@@ -1,0 +1,121 @@
+Get Rocrail sources
+
+Version 1.0 “Harvest” from svn:
+
+svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/branches/Rocrail-1.0.0 Rocrail-1.0.0
+
+Version 1.1 “Vision” from svn:
+
+svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/branches/Rocrail-1.1.0 Rocrail-1.1.0
+
+HEAD revision from svn:
+
+svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk Rocrail
+
+Rocrail tarball
+
+If you don't want to use a subversion client you can download and untar a Rocrail tarball. You also need to install the wxGTK-2.8 and wxGTK-dev package. These packages may be found in the package manager of your OS (synaptic, yum …..)
+
+    *
+      The head release can be found here: http://rocrail.svn.sourceforge.net/viewvc/rocrail/Rocrail/trunk.tar.gz?view=tar
+    *
+      The stable release can be downloaded here: https://sourceforge.net/project/showfiles.php?group_id=62652
+
+Download the file and save it in your homedir or a subfolder of your homedir. Open a terminal, chdir to the folder where you saved the .tar.gz file and type
+
+tar -xzvf name_of_file.tar.gz
+
+Chdir to the new created directory “Rocrail” (if you used the head release) or “Rocrail-1.1.0” (if you downloaded the stable release). Chdir to the subfolder rocs/bin and make ogen, wgen and xml2cstr executable by typing:
+
+chmod +x ogen
+
+chmod +x wgen
+
+chmod +x xml2cstr
+
+Jump back to the new created “Rocrail” or “Rocrail-1.1.0” folder and type
+
+make
+
+These 3 files are compiled against debian4 so it might be that they will not work with your Linux distribution. They should work with a Debian based OS like Ubuntu and derivates. If you get in trouble with this please try :
+
+make fromtar
+
+Due to an error in the vision release makefile this will work only if you downloaded the head release tar file. After the compiler finished without an error you have to install the binaries by typing:
+
+sudo make install
+
+Build Rocrail from source (Linux)
+
+Use the following commands:
+
+    *
+      Install the wxGTK 2.8.* (libwxgtk2.8*, wxGTK-devel) including develop package
+    *
+      check out the HEAD revision Rocrail from sourceforge.
+    *
+      cd Rocrail
+    *
+      make
+    *
+      sudo make install
+
+Build Rocrail from source (Windows)
+
+Get the sources as desribed earlier.
+
+    *
+      Install MinGW. (add the mingw\bin to your path environment)
+    *
+      Install the precompiled wx-2.6.3-mingw.
+    *
+      Change the wxroot variable in the Rocrail\rocgui\makefile-mingw to match your wxWidgets directory.
+    *
+      Install Inno Setup if you want to create the setup.
+    *
+      cd Rocrail
+    *
+      make -f makefile-mingw unicode (use ansi for Windows 9x)
+    *
+      start Inno Setup in Rocrail\rocrail\package and open the rocrail.iss; compile.
+
+SVN Log
+
+The main makefile will call the svn program to get the HEAD revisions version number to use in rocrail for tracing and info.
+Problems
+
+    *
+      If you have problems compiling the rocs library, the object generator binary does not fit to your Linux system. Try make fromtar.
+    *
+      After changing the rocs.xml you must also commit the rocs-gen.tar.gz in svn!!!
+
+Debian Etch
+
+Add following section in the /etc/apt/sources.list file:
+
+# wxWidgets/wxPython repository at apt.wxwidgets.org
+deb http://apt.wxwidgets.org/ etch-wx main
+deb-src http://apt.wxwidgets.org/ etch-wx main  
+
+Update the sources:
+
+sudo apt-get update
+
+Just for info:
+
+    *
+      Debian GNU/Linux 4.0 (“etch”)
+    *
+      Debian GNU/Linux 3.1 (“sarge”)
+
+Fedora Core 10
+
+To install wxwidgets on fedora core you hhave to type this in a shell window:
+
+sudo yum install wxGTK 2.8.* 
+
+followed by
+
+sudo yum install wxGTK-devel 
+
+Afterwards continue with the make process.

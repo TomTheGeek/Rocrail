@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Proposal for theme properties. -->
+<theme id="ILTIS">
+  <panel red="0" green="0" blue="0" border="false"/>
+  <block showid="false" red="255" green="0" blue="0"/>
+</theme>

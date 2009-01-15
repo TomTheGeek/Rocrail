@@ -1,0 +1,25 @@
+<svg width="64" height="32">
+  <g>
+    <path
+       fill="black" stroke="black"
+       d="M 28,17 L 28,15 L 27,13 L 25,11 L 23,10 L 5,10 L 3,11 L 1,13 L 0,15 L 0,17 L 0,19 L 1,21 L 3,23 L 5,24 L 23,24 L 25,23 L 27,21 L 28,19 L 28,17 L 28,17 z " />
+    <path
+       fill="grey" stroke="grey"
+       d="M 6,20 L 4,18 L 4,16 L 6,14 L 8,14 L 10,16 L 10,18 L 8,20 L 6,20 z "
+       />
+    <path
+       fill="grey" stroke="grey"
+       d="M 11,18 L 11,16 L 13,14 L 15,14 L 17,16 L 17,18 L 15,20 L 13,20 L 11,18 L 11,18 z "
+       />
+    <path
+       fill="#FF0000" stroke="#FF0000"
+       d="M 18,18 L 18,16 L 20,14 L 22,14 L 24,16 L 24,18 L 22,20 L 20,20 L 18,18 z "
+       />
+    <path
+       fill="black" stroke="black"
+       d="M 26,12 L 50,12 L 50,11 L 63,11 L 63,14 L 50,14 L 50,13 L 34,13 L 34,18 L 28,18 L 28,17 L 33,17 L 33,13 L 27,13 L 26,12 z " />
+    <path
+       fill="white" stroke="black"
+       d="M 57,14 L 57,11 L 63,11 L 63,14 L 57,14 z " />
+  </g>
+</svg>

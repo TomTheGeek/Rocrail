@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+ <head>
+  <title>ChangeLog librocs</title>
+ </head>
+<body>
+
+<h2>ChangeLog librocs</h2>
+<hr>
+
+<h3>1.19.1</h3>
+<h4><u>RV 01-01-2007 Fix: NodeOp.removeAttr</u></h4>
+copying rest pointers with wrong size.<br>
+
+<h4><u>RV 01-01-2007 Chg: NodeOp.setStr</u></h4>
+Attribute will be removed when new value is NULL.<br>
+
+
+
+<h3>v01.16</h3>
+	
+<h4><u>RV 16-05-2006 Fix: SocketOp.write loops</u></h4>
+The broken flag was not checked before writing.<br>
+
+<h4><u>RV 13-05-2006 Added flag INPCK to userial.c</u></h4>
+Generate paraty bit in case of odd/even.<br>
+
+<h4><u>RV 06-01-2006 Fix: NULL-pointer childnodes</u></h4>
+Not accepting NULL-pointer childnodes anymore. (NodeOp.addChild())<br>
+
+<h4><u>RV 02-01-2006 Fix: Trace init</u></h4>
+Changed trace init sequence: set filename after init parameters.<br>
+
+<h4><u>RV 02-01-2006 Fix: String too long error MSVC</u></h4>
+Xml2cstr outputs now an char array instead of a char pointer.<br>
+Change references from "extern char*" to "extern char[]".<br> 
+
+
+<h3>v01.15</h3>
+
+<h4><u>RV 20-12-2005 BugFix: Memory leak in wrpinf.c</u></h4>
+
+<h4><u>RV 19-12-2005 BugFix: reallocMem.</u></h4>
+The new buffer size was used when copy the old buffer into the new buffer.<br>
+This caused an access violation interrupt.<br>
+This should fix problems in Node, List and XmlH objects.<br> 
+
+<h4><u>RV 14-12-2005 BugFix: Query mac address (win32)</u></h4>
+Used wrong memory functions.<br>
+
+<h4><u>RV 30-11-2005 BugFix: NodeOp.removeChild()</u></h4>
+Too few bytes copied.<br>
+
+<h4><u>RV 25-11-2005 Change: NodeOp.merge()</u></h4>
+Optional overwrite existing attributes.<br>
+
+<h4><u>RV 21-11-2005 BugFix: Input flags serial</u></h4>
+Input flag were set to ignore break and return chars!<br>
+
+<h4><u>RV 21-11-2005 Change: Checking library name for extension</u></h4>
+Add only the extension .dll or .so if not already set.<br>
+
+<h4><u>RV 21-11-2005 Change: Tracefiles</u></h4>
+Looking now for oldest file to overwrite to get a better trace history.<br>
+
+<h4><u>RV 02-11-2005 BugFix: FileOp.cp()</u></h4>
+
+<h4><u>RV 14-09-2005 New: FileOp.isDirectory()</u></h4>
+
+<h4><u>RV 23-06-2005 New: StrOp.replaceAll()</u></h4>
+
+<h4><u>RV 17-06-2005 Changed: __removeThread</u></h4>
+Check for success on MutexOp.wait().<br>
+
+<hr>
+<h3>v01.13</h3>
+
+<h4><u>RV 14-06-2005 New: Xmlh.</u></h4>
+Xml Header for tranfering text and binaries over tcpip.<br>
+TRACELEVEL_XMLH added.<br>
+
+<hr>
+<h3>v01.12</h3>
+
+<h4><u>R V 14-06-2005 BugFix: StrOp.getLine().</u></h4>
+StrOp.getLine did try to access not allocated memeory.<br>
+
+<h4><u>RV 25-05-2005 Added: OpenSSL support.</u></h4>
+OpenSSL is now also implemented for Linux.<br>
+
+<h4><u>RV 15-03-2005 Added: Public wrapper documentation. (wgen)</u></h4>
+Wrapper nodes have became an extra attribute: public="true/false".<br>
+When set to "false" this node and all his childs will not be documented.<br>
+To make a developer documentation, just add the commandline option "-all" after the wrapperfilename.<br>
+
+<h4><u>RV 14-03-2005 New: MapOp.getList().</u></h4>
+Creates a list with all mapped objects.<br>
+
+<h4><u>RV 14-03-2005 New: ListOp.clear().</u></h4>
+Clears the list.<br>
+
+<h4><u>RV 11-03-2005 New: Ogen and Wgen sorts all nodes before processing.</u></h4>
+Also it is no longer neccesary to define interfaces before referending them in the object xml.<br>
+
+<h4><u>RV 11-03-2005 New: List sort.</u></h4>
+List is now sortable with user defined comparator.<br>
+
+<h4><u>RV 08-03-2005 New: Switching the Doc in case in/sensitive mode.</u></h4>
+Setting DocOp.setIgnoreCase() to false will increase attribute access time.<br>
+
+<h4><u>RV 08-03-2005 Optimized: Setting attribute value's.</u></h4>
+
+<h4><u>RV 06-03-2005 Added: External interface support in ogen.</u></h4>
+If the interface attribute is specified as <i>"$pathtoxml:interfacename"</i>, ogen will try to parse the file and look for an interface named by <i>"interfacename"</i>.
+
+<h4><u>RV 27-02-2005 New: SystemOp.getTick().</u></h4>
+If the System is instantiated a 10ms ticker will run which increases every 10ms the tick count.<br>
+
+<h4><u>RV 25-02-2005 Changed: NodeOp.base.serialize().</u></h4>
+Node serializing uses default UTF-8 encoding.<br>
+You can change this setting DocOp.setEncoding() with UTF-8(default) or ISO-8859-15<br>
+
+<h4><u>RV 23-02-2005 New: SystemOp.utf2latin().</u></h4>
+Converts UTF-8 encoding into Latin 15. A character is lost in case the decoded UTF-8 won't fit into the Latin 15.<br>
+
+<h4><u>RV 22-02-2005 New: DocOp.isUTF8Encoded().</u></h4>
+If the parser detects &lt;?xml encoding="UTF-8"?&gt; this new method returns True.<br>
+
+<h4><u>RV 08-02-2005 New: DocOp.setUniCodeEscapes().</u></h4>
+Default the parser uses HTML escapes for none ASCII chars, but with this new option you can manipulate this by setting UniCodeEscapes to True.<br>
+
+<h4><u>RV 06-02-2005 Fix: SerialOp.read() error message in case of timeout.</u></h4>
+The error message in case of a read timeout never came because of a wrong if statement.<br>
+
+<h4><u>RV 04-02-2005 Fix: QueueOp.waitPost() returns NULL.</u></h4>
+Under certain conditions the event was not reseted and this caused after the next waitPost a NULL as return value.<br>
+The event is now also reseted in case of no event wait.<br>
+
+<hr>
+<h3>v01.11</h3>
+
+</body>
+</html>

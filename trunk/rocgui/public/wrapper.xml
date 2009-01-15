@@ -1,0 +1,161 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Wrappers modulename="rocgui" title="RocGUI">
+
+  <Cmdline title="Commandline options:" createwrapper="true" remark="Commands are listed in column --Default--.">
+    <const name="offline" vt="string" val="-offline" defval="false" range="*" remark="Starts Gui in offline mode."/>
+    <const name="debug" vt="string" val="-debug" defval="false" range="*" remark="Set tracelevel debug."/>
+    <const name="parse" vt="string" val="-parse" defval="false" remark="Activates parse tracelevel."/>
+    <const name="inifile" vt="string" val="-i" defval="*" range="*" remark="Specifies which Inifile to use: -i [file]"/>
+    <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
+    <const name="host" vt="string" val="-h" defval="*" range="*" remark="Specifies target daemon: -h [hostname]"/>
+    <const name="port" vt="string" val="-p" defval="*" range="*" remark="Specifies target port: -p [port]"/>
+    <const name="tabsel" vt="string" val="-s" defval="-1" range="*" remark="Tab index for selection."/>
+    <const name="modview" vt="string" val="-modview" defval="false" remark="Activates model overview panel."/>
+  </Cmdline>
+
+  <gui structname="GUI" wrappername="Gui">
+    <const name="productname" vt="string" val="Rocrail"/>
+    <const name="releasename" vt="string" val="Snapshot"/>
+    <const name="releasesuffix" vt="string" val=""/>
+    <const name="vmajor" vt="int" val="1"/>
+    <const name="vminor" vt="int" val="2"/>
+    <const name="patch" vt="int" val="999"/>
+    <const name="buildDate" vt="string" val="$__DATE__"/>
+    <const name="buildTime" vt="string" val="$__TIME__"/>
+    <const name="inifile" vt="string" val="rocgui.ini"/>
+    <const name="lang_english" vt="string" val="en"/>
+    <const name="lang_german" vt="string" val="de"/>
+    <const name="lang_dutch" vt="string" val="nl"/>
+    <const name="lang_swedisch" vt="string" val="sv"/>
+    <const name="lang_french" vt="string" val="fr"/>
+    <const name="lang_turkish" vt="string" val="tr"/>
+    <const name="lang_spanish" vt="string" val="es"/>
+    <const name="lang_italien" vt="string" val="it"/>
+    <const name="lang_danish" vt="string" val="da"/>
+    <const name="clock_default" vt="string" val="default"/>
+    <const name="clock_ampm" vt="string" val="ampm"/>
+    <const name="clock_24h" vt="string" val="24h"/>
+    <var name="clocktype" vt="string" defval="default" range="default,ampm,24h" remark="clock type select"/>
+    <var name="lang" vt="string" defval="en" range="en,de,nl,sv,fr,tr" remark=""/>
+    <var name="host" vt="string" defval="localhost" remark="last used rrcon"/>
+    <var name="openpath" vt="string" defval="." remark="use this path for init the file open dialog"/>
+    <var name="xslpath" vt="string" defval="stylesheets" remark="reference stylsheets to this path"/>
+    <var name="iconpath" vt="string" defval="icons" remark="load GUI icons from this path"/>
+    <var name="imagepath" vt="string" defval="images" remark="load loco pictures from this path"/>
+    <var name="updatespath" vt="string" defval="updates" remark="download updates in this path"/>
+    <var name="updatesserver" vt="string" defval="rocrail.net" remark="location of updates"/>
+    <var name="updatestimestamp" vt="long" defval="0" remark="timestamp of last viewed updates xml for the update notifier; this number increases after adding items on the server"/>
+    <var name="checkupdates" vt="bool" defval="true"/>
+    <var name="tabalign" vt="int" defval="0" range="0-2" remark="0 default, 1 left, 2 multiline"/>
+    <var name="modview" vt="bool" defval="false"/>
+    <var name="restrictedit4auto" vt="bool" defval="true"/>
+    <var name="id" vt="string" defval="rocgui" range="*" remark="Rocgui ID"/>
+    <trace extern="true"/>
+    <rrcon cardinality="n" wrappername="RRCon">
+      <var name="host" vt="string" defval="localhost"/>
+      <var name="port" vt="int" defval="62842"/>
+      <var name="retry" vt="int" defval="2"/>
+      <var name="retryinterval" vt="int" defval="500" remark="In mS"/>
+    </rrcon>
+    <modpanel wrappername="ModPanel">
+      <var name="red" vt="int" defval="0"/>
+      <var name="green" vt="int" defval="0"/>
+      <var name="blue" vt="int" defval="0"/>
+    </modpanel>
+    <planpanel wrappername="PlanPanel">
+      <var name="scale" vt="float" defval="0.5"/>
+      <var name="bktext" vt="float" defval="1.25" remark="finetune blocktext font size: use 1.75 for Win32"/>
+      <var name="bktextid" vt="bool" defval="true"/>
+      <var name="bktext_red" vt="int" defval="0"/>
+      <var name="bktext_green" vt="int" defval="0"/>
+      <var name="bktext_blue" vt="int" defval="0"/>
+      <var name="fill" vt="bool" defval="false"/>
+      <var name="showborder" vt="bool" defval="true"/>
+      <var name="showid" vt="bool" defval="false"/>
+      <var name="raster" vt="bool" defval="false"/>
+      <var name="svgpath" vt="string" defval="svg/themes/Basic" remark="scan this path for svg symbols"/>
+      <var name="svgpath2" vt="string" defval="." remark="scan this path for svg symbols"/>
+      <var name="svgpath3" vt="string" defval="." remark="scan this path for svg symbols"/>
+      <var name="svgpath4" vt="string" defval="." remark="scan this path for svg symbols"/>
+      <var name="svgpath5" vt="string" defval="." remark="scan this path for svg symbols"/>
+      <var name="red" vt="int" defval="255"/>
+      <var name="green" vt="int" defval="255"/>
+      <var name="blue" vt="int" defval="255"/>
+      <var name="locobook" vt="bool" defval="true"/>
+    </planpanel>
+    <splitpanel wrappername="SplitPanel">
+      <var name="main" vt="int" defval="250" remark="vertical plan/message split position"/>
+      <var name="msg" vt="int" defval="300" remark="horizontal message/exception split position"/>
+      <var name="plan" vt="int" defval="300" remark="horizontal plan/plan split position"/>
+    </splitpanel>
+    <window wrappername="Window">
+      <var name="x" vt="int" defval="50"/>
+      <var name="y" vt="int" defval="50"/>
+      <var name="cx" vt="int" defval="600"/>
+      <var name="cy" vt="int" defval="400"/>
+    </window>
+    <jsmap extern="true"/>
+    <mic wrappername="MIC" remark="Mouse Integrated Controller">
+      <var name="step" vt="int" defval="1" range="1-9" remark="speed step per mousewheel notch"/>
+      <var name="exitstop" vt="bool" defval="true" remark="stops train after exit MIC mode"/>
+    </mic>
+    <cvconf wrappername="CVconf">
+      <var name="nrs" vt="string" defval="1,2,3,4,5,6,29" range="*" remark="predefined CV's for read,write and copy all"/>
+      <var name="timeout" vt="int" defval="30" range="*" unit="s" remark="timeout on ack"/>
+    </cvconf>
+    <lcctrl wrappername="LcCtrl">
+      <var name="id" vt="string" defval="" range="*" remark="Loco ID"/>
+      <var name="x" vt="int" defval="0" range="*" remark="X position of LocControlDialog"/>
+      <var name="y" vt="int" defval="0" range="*" remark="Y position of LocControlDialog"/>
+    </lcctrl>
+  </gui>
+
+  <release wrappername="Release">
+    <var name="version" vt="string" defval="1.0"/>
+    <var name="alias" vt="string" defval="Harvest"/>
+    <var name="timestamp" vt="long" defval="0"/>
+    <patch cardinality="n" wrappername="Patch">
+      <var name="file" vt="string" defval=""/>
+      <var name="nr" vt="int" defval="0"/>
+      <var name="os" vt="string" defval=""/>
+      <var name="remark" vt="string" defval=""/>
+      <var name="download" vt="bool" defval="false"/>
+    </patch>
+  </release>
+  
+  <theme wrappername="Theme">
+    <var name="id" vt="string" defval="" remark="theme name"/>
+    <panel cardinality="1" wrappername="ThemePanel">
+      <var name="border" vt="bool" defval="true" remark="show panel border"/>
+      <var name="red" vt="int" defval="190" remark="background color RGB red value"/>
+      <var name="green" vt="int" defval="190" remark="background color RGB green value"/>
+      <var name="blue" vt="int" defval="190" remark="background color RGB blue value"/>
+    </panel>
+    <block cardinality="1" wrappername="ThemeBlock">
+      <var name="showid" vt="bool" defval="true" remark="show block ID"/>
+      <var name="red" vt="int" defval="0" remark="text color RGB red value"/>
+      <var name="green" vt="int" defval="0" remark="text color RGB green value"/>
+      <var name="blue" vt="int" defval="0" remark="text color RGB blue value"/>
+    </block>
+  </theme>
+  
+</Wrappers>
+

@@ -1,0 +1,31 @@
+<svg width="32" height="64">
+  <g>
+	<!-- R-Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 5,0 L 5,12 L 26,12 L 26,0 z " />
+	<path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 5,18 L 5,44 L 26,44 L 26,18 z " />
+	<path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 5,50 L 5,63 L 26,63 L 26,50 z " />
+    <!-- R-Grey -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 7,0 L 7,12 L 24,12 L 24,0 z " />
+	<path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 7,18 L 7,44 L 24,44 L 24,18 z " />
+	<path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 7,50 L 7,63 L 24,63 L 24,50 z " />
+
+
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,44 L 31,44 L 31,51 L 0,51 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,46 L 23,46 L 23,49 L 8,49 z " />
+
+    <!-- gate -->
+	<path stroke-width="1" stroke="rgb(0,0,0)" fill="none" d="M 2,4 L 2,8 L 1,8 L 1,4 z" />
+	<path stroke-width="1" stroke="rgb(255,0,0)" fill="none" d="M 2,8 L 29,8 L 29,7 L 2,7 z" />
+	<path stroke-width="1" stroke="rgb(0,0,0)" fill="none" d="M 29,60 L 29,56 L 30,56 L 30,60 z" />
+	<path stroke-width="1" stroke="rgb(255,0,0)" fill="none" d="M 2,56 L 29,56 L 29,57 L 2,57 z" />
+	</g>
+</svg>
+
+

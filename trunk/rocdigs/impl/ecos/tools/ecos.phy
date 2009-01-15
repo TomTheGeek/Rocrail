@@ -1,0 +1,52 @@
+#!/usr/bin/python
+import time
+from socket import *
+myHost = ''
+myPort = 15471
+s = socket(AF_INET, SOCK_STREAM)     # create a TCP socket
+s.bind((myHost, myPort))             # bind it to the serv
+s.listen(5)                          # allow 5 simultaneou
+                                     # pending connections
+
+while 1:
+  # wait for next client to connect
+  connection, address = s.accept() # connection is a ne
+  while 1:
+    data = connection.recv(1024) # receive up to 1K b
+    if data:
+      connection.send('<REPLY queryObjects(10, addr, name, protocol)>\n')
+      connection.send('1000 addr[3] name["DB V100"] protocol[DCC14]\n')
+      connection.send('1001 addr[4] name["DB BR215"] protocol[DCC28]\n')
+      connection.send('1002 addr[1] name["Harry Potter"] protocol[DCC28]\n')
+      connection.send('1003 addr[5] name["DB BR64"] protocol[DCC128]\n')
+      connection.send('1004 addr[7] name["NS 1302"] protocol[DCC128]\n')
+      connection.send('1005 addr[10] name["Nieuw 0010"] protocol[DCC28]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      time.sleep(3)
+
+      connection.send('<EVENT 100>\n')
+      connection.send('100 state[0x400]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 100>\n')
+      connection.send('100 state[0x0]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 102>\n')
+      connection.send('102 state[0x10]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 102>\n')
+      connection.send('102 state[0x0]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 1>\n')
+      connection.send('102 state[0x10]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 1>\n')
+      connection.send('102 state[0x0]\n')
+      connection.send('<END 0 (OK)>\n')
+
+connection.close()               # close socket

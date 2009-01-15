@@ -1,0 +1,99 @@
+# makefile for module rocgui with mingw
+
+
+MOUNTPOINT=..
+OUTDIR=..\winbin
+GENDIR=..\wingen
+TMPOUTDIR=$(GENDIR)\rocgui\bin
+DEBUG=-g
+LIBRARY=unicode
+LIBEXT=u
+wxroot=c:\data\wx-2.8.7-mingw
+wxversion=2.8
+
+CPP=g++
+CC=gcc
+LNK=g++
+INCL_PATH=$(MOUNTPOINT)
+CC_FLAGS=-c $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
+WXINCL=-I$(wxroot)\lib-$(LIBRARY)\wx\include\msw-$(LIBRARY)-release-static-$(wxversion) -I$(wxroot)\include
+CC_WXFLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -DWX_PRECOMP -DNO_GCC_PRAGMA -I$(INCL_PATH) -I$(GENDIR)
+LNK_FLAGS=-mthreads -mwindows
+LIBS=$(OUTDIR)\librocrail.a $(OUTDIR)\libwrapper.a $(OUTDIR)\librocs.a
+
+#*** this works only partly under windows 9x: unicode is OK, but it thinks it is
+#*** not running in Win32 environment... I give up: ansi version for win9x.
+#WINLIBS=-lunicows -liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
+
+WINLIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
+#WXLIBS=-L$(wxroot)\lib-$(LIBRARY) -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_msw$(LIBEXT)_media-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+WXLIBS=-L$(wxroot)\lib-$(LIBRARY) -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+
+SRCS=impl\guiapp.cpp impl\item.cpp impl\locdlg.cpp impl\planpanel.cpp impl\propdlg.cpp impl\swdlg.cpp impl\streetdlg.cpp impl\bktext.cpp
+
+OBJS=$(patsubst impl/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard impl/*.cpp))
+DOBJS=$(patsubst dialogs/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/*.cpp))
+CDOBJS=$(patsubst dialogs/controllers/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/controllers/*.cpp))
+DECOBJS=$(patsubst dialogs/decoders/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/decoders/*.cpp))
+SOBJS=$(patsubst symbols/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard symbols/*.cpp))
+WOBJS=$(patsubst $(GENDIR)/rocgui/wrapper/impl/%.c,$(GENDIR)/rocgui/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocgui/wrapper/impl/*.c))
+ROBJS=$(patsubst $(GENDIR)/rocgui/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocgui/res/*.c))
+
+TARGET=$(OUTDIR)\rocgui.exe
+
+all: $(TARGET)
+#	-del /Q $(TMPOUTDIR)\*.o
+
+$(TARGET): $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(LIBS) $(TMPOUTDIR)\rocgui_rc.o
+	$(LNK) -o $(TARGET) $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(TMPOUTDIR)\rocgui_rc.o $(LIBS) $(LNK_FLAGS) $(WXLIBS) $(WINLIBS)
+
+$(TMPOUTDIR)\rocgui_rc.o: rocgui.rc
+	windres -irocgui.rc -o$(TMPOUTDIR)\rocgui_rc.o --define __WXMSW__ --include-dir %wxroot%\lib-$(LIBRARY)\wx\include\msw-$(LIBRARY)-release-static-$(wxversion) --include-dir %wxroot%\include
+
+$(TMPOUTDIR)/%.o: impl/%.cpp
+	$(CPP) $(CC_WXFLAGS) $(WXINCL) $< -o $@
+
+$(TMPOUTDIR)/%.o: dialogs/%.cpp
+	$(CPP) $(CC_WXFLAGS) $(WXINCL) $< -o $@
+
+$(TMPOUTDIR)/%.o: dialogs/controllers/%.cpp
+	$(CPP) $(CC_WXFLAGS) $(WXINCL) $< -o $@
+
+$(TMPOUTDIR)/%.o: dialogs/decoders/%.cpp
+	$(CPP) $(CC_WXFLAGS) $(WXINCL) $< -o $@
+
+$(TMPOUTDIR)/%.o: symbols/%.cpp
+	$(CPP) $(CC_WXFLAGS) $(WXINCL) $< -o $@
+
+$(GENDIR)/rocgui/wrapper/bin/%.o: $(GENDIR)/rocgui/wrapper/impl/%.c
+	$(CC) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: $(GENDIR)/rocgui/res/%.c
+	$(CC) $(CC_FLAGS) $< -o $@
+
+clean:
+	-mkdir $(OUTDIR)
+	-mkdir $(GENDIR)\rocgui
+	-mkdir $(GENDIR)\rocgui\res
+	-mkdir $(TMPOUTDIR)
+	-del /Q $(TMPOUTDIR)\*.o
+	-del /Q $(GENDIR)\rocgui\wrapper\public\*.*
+	-del /Q $(GENDIR)\rocgui\wrapper\impl\*.*
+	-del /Q $(GENDIR)\rocgui\wrapper\bin\*.*
+	-del /Q $(GENDIR)\rocgui\wrapper\doc\*.*
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\wgen.exe ..\..\rocgui\public\wrapper.xml
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocgui\res\messages.xml res\messages.c messages
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocgui\public\wrapper.xml wrapper\impl\guiwrapperinfo.c guiwrapperinfo
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml wrapper\impl\version.c svnLog
+
+messages:
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocgui\res\messages.xml res\messages.c messages
+	cd $(GENDIR)\rocgui & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocgui\public\wrapper.xml wrapper\impl\guiwrapperinfo.c guiwrapperinfo
+
+ansi:	LIBRARY=ansi
+ansi: LIBEXT=
+ansi: all
+
+unicode: LIBRARY=unicode
+unicode: LIBEXT=u
+unicode: all

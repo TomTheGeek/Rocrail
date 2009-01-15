@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan title="New Plan">
+  <zlevel z="0" title="Station"/>
+  <remark text=""/>
+  <tklist>
+    <tk id="tk350" x="2" y="1" z="0"/>
+    <tk id="tk298" x="1" y="1" z="0" ori="north" type="curve"/>
+    <tk id="tk166" x="1" y="2" z="0" ori="north"/>
+    <tk id="tk469" x="1" y="3" z="0" ori="north"/>
+    <tk id="tk565" x="1" y="4" z="0" type="curve" ori="east"/>
+    <tk id="tk471" x="2" y="5" z="0" ori="east" type="curve"/>
+    <tk id="tk333" x="4" y="4" z="0"/>
+    <tk id="tk948" x="4" y="4" z="0"/>
+    <tk id="tk923" x="4" y="5" z="0"/>
+    <tk id="tk112" x="9" y="1" z="0"/>
+    <tk id="tk999" x="11" y="5" z="0" type="curve" ori="south"/>
+    <tk id="tk821" x="12" y="4" z="0" type="curve" ori="south"/>
+    <tk id="tk613" x="12" y="3" z="0" ori="north"/>
+    <tk id="tk714" x="12" y="2" z="0" ori="north"/>
+    <tk id="tk589" x="12" y="1" z="0" type="curve"/>
+    <tk id="tk899" x="11" y="1" z="0"/>
+    <tk type="dir" id="tk20060325084532306" x="9" y="5" z="0" ori="east"/>
+    <tk type="dir" id="tk20060325084540253" x="9" y="4" z="0" ori="east"/>
+    <tk type="dir" id="tk20060325084549036" x="4" y="1" z="0"/>
+  </tklist>
+  <remark text=""/>
+  <fblist>
+    <fb id="fb1b" unit="1" pin="1" x="3" y="1" z="0"/>
+    <fb id="fb1a" unit="1" pin="2" x="10" y="1" z="0"/>
+    <fb id="fb2a" unit="1" pin="3" x="3" y="4" z="0"/>
+    <fb id="fb2b" unit="1" pin="4" x="10" y="4" z="0"/>
+    <fb id="fb3a" unit="1" pin="5" x="3" y="5" z="0"/>
+    <fb id="fb3b" unit="1" pin="6" x="10" y="5" z="0"/>
+  </fblist>
+  <remark text=""/>
+  <swlist>
+    <sw id="sw1" unit="1" pin="1" x="2" y="4" z="0"/>
+    <sw id="sw2" unit="1" pin="2" x="11" y="4" z="0" ori="west" type="left"/>
+  </swlist>
+  <remark text=""/>
+  <bklist>
+    <bk id="01" fba="fb1a" fbb="fb1b" x="5" y="1" z="0" locid="V200"/>
+    <bk id="02" fba="fb2a" fbb="fb2b" x="5" y="4" z="0"/>
+    <bk id="03" fba="fb3a" fbb="fb3b" x="5" y="5" z="0" locid="E03"/>
+  </bklist>
+  <remark text=""/>
+  <stlist>
+    <st id="st1-2" bka="01" bkb="02">
+      <swcmd id="sw1" cmd="straight"/>
+    </st>
+    <st id="st1-3" bka="01" bkb="03">
+      <swcmd id="sw1" cmd="turnout"/>
+    </st>
+    <st id="st2-1" bka="02" bkb="01">
+      <swcmd id="sw2" cmd="straight"/>
+    </st>
+    <st id="st3-1" bka="03" bkb="01">
+      <swcmd id="sw2" cmd="turnout"/>
+    </st>
+  </stlist>
+  <remark text=""/>
+  <lclist>
+    <lc id="E03" image="./locxpm/br03.xpm" addr="3" eng="Elektric" V_min="20" V_max="180" desc="TEE" catnr="M39573" prot="M">
+      <fundef fn="1" text="Lights"/>
+      <fundef fn="2" text="Tail light"/>
+      <fundef fn="3" text="Horn"/>
+      <fundef fn="4" text="Shunting"/>
+    </lc>
+    <lc id="V200" image="./locxpm/v200-1.xpm" addr="22" eng="Diesel" V_min="15" V_max="120" desc="V200 150" catnr="M39821" accel="2" prot="M">
+      <fundef fn="1" text="Engine"/>
+      <fundef fn="2" text="Tail light"/>
+      <fundef fn="3" text="Horn"/>
+      <fundef fn="4" text="Shunting"/>
+    </lc>
+  </lclist>
+</plan>

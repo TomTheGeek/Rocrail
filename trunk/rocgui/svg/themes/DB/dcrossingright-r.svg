@@ -1,0 +1,61 @@
+<svg
+      width="64"
+   height="32">
+     <g>
+     
+<!-- Abzweig oben rechts -->    <path
+       d="M 63,0 L 63,4 L 60,7 L 56,3 L 59,0 L 63,0 z "
+       id="path7539"
+       style="fill:#deb887;stroke:#000000" />
+    <path
+       d="M 48,15 L 48,11 L 51,8 L 55,12 L 52,15 L 48,15 z "
+       id="path7541"
+       style="fill:#deb887;stroke:#000000" />
+    <path
+       d="M 51,8 L 56,3 L 60,7 L 55,12 L 51,8 z "
+       id="path7543"
+       style="fill:#ffc8a0;stroke:#000000" />
+<!-- Abzweig unten links -->    <path
+       d="M 0,31 L 4,31 L 7,28 L 3,24 L 0,27 L 0,31 z "
+       id="path7545"
+       style="fill:#deb887;stroke:#000000" />
+    <path
+       d="M 15,16 L 15,20 L 12,23 L 8,19 L 11,16 L 15,16 z "
+       id="path7547"
+       style="fill:#deb887;stroke:#000000" />
+    <path
+       d="M 8,19 L 12,23 L 7,28 L 3,24 L 8,19 z "
+       id="path7549"
+       style="fill:#ffc8a0;stroke:#000000" />
+<!-- linke gerade -->    <path
+       d="M 0,15 L 2,13 L 8,13 L 8,18 L 2,18 L 0,16 z "
+       id="path7551"
+       stroke="black"
+       fill="rgb(0, 0, 255)" />
+    <path
+       d="M 23,13 L 29,13 L 31,15 L 31,16 L 29,18 L 23,18 z "
+       id="path7553"
+       stroke="black"
+       fill="rgb(0, 0, 255)" />
+    <path
+       d="M 8,13 L 23,13 L 23,18 L 8,18 z "
+       id="path7555"
+       stroke="black"
+       fill="rgb(0, 255, 255)" />
+<!-- rechte gerade -->    <path
+       d="M 32,15 L 34,13 L 40,13 L 40,18 L 34,18 L 32,16 z "
+       id="path7557"
+       stroke="black"
+       fill="rgb(0, 0, 255)" />
+    <path
+       d="M 55,13 L 61,13 L 63,15 L 63,16 L 61,18 L 55,18 z "
+       id="path7559"
+       stroke="black"
+       fill="rgb(0, 0, 255)" />
+    <path
+       d="M 40,13 L 55,13 L 55,18 L 40,18 z "
+       id="path7561"
+       stroke="black"
+       fill="rgb(0, 255, 255)" />
+  </g>
+</svg>

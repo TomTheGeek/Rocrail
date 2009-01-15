@@ -1,0 +1,14 @@
+all:
+	svn log -r HEAD -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail > common\version.xml
+	cd rocrail & make -f makefile-mingw rocrail
+
+release:
+	cd rocrail & make -f makefile-mingw rocrail DEBUG=
+
+unicode:
+	svn log -r HEAD -q --xml > common\version.xml
+	cd rocrail & make -f makefile-mingw unicode DEBUG=
+
+ansi:
+	cd rocrail & make -f makefile-mingw ansi DEBUG=
+	

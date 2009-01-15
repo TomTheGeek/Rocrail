@@ -1,0 +1,17 @@
+all:
+	rm -rf $(OUTDIR)/rocgui.app
+	-mkdir rocgui.app    
+	-mkdir rocgui.app/Contents
+	-mkdir rocgui.app/Contents/MacOS
+	-mkdir rocgui.app/Contents/Resources
+	-mkdir rocgui.app/Contents/Resources/icons
+	cp xpm/rocrail.icns rocgui.app/Contents/Resources
+	cp Info.plist rocgui.app/Contents/
+	echo -n 'APPL????' > rocgui.app/Contents/PkgInfo
+	cp ../unxbin/rocgui rocgui.app/Contents/MacOS/rocgui
+	cp icons/*.png rocgui.app/Contents/Resources/icons/
+	rm -rf ../macbin/rocgui.app
+	mv -f rocgui.app ../macbin
+	cp icons/*.png ../macbin/icons/
+	
+	

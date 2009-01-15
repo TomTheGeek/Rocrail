@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+ <head>
+  <title>XML to C-String converter</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ </head>
+<body>
+<a name="top"></a>
+<small>updated at: 20050204 CET</small>
+<hr>
+<h2>Rocs XML to C-String converter</h2>
+
+<hr>
+<ul>
+<li><a href="#Introduction">Introduction</a></li>
+<li><a href="#xmlfile">Example XML input file</a></li>
+</ul>
+
+<br><a href="#top">top</a>
+<hr><h3><a name="Introduction">Introduction</a>:</h3>
+<p>
+Xml2cstr generates a C char array from an XML or HTML input file.<br>
+</p>
+
+<br><a href="#top">top</a>
+<hr><h3><a name="xmlfile">Example XML input file</a>:</h3>
+<pre><small>
+&lt;Messages&gt;
+  &lt;Msg id="cancel" dialog="false"&gt;
+    &lt;de txt="Abbrechen" accel="0" tip="Abbrechen und &Auml;nderungen verwerfen."/&gt;
+    &lt;en txt="Cancel" accel="0" tip="Cancel dialog and disregard all changes."/&gt;
+  &lt;/Msg&gt;
+&lt;/Messages&gt;
+</small></pre>  
+After running in the directory myapp the command:<br>
+<br>
+<tt><b>../bin/xml2cstr res/messages.xml res/messages.c messages</b></tt><br>
+(inputfile outputfile stringname)<br>
+<br>
+the res/messages.c file will be generated:<br>
+
+<pre>
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+const char messages[] = {
+38,108,116,59,77,101,115,115,97,103,101,115,38,103,116,59,10,32,32,38,108,
+116,59,77,115,103,32,105,100,61,34,99,97,110,99,101,108,34,32,100,105,97,
+108,111,103,61,34,102,97,108,115,101,34,38,103,116,59,10,32,32,32,32,38,
+108,116,59,100,101,32,116,120,116,61,34,65,98,98,114,101,99,104,101,110,
+34,32,97,99,99,101,108,61,34,48,34,32,116,105,112,61,34,65,98,98,114,101,
+99,104,101,110,32,117,110,100,32,38,65,117,109,108,59,110,100,101,114,
+117,110,103,101,110,32,118,101,114,119,101,114,102,101,110,46,34,47,38,
+103,116,59,10,32,32,32,32,38,108,116,59,101,110,32,116,120,116,61,34,67,
+97,110,99,101,108,34,32,97,99,99,101,108,61,34,48,34,32,116,105,112,61,34,
+67,97,110,99,101,108,32,100,105,97,108,111,103,32,97,110,100,32,100,105,
+115,114,101,103,97,114,100,32,97,108,108,32,99,104,97,110,103,101,115,
+46,34,47,38,103,116,59,10,32,32,38,108,116,59,47,77,115,103,38,103,116,59,
+10,38,108,116,59,47,77,101,115,115,97,103,101,115,38,103,116,59,10,0
+};
+#ifdef __cplusplus
+  }
+#endif
+
+</pre>
+You can use the Rocs iORes object like this:
+<br>
+<pre>
+----------------------------------------
+#include "rocs/public/res.h"
+...
+// Resource messages:
+extern "C" {
+  extern const char messages[];
+}
+...
+  iORes m_EN_Res = ResOp.inst( messages, "en" );
+  iORes m_DE_Res = ResOp.inst( messages, "de" );
+...
+  const char*  msg = ResOp.getMsg ( m_EN_Res, "cancel" );
+  const char*  tip = ResOp.getTip ( m_DE_Res, "cancel" );
+  const char* menu = ResOp.getMenu( m_EN_Res, "cancel" );
+----------------------------------------
+</pre>
+Where the returned values are:<br>
+<pre>
+   msg = "Cancel"
+   tip = "Abbrechen und &Auml;nderungen verwerfen."
+  menu = "&Cancel"
+</pre>
+
+</body>
+</html>

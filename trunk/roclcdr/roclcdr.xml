@@ -1,0 +1,91 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="RocLcDr" title="RocRail LocDriver API" docname="roclcdrapi" source="$Source: /cvsroot/rojav/roclcdr/roclcdr.xml,v $" revision="$Revision: 1.6 $">
+
+
+  <object name="LcDriver" interface="$../rocint/rocint.xml:LcDriverInt" use="node,trace" include="$rocrail/public/loc,$rocrail/public/model,$rocrail/public/route,$rocint/public/lcdriverint,$rocint/public/blockbase" remark="Loc driver object">
+    <typedef def="enum {LC_IDLE=0,LC_FINDDEST,LC_INITDEST,LC_CHECKROUTE,LC_GO,LC_EXITBLOCK,LC_OUTBLOCK,
+              LC_ENTERBLOCK,LC_RE_ENTERBLOCK,LC_PRE2INBLOCK,LC_INBLOCK,LC_PRE_WAITBLOCK,LC_WAITBLOCK,LC_TIMER,LC_WAIT4EVENT,
+              LC_PAUSE} lc_state"/>
+    <typedef def="enum {LC_DIR_FORWARDS=0,LC_DIR_BACKWARDS} lc_direction"/>
+    <fun name="inst" vt="this">
+      <param name="loc" vt="const iOLoc" remark="Loc object"/>
+      <param name="model" vt="const iOModel" remark="Model object"/>
+      <param name="trace" vt="const iOTrace" remark="Trace object"/>
+      <param name="ctrl" vt="iONode"/>
+    </fun>
+    <data>
+      <var name="loc" vt="iOLoc" remark="Loc object instance"/>
+      <var name="model" vt="iOModel" remark="Model object instance"/>
+      <var name="state" vt="lc_state"/>
+      <var name="prevState" vt="lc_state"/>
+      <var name="ignevt" vt="int"/>
+      <var name="timer" vt="int"/>
+      <var name="run" vt="Boolean"/>
+      <var name="reqstop" vt="Boolean"/>
+      <var name="gomanual" vt="Boolean"/>
+      <var name="pending" vt="Boolean" remark="Fase between running and idle"/>
+      <var name="stop" vt="Boolean"/>
+      <var name="brake" vt="Boolean"/>
+      <var name="direction" vt="lc_direction"/>
+      <var name="prevBlock" vt="iIBlockBase"/>
+      <var name="curBlock" vt="iIBlockBase"/>
+      <var name="swapBlock" vt="iIBlockBase"/>
+      <var name="next1Block" vt="iIBlockBase"/>
+      <var name="next2Block" vt="iIBlockBase"/>
+      <var name="next3Block" vt="iIBlockBase"/>
+      <var name="next1Route" vt="iORoute"/>
+      <var name="next1RouteFromTo" vt="Boolean"/>
+      <var name="next2Route" vt="iORoute"/>
+      <var name="next2RouteFromTo" vt="Boolean"/>
+      <var name="next3Route" vt="iORoute"/>
+      <var name="next3RouteFromTo" vt="Boolean"/>
+      <var name="pause" vt="int"/>
+      <var name="preventer" vt="int" remark="Previous enter block event in ticks."/>
+      <var name="prevpre2in" vt="int" remark="Previous in block event in ticks."/>
+      <var name="previn" vt="int" remark="Previous in block event in ticks."/>
+      <var name="prevexit" vt="int" remark="Previous exit block event in ticks."/>
+      <var name="prevout" vt="int" remark="Previous out block event in ticks."/>
+      <var name="preventerbkid" vt="const char*"/>
+      <var name="prevpre2inbkid" vt="const char*"/>
+      <var name="previnbkid" vt="const char*"/>
+      <var name="prevexitbkid" vt="const char*"/>
+      <var name="prevoutbkid" vt="const char*"/>
+      <var name="gotoBlock" vt="const char*"/>
+      <var name="schedule" vt="const char*"/>
+      <var name="scheduleIdx" vt="int"/>
+      <var name="nextScheduleIdx" vt="int"/>
+      <var name="scheduletime" vt="long"/>
+      <var name="V_hint[32]" vt="char"/>
+      <var name="blockgroup" vt="iONode"/>
+      <var name="slowdown4route" vt="Boolean"/>
+      <var name="secondnextblock" vt="Boolean"/>
+      <var name="warningnodestfound" vt="Boolean"/>
+      <var name="eventTimeout" vt="int"/>
+      <var name="eventTimeoutTime" vt="int"/>
+      <var name="signalReset" vt="int"/>
+      <var name="signalResetTime" vt="int"/>
+      <var name="greenaspect" vt="Boolean"/>
+      <var name="semaphoreWait" vt="int"/>
+    </data>
+  </object>
+
+
+</Project>

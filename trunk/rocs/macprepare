@@ -1,0 +1,7 @@
+#!/bin/sh
+cp bin/ogen_mac bin/ogen
+cp bin/wgen_mac bin/wgen
+cp bin/xml2cstr_mac bin/xml2cstr
+rm -rf impl/unx
+cp -r impl/unx_mac impl/unx
+mkdir -p ../macbin/icons

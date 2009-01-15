@@ -1,0 +1,1942 @@
+<!--
+ Rocs - OS independent C library
+
+ Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public License
+ as published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="rocs" title="Rocs API" tolower="true" docname="rocsapi" source="$Source: /home/cvs/xspooler/rocs/rocs.xml,v $" revision="$Revision: 1.85 $">
+
+  <object name="Attr" use="str" remark="DOM Attribute as used in Node.">
+    <fun name="inst" vt="this" remark="Creates an attribute with given name and value.">
+      <param name="name" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="const char*" remark="Attribute value."/>
+    </fun>
+    <fun name="instInt" vt="this" remark="Creates an attribute with given name and integer value.">
+      <param name="name" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="int" remark="Attribute value."/>
+    </fun>
+    <fun name="getName" vt="const char*" remark="Attribute name.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setName" vt="void" remark="Change attribute name.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="name" vt="const char*" remark="New attribute name."/>
+    </fun>
+    <fun name="getVal" vt="const char*" remark="Attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="getEscVal" vt="const char*" remark="Escaped attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setVal" vt="void" remark="Change attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="val" vt="const char*" remark="New attribute value."/>
+    </fun>
+    <fun name="getInt" vt="int" remark="Attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setInt" vt="void" remark="Change attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="val" vt="int" remark="New attribute value."/>
+    </fun>
+    <fun name="getBoolean" vt="Boolean" remark="Attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setBoolean" vt="void" remark="Change attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="val" vt="Boolean" remark="New attribute value."/>
+    </fun>
+    <fun name="getLong" vt="long" remark="Attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setLong" vt="void" remark="Change attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="val" vt="long" remark="New attribute value."/>
+    </fun>
+    <fun name="getFloat" vt="double" remark="Attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+    </fun>
+    <fun name="setFloat" vt="void" remark="Change attribute value.">
+      <param name="inst" vt="this" remark="Attribute instance."/>
+      <param name="val" vt="double" remark="New attribute value."/>
+    </fun>
+    <data>
+      <var name="name" vt="char*" remark="Attribute name."/>
+      <var name="val" vt="char*" remark="Attribute value."/>
+      <var name="origval" vt="char*" remark="Attribute value.(Un-escaped.)"/>
+      <var name="escaped" vt="Boolean" remark="Attribute is escaped."/>
+    </data>
+  </object>
+
+
+  <object name="CmdLn" use="map" remark="Commandline helper object.">
+    <fun name="inst" vt="this" remark="Creates a commandline object.">
+      <param name="argc" vt="int" remark="Argument count."/>
+      <param name="argv" vt="const char**" remark="Argument values."/>
+    </fun>
+    <fun name="getStr" vt="const char*" remark="Get a string value by key.">
+      <param name="inst" vt="this" remark="CmdLn instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <fun name="getStrDef" vt="const char*" remark="Get a string value by key. Returns given default value if not found.">
+      <param name="inst" vt="this" remark="CmdLn instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+      <param name="defval" vt="const char*" remark="Default value."/>
+    </fun>
+    <fun name="getIntDef" vt="int" remark="Get an integer value by key. Returns given default value if not found.">
+      <param name="inst" vt="this" remark="CmdLn instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+      <param name="defval" vt="int" remark="Default value."/>
+    </fun>
+    <fun name="hasKey" vt="Boolean" remark="Test if the given key was on the commandline.">
+      <param name="inst" vt="this" remark="CmdLn instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <data>
+      <var name="argc" vt="int" remark="Argument count."/>
+      <var name="argv" vt="const char**" remark="Argument values."/>
+      <var name="argMap" vt="iOMap" remark="Argument values mapped with their key."/>
+      <var name="argStr" vt="char*" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Dir" use="list" include="#time" remark="Directory helper object.">
+    <typedef def="enum {SORT_NAME=0, SORT_OLDEST=1, SORT_NEWEST=2} sortmode"/>
+    <fun name="inst" vt="this" remark="Creates a directory object.">
+      <param name="path" vt="const char*" remark="Path pointing to the directory."/>
+    </fun>
+    <fun name="open" implname="_openDir" vt="Boolean" remark="Opens the directory for reading.">
+      <param name="inst" vt="this" remark="Dir instance."/>
+    </fun>
+    <fun name="read" implname="_readDir" vt="const char*" remark="Reads an direntry.">
+      <param name="inst" vt="this" remark="Dir instance."/>
+    </fun>
+    <fun name="close" implname="_closeDir" vt="void" remark="Closes the direntry.">
+      <param name="inst" vt="this" remark="Dir instance."/>
+    </fun>
+    <fun name="getRc" vt="int" remark="Get the last error.">
+      <param name="inst" vt="this" remark="Dir instance."/>
+    </fun>
+    <fun name="scandir" vt="int" static="true" remark="Scans the directory for entries with given ending.">
+      <param name="path" vt="const char*" remark="Directory to scan."/>
+      <param name="ext" vt="const char*" remark="File filter."/>
+    </fun>
+    <fun name="listdir" vt="iOList" static="true" remark="Scans the directory for entries with given ending.">
+      <param name="path" vt="const char*" remark="Directory to scan."/>
+      <param name="ext" vt="const char*" remark="File filter."/>
+      <param name="sort" vt="sortmode"/>
+    </fun>
+    <fun name="cleandirlist" vt="void" static="true" remark="free all memory allocated by listdir()">
+      <param name="list" vt="iOList" remark="Directory list."/>
+    </fun>
+    <data>
+      <var name="path" vt="char*" remark="Path pointing to the directory."/>
+      <var name="rc" vt="int" remark="Last error."/>
+      <var name="dir" vt="DIR*" remark="Directory structure as defined in dirent.h."/>
+    </data>
+    <struct public="true" name="DirEntry" typedef="*iDirEntry" remark="Container for a direntry.">
+      <var name="mtime" vt="time_t"/>
+      <var name="name" vt="char*"/>
+    </struct>
+  </object>
+
+
+  <object name="Doc" use="node" remark="XML Document parser and builder.">
+    <typedef def="enum {MaxNodeNameLen=1024,MaxAttrNameLen=1024,MaxAttrValLen=1024} parserConst" remark="File type."/>
+    <def name="startToken" vt="string" val="&lt;%s"/>
+    <def name="endToken" vt="string" val="&lt;/%s&gt;"/>
+    <def name="endInline" vt="string" val="/&gt;"/>
+    <def name="remToken" vt="string" val="&lt;!--"/>
+    <def name="remEndToken" vt="string" val="--&gt;"/>
+    <def name="propToken" vt="string" val="&lt;?"/>
+    <def name="propEndToken" vt="string" val="?&gt;"/>
+    <def name="varToken" vt="string" val="&lt;!"/>
+    <def name="varEndToken" vt="string" val="&gt;"/>
+    <fun name="parse" vt="this" remark="Parses given buffer.">
+      <param name="xml" vt="const char*" remark="XML buffer to parse."/>
+    </fun>
+    <fun name="getDocNode" vt="iONode" remark="Document node keeps all 1st level nodes.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+    </fun>
+    <fun name="getRootNode" vt="iONode" remark="This is probably what you want.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+    </fun>
+    <fun name="node2String" vt="char*" static="true" remark="Represents a node recursive as string.">
+      <param name="node" vt="iONode" remark="Node instance."/>
+      <param name="escaped" vt="Boolean" remark="Write attribute values escaped."/>
+    </fun>
+    <fun name="getStr" vt="const char*" remark="Search for a given attribute in the given node.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+      <param name="nodename" vt="const char*" remark="Node name."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="const char*" remark="Default value if attribute or node is not found in the document."/>
+    </fun>
+    <fun name="getInt" vt="int" remark="Search for a given attribute in the given node.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+      <param name="nodename" vt="const char*" remark="Node name."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="int" remark="Default value if attribute or node is not found in the document."/>
+    </fun>
+    <fun name="getBool" vt="Boolean" remark="Search for a given attribute in the given node.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+      <param name="nodename" vt="const char*" remark="Node name."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="Boolean" range="True,False" remark="Default value if attribute or node is not found in the document."/>
+    </fun>
+    <fun name="setUniCodeEscapes" vt="void" remark="Set UniCode escapes.">
+      <param name="uni" vt="Boolean" remark="Default is False."/>
+    </fun>
+    <fun name="isUniCodeEscapes" vt="Boolean" remark="Is UniCode escapes set."/>
+    <fun name="setHTMLEscapes" vt="void" remark="Set HTML escapes.">
+      <param name="html" vt="Boolean" remark="Default is False."/>
+    </fun>
+    <fun name="isHTMLEscapes" vt="Boolean" remark="Is HTML escapes set."/>
+    <fun name="isUTF8Encoded" vt="Boolean" remark="Is XML UTF-8 encoded.">
+      <param name="inst" vt="this" remark="Doc instance."/>
+    </fun>
+    <const name="ENC_UTF8" vt="const char*" val="UTF-8"/>
+    <const name="ENC_ISO885915" vt="const char*" val="ISO-8859-15"/>
+    <fun name="setEncoding" vt="void" remark="Set XML encoding for serialize.">
+      <param name="enc" vt="const char*" remark="Encoding."/>
+    </fun>
+    <fun name="getEncoding" vt="const char*" remark="Get XML encoding for serialize."/>
+    <fun name="getEncodingProperty" vt="char*" remark="Get XML encoding as a property: &lt;?xml encoding=&quot;UTF-8&quot;?&gt;"/>
+    <fun name="isUTF8Encoding" vt="Boolean" remark="UTF-8 encoding for serializing."/>
+    <fun name="isUTF2Latin" vt="Boolean" remark="Is UTF-8 decoded to Latin."/>
+    <fun name="setUTF2Latin" vt="void" remark="Is UTF-8 decoded to Latin.">
+      <param name="decode" vt="Boolean" remark="Default is True."/>
+	</fun>
+    <fun name="setIgnoreCase" vt="void" remark="Ignoring case in node and attribute names.">
+      <param name="ignore" vt="Boolean" remark="Default is True."/>
+    </fun>
+    <fun name="isIgnoreCase" vt="Boolean" remark="Ignoring case in node and attribute names."/>
+    <fun name="setXMLProlog" vt="void" remark="Add XML Prolog.">
+      <param name="prolog" vt="Boolean" remark="Default is True."/>
+    </fun>
+    <data>
+      <var name="doc" vt="iONode" remark="Document."/>
+      <var name="root" vt="iONode" remark="Root."/>
+      <var name="utf8" vt="Boolean" remark="Is UTF-8 encoded."/>
+    </data>
+  </object>
+
+
+  <object name="Ebcdic" use="node" remark="Converter for ASCII - EBCDIC.">
+    <typedef def="enum {CODEPAGE_DEFAULT=0,CODEPAGE_1252=1252,CODEPAGE_437=437,CODEPAGE_850=437} codepage" remark="CodePage."/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="CodePage" vt="codepage" remark="Codepage to use for converting."/>
+      <param name="converterfile" vt="const char*" remark="Optional converterfile in XML format."/>
+    </fun>
+    <fun name="Ebcdic2Ascii" vt="char*" remark="Converts ebcdic into ascii.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ebcdic" vt="char*" remark="Ebcdic buffer."/>
+      <param name="count" vt="int" remark="Number of chars to convert."/>
+    </fun>
+    <fun name="Ascii2Ebcdic" vt="char*" remark="Converts ascii into ebcdic.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ascii" vt="char*" remark="Ascii buffer."/>
+      <param name="count" vt="int" remark="Number of chars to convert."/>
+    </fun>
+    <fun name="getEbcdic" vt="char" remark="Gets the ebcdic coding for the given ascii code.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ascii" vt="char" remark="Ascii char."/>
+    </fun>
+    <fun name="getAscii" vt="char" remark="Gets the ascii coding for the given ebcdic code.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ebcdic" vt="char" remark="Ebcdic char."/>
+    </fun>
+    <fun name="Ebcdic2TrueAscii" vt="char*" remark="Converts ebcdic into ascii.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ebcdic" vt="char*" remark="Ebcdic buffer."/>
+      <param name="count" vt="int" remark="Number of chars to convert."/>
+    </fun>
+    <fun name="Ebcdic2ExtAscii" vt="char*" remark="Converts ebcdic into ascii.">
+      <param name="inst" vt="this" remark="Ebcdic instance."/>
+      <param name="ebcdic" vt="char*" remark="Ebcdic buffer."/>
+      <param name="count" vt="int" remark="Number of chars to convert."/>
+    </fun>
+    <data>
+      <var name="CodePage" vt="int" remark="Active codepage."/>
+      <var name="file" vt="const char*" remark="External converter file in XML format."/>
+      <var name="AsciiToEbcdicTable[256]" vt="unsigned char" remark=""/>
+      <var name="EbcdicToAsciiTable[256]" vt="unsigned char" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Event" remark="Event semaphore.">
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="name" vt="const char*" remark="Event name."/>
+      <param name="create" vt="Boolean" remark="Create event if not exist."/>
+    </fun>
+    <fun name="trywait" vt="Boolean" remark="Wait a given time for event to become posted.">
+      <param name="inst" vt="this" remark="Event instance."/>
+      <param name="time" vt="int" unit="ms" remark="Time to wait in ms."/>
+    </fun>
+    <fun name="wait" vt="Boolean" remark="Wait for event to become posted.">
+      <param name="inst" vt="this" remark="Event instance."/>
+    </fun>
+    <fun name="set" vt="Boolean" remark="Set the event.">
+      <param name="inst" vt="this" remark="Event instance."/>
+    </fun>
+    <fun name="reset" vt="Boolean" remark="Reset the event.">
+      <param name="inst" vt="this" remark="Event instance."/>
+    </fun>
+    <data>
+      <var name="name" vt="char*" remark="Event name."/>
+      <var name="handle" vt="void*" remark="Event handle."/>
+      <var name="posted" vt="Boolean" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="File" include="#stdio" remark="File helper object.">
+    <typedef def="enum {OPEN_WRITE=0, OPEN_READONLY=1, OPEN_APPEND=2, OPEN_READWRITE=3} openmode" remark="CodePage."/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="path" vt="const char*" remark="File path and name."/>
+      <param name="openflag" vt="int" remark="How to open this file. See typedef openmode."/>
+    </fun>
+    <fun name="size" vt="long" remark="Get the filesize in bytes.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="read" implname="_readFile" vt="Boolean" remark="Reads from file; True if successful.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+      <param name="size" vt="long" remark="Number of bytes to read."/>
+    </fun>
+    <fun name="write" implname="_writeFile" vt="Boolean" remark="Write to file; True if successful.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="buffer" vt="const char*" remark="Write buffer."/>
+      <param name="size" vt="long" remark="Number of bytes to write."/>
+    </fun>
+    <fun name="flush" implname="_flushFile" vt="Boolean" remark="Writes all buffered byte on disk.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="close" implname="_closeFile" vt="Boolean" remark="Closes the file. It does not cleanup this object.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="fmt" implname="_fmtFile" vt="Boolean" remark="Writes a formatted string into the file.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="fstr" vt="const char*" remark="Format string."/>
+      <param name="" vt="..." remark="Arguments."/>
+    </fun>
+    <fun name="rename" vt="Boolean" static="true" remark="Renames a file.">
+      <param name="oldname" vt="const char*" remark="Old filename."/>
+      <param name="newname" vt="const char*" remark="New filename."/>
+    </fun>
+    <fun name="forcerename" vt="Boolean" static="true" remark="Renames a file, target will be removed if the newname already exist.">
+      <param name="oldname" vt="const char*" remark="Old filename."/>
+      <param name="newname" vt="const char*" remark="New filename."/>
+    </fun>
+    <fun name="mkdir" implname="_makeDir" vt="Boolean" static="true" remark="Make directory.">
+      <param name="dirname" vt="const char*" remark="Directory path and name."/>
+    </fun>
+    <fun name="setFilename" vt="void" remark="Sets the filename to use with this object.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="filename" vt="const char*" remark="The (new) filenam to use."/>
+    </fun>
+    <fun name="reopen" vt="Boolean" remark="Reopens this file.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="truncate" vt="Boolean" remark="Truncates the file contents if set to true! Otherwise it is opened in appending mode."/>
+    </fun>
+    <fun name="getRc" vt="int" remark="Get the latest error.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="remove" vt="Boolean" static="true" remark="Removes the given file.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="fileSize" vt="long" static="true" remark="Gets the filesize in bytes.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="access" implname="_accessCheck" vt="Boolean" static="true" remark="Test for read permission.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="rewind" vt="Boolean" remark="Sets the filepointer to the beginning of the file.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="setpos" vt="Boolean" remark="Sets the filepointer to the given offset.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="offset" vt="long" remark="The new filepointer offset."/>
+    </fun>
+    <fun name="getpos" vt="long" remark="Gets the filepointer position.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="getReaded" vt="long" remark="Gets the count of the readed bytes.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="getWritten" vt="long" remark="Gets the count of the written bytes.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="fileTime" vt="long" static="true" remark="Gets the modification time for the given file.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="setfileTime" vt="Boolean" static="true" remark="Sets the modification time for the given file.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+      <param name="filetime" vt="long" remark="New file modification time."/>
+    </fun>
+    <fun name="getFilename" vt="const char*" remark="Gets the filename used by this file object.">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <fun name="ripPath" vt="const char*" static="true" remark="Returns a pointer to the filename.">
+      <param name="filename" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="getPath" vt="char*" static="true" remark="Returns a new allocated path string.">
+      <param name="path" vt="const char*" remark="File path and name."/>
+    </fun>
+    <fun name="cd" vt="Boolean" static="true" remark="Change the working directory.">
+      <param name="pathname" vt="const char*" remark="Relative or absolute."/>
+    </fun>
+    <fun name="exist" vt="Boolean" static="true" remark="Checks for file or directory existence.">
+      <param name="name" vt="const char*" remark="Relative or absolute."/>
+    </fun>
+    <fun name="convertPath2OSType" vt="void" static="true" remark="Changes the separators according the OS.">
+      <param name="pathname" vt="const char*" remark="Relative."/>
+    </fun>
+    <fun name="isRegularFile" vt="Boolean" static="true" remark="False if given name points not to a regular file.">
+      <param name="filename" vt="const char*" remark=""/>
+    </fun>
+    <fun name="pwd" vt="char*" static="true" remark="The process working directory."/>
+    <fun name="setFuser" vt="void" static="true" remark="Sets the fuser command to use for isAccessed.">
+      <param name="filename" vt="const char*" remark="Path and filename of the fuser command."/>
+    </fun>
+    <fun name="isAccessed" vt="Boolean" static="true" remark="Checks with fuser if the file is accessed by another process.">
+      <param name="filename" vt="const char*" remark="Path and filename."/>
+    </fun>
+    <fun name="setFuserUsage" vt="void" static="true" remark="The Linux fuser returns a useable rc. With all other unixes we must use a temp file.">
+      <param name="usage" vt="const char*" range="R,F" remark="R for returncode and F for file."/>
+    </fun>
+    <const name="FUSER_RC" vt="const char*" val="R" remark="Use the fusers returncode to determine the access state."/>
+    <const name="FUSER_FILE" vt="const char*" val="F" remark="Redirect the fuser output into a tempfile to determine the access state."/>
+    <fun name="append" vt="Boolean" remark="Appends a buffer to the file.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="buffer" vt="const char*" remark="Data buffer."/>
+      <param name="size" vt="long" remark="Size of databuffer."/>
+    </fun>
+    <fun name="cp" vt="Boolean" static="true" remark="Copies a file.">
+      <param name="src" vt="const char*" remark="Source file."/>
+      <param name="dst" vt="const char*" remark="Destination file."/>
+    </fun>
+    <fun name="isAbsolute" vt="Boolean" static="true" remark="Checks if given path is absolute.">
+      <param name="path" vt="const char*" remark="Path to check."/>
+    </fun>
+    <fun name="rmdir" implname="_rmDir" vt="Boolean" static="true" remark="Removes given directory.">
+      <param name="path" vt="const char*" remark=""/>
+    </fun>
+    <fun name="writeStr" vt="Boolean" remark="Appends a string to the file.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="str" vt="const char*" remark="Null terminated string."/>
+    </fun>
+    <fun name="isDirectory" vt="Boolean" static="true" remark="True if given name points to a directory.">
+      <param name="filename" vt="const char*" remark=""/>
+    </fun>
+    <fun name="getStream" vt="FILE*">
+      <param name="inst" vt="this" remark="File instance."/>
+    </fun>
+    <data>
+      <var name="fh" vt="FILE*" remark="File handle."/>
+      <var name="openflag" vt="int" remark=""/>
+      <var name="path" vt="char*" remark=""/>
+      <var name="size" vt="long" remark=""/>
+      <var name="readed" vt="long" remark=""/>
+      <var name="written" vt="long" remark=""/>
+      <var name="rc" vt="int" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Lib" remark="Library helper object.">
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="name" vt="const char*" remark="Library path and name."/>
+    </fun>
+    <fun name="getProc" implname="rocs_lib_getProc" vt="const void*" remark="Get a library procedure.">
+      <param name="inst" vt="this" remark="Lib instance."/>
+      <param name="procname" vt="const char*" remark="Procedure name."/>
+    </fun>
+    <data>
+      <var name="name" vt="char*" remark="Library name."/>
+      <var name="lh" vt="void*" remark="Library handle."/>
+    </data>
+  </object>
+
+
+  <object name="List" remark="List helper object.">
+    <typedef def="int(*comparator)(obj* o1, obj* o2)"/>
+    <def name="LIST_MINSIZE" vt="int" val="20" remark="Initial listsize."/>
+    <fun name="inst" vt="this" remark="Object creator."/>
+    <fun name="add" vt="void" remark="Adds an object to the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="object" vt="obj" remark="Object to add."/>
+    </fun>
+    <fun name="insert" vt="void" remark="Inserts an object into the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="pos" vt="int" remark="Insert position."/>
+      <param name="object" vt="obj" remark="Object to add."/>
+    </fun>
+    <fun name="remove" vt="obj" remark="Removes an object from the list by position.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="pos" vt="int" remark="Remove position."/>
+    </fun>
+    <fun name="removeObj" vt="obj" remark="Removes an object from the list by reference.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="object" vt="obj" remark="object to be removed."/>
+    </fun>
+    <fun name="get" vt="obj" remark="Gets an object from the list by position.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="pos" vt="int" remark="Position."/>
+    </fun>
+    <fun name="first" vt="obj" remark="Gets the first object from the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+    </fun>
+    <fun name="next" vt="obj" remark="Gets the next object from the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+    </fun>
+    <fun name="size" vt="int" remark="Gets the number of objects currently in the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+    </fun>
+    <fun name="getIndex" vt="int" remark="Gets the current pointer position.">
+      <param name="inst" vt="this" remark="List instance."/>
+    </fun>
+    <fun name="sort" vt="void" remark="Sorts this list.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="comp" vt="comparator" remark="Comparator function."/>
+    </fun>
+    <fun name="replace" vt="void" remark="Replaces an object.">
+      <param name="inst" vt="this" remark="List instance."/>
+      <param name="pos" vt="int" remark="Insert position."/>
+      <param name="object" vt="obj" remark="New object."/>
+    </fun>
+    <fun name="clear" vt="void" remark="Empties the list.">
+      <param name="inst" vt="this" remark="List instance."/>
+    </fun>
+    <data>
+      <var name="objList" vt="obj*" remark="List items."/>
+      <var name="ix" vt="int" remark="Item pointer for next function."/>
+      <var name="size" vt="int" remark="Number of items in list."/>
+      <var name="allocsize" vt="int" remark="List size."/>
+    </data>
+  </object>
+
+
+  <object name="Map" use="list" remark="Hashmap.">
+    <def name="NHASH" vt="int" val="1013"/>
+    <def name="MULTIPLIER" vt="int" val="31"/>
+    <fun name="inst" vt="this" remark="Map object creator."/>
+    <fun name="put" vt="void" remark="Put a new item in the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+      <param name="key" vt="const char*" remark="Key to associate with object."/>
+      <param name="val" vt="obj" remark="An object ot put in the map."/>
+    </fun>
+    <fun name="remove" vt="obj" remark="Remove an item from the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+      <param name="key" vt="const char*" remark="Key associated with an object."/>
+    </fun>
+    <fun name="get" vt="obj" remark="Get an item from the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+      <param name="key" vt="const char*" remark="Key associated with an object."/>
+    </fun>
+    <fun name="first" vt="obj" remark="Get the first item from the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+    </fun>
+    <fun name="next" vt="obj" remark="Get the next item from the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+    </fun>
+    <fun name="size" vt="int" remark="Get the size of the map. (Number of objects in the map.)">
+      <param name="inst" vt="this" remark="Map instance."/>
+    </fun>
+    <fun name="clear" vt="void" remark="Clear the map.">
+      <param name="inst" vt="this" remark="Map instance."/>
+    </fun>
+    <fun name="haskey" vt="Boolean" remark="Check if a map entry exist with the given key.">
+      <param name="inst" vt="this" remark="Map instance."/>
+      <param name="key" vt="const char*" remark="The key to check."/>
+    </fun>
+    <fun name="getList" vt="iOList" remark="Get all mapped objects as a list.">
+      <param name="inst" vt="this" remark="Map instance."/>
+    </fun>
+    <data>
+      <var name="index" vt="int" remark="Index for next."/>
+      <var name="size" vt="int" remark=""/>
+      <var name="hashTable[NHASH]" vt="iOList" remark=""/>
+    </data>
+    <struct name="MapItem" typedef="*iMapItem" remark="Container for a mapitem.">
+      <var name="key" vt="char*" remark="Index for next."/>
+      <var name="o" vt="obj" remark="Object."/>
+    </struct>
+  </object>
+
+
+  <object name="Mem" nobase="true" remark="Memory operation helper.">
+    <typedef implh="true" def="enum {MEMTYPE_ALLOC=0,MEMTYPE_REALLOC,MEMTYPE_CHECK,MEMTYPE_FREE} memOpType" remark="Memory operation type."/>
+    <typedef def="enum {RocsAttrID=0, RocsCmdLnID, RocsDirID, RocsDocID, RocsEventID, RocsFileID, RocsLibID, RocsListID, RocsMapID, RocsMutexID, RocsNodeID, RocsQueueID, RocsSerialID, RocsSocketID, RocsStrID, RocsStringID, RocsSystemID, RocsThreadID, RocsTraceID, RocsEbcdicID, RocsMsgID, RocsStrTokID, RocsLASTID} RocsMemID" remark="For internal use only."/>
+    <macro def="allocMem(size)MemOp.alloc(size,__FILE__,__LINE__)" remark="Macro for allocating memory."/>
+    <macro def="reallocMem(p,size)MemOp.realloc(p,size,__FILE__,__LINE__)" remark="Macro for re-allocating memory."/>
+    <macro def="freeMem(p)MemOp.free(p,__FILE__,__LINE__)" remark="Macro for freeing memory."/>
+    <macro def="allocIDMem(size,id)MemOp.allocTID(size,id,__FILE__,__LINE__)" remark="For internal use only."/>
+    <macro def="freeIDMem(p,id)MemOp.freeTID(p,id,__FILE__,__LINE__)" remark="For internal use only."/>
+    <def name="__magic" vt="string" val="#@librocs@#\0"/>
+    <def name="MAGIC_SIZE" vt="int" val="12"/>
+    <fun name="alloc" implname="_mem_alloc" vt="void*" remark="Allocate memory and records sourcefile and line. (Use macro allocMem.)">
+      <param name="size" vt="long" remark="Memory size to allocate."/>
+      <param name="file" vt="const char*" remark="Sourcefile."/>
+      <param name="line" vt="int" remark="Sourceline."/>
+    </fun>
+    <fun name="realloc" implname="_mem_realloc" vt="void*" remark="Re-Allocate memory and records sourcefile and line. (Use macro reallocMem.)">
+      <param name="p" vt="void*" remark="Memory block to re-allocate."/>
+      <param name="size" vt="long" remark="New memory size to allocate."/>
+      <param name="file" vt="const char*" remark="Sourcefile."/>
+      <param name="line" vt="int" remark="Sourceline."/>
+    </fun>
+    <fun name="free" implname="_mem_free" vt="void" remark="Free up memory and records sourcefile and line. (Use macro freeMem.)">
+      <param name="p" vt="void*" remark="Memory block to free up."/>
+      <param name="file" vt="const char*" remark="Sourcefile."/>
+      <param name="line" vt="int" remark="Sourceline."/>
+    </fun>
+    <fun name="getAllocCount" implname="_mem_getAllocCount" vt="long" remark="Returns number of allocated memory objects."/>
+    <fun name="freeObj" implname="_mem_freeObj" vt="void" remark="Free up obj memory.">
+      <param name="p" vt="void**" remark="Object to free up."/>
+    </fun>
+    <fun name="copy" implname="_mem_copy" vt="void" remark="Copies a memory block.">
+      <param name="dst" vt="void*" remark="Destination."/>
+      <param name="src" vt="const void*" remark="Source."/>
+      <param name="size" vt="int" remark="Size of source to be copied."/>
+    </fun>
+    <fun name="basecpy" implname="_mem_basecpy" vt="void" remark="A special copy function for creating rocs-based objects.">
+      <param name="dst" vt="void*" remark="Destination."/>
+      <param name="src" vt="void*" remark="Source."/>
+      <param name="asize" vt="int" remark=""/>
+      <param name="tsize" vt="int" remark=""/>
+      <param name="data" vt="void*" remark="Object date."/>
+    </fun>
+    <fun name="setDebug" implname="_mem_setDebug" vt="void" remark="If set it prints for every allocation and free a line.">
+      <param name="debug" vt="Boolean" remark="Debug flag."/>
+    </fun>
+    <fun name="init" implname="_mem_init" vt="void"/>
+    <fun name="set" implname="_mem_set" vt="void" remark="Initializes a memory block.">
+      <param name="p" vt="void*" remark="Memory block."/>
+      <param name="val" vt="int" remark="Init value."/>
+      <param name="size" vt="int" remark="Size to be initialized."/>
+    </fun>
+    <fun name="allocTID" implname="_mem_allocTID" vt="void*" remark="Allocate memory and records sourcefile and line. (Use macro allocIDMem.)">
+      <param name="size" vt="long" remark="Memory size to allocate."/>
+      <param name="id" vt="int" remark="See typedef RocsMemID."/>
+      <param name="file" vt="const char*" remark="Sourcefile."/>
+      <param name="line" vt="int" remark="Sourceline."/>
+    </fun>
+    <fun name="freeTID" implname="_mem_freeTID" vt="void" remark="Free up memory and records sourcefile and line. (Use macro freeIDMem.)">
+      <param name="p" vt="void*" remark="Memory block to free up."/>
+      <param name="id" vt="int" remark="See typedef RocsMemID."/>
+      <param name="file" vt="const char*" remark="Sourcefile."/>
+      <param name="line" vt="int" remark="Sourceline."/>
+    </fun>
+    <fun name="getAllocCntID" implname="_mem_getAllocCntID" vt="long" remark="Returns allocation count by ID.">
+      <param name="id" vt="int" remark="See typedef RocsMemID."/>
+    </fun>
+    <fun name="dumpAllocCntID" implname="_mem_dumpAllocCntID" vt="const long*" remark="Dumps allocation count by ID."/>
+    <fun name="getDumpSize" implname="_mem_getDumpSize" vt="int" remark=""/>
+    <fun name="resetDump" implname="_mem_resetDump" vt="void" remark=""/>
+    <fun name="getAllocSize" implname="_mem_getAllocSize" vt="long" remark="Returns total allocated memory size."/>
+    <fun name="getLastOperation" implname="_mem_getLastOperation" vt="const char*" remark=""/>
+    <fun name="cmp" implname="_mem_cmp" vt="Boolean" remark="Compairs two memory blocks.">
+      <param name="dst" vt="const void*" remark="Destination."/>
+      <param name="src" vt="const void*" remark="Source."/>
+      <param name="size" vt="int" remark="Size of source to be compaired."/>
+    </fun>
+    <fun name="chr" implname="_mem_chr" vt="char*" remark="Find a char in memoryblock.">
+      <param name="buffer" vt="const void*" remark="Buffer to search."/>
+      <param name="c" vt="char" remark="Char to look for."/>
+      <param name="size" vt="int" remark="Size of memoryblock to be searched."/>
+    </fun>
+    <struct name="__OMemAlloc" typedef="*__iOMemAlloc" remark="Memory allocation record.">
+      <var name="magic[MAGIC_SIZE]" vt="char" remark="Eyecacher."/>
+      <var name="size" vt="long" remark="Size of the allocated memory block."/>
+      <var name="id" vt="RocsMemID"/>
+    </struct>
+    <struct name="__OMemTrace" typedef="*__iOMemTrace" remark="Memory trace record.">
+      <var name="type" vt="memOpType" remark="Operation type."/>
+      <var name="p" vt="void*" remark="Object."/>
+      <var name="size" vt="long" remark="Object size."/>
+      <var name="file" vt="const char*" remark="Sourcecode filename."/>
+      <var name="line" vt="int" remark="Sourcecode line number."/>
+    </struct>
+  </object>
+
+
+  <object name="Msg" remark="Message object.">
+    <typedef def="enum {VOID_DATA, OBJ_DATA, STR_DATA } usrdatatype" remark="Cargo type."/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="sender" vt="obj" remark="Reference to sender."/>
+      <param name="event" vt="int" remark="Event type."/>
+    </fun>
+    <fun name="getEvent" vt="int" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+    </fun>
+    <fun name="getSender" vt="obj" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+    </fun>
+    <fun name="getTimer" vt="int" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+    </fun>
+    <fun name="setEvent" vt="void" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+      <param name="event" vt="int" remark="Event type."/>
+    </fun>
+    <fun name="setTimer" vt="void" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+      <param name="timer" vt="int" remark="Timer"/>
+    </fun>
+    <fun name="setUsrData" vt="void" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+      <param name="usrdata" vt="void*" remark="Cargo."/>
+      <param name="type" vt="usrdatatype" remark="Cargo type."/>
+    </fun>
+    <fun name="getUsrData" vt="void*" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+    </fun>
+    <fun name="getUsrDataType" vt="usrdatatype" remark="">
+      <param name="inst" vt="this" remark="Msg instance."/>
+    </fun>
+    <data>
+      <var name="sender" vt="obj" remark="Reference to sender."/>
+      <var name="event" vt="int" remark="Event type."/>
+      <var name="timer" vt="int" units="ms" remark="time to wait before processing"/>
+      <var name="usrdata" vt="void*" remark="Optional cargo."/>
+      <var name="type" vt="usrdatatype" remark="Type of cargo."/>
+    </data>
+  </object>
+
+
+  <object name="Mutex" remark="Mutex object.">
+    <fun name="inst" vt="this" remark="Object creator">
+      <param name="name" vt="const char*" remark="Mutex name."/>
+      <param name="create" vt="Boolean" remark="Create a mutex when not exist."/>
+    </fun>
+    <fun name="trywait" vt="Boolean" remark="Wait for the mutext.">
+      <param name="inst" vt="this" remark="Mutex instance."/>
+      <param name="time" vt="int" unit="ms" remark="Time to wait for the mutext."/>
+    </fun>
+    <fun name="wait" vt="Boolean" remark="Wait for the mutext. (request, lock)">
+      <param name="inst" vt="this" remark="Mutex instance."/>
+    </fun>
+    <fun name="post" vt="Boolean" remark="Release the mutext. (release, unlock)">
+      <param name="inst" vt="this" remark="Mutex instance."/>
+    </fun>
+    <fun name="getRc" vt="int" remark="Get last error code.">
+      <param name="inst" vt="this" remark="Mutex instance."/>
+    </fun>
+    <data>
+      <var name="name" vt="char*" remark="Mutex name."/>
+      <var name="handle" vt="void*" remark="Mutex handle."/>
+      <var name="mh" vt="void*" remark=""/>
+      <var name="rc" vt="int" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Node" use="attr" remark="DOM node object.">
+    <typedef def="enum {ELEMENT_NODE, TEXT_NODE, PROPERTY_NODE, REMARK_NODE, VARIABLE_NODE} nodetype" remark="Node type."/>
+    <fun name="inst" vt="this" remark="Object creator">
+      <param name="name" vt="const char*" remark="Node name."/>
+      <param name="parent" vt="this" remark="Parent node."/>
+      <param name="type" vt="nodetype" remark="Node type."/>
+    </fun>
+    <fun name="toEscString" vt="char*" remark="Serialize this node with escaped attribute values.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="setParent" vt="void" remark="Change or set parent of this node.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="parent" vt="this" remark="Parent node."/>
+    </fun>
+    <fun name="addChild" vt="void" remark="Add a child node.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="child" vt="this" remark="Child node."/>
+    </fun>
+    <fun name="removeChild" vt="void" remark="Remove a child node.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="child" vt="this" remark="Child node."/>
+    </fun>
+    <fun name="addAttr" vt="void" remark="Add an attribute.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attr" vt="iOAttr" remark="Attribute object."/>
+    </fun>
+    <fun name="removeAttr" vt="void" remark="Removes an attribute.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attr" vt="iOAttr" remark="Attribute object."/>
+    </fun>
+    <fun name="findAttr" vt="iOAttr" remark="Search for an attribute with the given name.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark=""/>
+    </fun>
+    <fun name="findNode" vt="this" remark="Search for a child node with the given name.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="nodename" vt="const char*" remark=""/>
+    </fun>
+    <fun name="findNextNode" vt="this" remark="Find next node with the same name.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="node" vt="this" remark="Node reference of previous find orfindNext."/>
+    </fun>
+    <fun name="getType" vt="nodetype" remark="Get the node type.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="setType" vt="void" remark="Set the node type.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="type" vt="nodetype" remark="Node type."/>
+    </fun>
+    <fun name="getName" vt="const char*" remark="Get the node name.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="setName" vt="void" remark="Set the node name.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="name" vt="const char*" remark="New node name."/>
+    </fun>
+    <fun name="getAttrCnt" vt="int" remark="Get the number of attributes.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="getAttr" vt="iOAttr" remark="Get an attribute by index.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="idx" vt="int" remark="Attribute index."/>
+    </fun>
+    <fun name="getChildCnt" vt="int" remark="Get the number of child nodes.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="getChild" vt="this" remark="Get an child node by index.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="idx" vt="int" remark="Child node index."/>
+    </fun>
+    <fun name="getStr" implname="rocs_node_getStr" vt="const char*" remark="Get an attribute value as string.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="const char*" remark="Value to return if attribute is not found."/>
+    </fun>
+    <fun name="getInt" implname="rocs_node_getInt" vt="int" remark="Get an attribute value as integer.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="int" remark="Value to return if attribute is not found."/>
+    </fun>
+    <fun name="getBool" implname="rocs_node_getBool" vt="Boolean" remark="Get an attribute value as boolean.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="Boolean" remark="Value to return if attribute is not found."/>
+    </fun>
+    <fun name="setStr" implname="rocs_node_setStr" vt="void" remark="Set an attribute value as string.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="const char*" remark="Value to assing given attribute."/>
+    </fun>
+    <fun name="setInt" implname="rocs_node_setInt" vt="void" remark="Set an attribute value as integer.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="int" remark="Value to assing given attribute."/>
+    </fun>
+    <fun name="setBool" implname="rocs_node_setBool" vt="void" remark="Set an attribute value as boolean.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="Boolean" remark="Value to assing given attribute."/>
+    </fun>
+    <fun name="getParent" vt="this" remark="Get the parent node.">
+      <param name="inst" vt="this" remark="Node instance."/>
+    </fun>
+    <fun name="getNode" vt="this" remark="Same as findNode but if no node is found it creates one.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="nodename" vt="const char*" remark=""/>
+    </fun>
+    <fun name="getLong" implname="rocs_node_getLong" vt="long" remark="Get an attribute value as long.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="long" remark="Value to return if attribute is not found."/>
+    </fun>
+    <fun name="setLong" implname="rocs_node_setLong" vt="void" remark="Set an attribute value as long.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="long" remark="Value to assign."/>
+    </fun>
+    <fun name="getFloat" implname="rocs_node_getFloat" vt="double" remark="Get an attribute value as float.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="defval" vt="double" remark="Value to return if attribute is not found."/>
+    </fun>
+    <fun name="setFloat" implname="rocs_node_setFloat" vt="void" remark="Set an attribute value as float.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="attrname" vt="const char*" remark="Attribute name."/>
+      <param name="val" vt="double" remark="Value to assign."/>
+    </fun>
+    <fun name="mergeNode" vt="this" remark="Merge nodeB into A.">
+      <param name="nodeA" vt="this" remark="Node A."/>
+      <param name="nodeB" vt="this" remark="Node B."/>
+      <param name="overwrite" vt="Boolean" remark="Overwrites existing attributes."/>
+      <param name="recursive" vt="Boolean" remark="merge childnodes"/>
+    </fun>
+    <data include="map">
+      <var name="name" vt="char*" remark="Node name."/>
+      <var name="ntype" vt="nodetype" remark="Node type."/>
+      <var name="attrCnt" vt="int" remark="Number of attributes in node."/>
+      <var name="childCnt" vt="int" remark="Number of childnodes."/>
+      <var name="parent" vt="iONode" remark="Parent node."/>
+      <var name="attrs" vt="iOAttr*" remark="List of attributes."/>
+      <var name="attrmap" vt="iOMap" remark="Map of attributes which is only used incase of DocOp.isIgnoreCase() == False."/>
+      <var name="childs" vt="iONode*" remark="List of child nodes."/>
+    </data>
+  </object>
+
+
+  <object name="Queue" use="event,mutex" remark="Queue object.">
+    <typedef def="enum {low=0,normal=1,high=2} q_prio" remark="Priority."/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="size" vt="int" remark="Size of queue."/>
+    </fun>
+    <fun name="post" vt="Boolean" remark="Post a message.">
+      <param name="inst" vt="this" remark="Queue instance."/>
+      <param name="object" vt="obj" remark="Object to post."/>
+      <param name="prio" vt="q_prio" remark="Message priority."/>
+    </fun>
+    <fun name="get" vt="obj" remark="Read a message.">
+      <param name="inst" vt="this" remark="Queue instance."/>
+    </fun>
+    <fun name="isEmpty" vt="Boolean" remark="Are messages in the queue?">
+      <param name="inst" vt="this" remark="Queue instance."/>
+    </fun>
+    <fun name="count" implname="_msgCount" vt="int" remark="Number of messages in the queue.">
+      <param name="inst" vt="this" remark="Queue instance."/>
+    </fun>
+    <fun name="waitPost" vt="obj" remark="Wait for a messages.">
+      <param name="inst" vt="this" remark="Queue instance."/>
+    </fun>
+    <struct name="SqMsg" typedef="*qMsg">
+      <var name="o" vt="obj" remark=""/>
+      <var name="prio" vt="q_prio" remark=""/>
+      <var name="next" vt="struct SqMsg*" remark=""/>
+    </struct>
+    <data>
+      <var name="size" vt="int" remark="Queue size."/>
+      <var name="count" vt="int" remark="Number of messages in queue."/>
+      <var name="mux" vt="iOMutex" remark=""/>
+      <var name="evt" vt="iOEvent" remark=""/>
+      <var name="first" vt="qMsg" remark=""/>
+      <var name="last[3]" vt="qMsg" remark="0 points to the last low prio message, 2 to the high."/>
+    </data>
+  </object>
+
+
+  <object name="Serial" remark="Serial communication.">
+    <typedef def="enum {none=0,even=1,odd=2} serial_parity"/>
+    <typedef def="enum {cts=1,dsr=2,xon=3} serial_flow"/>
+    <typedef def="enum {onestopbit=1,twostopbits=2} serial_stopbits"/>
+    <typedef def="enum {eight=8,seven=7} serial_databits"/>
+    <typedef def="enum {undefined=0,mm=1,dcc=2,mma=3} serial_mode"/>
+    <typedef def="serial_bps"/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="device" vt="const char*" remark="Device name like com1 or ttyS0."/>
+    </fun>
+    <fun name="setBlocking" vt="void" remark="Set blocking/non-blocking io.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="blocking" vt="Boolean" remark="Blocking mode."/>
+    </fun>
+    <fun name="setLine" vt="void" remark="Set line settings.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="bps" vt="serial_bps" remark="Line speed."/>
+      <param name="databits" vt="serial_databits" remark=""/>
+      <param name="stopbits" vt="serial_stopbits" remark=""/>
+      <param name="parity" vt="serial_parity" remark=""/>
+    </fun>
+    <fun name="setPortBase" vt="void" remark="Set data flow control.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="addr" vt="int" remark="IO base address of device"/>
+    </fun>
+    <fun name="setFlow" vt="void" remark="Set data flow control.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="flow" vt="serial_flow" remark="Data flow control to use."/>
+    </fun>
+    <fun name="setTimeout" vt="void" remark="Set timeout.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="wtime" vt="int" unit="ms" remark="Write timeout."/>
+      <param name="trime" vt="int" unit="ms" remark="Read timeout."/>
+    </fun>
+    <fun name="open" implname="rocs_serial_open" vt="Boolean" remark="Try to open and to initialize the port.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="close" implname="rocs_serial_close" vt="Boolean" remark="Close the port.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="read" implname="rocs_serial_read" vt="Boolean" remark="Read some bytes.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+      <param name="count" vt="int" remark="Number of bytes to read."/>
+    </fun>
+    <fun name="write" implname="rocs_serial_write" vt="Boolean" remark="Write some bytes.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="buffer" vt="const char*" remark="Write buffer."/>
+      <param name="count" vt="int" remark="Number of bytes to write."/>
+    </fun>
+    <fun name="isCTS" implname="rocs_serial_isCTS" vt="Boolean" remark="Control To Send.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="isDSR" implname="rocs_serial_isDSR" vt="Boolean" remark="Data Set Ready.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="isRI" implname="rocs_serial_isRI" vt="Boolean" remark="Ring Indicator.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="setSerialMode" implname="rocs_serial_setSerialMode" vt="void" remark="Set uart speed for MM or DCC">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="mode" vt="serial_mode" remark=""/>
+    </fun>
+    <fun name="waitMM" implname="rocs_serial_waitMM" vt="void" remark="Do busy wait for MM protocol">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="usperiod" vt="int" remark="Wait time from start of packet to start of packet"/>
+      <param name="uspause" vt="int" remark="Wait time from end of packet to start of packet"/>
+    </fun>
+    <fun name="setRTS" implname="rocs_serial_setRTS" vt="void" remark="Request To Send.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="rts" vt="Boolean" remark="on-off"/>
+    </fun>
+    <fun name="setCTS" implname="rocs_serial_setCTS" vt="void" remark="Clear To Send.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="cts" vt="Boolean" remark="on-off"/>
+    </fun>
+    <fun name="setDTR" implname="rocs_serial_setDTR" vt="void" remark="Data Terminal Ready.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="dtr" vt="Boolean" remark="on-off"/>
+    </fun>
+    <fun name="getRc" vt="int" remark="Get last error.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="getWaiting" vt="int" implname="rocs_serial_getWaiting" remark="Get number of bytes waiting to send.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="available" vt="int" remark="Get number of bytes available to read.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="setDivisor" vt="void" remark="Custom Divisor.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="divisor" vt="int"/>
+    </fun>
+    <fun name="flush" vt="void" implname="rocs_serial_flush" remark="clear output buffer">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
+    <fun name="setOutputFlow" vt="void" implname="rocs_serial_setOutputFlow" remark="set output flow on off">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="flow" vt="Boolean" remark="on-off"/>
+    </fun>
+    <fun name="isUartEmpty" vt="Boolean" implname="rocs_serial_isUartEmpty">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="soft" vt="Boolean" remark="no direct IO if soft ist set"/>
+    </fun>
+    <struct name="_line">
+      <var name="bps" vt="int"/>
+      <var name="bits" vt="int"/>
+      <var name="stopbits" vt="serial_stopbits"/>
+      <var name="parity" vt="serial_parity"/>
+      <var name="flow" vt="serial_flow"/>
+    </struct>
+    <struct name="_timeout">
+      <var name="write" vt="int"/>
+      <var name="read" vt="int"/>
+    </struct>
+    <data>
+      <var name="device" vt="char*" remark="Serial device name."/>
+      <var name="portbase" vt="int" remark=""/>
+      <var name="handle" vt="void*" remark=""/>
+      <var name="sh" vt="long" remark=""/>
+      <var name="rc" vt="int" remark=""/>
+      <var name="divisor" vt="int" remark="used if != 0"/>
+      <var name="ioState" vt="int" remark=""/>
+      <var name="line" vt="struct _line" remark=""/>
+      <var name="timeout" vt="struct _timeout" remark=""/>
+      <var name="blocking" vt="Boolean" remark="True for blocking IO"/>
+      <var name="overlapped" vt="void*" remark="pointer to Win overlapped struct"/>
+      <var name="directIO" vt="Boolean" remark="True for 16550 compatible devices"/>    
+      <var name="currserialmode" vt="int" remark=""/>     
+    </data>
+  </object>
+
+
+  <object name="Socket" include="#stdio" remark="Socket communication.">
+    <typedef def="void (*socket_listener)(unsigned char* in,int len)" remark="Socket Listener."/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="host" vt="const char*" remark="Target hostname."/>
+      <param name="port" vt="int" remark="Target or server port."/>
+      <param name="ssl" vt="Boolean" remark="SSL mode."/>
+      <param name="udp" vt="Boolean" remark="UDP mode."/>
+    </fun>
+    <fun name="instSSLserver" vt="this" remark="Object creator.">
+      <param name="port" vt="int" remark="Target or server port."/>
+      <param name="certFile" vt="const char*" remark=""/>
+      <param name="keyFile" vt="const char*" remark=""/>
+    </fun>
+    <fun name="setBlocking" implname="rocs_socket_setBlocking" vt="Boolean" remark="Set blocking.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="blocking" vt="Boolean" remark="Set True for blocking mode."/>
+    </fun>
+    <fun name="connect" implname="rocs_socket_connect" vt="Boolean" remark="Connect socket with target.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="bind" vt="Boolean">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="accept" implname="_acceptSocket" vt="this" remark="Accept client connections.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="write" implname="rocs_socket_write" vt="Boolean" remark="Write bytes.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="const char*" remark="Write buffer."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="writec" implname="_writecSocket" vt="Boolean" remark="Write one character.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="c" vt="char" remark="Char to write."/>
+    </fun>
+    <fun name="read" implname="rocs_socket_read" vt="Boolean" remark="Read bytes.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="recvfrom" implname="rocs_socket_recvfrom" vt="int" remark="Receive udp message.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="sendto" implname="rocs_socket_sendto" vt="Boolean" remark="Send udp message.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Write buffer."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="readc" implname="_readcSocket" vt="char" remark="Read one character.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="setListener" implname="NULL" vt="void" remark="NOT IMPLEMENTED!.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="listener" vt="socket_listener" remark="Listener."/>
+    </fun>
+    <fun name="reset" implname="_resetSocket" vt="void" remark="Reset the socket; clear flags.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="isConnected" vt="Boolean" remark="Socket is connected.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="readln" vt="char*" remark="Read till a linefeed is detected.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+    </fun>
+    <fun name="setSndTimeout" implname="rocs_socket_setSndTimeout" vt="Boolean" remark="Set timeout value for writing.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="timeout" vt="int" unit="ms" remark="Timeout value."/>
+    </fun>
+    <fun name="setRcvTimeout" implname="rocs_socket_setRcvTimeout" vt="Boolean" remark="Set timeout value for reading.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="timeout" vt="int" unit="ms" remark="Timeout value."/>
+    </fun>
+    <fun name="getPeername" implname="rocs_socket_getPeername" vt="const char*" remark="">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="setKeepalive" implname="rocs_socket_setKeepalive" vt="Boolean" remark="">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="keepalive" vt="Boolean" remark=""/>
+    </fun>
+    <fun name="disConnect" vt="void" remark="Disconnect from remote peer.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="getRc" vt="int" remark="Get last error.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="isTimedOut" vt="Boolean" remark="Check if last returncode is a ETIMEDOUT error.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="readStr" vt="char*" remark="Read til a terminating zero is detected.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+    </fun>
+    <fun name="getReceived" vt="long" remark="Get number of readed bytes.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="getSended" vt="long" remark="Get number of written bytes.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="peek" implname="rocs_socket_peek" vt="Boolean" remark="Are some bytes waiting to be read?">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="gethostname" vt="const char*" static="true" remark="Get local hostname."/>
+    <fun name="getPeeked" vt="long" remark="Get number of peeked bytes.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="isBroken" vt="Boolean" remark="Is connection broken?">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="getMAC" vt="char*" static="true" remark="">
+      <param name="device" vt="const char*" remark="Device name to query."/>
+    </fun>
+    <fun name="getStream" vt="FILE *" remark="Get socket stream object.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
+    <fun name="fmt" vt="Boolean" remark="Formats a string.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="format" vt="const char*" remark="Format rules."/>
+      <param name="" vt="..." remark="Multiple parameters."/>
+    </fun>
+    <fun name="isOpenSSL" vt="Boolean" remark="OpenSSL support is enabled."/>
+
+    <data>
+      <var name="host" vt="char*" remark="Target hostname."/>
+      <var name="port" vt="int" remark="Target port."/>
+      <var name="sh" vt="int" remark="Socket handle."/>
+      <var name="readed" vt="long" remark="Current number of readed bytes."/>
+      <var name="peeked" vt="long" remark="Currently available bytes."/>
+      <var name="written" vt="long" remark="Current number of written bytes."/>
+      <var name="rc" vt="int" remark="Last error."/>
+      <var name="hostaddr" vt="void*" remark="Host address in xxx.xxx.xxx.xxx format."/>
+      <var name="blocking" vt="Boolean" remark="Socket in blocking mode."/>
+      <var name="binded" vt="Boolean" remark="Socket is binded."/>
+      <var name="listening" vt="Boolean" remark="Server socket is listening."/>
+      <var name="connected" vt="Boolean" remark="Socket is connected."/>
+      <var name="ssl" vt="Boolean" remark="Socket is in SSL mode."/>
+      <var name="openssl_support" vt="Boolean" remark=""/>
+      <var name="ssl_ctx" vt="SSL_CTX*" remark="SSL control record."/>
+      <var name="ssl_sh" vt="SSL*" remark="SSL handle."/>
+      <var name="broken" vt="Boolean" remark="Socket connection is broken."/>
+      <var name="udp" vt="Boolean" remark="Socket is in UDP mode."/>
+    </data>
+  </object>
+
+
+  <object name="Str" use="mem" nobase="true" remark="String operation helper.">
+    <fun name="cat" vt="char*" static="true" remark="">
+      <param name="dest" vt="char*" remark=""/>
+      <param name="src" vt="const char*" remark=""/>
+    </fun>
+    <fun name="len" vt="int" static="true" remark="Calculates the string length.">
+      <param name="str" vt="const char*" remark=""/>
+    </fun>
+    <fun name="dup" vt="char*" static="true" remark="Duplicates a string.">
+      <param name="src" vt="const char*" remark=""/>
+    </fun>
+    <fun name="copy" vt="char*" static="true" remark="Copies a string.">
+      <param name="dst" vt="char*" remark=""/>
+      <param name="src" vt="const char*" remark=""/>
+    </fun>
+    <fun name="fmt" vt="char*" static="true" remark="Formats a string.">
+      <param name="format" vt="const char*" remark="Format rules."/>
+      <param name="" vt="..." remark="Multiple parameters."/>
+    </fun>
+    <fun name="equals" vt="Boolean" static="true" remark="Compares two strings.">
+      <param name="str1" vt="const char*" remark=""/>
+      <param name="str2" vt="const char*" remark=""/>
+    </fun>
+    <fun name="byteToStr" vt="char*" static="true" remark="Converts binary data into a hex string like 0AFE...">
+      <param name="bin" vt="unsigned char*" remark="Input bytes."/>
+      <param name="len" vt="int" remark="Number of bytes to translate."/>
+    </fun>
+    <fun name="strToByte" vt="unsigned char*" static="true" remark="Converts a hex string into binary data">
+      <param name="str" vt="const char*" remark="Input string"/>
+    </fun>
+    <fun name="findc" vt="char*" static="true" remark="Find the first occurrence of a character.">
+      <param name="str" vt="const char*" remark="String to investigate."/>
+      <param name="c" vt="char" remark="Character to look for."/>
+    </fun>
+    <fun name="trim" vt="char*" static="true" remark="Removes leading and trailing blanks.">
+      <param name="str" vt="char*" remark="String to trim."/>
+    </fun>
+    <fun name="endsWith" vt="Boolean" static="true" remark="Check if str1 ends with str2.">
+      <param name="str1" vt="const char*" remark="String to check."/>
+      <param name="str2" vt="const char*" remark="Ending."/>
+    </fun>
+    <fun name="endsWithi" vt="Boolean" static="true" remark="Check if str1 ends with str2. (ignoring case)">
+      <param name="str1" vt="const char*" remark="String to check."/>
+      <param name="str2" vt="const char*" remark="Ending."/>
+    </fun>
+    <fun name="copynz" vt="int" static="true" remark="Copies a zero terminated string as a non-zero terminated string.">
+      <param name="snz" vt="char*" remark="Non-zero buffer."/>
+      <param name="snzlen" vt="int" remark="Non-zero buffer length."/>
+      <param name="str" vt="const char*" remark="Input string."/>
+    </fun>
+    <fun name="int2snz" vt="void" static="true" remark="Converts an integer into a non-zero string.">
+      <param name="snz" vt="char*" remark="Non-zero buffer."/>
+      <param name="snzlen" vt="int" remark="Non-zero buffer length."/>
+      <param name="val" vt="int" remark="Input value."/>
+    </fun>
+    <fun name="long2snz" vt="void" static="true" remark="Converts an long into a non-zero string.">
+      <param name="snz" vt="char*" remark="Non-zero buffer."/>
+      <param name="snzlen" vt="int" remark="Non-zero buffer length."/>
+      <param name="val" vt="long" remark="Input value."/>
+    </fun>
+    <fun name="snz2sz" vt="char*" static="true" remark="Converts an non-zero string as a zero terminated string.">
+      <param name="snz" vt="const char*" remark="Non-zero string."/>
+      <param name="snzlen" vt="int" remark="Non-zero string length."/>
+    </fun>
+    <fun name="free" implname="_freeStr" vt="void" static="true" remark="Free up a string allocation.">
+      <param name="str" vt="char*" remark="String allocation."/>
+    </fun>
+    <fun name="getExtension" vt="char*" static="true" remark="Returns a pointer to the string extension: [readme.txt] would return a pointer to [txt].">
+      <param name="str" vt="const char*" remark=""/>
+    </fun>
+    <fun name="createStamp" vt="char*" static="true" remark="Creates a timestamp: YYYYmmdd.hhMMss.SSS."/>
+    <fun name="createStampNoDots" vt="char*" static="true" remark="Creates a timestamp: YYYYmmddhhMMssSSS."/>
+    <fun name="isoDate" vt="char*" static="true" remark="Creates an ISO date string: YYYY-mm-dd">
+      <param name="tt" vt="long" remark=""/>
+    </fun>
+    <fun name="isoTime" vt="char*" static="true" remark="Creates an ISO time string: hh:MM:ss">
+      <param name="tt" vt="long" remark=""/>
+    </fun>
+    <fun name="fmtb" vt="char*" static="true" remark="Formats a string into a buffer.">
+      <param name="buffer" vt="char*" remark="Buffer."/>
+      <param name="format" vt="const char*" remark="Format rules."/>
+      <param name="" vt="..." remark="Multiple parameters."/>
+    </fun>
+    <fun name="getCntLinefeeds" vt="int" static="true" remark="Returns number of linefeed chars found.">
+      <param name="str" vt="const char*" remark=""/>
+    </fun>
+    <fun name="getLine" vt="char*" static="true" remark="Returns pointer to the specified line.">
+      <param name="str" vt="const char*" remark=""/>
+      <param name="nr" vt="int" remark="Line number."/>
+    </fun>
+    <fun name="getNextLine" vt="char*" static="true" remark="Returns pointer to the next line.">
+      <param name="str" vt="const char*" remark=""/>
+      <param name="nr" vt="int*" remark="Line number."/>
+    </fun>
+    <fun name="strupr" implname="__strupr" vt="const char*" static="true" remark="Converts all chars into uppercase.">
+      <param name="str" vt="const char*" remark=""/>
+    </fun>
+    <fun name="strlwr" implname="__strlwr" vt="const char*" static="true" remark="Converts all chars into lowercase.">
+      <param name="str" vt="const char*" remark=""/>
+    </fun>
+    <fun name="find" vt="char*" static="true" remark="Finds a substring.">
+      <param name="str" vt="const char*" remark=""/>
+      <param name="substr" vt="const char*" remark=""/>
+    </fun>
+    <fun name="findi" vt="char*" static="true" remark="Finds a substring ignoring case.">
+      <param name="str" vt="const char*" remark=""/>
+      <param name="substr" vt="const char*" remark=""/>
+    </fun>
+    <fun name="equalsi" vt="Boolean" static="true" remark="Equals ignore case.">
+      <param name="str1" vt="const char*" remark=""/>
+      <param name="str2" vt="const char*" remark=""/>
+    </fun>
+    <fun name="equalsn" vt="Boolean" static="true" remark="Equals till number off char is reached.">
+      <param name="str1" vt="const char*" remark=""/>
+      <param name="str2" vt="const char*" remark=""/>
+      <param name="cnt" vt="int" remark="Number of chars to compare"/>
+    </fun>
+    <fun name="equalsni" vt="Boolean" static="true" remark="Equals ignore case till number off char is reached.">
+      <param name="str1" vt="const char*" remark=""/>
+      <param name="str2" vt="const char*" remark=""/>
+      <param name="cnt" vt="int" remark="Number of chars to compare"/>
+    </fun>
+    <fun name="catID" vt="char*" static="true" internal="true" remark="">
+      <param name="dest" vt="char*" remark=""/>
+      <param name="src" vt="const char*" remark=""/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="dupID" vt="char*" static="true" internal="true" remark="Duplicates a string.">
+      <param name="src" vt="const char*" remark=""/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="fmtID" vt="char*" static="true" internal="true" remark="Formats a string.">
+      <param name="id" vt="RocsMemID" remark=""/>
+      <param name="format" vt="const char*" remark="Format rules."/>
+      <param name="" vt="..." remark="Multiple parameters."/>
+    </fun>
+    <fun name="trimID" vt="char*" static="true" internal="true" remark="Removes trailing blanks.">
+      <param name="str" vt="char*" remark="String to trim."/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="createStampID" vt="char*" static="true" internal="true" remark="Creates a timestamp: YYYYmmdd.hhMMss.SSS.">
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="freeID" implname="_freeStrID" vt="void" static="true" internal="true" remark="Free up a string allocation.">
+      <param name="str" vt="char*" remark="String allocation."/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="snz2szID" vt="char*" static="true" internal="true" remark="Converts an non-zero string as a zero terminated string.">
+      <param name="snz" vt="const char*" remark="Non-zero string."/>
+      <param name="snzlen" vt="int" remark="Non-zero string length."/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="getLineID" vt="char*" static="true" internal="true" remark="Returns pointer to the specified line.">
+      <param name="str" vt="const char*" remark=""/>
+      <param name="nr" vt="int" remark="Line number."/>
+      <param name="id" vt="RocsMemID" remark=""/>
+    </fun>
+    <fun name="startsWith" vt="Boolean" static="true" remark="Check if str1 starts with str2.">
+      <param name="str1" vt="const char*" remark="String to check."/>
+      <param name="str2" vt="const char*" remark="Beginning."/>
+    </fun>
+    <fun name="startsWithi" vt="Boolean" static="true" remark="Check if str1 starts with str2. (ignoring case)">
+      <param name="str1" vt="const char*" remark="String to check."/>
+      <param name="str2" vt="const char*" remark="Beginning."/>
+    </fun>
+    <fun name="replaceAll" vt="int" static="true" remark="Replace all charA's with charB">
+      <param name="str" vt="char*" remark="String to change."/>
+      <param name="charA" vt="char" remark="Char to replace"/>
+      <param name="charB" vt="char" remark="Replacement"/>
+    </fun>
+    <fun name="replaceAllSubstitutions" vt="char*" static="true" remark="Replace all environment variables with there current values.">
+      <param name="str" vt="const char*" remark="Input string."/>
+    </fun>
+    <fun name="encode4URL" vt="char*" static="true" remark="replace special chars with url escapes">
+      <param name="url" vt="const char*" remark="URL to encode"/>
+    </fun>
+    <fun name="decode4URL" vt="char*" static="true" remark="replace url escapes with special chars">
+      <param name="url" vt="const char*" remark="URL to decode"/>
+    </fun>
+  </object>
+
+
+  <object name="String" use="str" remark="String object.">
+    <def name="STRING_MINSIZE" vt="int" val="80"/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="str" vt="const char*" remark="Initial string value."/>
+    </fun>
+    <fun name="str" vt="const char*" remark="String value.">
+      <param name="inst" vt="this" remark="String instance."/>
+    </fun>
+    <fun name="len" vt="int" remark="String length.">
+      <param name="inst" vt="this" remark="String instance."/>
+    </fun>
+    <data>
+      <var name="str" vt="char*" remark="String value."/>
+      <var name="len" vt="int" remark="String length."/>
+    </data>
+  </object>
+
+
+  <object name="StrTok" use="str" remark="String tokenizer object.">
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="str" vt="const char*" remark="Initial string value."/>
+      <param name="sep" vt="char" remark="String separator."/>
+    </fun>
+    <fun name="countTokens" vt="int" remark="Get number of tokens.">
+      <param name="inst" vt="this" remark="String instance."/>
+    </fun>
+    <fun name="hasMoreTokens" vt="Boolean" remark="There are more tokens left to read.">
+      <param name="inst" vt="this" remark="String instance."/>
+    </fun>
+    <fun name="nextToken" vt="const char*" remark="A token.">
+      <param name="inst" vt="this" remark="String instance."/>
+    </fun>
+    <data>
+      <var name="str" vt="char*" remark="String value."/>
+      <var name="sep" vt="char" remark="Separator."/>
+      <var name="countTokens" vt="int" remark="Number of tokens in this string."/>
+      <var name="nextToken" vt="char*" remark="Pointer to next token."/>
+    </data>
+  </object>
+
+
+  <object name="System" remark="System utilities.">
+    <typedef def="enum {OSTYPE_UNIX, OSTYPE_DOS} ostype" remark="OS type."/>
+    <const name="vmajor" vt="int" val="1"/>
+    <const name="vminor" vt="int" val="2"/>
+    <const name="patch" vt="int" val="0"/>
+    <const name="builddate" vt="const char*" val="$__DATE__"/>
+    <const name="buildtime" vt="const char*" val="$__TIME__"/>
+    <fun name="inst" vt="this" remark="Object creator. (Singleton)"/>
+    <fun name="getBuild" vt="const char*" remark="Get the Rocs build string."/>
+    <fun name="getWSName" vt="const char*" static="true" remark="Workstation name."/>
+    <fun name="getUserName" vt="const char*" static="true" remark="Login username."/>
+    <fun name="getProperty" vt="const char*" remark="Reads an environment variable.">
+      <param name="key" vt="const char*" remark="Environment variable key."/>
+    </fun>
+    <fun name="getMillis" implname="rocs_system_getMillis" vt="int" static="true" remark=""/>
+    <fun name="uBusyWait" implname="rocs_system_uBusyWait" vt="Boolean" static="true" remark="">
+      <param name="us" vt="int" remark="Wait time in us"/>
+    </fun>
+    <fun name="getFileSeparator" vt="char" static="true" remark=""/>
+    <fun name="getPathSeparator" vt="char" static="true" remark=""/>
+    <fun name="getErrStr" vt="const char*" remark="Translates an error code into a string.">
+      <param name="error" vt="int" remark=""/>
+    </fun>
+    <fun name="getOSType" vt="ostype" static="true" remark=""/>
+    <fun name="isWindows" vt="Boolean" static="true" remark=""/>
+    <fun name="isUnix" vt="Boolean" static="true" remark=""/>
+    <fun name="getPathSeparator4OS" vt="char" remark="Path separator for a specific OS type.">
+      <param name="type" vt="ostype" remark=""/>
+    </fun>
+    <fun name="system" implname="_systemExec" vt="int" remark="Starts a system command.">
+      <param name="cmd" vt="const char*" remark="Command."/>
+      <param name="async" vt="Boolean" remark="Start command async in a separate thread."/>
+    </fun>
+    <fun name="getpid" implname="_systemgetpid" vt="int" static="true" remark="Process ID."/>
+    <fun name="getSigStr" vt="const char*" remark="Translates an signal number into a string.">
+      <param name="sig" vt="int" remark=""/>
+    </fun>
+    <fun name="beep" implname="_sysbeep" vt="void" static="true" remark="Beeps."/>
+    <fun name="getGUID" vt="char*" static="true" remark="Get global unique ID. (32 chars long)">
+      <param name="macdev" vt="const char*" remark="May be NULL to use the default device for getting the MAC address."/>
+    </fun>
+    <fun name="getUNC" vt="char*" remark="Translates a local path into a UNC.">
+      <param name="filepath" vt="const char*" remark=""/>
+    </fun>
+    <fun name="utf2latin" vt="char*" remark="Translates fitting UTF-8 encodings into Lantin 15.">
+      <param name="utfstr" vt="const char*" remark="UTF-8 encoded string."/>
+    </fun>
+    <fun name="latin2utf" vt="char*" remark="Translates Latin 15 into UTF-8.">
+      <param name="latinstr" vt="const char*" remark="Latin 15 encoded string."/>
+    </fun>
+    <fun name="getTick" vt="unsigned long" remark="System tick in 10ms."/>
+    <fun name="cp1252toISO885915" vt="char*" remark="Translates Windows CP1252 into Latin 15.">
+      <param name="str" vt="const char*" remark="CP1252 encoded string."/>
+    </fun>
+    <fun name="setAdmin" implname="rocs_system_setadmin" vt="Boolean" static="true" remark=""/>
+    <fun name="getTime" implname="rocs_system_getTime" vt="int" remark="returns milliseconds">
+      <param name="hours" vt="int*"/>
+      <param name="minutes" vt="int*"/>
+      <param name="seconds" vt="int*"/>
+    </fun>
+    <fun name="accessPort" implname="rocs_system_accessPort" vt="Boolean" remark="try to get port access">
+      <param name="from" vt="int" remark="port base address"/>
+      <param name="num" vt="int"/>
+    </fun>
+    <fun name="releasePort" implname="rocs_system_releasePort" vt="Boolean" remark="release the port access">
+      <param name="from" vt="int" remark="port base address"/>
+      <param name="num" vt="int"/>
+    </fun>
+    <fun name="writePort" implname="rocs_system_writePort" vt="void" remark="write a byte to the port">
+      <param name="port" vt="int"/>
+      <param name="val" vt="byte"/>
+    </fun>
+    <fun name="readPort" implname="rocs_system_readPort" vt="byte" remark="read a byte to the port">
+      <param name="port" vt="int"/>
+    </fun>
+    <fun name="accessDev" implname="rocs_system_accessDev" vt="Boolean" remark="check device access">
+      <param name="device" vt="const char*" remark="device name"/>
+      <param name="readonly" vt="Boolean"/>
+    </fun>
+    <data include="thread">
+      <var name="WSName[64]" vt="char" remark=""/>
+      <var name="UserName[64]" vt="char" remark=""/>
+      <var name="ticker" vt="iOThread" remark=""/>
+      <var name="tick" vt="unsigned long" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Thread" use="list,queue" remark="Thread object.">
+    <typedef def="void (*thread_run)(void*)"/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="name" vt="const char*" remark="Thread name."/>
+      <param name="run" vt="thread_run" remark="Thread runner."/>
+      <param name="parm" vt="void*" remark="Thread parameters. (User defined.)"/>
+    </fun>
+    <fun name="getName" vt="const char*" remark="Thread name.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="start" vt="Boolean" remark="Starts the thread runner.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="requestQuit" implname="_quit" vt="void" remark="Signals thread to stop as soon as possible.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="requestQuitAll" implname="_quitAll" vt="void" remark="Signals all thread to stop as soon as possible."/>
+    <fun name="sleep" implname="rocs_thread_sleep" vt="void" remark="Sleeps the current thread.">
+      <param name="time" vt="int" unit="ms" remark="Time to sleep."/>
+    </fun>
+    <fun name="getAll" vt="iOList" remark="Get a list of all threads."/>
+    <fun name="find" vt="this" remark="Find a thread by name.">
+      <param name="name" vt="const char*" remark="Thread name."/>
+    </fun>
+    <fun name="post" vt="Boolean" remark="Post a message into the queue.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+      <param name="msg" vt="obj" remark="Post."/>
+    </fun>
+    <fun name="getPost" vt="obj" remark="Get post from the queue. (NULL if nothing is in queue.)">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="findById" vt="this" remark="Find a thread by id.">
+      <param name="id" vt="unsigned long" remark="Thread id."/>
+    </fun>
+    <fun name="id" implname="rocs_thread_id" vt="unsigned long" remark="Get current thread id."/>
+    <fun name="getParm" vt="void*" remark="Get parameter object.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="waitPost" vt="obj" remark="Get post from the queue. (Wait until post comes in queue.)">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="kill" vt="void" remark="Kill a thread by reference.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="isQuit" vt="Boolean" remark="Quit signaled.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="setStacksize" vt="void" remark="Change the default stacksize.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+      <param name="size" vt="long" unit="byte" remark="New stacksize."/>
+    </fun>
+    <fun name="join" vt="Boolean" remark="Waits for thread termination and returns True if ok.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="setDescription" vt="void" remark="">
+      <param name="inst" vt="this" remark="Thread instance."/>
+      <param name="desc" vt="const char*" remark="Description."/>
+    </fun>
+    <fun name="setHigh" vt="void" remark="Sets the priority to high.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <fun name="pause" vt="void" remark="set pause flag">
+      <param name="inst" vt="this" remark="Thread instance."/>
+      <param name="pause" vt="Boolean"/>
+    </fun>
+    <fun name="isPause" vt="Boolean" remark="Pause signaled.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+    </fun>
+    <data>
+      <var name="run" vt="thread_run" remark="Run method."/>
+      <var name="tname" vt="char*" remark="Thread name."/>
+      <var name="id" vt="unsigned long" remark="Thread id."/>
+      <var name="handle" vt="unsigned long" remark="Thread handle."/>
+      <var name="quit" vt="Boolean" remark="Quit is signaled."/>
+      <var name="queue" vt="iOQueue" remark="Queue for posting."/>
+      <var name="parm" vt="void*" remark="Thread parameters."/>
+      <var name="stacksize" vt="long" remark="Thread stacksize."/>
+      <var name="tdesc" vt="char*" remark="Thread description."/>
+      <var name="pause" vt="Boolean" remark="pause is signaled."/>
+    </data>
+  </object>
+
+
+  <object name="Trace" use="file,mutex,ebcdic" remark="Trace object. (Singleton)">
+    <typedef def="void(*trcListener )(int level, char* module, char* msg, int rc, Boolean dump)"/>
+    <typedef def="void(*ExceptionListener )(int level, char* msg)"/>
+    <typedef def="enum {TRCLEVEL_EXCEPTION=0x0001,TRCLEVEL_INFO  =0x0002,TRCLEVEL_WARNING=0x0004,TRCLEVEL_DEBUG  =0x0008,
+                        TRCLEVEL_BYTE     =0x0010,TRCLEVEL_METHOD=0x0020,TRCLEVEL_MEMORY =0x0040,TRCLEVEL_PARAM  =0x0080,
+                        TRCLEVEL_PROTOCOL =0x0100,TRCLEVEL_ERROR =0x0200,TRCLEVEL_PARSE  =0x0400,TRCLEVEL_WRAPPER=0x0800,
+                        TRCLEVEL_USER1    =0x1000,TRCLEVEL_USER2 =0x2000,TRCLEVEL_MONITOR=0x4000,TRCLEVEL_XMLH   =0x8000,
+                        TRCLEVEL_USER     =0xF000,TRCLEVEL_CALC  =0x10000,TRCLEVEL_ALL   =0xFFFFFF} tracelevel" remark="Trace levels."/>
+    <def name="TRC_DUMPSIZE" vt="int" val="128"/>
+    <def name="TRC_FILESIZE" vt="int" val="100"/>
+    <def name="TRC_NRFILES" vt="int" val="10"/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="level" vt="tracelevel" remark="Trace level(s) to be traced out."/>
+      <param name="filename" vt="const char*" remark="Trace filename."/>
+      <param name="toStdErr" vt="Boolean" remark="Trace output also to stderr."/>
+    </fun>
+    <fun name="get" vt="this" static="true" remark="Get's the trace object."/>
+    <fun name="trace" vt="void" remark="Trace.">
+      <param name="cargo" vt="const void*" remark="Trace instance or Object name."/>
+      <param name="level" vt="tracelevel" remark="Trace level."/>
+      <param name="id" vt="int" remark="Trace id."/>
+      <param name="fmt" vt="const char*" remark="Format string."/>
+      <param name="" vt="..." remark="Variables for format string."/>
+    </fun>
+    <fun name="dump" vt="void" remark="Trace a binary buffer.">
+      <param name="cargo" vt="const void*" remark="Trace instance or Object name."/>
+      <param name="level" vt="tracelevel" remark="Trace level."/>
+      <param name="buffer" vt="const char*" remark="Buffer to trace."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="setLevel" vt="void" remark="Change the trace level(s).">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="level" vt="tracelevel" remark="Trace level(s)."/>
+    </fun>
+    <fun name="getLevel" vt="tracelevel" remark="Get the trace level(s).">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="setFilename" vt="void" remark="Change the trace filename.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="filename" vt="const char*" remark="New filename."/>
+    </fun>
+    <fun name="getFilename" vt="const char*" remark="Get the trace filename.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="setStdErr" vt="void" remark="Set trace to stderr.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="tostderr" vt="Boolean" remark=""/>
+    </fun>
+    <fun name="isStdErr" vt="Boolean" remark="Get trace to stderr.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="setDumpsize" vt="void" remark="Set trace dumpsize.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="size" vt="int" remark="New dumpsize."/>
+    </fun>
+    <fun name="getDumpsize" vt="int" remark="Get trace dumpsize.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="setExceptionListener" vt="void" remark="Set an exceptionlistener.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="listener" vt="ExceptionListener" remark=""/>
+      <param name="timestamp" vt="Boolean" remark="Send exceptions with timestamp prefix."/>
+    </fun>
+    <fun name="setMainThreadId" vt="void" remark="Set the thread id for main.">
+      <param name="id" vt="unsigned long" remark=""/>
+    </fun>
+    <fun name="setEbcdicDump" vt="void" remark="Dump also an ebcdic column.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="ebcdic" vt="Boolean" remark=""/>
+    </fun>
+    <fun name="getOS" vt="const char*" remark="Get the current operating system."/>
+    <fun name="println" vt="void" remark="Prints one line into the trace.">
+      <param name="fmt" vt="const char*" remark="Format string."/>
+      <param name="" vt="..." remark="Variables for the format string."/>
+    </fun>
+    <fun name="setAppID" vt="void" remark="Sets the application id to use in the trace.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="id" vt="const char*" remark="Application ID."/>
+    </fun>
+    <fun name="terrno" vt="void" remark="Trace.">
+      <param name="objectname" vt="const char*" remark="Name of calling object."/>
+      <param name="level" vt="tracelevel" remark="Trace level."/>
+      <param name="line" vt="int" remark="Sourceline number."/>
+      <param name="id" vt="int" remark="Trace id."/>
+      <param name="error" vt="int" remark="Error number to be translated."/>
+      <param name="fmt" vt="const char*" remark="Format string."/>
+      <param name="" vt="..." remark="Variables for format string."/>
+    </fun>
+    <fun name="dmp" vt="void" remark="Trace a binary buffer.">
+      <param name="cargo" vt="const void*" remark="Name of calling object or Trace instance."/>
+      <param name="level" vt="tracelevel" remark="Trace level."/>
+      <param name="id" vt="int" remark="Trace id."/>
+      <param name="buffer" vt="const char*" remark="Buffer to trace."/>
+      <param name="size" vt="int" remark="Size of buffer."/>
+    </fun>
+    <fun name="setFileSize" vt="void" remark="Change the trace max. filesize.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="size" vt="int" unit="KB" remark="New filesize."/>
+    </fun>
+    <fun name="setNrFiles" vt="void" remark="Change the number of files before recycling the oldest.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="cnt" vt="int" remark="New number of files."/>
+    </fun>
+    <fun name="setExceptionFile" vt="void" remark="If set, exceptions are also traced in a separate file.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="useexceptionfile" vt="Boolean" remark="Activates an exception file."/>
+    </fun>
+    <fun name="setInvoke" vt="void" remark="Command to invoke when writing a new exception file.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+      <param name="cmd" vt="const char*" remark="Command to invoke."/>
+      <param name="async" vt="Boolean" remark="Invoke in separate thread."/>
+    </fun>
+    <fun name="printHeader" vt="void" remark="Prints the trace header."/>
+    <fun name="trc" vt="void" remark="Trace.">
+      <param name="objectname" vt="const char*" remark="Name of calling object."/>
+      <param name="level" vt="tracelevel" remark="Trace level."/>
+      <param name="line" vt="int" remark="Sourceline number."/>
+      <param name="id" vt="int" remark="Trace id."/>
+      <param name="fmt" vt="const char*" remark="Format string."/>
+      <param name="" vt="..." remark="Variables for format string."/>
+    </fun>
+    <fun name="set" vt="void" remark="Replace or set the singleton with this one.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="getCurrentFilename" vt="const char*" remark="Get the current trace filename.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <fun name="getF" vt="const FILE*" remark="Get the current trace FILE object.">
+      <param name="inst" vt="this" remark="Trace instance or NULL."/>
+    </fun>
+    <data>
+      <var name="level" vt="int" remark="Trace level(s)."/>
+      <var name="file" vt="char*" remark="Current filename."/>
+      <var name="appID" vt="char*" remark="Application ID to use in traces."/>
+      <var name="trcfile" vt="FILE*" remark="Native filehandle."/>
+      <var name="dumpsize" vt="int" remark="Default dumpsize."/>
+      <var name="filesize" vt="int" unit="KB" remark="Default filesize."/>
+      <var name="nrfiles" vt="int" remark=""/>
+      <var name="currentfilename" vt="char*" remark=""/>
+      <var name="toStdErr" vt="Boolean" remark=""/>
+      <var name="ebcdicDump" vt="Boolean" remark=""/>
+      <var name="excListener" vt="ExceptionListener" remark=""/>
+      <var name="excTimestamp" vt="Boolean" remark=""/>
+      <var name="mux" vt="iOMutex" remark=""/>
+      <var name="ebcdic" vt="iOEbcdic" remark=""/>
+      <var name="exceptionfile" vt="Boolean" remark=""/>
+      <var name="invoke" vt="char*" remark=""/>
+      <var name="invokeasync" vt="Boolean" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="Res" use="map,node" remark="Resource helper object.">
+    <fun name="inst" vt="this" remark="Creates a resource object.">
+      <param name="xml" vt="const char*" remark="Messages XML as C-String."/>
+      <param name="lang" vt="const char*" remark="Language.(de,en...)"/>
+    </fun>
+    <fun name="getMsg" vt="const char*" remark="Get a message by key.">
+      <param name="inst" vt="this" remark="res instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <fun name="getTip" vt="const char*" remark="Get a tooltip by key.">
+      <param name="inst" vt="this" remark="res instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <fun name="getMenu" vt="const char*" remark="Get a message by key.">
+      <param name="inst" vt="this" remark="res instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <fun name="hasKey" vt="Boolean" remark="Test if the given key is in the XML.">
+      <param name="inst" vt="this" remark="Res instance."/>
+      <param name="key" vt="const char*" remark="Argument key."/>
+    </fun>
+    <data>
+      <var name="msgMap" vt="iOMap" remark="Message values mapped with their key."/>
+      <var name="xmlStr" vt="const char*" remark=""/>
+      <var name="language" vt="const char*" remark=""/>
+      <var name="msgNode" vt="iONode" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="WrpInf" use="map,node,list" remark="Wrapper info object.">
+    <fun name="inst" vt="this" remark="Creates a resource object.">
+      <param name="xmls" vt="const char**" remark="Wrapper XML's as C-String."/>
+      <param name="cnt" vt="int" remark="Number of xml strings."/>
+    </fun>
+    <fun name="getWrapper" vt="iONode" remark="Get a wrapper by key.">
+      <param name="inst" vt="this" remark="res instance."/>
+      <param name="wrpname" vt="const char*" remark="Wrapper name."/>
+    </fun>
+    <fun name="getVars" vt="iOList" remark="Get all var nodes.">
+      <param name="wrp" vt="iONode" remark="Wrapper."/>
+    </fun>
+    <data>
+      <var name="wrpMap" vt="iOMap" remark="Wrapper nodes mapped with their name."/>
+      <var name="xmlStrs" vt="const char**" remark="Array of xml string."/>
+      <var name="cnt" vt="int" remark=""/>
+      <var name="wrpNode" vt="iONode" remark=""/>
+    </data>
+  </object>
+
+  <object name="Xmlh" use="node,list" remark="Xmlh protocol helper object.">
+    <const name="header_tagname" vt="const char*" val="xmlh"/>
+    <const name="xml_tagname" vt="const char*" val="xml"/>
+    <const name="bin_tagname" vt="const char*" val="bin"/>
+    <const name="initAllocSize" vt="int" val="4096"/>
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="create" vt="Boolean" remark="Create a new Xmlh."/>
+      <param name="header_tagname" vt="const char*" remark="Optional tagname as alternative to xmlh."/>
+      <param name="bin_tagname" vt="const char*" remark="Optional tagname as alternative to bin."/>
+    </fun>
+    <fun name="read" vt="Boolean" remark="Reads the Xmlh from buffer. True if complete header is read.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="buffer" vt="const byte*" remark="Buffer with part of Xmlh."/>
+      <param name="size" vt="int" remark="Byte count in buffer."/>
+    </fun>
+    <fun name="hasXml" vt="int" remark="Get number of xml nodes.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <fun name="hasBin" vt="int" remark="Get number of bin nodes.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <fun name="getSizeByTagName" vt="int" remark="Get size of block by name.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="name" vt="const char*" remark="Name."/>
+      <param name="idx" vt="int" remark="Index. (Incase of a list of the same nodes.)"/>
+    </fun>
+    <fun name="getNodeByTagName" vt="iONode" remark="Get header childnode by name.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="name" vt="const char*" remark="Name."/>
+      <param name="idx" vt="int" remark="Index. (Incase of a list of the same nodes.)"/>
+    </fun>
+    <fun name="getXmlSize" vt="int" remark="Get size of xml block by index.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="idx" vt="int" remark="Index."/>
+    </fun>
+    <fun name="getBinSize" vt="long" remark="Get size of bin block by index.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="dataIdx" vt="int" remark="Index."/>
+    </fun>
+    <fun name="getXmlName" vt="const char*" remark="Get node for xml block by index.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="dataIdx" vt="int" remark="Index."/>
+    </fun>
+    <fun name="getBinName" vt="const char*" remark="Get filename for bin block by index.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="idx" vt="int" remark="Index."/>
+    </fun>
+    <fun name="addNode" vt="void" remark="Add.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+      <param name="node" vt="iONode" remark="Node to add in the Xmlh."/>
+    </fun>
+    <fun name="isError" vt="Boolean" remark="Get error state of Xmlh.">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <fun name="reset" vt="void" remark="">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <data>
+      <var name="header_tagname" vt="char*" remark=""/>
+      <var name="xml_tagname" vt="char*" remark=""/>
+      <var name="bin_tagname" vt="char*" remark=""/>
+      <var name="xmlh_begin" vt="char*" remark=""/>
+      <var name="xmlh_end" vt="char*" remark=""/>
+      <var name="beginHdr" vt="Boolean" remark=""/>
+      <var name="endHdr" vt="Boolean" remark=""/>
+      <var name="error" vt="Boolean" remark=""/>
+      <var name="buffer" vt="byte*" remark=""/>
+      <var name="bufferIdx" vt="int" remark=""/>
+      <var name="bufferSize" vt="int" remark=""/>
+      <var name="xmlh" vt="iONode" remark=""/>
+      <var name="xmlList" vt="iOList" remark=""/>
+      <var name="binList" vt="iOList" remark=""/>
+    </data>
+  </object>
+
+  <object name="GZip" remark="GNU ZIP wrapper.">
+    <fun name="inst" vt="this" remark="Object creator.">
+      <param name="fileName" vt="const char*"/>
+    </fun>
+    <fun name="compress" vt="Boolean">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <fun name="deCompress" vt="Boolean">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <fun name="getRc" vt="int">
+      <param name="inst" vt="this" remark="Xmlh instance."/>
+    </fun>
+    <data>
+      <var name="name" vt="char*" remark=""/>
+      <var name="rc" vt="int" remark=""/>
+    </data>
+  </object>
+
+
+  <object name="JS" use="list,thread" remark="JoyStick support.">
+    <typedef def="void(*jsListener )( int dev, int type, int number, int value, unsigned long msec )"/>
+    <fun name="inst" vt="this" remark="Object creator."/>
+    <fun name="init" vt="int">
+      <param name="inst" vt="this" remark="JS instance."/>
+      <param name="devicemap" vt="int*" remark="bit 0 = /dev/js0..."/>
+    </fun>
+    <fun name="start" vt="void">
+      <param name="inst" vt="this" remark="JS instance."/>
+    </fun>
+    <fun name="setListener" vt="Boolean" remark="Set an JS listener.">
+      <param name="inst" vt="this" remark="JS instance."/>
+      <param name="listener" vt="jsListener" remark=""/>
+      <param name="devnr" vt="int" remark="Device number: /dev/js0.../dev/jsn"/>
+    </fun>
+    <data>
+      <var name="jsfd[4]" vt="int" remark="file descriptors"/>
+      <var name="listeners[4]" vt="iOList" remark="Listeners list."/>
+      <var name="reader" vt="iOThread" remark="HID reader"/>
+      <var name="run" vt="Boolean"/>
+      <var name="devcnt" vt="int"/>
+    </data>
+  </object>
+
+
+  <object name="Mime64" remark="Mime64 converter">
+    <fun name="encode" vt="Boolean" remark="encode the input file into mime64">
+      <param name="infile" vt="const char*"/>
+      <param name="outfile" vt="const char*"/>
+    </fun>
+    <fun name="decode" vt="Boolean" remark="decode the input file into it's ">
+      <param name="infile" vt="const char*"/>
+      <param name="outfile" vt="const char*"/>
+    </fun>
+  </object>
+
+
+</Project>

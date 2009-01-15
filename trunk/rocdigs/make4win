@@ -1,0 +1,7 @@
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+i586-mingw32msvc-strip ../winbin/*.dll
+i586-mingw32msvc-strip ../winbin/*.exe
+cp ../winbin/roco.dll .
+zip ../winbin/roco.dll.zip roco.dll
+cp ../winbin/lenz.dll .
+zip ../winbin/lenz.dll.zip lenz.dll

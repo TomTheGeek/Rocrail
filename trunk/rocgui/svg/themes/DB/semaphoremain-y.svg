@@ -1,0 +1,28 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Mast -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 13,25 L 15,23 L 15,28 L 13,26 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(128,128,128)" d="M 16,23 L 29,23 L 29,28 L 16,28 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(255,0,0)" d="M 29,23 L 38,23 L 38,28 L 29,28 z " />  
+    <path stroke="rgb(0,0,0)" fill="rgb(255,255,255)" d="M 38,23 L 47,23 L 47,28 L 38,28 z " />  
+    <path stroke="rgb(0,0,0)" fill="rgb(128,128,128)" d="M 47,23 L 63,23 L 63,28 L 47,28 z " />
+    <!-- Lichtplatte oben -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 22,15 L 25,15 L 26,16 L 26,19 L 21,23 L 18,23 L 17,22 L 17,19 L 22,15 z " />
+    <!-- Lichtplatte unten -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 53,15 L 56,15 L 57,16 L 57,19 L 52,23 L 49,23 L 48,22 L 48,20 L 53,15 z " />
+    <!-- Lichter oben -->    
+    <path stroke="rgb(120,0,0)" fill="rgb(120,0,0)" d="M 19,19 L 20,19 L 21,20 L 21,21 L 20,22 L 19,22 L 18,21 L 18,20 L 22,17 z " />
+    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 23,16 L 24,16 L 25,17 L 25,18 L 24,19 L 23,19 L 22,18 L 22,17 z " />
+    <!-- Lichter unten -->    
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 54,16 L 55,16 L 56,17 L 56,18 L 55,19 L 54,19 L 53,18 L 53,17 L 54,16 z " />
+    <path stroke="rgb(128,128,128)" fill="rgb(128,128,128)" d="M 50,19 L 51,19 L 52,20 L 51,22 L 50,22 L 49,21 L 49,20 L 50,19 z " />
+    <!-- Fluegel oben -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,255,255)" d="M 20,30 L 23,27 L 8,12 L 5,15 z " />
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 2,7 L 6,7 L 8,9 L 8,13 L 6,15 L 2,15 L 0,13 L 0,9 z " />
+    <path stroke="rgb(255,255,255)" fill="rgb(255,255,255)"  d="M 3,8 L 5,8 L 7,10 L 7,12 L 5,14 L 3,14 L 1,12 L 1,10 z " />
+    <!-- Fluegel unten -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,255,255)" d="M 51,30 L 54,27 L 39,12 L 36,15 z " />
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 33,7 L 37,7 L 39,9 L 39,13 L 37,15 L 33,15 L 31,13 L 31,9 z " />
+    <path stroke="rgb(255,255,255)" fill="rgb(255,255,255)"  d="M 34,8 L 36,8 L 38,10 L 38,12 L 36,14 L 34,14 L 32,12 L 32,10 z " />
+  </g>
+</svg>

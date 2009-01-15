@@ -1,0 +1,55 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          Rocrail Server
+# Required-Start:    $network
+# X-UnitedLinux-Should-Start: 
+# Required-Stop:     
+# X-UnitedLinux-Should-Stop: 
+# Default-Start:     3
+# Default-Stop:      
+# Short-Description: Starts the Rocrail Server
+# Description:       Starts the Rocrail Server
+### END INIT INFO
+
+rocrail_BIN=/opt/rocrail/rocrail
+rocrail_PID=/opt/rocrail/rocrail.pid
+rocrail_SH=/opt/rocrail/rocrail.sh
+
+if [ ! -x $rocrail_BIN ] ; then
+	echo -n "Rocrail Server not installed ! "
+	exit 5
+fi
+
+case "$1" in
+    start)
+	if [ ! -e $rocrail_PID ] ; then
+		echo "Starting Rocrail Server"
+	else
+		echo "rocrail.pid already exists ! "
+		exit 5
+	fi
+	;;
+    stop)
+	if [ -e $rocrail_PID ] ; then
+		echo "Shutting down Rocrail Server"
+	else
+		echo "Rocrail Server not running or missing PID File ! "
+		exit 5
+	fi
+	su - root -c "kill `head $rocrail_PID`"
+	su - root -c "rm $rocrail_PID"
+
+	;;
+    restart)
+	## Stop the service and regardless of whether it was
+	## running or not, start it again.
+	$0 stop && sleep 4
+	$0 start
+
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac

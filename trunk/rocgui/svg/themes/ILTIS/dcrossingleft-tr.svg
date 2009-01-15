@@ -1,0 +1,12 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Diagonale links oben rechts unten --> 
+
+<path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 15,0 L 17,0 L 33,16 L 31,16 L 15,0 z" />
+ 
+<path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 37,22 L 39,22 L 48,31 L 46,31 L 37,22 z" />
+ <!-- Gerade --> 
+<path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 0,15 L 0,16 L 23,16 L 23,15 z " />
+<path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 32,15 L 32,16 L 64,16 L 64,15 L 32,15 z " />
+  </g>
+</svg>

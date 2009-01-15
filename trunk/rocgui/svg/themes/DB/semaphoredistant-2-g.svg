@@ -1,0 +1,21 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Mast -->
+    <path stroke="black" fill="rgb(128,128,128)" d="M 17,14 L 62,14 L 62,18 L 17,18 z " />
+    <!-- Scheibe gekippt -->
+    <path stroke="black" fill="rgb(255,255,25)" d="M 15,5 L 17,5 L 17,27 L 15,27 z " />
+    <path stroke="black" fill="rgb(255,168,0)" d="M 15,8 L 17,8 L 17,24 L 15,24 z " />
+    <!-- Lichterplatte rechts gruen-->
+    <path stroke="black" fill="black" d="M 27,11 L 32,7 L 35,7 L 36,8 L 36,11 L 31,15 L 28,15 L 27,14 z " />
+    <!-- Lichterplatte links gruen -->    
+    <path stroke="black" fill="black" d="M 45,21 L 50,17 L 53,17 L 54,18 L 54,21 L 49,25 L 46,25 L 45,24 z " />
+    <!-- Licht rechts gruen -->    
+    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 33,8 L 34,8 L 35,9 L 35,10 L 34,11 L 33,11 L 32,10 L 32,9 z " />
+    <!-- Licht links gruen -->  
+    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 47,21 L 48,21 L 49,22 L 49,23 L 48,24 L 47,24 L 46,23 L 46,22 z " />
+    <!-- Licht rechts dunkelgelb -->  
+    <path stroke="rgb(100,100,0)" fill="rgb(100,100,0)" d="M 29,11 L 30,11 L 31,12 L 31,13 L 30,14 L 29,14 L 28,13 L 28,12 z " />
+    <!-- Licht links dunkelgelb --> 
+    <path stroke="rgb(100,100,0)" fill="rgb(100,100,0)" d="M 51,18 L 52,18 L 53,19 L 53,20 L 52,21 L 51,21 L 50,20 L 50,19 z " />
+  </g>
+</svg>

@@ -1,0 +1,104 @@
+C H A N G E   L O G   R O C R A I L
+
+---------- ----- --- ----- ------- ------------------------------------------------------------
+ISO-Date:  Ver:  Ct: svn:  tr.id:  Description:
+---------- ----- --- ----- ------- ------------------------------------------------------------
+07-01-2009 1.2.0 fix  4234 2356721 programming using pom runs in loop
+06-01-2009 1.2.0 new  4230 2488305 Lenz Setup Dialog
+06-01-2009 1.2.0 new  4224         turntable available in auto mode
+05-01-2009 1.2.0 new  4212         lenz debounce timer via config.
+01-01-2009 1.2.0 fix  4196         always report to the clients the reported switch position
+01-01-2009 1.2.0 fix  4194 1897377 Resize colums in schedules->destinations
+30-12-2008 1.2.0 fix  4192         fix for schedule entry actions and second next block option
+30-12-2008 1.2.0 new  4191         added block velocity mid
+30-12-2008 1.2.0 chg  4190         turntable track roundhouse option removed, pause option added
+29-12-2008 1.2.0 fix  4185         turntable-basics
+28-12-2008 1.2.0 fix  4181         corrected V_hint at enter
+25-12-2008 1.2.0 fix  4162         provide current switch state in case of lock/unlock
+25-12-2008 1.2.0 fix  4159         turntable delay and track mapping added
+24-12-2008 1.2.0 bug  4150 2463874 LocoIO dialog always shows address 81/1
+24-12-2008 1.2.0 chg  4149         CTS flow checkbox for LocoBuffer HDL USB
+23-12-2008 1.2.0 fix  4140         schedule entry action fix
+22-12-2008 1.2.0 fix  4138         bug fix for setting new module address for LocoIO
+21-12-2008 1.2.0 new  4131 2308464 Saving info about loco control windows
+20-12-2008 1.2.0 new  4125 2454126 Light for double heading
+19-12-2008 1.2.0 new  4105 2200470 Semaphore Signal wait option
+18-12-2008 1.2.0 chg  4101         repository reorganized according subversion guide lines 
+15-12-2008 1.2.0 new  4064 2427662 SVG theme properties
+14-12-2008 1.2.0 new  4061         ILTIS SVG theme
+14-12-2008 1.2.0 chg  4052         disable planpanel borders in modview mode
+14-12-2008 1.2.0 fix  4051         ignore model events at gui startup to prevent crashing caused 
+                                   by uninitialized objects
+14-12-2008 1.2.0 new  4046         optional block text color and blockID
+13-12-2008 1.2.0 fix  4043         fix to unlock a Selection Table block by ID
+07-12-2008 1.2.0 fix  4027 2401207 Dual motor switches are not updated by field events
+07-12-2008 1.2.0 fix  4024 2397458 180 rotated module shifts all symbols 1 cell to the right
+07-12-2008 1.2.0 new  4022         optional disable restricting edit in automode
+07-12-2008 1.2.0 fix  4021 2401748 slider loco speed
+07-12-2008 1.2.0 fix  4020 2397448 FY is not beeing freed up in unmanaged mode
+05-12-2008 1.2.0 new  4019 2376649 Route indication in modular layouts
+04-12-2008 1.2.0 fix  4015         correction route evaluation for 2 aspects signals
+02-12-2008 1.2.0 fix  4010 2378324 Crash on symbol deletion
+02-12-2008 1.2.0 new  4009         route representation for signals
+01-12-2008 1.2.0 new  4004         first implementation of the CS2 protocol
+29-11-2008 1.2.0 chg  3989         using the slider scroll event to update the velocity display and 
+                                   the thumb released for generating a command
+27-11-2008 1.2.0 new  3984 2342464 route switchtime dependent of switch state
+27-11-2008 1.2.0 fix  3980         fiddle yard managed blocks
+24-11-2008 1.2.0 fix  3967         Lenz Sensor adressing shifted by 1.
+23-11-2008 1.2.0 new  3970 2326672 Block fbevents using "point-*" connections.
+21-11-2008 1.2.0 new  3962 1977324 FY as block manager and shared sensor events
+21-11-2008 1.2.0 new  3955 2172523 Lenz: booster state at startup
+20-11-2008 1.2.0 new  3953 2109022 Indication of occupied tracks
+19-11-2008 1.2.0 new  3945         support for LI-USB added
+18-11-2008 1.2.0 fix  3938         fix for "routeids" with same prefix and diff length
+17-11-2008 1.2.0 chg  3936         invert flag for new position fiddle yard
+16-11-2008 1.2.0 fix  3930         major bugfix: under certain conditions it was possible to 
+                                   loose about 10 LocoNet packets!
+16-11-2008 1.2.0 fix  3928         stop in terminal station incase of "secondnextblock" activated
+16-11-2008 1.2.0 fix  3927         regard placing flag in case of handling a locomotive direction event
+15-11-2008 1.2.0 chg  3924         send the straight command first for a threeway switch
+15-11-2008 1.2.0 new  3922         optional enable "loco only" commands for the loconet slotserver
+15-11-2008 1.2.0 new  3922 2109029 optical feedback of switched routes
+15-11-2008 1.2.0 chg  3918         move png format to front and xpm to back
+14-11-2008 1.2.0 new  3915         handle loco event coming from CS
+14-11-2008 1.2.0 chg  3913         moved switch and loco reader into the status reader thread
+14-11-2008 1.2.0 fix  3912         range of route switch time corrected in dialog
+14-11-2008 1.2.0 fix  3911         fix for the trackplan file filter in the Danish translation
+11-11-2008 1.2.0 fix  3904         fix for handle loco function event
+10-11-2008 1.2.0 new  3901 2236302 yellow when the next Signal behind is red
+09-11-2008 1.2.0 bug  3898         bug in opendcc trace crashes server
+09-11-2008 1.2.0 fix  3897         read back all switch states in p50x
+09-11-2008 1.2.0 fix  3896         fix for second address for the threeway type
+09-11-2008 1.2.0 fix  3893         move selection looses symbol orientation
+07-11-2008 1.2.0 new  3892         handle loco event coming from p50x
+06-11-2008 1.2.0 new  3881 2200325 Default Signal Aspect
+06-11-2008 1.2.0 new  3878         added identifier option for fb action condition
+04-11-2008 1.2.0 new  3874         added event type "ident"
+04-11-2008 1.2.0 new  3872         reverted the deletion of the LN-SV tab and added a sviid
+03-11-2008 1.2.0 new  3871         readonly mode for none first clients: RocrailIni dialog
+02-11-2008 1.2.0 fix  3869         fix for server crash in case of client detach
+02-11-2008 1.2.0 fix  3868         fix for crash in case of events before the rocgui is totally initialized
+02-11-2008 1.2.0 new  3867         readonly mode for none first clients
+02-11-2008 1.2.0 bug  3865 2214943 Uncomplete Action setup cause permanent server crash
+01-11-2008 1.2.0 fix  3864         corrected the switch action
+31-10-2008 1.2.0 fix  3860         prevent a divice by zero exception if V_max is set to zero
+31-10-2008 1.2.0 new  3854         accessory occupation representation added
+31-10-2008 1.2.0 new  3853         4 aspect signal fix for manual mode
+31-10-2008 1.2.0 new  3851         decoupler **on** symbol
+31-10-2008 1.2.0 new  3848         more advanced actions
+31-10-2008 1.2.0 chg  3847         NMBS-SNCB theme update
+30-10-2008 1.2.0 new  3846         enter and reserved block symbols for DB and Road theme
+30-10-2008 1.2.0 new  3844         added loco condition to action control
+30-10-2008 1.2.0 new  3842         create module plan from scratch
+29-10-2008 1.2.0 fix  3837         adjust module panel size
+29-10-2008 1.2.0 fix  3833         module size and rotation corrections
+29-10-2008 1.2.0 fix  3827         show default image if loco image is not set
+29-10-2008 1.2.0 bug  3825 1941284 Inform server incase of a select operation.
+28-10-2008 1.2.0 fix  3823         schedule ID change made a copy
+28-10-2008 1.2.0 fix  3822         resume is signaled by an asterisk in mode column
+28-10-2008 1.2.0 fix  3821         fix resume flag
+28-10-2008 1.2.0 chg  3819 2117314 normalize accessory key in case of fada or pada
+28-10-2008 1.2.0 new  3818         fast CV get option with DDX
+28-10-2008 1.2.0 del  3817         dda removed
+27-10-2008 1.2.0 fix  3813         enable level field

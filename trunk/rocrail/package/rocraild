@@ -1,0 +1,48 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          rocrail
+# Required-Start:    $network
+# X-UnitedLinux-Should-Start: 
+# Required-Stop:     
+# X-UnitedLinux-Should-Stop: 
+# Default-Start:     3
+# Default-Stop:      
+# Short-Description: Starts the Rocrail Daemon
+# Description:       Starts the Rocrail Daemon
+### END INIT INFO
+
+rocraild_BIN=/opt/rocrail/rocrail
+rocraild_PID=/opt/rocrail/rocraild.pid
+rocraild_SH=/opt/rocrail/rocraild.sh
+
+if [ ! -x $rocraild_BIN ] ; then
+	echo -n "Rocrail not installed ! "
+	exit 5
+fi
+
+case "$1" in
+    start)
+	if [ ! -e $rocraild_PID ] ; then
+		echo "Starting Rocrail"
+	else
+		echo "rocraild.pid already exists ! "
+		exit 5
+	fi
+ 	su - root -c "$rocraild_SH"
+	;;
+    stop)
+	if [ -e $rocraild_PID ] ; then
+		echo "Shutting down Rocrail"
+	else
+		echo "Rocrail not running or missing PID File ! "
+		exit 5
+	fi
+	su - root -c "kill `head $rocraild_PID`"
+	su - root -c "rm $rocraild_PID"
+	;;
+*)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+
+esac

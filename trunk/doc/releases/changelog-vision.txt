@@ -1,0 +1,371 @@
+C H A N G E   L O G   R O C R A I L
+
+---------- ----- --- ----- ------- ------------------------------------------------------------
+ISO-Date:  Ver:  Ct: svn:  tr.id:  Description:
+---------- ----- --- ----- ------- ------------------------------------------------------------
+26-10-2008 1.1.0 rel  3805         VISION
+24-10-2008 1.1.0 new  3804         lenz fboffset in ini
+24-10-2008 1.1.0 fix  3804         lenz fb shifted up by one
+23-10-2008 1.1.0 new  3795         opendcc bridge in lenz
+21-10-2008 1.1.0 fix  3786         rotation fix for double high symbols
+21-10-2008 1.1.0 fix  3785         unintialized symbol references crashes rocgui (2 aspects setting to white)
+21-10-2008 1.1.0 new  3783         Lenz sensor debounce
+18-10-2008 1.1.0 new  3765         optional reduce route speed in case of thrown switches
+17-10-2008 1.1.0 fix  3760 2172110 lenz power status shown
+17-10-2008 1.1.0 new  3758 2109033 actions and conditions
+14-10-2008 1.1.0 fix  3746         reset velocity to zero at startup
+07-10-2008 1.1.0 fix  3721 2149163 crash at set destination
+03-10-2008 1.1.0 new  3698         Mac support; GUI becomes native
+01-10-2008 1.1.0 fix  3704 2139909 Changed track plan properties not saved to plan file
+30-09-2008 1.1.0 new  3698         Danish language added
+29-09-2008 1.1.0 fix  3691 2134591 Not possible to work on a plan with offline Rocgui
+27-09-2008 1.1.0 fix  3683 2132561 error with consist and assignment
+23-09-2008 1.1.0 new  3660         accessory crossing in SpDrS60 style
+19-09-2008 1.1.0 fix  3651 2119666 Tooltip shows only the first loco in the list
+19-09-2008 1.1.0 new  3649         try a power off incase of a segment violation
+19-09-2008 1.1.0 fix  3647 1951779 Make route selection more random.
+18-09-2008 1.1.0 fix  3642         behave like loco panel
+18-09-2008 1.1.0 new  3641 2116749 Timer for setting previouse signal back to red.
+17-09-2008 1.1.0 fix  3639         fix for reset loco assignment
+16-09-2008 1.1.0 fix  3636         set signals after checking route
+14-09-2008 1.1.0 new  3633         set all signals to red in case of auto on command
+14-09-2008 1.1.0 new  3630         signal patterns enhanced
+13-09-2008 1.1.0 fix  3628         Fixed DDX turnout switch time
+13-09-2008 1.1.0 fix  3622         always allow unlock switches, event without address set
+12-09-2008 1.1.0 fix  3619         swap only once per block for a terminal station
+12-09-2008 1.1.0 new  3617         "queuecheck" option to avoid flickering of LEDs and bulbs (Check Tx)
+10-09-2008 1.1.0 new  3612         new rocrail attribute lciid to dispatch all loco commands
+06-09-2008 1.1.0 new  3585         UDP socket option added
+04-09-2008 1.1.0 chg  3582         removed sleep time check between switch commands in routes
+03-09-2008 1.1.0 fix  3579         loconet dispatch with slotserver
+03-09-2008 1.1.0 fix  3573         Fixed DTR problem for HSI88
+02-09-2008 1.1.0 fix  3570         p50x: get version improved with mutex to avoid mixing transactions
+02-09-2008 1.1.0 fix  3567         p50x: Read timeout corrected (p50x was not the only lib affected)
+01-09-2008 1.1.0 new  3563         added optional portbase to serial and ddx
+28-08-2008 1.1.0 new  3542         init pause is also used for route commands
+28-08-2008 1.1.0 chg  3541         disable V_step incase of regulated or speed count > 14
+25-08-2008 1.1.0 chg  3532         the reported FY position is now also evaluated before a new command is send
+24-08-2008 1.1.0 chg  3524         placing flag changed from '!' to '-' 
+24-08-2008 1.1.0 new  3520 2071130 2 extra SVG themes in rocgui ini 
+24-08-2008 1.1.0 chg  3518         placing made more visible with red background color
+23-08-2008 1.1.0 bug  3517         check if socket is initialized; 
+                                   when connecting a client during initfield this could take longer than expected
+21-08-2008 1.1.0 new  3502         advanced trace functionallity
+21-08-2008 1.1.0 new  3498         rocrail windows service support
+20-08-2008 1.1.0 bug  3493 2062898 Init field fails in auto mode
+20-08-2008 1.1.0 new  3491 2062864 enable "put out of operation" Block in auto mode
+19-08-2008 1.1.0 chg  3479         set V=0 on dir change flag is removed; standard
+19-08-2008 1.1.0 bug  3478 2057872 reserve second next block only in the same running direction
+16-08-2008 1.1.0 new  3462 2025056 warning when train or car stays to long in block
+16-08-2008 1.1.0 new  3454 1890232 Warning against "no route found" and "wait"
+16-08-2008 1.1.0 new  3453 1989825 opening properties on dbl-click in edit mode
+16-08-2008 1.1.0 new  3452 2017196 Block: no dirchange allowed
+15-08-2008 1.1.0 bug  3448         swap placing menu item added in loco table
+15-08-2008 1.1.0 bug  3435 1944247 layout .xml not correctly updated
+15-08-2008 1.1.0 bug  3434 2017477 swap placing flag in routes
+15-08-2008 1.1.0 new  3431         functions and direction events from loconet (inform clients)
+14-08-2008 1.1.0 new  3430         save loco placing in the occupation file
+14-08-2008 1.1.0 fix  3427         stop in block in case of a terminal station to swap direction
+14-08-2008 1.1.0 new  3426         velocity events from loconet (inform clients)
+13-08-2008 1.1.0 new  3411         check double track module connections for right fit
+13-08-2008 1.1.0 chg  3407         moved module support into new objects
+13-08-2008 1.1.0 fix  3400         fixed 128 speedsteps problem in lenz
+12-08-2008 1.1.0 fix  3392         corrected command line trace level options
+12-08-2008 1.1.0 fix  3391         fbinfo calculation correction (slx)
+12-08-2008 1.1.0 new  3390         dummyIO flag for slx
+11-08-2008 1.1.0 new  3386         new sub project rocMobile started for PDA's
+11-08-2008 1.1.0 new  3385         connection points for single track modules added
+11-08-2008 1.1.0 new  3382         set module panel background separate from plan panel
+10-08-2008 1.1.0 fix  3379         set occupation before block init
+10-08-2008 1.1.0 new  3377         enable switch feedback flag for testing
+10-08-2008 1.1.0 chg  3374         introduced "from-all-reverse" route event
+10-08-2008 1.1.0 chg  3373         renamed street into route object/wrapper
+09-08-2008 1.1.0 bug  3366         bug fix for command line option "-offline"
+08-08-2008 1.1.0 new  3364         resolving recursively module routes
+07-08-2008 1.1.0 new  3329 2030646 center crossing svg: occupancy support
+04-08-2008 1.1.0 new  3326 2030646 center crossing svg
+02-08-2008 1.1.0 new  3314         request server for text item image if local not found
+02-08-2008 1.1.0 chg  3313         regards request for stop in the idle step
+02-08-2008 1.1.0 mrg  3309         merged changes from branch Rocrail-1.1.0-fy into the trunk
+31-07-2008 1.1.0 bug  3306 2016686 Double crossing - wrong svg
+29-07-2008 1.1.0 fix  3290         DDX, supply power also through pin 1 and 16 in parallel port
+26-07-2008 1.1.0 fix  3281         try to connect to server before creating the gui frame
+26-07-2008 1.1.0 new  3279         optional initfield power flag
+26-07-2008 1.1.0 fix  3275         avoid multiple route lists
+25-07-2008 1.1.0 new  3269         set pada tooltip in switch test dialog
+25-07-2008 1.1.0 chg  3266         removed ddl.so
+25-07-2008 1.1.0 bug  3265 2027618 Rocgui crashes after adding a new trackplan
+
+24-07-2008 1.1.0 bug  3259 2020797 Fixed 12 functions for DCC long in DDX
+24-07-2008 1.1.0 chg  3257         swapped the backspace for the break key for "emergency break" 
+24-07-2008 1.1.0 new  3255 2026450 Plan scaling with a better granularity
+23-07-2008 1.1.0 new  3249         module properties dialog
+22-07-2008 1.1.0 bug  3241 2023947 do not show description in tooltip
+21-07-2008 1.1.0 new  3239         ModPlan dialog
+20-07-2008 1.1.0 chg  3228         removed output FY controlling in favour of switch commands
+19-07-2008 1.1.0 new  3224 2020310 Virtual Command Station (may be WIP)
+19-07-2008 1.1.0 new  3221         Lenz sensor simulation added
+19-07-2008 1.1.0 new  3218         Module inserting and removing by GUI
+18-07-2008 1.1.0 new  3211         Module inserting and removing by GUI
+14-07-2008 1.1.0 bug  3195 2017106 Module View Panel Windows not correct
+14-07-2008 1.1.0 new  3191         curved sensor symbols
+13-07-2008 1.1.0 bug  3188 2017106 Module View Panel Windows not correct
+13-07-2008 1.1.0 new  3184 2016799 Address of feedback in tool tip
+11-07-2008 1.1.0 fix  3182         added a re_enter status to prevent sending signal commands over and over again
+11-07-2008 1.1.0 fix  3180         lenz startup code changed/light function repaired
+11-07-2008 1.1.0 new  3179         auto routing with modules
+10-07-2008 1.1.0 new  3174         Elite offset fixed by Ronald   
+10-07-2008 1.1.0 fix  3173         enable delete when an item is selected
+06-07-2008 1.1.0 fix  3166         panel tooltip with title and module ID
+18-06-2008 1.1.0 new  3146 1996866 Show optional all ID's
+18-06-2008 1.1.0 new  3141         Output changes color on external event
+18-06-2008 1.1.0 fix  3134         lenz PT off after read if interface unknown
+17-06-2008 1.1.0 new  3130 1995705 Sensors in between blocks
+15-06-2008 1.1.0 new  3112         ddx PADA support
+15-06-2008 1.1.0 new  3108         dda PADA support
+14-06-2008 1.1.0 new  3096         update loco properties after save command
+14-06-2008 1.1.0 new  3095         broadcast an event to all clients after CVset
+14-06-2008 1.1.0 new  3093         crossing block changed to crossing blockS: comma separated list of blocks
+13-06-2008 1.1.0 new  3087         switch activation flag to trigger first command
+13-06-2008 1.1.0 fix  3087         save te original position of objects before rotating the module
+13-06-2008 1.1.0 fix  3075         add zlevel on module save
+12-06-2008 1.1.0 fix  3070         removed auto module label
+12-06-2008 1.1.0 new  3070         module panel background color
+11-06-2008 1.1.0 new  3064         90, 180 and 270 degree rotation added
+10-06-2008 1.1.0 new  3054         roco PT/POM added
+10-06-2008 1.1.0 fix  3039         lenz PT off after write if interface unknown
+08-06-2008 1.1.0 new  3019         PADA support in loconet
+08-06-2008 1.1.0 new  3017         added normal crossing
+07-06-2008 1.1.0 new  3010 1940643 12 DCC loco functions in DDX, FADA support in DDX
+05-06-2008 1.1.0 new  3008         virtual switch flag
+05-06-2008 1.1.0 chg  3005         set only state to unknown incase of position feedbacks
+03-06-2008 1.1.0 chg  3000         potential sigseg fixed in symbol renderer for block enter
+01-06-2008 1.1.0 chg  2994         set unknown switch state at startup
+30-05-2008 1.1.0 chg  2986         LNCV tab removed
+29-05-2008 1.1.0 chg  2982         FY rendering changed
+29-05-2008 1.1.0 chg  2976         svg is no longer optional; base theme is standard
+29-05-2008 1.1.0 fix  2975         check track range for digitalbahn decoder
+29-05-2008 1.1.0 new  2973 1888254 Support for curves in SVGs
+28-05-2008 1.1.0 new  2964         color block green on enter
+28-05-2008 1.1.0 new  2963         start of adding documentation buttons in table dialogs
+28-05-2008 1.1.0 fix  2962         turntable addressing fix for type "digitalbahn"
+27-05-2008 1.1.0 new  2937 1905288 Schedule selction from bloks contextmenu
+27-05-2008 1.1.0 new  2936 1923134 Hide/Show locos in table
+27-05-2008 1.1.0 bug  2934         srcp fix for info reader; memory access violation
+26-05-2008 1.1.0 bug  2923         data loss after object move in GUI fixed!
+25-05-2008 1.1.0 new  2916         turntable decoder protocol
+25-05-2008 1.1.0 new  2915         roco lib first version
+25-05-2008 1.1.0 new  2906         goto selection table track 1 after a reset (FY)
+25-05-2008 1.1.0 chg  2901         send position command always to fiddle yard
+24-05-2008 1.1.0 new  2899 1967612 Extra panel for modular layout overview; useable 1st step
+23-05-2008 1.1.0 bug  2882 1964758 Double crossings with 2 motors and 2 sensors
+23-05-2008 1.1.0 fix  2877         error in wrapper route switchcmd: remark was written in value
+23-05-2008 1.1.0 fix  2876         fix for layout grid incase of more rows than can be shown
+23-05-2008 1.1.0 fix  2873         switch commando option for fiddle yard
+23-05-2008 1.1.0 fix  2871         fixed crash after edit track in FY dialog
+22-05-2008 1.1.0 fix  2863         regard all address field for pair signals
+22-05-2008 1.1.0 fix  2860         fix for broken reset
+22-05-2008 1.1.0 fix  2859         prevent using a not initialized mutex
+21-05-2008 1.1.0 fix  2858         prevent sending same velocity over and over again
+21-05-2008 1.1.0 fix  2853         unlock checks for NULL or "" to give it free
+21-05-2008 1.1.0 bug  2852 1968176 Second next block only in same direction!
+20-05-2008 1.1.0 fix  2840         fix for clock settings: gui did not use the new setting
+19-05-2008 1.1.0 chg  2837         loconet commands are queued in a thread
+19-05-2008 1.1.0 fix  2830         fix for clock update and disconnect from server
+18-05-2008 1.1.0 bug  2822 1962462 occupation not correct with sensors if set manual reservations
+18-05-2008 1.1.0 new  2821         added an induvidual **secondnextblock** flag
+18-05-2008 1.1.0 new  2818         only wait one second if block does not have the wait flag on
+18-05-2008 1.1.0 fix  2816         merge title into the model incase of a modplan
+18-05-2008 1.1.0 fix  2812         disable loc start incase of none-automode in panel
+17-05-2008 1.1.0 fix  2805         switch/fb action fix
+17-05-2008 1.1.0 new  2796         extra text attributes and color
+16-05-2008 1.1.0 new  2786 1964782 Easy sensor setup in blocks for routes
+16-05-2008 1.1.0 new  2783         soft reset which keeps current block occupation
+16-05-2008 1.1.0 bug  2782 1964830 Block reservation is not consistent.
+15-05-2008 1.1.0 fix  2776         fix for strange loco ID's
+15-05-2008 1.1.0 new  2774 1963844 reset ghost blocks
+13-05-2008 1.1.0 fix  2770         blocks accepting ghost trains
+13-05-2008 1.1.0 fix  2767         fix for double crossing; two seonsor events for setting the status
+13-05-2008 1.1.0 fix  2764         occupied event re-added
+10-05-2008 1.1.0 new  2745 1925328 Versatile programming interface (CVs on disk)
+10-05-2008 1.1.0 new  2743 1897370 Warning messagebox when server is not running
+08-05-2008 1.1.0 chg  2739         reorganized automatic library 'lcdriver'
+08-05-2008 1.1.0 fix  2728         unlock all next blocks in case of a wait for direction change
+07-05-2008 1.1.0 fix  2726         reset blocks in auto mode fixed to provide wrong unlocking
+07-05-2008 1.1.0 fix  2725         trace level setting in rocrail ini dialog
+06-05-2008 1.1.0 fix  2723         reset second next block too if next block is being reset
+06-05-2008 1.1.0 fix  2722 1895071 Server is unuseable if IB is not attached
+05-05-2008 1.1.0 bug  2718 1958103 sensor activation on/off
+05-05-2008 1.1.0 fix  2717         fix for ecos sensors
+05-05-2008 1.1.0 fix  2716         unlock blocks on reset
+04-05-2008 1.1.0 fix  2712         lenz library: some changes on the output code (new signalling)
+04-05-2008 1.1.0 fix  2710 1956580 move signal logic from rocdigs to rocrail
+04-05-2008 1.1.0 new  2708 1931422 Timetable for certain decoder actions
+03-05-2008 1.1.0 chg  2706         backspace emergency break only for auto mode
+03-05-2008 1.1.0 chg  2702 1956580 move signal logic from rocdigs to rocrail
+02-05-2008 1.1.0 new  2695         use back space key as accelerator for power off
+02-05-2008 1.1.0 fix  2693         unlock groups and routes on reset
+02-05-2008 1.1.0 bug  2691 1897386 Auto reconnect to server
+01-05-2008 1.1.0 bug  2689 1955036 RR crashes when resetting a locomotive assignment (fix4fix)
+01-05-2008 1.1.0 fix  2686         selection table: fixed reported position
+01-05-2008 1.1.0 new  2686         sensor: added active low flag
+30-04-2008 1.1.0 bug  2685 1955036 RR crashes when resetting a locomotive assignment
+30-04-2008 1.1.0 fix  2683         accept only go if current block is set
+30-04-2008 1.1.0 new  2681         multiport sensor support
+29-04-2008 1.1.0 fix  2675         check always for electrical block occupation
+29-04-2008 1.1.0 fix  2674         prevent reset in auto mode
+28-04-2008 1.1.0 new  2666         selectiontable reported position by sensors
+28-04-2008 1.1.0 fix  2665 1942553 inform loc incase of reset block assignment
+27-04-2008 1.1.0 new  2664         FADA support
+26-04-2008 1.1.0 new  2653         selection table "Fiddle Yard" dialog added
+25-04-2008 1.1.0 fix  2645 1947338 signals red on enter next block
+24-04-2008 1.1.0 new  2642         LocoIO export import of *.SV files
+23-04-2008 1.1.0 bug  2634 1942548 Turnout dropdown not resetting when adding blocks
+23-04-2008 1.1.0 new  2632         LocoIO easy setup contact 2 added
+22-04-2008 1.1.0 fix  2628         added protocol for selection table
+22-04-2008 1.1.0 new  2626         LocoIO address list panel added
+22-04-2008 1.1.0 fix  2625         lenz direction flag changed
+21-04-2008 1.1.0 new  2624         LocoIO easy setup
+20-04-2008 1.1.0 fix  2619         modified lenz implementation
+19-04-2008 1.1.0 new  2616         selection table object: "Fiddle Yard"
+17-04-2008 1.1.0 fix  2605         disable rocrail.ini edit in case running auto mode
+17-04-2008 1.1.0 fix  2603         PT dialog supporting all CV's up to 1024
+17-04-2008 1.1.0 fix  2602         lenz looping fixed
+17-04-2008 1.1.0 new  2599 1936100 dialog for Measurement Track
+16-04-2008 1.1.0 bug  2594 1943752 signals not working correctly
+16-04-2008 1.1.0 bug  2592 1942597 Average Speed shows in Controller panel
+15-04-2008 1.1.0 fix  2590         if the gui request the rocrail ini it should get the new one if set
+15-04-2008 1.1.0 fix  2589         use the new ini when informing the digints
+14-04-2008 1.1.0 fix  2586         lenz signal addressing corrections
+14-04-2008 1.1.0 fix  2585         lenz statusRequestSender() added to prevent looping of commands
+13-04-2008 1.1.0 bug  2581 1924002 Locomotives lock up on Dueling Dampfloks
+13-04-2008 1.1.0 fix  2577         p50x PT response correction
+13-04-2008 1.1.0 new  2575 1931422 Timetable for certain decoder actions
+13-04-2008 1.1.0 new  2574         POM support for p50x
+10-04-2008 1.1.0 fix  2570 1936092 create image path if not exist to avoid Rocgui crash
+10-04-2008 1.1.0 fix  2568         floating point exception in MVTrack
+10-04-2008 1.1.0 bug  2565 1924002 Locomotives lock up on Dueling Dampfloks
+09-04-2008 1.1.0 new  2561 1936092 Server provide loco pics if not found locally
+09-04-2008 1.1.0 new  2558 1936092 Server provide loco pics if not found locally
+08-04-2008 1.1.0 new  2548 1936100 Measurement Track to determine the loco velocity
+07-04-2008 1.1.0 bug  2544 1936690 Fixed NULL-pointer serial port close seg-fault
+07-04-2008 1.1.0 fix  2543         lenz signal addressing
+07-04-2008 1.1.0 new  2542 1936100 measurement block to determine the loco velocity
+04-04-2008 1.1.0 fix  2530 1870898 opendcc setup dialog: tabs for PT and SCD corrected
+04-04-2008 1.1.0 new  2529 1870898 opendcc setup dialog
+04-04-2008 1.1.0 bug  2528 1933610 Lenz switch addressing does not match decoder connections
+02-04-2008 1.1.0 new  2518 1902025 white aspect added in dialog and symbols 
+01-04-2008 1.1.0 new  2513 1902025 set white aspect incase of thrown switches in the route 
+31-03-2008 1.1.0 new  2511 1870898 opendcc setup dialog (WIP)
+30-03-2008 1.1.0 fix  2510         prevent double block unlocks in auto mode
+29-03-2008 1.1.0 fix  2508         ddx: changed MMA to use improved timing
+29-03-2008 1.1.0 new  2506 1870898 opendcc/p50x: added bincmd support
+29-03-2008 1.1.0 fix  2506         edit online: update local model, init blocks, sensors and 
+                                   routes after modifications (no need to restart server anymore)
+29-03-2008 1.1.0 new  2506 1818308 shows a dialog if changes have been made online to the layout
+29-03-2008 1.1.0 new  2506 1902025 second next block and signal aspects, see wiki page
+29-03-2008 1.1.0 fix  2506         turntable in auto mode, see wiki page
+19-03-2008 1.1.0 new  2495         p50x: use XEvent to trigger XEvtPT (OpenDCC support)
+19-03-2008 1.1.0 new  2491         fix for regarding the s88 module number for ecos
+12-03-2008 1.1.0 new  2488         basic support for USB2Serial, both Linux and Windows (DDX)
+09-03-2008 1.1.0 new  2483         all configurations flags working in ddx (DCC,MM,MMA)
+09-03-2008 1.1.0 new  2480         OPC panel added in the locoIO dialog
+04-03-2008 1.1.0 new  2471         Jean-Michel added switch and sensor event handling
+04-03-2008 1.1.0 new  2470         opendcc support (WIP)
+04-03-2008 1.1.0 chg  2469         removed service and updated usergroup menu
+03-03-2008 1.1.0 new  2468         added a binary command for digints
+03-03-2008 1.1.0 new  2466         added reserved block symbol to the svg themes
+03-03-2008 1.1.0 bug  2465         crash fixed after a threeway command
+03-03-2008 1.1.0 bug  2464         Fixed power-on/PT-on confusion in ddx
+02-03-2008 1.1.0 bug  2463 1905848 Rocgui crashes after several CV gets
+02-03-2008 1.1.0 bug  2457         fixed bug in the auto mode
+02-03-2008 1.1.0 bug  2449         crash fixed after a double crossing command 
+29-02-2008 1.1.0 new  2445 1877559 Turnout sensor check
+29-02-2008 1.1.0 new  2441         fixed init of the ddl dialog for ddl/dda/ddx
+28-02-2008 1.1.0 new  2440 1709283 locked vs. occupied blocks (only with svg symbols)
+27-02-2008 1.1.0 new  2436 1877559 Turnout sensor check
+26-02-2008 1.1.0 new  2429         extended the ddl dialog for ddx
+26-02-2008 1.1.0 new  2427         added ddx library
+25-02-2008 1.1.0 new  2425         added invert flag for turnout sensors
+25-02-2008 1.1.0 new  2424         corrected shutdown process
+24-02-2008 1.1.0 new  2420         1852248 Modular Layout Support (WIP) save modules
+24-02-2008 1.1.0 new  2419         support dummyio in p50x
+24-02-2008 1.1.0 new  2418         do the save of the ini before the digints halt because windows 
+                                   won't wait for the program to finish when using ctrl+c or the 
+                                   cross window control
+17-02-2008 1.1.0 new  2410         set flag informall (digints) in case of stop/go command
+16-02-2008 1.1.0 new  2408         Added uBusyWait to the system object
+16-02-2008 1.1.0 fix  2408         Improved some serial functions 
+16-02-2008 1.1.0 new  2407         send stop/go commands to all connected interfaces
+15-02-2008 1.1.0 fix  2406         regard actdelay flag for switches
+15-02-2008 1.1.0 fix  2405         fixes for the locoIO servo get/set
+15-02-2008 1.1.0 fix  2405         added IID for switchtester and LocoIO programming
+15-02-2008 1.1.0 new  2404 1852248 Modular Layout Support: block occupation & initfield (WIP)
+14-02-2008 1.1.0 bug  2401 1892173 Sending yellow to signal with 2 aspects
+13-02-2008 1.1.0 new  2399 1852248 Modular Layout Support: module rotation (WIP)
+13-02-2008 1.1.0 bug  2397 1892906 Server crashes sometimes while running multiple clients
+13-02-2008 1.1.0 fix  2396 1891456 Control which level of the trackplan should be displayed
+12-02-2008 1.1.0 new  2395         added generic type info in the controller dialog
+12-02-2008 1.1.0 new  2394         add library to the list of controllers in the rocrail dialog
+12-02-2008 1.1.0 fix  2393         prevent looping on CTS error (p50x)
+11-02-2008 1.1.0 new  2392 1891456 Control which level of the trackplan should be displayed
+11-02-2008 1.1.0 new  2391 1852248 Modular Layout Support: merging modules (WIP)
+11-02-2008 1.1.0 new  2390         loco panel can be disabled to make more room for the track plan
+10-02-2008 1.1.0 fix  2389         read IB version info in a thread to avoid blocking rocrail
+10-02-2008 1.1.0 new  2387 1890609 signals/outputs in non automatic mode
+10-02-2008 1.1.0 new  2387 1852248 Modular Layout Support (WIP)
+06-02-2008 1.1.0 new  2382 1875839 Enhanced keyboard support to control locos (dialog)
+03-02-2008 1.1.0 fix  2381         continue to check for free destinations after **enter**
+05-02-2008 1.1.0 new  2380 1875374 Add Possibility to reset trains from automode
+04-02-2008 1.1.0 new  2379 1863526 Momentary loco functions
+03-02-2008 1.1.0 new  2375         show control device in mode field
+03-02-2008 1.1.0 fix  2374         skip Dutch ad if a loco picture is available
+03-02-2008 1.1.0 new  2372         continue to check for free destinations after **enter**
+02-02-2008 1.1.0 new  2371 1863526 Momentary loco functions
+31-01-2008 1.1.0 fix  2369         try to save the track plan under all circumstances
+31-01-2008 1.1.0 new  2368 1847217 Single Gate commands for turnouts (lenz)
+31-01-2008 1.1.0 new  2368         output object support in lenz
+31-01-2008 1.1.0 new  2366 1847217 Single Gate commands for turnouts (dda, ddl, loconet)
+30-01-2008 1.1.0 bug  2365         bug fix for setting port settings in LocoIO dialog
+28-01-2008 1.1.0 bug  2364 1881372 Actualize Function and F12
+28-01-2008 1.1.0 fix  2363         fix for the DTR signal for dda running windows
+27-01-2008 1.1.0 fix  2362         fix for pre2in event
+26-01-2008 1.1.0 chg  2357         removed fixed wait time
+25-01-2008 1.1.0 bug  2355         list position out of range when searching reverse a new destination
+25-01-2008 1.1.0 new  2354 1875839 Enhanced keyboard support to control locos
+25-01-2008 1.1.0 new  2352 1876045 Turnout default state
+24-01-2008 1.1.0 new  2351 1877563 Combining SVG themes and add extra road sym names
+24-01-2008 1.1.0 new  2349 1876259 Make additional wait time optional
+23-01-2008 1.1.0 new  2347 1877563 Combining SVG themes
+23-01-2008 1.1.0 fix  2316 1873654 stop a train at a defined location
+23-01-2008 1.1.0 bug  2345 1875769 Schedule not displayed
+22-01-2008 1.1.0 bug  2341 1877275 Route speed is overwritten by ENTER sensor
+22-01-2008 1.1.0 new  2341 1876044 added random seed for searching routes
+21-01-2008 1.1.0 bug  2337 1876072 reject close block when occupied in auto mode
+                                   check all sensors on isFree request
+21-01-2008 1.1.0 new  2336 1876669 "event timer" for locos
+21-01-2008 1.1.0 new  2335 1876044 Route selection improvement
+20-01-2008 1.1.0 new  2331         route function: regard target block when using deactivation event
+19-01-2008 1.1.0 new  2329         route function fix
+19-01-2008 1.1.0 chg  2323         replaced function left/right in route with only one function
+                                   reset previous timed function if a new timed function comes
+19-01-2008 1.1.0 new  2322         support for paired signal gates
+18-01-2008 1.1.0 bug  2321 1874902 Tool tips for function groups higher than FG1 not working
+18-01-2008 1.1.0 new  2320 1847223 Activate blinkers for cars (deactivation options)
+18-01-2008 1.1.0 new  2320         LocoIO dialog; servo support
+18-01-2008 1.1.0 new  2319         show version and name in software updates dialog
+18-01-2008 1.1.0 fix  2318         LocoIO dialog, addressing fix
+17-01-2008 1.1.0 new  2316 1873654 stop a train at a defined location
+17-01-2008 1.1.0 fix  2310         signal and output addressing fix in dda 
+15-01-2008 1.1.0 bug  2305 1872355 Functions do not work with ECoS driver 
+15-01-2008 1.1.0 new  2304 1871753 Increase number of available function in loco dialog
+14-01-2008 1.1.0 new  2301 1847223 Activate blinkers for cars (WIP)
+14-01-2008 1.1.0 fix  2297         LocoIO dialog, queue the packets and wait for matching replies
+13-01-2008 1.1.0 new  2296         LocoIO programming dialog, added version info
+13-01-2008 1.1.0 fix  2295         LocoIO programming response evaluation
+13-01-2008 1.1.0 new  2293         LocoIO programming dialog
+13-01-2008 1.1.0 fix  2290         removed e-stop for 127 speeds steps in lenz
+12-01-2008 1.1.0 new  2284         LocoIO programming dialog (WIP)
+11-01-2008 1.1.0 new  2282         dwarf signal support
+11-01-2008 1.1.0 new  2280         added NL Theme
+

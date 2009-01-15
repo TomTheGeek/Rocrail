@@ -1,0 +1,88 @@
+<plan title="rocrail-wiki.xml" rocguiversion="1.1.0 svn2322" rocrailversion="1.2.999 svn3889">
+  <lclist>
+    <lc id="BR110" prev_id="BR110" desc="BR110234-2" len="0" catnr="" purchased="" runtime="7940" bus="0" addr="11" iid="" prot="N" protver="1" spcnt="128" V_min="20" V_max="100" V_step="0" mass="0" V_mode="percent" placing="true" blockwaittime="10" commuter="true" engine="diesel" cargo="none" fn="true" V="0" dir="true" image="br110.xpm" remark="" identifier="0" fncnt="4" V_Rmin="0" V_Rmax="0" regulated="true" dirpause="0" dirchgspd="false" usescheduletime="false" trysamedir="false" tryoppositedir="false" consist="" mode="idle" V_mid="50" V_Rmid="0" evttimer="3000" fx="0">
+      <fundef fn="1" text="toeter" timer="3"/>
+      <fundef fn="6" text="herrie" timer="2"/>
+    </lc>
+  </lclist>
+  <tklist>
+    <tk type="buffer" id="tk20060904170001955" x="0" y="3" z="0" prev_id="tk20060904170001955" blockid="bk01" ori="east"/>
+    <tk type="curve" id="tk20060904170529361" x="17" y="4" z="0" ori="south" prev_id="tk20060904170529361" blockid="bk02"/>
+    <tk type="curve" id="tk20060904170640289" x="9" y="2" z="0" ori="north" prev_id="tk20060904170640289" blockid="bk04"/>
+    <tk type="buffer" id="tk20060904171413246" x="25" y="3" z="0" prev_id="tk20060904171413246" blockid="bk05" ori="west"/>
+    <tk type="buffer" id="tk20060904171415272" x="25" y="2" z="0" prev_id="tk20060904171415272" blockid="bk06" ori="west"/>
+    <tk type="buffer" id="tk20061003203723195" x="0" y="4" z="0" ori="east"/>
+  </tklist>
+  <stlist>
+    <st id="b01-b03" prev_id="NEW" bka="bk01" bkb="bk03" dir="false">
+      <swcmd id="sw01" cmd="straight"/>
+    </st>
+    <st id="b01-b04" prev_id="NEW" bka="bk01" bkb="bk04" dir="false">
+      <swcmd id="sw01" cmd="turnout"/>
+    </st>
+    <st id="b04-b06" prev_id="b04-b06" bka="bk04" bkb="bk06" dir="false"/>
+    <st id="b03-b05" prev_id="NEW" bka="bk03" bkb="bk05" dir="false">
+      <swcmd id="sw02" cmd="straight"/>
+    </st>
+    <st id="b00-b02" prev_id="b00-b02" bka="bk00" bkb="bk02" dir="false">
+      <swcmd id="sw00" cmd="straight"/>
+    </st>
+    <st id="b00-b03" prev_id="NEW" bka="bk00" bkb="bk03" dir="false">
+      <swcmd id="sw00" cmd="turnout"/>
+      <swcmd id="sw01" cmd="turnout"/>
+    </st>
+    <st id="b02-b05" prev_id="b02-b05" bka="bk02" bkb="bk05" dir="false">
+      <swcmd id="sw02" cmd="turnout"/>
+    </st>
+    <st id="b00-b04" prev_id="NEW" bka="bk00" bkb="bk04" dir="false">
+      <swcmd id="sw00" cmd="turnout"/>
+      <swcmd id="sw01" cmd="straight"/>
+    </st>
+  </stlist>
+  <bklist>
+    <bk id="bk00" x="2" y="4" z="0" prev_id="bk00" desc="" len="0" electrified="false" station="false" wait="true" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" iid="" addr="0" port="0" td="false" locid="(null)" reserved="false" entering="false"/>
+    <bk id="bk02" x="11" y="4" z="0" prev_id="bk02" desc="" len="0" electrified="false" station="false" wait="true" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" iid="" addr="0" port="0" td="false" locid="" reserved="false" entering="false"/>
+    <bk id="bk03" x="12" y="3" z="0" state="open" locid="" prev_id="bk03" desc="" len="0" electrified="false" station="false" wait="true" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" iid="" addr="0" port="0" td="false" gomanual="true" acceptghost="false" terminalstation="false" ttid="" signalR="" wsignalR="" exitspeed="cruise" evttimer="1000" reserved="false" entering="false"/>
+    <bk id="bk04" x="12" y="2" z="0" prev_id="bk04" desc="" len="0" electrified="false" station="false" wait="false" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="30" waittime="0" iid="" addr="0" port="0" td="false" locid="" gomanual="false" acceptghost="false" terminalstation="false" road="false" ttid="" signalR="" wsignalR="" exitspeed="cruise" evttimer="0" reserved="false" entering="false"/>
+    <bk id="bk06" x="20" y="2" z="0" prev_id="bk06" desc="" len="0" electrified="false" station="false" wait="false" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="30" waittime="0" iid="" addr="0" port="0" td="false" locid="" gomanual="true" acceptghost="false" terminalstation="false" road="false" ttid="" signalR="" wsignalR="" exitspeed="cruise" evttimer="0" reserved="false" entering="false"/>
+    <bk id="bk05" x="20" y="3" z="0" prev_id="bk05" desc="" len="0" electrified="false" station="false" wait="true" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" iid="" addr="0" port="0" td="false" locid="" reserved="false" entering="false"/>
+    <bk id="bk01" x="2" y="3" z="0" prev_id="bk01" desc="" len="0" electrified="false" station="false" wait="true" state="open" commuter="yes" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" iid="" addr="0" port="0" td="false" locid="" reserved="false" entering="false"/>
+  </bklist>
+  <fblist>
+    <fb id="fb072" x="1" y="3" z="0" prev_id="fb072" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="1" action="false" state="false" road="false" blockid="" addr="3"/>
+    <fb id="fb073" x="7" y="3" z="0" prev_id="fb073" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="2" action="false" state="false" road="false" blockid="" addr="4"/>
+    <fb id="fb064" x="1" y="4" z="0" prev_id="fb064" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="9" action="false" state="false" road="false" blockid="" addr="104"/>
+    <fb id="fb065" x="7" y="4" z="0" prev_id="fb065" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="8" action="false" state="false" road="false" blockid="" addr="1"/>
+    <fb id="fb066" x="9" y="4" z="0" prev_id="fb066" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="10" action="false" state="false" road="false" blockid="" addr="2"/>
+    <fb id="fb063" x="11" y="3" z="0" prev_id="fb063" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="13" action="false" state="false" blockid="" addr="102" road="false"/>
+    <fb id="fb060" x="14" y="4" z="0" prev_id="fb060" desc="" show="false" ori="west" iid="" bus="0" unit="1" pin="11" action="false" state="false" road="false" blockid="" addr="100"/>
+    <fb id="fb061" x="16" y="4" z="0" prev_id="fb061" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="12" action="false" state="false" road="false" blockid="" addr="101"/>
+    <fb id="fb082" x="18" y="3" z="0" prev_id="fb082" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="5" action="false" state="false" road="false" blockid="" addr="7"/>
+    <fb id="fb083" x="24" y="3" z="0" prev_id="fb083" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="7" action="false" state="false" road="false" blockid="" addr="8"/>
+    <fb id="fb074" x="10" y="2" z="0" prev_id="fb074" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="3" action="false" state="false" road="false" blockid="" addr="5"/>
+    <fb id="fb075" x="17" y="2" z="0" prev_id="fb075" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="4" action="false" state="false" road="false" blockid="" addr="6"/>
+    <fb id="fb094" x="18" y="2" z="0" prev_id="fb094" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="14" action="false" state="false" road="false" blockid="" addr="10"/>
+    <fb id="fb091" x="24" y="2" z="0" prev_id="fb091" desc="" show="true" ori="west" iid="" bus="0" unit="1" pin="6" action="false" state="false" road="false" blockid="" addr="9"/>
+  </fblist>
+  <swlist>
+    <sw type="left" id="sw00" x="8" y="4" z="0" ori="east" prev_id="sw00" dir="false" iid="" bus="0" unit="1" pin="1" inv="false" unit2="0" pin2="0" inv2="false" prot="M" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="turnout"/>
+    <sw type="dcrossing" id="sw01" x="8" y="3" z="0" prev_id="sw01" dir="false" ori="east" iid="" bus="0" unit="1" pin="2" inv="false" unit2="0" pin2="0" inv2="false" prot="M" fbR="" fbG="" fb2R="" fb2G="" state="straight" blockid="" savepos="none" swtype="default" road="false" addr1="1" port1="1" gate1="0" singlegate="false" addr2="1" port2="2" actdelay="true" delay="0" fbRinv="false" fbGinv="false" fb2Rinv="false" fb2Ginv="false"/>
+    <sw type="left" id="sw02" x="17" y="3" z="0" prev_id="sw02" dir="false" ori="west" iid="" bus="0" unit="1" pin="3" inv="false" unit2="0" pin2="0" inv2="false" prot="M" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="turnout"/>
+  </swlist>
+  <colist/>
+  <sglist>
+    <sg id="sg05" x="19" y="3" z="0"/>
+    <sg id="sg03" x="16" y="3" z="0" ori="east"/>
+    <sg id="sg06" x="19" y="2" z="0"/>
+    <sg id="sg04" x="11" y="2" z="0"/>
+    <sg id="sg02" x="15" y="4" z="0" ori="east"/>
+    <sg id="sg00" x="6" y="4" z="0" ori="east"/>
+    <sg id="sg01" x="6" y="3" z="0" ori="east"/>
+    <sg id="sg04e" x="16" y="2" z="0" ori="east"/>
+    <sg id="sg03w" x="10" y="3" z="0"/>
+    <sg id="sg02w" x="10" y="4" z="0"/>
+  </sglist>
+  <ttlist/>
+  <zlevel title="Dinamo Test Baan" z="0" active="true"/>
+  <txlist/>
+</plan>

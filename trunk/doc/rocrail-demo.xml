@@ -1,0 +1,349 @@
+<plan title="Kofferbahn.xml" name="Kofferbahn.xml" server="infw081F8ED4">
+  <lclist>
+    <lc id="BR211" prev_id="BR211ü" desc="Arnold BR 211" len="0" catnr="" purchased="" runtime="0" identifier="0" bus="0" addr="11" iid="" prot="N" protver="2" spcnt="128" fncnt="4" V_min="35" V_max="60" V_step="0" mass="0" V_mode="percent" placing="true" dirpause="0" dirchgspd="false" blockwaittime="2" commuter="false" trysamedir="false" tryoppositedir="false" engine="diesel" cargo="mixed" fn="true" V="0" dir="false" image="/home/christian/rocrail/locxpm/br212.xpm" mode="idle" V_Rmin="35" V_Rmax="60">
+      <cvbyte nr="1" value="11"/>
+      <cvbyte nr="2" value="10"/>
+      <cvbyte nr="3" value="2"/>
+      <cvbyte nr="4" value="2"/>
+      <cvbyte nr="5" value="130"/>
+      <cvbyte nr="6" value="100"/>
+      <cvbyte nr="29" value="2"/>
+      <cvbyte nr="7" value="37"/>
+      <cvbyte nr="8" value="117"/>
+      <cvbyte nr="9" value="144"/>
+      <cvbyte nr="10" value="0"/>
+      <cvbyte nr="11" value="0"/>
+      <cvbyte nr="12" value="0"/>
+      <cvbyte nr="13" value="0"/>
+      <cvbyte nr="14" value="0"/>
+      <cvbyte nr="15" value="0"/>
+      <cvbyte nr="16" value="0"/>
+      <cvbyte nr="17" value="0"/>
+      <cvbyte nr="18" value="0"/>
+      <cvbyte nr="19" value="0"/>
+      <cvbyte nr="20" value="0"/>
+      <cvbyte nr="21" value="0"/>
+      <cvbyte nr="22" value="0"/>
+      <cvbyte nr="23" value="0"/>
+      <cvbyte nr="24" value="0"/>
+      <cvbyte nr="25" value="0"/>
+      <cvbyte nr="26" value="0"/>
+      <cvbyte nr="27" value="0"/>
+      <cvbyte nr="28" value="0"/>
+      <cvbyte nr="30" value="0"/>
+      <cvbyte nr="31" value="0"/>
+      <cvbyte nr="32" value="0"/>
+    </lc>
+    <lc id="BR237" prev_id="BR237" desc="" len="0" catnr="" purchased="" runtime="0" identifier="0" bus="0" addr="10" iid="" prot="N" protver="2" spcnt="128" fncnt="4" V_min="50" V_max="99" V_step="0" mass="0" V_mode="percent" placing="true" dirpause="0" dirchgspd="false" blockwaittime="10" commuter="false" trysamedir="false" tryoppositedir="false" engine="diesel" cargo="none" fn="false" dir="false" V="0" image="/home/christian/rocrail/locxpm/B237.png" mode="idle">
+      <cvbyte nr="1" value="10"/>
+      <cvbyte nr="2" value="5"/>
+      <cvbyte nr="3" value="4"/>
+      <cvbyte nr="4" value="4"/>
+      <cvbyte nr="5" value="1"/>
+      <cvbyte nr="6" value="0"/>
+      <cvbyte nr="29" value="2"/>
+      <cvbyte nr="7" value="37"/>
+      <cvbyte nr="8" value="117"/>
+      <cvbyte nr="9" value="141"/>
+      <cvbyte nr="10" value="0"/>
+      <cvbyte nr="11" value="0"/>
+      <cvbyte nr="12" value="0"/>
+      <cvbyte nr="13" value="0"/>
+      <cvbyte nr="14" value="0"/>
+      <cvbyte nr="15" value="0"/>
+      <cvbyte nr="16" value="0"/>
+      <cvbyte nr="17" value="0"/>
+      <cvbyte nr="18" value="0"/>
+      <cvbyte nr="19" value="0"/>
+      <cvbyte nr="20" value="0"/>
+      <cvbyte nr="21" value="0"/>
+      <cvbyte nr="22" value="0"/>
+      <cvbyte nr="23" value="0"/>
+      <cvbyte nr="24" value="0"/>
+      <cvbyte nr="25" value="0"/>
+      <cvbyte nr="26" value="0"/>
+      <cvbyte nr="27" value="0"/>
+      <cvbyte nr="28" value="0"/>
+      <cvbyte nr="30" value="0"/>
+      <cvbyte nr="31" value="0"/>
+      <cvbyte nr="32" value="0"/>
+    </lc>
+    <lc id="BR216" prev_id="BR216" desc="" len="0" catnr="" purchased="" runtime="0" identifier="0" bus="0" addr="12" iid="" prot="N" protver="2" spcnt="128" fncnt="4" V_min="65" V_max="99" V_step="0" mass="0" V_mode="percent" placing="true" dirpause="0" dirchgspd="false" blockwaittime="10" commuter="false" trysamedir="false" tryoppositedir="false" engine="diesel" cargo="none" fn="false" dir="false" V="0" image="/home/christian/rocrail/locxpm/BR218_Fleischmann_7235.png" mode="idle" V_Rmin="65" V_Rmax="99">
+      <cvbyte nr="1" value="12"/>
+      <cvbyte nr="2" value="5"/>
+      <cvbyte nr="3" value="5"/>
+      <cvbyte nr="4" value="5"/>
+      <cvbyte nr="5" value="170"/>
+      <cvbyte nr="6" value="80"/>
+      <cvbyte nr="7" value="37"/>
+      <cvbyte nr="8" value="117"/>
+      <cvbyte nr="9" value="141"/>
+      <cvbyte nr="10" value="0"/>
+      <cvbyte nr="11" value="0"/>
+      <cvbyte nr="12" value="0"/>
+      <cvbyte nr="13" value="0"/>
+      <cvbyte nr="14" value="0"/>
+      <cvbyte nr="15" value="0"/>
+      <cvbyte nr="16" value="0"/>
+      <cvbyte nr="17" value="0"/>
+      <cvbyte nr="18" value="0"/>
+      <cvbyte nr="19" value="0"/>
+      <cvbyte nr="20" value="0"/>
+      <cvbyte nr="21" value="0"/>
+      <cvbyte nr="22" value="0"/>
+      <cvbyte nr="23" value="0"/>
+      <cvbyte nr="24" value="0"/>
+      <cvbyte nr="25" value="0"/>
+      <cvbyte nr="26" value="0"/>
+      <cvbyte nr="27" value="0"/>
+      <cvbyte nr="28" value="0"/>
+      <cvbyte nr="29" value="2"/>
+      <cvbyte nr="30" value="0"/>
+      <cvbyte nr="31" value="0"/>
+      <cvbyte nr="32" value="0"/>
+    </lc>
+    <lc id="E19" prev_id="E19" desc="Fleischmann E19" len="0" catnr="" purchased="" runtime="0" identifier="0" bus="0" addr="13" iid="" prot="N" protver="2" spcnt="128" fncnt="4" V_min="0" V_max="100" V_step="0" mass="0" V_mode="percent" placing="true" dirpause="0" dirchgspd="false" blockwaittime="10" commuter="false" trysamedir="false" tryoppositedir="false" engine="diesel" cargo="none" fn="true" image="/home/christian/rocrail/locxpm/E19.png" V="-1" dir="true" mode="idle"/>
+    <lc id="ICE 3" prev_id="ICE 3" desc="" len="0" catnr="" purchased="" runtime="0" identifier="0" bus="0" addr="14" iid="" prot="N" protver="2" spcnt="128" fncnt="4" V_min="50" V_max="99" V_step="0" mass="0" V_mode="percent" placing="true" dirpause="0" dirchgspd="false" blockwaittime="10" commuter="true" trysamedir="false" tryoppositedir="false" engine="diesel" cargo="none" fn="false" image="/home/christian/rocrail/locxpm/V80_Trix_12504.png" V="0" dir="false" mode="idle" V_Rmin="0" V_Rmax="0">
+      <cvbyte nr="1" value="14"/>
+      <cvbyte nr="2" value="0"/>
+      <cvbyte nr="3" value="14"/>
+      <cvbyte nr="4" value="5"/>
+      <cvbyte nr="5" value="0"/>
+      <cvbyte nr="6" value="0"/>
+      <cvbyte nr="7" value="34"/>
+      <cvbyte nr="8" value="157"/>
+      <cvbyte nr="9" value="0"/>
+      <cvbyte nr="10" value="0"/>
+      <cvbyte nr="11" value="0"/>
+      <cvbyte nr="12" value="0"/>
+      <cvbyte nr="13" value="0"/>
+      <cvbyte nr="14" value="0"/>
+      <cvbyte nr="15" value="0"/>
+      <cvbyte nr="16" value="1"/>
+      <cvbyte nr="17" value="192"/>
+      <cvbyte nr="18" value="0"/>
+      <cvbyte nr="19" value="0"/>
+      <cvbyte nr="20" value="0"/>
+      <cvbyte nr="21" value="0"/>
+      <cvbyte nr="22" value="-1"/>
+      <cvbyte nr="23" value="0"/>
+      <cvbyte nr="24" value="0"/>
+      <cvbyte nr="25" value="0"/>
+      <cvbyte nr="26" value="0"/>
+      <cvbyte nr="27" value="0"/>
+      <cvbyte nr="28" value="0"/>
+      <cvbyte nr="29" value="6"/>
+      <cvbyte nr="30" value="0"/>
+      <cvbyte nr="31" value="0"/>
+      <cvbyte nr="32" value="0"/>
+    </lc>
+  </lclist>
+  <tklist>
+    <tk type="curve" id="tk20070705001314746" x="1" y="1" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705001930439" x="12" y="1" z="0"/>
+    <tk type="curve" id="tk20070705002131810" x="14" y="2" z="0" ori="south"/>
+    <tk type="curve" id="tk20070705002518390" x="24" y="5" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705002553927" x="18" y="3" z="0"/>
+    <tk type="straight" id="tk20070705002607375" x="3" y="3" z="0"/>
+    <tk type="straight" id="tk20070705002715175" x="10" y="2" z="0"/>
+    <tk type="straight" id="tk20070705002718111" x="12" y="2" z="0"/>
+    <tk type="buffer" id="tk20070705002723199" x="2" y="2" z="0" ori="east"/>
+    <tk type="buffer" id="tk20070705002731223" x="2" y="3" z="0" ori="east"/>
+    <tk type="buffer" id="tk20070705002817651" x="24" y="3" z="0"/>
+    <tk type="straight" id="tk20070705002820519" x="10" y="1" z="0"/>
+    <tk type="straight" id="tk20070705002822935" x="15" y="1" z="0"/>
+    <tk type="straight" id="tk20070705002825462" x="18" y="10" z="0"/>
+    <tk type="curve" id="tk20070705002838522" x="25" y="1" z="0"/>
+    <tk type="straight" id="tk20070705002841847" x="25" y="7" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705002844993" x="25" y="2" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705004103712" x="1" y="4" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705004248967" x="23" y="8" z="0" ori="east"/>
+    <tk type="curve" id="tk20070705004300792" x="24" y="8" z="0" ori="south"/>
+    <tk type="straight" id="tk20070705004315569" x="8" y="8" z="0"/>
+    <tk type="straight" id="tk20070705004329505" x="10" y="8" z="0"/>
+    <tk type="straight" id="tk20070705005142397" x="9" y="8" z="0"/>
+    <tk type="straight" id="tk20070705005144956" x="7" y="8" z="0"/>
+    <tk type="curve" id="tk20070705153903330" x="2" y="5" z="0"/>
+    <tk type="straight" id="tk20070705153906346" x="2" y="6" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705153911714" x="2" y="7" z="0" ori="north"/>
+    <tk type="curve" id="tk20070705153917258" x="2" y="8" z="0" ori="east"/>
+    <tk type="straight" id="tk20070705153923947" x="4" y="8" z="0"/>
+    <tk type="straight" id="tk20070705153928474" x="6" y="8" z="0"/>
+    <tk type="straight" id="tk20070705153931850" x="25" y="6" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705153936940" x="25" y="8" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705153939195" x="17" y="9" z="0"/>
+    <tk type="curve" id="tk20070705153950438" x="25" y="9" z="0" ori="south"/>
+    <tk type="straight" id="tk20070705154011908" x="12" y="9" z="0"/>
+    <tk type="straight" id="tk20070705154019020" x="9" y="9" z="0"/>
+    <tk type="straight" id="tk20070705154023196" x="7" y="9" z="0"/>
+    <tk type="straight" id="tk20070705154055316" x="5" y="9" z="0"/>
+    <tk type="straight" id="tk20070705154057340" x="4" y="9" z="0"/>
+    <tk type="curve" id="tk20070705154102012" x="1" y="9" z="0" ori="east"/>
+    <tk type="straight" id="tk20070705154109221" x="1" y="8" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705154113044" x="1" y="6" z="0" ori="north"/>
+    <tk type="straight" id="tk20070705154128084" x="3" y="10" z="0"/>
+    <tk type="straight" id="tk20070705154130268" x="4" y="10" z="0"/>
+    <tk type="buffer" id="tk20070705154136964" x="1" y="10" z="0" ori="east"/>
+    <tk type="straight" id="tk20070705154148276" x="12" y="10" z="0"/>
+    <tk type="straight" id="tk20070705154153252" x="10" y="10" z="0" prev_id="tk20070705154153252" blockid="" ori="west"/>
+    <tk type="straight" id="tk20070705154155468" x="9" y="10" z="0"/>
+    <tk type="straight" id="tk20070705154208981" x="17" y="10" z="0"/>
+    <tk type="straight" id="tk20070705154215189" x="22" y="7" z="0"/>
+    <tk type="straight" id="tk20070705154226038" x="17" y="7" z="0"/>
+    <tk type="buffer" id="tk20070705154244407" x="23" y="7" z="0"/>
+    <tk type="buffer" id="tk20070705154247671" x="3" y="7" z="0" ori="east"/>
+    <tk type="straight" id="tk20070708114651606" x="15" y="8" z="0"/>
+    <tk type="straight" id="tk20070708114656534" x="19" y="9" z="0"/>
+    <tk type="straight" id="tk20070708114702326" x="20" y="9" z="0"/>
+    <tk type="straight" id="tk20070708114721566" x="8" y="3" z="0"/>
+    <tk type="straight" id="tk20070708114723767" x="8" y="1" z="0"/>
+    <tk type="straight" id="tk20070708123356585" x="19" y="10" z="0"/>
+    <tk type="straight" id="tk20070708123358697" x="20" y="10" z="0"/>
+    <tk type="straight" id="tk20070708123400697" x="21" y="10" z="0"/>
+    <tk type="straight" id="tk20070713154704164" x="14" y="8" z="0"/>
+    <tk type="straight" id="tk20070713154706444" x="12" y="8" z="0"/>
+    <tk type="straight" id="tk20070713154708692" x="17" y="8" z="0"/>
+    <tk type="straight" id="tk20070713154738332" x="12" y="7" z="0"/>
+    <tk type="straight" id="tk20070713154740284" x="9" y="7" z="0"/>
+    <tk type="straight" id="tk20070713154743964" x="15" y="7" z="0"/>
+    <tk type="straight" id="tk20070713154747526" x="14" y="7" z="0"/>
+    <tk type="straight" id="tk20070713154826916" x="2" y="9" z="0"/>
+    <tk type="straight" id="tk20070713154833764" x="13" y="1" z="0"/>
+    <tk type="straight" id="tk20070713154835389" x="16" y="3" z="0"/>
+    <tk type="straight" id="tk20070713154837756" x="8" y="2" z="0"/>
+    <tk type="straight" id="tk20070713154839860" x="10" y="3" z="0"/>
+    <tk type="straight" id="tk20070713154841916" x="12" y="3" z="0"/>
+    <tk type="straight" id="tk20070713154843980" x="14" y="3" z="0"/>
+    <tk type="straight" id="tk20070713154957467" x="23" y="1" z="0"/>
+    <tk type="straight" id="tk20070713155000292" x="18" y="1" z="0" prev_id="tk20070713155000292" blockid="" ori="west"/>
+    <tk type="straight" id="tk20070713155012722" x="23" y="9" z="0"/>
+    <tk type="straight" id="tk20070713155014802" x="10" y="9" z="0"/>
+    <tk type="straight" id="tk20070713155017002" x="21" y="9" z="0"/>
+    <tk type="straight" id="tk20070926234249371" x="16" y="1" z="0"/>
+    <tk type="straight" id="tk20070926234252699" x="25" y="4" z="0" ori="north"/>
+    <tk type="straight" id="tk20070927001400926" x="24" y="6" z="0" ori="north"/>
+    <tk type="straight" id="tk20070927001406440" x="24" y="9" z="0"/>
+    <tk type="straight" id="tk20070927004358365" x="24" y="1" z="0"/>
+    <tk type="straight" id="tk20070927004402766" x="3" y="8" z="0"/>
+    <tk type="straight" id="tk20070927004403822" x="3" y="9" z="0"/>
+    <tk type="straight" id="tk20070927004407966" x="1" y="2" z="0" ori="north"/>
+    <tk type="straight" id="tk20070929233652007" x="2" y="1" z="0"/>
+    <tk type="curve" id="tk20071031000444686" x="15" y="0" z="0" ori="north"/>
+    <tk type="straight" id="tk20071031000518385" x="16" y="0" z="0"/>
+    <tk type="straight" id="tk20071031000519836" x="17" y="0" z="0"/>
+    <tk type="straight" id="tk20071031000520505" x="18" y="0" z="0"/>
+    <tk type="straight" id="tk20071031000524634" x="23" y="0" z="0"/>
+    <tk type="straight" id="tk20071031000525273" x="24" y="0" z="0"/>
+    <tk type="straight" id="tk20071031000639029" x="22" y="10" z="0"/>
+    <tk type="straight" id="tk20071031000639629" x="23" y="10" z="0"/>
+    <tk type="straight" id="tk20071031000640277" x="24" y="10" z="0"/>
+    <tk type="buffer" id="tk20071101003759852" x="25" y="0" z="0"/>
+    <tk type="buffer" id="tk20071101003803740" x="25" y="10" z="0"/>
+    <tk type="straight" id="tk20071101003846062" x="7" y="10" z="0"/>
+    <tk type="straight" id="tk20071101003851935" x="5" y="10" z="0"/>
+    <tk type="straight" id="tk20071101003855920" x="2" y="10" z="0"/>
+  </tklist>
+  <stlist>
+    <st id="B08-B01" prev_id="B08-B01" bka="B08" bkb="B01" bkc="" dir="false">
+      <swcmd id="W7" cmd="straight"/>
+      <swcmd id="W5" cmd="turnout"/>
+    </st>
+    <st id="B09-B01" prev_id="B09-B01" bka="B09" bkb="B01" bkc="" dir="false">
+      <swcmd id="W8" cmd="straight"/>
+      <swcmd id="W5" cmd="straight"/>
+    </st>
+    <st id="B01-B02" prev_id="B01-B02" bka="B01" bkb="" bkc="" dir="false">
+      <swcmd id="W1" cmd="straight"/>
+    </st>
+    <st id="B02-B09" prev_id="B02-B09" bka="B02" bkb="B09" bkc="" dir="false">
+      <swcmd id="W4" cmd="straight"/>
+    </st>
+    <st id="B02-B08" prev_id="B02-B08" bka="B02" bkb="B08" bkc="" dir="false">
+      <swcmd id="W4" cmd="turnout"/>
+    </st>
+  </stlist>
+  <bklist>
+    <bk id="B01" x="4" y="1" z="0" locid="" state="open" prev_id="B01" desc="Hintenhalt" len="0" electrified="false" station="false" wait="true" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="S03" fbb="" fbi="S01" fbr="S03" fbm="S02" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="2" waittime="2" evttimer="0" iid="" addr="0" port="0" td="false"/>
+    <bk id="B03" x="4" y="2" z="0" prev_id="B03" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false" locid="(null)"/>
+    <bk id="B04" x="4" y="3" z="0" prev_id="B04" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false"/>
+    <bk id="B05" x="19" y="3" z="0" prev_id="B05" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false"/>
+    <bk id="B06" x="4" y="7" z="0" prev_id="B06" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false"/>
+    <bk id="B07" x="18" y="7" z="0" prev_id="B07" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false"/>
+    <bk id="B08" x="18" y="8" z="0" prev_id="B08" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="S15" fbb="" fbi="S13" fbr="" fbm="S14" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="2" waittime="2" evttimer="0" iid="" addr="0" port="0" td="false" locid="BR211"/>
+    <bk id="B09" x="13" y="9" z="0" prev_id="B09" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="S08" fbb="" fbi="S06" fbr="" fbm="S07" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="10" waittime="2" evttimer="0" iid="" addr="0" port="0" td="false" locid="">
+      <fbevent id="S06" action="enter" from="B01" endpuls="false"/>
+      <fbevent id="S08" action="in" from="B01" endpuls="false"/>
+      <fbevent id="S09" action="exit" from="B01" endpuls="false"/>
+    </bk>
+    <bk id="B10" x="13" y="10" z="0" prev_id="B10" desc="" len="0" electrified="false" station="false" wait="true" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="" fbb="" fbi="" fbr="" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false" locid="(null)"/>
+    <bk id="B02" x="19" y="1" z="0" prev_id="B02" desc="" len="0" electrified="false" station="false" wait="false" state="open" gomanual="true" acceptghost="true" terminalstation="false" commuter="no" fba="S10" fbb="" fbi="S11" fbr="S11" fbm="" signal="" wsignal="" speed="cruise" type="local" incline="0" waitmode="fixed" minwaittime="1" maxwaittime="2" waittime="2" evttimer="0" iid="" addr="0" port="0" td="false" locid=""/>
+    <bk id="B00" x="19" y="0" z="0" state="open" locid="(null)"/>
+  </bklist>
+  <fblist>
+    <fb id="S01" x="11" y="1" z="0" state="false" prev_id="S01" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="1" action="false"/>
+    <fb id="S02" x="9" y="1" z="0" state="false" prev_id="S02" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="2" action="false"/>
+    <fb id="S03" x="3" y="1" z="0" state="false" prev_id="S03" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="3" action="false"/>
+    <fb id="S04" x="1" y="3" z="0" state="false" prev_id="S04" desc="" show="true" ori="north" iid="" bus="0" unit="32" pin="4" action="false"/>
+    <fb id="S05" x="1" y="7" z="0" state="false" prev_id="S05" desc="" show="true" ori="north" iid="" bus="0" unit="32" pin="5" action="false"/>
+    <fb id="S06" x="8" y="9" z="0" state="false" prev_id="S06" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="6" action="false"/>
+    <fb id="S07" x="11" y="9" z="0" state="false" prev_id="S07" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="7" action="false"/>
+    <fb id="S08" x="18" y="9" z="0" state="false" prev_id="S08" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="8" action="false"/>
+    <fb id="S09" x="22" y="9" z="0" state="false" prev_id="S09" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="9" action="false"/>
+    <fb id="S10" x="25" y="3" z="0" state="false" prev_id="S10" desc="" show="true" ori="north" iid="" bus="0" unit="32" pin="10" action="false"/>
+    <fb id="S20" x="16" y="7" z="0" state="false"/>
+    <fb id="S30" x="23" y="3" z="0" state="false"/>
+    <fb id="S19" x="13" y="7" z="0" state="false"/>
+    <fb id="S18" x="11" y="10" z="0" state="false"/>
+    <fb id="S17" x="8" y="10" z="0" state="false"/>
+    <fb id="S16" x="24" y="7" z="0" state="false" prev_id="S16" desc="" show="true" ori="north" iid="" bus="0" unit="32" pin="16" action="false"/>
+    <fb id="S15" x="22" y="8" z="0" state="false" prev_id="S15" desc="" show="true" ori="east" iid="" bus="0" unit="32" pin="15" action="false"/>
+    <fb id="S14" x="16" y="8" z="0" state="false" prev_id="S14" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="14" action="false"/>
+    <fb id="S13" x="13" y="8" z="0" state="false" prev_id="S13" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="13" action="false"/>
+    <fb id="S12" x="5" y="8" z="0" state="false" prev_id="S12" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="12" action="false"/>
+    <fb id="S11" x="17" y="1" z="0" state="false" prev_id="S11" desc="" show="true" ori="west" iid="" bus="0" unit="32" pin="11" action="false"/>
+    <fb id="S21" x="10" y="7" z="0" state="false"/>
+    <fb id="S22" x="8" y="7" z="0" state="false"/>
+    <fb id="S23" x="11" y="2" z="0" state="false"/>
+    <fb id="S24" x="9" y="3" z="0" state="false"/>
+    <fb id="S25" x="3" y="2" z="0" state="false"/>
+    <fb id="S26" x="11" y="3" z="0" state="false"/>
+    <fb id="S27" x="9" y="2" z="0" state="false"/>
+    <fb id="S28" x="15" y="3" z="0" state="false"/>
+    <fb id="S29" x="17" y="3" z="0" state="false"/>
+  </fblist>
+  <swlist>
+    <sw type="left" id="W3" x="13" y="3" z="0" ori="east" prev_id="W3" dir="false" iid="" bus="0" unit="0" pin="3" gate="0" inv="false" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="turnout"/>
+    <sw type="right" id="W4" x="25" y="5" z="0" ori="south" prev_id="W4" dir="true" iid="" bus="0" unit="0" pin="4" gate="0" inv="false" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="turnout"/>
+    <sw type="left" id="W2" x="13" y="2" z="0" prev_id="W2" dir="false" ori="west" iid="" bus="0" unit="0" pin="2" gate="0" inv="false" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="straight"/>
+    <sw type="left" id="W5" x="1" y="5" z="0" ori="north" prev_id="W5" dir="false" iid="" bus="0" unit="1" pin="1" gate="0" inv="true" unit2="0" pin2="0" inv2="false" actdelay="true" delay="250" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="turnout"/>
+    <sw type="right" id="W8" x="6" y="9" z="0" prev_id="W8" dir="true" ori="west" iid="" bus="0" unit="1" pin="4" gate="0" inv="true" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="straight"/>
+    <sw type="left" id="W7" x="11" y="8" z="0" ori="east" prev_id="W7" dir="false" iid="" bus="0" unit="1" pin="3" gate="0" inv="true" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="straight"/>
+    <sw type="left" id="W6" x="11" y="7" z="0" prev_id="W6" dir="false" ori="west" iid="" bus="0" unit="1" pin="2" gate="0" inv="true" unit2="0" pin2="0" inv2="false" actdelay="true" delay="0" prot="N" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)" state="straight"/>
+    <sw type="dcrossing" id="DK1" x="14" y="1" z="0"/>
+    <sw type="right" id="ws09" x="6" y="10" z="0" ori="east"/>
+  </swlist>
+  <colist/>
+  <sglist/>
+  <ttlist/>
+  <zlevel title="Kofferbahn" z="0" active="true"/>
+  <txlist>
+    <tx text="Prog.Track" id="tx20070708123713757" x="3" y="11" z="0" prev_id="tx20070708123713757" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="s03" id="tx20071101113154415" x="3" y="0" z="0" prev_id="tx20071101113154415" desc="" pointsize="0" cx="1" cy="1"/>
+    <tx text="s02" id="tx20071101113208426" x="9" y="0" z="0" prev_id="tx20071101113208426" desc="" pointsize="0" cx="1" cy="1"/>
+    <tx text="s01" id="tx20071101113222511" x="11" y="0" z="0" prev_id="tx20071101113222511" desc="" pointsize="0" cx="1" cy="1"/>
+    <tx text="dk1" id="tx20071101113244097" x="14" y="0" z="0" prev_id="tx20071101113244097" desc="" pointsize="0" cx="1" cy="1"/>
+  </txlist>
+  <locationlist>
+    <location id="Hintenhalt" blocks="B01"/>
+    <location id="Bahnhof Gl.2" blocks="B08"/>
+    <location id="Bahnhof Gl.3" blocks="B09"/>
+  </locationlist>
+  <sclist>
+    <sc id="fahrplan 1">
+      <scentry block="B08" hour="0" minute="0" location="Hintenhalt"/>
+      <scentry block="B08" hour="0" minute="0"/>
+      <scentry location="" hour="0" minute="0"/>
+      <scentry location="Hintenhalt" hour="0" minute="0"/>
+    </sc>
+  </sclist>
+</plan>

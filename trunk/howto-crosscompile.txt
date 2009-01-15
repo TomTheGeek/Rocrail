@@ -1,0 +1,71 @@
+Cross Compile with MinGW
+Rocrail cross compiled on Ubuntu for Windows unicode:
+get the cross compiler:
+
+sudo apt-get install mingw32
+
+get from http://www.wxwidgets.org the wxall sources and decompress it in your home directory.
+
+cd wxWidgets-2.8.x
+run configure like:
+
+./configure --prefix=/usr/i586-mingw32msvc --host=i586-mingw32msvc --target=i586-mingw32msvc --with-msw --enable-unicode --enable-mslu --disable-shared
+
+Leave out the ”–enable-unicode –enable-mslu” flags if you want to build a version for MS Windows 9x. (ANSI)
+make the wx libraries:
+
+make
+
+install it:
+
+sudo make install
+
+build the rocrail modules:
+
+cd Rocrail
+cd rocs
+make clean
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+cd ../rocint
+make clean
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+cd ../rocrail
+make clean
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+cd ../roclcdr
+make clean
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+cd ../rocdigs
+make clean
+make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
+
+build the UNICODE rocgui: (using the common makefile)
+
+cd ../rocgui
+make clean
+make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
+
+build the ANSI rocgui: (using the common makefile)
+
+cd ../rocgui
+make clean
+make all TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc LIBRARY=ansi
+
+#note: The 'i586-mingw32msvc' naming must be justified to fit your installation of mingw.
+
+build all modules from the /**R**ocrail main makefile:
+
+make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
+
+see also: http://www.wxwidgets.org/wiki/index.php/Cross-Compiling_Under_Linux
+strip the binaries
+
+cd Rocrail
+cd winbin
+i586-mingw32msvc-strip *.dll
+i586-mingw32msvc-strip *.exe
+
+copy mingw runtime dll to winbin directory
+
+Extract /usr/share/doc/mingw32-runtime/mingwm10.dll.gz to winbin
+run inno setup with wine and create the package

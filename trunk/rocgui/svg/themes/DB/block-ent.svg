@@ -1,0 +1,7 @@
+<svg width="128" height="32">
+  <g>
+    <path stroke="black" fill="none" d="M 0,3 L 126,3 L 126,28 L 0,28 z " />
+    <path stroke="rgb(255,255,0)" fill="none" d="M 1,4 L 125,4 L 125,27 L 1,27 z " />
+    <path stroke="rgb(0,0,255)" fill="rgb(200,200,255)" d="M 2,5 L 124,5 L 124,26 L 2,26 z " />
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<homebank v="0.1">
+<properties title="Rocrail 2009" car_category="0" auto_nbdays="0"/>
+<account key="0" flags="0" name="Rocrail"
+ number="3974310" bankname="Postbank" initial="-352.51999999999998" minimum="0"
+ cheque1="0" cheque2="0"/>
+<pay key="1" name="Domain Factory"/>
+<pay key="2" name="MayNet"/>
+<cat key="1" parent="0" flags="0" name="Domain Registration"/>
+<cat key="2" parent="0" flags="0" name="Hosting"/>
+<cat key="3" parent="0" flags="0" name="Promotion"/>
+<cat key="4" parent="0" flags="2" name="Donation"/>
+<ope date="733409" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="R Berkel en E Berkel-Beentjes"/>
+<ope date="733410" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Hannes Hoerting"/>
+<ope date="733412" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="FIEDLER, STEFAN"/>
+<ope date="733412" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Sbaffi Sergio"/>
+<ope date="733413" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="DIRK ADOLPHS"/>
+<ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Heiner Schacht"/>
+<ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="MAGNIDOFF, JOERN"/>
+</homebank>

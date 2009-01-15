@@ -1,0 +1,70 @@
+# makefile for module roclcdr with mingw
+
+
+#rem roclcdr.cmd for making the DLL's.
+
+#..\rocs\bin\ogen.exe roclcdr.xml
+#md bin
+#cd bin
+#del /Q *.*
+#gcc -c -I..\.. ..\impl\*.c
+
+#dllwrap --def ..\..\roclcdr\lcdriver.def lcdriver.o ..\..\rocrail\bin\wrapper\*.o ..\..\rocs\bin\librocs.a -liphlpapi -lwsock32 -lmpr -ladvapi32 -o ..\..\bin\lcdriver.dll
+
+#cd ..
+
+
+
+MOUNTPOINT=..
+OUTDIR=..\winbin
+GENDIR=..\wingen
+TMPOUTDIR=$(GENDIR)\roclcdr\bin
+DEBUG=-g
+
+CPP=gcc
+LNK=gcc
+INCL_PATH=$(MOUNTPOINT)
+CC_FLAGS=-c $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
+LNK_FLAGS=
+LIBS=$(OUTDIR)\libwrapper.a $(OUTDIR)\librocs.a -liphlpapi -lwsock32 -lmpr -ladvapi32
+
+OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
+EVENTSOBJS=$(patsubst impl/events/%.c,$(TMPOUTDIR)/events/%.o,$(wildcard impl/events/*.c))
+STATUSOBJS=$(patsubst impl/status/%.c,$(TMPOUTDIR)/status/%.o,$(wildcard impl/status/*.c))
+TOOLSOBJS=$(patsubst impl/tools/%.c,$(TMPOUTDIR)/tools/%.o,$(wildcard impl/tools/*.c))
+
+all: $(OBJS) $(OUTDIR)\lcdriver.dll
+#	-del /Q $(TMPOUTDIR)\*.o
+
+# ------------------------------------------------------------
+# The LocDrivers as shared libraries.
+# ------------------------------------------------------------
+$(OUTDIR)\lcdriver.dll: $(TMPOUTDIR)\lcdriver.o $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS)
+	dllwrap --def lcdriver.def $(TMPOUTDIR)\lcdriver.o $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS) $(LIBS) -o $(OUTDIR)\lcdriver.dll
+
+# ------------------------------------------------------------
+# The RocLcDr objects.
+# ------------------------------------------------------------
+$(TMPOUTDIR)/%.o: impl/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/events/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/status/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/tools/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+clean:
+	-mkdir $(OUTDIR)
+	-mkdir $(TMPOUTDIR)
+	-mkdir $(TMPOUTDIR)\events
+	-mkdir $(TMPOUTDIR)\status
+	-mkdir $(TMPOUTDIR)\tools
+	-del /Q $(TMPOUTDIR)\*.o
+	-del /Q $(TMPOUTDIR)\events\*.o
+	-del /Q $(TMPOUTDIR)\status\*.o
+	-del /Q $(TMPOUTDIR)\tools\*.o
+	cd $(GENDIR)\roclcdr & ..\$(OUTDIR)\ogen.exe ..\..\roclcdr\roclcdr.xml ..\\

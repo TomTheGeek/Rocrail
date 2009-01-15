@@ -1,0 +1,16 @@
+<svg width="32" height="32">
+  <g>
+    <path
+       fill="black" stroke="black"
+       d="M 30,27 L 29,29 L 27,30 L 25,30 L 23,29 L 13,20 L 12,17 L 13,14 L 23,5 L 25,4 L 27,4 L 29,5 L 30,7 L 30,27 z " />
+    <path
+       fill="#817b7b" stroke="#817b7b"
+       d="M 27,27 L 25,27 L 23,25 L 23,23 L 25,21 L 27,21 L 29,23 L 29,25 L 27,27 z " />
+    <path
+       fill="#817b7b" stroke="#817b7b"
+       d="M 25,7 L 27,7 L 29,9 L 29,11 L 27,13 L 25,13 L 23,11 L 23,9 L 25,7 z " />
+    <path
+       fill="#00FF00" stroke="#00FF00"
+       d="M 14,18 L 14,16 L 16,14 L 18,14 L 20,16 L 20,18 L 18,20 L 16,20 L 14,18 z " />
+  </g>
+</svg>

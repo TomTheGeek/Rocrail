@@ -1,0 +1,1522 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2008 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Wrappers modulename="rocrail" title="RocRail">
+
+  <Cmdline title="Commandline options:" createwrapper="true" remark="Commands are listed in column --Default--.">
+    <const name="workdir" vt="string" val="-w" defval="." range="*" remark="Specifies working directory to use: -w [path]"/>
+    <const name="inifile" vt="string" val="-i" defval="rocrail.ini" range="*" remark="Specifies which Inifile to use: -i [file]"/>
+    <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
+    <const name="planfile" vt="string" val="-x" defval="" range="*" remark="Specifies plan filename"/>
+    <const name="libpath" vt="string" val="-l" defval="" range="*" remark="Location of the rocrail libraries: -l [path]"/>
+    <const name="debug" vt="string" val="-debug" defval="false" remark="Activates debug tracelevel."/>
+    <const name="byte" vt="string" val="-byte" defval="false" remark="Activates byte tracelevel."/>
+    <const name="monitor" vt="string" val="-monitor" defval="false" remark="Activates monitor tracelevel."/>
+    <const name="parse" vt="string" val="-parse" defval="false" remark="Activates parse tracelevel."/>
+    <const name="nocom" vt="string" val="-nocom" defval="false" remark="Disable communication."/>
+    <const name="console" vt="string" val="-console" defval="false" remark="Enable console commands."/>
+    <const name="port" vt="string" val="-p" defval="62842" range="*" remark="Service port for clients"/>
+    <const name="initfield" vt="string" val="-f" defval="false" range="*" remark="Activate field initialization: flip all switches twice"/>
+    <const name="help" vt="string" val="--help" defval="" range="*" remark="Shows commandline help."/>
+    <const name="version" vt="string" val="-version" defval="false" remark="Shows version info and stops rocrail."/>
+    <const name="doc" vt="string" val="-doc" defval="false" remark="Writes HTML documentation and stops rocrail."/>
+    <const name="service" vt="string" val="-service" defval="false" remark="Try to start rocrail as Windows Service. (Windows only)"/>
+    <const name="installservice" vt="string" val="-installservice" defval="false" remark="Try to install rocrail as Windows Service. (Windows only)"/>
+    <const name="deleteservice" vt="string" val="-deleteservice" defval="false" remark="Try to uninstall rocrail as Windows Service. (Windows only)"/>
+    <const name="lcd" vt="string" val="-lcd" defval="false" remark="activate LCD support with gamepad navigation"/>
+    <const name="info" vt="string" val="-info" defval="true" remark="Activates info tracelevel."/>
+    <const name="stress" vt="string" val="-stress" defval="true" remark="Activates network stress runner."/>
+    <const name="modplan" vt="string" val="-modplan" defval="true" remark="Create modplan."/>
+  </Cmdline>
+
+  <ConCmd title="Console commands:" createwrapper="true" remark="Commands are listed in column --Default--.">
+    <const name="quit" vt="char" val="q" remark="Quit rocrail."/>
+    <const name="poweron" vt="char" val="p" remark="Turns power on"/>
+    <const name="poweroff" vt="char" val="y" remark="Turns power off"/>
+    <const name="threads" vt="char" val="t" remark="Lists all active threads."/>
+    <const name="memory" vt="char" val="m" remark="Shows memory in use."/>
+    <const name="debug" vt="char" val="d" remark="Toggle debug tracelevel."/>
+    <const name="byte" vt="char" val="b" remark="Toggle byte tracelevel."/>
+    <const name="automat" vt="char" val="a" remark="Toggle auto tracelevel."/>
+    <const name="http" vt="char" val="h" remark="Toggle http tracelevel."/>
+    <const name="monitor" vt="char" val="o" remark="Toggle monitor tracelevel."/>
+    <const name="help" vt="char" val="?" remark="Shows console commands."/>
+    <const name="initfield" vt="char" val="i" remark="Field initialization: flip all switches twice"/>
+    <const name="slots" vt="char" val="x" remark="Read all slots."/>
+    <const name="config" vt="char" val="c" remark="Read config slots."/>
+    <const name="analyse" vt="char" val="z" remark="Analyse track plan."/>
+  </ConCmd>
+
+  <Global structname="GC" remark="For internal use only.">
+    <const name="productname" vt="string" val="Rocrail"/>
+    <const name="releasename" vt="string" val="Snapshot"/>
+    <const name="releasesuffix" vt="string" val=""/>
+    <const name="vmajor" vt="int" val="1"/>
+    <const name="vminor" vt="int" val="2"/>
+    <const name="patch" vt="int" val="999"/>
+    <const name="buildDate" vt="string" val="$__DATE__"/>
+    <const name="buildTime" vt="string" val="$__TIME__"/>
+  </Global>
+  
+  <netreq wrappername="NetReq">
+    <var name="id" vt="string" defval="" remark="Local server name."/>
+    <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
+    <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+    <var name="lcid" vt="string" defval="" remark="Loc ID."/>
+    <var name="req" vt="string" defval="fit" range="lock,fit" remark=""/>
+  </netreq>
+  <netrsp wrappername="NetRsp">
+    <var name="id" vt="string" defval="" remark="Local server name."/>
+    <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
+    <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+    <var name="rsp" vt="string" defval="occupied" range="occupied,locked,fits,unknownlc" remark=""/>
+  </netrsp>
+
+  <jsevent wrappername="JsEvent">
+    <var name="device" vt="int" defval="0" range="*"/>
+    <var name="type" vt="int" defval="0" range="*"/>
+    <var name="number" vt="int" defval="0" range="*"/>
+    <var name="value" vt="int" defval="0" range="*"/>
+    <var name="msec" vt="int" defval="0" range="*"/>
+  </jsevent>
+
+  <log wrappername="SvnLog">
+    <logentry wrappername="SvnLogEntry" cardinality="1">
+      <var name="revision" vt="int" defval="0" range="0-*"/>
+    </logentry>  
+  </log>
+
+  <rocrail structname="RRI" wrappername="RocRail">
+    <var name="file" vt="string" defval="rocrail.ini" remark="RocRail ini-file."/>
+    <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>
+    <var name="createmodplan" vt="bool" defval="false" remark="Create a modplan if the planfile does not jet exist."/>
+    <var name="libpath" vt="string" defval="." range="*" remark="Location of the rocrail libraries."/>
+    <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
+    <var name="runasroot" vt="bool" defval="false" remark="Force rocrail to run as root."/>
+    <var name="ptiid" vt="string" defval="" range="*" remark="IID to use with programming; using default in case not set."/>
+    <var name="lciid" vt="string" defval="" range="*" remark="IID to use for mobile decoders; using default in case not set."/>
+    <var name="dpiid" vt="string" defval="" range="*" remark="IID to use for dispathing a loco; using default in case not set."/>
+    <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
+    <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
+      <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
+      <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
+    </lcd>  
+    <throttle wrappername="Throttle" cardinality="1" remark="Throttle ini">
+      <var name="type" vt="string" defval="opendcc" range="*" remark="throttle type"/>
+      <var name="iid" vt="string" defval="" range="*" remark="IID to use for sending throttle commands."/>
+    </throttle>  
+    <jsmap wrappername="JsMap">
+      <var name="select" vt="int" defval="9" range="*"/>
+      <var name="updown" vt="int" defval="5" range="*" remark="Y"/>
+      <var name="leftright" vt="int" defval="4" range="*" remark="X"/>
+      <var name="f1" vt="int" defval="0" range="*"/>
+      <var name="f2" vt="int" defval="1" range="*"/>
+      <var name="f3" vt="int" defval="2" range="*"/>
+      <var name="f4" vt="int" defval="3" range="*"/>
+      <var name="reverse" vt="int" defval="4" range="*"/>
+      <var name="light" vt="int" defval="5" range="*"/>
+      <var name="stop" vt="int" defval="6" range="*"/>
+      <var name="poweroff" vt="int" defval="7" range="*"/>
+      <var name="poweron" vt="int" defval="8" range="*"/>
+      <var name="repeat" vt="int" defval="500" range="*" unit="ms" remark="Repeat interval in ms for the updown axis. (value 0 disables the repeat)"/>
+      <var name="step" vt="int" defval="1" range="1-9" remark="speed step per click"/>
+    </jsmap>
+    <clock wrappername="Clock" cardinality="1" remark="clock synchronizer.">
+      <var name="time" vt="long" defval="0" range="*" remark="time in seconds"/>
+      <var name="divider" vt="int" defval="1" range="1,2,4,5,10" remark="time devider: 1 = realtime"/>
+      <var name="hour" vt="int" defval="24" range="0-24" remark="start hour; 24 not used"/>
+      <var name="minute" vt="int" defval="60" range="0-60" remark="start minute; 60 not used"/>
+    </clock>  
+    <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
+      <var name="port" vt="int" defval="53701" range="0-65535" remark="Port number for server socket. Deactivated when 0."/>
+      <var name="path" vt="string" defval="." range="*" remark="Path where to look for external HTML documents."/>
+      <var name="refresh" vt="int" defval="10" range="0-*" unit="s" remark="browser refresh time: 0=no refresh"/>
+      <webclient wrappername="WebClient" cardinality="1">
+        <var name="me" vt="bool" defval="false" remark="rocWeb Mobile Edition"/>
+        <var name="port" vt="int" defval="53702" range="0-65535" remark="Port number server socket for webclients. Deactivated when 0."/>
+        <var name="xsize" vt="int" defval="640" range="0-*" remark=""/>
+        <var name="ysize" vt="int" defval="0" range="0-*" remark="no height is set when 0 which is recommended"/>
+        <var name="refresh" vt="int" defval="0" range="0-*" unit="s" remark="browser refresh time: 0=no refresh"/>
+        <var name="symboltype" vt="string" defval="png" range="*" remark="symbol type"/>
+        <var name="symbolpath" vt="string" defval="symbols" range="*" remark="where to look for symbol png's"/>
+        <var name="webcampath" vt="string" defval="webcam" range="*" remark="where to look for symbol png's"/>
+        <const name="bottom" vt="string" val="bottom"/>
+        <const name="right" vt="string" val="right"/>
+        <var name="webcampos" vt="string" defval="bottom" range="bottom,right" remark="where to locate the cam images"/>
+        <var name="symbolsize" vt="int" defval="16" range="16,24,32"/>
+        <var name="rulerbackground" vt="string" defval="#CCCCCC" range="*" remark="background color"/>
+        <var name="planbackground" vt="string" defval="#EEEEEE" range="*" remark="background color"/>
+        <webcam wrappername="WebCam" cardinality="n">
+          <var name="title" vt="string" defval="WebCam" range="*"/>
+          <var name="imagefile" vt="string" defval="webcam.jpg" range="*"/>
+        </webcam>
+      </webclient>
+    </http>
+    <service wrappername="Service" cardinality="1" remark="Service for remote Rocrail to negotiate about a loc destination.">
+      <var name="sname" vt="string" defval="" range="*" remark="Servicer name to use in NetReq and NetRsp."/>
+      <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
+    </service>
+    <netrocrail wrappername="NetRocrail" cardinality="n" remark="Remote Rocrail to negotiate about a loc destination.">
+      <var name="id" vt="string" defval="" remark="ID to use in block destinations."/>
+      <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
+    </netrocrail>
+    <trace wrappername="Trace">
+      <var name="rfile" vt="string" defval="rocrail.trace"/>
+      <var name="gfile" vt="string" defval="rocgui.trace"/>
+      <var name="debug" vt="bool" defval="false" remark="Trace level debug."/>
+      <var name="automatic" vt="bool" defval="false" remark="Trace level for extra info in automatic mode."/>
+      <var name="byte" vt="bool" defval="false" remark="Activates dump tracelevel."/>
+      <var name="monitor" vt="bool" defval="true" remark="Activates monitor tracelevel."/>
+      <var name="parse" vt="bool" defval="false" remark="Activates parse tracelevel."/>
+      <var name="info" vt="bool" defval="true" range="*" remark="Activates info trace level."/>
+      <var name="calc" vt="bool" defval="true" range="*" remark="Activates calculation trace level."/>
+      <var name="protpath" vt="string" defval="NULL" range="*" remark="Protocol path; Where to write the trace files. (Use relative only if using http service.) Path is relative to pwd!"/>
+      <var name="unique" vt="bool" defval="false" range="*" remark="Create a unique trace filename at startup."/>
+      <var name="size" vt="int" defval="100" range="10-*" unit="kb" remark="Filesize of trace files."/>
+      <var name="nr" vt="int" defval="10" range="*" remark="Number of continuous trace files. In case of 0 or 1: All traces are written in one file disregarding filesize."/>
+      <var name="exceptionfile" vt="bool" defval="false" range="*" remark="Create extra file for exceptions."/>
+      <var name="invoke" vt="string" defval="./xmail.pl" range="*" remark="External program or script to invoke on exception file creation."/>
+      <var name="invokeasync" vt="bool" defval="false" range="*" remark="The invokation will take place in a separate thread."/>
+      <var name="dumpsize" vt="int" defval="128" range="16-*" unit="byte" remark="Max. byte dump size."/>
+    </trace>
+    <digint cardinality="n" wrappername="DigInt" remark="Digital Interface definition.">
+      <var name="iid" vt="string" defval="NULL" remark="Interface ID." required="true"/>
+      <var name="iid_master" vt="string" defval="NULL" remark="Interface ID (loconet)." required="false"/>
+      <var name="iid_slave" vt="string" defval="NULL" remark="Interface ID (ddl)." required="false"/>
+
+      <const name="p50" vt="string" val="p50"/>
+      <const name="p50x" vt="string" val="p50x"/>
+      <const name="srcp" vt="string" val="srcp"/>
+      <const name="hsi88" vt="string" val="hsi88"/>
+      <const name="barjut" vt="string" val="barjut"/>
+      <const name="lenz" vt="string" val="lenz"/>
+      <const name="roco" vt="string" val="roco"/>
+      <const name="zimo" vt="string" val="zimo"/>
+      <const name="dinamo" vt="string" val="dinamo"/>
+      <const name="om32" vt="string" val="om32"/>
+      <const name="slx" vt="string" val="slx"/>
+      <const name="inter10" vt="string" val="inter10"/>
+      <const name="ecos" vt="string" val="ecos"/>
+      <const name="loconet" vt="string" val="loconet"/>
+      <const name="ddx" vt="string" val="ddx" remark="Digital Direct X"/>
+      <const name="opendcc" vt="string" val="opendcc"/>
+      <const name="vcs" vt="string" val="virtual"/>
+      <const name="rocnet" vt="string" val="rocnet"/>
+      <const name="mcs2" vt="string" val="mcs2"/>
+      <const name="rci" vt="string" val="rci"/>
+      <const name="nce" vt="string" val="nce"/>
+      <const name="sprog" vt="string" val="sprog"/>
+      <var name="lib" vt="string" defval="virtual"/>
+
+      <var name="libpath" vt="string" defval="."/>
+      
+      <!-- -->
+      <const name="sublib_serial" vt="string" val="serial"/>
+      <const name="sublib_socket" vt="string" val="socket"/>
+      <const name="sublib_usb" vt="string" val="usb"/>
+      <const name="sublib_udp" vt="string" val="udp"/>
+      <const name="sublib_native" vt="string" val="native"/>
+      <const name="sublib_default" vt="string" val="default"/>
+      <const name="sublib_lenz_elite" vt="string" val="elite"/>
+      <const name="sublib_lenz_roco" vt="string" val="roco"/>
+      <var name="sublib" vt="string" defval="default"/>
+
+      <!-- Serial connection: Fixed for most interfaces and controllers -->
+      <!-- p50: 2400,8,2,1,none,cts -->
+      <!-- p50x: 2400-19200,8,2,1,none,cts -->
+      <!-- slx: 2400-19200,8,2,1,none,no -->
+      <!-- hsi88: 9600,8,1,1,none,cts -->
+      <var name="device" vt="string" defval="com1"/>
+      <var name="bps" vt="int" defval="2400" range="1200,2400,4800,9600,19200,38400,57600" unit="bps"/>
+      <var name="bits" vt="int" defval="8" range="*"/>
+      <var name="stopbits" vt="int" defval="2" range="*"/>
+      <const name="none" vt="string" val="none"/>
+      <const name="even" vt="string" val="even"/>
+      <const name="odd" vt="string" val="odd"/>
+      <var name="parity" vt="string" defval="none" range="none,even,odd"/>
+      <const name="cts" vt="string" val="cts"/>
+      <const name="dsr" vt="string" val="dsr"/>
+      <const name="xon" vt="string" val="xon"/>
+      <const name="no" vt="string" val="no"/>
+      <var name="flow" vt="string" defval="cts" range="cts,dsr,xon,no"/>
+      <var name="ctsretry" vt="int" defval="1000" range="*" unit="ms" remark="wait for CTS line to come up."/>
+      <var name="timeout" vt="int" defval="1000" range="*" unit="ms"/>
+
+      <!-- all -->
+      <var name="fbmod" vt="int" defval="0" range="*" remark="Number of connected feedback modules of 8 inputs."/>
+      <var name="fbpoll" vt="bool" defval="false" remark="Poll sensor events in p50x instead of xEvtSen."/>
+      <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
+      <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
+	  <var name="sensordebounce" vt="int" defval="100" remark="No of cycles for Sensor debounce"/>
+
+
+      <!-- HSI88 -->
+      <hsi88 remark="HSI88 init" wrappername="HSI88">
+        <var name="fbleft" vt="int" defval="0" remark="HSI-88 number of modules of 8 inputs on left port" />
+        <var name="fbmiddle" vt="int" defval="0" remark="HSI-88 number of modules of 8 inputs on middle port" />
+        <var name="fbright" vt="int" defval="0" remark="HSI-88 number of modules of 8 inputs on right port" />
+        <var name="smooth" vt="bool" defval="false" remark="HSI-88 smooth out fb contact noice; fb must be at least 100ms low before sending event." />
+      </hsi88>
+
+
+      <var name="swtime" vt="int" defval="250" range="*" unit="ms" remark="Switch time."/>
+      <var name="fboffset" vt="int" defval="0" remark="Offset for the feedback units."/>
+      <var name="swinvert" vt="bool" defval="false" remark="Invert all turnouts/switches."/>
+
+      <var name="dummyio" vt="bool" defval="false" remark="Do not use real I/O."/>
+      <var name="readfb" vt="bool" defval="true" remark="Poll the feedback units."/>
+      <var name="startpwstate" vt="bool" defval="false" remark="Powerstate at startup."/>
+
+      <!-- tcpip connection -->
+      <var name="host" vt="string" defval="" remark="hostname."/>
+      <var name="port" vt="int" defval="0" remark="command port."/>
+
+      <opendcc remark="OpenDCC options" wrappername="OpenDCC">
+        <var name="lib" vt="string" defval="p50x"/>
+        <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>
+      </opendcc>
+      
+      <srcp remark="SRCP init" wrappername="SRCP">
+        <var name="cmdport" vt="int" defval="4303" remark="SRCP command port."/>
+        <var name="infoport" vt="int" defval="0" remark="SRCP infoport."/>
+        <var name="fbackport" vt="int" defval="4303" remark="SRCP feedbackport."/>
+        <var name="srcpbus_server" vt="int" defval="0" remark="server bus"/>
+        <var name="srcpbusGL_m" vt="int" defval="1" remark="maerklin generic loco bus"/>
+        <var name="srcpbusGL_ns" vt="int" defval="2" remark="nmra dcc generic loco with short addr bus"/>
+        <var name="srcpbusGL_nl" vt="int" defval="3" remark="nmra dcc generic loco with long addr bus"/>
+        <var name="srcpbusGL_ps" vt="int" defval="4" remark="protocol by server generic loco"/>
+        <var name="srcpbusGA_m" vt="int" defval="5" remark="marklin generic accessorie bus"/>
+        <var name="srcpbusGA_n" vt="int" defval="6" remark="nmra dcc generic accessorie bus"/>
+        <var name="srcpbusGA_ps" vt="int" defval="7" remark="protocol by server generic accessorie"/>
+        <var name="srcpbusFB_s88" vt="int" defval="8" remark="s88 feedback bus"/>
+        <var name="srcpbusFB_m6051" vt="int" defval="9" remark="m6051 feedback bus"/>
+        <var name="srcpbusFB_i8255" vt="int" defval="10" remark="i8255 feedback bus"/>
+      </srcp>
+  
+      <ddx remark="DDX init" wrappername="DDX">
+        <var name="port" vt="string" defval="/dev/ttyS0" range="*"/>
+        <var name="portbase" vt="string" defval="0x0000" range="*"/>
+        <var name="s88port" vt="string" defval="0x378" range="*"/>
+        <var name="s88busses" vt="int" defval="1" range="1-4"/>
+        <var name="s88b0modcnt" vt="int" defval="0" range="0-62" remark="one module represents 8 inputs (one byte)"/>
+        <var name="s88b1modcnt" vt="int" defval="0" range="0-62" remark="one module represents 8 inputs (one byte)"/>
+        <var name="s88b2modcnt" vt="int" defval="0" range="0-62" remark="one module represents 8 inputs (one byte)"/>
+        <var name="s88b3modcnt" vt="int" defval="0" range="0-62" remark="one module represents 8 inputs (one byte)"/>
+        <var name="s88refresh" vt="int" defval="100" range="50-250" unit="ms" remark="time between the bus polling"/>
+        <var name="s88clockscale" vt="int" defval="35" range="1-50" remark="clock=166kHz divided by S88CLOCK_SCALE"/>
+        <var name="shortcutchecking" vt="bool" defval="false" remark="Use shortcut detection"/>
+        <var name="shortcutdelay" vt="int" defval="1000" unit="us" remark="Shortcut events shorter than this time is ignored"/>
+        <var name="inversedsr" vt="bool" defval="false"/>
+        <var name="dcc" vt="bool" defval="true" remark="generate the NMRA DCC protocol"/>
+        <var name="motorola" vt="bool" defval="true" remark="generate the motorola protocol"/>
+        <var name="motorolarefresh" vt="bool" defval="true" remark="set to false if no MM locdecoders are used and accessory are MM"/>
+        <var name="queuecheck" vt="bool" defval="true" remark="Check if there are bytes left in the send queue and sleep."/>
+        <var name="fastcvget" vt="bool" defval="true" remark="Fast cv get for real rs232."/>
+        <var name="realnmratiming" vt="bool" defval="false" remark="experimental: do not use"/>
+      </ddx>
+        
+      <rocnet remark="rocNet options" wrappername="RocNet">
+        <var name="id" vt="int" defval="1" range="0-*" remark="rocNet sender ID, 1 is default for rocrail."/>
+        <const name="rn_type_udp" vt="string" val="udp"/>
+        <const name="rn_type_serial" vt="string" val="serial"/>
+        <var name="type" vt="string" defval="udp" range="udp,serial"/>
+        <rnudp wrappername="RocNetUDP">
+          <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
+          <var name="port" vt="int" defval="1234" range="0-*" remark="multicast port"/>
+        </rnudp>
+        <rnserial wrappername="RocNetSerial">
+          <var name="device" vt="string" defval="com1" remark="The roc lib will map this to /dev/ttyS0 when running linux."/>
+        </rnserial>
+      </rocnet>
+      
+      <loconet remark="LocoNet options" wrappername="LocoNet">
+        <var name="purgetime" vt="int" defval="200" unit="s" range="0-*" remark="set to zero if the command station does not purge"/>
+        <var name="slots" vt="int" defval="22" range="0-*" remark="number of slots for loco's"/>
+        <var name="reportaddr" vt="int" defval="1017" range="0-*" remark="global addres on which sensors are reported"/>
+        <const name="cs_dcs50" vt="string" val="dcs50"/>
+        <const name="cs_dcs100" vt="string" val="dcs100"/>
+        <const name="cs_db150" vt="string" val="db150"/>
+        <const name="cs_intellibox" vt="string" val="intellibox"/>
+        <const name="cs_rocrail" vt="string" val="rocrail"/>
+        <var name="cmdstn" vt="string" defval="dcs100" range="dcs100,db150,dcs50,intellibox,rocrail"/>
+        <var name="useidle" vt="bool" defval="false" remark="use OPC_IDLE instead of OPC_GPOFF"/>
+        <var name="sensorquery" vt="bool" defval="true" remark="do sensor query at OPC_GPON"/>
+        <options wrappername="CSOptions">
+          <var name="store" vt="bool" defval="false" remark="set by client to signal to store the options in the command station"/>
+          <var name="opsw" vt="string" defval="" range="*" remark="zero based options list 0=open 1=set"/>
+        </options>
+        <slotserver wrappername="LNSlotServer">
+          <var name="active" vt="bool" defval="false" remark="activate slot server support"/>
+          <var name="lconly" vt="bool" defval="false" remark="serve loco commands only"/>
+          <var name="purge" vt="bool" defval="true" remark="activate slot purging (purgtime from parent node)"/>
+          <var name="stopatpurge" vt="bool" defval="false" remark="stop loc after purge"/>
+          <var name="iid" vt="string" defval="" range="*" remark="redirect commands to this interface ID"/>
+          <var name="format" vt="string" defval="dcc" range="dcc,mm" remark="default decoder digital format"/>
+          <var name="speedstep" vt="int" defval="128" range="14,28,128" remark="default decoder speed steps"/>
+        </slotserver>
+      </loconet>
+      
+    </digint>
+    <tcp remark="Client service port." wrappername="Tcp">
+      <var name="port" vt="int" defval="62842" range="1-65535"/>
+      <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
+      <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
+    </tcp>
+    <ctrl wrappername="Ctrl">
+      <var name="swtimeout" vt="int" defval="250" range="100-1000" unit="ms" remark="Switch activation time."/>
+      <var name="initfieldpause" vt="int" defval="500" range="100-5000" unit="ms" remark="Pause between the switch commands."/>
+      <var name="initfieldpower" vt="bool" defval="true" remark="Set global power on before init field."/>
+      <var name="minbklc" vt="int" defval="20" range="10-50" unit="cm" remark="Minimal blocklen - loclen."/>
+      <var name="ignevt" vt="int" defval="5" range="0-*" unit="10ms ticks" remark="Ignore multiple events for the same state if comming within this number of 10ms ticks."/>
+      <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands to the CS"/>
+      <var name="seed" vt="int" defval="4711" range="0-65535" remark="random seed for block selection"/>
+      <var name="savepostime" vt="int" defval="10" range="0-100" unit="s" remark="save positio timer"/>
+      <var name="check2in" vt="bool" defval="false" remark="Check for a free new destination between the enter and in event."/>
+      <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
+      <var name="enableswfb" vt="bool" defval="true" remark="Enable switch position feedbacks."/>
+      <var name="eventtimeout" vt="int" defval="0" range="0-*" unit="s" remark="Time to wait for a next event. Disabled when set to zero."/>
+      <var name="signalreset" vt="int" defval="0" range="0-*" unit="s" remark="Time to wait for resetting the signals of previous block. Disabled when set to zero."/>
+      <var name="routeswtime" vt="int" defval="10" range="10-10000" unit="ms" remark="Time between switch commands in routes."/>
+      <var name="disablerouteVreduce" vt="bool" defval="false" remark="Global disable route speed reducing by thrown switches."/>
+      <var name="defaspect" vt="string" defval="red" range="red,green,yellow,white" remark="Default signal aspect."/>
+      <var name="greenaspect" vt="bool" defval="false" remark="Use green aspect instead of yellow if next block has red."/>
+      <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commonds in routes for switches already in model position."/>
+      <var name="semaphorewait" vt="int" defval="1" range="0-*" unit="s" remark="Time needed by a semaphore to get in position."/>
+    </ctrl>
+  </rocrail>
+
+  <command remark="Command." wrappername="Command">
+    <var name="server" vt="string" defval="" range="*"/>
+    <const name="fbmods" vt="string" val="fbmods" remark="comma separated list of connected feedback module addresses"/>
+    <var name="cmd" vt="string" defval="" range="*"/>
+    <var name="id" vt="string" defval="NULL" range="*"/>
+    <var name="iid" vt="string" defval="NULL" range="*"/>
+    <var name="arg" vt="string" defval="NULL" range="*" remark="command arguments"/>
+  </command>
+  
+  <fbinfo wrappername="FbInfo">
+    <fbmods cardinality="n" remark="feedback module listing" wrappername="FbMods">
+      <var name="bus" vt="int" defval="0" range="0-*" remark="bus number"/>
+      <var name="modules" vt="string" defval="" range="*" remark="comma separated list of connected feedback module addresses"/>
+    </fbmods>
+  </fbinfo>
+
+  <bincmd wrappername="BinCmd" remark="Binary command; the DigInt should send the bytes un-translated to the command station.">
+    <var name="iid" vt="string" defval="NULL" range="*"/>
+    <var name="out" vt="string" defval="NULL" range="*" remark="one byte represented by 2 ascii chars; StrOp.byteToStr()"/>
+    <var name="inlen" vt="int" defval="0" range="0-*" remark="expected response length in bytes"/>
+    <var name="outlen" vt="int" defval="0" range="0-*" remark="out length in bytes"/>
+    <var name="inendbyte" vt="int" defval="-1" range="0-*" remark="Read response until detecting this byte within the inlen."/>
+  </bincmd>
+  
+  <datareq remark="Data request" wrappername="DataReq">
+    <var name="id" vt="string" defval="NULL" range="*" remark="reference ID"/>
+    <const name="get" vt="int" val="0"/>
+    <var name="cmd" vt="int" defval="0" range="0-*"/>
+    <const name="image" vt="int" val="0"/>
+    <var name="type" vt="int" defval="0" range="0-*"/>
+    <var name="filename" vt="string" defval="NULL" range="*"/>
+    <var name="data" vt="string" defval="NULL" range="*" remark="one byte represented by 2 ascii chars; StrOp.byteToStr()"/>
+  </datareq>
+  
+  <program remark="Program." wrappername="Program">
+    <var name="iid" vt="string" defval="NULL" range="*"/>
+    <const name="get" vt="int" val="0"/>
+    <const name="set" vt="int" val="1"/>
+    <const name="pton" vt="int" val="2"/>
+    <const name="ptoff" vt="int" val="3"/>
+    <const name="ptstat" vt="int" val="4"/>
+    <const name="save" vt="int" val="5"/>
+    <const name="load" vt="int" val="6"/>
+    <const name="datarsp" vt="int" val="7" remark="data response from previous get command"/>
+    <const name="statusrsp" vt="int" val="8" remark="status response from previous command"/>
+    <const name="lncvget" vt="int" val="9"/>
+    <const name="lncvset" vt="int" val="10"/>
+    <const name="mprsp" vt="int" val="11" remark="multi port data response from previous get command"/>
+    <var name="cmd" vt="int" defval="0" range="0-*"/>
+    <const name="lncvstart" vt="int" val="1"/>
+    <const name="lncvend" vt="int" val="2"/>
+    <var name="lncvcmd" vt="int" defval="0" range="0-*"/>
+    <var name="addr" vt="int" defval="0" range="*" remark="loco address for POM"/>
+    <var name="cv" vt="int" defval="0" range="0-1023" remark="CV number"/>
+    <var name="value" vt="int" defval="0" range="0-255" remark="CV value"/>
+    <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
+    <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>
+    <var name="modid" vt="int" defval="0" range="*" remark="module id for use with lncv"/>
+    <var name="version" vt="int" defval="0" range="*" remark="firmware version"/>
+    <const name="lntype_none" vt="int" val="0"/>
+    <const name="lntype_cv" vt="int" val="1" remark="Uhlenbrock LocoNet CV's"/>
+    <const name="lntype_sv" vt="int" val="2" remark="LocoIO SV's"/>
+    <const name="lntype_cs" vt="int" val="3" remark="Command Station Config"/>
+    <const name="lntype_mp" vt="int" val="4" remark="LocoIO MP's"/>
+    <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
+    <var name="lncv" vt="bool" defval="false"/>
+  </program>
+
+  <exception remark="Exception wrapper" wrappername="Exception">
+    <var name="text" vt="string" defval="" range="*"/>
+    <var name="level" vt="int" defval="0" range="0-*"/>
+  </exception>
+
+  <state remark="State wrapper" wrappername="State">
+    <var name="iid" vt="string" defval="NULL" range="*"/>
+    <var name="power" vt="bool" defval="false"/>
+    <var name="programming" vt="bool" defval="false"/>
+    <var name="trackbus" vt="bool" defval="false"/>
+    <var name="sensorbus" vt="bool" defval="false"/>
+    <var name="accessorybus" vt="bool" defval="false"/>
+    <var name="consolemode" vt="bool" defval="false"/>
+  </state>
+
+  <response remark="Interface Response." wrappername="Response">
+    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+    <var name="retry" vt="bool" defval="false" remark="controller buffer full; try again."/>
+    <var name="error" vt="bool" defval="false"/>
+    <var name="rc" vt="int" defval="0"/>
+    <var name="sender" vt="string" defval="" range="*"/>
+    <var name="msg" vt="string" defval="" range="*"/>
+    <var name="state" vt="string" defval="" range="*"/>
+    <var name="data" vt="string" defval="" range="*"/>
+    <const name="ok" vt="string" val="ok"/>
+    <const name="ctserr" vt="string" val="ctserr"/>
+    <const name="rcverr" vt="string" val="rcverr"/>
+    <const name="snderr" vt="string" val="snderr"/>
+  </response>
+
+  <ext remark="External command." wrappername="ExtCmd">
+    <var name="cmdline" vt="string" defval="" range="*"/>
+  </ext>
+  
+  <thr remark="Throttle packet." wrappername="ThrottleCmd">
+    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+    <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
+  </thr>
+  
+  <sys remark="System command." wrappername="SysCmd">
+    <const name="stoplocs" vt="string" val="stoplocs"/>
+    <const name="stop" vt="string" val="stop"/>
+    <const name="go" vt="string" val="go"/>
+    <const name="test" vt="string" val="test"/>
+    <const name="save" vt="string" val="save"/>
+    <const name="shutdown" vt="string" val="shutdown"/>
+    <const name="getini" vt="string" val="getini"/>
+    <const name="setini" vt="string" val="setini"/>
+    <const name="getmodplan" vt="string" val="getmodplan"/>
+    <const name="setmodplan" vt="string" val="setmodplan"/>
+    <const name="getmodule" vt="string" val="getmodule"/>
+    <const name="setmodule" vt="string" val="setmodule"/>
+    <const name="analog" vt="string" val="analog"/>
+    <const name="dcc" vt="string" val="dcc"/>
+    <const name="reset" vt="string" val="reset"/>
+    <const name="version" vt="string" val="version"/>
+    <const name="info" vt="string" val="info"/>
+    <const name="link" vt="string" val="link"/>
+    <const name="ulink" vt="string" val="ulink"/>
+    <const name="grouplink" vt="string" val="grouplink"/>
+    <const name="hfi" vt="string" val="hfi" remark="Set HF light level for analog systems"/>
+    <const name="slots" vt="string" val="slots"/>
+    <const name="config" vt="string" val="config"/>
+    <const name="loccnfg" vt="string" val="loccnfg"/>
+    <const name="swcnfg" vt="string" val="swcnfg"/>
+    <const name="analyse" vt="string" val="analyse"/>
+    <const name="txshortids" vt="string" val="txshortids"/>
+    <var name="cmd" vt="string" defval="" range="*"/>
+    <var name="informall" vt="bool" defval="false" remark="send command to all interfaces"/>
+    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+    <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
+    <var name="oid" vt="string" defval="NULL" range="*" remark="Object ID"/>
+    <var name="addr" vt="int" defval="0" range="0-*" remark="Interface address"/>
+    <var name="port" vt="int" defval="0" range="0-*" remark="Interface port"/>
+    <var name="val" vt="int" defval="0" range="*" remark="optional value"/>
+    <var name="valA" vt="int" defval="0" range="*" remark="optional value"/>
+    <var name="valB" vt="int" defval="0" range="*" remark="optional value"/>
+  </sys>
+
+  <model remark="Model command." wrappername="ModelCmd">
+    <const name="save" vt="string" val="save"/>
+    <const name="initfield" vt="string" val="initfield"/>
+    <const name="add" vt="string" val="add"/>
+    <const name="merge" vt="string" val="merge"/>
+    <const name="addmodule" vt="string" val="addmodule"/>
+    <const name="modify" vt="string" val="modify"/>
+    <const name="move" vt="string" val="move"/>
+    <const name="remove" vt="string" val="remove"/>
+    <const name="plan" vt="string" val="plan" remark="Request the plan XML"/>
+    <const name="lclist" vt="string" val="lclist" remark="Request the loco list"/>
+    <const name="swlist" vt="string" val="swlist" remark="Request the switch list"/>
+    <const name="stlist" vt="string" val="stlist" remark="Request the street list"/>
+    <const name="sclist" vt="string" val="sclist" remark="Request the schedule list"/>
+    <const name="bklist" vt="string" val="bklist" remark="Request the block list"/>
+    <const name="plantitle" vt="string" val="plantitle" remark="Set the plan title"/>
+    <const name="fstat" vt="string" val="fstat" remark="Request all feedback states"/>
+    <var name="cmd" vt="string" defval="" range="*"/>
+    <var name="val" vt="string" defval="" range="*"/>
+    <var name="cmdfrom" vt="string" defval="NULL" range="*"/>
+  </model>
+
+  <auto remark="Auto command." wrappername="AutoCmd">
+    <const name="on" vt="string" val="on"/>
+    <const name="off" vt="string" val="off"/>
+    <const name="start" vt="string" val="start"/>
+    <const name="resume" vt="string" val="resume"/>
+    <const name="stop" vt="string" val="stop"/>
+    <const name="reset" vt="string" val="reset"/>
+    <const name="softreset" vt="string" val="softreset"/>
+    <var name="cmd" vt="string" defval="" range="on,off,start,stop,reset"/>
+  </auto>
+
+  <fn remark="Function command." wrappername="FunCmd">
+    <var name="id" vt="string" defval="" range="*"/>
+    <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+    <var name="addr" vt="int" defval="0" range="0-*"/>
+    <var name="f0" vt="bool" defval="true"/>
+    <var name="f1" vt="bool" defval="false"/>
+    <var name="f2" vt="bool" defval="false"/>
+    <var name="f3" vt="bool" defval="false"/>
+    <var name="f4" vt="bool" defval="false"/>
+    <var name="f5" vt="bool" defval="false"/>
+    <var name="f6" vt="bool" defval="false"/>
+    <var name="f7" vt="bool" defval="false"/>
+    <var name="f8" vt="bool" defval="false"/>
+    <var name="f9" vt="bool" defval="false"/>
+    <var name="f10" vt="bool" defval="false"/>
+    <var name="f11" vt="bool" defval="false"/>
+    <var name="f12" vt="bool" defval="false"/>
+    <var name="timedfn" vt="int" defval="0" range="0-*"/>
+    <var name="timer" vt="int" defval="0" unit="s" range="0-*" remark="function activation timer"/>
+    <var name="event" vt="const char*" defval="none" range="*" remark="function deactivation event"/>
+    <var name="eventblock" vt="char*" defval="NULL" range="*" remark="function deactivation block"/>
+    <var name="timerf1" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf2" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf3" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf4" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf5" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf6" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf7" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf8" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf9" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf10" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf11" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf12" vt="int" defval="0" unit="s" range="0-*"/>
+  </fn>
+
+  <custom remark="Custom Command for interfaces" wrappername="CustomCmd">
+   <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+   <var name="cmd" vt="string" defval="" range="*"/>
+   <var name="arg1" vt="string" defval="" range="*"/>
+   <var name="arg2" vt="string" defval="" range="*"/>
+   <var name="arg3" vt="string" defval="" range="*"/>
+   <var name="arg4" vt="string" defval="" range="*"/>
+   <var name="arg5" vt="string" defval="" range="*"/>
+   <var name="arg6" vt="string" defval="" range="*"/>
+  </custom>
+
+  <item wrappername="Item" remark="Message to change type, position and orientation of an item.">
+    <var name="id" vt="string" defval="" range="*"/>
+    <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+    <var name="blockid" vt="string" defval="NULL" range="*"/>
+    <var name="routeids" vt="string" defval="NULL" range="*" remark="comma separated list of route ids used to show a special route representation"/>
+    <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the table"/>
+    <var name="desc" vt="string" defval="" range="*" remark="description"/>
+    <var name="name" vt="string" defval="NULL" range="*"/>
+    <var name="x" vt="int" defval="-1" range="0-*"/>
+    <var name="y" vt="int" defval="-1" range="0-*"/>
+    <var name="prev_x" vt="int" defval="0" range="0-*" remark="x position before rotation"/>
+    <var name="prev_y" vt="int" defval="0" range="0-*" remark="y position before rotation"/>
+    <var name="z" vt="int" defval="0" range="0-9"/>
+    <var name="cx" vt="int" defval="0" range="0-*" remark="Zero means not set; use default symbol size."/>
+    <var name="cy" vt="int" defval="0" range="0-*"/>
+    <const name="north" vt="string" val="north"/>
+    <const name="south" vt="string" val="south"/>
+    <const name="west" vt="string" val="west"/>
+    <const name="east" vt="string" val="east"/>
+    <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+    <var name="prev_ori" vt="string" defval="NULL" range="north,south,west,east"/>
+    <var name="type" vt="string" defval="NULL" range="*"/>
+    <var name="show" vt="bool" defval="true"/>
+    <var name="road" vt="bool" defval="false"/>
+    <var name="state" vt="string" defval="-"/>
+  </item>
+
+  <modplan wrappername="ModPlan" remark="Root node of the module master plan.">
+    <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of plan."/>
+    <var name="locs" vt="string" defval="lc.xml" range="*" remark="File name of locomotive definitions."/>
+    <var name="routes" vt="string" defval="rt.xml" range="*" remark="File name of route and schedule definitions."/>
+    <var name="occupation" vt="string" defval="occ.xml" range="*" remark="File name of block occupations."/>
+    <var name="initfield" vt="bool" defval="false"/>
+    <var name="modified" vt="bool" defval="false" remark="Flags module as modified by the GUI. (Internal use only)"/>
+    <var name="savemodplan" vt="bool" defval="true" remark="Make sure locs and routes are in separate files and not part of a module!"/>
+    <var name="savemodules" vt="bool" defval="true" remark="Leave modules un touched if set to false, but all changes are lost."/>
+    <var name="modroutes" vt="bool" defval="false" remark="Use internal module routes in conjunction with connections."/>
+    <module cardinality="n" remark="Module definition" wrappername="Module">
+      <var name="title" vt="string" defval="Module 1" range="*" remark="Text to show in the tab."/>
+      <var name="filename" vt="string" defval="m1.xml" range="*" remark="File name of module track plan."/>
+      <var name="id" vt="string" defval="" range="*" required="true" remark="Module ID."/>
+      <var name="idprefix" vt="string" defval="" range="*" remark="Add a prefix to all objects to make them unique."/>
+      <var name="x" vt="int" defval="0" range="0-*" remark="x position on an overview panel"/>
+      <var name="y" vt="int" defval="0" range="0-*" remark="y position on an overview panel"/>
+      <var name="rotation" vt="int" defval="0" range="0,90,180,270" remark="rotation angle in degrees"/>
+      <var name="cx" vt="int" defval="0" range="0-*"/>
+      <var name="cy" vt="int" defval="0" range="0-*"/>
+      <var name="cmd" vt="string" defval="" range="*" remark="module command from rocgui"/>
+      <const name="cmd_north" vt="string" val="north"/>
+      <const name="cmd_east" vt="string" val="east"/>
+      <const name="cmd_south" vt="string" val="south"/>
+      <const name="cmd_west" vt="string" val="west"/>
+      <const name="cmd_move" vt="string" val="move"/>
+      <const name="cmd_connect" vt="string" val="connect"/>
+      <connection cardinality="n" remark="Connection specification" wrappername="ModuleConnection">
+        <var name="id" vt="string" defval="" range="*" remark="Module ID; for internal use only."/>
+        <var name="modid" vt="string" defval="" range="*" remark="Module ID which connects to this module."/>
+        <const name="point_n" vt="string" val="point-n"/>
+        <const name="point_e" vt="string" val="point-e"/>
+        <const name="point_s" vt="string" val="point-s"/>
+        <const name="point_w" vt="string" val="point-w"/>
+        <var name="side" vt="string" defval="" range="point-n,point-e,point-s,point-w" remark="connection side"/>
+      </connection>
+    </module>
+  </modplan>
+  
+  <modocc wrappername="ModOcc" remark="Root node of the block occupation.">
+    <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of associated plan."/>
+    <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
+      <var name="bkid" vt="string" defval="" range="*" required="true"/>
+      <var name="lcid" vt="string" defval="" range="*" required="true"/>
+      <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
+      <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
+      <var name="auto" vt="bool" defval="false" remark="The occupying loco is in automode."/>
+    </occ>
+  </modocc>
+
+	<actionctrl wrappername="ActionCtrl">
+	  <var name="id" vt="string" defval="" range="*" required="true"/>
+	  <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
+	  <var name="auto" vt="bool" defval="false" remark="Activate in auto mode only."/>
+    <var name="deact" vt="string" defval="none" range="none,enter,in" remark="Deactivation event."/>
+    <var name="lcid" vt="string" defval="" range="*"/>
+    <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
+      <var name="id" vt="string" defval="" range="*" required="true"/>
+      <var name="type" vt="string" defval="" range="co,sw,sg,fb" required="true"/>
+      <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
+    </actioncond>
+	</actionctrl>
+
+  <plan structname="RRP" wrappername="Plan" remark="Root node of the planfile.">
+    <var name="title" vt="string" defval="New Plan" range="*" remark="Title of plan."/>
+    <var name="name" vt="string" defval="plan.xml" range="*" remark="Filename of plan."/>
+    <var name="rocguiversion" vt="string" defval="" range="*" remark="Rocgui version at last save of a local plan."/>
+    <var name="rocrailversion" vt="string" defval="" range="*" remark="Rocrail version at last save of a plan."/>
+    <digint cardinality="n" wrappername="DigInt" referenceonly="true"/>
+    <zlevel cardinality="n" remark="Z-Level description" wrappername="ZLevel">
+      <var name="title" vt="string" defval="" range="*"/>
+      <var name="z" vt="int" defval="0" range="0-9"/>
+      <var name="active" vt="bool" defval="false" remark="active notebook page"/>
+      <var name="modid" vt="string" defval="" range="*" remark="module ID"/>
+      <var name="modviewx" vt="int" defval="0" range="0-*" remark="x position on an overview panel"/>
+      <var name="modviewy" vt="int" defval="0" range="0-*" remark="y position on an overview panel"/>
+      <var name="modviewcx" vt="int" defval="0" range="0-*" remark="x size on an overview panel"/>
+      <var name="modviewcy" vt="int" defval="0" range="0-*" remark="y size on an overview panel"/>
+    </zlevel>
+    <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">
+      <var name="distance" vt="int" defval="0" units="mm" remark="Distance between the two events."/>
+      <var name="scale" vt="int" defval="87" remark="Scale of locomotives."/>
+      <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID"/>
+      <var name="s2" vt="string" defval="" range="*" required="true" remark="Feedback ID"/>
+      <var name="mph" vt="bool" defval="false" remark="convert to MPH"/>
+    </mv>
+    <swlist cardinality="1" remark="Turnout table" wrappername="SwitchList">
+      <sw cardinality="n" wrappername="Switch" remark="Switch definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="blockid" vt="string" defval="NULL" range="*"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        
+        <!-- Addressing -->
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port1" vt="int" defval="0" range="0-*" required="true" remark="port of decoder unit."/>
+        <var name="gate1" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address in case of type 3way"/>
+        <var name="port2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
+        <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
+        
+        <var name="singlegate" vt="bool" defval="false" remark="Switch works with only one gate."/>
+        <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
+        <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
+        <var name="delay" vt="int" defval="0" range="0-*" required="false" remark="overwrites control.swtimeout if greater then 0"/>
+        <var name="delaytime" vt="long" defval="0" range="0-*" required="false" remark="Delay timer for internal use only."/>
+        <var name="actdelay" vt="bool" defval="false" remark="if false: delay is programmed in central unit or module"/>
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
+        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
+        <var name="virtual" vt="bool" defval="false" remark="If this object is only used for dispatching commands."/>
+        <const name="turnout" vt="string" val="turnout" remark="Turnout command."/>
+        <const name="straight" vt="string" val="straight" remark="Straight command."/>
+        <const name="right" vt="string" val="right" remark="3way switch right command or right switch type."/>
+        <const name="left" vt="string" val="left" remark="3way switch left command or left switch type."/>
+        <var name="state" vt="string" defval="NULL" range="straight,turnout,red,green,left,right" remark="Current state og switch."/>
+        <var name="savepos" vt="string" defval="none" range="none,straight,turnout,left,right" remark="save position of switch"/>
+        <const name="flip" vt="string" val="flip" remark="Change current state."/>
+        <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="activate" vt="bool" defval="true"/>
+        <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
+        <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this switch."/>
+        <var name="fbR" vt="string" defval="NULL" range="*" remark="Optional feedback for turnout(Red) state."/>
+        <var name="fbRinv" vt="bool" defval="false"/>
+        <var name="fbG" vt="string" defval="NULL" range="*" remark="Optional feedback for straigh(Green) state."/>
+        <var name="fbGinv" vt="bool" defval="false"/>
+        <var name="fb2R" vt="string" defval="NULL" range="*" remark="Optional feedback for turnout(Red) state."/>
+        <var name="fb2Rinv" vt="bool" defval="false"/>
+        <var name="fb2G" vt="string" defval="NULL" range="*" remark="Optional feedback for straigh(Green) state."/>
+        <var name="fb2Ginv" vt="bool" defval="false"/>
+        <const name="accessory" vt="string" val="accessory" remark="Accessory representation, but act like a switch."/>
+        <const name="decoupler" vt="string" val="decoupler" remark="Switch type for crossing."/>
+        <const name="ccrossing" vt="string" val="ccrossing" remark="Switch type for center crossing."/>
+        <const name="crossing" vt="string" val="crossing" remark="Switch type for crossing."/>
+        <const name="dcrossing" vt="string" val="dcrossing" remark="Switch type for dubble crossing."/>
+        <const name="threeway" vt="string" val="threeway" remark="Switch type for a 2way switch."/>
+        <var name="type" vt="string" defval="right" range="right,left,turnout,crossing,ccrossing,dcrossing,threeway,decoupler"/>
+        <var name="accnr" vt="int" defval="1" range="0-*" required="false" remark="Accessory number."/>
+        <const name="swtype_default" vt="string" val="default"/>
+        <const name="swtype_raster" vt="string" val="raster"/>
+        <var name="swtype" vt="string" defval="default" range="default,raster"/>
+        <var name="dir" vt="bool" defval="false" remark="false=left, true=right"/>
+        <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
+             remark="Protocol to use for this output."/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MDD" vt="string" val="mdd" remark="Dinamo MDD"/>
+        <const name="prot_OM32" vt="string" val="om32" remark="Dinamo OM32"/>
+        <const name="prot_DO" vt="string" val="do" remark="Dinamo DO"/>
+        <const name="prot_VO" vt="string" val="vo" remark="Dinamo VO"/>
+        <actionctrl cardinality="n"/>
+      </sw>
+    </swlist>
+    <sglist cardinality="1" remark="Signal table" wrappername="SignalList">
+      <sg cardinality="n" wrappername="Signal" remark="Signal definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="blockid" vt="string" defval="NULL" range="*"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+
+        <!-- Addressing -->
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port1" vt="int" defval="0" range="0-*" required="true" remark="Output port 1."/>
+        <var name="port2" vt="int" defval="0" range="0-*" required="true" remark="Output port 2."/>
+        <var name="port3" vt="int" defval="0" range="0-*" required="true" remark="Output port 3."/>
+        <var name="port4" vt="int" defval="0" range="0-*" required="true" remark="Output port 4, white."/>
+        <var name="gate1" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 1."/>
+        <var name="gate2" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 2."/>
+        <var name="gate3" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 3."/>
+        <var name="gate4" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 4, white."/>
+        <var name="inv" vt="bool" defval="false" remark="Signal inverted. (Software wirering correction)"/>
+        <var name="pair" vt="bool" defval="false" remark="both gates are used for on-off"/>
+        <var name="asswitch" vt="bool" defval="false" remark="send a switch command incase of 2 aspects"/>
+
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
+        <const name="red" vt="string" val="red" remark="Signal Red command."/>
+        <const name="yellow" vt="string" val="yellow" remark="Signal yellow command."/>
+        <const name="green" vt="string" val="green" remark="Signal green command."/>
+        <const name="white" vt="string" val="white" remark="Signal white command."/>
+        <const name="flip" vt="string" val="flip"/>
+        <var name="state" vt="string" defval="NULL" range="*" remark="Current state of signal."/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="prot" vt="string" defval="M" range="M,N,D,mdd,om32"
+             remark="Protocol to use for this output."/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MDD" vt="string" val="mdd" remark="Dinamo MDD"/>
+        <const name="prot_OM32" vt="string" val="om32" remark="Dinamo OM32"/>
+        <const name="light" vt="string" val="light"/>
+        <const name="semaphore" vt="string" val="semaphore"/>
+        <var name="type" vt="string" defval="light" range="light,semaphore"/>
+        <const name="shunting" vt="string" val="shunting"/>
+        <const name="distant" vt="string" val="distant"/>
+        <const name="main" vt="string" val="main"/>
+        <var name="signal" vt="string" defval="main" range="main,distant,shunting"/>
+        <var name="aspects" vt="int" defval="3" range="2-4" remark="number of aspects to show"/>
+        <var name="dwarf" vt="bool" defval="false"/>
+        
+        <!-- patterns -->
+        <var name="usepatterns" vt="bool" defval="false"/>
+        <var name="green" vt="int" defval="0" range="0-3" remark="pattern for green"/>
+        <var name="red" vt="int" defval="0" range="0-3" remark="pattern for red"/>
+        <var name="yellow" vt="int" defval="0" range="0-3" remark="pattern for yellow"/>
+        <var name="white" vt="int" defval="0" range="0-3" remark="pattern for white"/>
+        
+        <actionctrl cardinality="n"/>
+      </sg>
+    </sglist>
+    <colist cardinality="1" remark="Common Output table" wrappername="OutputList">
+      <co cardinality="n" wrappername="Output" remark="Common Output definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="grpid" vt="string" defval="" range="*" required="false" remark="Group ID; All buttons of this group must be true to trigger actions."/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+
+        <!-- Addressing -->
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port" deprecated="true" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
+        <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="type" vt="string" defval="output" range="output,switch,button"/>
+        
+        <const name="on" vt="string" val="on"/>
+        <const name="off" vt="string" val="off"/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
+             remark="Protocol to use for this output."/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MDD" vt="string" val="mdd" remark="Dinamo MDD"/>
+        <const name="prot_OM32" vt="string" val="om32" remark="Dinamo OM32"/>
+        <const name="prot_DO" vt="string" val="do" remark="Dinamo DO"/>
+        <const name="prot_VO" vt="string" val="vo" remark="Dinamo VO"/>
+        <var name="state" vt="string" defval="NULL" range="on,off" remark="Current state of output."/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
+        <var name="svgtype" vt="int" defval="0" range="0-*" remark="Defines which SVG symbol should be used in case of show."/>
+        <actionctrl cardinality="n"/>
+      </co>
+    </colist>
+    <fblist cardinality="1" remark="Sensor table" wrappername="FeedbackList">
+      <fb cardinality="n" wrappername="Feedback">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+
+        <!-- Addressing -->
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="activelow" vt="bool" defval="false" remark=""/>
+
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
+        <var name="val" vt="int" defval="0" remark="multiple port value"/>
+        <var name="identifier" vt="int" defval="0" remark="Loc identifier"/>
+        <var name="info" vt="string" defval="" remark="extra information"/>
+        <var name="direction" vt="bool" defval="true" remark="Loc identifier direction"/>
+        <var name="state" vt="bool" defval="false" remark="Current feedback state."/>
+        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
+        <var name="curve" vt="bool" defval="false" remark="Curved feedback track."/>
+        <var name="blockid" vt="string" defval="NULL" range="*"/>
+        <actionctrl cardinality="n"/>
+      </fb>
+    </fblist>
+
+    <locationlist cardinality="1" remark="Location table" wrappername="LocationList">
+      <location cardinality="n" wrappername="Location">
+        <var name="id" vt="string" defval="" range="*" required="true" remark="location name"/>
+        <var name="blocks" vt="string" defval="" range="*" required="true" remark="location related blocks as csv"/>
+      </location>
+    </locationlist>
+      
+    <sclist cardinality="1" remark="Schedule table" wrappername="ScheduleList">
+      <sc cardinality="n" wrappername="Schedule">
+        <var name="id" vt="string" defval="" range="*" required="true" remark="schedule name"/>
+        <const name="type_cycle" vt="string" val="cycle"/>
+        <const name="type_commuter" vt="string" val="commuter"/>
+        <var name="type" vt="string" defval="cycle" range="cycle,commuter" required="true" remark="how the schedule should be used"/>
+        <var name="cycles" vt="int" defval="0" range="0-*" remark="number of runs in case of cycle type: 0 is just one run"/>
+        <var name="relativetime" vt="bool" defval="false" remark="time is relative to the schedule start"/>
+        <scentry cardinality="n" wrappername="ScheduleEntry">
+          <var name="location" vt="string" defval="NULL" range="*" required="false" remark="Location from the locationlist"/>
+          <var name="block" vt="string" defval="NULL" range="*" required="false" remark="Block from the blocklist"/>
+          <var name="hour" vt="int" defval="0" remark="Departure hour"/>
+          <var name="minute" vt="int" defval="0" remark="Departure minute"/>
+          <actionctrl cardinality="n"/>
+	        <var name="swap" vt="bool" defval="false" remark="swap the loc placing before traveling to this destination"/>
+        </scentry>
+        <var name="scaction" vt="string" defval="NULL" range="*" remark="schedule action id"/>
+        <actionctrl cardinality="n"/>
+      </sc>
+    </sclist>
+
+    <bklist cardinality="1" remark="Block table" wrappername="BlockList">
+      <bk cardinality="n" wrappername="Block">
+        <var name="id" vt="string" defval="?" range="*" required="true"/>
+        <var name="desc" vt="string" defval="" range="*" remark="Description of block."/>
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Distance between enter and in event to check with train length."/>
+        <var name="gomanual" vt="bool" defval="true" remark="allow half-automatic mode"/>
+        <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
+        <var name="acceptghost" vt="bool" defval="false" remark="accept a ghosttrain and signal the block occupied."/>
+        <var name="terminalstation" vt="bool" defval="false" remark="swap placing of an incomming loc to get another default direction.(terminal station)"/>
+        <var name="turnouts" vt="string" defval="" range="*" remark="list of turnouts which are overlapped by this block in case of occupation. (csv list)"/>
+        <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>
+
+        <!-- Track Driver support (Dinamo)-->
+        <var name="iid" vt="string" defval="NULL" range="*" remark="TD interface id"/>
+        <var name="addr" vt="int" defval="0" range="0-*" remark="TD address"/>
+        <var name="port" vt="int" defval="0" range="0-*" remark="TD output port"/>
+        <var name="power" vt="bool" defval="true" remark="block power"/>
+        <var name="td" vt="bool" defval="false" remark="trackdriver connected to this block"/>
+
+        <var name="mvdistance" vt="int" defval="0" units="mm" remark="Distance between the enter and in event."/>
+        <var name="mvscale" vt="int" defval="87" remark="Scale of locomotives."/>
+        <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
+
+        <const name="open" vt="string" val="open"/>
+        <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
+        <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="locid" vt="string" defval="NULL" range="*" remark="The loc which is actualy in the block or is comming or going."/>
+        <var name="manual" vt="bool" defval="false" remark="Block not chooseable for locs in auto-mode if set to true."/>
+        <var name="reserved" vt="bool" defval="false" remark=""/>
+        <var name="entering" vt="bool" defval="false" remark=""/>
+        <var name="wait" vt="bool" defval="true" remark="Should the loc wait in this block?"/>
+        <const name="wait_random" vt="string" val="random" remark="Generate a random wait time."/>
+        <const name="wait_fixed" vt="string" val="fixed" remark="Wait a fixed period of time."/>
+        <const name="wait_loc" vt="string" val="loc" remark="Takes the loc wait time as defined in lc."/>
+        <var name="waitmode" vt="string" defval="random" range="random,fixed,loc"/>
+        <var name="waittime" vt="int" defval="10" unit="s" range="0-*" remark="Wait time in case of wait_fixed."/>
+        <var name="minwaittime" vt="int" defval="1" unit="s" range="0-*" remark="Min. wait time in case of wait_random."/>
+        <var name="maxwaittime" vt="int" defval="30" unit="s" range="0-*" remark="Max. wait time in case of wait_random."/>
+        <const name="min" vt="string" val="min" remark="Blockspeed is minimal."/>
+        <const name="mid" vt="string" val="mid" remark="Blockspeed is middle."/>
+        <const name="max" vt="string" val="max" remark="Blockspeed is maximal."/>
+        <const name="cruise" vt="string" val="cruise" remark="Blockspeed is cruise."/>
+        <const name="percent" vt="string" val="percent" remark="Blockspeed is set by percent."/>
+        <var name="speed" vt="string" defval="cruise" range="*" remark="Block speed on arrive."/>
+        <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
+        <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
+        <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
+        <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>
+        <var name="signalR" vt="string" defval="NULL" range="*" remark="Home Signal ID for reverse direction. (sw)"/>
+        <var name="wsignalR" vt="string" defval="NULL" range="*" remark="Warning Signal ID for reverse direction. (sw)"/>
+        <var name="electrified" vt="bool" defval="false" remark="Block is open for electric locs."/>
+        <var name="station" vt="bool" defval="false" remark="Block has a station defined by type."/>
+        <const name="type_turntable" vt="string" val="turntable"/>
+        <const name="type_local" vt="string" val="local"/>
+        <const name="type_ice" vt="string" val="ice"/>
+        <const name="type_shunting" vt="string" val="shunting"/>
+        <const name="type_goods" vt="string" val="goods"/>
+        <const name="type_none" vt="string" val="none"/>
+        <var name="type" vt="string" defval="none" range="none,local,ice,shunting,goods"/>
+        <const name="incline_up" vt="int" val="1"/>
+        <const name="incline_none" vt="int" val="0"/>
+        <const name="incline_down" vt="int" val="-1"/>
+        <var name="incline" vt="int" defval="0" range="1,0,-1"/>
+        <var name="commuter" vt="string" defval="no" range="no,yes,only" remark="Are commuter trains allowed?"/>
+        <const name="loc" vt="string" val="loc"/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="ttid" vt="string" defval="NULL" range="*" remark="Turntable ID."/>
+        <incl cardinality="n" wrappername="BlockInclude">
+          <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
+        </incl>
+        <excl cardinality="n" wrappername="BlockExclude">
+          <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
+        </excl>
+        <!-- New feedback handling: -->
+        <fbevent cardinality="n" wrappername="FeedbackEvent">
+          <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
+          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
+          <const name="ident_event" vt="string" val="ident"/>
+          <const name="enter_event" vt="string" val="enter"/>
+          <const name="enter2route_event" vt="string" val="enter2route"/>
+          <const name="enter2in_event" vt="string" val="enter2in"/>
+          <const name="in_event" vt="string" val="in"/>
+          <const name="exit_event" vt="string" val="exit"/>
+          <const name="pre2in_event" vt="string" val="pre2in"/>
+          <const name="occupied_event" vt="string" val="occupied"/>
+          <const name="V_min_event" vt="string" val="V_min"/>
+          <const name="V_mid_event" vt="string" val="V_mid"/>
+          <const name="V_max_event" vt="string" val="V_max"/>
+          <const name="V_cruise_event" vt="string" val="V_cruise"/>
+          <var name="endpuls" vt="bool" defval="false" remark="use the down flank of the puls"/>
+          <const name="from_all" vt="string" val="all"/>
+          <const name="from_all_reverse" vt="string" val="all-reverse"/>
+          <var name="from" vt="string" defval="" range="*" remark="from block id (csv list for more blocks)"/>
+          <var name="ghostdetection" vt="bool" defval="false" remark=""/>
+        </fbevent>
+      </bk>
+    </bklist>
+    <linklist cardinality="1" remark="Block Link table" wrappername="LinkList">
+      <link cardinality="n" wrappername="Link" remark="in case of critsect the src is ignored and all blocks listed in dst are group members">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <const name="usage_manual" vt="int" val="0"/>
+        <const name="usage_critsect" vt="int" val="1" remark="group is used as a critical section"/>
+        <var name="usage" vt="int" defval="0" range="*" remark="group usage"/>
+        <var name="active" vt="bool" defval="false" remark="Activates links: all blocks are set to manual mode."/>
+        <var name="src" vt="string" defval="" range="*" required="true" remark="source block"/>
+        <var name="dst" vt="string" defval="" range="*" required="true" remark="destination blocks; id's in CSV format"/>
+      </link>
+    </linklist>
+    <stlist cardinality="1" remark="Route table" wrappername="RouteList">
+      <st cardinality="n" wrappername="Route" remark="A street defines a destination fromone block to another including switch positions.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <const name="modid_auto_gen" vt="string" val="auto-generated"/>
+        <var name="modid" vt="string" defval="" range="*" remark="module ID for internal use only"/>
+        <var name="z" vt="int" defval="-1" range="*" remark="level for internal use only"/>
+        <const name="routelock" vt="string" val="--routelock--" remark="id to signal FY and TT a route lock/unlock"/>
+        <const name="point_nw" vt="string" val="point-nw"/>
+        <const name="point_ne" vt="string" val="point-ne"/>
+        <const name="point_wn" vt="string" val="point-wn"/>
+        <const name="point_ws" vt="string" val="point-ws"/>
+        <const name="point_sw" vt="string" val="point-sw"/>
+        <const name="point_se" vt="string" val="point-se"/>
+        <const name="point_en" vt="string" val="point-en"/>
+        <const name="point_es" vt="string" val="point-es"/>
+        <const name="point_n" vt="string" val="point-n" remark="for single track modules"/>
+        <const name="point_w" vt="string" val="point-w" remark="for single track modules"/>
+        <const name="point_s" vt="string" val="point-s" remark="for single track modules"/>
+        <const name="point_e" vt="string" val="point-e" remark="for single track modules"/>
+        <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
+        <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+        <var name="bkc" vt="string" defval="NULL" range="*" required="false" 
+          remark="Crossing block: optional incase a block overlaps turnouts used by this route. This is a csv list of blocks."/>
+        <var name="dir" vt="bool" defval="true" remark="Direction permission; true is from-to only, false is both directions."/>
+        <var name="lcdir" vt="bool" defval="true" remark="Loco running direction from-to; true is forwards, false is backwards."/>
+        <var name="swap" vt="bool" defval="false" remark="swap loco placing at activating this route"/>
+        <var name="reduceV" vt="bool" defval="true" remark="reduce speed by thrown switches"/>
+        <swcmd cardinality="n" wrappername="SwitchCmd">
+          <var name="id" vt="string" defval="" range="*" required="true" remark="Switch ID."/>
+          <var name="cmd" vt="string" defval="straight" range="straight,turnout,left,right,green,red,track"/>
+          <var name="track" vt="int" defval="0" range="0-*" remark="turntable track"/>
+          <const name="cmd_track" vt="string" val="track" remark="track of turntable or selectiontable: avoid using same id's for both types!"/>
+        </swcmd>
+        <const name="go" vt="string" val="go" remark="Switch all switches for this street."/>
+        <const name="test" vt="string" val="test" remark="Switch all switches for this street without sending the clients updates."/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <const name="V_none" vt="string" val="none" remark="No V_hint defined."/>
+        <var name="speed" vt="string" defval="none" range="none,min,cruise,max" remark="Route speed on departure; overwrites block departure speed if set."/>
+        <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Route speed in percent."/>
+        <var name="function" vt="int" defval="0" range="0-12" remark="function to activate"/>
+        <var name="funtime" vt="int" defval="1" range="1-10" unit="s" remark="function to activation time"/>
+        <var name="funevent" vt="const char*" defval="none" range="none,enter,in" remark="function deactivation event"/>
+        <fbevent cardinality="n"/>
+        <actionctrl cardinality="n"/>
+      </st>
+    </stlist>
+    <tklist cardinality="1" remark="Track table" wrappername="TrackList">
+      <tk cardinality="n" wrappername="Track" remark="None active piece of plan.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="blockid" vt="string" defval="NULL" range="*"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="0" range="0-9"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+        <const name="straight" vt="string" val="straight"/>
+        <const name="buffer" vt="string" val="buffer"/>
+        <const name="curve" vt="string" val="curve"/>
+        <const name="dir" vt="string" val="dir"/>
+        <const name="dirall" vt="string" val="dirall"/>
+        <const name="connector" vt="string" val="connector"/>
+        <var name="type" vt="string" defval="straight" range="straight,curve,dir,dirall,buffer,connector"/>
+      </tk>
+    </tklist>
+    <ttlist cardinality="1" remark="Turntable" wrappername="TurntableList">
+      <tt cardinality="n" wrappername="Turntable" remark="Turntable definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr" vt="int" defval="0" range="0-255" required="true" remark="Digital address."/>
+
+        <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="gate0" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="gate1" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="gate2" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="gate3" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="gate4" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+
+        <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
+        <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
+        <var name="b1sen" vt="string" defval="NULL" range="*" remark="ID bit 1 of position"/>
+        <var name="b2sen" vt="string" defval="NULL" range="*" remark="ID bit 2 of position"/>
+        <var name="b3sen" vt="string" defval="NULL" range="*" remark="ID bit 3 of position"/>
+
+
+
+        <var name="prot" vt="string" defval="D" range="D,M,N" remark="Protocol to use."/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MP" vt="string" val="MP" remark="Multi Port"/>
+        <var name="swcmd" vt="bool" defval="false" remark="use switch instead of output commands"/>
+        <var name="V" vt="int" defval="75" range="10-100" required="true" remark="Rotation speed in percent."/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="0" range="0-9"/>
+        <const name="next" vt="string" val="next" remark="Go to next track."/>
+        <const name="prev" vt="string" val="prev" remark="Go to previous track."/>
+        <const name="turn180" vt="string" val="180" remark="Go to previous track."/>
+        <const name="lighton" vt="string" val="lighton" remark="Turn lights on."/>
+        <const name="lightoff" vt="string" val="lightoff" remark="Turn lights off."/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <const name="locdec" vt="string" val="locdec" remark="Modified analog turntable."/>
+        <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>
+        <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
+        <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
+        <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
+        <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
+        <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupation on the bridge."/>
+        <var name="s2" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupation on the bridge."/>
+        <var name="state1" vt="bool" defval="false" remark="Feedback state bridge sensor1."/>
+        <var name="state2" vt="bool" defval="false" remark="Feedback state bridge sensor2."/>
+        <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
+        <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this turntable."/>
+        <var name="delay" vt="int" defval="0" range="0-*" unit="s" required="false"/>
+        <var name="pause" vt="int" defval="0" range="0-*" unit="s" required="false" remark="pause between direction and position command"/>
+        <track cardinality="n" wrappername="TTTrack" remark="Turntable track.">
+          <var name="posfb" vt="string" defval="" range="*" required="true" remark="Feedback ID for positioning the TT."/>
+          <var name="nr" vt="int" defval="0" range="0-48*" required="true" remark="Track number."/>
+          <var name="decnr" vt="int" defval="-1" range="*" required="false" remark="Decoder track number."/>
+          <var name="state" vt="bool" defval="false" remark="pos feedback state."/>
+          <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        </track>
+      </tt>
+    </ttlist>
+    <lclist cardinality="1" remark="Loc table" wrappername="LocList">
+      <lc cardinality="n" wrappername="Loc" remark="Loc definition.">
+        <var name="show" vt="bool" defval="true" remark="Show in loco table."/>
+        <var name="image" vt="string" defval="NULL" range="*" remark="local image file to show in dialogs"/>
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="shortid" vt="string" defval="" range="*" remark="Short IDs are used for throttle displays."/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="identifier" vt="int" defval="0" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>
+        <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the loc table"/>
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr" vt="int" defval="0" range="0-255" required="true" remark="Digital address. (0 == analog)"/>
+        <var name="port" vt="int" defval="0" range="0-*" required="false" 
+          remark="Block number in the Dinamo system. (Block property)"/>
+        <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Total length of loc with wagons to check with block length.."/>
+        <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
+        <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
+
+        <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
+        <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>
+        <const name="max" vt="string" val="max" remark="Set speed to maximal."/>
+        <const name="cruise" vt="string" val="cruise" remark="Set speed to 80% of maximal."/>
+        <const name="climb" vt="string" val="climb" remark="Set speed to 90% of maximal."/>
+
+        <!-- running steps in percents for maerklin decoders in case of V_mode="percent":
+           7% = 1    57% = 8
+          14% = 2    64% = 9
+          21% = 3    71% = 10
+          28% = 4    78% = 11
+          35% = 5    85% = 12
+          42% = 6    92% = 13
+          50% = 7   100% = 14
+        -->
+        <!-- V speed attributes -->
+        <const name="V_mode_kmh" vt="string" val="kmh"/>
+        <const name="V_mode_percent" vt="string" val="percent"
+               remark="use 30 incase of mins=4, 70 incase of maxs=10... (Replaces attr controlled)"/>
+        <var name="V_mode" vt="string" defval="percent" range="kmh,percent"
+             remark="How the V values should be interpreted by the digint: percent is used for decoders without max speed tuning.(Delta...)"/>
+        <var name="V_max" vt="int" defval="100" range="*" unit="kmh" remark="Maximal speed in kmh"/>
+        <var name="V_mid" vt="int" defval="50" range="*" unit="kmh" remark="Middle speed in kmh"/>
+        <var name="V_min" vt="int" defval="10" range="*" unit="kmh" remark="Minimal speed in kmh"/>
+        <var name="V_Rmax" vt="int" defval="0" range="*" unit="kmh" remark="Maximal reverse speed.(not used when 0)"/>
+        <var name="V_Rmid" vt="int" defval="0" range="*" unit="kmh" remark="Minimal reverse speed.(not used when 0)"/>
+        <var name="V_Rmin" vt="int" defval="0" range="*" unit="kmh" remark="Minimal reverse speed.(not used when 0)"/>
+        <var name="V" vt="int" defval="-1" range="*" unit="kmh" remark="Loc speed in kmh."/>
+        <var name="V_raw" vt="int" defval="-1" range="*" remark="Loc speed in CS speed steps."/>
+        <var name="V_rawMax" vt="int" defval="-1" range="*" remark="Max loc speed in CS speed steps."/>
+        <var name="V_step" vt="int" defval="0" range="0-9" unit="tenth of sec."
+             remark="Time between next decoder speed.(used only incase of V_mode_percent)"/>
+        <var name="V_hint" vt="string" defval="NULL" range="min,mid,max,cruise,climb"
+             remark="Loc speed in word hints."/>
+
+        <var name="mass" vt="int" defval="0" range="0-127" remark="Mass index for use with Dinamo."/>
+        <var name="dir" vt="bool" defval="true" remark="Direction; true is forwards."/>
+        <var name="placing" vt="bool" defval="true" remark="If loc is placed back to front this should be set to false."/>
+        <var name="roaming" vt="bool" defval="true" remark="The roaming flag allows a loc traveling to other systems."/>
+        <var name="trysamedir" vt="bool" defval="false" remark="Try find new destinations in the same direction as the loc is running now."/>
+        <var name="tryoppositedir" vt="bool" defval="false" remark="Try find new destinations in the opposite direction. (to-from)"/>
+        <var name="dirpause" vt="int" defval="0" range="0-999" unit="ms" remark="pause after sending last turnout command and before sending the direction to the loc decoder"/>
+
+        <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>
+        <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
+        <var name="catnr" vt="string" defval="" range="*" remark="Catalog number."/>
+        <var name="prot" vt="string" defval="P" range="P,M,N,A,C"
+             remark="P = protocol by server, M = Marklin, N = NMRA-DCC, L = NMRA-DCC long addresses, A = Analog, C= Car Decoder"/>
+        <const name="prot_P" vt="string" val="P" remark="Protocol by server"/>
+        <const name="prot_M" vt="string" val="M" remark="Marklin"/>
+        <const name="prot_N" vt="string" val="N" remark="DCC short addresses"/>
+        <const name="prot_L" vt="string" val="L" remark="DCC long addresses"/>
+        <const name="prot_A" vt="string" val="A" remark="analog"/>
+        <const name="prot_C" vt="string" val="C" remark="Car Decoder"/>
+        <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
+        <var name="spcnt" vt="int" defval="14" range="*" remark="Speed steps count"/>
+        <var name="regulated" vt="bool" defval="true" remark="Decoder regulates the motor."/>
+        <var name="fn" vt="bool" defval="true" remark="Function switch. (Lights)"/>
+        <var name="fx" vt="int" defval="0" remark="Function status bits for display only."/>
+
+        <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
+        <fundef cardinality="n" wrappername="FunDef">
+          <var name="fn" vt="int" defval="1" range="1-*" remark="function number"/>
+          <var name="timer" vt="int" defval="0" range="0-99" unit="s" remark="function timer"/>
+          <var name="text" vt="string" defval="function" range="*" remark="function label"/>
+          <var name="on" vt="bool" defval="false" remark="activation"/>
+          <var name="onevent" vt="string" defval="enter_block" range="enter_block,exit_block,in_block,out_block" remark="Activation event."/>
+          <var name="onblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
+          <var name="offevent" vt="string" defval="in_block" range="enter_block,exit_block,in_block,out_block" remark="Deactivation event."/>
+          <var name="offblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
+          <const name="enter_block" vt="string" val="enter_block"/>
+          <const name="in_block" vt="string" val="in_block"/>
+          <const name="exit_block" vt="string" val="exit_block"/>
+        </fundef>
+
+        <const name="cargo_person" vt="string" val="person"/>
+        <const name="cargo_goods" vt="string" val="goods"/>
+        <const name="cargo_mixed" vt="string" val="mixed"/>
+        <const name="cargo_none" vt="string" val="none"/>
+        <const name="cargo_ice" vt="string" val="ice"/>
+        <const name="cargo_cleaning" vt="string" val="cleaning" remark="should not wait in blocks"/>
+        <var name="cargo" vt="string" defval="none" range="none,ice,persons,goods,mixed,cleaning"/>
+        <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>
+        <const name="engine_diesel" vt="string" val="diesel"/>
+        <const name="engine_electric" vt="string" val="electric"/>
+        <const name="engine_steam" vt="string" val="steam"/>
+        <var name="engine" vt="string" defval="diesel" range="diesel,electric,steam"/>
+        <var name="sw" vt="bool" deprecated="true" defval="false" remark="Change direction in P50 protocol.(Use dir=true/false)"/>
+        <const name="go" vt="string" val="go" remark="Start loc in automatic mode."/>
+        <const name="gomanual" vt="string" val="gomanual" remark="Start loc in half-automatic mode."/>
+        <const name="stop" vt="string" val="stop" remark="Stop loc in next or current block."/>
+        <const name="stopgo" vt="string" val="stopgo" remark="Stop loc, reset and go."/>
+        <const name="brake" vt="string" val="brake" remark="Stop immidiately"/>
+        <const name="block" vt="string" val="block" remark="Set loc in the supplied block."/>
+        <const name="gotoblock" vt="string" val="gotoblock" remark="Set wanted block."/>
+        <const name="useschedule" vt="string" val="useschedule" remark="Set schedule to use."/>
+        <const name="dispatch" vt="string" val="dispatch" remark="Dispatch loco for throttle."/>
+        <const name="reset" vt="string" val="reset" remark="Stop immidiately and go to idle mode."/>
+        <const name="swap" vt="string" val="swap" remark="Swap placing."/>
+        <const name="velocity" vt="string" val="velocity" remark="Set direct velocity."/>
+        <const name="shortid" vt="string" val="shortid" remark="Send the short ID to the command station."/>
+        <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
+        <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>
+        <var name="usescheduletime" vt="bool" defval="False" remark="Use departure time in schedules."/>
+        <var name="scidx" vt="int" defval="-1" range="*" remark="Schedule index"/>
+        <var name="blockid" vt="string" defval="NULL" range="*" remark="Current block ID."/>
+        <var name="destblockid" vt="string" defval="NULL" range="*" remark="Destination block ID. (info only)"/>
+        <var name="blockwaittime" vt="int" defval="10" unit="s" range="0-*" remark="Own wait time."/>
+        <var name="lclib" vt="string" defval="./lcdriver" remark="LocDriver library"/>
+        <var name="ttlib" vt="string" defval="./ttdriver" remark="TurntableDriver library"/>
+        <var name="purchased" vt="string" defval="" remark="Date of purchase"/>
+        <var name="runtime" vt="long" defval="0" remark="Auto runtime in seconds"/>
+        <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
+        
+        <const name="mode_idle" vt="string" val="idle"/>
+        <const name="mode_wait" vt="string" val="wait"/>
+        <const name="mode_halfauto" vt="string" val="halfauto"/>
+        <const name="mode_auto" vt="string" val="auto"/>
+        <var name="mode" vt="string" defval="" range="*" remark="Loc mode."/>
+
+        <cvbyte cardinality="n" wrappername="CVByte">
+          <var name="nr" vt="int" defval="0" range="0-255" remark="CV-Number"/>
+          <var name="value" vt="int" defval="0" range="0-255" remark="CV-Value"/>
+          <var name="desc" vt="string" defval="NULL" range="*" remark="CV-Description"/>
+        </cvbyte>
+
+        <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
+        <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
+      </lc>
+    </lclist>
+    <txlist cardinality="1" remark="text symbols table" wrappername="TextList">
+      <tx cardinality="n" wrappername="Text" remark="">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
+        <var name="text" vt="string" defval="" range="*" required="true" remark="Text or Image (if ending on .png) to be displayed."/>
+        <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the table"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="red" vt="int" defval="0" range="0-255"/>
+        <var name="green" vt="int" defval="0" range="0-255"/>
+        <var name="blue" vt="int" defval="0" range="0-255"/>
+        <var name="backred" vt="int" defval="-1" range="0-255"/>
+        <var name="backgreen" vt="int" defval="-1" range="0-255"/>
+        <var name="backblue" vt="int" defval="-1" range="0-255"/>
+        <var name="bold" vt="bool" defval="False"/>
+        <var name="underlined" vt="bool" defval="False"/>
+        <var name="italic" vt="bool" defval="False"/>
+        <var name="transparent" vt="bool" defval="True"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="0" range="0-9"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+        <var name="cx" vt="int" defval="3" range="1-*"/>
+        <var name="cy" vt="int" defval="1" range="1-*"/>
+        <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
+      </tx>
+    </txlist>
+    
+    <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
+      <ac cardinality="n" wrappername="Action" remark="">
+        <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
+        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn" required="true" remark="type [ext] is an external program or script to be executed"/>
+        <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
+        <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
+        <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
+        <var name="timed" vt="bool" defval="false" remark="Use time for activation."/>
+        <var name="oid" vt="string" defval="NULL" range="*" remark="output id"/>
+        <var name="cmd" vt="string" defval="NULL" range="*" remark="on, off or an external program or script to be executed"/>
+        <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>
+        <var name="actiontime" vt="int" defval="0" unit="s" remark="function activation time"/>
+      </ac>
+    </aclist>
+    
+    <seltablist cardinality="1" remark="selection table list" wrappername="SelTabList">
+      <seltab cardinality="n" wrappername="SelTab" remark="Selection Table">
+        <var name="id" vt="string" defval="NULL" range="*" remark="object id"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="0" range="0-9"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+        <var name="iid" vt="string" defval="NULL" range="*" remark="interfaced id"/>
+        <var name="locid" vt="string" defval="NULL" range="*" remark="loc id"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+
+        <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+
+        <var name="nrtracks" vt="int" defval="12" range="4-16" required="true"/>
+
+        <var name="sharedfb" vt="bool" defval="false" remark="Use one set of sensors for all blocks."/>
+        <var name="manager" vt="bool" defval="false" remark="Manager mode: Act like a block and manage all sub blocks.(Tracks)"/>
+        <var name="state" vt="string" defval="open" range="open,closed"/>
+
+        <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MP" vt="string" val="MP" remark="Multi Port"/>
+        <var name="inv" vt="bool" defval="false" remark="invert the switch commands 0 to 3"/>
+        <var name="invnew" vt="bool" defval="false" remark="invert the switch command 4"/>
+        <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
+        <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
+        <var name="b1sen" vt="string" defval="NULL" range="*" remark="ID bit 1 of position"/>
+        <var name="b2sen" vt="string" defval="NULL" range="*" remark="ID bit 2 of position"/>
+        <var name="b3sen" vt="string" defval="NULL" range="*" remark="ID bit 3 of position"/>
+        <var name="pos" vt="int" defval="0" range="*" remark="position of table"/>
+        <const name="next" vt="string" val="next" remark="Go to next track."/>
+        <const name="prev" vt="string" val="prev" remark="Go to previous track."/>
+        <const name="gotopos" vt="string" val="gotopos" remark="Go to track."/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="pending" vt="bool" defval="false" range="*"/>
+        <seltabpos cardinality="n" wrappername="SelTabPos" remark="Selection Table Position">
+          <var name="nr" vt="int" defval="0" range="*" remark="position"/>
+          <var name="desc" vt="string" defval="" range="*" remark="description"/>
+          <var name="bkid" vt="string" defval="NULL" range="*" remark="block id"/>
+          <var name="s1id" vt="string" defval="NULL" range="*" remark="sensor 1 id for optical feedback of the selected position"/>
+          <var name="s2id" vt="string" defval="NULL" range="*" remark="sensor 2 id for optical feedback of the selected position"/>
+        </seltabpos>
+        <fbevent cardinality="n"/>
+      </seltab>
+    </seltablist>
+
+    <traverserlist cardinality="1" remark="traverser list" wrappername="TraverserList">
+      <traverser cardinality="n" wrappername="Traverser" remark="Traverser Table">
+        <var name="id" vt="string" defval="NULL" range="*" remark="object id"/>
+        <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="0" range="0-9"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+        <var name="iid" vt="string" defval="NULL" range="*" remark="interfaced id"/>
+        <var name="locid" vt="string" defval="NULL" range="*" remark="loc id"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+
+        <var name="nrtracks" vt="int" defval="12" range="4-16" required="true"/>
+
+        <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
+        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
+        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
+        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
+        <const name="prot_MP" vt="string" val="MP" remark="Multi Port"/>
+        <var name="inv" vt="bool" defval="false" remark="invert the switch commands 0 to 3"/>
+        <var name="invnew" vt="bool" defval="false" remark="invert the switch command 4"/>
+        <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
+        <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
+        <var name="b1sen" vt="string" defval="NULL" range="*" remark="ID bit 1 of position"/>
+        <var name="b2sen" vt="string" defval="NULL" range="*" remark="ID bit 2 of position"/>
+        <var name="b3sen" vt="string" defval="NULL" range="*" remark="ID bit 3 of position"/>
+        <var name="pos" vt="int" defval="0" range="*" remark="position of table"/>
+        <const name="next" vt="string" val="next" remark="Go to next track."/>
+        <const name="prev" vt="string" val="prev" remark="Go to previous track."/>
+        <const name="gotopos" vt="string" val="gotopos" remark="Go to track."/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="pending" vt="bool" defval="false" range="*"/>
+      </traverser>
+    </traverserlist>
+
+    
+  </plan>
+
+
+</Wrappers>
+

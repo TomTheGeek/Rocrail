@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+ <head>
+  <title>Object Generator</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+ </head>
+<body>
+<a name="top"></a>
+<small>updated at: 20050307 CET</small>
+<hr>
+<h2>Rocs Object Generator</h2>
+
+<hr>
+<ul>
+<li><a href="#Introduction">Introduction</a></li>
+<li><a href="#xmlfile">Example XML input file</a></li>
+<li><a href="#definition">Definition of XML input files</a></li>
+<li><a href="#base">Base functions</a></li>
+</ul>
+
+<br><a href="#top">top</a>
+<hr><h3><a name="Introduction">Introduction</a>:</h3>
+<p>
+Ogen generates C-Objects from an XML input file.<br>
+It generates 4 to 5 things: 
+<ol>
+  <li>a public header file </li>
+  <li>an implementation header file</li>
+  <li>a function map file (*.fm)</li>
+  <li>and if not jet exist the implementation C file</li>
+  <li>HTML documentation</li>
+</ol>
+And with those files C has got an Object like syntax:<br>
+<br> 
+e.g.:
+<pre>
+#include "myapp/public/item.h"
+...
+  iOItem item = ItemOp.inst( "id007" );
+  const char* id = ItemOp.getId( item ); 
+...
+</pre>
+The ItemOp structure is filled with the right function addresses in the item.fm file. <br>
+All C objects also implements the <a href="#base">OBase</a> functions: name, count, equals, serialize, deserialize, toString, getPropeties, del, clone.
+</p>
+
+<br><a href="#top">top</a>
+<hr><h3><a name="xmlfile">Example XML input file</a>:</h3>
+<pre><small>
+&lt;Project name="myapp" title="MyApp API" tolower="true" docname="myappapi" source="$Source: /cvsroot/rojav/rocs/gen/ogen.html,v $" revision="$Revision: 1.3 $"&gt;
+
+  &lt;object name="Item" use="node" remark="An Item object."&gt;
+    &lt;const name="version" vt="string" val="0.10"/&gt;
+    &lt;fun name="inst" vt="this" remark=""&gt;
+      &lt;param name="id" vt="const char*" range="*" unit="-" remark="ID for this new item."/&gt;
+    &lt;/fun&gt;
+    &lt;fun name="getId" vt="void" remark="Get the item ID."&gt;
+      &lt;param name="inst" vt="this" remark="Item instance."/&gt;
+    &lt;/fun&gt;
+    &lt;data&gt;
+      &lt;var name="id" vt="const char*" remark="The ID."/&gt;
+    &lt;/data&gt;
+  &lt;/object&gt;
+  
+&lt;/Project&gt;
+</small></pre>  
+After running in the directory myapp the command ../bin/ogen myapp.xml the following directories and files will be generated:<br>
+<ul>
+  <li>myapp/public/<a href="public/item.h">item.h</a></li>
+  <li>myapp/impl/<a href="impl/item_impl.h">item_impl.h</a></li>
+  <li>myapp/impl/<a href="impl/item.fm">item.fm</a></li>
+  <li>myapp/impl/<a href="impl/item.c">item.c</a></li>
+  <li>myapp/doc/<a href="doc/myappapi-index.html">myappapi-index.html</a></li>
+  <li>myapp/doc/<a href="doc/myappapi.html">myappapi.html</a></li>
+</ul>
+
+
+<br><a href="#top">top</a>
+<hr><h3><a name="definition">Definition of XML input files</a>:</h3>
+<table border="1" cellpadding="2" cellspacing="0" width="80%">
+  <tr><th>Node</th><th>Parent node<br>Attribute/Constant</th><th>Remark</th><th>Default</th><th>Range</th></tr>
+  
+  <tr bgcolor="#e8e8e8"><td><b>project</b></td><td>*root*</td><td></td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>The real application directory or cvs module.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>docname</td><td>File name for the HTML documentation.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>title</td><td>HTML documentation title.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>tolower</td><td>Make all C files lower case.</td><td>false</td><td>true,false</td></tr>
+  <tr><td></td><td>source</td><td>CVS keyword.</td><td>-</td><td>$Source: /cvsroot/rojav/rocs/gen/ogen.html,v $</td></tr>
+  <tr><td></td><td>revision</td><td>CVS keyword.</td><td>-</td><td>$Revision: 1.3 $</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>object</b></td><td>childnode of project</td><td>Object definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Object name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>interface</td><td>Interface to implement. Should be defined first, or external: "$../module/xmlfile:interfacename"</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>nobase</td><td>Object does not implements the base interface if set true.</td><td>false</td><td>true,false</td></tr>
+  <tr><td></td><td>filename</td><td>Overwrite the default generated filename.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>use</td><td>Public headers from the librocs to include in the public header.(csv)<br>Use $-prefix to include from other modules, or #-prefix for stdlib.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>include</td><td>Public headers from the module to include in the public header.(csv)<br>Use $-prefix to include from other modules, or #-prefix for stdlib.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>remark</td><td>Object description.</td><td>-</td><td>*</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>const</b></td><td>childnode of object</td><td>Constant value.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Constant name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>vt</td><td>Variable type.<br>(all possible C- and typedefs were string is translated in const char*)</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>val</td><td>Value of constant.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of the constant.</td><td>-</td><td>*</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>typedef</b></td><td>childnode of object</td><td>Type definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>def</td><td>Valid C typedef.</td><td>-</td><td>*</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>def</b></td><td>childnode of object</td><td>A define.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Define name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>val</td><td>Define value.</td><td>-</td><td>*</td></tr>
+  
+  <tr bgcolor="#e8e8e8"><td><b>fun</b></td><td>childnode of object</td><td>Function definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Function name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>vt</td><td>Return type.</td><td>-</td><td>this-*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of the function.</td><td>-</td><td>*</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>param</b></td><td>childnode of fun</td><td>Function parameter definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Parameter name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>vt</td><td>Variable type.</td><td>-</td><td>this-*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of the parameter.</td><td>-</td><td>*</td></tr>
+
+  <tr bgcolor="#e8e8e8"><td><b>data</b></td><td>childnode of object</td><td>Object private data definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>include</td><td>Public headers from the module to include in the impl header.(csv)<br>Use $-prefix to include from other modules, or #-prefix for stdlib.</td><td>-</td><td>*</td></tr>
+  <tr bgcolor="#e8e8e8"><td><b>var</b></td><td>childnode of data</td><td>Data variable.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Variable name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>vt</td><td>Variable type.<br>(all possible C- and typedefs were string is translated in const char*)</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of the variable.</td><td>-</td><td>*</td></tr>
+  
+  <tr bgcolor="#e8e8e8"><td><b>struct</b></td><td>childnode of object</td><td>Object structure definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Structure name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>typedef</td><td>Optional struct typedef.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of structure.</td><td>-</td><td>*</td></tr>
+  
+  <tr bgcolor="#e8e8e8"><td><b>var</b></td><td>childnode of struct</td><td>Structure variable.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Variable name.</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>vt</td><td>Variable type.<br>(all possible C- and typedefs were string is translated in const char*)</td><td>-</td><td>*</td></tr>
+  <tr><td></td><td>remark</td><td>Description of the variable.</td><td>-</td><td>*</td></tr>
+  
+  <tr bgcolor="#e8e8e8"><td><b>interface</b></td><td>childnode of project</td><td>Interface definition.</td><td></td><td></td></tr>
+  <tr><td></td><td>name</td><td>Interface name.</td><td>-</td><td>*</td></tr>
+
+
+</table>
+
+
+<br><a href="#top">top</a>
+<hr><h3><a name="base">Base functions</a>:</h3>
+
+Every rocs object can be down casted to an <b>obj</b> or <b>OBase</b>. (see: rocs/public/rocs.h)
+<pre> 
+  obj o = (obj)item;
+  char* str = o-&gt;toString( o );
+</pre>
+or:
+<pre> 
+  char* str = item-&gt;base.toString( item );
+</pre>
+<table border="1" cellpadding="2" cellspacing="0" width="80%">
+  <tr bgcolor="#e8e8e8"><th colspan="2" align="left">Method Summary of obj</th></tr>
+  <tr><td valign="top" align="right">void</td><td><b>del( obj <i>inst</i> );</b><br>Free this object.</td></tr>
+  <tr><td valign="top" align="right">const char*</td><td><b>name( void );</b><br>Returns name of object.</td></tr>
+  <tr><td valign="top" align="right">int</td><td><b>count( void );</b><br>Returns object count.</td></tr>
+  <tr><td valign="top" align="right">obj</td><td><b>clone( obj <i>inst</i> );</b><br>Clones this object.</td></tr>
+  <tr><td valign="top" align="right">Boolean</td><td><b>equals( obj <i>inst1</i>, obj <i>inst2</i> );</b><br>Compairs both objects at contents.</td></tr>
+  <tr><td valign="top" align="right">byte*</td><td><b>serialize( obj <i>inst1</i>, long* <i>size</i> );</b><br>Serializes object contents.</td></tr>
+  <tr><td valign="top" align="right">void</td><td><b>deserialize( obj <i>inst1</i>, byte* <i>bytes</i> );</b><br>Serializes object contents.</td></tr>
+  <tr><td valign="top" align="right">char*</td><td><b>toString( obj <i>inst</i> );</b><br>String representation of this obj.</td></tr>
+  <tr><td valign="top" align="right">const void*<br></td><td><b>properties(obj <i>inst</i> );</b><br>If object has properties this should return an iONode.<br></td></tr>
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Gerade -->
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 0,15 L 2,13 L 8,13 L 8,18 L 2,18 L 0,16 z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 23,13 L 29,13 L 31,15 L 31,16 L 29,18 L 23,18 z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 8,13 L 23,13 L 23,18 L 8,18 z " />
+    <!-- Sensor innen -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,255,0)" d="M 14,11 L 17,11 L 20,14 L 20,17 L 17,20 L 14,20 L 11,17 L 11,14 z " />
+  </g>
+</svg>

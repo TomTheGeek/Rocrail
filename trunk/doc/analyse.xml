@@ -1,0 +1,82 @@
+<plan title="Analyse">
+  <zlevel title="Ori" z="0" active="true"/>
+  <tklist>
+    <tk type="straight" id="tk20071031124755198" x="3" y="1" z="0" ori="east" prev_id="tk20071031124755198" blockid=""/>
+    <tk type="straight" id="tk20071031124908668" x="7" y="1" z="0" ori="north"/>
+    <tk type="curve" id="tk20071031124927417" x="3" y="2" z="0"/>
+    <tk type="curve" id="tk20071031124944294" x="7" y="2" z="0" ori="north"/>
+    <tk type="curve" id="tk20071031125004995" x="11" y="2" z="0" ori="east"/>
+    <tk type="curve" id="tk20071031125028696" x="15" y="2" z="0" ori="south"/>
+    <tk type="dir" id="tk20071031125112354" x="3" y="3" z="0"/>
+    <tk type="dir" id="tk20071031125335733" x="7" y="3" z="0" ori="north"/>
+    <tk type="dir" id="tk20071031125342059" x="11" y="3" z="0" ori="east"/>
+    <tk type="dir" id="tk20071031125350890" x="15" y="3" z="0" ori="south"/>
+    <tk type="dirall" id="tk20071031125410567" x="3" y="4" z="0"/>
+    <tk type="dirall" id="tk20071031125424766" x="7" y="4" z="0" ori="north"/>
+    <tk type="buffer" id="tk20071031132326592" x="3" y="18" z="0"/>
+    <tk type="buffer" id="tk20071031132331150" x="7" y="18" z="0" ori="north"/>
+    <tk type="buffer" id="tk20071031132335351" x="11" y="18" z="0" ori="east"/>
+    <tk type="buffer" id="tk20071031132342708" x="15" y="18" z="0" ori="south"/>
+    <tk type="connector" id="tk20071031191507945" x="3" y="19" z="0"/>
+    <tk type="connector" id="tk20071031191512209" x="7" y="19" z="0" ori="north"/>
+    <tk type="connector" id="tk20071031191519953" x="11" y="19" z="0" ori="east"/>
+    <tk type="connector" id="tk20071031191533314" x="15" y="19" z="0" ori="south"/>
+  </tklist>
+  <txlist>
+    <tx text="west" id="tx20071031125144741" x="3" y="0" z="0"/>
+    <tx text="north" id="tx20071031125200652" x="7" y="0" z="0"/>
+    <tx text="east" id="tx20071031125208777" x="11" y="0" z="0"/>
+    <tx text="south" id="tx20071031125215408" x="15" y="0" z="0"/>
+    <tx text="R" id="tx20071031130952623" x="5" y="9" z="0" prev_id="tx20071031130952623" desc="" pointsize="0" cx="1" cy="1"/>
+    <tx text="L" id="tx20071031130958798" x="5" y="8" z="0" prev_id="tx20071031130958798" desc="" pointsize="0" cx="1" cy="1"/>
+    <tx text="tk straight" id="tx20071031131644674" x="0" y="1" z="0" prev_id="tx20071031131644674" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="tk curve" id="tx20071031131651113" x="0" y="2" z="0" prev_id="tx20071031131651113" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="tk dir" id="tx20071031131657345" x="0" y="3" z="0" prev_id="tx20071031131657345" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="tk dirall" id="tx20071031131709519" x="0" y="4" z="0" prev_id="tx20071031131709519" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="sw right" id="tx20071031131841624" x="0" y="5" z="0"/>
+    <tx text="sw left" id="tx20071031131847664" x="0" y="6" z="0"/>
+    <tx text="sw crossing" id="tx20071031131858582" x="0" y="7" z="0"/>
+    <tx text="sw dcrossing" id="tx20071031131914900" x="0" y="8" z="0"/>
+    <tx text="sw dcrossing dir" id="tx20071031132001533" x="0" y="9" z="0"/>
+    <tx text="sw threeway" id="tx20071031132013043" x="0" y="10" z="0"/>
+    <tx text="sg" id="tx20071031132054716" x="0" y="11" z="0"/>
+    <tx text="bk" id="tx20071031132102796" x="0" y="12" z="0"/>
+    <tx text="fb" id="tx20071031132112363" x="0" y="16" z="0"/>
+    <tx text="sw decoupler" id="tx20071031132155421" x="0" y="17" z="0"/>
+    <tx text="tk buffer" id="tx20071031132410417" x="0" y="18" z="0" prev_id="tx20071031132410417" desc="" pointsize="0" cx="3" cy="1"/>
+    <tx text="tk connector" id="tx20071031191544968" x="0" y="19" z="0"/>
+  </txlist>
+  <bklist>
+    <bk id="A" x="3" y="12" z="0" state="open" locid="(null)"/>
+    <bk id="B" x="7" y="12" z="0" ori="north" state="open" prev_id="B" desc="Block description" len="0" electrified="false" station="false" wait="true" gomanual="true" acceptghost="false" terminalstation="false" commuter="no" signal="" wsignal="" signalR="" wsignalR="" speed="cruise" exitspeed="cruise" type="local" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" evttimer="0" iid="" addr="0" port="0" td="false" locid="(null)"/>
+  </bklist>
+  <swlist>
+    <sw type="right" id="w1rw" x="3" y="5" z="0"/>
+    <sw type="right" id="w1rn" x="7" y="5" z="0" ori="north"/>
+    <sw type="right" id="w1re" x="11" y="5" z="0" ori="east"/>
+    <sw type="right" id="w1rs" x="15" y="5" z="0" ori="south"/>
+    <sw type="left" id="w2lw" x="3" y="6" z="0"/>
+    <sw type="left" id="w2ln" x="7" y="6" z="0" ori="north"/>
+    <sw type="left" id="w2le" x="11" y="6" z="0" ori="east"/>
+    <sw type="left" id="w2ls" x="15" y="6" z="0" ori="south"/>
+    <sw type="crossing" id="c1" x="3" y="7" z="0"/>
+    <sw type="dcrossing" id="dc1w" x="3" y="8" z="0"/>
+    <sw type="dcrossing" id="dc1n" x="3" y="9" z="0" prev_id="dc1n" dir="true" ori="north" iid="" bus="0" addr1="0" port1="0" gate1="0" inv="false" addr2="0" port2="0" inv2="false" actdelay="true" delay="0" prot="M"/>
+    <sw type="threeway" id="3ww" x="3" y="10" z="0"/>
+    <sw type="threeway" id="3wn" x="7" y="10" z="0" ori="north"/>
+    <sw type="threeway" id="3we" x="11" y="10" z="0" ori="east"/>
+    <sw type="threeway" id="3ws" x="15" y="10" z="0" prev_id="3ws" dir="false" ori="south" iid="" bus="0" addr1="0" port1="0" gate1="0" inv="false" addr2="0" port2="0" inv2="false" actdelay="true" delay="0" prot="M" fbR="(null)" fbG="(null)" fb2R="(null)" fb2G="(null)"/>
+    <sw type="decoupler" id="d1w" x="3" y="17" z="0"/>
+    <sw type="decoupler" id="d1n" x="7" y="17" z="0" ori="north"/>
+  </swlist>
+  <sglist>
+    <sg id="s1w" x="3" y="11" z="0"/>
+    <sg id="s1n" x="7" y="11" z="0" ori="north"/>
+    <sg id="s1e" x="11" y="11" z="0" ori="east"/>
+    <sg id="s1s" x="15" y="11" z="0" desc="" blockid="" ori="south" iid="" bus="0" addr="0" port1="0" port2="0" port3="0" gate1="0" gate2="0" gate3="0" prot="M" type="light" signal="main" usepatterns="false" inv="false" green="0" red="0" yellow="0" white="0"/>
+  </sglist>
+  <fblist>
+    <fb id="s1w" x="3" y="16" z="0" prev_id="s1n" desc="" show="true" ori="west" iid="" bus="0" addr="0" action="false"/>
+    <fb id="s1north" x="7" y="16" z="0" ori="north"/>
+  </fblist>
+</plan>

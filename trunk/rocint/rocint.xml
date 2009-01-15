@@ -1,0 +1,251 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="RocInt" title="RocRail Interfaces" docname="rocintapi" source="$Source: /cvsroot/rojav/rocint/rocint.xml,v $" revision="$Revision: 1.4 $">
+
+  <interface name="DigInt" use="node">
+    <typedef def="void (*digint_listener)(obj,iONode,int)"/>
+    <typedef def="iONode(*queryProperties)(obj,const char*,const char*)"/>
+    <fun name="setListener" vt="Boolean">
+      <param name="inst" vt="obj"/>
+      <param name="listenerObj" vt="obj"/>
+      <param name="listenerFun" vt="const digint_listener"/>
+    </fun>
+    <fun name="cmd" vt="iONode">
+      <param name="inst" vt="obj"/>
+      <param name="cmd" vt="const iONode"/>
+    </fun>
+    <fun name="halt" vt="void">
+      <param name="inst" vt="obj"/>
+    </fun>
+    <fun name="supportPT" vt="Boolean">
+      <param name="inst" vt="obj"/>
+    </fun>
+    <fun name="version" vt="int" remark="vmajor*1000 + vminor*100 + patch">
+      <param name="inst" vt="obj"/>
+    </fun>
+    <fun name="state" vt="int" remark="bit0=power, bit1=programming, bit2=connection">
+      <param name="inst" vt="obj"/>
+    </fun>
+  </interface>
+
+
+  <interface name="LcDriverInt" use="node" remark="Interface for a LcDriver">
+    <fun name="drive" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="emitter" vt="obj" remark="Sender of event"/>
+      <param name="event" vt="int" remark="Event code"/>
+    </fun>
+    <fun name="go" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="gomanual" vt="Boolean" remark="half-automatic mode"/>
+    </fun>
+    <fun name="stop" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+    <fun name="brake" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+    <fun name="info" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="info" vt="iONode" remark="Info node"/>
+    </fun>
+    <fun name="reset" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="saveCurBlock" vt="Boolean" remark="save current block occupation"/>
+    </fun>
+    <fun name="curblock" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="blockid" vt="const char*" remark="New current block."/>
+    </fun>
+    <fun name="gotoblock" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="blockid" vt="const char*" remark="Block to find."/>
+    </fun>
+    <fun name="useschedule" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="scheduleid" vt="const char*" remark="Schedule to use."/>
+    </fun>
+    <fun name="version" vt="int" remark="vmajor*1000 + vminor*100 + patch">
+      <param name="inst" vt="obj"/>
+    </fun>
+    <fun name="getGotoblock" vt="const char*">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+    <fun name="getScheduleIdx" vt="int">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+    <fun name="isRun" vt="Boolean">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+  </interface>
+
+  <interface name="BlockBase" use="node" include="$rocrail/public/loc" >
+    <fun name="init" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="isReady" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="isFree" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="locid" vt="const char*" remark="Querying loc"/>
+    </fun>
+    <fun name="isSuited" vt="int">
+      <param name="inst" vt="this"/>
+      <param name="loc" vt="iOLoc" remark="Loc instance"/>
+    </fun>
+    <fun name="getVisitCnt" vt="int">
+      <param name="inst" vt="this"/>
+      <param name="locid" vt="const char*"/>
+    </fun>
+    <fun name="lock" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="locid" vt="const char*" remark="Locking loc"/>
+      <param name="blockid" vt="const char*" remark="Comming from block"/>
+      <param name="crossing" vt="Boolean" remark="if this block overlaps turnouts used by other routes, this flag does ignore all events!"/>
+      <param name="reset" vt="Boolean" remark="reset all triggers"/>
+      <param name="reverse" vt="Boolean" remark="reverse enter"/>
+    </fun>
+    <fun name="unLock" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="locid" vt="const char*" remark="Unlocking loc"/>
+    </fun>
+    <fun name="getLoc" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="BlockBase instance"/>
+      <param name="cmd" vt="iONode" remark="Command node"/>
+    </fun>
+    <fun name="getTDiid" vt="const char*">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="getTDaddress" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="getTDport" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="setAnalog" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="analog" vt="Boolean"/>
+    </fun>
+    <fun name="isLinked" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="setGroup" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="group" vt="const char*"/>
+    </fun>
+    <fun name="getFromBlockId" vt="const char*">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="link" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="linkto" vt="this" remark="link to block"/>
+    </fun>
+    <fun name="unLink" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="wait" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="loc" vt="iOLoc" remark="Loc instance"/>
+    </fun>
+    <fun name="inBlock" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="locid" vt="const char*" remark="Loc id"/>
+    </fun>
+    <fun name="enterBlock" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="locid" vt="const char*" remark="Loc id"/>
+    </fun>
+    <fun name="green" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="distant" vt="Boolean" remark="distant signal"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
+    </fun>
+    <fun name="yellow" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="distant" vt="Boolean" remark="distant signal"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
+    </fun>
+    <fun name="white" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="distant" vt="Boolean" remark="distant signal"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
+    </fun>
+    <fun name="red" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="distant" vt="Boolean" remark="distant signal"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
+    </fun>
+    <fun name="resetTrigs" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="getWait" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="loc" vt="iOLoc" remark="Loc instance"/>
+    </fun>
+    <fun name="getVelocity" vt="const char*">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="percent" vt="int*" remark="Speed percent"/>
+      <param name="onexit" vt="Boolean" remark="Speed on exit"/>
+    </fun>
+    <fun name="hasEnter2Route" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="fromBlockId" vt="const char*" remark="from block ID"/>
+    </fun>
+    <fun name="hasPre2In" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="fromBlockId" vt="const char*" remark="from block ID"/>
+    </fun>
+    <fun name="isTerminalStation" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="lockForGroup" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="locid" vt="const char*" remark="Locking loc"/>
+    </fun>
+    <fun name="unLockForGroup" vt="Boolean">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="locid" vt="const char*" remark="Unlocking loc"/>
+    </fun>
+    <fun name="event" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="puls" vt="Boolean" remark="event value"/>
+      <param name="id" vt="const char*" remark="event(fb) ID"/>
+      <param name="ident" vt="int" remark="ID of object which triggered the event. (barcode reader)"/>
+      <param name="val" vt="int" remark="Value of object which triggered the event. (barcode reader)"/>
+      <param name="evtDescr" vt="iONode" remark="event description: optional"/>
+    </fun>
+    <fun name="reset" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="setManager" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="manager" vt="this"/>
+    </fun>
+    <fun name="getManager" vt="this">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+  </interface>
+
+
+</Project>
