@@ -1,14 +1,21 @@
-all:
-	svn log -r HEAD -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail > common\version.xml
+all: version
 	cd rocrail & make -f makefile-mingw rocrail
 
-release:
+release: version
 	cd rocrail & make -f makefile-mingw rocrail DEBUG=
 
-unicode:
-	svn log -r HEAD -q --xml > common\version.xml
+unicode: version
 	cd rocrail & make -f makefile-mingw unicode DEBUG=
 
-ansi:
+ansi: version
 	cd rocrail & make -f makefile-mingw ansi DEBUG=
+
+
+version:
+	echo "const int bzr = " >  common/version.h
+	bzr revno >> common/version.h
+	echo ";" >> common/version.h
+
+svnversion:
+	-svn log -r HEAD -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail > common\version.xml
 	

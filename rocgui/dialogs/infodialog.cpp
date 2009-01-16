@@ -88,7 +88,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_Name->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
-  str = StrOp.fmt("%s svn %d", wGui.buildDate, wxGetApp().getSvn());
+  str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getSvn());
   m_Build->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
