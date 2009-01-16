@@ -21,21 +21,24 @@
 #
 PLATFORM=LINUX
 
-offlineall:
+offlineall: version
 	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
 
-all:
-	-svn log --limit 1 -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk > common/version.xml
+all: version
 	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
 
-fromtar:
+fromtar: version
 	cd rocrail; make fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
 
-release:
-	-svn log --limit 1 -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk > common/version.xml
+release: version
 	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
 	
 install:
 	cd rocrail; make install_all
 #	cp doc/rocrail*.htb ~/rocrail
-	
+
+
+version:
+	echo "const int bzr = " >  common/version.h
+	bzr revno >> common/version.h
+	echo ";" >> common/version.h
