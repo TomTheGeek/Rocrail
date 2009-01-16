@@ -56,6 +56,6 @@ cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
 dpkg-deb --build debian
-mv debian.deb rocrail-setup-$VERSION.$PATCH-svn$SVN-$RELEASNAME-$DIST-i386.deb
+mv debian.deb rocrail-setup-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-i386.deb
 rm -Rf debian
 cd ../rocrail
