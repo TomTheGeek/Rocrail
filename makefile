@@ -42,3 +42,7 @@ version:
 	echo "const int bzr = " >  common/version.h
 	bzr revno >> common/version.h
 	echo ";" >> common/version.h
+
+svnversion:
+	-svn log --limit 1 -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk > common/version.xml
+

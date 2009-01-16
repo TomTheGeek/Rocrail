@@ -51,6 +51,9 @@
 #include "rocrail/wrapper/public/SvnLog.h"
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 
+#include "common/version.h"
+
+
 extern const char svnLog[];
 
 static iOApp __appinst = NULL;
@@ -279,7 +282,11 @@ static int __logo( void ) {
   TraceOp.println( " build %s %s",
                    wGlobal.buildDate,
                    wGlobal.buildTime );
-  {
+
+  if( bzr > 0 ){
+    TraceOp.println( " bzr %d", bzr );
+  }
+  else {
     iODoc doc = DocOp.parse(svnLog);
     if( doc != NULL ) {
       iONode log = DocOp.getRootNode(doc);

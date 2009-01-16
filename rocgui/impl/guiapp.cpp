@@ -106,6 +106,7 @@
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 #include "rocrail/wrapper/public/DataReq.h"
 
+#include "common/version.h"
 
 // ----------------------------------------------------------------------------
 // resources
@@ -462,14 +463,20 @@ bool RocGui::OnInit() {
       wGui.buildDate,
       wGui.buildTime );
 
-  iODoc doc = DocOp.parse(svnLog);
-  if( doc != NULL ) {
-    iONode log = DocOp.getRootNode(doc);
-    DocOp.base.del(doc);
-    if( log != NULL ) {
-      m_Svn = wSvnLogEntry.getrevision( wSvnLog.getlogentry(log) );
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," svn %d", m_Svn );
-      NodeOp.base.del(log);
+  if( bzr > 0 ) {
+    m_Svn = bzr;
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," bzr %d", m_Svn );
+  }
+  else {
+    iODoc doc = DocOp.parse(svnLog);
+    if( doc != NULL ) {
+      iONode log = DocOp.getRootNode(doc);
+      DocOp.base.del(doc);
+      if( log != NULL ) {
+        m_Svn = wSvnLogEntry.getrevision( wSvnLog.getlogentry(log) );
+        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," svn %d", m_Svn );
+        NodeOp.base.del(log);
+      }
     }
   }
 
