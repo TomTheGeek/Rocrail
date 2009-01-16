@@ -1365,8 +1365,32 @@
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
         <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
+        
+        <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
       </lc>
     </lclist>
+    <carlist>
+      <car>
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="code" vt="string" defval="" range="*"/>
+        <const name="cartype_freight" vt="string" val="freight"/>
+        <const name="cartype_passenger" vt="string" val="freight"/>
+        <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
+        <const name="subtype_boxcar" vt="string" val="boxcar"/>
+        <const name="subtype_gondola" vt="string" val="gondola"/>
+        <var name="subtype" vt="string" defval="" range="" remark="Car sub type like Boxcar or gondola."/>
+        <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
+        <var name="waybill" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
+      </car>
+    </carlist>
+    <waybilllist>
+      <waybill>
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="shipper" vt="string" defval="" range="*" required="true"/>
+        <var name="consignee" vt="string" defval="" range="*" required="true"/>
+        <var name="box" vt="string" defval="" range="*" required="true"/>
+      </waybill>
+    </waybilllist>
     <txlist cardinality="1" remark="text symbols table" wrappername="TextList">
       <tx cardinality="n" wrappername="Text" remark="">
         <var name="id" vt="string" defval="" range="*" required="true"/>
