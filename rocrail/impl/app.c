@@ -158,10 +158,10 @@ static const char* _getLibPath( void ) {
   return NULL;
 }
 
-static int _getsvn( void ) {
+static int _getrevno( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);
-    return data->svn;
+    return data->revno;
   }
   return 0;
 }
@@ -284,7 +284,8 @@ static int __logo( void ) {
                    wGlobal.buildTime );
 
   if( bzr > 0 ){
-    TraceOp.println( " bzr %d", bzr );
+    TraceOp.println( " revision %d", bzr );
+    svn = bzr;
   }
   else {
     iODoc doc = DocOp.parse(svnLog);
@@ -484,7 +485,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   }
   else {
     if( help ) {
-      data->svn = __logo();
+      data->revno = __logo();
       __help();
       return 0;
     }
@@ -665,7 +666,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
 
   /* Logo. */
-  data->svn = __logo();
+  data->revno = __logo();
 
   /* planDoc */
   pf = pf?pf:wRocRail.getplanfile(data->ini);

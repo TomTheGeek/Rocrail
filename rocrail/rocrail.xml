@@ -49,7 +49,7 @@
     <fun name="getIniFile" vt="const char*" remark="Current ini filename."/>
     <fun name="listThreads" vt="void" remark=""/>
     <fun name="getLibPath" vt="const char*" remark="Path to the rocrail libraries."/>
-    <fun name="getsvn" vt="int"/>
+    <fun name="getrevno" vt="int"/>
     <fun name="isCreateModplan" vt="Boolean"/>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
@@ -65,7 +65,7 @@
       <var name="szLibPath" vt="const char*"/>
       <var name="stress" vt="Boolean"/>
       <var name="createmodplan" vt="Boolean"/>
-      <var name="svn" vt="int"/>
+      <var name="revno" vt="int"/>
     </data>
   </object>
 

@@ -473,50 +473,52 @@ static void _updateFB( iOModel inst ) {
 
 static Boolean _addItem( iOModel inst, iONode item ) {
   iOModelData data = Data(inst);
-  const char* name = NodeOp.getName( item );
+  const char* itemName = NodeOp.getName( item );
   Boolean added = False;
 
-  if( StrOp.equals( wBlock.name(), name ) ) {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding %s %s...", name, wItem.getid(item) );
+
+  if( StrOp.equals( wBlock.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOBlock bk = BlockOp.inst( clone );
     __addItemInList( data, wBlockList.name(), clone );
     MapOp.put( data->blockMap, wBlock.getid( item ), (obj)bk );
     added = True;
   }
-  else if( StrOp.equals( wTurntable.name(), name ) ) {
+  else if( StrOp.equals( wTurntable.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOTT tt = TTOp.inst( clone );
     __addItemInList( data, wTurntableList.name(), clone );
     MapOp.put( data->ttMap, wTurntable.getid( item ), (obj)tt );
     added = True;
   }
-  else if( StrOp.equals( wSelTab.name(), name ) ) {
+  else if( StrOp.equals( wSelTab.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOSelTab seltab = SelTabOp.inst( clone );
     __addItemInList( data, wSelTabList.name(), clone );
     MapOp.put( data->seltabMap, wSelTab.getid( item ), (obj)seltab );
     added = True;
   }
-  else if( StrOp.equals( wAction.name(), name ) ) {
+  else if( StrOp.equals( wAction.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOAction action = ActionOp.inst( clone );
     __addItemInList( data, wActionList.name(), clone );
     MapOp.put( data->actionMap, wAction.getid( item ), (obj)action );
     added = True;
   }
-  else if( StrOp.equals( wTrack.name(), name ) ) {
+  else if( StrOp.equals( wTrack.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOTrack tk = TrackOp.inst( clone );
     __addItemInList( data, wTrackList.name(), clone );
     MapOp.put( data->trackMap, wTrack.getid( item ), (obj)tk );
     added = True;
   }
-  else if( StrOp.equals( wZLevel.name(), name ) ) {
+  else if( StrOp.equals( wZLevel.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     NodeOp.addChild( data->model, clone );
     added = True;
   }
-  else if( StrOp.equals( wFeedback.name(), name ) ) {
+  else if( StrOp.equals( wFeedback.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOFBack fb = FBackOp.inst( clone );
     __addItemInList( data, wFeedbackList.name(), clone );
@@ -524,14 +526,14 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     __updateDigInt( inst );
     added = True;
   }
-  else if( StrOp.equals( wLoc.name(), name ) ) {
+  else if( StrOp.equals( wLoc.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOLoc lc = LocOp.inst( clone );
     __addItemInList( data, wLocList.name(), clone );
     MapOp.put( data->locMap, wLoc.getid( item ), (obj)lc );
     added = True;
   }
-  else if( StrOp.equals( wRoute.name(), name ) ) {
+  else if( StrOp.equals( wRoute.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iORoute st = RouteOp.inst( clone );
     __addItemInList( data, wRouteList.name(), clone );
@@ -539,35 +541,35 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     ListOp.add( data->routeList, (obj)st);
     added = True;
   }
-  else if( StrOp.equals( wSwitch.name(), name ) ) {
+  else if( StrOp.equals( wSwitch.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOSwitch sw = SwitchOp.inst( clone );
     __addItemInList( data, wSwitchList.name(), clone );
     MapOp.put( data->switchMap, wSwitch.getid( item ), (obj)sw );
     added = True;
   }
-  else if( StrOp.equals( wSignal.name(), name ) ) {
+  else if( StrOp.equals( wSignal.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOSignal sg = SignalOp.inst( clone );
     __addItemInList( data, wSignalList.name(), clone );
     MapOp.put( data->signalMap, wSignal.getid( item ), (obj)sg );
     added = True;
   }
-  else if( StrOp.equals( wOutput.name(), name ) ) {
+  else if( StrOp.equals( wOutput.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOOutput co = OutputOp.inst( clone );
     __addItemInList( data, wOutputList.name(), clone );
     MapOp.put( data->outputMap, wOutput.getid( item ), (obj)co );
     added = True;
   }
-  else if( StrOp.equals( wText.name(), name ) ) {
+  else if( StrOp.equals( wText.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOText tx = TextOp.inst( clone );
     __addItemInList( data, wTextList.name(), clone );
     MapOp.put( data->textMap, wText.getid( item ), (obj)tx );
     added = True;
   }
-  else if( StrOp.equals( wLink.name(), name ) ) {
+  else if( StrOp.equals( wLink.name(), itemName ) ) {
     iONode linklist = wPlan.getlinklist( data->model );
     iONode clone = (iONode)item->base.clone( item );
     if( linklist == NULL ) {
@@ -577,7 +579,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     NodeOp.addChild( linklist, clone );
     added = True;
   }
-  else if( StrOp.equals( wLocation.name(), name ) ) {
+  else if( StrOp.equals( wLocation.name(), itemName ) ) {
     iONode locationlist = wPlan.getlocationlist( data->model );
     iONode clone = (iONode)item->base.clone( item );
     if( locationlist == NULL ) {
@@ -588,7 +590,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->locationMap, wLocation.getid(clone), (obj)clone );
     added = True;
   }
-  else if( StrOp.equals( wSchedule.name(), name ) ) {
+  else if( StrOp.equals( wSchedule.name(), itemName ) ) {
     iONode sclist = wPlan.getsclist( data->model );
     iONode clone = (iONode)item->base.clone( item );
     if( sclist == NULL ) {
@@ -600,6 +602,16 @@ static Boolean _addItem( iOModel inst, iONode item ) {
 
     added = True;
   }
+
+  if(added) {
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.add );
+    NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new item added %s %s", itemName, wItem.getid(item) );
+    /* Broadcast to clients. */
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), cmd );
+  }
+
   return added;
 }
 
@@ -1305,8 +1317,6 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       iONode child = NodeOp.getChild( cmd, i );
       _addItem( inst, child );
     }
-    /* Broadcast to clients. */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), (iONode)NodeOp.base.clone( cmd ) );
   }
   else if( StrOp.equals( wModelCmd.modify, cmdVal ) ) {
     int childCnt = NodeOp.getChildCnt( cmd );
@@ -1494,7 +1504,7 @@ static void _save( iOModel inst ) {
   if( o->model != NULL && o->moduleplan == NULL ){
     /* save regular plan */
     char* xml = NULL;
-    char* version = StrOp.fmt( "%d.%d.%d svn%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getsvn() );
+    char* version = StrOp.fmt( "%d.%d.%d revision %d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
     wPlan.setrocrailversion( o->model, version );
     /* Serialize plan. */
     xml = o->model->base.toString( o->model );
