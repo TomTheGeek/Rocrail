@@ -20,7 +20,6 @@ Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Se
 Name: demoplan; Description: "Demo plan"
 Name: rocrailini; Description: "Demo rocrail.ini"
 Name: rocguiini; Description: "Demo rocgui.ini"
-Name: locxpm; Description: "Loc pictures"
 Name: icons; Description: "Rocgui icons"
 Name: symbols; Description: "WebClient Symbols"
 Name: doc; Description: "Documentation"

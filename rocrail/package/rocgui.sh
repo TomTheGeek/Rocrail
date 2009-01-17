@@ -10,10 +10,6 @@ fi
 
 cd ~/rocrail
 
-if [ ! -e ~/rocrail/locxpm ] ; then
-	ln -s /opt/rocrail/locxpm ~/rocrail/locxpm
-fi
-
 if [ ! -e ~/rocrail/icons ] ; then
 	ln -s /opt/rocrail/icons ~/rocrail/icons
 fi

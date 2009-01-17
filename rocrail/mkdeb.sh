@@ -19,7 +19,6 @@ cd ../package
 rm -Rf *.deb
 mkdir -p debian/DEBIAN
 mkdir -p debian/opt/rocrail/default
-mkdir -p debian/opt/rocrail/locxpm
 mkdir -p debian/opt/rocrail/icons
 mkdir -p debian/opt/rocrail/stylesheets
 mkdir -p debian/opt/rocrail/symbols
