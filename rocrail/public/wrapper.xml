@@ -1373,6 +1373,11 @@
       <car>
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="code" vt="string" defval="" range="*"/>
+        <var name="era" vt="string" defval="" range="*"/>
+        <var name="inspectiondate" vt="string" defval="" range="*"/>
+        <var name="roadname" vt="string" defval="" range="*"/>
+        <var name="owner" vt="string" defval="" range="*"/>
+        <var name="color" vt="string" defval="" range="*"/>
         <const name="cartype_freight" vt="string" val="freight"/>
         <const name="cartype_passenger" vt="string" val="freight"/>
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
@@ -1380,15 +1385,18 @@
         <const name="subtype_gondola" vt="string" val="gondola"/>
         <var name="subtype" vt="string" defval="" range="" remark="Car sub type like Boxcar or gondola."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
-        <var name="waybill" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
+        <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
       </car>
     </carlist>
     <waybilllist>
       <waybill>
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shipper" vt="string" defval="" range="*" required="true"/>
+        <var name="shippertrack" vt="string" defval="" range="*" required="true" remark="Shipper (local) block."/>
         <var name="consignee" vt="string" defval="" range="*" required="true"/>
-        <var name="box" vt="string" defval="" range="*" required="true"/>
+        <var name="consigneetrack" vt="string" defval="" range="*" required="true" remark="Consignee (local) block."/>
+        <var name="routing" vt="string" defval="" range="*" required="true"/>
+        <var name="cargo" vt="string" defval="" range="*"/>
       </waybill>
     </waybilllist>
     <txlist cardinality="1" remark="text symbols table" wrappername="TextList">
