@@ -6307,7 +6307,7 @@
     <da txt="Direction change pause"/>
   </Msg>
   <Msg id="swaprotationdirection">
-    <de txt="swap rotation direction"/>
+    <de txt="Wechsel der Drehrichtung"/>
     <en txt="swap rotation direction"/>
     <nl txt="draai rotatie richting om"/>
     <sv txt="swap rotation direction"/>
