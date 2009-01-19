@@ -23,6 +23,9 @@
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/statline.h>
+#include <wx/radiobox.h>
+#include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -44,14 +47,36 @@ class CarDlg : public wxDialog
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Apply;
-		wxButton* m_sdbSizer1Cancel;
+		wxStaticText* m_labCode;
+		wxTextCtrl* m_Code;
+		wxStaticText* m_labRoadname;
+		wxTextCtrl* m_Roadname;
+		wxStaticText* m_labColor;
+		wxTextCtrl* m_Color;
+		wxStaticLine* m_staticline1;
+		wxRadioBox* m_Era;
+		wxPanel* m_DetailsPanel;
+		wxRadioBox* m_Type;
+		wxRadioBox* m_SubType;
+		wxStaticText* m_labLength;
+		wxTextCtrl* m_Length;
+		wxPanel* m_WaybillPanel;
+		wxListBox* m_WaybillList;
+		wxComboBox* m_WaybillSelection;
+		wxButton* m_AddWaybill;
+		wxButton* m_DeleteWaybill;
+		wxStdDialogButtonSizer* m_stdButton;
+		wxButton* m_stdButtonOK;
+		wxButton* m_stdButtonApply;
+		wxButton* m_stdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onCarImage( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarList( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onTypeSelect( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onWaybillList( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onAddWaybill( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onDeleteWaybill( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onApply( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
