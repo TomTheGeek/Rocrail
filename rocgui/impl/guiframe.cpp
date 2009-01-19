@@ -58,6 +58,7 @@
 #include "rocs/public/strtok.h"
 
 #include "rocgui/dialogs/locdialog.h"
+#include "rocgui/dialogs/cardlg.h"
 #include "rocgui/dialogs/locseldlg.h"
 #include "rocgui/dialogs/loccontroldlg.h"
 #include "rocgui/dialogs/switchdialog.h"
@@ -227,6 +228,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditMode       , RocGuiFrame::OnEditMode)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
+    EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
     EVT_MENU( ME_EditTurnouts   , RocGuiFrame::OnEditTurnouts)
     EVT_MENU( ME_EditTurntables , RocGuiFrame::OnEditTurntables)
     EVT_MENU( ME_EditSensors    , RocGuiFrame::OnEditSensors)
@@ -947,6 +949,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   acc_entries[32].Set(wxACCEL_NORMAL, WXK_PAUSE, ME_EmergencyBreak);
 
   acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
+  acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
 
   wxAcceleratorTable m_accel(34, acc_entries);
   this->SetAcceleratorTable(m_accel);
@@ -1013,6 +1016,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   wxMenu *menuTables = new wxMenu();
   menuTables->Append(ME_EditLocs, wxGetApp().getMenu("loctable"), wxGetApp().getTip("loctable") );
+  menuTables->Append(ME_EditCars, wxGetApp().getMenu("cartable"), wxGetApp().getTip("cartable") );
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
@@ -2004,6 +2008,14 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
   locdialog->Destroy();
 }
 
+void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
+  CarDlg* cardlg = new CarDlg(this );
+  if( wxID_OK == cardlg->ShowModal() ) {
+    /* Notify Notebook. */
+  }
+  cardlg->Destroy();
+}
+
 void RocGuiFrame::OnEditTurnouts( wxCommandEvent& event ) {
   SwitchDialog*  dlg = new SwitchDialog(this, (iONode)NULL );
   if( wxID_OK == dlg->ShowModal() ) {
@@ -2198,6 +2210,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   // Disable table editing in case of automode:
   mi = menuBar->FindItem(ME_EditLocs);
+  if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
+  mi = menuBar->FindItem(ME_EditCars);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditTurnouts);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );

@@ -6350,5 +6350,16 @@
     <it txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
     <da txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
   </Msg>
+  <Msg id="cartable" dialog="true" key="Alt-4">
+    <de txt="Wagonen" tip="Wagontabelle"/>
+    <en txt="Cars" tip="Car table"/>
+    <nl txt="Wagonnen" tip="Wagon lijst"/>
+    <sv txt="Cars" tip="Car table"/>
+    <fr txt="Cars" tip="Car table"/>
+    <tr txt="Cars" tip="Car table"/>
+    <es txt="Cars" tip="Car table"/>
+    <it txt="Cars" tip="Car table"/>
+    <da txt="Cars" tip="Car table"/>
+  </Msg>
 </Messages>
 
