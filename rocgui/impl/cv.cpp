@@ -747,6 +747,7 @@ void CV::writeAll() {
 
 void CV::initLabels() {
   m_labelCVaddress->SetLabel( _T( "Addr." ) );
+  m_labelCVlongaddress->SetLabel( _T( "L.Addr." ) );
   m_labelCVVstart->SetLabel( _T( "Vstart" ) );
   m_labelCVaccel->SetLabel( _T( "Acc.rate" ) );
   m_labelCVdecel->SetLabel( _T( "Dec.rate" ) );
@@ -770,6 +771,10 @@ bool CV::Create()
     m_CVaddress = NULL;
     m_getAddress = NULL;
     m_setAddress = NULL;
+    m_labelCVlongaddress = NULL;
+    m_CVlongaddress = NULL;
+    m_getlongAddress = NULL;
+    m_setlongAddress = NULL;
     m_labelCVVstart = NULL;
     m_CVVstart = NULL;
     m_getVstart = NULL;
@@ -862,7 +867,7 @@ void CV::CreateControls() {
   m_LocBox->Add(m_labLoc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
   wxString* m_LcListStrings = NULL;
   m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
-  m_LocBox->Add(m_LcList, 3, wxGROW|wxALL, 2);
+  m_LocBox->Add(m_LcList, 3, wxGROW|wxALL, 1);
 
   m_loadFile = new wxButton( m_ItemPanel, -1, _("Load..."), wxDefaultPosition, wxSize(60, 25), 0 );
   m_LocBox->Add(m_loadFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
@@ -887,13 +892,27 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVaddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVaddress = new wxTextCtrl( m_ItemPanel, VAL_ADDRESS, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVaddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVaddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getAddress = new wxButton( m_ItemPanel, GET_ADDRESS, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setAddress = new wxButton( m_ItemPanel, SET_ADDRESS, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
+
+
+  // Long Address:
+  m_labelCVlongaddress = new wxStaticText( m_ItemPanel, -1, _("longaddress"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_FlexGrid->Add(m_labelCVlongaddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+
+  m_CVlongaddress = new wxTextCtrl( m_ItemPanel, VAL_LADDRESS, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
+  m_FlexGrid->Add(m_CVlongaddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
+
+  m_getlongAddress = new wxButton( m_ItemPanel, GET_LADDRESS, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
+  m_FlexGrid->Add(m_getlongAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
+
+  m_setlongAddress = new wxButton( m_ItemPanel, SET_LADDRESS, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
+  m_FlexGrid->Add(m_setlongAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // Vstart:
@@ -901,13 +920,13 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVVstart, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVVstart = new wxTextCtrl( m_ItemPanel, VAL_VSTART, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getVstart = new wxButton( m_ItemPanel, GET_VSTART, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setVstart = new wxButton( m_ItemPanel, SET_VSTART, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setVstart, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // Vaccel:
@@ -915,13 +934,13 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVaccel, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVaccel = new wxTextCtrl( m_ItemPanel, VAL_VACCEL, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVaccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVaccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getAccel = new wxButton( m_ItemPanel, GET_VACCEL, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getAccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getAccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setAccel = new wxButton( m_ItemPanel, SET_VACCEL, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setAccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setAccel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // Vdecel:
@@ -929,13 +948,13 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVdecel, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVdecel = new wxTextCtrl( m_ItemPanel, VAL_VDECEL, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVdecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVdecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getDecel = new wxButton( m_ItemPanel, GET_VDECEL, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getDecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getDecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setDecel = new wxButton( m_ItemPanel, SET_VDECEL, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setDecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setDecel, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // Vhigh:
@@ -943,13 +962,13 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVVhigh, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVVhigh = new wxTextCtrl( m_ItemPanel, VAL_VHIGH, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getVhigh = new wxButton( m_ItemPanel, GET_VHIGH, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setVhigh = new wxButton( m_ItemPanel, SET_VHIGH, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setVhigh, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // VMid:
@@ -957,13 +976,13 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVVmid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVVmid = new wxTextCtrl( m_ItemPanel, VAL_VMID, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getVmid = new wxButton( m_ItemPanel, GET_VMID, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setVmid = new wxButton( m_ItemPanel, SET_VMID, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_setVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setVmid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // version:
@@ -971,14 +990,14 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVversion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVversion = new wxTextCtrl( m_ItemPanel, VAL_VERSION, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_READONLY|wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVversion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVversion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getVersion = new wxButton( m_ItemPanel, GET_VERSION, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setVersion = new wxButton( m_ItemPanel, SET_VERSION, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
   m_setVersion->Enable(false);
-  m_FlexGrid->Add(m_setVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // manufacturedID:
@@ -986,14 +1005,14 @@ void CV::CreateControls() {
   m_FlexGrid->Add(m_labelCVmanufacturedID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_CVmanufacturedID = new wxTextCtrl( m_ItemPanel, VAL_MANUFACTUREDID, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_READONLY|wxTE_CENTRE );
-  m_FlexGrid->Add(m_CVmanufacturedID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_CVmanufacturedID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_getManu = new wxButton( m_ItemPanel, GET_MANUFACTUREDID, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_FlexGrid->Add(m_getManu, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_getManu, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_setManu = new wxButton( m_ItemPanel, SET_MANUFACTUREDID, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
   m_setManu->Enable(false);
-  m_FlexGrid->Add(m_setManu, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_FlexGrid->Add(m_setManu, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   // CVTable
@@ -1032,17 +1051,17 @@ void CV::CreateControls() {
   m_MainBox->Add(m_CVSubBox3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
   m_CVnr = new wxSpinCtrl( m_ItemPanel, -1, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 1024, 0 );
-  m_CVSubBox1->Add(m_CVnr, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox1->Add(m_CVnr, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_CVvalue = new wxTextCtrl( m_ItemPanel, VAL_GENERIC, _T("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Controls 4.1..." );
-  m_CVSubBox1->Add(m_CVvalue, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox1->Add(m_CVvalue, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_Get = new wxButton( m_ItemPanel, -1, _("Get"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_CVSubBox1->Add(m_Get, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox1->Add(m_Get, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_Set = new wxButton( m_ItemPanel, -1, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
-  m_CVSubBox1->Add(m_Set, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox1->Add(m_Set, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Bitfield..." );
 
@@ -1064,11 +1083,11 @@ void CV::CreateControls() {
   m_CVSubBox2->Add(m_bit0, 0, wxALIGN_CENTER_VERTICAL, 0);
 
   m_saveCVs = new wxButton( m_ItemPanel, -1, _("Save"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox3->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox3->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  m_CVSubBox3->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1077,15 +1096,15 @@ void CV::CreateControls() {
 
   m_PTonoff = new wxToggleButton( m_ItemPanel, -1, _("PT"), wxDefaultPosition, wxDefaultSize, 0 );
   m_PTonoff->SetValue(false);
-  buttonSizer->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  buttonSizer->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_WriteAll = new wxButton( m_ItemPanel, -1, _("Write all"), wxDefaultPosition, wxSize(70, 28), 0 );
   m_ReadAll  = new wxButton( m_ItemPanel, -1, _("Read all"), wxDefaultPosition, wxSize(70, 28), 0 );
   m_CopyFrom  = new wxButton( m_ItemPanel, -1, _("Copy from..."), wxDefaultPosition, wxSize(75, 28), 0 );
 
-  buttonSizer->Add(m_ReadAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
-  buttonSizer->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
-  buttonSizer->Add(m_CopyFrom, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+  buttonSizer->Add(m_ReadAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer->Add(m_CopyFrom, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
 }

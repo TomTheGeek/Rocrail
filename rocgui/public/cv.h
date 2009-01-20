@@ -46,6 +46,7 @@ enum {
   GET_VMID,
   GET_VERSION,
   GET_MANUFACTUREDID,
+  GET_LADDRESS,
 };
 
 enum {
@@ -58,6 +59,7 @@ enum {
   SET_VMID,
   SET_VERSION,
   SET_MANUFACTUREDID,
+  SET_LADDRESS,
 };
 
 enum {
@@ -71,6 +73,7 @@ enum {
   VAL_VERSION,
   VAL_MANUFACTUREDID,
   VAL_GENERIC,
+  VAL_LADDRESS,
 };
 
 enum {
@@ -107,7 +110,7 @@ private:
 
     void loadCVfromFile();
     void saveCVtoFile();
-    
+
     void startProgress();
     void stopProgress();
 
@@ -121,7 +124,7 @@ private:
     void CVconf();
     void update4POM();
     void reset();
-    
+
     int m_TimerCount;
     int m_CVidx;
     int m_CVall[1024];
@@ -130,29 +133,33 @@ private:
     Boolean m_bPOM;
     int m_CVoperation;
     bool m_bCleanUpProgress;
-    
+
     const char* m_Manu[256];
-    
+
     wxTimer* m_Timer;
     wxProgressDialog* m_Progress;
-    
+
     wxScrolledWindow* m_Parent;
     iONode m_LocProps;
     iONode m_CVconf;
 
     wxBoxSizer* m_MainBox;
     wxScrolledWindow* m_ScrollWindow;
-    
+
     wxPanel* m_ItemPanel;
     wxBoxSizer* m_PanelMainBox;
     wxBoxSizer* m_LocBox;
     wxBoxSizer* m_TableBox;
     wxFlexGridSizer* m_FlexGrid;
-    
+
     wxStaticText* m_labelCVaddress;
     wxTextCtrl* m_CVaddress;
     wxButton* m_getAddress;
     wxButton* m_setAddress;
+    wxStaticText* m_labelCVlongaddress;
+    wxTextCtrl* m_CVlongaddress;
+    wxButton* m_getlongAddress;
+    wxButton* m_setlongAddress;
     wxStaticText* m_labelCVVstart;
     wxTextCtrl* m_CVVstart;
     wxButton* m_getVstart;
@@ -195,7 +202,7 @@ private:
     wxButton* m_loadCVs;
     wxButton* m_loadFile;
     wxButton* m_saveFile;
-    
+
     wxBoxSizer* m_CVMainBox;
     wxBoxSizer* m_CVSubBox1;
     wxBoxSizer* m_CVSubBox2;
@@ -212,7 +219,7 @@ private:
     wxButton* m_CopyFrom;
     wxButton* m_WriteAll;
     wxButton* m_ReadAll;
-    
+
     wxStaticText* m_labTable;
     wxGrid*       m_CVTable;
     wxCheckBox*   m_POM;
