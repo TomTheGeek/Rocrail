@@ -6361,5 +6361,27 @@
     <it txt="Cars" tip="Car table"/>
     <da txt="Cars" tip="Car table"/>
   </Msg>
+  <Msg id="waybilltable" dialog="true" key="Alt-5">
+    <de txt="Frachtzetteln" tip="Frachtzetteltabelle"/>
+    <en txt="Waybills" tip="Waybill table"/>
+    <nl txt="Waybills" tip="Waybill table"/>
+    <sv txt="Waybills" tip="Waybill table"/>
+    <fr txt="Waybills" tip="Waybill table"/>
+    <tr txt="Waybills" tip="Waybill table"/>
+    <es txt="Waybills" tip="Waybill table"/>
+    <it txt="Waybills" tip="Waybill table"/>
+    <da txt="Waybills" tip="Waybill table"/>
+  </Msg>
+  <Msg id="waybill">
+    <de txt="Frachtzettel"/>
+    <en txt="Waybill"/>
+    <nl txt="Waybill"/>
+    <sv txt="Waybill"/>
+    <fr txt="Waybill"/>
+    <tr txt="Waybill"/>
+    <es txt="Waybill"/>
+    <it txt="Waybill"/>
+    <da txt="Waybill"/>
+  </Msg>
 </Messages>
 

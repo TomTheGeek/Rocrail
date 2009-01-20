@@ -2009,11 +2009,11 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
-  CarDlg* cardlg = new CarDlg(this );
-  if( wxID_OK == cardlg->ShowModal() ) {
+  CarDlg* dlg = new CarDlg(this, NULL );
+  if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
   }
-  cardlg->Destroy();
+  dlg->Destroy();
 }
 
 void RocGuiFrame::OnEditTurnouts( wxCommandEvent& event ) {

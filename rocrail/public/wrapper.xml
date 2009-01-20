@@ -1369,8 +1369,8 @@
         <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
       </lc>
     </lclist>
-    <carlist>
-      <car>
+    <carlist cardinality="1" remark="Car table" wrappername="CarList">
+      <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="code" vt="string" defval="" range="*"/>
         <var name="era" vt="string" defval="" range="*"/>
@@ -1388,8 +1388,8 @@
         <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
       </car>
     </carlist>
-    <waybilllist>
-      <waybill>
+    <waybilllist cardinality="1" remark="Waybill table" wrappername="WaybillList">
+      <waybill cardinality="n" wrappername="Waybill" remark="Waybill definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shipper" vt="string" defval="" range="*" required="true"/>
         <var name="shippertrack" vt="string" defval="" range="*" required="true" remark="Shipper (local) block."/>

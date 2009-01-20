@@ -33,9 +33,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class CarDlg
+/// Class cardlggen
 ///////////////////////////////////////////////////////////////////////////////
-class CarDlg : public wxDialog 
+class cardlggen : public wxDialog 
 {
 	private:
 	
@@ -44,6 +44,8 @@ class CarDlg : public wxDialog
 		wxPanel* m_IndexPanel;
 		wxBitmapButton* m_CarImage;
 		wxListBox* m_CarList;
+		wxButton* m_NewCar;
+		wxButton* m_DeleteCar;
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
@@ -73,6 +75,8 @@ class CarDlg : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void onCarImage( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarList( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onNewCar( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onDeleteCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onTypeSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onWaybillList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onAddWaybill( wxCommandEvent& event ){ event.Skip(); }
@@ -83,8 +87,8 @@ class CarDlg : public wxDialog
 		
 	
 	public:
-		CarDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Car Table"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~CarDlg();
+		cardlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Car Table"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~cardlggen();
 	
 };
 

@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-CarDlg::CarDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -27,10 +27,21 @@ CarDlg::CarDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	m_CarList = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,200 ), 0, NULL, 0 ); 
 	bSizer2->Add( m_CarList, 0, wxALL|wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_NewCar = new wxButton( m_IndexPanel, wxID_ANY, wxT("New"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( m_NewCar, 0, wxALL, 5 );
+	
+	m_DeleteCar = new wxButton( m_IndexPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( m_DeleteCar, 0, wxALL, 5 );
+	
+	bSizer2->Add( bSizer7, 1, wxEXPAND, 5 );
+	
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_CarBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_CarBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_GeneralPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -83,7 +94,7 @@ CarDlg::CarDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	m_GeneralPanel->SetSizer( bSizer3 );
 	m_GeneralPanel->Layout();
 	bSizer3->Fit( m_GeneralPanel );
-	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), true );
+	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), false );
 	m_DetailsPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -161,27 +172,31 @@ CarDlg::CarDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	m_CarImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onCarImage ), NULL, this );
-	m_CarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CarDlg::onCarList ), NULL, this );
-	m_Type->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CarDlg::onTypeSelect ), NULL, this );
-	m_WaybillList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CarDlg::onWaybillList ), NULL, this );
-	m_AddWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onAddWaybill ), NULL, this );
-	m_DeleteWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onDeleteWaybill ), NULL, this );
-	m_stdButtonApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onApply ), NULL, this );
-	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onCancel ), NULL, this );
-	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onOK ), NULL, this );
+	m_CarImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCarImage ), NULL, this );
+	m_CarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onCarList ), NULL, this );
+	m_NewCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onNewCar ), NULL, this );
+	m_DeleteCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteCar ), NULL, this );
+	m_Type->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( cardlggen::onTypeSelect ), NULL, this );
+	m_WaybillList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onWaybillList ), NULL, this );
+	m_AddWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onAddWaybill ), NULL, this );
+	m_DeleteWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteWaybill ), NULL, this );
+	m_stdButtonApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onApply ), NULL, this );
+	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCancel ), NULL, this );
+	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onOK ), NULL, this );
 }
 
-CarDlg::~CarDlg()
+cardlggen::~cardlggen()
 {
 	// Disconnect Events
-	m_CarImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onCarImage ), NULL, this );
-	m_CarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CarDlg::onCarList ), NULL, this );
-	m_Type->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CarDlg::onTypeSelect ), NULL, this );
-	m_WaybillList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CarDlg::onWaybillList ), NULL, this );
-	m_AddWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onAddWaybill ), NULL, this );
-	m_DeleteWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onDeleteWaybill ), NULL, this );
-	m_stdButtonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onApply ), NULL, this );
-	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onCancel ), NULL, this );
-	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CarDlg::onOK ), NULL, this );
+	m_CarImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCarImage ), NULL, this );
+	m_CarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onCarList ), NULL, this );
+	m_NewCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onNewCar ), NULL, this );
+	m_DeleteCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteCar ), NULL, this );
+	m_Type->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( cardlggen::onTypeSelect ), NULL, this );
+	m_WaybillList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onWaybillList ), NULL, this );
+	m_AddWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onAddWaybill ), NULL, this );
+	m_DeleteWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteWaybill ), NULL, this );
+	m_stdButtonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onApply ), NULL, this );
+	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCancel ), NULL, this );
+	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onOK ), NULL, this );
 }
