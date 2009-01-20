@@ -56,6 +56,7 @@
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 
 /* loconet opcodes */
@@ -1043,7 +1044,8 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
       }
       else if( slot == 0x7B ) {
-        /* fast clock */
+        /* TODO: Fast Clock */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO: Fast Clock slot read" );
       }
       else if( slot > 0 && slot < 0x70 ) {
         int addrL = rsp[4];     // loco address
@@ -1620,6 +1622,24 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         size = __rwLNMP(loconet_inst, cv, value, cmd, True, addr, modid, lncvcmd);
       }
       return size;
+    }
+  }
+
+  /* Clock command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+    /* TODO: Fast Clock */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO: Fast Clock command..." );
+    if(  wClock.getcmd( node ) == wClock.freeze ) {
+      return 0;
+    }
+    else if(  wClock.getcmd( node ) == wClock.go ) {
+      return 0;
+    }
+    else if(  wClock.getcmd( node ) == wClock.set ) {
+      return 0;
+    }
+    else if(  wClock.getcmd( node ) == wClock.sync ) {
+      return 0;
     }
   }
 

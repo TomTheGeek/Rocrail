@@ -142,6 +142,11 @@
       <var name="divider" vt="int" defval="1" range="1,2,4,5,10" remark="time devider: 1 = realtime"/>
       <var name="hour" vt="int" defval="24" range="0-24" remark="start hour; 24 not used"/>
       <var name="minute" vt="int" defval="60" range="0-60" remark="start minute; 60 not used"/>
+      <const name="freeze" vt="string" val="freeze"/>
+      <const name="go" vt="string" val="go"/>
+      <const name="set" vt="string" val="set"/>
+      <const name="sync" vt="string" val="sync"/>
+      <var name="cmd" vt="string" defval="" range="*"/>
     </clock>  
     <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
       <var name="port" vt="int" defval="53701" range="0-65535" remark="Port number for server socket. Deactivated when 0."/>
