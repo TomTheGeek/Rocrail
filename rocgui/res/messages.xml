@@ -6383,5 +6383,27 @@
     <it txt="Waybill"/>
     <da txt="Waybill"/>
   </Msg>
+  <Msg id="freezetime">
+    <de txt="Uhrzeit anhalten"/>
+    <en txt="Freeze time"/>
+    <nl txt="Tijd stoppen"/>
+    <sv txt="Freeze time"/>
+    <fr txt="Freeze time"/>
+    <tr txt="Freeze time"/>
+    <es txt="Freeze time"/>
+    <it txt="Freeze time"/>
+    <da txt="Freeze time"/>
+  </Msg>
+  <Msg id="resumetime">
+    <de txt="Uhrzeit fortsetzen"/>
+    <en txt="Resume time"/>
+    <nl txt="Tijd starten"/>
+    <sv txt="Resume time"/>
+    <fr txt="Resume time"/>
+    <tr txt="Resume time"/>
+    <es txt="Resume time"/>
+    <it txt="Resume time"/>
+    <da txt="Resume time"/>
+  </Msg>
 </Messages>
 

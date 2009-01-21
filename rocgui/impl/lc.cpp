@@ -66,9 +66,8 @@ LC::LC( wxPanel* parent ) {
 void LC::init() {
 }
 
-void LC::SyncClock( int devider, long rocrailtime ) {
-  m_Clock->SetDevider( devider );
-  m_Clock->SetTime( rocrailtime );
+void LC::SyncClock( iONode node ) {
+  m_Clock->SyncClock( node );
 }
 
 

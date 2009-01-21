@@ -59,7 +59,7 @@ public:
   void create();
 
   void setOnline( bool online );
-  void SyncClock( int devider, long rocrailtime );
+  void SyncClock( iONode node );
 
   void OnQuit(wxCommandEvent& event);
   void OnSize(wxSizeEvent& event);

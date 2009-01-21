@@ -42,7 +42,7 @@ public:
     void OnSlider(wxScrollEvent& event);
     void setLocProps( iONode props );
     void updateLoc( iONode node );
-    void SyncClock( int devider, long rocrailtime );
+    void SyncClock( iONode node );
     iONode getLocProps();
 
 private:

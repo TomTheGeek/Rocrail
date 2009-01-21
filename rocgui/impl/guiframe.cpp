@@ -1311,8 +1311,8 @@ void RocGuiFrame::initJS() {
 }
 
 
-void RocGuiFrame::SyncClock( int devider, long rocrailtime ) {
-  m_LC->SyncClock(devider, rocrailtime);
+void RocGuiFrame::SyncClock( iONode node ) {
+  m_LC->SyncClock(node);
 }
 
 

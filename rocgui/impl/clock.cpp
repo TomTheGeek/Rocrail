@@ -41,24 +41,27 @@
 #include "rocgui/public/guiapp.h"
 #include "rocgui/public/guiframe.h"
 
-BEGIN_EVENT_TABLE(Clock, wxPanel) 
+BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_PAINT(Clock::OnPaint)
-	EVT_TIMER(ID_WXTIMER, Clock::Timer)	
+  EVT_TIMER(ID_WXTIMER, Clock::Timer)
   EVT_RIGHT_UP(Clock::OnPopup)
-  EVT_MENU( ME_PlanProps , Clock::OnAdjustTime )
+  EVT_MENU( ME_AdjustTime , Clock::OnAdjustTime )
+  EVT_MENU( ME_FreezeTime , Clock::OnFreezeTime )
+  EVT_MENU( ME_ResumeTime , Clock::OnResumeTime )
 END_EVENT_TABLE()
 
-Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype) 
-                  : wxPanel(parent, id,  wxPoint(x, y), wxDefaultSize, wxBORDER_NONE) 
-{ 
-	start = true;
+Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxDefaultSize, wxBORDER_NONE)
+{
+  start = true;
+  run   = true;
   deviderchanged = false;
-	wxString platepath = ((RocGuiFrame*)parent)->getIconPath("plate");
-  TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "platepath=[%s]", (const char*)platepath.mb_str(wxConvUTF8)); 
+  wxString platepath = ((RocGuiFrame*)parent)->getIconPath("plate");
+  TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "platepath=[%s]", (const char*)platepath.mb_str(wxConvUTF8));
   wxString logopath = ((RocGuiFrame*)parent)->getIconPath("logo");
-	m_Plate = NULL;
+  m_Plate = NULL;
   m_Logo  = NULL;
-  
+
   if( FileOp.exist((const char*)platepath.mb_str(wxConvUTF8) ) ) {
     TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "clock plate found: [%s]", (const char*)platepath.mb_str(wxConvUTF8) );
     m_Plate = new wxBitmap(platepath, wxBITMAP_TYPE_PNG);
@@ -71,15 +74,15 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   if( FileOp.exist((const char*)logopath.mb_str(wxConvUTF8)) )
     m_Logo = new wxBitmap(logopath , wxBITMAP_TYPE_PNG);
 
-	clockpicwidth = m_Plate->GetWidth(); 
+	clockpicwidth = m_Plate->GetWidth();
   SetSize(wxSize(clockpicwidth, clockpicwidth));
   hw = handwidth;
   type = clocktype;
-	
+
   devider = p_devider;
   if( devider <= 0 )
     devider = 1;
-	
+
   datetime = new wxDateTime();
   datetime->SetToCurrent();
   ltime = datetime->GetTimeNow();
@@ -87,11 +90,11 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
 	WxTimer = new wxTimer();
 	WxTimer->SetOwner(this, ID_WXTIMER);
 	WxTimer->Start(TIMER/devider);
-} 
+}
 
 int modulal(int val)
 {
-	do{ 
+	do{
 		val +=360;
 	}while(val<0);
 	return val;
@@ -100,7 +103,7 @@ int modulal(int val)
 int kactane(int x, int y)
 {
 	int times=0;
-	do{ 
+	do{
 		x-=y;
 		times++;
 	}while(x>=y);
@@ -109,7 +112,7 @@ int kactane(int x, int y)
 
 double sm_angle(int m)
 {
-	// Values of m must be minute or second. 
+	// Values of m must be minute or second.
 	return ((modulal((90 - (m * 6))) * M_PI) / 180);
 }
 
@@ -120,9 +123,11 @@ double h_angle(int m, int n)
 }
 
 void Clock::OnPopup(wxMouseEvent& event) {
-  
+
   wxMenu menu( wxGetApp().getMenu("clock") );
-  menu.Append( ME_PlanProps, wxGetApp().getMenu("adjusttime") );
+  menu.Append( ME_AdjustTime, wxGetApp().getMenu("adjusttime") );
+  menu.Append( ME_FreezeTime, wxGetApp().getMenu("freezetime") );
+  menu.Append( ME_ResumeTime, wxGetApp().getMenu("resumetime") );
   PopupMenu(&menu, event.GetX(), event.GetY() );
 }
 
@@ -135,9 +140,9 @@ void Clock::OnAdjustTime(wxCommandEvent& event) {
 
     datetime->SetHour( hour );
     datetime->SetMinute( minute );
-    
+
     ltime = datetime->GetTicks();
-    
+
     // send to rocrail
     iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
     wClock.setdivider( tick, devider );
@@ -147,13 +152,29 @@ void Clock::OnAdjustTime(wxCommandEvent& event) {
 }
 
 
-void Clock::OnPaint(wxPaintEvent& WXUNUSED(event)) 
-{    
-  if(m_Plate && m_Plate->Ok()) 
-  { 
+void Clock::OnFreezeTime(wxCommandEvent& event) {
+  // send to rocrail
+  iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+  wClock.setcmd( tick, wClock.freeze );
+  wxGetApp().sendToRocrail( tick, false );
+}
+
+
+void Clock::OnResumeTime(wxCommandEvent& event) {
+  // send to rocrail
+  iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+  wClock.setcmd( tick, wClock.go );
+  wxGetApp().sendToRocrail( tick, false );
+}
+
+
+void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
+{
+  if(m_Plate && m_Plate->Ok())
+  {
 		wxPaintDC dc(this);
 		double c = clockpicwidth / 2;
-		
+
     wxPen pen(GetBackgroundColour(),hw,wxSOLID);
     // clear pre-now
     dc.SetPen(pen);
@@ -161,7 +182,7 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 
     pen.SetColour(*wxBLACK);
     dc.SetPen(pen);
-    
+
     if( type > 0 ) {
   		wxString timestring;
   		if( type == 1 && hours < 12 )
@@ -175,16 +196,16 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
   		dc.GetTextExtent(timestring, &w, &h);
   		dc.DrawText(timestring, 50-(w/2),63);
 		}
-    
+
     if(m_Logo != NULL && m_Logo->Ok()) {
-      int w = m_Logo->GetWidth(); 
-      dc.DrawBitmap(wxBitmap(*m_Logo),50-(w/2),28,true); 
+      int w = m_Logo->GetWidth();
+      dc.DrawBitmap(wxBitmap(*m_Logo),50-(w/2),28,true);
     }
-		
+
 		// draw now
     if(m_Plate != NULL)
       dc.DrawBitmap(wxBitmap(*m_Plate),0,0,true);
-    
+
 		pen.SetColour(*wxBLACK);
 		pen.SetWidth(hw*2);
 		dc.SetPen(pen);
@@ -200,8 +221,24 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 		pen.SetColour(*wxWHITE);
     dc.SetPen(pen);
     dc.DrawPoint(50,50);
-  } 
-} 
+  }
+}
+
+void Clock::SyncClock(iONode node) {
+  if( StrOp.equals( wClock.getcmd(node), wClock.freeze )) {
+    run = false;
+  }
+  else if( StrOp.equals( wClock.getcmd(node), wClock.go )) {
+    run = true;
+    SetDevider( wClock.getdivider(node) );
+    SetTime( wClock.gettime(node) );
+  }
+  else {
+    SetDevider( wClock.getdivider(node) );
+    SetTime( wClock.gettime(node) );
+  }
+}
+
 
 void Clock::SetDevider(int p_devider) {
   if( devider != p_devider ) {
@@ -222,7 +259,11 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
     deviderchanged = false;
     WxTimer->Start(TIMER/devider);
   }
-  
+
+  if( !run ) {
+    return;
+  }
+
   //if( devider > 1 ) {
   if( 1 ) {
     ltime++;
@@ -233,16 +274,16 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
     datetime->Set( ltime );
   }
   SetToolTip( datetime->FormatISOTime());
-  
+
   if ((datetime->GetSecond() == 0) || start) Refresh(true);
   start = false;
-  
+
   x = sm_angle(datetime->GetSecond());
   xpre = sm_angle(datetime->GetSecond()-1);
   y = sm_angle(datetime->GetMinute());
   z = h_angle(datetime->GetHour(),datetime->GetMinute());
   hours   = datetime->GetHour();
   minutes = datetime->GetMinute();
-  
-  Refresh(true); 
+
+  Refresh(true);
 }

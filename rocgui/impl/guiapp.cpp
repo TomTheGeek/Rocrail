@@ -626,7 +626,7 @@ static void rocrailCallback( obj me, iONode node ) {
   }
   /* Clock */
   else if( StrOp.equals( wClock.name(), NodeOp.getName( node ) ) && wxGetApp().getFrame() != NULL && guiApp->isInit()) {
-    wxGetApp().getFrame()->SyncClock( wClock.getdivider(node), wClock.gettime(node));
+    wxGetApp().getFrame()->SyncClock( node );
   }
   /* State */
   else if( StrOp.equals( wState.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {

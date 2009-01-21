@@ -294,10 +294,46 @@ static void __callback( obj inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "nodeName=%s", nodeName );
 
   if( StrOp.equals( wClock.name(), nodeName ) ) {
-    data->devider = wClock.getdivider(nodeA);
-    data->time = wClock.gettime(nodeA);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting time with devider %d", data->devider );
-    data->timeset = True;
+    if( StrOp.equals( wClock.getcmd(nodeA), wClock.freeze ) ) {
+      if( data->devider > 1 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );
+        data->clockrun = False;
+        /* TODO: broadcast to clients */
+        {
+          iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+          wClock.setcmd( tick, wClock.freeze );
+          wClock.setdivider( tick, data->devider );
+          wClock.settime( tick, data->time );
+          ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "freeze/resume clock not possible with real time" );
+      }
+    }
+    else if( StrOp.equals( wClock.getcmd(nodeA), wClock.go ) ) {
+      if( data->devider > 1 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resume clock" );
+        data->clockrun = True;
+        /* TODO: broadcast to clients */
+        {
+          iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+          wClock.setcmd( tick, wClock.go );
+          wClock.setdivider( tick, data->devider );
+          wClock.settime( tick, data->time );
+          ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "freeze/resume clock not possible with real time" );
+      }
+    }
+    else {
+      data->devider = wClock.getdivider(nodeA);
+      data->time = wClock.gettime(nodeA);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting time with devider %d", data->devider );
+      data->timeset = True;
+    }
     return;
   }
   else if( StrOp.equals( wSwitch.name(), nodeName ) ) {
@@ -798,10 +834,13 @@ static void __clockticker( void* threadinst ) {
       data->timeset = False;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker time set." );
     }
-    else {
+    else if( data->clockrun ) {
       seconds++;
       if( seconds < 60 )
         continue;
+    }
+    else {
+      continue;
     }
 
     seconds = 0;
@@ -883,6 +922,7 @@ static iOControl _inst( Boolean nocom ) {
       data->throttle = ThrottleOp.inst(wRocRail.getthrottle(ini));
     }
 
+    data->clockrun = True;
     data->clockticker = ThreadOp.inst( "clockticker", __clockticker, control );
     ThreadOp.start( data->clockticker );
 
