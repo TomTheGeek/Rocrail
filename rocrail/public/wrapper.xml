@@ -227,6 +227,7 @@
       <const name="rci" vt="string" val="rci"/>
       <const name="nce" vt="string" val="nce"/>
       <const name="sprog" vt="string" val="sprog"/>
+      <const name="clock" vt="string" val="clock"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

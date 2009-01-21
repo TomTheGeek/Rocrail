@@ -226,8 +226,8 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       }
     }
 
-    if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) &&
-        wSysCmd.isinformall(node) )
+    if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node) ||
+        StrOp.equals( wClock.name(), NodeOp.getName(node) ) )
     {
       /* inform all */
       pDi = (iIDigInt)MapOp.first( data->diMap );
@@ -854,7 +854,9 @@ static void __clockticker( void* threadinst ) {
       iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(tick) );
+      /* inform all digints */
+      ControlOp.cmd( control, tick, NULL );
     }
 
     __checkActions( control );
