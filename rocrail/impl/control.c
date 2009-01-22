@@ -298,7 +298,7 @@ static void __callback( obj inst, iONode nodeA ) {
       if( data->devider > 1 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );
         data->clockrun = False;
-        /* TODO: broadcast to clients */
+        /* broadcast to clients */
         {
           iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
           wClock.setcmd( tick, wClock.freeze );
@@ -315,7 +315,7 @@ static void __callback( obj inst, iONode nodeA ) {
       if( data->devider > 1 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resume clock" );
         data->clockrun = True;
-        /* TODO: broadcast to clients */
+        /* broadcast to clients */
         {
           iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
           wClock.setcmd( tick, wClock.go );
@@ -607,6 +607,14 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   else if( StrOp.equals( wState.name(), NodeOp.getName( nodeC ) ) ) {
     /* Broadcast to clients. Node3 */
     wState.setconsolemode( nodeC, AppOp.isConsoleMode() );
+    if( data->power && !wState.ispower( nodeC ) ) {
+      /* freeze clock */
+      control_callback cb = ControlOp.getCallback((iOControl)inst);
+      iONode clockcmd = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+      wClock.setcmd(clockcmd, wClock.freeze );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off, freeze clock" );
+      cb(inst,clockcmd);
+    }
     data->power        = wState.ispower( nodeC );
     data->programming  = wState.isprogramming( nodeC );
     data->trackbus     = wState.istrackbus( nodeC );
