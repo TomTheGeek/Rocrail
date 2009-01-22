@@ -18,4 +18,5 @@
 <ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Heiner Schacht"/>
 <ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="MAGNIDOFF, JOERN"/>
 <ope date="733423" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Hartmut Neu"/>
+<ope date="733429" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Christian Wichmann"/>
 </homebank>
