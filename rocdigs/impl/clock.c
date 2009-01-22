@@ -93,9 +93,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       /* freeze command: not possible to implement */
     }
     else {
-      data->tick = !data->tick;
-      SerialOp.setDTR(data->serial, data->tick);
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s...", data->tick?"tick":"tack" );
+      ThreadOp.post( data->driver, (obj)cmd );
     }
   }
   else {
@@ -109,7 +107,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 /**  */
 static void _halt( obj inst ) {
   iOClockData data = Data(inst);
+  iONode quitNode = NodeOp.inst( "quit", NULL, ELEMENT_NODE );
   data->run = False;
+  ThreadOp.post( data->driver, (obj)quitNode );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down [%s]...", data->iid );
   SerialOp.close( data->serial );
   return;
@@ -136,6 +136,37 @@ static int _state( obj inst ) {
 static Boolean _supportPT( obj inst ) {
   iOClockData data = Data(inst);
   return False;
+}
+
+
+static void __driverThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOClock inst = (iOClock)ThreadOp.getParm( th );
+  iOClockData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Clock driver started." );
+
+  while( data->run ) {
+    obj post = ThreadOp.getPost( th );
+    if( post != NULL ) {
+      iONode node = (iONode)post;
+
+      if( StrOp.equals( "quit", NodeOp.getName( node ) ) ) {
+        node->base.del( node );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stopping clock driver..." );
+        break;
+      }
+
+      data->tick = !data->tick;
+      SerialOp.setDTR(data->serial, data->tick);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s...", data->tick?"tick":"tack" );
+      node->base.del( node );
+
+    }
+
+    ThreadOp.sleep(100);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Clock driver ended." );
 }
 
 
@@ -178,6 +209,9 @@ static struct OClock* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setFlow( data->serial, none );
   SerialOp.setLine( data->serial, 9600, 8, 1, 0 );
   SerialOp.open( data->serial );
+
+  data->driver = ThreadOp.inst( "clckdrv", &__driverThread, __Clock );
+  ThreadOp.start( data->driver );
 
   instCnt++;
   return __Clock;

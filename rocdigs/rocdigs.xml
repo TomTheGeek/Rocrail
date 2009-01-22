@@ -780,6 +780,7 @@
       <var name="mux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
       <var name="tick" vt="Boolean"/>
+      <var name="driver" vt="iOThread"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
     </data>
