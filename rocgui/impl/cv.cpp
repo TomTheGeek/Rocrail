@@ -242,12 +242,37 @@ void CV::event( iONode event ) {
   if( ivalue != -1 && cmd == wProgram.datarsp ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv...");
     char* val = StrOp.fmt( "%d", ivalue );
-    wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
-    if( tc != NULL ) {
-      tc->SetValue( wxString( val,wxConvUTF8) );
-      if( cv == 8 ) {
-        tc->SetToolTip(wxString( m_Manu[ivalue&0xFF],wxConvUTF8));
-        TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Manu[ivalue&0xFF] );
+
+    /*
+     * CV18 = addr - 256 * (addr / 256)
+     * CV17 = (addr / 256) + 192
+     */
+    if( m_CVidx == 17 ) {
+      m_CV17 = ivalue;
+      int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 1 of long address(%d) cv%d=%d",
+          laddr, m_CVidx, ivalue );
+      char* lval = StrOp.fmt("%d", laddr);
+      m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
+      StrOp.free(lval);
+    }
+    else if( m_CVidx == 18 ) {
+      m_CV18 = ivalue;
+      int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 2 of long address(%d) cv%d=%d",
+          laddr, m_CVidx, ivalue );
+      char* lval = StrOp.fmt("%d", laddr);
+      m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
+      StrOp.free(lval);
+    }
+    else {
+      wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
+      if( tc != NULL ) {
+        tc->SetValue( wxString( val,wxConvUTF8) );
+        if( cv == 8 ) {
+          tc->SetToolTip(wxString( m_Manu[ivalue&0xFF],wxConvUTF8));
+          TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Manu[ivalue&0xFF] );
+        }
       }
     }
 
@@ -642,6 +667,29 @@ void CV::OnButton(wxCommandEvent& event)
 
 }
 
+/*
+ * CV18 = addr - 256 * (addr / 256)
+ * CV17 = (addr / 256) + 192
+ */
+void CV::getLongAddress() {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
+  m_CVoperation = CVGET;
+  doCV( wProgram.get, 17, 0 );
+  m_CVoperation = CVGET;
+  doCV( wProgram.get, 18, 0 );
+}
+
+void CV::setLongAddress() {
+  wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( VAL_LADDRESS, m_Parent );
+  if( tc != NULL ) {
+    int addr = atoi( tc->GetValue().mb_str(wxConvUTF8) );
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "set long address to %d..." );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 17, (addr / 256) + 192 );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 18, addr - 256 * (addr / 256) );
+  }
+}
 
 void CV::doCV( int id ) {
   int command = 0;
@@ -650,6 +698,15 @@ void CV::doCV( int id ) {
 
   if( id <= 0 )
     return;
+
+  switch(id) {
+  case GET_LADDRESS:
+    getLongAddress();
+    return;
+  case SET_LADDRESS:
+    setLongAddress();
+    return;
+  }
 
   if( id > GET_CV && id < SET_CV ) {
     command = wProgram.get;

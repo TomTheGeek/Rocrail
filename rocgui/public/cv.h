@@ -125,6 +125,11 @@ private:
     void update4POM();
     void reset();
 
+    void getLongAddress();
+    void setLongAddress();
+
+    int m_CV17;
+    int m_CV18;
     int m_TimerCount;
     int m_CVidx;
     int m_CVall[1024];
