@@ -1628,7 +1628,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     /* TODO: Fast Clock */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO: Fast Clock command..." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TODO: Fast Clock command..." );
     if(  wClock.getcmd( node ) == wClock.freeze ) {
       return 0;
     }
