@@ -183,7 +183,7 @@ void CarDlg::initValues() {
       TraceOp.trc( "cardlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
       m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     }
-    m_CarImage->SetToolTip(wxString(wCar.getdesc( m_Props ),wxConvUTF8));
+    m_CarImage->SetToolTip(wxString(wCar.getcode( m_Props ),wxConvUTF8));
 
 
     //m_CarImage->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
@@ -203,6 +203,17 @@ void CarDlg::initValues() {
   m_Roadname->SetValue( wxString(wCar.getroadname( m_Props ),wxConvUTF8) );
   m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
   m_Era->SetSelection( wCar.getera( m_Props ) );
+
+  // init Details
+  if( StrOp.equals( wCar.cartype_freight, wCar.gettype( m_Props) ) )
+    m_Type->SetSelection(0);
+  else
+    m_Type->SetSelection(1);
+
+  m_Subtype->SetValue( wxString(wCar.getsubtype( m_Props ),wxConvUTF8) );
+  m_Length->SetValue( wCar.getlen( m_Props ) );
+  m_Remark->SetValue( wxString(wCar.getremark( m_Props ),wxConvUTF8) );
+
 }
 
 
@@ -221,6 +232,16 @@ void CarDlg::evaluate(){
   wCar.setroadname( m_Props, m_Roadname->GetValue().mb_str(wxConvUTF8) );
   wCar.setimage( m_Props, m_ImageName->GetValue().mb_str(wxConvUTF8) );
   wCar.setera( m_Props, m_Era->GetSelection() );
+
+  // evaluate Details
+  if( m_Type->GetSelection() == 0 )
+    wCar.settype( m_Props, wCar.cartype_freight );
+  else
+    wCar.settype( m_Props, wCar.cartype_passenger );
+  wCar.setsubtype( m_Props, m_Subtype->GetValue().mb_str(wxConvUTF8) );
+  wCar.setlen( m_Props, m_Length->GetValue() );
+  wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
+
 
 }
 

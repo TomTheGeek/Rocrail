@@ -1378,7 +1378,7 @@
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
-        <var name="desc" vt="string" defval="" range="*"/>
+        <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
         <var name="code" vt="string" defval="" range="*"/>
         <var name="era" vt="int" defval="0" range="0-*"/>
@@ -1391,7 +1391,7 @@
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
         <const name="subtype_boxcar" vt="string" val="boxcar"/>
         <const name="subtype_gondola" vt="string" val="gondola"/>
-        <var name="subtype" vt="string" defval="" range="" remark="Car sub type like Boxcar or gondola."/>
+        <var name="subtype" vt="string" defval="" range="*" remark="Car sub type like Boxcar or gondola."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
         <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
       </car>

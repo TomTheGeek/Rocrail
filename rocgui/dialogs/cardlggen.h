@@ -25,6 +25,7 @@
 #include <wx/textctrl.h>
 #include <wx/statline.h>
 #include <wx/radiobox.h>
+#include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -64,7 +65,9 @@ class cardlggen : public wxDialog
 		wxStaticText* m_labSubtype;
 		wxTextCtrl* m_Subtype;
 		wxStaticText* m_labLength;
-		wxTextCtrl* m_Length;
+		wxSpinCtrl* m_Length;
+		wxStaticText* m_labRemark;
+		wxTextCtrl* m_Remark;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
 		wxButton* m_stdButtonApply;
