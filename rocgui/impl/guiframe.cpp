@@ -59,6 +59,7 @@
 
 #include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/cardlg.h"
+#include "rocgui/dialogs/waybilldlg.h"
 #include "rocgui/dialogs/locseldlg.h"
 #include "rocgui/dialogs/loccontroldlg.h"
 #include "rocgui/dialogs/switchdialog.h"
@@ -229,6 +230,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
     EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
+    EVT_MENU( ME_EditWaybills   , RocGuiFrame::OnEditWaybills)
     EVT_MENU( ME_EditTurnouts   , RocGuiFrame::OnEditTurnouts)
     EVT_MENU( ME_EditTurntables , RocGuiFrame::OnEditTurntables)
     EVT_MENU( ME_EditSensors    , RocGuiFrame::OnEditSensors)
@@ -950,8 +952,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
   acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
+  acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
 
-  wxAcceleratorTable m_accel(34, acc_entries);
+  wxAcceleratorTable m_accel(36, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
@@ -1017,6 +1020,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   wxMenu *menuTables = new wxMenu();
   menuTables->Append(ME_EditLocs, wxGetApp().getMenu("loctable"), wxGetApp().getTip("loctable") );
   menuTables->Append(ME_EditCars, wxGetApp().getMenu("cartable"), wxGetApp().getTip("cartable") );
+  menuTables->Append(ME_EditWaybills, wxGetApp().getMenu("waybilltable"), wxGetApp().getTip("waybilltable") );
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
@@ -2010,6 +2014,14 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
   CarDlg* dlg = new CarDlg(this, NULL );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify Notebook. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnEditWaybills( wxCommandEvent& event ) {
+  WaybillDlg* dlg = new WaybillDlg(this, NULL );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
   }
