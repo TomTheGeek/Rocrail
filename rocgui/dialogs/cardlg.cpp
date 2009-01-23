@@ -304,7 +304,31 @@ void CarDlg::onNewCar( wxCommandEvent& event ){
 
 
 void CarDlg::onDeleteCar( wxCommandEvent& event ){
-  event.Skip();
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
+  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
+  /* Notify RocRail. */
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.remove );
+  NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode carlist = wPlan.getcarlist( model );
+    if( carlist != NULL ) {
+      NodeOp.removeChild( carlist, m_Props );
+      m_Props = NULL;
+    }
+  }
+
+  initIndex();
 }
 
 
