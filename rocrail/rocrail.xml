@@ -457,7 +457,7 @@
   </object>
 
 
-  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,route,fback,switch,signal,tt,output,seltab,action,$rocint/public/blockbase" remark="The plan model">
+  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,route,fback,switch,signal,tt,output,seltab,action,$rocint/public/blockbase" remark="The plan model">
     <typedef def="void (*model_listener)(obj,iONode)"/>
     <fun name="inst" vt="this">
       <param name="planfile" vt="const char*" remark="PLan filename"/>
@@ -510,6 +510,10 @@
     <fun name="getLoc" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="LocID to search for"/>
+    </fun>
+    <fun name="getCar" vt="iOCar">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="CarID to search for"/>
     </fun>
     <fun name="getLocByAddress" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -725,6 +729,7 @@
       <var name="planDoc" vt="iODoc"/>
       <var name="model" vt="iONode"/>
       <var name="locMap" vt="iOMap"/>
+      <var name="carMap" vt="iOMap"/>
       <var name="switchMap" vt="iOMap"/>
       <var name="signalMap" vt="iOMap"/>
       <var name="outputMap" vt="iOMap"/>
@@ -1498,6 +1503,24 @@
       <var name="muxLock" vt="iOMutex"/>
       <var name="muxCmd" vt="iOMutex"/>
       <var name="activated" vt="Boolean"/>
+    </data>
+  </object>
+
+
+  <object name="Car" interface="HtmlInt" use="node" include="htmlint" remark="Car object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="Car node"/>
+    </fun>
+    <fun name="modify" vt="void">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="addWaybill" vt="void">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="waybill" vt="iONode" remark="Waybill node"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
     </data>
   </object>
 
