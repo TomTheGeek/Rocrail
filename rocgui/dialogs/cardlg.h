@@ -16,12 +16,27 @@ class CarDlg : public cardlggen
   iONode m_Props;
   bool   m_bSave;
   int    m_TabAlign;
+  int    m_SetPage;
 
   void initLabels();
+  void evaluate();
+  void initIndex();
+  void initValues();
 
 public:
 	/** Constructor */
   CarDlg( wxWindow* parent, iONode p_Props, bool save=true );
+
+  void onCarImage( wxCommandEvent& event );
+  void onCarList( wxCommandEvent& event );
+  void onNewCar( wxCommandEvent& event );
+  void onDeleteCar( wxCommandEvent& event );
+  void onTypeSelect( wxCommandEvent& event );
+  void onApply( wxCommandEvent& event );
+  void onCancel( wxCommandEvent& event );
+  void onOK( wxCommandEvent& event );
+  void onSetPage( wxCommandEvent& event );
+
 };
 
 #endif // __cardlg__

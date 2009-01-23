@@ -6405,5 +6405,49 @@
     <it txt="Resume time"/>
     <da txt="Resume time"/>
   </Msg>
+  <Msg id="code">
+    <de txt="Kode"/>
+    <en txt="Code"/>
+    <nl txt="Code"/>
+    <sv txt="Code"/>
+    <fr txt="Code"/>
+    <tr txt="Code"/>
+    <es txt="Code"/>
+    <it txt="Code"/>
+    <da txt="Code"/>
+  </Msg>
+  <Msg id="roadname">
+    <de txt="Geselschaft"/>
+    <en txt="Roadname"/>
+    <nl txt="Maatschappij"/>
+    <sv txt="Roadname"/>
+    <fr txt="Roadname"/>
+    <tr txt="Roadname"/>
+    <es txt="Roadname"/>
+    <it txt="Roadname"/>
+    <da txt="Roadname"/>
+  </Msg>
+  <Msg id="era">
+    <de txt="Epoche"/>
+    <en txt="Era"/>
+    <nl txt="Periode"/>
+    <sv txt="Era"/>
+    <fr txt="Era"/>
+    <tr txt="Era"/>
+    <es txt="Era"/>
+    <it txt="Era"/>
+    <da txt="Era"/>
+  </Msg>
+  <Msg id="subtype">
+    <de txt="Untergruppe"/>
+    <en txt="Subtype"/>
+    <nl txt="Subtype"/>
+    <sv txt="Subtype"/>
+    <fr txt="Subtype"/>
+    <tr txt="Subtype"/>
+    <es txt="Subtype"/>
+    <it txt="Subtype"/>
+    <da txt="Subtype"/>
+  </Msg>
 </Messages>
 

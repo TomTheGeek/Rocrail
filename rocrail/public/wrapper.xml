@@ -1378,6 +1378,8 @@
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="desc" vt="string" defval="" range="*"/>
+        <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
         <var name="code" vt="string" defval="" range="*"/>
         <var name="era" vt="string" defval="" range="*"/>
         <var name="inspectiondate" vt="string" defval="" range="*"/>

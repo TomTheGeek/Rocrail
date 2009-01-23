@@ -25,12 +25,12 @@
 #include <wx/textctrl.h>
 #include <wx/statline.h>
 #include <wx/radiobox.h>
-#include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
+#define ID_CARBOOK 1000
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class cardlggen
@@ -40,9 +40,9 @@ class cardlggen : public wxDialog
 	private:
 	
 	protected:
+		wxBitmapButton* m_CarImage;
 		wxNotebook* m_CarBook;
 		wxPanel* m_IndexPanel;
-		wxBitmapButton* m_CarImage;
 		wxListBox* m_CarList;
 		wxButton* m_NewCar;
 		wxButton* m_DeleteCar;
@@ -59,14 +59,10 @@ class cardlggen : public wxDialog
 		wxRadioBox* m_Era;
 		wxPanel* m_DetailsPanel;
 		wxRadioBox* m_Type;
-		wxRadioBox* m_SubType;
+		wxStaticText* m_labSubtype;
+		wxTextCtrl* m_Subtype;
 		wxStaticText* m_labLength;
 		wxTextCtrl* m_Length;
-		wxPanel* m_WaybillPanel;
-		wxListBox* m_WaybillList;
-		wxComboBox* m_WaybillSelection;
-		wxButton* m_AddWaybill;
-		wxButton* m_DeleteWaybill;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
 		wxButton* m_stdButtonApply;
@@ -78,9 +74,6 @@ class cardlggen : public wxDialog
 		virtual void onNewCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onDeleteCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onTypeSelect( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onWaybillList( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onAddWaybill( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onDeleteWaybill( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onApply( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }

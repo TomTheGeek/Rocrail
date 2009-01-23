@@ -16,13 +16,13 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	m_CarBook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_CarImage = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 280,80 ), wxBU_AUTODRAW );
+	bSizer1->Add( m_CarImage, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_CarBook = new wxNotebook( this, ID_CARBOOK, wxDefaultPosition, wxDefaultSize, 0 );
 	m_IndexPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
-	
-	m_CarImage = new wxBitmapButton( m_IndexPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 280,80 ), wxBU_AUTODRAW );
-	bSizer2->Add( m_CarImage, 0, wxALL, 5 );
 	
 	m_CarList = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,200 ), 0, NULL, 0 ); 
 	bSizer2->Add( m_CarList, 0, wxALL|wxEXPAND, 5 );
@@ -41,7 +41,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_CarBook->AddPage( m_IndexPanel, wxT("Index"), true );
+	m_CarBook->AddPage( m_IndexPanel, wxT("Index"), false );
 	m_GeneralPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -105,16 +105,18 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Type->SetSelection( 0 );
 	bSizer4->Add( m_Type, 0, wxALL, 5 );
 	
-	wxString m_SubTypeChoices[] = { wxT("Box"), wxT("Gondola"), wxT("Tank") };
-	int m_SubTypeNChoices = sizeof( m_SubTypeChoices ) / sizeof( wxString );
-	m_SubType = new wxRadioBox( m_DetailsPanel, wxID_ANY, wxT("Subtype"), wxDefaultPosition, wxDefaultSize, m_SubTypeNChoices, m_SubTypeChoices, 1, wxRA_SPECIFY_COLS );
-	m_SubType->SetSelection( 0 );
-	bSizer4->Add( m_SubType, 0, wxALL, 5 );
-	
 	wxFlexGridSizer* fgSizer3;
 	fgSizer3 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer3->AddGrowableCol( 1 );
 	fgSizer3->SetFlexibleDirection( wxBOTH );
 	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_labSubtype = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Subtype"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labSubtype->Wrap( -1 );
+	fgSizer3->Add( m_labSubtype, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_Subtype = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( m_Subtype, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	m_labLength = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Length"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labLength->Wrap( -1 );
@@ -128,32 +130,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DetailsPanel->SetSizer( bSizer4 );
 	m_DetailsPanel->Layout();
 	bSizer4->Fit( m_DetailsPanel );
-	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), false );
-	m_WaybillPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxVERTICAL );
-	
-	m_WaybillList = new wxListBox( m_WaybillPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), 0, NULL, 0 ); 
-	bSizer5->Add( m_WaybillList, 1, wxALL|wxEXPAND, 5 );
-	
-	m_WaybillSelection = new wxComboBox( m_WaybillPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer5->Add( m_WaybillSelection, 0, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_AddWaybill = new wxButton( m_WaybillPanel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_AddWaybill, 0, wxALL, 5 );
-	
-	m_DeleteWaybill = new wxButton( m_WaybillPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_DeleteWaybill, 0, wxALL, 5 );
-	
-	bSizer5->Add( bSizer6, 0, wxEXPAND, 5 );
-	
-	m_WaybillPanel->SetSizer( bSizer5 );
-	m_WaybillPanel->Layout();
-	bSizer5->Fit( m_WaybillPanel );
-	m_CarBook->AddPage( m_WaybillPanel, wxT("Waybills"), false );
+	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), true );
 	
 	bSizer1->Add( m_CarBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -177,9 +154,6 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_NewCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onNewCar ), NULL, this );
 	m_DeleteCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteCar ), NULL, this );
 	m_Type->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( cardlggen::onTypeSelect ), NULL, this );
-	m_WaybillList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onWaybillList ), NULL, this );
-	m_AddWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onAddWaybill ), NULL, this );
-	m_DeleteWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteWaybill ), NULL, this );
 	m_stdButtonApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onApply ), NULL, this );
 	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCancel ), NULL, this );
 	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onOK ), NULL, this );
@@ -193,9 +167,6 @@ cardlggen::~cardlggen()
 	m_NewCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onNewCar ), NULL, this );
 	m_DeleteCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteCar ), NULL, this );
 	m_Type->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( cardlggen::onTypeSelect ), NULL, this );
-	m_WaybillList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cardlggen::onWaybillList ), NULL, this );
-	m_AddWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onAddWaybill ), NULL, this );
-	m_DeleteWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onDeleteWaybill ), NULL, this );
 	m_stdButtonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onApply ), NULL, this );
 	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onCancel ), NULL, this );
 	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cardlggen::onOK ), NULL, this );
