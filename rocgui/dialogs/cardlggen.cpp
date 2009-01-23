@@ -80,6 +80,13 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Color = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_Color, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_labImageName = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Image"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labImageName->Wrap( -1 );
+	fgSizer1->Add( m_labImageName, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ImageName = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_ImageName, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
 	bSizer3->Add( fgSizer1, 0, wxEXPAND, 5 );
 	
 	m_staticline1 = new wxStaticLine( m_GeneralPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -94,7 +101,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_GeneralPanel->SetSizer( bSizer3 );
 	m_GeneralPanel->Layout();
 	bSizer3->Fit( m_GeneralPanel );
-	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), false );
+	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), true );
 	m_DetailsPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -130,7 +137,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DetailsPanel->SetSizer( bSizer4 );
 	m_DetailsPanel->Layout();
 	bSizer4->Fit( m_DetailsPanel );
-	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), true );
+	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), false );
 	
 	bSizer1->Add( m_CarBook, 1, wxEXPAND | wxALL, 5 );
 	

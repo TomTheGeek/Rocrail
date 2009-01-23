@@ -55,6 +55,8 @@ class cardlggen : public wxDialog
 		wxTextCtrl* m_Roadname;
 		wxStaticText* m_labColor;
 		wxTextCtrl* m_Color;
+		wxStaticText* m_labImageName;
+		wxTextCtrl* m_ImageName;
 		wxStaticLine* m_staticline1;
 		wxRadioBox* m_Era;
 		wxPanel* m_DetailsPanel;

@@ -6449,5 +6449,16 @@
     <it txt="Subtype"/>
     <da txt="Subtype"/>
   </Msg>
+  <Msg id="car">
+    <de txt="Wagon"/>
+    <en txt="Car"/>
+    <nl txt="Wagon"/>
+    <sv txt="Car"/>
+    <fr txt="Car"/>
+    <tr txt="Car"/>
+    <es txt="Car"/>
+    <it txt="Car"/>
+    <da txt="Car"/>
+  </Msg>
 </Messages>
 

@@ -107,6 +107,8 @@ void CarDlg::initIndex(){
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
   iONode l_Props = m_Props;
 
+  SetTitle(wxGetApp().getMsg( "cartable" ));
+
   m_CarList->Clear();
 
   iONode model = wxGetApp().getModel();
@@ -137,6 +139,9 @@ void CarDlg::initIndex(){
         m_CarList->SetStringSelection( wxString(wCar.getid( l_Props ),wxConvUTF8) );
         m_CarList->SetFirstItem( wxString(wCar.getid( l_Props ),wxConvUTF8) );
         m_Props = l_Props;
+        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("car").mb_str(wxConvUTF8), wCar.getid( m_Props ) );
+        SetTitle( wxString(title,wxConvUTF8) );
+        StrOp.free( title );
       }
       else
         TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
@@ -191,14 +196,34 @@ void CarDlg::initValues() {
   m_CarImage->Refresh();
   //m_CarImageIndex->Refresh();
 
+  // init General
   m_ID->SetValue( wxString(wCar.getid( m_Props ),wxConvUTF8) );
+  m_Code->SetValue( wxString(wCar.getcode( m_Props ),wxConvUTF8) );
+  m_Color->SetValue( wxString(wCar.getcolor( m_Props ),wxConvUTF8) );
+  m_Roadname->SetValue( wxString(wCar.getroadname( m_Props ),wxConvUTF8) );
+  m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
+  m_Era->SetSelection( wCar.getera( m_Props ) );
 }
 
 
 
 void CarDlg::evaluate(){
+  if( m_Props == NULL )
+    return;
+
+  TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wCar.getid( m_Props ) );
+
+  // evaluate General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+  wCar.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  wCar.setcode( m_Props, m_Code->GetValue().mb_str(wxConvUTF8) );
+  wCar.setcolor( m_Props, m_Color->GetValue().mb_str(wxConvUTF8) );
+  wCar.setroadname( m_Props, m_Roadname->GetValue().mb_str(wxConvUTF8) );
+  wCar.setimage( m_Props, m_ImageName->GetValue().mb_str(wxConvUTF8) );
+  wCar.setera( m_Props, m_Era->GetSelection() );
 
 }
+
 
 void CarDlg::onCarImage( wxCommandEvent& event ){
   const char* imagepath = wGui.getimagepath( wxGetApp().getIni() );
@@ -216,7 +241,7 @@ void CarDlg::onCarImage( wxCommandEvent& event ){
     m_CarImage->SetBitmapLabel( wxBitmap( fdlg->GetPath(), bmptype ) );
     m_CarImage->Refresh();
     wCar.setimage( m_Props, FileOp.ripPath(fdlg->GetPath().mb_str(wxConvUTF8)) );
-    //m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
+    m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
   }
 }
 
