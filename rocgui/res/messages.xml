@@ -6471,5 +6471,16 @@
     <it txt="Polarization addr."/>
     <da txt="Polarization addr."/>
   </Msg>
+  <Msg id="ttbridgepolarization">
+    <de txt="Bridge polarization"/>
+    <en txt="Bridge polarization"/>
+    <nl txt="Bridge polarization"/>
+    <sv txt="Bridge polarization"/>
+    <fr txt="Bridge polarization"/>
+    <tr txt="Bridge polarization"/>
+    <es txt="Bridge polarization"/>
+    <it txt="Bridge polarization"/>
+    <da txt="Bridge polarization"/>
+  </Msg>
 </Messages>
 
