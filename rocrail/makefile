@@ -123,14 +123,15 @@ fromtar:
 install_all:
 	-rm -Rf $(DESTDIR)
 	-mkdir -p $(DESTDIR)
-	-mkdir -p $(DESTDIR)
+	-mkdir -p ~/rocrail
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
 	cd ../rocdigs; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	cd ../roclcdr; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	cd ../rocgui; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	-cp -p rocraild.png $(DESTDIR)
 	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
-	-cp -Rp ../rocgui/icons ~/rocrail
+	-cp -Rp ../rocgui/icons $(DESTDIR)
+	-ln -s $(DESTDIR)/icons ~/rocrail/icons
 	-cp -pu package/*.xml ~/rocrail
 	-cp -pu package/*.ini ~/rocrail
 	-cp -p package/rocrail.sh $(DESTDIR)
