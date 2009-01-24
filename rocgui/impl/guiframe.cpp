@@ -583,6 +583,11 @@ void RocGuiFrame::modifyLoc( iONode props ) {
 }
 
 void RocGuiFrame::InitActiveLocs() {
+  // protect by mutex
+  if( !MutexOp.wait( m_muxInitActiveLocs ) ) {
+    return;
+  }
+
   iONode model = wxGetApp().getModel();
   bool hiddenlocos = false;
   bool firstset = false;
@@ -625,7 +630,6 @@ void RocGuiFrame::InitActiveLocs() {
         const char* id = wLoc.getid( lc );
 
         if( !firstset && m_LC != NULL && id != NULL ) {
-          m_LC->setLocProps( lc );
           selectedLoc = lc;
           firstset = true;
           firstid = id;
@@ -683,6 +687,7 @@ void RocGuiFrame::InitActiveLocs() {
     m_LocID = StrOp.dup(firstid);
     m_LC->setLocProps(selectedLoc);
 
+
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_LOC_IMAGE_EVENT );
     event.SetClientData( NodeOp.base.clone( selectedLoc ) );
     wxPostEvent( this, event );
@@ -693,6 +698,8 @@ void RocGuiFrame::InitActiveLocs() {
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
 
   initLocCtrlDialogs();
+
+  MutexOp.post( m_muxInitActiveLocs );
 
 }
 
@@ -899,6 +906,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocCtrlList = ListOp.inst();
   m_LocDlgMap = MapOp.inst();
   m_bAutoMode = false;
+
+  m_muxInitActiveLocs = MutexOp.inst( NULL, True );
+
 
   // set the frame icon
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );

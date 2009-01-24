@@ -730,7 +730,15 @@ static void rocrailCallback( obj me, iONode node ) {
       if( StrOp.equals( childName, wLoc.name() ) ) {
         iONode lclist = wPlan.getlclist( model );
         if( lclist != NULL ) {
-          NodeOp.addChild( lclist, (iONode)NodeOp.base.clone(child) );
+          /* check if a loco already exist with this ID */
+          iONode lc = wxGetApp().getFrame()->findLoc(wLoc.getid(child));
+          if(lc == NULL ) {
+            NodeOp.addChild( lclist, (iONode)NodeOp.base.clone(child) );
+          }
+          else {
+            /* TODO: update existing */
+            //NodeOp.mergeNode(lc, child, True, True );
+          }
           wxGetApp().getFrame()->InitActiveLocs();
         }
         planItems = false;
@@ -834,6 +842,7 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
     if( StrOp.equals( wProgram.name(), NodeOp.getName( cmd ) ) ) {
       return;
     }
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Bounce to add to local model..." );
 
     // Bounce to add to local model...
     if( StrOp.equals( wModelCmd.name(), NodeOp.getName( cmd ) ) ) {

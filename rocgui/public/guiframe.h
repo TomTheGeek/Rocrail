@@ -29,6 +29,7 @@
 #include "rocs/public/res.h"
 #include "rocs/public/wrpinf.h"
 #include "rocs/public/map.h"
+#include "rocs/public/mutex.h"
 
 #include "rocrail/public/rcon.h"
 
@@ -256,6 +257,8 @@ private:
   LocoIO* m_LocoIO;
   OpenDecoderDlg* m_OpenDecoder;
   RocrailIniDialog* m_RocrailIniDlg;
+
+  iOMutex m_muxInitActiveLocs;
 
   bool  m_bLocoBook;
   bool  m_bFill;
