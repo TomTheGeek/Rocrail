@@ -1159,7 +1159,8 @@
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
-        <var name="addr" vt="int" defval="0" range="0-255" required="true" remark="Digital address."/>
+        <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="Digital address."/>
+        <var name="poladdr" vt="int" defval="0" range="0-*" required="false" remark="Polarization relay address."/>
 
         <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
@@ -1222,6 +1223,7 @@
           <var name="decnr" vt="int" defval="-1" range="*" required="false" remark="Decoder track number."/>
           <var name="state" vt="bool" defval="false" remark="pos feedback state."/>
           <var name="desc" vt="string" defval="" range="*" remark="description"/>
+          <var name="polarization" vt="bool" defval="false" remark="Flip bridge polarization when entering this track."/>
         </track>
       </tt>
     </ttlist>

@@ -6460,5 +6460,16 @@
     <it txt="Car"/>
     <da txt="Car"/>
   </Msg>
+  <Msg id="poladdr">
+    <de txt="Polarization addr."/>
+    <en txt="Polarization addr."/>
+    <nl txt="Polarization addr."/>
+    <sv txt="Polarization addr."/>
+    <fr txt="Polarization addr."/>
+    <tr txt="Polarization addr."/>
+    <es txt="Polarization addr."/>
+    <it txt="Polarization addr."/>
+    <da txt="Polarization addr."/>
+  </Msg>
 </Messages>
 

@@ -2431,6 +2431,19 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
+                                            <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticText" name="wxID_ANY">
+                                                <label>Short ID:</label>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP</flag>
+                                            <border>5</border>
+                                            <object class="wxTextCtrl" name="wxID_ANY">
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
                                             <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC_DESCRIPTION">
@@ -5584,16 +5597,31 @@
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE</flag>
+                                            <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE</flag>
                                             <border>5</border>
                                             <object class="wxStaticText" name="wxID_STATIC_TT_ADDRESS">
                                                 <label>address</label>
                                             </object>
                                         </object>
                                         <object class="sizeritem">
-                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT</flag>
                                             <border>5</border>
                                             <object class="wxTextCtrl" name="ID_TEXTCTRL_TT_ADDRESS">
+                                                <style>wxTE_CENTRE</style>
+                                                <value>0</value>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticText" name="wxID_STATIC">
+                                                <label>pol. addr.</label>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                                            <border>5</border>
+                                            <object class="wxTextCtrl" name="wxID_ANY">
                                                 <style>wxTE_CENTRE</style>
                                                 <value>0</value>
                                             </object>
@@ -5888,6 +5916,14 @@
                             <style>wxCB_DROPDOWN</style>
                         </object>
                     </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_LEFT|wxALL</flag>
+                <border>5</border>
+                <object class="wxCheckBox" name="wxID_ANY">
+                    <label>Flip bridge polarization</label>
+                    <checked>0</checked>
                 </object>
             </object>
             <object class="sizeritem">

@@ -191,6 +191,8 @@ public:
     wxTextCtrl* m_Bus;
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
+    wxStaticText* m_labPolAddr;
+    wxTextCtrl* m_PolAddr;
     wxStaticText* m_labProt;
     wxComboBox* m_Prot;
     wxStaticText* m_labBridgeSensor1;

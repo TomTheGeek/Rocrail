@@ -98,6 +98,7 @@ void TTTrackDialog::initLabels() {
   m_labDecoder->SetLabel( wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("tracknr") );
   m_LabelDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_LabelPosFB->SetLabel( wxGetApp().getMsg( "posfb" ) );
+  m_Polarization->SetLabel( wxGetApp().getMsg( "ttbridgepolarization" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -130,6 +131,8 @@ void TTTrackDialog::initValues() {
     }
   }
 
+  m_Polarization->SetValue(wTTTrack.ispolarization( m_Props ));
+
 }
 
 void TTTrackDialog::evaluate() {
@@ -140,6 +143,9 @@ void TTTrackDialog::evaluate() {
   wTTTrack.setdecnr( m_Props, m_DecTrackNr->GetValue() );
   wTTTrack.setdesc( m_Props, m_Desc->GetValue().mb_str(wxConvUTF8) );
   wTTTrack.setposfb( m_Props, m_PosFB->GetStringSelection().mb_str(wxConvUTF8) );
+
+  wTTTrack.setpolarization( m_Props, m_Polarization->IsChecked() ? True:False );
+
 }
 
 /*!
@@ -158,6 +164,7 @@ bool TTTrackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_Desc = NULL;
     m_LabelPosFB = NULL;
     m_PosFB = NULL;
+    m_Polarization = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end TTTrackDialog member initialisation
@@ -217,17 +224,21 @@ void TTTrackDialog::CreateControls()
     m_PosFB = new wxComboBox( itemDialog1, ID_COMBOBOX_TTT_POSFB, _T(""), wxDefaultPosition, wxDefaultSize, m_PosFBStrings, wxCB_DROPDOWN );
     itemFlexGridSizer3->Add(m_PosFB, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer12 = new wxStdDialogButtonSizer;
+    m_Polarization = new wxCheckBox( itemDialog1, wxID_ANY, _("Flip bridge polarization"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Polarization->SetValue(false);
+    itemBoxSizer2->Add(m_Polarization, 0, wxALIGN_LEFT|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer12, 0, wxGROW|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer13 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer13, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer12->AddButton(m_OK);
+    itemStdDialogButtonSizer13->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer12->AddButton(m_Cancel);
+    itemStdDialogButtonSizer13->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer12->Realize();
+    itemStdDialogButtonSizer13->Realize();
 
 ////@end TTTrackDialog content construction
 }

@@ -654,13 +654,14 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 }
 
 
-static int __evaluatePos( iOTT inst, Boolean puls, const char* id ) {
+static int __evaluatePos( iOTT inst, Boolean puls, const char* id, Boolean* polarization ) {
   iOTTData data = Data(inst);
 
   iONode track = wTurntable.gettrack( data->props );
   while( track != NULL ) {
     if( StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
       data->tablepos = wTTTrack.getnr( track );
+      *polarization = wTTTrack.ispolarization(track);
       return wTTTrack.getnr( track );
     }
     track = wTurntable.nexttrack( data->props, track );
@@ -826,11 +827,12 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
   int prevpos = data->tablepos;
-  int pos = __evaluatePos( (iOTT)inst, puls, id );
+  Boolean polarization;
+  int pos = __evaluatePos( (iOTT)inst, puls, id, &polarization );
   Boolean stop = False;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable \"%s\" fb=\"%s\" pos=%d ",
-      inst->id(inst), id, pos );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] pos=[%d] polarization=[%d] ",
+      inst->id(inst), id, pos, polarization );
 
   if( control == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "controller is not initialized..." );
@@ -893,6 +895,45 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     wLoc.setdir( cmd, data->dir );
 
     ControlOp.cmd( control, cmd, NULL );
+  }
+
+  if( wTurntable.getpoladdr( data->props ) > 0 ) {
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    int addr = wTurntable.getpoladdr( data->props );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "setting bridge polarization to %d", polarization );
+
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( cmd, iid );
+
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+    if( polarization ) {
+      addr++;
+      wSwitch.setaddr1( cmd, addr / 4 + 1 );
+      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setcmd( cmd, wSwitch.turnout );
+      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+      addr--;
+      wSwitch.setaddr1( cmd, addr / 4 + 1 );
+      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setcmd( cmd, wSwitch.straight );
+      ControlOp.cmd( control, cmd, NULL );
+    }
+    else {
+      wSwitch.setaddr1( cmd, addr / 4 + 1 );
+      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setcmd( cmd, wSwitch.turnout );
+      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+      addr++;
+      wSwitch.setaddr1( cmd, addr / 4 + 1 );
+      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setcmd( cmd, wSwitch.straight );
+      ControlOp.cmd( control, cmd, NULL );
+    }
+
   }
 
 }
