@@ -320,6 +320,8 @@ void TurntableDialog::initValues() {
     m_BridgeSensor1->SetStringSelection( wxString(wTurntable.gets1(m_Props),wxConvUTF8) );
   if( wTurntable.gets2( m_Props ) != NULL && StrOp.len( wTurntable.gets2( m_Props ) ) > 0 )
     m_BridgeSensor2->SetStringSelection( wxString(wTurntable.gets2(m_Props),wxConvUTF8) );
+  if( wTurntable.getpsen( m_Props ) != NULL && StrOp.len( wTurntable.getpsen( m_Props ) ) > 0 )
+    m_PSen->SetStringSelection( wxString(wTurntable.getpsen(m_Props),wxConvUTF8) );
 
   m_SwapRotation->SetValue( wTurntable.isswaprotation( m_Props )?true:false );
 
