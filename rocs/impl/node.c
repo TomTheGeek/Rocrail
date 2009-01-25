@@ -195,7 +195,7 @@ static void _removeAttr( iONode inst, iOAttr attr ) {
   int i;
   if( attr == NULL )
     return;
-  
+
   for( i = 0; i < data->attrCnt; i++ ) {
     if( data->attrs[i] == attr ) {
       MapOp.remove( data->attrmap, AttrOp.getName( attr ) );
@@ -440,7 +440,7 @@ static void rocs_node_setBool(iONode node,const char* aname, Boolean val) {
   *
   * Merged all unknown attributes from B into A.
   */
-static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean recursive ) {
+static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean recursive, Boolean keepid ) {
   int cnt = NodeOp.getAttrCnt( nodeB );
   int i = 0;
   for( i = 0; i < cnt; i++ ) {
@@ -448,10 +448,16 @@ static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean
     if( NodeOp.findAttr( nodeA, AttrOp.getName( attr ) ) == NULL ) {
       NodeOp.setStr( nodeA, AttrOp.getName( attr ), AttrOp.getVal( attr ) );
     }
-    else if( overwrite )
-      NodeOp.setStr( nodeA, AttrOp.getName( attr ), AttrOp.getVal( attr ) );
+    else if( overwrite ) {
+      if( keepid && StrOp.equals( "id", AttrOp.getName( attr ) ) ) {
+        /* do not overwrite the id */
+      }
+      else {
+        NodeOp.setStr( nodeA, AttrOp.getName( attr ), AttrOp.getVal( attr ) );
+      }
+    }
   }
-  
+
   if( recursive ) {
     cnt = NodeOp.getChildCnt( nodeB );
     for( i = 0; i < cnt; i++ ) {
@@ -460,10 +466,10 @@ static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean
         NodeOp.addChild( nodeA, (iONode)node->base.clone( node ) );
       }
       /* Merge recursive */
-      NodeOp.mergeNode( NodeOp.findNode( nodeA, NodeOp.getName( node ) ), node, overwrite, recursive );
+      NodeOp.mergeNode( NodeOp.findNode( nodeA, NodeOp.getName( node ) ), node, overwrite, recursive, False );
     }
   }
-  
+
   return nodeA;
 }
 

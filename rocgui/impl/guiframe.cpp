@@ -297,6 +297,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_F11, RocGuiFrame::OnButton)
     EVT_MENU( ME_F12, RocGuiFrame::OnButton)
 
+    EVT_MENU( ME_INITACTIVELOCS, RocGuiFrame::InitActiveLocs)
+
 END_EVENT_TABLE()
 
 
@@ -517,8 +519,8 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   iONode model = wxGetApp().getModel();
   setPlanTitle( wPlan.gettitle(model) );
 
-  InitActiveLocs();
-  m_CV->init();
+  wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
+  wxPostEvent( this, evt );
 
    wxGetApp().cleanupOldModel();
 
@@ -582,10 +584,16 @@ void RocGuiFrame::modifyLoc( iONode props ) {
   }
 }
 
-void RocGuiFrame::InitActiveLocs() {
-  // protect by mutex
-  if( !MutexOp.wait( m_muxInitActiveLocs ) ) {
-    return;
+void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
+  iONode node = (iONode)event.GetClientData();
+  if( node != NULL ) {
+    iONode lc   = findLoc(wLoc.getid(node));
+
+    if( lc != NULL ) {
+     /* merge all attribute */
+      NodeOp.mergeNode( lc, node, True, True, True );
+    }
+    NodeOp.base.del(node);
   }
 
   iONode model = wxGetApp().getModel();
@@ -673,7 +681,6 @@ void RocGuiFrame::InitActiveLocs() {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxALIGN_LEFT, wxALIGN_CENTRE );
 
-        wxGetApp().Yield();
       }
       ListOp.base.del( list );
     }
@@ -698,8 +705,7 @@ void RocGuiFrame::InitActiveLocs() {
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
 
   initLocCtrlDialogs();
-
-  MutexOp.post( m_muxInitActiveLocs );
+  m_CV->init();
 
 }
 
@@ -906,9 +912,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocCtrlList = ListOp.inst();
   m_LocDlgMap = MapOp.inst();
   m_bAutoMode = false;
-
-  m_muxInitActiveLocs = MutexOp.inst( NULL, True );
-
 
   // set the frame icon
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
@@ -2016,8 +2019,8 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
   LocDialog* locdialog = new LocDialog(this, (iONode)NULL );
   if( wxID_OK == locdialog->ShowModal() ) {
     /* Notify Notebook. */
-    InitActiveLocs();
-    m_CV->init();
+    wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
+    wxPostEvent( this, evt );
   }
   locdialog->Destroy();
 }
@@ -2850,8 +2853,8 @@ void RocGuiFrame::OnButton(wxCommandEvent& event)
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "LocID=%s...0x%08X", m_LocID==NULL?"":m_LocID, lc );
     if( wxID_OK == dlg->ShowModal() ) {
       /* Notify Notebook. */
-      InitActiveLocs();
-      m_CV->init();
+      wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
+      wxPostEvent( this, evt );
     }
     dlg->Destroy();
   }
@@ -2943,8 +2946,8 @@ void RocGuiFrame::OnLocProps(wxCommandEvent& event) {
   LocDialog*  dlg = new LocDialog(this, lc );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
-    InitActiveLocs();
-    m_CV->init();
+    wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
+    wxPostEvent( this, evt );
   }
   dlg->Destroy();
 }

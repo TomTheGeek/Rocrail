@@ -853,7 +853,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       iONode node = wLinkList.getlink( linklist );
       while( node != NULL ) {
         if( StrOp.equals( wLink.getid( item ), wLink.getid( node ) ) ) {
-          NodeOp.mergeNode( node, item, True, True );
+          NodeOp.mergeNode( node, item, True, True, True );
           link = node;
           break;
         }
@@ -873,7 +873,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       while( node != NULL ) {
         Boolean prev_id_matched = StrOp.equals( prev_id, wSchedule.getid( node ) );
         if( StrOp.equals( wLocation.getid( item ), wLocation.getid( node ) ) || prev_id_matched ) {
-          NodeOp.mergeNode( node, item, True, True );
+          NodeOp.mergeNode( node, item, True, True, False );
           location = node;
 
           /* update location map */

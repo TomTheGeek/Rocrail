@@ -220,7 +220,7 @@ public:
   wxSplitterWindow* getTraceSplitter() { return m_TraceSplitter; }
   iOMap getLocDlgMap() { return m_LocDlgMap; }
 
-  void InitActiveLocs();
+  void InitActiveLocs(wxCommandEvent& event);
   void initLocCtrlDialogs();
   wxString getIconPath(const char* iconfile);
 
@@ -400,6 +400,7 @@ enum
     ME_F11,
     ME_F12,
     ID_SCALE_COMBO,
+    ME_INITACTIVELOCS,
 };
 
 enum {

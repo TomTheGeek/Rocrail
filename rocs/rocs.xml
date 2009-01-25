@@ -877,6 +877,7 @@
       <param name="nodeB" vt="this" remark="Node B."/>
       <param name="overwrite" vt="Boolean" remark="Overwrites existing attributes."/>
       <param name="recursive" vt="Boolean" remark="merge childnodes"/>
+      <param name="keepid" vt="Boolean" remark="do not overwrite id attributes at first level"/>
     </fun>
     <data include="map">
       <var name="name" vt="char*" remark="Node name."/>

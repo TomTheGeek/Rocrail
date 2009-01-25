@@ -732,14 +732,16 @@ static void rocrailCallback( obj me, iONode node ) {
         if( lclist != NULL ) {
           /* check if a loco already exist with this ID */
           iONode lc = wxGetApp().getFrame()->findLoc(wLoc.getid(child));
+          wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
           if(lc == NULL ) {
             NodeOp.addChild( lclist, (iONode)NodeOp.base.clone(child) );
           }
           else {
-            /* TODO: update existing */
-            //NodeOp.mergeNode(lc, child, True, True );
+            /* update existing */
+            event.SetClientData( NodeOp.base.clone( lc ) );
           }
-          wxGetApp().getFrame()->InitActiveLocs();
+          wxPostEvent( wxGetApp().getFrame(), event );
+
         }
         planItems = false;
       }

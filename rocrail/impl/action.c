@@ -356,7 +356,7 @@ static void _tick( iOAction inst ) {
 
 static void _modify( iOAction inst, iONode props ) {
   iOActionData data = Data(inst);
-  NodeOp.mergeNode( data->action, props, True, True );
+  NodeOp.mergeNode( data->action, props, True, True, True );
 }
 
 
