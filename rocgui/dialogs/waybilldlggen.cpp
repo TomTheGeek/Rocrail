@@ -38,7 +38,7 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_WaybillBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_WaybillBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_GeneralPanel = new wxPanel( m_WaybillBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -96,7 +96,7 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_GeneralPanel->SetSizer( bSizer4 );
 	m_GeneralPanel->Layout();
 	bSizer4->Fit( m_GeneralPanel );
-	m_WaybillBook->AddPage( m_GeneralPanel, wxT("General"), true );
+	m_WaybillBook->AddPage( m_GeneralPanel, wxT("General"), false );
 	m_RoutingPanel = new wxPanel( m_WaybillBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
@@ -116,30 +116,36 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer1->Add( m_WaybillBook, 1, wxEXPAND | wxALL, 5 );
 	
-	m_sdButton = new wxStdDialogButtonSizer();
-	m_sdButtonOK = new wxButton( this, wxID_OK );
-	m_sdButton->AddButton( m_sdButtonOK );
-	m_sdButtonApply = new wxButton( this, wxID_APPLY );
-	m_sdButton->AddButton( m_sdButtonApply );
-	m_sdButtonCancel = new wxButton( this, wxID_CANCEL );
-	m_sdButton->AddButton( m_sdButtonCancel );
-	m_sdButton->Realize();
-	bSizer1->Add( m_sdButton, 0, wxALIGN_RIGHT|wxALL, 5 );
+	m_stdButton = new wxStdDialogButtonSizer();
+	m_stdButtonOK = new wxButton( this, wxID_OK );
+	m_stdButton->AddButton( m_stdButtonOK );
+	m_stdButtonApply = new wxButton( this, wxID_APPLY );
+	m_stdButton->AddButton( m_stdButtonApply );
+	m_stdButtonCancel = new wxButton( this, wxID_CANCEL );
+	m_stdButton->AddButton( m_stdButtonCancel );
+	m_stdButton->Realize();
+	bSizer1->Add( m_stdButton, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	m_WaybillList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( waybillgen::onWaybillSelect ), NULL, this );
+	m_WaybillList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( waybillgen::onWaybillList ), NULL, this );
 	m_NewWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onNewWaybill ), NULL, this );
 	m_DeleteWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onDeleteWaybill ), NULL, this );
+	m_stdButtonApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onApply ), NULL, this );
+	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onCancel ), NULL, this );
+	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onOK ), NULL, this );
 }
 
 waybillgen::~waybillgen()
 {
 	// Disconnect Events
-	m_WaybillList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( waybillgen::onWaybillSelect ), NULL, this );
+	m_WaybillList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( waybillgen::onWaybillList ), NULL, this );
 	m_NewWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onNewWaybill ), NULL, this );
 	m_DeleteWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onDeleteWaybill ), NULL, this );
+	m_stdButtonApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onApply ), NULL, this );
+	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onCancel ), NULL, this );
+	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( waybillgen::onOK ), NULL, this );
 }

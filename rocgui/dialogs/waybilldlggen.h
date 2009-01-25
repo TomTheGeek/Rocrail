@@ -55,15 +55,18 @@ class waybillgen : public wxDialog
 		wxStaticText* m_labCargo;
 		wxTextCtrl* m_Cargo;
 		wxPanel* m_RoutingPanel;
-		wxStdDialogButtonSizer* m_sdButton;
-		wxButton* m_sdButtonOK;
-		wxButton* m_sdButtonApply;
-		wxButton* m_sdButtonCancel;
+		wxStdDialogButtonSizer* m_stdButton;
+		wxButton* m_stdButtonOK;
+		wxButton* m_stdButtonApply;
+		wxButton* m_stdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void onWaybillSelect( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onWaybillList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onNewWaybill( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onDeleteWaybill( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onApply( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:

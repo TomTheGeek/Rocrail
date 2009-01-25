@@ -128,7 +128,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Index</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -211,7 +211,7 @@
                                             <event name="OnLeftDClick"></event>
                                             <event name="OnLeftDown"></event>
                                             <event name="OnLeftUp"></event>
-                                            <event name="OnListBox">onWaybillSelect</event>
+                                            <event name="OnListBox">onWaybillList</event>
                                             <event name="OnListBoxDClick"></event>
                                             <event name="OnMiddleDClick"></event>
                                             <event name="OnMiddleDown"></event>
@@ -349,7 +349,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">General</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -1142,14 +1142,14 @@
                         <property name="Save">0</property>
                         <property name="Yes">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">m_sdButton</property>
+                        <property name="name">m_stdButton</property>
                         <property name="permission">protected</property>
-                        <event name="OnApplyButtonClick"></event>
-                        <event name="OnCancelButtonClick"></event>
+                        <event name="OnApplyButtonClick">onApply</event>
+                        <event name="OnCancelButtonClick">onCancel</event>
                         <event name="OnContextHelpButtonClick"></event>
                         <event name="OnHelpButtonClick"></event>
                         <event name="OnNoButtonClick"></event>
-                        <event name="OnOKButtonClick"></event>
+                        <event name="OnOKButtonClick">onOK</event>
                         <event name="OnSaveButtonClick"></event>
                         <event name="OnYesButtonClick"></event>
                     </object>
