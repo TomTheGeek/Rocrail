@@ -22,6 +22,7 @@
 #include <wx/icon.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -54,6 +55,7 @@ class waybillgen : public wxDialog
 		wxTextCtrl* m_ConsigneeAddr;
 		wxStaticText* m_labCargo;
 		wxTextCtrl* m_Cargo;
+		wxRadioBox* m_Status;
 		wxPanel* m_RoutingPanel;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;

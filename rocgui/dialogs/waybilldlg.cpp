@@ -94,7 +94,7 @@ void WaybillDlg::initLabels() {
   m_labShipperAddr->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labConsignee->SetLabel( wxGetApp().getMsg( "consignee" ) );
   m_labConsigneeAddr->SetLabel( wxGetApp().getMsg( "address" ) );
-  m_labCargo->SetLabel( wxGetApp().getMsg( "cargo" ) );
+  m_labCargo->SetLabel( wxGetApp().getMsg( "lading" ) );
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );

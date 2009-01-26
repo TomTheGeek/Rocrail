@@ -92,16 +92,16 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticline1 = new wxStaticLine( m_GeneralPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer3->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	wxString m_EraChoices[] = { wxT("I"), wxT("II"), wxT("III"), wxT("IV"), wxT("V"), wxT("VI") };
-	int m_EraNChoices = sizeof( m_EraChoices ) / sizeof( wxString );
-	m_Era = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxT("Era"), wxDefaultPosition, wxDefaultSize, m_EraNChoices, m_EraChoices, 1, wxRA_SPECIFY_ROWS );
-	m_Era->SetSelection( 0 );
-	bSizer3->Add( m_Era, 0, wxALL, 5 );
+	wxString m_StatusChoices[] = { wxT("unloaded"), wxT("loaded"), wxT("defunction") };
+	int m_StatusNChoices = sizeof( m_StatusChoices ) / sizeof( wxString );
+	m_Status = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxT("Status"), wxDefaultPosition, wxDefaultSize, m_StatusNChoices, m_StatusChoices, 1, wxRA_SPECIFY_ROWS );
+	m_Status->SetSelection( 0 );
+	bSizer3->Add( m_Status, 0, wxALL|wxEXPAND, 5 );
 	
 	m_GeneralPanel->SetSizer( bSizer3 );
 	m_GeneralPanel->Layout();
 	bSizer3->Fit( m_GeneralPanel );
-	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), false );
+	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), true );
 	m_DetailsPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -132,11 +132,17 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Length = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 9999, 0 );
 	fgSizer3->Add( m_Length, 0, wxALL, 5 );
 	
-	bSizer4->Add( fgSizer3, 1, wxEXPAND, 5 );
+	bSizer4->Add( fgSizer3, 0, wxEXPAND, 5 );
+	
+	wxString m_EraChoices[] = { wxT("I"), wxT("II"), wxT("III"), wxT("IV"), wxT("V"), wxT("VI") };
+	int m_EraNChoices = sizeof( m_EraChoices ) / sizeof( wxString );
+	m_Era = new wxRadioBox( m_DetailsPanel, wxID_ANY, wxT("Era"), wxDefaultPosition, wxDefaultSize, m_EraNChoices, m_EraChoices, 1, wxRA_SPECIFY_ROWS );
+	m_Era->SetSelection( 0 );
+	bSizer4->Add( m_Era, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_labRemark = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Remark"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labRemark->Wrap( -1 );
-	bSizer4->Add( m_labRemark, 0, wxALL, 5 );
+	bSizer4->Add( m_labRemark, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Remark = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	bSizer4->Add( m_Remark, 1, wxALL|wxEXPAND, 5 );
@@ -144,7 +150,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DetailsPanel->SetSizer( bSizer4 );
 	m_DetailsPanel->Layout();
 	bSizer4->Fit( m_DetailsPanel );
-	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), true );
+	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), false );
 	
 	bSizer1->Add( m_CarBook, 1, wxEXPAND | wxALL, 5 );
 	

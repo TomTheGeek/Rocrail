@@ -59,13 +59,14 @@ class cardlggen : public wxDialog
 		wxStaticText* m_labImageName;
 		wxTextCtrl* m_ImageName;
 		wxStaticLine* m_staticline1;
-		wxRadioBox* m_Era;
+		wxRadioBox* m_Status;
 		wxPanel* m_DetailsPanel;
 		wxRadioBox* m_Type;
 		wxStaticText* m_labSubtype;
 		wxTextCtrl* m_Subtype;
 		wxStaticText* m_labLength;
 		wxSpinCtrl* m_Length;
+		wxRadioBox* m_Era;
 		wxStaticText* m_labRemark;
 		wxTextCtrl* m_Remark;
 		wxStdDialogButtonSizer* m_stdButton;

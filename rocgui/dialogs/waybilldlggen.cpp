@@ -38,7 +38,7 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_WaybillBook->AddPage( m_IndexPanel, wxT("Index"), true );
+	m_WaybillBook->AddPage( m_IndexPanel, wxT("Index"), false );
 	m_GeneralPanel = new wxPanel( m_WaybillBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -93,10 +93,16 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer4->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
+	wxString m_StatusChoices[] = { wxT("waiting"), wxT("shipping"), wxT("arrived") };
+	int m_StatusNChoices = sizeof( m_StatusChoices ) / sizeof( wxString );
+	m_Status = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxT("Status"), wxDefaultPosition, wxDefaultSize, m_StatusNChoices, m_StatusChoices, 1, wxRA_SPECIFY_ROWS );
+	m_Status->SetSelection( 0 );
+	bSizer4->Add( m_Status, 0, wxALL|wxEXPAND, 5 );
+	
 	m_GeneralPanel->SetSizer( bSizer4 );
 	m_GeneralPanel->Layout();
 	bSizer4->Fit( m_GeneralPanel );
-	m_WaybillBook->AddPage( m_GeneralPanel, wxT("General"), false );
+	m_WaybillBook->AddPage( m_GeneralPanel, wxT("General"), true );
 	m_RoutingPanel = new wxPanel( m_WaybillBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );

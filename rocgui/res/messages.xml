@@ -318,7 +318,7 @@
   </Msg>
   <Msg id="editmode">
     <de txt="Bearbeiten" tip="Gleisbild bearbeiten."/>
-    <en txt="Edit" tip="Edit track plan."/>
+    <en txt="Edit plan" tip="Edit track plan."/>
     <nl txt="Bewerken" tip="Spoorplan bewerken."/>
     <sv txt="Redigera" tip="Bearbeta spårplan."/>
     <fr txt="Mode Création" tip="Editer le TCO"/>
@@ -758,7 +758,7 @@
   </Msg>
   <Msg id="functioncount">
     <de txt="Anzahl Funktionen"/>
-    <en txt="Functions"/>
+    <en txt="Number of Function"/>
     <nl txt="Aantal Functies"/>
     <sv txt="Antal funktioner"/>
     <fr txt="Nombre de fonction"/>
@@ -778,9 +778,9 @@
     <it txt="Funzioni"/>
     <da txt="Funktioner"/>
   </Msg>
-  <Msg id="direction">
+  <Msg id="changedirection">
     <de txt="Richtung" tip="Fahrtrichtung ändern."/>
-    <en txt="Direction" tip="Change direction."/>
+    <en txt="Change direction" tip="Change direction."/>
     <nl txt="Richting" tip="Rij richting wisselen."/>
     <sv txt="Riktning" tip="Ändra riktning."/>
     <de txt="Direction" tip="Changer de direction."/>
@@ -832,17 +832,6 @@
     <es txt="Valor"/>
     <it txt="Valore"/>
     <da txt="Værdi"/>
-  </Msg>
-  <Msg id="test">
-    <de txt="Testen"/>
-    <en txt="Test"/>
-    <nl txt="Testen"/>
-    <sv txt="Testa"/>
-    <fr txt="Tester"/>
-    <tr txt="Test"/>
-    <es txt="Probar"/>
-	<it txt="Test"/>
-	<da txt="Test"/>
   </Msg>
   <Msg id="streetid">
     <de txt="Fahrstraßen Nummer"/>
@@ -923,7 +912,7 @@
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
-    <en txt="Locomotives" tip="Locomotives"/>
+    <en txt="Locomotive table" tip="Locomotive table"/>
     <nl txt="Locomotieven" tip="Locomotieven"/>
     <sv txt="Lok" tip="Loktabell"/>
     <fr txt="Locomotives" tip="Locomotives"/>
@@ -967,7 +956,7 @@
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
-    <en txt="Routes" tip="Routes"/>
+    <en txt="Route table" tip="Routes"/>
     <nl txt="Rijwegen" tip="Rijwegen"/>
     <sv txt="Tågvägar" tip="Tågvägstabell"/>
     <fr txt="Routes" tip="Routes"/>
@@ -978,7 +967,7 @@
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
-    <en txt="Block groups" tip="Block group table"/>
+    <en txt="Block group table" tip="Block group table"/>
     <nl txt="Blok groepen" tip="Blok groepen tabel"/>
     <sv txt="Blockgrupper" tip="Blockgruppstabell"/>
     <fr txt="Groupes de blocs" tip="Tableau des Groupes de blocs "/>
@@ -989,7 +978,7 @@
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
-    <en txt="Blocks" tip="Blocks"/>
+    <en txt="Block table" tip="Block table"/>
     <nl txt="Blokken" tip="Blokken"/>
     <sv txt="Block" tip="Blocktabell"/>
     <fr txt="Blocs" tip="Tableau de blocs"/>
@@ -1000,7 +989,7 @@
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
-    <en txt="Turnouts" tip="Turnouts"/>
+    <en txt="Turnout table" tip="Turnout table"/>
     <nl txt="Wissels" tip="Wissels"/>
     <sv txt="Växlar" tip="Växeltabell"/>
     <fr txt="Aiguillages" tip="Tableau d'aiguillages"/>
@@ -1011,7 +1000,7 @@
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
     <de txt="Ausgänge" tip="Ausgänge"/>
-    <en txt="Outputs" tip="Outputs"/>
+    <en txt="Output table" tip="Output table"/>
     <nl txt="Uitgangen" tip="Uitgangen"/>
     <sv txt="Utgångar" tip="Utgångstabell"/>
     <fr txt="Sorties" tip="Tableau de sorties"/>
@@ -1022,7 +1011,7 @@
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
     <de txt="Signale" tip="Signale"/>
-    <en txt="Signals" tip="Signals"/>
+    <en txt="Signal table" tip="Signal table"/>
     <nl txt="Seinen" tip="Seinen"/>
     <sv txt="Signaler" tip="Signaltabell"/>
     <fr txt="Signaux" tip="Tableau de signaux"/>
@@ -1044,7 +1033,7 @@
   </Msg>
   <Msg id="sensortable" dialog="true" key="Alt-1">
     <de txt="Rückmelder" tip="Rückmelder"/>
-    <en txt="Sensors" tip="Sensors"/>
+    <en txt="Sensor table" tip="Sensor table"/>
     <nl txt="Melders" tip="Bezetmelders"/>
     <sv txt="Sensorer" tip="Sensortabell"/>
     <fr txt="Contacts" tip="Tableau des contacts"/>
@@ -1088,7 +1077,7 @@
   </Msg>
   <Msg id="panelprops" dialog="true">
     <de txt="Gleisplan Eigenschaften" tip="Gleisplan Eigenschaften"/>
-    <en txt="Track plan properties" tip="Track plan properties"/>
+    <en txt="Panel properties" tip="Panel properties"/>
     <nl txt="Spoorplan eigenschappen" tip="Spoorplan eigenschappen"/>
     <sv txt="Spårplansegenskaper" tip="Spårplansegenskaper"/>
     <fr txt="Propriétés du TCO" tip="Propriétés du TCO"/>
@@ -1132,7 +1121,7 @@
   </Msg>
   <Msg id="activelocs">
     <de txt="Lokomotiven"/>
-    <en txt="Locomotives"/>
+    <en txt="Active Locos"/>
     <nl txt="Locomotieven"/>
     <sv txt="Lok"/>
     <fr txt="Locomotives"/>
@@ -1482,17 +1471,6 @@
     <it txt="Segnali"/>
     <da txt="Signaler"/>
   </Msg>
-  <Msg id="distantsignal">
-    <de txt="Vorsignal"/>
-    <en txt="Distant signal"/>
-    <nl txt="Voorsein"/>
-    <sv txt="Försignal"/>
-    <fr txt="Signal avancé"/>
-    <tr txt="Uzak sinyal"/>
-    <es txt="Señal avanzada"/>
-    <it txt="Segnale di avviso"/>
-    <da txt="Forsignal"/>
-  </Msg>
   <Msg id="sensor">
     <de txt="Rückmeldung"/>
     <en txt="Sensor"/>
@@ -1503,17 +1481,6 @@
     <es txt="Contacto"/>
     <it txt="Sensore"/>
     <da txt="Sensor"/>
-  </Msg>
-  <Msg id="turntable">
-    <de txt="Drehscheibe"/>
-    <en txt="Turntable"/>
-    <nl txt="Draaischijf"/>
-    <sv txt="Vändskiva"/>
-    <fr txt="Pont tournant"/>
-    <tr txt="Pikap platformu"/>
-    <es txt="Plataforma giratioria"/>
-	<it txt="Piattaforma girevole"/>
-	<da txt="Drejeskive"/>
   </Msg>
   <Msg id="setlocid" dialog="true">
     <de txt="Lokbelegung setzen"/>
@@ -2671,17 +2638,6 @@
     <it txt="Percorso librerie"/>
     <da txt="Bibliotekssti"/>
   </Msg>
-  <Msg id="imgpath">
-    <de txt="Bilderverzeichnis"/>
-    <en txt="Image path"/>
-    <nl txt="Afbeeldingen pad"/>
-    <sv txt="Image path"/>
-    <fr txt="Répertoire des Images"/>
-    <tr txt="Image path"/>
-    <es txt="Image path"/>
-    <it txt="Percorso Immagini"/>
-    <da txt="Billedesti"/>
-  </Msg>
   <Msg id="http">
     <de txt="HTTP-Dienste"/>
     <en txt="HTTP service"/>
@@ -3334,7 +3290,7 @@
   </Msg>
   <Msg id="enableaction">
     <de txt="Freischalten"/>
-    <en txt="Activate"/>
+    <en txt="Enable action"/>
     <nl txt="Aktiveren"/>
     <sv txt="Aktivera"/>
     <fr txt="Libération"/>
@@ -3609,7 +3565,7 @@
   </Msg>
   <Msg id="scheduletable" dialog="true" key="Ctrl-4">
     <de txt="Fahrpläne" tip="Fahrpläne"/>
-    <en txt="Schedules" tip="Schedules"/>
+    <en txt="Schedule table" tip="Schedule table"/>
     <nl txt="Dienstroosters" tip="Dienstroosters"/>
     <sv txt="Tidtabeller" tip="Tidtabeller"/>
     <fr txt="Horaires" tip="Horaires"/>
@@ -3653,7 +3609,7 @@
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaften" tip="Ortschaften"/>
-    <en txt="Locations" tip="Locations"/>
+    <en txt="Location table" tip="Location table"/>
     <nl txt="Plaatsen" tip="Plaatsen"/>
     <sv txt="Platser" tip="Destinationstabell"/>
     <fr txt="Places" tip="Places"/>
@@ -4621,7 +4577,7 @@
   </Msg>
   <Msg id="actiontable" dialog="true" key="Alt-3">
     <de txt="Aktionen"/>
-    <en txt="Actions"/>
+    <en txt="Action table"/>
     <nl txt="Acties"/>
     <sv txt="Åtgärder"/>
     <fr txt="Actions"/>
@@ -4673,17 +4629,6 @@
     <es txt="Próxima loco"/>
     <it txt="Prossima loco"/>
     <da txt="Næste lokomotiv"/>
-  </Msg>
-  <Msg id="tracknumber">
-    <de txt="Gleis"/>
-    <en txt="Track number"/>
-    <nl txt="Spoor number"/>
-    <sv txt="Spårnummer"/>
-    <fr txt="Numéro de voie"/>
-    <tr txt="Track number"/>
-    <es txt="Número de vía"/>
-    <it txt="Numero binario"/>
-    <da txt="Spornummer"/>
   </Msg>
   <Msg id="swtype_raster">
     <de txt="Raster"/>
@@ -4840,14 +4785,14 @@
     <da txt="Bemærkning"/>
   </Msg>
   <Msg id="option">
-    <de txt="Optionen"/>
-    <en txt="Options"/>
-    <nl txt="Opties"/>
+    <de txt="Option"/>
+    <en txt="Option"/>
+    <nl txt="Optie"/>
     <sv txt="Option"/>
-    <fr txt="Options"/>
-    <tr txt="Options"/>
-    <es txt="Opciones"/>
-    <it txt="Opzioni"/>
+    <fr txt="Option"/>
+    <tr txt="Option"/>
+    <es txt="Opcione"/>
+    <it txt="Opzion"/>
     <da txt="Muligheder"/>
   </Msg>
   <Msg id="swapplacing">
@@ -6352,7 +6297,7 @@
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagonen" tip="Wagontabelle"/>
-    <en txt="Cars" tip="Car table"/>
+    <en txt="Car table" tip="Car table"/>
     <nl txt="Wagonnen" tip="Wagon lijst"/>
     <sv txt="Cars" tip="Car table"/>
     <fr txt="Cars" tip="Car table"/>
@@ -6363,7 +6308,7 @@
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtzetteln" tip="Frachtzetteltabelle"/>
-    <en txt="Waybills" tip="Waybill table"/>
+    <en txt="Waybill table" tip="Waybill table"/>
     <nl txt="Waybills" tip="Waybill table"/>
     <sv txt="Waybills" tip="Waybill table"/>
     <fr txt="Waybills" tip="Waybill table"/>

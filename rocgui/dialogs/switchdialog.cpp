@@ -144,7 +144,7 @@ void SwitchDialog::initLabels() {
   m_LabelState->SetLabel( wxGetApp().getMsg( "state" ) );
   m_LabelType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_labAccNr->SetLabel( wxGetApp().getMsg( "accnr" ) );
-  m_Dir->SetLabel( wxGetApp().getMsg( "direction" ) );
+  m_Dir->SetLabel( wxGetApp().getMsg( "dir" ) );
   m_Dir->SetString( 0, wxGetApp().getMsg( "left" ) );
   m_Dir->SetString( 1, wxGetApp().getMsg( "right" ) );
   m_Raster->SetLabel( wxGetApp().getMsg( "swtype_raster" ) );
