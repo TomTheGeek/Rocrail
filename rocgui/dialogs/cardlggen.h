@@ -50,14 +50,16 @@ class cardlggen : public wxDialog
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
-		wxStaticText* m_labCode;
-		wxTextCtrl* m_Code;
 		wxStaticText* m_labRoadname;
 		wxTextCtrl* m_Roadname;
+		wxStaticText* m_labNumber;
+		wxTextCtrl* m_Number;
 		wxStaticText* m_labColor;
 		wxTextCtrl* m_Color;
 		wxStaticText* m_labImageName;
 		wxTextCtrl* m_ImageName;
+		wxStaticText* m_labOwner;
+		wxTextCtrl* m_Owner;
 		wxStaticLine* m_staticline1;
 		wxRadioBox* m_Status;
 		wxPanel* m_DetailsPanel;

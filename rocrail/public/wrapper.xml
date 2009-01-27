@@ -1382,9 +1382,8 @@
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
-        <var name="code" vt="string" defval="" range="*"/>
+        <var name="number" vt="string" defval="" range="*"/>
         <var name="era" vt="int" defval="0" range="0-*"/>
-        <var name="inspectiondate" vt="string" defval="" range="*"/>
         <var name="roadname" vt="string" defval="" range="*"/>
         <var name="owner" vt="string" defval="" range="*"/>
         <var name="color" vt="string" defval="" range="*"/>
@@ -1396,9 +1395,9 @@
         <var name="subtype" vt="string" defval="" range="*" remark="Car sub type like Boxcar or gondola."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
         <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
-        <const name="status_unloaded" vt="string" val="unloaded"/>
+        <const name="status_empty" vt="string" val="empty"/>
         <const name="status_loaded" vt="string" val="loaded"/>
-        <const name="status_defunc" vt="string" val="defunc"/>
+        <const name="status_maintenance" vt="string" val="maintenance"/>
         <var name="status" vt="string" defval="unloaded" range="*" remark="Car status."/>
       </car>
     </carlist>
@@ -1406,14 +1405,14 @@
       <waybill cardinality="n" wrappername="Waybill" remark="Waybill definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shipper" vt="string" defval="" range="*" required="true"/>
-        <var name="shippertrack" vt="string" defval="" range="*" required="true" remark="Shipper (local) block."/>
+        <var name="origin" vt="string" defval="" range="*" required="true" remark="Shipper (local) block."/>
         <var name="consignee" vt="string" defval="" range="*" required="true"/>
-        <var name="consigneetrack" vt="string" defval="" range="*" required="true" remark="Consignee (local) block."/>
+        <var name="destination" vt="string" defval="" range="*" required="true" remark="Consignee (local) block."/>
         <var name="routing" vt="string" defval="" range="*" required="true"/>
-        <var name="cargo" vt="string" defval="" range="*"/>
+        <var name="commodity" vt="string" defval="" range="*"/>
         <const name="status_waiting" vt="string" val="waiting"/>
         <const name="status_shipping" vt="string" val="shipping"/>
-        <const name="status_arrived" vt="string" val="arrived"/>
+        <const name="status_delivered" vt="string" val="delivered"/>
         <var name="status" vt="string" defval="waiting" range="*" remark="Waybill status."/>
       </waybill>
     </waybilllist>

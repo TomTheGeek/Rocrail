@@ -58,45 +58,52 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_labShipper = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Shipper"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labShipper->Wrap( -1 );
-	fgSizer1->Add( m_labShipper, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_labShipper, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Shipper = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Shipper, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	fgSizer1->Add( m_Shipper, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_labShipperAddr = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labShipperAddr->Wrap( -1 );
-	fgSizer1->Add( m_labShipperAddr, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	m_labOrigin = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Origin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labOrigin->Wrap( -1 );
+	fgSizer1->Add( m_labOrigin, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_ShipperAddr = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_ShipperAddr, 0, wxALL|wxEXPAND, 5 );
+	m_Origin = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Origin, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_labConsignee = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Consignee"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labConsignee->Wrap( -1 );
-	fgSizer1->Add( m_labConsignee, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_labConsignee, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Consignee = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Consignee, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	fgSizer1->Add( m_Consignee, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_labConsigneeAddr = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labConsigneeAddr->Wrap( -1 );
-	fgSizer1->Add( m_labConsigneeAddr, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	m_labDestination = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Destination"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labDestination->Wrap( -1 );
+	fgSizer1->Add( m_labDestination, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_ConsigneeAddr = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_ConsigneeAddr, 0, wxALL|wxEXPAND, 5 );
+	m_Destination = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Destination, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_labCargo = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Cargo"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labCargo->Wrap( -1 );
-	fgSizer1->Add( m_labCargo, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	m_labCommodity = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Commodity"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labCommodity->Wrap( -1 );
+	fgSizer1->Add( m_labCommodity, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_Cargo = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
-	fgSizer1->Add( m_Cargo, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	m_Commodity = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+	fgSizer1->Add( m_Commodity, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_labCartype = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Car type"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labCartype->Wrap( -1 );
+	fgSizer1->Add( m_labCartype, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+	
+	m_Cartype = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Cartype, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxALL, 5 );
 	
 	bSizer4->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
-	wxString m_StatusChoices[] = { wxT("waiting"), wxT("shipping"), wxT("arrived") };
+	wxString m_StatusChoices[] = { wxT("waiting"), wxT("shipping"), wxT("delivered") };
 	int m_StatusNChoices = sizeof( m_StatusChoices ) / sizeof( wxString );
 	m_Status = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxT("Status"), wxDefaultPosition, wxDefaultSize, m_StatusNChoices, m_StatusChoices, 1, wxRA_SPECIFY_ROWS );
-	m_Status->SetSelection( 0 );
+	m_Status->SetSelection( 2 );
 	bSizer4->Add( m_Status, 0, wxALL|wxEXPAND, 5 );
 	
 	m_GeneralPanel->SetSizer( bSizer4 );

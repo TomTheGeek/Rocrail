@@ -59,26 +59,26 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_ID, 0, wxALL|wxEXPAND, 5 );
 	
-	m_labCode = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Code"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labCode->Wrap( -1 );
-	fgSizer1->Add( m_labCode, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_Code = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Code, 0, wxALL|wxEXPAND, 5 );
-	
 	m_labRoadname = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Roadname"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labRoadname->Wrap( -1 );
-	fgSizer1->Add( m_labRoadname, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_labRoadname, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Roadname = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Roadname, 0, wxALL|wxEXPAND, 5 );
+	fgSizer1->Add( m_Roadname, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_labNumber = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Number"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labNumber->Wrap( -1 );
+	fgSizer1->Add( m_labNumber, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_Number = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Number, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_labColor = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Color"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labColor->Wrap( -1 );
 	fgSizer1->Add( m_labColor, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Color = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Color, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_Color, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	m_labImageName = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Image"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labImageName->Wrap( -1 );
@@ -87,12 +87,19 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_ImageName = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_ImageName, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
+	m_labOwner = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Owner"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labOwner->Wrap( -1 );
+	fgSizer1->Add( m_labOwner, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_Owner = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Owner, 0, wxALL|wxEXPAND, 5 );
+	
 	bSizer3->Add( fgSizer1, 0, wxEXPAND, 5 );
 	
 	m_staticline1 = new wxStaticLine( m_GeneralPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer3->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	wxString m_StatusChoices[] = { wxT("unloaded"), wxT("loaded"), wxT("defunction") };
+	wxString m_StatusChoices[] = { wxT("empty"), wxT("loaded"), wxT("maintenance") };
 	int m_StatusNChoices = sizeof( m_StatusChoices ) / sizeof( wxString );
 	m_Status = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxT("Status"), wxDefaultPosition, wxDefaultSize, m_StatusNChoices, m_StatusChoices, 1, wxRA_SPECIFY_ROWS );
 	m_Status->SetSelection( 0 );
@@ -140,7 +147,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Era->SetSelection( 0 );
 	bSizer4->Add( m_Era, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_labRemark = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Remark"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labRemark = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Maintenance"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labRemark->Wrap( -1 );
 	bSizer4->Add( m_labRemark, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	

@@ -91,10 +91,10 @@ void WaybillDlg::initLabels() {
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labShipper->SetLabel( wxGetApp().getMsg( "shipper" ) );
-  m_labShipperAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labOrigin->SetLabel( wxGetApp().getMsg( "origin" ) );
   m_labConsignee->SetLabel( wxGetApp().getMsg( "consignee" ) );
-  m_labConsigneeAddr->SetLabel( wxGetApp().getMsg( "address" ) );
-  m_labCargo->SetLabel( wxGetApp().getMsg( "lading" ) );
+  m_labDestination->SetLabel( wxGetApp().getMsg( "destination" ) );
+  m_labCommodity->SetLabel( wxGetApp().getMsg( "commodity" ) );
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -180,10 +180,10 @@ void WaybillDlg::initValues() {
   // init General
   m_ID->SetValue( wxString(wWaybill.getid( m_Props ),wxConvUTF8) );
   m_Shipper->SetValue( wxString(wWaybill.getshipper( m_Props ),wxConvUTF8) );
-  m_ShipperAddr->SetValue( wxString(wWaybill.getshippertrack( m_Props ),wxConvUTF8) );
+  m_Origin->SetValue( wxString(wWaybill.getorigin( m_Props ),wxConvUTF8) );
   m_Consignee->SetValue( wxString(wWaybill.getconsignee( m_Props ),wxConvUTF8) );
-  m_ConsigneeAddr->SetValue( wxString(wWaybill.getconsigneetrack( m_Props ),wxConvUTF8) );
-  m_Cargo->SetValue( wxString(wWaybill.getcargo( m_Props ),wxConvUTF8) );
+  m_Destination->SetValue( wxString(wWaybill.getdestination( m_Props ),wxConvUTF8) );
+  m_Commodity->SetValue( wxString(wWaybill.getcommodity( m_Props ),wxConvUTF8) );
 
 }
 
@@ -199,10 +199,10 @@ void WaybillDlg::evaluate(){
   wWaybill.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
 
   wWaybill.setshipper( m_Props, m_Shipper->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setshippertrack( m_Props, m_ShipperAddr->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setorigin( m_Props, m_Origin->GetValue().mb_str(wxConvUTF8) );
   wWaybill.setconsignee( m_Props, m_Consignee->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setconsigneetrack( m_Props, m_ConsigneeAddr->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setcargo( m_Props, m_Cargo->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setdestination( m_Props, m_Destination->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setcommodity( m_Props, m_Commodity->GetValue().mb_str(wxConvUTF8) );
 
 }
 
