@@ -749,6 +749,7 @@
       <var name="locationMap" vt="iOMap"/>
       <var name="scheduleMap" vt="iOMap"/>
       <var name="actionMap" vt="iOMap"/>
+      <var name="waybillMap" vt="iOMap"/>
       <var name="muxFindDest" vt="iOMutex"/>
       <var name="fbAddresses[32][256]" vt="byte" remark="array of active feedback module addresses used to inform the digint"/>
       <var name="levelItemsMap" vt="iOMap"/>

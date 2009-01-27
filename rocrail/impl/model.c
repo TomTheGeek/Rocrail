@@ -60,6 +60,8 @@
 #include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/CarList.h"
+#include "rocrail/wrapper/public/Waybill.h"
+#include "rocrail/wrapper/public/WaybillList.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/TurntableList.h"
@@ -600,6 +602,17 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->locationMap, wLocation.getid(clone), (obj)clone );
     added = True;
   }
+  else if( StrOp.equals( wWaybill.name(), itemName ) ) {
+    iONode waybilllist = wPlan.getwaybilllist( data->model );
+    iONode clone = (iONode)item->base.clone( item );
+    if( waybilllist == NULL ) {
+      waybilllist = NodeOp.inst( wWaybillList.name(), data->model, ELEMENT_NODE );
+      NodeOp.addChild( data->model, waybilllist );
+    }
+    NodeOp.addChild( waybilllist, clone );
+    MapOp.put( data->waybillMap, wWaybill.getid(clone), (obj)clone );
+    added = True;
+  }
   else if( StrOp.equals( wSchedule.name(), itemName ) ) {
     iONode sclist = wPlan.getsclist( data->model );
     iONode clone = (iONode)item->base.clone( item );
@@ -890,6 +903,32 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       _addItem( inst, item );
     }
   }
+  else if( StrOp.equals( wWaybill.name(), name ) ) {
+    /* modify waybill... */
+    iONode waybill = NULL;
+    iONode waybilllist = wPlan.getwaybilllist( data->model );
+    if( waybilllist != NULL ) {
+      iONode node = wWaybillList.getwaybill( waybilllist );
+      while( node != NULL ) {
+        Boolean prev_id_matched = StrOp.equals( prev_id, wWaybill.getid( node ) );
+        if( StrOp.equals( wWaybill.getid( item ), wWaybill.getid( node ) ) || prev_id_matched ) {
+          NodeOp.mergeNode( node, item, True, True, False );
+          waybill = node;
+
+          /* update waybill map */
+          if( prev_id_matched ) {
+            MapOp.remove( data->waybillMap, prev_id );
+            MapOp.put( data->waybillMap, id, (obj)node );
+          }
+          break;
+        }
+        node = wWaybillList.nextwaybill( waybilllist, node );
+      }
+    }
+    if( waybill == NULL && wWaybill.getid( item ) != NULL && StrOp.len( wWaybill.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
   else if( StrOp.equals( wSchedule.name(), name ) ) {
     /* modify location... */
     iONode schedule = NULL;
@@ -1163,9 +1202,30 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       while( node != NULL ) {
         if( StrOp.equals( wLocation.getid( item ), wLocation.getid( node ) ) ) {
           NodeOp.removeChild( locationlist, node );
+          MapOp.remove( o->locationMap, wLocation.getid( item ) );
+          node->base.del( node );
           removed = True;
+          break;
         }
         node = wLocationList.nextlocation( locationlist, node );
+      };
+    }
+  }
+  else if( StrOp.equals( wWaybill.name(), name ) ) {
+    iONode waybill = NULL;
+    iONode waybilllist = wPlan.getwaybilllist( o->model );
+    if( waybilllist != NULL ) {
+      iONode node = wWaybillList.getwaybill( waybilllist );
+      while( node != NULL ) {
+        if( StrOp.equals( wWaybill.getid( item ), wWaybill.getid( node ) ) ) {
+          NodeOp.removeChild( waybilllist, node );
+          MapOp.remove( o->waybillMap, wWaybill.getid( item ) );
+          node->base.del( node );
+          removed = True;
+          break;
+
+        }
+        node = wWaybillList.nextwaybill( waybilllist, node );
       };
     }
   }
@@ -1177,7 +1237,10 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       while( node != NULL ) {
         if( StrOp.equals( wSchedule.getid( item ), wSchedule.getid( node ) ) ) {
           NodeOp.removeChild( sclist, node );
+          MapOp.remove( o->scheduleMap, wSchedule.getid( item ) );
+          node->base.del( node );
           removed = True;
+          break;
         }
         node = wScheduleList.nextsc( sclist, node );
       };
@@ -1895,6 +1958,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->textMap    , wTextList.name(), wText.name(), (item_inst)TextOp.inst, NULL  );
   _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, NULL );
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
+  _createMap( o, o->waybillMap , wWaybillList.name(), wWaybill.name(), NULL, NULL );
   _createMap( o, o->locationMap, wLocationList.name(), wLocation.name(), NULL, NULL );
   _createMap( o, o->scheduleMap, wScheduleList.name(), wSchedule.name(), NULL, NULL );
 
@@ -2943,6 +3007,7 @@ static iOModel _inst( const char* fileName ) {
 
   data->locMap      = MapOp.inst();
   data->carMap      = MapOp.inst();
+  data->waybillMap  = MapOp.inst();
   data->switchMap   = MapOp.inst();
   data->signalMap   = MapOp.inst();
   data->outputMap   = MapOp.inst();
