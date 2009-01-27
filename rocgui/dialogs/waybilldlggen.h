@@ -22,6 +22,7 @@
 #include <wx/icon.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/combobox.h>
 #include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -48,11 +49,11 @@ class waybillgen : public wxDialog
 		wxStaticText* m_labShipper;
 		wxTextCtrl* m_Shipper;
 		wxStaticText* m_labOrigin;
-		wxTextCtrl* m_Origin;
+		wxComboBox* m_Origin;
 		wxStaticText* m_labConsignee;
 		wxTextCtrl* m_Consignee;
 		wxStaticText* m_labDestination;
-		wxTextCtrl* m_Destination;
+		wxComboBox* m_Destination;
 		wxStaticText* m_labCommodity;
 		wxTextCtrl* m_Commodity;
 		wxStaticText* m_labCartype;

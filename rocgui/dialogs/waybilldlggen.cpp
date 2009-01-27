@@ -67,8 +67,8 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_labOrigin->Wrap( -1 );
 	fgSizer1->Add( m_labOrigin, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_Origin = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Origin, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	m_Origin = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer1->Add( m_Origin, 0, wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND, 5 );
 	
 	m_labConsignee = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Consignee"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labConsignee->Wrap( -1 );
@@ -81,8 +81,8 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_labDestination->Wrap( -1 );
 	fgSizer1->Add( m_labDestination, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_Destination = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Destination, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	m_Destination = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer1->Add( m_Destination, 0, wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND, 5 );
 	
 	m_labCommodity = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Commodity"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labCommodity->Wrap( -1 );
