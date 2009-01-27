@@ -285,10 +285,14 @@ void update_NMRAPacketPool(int adr, char *packet, int packet_size,
       found=True;
 
   MutexOp.wait(nmra_pktpool_mutex);
-  memcpy(NMRAPacketPool.packets[adr].packet,packet,packet_size);
-  NMRAPacketPool.packets[adr].packet_size=packet_size;
-  memcpy(NMRAPacketPool.packets[adr].fx_packet,fx_packet,fx_packet_size);
-  NMRAPacketPool.packets[adr].fx_packet_size=fx_packet_size;
+  if( packet_size > 0 ) {
+    memcpy(NMRAPacketPool.packets[adr].packet,packet,packet_size);
+    NMRAPacketPool.packets[adr].packet_size=packet_size;
+  }
+  if( fx_packet_size > 0 ) {
+    memcpy(NMRAPacketPool.packets[adr].fx_packet,fx_packet,fx_packet_size);
+    NMRAPacketPool.packets[adr].fx_packet_size=fx_packet_size;
+  }
   MutexOp.post(nmra_pktpool_mutex);
 
   if (NMRAPacketPool.NrOfKnownAdresses==1 &&
@@ -428,7 +432,7 @@ Boolean send_packet(iOSerial serial, int addr, char *packet, int packet_size, in
         return False;
       SerialOp.waitMM(serial,end38K+i*100+(packet_size*208),end38K+i*100);
     }
-    
+
     SerialOp.setSerialMode(serial,mm);
     for (i=0; i<3; i++) {
       if(!SerialOp.write(serial,packet,packet_size))
@@ -438,7 +442,7 @@ Boolean send_packet(iOSerial serial, int addr, char *packet, int packet_size, in
         return False;
       SerialOp.waitMM(serial,end38K+i*200+(packet_size*208),end38K+i*200);
     }
-    
+
     break;
   case QNBACCPKT:
   case QNBLOCOPKT:
