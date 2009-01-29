@@ -1061,7 +1061,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuControl->AppendSeparator();
 
   wxMenuItem *opctrl_menuControl = new wxMenuItem(menuControl, ME_OperatorDlg, wxGetApp().getMenu("operator"), wxGetApp().getTip("operator") );
-  opctrl_menuControl->SetBitmap(wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG));
+  opctrl_menuControl->SetBitmap(wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG));
   menuControl->Append(opctrl_menuControl);
 
   menuControl->AppendSeparator();
@@ -1237,6 +1237,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   toolBar->AddSeparator();
 
+  toolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
   toolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
   toolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
   toolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
