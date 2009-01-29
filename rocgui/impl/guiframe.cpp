@@ -60,6 +60,7 @@
 #include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/cardlg.h"
 #include "rocgui/dialogs/waybilldlg.h"
+#include "rocgui/dialogs/operatordlg.h"
 #include "rocgui/dialogs/locseldlg.h"
 #include "rocgui/dialogs/loccontroldlg.h"
 #include "rocgui/dialogs/switchdialog.h"
@@ -207,6 +208,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Survey         , RocGuiFrame::OnService)
     EVT_MENU( ME_MIC            , RocGuiFrame::OnMIC)
     EVT_MENU( ME_LcDlg          , RocGuiFrame::OnLcDlg)
+    EVT_MENU( ME_OperatorDlg    , RocGuiFrame::OnOperatorDlg)
     EVT_MENU( ME_SwDlg          , RocGuiFrame::OnSwDlg)
     EVT_MENU( ME_RouteDlg       , RocGuiFrame::OnRouteDlg)
     EVT_MENU( ME_Connect        , RocGuiFrame::OnConnect)
@@ -1056,6 +1058,12 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuControl->Append(ME_InitField, wxGetApp().getMenu("initfield"), wxGetApp().getTip("initfield") );
   menuControl->AppendSeparator();
   menuControl->Append(ME_TxShortIDs, wxGetApp().getMenu("txshortids"), wxGetApp().getTip("txshortids") );
+  menuControl->AppendSeparator();
+
+  wxMenuItem *opctrl_menuControl = new wxMenuItem(menuControl, ME_OperatorDlg, wxGetApp().getMenu("operator"), wxGetApp().getTip("operator") );
+  opctrl_menuControl->SetBitmap(wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG));
+  menuControl->Append(opctrl_menuControl);
+
   menuControl->AppendSeparator();
 
   wxMenuItem *mic_menuControl = new wxMenuItem(menuControl, ME_MIC, wxGetApp().getMenu("mic"), wxGetApp().getTip("mic") );
@@ -2509,6 +2517,11 @@ void RocGuiFrame::OnBug(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {
   wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_feature"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
+  OperatorDlg* dlg = new OperatorDlg(this, NULL);
+  dlg->Show(TRUE);
 }
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){

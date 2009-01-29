@@ -23,6 +23,7 @@
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/combobox.h>
 #include <wx/statline.h>
 #include <wx/radiobox.h>
 #include <wx/spinctrl.h>
@@ -50,6 +51,8 @@ class cardlggen : public wxDialog
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
+		wxStaticText* m_labLocation;
+		wxComboBox* m_Location;
 		wxStaticText* m_labRoadname;
 		wxTextCtrl* m_Roadname;
 		wxStaticText* m_labNumber;

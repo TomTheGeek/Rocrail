@@ -80,6 +80,7 @@ public:
   void OnFeature(wxCommandEvent& event);
   void OnService(wxCommandEvent& event);
   void OnLcDlg(wxCommandEvent& event);
+  void OnOperatorDlg(wxCommandEvent& event);
   void OnMIC(wxCommandEvent& event);
   void OnSwDlg(wxCommandEvent& event);
   void OnRouteDlg(wxCommandEvent& event);
@@ -300,6 +301,7 @@ enum
     ME_Update,
     ME_Help,
     ME_LcDlg,
+    ME_OperatorDlg,
     ME_MIC,
     ME_SwDlg,
     ME_RouteDlg,

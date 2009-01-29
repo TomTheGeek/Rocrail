@@ -54,10 +54,17 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_labID = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("ID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labID->Wrap( -1 );
-	fgSizer1->Add( m_labID, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer1->Add( m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_ID, 0, wxALL|wxEXPAND, 5 );
+	fgSizer1->Add( m_ID, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_labLocation = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Location"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labLocation->Wrap( -1 );
+	fgSizer1->Add( m_labLocation, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_Location = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer1->Add( m_Location, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_labRoadname = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Roadname"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labRoadname->Wrap( -1 );
