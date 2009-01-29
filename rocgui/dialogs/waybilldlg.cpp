@@ -95,6 +95,10 @@ void WaybillDlg::initLabels() {
   m_labConsignee->SetLabel( wxGetApp().getMsg( "consignee" ) );
   m_labDestination->SetLabel( wxGetApp().getMsg( "destination" ) );
   m_labCommodity->SetLabel( wxGetApp().getMsg( "commodity" ) );
+  m_Status->SetLabel( wxGetApp().getMsg( "status" ) );
+  m_Status->SetString( 0, wxGetApp().getMsg( "waiting" ) );
+  m_Status->SetString( 1, wxGetApp().getMsg( "shipping" ) );
+  m_Status->SetString( 2, wxGetApp().getMsg( "delivered" ) );
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -185,6 +189,14 @@ void WaybillDlg::initValues() {
   m_Destination->SetValue( wxString(wWaybill.getdestination( m_Props ),wxConvUTF8) );
   m_Commodity->SetValue( wxString(wWaybill.getcommodity( m_Props ),wxConvUTF8) );
 
+  // init Status
+  if( StrOp.equals( wWaybill.status_waiting, wWaybill.getstatus( m_Props) ) )
+    m_Status->SetSelection(0);
+  else if( StrOp.equals( wWaybill.status_shipping, wWaybill.getstatus( m_Props) ) )
+    m_Status->SetSelection(1);
+  else
+    m_Status->SetSelection(2);
+
 }
 
 
@@ -203,6 +215,13 @@ void WaybillDlg::evaluate(){
   wWaybill.setconsignee( m_Props, m_Consignee->GetValue().mb_str(wxConvUTF8) );
   wWaybill.setdestination( m_Props, m_Destination->GetValue().mb_str(wxConvUTF8) );
   wWaybill.setcommodity( m_Props, m_Commodity->GetValue().mb_str(wxConvUTF8) );
+
+  if( m_Status->GetSelection() == 0 )
+    wWaybill.setstatus( m_Props, wWaybill.status_waiting );
+  else if( m_Status->GetSelection() == 1 )
+    wWaybill.setstatus( m_Props, wWaybill.status_shipping );
+  else
+    wWaybill.setstatus( m_Props, wWaybill.status_delivered );
 
 }
 

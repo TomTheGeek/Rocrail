@@ -223,6 +223,14 @@ void CarDlg::initValues() {
   m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
   m_Era->SetSelection( wCar.getera( m_Props ) );
 
+  // init Status
+  if( StrOp.equals( wCar.status_empty, wCar.getstatus( m_Props) ) )
+    m_Status->SetSelection(0);
+  if( StrOp.equals( wCar.status_loaded, wCar.getstatus( m_Props) ) )
+    m_Status->SetSelection(1);
+  else
+    m_Status->SetSelection(2);
+
   // init Details
   if( StrOp.equals( wCar.cartype_freight, wCar.gettype( m_Props) ) )
     m_Type->SetSelection(0);
@@ -251,6 +259,18 @@ void CarDlg::evaluate(){
   wCar.setroadname( m_Props, m_Roadname->GetValue().mb_str(wxConvUTF8) );
   wCar.setimage( m_Props, m_ImageName->GetValue().mb_str(wxConvUTF8) );
   wCar.setera( m_Props, m_Era->GetSelection() );
+
+  m_Status->SetLabel( wxGetApp().getMsg( "status" ) );
+  m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
+  m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
+  m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
+
+  if( m_Status->GetSelection() == 0 )
+    wCar.setstatus( m_Props, wCar.status_empty );
+  else if( m_Status->GetSelection() == 1 )
+    wCar.setstatus( m_Props, wCar.status_loaded );
+  else
+    wCar.setstatus( m_Props, wCar.status_maintenance );
 
   // evaluate Details
   if( m_Type->GetSelection() == 0 )
