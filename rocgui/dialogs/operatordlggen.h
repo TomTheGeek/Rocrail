@@ -54,6 +54,7 @@ class operatordlggen : public wxDialog
 		wxButton* m_AddCar;
 		wxButton* m_LeaveCar;
 		wxButton* m_ShowCar;
+		wxButton* m_ShowWaybill;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Apply;

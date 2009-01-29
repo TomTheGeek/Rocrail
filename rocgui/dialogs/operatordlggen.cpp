@@ -69,7 +69,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_LocoPanel->SetSizer( bSizer4 );
 	m_LocoPanel->Layout();
 	bSizer4->Fit( m_LocoPanel );
-	m_OperatorBook->AddPage( m_LocoPanel, wxT("Locomotive"), true );
+	m_OperatorBook->AddPage( m_LocoPanel, wxT("Locomotive"), false );
 	m_ConsistPanel = new wxPanel( m_OperatorBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -84,20 +84,23 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_AddCar = new wxButton( m_ConsistPanel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_AddCar, 0, wxALL, 5 );
+	bSizer3->Add( m_AddCar, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_LeaveCar = new wxButton( m_ConsistPanel, wxID_ANY, wxT("Leave"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_LeaveCar, 0, wxALL, 5 );
+	bSizer3->Add( m_LeaveCar, 0, wxTOP|wxBOTTOM, 5 );
 	
-	m_ShowCar = new wxButton( m_ConsistPanel, wxID_ANY, wxT("Show"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_ShowCar, 0, wxALL, 5 );
+	m_ShowCar = new wxButton( m_ConsistPanel, wxID_ANY, wxT("Car card"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_ShowCar, 0, wxTOP|wxBOTTOM, 5 );
+	
+	m_ShowWaybill = new wxButton( m_ConsistPanel, wxID_ANY, wxT("Waybill"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_ShowWaybill, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	bSizer2->Add( bSizer3, 0, wxEXPAND, 5 );
 	
 	m_ConsistPanel->SetSizer( bSizer2 );
 	m_ConsistPanel->Layout();
 	bSizer2->Fit( m_ConsistPanel );
-	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), false );
+	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), true );
 	
 	bSizer1->Add( m_OperatorBook, 1, wxEXPAND | wxALL, 5 );
 	
