@@ -237,7 +237,8 @@ void CarDlg::initValues() {
   else
     m_Type->SetSelection(1);
 
-  m_Subtype->SetValue( wxString(wCar.getsubtype( m_Props ),wxConvUTF8) );
+  initSubType();
+
   m_Length->SetValue( wCar.getlen( m_Props ) );
   m_Remark->SetValue( wxString(wCar.getremark( m_Props ),wxConvUTF8) );
 
@@ -277,7 +278,8 @@ void CarDlg::evaluate(){
     wCar.settype( m_Props, wCar.cartype_freight );
   else
     wCar.settype( m_Props, wCar.cartype_passenger );
-  wCar.setsubtype( m_Props, m_Subtype->GetValue().mb_str(wxConvUTF8) );
+
+  wCar.setsubtype( m_Props, (char*)m_SubType->GetClientData( m_SubType->GetSelection()) );
   wCar.setlen( m_Props, m_Length->GetValue() );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
 
@@ -371,8 +373,40 @@ void CarDlg::onDeleteCar( wxCommandEvent& event ){
 }
 
 
+void CarDlg::initSubType(){
+  m_SubType->Clear();
+
+  if( m_Type->GetSelection() == 0 ) {
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_boxcar ), (void*)wCar.freight_boxcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_gondola ), (void*)wCar.freight_gondola );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_flatcar ), (void*)wCar.freight_flatcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_reefer ), (void*)wCar.freight_reefer );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_stockcar ), (void*)wCar.freight_stockcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_tankcar ), (void*)wCar.freight_tankcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_wellcar ), (void*)wCar.freight_wellcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_hopper ), (void*)wCar.freight_hopper );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_caboose ), (void*)wCar.freight_caboose );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_autorack ), (void*)wCar.freight_autorack );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_autocarrier ), (void*)wCar.freight_autocarrier );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_logdumpcar ), (void*)wCar.freight_logdumpcar );
+    m_SubType->Append( wxGetApp().getMsg( wCar.freight_coilcar ), (void*)wCar.freight_coilcar );
+  }
+  else {
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_coach ), (void*)wCar.passenger_coach );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_lounge ), (void*)wCar.passenger_lounge );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_dome ), (void*)wCar.passenger_dome );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_express ), (void*)wCar.passenger_express );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_dinner ), (void*)wCar.passenger_dinner );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_sleeper ), (void*)wCar.passenger_sleeper );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_baggage ), (void*)wCar.passenger_baggage );
+    m_SubType->Append( wxGetApp().getMsg( wCar.passenger_postoffice ), (void*)wCar.passenger_postoffice );
+  }
+  m_SubType->SetStringSelection( wxGetApp().getMsg( wCar.getsubtype( m_Props ) ) );
+}
+
+
 void CarDlg::onTypeSelect( wxCommandEvent& event ){
-  event.Skip();
+  initSubType();
 }
 
 

@@ -115,7 +115,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_GeneralPanel->SetSizer( bSizer3 );
 	m_GeneralPanel->Layout();
 	bSizer3->Fit( m_GeneralPanel );
-	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), true );
+	m_CarBook->AddPage( m_GeneralPanel, wxT("General"), false );
 	m_DetailsPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -136,8 +136,8 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_labSubtype->Wrap( -1 );
 	fgSizer3->Add( m_labSubtype, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
-	m_Subtype = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_Subtype, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	m_SubType = new wxComboBox( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer3->Add( m_SubType, 0, wxALL|wxEXPAND, 5 );
 	
 	m_labLength = new wxStaticText( m_DetailsPanel, wxID_ANY, wxT("Length"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labLength->Wrap( -1 );
@@ -164,7 +164,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DetailsPanel->SetSizer( bSizer4 );
 	m_DetailsPanel->Layout();
 	bSizer4->Fit( m_DetailsPanel );
-	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), false );
+	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), true );
 	
 	bSizer1->Add( m_CarBook, 1, wxEXPAND | wxALL, 5 );
 	

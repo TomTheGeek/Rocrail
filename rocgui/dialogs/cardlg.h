@@ -41,6 +41,7 @@ class CarDlg : public cardlggen
   void evaluate();
   void initIndex();
   void initValues();
+  void initSubType();
 
 public:
 	/** Constructor */
