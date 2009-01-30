@@ -1390,8 +1390,27 @@
         <const name="cartype_freight" vt="string" val="freight"/>
         <const name="cartype_passenger" vt="string" val="freight"/>
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
-        <const name="subtype_boxcar" vt="string" val="boxcar"/>
-        <const name="subtype_gondola" vt="string" val="gondola"/>
+        <const name="freight_boxcar" vt="string" val="boxcar"/>
+        <const name="freight_gondola" vt="string" val="gondola"/>
+        <const name="freight_flatcar" vt="string" val="flatcar"/>
+        <const name="freight_reefer" vt="string" val="reefer"/>
+        <const name="freight_stockcar" vt="string" val="stockcar"/>
+        <const name="freight_tankcar" vt="string" val="tankcar"/>
+        <const name="freight_wellcar" vt="string" val="wellcar"/>
+        <const name="freight_hopper" vt="string" val="hopper"/>
+        <const name="freight_caboose" vt="string" val="caboose"/>
+        <const name="freight_autorack" vt="string" val="autorack"/>
+        <const name="freight_autocarrier" vt="string" val="autocarrier"/>
+        <const name="freight_logdumpcar" vt="string" val="logdumpcar"/>
+        <const name="freight_coilcar" vt="string" val="coilcar"/>
+        <const name="passenger_coach" vt="string" val="coach"/>
+        <const name="passenger_lounge" vt="string" val="lounge"/>
+        <const name="passenger_dome" vt="string" val="dome"/>
+        <const name="passenger_express" vt="string" val="express"/>
+        <const name="passenger_dinner" vt="string" val="dinner"/>
+        <const name="passenger_sleeper" vt="string" val="sleeper"/>
+        <const name="passenger_baggage" vt="string" val="baggage"/>
+        <const name="passenger_postoffice" vt="string" val="postoffice"/>
         <var name="subtype" vt="string" defval="" range="*" remark="Car sub type like Boxcar or gondola."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
         <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
