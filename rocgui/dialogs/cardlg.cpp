@@ -226,7 +226,7 @@ void CarDlg::initValues() {
   // init Status
   if( StrOp.equals( wCar.status_empty, wCar.getstatus( m_Props) ) )
     m_Status->SetSelection(0);
-  if( StrOp.equals( wCar.status_loaded, wCar.getstatus( m_Props) ) )
+  else if( StrOp.equals( wCar.status_loaded, wCar.getstatus( m_Props) ) )
     m_Status->SetSelection(1);
   else
     m_Status->SetSelection(2);
