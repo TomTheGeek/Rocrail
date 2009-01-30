@@ -922,10 +922,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
   }
 
   if( !StrOp.startsWith(id, wRoute.routelock) && wSelTab.ismanager(data->props) ) {
-    iIBlockBase block = __getActiveTrackBlock(inst);
-
-    if( block == NULL )
-      block = __getBlock4Loc(inst, id);
+    iIBlockBase block = __getBlock4Loc(inst, id);
 
       /* dispatch to active tracke block */
     if( block != NULL ) {
