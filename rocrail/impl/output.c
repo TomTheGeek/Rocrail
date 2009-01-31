@@ -177,13 +177,15 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
                wOutput.getid( o->props ), state );
 
   __checkActions(inst, state );
+  /* remember state */
+  wOutput.setstate( o->props, state );
 
   if( iid != NULL )
     wOutput.setiid( nodeA, iid );
 
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
 
-  {
+  if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
     wOutput.setaddr( nodeA, wOutput.getaddr( o->props ) );
     wOutput.setport( nodeA, wOutput.getport( o->props ) );
     wOutput.setgate( nodeA, wOutput.getgate( o->props ) );
@@ -193,6 +195,10 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
                      wOutput.getid( o->props ) );
       return False;
     }
+  }
+  else {
+    /* no longer needed */
+    NodeOp.base.del(nodeA);
   }
 
   /* Broadcast to clients. Node6 */

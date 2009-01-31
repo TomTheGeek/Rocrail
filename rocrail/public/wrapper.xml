@@ -898,7 +898,9 @@
         <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
         
+        <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <const name="on" vt="string" val="on"/>
+        <const name="active" vt="string" val="active"/>
         <const name="off" vt="string" val="off"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
