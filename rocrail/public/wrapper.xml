@@ -1417,7 +1417,7 @@
         <const name="status_empty" vt="string" val="empty"/>
         <const name="status_loaded" vt="string" val="loaded"/>
         <const name="status_maintenance" vt="string" val="maintenance"/>
-        <var name="status" vt="string" defval="unloaded" range="*" remark="Car status."/>
+        <var name="status" vt="string" defval="" range="*" remark="Car status."/>
       </car>
     </carlist>
     <waybilllist cardinality="1" remark="Waybill table" wrappername="WaybillList">
@@ -1472,6 +1472,7 @@
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
         <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
         <var name="timed" vt="bool" defval="false" remark="Use time for activation."/>
+        <var name="timer" vt="int" defval="0" remark="Timer in ms before activation this action."/>
         <var name="oid" vt="string" defval="NULL" range="*" remark="output id"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="on, off or an external program or script to be executed"/>
         <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>

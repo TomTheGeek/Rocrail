@@ -176,19 +176,15 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
 
 
 /**  */
-static void _exec( struct OAction* inst, iONode actionctrl ) {
+static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   iOActionData data = Data(inst);
   iOModel model = AppOp.getModel();
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action %s [%s-%s:%s] ",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action execution %s [%s-%s:%s] ",
       wAction.getid(data->action),
       wAction.gettype(data->action),
       wAction.getoid(data->action),
       wAction.getcmd(data->action) );
-
-  if( !__checkConditions(inst, actionctrl) ) {
-    return;
-  }
 
   /* output action */
   if( StrOp.equals( wOutput.name(), wAction.gettype( data->action ) ) ) {
@@ -339,6 +335,50 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
 
 }
 
+
+static void __timerThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOAction action = (iOAction)ThreadOp.getParm( th );
+  iOActionData data = Data(action);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer started %s [%dms] ",
+      wAction.getid(data->action), wAction.gettimer(data->action) );
+
+  ThreadOp.sleep(wAction.gettimer(data->action));
+  __executeAction( action, data->actionctrl );
+  data->timerthread = NULL;
+}
+
+
+static void _exec( struct OAction* inst, iONode actionctrl ) {
+  iOActionData data = Data(inst);
+  iOModel model = AppOp.getModel();
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action %s [%s-%s:%s] ",
+      wAction.getid(data->action),
+      wAction.gettype(data->action),
+      wAction.getoid(data->action),
+      wAction.getcmd(data->action) );
+
+  if( !__checkConditions(inst, actionctrl) ) {
+    return;
+  }
+
+  if( wAction.gettimer(data->action) == 0 ) {
+    __executeAction( inst, actionctrl );
+  }
+  else {
+    if( data->timerthread == NULL ) {
+      /* start the timer thread */
+      data->actionctrl = actionctrl;
+      data->timerthread = ThreadOp.inst( NULL, &__timerThread, inst );
+      ThreadOp.start( data->timerthread );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "action timer for [%s] is already active.", wAction.getid(data->action) );
+    }
+  }
+}
 
 static void _tick( iOAction inst ) {
   iOActionData data = Data(inst);

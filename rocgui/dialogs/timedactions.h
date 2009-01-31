@@ -145,6 +145,8 @@ public:
     wxTextCtrl* m_Parameter;
     wxStaticText* m_labDuration;
     wxSpinCtrl* m_ActTime;
+    wxStaticText* m_labTimer;
+    wxSpinCtrl* m_Timer;
     wxCheckBox* m_Timed;
     wxStaticText* m_labHour;
     wxSpinCtrl* m_Hour;

@@ -1414,7 +1414,7 @@
   </object>
 
 
-  <object name="Action" use="node">
+  <object name="Action" use="node,thread">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="action node"/>
     </fun>
@@ -1431,6 +1431,8 @@
     </fun>
     <data>
       <var name="action" vt="iONode"/>
+      <var name="timerthread" vt="iOThread"/>
+      <var name="actionctrl" vt="iONode"/>
     </data>
   </object>
 
