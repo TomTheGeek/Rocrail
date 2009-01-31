@@ -263,6 +263,10 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     }
   }
 
+  if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) )
+    Lower();
+
+
 
   sizeToScale();
 }
@@ -567,7 +571,8 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   int x;
   int y;
 
-  Raise();
+  if( !StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) )
+    Raise();
 
   wxGetMousePosition( &x, &y );
 
