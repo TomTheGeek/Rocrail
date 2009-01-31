@@ -263,7 +263,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     }
   }
 
-  if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) )
+  if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
     Lower();
 
 
@@ -413,6 +413,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
     pen.SetWidth(1);
     dc.SetPen(pen);
     m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID() );
+
+    if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
+      Lower();
 
   }
   else {
