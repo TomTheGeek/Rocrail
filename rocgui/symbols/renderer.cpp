@@ -435,6 +435,8 @@ void SymbolRenderer::initSym() {
       m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
       StrOp.fmtb( key, outputtype::button_on, wOutput.getsvgtype( m_Props ) );
       m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, outputtype::button_active, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
     }
   }
   else if( StrOp.equals( wBlock.name(), nodeName ) ) {
@@ -1400,7 +1402,11 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, const 
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s", wSignal.getid( m_Props ), state );
 
   // SVG Symbol:
-  if( m_SvgSym2!=NULL && StrOp.equals( state, wOutput.on ) ) {
+  if( m_SvgSym3!=NULL && StrOp.equals( state, wOutput.active ) ) {
+    drawSvgSym(dc, m_SvgSym3, ori);
+    return;
+  }
+  else if( m_SvgSym2!=NULL && StrOp.equals( state, wOutput.on ) ) {
     drawSvgSym(dc, m_SvgSym2, ori);
     return;
   }

@@ -272,6 +272,7 @@ namespace signaltype {
 namespace outputtype {
   static const char* button_on  = "button-%d-on.svg";
   static const char* button_off = "button-%d-off.svg";
+  static const char* button_active = "button-%d-active.svg";
 
   static const int i_button = 1;
 }
