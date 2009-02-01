@@ -176,7 +176,6 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s",
                wOutput.getid( o->props ), state );
 
-  __checkActions(inst, state );
   /* remember state */
   wOutput.setstate( o->props, state );
 
@@ -201,6 +200,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
     NodeOp.base.del(nodeA);
   }
 
+
   /* Broadcast to clients. Node6 */
   if( update ) {
     iONode nodeF = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
@@ -211,6 +211,8 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
   }
 
+  __checkActions(inst, state );
+  
   return True;
 }
 
