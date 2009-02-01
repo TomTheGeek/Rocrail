@@ -416,6 +416,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
       Lower();
+    else
+      Raise();
 
   }
   else {
