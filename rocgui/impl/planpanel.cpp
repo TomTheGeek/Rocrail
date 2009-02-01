@@ -1216,7 +1216,7 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   for( int i = 0; i < cnt; i++ ) {
     iONode child = NodeOp.getChild( node, i );
     addItem( child, false );
-    wxGetApp().Yield();
+    //wxGetApp().Yield();
   }
   char* text = StrOp.fmt( "%d items", m_ChildTable->GetCount() );
   wxGetApp().getFrame()->setInfoText( text );
@@ -1413,6 +1413,24 @@ static void initPlan( PlanPanel* o ) {
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Title = %s", wPlan.gettitle( model ) );
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level = %d(%d)", o->m_Z, wZLevel.getz(o->m_zLevel) );
 
+  if( wPlan.gettxlist( model ) != NULL ) {
+    iONode images = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
+    iONode texts  = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
+
+    iONode txlist = wPlan.gettxlist( model );
+    int cnt = NodeOp.getChildCnt(txlist);
+    for( int i = 0; i < cnt; i++ ) {
+      iONode txt = NodeOp.getChild( txlist, i );
+      if( StrOp.endsWithi(wText.gettext(txt), ".png") )
+        NodeOp.addChild(images, txt);
+      else
+        NodeOp.addChild(texts, txt);
+
+    }
+    o->addItems( images );
+    o->addItems( texts );
+  }
+
   o->addItems( wPlan.gettklist( model ) );
   o->addItems( wPlan.getbklist( model ) );
   o->addItems( wPlan.getfblist( model ) );
@@ -1421,7 +1439,6 @@ static void initPlan( PlanPanel* o ) {
   o->addItems( wPlan.getsglist( model ) );
   o->addItems( wPlan.getttlist( model ) );
   o->addItems( wPlan.getseltablist( model ) );
-  o->addItems( wPlan.gettxlist( model ) );
 
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.fstat );
