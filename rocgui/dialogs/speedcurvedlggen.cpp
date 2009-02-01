@@ -22,11 +22,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl1 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer3->Add( m_textCtrl1, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step15 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer3->Add( m_Step15, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider1 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer3->Add( m_slider1, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep15 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer3->Add( m_SliderStep15, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText1 = new wxStaticText( this, wxID_ANY, wxT("15"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1->Wrap( -1 );
@@ -37,11 +37,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer31;
 	bSizer31 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl11 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer31->Add( m_textCtrl11, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step16 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer31->Add( m_Step16, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider11 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer31->Add( m_slider11, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep16 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer31->Add( m_SliderStep16, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("16"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText11->Wrap( -1 );
@@ -52,11 +52,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl12 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer32->Add( m_textCtrl12, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step17 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer32->Add( m_Step17, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider12 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer32->Add( m_slider12, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep17 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer32->Add( m_SliderStep17, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText12 = new wxStaticText( this, wxID_ANY, wxT("17"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12->Wrap( -1 );
@@ -67,11 +67,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer33;
 	bSizer33 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl13 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer33->Add( m_textCtrl13, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step18 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer33->Add( m_Step18, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider13 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer33->Add( m_slider13, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep18 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer33->Add( m_SliderStep18, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText13 = new wxStaticText( this, wxID_ANY, wxT("18"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText13->Wrap( -1 );
@@ -82,11 +82,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer34;
 	bSizer34 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl14 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer34->Add( m_textCtrl14, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step19 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer34->Add( m_Step19, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider14 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer34->Add( m_slider14, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep19 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer34->Add( m_SliderStep19, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText14 = new wxStaticText( this, wxID_ANY, wxT("19"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText14->Wrap( -1 );
@@ -97,11 +97,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer35;
 	bSizer35 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl15 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer35->Add( m_textCtrl15, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step20 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer35->Add( m_Step20, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider15 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer35->Add( m_slider15, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep20 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer35->Add( m_SliderStep20, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText15 = new wxStaticText( this, wxID_ANY, wxT("20"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText15->Wrap( -1 );
@@ -112,11 +112,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer36;
 	bSizer36 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl16 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer36->Add( m_textCtrl16, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step21 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer36->Add( m_Step21, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider16 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer36->Add( m_slider16, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep21 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer36->Add( m_SliderStep21, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText16 = new wxStaticText( this, wxID_ANY, wxT("21"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText16->Wrap( -1 );
@@ -127,11 +127,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer37;
 	bSizer37 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl17 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer37->Add( m_textCtrl17, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step22 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer37->Add( m_Step22, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider17 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer37->Add( m_slider17, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep22 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer37->Add( m_SliderStep22, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("22"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText17->Wrap( -1 );
@@ -142,11 +142,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer38;
 	bSizer38 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl18 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer38->Add( m_textCtrl18, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step23 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer38->Add( m_Step23, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider18 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer38->Add( m_slider18, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep23 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer38->Add( m_SliderStep23, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText18 = new wxStaticText( this, wxID_ANY, wxT("23"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText18->Wrap( -1 );
@@ -157,11 +157,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer39;
 	bSizer39 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl19 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer39->Add( m_textCtrl19, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step24 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer39->Add( m_Step24, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider19 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer39->Add( m_slider19, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep24 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer39->Add( m_SliderStep24, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText19 = new wxStaticText( this, wxID_ANY, wxT("24"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
@@ -172,11 +172,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer310;
 	bSizer310 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl110 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer310->Add( m_textCtrl110, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step25 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer310->Add( m_Step25, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider110 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer310->Add( m_slider110, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep25 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer310->Add( m_SliderStep25, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText110 = new wxStaticText( this, wxID_ANY, wxT("25"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText110->Wrap( -1 );
@@ -187,11 +187,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer311;
 	bSizer311 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl111 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer311->Add( m_textCtrl111, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step26 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer311->Add( m_Step26, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider111 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer311->Add( m_slider111, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep26 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer311->Add( m_SliderStep26, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText111 = new wxStaticText( this, wxID_ANY, wxT("26"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText111->Wrap( -1 );
@@ -202,11 +202,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer312;
 	bSizer312 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl112 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer312->Add( m_textCtrl112, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step27 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer312->Add( m_Step27, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider112 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer312->Add( m_slider112, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep27 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer312->Add( m_SliderStep27, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText112 = new wxStaticText( this, wxID_ANY, wxT("27"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText112->Wrap( -1 );
@@ -217,11 +217,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer313;
 	bSizer313 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl113 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer313->Add( m_textCtrl113, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step28 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer313->Add( m_Step28, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider113 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer313->Add( m_slider113, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep28 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer313->Add( m_SliderStep28, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText113 = new wxStaticText( this, wxID_ANY, wxT("28"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText113->Wrap( -1 );
@@ -237,11 +237,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer314;
 	bSizer314 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl114 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer314->Add( m_textCtrl114, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step1 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer314->Add( m_Step1, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider114 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer314->Add( m_slider114, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep1 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer314->Add( m_SliderStep1, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText114 = new wxStaticText( this, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText114->Wrap( -1 );
@@ -252,11 +252,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer315;
 	bSizer315 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl115 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer315->Add( m_textCtrl115, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step2 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer315->Add( m_Step2, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider115 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer315->Add( m_slider115, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep2 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer315->Add( m_SliderStep2, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText115 = new wxStaticText( this, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText115->Wrap( -1 );
@@ -267,11 +267,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer321;
 	bSizer321 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl121 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer321->Add( m_textCtrl121, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step3 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer321->Add( m_Step3, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider121 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer321->Add( m_slider121, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep3 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer321->Add( m_SliderStep3, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText121 = new wxStaticText( this, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText121->Wrap( -1 );
@@ -282,11 +282,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer331;
 	bSizer331 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl131 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer331->Add( m_textCtrl131, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step4 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer331->Add( m_Step4, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider131 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer331->Add( m_slider131, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep4 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer331->Add( m_SliderStep4, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText131 = new wxStaticText( this, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText131->Wrap( -1 );
@@ -297,11 +297,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer341;
 	bSizer341 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl141 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer341->Add( m_textCtrl141, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step5 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer341->Add( m_Step5, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider141 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer341->Add( m_slider141, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep5 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer341->Add( m_SliderStep5, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText141 = new wxStaticText( this, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText141->Wrap( -1 );
@@ -312,11 +312,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer351;
 	bSizer351 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl151 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer351->Add( m_textCtrl151, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step6 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer351->Add( m_Step6, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider151 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer351->Add( m_slider151, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep6 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer351->Add( m_SliderStep6, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText151 = new wxStaticText( this, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText151->Wrap( -1 );
@@ -327,11 +327,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer361;
 	bSizer361 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl161 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer361->Add( m_textCtrl161, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step7 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer361->Add( m_Step7, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider161 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer361->Add( m_slider161, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep7 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer361->Add( m_SliderStep7, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText161 = new wxStaticText( this, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText161->Wrap( -1 );
@@ -342,11 +342,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer371;
 	bSizer371 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl171 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer371->Add( m_textCtrl171, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step8 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer371->Add( m_Step8, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider171 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer371->Add( m_slider171, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep8 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer371->Add( m_SliderStep8, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText171 = new wxStaticText( this, wxID_ANY, wxT("8"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText171->Wrap( -1 );
@@ -357,11 +357,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer381;
 	bSizer381 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl181 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer381->Add( m_textCtrl181, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step9 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer381->Add( m_Step9, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider181 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer381->Add( m_slider181, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep9 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer381->Add( m_SliderStep9, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText181 = new wxStaticText( this, wxID_ANY, wxT("9"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText181->Wrap( -1 );
@@ -372,11 +372,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer391;
 	bSizer391 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl191 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer391->Add( m_textCtrl191, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step10 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer391->Add( m_Step10, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider191 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer391->Add( m_slider191, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep10 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer391->Add( m_SliderStep10, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText191 = new wxStaticText( this, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText191->Wrap( -1 );
@@ -387,11 +387,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3101;
 	bSizer3101 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl1101 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer3101->Add( m_textCtrl1101, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step11 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer3101->Add( m_Step11, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider1101 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer3101->Add( m_slider1101, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep11 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer3101->Add( m_SliderStep11, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText1101 = new wxStaticText( this, wxID_ANY, wxT("11"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1101->Wrap( -1 );
@@ -402,11 +402,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3111;
 	bSizer3111 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl1111 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer3111->Add( m_textCtrl1111, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step12 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer3111->Add( m_Step12, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider1111 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer3111->Add( m_slider1111, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep12 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer3111->Add( m_SliderStep12, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText1111 = new wxStaticText( this, wxID_ANY, wxT("12"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1111->Wrap( -1 );
@@ -417,11 +417,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3121;
 	bSizer3121 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl1121 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer3121->Add( m_textCtrl1121, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step13 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer3121->Add( m_Step13, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider1121 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer3121->Add( m_slider1121, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep13 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer3121->Add( m_SliderStep13, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText1121 = new wxStaticText( this, wxID_ANY, wxT("13"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1121->Wrap( -1 );
@@ -432,11 +432,11 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3131;
 	bSizer3131 = new wxBoxSizer( wxVERTICAL );
 	
-	m_textCtrl1131 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
-	bSizer3131->Add( m_textCtrl1131, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
+	m_Step14 = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 40,-1 ), wxTE_CENTRE );
+	bSizer3131->Add( m_Step14, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP, 5 );
 	
-	m_slider1131 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer3131->Add( m_slider1131, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_SliderStep14 = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxSize( -1,100 ), wxSL_INVERSE|wxSL_VERTICAL );
+	bSizer3131->Add( m_SliderStep14, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_staticText1131 = new wxStaticText( this, wxID_ANY, wxT("14"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1131->Wrap( -1 );
@@ -452,31 +452,159 @@ speedcurvedlggen::speedcurvedlggen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer71;
 	bSizer71 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_button1 = new wxButton( this, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer71->Add( m_button1, 0, wxALL, 5 );
+	m_Read = new wxButton( this, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer71->Add( m_Read, 0, wxALL, 5 );
 	
-	m_button2 = new wxButton( this, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer71->Add( m_button2, 0, wxALL, 5 );
+	m_Write = new wxButton( this, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer71->Add( m_Write, 0, wxALL, 5 );
 	
-	m_button3 = new wxButton( this, wxID_ANY, wxT("Linearize"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer71->Add( m_button3, 0, wxALL, 5 );
+	m_Linearize = new wxButton( this, wxID_ANY, wxT("Linearize"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer71->Add( m_Linearize, 0, wxALL, 5 );
+	
+	m_Logarithmize = new wxButton( this, wxID_ANY, wxT("Logarithmize"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer71->Add( m_Logarithmize, 0, wxALL, 5 );
 	
 	bSizer1->Add( bSizer71, 0, wxEXPAND, 5 );
 	
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer1->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
-	m_sdbSizer1 = new wxStdDialogButtonSizer();
-	m_sdbSizer1OK = new wxButton( this, wxID_OK );
-	m_sdbSizer1->AddButton( m_sdbSizer1OK );
-	m_sdbSizer1->Realize();
-	bSizer1->Add( m_sdbSizer1, 0, wxEXPAND, 5 );
+	m_stdButton = new wxStdDialogButtonSizer();
+	m_stdButtonOK = new wxButton( this, wxID_OK );
+	m_stdButton->AddButton( m_stdButtonOK );
+	m_stdButton->Realize();
+	bSizer1->Add( m_stdButton, 0, wxEXPAND|wxALL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
+	
+	// Connect Events
+	m_Step15->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep15->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step16->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep16->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step17->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep17->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step18->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep18->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step19->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep19->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step20->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep20->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step21->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep21->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step22->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep22->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step23->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep23->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step24->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep24->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step25->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep25->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step26->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep26->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step27->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep27->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step28->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep28->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step1->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep1->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step2->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep2->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step3->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep3->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step4->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep4->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step5->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep5->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step6->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep6->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step7->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep7->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step8->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep8->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step9->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep9->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step10->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep10->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step11->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep11->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step12->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep12->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step13->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep13->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step14->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep14->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Read->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onRead ), NULL, this );
+	m_Write->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onWrite ), NULL, this );
+	m_Linearize->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onLinearize ), NULL, this );
+	m_Logarithmize->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onLogarithmize ), NULL, this );
+	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onOK ), NULL, this );
 }
 
 speedcurvedlggen::~speedcurvedlggen()
 {
+	// Disconnect Events
+	m_Step15->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep15->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step16->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep16->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step17->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep17->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step18->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep18->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step19->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep19->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step20->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep20->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step21->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep21->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step22->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep22->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step23->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep23->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step24->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep24->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step25->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep25->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step26->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep26->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step27->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep27->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step28->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep28->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step1->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep1->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step2->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep2->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step3->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep3->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step4->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep4->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step5->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep5->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step6->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep6->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step7->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep7->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step8->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep8->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step9->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep9->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step10->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep10->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step11->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep11->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step12->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep12->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step13->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep13->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Step14->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( speedcurvedlggen::onStep ), NULL, this );
+	m_SliderStep14->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( speedcurvedlggen::onSlider ), NULL, this );
+	m_Read->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onRead ), NULL, this );
+	m_Write->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onWrite ), NULL, this );
+	m_Linearize->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onLinearize ), NULL, this );
+	m_Logarithmize->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onLogarithmize ), NULL, this );
+	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( speedcurvedlggen::onOK ), NULL, this );
 }

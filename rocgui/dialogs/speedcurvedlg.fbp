@@ -108,7 +108,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl1</property>
+                                        <property name="name">m_Step15</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -141,7 +141,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -164,7 +164,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider1</property>
+                                        <property name="name">m_SliderStep15</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -213,7 +213,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -297,7 +297,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl11</property>
+                                        <property name="name">m_Step16</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -330,7 +330,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -353,7 +353,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider11</property>
+                                        <property name="name">m_SliderStep16</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -402,7 +402,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -486,7 +486,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl12</property>
+                                        <property name="name">m_Step17</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -519,7 +519,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -542,7 +542,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider12</property>
+                                        <property name="name">m_SliderStep17</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -591,7 +591,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -675,7 +675,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl13</property>
+                                        <property name="name">m_Step18</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -708,7 +708,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -731,7 +731,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider13</property>
+                                        <property name="name">m_SliderStep18</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -780,7 +780,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -864,7 +864,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl14</property>
+                                        <property name="name">m_Step19</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -897,7 +897,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -920,7 +920,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider14</property>
+                                        <property name="name">m_SliderStep19</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -969,7 +969,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1053,7 +1053,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl15</property>
+                                        <property name="name">m_Step20</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -1086,7 +1086,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -1109,7 +1109,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider15</property>
+                                        <property name="name">m_SliderStep20</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -1158,7 +1158,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1242,7 +1242,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl16</property>
+                                        <property name="name">m_Step21</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -1275,7 +1275,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -1298,7 +1298,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider16</property>
+                                        <property name="name">m_SliderStep21</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -1347,7 +1347,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1431,7 +1431,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl17</property>
+                                        <property name="name">m_Step22</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -1464,7 +1464,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -1487,7 +1487,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider17</property>
+                                        <property name="name">m_SliderStep22</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -1536,7 +1536,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1620,7 +1620,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl18</property>
+                                        <property name="name">m_Step23</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -1653,7 +1653,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -1676,7 +1676,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider18</property>
+                                        <property name="name">m_SliderStep23</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -1725,7 +1725,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1809,7 +1809,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl19</property>
+                                        <property name="name">m_Step24</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -1842,7 +1842,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -1865,7 +1865,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider19</property>
+                                        <property name="name">m_SliderStep24</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -1914,7 +1914,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -1998,7 +1998,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl110</property>
+                                        <property name="name">m_Step25</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2031,7 +2031,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -2054,7 +2054,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider110</property>
+                                        <property name="name">m_SliderStep25</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -2103,7 +2103,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -2187,7 +2187,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl111</property>
+                                        <property name="name">m_Step26</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2220,7 +2220,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -2243,7 +2243,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider111</property>
+                                        <property name="name">m_SliderStep26</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -2292,7 +2292,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -2376,7 +2376,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl112</property>
+                                        <property name="name">m_Step27</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2409,7 +2409,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -2432,7 +2432,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider112</property>
+                                        <property name="name">m_SliderStep27</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -2481,7 +2481,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -2565,7 +2565,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl113</property>
+                                        <property name="name">m_Step28</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2598,7 +2598,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -2621,7 +2621,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider113</property>
+                                        <property name="name">m_SliderStep28</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -2670,7 +2670,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -2765,7 +2765,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl114</property>
+                                        <property name="name">m_Step1</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2798,7 +2798,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -2821,7 +2821,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider114</property>
+                                        <property name="name">m_SliderStep1</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -2870,7 +2870,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -2954,7 +2954,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl115</property>
+                                        <property name="name">m_Step2</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -2987,7 +2987,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3010,7 +3010,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider115</property>
+                                        <property name="name">m_SliderStep2</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -3059,7 +3059,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -3143,7 +3143,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl121</property>
+                                        <property name="name">m_Step3</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -3176,7 +3176,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3199,7 +3199,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider121</property>
+                                        <property name="name">m_SliderStep3</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -3248,7 +3248,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -3332,7 +3332,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl131</property>
+                                        <property name="name">m_Step4</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -3365,7 +3365,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3388,7 +3388,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider131</property>
+                                        <property name="name">m_SliderStep4</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -3437,7 +3437,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -3521,7 +3521,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl141</property>
+                                        <property name="name">m_Step5</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -3554,7 +3554,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3577,7 +3577,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider141</property>
+                                        <property name="name">m_SliderStep5</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -3626,7 +3626,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -3710,7 +3710,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl151</property>
+                                        <property name="name">m_Step6</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -3743,7 +3743,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3766,7 +3766,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider151</property>
+                                        <property name="name">m_SliderStep6</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -3815,7 +3815,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -3899,7 +3899,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl161</property>
+                                        <property name="name">m_Step7</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -3932,7 +3932,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -3955,7 +3955,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider161</property>
+                                        <property name="name">m_SliderStep7</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4004,7 +4004,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -4088,7 +4088,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl171</property>
+                                        <property name="name">m_Step8</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -4121,7 +4121,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -4144,7 +4144,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider171</property>
+                                        <property name="name">m_SliderStep8</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4193,7 +4193,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -4277,7 +4277,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl181</property>
+                                        <property name="name">m_Step9</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -4310,7 +4310,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -4333,7 +4333,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider181</property>
+                                        <property name="name">m_SliderStep9</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4382,7 +4382,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -4466,7 +4466,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl191</property>
+                                        <property name="name">m_Step10</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -4499,7 +4499,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -4522,7 +4522,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider191</property>
+                                        <property name="name">m_SliderStep10</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4571,7 +4571,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -4655,7 +4655,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl1101</property>
+                                        <property name="name">m_Step11</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -4688,7 +4688,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -4711,7 +4711,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider1101</property>
+                                        <property name="name">m_SliderStep11</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4760,7 +4760,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -4844,7 +4844,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl1111</property>
+                                        <property name="name">m_Step12</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -4877,7 +4877,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -4900,7 +4900,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider1111</property>
+                                        <property name="name">m_SliderStep12</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -4949,7 +4949,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -5033,7 +5033,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl1121</property>
+                                        <property name="name">m_Step13</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -5066,7 +5066,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -5089,7 +5089,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider1121</property>
+                                        <property name="name">m_SliderStep13</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -5138,7 +5138,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -5222,7 +5222,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_textCtrl1131</property>
+                                        <property name="name">m_Step14</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">40,-1</property>
@@ -5255,7 +5255,7 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnText"></event>
+                                        <event name="OnText">onStep</event>
                                         <event name="OnTextEnter"></event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
@@ -5278,7 +5278,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="minValue">0</property>
                                         <property name="minimum_size"></property>
-                                        <property name="name">m_slider1131</property>
+                                        <property name="name">m_SliderStep14</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,100</property>
@@ -5327,7 +5327,7 @@
                                         <event name="OnScrollPageDown"></event>
                                         <event name="OnScrollPageUp"></event>
                                         <event name="OnScrollThumbRelease"></event>
-                                        <event name="OnScrollThumbTrack"></event>
+                                        <event name="OnScrollThumbTrack">onSlider</event>
                                         <event name="OnScrollTop"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
@@ -5463,7 +5463,7 @@
                                 <property name="label">Read</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_button1</property>
+                                <property name="name">m_Read</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -5473,7 +5473,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick"></event>
+                                <event name="OnButtonClick">onRead</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
@@ -5515,7 +5515,7 @@
                                 <property name="label">Write</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_button2</property>
+                                <property name="name">m_Write</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -5525,7 +5525,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick"></event>
+                                <event name="OnButtonClick">onWrite</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
@@ -5567,7 +5567,7 @@
                                 <property name="label">Linearize</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_button3</property>
+                                <property name="name">m_Linearize</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
                                 <property name="size"></property>
@@ -5577,7 +5577,59 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick"></event>
+                                <event name="OnButtonClick">onLinearize</event>
+                                <event name="OnChar"></event>
+                                <event name="OnEnterWindow"></event>
+                                <event name="OnEraseBackground"></event>
+                                <event name="OnKeyDown"></event>
+                                <event name="OnKeyUp"></event>
+                                <event name="OnKillFocus"></event>
+                                <event name="OnLeaveWindow"></event>
+                                <event name="OnLeftDClick"></event>
+                                <event name="OnLeftDown"></event>
+                                <event name="OnLeftUp"></event>
+                                <event name="OnMiddleDClick"></event>
+                                <event name="OnMiddleDown"></event>
+                                <event name="OnMiddleUp"></event>
+                                <event name="OnMotion"></event>
+                                <event name="OnMouseEvents"></event>
+                                <event name="OnMouseWheel"></event>
+                                <event name="OnPaint"></event>
+                                <event name="OnRightDClick"></event>
+                                <event name="OnRightDown"></event>
+                                <event name="OnRightUp"></event>
+                                <event name="OnSetFocus"></event>
+                                <event name="OnSize"></event>
+                                <event name="OnUpdateUI"></event>
+                            </object>
+                        </object>
+                        <object class="sizeritem" expanded="1">
+                            <property name="border">5</property>
+                            <property name="flag">wxALL</property>
+                            <property name="proportion">0</property>
+                            <object class="wxButton" expanded="1">
+                                <property name="bg"></property>
+                                <property name="context_help"></property>
+                                <property name="default">0</property>
+                                <property name="enabled">1</property>
+                                <property name="fg"></property>
+                                <property name="font"></property>
+                                <property name="hidden">0</property>
+                                <property name="id">wxID_ANY</property>
+                                <property name="label">Logarithmize</property>
+                                <property name="maximum_size"></property>
+                                <property name="minimum_size"></property>
+                                <property name="name">m_Logarithmize</property>
+                                <property name="permission">protected</property>
+                                <property name="pos"></property>
+                                <property name="size"></property>
+                                <property name="style"></property>
+                                <property name="subclass"></property>
+                                <property name="tooltip"></property>
+                                <property name="window_extra_style"></property>
+                                <property name="window_name"></property>
+                                <property name="window_style"></property>
+                                <event name="OnButtonClick">onLogarithmize</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
@@ -5656,7 +5708,7 @@
                 </object>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
                     <property name="proportion">0</property>
                     <object class="wxStdDialogButtonSizer" expanded="1">
                         <property name="Apply">0</property>
@@ -5668,14 +5720,14 @@
                         <property name="Save">0</property>
                         <property name="Yes">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">m_sdbSizer1</property>
+                        <property name="name">m_stdButton</property>
                         <property name="permission">protected</property>
                         <event name="OnApplyButtonClick"></event>
                         <event name="OnCancelButtonClick"></event>
                         <event name="OnContextHelpButtonClick"></event>
                         <event name="OnHelpButtonClick"></event>
                         <event name="OnNoButtonClick"></event>
-                        <event name="OnOKButtonClick"></event>
+                        <event name="OnOKButtonClick">onOK</event>
                         <event name="OnSaveButtonClick"></event>
                         <event name="OnYesButtonClick"></event>
                     </object>
