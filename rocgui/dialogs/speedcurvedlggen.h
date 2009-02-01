@@ -117,21 +117,19 @@ class speedcurvedlggen : public wxDialog
 		wxSlider* m_SliderStep14;
 		wxStaticText* m_staticText1131;
 		wxStaticLine* m_staticline2;
-		wxButton* m_Read;
-		wxButton* m_Write;
 		wxButton* m_Linearize;
 		wxButton* m_Logarithmize;
 		wxStaticLine* m_staticline1;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
+		wxButton* m_stdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onStep( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onSlider( wxScrollEvent& event ){ event.Skip(); }
-		virtual void onRead( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onWrite( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onLinearize( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onLogarithmize( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
 		
 	
