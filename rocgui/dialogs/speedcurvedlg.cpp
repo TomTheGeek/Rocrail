@@ -1,5 +1,7 @@
 #include "speedcurvedlg.h"
 
+#include "rocs/public/trace.h"
+
 SpeedCurveDlg::SpeedCurveDlg( wxWindow* parent )
   :speedcurvedlggen( parent )
 {
@@ -88,11 +90,37 @@ void SpeedCurveDlg::onStep( wxCommandEvent& event ) {
 
 
 void SpeedCurveDlg::onLinearize( wxCommandEvent& event ) {
-
+  int Vmin = m_SliderStep[ 0]->GetValue();
+  int Vmax = m_SliderStep[27]->GetValue();
+  float step = (Vmax -Vmin) / 27.0;
+  for( int i = 1; i < 27; i++ ) {
+    int V = (int)(step * i);
+    m_SliderStep[i]->SetValue( V );
+    m_Step[i]->SetValue(wxString::Format( _T("%d"), V ));
+  }
 }
+
+
 void SpeedCurveDlg::onLogarithmize( wxCommandEvent& event ){
+  int Vmin = m_SliderStep[ 0]->GetValue();
+  int Vmax = m_SliderStep[27]->GetValue();
+  float step = (Vmax -Vmin) / 27.0;
+  float fact = 1.1;
+  for( int i = 1; i < 27; i++ ) {
+    float Vf = step * i * log(fact);
+    int V = (int)(Vf);
+    if( Vf - (float)V >= 0.5 )
+      V++;
+    TraceOp.trc( "vcurve", TRCLEVEL_INFO, __LINE__, 9999,
+        "i=%d fact=%.2f log=%.2f V=%d", i, fact, log(fact), V  );
 
+    fact += 1.6 / 26; // hack
+    m_SliderStep[i]->SetValue( V + Vmin );
+    m_Step[i]->SetValue(wxString::Format( _T("%d"), V + Vmin ));
+  }
 }
+
+
 void SpeedCurveDlg::onCancel( wxCommandEvent& event ) {
 
 }
