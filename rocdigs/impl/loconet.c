@@ -1023,6 +1023,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   case OPC_SL_RD_DATA:
     {
       int slot = rsp[2];
+      int pcmd = rsp[3];
       int addr = rsp[4];
       int track= rsp[7];  // hi 3 bits of CV# and msb of data7
       int cvh  = rsp[8];  // hi 3 bits of CV# and msb of data7
@@ -1036,7 +1037,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         /* inform listener */
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setvalue( node, value );
-        wProgram.setcmd( node, wProgram.datarsp );
+        wProgram.setcmd( node, (pcmd & PCMD_RW) ? wProgram.statusrsp:wProgram.datarsp );
         if( data->iid != NULL )
           wProgram.setiid( node, data->iid );
 
@@ -1628,6 +1629,8 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     /* TODO: Fast Clock */
+    /* OPC_WR_SL_DATA: 0xEF 0x0E 0x7B CLK_RATE FRAC_MINSL FRAC_MINSH 256-MINS_60 TRK 256-HRS_24 DAYS CLK_CNTR ID1 ID2 */
+
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TODO: Fast Clock command..." );
     if(  wClock.getcmd( node ) == wClock.freeze ) {
       return 0;

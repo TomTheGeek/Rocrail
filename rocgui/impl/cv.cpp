@@ -69,6 +69,12 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   m_CVoperation = 0;
   m_bCleanUpProgress = false;
 
+  for(int i = 0; i < 28; i++ ) {
+    m_Curve[i] = 0;
+  }
+  m_bSpeedCurve = false;
+
+
   CVconf();
   m_Timer = new wxTimer( frame, ME_CVTimer );
   m_Progress = NULL;
@@ -265,6 +271,16 @@ void CV::event( iONode event ) {
       char* lval = StrOp.fmt("%d", laddr);
       m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
       StrOp.free(lval);
+    }
+    else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
+      m_Curve[m_CVidx-67] = ivalue;
+      if(m_CVidx == 94 && m_bSpeedCurve ) {
+        /* TODO: post an event to activate the speed curve dialog */
+        m_bSpeedCurve = false;
+        wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
+        event.SetEventObject( (wxObject*)m_Curve );
+        wxPostEvent( m_Parent, event );
+      }
     }
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
@@ -662,9 +678,31 @@ void CV::OnButton(wxCommandEvent& event)
     }
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "TODO: Speed Curve" );
-    SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent );
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
+    m_bSpeedCurve = true;
+    for( int i = 0; i < 28; i++ ) {
+      m_CVoperation = CVGET;
+      doCV( wProgram.get, 67+i, 0 );
+    }
+  }
+  else if( event.GetEventObject() == (wxObject*)m_Curve ) {
+
+    /* TODO: move to the event handler */
+
+    SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent, m_Curve );
     if( wxID_OK == dlg->ShowModal() ) {
+      int* newCurve = dlg->getCurve();
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "New Speed Curve:" );
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+          newCurve[0],newCurve[1],newCurve[2],newCurve[3],newCurve[4],newCurve[5],newCurve[6],newCurve[7],
+          newCurve[8],newCurve[9],newCurve[10],newCurve[11],newCurve[12],newCurve[13]);
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+          newCurve[14],newCurve[15],newCurve[16],newCurve[17],newCurve[18],newCurve[19],newCurve[20],newCurve[21],
+          newCurve[22],newCurve[23],newCurve[24],newCurve[25],newCurve[26],newCurve[27]);
+      for( int i = 0; i < 28; i++ ) {
+        m_CVoperation = CVSET;
+        doCV( wProgram.set, 67+i, newCurve[i] );
+      }
     }
   }
   else {
@@ -784,7 +822,7 @@ void CV::OnTimer(wxTimerEvent& event) {
     stopProgress();
   }
   else if( m_Progress != NULL ) {
-    if( !m_bCleanUpProgress && !m_Progress->Pulse() ) {
+    if( !m_bCleanUpProgress || !m_Progress->Pulse() ) {
       stopProgress();
       m_TimerCount = wCVconf.gettimeout(m_CVconf);
     }

@@ -13,6 +13,7 @@ class SpeedCurveDlg : public speedcurvedlggen
 {
   wxTextCtrl* m_Step[28];
   wxSlider* m_SliderStep[28];
+  int m_Curve[28];
 
   void onStep( wxCommandEvent& event );
   void onSlider( wxScrollEvent& event );
@@ -24,7 +25,8 @@ class SpeedCurveDlg : public speedcurvedlggen
 
 public:
 	/** Constructor */
-	SpeedCurveDlg( wxWindow* parent );
+	SpeedCurveDlg( wxWindow* parent, int* curve );
+	int* getCurve();
 };
 
 #endif // __speedcurvedlg__

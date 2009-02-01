@@ -136,8 +136,10 @@ private:
     int m_CVcountAll;
     int m_CVidxAll;
     Boolean m_bPOM;
+    bool m_bSpeedCurve;
     int m_CVoperation;
     bool m_bCleanUpProgress;
+    int m_Curve[28];
 
     const char* m_Manu[256];
 

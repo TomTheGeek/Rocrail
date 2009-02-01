@@ -2,7 +2,7 @@
 
 #include "rocs/public/trace.h"
 
-SpeedCurveDlg::SpeedCurveDlg( wxWindow* parent )
+SpeedCurveDlg::SpeedCurveDlg( wxWindow* parent, int* curve )
   :speedcurvedlggen( parent )
 {
   m_Step[ 0] = m_Step1;
@@ -63,12 +63,25 @@ SpeedCurveDlg::SpeedCurveDlg( wxWindow* parent )
   m_SliderStep[26] = m_SliderStep27;
   m_SliderStep[27] = m_SliderStep28;
 
+  MemOp.copy( m_Curve, curve, 28 * sizeof(int));
+
+  for( int i = 0; i < 28; i++ ) {
+    m_SliderStep[i]->SetValue(m_Curve[i]);
+    m_Step[i]->SetValue(wxString::Format( _T("%d"), m_Curve[i]));
+  }
+
 }
+
+int* SpeedCurveDlg::getCurve(){
+  return m_Curve;
+}
+
 
 void SpeedCurveDlg::onSlider( wxScrollEvent& event ){
   for( int i = 0; i < 28; i++ ) {
     if( event.GetEventObject() == m_SliderStep[i] ) {
       m_Step[i]->SetValue(wxString::Format( _T("%d"), m_SliderStep[i]->GetValue()));
+      m_Curve[i] = m_SliderStep[i]->GetValue();
       break;
     }
   }
@@ -83,6 +96,7 @@ void SpeedCurveDlg::onStep( wxCommandEvent& event ) {
       if( step > 255 ) step = 255;
       if( step < 0   ) step = 0;
       m_SliderStep[i]->SetValue((int)step);
+      m_Curve[i] = step;
       break;
     }
   }
@@ -125,9 +139,10 @@ void SpeedCurveDlg::onLogarithmize( wxCommandEvent& event ){
 
 
 void SpeedCurveDlg::onCancel( wxCommandEvent& event ) {
+  EndModal( 0 );
 
 }
 void SpeedCurveDlg::onOK( wxCommandEvent& event ) {
-
+  EndModal( wxID_OK );
 }
 
