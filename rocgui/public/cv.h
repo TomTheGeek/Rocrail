@@ -204,6 +204,7 @@ private:
 
     wxButton* m_saveCVs;
     wxButton* m_saveAllCVs;
+    wxButton* m_SpeedCurve;
     wxButton* m_loadCVs;
     wxButton* m_loadFile;
     wxButton* m_saveFile;

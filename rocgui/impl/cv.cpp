@@ -36,6 +36,7 @@
 #include "rocs/public/strtok.h"
 #include "rocgui/public/guiapp.h"
 #include "rocgui/dialogs/locdialog.h"
+#include "rocgui/dialogs/speedcurvedlg.h"
 
 #include "rocgui/public/cv.h"
 
@@ -660,6 +661,12 @@ void CV::OnButton(wxCommandEvent& event)
       }
     }
   }
+  else if( event.GetEventObject() == m_SpeedCurve ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "TODO: Speed Curve" );
+    SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent );
+    if( wxID_OK == dlg->ShowModal() ) {
+    }
+  }
   else {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "default doCV" );
     doCV( event.GetId() );
@@ -873,6 +880,7 @@ bool CV::Create()
     m_saveCVs = NULL;
     m_loadCVs = NULL;
     m_saveAllCVs = NULL;
+    m_SpeedCurve = NULL;
     m_loadFile = NULL;
     m_saveFile = NULL;
 
@@ -1145,6 +1153,8 @@ void CV::CreateControls() {
   m_CVSubBox3->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxSize(60, 25), 0 );
   m_CVSubBox3->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_SpeedCurve = new wxButton( m_ItemPanel, -1, _("Vcurve..."), wxDefaultPosition, wxSize(70, 25), 0 );
+  m_CVSubBox3->Add(m_SpeedCurve, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
