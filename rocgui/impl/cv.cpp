@@ -30,6 +30,7 @@
 
 #ifndef WX_PRECOMP
 #include "wx/wx.h"
+#include "wx/defs.h"
 #endif
 
 #include "rocs/public/trace.h"
@@ -237,16 +238,29 @@ void CV::event( iONode event ) {
     return;
   }
 
-  if( cmd == wProgram.datarsp|| cmd == wProgram.statusrsp )
+  if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp )
     datarsp = true;
 
   if( cv == 0 && datarsp )
     cv = m_CVidx;
 
   TraceOp.trc( "cv", ivalue != -1 ? TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
-      "got program event...cmd=%d cv=%d value=%d datarsp=%d", cmd, cv, ivalue, datarsp );
+      "got program event...cmd=%d cv=%d value=%d %s", cmd, cv, ivalue, cmd == wProgram.datarsp ? "datarsp":"statusrsp" );
 
-  if( ivalue != -1 && cmd == wProgram.datarsp ) {
+  if( ivalue != -1 && cmd == wProgram.statusrsp ) {
+    if( m_CVidx >= 67 && m_CVidx <= 94 ) {
+      if(m_CVidx < 94 && m_bSpeedCurve ) {
+        m_CVoperation = CVSET;
+        m_TimerCount = 0;
+        doCV( wProgram.set, m_CVidx + 1, m_Curve[m_CVidx-67] );
+      }
+      else if(m_CVidx == 94 && m_bSpeedCurve ) {
+        /* TODO: post an event to activate the speed curve dialog */
+        m_bSpeedCurve = false;
+      }
+    }
+  }
+  else if( ivalue != -1 && cmd == wProgram.datarsp ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv...");
     char* val = StrOp.fmt( "%d", ivalue );
 
@@ -274,7 +288,12 @@ void CV::event( iONode event ) {
     }
     else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
       m_Curve[m_CVidx-67] = ivalue;
-      if(m_CVidx == 94 && m_bSpeedCurve ) {
+      if(m_CVidx < 94 && m_bSpeedCurve ) {
+        m_CVoperation = CVGET;
+        m_TimerCount = 0;
+        doCV( wProgram.get, m_CVidx + 1, 0 );
+      }
+      else if(m_CVidx == 94 && m_bSpeedCurve ) {
         /* TODO: post an event to activate the speed curve dialog */
         m_bSpeedCurve = false;
         wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
@@ -322,7 +341,7 @@ void CV::event( iONode event ) {
 
 
 
-  if( datarsp ) {
+  if( datarsp && !m_bSpeedCurve ) {
     if( m_CVoperation == CVGET || m_CVoperation == CVSET ) {
       stopProgress();
     }
@@ -416,6 +435,7 @@ void CV::stopProgress() {
   if( m_Progress != NULL ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "end progress dialog" );
     m_bCleanUpProgress = true;
+    m_bSpeedCurve = false;
     m_Timer->Start( 10, wxTIMER_ONE_SHOT );
   }
 }
@@ -679,10 +699,20 @@ void CV::OnButton(wxCommandEvent& event)
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
-    m_bSpeedCurve = true;
-    for( int i = 0; i < 28; i++ ) {
+
+    int action = wxMessageDialog( m_Parent, wxGetApp().getMsg("readspeedcurve"), _T("Rocrail"), wxYES_NO ).ShowModal();
+    if( action == wxID_NO ) {
+      for( int i = 0; i < 28; i++ ) {
+        m_Curve[i] = 0;
+      }
+      wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
+      event.SetEventObject( (wxObject*)m_Curve );
+      wxPostEvent( m_Parent, event );
+    }
+    else {
+      m_bSpeedCurve = true;
       m_CVoperation = CVGET;
-      doCV( wProgram.get, 67+i, 0 );
+      doCV( wProgram.get, 67, 0 );
     }
   }
   else if( event.GetEventObject() == (wxObject*)m_Curve ) {
@@ -699,10 +729,14 @@ void CV::OnButton(wxCommandEvent& event)
       TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
           newCurve[14],newCurve[15],newCurve[16],newCurve[17],newCurve[18],newCurve[19],newCurve[20],newCurve[21],
           newCurve[22],newCurve[23],newCurve[24],newCurve[25],newCurve[26],newCurve[27]);
+
       for( int i = 0; i < 28; i++ ) {
-        m_CVoperation = CVSET;
-        doCV( wProgram.set, 67+i, newCurve[i] );
+        m_Curve[i] = newCurve[i];
       }
+      m_bSpeedCurve = true;
+      m_CVoperation = CVSET;
+      doCV( wProgram.set, 67, m_Curve[0] );
+
     }
   }
   else {
@@ -822,7 +856,7 @@ void CV::OnTimer(wxTimerEvent& event) {
     stopProgress();
   }
   else if( m_Progress != NULL ) {
-    if( !m_bCleanUpProgress || !m_Progress->Pulse() ) {
+    if( !m_bCleanUpProgress && !m_Progress->Pulse() ) {
       stopProgress();
       m_TimerCount = wCVconf.gettimeout(m_CVconf);
     }
