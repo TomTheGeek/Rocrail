@@ -6427,5 +6427,16 @@
     <it txt="Bridge polarization"/>
     <da txt="Bridge polarization"/>
   </Msg>
+  <Msg id="readspeedcurve">
+    <de txt="Read current speed curve from decoder?"/>
+    <en txt="Read current speed curve from decoder?"/>
+    <nl txt="Lees de huidige sneldheids karakteristiek uit de decoder?"/>
+    <sv txt="Read current speed curve from decoder?"/>
+    <fr txt="Read current speed curve from decoder?"/>
+    <tr txt="Read current speed curve from decoder?"/>
+    <es txt="Read current speed curve from decoder?"/>
+    <it txt="Read current speed curve from decoder?"/>
+    <da txt="Read current speed curve from decoder?"/>
+  </Msg>
 </Messages>
 
