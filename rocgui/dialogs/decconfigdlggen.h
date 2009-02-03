@@ -14,7 +14,6 @@
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/statline.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -35,7 +34,6 @@ class decconfigdlggen : public wxDialog
 		wxCheckBox* m_DCOperation;
 		wxCheckBox* m_UserSpeedCurve;
 		wxCheckBox* m_ExtAddressing;
-		wxStaticLine* m_staticline1;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
 		wxButton* m_stdButtonCancel;

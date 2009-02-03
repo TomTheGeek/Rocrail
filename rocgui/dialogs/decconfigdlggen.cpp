@@ -36,9 +36,6 @@ decconfigdlggen::decconfigdlggen( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	bSizer1->Add( m_ExtAddressing, 0, wxALL, 5 );
 	
-	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer1->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
-	
 	m_stdButton = new wxStdDialogButtonSizer();
 	m_stdButtonOK = new wxButton( this, wxID_OK );
 	m_stdButton->AddButton( m_stdButtonOK );

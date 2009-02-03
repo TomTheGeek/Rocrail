@@ -108,6 +108,9 @@ private:
     void readAll();
     void writeAll();
 
+    void onDecConfig();
+    void onSpeedCurve();
+
     void loadCVfromFile();
     void saveCVtoFile();
 

@@ -303,17 +303,13 @@ void CV::event( iONode event ) {
       else if(m_CVidx == 94 && m_bSpeedCurve ) {
         /* post an event to activate the speed curve dialog */
         m_bSpeedCurve = false;
-        wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
-        event.SetEventObject( (wxObject*)m_Curve );
-        wxPostEvent( m_Parent, event );
+        onSpeedCurve();
       }
     }
     else if( m_CVidx == 29 ) {
       /* post an event to activate the speed curve dialog */
       m_ConfigVal = ivalue;
-      wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
-      event.SetEventObject( (wxObject*)&m_ConfigVal );
-      wxPostEvent( m_Parent, event );
+      onDecConfig();
     }
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
@@ -368,6 +364,21 @@ void CV::event( iONode event ) {
   }
 
   NodeOp.base.del( event );
+}
+
+
+void CV::onDecConfig(void) {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 1 (%d)", m_ConfigVal );
+  DecConfigDlg*  dlg = new DecConfigDlg(m_Frame, m_ConfigVal );
+  int rc = dlg->ShowModal();
+  if( rc == wxID_OK ) {
+    m_ConfigVal = dlg->getConfig();
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 2 (%d)", m_ConfigVal );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 29, m_ConfigVal );
+  }
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
+  dlg->Destroy();
 }
 
 
@@ -716,20 +727,6 @@ void CV::OnButton(wxCommandEvent& event)
     m_CVoperation = CVGET;
     doCV( wProgram.get, 29, 0 );
   }
-  else if( event.GetEventObject() == (wxObject*)&m_ConfigVal ) {
-    /* config dialog */
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 1 (%d)", m_ConfigVal );
-    DecConfigDlg*  dlg = new DecConfigDlg(m_Parent, m_ConfigVal );
-    int rc = dlg->ShowModal();
-    if( rc == wxID_OK ) {
-      m_ConfigVal = dlg->getConfig();
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 2 (%d)", m_ConfigVal );
-      m_CVoperation = CVSET;
-      doCV( wProgram.set, 29, m_ConfigVal );
-    }
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
-    dlg->Destroy();
-  }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
 
@@ -738,9 +735,7 @@ void CV::OnButton(wxCommandEvent& event)
       for( int i = 0; i < 28; i++ ) {
         m_Curve[i] = 0;
       }
-      wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
-      event.SetEventObject( (wxObject*)m_Curve );
-      wxPostEvent( m_Parent, event );
+      onSpeedCurve();
     }
     else {
       m_bSpeedCurve = true;
@@ -748,39 +743,42 @@ void CV::OnButton(wxCommandEvent& event)
       doCV( wProgram.get, 67, 0 );
     }
   }
-  else if( event.GetEventObject() == (wxObject*)m_Curve ) {
-
-    /* move to the event handler */
-
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***start***" );
-    SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent, m_Curve );
-    if( wxID_OK == dlg->ShowModal() ) {
-      int* newCurve = dlg->getCurve();
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "New Speed Curve:" );
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
-          newCurve[0],newCurve[1],newCurve[2],newCurve[3],newCurve[4],newCurve[5],newCurve[6],newCurve[7],
-          newCurve[8],newCurve[9],newCurve[10],newCurve[11],newCurve[12],newCurve[13]);
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
-          newCurve[14],newCurve[15],newCurve[16],newCurve[17],newCurve[18],newCurve[19],newCurve[20],newCurve[21],
-          newCurve[22],newCurve[23],newCurve[24],newCurve[25],newCurve[26],newCurve[27]);
-
-      for( int i = 0; i < 28; i++ ) {
-        m_Curve[i] = newCurve[i];
-      }
-      m_bSpeedCurve = true;
-      m_CVoperation = CVSET;
-      doCV( wProgram.set, 67, m_Curve[0] );
-
-    }
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***end***" );
-    dlg->Destroy();
-  }
   else {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "default doCV" );
     doCV( event.GetId() );
   }
 
 }
+
+
+void CV::onSpeedCurve() {
+
+  /* move to the event handler */
+
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***start***" );
+  SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent, m_Curve );
+  if( wxID_OK == dlg->ShowModal() ) {
+    int* newCurve = dlg->getCurve();
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "New Speed Curve:" );
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+        newCurve[0],newCurve[1],newCurve[2],newCurve[3],newCurve[4],newCurve[5],newCurve[6],newCurve[7],
+        newCurve[8],newCurve[9],newCurve[10],newCurve[11],newCurve[12],newCurve[13]);
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d ",
+        newCurve[14],newCurve[15],newCurve[16],newCurve[17],newCurve[18],newCurve[19],newCurve[20],newCurve[21],
+        newCurve[22],newCurve[23],newCurve[24],newCurve[25],newCurve[26],newCurve[27]);
+
+    for( int i = 0; i < 28; i++ ) {
+      m_Curve[i] = newCurve[i];
+    }
+    m_bSpeedCurve = true;
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 67, m_Curve[0] );
+
+  }
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***end***" );
+  dlg->Destroy();
+}
+
 
 /*
  * CV18 = addr - 256 * (addr / 256)
