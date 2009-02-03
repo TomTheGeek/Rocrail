@@ -38,6 +38,7 @@
 #include "rocgui/public/guiapp.h"
 #include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/speedcurvedlg.h"
+#include "rocgui/dialogs/decconfigdlg.h"
 
 #include "rocgui/public/cv.h"
 
@@ -62,6 +63,7 @@
 
 CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   m_Parent = parent;
+  m_Frame = frame;
   m_LocProps = NULL;
   Create();
   m_CVconf = cvconf;
@@ -254,21 +256,19 @@ void CV::event( iONode event ) {
   TraceOp.trc( "cv", ivalue != -1 ? TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
       "got program event...cmd=%d cv=%d value=%d %s", cmd, cv, ivalue, cmd == wProgram.datarsp ? "datarsp":"statusrsp" );
 
-  if( ivalue != -1 && cmd == wProgram.statusrsp ) {
-    if( m_CVidx >= 67 && m_CVidx <= 94 ) {
-      if(m_CVidx < 94 && m_bSpeedCurve ) {
-        m_CVoperation = CVSET;
-        m_TimerCount = 0;
-        doCV( wProgram.set, m_CVidx + 1, m_Curve[m_CVidx-67] );
-      }
-      else if(m_CVidx == 94 && m_bSpeedCurve ) {
-        /* TODO: post an event to activate the speed curve dialog */
-        m_bSpeedCurve = false;
-      }
+  if( ivalue != -1 && cmd == wProgram.statusrsp && m_CVidx >= 67 && m_CVidx <= 94 ) {
+    if(m_CVidx < 94 && m_bSpeedCurve ) {
+      m_CVoperation = CVSET;
+      m_TimerCount = 0;
+      doCV( wProgram.set, m_CVidx + 1, m_Curve[m_CVidx-67] );
+    }
+    else if(m_CVidx == 94 && m_bSpeedCurve ) {
+      /* post an event to activate the speed curve dialog */
+      m_bSpeedCurve = false;
     }
   }
   else if( ivalue != -1 && cmd == wProgram.datarsp ) {
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv...");
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv %d...", m_CVidx);
     char* val = StrOp.fmt( "%d", ivalue );
 
     /*
@@ -301,7 +301,7 @@ void CV::event( iONode event ) {
         doCV( wProgram.get, m_CVidx + 1, 0 );
       }
       else if(m_CVidx == 94 && m_bSpeedCurve ) {
-        /* TODO: post an event to activate the speed curve dialog */
+        /* post an event to activate the speed curve dialog */
         m_bSpeedCurve = false;
         wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
         event.SetEventObject( (wxObject*)m_Curve );
@@ -309,7 +309,7 @@ void CV::event( iONode event ) {
       }
     }
     else if( m_CVidx == 29 ) {
-      /* TODO: post an event to activate the speed curve dialog */
+      /* post an event to activate the speed curve dialog */
       m_ConfigVal = ivalue;
       wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
       event.SetEventObject( (wxObject*)&m_ConfigVal );
@@ -717,14 +717,18 @@ void CV::OnButton(wxCommandEvent& event)
     doCV( wProgram.get, 29, 0 );
   }
   else if( event.GetEventObject() == (wxObject*)&m_ConfigVal ) {
-    /* TODO: dialog
-    DecConfigDlg*  dlg = new DecConfigDlg(m_Parent, m_Curve );
-    if( wxID_OK == dlg->ShowModal() ) {
+    /* config dialog */
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 1 (%d)", m_ConfigVal );
+    DecConfigDlg*  dlg = new DecConfigDlg(m_Parent, m_ConfigVal );
+    int rc = dlg->ShowModal();
+    if( rc == wxID_OK ) {
       m_ConfigVal = dlg->getConfig();
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 2 (%d)", m_ConfigVal );
       m_CVoperation = CVSET;
       doCV( wProgram.set, 29, m_ConfigVal );
     }
-    */
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
+    dlg->Destroy();
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
@@ -746,8 +750,9 @@ void CV::OnButton(wxCommandEvent& event)
   }
   else if( event.GetEventObject() == (wxObject*)m_Curve ) {
 
-    /* TODO: move to the event handler */
+    /* move to the event handler */
 
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***start***" );
     SpeedCurveDlg*  dlg = new SpeedCurveDlg(m_Parent, m_Curve );
     if( wxID_OK == dlg->ShowModal() ) {
       int* newCurve = dlg->getCurve();
@@ -767,6 +772,8 @@ void CV::OnButton(wxCommandEvent& event)
       doCV( wProgram.set, 67, m_Curve[0] );
 
     }
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve Dialog ***end***" );
+    dlg->Destroy();
   }
   else {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "default doCV" );
@@ -846,15 +853,20 @@ void CV::doCV( int id ) {
 
 void CV::doCV( int command, int index, int value ) {
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  int addr = atoi( m_CVaddress->GetValue().mb_str(wxConvUTF8) );
+  if( addr == 0 )
+    addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
+
   wProgram.setcmd( cmd, command );
-  wProgram.setaddr( cmd, atoi( m_CVaddress->GetValue().mb_str(wxConvUTF8) ) );
+  wProgram.setaddr( cmd, addr );
   wProgram.setcv( cmd, index );
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_bPOM );
   if( m_LocProps != NULL ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
   }
-  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "sending program command for index %d...", index );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
+      "sending program command for cmd=%d index=%d value=%d...", command, index, value );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
   m_CVidx = index;

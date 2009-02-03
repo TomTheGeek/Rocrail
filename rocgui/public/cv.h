@@ -143,6 +143,7 @@ private:
     int m_ConfigVal;
 
     const char* m_Manu[256];
+    wxWindow* m_Frame;
 
     wxTimer* m_Timer;
     wxProgressDialog* m_Progress;
