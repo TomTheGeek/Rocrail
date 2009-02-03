@@ -140,6 +140,7 @@ private:
     int m_CVoperation;
     bool m_bCleanUpProgress;
     int m_Curve[28];
+    int m_ConfigVal;
 
     const char* m_Manu[256];
 
@@ -207,6 +208,7 @@ private:
     wxButton* m_saveCVs;
     wxButton* m_saveAllCVs;
     wxButton* m_SpeedCurve;
+    wxButton* m_Config;
     wxButton* m_loadCVs;
     wxButton* m_loadFile;
     wxButton* m_saveFile;

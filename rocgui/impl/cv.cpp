@@ -201,7 +201,14 @@ void CV::setLocProps( iONode props ) {
     m_saveAllCVs->Enable(true);
 
     char* str = StrOp.fmt( "%d", wLoc.getaddr( m_LocProps ) );
-    m_CVaddress->SetValue( wxString(str,wxConvUTF8) );
+    if( wLoc.getaddr( m_LocProps ) < 128 ) {
+      m_CVaddress->SetValue( wxString(str,wxConvUTF8) );
+      m_CVlongaddress->SetValue( _T("0") );
+    }
+    else {
+      m_CVaddress->SetValue( _T("0") );
+      m_CVlongaddress->SetValue( wxString(str,wxConvUTF8) );
+    }
     StrOp.free( str );
 
     iONode cv = wLoc.getcvbyte( m_LocProps );
@@ -300,6 +307,13 @@ void CV::event( iONode event ) {
         event.SetEventObject( (wxObject*)m_Curve );
         wxPostEvent( m_Parent, event );
       }
+    }
+    else if( m_CVidx == 29 ) {
+      /* TODO: post an event to activate the speed curve dialog */
+      m_ConfigVal = ivalue;
+      wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED, -1 );
+      event.SetEventObject( (wxObject*)&m_ConfigVal );
+      wxPostEvent( m_Parent, event );
     }
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
@@ -697,6 +711,21 @@ void CV::OnButton(wxCommandEvent& event)
       }
     }
   }
+  else if( event.GetEventObject() == m_Config ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Config" );
+    m_CVoperation = CVGET;
+    doCV( wProgram.get, 29, 0 );
+  }
+  else if( event.GetEventObject() == (wxObject*)&m_ConfigVal ) {
+    /* TODO: dialog
+    DecConfigDlg*  dlg = new DecConfigDlg(m_Parent, m_Curve );
+    if( wxID_OK == dlg->ShowModal() ) {
+      m_ConfigVal = dlg->getConfig();
+      m_CVoperation = CVSET;
+      doCV( wProgram.set, 29, m_ConfigVal );
+    }
+    */
+  }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
 
@@ -1006,10 +1035,10 @@ void CV::CreateControls() {
   m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
   m_LocBox->Add(m_LcList, 3, wxGROW|wxALL, 1);
 
-  m_loadFile = new wxButton( m_ItemPanel, -1, _("Load..."), wxDefaultPosition, wxSize(60, 25), 0 );
+  m_loadFile = new wxButton( m_ItemPanel, -1, _("Import"), wxDefaultPosition, wxSize(60, 26), 0 );
   m_LocBox->Add(m_loadFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_saveFile = new wxButton( m_ItemPanel, -1, _("Save..."), wxDefaultPosition, wxSize(60, 25), 0 );
+  m_saveFile = new wxButton( m_ItemPanel, -1, _("Export"), wxDefaultPosition, wxSize(60, 26), 0 );
   m_LocBox->Add(m_saveFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_POM = new wxCheckBox( m_ItemPanel, -1, _T("POM"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1219,31 +1248,35 @@ void CV::CreateControls() {
   m_bit0 = new wxCheckBox( m_ItemPanel, -1, _T("0"), wxDefaultPosition, wxDefaultSize, 0 );
   m_CVSubBox2->Add(m_bit0, 0, wxALIGN_CENTER_VERTICAL, 0);
 
-  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Save"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxSize(60, 25), 0 );
-  m_CVSubBox3->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_SpeedCurve = new wxButton( m_ItemPanel, -1, _("Vcurve..."), wxDefaultPosition, wxSize(70, 25), 0 );
-  m_CVSubBox3->Add(m_SpeedCurve, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+  wxBoxSizer* buttonSizer1 = new wxBoxSizer(wxHORIZONTAL);
+  m_PanelMainBox->Add(buttonSizer1, 0, wxALL|wxADJUST_MINSIZE, 2);
 
-  wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_PanelMainBox->Add(buttonSizer, 0, wxALL|wxADJUST_MINSIZE, 2);
+  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Save"), wxDefaultPosition, wxSize(60, 26), 0 );
+  buttonSizer1->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxSize(60, 26), 0 );
+  buttonSizer1->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxSize(60, 26), 0 );
+  buttonSizer1->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_SpeedCurve = new wxButton( m_ItemPanel, -1, _("V curve"), wxDefaultPosition, wxSize(60, 26), 0 );
+  buttonSizer1->Add(m_SpeedCurve, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_Config = new wxButton( m_ItemPanel, -1, _("Config"), wxDefaultPosition, wxSize(60, 26), 0 );
+  buttonSizer1->Add(m_Config, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+  wxBoxSizer* buttonSizer2 = new wxBoxSizer(wxHORIZONTAL);
+  m_PanelMainBox->Add(buttonSizer2, 0, wxALL|wxADJUST_MINSIZE, 2);
 
-  m_PTonoff = new wxToggleButton( m_ItemPanel, -1, _("PT"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_PTonoff = new wxToggleButton( m_ItemPanel, -1, _("PT"), wxDefaultPosition, wxSize(75, 26), 0 );
   m_PTonoff->SetValue(false);
-  buttonSizer->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer2->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
-  m_WriteAll = new wxButton( m_ItemPanel, -1, _("Write all"), wxDefaultPosition, wxSize(70, 28), 0 );
-  m_ReadAll  = new wxButton( m_ItemPanel, -1, _("Read all"), wxDefaultPosition, wxSize(70, 28), 0 );
-  m_CopyFrom  = new wxButton( m_ItemPanel, -1, _("Copy from..."), wxDefaultPosition, wxSize(75, 28), 0 );
+  m_WriteAll = new wxButton( m_ItemPanel, -1, _("Write all"), wxDefaultPosition, wxSize(75, 26), 0 );
+  m_ReadAll  = new wxButton( m_ItemPanel, -1, _("Read all"), wxDefaultPosition, wxSize(75, 26), 0 );
+  m_CopyFrom  = new wxButton( m_ItemPanel, -1, _("Copy from..."), wxDefaultPosition, wxSize(75, 26), 0 );
 
-  buttonSizer->Add(m_ReadAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  buttonSizer->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  buttonSizer->Add(m_CopyFrom, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer2->Add(m_ReadAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer2->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  buttonSizer2->Add(m_CopyFrom, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
 
 }
