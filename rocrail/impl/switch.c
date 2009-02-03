@@ -824,11 +824,19 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr=%d port=%d", addr, port );
       if( addr == addr1 && port == port1 ) {
-        data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+        if( inv )
+          data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
+        else
+          data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState1=%d", data->fieldState1 );
       }
       if( addr == addr2 && port == port2 ) {
-        data->fieldState2 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+        if( inv2 )
+          data->fieldState2 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
+        else
+          data->fieldState2 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState2=%d", data->fieldState2 );
       }
 
