@@ -1369,6 +1369,8 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   iOLocoNetData data = Data(loconet_inst);
   *delnode = True;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+
   /* new ini: update the references and write, if wanted the options  */
   if( StrOp.equals( NodeOp.getName( node ), wDigInt.name() ) ) {
     iONode loconet = wDigInt.getloconet(node);
@@ -1628,18 +1630,55 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
-    /* TODO: Fast Clock */
+    /* Fast Clock */
     /* OPC_WR_SL_DATA: 0xEF 0x0E 0x7B CLK_RATE FRAC_MINSL FRAC_MINSH 256-MINS_60 TRK 256-HRS_24 DAYS CLK_CNTR ID1 ID2 */
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TODO: Fast Clock command..." );
-    if(  wClock.getcmd( node ) == wClock.freeze ) {
-      return 0;
+    int clk_rate = wClock.getdivider(node);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Fast Clock command..." );
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );
+      wClock.setcmd( node, wClock.set );
+      clk_rate = 0;
     }
-    else if(  wClock.getcmd( node ) == wClock.go ) {
-      return 0;
+    else if(  StrOp.equals( wClock.getcmd( node ), wClock.go ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "go clock" );
+      wClock.setcmd( node, wClock.set );
     }
-    else if(  wClock.getcmd( node ) == wClock.set ) {
-      return 0;
+
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.set ) ) {
+      int size = 0;
+      int hours = 10;
+      int mins = 30;
+
+      long l_time = wClock.gettime(node);
+      struct tm* lTime = localtime( &l_time );
+
+      mins  = lTime->tm_min;
+      hours = lTime->tm_hour;
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock" );
+
+      cmd[0] = OPC_WR_SL_DATA;
+      cmd[1] = 0x0E;
+      cmd[2] = 0x7B;
+      cmd[3] = clk_rate;
+
+      cmd[4] = 0x7F; // fractional minutes L
+      cmd[5] = 0x7F; // fractional minutes H
+      cmd[6] = (255-(60-mins))&0x7F; // 256 - minutes 43
+      cmd[7] = 0x00; // track status
+
+      cmd [8] = (256-(24-hours))&0x7F; // 256 - hours 14
+      cmd [9] = 0; // clock rollovers
+      cmd[10] = 0x70;
+      cmd[11] = 0x7F;
+      cmd[12] = 0x70;
+      cmd[13] = LocoNetOp.checksum( cmd, 13 );
+
+      return 14;
+
+
     }
     else if(  wClock.getcmd( node ) == wClock.sync ) {
       return 0;

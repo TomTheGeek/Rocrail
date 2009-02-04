@@ -306,6 +306,15 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.settime( tick, data->time );
           ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
         }
+        {
+          iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+          wClock.setdivider( tick, data->devider );
+          wClock.settime( tick, data->time );
+          wClock.setcmd( tick, wClock.freeze );
+          /* inform all digints */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform all digints..." );
+          ControlOp.cmd( (iOControl)inst, tick, NULL );
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "freeze/resume clock not possible with real time" );
@@ -323,6 +332,15 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.settime( tick, data->time );
           ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
         }
+        {
+          iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+          wClock.setdivider( tick, data->devider );
+          wClock.settime( tick, data->time );
+          wClock.setcmd( tick, wClock.go );
+          /* inform all digints */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform all digints..." );
+          ControlOp.cmd( (iOControl)inst, tick, NULL );
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "freeze/resume clock not possible with real time" );
@@ -333,6 +351,15 @@ static void __callback( obj inst, iONode nodeA ) {
       data->time = wClock.gettime(nodeA);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting time with devider %d", data->devider );
       data->timeset = True;
+      {
+        iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+        wClock.setdivider( tick, data->devider );
+        wClock.settime( tick, data->time );
+        wClock.setcmd( tick, wClock.set );
+        /* inform all digints */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform all digints..." );
+        ControlOp.cmd( (iOControl)inst, tick, NULL );
+      }
     }
     return;
   }
