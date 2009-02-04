@@ -280,7 +280,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
-    iOLoc lc = ModelOp.getLoc( model, wAction.getid( data->action ));
+    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ));
     if( lc != NULL ) {
       if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
         if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 )
