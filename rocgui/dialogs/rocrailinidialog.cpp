@@ -140,7 +140,7 @@ void RocrailIniDialog::initLabels() {
   m_LabelPlanfile->SetLabel( wxGetApp().getMsg( "planfile" ) );
   m_labPlanType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_LabelLibPath->SetLabel( wxGetApp().getMsg( "libpath" ) );
-  m_labImgPath->SetLabel( wxGetApp().getMsg( "imgpath" ) );
+  m_labImgPath->SetLabel( wxGetApp().getMsg( "imagepath" ) );
   m_LabelTraceFile->SetLabel( wxGetApp().getMsg( "tracefile" ) );
   m_labPTIID->SetLabel( wxGetApp().getMsg( "ptiid" ) );
   m_PTIID->SetToolTip( wxGetApp().getTip( "ptiid" ) );

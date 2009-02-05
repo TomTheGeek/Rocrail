@@ -49,7 +49,6 @@
 ////@begin control identifiers
 #define ID_DIALOG_LOCONET_SETTINGS 10033
 #define ID_NOTEBOOK1 10039
-#define ID_CHECKBOX2 10042
 #define ID_COMBOBOX_LOCONET_CMDSTN 10040
 #define ID_CHECKBOX1 10041
 #define SYMBOL_LOCONETCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -135,18 +134,28 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
     wxTextCtrl* m_Port;
-    wxStaticText* m_labSWTime;
-    wxTextCtrl* m_SWTime;
-    wxStaticText* m_labPurgeTime;
-    wxTextCtrl* m_PurgeTime;
     wxRadioBox* m_Baudrate;
     wxRadioBox* m_SubLib;
-    wxCheckBox* m_UseIdle;
     wxCheckBox* m_Flow;
     wxPanel* m_OptionsPanel;
     wxComboBox* m_CmdStn;
     wxCheckListBox* m_OptionsList;
     wxCheckBox* m_SetOptions;
+    wxPanel* m_DetailsPanel;
+    wxStaticText* m_labSWTime;
+    wxTextCtrl* m_SWTime;
+    wxStaticText* m_labPurgeTime;
+    wxTextCtrl* m_PurgeTime;
+    wxStaticBox* m_FastClockBox;
+    wxCheckBox* m_UseFC;
+    wxCheckBox* m_SyncFC;
+    wxStaticBox* m_SlotServerBox;
+    wxCheckBox* m_SlotServerActive;
+    wxCheckBox* m_MobileOnly;
+    wxCheckBox* m_PurgeSlots;
+    wxCheckBox* m_StopAtPurge;
+    wxStaticText* m_labDispatchIID;
+    wxTextCtrl* m_DispatchIID;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end LocoNetCtrlDlg member variables

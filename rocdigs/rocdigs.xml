@@ -566,6 +566,7 @@
       <var name="stress" vt="Boolean"/>
       <var name="stressRunner" vt="iOThread"/>
       <var name="cts" vt="Boolean"/>
+      <var name="fcsync" vt="Boolean"/>
     </data>
   </object>
 

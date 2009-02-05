@@ -6438,5 +6438,49 @@
     <it txt="Read current speed curve from decoder?"/>
     <da txt="Read current speed curve from decoder?"/>
   </Msg>
+  <Msg id="sync">
+    <de txt="Synchronize"/>
+    <en txt="Synchronize"/>
+    <nl txt="Synchronize"/>
+    <sv txt="Synchronize"/>
+    <fr txt="Synchronize"/>
+    <tr txt="Synchronize"/>
+    <es txt="Synchronize"/>
+    <it txt="Synchronize"/>
+    <da txt="Synchronize"/>
+  </Msg>
+  <Msg id="onlymobiledec">
+    <de txt="Mobile only"/>
+    <en txt="Mobile only"/>
+    <nl txt="Mobile only"/>
+    <sv txt="Mobile only"/>
+    <fr txt="Mobile only"/>
+    <tr txt="Mobile only"/>
+    <es txt="Mobile only"/>
+    <it txt="Mobile only"/>
+    <da txt="Mobile only"/>
+  </Msg>
+  <Msg id="purgeslots">
+    <de txt="Purge slots"/>
+    <en txt="Purge slots"/>
+    <nl txt="Purge slots"/>
+    <sv txt="Purge slots"/>
+    <fr txt="Purge slots"/>
+    <tr txt="Purge slots"/>
+    <es txt="Purge slots"/>
+    <it txt="Purge slots"/>
+    <da txt="Purge slots"/>
+  </Msg>
+  <Msg id="stopatpurge">
+    <de txt="Stop at purge"/>
+    <en txt="Stop at purge"/>
+    <nl txt="Stop at purge"/>
+    <sv txt="Stop at purge"/>
+    <fr txt="Stop at purge"/>
+    <tr txt="Stop at purge"/>
+    <es txt="Stop at purge"/>
+    <it txt="Stop at purge"/>
+    <da txt="Stop at purge"/>
+  </Msg>
 </Messages>
 

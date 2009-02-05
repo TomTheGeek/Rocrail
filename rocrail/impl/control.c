@@ -889,6 +889,7 @@ static void __clockticker( void* threadinst ) {
       iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
+      wClock.setcmd( tick, wClock.sync );
       ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */
       ControlOp.cmd( control, tick, NULL );
