@@ -167,39 +167,41 @@ static Boolean _go( iORoute inst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch[%s] already in position [%s]; skip command", swId, swCmd );
       }
       else {
-        iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-        wSwitch.setcmd( cmd, swCmd );
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
+        if( wSwitchCmd.islock( sw ) || !SwitchOp.isLocked(isw, NULL) ) {
+          iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          wSwitch.setcmd( cmd, swCmd );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
 
-        if( !SwitchOp.cmd( isw, cmd, True, &error ) ) {
-          if( error == CMD_ERROR ) {
-            return False;
-          }
-          else if( error == CMD_RETRY ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "retry on %s:%s", swId, swCmd );
-            ThreadOp.sleep( 10 );
-
-            if( sw == sw_retry ) {
-              retry++;
-            }
-            else {
-              sw_retry = sw;
-              retry = 0;
-            }
-
-            if( retry > 9 ) {
-              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "retry did not work on %s:%s", swId, swCmd );
+          if( !SwitchOp.cmd( isw, cmd, True, &error ) ) {
+            if( error == CMD_ERROR ) {
               return False;
             }
-            else
-              continue;
+            else if( error == CMD_RETRY ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "retry on %s:%s", swId, swCmd );
+              ThreadOp.sleep( 10 );
+
+              if( sw == sw_retry ) {
+                retry++;
+              }
+              else {
+                sw_retry = sw;
+                retry = 0;
+              }
+
+              if( retry > 9 ) {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "retry did not work on %s:%s", swId, swCmd );
+                return False;
+              }
+              else
+                continue;
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Error on switching %s:%s", swId, swCmd );
+              return False;
+            }
           }
-          else {
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Error on switching %s:%s", swId, swCmd );
-            return False;
-          }
+          ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
         }
-        ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
       }
     }
 
