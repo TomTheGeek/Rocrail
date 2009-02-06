@@ -275,6 +275,10 @@ void RouteDialog::initIndex() {
         m_List->SetStringSelection( wxString(wRoute.getid( l_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wRoute.getid( l_Props ),wxConvUTF8) );
         m_Props = l_Props;
+        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("route").mb_str(wxConvUTF8), wRoute.getid( l_Props ) );
+        SetTitle( wxString(title,wxConvUTF8) );
+        StrOp.free( title );
+
       }
 
     }
@@ -484,7 +488,8 @@ void RouteDialog::initCommands() {
   m_Commands->Clear();
   iONode swcmd = wRoute.getswcmd( m_Props );
   while( swcmd != NULL ) {
-    char* str = StrOp.fmt( "%s %s %d", wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd(swcmd), wSwitchCmd.gettrack(swcmd) );
+    char* str = StrOp.fmt( "%s %s %d %s",
+        wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd(swcmd), wSwitchCmd.gettrack(swcmd), wSwitchCmd.islock(swcmd)?"lock":"" );
     m_Commands->Append( wxString(str,wxConvUTF8), swcmd );
     StrOp.free( str );
     swcmd = wRoute.nextswcmd( m_Props, swcmd );
@@ -900,7 +905,8 @@ void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
 
   NodeOp.addChild( m_Props, swcmd );
 
-  char* str = StrOp.fmt( "%s %s %d", wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd(swcmd), wSwitchCmd.gettrack(swcmd) );
+  char* str = StrOp.fmt( "%s %s %d %s",
+      wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd(swcmd), wSwitchCmd.gettrack(swcmd), wSwitchCmd.islock(swcmd)?"lock":"" );
   m_Commands->Append( wxString(str,wxConvUTF8), swcmd );
   StrOp.free( str );
 
