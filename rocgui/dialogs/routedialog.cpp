@@ -217,6 +217,7 @@ void RouteDialog::initLabels() {
   m_SwitchCmd->SetString( 2, wxGetApp().getMsg( "left" ) );
   m_SwitchCmd->SetString( 3, wxGetApp().getMsg( "right" ) );
   m_SwitchCmd->SetString( 4, wxGetApp().getMsg( "track" ) );
+  m_Lock->SetLabel( wxGetApp().getMsg( "lock" ) );
 
   // Sensors
   m_AddSensor->SetLabel( wxGetApp().getMsg( "add" ) );
@@ -467,6 +468,8 @@ void RouteDialog::initValues() {
   m_SwitchCmd->Enable( 3, false );
   m_SwitchCmd->Enable( 4, false );
 
+  m_Lock->SetValue(true);
+
   // Sensors
   iONode fb = wRoute.getfbevent( m_Props );
   while( fb != NULL ) {
@@ -580,6 +583,7 @@ bool RouteDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_TrackNumber = NULL;
     m_Add = NULL;
     m_SwitchCmd = NULL;
+    m_Lock = NULL;
     m_SensorPanel = NULL;
     m_SensorList = NULL;
     m_SensorCombo = NULL;
@@ -768,6 +772,8 @@ void RouteDialog::CreateControls()
     m_Add = new wxButton( m_CommandPanel, ID_BUTTON_ST_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer42->Add(m_Add, 0, wxALIGN_LEFT|wxALL, 5);
 
+    wxBoxSizer* itemBoxSizer49 = new wxBoxSizer(wxVERTICAL);
+    itemFlexGridSizer41->Add(itemBoxSizer49, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 5);
     wxArrayString m_SwitchCmdStrings;
     m_SwitchCmdStrings.Add(_("&straight"));
     m_SwitchCmdStrings.Add(_("&turnout(left)"));
@@ -776,48 +782,52 @@ void RouteDialog::CreateControls()
     m_SwitchCmdStrings.Add(_("&track"));
     m_SwitchCmd = new wxRadioBox( m_CommandPanel, ID_RADIOBOX_ST_SW_CMD, _("Command"), wxDefaultPosition, wxDefaultSize, m_SwitchCmdStrings, 1, wxRA_SPECIFY_COLS );
     m_SwitchCmd->SetSelection(0);
-    itemFlexGridSizer41->Add(m_SwitchCmd, 0, wxALIGN_LEFT|wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer49->Add(m_SwitchCmd, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_Lock = new wxCheckBox( m_CommandPanel, wxID_ANY, _("Lock"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Lock->SetValue(false);
+    itemBoxSizer49->Add(m_Lock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_CommandPanel, _("Turnouts"));
 
     m_SensorPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer51 = new wxBoxSizer(wxVERTICAL);
-    m_SensorPanel->SetSizer(itemBoxSizer51);
+    wxBoxSizer* itemBoxSizer53 = new wxBoxSizer(wxVERTICAL);
+    m_SensorPanel->SetSizer(itemBoxSizer53);
 
     wxArrayString m_SensorListStrings;
     m_SensorList = new wxListBox( m_SensorPanel, ID_LIST_ROUTE_SENSORS, wxDefaultPosition, wxDefaultSize, m_SensorListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer51->Add(m_SensorList, 1, wxGROW|wxALL, 5);
+    itemBoxSizer53->Add(m_SensorList, 1, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer53 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer51->Add(itemBoxSizer53, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer55 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer53->Add(itemBoxSizer55, 0, wxGROW|wxALL, 5);
     wxArrayString m_SensorComboStrings;
     m_SensorCombo = new wxComboBox( m_SensorPanel, ID_COMBOBOX_ROUTES_SENSORS, _T(""), wxDefaultPosition, wxSize(140, -1), m_SensorComboStrings, wxCB_DROPDOWN );
-    itemBoxSizer53->Add(m_SensorCombo, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
+    itemBoxSizer55->Add(m_SensorCombo, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_AddSensor = new wxButton( m_SensorPanel, ID_BUTTON_ROUTES_ADD_SENSOR, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer53->Add(m_AddSensor, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemBoxSizer55->Add(m_AddSensor, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_DelSensor = new wxButton( m_SensorPanel, ID_BUTTON_ROUTES_DEL_SENSOR, _("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer53->Add(m_DelSensor, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemBoxSizer55->Add(m_DelSensor, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_SensorPanel, _("Sensors"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer57 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer59 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer57, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer59, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer57->AddButton(m_Cancel);
+    itemStdDialogButtonSizer59->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer57->AddButton(m_OK);
+    itemStdDialogButtonSizer59->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer57->AddButton(m_Apply);
+    itemStdDialogButtonSizer59->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer57->Realize();
+    itemStdDialogButtonSizer59->Realize();
 
 ////@end RouteDialog content construction
 }
@@ -886,6 +896,8 @@ void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
       break;
   }
 
+  wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
+
   NodeOp.addChild( m_Props, swcmd );
 
   char* str = StrOp.fmt( "%s %s %d", wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd(swcmd), wSwitchCmd.gettrack(swcmd) );
@@ -942,6 +954,9 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
     }
     m_SwitchCmd->SetSelection(dir);
 
+    m_Lock->Enable(true);
+    m_Lock->SetValue(wSwitchCmd.islock( swcmd )?true:false);
+
     int swidx = m_SwitchId->FindString( wxString(wSwitchCmd.getid(swcmd),wxConvUTF8) );
     if( swidx != wxNOT_FOUND ) {
       iONode sw = (iONode)m_SwitchId->GetClientData( swidx );
@@ -966,6 +981,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 2, false );
         m_SwitchCmd->Enable( 3, false );
         m_SwitchCmd->Enable( 4, true );
+        m_Lock->Enable(false);
       }
       else {
         m_SwitchCmd->Enable( 0, true );
@@ -1120,6 +1136,7 @@ void RouteDialog::OnButtonTurnoutModifyClick( wxCommandEvent& event )
   iONode swcmd = (iONode)m_Commands->GetClientData( m_Commands->GetSelection() );
   if( swcmd != NULL ) {
     wSwitchCmd.setid(swcmd, m_SwitchId->GetStringSelection().mb_str(wxConvUTF8) );
+    wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
 
     int dir = m_SwitchCmd->GetSelection();
     switch( dir ) {

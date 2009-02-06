@@ -489,10 +489,16 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
       if( isw != NULL ) {
-        if( !SwitchOp.lock( isw, locId, inst ) ) {
-          /* Rewind. */
-          __unlockSwitches( inst, locId );
-          return False;
+        if( wSwitchCmd.islock( sw ) ) {
+          if( !SwitchOp.lock( isw, locId, inst ) ) {
+            /* Rewind. */
+            __unlockSwitches( inst, locId );
+            return False;
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "***** no locking wanted for switch [%s] for route [%s]", SwitchOp.getId(isw) , o->routeLockId );
         }
       }
     }

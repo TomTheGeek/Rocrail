@@ -1125,6 +1125,7 @@
           <var name="cmd" vt="string" defval="straight" range="straight,turnout,left,right,green,red,track"/>
           <var name="track" vt="int" defval="0" range="0-*" remark="turntable track"/>
           <const name="cmd_track" vt="string" val="track" remark="track of turntable or selectiontable: avoid using same id's for both types!"/>
+          <var name="lock" vt="bool" defval="true" remark="lock the switch for exclusive use"/>
         </swcmd>
         <const name="go" vt="string" val="go" remark="Switch all switches for this street."/>
         <const name="test" vt="string" val="test" remark="Switch all switches for this street without sending the clients updates."/>

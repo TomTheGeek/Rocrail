@@ -240,6 +240,7 @@ public:
     wxSpinCtrl* m_TrackNumber;
     wxButton* m_Add;
     wxRadioBox* m_SwitchCmd;
+    wxCheckBox* m_Lock;
     wxPanel* m_SensorPanel;
     wxListBox* m_SensorList;
     wxComboBox* m_SensorCombo;
