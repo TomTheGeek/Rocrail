@@ -128,7 +128,7 @@
 #define DEC_MODE_MASK     (STAT1_SL_SPDEX | STAT1_SL_SPD14 | STAT1_SL_SPD28)
 /* Advanced consisting allowed for the next two */
 #define DEC_MODE_128A     (STAT1_SL_SPDEX | STAT1_SL_SPD14 | STAT1_SL_SPD28)
-#define DEC_MODE_28A      STAT1_SL_SPDEX 
+#define DEC_MODE_28A      STAT1_SL_SPDEX
 /* normal modes */
 #define DEC_MODE_128      (STAT1_SL_SPD14 | STAT1_SL_SPD28)
 #define DEC_MODE_14       STAT1_SL_SPD14
@@ -291,4 +291,7 @@
 #define KEY_IMM_PACKET		1<< 21
 #define KEY_WR_SL_DATA		1<< 22
 
+#define SENSOR_TYPE_DEFAULT      0
+#define SENSOR_TYPE_LISSY        1
+#define SENSOR_TYPE_TRANSPONDING 2
 

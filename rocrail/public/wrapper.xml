@@ -942,6 +942,8 @@
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
         <var name="identifier" vt="int" defval="0" remark="Loc identifier"/>
+        <var name="zone" vt="string" defval="" remark="transponder zone"/>
+        <var name="section" vt="int" defval="0" remark="transponder section"/>
         <var name="info" vt="string" defval="" remark="extra information"/>
         <var name="direction" vt="bool" defval="true" remark="Loc identifier direction"/>
         <var name="state" vt="bool" defval="false" remark="Current feedback state."/>
