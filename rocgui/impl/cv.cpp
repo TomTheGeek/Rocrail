@@ -303,12 +303,14 @@ void CV::event( iONode event ) {
       else if(m_CVidx == 94 && m_bSpeedCurve ) {
         /* post an event to activate the speed curve dialog */
         m_bSpeedCurve = false;
+        m_Timer->Stop();
         onSpeedCurve();
       }
     }
     else if( m_CVidx == 29 ) {
       /* post an event to activate the speed curve dialog */
       m_ConfigVal = ivalue;
+      m_Timer->Stop();
       onDecConfig();
     }
     else {
