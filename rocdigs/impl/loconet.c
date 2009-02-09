@@ -461,7 +461,7 @@ static void __handleSensor(iOLocoNet loconet, int addr, int value, int type) {
     sType = "transponding";
 
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fb=%d ident=%d (%s)", addr, value, sType );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fb=%d value=%d (%s)", addr, value, sType );
   {
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -492,7 +492,7 @@ static void __handleSensor(iOLocoNet loconet, int addr, int value, int type) {
 
 static void __powerMultiSenseMessage(iOLocoNet loconet, byte* msg) {
   iOLocoNetData data = Data(loconet);
-  TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "*** powerMultiSenseMessage not implemented" );
+  TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999, "*** powerMultiSenseMessage not implemented" );
 }
 
 
@@ -509,8 +509,12 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
 
   if      ((msg[2]&0x0F) == 0x00) zone = "A";
   else if ((msg[2]&0x0F) == 0x02) zone = "B";
-  else if ( msg[2] == 0x04)       zone = "C";
+  else if ((msg[2]&0x0F) == 0x04) zone = "C";
   else if ((msg[2]&0x0F) == 0x06) zone = "D";
+  else if ((msg[2]&0x0F) == 0x08) zone = "E";
+  else if ((msg[2]&0x0F) == 0x0A) zone = "F";
+  else if ((msg[2]&0x0F) == 0x0C) zone = "G";
+  else if ((msg[2]&0x0F) == 0x0E) zone = "H";
 
 
   if (msg[3]==0x7D)
@@ -529,6 +533,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     present  = False;
     break;
   default:
+    TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999, "*** unknown multi sense type: 0x%02X (0x%02X)", type, msg[1] );
     return;
   }
 
@@ -544,8 +549,11 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
 
     wFeedback.setidentifier( nodeC, locoaddr );
     wFeedback.setstate( nodeC, present );
-
-    TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
+/*
+D0 20 06 7D 01 75
+loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address [1]
+ */
+    TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999,
         "Transponder [%d] [%s] in section [%d] zone [%s] decoder address [%d]",
         sensaddr, present?"present":"absend", section, zone, locoaddr );
 
@@ -1510,7 +1518,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   iOLocoNetData data = Data(loconet_inst);
   *delnode = True;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
 
   /* new ini: update the references and write, if wanted the options  */
   if( StrOp.equals( NodeOp.getName( node ), wDigInt.name() ) ) {
@@ -1783,7 +1791,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       wClock.setcmd( node, wClock.set );
     }
     else if(  StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sync clock" );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sync clock" );
       if( wLocoNet.issyncfc(data->loconet) || !data->fcsync ) {
         wClock.setcmd( node, wClock.set );
         data->fcsync = True;
