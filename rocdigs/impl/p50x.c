@@ -787,6 +787,7 @@ static void __evaluatePTevent( iOP50x p50, byte* in, int size ) {
   iOP50xData o = Data(p50);
 
   if( size >= 1 ) {
+    int cmd = 0;
     int status = in[0];
     int val = -1;
 
@@ -825,16 +826,18 @@ static void __evaluatePTevent( iOP50x p50, byte* in, int size ) {
           break;
       }
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT [%s] status=%d", statusstring, status );
+      cmd = wProgram.statusrsp;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV value=%d", val );
       val = in[1]; /* cv value or status */
+      cmd = wProgram.datarsp;
     }
 
     /* inform listener */
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setvalue( node, val );
-    wProgram.setcmd( node, (size > 1 ? wProgram.datarsp:wProgram.statusrsp) );
+    wProgram.setcmd( node, cmd );
     if( o->iid != NULL )
       wProgram.setiid( node, o->iid );
 
