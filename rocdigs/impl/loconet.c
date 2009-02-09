@@ -492,7 +492,7 @@ static void __handleSensor(iOLocoNet loconet, int addr, int value, int type) {
 
 static void __powerMultiSenseMessage(iOLocoNet loconet, byte* msg) {
   iOLocoNetData data = Data(loconet);
-  TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999, "*** powerMultiSenseMessage not implemented" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "*** powerMultiSenseMessage not implemented" );
 }
 
 
@@ -500,8 +500,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   iOLocoNetData data = Data(loconet);
 
   int type         = msg[1] & OPC_MULTI_SENSE_MSG;
-  int section      = (msg[2]/16)+(msg[2]&0x1F)*16;
-  int sensaddr     = ((msg[1]&0x1F)*128) + msg[2] + 1;
+  int boardaddr    = ( ( ( (msg[1]&0x1F) * 128 ) + msg[2] ) >> 4 ) + 1;
   int locoaddr     = 0;
   const char* zone = "";
   Boolean present  = False;
@@ -533,15 +532,14 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     present  = False;
     break;
   default:
-    TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999, "*** unknown multi sense type: 0x%02X (0x%02X)", type, msg[1] );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "*** unknown multi sense type: 0x%02X (0x%02X)", type, msg[1] );
     return;
   }
 
   {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setaddr( nodeC, sensaddr );
-    wFeedback.setsection( nodeC, section );
+    wFeedback.setaddr( nodeC, boardaddr );
     wFeedback.setzone( nodeC, zone );
 
     if( data->iid != NULL )
@@ -553,9 +551,9 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
 D0 20 06 7D 01 75
 loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address [1]
  */
-    TraceOp.trc( "loconet", TRCLEVEL_MONITOR, __LINE__, 9999,
-        "Transponder [%d] [%s] in section [%d] zone [%s] decoder address [%d]",
-        sensaddr, present?"present":"absend", section, zone, locoaddr );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "BDL [%d] zone [%s] reports [%s] of decoder address [%d]",
+        boardaddr, zone, present?"present":"absend", locoaddr );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }

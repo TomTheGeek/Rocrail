@@ -30,20 +30,20 @@
  * @author      Bob Jacobsen  Copyright 2001, 2002, 2003
  * @version      $Revision: 1.37 $
  */
- 
+
 #include "rocs/public/rocs.h"
 #include "rocs/public/objbase.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/trace.h"
- 
+
 #include "rocdigs/impl/loconet/lnconst.h"
 #include "rocdigs/impl/loconet/lncv.h"
- 
+
     // control data
 static Boolean  showTrackStatus = True;   /* if TRUE, show track status on every slot read    */
 static int      trackStatus     = -1;     /* most recent track status value                   */
-    
+
 /**
  * Factor out the PM power messages
  * @param l
@@ -56,7 +56,7 @@ static void __powerMultiSenseMessage(byte* msg) {
         // autoreverse
         int cm1 = msg[3];
         int cm2 = msg[4];
-        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
             "PM4 %d ch1 %s %s ch2 %s %s ch3 %s %s ch4 %s %s",
             (msg[2]+1),
             ((cm1&1)!=0 ? "AR " : "SC "), ((cm2&1)!=0 ? "ACT;" : "OK;"),
@@ -84,7 +84,7 @@ static void __powerMultiSenseMessage(byte* msg) {
             wrd, bit, opsw, val,
             (val==1 ? "(closed)":"(thrown)") );
     } else  // beats me
-        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
             "OPC_MULTI_SENSE power message PM4 %d unknown CMD=0x%02X",
             msg[2]+1, pCMD);
 }
@@ -126,7 +126,7 @@ static void __peerToPeerMessage(byte* msg) {
     // check for a specific type - download message
     if ( (src == 0x7F) && (dst_l == 0x7F) && (dst_h == 0x7F)
          && ((pxct1&0x70) == 0x40) ) {
-         
+
         // yes - format as such
         // decode subtype
         int sub = pxct2&0x70;
@@ -151,17 +151,17 @@ static void __peerToPeerMessage(byte* msg) {
                 break;
         }
     }
-    
-    
+
+
     // no specific type, return generic format
-    TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+    TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
         "Peer to Peer transfer: SRC=0x%02X DSTL=0x%02X DSTH=0x%02X PXCT1=0x%02X PXCT2=0x%02X D1=0x%02X D2=0x%02X D3=0x%02X D4=0x%02X D5=0x%02X D6=0x%02X D7=0x%02X D8=0x%02X",
         src, dst_l, dst_h, pxct1, pxct2, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7] );
-                
+
 }
 
-static int LOCO_ADR(int a1, int a2) { 
-  return (((a1 & 0x7f) * 128) + (a2 & 0x7f)); 
+static int LOCO_ADR(int a1, int a2) {
+  return (((a1 & 0x7f) * 128) + (a2 & 0x7f));
 }
 
 /**
@@ -171,8 +171,8 @@ static int LOCO_ADR(int a1, int a2) {
  * @param a2 Byte containing the lower bits
  * @return 1-4096 address
  */
-static int SENSOR_ADR(int a1, int a2) { 
-  return (((a2 & 0x0f) * 128) + (a1 & 0x7f)) + 1; 
+static int SENSOR_ADR(int a1, int a2) {
+  return (((a2 & 0x0f) * 128) + (a1 & 0x7f)) + 1;
 }
 
 
@@ -220,7 +220,7 @@ void traceLocoNet(byte* msg) {
     int minutes;  // temporary time values
     int hours;
     int frac_mins;
-    
+
     if( !(TraceOp.getLevel(NULL) & TRCLEVEL_MONITOR) ) {
       /* return if monitor level is not set */
       return;
@@ -310,7 +310,7 @@ void traceLocoNet(byte* msg) {
     case OPC_SW_ACK: {               /* page 8 of Loconet PE */
         int sw1 = msg[1];
         int sw2 = msg[2];
-        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Request switch %d %s %s with Acknowledge", 
+        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Request switch %d %s %s with Acknowledge",
             SENSOR_ADR(sw1, sw2),
             ((sw2 & OPC_SW_ACK_CLOSED)!=0 ? " Closed/Green" : " Thrown/Red"),
             ((sw2 & OPC_SW_ACK_OUTPUT)!=0 ? " (Output On)" : " (Output Off)") );
@@ -548,18 +548,18 @@ void traceLocoNet(byte* msg) {
         int sensoraddr = SENSOR_ADR(in1,in2);
 
         int ch = 0;
-        
+
         if ( ((in1/2) & 3) == 0 ) ch = 0;
         else if ( ((in1/2) & 3) == 1 ) ch = 4;
         else if ( ((in1/2) & 3) == 2 ) ch = 8;
         else ch = 12;
-        
+
         if ( ((in1 & 1) !=0) &&  (in2 & OPC_INPUT_REP_SW) ) ch+=4;
         else if (  (in1 & 1) && !(in2 & OPC_INPUT_REP_SW) ) ch+=3;
         else if ( !(in1 & 1) &&  (in2 & OPC_INPUT_REP_SW) ) ch+=2;
         else ch+=1;
 
-        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+        TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
             "Sensor report: contact %d (DS54 switch%d %s) (BLD16 %d%d) is %s",
             ((sensoraddr-1) * 2 + ( (in2 & OPC_INPUT_REP_SW) ? 2:1) ),
             sensoraddr,
@@ -754,26 +754,31 @@ void traceLocoNet(byte* msg) {
         const char* zone;
         if      ((msg[2]&0x0F) == 0x00) zone = "A";
         else if ((msg[2]&0x0F) == 0x02) zone = "B";
-        else if (msg[2] == 0x04) zone = "C";
+        else if ((msg[2]&0x0F) == 0x04) zone = "C";
         else if ((msg[2]&0x0F) == 0x06) zone = "D";
+        else if ((msg[2]&0x0F) == 0x08) zone = "E";
+        else if ((msg[2]&0x0F) == 0x0A) zone = "F";
+        else if ((msg[2]&0x0F) == 0x0C) zone = "G";
+        else if ((msg[2]&0x0F) == 0x0E) zone = "H";
         else zone="<unknown>";
-        
-        int section = (msg[2]/16)+(msg[2]&0x1F)*16;
+
+        int boardaddr    = ( ( ( (msg[1]&0x1F) * 128 ) + msg[2] ) >> 4 ) + 1;
+
         int addr = 0;
         if (msg[3]==0x7D)
           addr=msg[4];
         else
           addr=msg[3]*128+msg[4];
-          
+
         switch (type) {
         case OPC_MULTI_SENSE_POWER:
             __powerMultiSenseMessage(msg);
             break;
         case OPC_MULTI_SENSE_PRESENT:  // from transponding app note
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Transponder present in section %d zone %s decoder address %d", section, zone,addr );
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Transponder present in BDL %d zone %s decoder address %d", boardaddr, zone,addr );
             break;
         case OPC_MULTI_SENSE_ABSENT:
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Transponder absent in section %d zone %s decoder address %d", section, zone,addr );
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Transponder absent in BDL %d zone %s decoder address %d", boardaddr, zone,addr );
             break;
         default:
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_MULTI_SENSE unknown format");
@@ -963,7 +968,7 @@ void traceLocoNet(byte* msg) {
             if (adr2 == 0x7f) {
                 if ((ss2 & STAT2_ALIAS_MASK) == STAT2_ID_IS_ALIAS) {
                     /* this is an aliased address and we have the alias*/
-                    locoAdrStr = StrOp.fmt("%d (Alias for loco %s)", 
+                    locoAdrStr = StrOp.fmt("%d (Alias for loco %s)",
                         LOCO_ADR(id2, id1),
                         mixedAdrStr
                         );
@@ -1386,32 +1391,32 @@ void traceLocoNet(byte* msg) {
             // end of OPC_WR_SL_DATA, OPC_SL_RD_DATA case
             break;
         } // end case
-        
+
 
     case 0xEE:
     case 0xE6:
         if (msg[1]==0x10) {
             // ALM read and write messages
             char* msg3[4] = {"(ID)","","(RD)","(WR)"};
-            
+
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "%s %d ATASK=%d %s BLKL=%d BLKH=%d LOGIC=%d\nARG1L=0x%02X ARG1H=0x%02X ARG2L=0x%02X ARG2H=0x%02X ARG3L=0x%02X ARG3H=0x%02X ARG4L=0x%02X ARG4H=0x%02X",
                 (msg[0]==0xEE?"Write ALM msg":"Read ALM msg (Write reply)"),
                 msg[2], msg[3], msg3[msg[3]&0x03], msg[4], msg[5], msg[6],
                 msg[7],msg[8],msg[9],msg[10],msg[11],msg[12],msg[13],msg[14]);
-              
+
         } else if (msg[1] == 0x15) {
             // write extended master message
-            if (msg[0]==0xEE) 
+            if (msg[0]==0xEE)
               TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Write extended slot: ");
-            else 
+            else
               TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Read extended slot (Write reply): ");
-            
-        } else 
+
+        } else
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "0XE6/0xEE message with unexpected length %d", msg[1]);
         break;
-        
+
     case 0xE5:
         // there are several different formats for 0xE5 messages, with
         // the length apparently the distinquishing item.
@@ -1433,14 +1438,14 @@ void traceLocoNet(byte* msg) {
 
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "Throttle status TCNTRL=%02X %s ID1,ID2=%02X,%02X SLA=%02X SLB=%02X", tcntrl,
-                stat, msg[3], msg[4], msg[7], msg[8] ); 
+                stat, msg[3], msg[4], msg[7], msg[8] );
             break;
         }
         case 0x0F: {
           if( msg[5] == 0x11 ) {
             /* IB response s88 status */
             /* E5 0F 00 49 4B 11 06 05 7F 7F 00 00 0A 44 4B */
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
               "IB s88 module %d reports 1-8=0x%02X 9-16=0x%02X PXCT1=0x%02X", msg[7]+1, msg[12], msg[13], msg[6] );
           }
           else if( msg[5] == 0x1F ) {
@@ -1448,12 +1453,12 @@ void traceLocoNet(byte* msg) {
             /* E5 0F 05 49 4B 1F 01 3F 18 00 00 01 00 00 2A */
             int type, addr, cv, val;
             int iSet = evaluateLNCV( msg, &type, &addr, &cv, &val);
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
               "LNCV %s response type=%d, cv%d=%d", iSet?"SET":"GET", type, cv, val );
           }
           break;
         }
-        
+
         default: {
             // 0xE5 message of unknown format
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Message with opcode 0xE5 and unknown format" );
@@ -1474,7 +1479,7 @@ void traceLocoNet(byte* msg) {
         case 0x08 : {  // Format LISSY message
             int unit = (msg[4]&0x7F);
             int address = (msg[6]&0x7F)+128*(msg[5]&0x7F);
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "Lissy %d: Loco %d moving %s", unit, address, ((msg[3]&0x20)==0 ? "north":"south") );
             break;
         }
@@ -1496,19 +1501,19 @@ void traceLocoNet(byte* msg) {
                     status = " XA reserved; ";
                 else
                     status = " no reservation; ";
-            if ( (stat2&0x01) !=0 ) 
+            if ( (stat2&0x01) !=0 )
               status1="Turnout thrown; ";
-            else 
+            else
               status1="Turnout closed; ";
-            if ( (stat1&0x01) !=0 ) 
+            if ( (stat1&0x01) !=0 )
               status2="Occupied";
-            else 
+            else
               status2="Not occupied";
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
-                "SE%d (%d) reports AX:%d XA:%d %s%s%s",(element+1), element, msg[7], msg[8], status, status1, status2 ); 
+                "SE%d (%d) reports AX:%d XA:%d %s%s%s",(element+1), element, msg[7], msg[8], status, status1, status2 );
             break;
         }
-        
+
         default :
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Unrecognized command varient");
             break;
@@ -1549,7 +1554,7 @@ void traceLocoNet(byte* msg) {
             int len = ((reps & 0x70) >> 4);
             byte packet[32];
             /* it is */
-            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "Send packet immediate: %d bytes, repeat count %d\n\tDHI=0x%02X, IM1=0x%02X, IM2=0x%02X, IM3=0x%02X, IM4=0x%02X, IM5=0x%02X",
                 ((reps & 0x70) >> 4), (reps & 0x07), dhi, im1, im2, im3, im4, im5 );
 
@@ -1558,13 +1563,13 @@ void traceLocoNet(byte* msg) {
         /* ED 0F 01 49 42 13 00 05 00 00 00 00 00 00 01 */
         else if( val7f == 0x01 && reps == 0x49 && dhi == 0x42 && im1 == 0x13 ) {
           TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Request s88 module status %d", im3+1 );
-        } 
+        }
         else if( im1 == UB_LNCVGET || im1 == UB_LNCVSET ) {
           int type, addr, cv, val;
           evaluateLNCV( msg, &type, &addr, &cv, &val);
-          TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, 
+          TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
               "LNCV %s command type=%d, cv%d=%d", im1 == UB_LNCVGET ? "GET":"SET", type, cv, val );
-        } 
+        }
         else {
             /* Hmmmm... */
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Weird Send Packet Immediate, 3rd byte id 0x%02X not 0x7f",val7f );
@@ -1572,7 +1577,7 @@ void traceLocoNet(byte* msg) {
         break;
     }
     break;
-    
+
     default:
         TraceOp.trc( "lnmon", TRCLEVEL_DEBUG, __LINE__, 9999, "Command 0x%02X is not defined in Loconet Personal Use Edition 1.0", msg[0] );
 
