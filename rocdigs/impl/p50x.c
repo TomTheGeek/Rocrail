@@ -481,6 +481,7 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
+      o->cv_nr = cv;
       p50[0] = (byte)'x';
       p50[1] = 0xF0;
       p50[2] = cv & 0xFF;
@@ -493,6 +494,8 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
       int addr = wProgram.getaddr( node );
       int cv = wProgram.getcv( node );
       int val = wProgram.getvalue( node );
+      o->cv_nr = cv;
+      o->cv_val = val;
       if( wProgram.ispom(node) ) {
         /*
         XDCC_PD (0xDE)- Länge = 1+5 Bytes
@@ -820,6 +823,7 @@ static void __evaluatePTevent( iOP50x p50, byte* in, int size ) {
           break;
         case 0x00:
           statusstring = "Command completed, no errors";
+          val = o->cv_val;
           break;
         default:
           statusstring = "**Check manual for meaning of status**";
@@ -836,6 +840,7 @@ static void __evaluatePTevent( iOP50x p50, byte* in, int size ) {
 
     /* inform listener */
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( node, o->cv_nr );
     wProgram.setvalue( node, val );
     wProgram.setcmd( node, cmd );
     if( o->iid != NULL )

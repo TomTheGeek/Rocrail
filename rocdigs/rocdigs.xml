@@ -93,6 +93,8 @@
       <var name="power" vt="Boolean"/>
       <var name="hot" vt="Boolean"/>
       <var name="halt" vt="Boolean"/>
+      <var name="cv_nr" vt="int"/>
+      <var name="cv_val" vt="int"/>
     </data>
   </object>
 
