@@ -1121,6 +1121,7 @@
         <var name="dir" vt="bool" defval="true" remark="Direction permission; true is from-to only, false is both directions."/>
         <var name="lcdir" vt="bool" defval="true" remark="Loco running direction from-to; true is forwards, false is backwards."/>
         <var name="swap" vt="bool" defval="false" remark="swap loco placing at activating this route"/>
+        <var name="swappost" vt="bool" defval="false" remark="swap loco placing at terminating this route"/>
         <var name="reduceV" vt="bool" defval="true" remark="reduce speed by thrown switches"/>
         <swcmd cardinality="n" wrappername="SwitchCmd">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Switch ID."/>
@@ -1293,6 +1294,7 @@
         <var name="roaming" vt="bool" defval="true" remark="The roaming flag allows a loc traveling to other systems."/>
         <var name="trysamedir" vt="bool" defval="false" remark="Try find new destinations in the same direction as the loc is running now."/>
         <var name="tryoppositedir" vt="bool" defval="false" remark="Try find new destinations in the opposite direction. (to-from)"/>
+        <var name="forcesamedir" vt="bool" defval="false" remark="Force find new destinations in the same direction as the loc is running now."/>
         <var name="dirpause" vt="int" defval="0" range="0-999" unit="ms" remark="pause after sending last turnout command and before sending the direction to the loc decoder"/>
 
         <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>

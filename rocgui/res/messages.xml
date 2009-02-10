@@ -3893,6 +3893,17 @@
     <it txt="destinazione opposta" tip="Ricerca nuova destinazione  nel a-da direzione"/>
     <da txt="Ændre retning" tip="Søg ny destination i modsatte retning"/>
   </Msg>
+  <Msg id="forcesamedir">
+    <de txt="Nur Fahrziel in Fahrtrichtung" tip="Sucht nur neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
+    <en txt="force same destination direction" tip="Search forced new destination without changing the current direction."/>
+    <nl txt="xxx zelfde bestemmings richting" tip="xxx Nieuwe bestemming zoeken zonder richtings verandering."/>
+    <sv txt="xxx Samma riktning" tip="xxx Sök ny destination utan att byta riktning."/>
+    <fr txt="xxx Même sens de destination" tip="xxx Chercher une nouvelle destination sans changer de sens de roulage"/>
+    <tr txt="xxx Samedir"/>
+    <es txt="xxx Igual dirección" tip="xxx Buscar nuevo destino sin cambiar de dirección."/>
+    <it txt="xxx Stessa direzione destinazione" tip="xxx Ricerca nuova destinazione senza cambiare attuale direzione destinazione"/>
+    <da txt="xxx Samme retning" tip="xxx Søg destination uden at skifte retning"/>
+  </Msg>
   <Msg id="deactivate">
     <de txt="Deaktivieren"/>
     <en txt="Deactivate"/>
@@ -4805,6 +4816,17 @@
     <es txt="Cambiar dirección"/>
     <it txt="Loco posta girata"/>
     <da txt="Skift placering"/>
+  </Msg>
+  <Msg id="swapplacingpost">
+    <de txt="Ändern der Platzierung nach der Route"/>
+    <en txt="Swap placing post"/>
+    <nl txt="Omkeren xxx"/>
+    <sv txt="Byt plats xxx"/>
+    <fr txt="Echanger le positionnement xxx"/>
+    <tr txt="Swap placing post"/>
+    <es txt="Cambiar dirección xxx"/>
+    <it txt="Loco posta girata xxx"/>
+    <da txt="Skift placering xxx"/>
   </Msg>
   <Msg id="relativetime">
     <de txt="Relative Zeiten"/>

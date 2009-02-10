@@ -585,6 +585,7 @@
       <param name="trysamedir" vt="Boolean" remark="Try to find a destination in the same direction of the running train"/>
       <param name="tryoppositedir" vt="Boolean" remark="Try to find a destination in the to-from direction"/>
       <param name="forcesamedir" vt="Boolean" remark="find a destination in the same direction of the running train"/>
+      <param name="swapPlacingInPrevRoute" vt="Boolean" remark="the route bevore is swapping the placement/direction"/>
     </fun>
     <fun name="findRoute" vt="iORoute" remark="returns the fitting route">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -849,6 +850,9 @@
     </fun>
     <fun name="isSwap" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="isSwapPost" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="hasThrownSwitch" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>

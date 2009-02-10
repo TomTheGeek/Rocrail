@@ -69,15 +69,15 @@ Boolean reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockB
   /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
   /* TODO: use the right direction for finding the next block in the same direction */
 
-  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop ) {
+  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop )   {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "finding a second next block for [%s]", data->loc->getId( data->loc ) );
 
     if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
       nextRoute = NULL;
       nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock),
-                                          data->loc, &nextRoute, gotoBlock, True, False, True ); /* force same dir */
-
+                                         data->loc, &nextRoute, gotoBlock, True, False, True, /* force same dir */
+		      			 fromRoute->isSwapPost( fromRoute ) );
     }
     else {
       /* find destination using schedule */

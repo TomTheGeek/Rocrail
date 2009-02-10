@@ -203,6 +203,7 @@ void RouteDialog::initLabels() {
 
   m_DetailsBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_Swap->SetLabel( wxGetApp().getMsg( "swapplacing" ) );
+  m_SwapPost->SetLabel( wxGetApp().getMsg( "swapplacingpost" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
 
   // Commands
@@ -461,6 +462,8 @@ void RouteDialog::initValues() {
   m_ReduceV->SetValue(wRoute.isreduceV( m_Props ));
 
   m_Swap->SetValue(wRoute.isswap( m_Props ));
+  
+  m_SwapPost->SetValue(wRoute.isswappost( m_Props ));
 
   initCommands();
 
@@ -540,8 +543,9 @@ void RouteDialog::evaluate() {
 
   wRoute.setreduceV( m_Props, m_ReduceV->IsChecked()?True:False);
 
-
   wRoute.setswap( m_Props, m_Swap->IsChecked()?True:False);
+  
+  wRoute.setswappost( m_Props, m_SwapPost->IsChecked()?True:False);
 
 }
 
@@ -577,6 +581,7 @@ bool RouteDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_RunDir = NULL;
     m_DetailsBox = NULL;
     m_Swap = NULL;
+    m_SwapPost = NULL;
     m_Actions = NULL;
     m_CommandPanel = NULL;
     m_Commands = NULL;
@@ -732,6 +737,9 @@ void RouteDialog::CreateControls()
     m_Swap = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Swap loco placing"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Swap->SetValue(false);
     itemStaticBoxSizer32->Add(m_Swap, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_SwapPost = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Swap loco placing post route"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SwapPost->SetValue(false);
+    itemStaticBoxSizer32->Add(m_SwapPost, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_GeneralPanel, ID_ROUTE_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer32->Add(m_Actions, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);

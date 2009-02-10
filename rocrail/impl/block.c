@@ -272,7 +272,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
         data->id, data->fromBlockId?data->fromBlockId:"?" );
 
     /* TODO: check running direction -> from_all or from_all_reverse */
-    if( data->reverse ) {
+/*
+    if ( ( data->reverse && !data->next1Route->isSwapPost( data->next1Route ) )
+      || ( !data->reverse && data->next1Route->isSwapPost( data->next1Route ) ) ) {
+*/
+    if ( data->reverse ) {
       StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
     }
     else {

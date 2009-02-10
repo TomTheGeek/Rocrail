@@ -78,7 +78,18 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
                    "Setting state for \"%s\" to LC_INBLOCK.",
                    data->loc->getId( data->loc ) );
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
-    
+  
+    if ( data->next1Route->isSwapPost( data->next1Route ) ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+      /* swap post route */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
+      data->loc->swapPlacing( data->loc );
+      
+      wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
+      data->loc->cmd( data->loc, cmd);
+    }    
+
     /* unlink-up after inblock event */
     data->next1Block->unLink( data->next1Block );
     

@@ -2435,7 +2435,8 @@ static const char* __getManagedID(iOModel inst, const char* fromBlockId) {
 /* synchronized!!! */
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
-                          Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir ) {
+                          Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
+	       		  Boolean swapPlacingInPrevRoute) {
   iOModelData o = Data(inst);
 
   iIBlockBase   blockBest = NULL;
@@ -2501,7 +2502,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                        "[%d] FromBlock [%s] ToBlock [%s]", i, stFrom, stTo );
 
         destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
-        samedir = (locdir==destdir ? True:False);
+        samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
 
         /* Must match the fromBlock: */
         if( StrOp.equals( fromBlockId, stFrom ) )
@@ -2546,14 +2547,14 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                 if( !samedir && !allowChgDir )
                   dirOK = False;
 
-                if( dirOK && (!trysamedir && !tryoppositedir) ) {
+                if( dirOK && (!trysamedir && !forceSameDir && !tryoppositedir) ) {
                   /* normal case */
                   blockBest = block;
                   routeBest = route;
                   ListOp.add( fitBlocks, (obj)block );
                   ListOp.add( fitRoutes, (obj)route );
                 }
-                else if( (dirOK && trysamedir && samedir) || (dirOK && tryoppositedir && !destdir) ) {
+                else if( (dirOK && ( trysamedir || forceSameDir) && samedir) || (dirOK && tryoppositedir && !destdir) ) {
                   /* direction flags fits */
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                  "found a BEST block [%s] for [%s] in the wanted direction",
@@ -2577,11 +2578,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                   dirOK = False;
 
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "dirOK=%d locdir=%d destdir=%d samedir=%d allowChgDir=%d trysamedir=%d tryoppositedir=%d",
-                     dirOK,   locdir,   destdir,   samedir,   allowChgDir,   trysamedir,   tryoppositedir );
+                    "dirOK=%d locdir=%d destdir=%d samedir=%d allowChgDir=%d trysamedir=%d tryoppositedir=%d forceSameDir=%d swapPlacingInPrevRoute=%d",
+                     dirOK,   locdir,   destdir,   samedir,   allowChgDir,   trysamedir,   tryoppositedir,   forceSameDir,   swapPlacingInPrevRoute);
 
                 if( blockBest == NULL ) {
-                  if( (dirOK && trysamedir && samedir) || (dirOK && tryoppositedir && !samedir) ) {
+                  if( (dirOK && ( trysamedir || forceSameDir) && samedir) || (dirOK && tryoppositedir && !samedir) ) {
                     /* direction flags fits */
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                    "found an ALT block [%s] for [%s] in the wanted direction",

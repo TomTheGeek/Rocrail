@@ -229,6 +229,7 @@ public:
     wxRadioBox* m_RunDir;
     wxStaticBox* m_DetailsBox;
     wxCheckBox* m_Swap;
+    wxCheckBox* m_SwapPost;
     wxButton* m_Actions;
     wxPanel* m_CommandPanel;
     wxListBox* m_Commands;

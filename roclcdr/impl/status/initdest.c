@@ -45,13 +45,19 @@ void statusInitDest( iILcDriverInt inst ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Init destination for \"%s\"...",
                  data->loc->getId( data->loc ) );
   {
+    Boolean dir = data->next1Route->getDirection( data->next1Route, 
+		    				  data->loc->getCurBlock( data->loc ), 
+		    				  &data->next1RouteFromTo );
+
     if( initializeGroup( (iOLcDriver)inst, data->next1Block ) &&  
-        initialize_Destination( (iOLcDriver)inst, data->next1Block, data->next1Route, data->curBlock ) &&
+        initialize_Destination( (iOLcDriver)inst, 
+				data->next1Block, 
+				data->next1Route, 
+				data->curBlock,
+	       			data->next1Route->isSwapPost( data->next1Route ) ? !dir : dir ) &&
         initializeSwap( (iOLcDriver)inst, data->next1Route ) ) 
     {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      Boolean dir = data->next1Route->getDirection( data->next1Route, 
-          data->loc->getCurBlock( data->loc ), &data->next1RouteFromTo );
 
       /* Send the first command to the loc with the direction: */
       wLoc.setdir( cmd, dir );
