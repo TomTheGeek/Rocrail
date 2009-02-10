@@ -1353,7 +1353,7 @@ void RocGuiFrame::create() {
   m_Splitter->SetMinimumPaneSize(50);
 
   m_PlanSplitter = new wxSplitterWindow( m_Splitter, 10, wxDefaultPosition, wxSize(iWidth, iHeight), wxSP_3DBORDER|wxSP_3DSASH|wxNO_BORDER );
-  m_PlanSplitter->SetMinimumPaneSize(0);
+  m_PlanSplitter->SetMinimumPaneSize(1);
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanPanel..." );
   m_Scale = wPlanPanel.getscale( wGui.getplanpanel( m_Ini ) );
