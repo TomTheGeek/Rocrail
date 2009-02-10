@@ -291,7 +291,4 @@
 #define KEY_IMM_PACKET		1<< 21
 #define KEY_WR_SL_DATA		1<< 22
 
-#define SENSOR_TYPE_DEFAULT      0
-#define SENSOR_TYPE_LISSY        1
-#define SENSOR_TYPE_TRANSPONDING 2
 

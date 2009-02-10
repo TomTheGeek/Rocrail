@@ -943,7 +943,11 @@
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
         <var name="identifier" vt="int" defval="0" remark="Loc identifier"/>
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
-        <var name="section" vt="int" defval="0" remark="transponder section"/>
+        <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
+        <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>
+        <const name="fbtype_transponder" vt="int" val="2" remark="transponder"/>
+        <const name="fbtype_railcom" vt="int" val="3" remark="railcom"/>
+        <var name="fbtype" vt="int" defval="0" remark="feedback type reported by the device"/>
         <var name="info" vt="string" defval="" remark="extra information"/>
         <var name="direction" vt="bool" defval="true" remark="Loc identifier direction"/>
         <var name="state" vt="bool" defval="false" remark="Current feedback state."/>

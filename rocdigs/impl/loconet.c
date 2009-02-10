@@ -451,39 +451,48 @@ static void __loconetSensorQuery( void* threadinst ) {
 
 
 
-static void __handleSensor(iOLocoNet loconet, int addr, int value, int type) {
-  iOLocoNetData data = Data(loconet);
-  const char* sType = "sensor";
+static void __handleLissy(iOLocoNet loconet, byte* msg) {
+  iOLocoNetData data   = Data(loconet);
 
-  if( type == SENSOR_TYPE_LISSY)
-    sType = "Lissy";
-  else if( type == SENSOR_TYPE_TRANSPONDING)
-    sType = "transponding";
+  int         lissyaddr = msg[4] & 0x7F;
+  int         decaddr   = ( msg[6] & 0x7F ) + 128 * ( msg[5] & 0x7F );
+  Boolean     dir       = ( msg[3] & 0x20 ) ? True:False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lissy=%d ident=%d dir=%d", lissyaddr, decaddr, dir );
+  {
+    /* inform listener: Node3 */
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, lissyaddr );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
+
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    wFeedback.setidentifier( nodeC, decaddr );
+    wFeedback.setdirection( nodeC, dir );
+    wFeedback.setstate( nodeC, True );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
 
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fb=%d value=%d (%s)", addr, value, sType );
+static void __handleSensor(iOLocoNet loconet, int addr, int value) {
+  iOLocoNetData data   = Data(loconet);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor=%d value=%d", addr, value );
   {
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( nodeC, addr );
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fb addr=%d",
-          wFeedback.getaddr(nodeC) );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
 
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );
 
-    if( type == SENSOR_TYPE_LISSY ) {
-      wFeedback.setidentifier( nodeC, value );
-      wFeedback.setstate( nodeC, True );
-    }
-    else if( type == SENSOR_TYPE_TRANSPONDING ) {
-      wFeedback.setidentifier( nodeC, value );
-      wFeedback.setstate( nodeC, True );
-    }
-    else {
-      wFeedback.setstate( nodeC, value?True:False );
-    }
+    wFeedback.setstate( nodeC, value?True:False );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
@@ -500,11 +509,15 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   iOLocoNetData data = Data(loconet);
 
   int type         = msg[1] & OPC_MULTI_SENSE_MSG;
-  int boardaddr    = ( ( ( (msg[1]&0x1F) * 128 ) + msg[2] ) >> 4 ) + 1;
+  int addr         = ( (msg[1]&0x1F) * 128 ) + msg[2];
+  int boardaddr    = addr/16;
   int locoaddr     = 0;
   const char* zone = "";
   Boolean present  = False;
   Boolean enter    = (msg[1] & 0x20) != 0 ? True:False;
+
+  addr++;
+  boardaddr++;
 
   if      ((msg[2]&0x0F) == 0x00) zone = "A";
   else if ((msg[2]&0x0F) == 0x02) zone = "B";
@@ -539,8 +552,9 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setaddr( nodeC, boardaddr );
+    wFeedback.setaddr( nodeC, addr );
     wFeedback.setzone( nodeC, zone );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_transponder );
 
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );
@@ -552,8 +566,8 @@ D0 20 06 7D 01 75
 loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address [1]
  */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "BDL [%d] zone [%s] reports [%s] of decoder address [%d]",
-        boardaddr, zone, present?"present":"absend", locoaddr );
+        "BDL[%d] RX[%d] zone [%s] reports [%s] of decoder address [%d]",
+        boardaddr, addr, zone, present?"present":"absend", locoaddr );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
@@ -955,7 +969,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
     addr = 1 + addr * 2 + ((((unsigned int) rsp[2] & 0x0020) >> 5));
     value = (rsp[2] & 0x10) >> 4;
 
-    __handleSensor(loconet, addr, value, SENSOR_TYPE_DEFAULT);
+    __handleSensor(loconet, addr, value);
     break;
 
   case OPC_LOCO_DIRF:
@@ -981,10 +995,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   case OPC_LISSY_REP: // E4
     /* sensor 1: E4 08 00 00 20 00 03 30 */
     /* sensor 2: E4 08 00 00 02 00 03 12 */
-    addr  = rsp[4];
-    value = rsp[6];
-
-    __handleSensor(loconet, addr, value, SENSOR_TYPE_LISSY);
+    __handleLissy(loconet, rsp);
     break;
 
   case OPC_MULTI_SENSE: // D0
@@ -1010,7 +1021,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       for( saddr = 0; saddr < 8; saddr++ ) {
         value = d6 & (0x01 << saddr);
         if( value )
-          __handleSensor(loconet, addr+(7-saddr)+1, 1, SENSOR_TYPE_DEFAULT);
+          __handleSensor(loconet, addr+(7-saddr)+1, 1);
       }
 
       addr  = rsp[7]*16 + 8;
@@ -1018,7 +1029,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       for( saddr = 0; saddr < 8; saddr++ ) {
         value = d7 & (0x01 << saddr);
         if( value )
-          __handleSensor(loconet, addr+(7-saddr)+1, 1, SENSOR_TYPE_DEFAULT);
+          __handleSensor(loconet, addr+(7-saddr)+1, 1);
       }
     }
     else if( isLNCV(rsp) ) {
