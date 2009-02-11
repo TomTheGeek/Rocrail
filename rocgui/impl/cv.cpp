@@ -916,7 +916,7 @@ void CV::readAll() {
 
 
 void CV::writeAll() {
-  wxString svalue = m_CVTable->GetCellValue( m_CVall[m_CVidxAll], 0 );
+  wxString svalue = m_CVTable->GetCellValue( m_CVall[m_CVidxAll]-1, 0 );
   int ivalue = atoi( (const char*)svalue.c_str() );
   doCV( wProgram.set, m_CVall[m_CVidxAll], ivalue );
 }
