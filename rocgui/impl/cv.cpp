@@ -917,8 +917,11 @@ void CV::readAll() {
 
 void CV::writeAll() {
   wxString svalue = m_CVTable->GetCellValue( m_CVall[m_CVidxAll]-1, 0 );
-  int ivalue = atoi( (const char*)svalue.c_str() );
-  doCV( wProgram.set, m_CVall[m_CVidxAll], ivalue );
+  long val;
+  if( svalue.ToLong(&val ) ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "cellval[%d]=%d", m_CVidxAll, (int)val );
+    doCV( wProgram.set, m_CVall[m_CVidxAll], (int)val );
+  }
 }
 
 
