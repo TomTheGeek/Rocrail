@@ -444,6 +444,9 @@ void SwitchDialog::evaluate() {
     case 5:
       wSwitch.settype( m_Props, wSwitch.decoupler );
       break;
+    case 6:
+      wSwitch.settype( m_Props, wSwitch.accessory );
+      break;
   }
 
   wSwitch.setaccnr( m_Props, m_AccNr->GetValue() );
