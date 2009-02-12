@@ -1066,8 +1066,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new LocoNetCtrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
-  else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new OpenDCCCtrlDlg(this,m_Controller);
+  //else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
+    //m_CSDialog = new OpenDCCCtrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
   else if( StrOp.equals( wDigInt.lenz, wDigInt.getlib( m_Controller ) ) )
