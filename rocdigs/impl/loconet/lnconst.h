@@ -291,4 +291,10 @@
 #define KEY_IMM_PACKET		1<< 21
 #define KEY_WR_SL_DATA		1<< 22
 
+/* configure OPC_MULTI_SENSE message type */
+#define BOARD_TYPE_PM4    0x70
+#define BOARD_TYPE_BDL16  0x71
+#define BOARD_TYPE_SE8    0x72
+#define BOARD_TYPE_DS64   0x73
+
 
