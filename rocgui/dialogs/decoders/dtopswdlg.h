@@ -46,6 +46,7 @@ class DTOpSwDlg : public dtopswdlg
   wxTimer* m_Timer;
   int m_iOpSw[256];
 
+  void evaluateEvent( int val );
   void onBoardType( wxCommandEvent& event );
   void onReadAll( wxCommandEvent& event );
   void onWriteAll( wxCommandEvent& event );

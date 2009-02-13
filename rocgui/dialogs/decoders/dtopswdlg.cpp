@@ -43,6 +43,7 @@ DTOpSwDlg::DTOpSwDlg( wxWindow* parent )
   m_Timer->Connect( wxEVT_TIMER, wxTimerEventHandler( DTOpSwDlg::onTimer ), NULL, this );
 
   initLabels();
+  m_BoardType->SetSelection(0);
   initValues();
 }
 
@@ -57,11 +58,6 @@ void DTOpSwDlg::initLabels() {
 
 
 void DTOpSwDlg::initValues() {
-
-}
-
-
-void DTOpSwDlg::onBoardType( wxCommandEvent& event ) {
   int selectedBoard = m_BoardType->GetSelection();
   m_OpSwList->Clear();
 
@@ -73,11 +69,40 @@ void DTOpSwDlg::onBoardType( wxCommandEvent& event ) {
 }
 
 
+void DTOpSwDlg::onBoardType( wxCommandEvent& event ) {
+  initValues();
+}
+
+
 void DTOpSwDlg::onReadAll( wxCommandEvent& event ) {
   if( !QueueOp.isEmpty(m_Queue) ) {
     TraceOp.trc( "dtopsw", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
     return;
   }
+
+  int selectedBoard = m_BoardType->GetSelection();
+  int addr = m_BoardNumber->GetValue();
+
+  int idx = 0;
+
+  while(DT_idxOpSw[selectedBoard][idx] != 0) {
+    TraceOp.trc( "dtopsw", TRCLEVEL_INFO, __LINE__, 9999, "%s opsw %d program command for board %d",
+        "get", DT_idxOpSw[selectedBoard][idx], addr );
+
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setlntype( cmd, wProgram.lntype_opsw );
+    wProgram.setcmd( cmd, wProgram.lncvget );
+    wProgram.setaddr( cmd, addr );
+    wProgram.setmodid( cmd, DT_msgType[selectedBoard] );
+    wProgram.setcv( cmd, DT_idxOpSw[selectedBoard][idx] );
+    QueueOp.post( m_Queue, (obj)cmd, normal );
+
+    idx++;
+  }
+
+  m_ReadAll->Enable(false);
+  m_WriteAll->Enable(false);
+  sendPacket();
 
 }
 
@@ -87,6 +112,31 @@ void DTOpSwDlg::onWriteAll( wxCommandEvent& event ) {
     TraceOp.trc( "dtopsw", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
     return;
   }
+
+  int selectedBoard = m_BoardType->GetSelection();
+  int addr = m_BoardNumber->GetValue();
+
+  int idx = 0;
+
+  while(DT_idxOpSw[selectedBoard][idx] != 0) {
+    TraceOp.trc( "dtopsw", TRCLEVEL_INFO, __LINE__, 9999, "%s opsw %d program command for board %d",
+        "set", DT_idxOpSw[selectedBoard][idx], addr );
+
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setlntype( cmd, wProgram.lntype_opsw );
+    wProgram.setcmd( cmd, wProgram.lncvset );
+    wProgram.setaddr( cmd, addr );
+    wProgram.setmodid( cmd, DT_msgType[selectedBoard] );
+    wProgram.setcv( cmd, DT_idxOpSw[selectedBoard][idx] );
+    wProgram.setvalue( cmd, m_OpSwList->IsChecked(idx) ? 1:0 );
+    QueueOp.post( m_Queue, (obj)cmd, normal );
+
+    idx++;
+  }
+
+  m_ReadAll->Enable(false);
+  m_WriteAll->Enable(false);
+  sendPacket();
 
 }
 
@@ -104,6 +154,8 @@ void DTOpSwDlg::onTimer(wxTimerEvent& event) {
       cmd = (iONode)QueueOp.get(m_Queue);
     }
   }
+  m_ReadAll->Enable(true);
+  m_WriteAll->Enable(true);
 
 }
 
@@ -119,12 +171,50 @@ void DTOpSwDlg::sendPacket() {
   else {
     m_Timer->Stop();
     this->SetCursor(wxCURSOR_ARROW);
+    m_ReadAll->Enable(true);
+    m_WriteAll->Enable(true);
   }
 
 }
 
+void DTOpSwDlg::evaluateEvent( int val ) {
+  if( m_SendedCmd != NULL ) {
+    int selectedBoard = m_BoardType->GetSelection();
+    int opsw = wProgram.getcv( m_SendedCmd );
+    int idx = 0;
+    while(DT_idxOpSw[selectedBoard][idx] != 0) {
+
+      if( DT_idxOpSw[selectedBoard][idx] == opsw ) {
+        m_OpSwList->Check(idx, val?true:false);
+        break;
+      }
+      idx++;
+    }
+  }
+}
 
 void DTOpSwDlg::event( iONode event ) {
+  int addr     = wProgram.getaddr(event);
+  int cmd      = wProgram.getcmd(event);
+  int type     = wProgram.getlntype(event);
+  int cv       = wProgram.getcv (event);
+  int val      = wProgram.getvalue(event);
+
+  TraceOp.trc( "dtopsw", TRCLEVEL_INFO, __LINE__, 9999,
+      "lnopsw event for addr %d, opsw%d=%d", addr, cv, val );
+
+  if( cmd == wProgram.datarsp )
+    evaluateEvent( val );
+
+  if( m_SendedCmd != NULL ) {
+    NodeOp.base.del(m_SendedCmd);
+    m_SendedCmd = NULL;
+    ThreadOp.sleep(100);
+    sendPacket();
+  }
+
+  /* clean up event node */
+  NodeOp.base.del(event);
 
 }
 

@@ -473,6 +473,7 @@
     <const name="lntype_sv" vt="int" val="2" remark="LocoIO SV's"/>
     <const name="lntype_cs" vt="int" val="3" remark="Command Station Config"/>
     <const name="lntype_mp" vt="int" val="4" remark="LocoIO MP's"/>
+    <const name="lntype_opsw" vt="int" val="5" remark="Stationary decoder programming"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <var name="lncv" vt="bool" defval="false"/>
   </program>

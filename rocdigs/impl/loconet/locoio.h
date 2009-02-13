@@ -3,10 +3,10 @@
 
 /*
  * Programming SV's with OPC_PEER_XFER */
- 
+
 /*
   Current addressing
-  
+
   The PC is 01 80
   The default LocoIO is 01 81 (you will have to change this if you have more than 1 LocoIO). Digitrax has
   assigned the 01 high address for LocoIO devices.
@@ -17,7 +17,7 @@
   In order to program the SV’s you use Loconet Peer to Peer messages (OPC_PEER_XFER). The syntax of
   this message is documented in the Loconet Personal Edition 1.0. This document will address the field’s
   LocoIO uses.
-  
+
   0xE5      OP Code
   0x10      message length
   SRCL      Source low address
@@ -34,15 +34,15 @@
   D7
   D8
   CHK Checksum
-  
+
   Example
   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
   E5 10 50 51 01 00 02 01 00 00 00 00 00 00 00 09
   This is sending out a read command to LocoIO # 81 (0x51) and requesting the data from SV number 1.
-  
-  
+
+
   Loconet Program Packet Layout (reply from LocoIO to the PC)
-  
+
   0xE5     OP Code
   0x10     message length
   SRCL     Source low address
@@ -59,7 +59,7 @@
   D7       Requested Data + 1
   D8       Requested Data + 2
   CHK Checksum
-  
+
   Example
   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
   E5 10 51 50 01 04 02 01 07 00 08 00 51 01 40 12
@@ -76,11 +76,15 @@
 
 Boolean isLocoIOSV(byte* msg);
 Boolean isLocoIOMP(byte* msg);
+Boolean isLNOPSW(byte* msg);
 Boolean evaluateLocoIOSV(byte *msg, int* addr, int* subaddr, int* sv, int* val, int* ver);
 int makereqLocoIOSV(byte *msg, int addr, int subaddr, int sv, int val, Boolean writereq);
 
 int makereqLocoIOMultiPort(byte *msg, int addr, int subaddr, int mask, int val, Boolean writereq);
 Boolean evaluateLocoIOMultiPort(byte *msg, int* addr, int* subaddr, int* mask, int* val, int* ver);
+
+int makereqLNOPSW(byte *msg, int addr, int type, int opsw, int val, Boolean writereq);
+Boolean evaluateLNOPSW(byte *msg, int* addr, int* opsw, int* val);
 
 
 
