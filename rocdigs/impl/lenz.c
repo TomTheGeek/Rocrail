@@ -1303,8 +1303,9 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
   if( nodeA != NULL ) {
     if( StrOp.equals( wThrottleCmd.name(), NodeOp.getName(nodeA) ) ) {
-      /* TODO: throttle command processing */
 
+      /* TODO: throttle command processing */
+/*
       const char * str  = NodeOp.getStr(nodeA, "str",  0 );
       int msgsize = StrOp.len( str);
       int i;
@@ -1325,6 +1326,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
       ThreadOp.post(data->transactor, (obj) outc);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Throttle Command sended.");
+      */
 
       /* Bin Commands (opendcc)*/
     } else if (StrOp.equals( NodeOp.getName( nodeA ), wBinCmd.name() )) {
