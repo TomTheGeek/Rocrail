@@ -154,6 +154,8 @@ void OpenDCCCtrlDlg::stopProgress() {
     m_bCleanUpProgress = true;
     m_Timer->Start( 10, wxTIMER_ONE_SHOT );
   }
+  m_ReadCVs->Enable(true);
+  m_WriteCVs->Enable(true);
 }
 
 void OpenDCCCtrlDlg::OnTimer(wxTimerEvent& event) {
@@ -392,6 +394,8 @@ void OpenDCCCtrlDlg::writeAll() {
     sendSet( so_sw_sensor_mode, m_SwitchSensorMode->GetSelection() );
   }
 
+  m_ReadCVs->Enable(true);
+  m_WriteCVs->Enable(true);
 }
 
 
@@ -998,6 +1002,8 @@ void OpenDCCCtrlDlg::OnOkClick( wxCommandEvent& event )
 
 void OpenDCCCtrlDlg::OnWritecvsClick( wxCommandEvent& event )
 {
+  m_ReadCVs->Enable(false);
+  m_WriteCVs->Enable(false);
   writeAll();
 }
 
@@ -1008,6 +1014,8 @@ void OpenDCCCtrlDlg::OnWritecvsClick( wxCommandEvent& event )
 
 void OpenDCCCtrlDlg::OnReadcvsClick( wxCommandEvent& event )
 {
+  m_ReadCVs->Enable(false);
+  m_WriteCVs->Enable(false);
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "initValues" );
   m_bStartUpProgress = true;
   m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
