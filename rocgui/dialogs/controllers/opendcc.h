@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        opendcc.h
-// Purpose:     
-// Author:      
-// Modified by: 
+// Purpose:
+// Author:
+// Modified by:
 // Created:     Sun 02 Mar 2008 11:51:45 CET
-// RCS-ID:      
-// Copyright:   
-// Licence:     
+// RCS-ID:
+// Copyright:
+// Licence:
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef _OPENDCC_H_
@@ -45,6 +45,8 @@ class wxSpinCtrl;
 
 ////@begin control identifiers
 #define ID_OPENDCCCTRLDLG 10016
+#define ID_READCVS 10042
+#define ID_WRITECVS 10049
 #define ID_LISTCTRL_DECEXCEPTIONS 10051
 #define SYMBOL_OPENDCCCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxDIALOG_MODAL|wxTAB_TRAVERSAL
 #define SYMBOL_OPENDCCCTRLDLG_TITLE _("OpenDCC")
@@ -85,7 +87,7 @@ enum {
 
 
 class OpenDCCCtrlDlg: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( OpenDCCCtrlDlg )
     DECLARE_EVENT_TABLE()
 
@@ -96,18 +98,20 @@ class OpenDCCCtrlDlg: public wxDialog
     void sendSet( int so, int value );
     void evaluateGet( int so, int value );
     void evaluateSet( int so, int value );
-    
+
     int m_soValue[256];
     int m_soNewValue[256];
-    
+
     int m_TimerCount;
     bool m_bStartUpProgress;
     bool m_bCleanUpProgress;
     void OnTimer(wxTimerEvent& event);
     wxTimer* m_Timer;
     wxProgressDialog* m_Progress;
+    Boolean m_Create;
     void startProgress();
     void stopProgress();
+    void writeAll();
 
 public:
     /// Constructors
@@ -128,6 +132,12 @@ public:
     void CreateControls();
 
 ////@begin OpenDCCCtrlDlg event handler declarations
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_READCVS
+    void OnReadcvsClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_WRITECVS
+    void OnWritecvsClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -159,7 +169,11 @@ public:
     wxTextCtrl* m_IID;
     wxStaticText* m_labVersion;
     wxTextCtrl* m_Version;
+    wxStaticText* m_labDevice;
+    wxTextCtrl* m_Device;
     wxRadioBox* m_Baudrate;
+    wxButton* m_ReadCVs;
+    wxButton* m_WriteCVs;
     wxPanel* m_DecoderPanel;
     wxRadioBox* m_DecSpeedSteps;
     wxStaticBox* m_DecExceptionBox;

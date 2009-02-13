@@ -21,10 +21,27 @@
 
 #include "rocdigs/impl/loconet/dtopsw.h"
 
+#include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#include "wx/defs.h"
+#endif
+
+#include "rocgui/public/guiapp.h"
+
+#include "rocrail/wrapper/public/Program.h"
+#include "rocgui/wrapper/public/Gui.h"
+
 
 DTOpSwDlg::DTOpSwDlg( wxWindow* parent )
   :dtopswdlg( parent )
 {
+  m_Queue = QueueOp.inst(100);
+  m_SendedCmd = NULL;
+  m_Timer = new wxTimer( this, DTOPSW_Timer );
+  m_Timer->Connect( wxEVT_TIMER, wxTimerEventHandler( DTOpSwDlg::onTimer ), NULL, this );
+
   initLabels();
   initValues();
 }
@@ -57,13 +74,61 @@ void DTOpSwDlg::onBoardType( wxCommandEvent& event ) {
 
 
 void DTOpSwDlg::onReadAll( wxCommandEvent& event ) {
+  if( !QueueOp.isEmpty(m_Queue) ) {
+    TraceOp.trc( "dtopsw", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    return;
+  }
 
 }
 
 
 void DTOpSwDlg::onWriteAll( wxCommandEvent& event ) {
+  if( !QueueOp.isEmpty(m_Queue) ) {
+    TraceOp.trc( "dtopsw", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    return;
+  }
 
 }
+
+void DTOpSwDlg::onTimer(wxTimerEvent& event) {
+  TraceOp.trc( "dtopsw", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on reply...");
+  if( m_SendedCmd != NULL ) {
+
+    NodeOp.base.del(m_SendedCmd);
+    m_SendedCmd = NULL;
+
+    /* empty queue */
+    iONode cmd = (iONode)QueueOp.get(m_Queue);
+    while( cmd != NULL ) {
+      NodeOp.base.del(cmd);
+      cmd = (iONode)QueueOp.get(m_Queue);
+    }
+  }
+
+}
+
+
+void DTOpSwDlg::sendPacket() {
+  if( !QueueOp.isEmpty(m_Queue) ) {
+    iONode cmd = (iONode)QueueOp.get(m_Queue);
+    wxGetApp().sendToRocrail( cmd );
+    m_SendedCmd = cmd;
+    this->SetCursor(wxCURSOR_WATCH);
+    m_Timer->Start( 2000, wxTIMER_ONE_SHOT );
+  }
+  else {
+    m_Timer->Stop();
+    this->SetCursor(wxCURSOR_ARROW);
+  }
+
+}
+
+
+void DTOpSwDlg::event( iONode event ) {
+
+}
+
+
 
 void DTOpSwDlg::onOK( wxCommandEvent& event ){
   EndModal( wxID_OK );
