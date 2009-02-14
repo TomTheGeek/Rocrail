@@ -108,7 +108,7 @@ void SpeedCurveDlg::onLinearize( wxCommandEvent& event ) {
   int Vmax = m_SliderStep[27]->GetValue();
   float step = (Vmax -Vmin) / 27.0;
   for( int i = 1; i < 27; i++ ) {
-    int Vf = step * i;
+    float Vf = step * i;
     int V = (int)(step * i);
     if( Vf - (float)V >= 0.5 )
       V++;

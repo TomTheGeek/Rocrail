@@ -312,6 +312,10 @@ public:
     wxTextCtrl* m_ID;
     wxStaticText* m_labShortID;
     wxTextCtrl* m_ShortID;
+    wxStaticText* m_labRoadname;
+    wxTextCtrl* m_Roadname;
+    wxStaticText* m_labNumber;
+    wxTextCtrl* m_Number;
     wxStaticText* m_Label_Description;
     wxTextCtrl* m_Description;
     wxStaticText* m_labImageName;
