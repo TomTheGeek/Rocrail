@@ -24,7 +24,7 @@ dtopswdlg::dtopswdlg( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labBoardNumber = new wxStaticText( this, wxID_ANY, wxT("Number"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labBoardNumber = new wxStaticText( this, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labBoardNumber->Wrap( -1 );
 	fgSizer2->Add( m_labBoardNumber, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	

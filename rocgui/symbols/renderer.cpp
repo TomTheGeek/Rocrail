@@ -1736,7 +1736,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
     int x = 79 + (int)xa;
     int y = 79 - (int)ya;
 
-    if( wTTTrack.isstate( track ) ) {
+    if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
       pen = (wxPen*)wxBLACK_PEN;
       pen->SetWidth(5);
       dc.SetPen(*pen);
