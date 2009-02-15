@@ -1020,12 +1020,18 @@ static void __transactor( void* threadinst ) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
      	       expectEliteAnswer = False;
   	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
-  	       ThreadOp.sleep(9000);
+  	       if(data->elite)
+  	    	 ThreadOp.sleep(9000);
+  	       if(data->usb)
+  	    	 ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
   	       expectEliteAnswer = False;
   	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
-  	       ThreadOp.sleep(9000);
+			 if(data->elite)
+  	       	   ThreadOp.sleep(9000);
+  	       	 if(data->usb)
+  	       	   ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
   	       expectEliteAnswer = False;
@@ -1266,8 +1272,8 @@ static void __transactor( void* threadinst ) {
 
         else {
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNKNOWN CMD");
-          TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, 15);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
         }
 
        /* anything will go to rocgui ...*/
