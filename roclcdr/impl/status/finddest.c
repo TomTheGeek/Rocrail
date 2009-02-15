@@ -47,9 +47,9 @@ void statusFindDest( iILcDriverInt inst ) {
     data->next1Block = data->model->findDest( data->model, data->loc->getCurBlock( data->loc ),
                                         data->loc, &data->next1Route, data->gotoBlock,
                                         wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                        wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ), 
-					wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
-		   			False ); /* currently is no prev route running */
+                                        wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
+                                        wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
+                                        False ); /* currently is no prev route running */
   }
   else {
     Boolean wait = False;

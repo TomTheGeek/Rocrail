@@ -71,12 +71,15 @@ void statusInitDest( iILcDriverInt inst ) {
                 data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo ) &&
         initializeSwap( (iOLcDriver)inst, data->next1Route ) )
     {
-      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
-      /* Send the first command to the loc with the direction: */
-      wLoc.setdir( cmd, dir );
-      wLoc.setV( cmd, 0 );
-      data->loc->cmd( data->loc, cmd );
+      if( !data->gomanual ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+        /* Send the first command to the loc with the direction: */
+        wLoc.setdir( cmd, dir );
+        wLoc.setV( cmd, 0 );
+        data->loc->cmd( data->loc, cmd );
+      }
 
 
       if( !data->next1Block->isLinked( data->next1Block ) ) {

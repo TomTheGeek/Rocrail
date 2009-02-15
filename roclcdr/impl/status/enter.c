@@ -244,7 +244,13 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                    data->loc->getId( data->loc ) );
 
     wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    data->loc->cmd( data->loc, cmd );
+    if( !data->gomanual ) {
+      data->loc->cmd( data->loc, cmd );
+    }
+    else {
+      /* delete un sended node */
+      NodeOp.base.del(cmd);
+    }
     data->state = LC_WAIT4EVENT;
     data->eventTimeout = 0;
     data->signalReset  = 0;
