@@ -183,6 +183,15 @@ static int __rwLNMP(iOLocoNet loconet, int mask, int val, byte* cmd, Boolean wri
 }
 
 
+static int __rwLNOPSW(iOLocoNet loconet, int addr, int type, int opsw, int val, byte* cmd, Boolean write) {
+  iOLocoNetData data = Data(loconet);
+  /* call lncv utilis */
+  int size = makereqLNOPSW(cmd, addr, type, opsw, val, write);
+  cmd[size-1] = LocoNetOp.checksum( cmd, size-1 );
+  return size;
+}
+
+
 static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeCV, Boolean pom, int decaddr) {
   iOLocoNetData data = Data(loconet);
   int addr  = cvnum-1; /* cvnum is in human readable form; addr is what's sent over loconet */
@@ -1117,6 +1126,26 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
     break;
 
   case OPC_LONG_ACK:
+    if( isLNOPSW(rsp) ) {
+      int addr, opsw, val, cv;
+      Boolean lncvset = evaluateLNOPSW(rsp, &addr, &cv, &val);
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LN OpSw response" );
+
+      wProgram.setlncv( node, True );
+      wProgram.setlntype( node, wProgram.lntype_opsw );
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, lncvset?wProgram.statusrsp:wProgram.datarsp );
+      wProgram.setcv( node, cv );
+      wProgram.setaddr( node, addr );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+    }
     break;
 
   case OPC_SL_RD_DATA:
@@ -1766,6 +1795,9 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       else if( wProgram.getlntype(node) == wProgram.lntype_mp ) {
         size = __rwLNMP(loconet_inst, cv, value, cmd, False, addr, modid, lncvcmd);
       }
+      else if( wProgram.getlntype(node) == wProgram.lntype_opsw ) {
+        size = __rwLNOPSW(loconet_inst, addr, modid, cv, value, cmd, False);
+      }
       return size;
     }
     else if( wProgram.getcmd( node ) == wProgram.lncvset ) {
@@ -1783,6 +1815,9 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       }
       else if( wProgram.getlntype(node) == wProgram.lntype_mp ) {
         size = __rwLNMP(loconet_inst, cv, value, cmd, True, addr, modid, lncvcmd);
+      }
+      else if( wProgram.getlntype(node) == wProgram.lntype_opsw ) {
+        size = __rwLNOPSW(loconet_inst, addr, modid, cv, value, cmd, True);
       }
       return size;
     }

@@ -473,6 +473,7 @@
     <const name="lntype_sv" vt="int" val="2" remark="LocoIO SV's"/>
     <const name="lntype_cs" vt="int" val="3" remark="Command Station Config"/>
     <const name="lntype_mp" vt="int" val="4" remark="LocoIO MP's"/>
+    <const name="lntype_opsw" vt="int" val="5" remark="Stationary decoder programming"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <var name="lncv" vt="bool" defval="false"/>
   </program>
@@ -1245,6 +1246,8 @@
         <var name="image" vt="string" defval="NULL" range="*" remark="local image file to show in dialogs"/>
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shortid" vt="string" defval="" range="*" remark="Short IDs are used for throttle displays."/>
+        <var name="roadname" vt="string" defval="" range="*"/>
+        <var name="number" vt="string" defval="" range="*"/>
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="identifier" vt="int" defval="0" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>
         <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the loc table"/>

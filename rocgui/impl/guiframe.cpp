@@ -85,6 +85,7 @@
 
 #include "rocgui/dialogs/decoders/63350.h"
 #include "rocgui/dialogs/decoders/locoio.h"
+#include "rocgui/dialogs/decoders/dtopswdlg.h"
 
 #include "rocgui/public/guiapp.h"
 #include "rocgui/public/swdlg.h"
@@ -259,7 +260,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
-    EVT_MENU( ME_HDL_LOCOIO     , RocGuiFrame::OnHDLLocoIO)
+    EVT_MENU( ME_LOCOIO         , RocGuiFrame::OnLocoIO)
+    EVT_MENU( ME_DTOpSw         , RocGuiFrame::OnDTOpSw)
 
     EVT_MENU( ME_LangEnglish    , RocGuiFrame::OnLangEnglish)
     EVT_MENU( ME_LangGerman     , RocGuiFrame::OnLangGerman)
@@ -737,6 +739,8 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   if( wProgram.islncv(node) ) {
     if( m_LocoIO != NULL )
       m_LocoIO->event( node );
+    else if( m_DTOpSw != NULL )
+      m_DTOpSw->event( node );
     else
       m_LNCV->event( node );
   }
@@ -909,6 +913,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_SymbolMap = NULL;
   m_LocalPlan = _T("");
   m_LocoIO = NULL;
+  m_DTOpSw = NULL;
   m_RocrailIniDlg = NULL;
   m_ModPanel = NULL;
   m_LocCtrlList = ListOp.inst();
@@ -1141,7 +1146,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   wxMenu *menuProgramming = new wxMenu();
   wxMenu *menuPTLN = new wxMenu();
   //menuPTLN->Append( ME_UHL_63350, _T("Uhlenbrock 63350"), _T("Uhlenbrock 63350") );
-  menuPTLN->Append( ME_HDL_LOCOIO, _T("LocoIO"), _T("LocoIO") );
+  menuPTLN->Append( ME_LOCOIO, _T("LocoIO"), _T("LocoIO") );
+  menuPTLN->Append( ME_DTOpSw, _T("Digitrax"), _T("Digitrax") );
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
   wxMenu *menuPTDCC = new wxMenu();
@@ -2175,13 +2181,22 @@ void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
-void RocGuiFrame::OnHDLLocoIO( wxCommandEvent& event ) {
+void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {
   m_LocoIO = new LocoIO(this);
   if( wxID_OK == m_LocoIO->ShowModal() ) {
     /* Notify RocRail. */
   }
   m_LocoIO->Destroy();
   m_LocoIO = NULL;
+}
+
+void RocGuiFrame::OnDTOpSw( wxCommandEvent& event ) {
+  m_DTOpSw = new DTOpSwDlg(this);
+  if( wxID_OK == m_DTOpSw->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  m_DTOpSw->Destroy();
+  m_DTOpSw = NULL;
 }
 
 void RocGuiFrame::OnOpenDecoder( wxCommandEvent& event ) {

@@ -2436,7 +2436,7 @@ static const char* __getManagedID(iOModel inst, const char* fromBlockId) {
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
                           Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
-	       		  Boolean swapPlacingInPrevRoute) {
+                          Boolean swapPlacingInPrevRoute) {
   iOModelData o = Data(inst);
 
   iIBlockBase   blockBest = NULL;

@@ -882,12 +882,13 @@ void CV::doCV( int command, int index, int value ) {
 
 void CV::OnTimer(wxTimerEvent& event) {
   if( m_bCleanUpProgress ) {
-    m_bCleanUpProgress = false;
     if( m_Progress != NULL ) {
       wxProgressDialog* dlg = m_Progress;
       m_Progress = NULL;
       dlg->Destroy();
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
     }
+    m_bCleanUpProgress = false;
     return;
   }
 
@@ -896,8 +897,8 @@ void CV::OnTimer(wxTimerEvent& event) {
     TraceOp.trc( "cv", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on PT acknowledge" );
     stopProgress();
   }
-  else if( m_Progress != NULL ) {
-    if( !m_bCleanUpProgress && !m_Progress->Pulse() ) {
+  else if( m_Progress != NULL && !m_bCleanUpProgress ) {
+    if( m_Progress->IsShownOnScreen() && !m_Progress->Pulse() ) {
       stopProgress();
       m_TimerCount = wCVconf.gettimeout(m_CVconf);
     }

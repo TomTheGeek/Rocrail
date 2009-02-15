@@ -43,6 +43,7 @@
 #include "rocgui/public/statbar.h"
 
 #include "rocgui/dialogs/decoders/locoio.h"
+#include "rocgui/dialogs/decoders/dtopswdlg.h"
 #include "rocgui/dialogs/decoders/opendecoder.h"
 #include "rocgui/dialogs/rocrailinidialog.h"
 
@@ -183,8 +184,9 @@ public:
   void OnBackColor(wxCommandEvent& event);
 
   void OnUhl63350(wxCommandEvent& event);
-  void OnHDLLocoIO(wxCommandEvent& event);
+  void OnLocoIO(wxCommandEvent& event);
   void OnOpenDecoder(wxCommandEvent& event);
+  void OnDTOpSw(wxCommandEvent& event);
 
   void OnButton(wxCommandEvent& event);
   void OnSlider(wxScrollEvent& event);
@@ -257,6 +259,7 @@ private:
 
   LocoIO* m_LocoIO;
   OpenDecoderDlg* m_OpenDecoder;
+  DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
 
   iOMutex m_muxInitActiveLocs;
@@ -387,8 +390,9 @@ enum
     ME_Survey,
     ME_BackColor,
     ME_UHL_63350,
-    ME_HDL_LOCOIO,
+    ME_LOCOIO,
     ME_OpenDecoder,
+    ME_DTOpSw,
     ME_F1,
     ME_F2,
     ME_F3,

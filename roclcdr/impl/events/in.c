@@ -108,7 +108,10 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     */
     
     block->inBlock( block, data->loc->getId( data->loc ) );
+
+    // unLock crossing bloks and switches before new calculation in eventEnter
     data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ) );
+    
     data->next1Route = data->next2Route;
     data->next2Route = data->next3Route;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
