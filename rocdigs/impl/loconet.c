@@ -1766,17 +1766,21 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
-      int size = __rwCV(loconet_inst, cv, 0, cmd, False, False, 0);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
+      int decaddr = wProgram.getdecaddr( node );
+      int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
+      Boolean pom = wProgram.ispom( node );
+      int size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, addr);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d of %d (ops=%d)...", cv, addr, pom );
       return size;
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       int cv = wProgram.getcv( node );
       int value = wProgram.getvalue( node );
       int decaddr = wProgram.getdecaddr( node );
+      int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      int size = __rwCV(loconet_inst, cv, value, cmd, True, pom, decaddr);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
+      int size = __rwCV(loconet_inst, cv, value, cmd, True, pom, addr);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d of %d (ops=%d)...", cv, value, addr, pom );
       return size;
     }
     else if( wProgram.getcmd( node ) == wProgram.lncvget ) {
