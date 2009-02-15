@@ -873,7 +873,7 @@ void PlanPanel::addItemAttr( iONode node ) {
   if( StrOp.equals( wText.name(), NodeOp.getName( node ) ) &&
       (wText.gettext(node) == NULL || StrOp.len( wText.gettext(node) ) == 0) ) {
 
-    wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("entertext") );
+    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("entertext") );
     if( wxID_OK == dlg->ShowModal() ) {
       wText.settext( node, dlg->GetValue().mb_str(wxConvUTF8) );
     }
@@ -882,7 +882,7 @@ void PlanPanel::addItemAttr( iONode node ) {
   else if( !StrOp.equals( wTrack.name(), NodeOp.getName( node ) ) &&
       ( wItem.getid(node) == NULL || StrOp.len( wItem.getid(node) ) == 0 ) ) {
 
-    wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("enterid") );
+    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("enterid") );
 
     Symbol* item = NULL;
     do {
