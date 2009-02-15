@@ -304,7 +304,7 @@ void Symbol::blockEvent( const char* id ) {
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( StrOp.equals( wTrack.getblockid( m_Props ), id ) ) {
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "block occ id=[%s]", id );
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block occ id=[%s]", id );
       Refresh();
     }
   }
@@ -1340,7 +1340,7 @@ void Symbol::modelEvent( iONode node ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
 
-  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999,
       "id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
 
   if( StrOp.equals( NodeOp.getName( node ), NodeOp.getName( m_Props ) ) ) {

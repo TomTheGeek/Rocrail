@@ -281,7 +281,7 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
         FileOp.base.del( f );
         svgSymbol* sym = parseSvgSymbol( svgStr );
         if(sym != NULL) {
-          TraceOp.trc( "svg", TRCLEVEL_INFO, __LINE__, 9999, "add [%s] to symbolMap", key );
+          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "add [%s] to symbolMap", key );
           MapOp.put( symbolMap, key, (obj)sym );
         }
         else {
