@@ -75,7 +75,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
                                               data->loc, &data->next2Route, data->gotoBlock,
                                               wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                              wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ), 
+                                              wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
 					      wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
 		       			      data->next1Route->isSwapPost( data->next1Route ) );
       }
@@ -131,8 +131,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     if( data->next2Block != NULL ) {
       /* fix: if a loc is running, and the new destination is opposite, the loc should reject the new destination and stop. */
       Boolean dir = data->next2Route->getDirection( data->next2Route,
-          					    data->next1Block->base.id(data->next1Block), 
+          					    data->next1Block->base.id(data->next1Block),
 						    &data->next2RouteFromTo );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "loco direction for [%s] is [%s], route direction [%s]",
+                     data->loc->getId( data->loc ), dir?"forwards":"reverse", data->next1RouteFromTo?"fromTo":"toFrom" );
 
       if( data->loc->getDir( data->loc ) != ( data->next1Route->isSwapPost( data->next1Route ) ? !dir : dir ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Destination is in opposite direction while running: Reject and wait in block." );
@@ -147,11 +150,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         resetNext2( (iOLcDriver)inst, True );
       }
       else if( initializeGroup( (iOLcDriver)inst, data->next2Block ) &&
-               initialize_Destination( (iOLcDriver)inst, 
-		       		       data->next2Block, 
-				       data->next2Route, 
-				       data->next1Block, 
-		                       data->next2Route->isSwapPost( data->next2Route ) ? !dir : dir ) &&
+               initializeDestination( (iOLcDriver)inst,
+                       data->next2Block,
+                       data->next2Route,
+                       data->next1Block,
+                       data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo ) &&
                initializeSwap( (iOLcDriver)inst, data->next2Route) )
       {
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );

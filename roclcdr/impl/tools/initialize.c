@@ -44,7 +44,7 @@
  * @param block      destination block
  * @param curBlock   current block
  */
-Boolean initialize_Destination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean dir ) {
+Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
   Boolean grouplocked = False;
 
@@ -79,8 +79,8 @@ Boolean initialize_Destination( iOLcDriver inst, iIBlockBase block, iORoute stre
   }
 
 
-  if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, !dir ) ) {
-    if( street->lock( street, data->loc->getId( data->loc ), !dir ) ) {
+  if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, reverse ) ) {
+    if( street->lock( street, data->loc->getId( data->loc ), reverse ) ) {
       if( street->go( street ) ) {
 
         if( data->gotoBlock != NULL && StrOp.equals( data->gotoBlock, block->base.id( block ) ) ) {

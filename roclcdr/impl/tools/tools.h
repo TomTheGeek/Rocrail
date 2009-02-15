@@ -24,7 +24,7 @@ void listBlocks(iOLcDriver inst);
 void resetNext2( iOLcDriver inst, Boolean unLock );
 
 
-Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iOBlock curBlock, Boolean dir );
+Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean dir );
 Boolean initializeGroup( iOLcDriver inst, iIBlockBase block );
 Boolean initializeSwap( iOLcDriver inst, iORoute route );
 const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street );
