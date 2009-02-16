@@ -1146,8 +1146,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   wxMenu *menuProgramming = new wxMenu();
   wxMenu *menuPTLN = new wxMenu();
   //menuPTLN->Append( ME_UHL_63350, _T("Uhlenbrock 63350"), _T("Uhlenbrock 63350") );
-  menuPTLN->Append( ME_LOCOIO, _T("LocoIO"), _T("LocoIO") );
-  menuPTLN->Append( ME_DTOpSw, _T("Digitrax"), _T("Digitrax") );
+  menuPTLN->Append( ME_LOCOIO, wxString(_T("LocoIO")) + wxString(_T("...")), _T("LocoIO") );
+  menuPTLN->Append( ME_DTOpSw, wxString(_T("Digitrax")) + wxString(_T("...")), _T("Digitrax") );
+  menuPTLN->Append( ME_Uhlenbrock, wxString(_T("Uhlenbrock")) + wxString(_T("...")), _T("Uhlenbrock") );
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
   wxMenu *menuPTDCC = new wxMenu();
@@ -1426,7 +1427,7 @@ void RocGuiFrame::create() {
   m_LNCVPanel->SetScrollbars(1, 1, 0, 0);
   m_LNCV = NULL;
   m_LNCV = new LNCV( m_LNCVPanel, this );
-  //m_LNCVPanel->Enable(false);
+  m_LNCVPanel->Show(false);
 
   m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
 

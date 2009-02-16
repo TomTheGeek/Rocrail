@@ -393,6 +393,7 @@ enum
     ME_LOCOIO,
     ME_OpenDecoder,
     ME_DTOpSw,
+    ME_Uhlenbrock,
     ME_F1,
     ME_F2,
     ME_F3,
