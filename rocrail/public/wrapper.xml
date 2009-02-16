@@ -224,9 +224,6 @@
       <const name="vcs" vt="string" val="virtual"/>
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
-      <const name="rci" vt="string" val="rci"/>
-      <const name="nce" vt="string" val="nce"/>
-      <const name="sprog" vt="string" val="sprog"/>
       <const name="clock" vt="string" val="clock"/>
       <var name="lib" vt="string" defval="virtual"/>
 
