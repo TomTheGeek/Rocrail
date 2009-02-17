@@ -57,7 +57,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "Ignoring in_block event from %s; it came within %d ticks!", blockId, data->ignevt );
   }
-  
+
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "in_block event for \"%s\" from \"%s\"...",
                  data->loc->getId( data->loc ), blockId );
@@ -78,21 +78,21 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
                    "Setting state for \"%s\" to LC_INBLOCK.",
                    data->loc->getId( data->loc ) );
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
-  
+
     if ( data->next1Route->isSwapPost( data->next1Route ) ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
       /* swap post route */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
       data->loc->swapPlacing( data->loc );
-      
+
       wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
       data->loc->cmd( data->loc, cmd);
-    }    
+    }
 
     /* unlink-up after inblock event */
     data->next1Block->unLink( data->next1Block );
-    
+
     if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
       data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
     }
@@ -101,14 +101,30 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     }
     data->curBlock = data->next1Block;
     data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
-    
+
     /**/
     /*
     data->loc->setCurBlock( data->loc, blockId );
     */
-    
+
     block->inBlock( block, data->loc->getId( data->loc ) );
-    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ) );
+
+    {
+      /*
+       * unlock the previous route regarding reserved blocks
+       */
+      const char* resblocks[4] = {NULL, NULL, NULL, NULL};
+      if( data->next1Block != NULL ) {
+        resblocks[0] = data->next1Block->base.id(data->next1Block);
+        if( data->next2Block != NULL ) {
+          resblocks[1] = data->next2Block->base.id(data->next2Block);
+          if( data->next3Block != NULL )
+            resblocks[2] = data->next3Block->base.id(data->next3Block);
+        }
+      }
+      data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks );
+    }
+
     data->next1Route = data->next2Route;
     data->next2Route = data->next3Route;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

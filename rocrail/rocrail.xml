@@ -824,6 +824,7 @@
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Unlocking locid"/>
+      <param name="resblocks" vt="const char**" remark="Reserved blocks; not to unlock as crossing blocks."/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>

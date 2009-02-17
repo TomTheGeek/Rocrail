@@ -104,7 +104,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
       }
       else {
         block->unLock( block, data->loc->getId( data->loc ) );
-        street->unLock( street, data->loc->getId( data->loc ) );
+        street->unLock( street, data->loc->getId( data->loc ), NULL );
         if(grouplocked) {
           unlockBlockGroup(inst, group);
         }

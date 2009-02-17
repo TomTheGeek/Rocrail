@@ -291,6 +291,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   if( data->crossing ) {
     /* ignore all events */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore events for crossing block %s", data->id );
     return;
   }
 
@@ -851,6 +852,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, data->locId, False, 0 );
   }
   else if( StrOp.equals( id, data->locId ) ) {
+    data->crossing = crossing;
     ok = True;
   }
 
@@ -1034,6 +1036,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       data->locId = NULL;
       BlockOp.resetTrigs( inst );
       wBlock.setlocid(data->props, "");
+      data->crossing = False;
 
       if( data->closereq ) {
         wBlock.setstate( data->props, wBlock.closed );
