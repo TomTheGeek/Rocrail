@@ -72,6 +72,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
   }
 
   if( newInEvent && dstBlockEvent && data->state == LC_ENTERBLOCK ||
+      newInEvent && dstBlockEvent && data->state == LC_RE_ENTERBLOCK ||
       newInEvent && dstBlockEvent && data->state == LC_WAIT4EVENT ) {
     data->state = LC_INBLOCK;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -130,5 +131,11 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" to LC_INBLOCK.",
                    data->loc->getId( data->loc ) );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "unexpected IN event for [%s], state=[%d]",
+                   data->loc->getId( data->loc ), data->state );
+
   }
 }

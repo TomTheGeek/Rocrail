@@ -52,8 +52,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->state = LC_IDLE;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_ENTERBLOCK to LC_IDLE.",
-                   data->loc->getId( data->loc ) );
+                   "Setting state for \"%s\" from %s to LC_IDLE.",
+                   data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
     return;
   }
 
@@ -168,8 +168,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
         wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Setting state for \"%s\" from LC_ENTERBLOCK to LC_WAIT4EVENT.",
-                       data->loc->getId( data->loc ) );
+                       "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
+                       data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
         checkRouteFunction(inst, data->next2Route, data->next2Block );
         /*
@@ -256,8 +256,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->signalReset  = 0;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_ENTERBLOCK to LC_WAIT4EVENT.",
-                   data->loc->getId( data->loc ) );
+                   "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
+                   data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
   }
 
 
