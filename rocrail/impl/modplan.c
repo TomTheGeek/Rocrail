@@ -113,6 +113,12 @@ static iONode _parsePlan( const char* filename ) {
 
   iOFile moduleFile = FileOp.inst( filename, True );
 
+  if(moduleFile == NULL) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "file [%s] not found, try to open it in the working directory...", filename );
+    moduleFile = FileOp.inst( FileOp.ripPath(filename), True );
+  }
+
   if( moduleFile != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parse file: %s", filename );
     {
