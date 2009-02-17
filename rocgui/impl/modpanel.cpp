@@ -70,10 +70,11 @@ END_EVENT_TABLE()
 ModPanel::ModPanel(wxWindow *parent, int itemsize, double scale )
              :BasePanel( parent, wxSUNKEN_BORDER | wxWANTS_CHARS )
 {
+  m_Parent    = parent;
   m_Scale     = scale;
   m_ItemSize  = itemsize;
   m_ModList   = ListOp.inst();
-  
+
   SetBackgroundColour( *wxWHITE );
 
   // TODO: resize virtual size after every module add
@@ -102,11 +103,11 @@ void ModPanel::OnBackColor( wxCommandEvent& event ) {
   if( wxID_OK == dlg->ShowModal() ) {
     wxColour &color = dlg->GetColourData().GetColour();
     iONode ini = wGui.getmodpanel( wxGetApp().getIni() );
-    
+
     wModPanel.setred  ( ini, (int)color.Red() );
     wModPanel.setgreen( ini, (int)color.Green() );
     wModPanel.setblue ( ini, (int)color.Blue() );
-    
+
     SetBackgroundColour(color);
   }
   dlg->Destroy();
@@ -119,33 +120,33 @@ void ModPanel::OnProperties(wxCommandEvent& event) {
 void ModPanel::OnAddModule(wxCommandEvent& event) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(m_Parent, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
 
     /* Notify RocRail. */
-    TraceOp.trc( "modpanel", TRCLEVEL_INFO, __LINE__, 9999, 
+    TraceOp.trc( "modpanel", TRCLEVEL_INFO, __LINE__, 9999,
         "Add module [%s]", wGui.getopenpath( wxGetApp().getIni() ) );
-    
+
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.addmodule );
     iONode module = NodeOp.inst( wModule.name(), cmd, ELEMENT_NODE );
     wModule.setfilename( module, wGui.getopenpath( wxGetApp().getIni() ) );
     wModule.setx( module, m_X );
     wModule.sety( module, m_Y );
-    
-    
-    wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("enterid") );
+
+
+    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("enterid") );
 
     if( wxID_OK == dlg->ShowModal() ) {
       wModule.setid( module, dlg->GetValue().mb_str(wxConvUTF8) );
     }
     dlg->Destroy();
-    
+
     NodeOp.addChild( cmd, module );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
-    
+
     // strip filename:
     wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
   }
@@ -192,17 +193,17 @@ void ModPanel::reScale( double scale ) {
 
   SetVirtualSize( (int)(m_ItemSize*m_Scale*128), (int)(m_ItemSize*m_Scale*96) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
-  
+
   BasePanel* p = (BasePanel*)ListOp.first(m_ModList);
   while( p != NULL ) {
     p->reScale(scale);
-    
+
     int xpos = (int)(itemsize * m_Scale * wZLevel.getmodviewx(p->getZLevel()));
     int ypos = (int)(itemsize * m_Scale * wZLevel.getmodviewy(p->getZLevel()));
-    
+
     p->SetPosition( wxPoint( xpos, ypos) );
-    
-    
+
+
     p = (BasePanel*)ListOp.next(m_ModList);
   }
   Refresh();
@@ -210,17 +211,17 @@ void ModPanel::reScale( double scale ) {
 
 
 void ModPanel::removeItemFromList( iONode item ) {
-  
+
 }
 
 
 void ModPanel::init(bool modview) {
-  
+
 }
 
 
 void ModPanel::clean() {
-  
+
 }
 
 
@@ -230,7 +231,7 @@ const char* ModPanel::getZLevelTitle() {
 
 
 int ModPanel::getZ() {
-  return 0;  
+  return 0;
 }
 
 
@@ -240,7 +241,7 @@ iONode ModPanel::getZLevel() {
 
 
 void ModPanel::refresh(bool eraseBackground) {
-  Refresh(eraseBackground);  
+  Refresh(eraseBackground);
 }
 
 
@@ -300,7 +301,7 @@ bool ModPanel::hasZLevel(iONode zlevel) {
       return true;
     p = (BasePanel*)ListOp.next(m_ModList);
   }
-  return false;  
+  return false;
 }
 
 BasePanel* ModPanel::updateZLevel(iONode zlevel) {
@@ -312,7 +313,7 @@ BasePanel* ModPanel::updateZLevel(iONode zlevel) {
     }
     p = (BasePanel*)ListOp.next(m_ModList);
   }
-  return NULL;  
+  return NULL;
 }
 
 
