@@ -2359,7 +2359,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
   {
     iIBlockBase block = NULL;
 
-    if( toBlockId == NULL ) {
+    if( toBlockId == NULL || StrOp.len(toBlockId) == 0 ) {
       iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
       const char* id = NULL;
       while( StrTokOp.hasMoreTokens( blocks ) ) {
