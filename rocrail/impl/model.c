@@ -24,6 +24,7 @@
 #include "rocrail/impl/model_impl.h"
 #include "rocrail/public/loc.h"
 #include "rocrail/public/car.h"
+#include "rocrail/public/operator.h"
 #include "rocrail/public/block.h"
 #include "rocrail/public/fback.h"
 #include "rocrail/public/switch.h"
@@ -62,6 +63,8 @@
 #include "rocrail/wrapper/public/CarList.h"
 #include "rocrail/wrapper/public/Waybill.h"
 #include "rocrail/wrapper/public/WaybillList.h"
+#include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/OperatorList.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/TurntableList.h"
@@ -545,6 +548,13 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->carMap, wCar.getid( item ), (obj)car );
     added = True;
   }
+  else if( StrOp.equals( wOperator.name(), itemName ) ) {
+    iONode clone = (iONode)item->base.clone( item );
+    iOOperator operator = OperatorOp.inst( clone );
+    __addItemInList( data, wOperatorList.name(), clone );
+    MapOp.put( data->operatorMap, wOperator.getid( item ), (obj)operator );
+    added = True;
+  }
   else if( StrOp.equals( wRoute.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iORoute st = RouteOp.inst( clone );
@@ -727,6 +737,22 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       modified = True;
     }
     else if( wCar.getid( item ) != NULL && StrOp.len( wCar.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
+  else if( StrOp.equals( wOperator.name(), name ) ) {
+    iOOperator operator = (iOOperator)MapOp.get( data->operatorMap, wOperator.getid( item ) );
+    if( operator != NULL ) {
+      OperatorOp.modify( operator, (iONode)NodeOp.base.clone( item ) );
+      modified = True;
+    }
+    else if( StrOp.len(prev_id) > 0 && (operator = (iOOperator)MapOp.get( data->operatorMap, prev_id ) ) ) {
+      OperatorOp.modify( operator, (iONode)NodeOp.base.clone( item ) );
+      MapOp.remove( data->carMap, prev_id );
+      MapOp.put( data->operatorMap, id, (obj)operator );
+      modified = True;
+    }
+    else if( wOperator.getid( item ) != NULL && StrOp.len( wOperator.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
   }
@@ -1114,6 +1140,18 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       /* Remove item from list: */
       __removeItemFromList( o, wCarList.name(), props );
       car->base.del( car );
+      props->base.del( props );
+      removed = True;
+    }
+  }
+  else if( StrOp.equals( wOperator.name(), name ) ) {
+    iOOperator operator = (iOOperator)MapOp.get( o->operatorMap, wOperator.getid( item ) );
+    if( operator != NULL ) {
+      iONode props = OperatorOp.base.properties( operator );
+      MapOp.remove( o->operatorMap, wOperator.getid( item ) );
+      /* Remove item from list: */
+      __removeItemFromList( o, wOperatorList.name(), props );
+      operator->base.del( operator );
       props->base.del( props );
       removed = True;
     }
@@ -1635,6 +1673,11 @@ static iOCar _getCar( iOModel inst, const char* id ) {
   return (iOCar)MapOp.get( o->carMap, id );
 }
 
+static iOOperator _getOperator( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  return (iOOperator)MapOp.get( o->operatorMap, id );
+}
+
 static iOLoc _getLocByAddress( iOModel inst, int addr ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.first( o->locMap );
@@ -1931,6 +1974,7 @@ static void _init( iOModel inst ) {
   __clearMap( o->feedbackMap );
   __clearMap( o->locMap );
   __clearMap( o->carMap );
+  __clearMap( o->operatorMap );
   __clearMap( o->routeMap );
   __clearMap( o->switchMap );
   __clearMap( o->signalMap );
@@ -1959,6 +2003,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, NULL );
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
   _createMap( o, o->waybillMap , wWaybillList.name(), wWaybill.name(), NULL, NULL );
+  _createMap( o, o->operatorMap, wOperatorList.name(), wOperator.name(), (item_inst)OperatorOp.inst, NULL );
   _createMap( o, o->locationMap, wLocationList.name(), wLocation.name(), NULL, NULL );
   _createMap( o, o->scheduleMap, wScheduleList.name(), wSchedule.name(), NULL, NULL );
 
@@ -2713,10 +2758,10 @@ static void __printObjects2Stream( iOMap map, const char* title, FILE* f ) {
 
   fprintf( f, "</head><body>\n" );
   fprintf( f, "<table rules=\"all\" border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n" );
-  fprintf( f, o->tableHdr() );
+  fprintf( f, "%s", o->tableHdr() );
   while( o != NULL ) {
     char* htmlStr = o->toHtml( o );
-    fprintf( f, htmlStr );
+    fprintf( f, "%s", htmlStr );
     StrOp.free( htmlStr );
     o = (iIHtmlInt)MapOp.next( map );
   }
@@ -3009,6 +3054,7 @@ static iOModel _inst( const char* fileName ) {
   data->locMap      = MapOp.inst();
   data->carMap      = MapOp.inst();
   data->waybillMap  = MapOp.inst();
+  data->operatorMap = MapOp.inst();
   data->switchMap   = MapOp.inst();
   data->signalMap   = MapOp.inst();
   data->outputMap   = MapOp.inst();

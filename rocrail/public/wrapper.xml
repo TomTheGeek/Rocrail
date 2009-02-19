@@ -1390,6 +1390,15 @@
         <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
       </lc>
     </lclist>
+    
+    <operatorlist cardinality="1" remark="Operator table" wrappername="OperatorList">
+      <operator cardinality="n" wrappername="Operator" remark="Operator consist definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="lcid" vt="string" defval="" range="*" required="true"/>
+        <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
+      </operator>
+    </operatorlist>
+    
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>

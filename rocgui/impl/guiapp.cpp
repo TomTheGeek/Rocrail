@@ -106,6 +106,10 @@
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/CarList.h"
+#include "rocrail/wrapper/public/OperatorList.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "common/version.h"
 
@@ -759,6 +763,18 @@ static void rocrailCallback( obj me, iONode node ) {
           wxPostEvent( wxGetApp().getFrame(), event );
 
         }
+        planItems = false;
+      }
+      else if( StrOp.equals( childName, wCar.name() ) ) {
+        iONode carlist = wPlan.getcarlist( model );
+        if( carlist != NULL && !__hasIDinList(carlist, wItem.getid(child)) )
+          NodeOp.addChild( carlist, (iONode)NodeOp.base.clone(child) );
+        planItems = false;
+      }
+      else if( StrOp.equals( childName, wOperator.name() ) ) {
+        iONode oplist = wPlan.getoperatorlist( model );
+        if( oplist != NULL && !__hasIDinList(oplist, wItem.getid(child)) )
+          NodeOp.addChild( oplist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wRoute.name() ) ) {

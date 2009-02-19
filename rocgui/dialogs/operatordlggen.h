@@ -8,21 +8,23 @@
 #ifndef __operatordlggen__
 #define __operatordlggen__
 
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/bmpbuttn.h>
+#include <wx/string.h>
+#include <wx/listbox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/string.h>
 #include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/combobox.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
-#include <wx/listbox.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/statline.h>
+#include <wx/bmpbuttn.h>
+#include <wx/combobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -38,7 +40,14 @@ class operatordlggen : public wxDialog
 	
 	protected:
 		wxNotebook* m_OperatorBook;
-		wxPanel* m_LocoPanel;
+		wxPanel* m_IndexPanel;
+		wxListBox* m_OperatorList;
+		wxButton* m_NewOperator;
+		wxButton* m_DelOperator;
+		wxPanel* m_ControlPanel;
+		wxStaticText* m_labOperator;
+		wxTextCtrl* m_Operator;
+		wxStaticLine* m_staticline1;
 		wxBitmapButton* m_LocoImage;
 		wxStaticText* m_labLocoID;
 		wxComboBox* m_LocoID;
@@ -59,6 +68,11 @@ class operatordlggen : public wxDialog
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Apply;
 		wxButton* m_sdbSizer1Cancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void onNewOperator( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onDelOperator( wxCommandEvent& event ){ event.Skip(); }
+		
 	
 	public:
 		operatordlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Operator"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
