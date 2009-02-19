@@ -382,6 +382,7 @@ public:
     wxCheckBox* m_ForceSameDir;
     wxCheckBox* m_UseScheduleTime;
     wxCheckBox* m_secondNextBlock;
+    wxCheckBox* m_ShortIn;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;

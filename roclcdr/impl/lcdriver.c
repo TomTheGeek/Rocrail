@@ -159,8 +159,11 @@ static void __blockEvent( iOLcDriver inst, obj emitter, int event ) {
 
 
   /*---------- IN ----------*/
+  case shortin_event:
+    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, True );
+    break;
   case in_event:
-    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent );
+    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, False );
     break;
 
 

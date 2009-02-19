@@ -174,6 +174,8 @@ static int _getEventCode( const char* evtname ) {
     return occupied_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
     return ident_event;
+  else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) )
+    return shortin_event;
   else
     return 0;
 }
@@ -333,7 +335,8 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     else
       LocOp.event( loc, manager, evt, 0 );
 
-    if( evt == enter2in_event || evt == in_event ) {
+    if( evt == enter2in_event || evt == in_event || shortin_event ) {
+      /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
     }
   }

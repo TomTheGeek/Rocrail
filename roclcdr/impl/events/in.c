@@ -39,10 +39,25 @@
 
 
 
-void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean curBlockEvent, Boolean dstBlockEvent ) {
+void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean curBlockEvent, Boolean dstBlockEvent, Boolean shortIn ) {
   iOLcDriverData data = Data(inst);
 
   Boolean newInEvent = False;
+
+  if( shortIn && wLoc.isshortin( data->loc->base.properties( data->loc ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "using shortin_block event for \"%s\" from \"%s\"...",
+                   data->loc->getId( data->loc ), blockId );
+  }
+  else if( shortIn ) {
+    /* ignore */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "ignoring shortin_block event for \"%s\" from \"%s\"...",
+                   data->loc->getId( data->loc ), blockId );
+    return;
+  }
+
+
   if( data->previn + data->ignevt < SystemOp.getTick() && StrOp.equals( blockId, data->previnbkid ) ) {
     data->previn = SystemOp.getTick();
     data->previnbkid = blockId;

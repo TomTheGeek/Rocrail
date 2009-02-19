@@ -2052,6 +2052,7 @@ void BlockDialog::initSensorCombos() {
     acts[i]->Append( wxString(wFeedbackEvent.pre2in_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.occupied_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.ident_event,wxConvUTF8) );
+    acts[i]->Append( wxString(wFeedbackEvent.shortin_event,wxConvUTF8) );
   }
 
   iONode model = wxGetApp().getModel();

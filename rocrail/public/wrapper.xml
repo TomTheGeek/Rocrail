@@ -1063,12 +1063,13 @@
         <!-- New feedback handling: -->
         <fbevent cardinality="n" wrappername="FeedbackEvent">
           <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
-          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
+          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
           <const name="ident_event" vt="string" val="ident"/>
           <const name="enter_event" vt="string" val="enter"/>
           <const name="enter2route_event" vt="string" val="enter2route"/>
           <const name="enter2in_event" vt="string" val="enter2in"/>
           <const name="in_event" vt="string" val="in"/>
+          <const name="shortin_event" vt="string" val="shortin"/>
           <const name="exit_event" vt="string" val="exit"/>
           <const name="pre2in_event" vt="string" val="pre2in"/>
           <const name="occupied_event" vt="string" val="occupied"/>
@@ -1256,6 +1257,7 @@
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Total length of loc with wagons to check with block length.."/>
         <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
         <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
+        <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
 
         <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
         <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>
