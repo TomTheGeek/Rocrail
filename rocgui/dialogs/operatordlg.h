@@ -37,9 +37,29 @@ class OperatorDlg : public operatordlggen
   int    m_TabAlign;
   int    m_SetPage;
 
+  void initLabels();
+  void evaluate();
+  void initIndex();
+  void initValues();
+
 public:
 	/** Constructor */
 	OperatorDlg( wxWindow* parent, iONode p_Props );
+
+	void onNewOperator( wxCommandEvent& event );
+    void onDelOperator( wxCommandEvent& event );
+    void onLocoImage( wxCommandEvent& event );
+    void onLocomotiveCombo( wxCommandEvent& event );
+    void onReserve( wxCommandEvent& event );
+    void onRun( wxCommandEvent& event );
+    void onCarImage( wxCommandEvent& event );
+    void onAddCar( wxCommandEvent& event );
+    void onLeaveCar( wxCommandEvent& event );
+    void onCarCard( wxCommandEvent& event );
+    void onWayBill( wxCommandEvent& event );
+    void onApply( wxCommandEvent& event );
+    void onCancel( wxCommandEvent& event );
+    void onOK( wxCommandEvent& event );
 };
 
 #endif // __operatordlg__

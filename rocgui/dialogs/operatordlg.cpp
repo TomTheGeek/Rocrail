@@ -19,9 +19,139 @@
 */
 #include "operatordlg.h"
 
+#include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#include "wx/defs.h"
+#endif
+
+#include "rocgui/public/guiapp.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/CarList.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/LocList.h"
+#include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/OperatorList.h"
+
+#include "rocgui/wrapper/public/Gui.h"
+
+#include "rocs/public/trace.h"
+#include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
+
+#include "rocgui/xpm/nopict.xpm"
+
+
 OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
-:
-operatordlggen( parent )
+  :operatordlggen( parent )
 {
 
 }
+
+void OperatorDlg::initLabels() {
+
+}
+
+
+void OperatorDlg::evaluate() {
+
+}
+
+
+void OperatorDlg::initIndex() {
+
+}
+
+
+void OperatorDlg::initValues() {
+
+}
+
+
+void OperatorDlg::onNewOperator( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onDelOperator( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onLocoImage( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onLocomotiveCombo( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onReserve( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onRun( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onCarImage( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onAddCar( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onCarCard( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onWayBill( wxCommandEvent& event ) {
+
+}
+
+
+void OperatorDlg::onApply( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  evaluate();
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  initIndex();
+}
+
+
+void OperatorDlg::onCancel( wxCommandEvent& event ) {
+  EndModal( 0 );
+}
+
+
+void OperatorDlg::onOK( wxCommandEvent& event ) {
+  if( m_bSave )
+    onApply(event);
+  EndModal( wxID_OK );
+}
+

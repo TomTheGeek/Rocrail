@@ -72,6 +72,18 @@ class operatordlggen : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void onNewOperator( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onDelOperator( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onLocoImage( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onLocomotiveCombo( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onReserve( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onRun( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCarImage( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onAddCar( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onLeaveCar( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCarCard( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onWayBill( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onApply( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:

@@ -109,7 +109,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ControlPanel->SetSizer( bSizer4 );
 	m_ControlPanel->Layout();
 	bSizer4->Fit( m_ControlPanel );
-	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), true );
+	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), false );
 	m_ConsistPanel = new wxPanel( m_OperatorBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -140,7 +140,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ConsistPanel->SetSizer( bSizer2 );
 	m_ConsistPanel->Layout();
 	bSizer2->Fit( m_ConsistPanel );
-	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), false );
+	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), true );
 	
 	bSizer1->Add( m_OperatorBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -161,6 +161,18 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	// Connect Events
 	m_NewOperator->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onNewOperator ), NULL, this );
 	m_DelOperator->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onDelOperator ), NULL, this );
+	m_LocoImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLocoImage ), NULL, this );
+	m_LocoID->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( operatordlggen::onLocomotiveCombo ), NULL, this );
+	m_Reserve->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onReserve ), NULL, this );
+	m_Run->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
+	m_CarImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
+	m_AddCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );
+	m_LeaveCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLeaveCar ), NULL, this );
+	m_ShowCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarCard ), NULL, this );
+	m_ShowWaybill->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onWayBill ), NULL, this );
+	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onApply ), NULL, this );
+	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCancel ), NULL, this );
+	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onOK ), NULL, this );
 }
 
 operatordlggen::~operatordlggen()
@@ -168,4 +180,16 @@ operatordlggen::~operatordlggen()
 	// Disconnect Events
 	m_NewOperator->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onNewOperator ), NULL, this );
 	m_DelOperator->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onDelOperator ), NULL, this );
+	m_LocoImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLocoImage ), NULL, this );
+	m_LocoID->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( operatordlggen::onLocomotiveCombo ), NULL, this );
+	m_Reserve->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onReserve ), NULL, this );
+	m_Run->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
+	m_CarImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
+	m_AddCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );
+	m_LeaveCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLeaveCar ), NULL, this );
+	m_ShowCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarCard ), NULL, this );
+	m_ShowWaybill->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onWayBill ), NULL, this );
+	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onApply ), NULL, this );
+	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCancel ), NULL, this );
+	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onOK ), NULL, this );
 }
