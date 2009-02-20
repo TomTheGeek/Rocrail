@@ -76,6 +76,8 @@ clean:
 	-mkdir $(GENDIR)\rocgui
 	-mkdir $(GENDIR)\rocgui\res
 	-mkdir $(TMPOUTDIR)
+	-del /Q $(OUTDIR)\rocgui.exe
+	-del /Q $(TARGET)
 	-del /Q $(TMPOUTDIR)\*.o
 	-del /Q $(GENDIR)\rocgui\wrapper\public\*.*
 	-del /Q $(GENDIR)\rocgui\wrapper\impl\*.*

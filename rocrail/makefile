@@ -92,6 +92,7 @@ clean:
 	-mkdir -p $(OUTDIR)
 	-mkdir -p $(TMPOUTDIR)
 	-mkdir -p $(GENDIR)/rocrail
+	-rm -f $(TARGET)
 	-rm -f $(OUTDIR)/*.o
 	-rm -f $(GENDIR)/rocrail/wrapper/public/*
 	-rm -f $(GENDIR)/rocrail/wrapper/impl/*
