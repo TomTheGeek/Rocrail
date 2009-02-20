@@ -22,4 +22,6 @@
 <ope date="733450" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="1" category="2" wording="6 Months Hosting" info="ManagedHosting S"/>
 <ope date="733454" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="MATTHIAS VENNEKOTTER"/>
 <ope date="733455" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="HASELSTEINER, MARIO"/>
+<ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="EDELMANN, MARIO"/>
+<ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="BERNHARD BAPTIST"/>
 </homebank>
