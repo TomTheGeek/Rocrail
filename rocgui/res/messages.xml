@@ -6156,353 +6156,137 @@
     <de txt="Begrenze Editieren im Automatikmodus"/>
     <en txt="Restrict edit in automode"/>
     <nl txt="Beperk modificeren in automaat"/>
-    <sv txt="Restrict edit in automode"/>
-    <fr txt="Restrict edit in automode"/>
-    <tr txt="Restrict edit in automode"/>
-    <es txt="Restrict edit in automode"/>
-    <it txt="Restrict edit in automode"/>
-    <da txt="Restrict edit in automode"/>
   </Msg>
   <Msg id="semaphorewait">
     <de txt="Formsignalzeit"/>
     <en txt="Semaphore time"/>
     <nl txt="Armsein tijd"/>
-    <sv txt="Semaphore time"/>
-    <fr txt="Semaphore time"/>
-    <tr txt="Semaphore time"/>
-    <es txt="Semaphore time"/>
-    <it txt="Semaphore time"/>
-    <da txt="Semaphore time"/>
   </Msg>
   <Msg id="lightsoff">
     <de txt="Licht aus"/>
     <en txt="Lights off"/>
     <nl txt="Licht uit"/>
-    <sv txt="Lights off"/>
-    <fr txt="Lights off"/>
-    <tr txt="Lights off"/>
-    <es txt="Lights off"/>
-    <it txt="Lights off"/>
-    <da txt="Lights off"/>
   </Msg>
   <Msg id="svg">
-    <de txt="SVG"/>
     <en txt="SVG"/>
-    <nl txt="SVG"/>
-    <sv txt="SVG"/>
-    <fr txt="SVG"/>
-    <tr txt="SVG"/>
-    <es txt="SVG"/>
-    <it txt="SVG"/>
-    <da txt="SVG"/>
   </Msg>
   <Msg id="followup">
     <de txt="Nachfolge"/>
     <en txt="Follow-up"/>
-    <nl txt="Follow-up"/>
-    <sv txt="Follow-up"/>
-    <fr txt="Follow-up"/>
-    <tr txt="Follow-up"/>
-    <es txt="Follow-up"/>
-    <it txt="Follow-up"/>
-    <da txt="Follow-up"/>
+    <nl txt="Vervolg"/>
   </Msg>
   <Msg id="ctsflow">
-    <de txt="CTS Flow"/>
     <en txt="CTS Flow"/>
-    <nl txt="CTS Flow"/>
-    <sv txt="CTS Flow"/>
-    <fr txt="CTS Flow"/>
-    <tr txt="CTS Flow"/>
-    <es txt="CTS Flow"/>
-    <it txt="CTS Flow"/>
-    <da txt="CTS Flow"/>
   </Msg>
     <Msg id="savelocoiofileas">
     <de txt="Speichern der LocoIO-Datei als"/>
     <en txt="Save LocoIO file as"/>
-    <nl txt="Save LocoIO file as"/>
-    <sv txt="Save LocoIO file as"/>
-    <fr txt="Save LocoIO file as"/>
-    <tr txt="Save LocoIO file as"/>
-    <es txt="Save LocoIO file as"/>
-    <it txt="Save LocoIO file as"/>
-    <da txt="Save LocoIO file as"/>
+    <nl txt="LocoIO bestand opslaan als"/>
   </Msg>
   <Msg id="openlocoiofile">
     <de txt="Öffnen einer LocoIO-Datei"/>
     <en txt="Open LocoIO file"/>
-    <nl txt="Open LocoIO file"/>
-    <sv txt="Open LocoIO file"/>
-    <fr txt="Open LocoIO file"/>
-    <tr txt="Open LocoIO file"/>
-    <es txt="Open LocoIO file"/>
-    <it txt="Open LocoIO file"/>
-    <da txt="Open LocoIO file"/>
+    <nl txt="Open een LocoIO bestand"/>
   </Msg>
   <Msg id="roundhouse">
     <de txt="Ringlokschuppen"/>
     <en txt="Roundhouse"/>
     <nl txt="Lokloods"/>
-    <sv txt="Roundhouse"/>
-    <fr txt="Roundhouse"/>
-    <tr txt="Roundhouse"/>
-    <es txt="Roundhouse"/>
-    <it txt="Roundhouse"/>
-    <da txt="Roundhouse"/>
   </Msg>
   <Msg id="access">
     <de txt="Zufahrt"/>
     <en txt="Access"/>
     <nl txt="Toegang"/>
-    <sv txt="Access"/>
-    <fr txt="Access"/>
-    <tr txt="Access"/>
-    <es txt="Access"/>
-    <it txt="Access"/>
-    <da txt="Access"/>
   </Msg>
   <Msg id="ttdirpause">
     <de txt="Richtungswechselwartezeit"/>
     <en txt="Direction change pause"/>
     <nl txt="Draairichtings wissel pause"/>
-    <sv txt="Direction change pause"/>
-    <fr txt="Direction change pause"/>
-    <tr txt="Direction change pause"/>
-    <es txt="Direction change pause"/>
-    <it txt="Direction change pause"/>
-    <da txt="Direction change pause"/>
   </Msg>
   <Msg id="swaprotationdirection">
     <de txt="Wechsel der Drehrichtung"/>
     <en txt="swap rotation direction"/>
     <nl txt="draai rotatie richting om"/>
-    <sv txt="swap rotation direction"/>
-    <fr txt="swap rotation direction"/>
-    <tr txt="swap rotation direction"/>
-    <es txt="swap rotation direction"/>
-    <it txt="swap rotation direction"/>
-    <da txt="swap rotation direction"/>
   </Msg>
   <Msg id="shortid">
-    <de txt="Short ID"/>
     <en txt="Short ID"/>
-    <nl txt="Short ID"/>
-    <sv txt="Short ID"/>
-    <fr txt="Short ID"/>
-    <tr txt="Short ID"/>
-    <es txt="Short ID"/>
-    <it txt="Short ID"/>
-    <da txt="Short ID"/>
   </Msg>
   <Msg id="setshortid">
-    <de txt="Set short ID"/>
     <en txt="Set short ID"/>
-    <nl txt="Set short ID"/>
-    <sv txt="Set short ID"/>
-    <fr txt="Set short ID"/>
-    <tr txt="Set short ID"/>
-    <es txt="Set short ID"/>
-    <it txt="Set short ID"/>
-    <da txt="Set short ID"/>
   </Msg>
   <Msg id="txshortids">
-    <de txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
     <en txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <nl txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <sv txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <fr txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <tr txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <es txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <it txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
-    <da txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagonen" tip="Wagontabelle"/>
     <en txt="Car table" tip="Car table"/>
     <nl txt="Wagonnen" tip="Wagon lijst"/>
-    <sv txt="Cars" tip="Car table"/>
-    <fr txt="Cars" tip="Car table"/>
-    <tr txt="Cars" tip="Car table"/>
-    <es txt="Cars" tip="Car table"/>
-    <it txt="Cars" tip="Car table"/>
-    <da txt="Cars" tip="Car table"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtzetteln" tip="Frachtzetteltabelle"/>
     <en txt="Waybill table" tip="Waybill table"/>
-    <nl txt="Waybills" tip="Waybill table"/>
-    <sv txt="Waybills" tip="Waybill table"/>
-    <fr txt="Waybills" tip="Waybill table"/>
-    <tr txt="Waybills" tip="Waybill table"/>
-    <es txt="Waybills" tip="Waybill table"/>
-    <it txt="Waybills" tip="Waybill table"/>
-    <da txt="Waybills" tip="Waybill table"/>
+    <nl txt="Vrachtbrieven" tip="Vrachtbrieven tabel"/>
   </Msg>
   <Msg id="waybill">
     <de txt="Frachtzettel"/>
     <en txt="Waybill"/>
-    <nl txt="Waybill"/>
-    <sv txt="Waybill"/>
-    <fr txt="Waybill"/>
-    <tr txt="Waybill"/>
-    <es txt="Waybill"/>
-    <it txt="Waybill"/>
-    <da txt="Waybill"/>
+    <nl txt="Vrachtbrief"/>
   </Msg>
   <Msg id="freezetime">
     <de txt="Uhrzeit anhalten"/>
     <en txt="Freeze time"/>
     <nl txt="Tijd stoppen"/>
-    <sv txt="Freeze time"/>
-    <fr txt="Freeze time"/>
-    <tr txt="Freeze time"/>
-    <es txt="Freeze time"/>
-    <it txt="Freeze time"/>
-    <da txt="Freeze time"/>
   </Msg>
   <Msg id="resumetime">
     <de txt="Uhrzeit fortsetzen"/>
     <en txt="Resume time"/>
     <nl txt="Tijd starten"/>
-    <sv txt="Resume time"/>
-    <fr txt="Resume time"/>
-    <tr txt="Resume time"/>
-    <es txt="Resume time"/>
-    <it txt="Resume time"/>
-    <da txt="Resume time"/>
   </Msg>
   <Msg id="code">
     <de txt="Kode"/>
     <en txt="Code"/>
     <nl txt="Code"/>
-    <sv txt="Code"/>
-    <fr txt="Code"/>
-    <tr txt="Code"/>
-    <es txt="Code"/>
-    <it txt="Code"/>
-    <da txt="Code"/>
   </Msg>
   <Msg id="roadname">
     <de txt="Geselschaft"/>
     <en txt="Roadname"/>
     <nl txt="Maatschappij"/>
-    <sv txt="Roadname"/>
-    <fr txt="Roadname"/>
-    <tr txt="Roadname"/>
-    <es txt="Roadname"/>
-    <it txt="Roadname"/>
-    <da txt="Roadname"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
     <en txt="Era"/>
     <nl txt="Periode"/>
-    <sv txt="Era"/>
-    <fr txt="Era"/>
-    <tr txt="Era"/>
-    <es txt="Era"/>
-    <it txt="Era"/>
-    <da txt="Era"/>
   </Msg>
   <Msg id="subtype">
     <de txt="Untergruppe"/>
     <en txt="Subtype"/>
-    <nl txt="Subtype"/>
-    <sv txt="Subtype"/>
-    <fr txt="Subtype"/>
-    <tr txt="Subtype"/>
-    <es txt="Subtype"/>
-    <it txt="Subtype"/>
-    <da txt="Subtype"/>
   </Msg>
   <Msg id="car">
     <de txt="Wagon"/>
     <en txt="Car"/>
     <nl txt="Wagon"/>
-    <sv txt="Car"/>
-    <fr txt="Car"/>
-    <tr txt="Car"/>
-    <es txt="Car"/>
-    <it txt="Car"/>
-    <da txt="Car"/>
   </Msg>
   <Msg id="poladdr">
-    <de txt="Polarization addr."/>
     <en txt="Polarization addr."/>
-    <nl txt="Polarization addr."/>
-    <sv txt="Polarization addr."/>
-    <fr txt="Polarization addr."/>
-    <tr txt="Polarization addr."/>
-    <es txt="Polarization addr."/>
-    <it txt="Polarization addr."/>
-    <da txt="Polarization addr."/>
   </Msg>
   <Msg id="ttbridgepolarization">
-    <de txt="Bridge polarization"/>
     <en txt="Bridge polarization"/>
-    <nl txt="Bridge polarization"/>
-    <sv txt="Bridge polarization"/>
-    <fr txt="Bridge polarization"/>
-    <tr txt="Bridge polarization"/>
-    <es txt="Bridge polarization"/>
-    <it txt="Bridge polarization"/>
-    <da txt="Bridge polarization"/>
   </Msg>
   <Msg id="readspeedcurve">
-    <de txt="Read current speed curve from decoder?"/>
     <en txt="Read current speed curve from decoder?"/>
     <nl txt="Lees de huidige sneldheids karakteristiek uit de decoder?"/>
-    <sv txt="Read current speed curve from decoder?"/>
-    <fr txt="Read current speed curve from decoder?"/>
-    <tr txt="Read current speed curve from decoder?"/>
-    <es txt="Read current speed curve from decoder?"/>
-    <it txt="Read current speed curve from decoder?"/>
-    <da txt="Read current speed curve from decoder?"/>
   </Msg>
   <Msg id="sync">
-    <de txt="Synchronize"/>
     <en txt="Synchronize"/>
-    <nl txt="Synchronize"/>
-    <sv txt="Synchronize"/>
-    <fr txt="Synchronize"/>
-    <tr txt="Synchronize"/>
-    <es txt="Synchronize"/>
-    <it txt="Synchronize"/>
-    <da txt="Synchronize"/>
   </Msg>
   <Msg id="onlymobiledec">
-    <de txt="Mobile only"/>
     <en txt="Mobile only"/>
-    <nl txt="Mobile only"/>
-    <sv txt="Mobile only"/>
-    <fr txt="Mobile only"/>
-    <tr txt="Mobile only"/>
-    <es txt="Mobile only"/>
-    <it txt="Mobile only"/>
-    <da txt="Mobile only"/>
   </Msg>
   <Msg id="purgeslots">
-    <de txt="Purge slots"/>
     <en txt="Purge slots"/>
-    <nl txt="Purge slots"/>
-    <sv txt="Purge slots"/>
-    <fr txt="Purge slots"/>
-    <tr txt="Purge slots"/>
-    <es txt="Purge slots"/>
-    <it txt="Purge slots"/>
-    <da txt="Purge slots"/>
   </Msg>
   <Msg id="stopatpurge">
-    <de txt="Stop at purge"/>
     <en txt="Stop at purge"/>
-    <nl txt="Stop at purge"/>
-    <sv txt="Stop at purge"/>
-    <fr txt="Stop at purge"/>
-    <tr txt="Stop at purge"/>
-    <es txt="Stop at purge"/>
-    <it txt="Stop at purge"/>
-    <da txt="Stop at purge"/>
   </Msg>
   <Msg id="useshortinevent">
     <en txt="Use shortin event"/>
