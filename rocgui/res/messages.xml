@@ -6504,5 +6504,8 @@
     <it txt="Stop at purge"/>
     <da txt="Stop at purge"/>
   </Msg>
+  <Msg id="useshortinevent">
+    <en txt="Use shortin event"/>
+  </Msg>
 </Messages>
 

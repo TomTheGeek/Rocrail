@@ -133,6 +133,10 @@ static const char* _getMsg( struct ORes* inst ,const char* key ) {
       if( lang != NULL ) {
         return NodeOp.getStr( lang, "txt", key );
       }
+      lang = NodeOp.findNode( msg, "en" );
+      if( lang != NULL ) {
+        return NodeOp.getStr( lang, "txt", key );
+      }
     }
   }
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Resource [%s_%s] not found.", data->language, key );
@@ -148,6 +152,10 @@ static const char* _getMenu( struct ORes* inst ,const char* key ) {
     if( msg != NULL ) {
       const char* key = NodeOp.getStr( msg, "key", NULL );
       iONode lang = NodeOp.findNode( msg, data->language );
+      if( lang == NULL )
+        lang = NodeOp.findNode( msg, "all" );
+      if( lang == NULL )
+        lang = NodeOp.findNode( msg, "en" );
       if( lang != NULL ) {
         Boolean dialog = NodeOp.getBool( msg, "dialog", False );
         int accel = NodeOp.getInt( lang, "accel", -1 );
@@ -197,6 +205,10 @@ static const char* _getTip( struct ORes* inst ,const char* key ) {
         return NodeOp.getStr( lang, "tip", key );
       }
       lang = NodeOp.findNode( msg, "all" );
+      if( lang != NULL ) {
+        return NodeOp.getStr( lang, "tip", key );
+      }
+      lang = NodeOp.findNode( msg, "en" );
       if( lang != NULL ) {
         return NodeOp.getStr( lang, "tip", key );
       }

@@ -30,6 +30,7 @@
 #include "rocs/public/cmdln.h"
 
 static iOMap nodeMap = NULL;
+static iOMap enMap = NULL;
 static iOMap descMap = NULL;
 
 static const char* package   = "PACKAGE";
@@ -44,12 +45,24 @@ static void __createMap(iONode root) {
   iONode msg = NodeOp.findNode( root, "Msg" );
 
   nodeMap = MapOp.inst();
+  enMap = MapOp.inst();
   while( msg != NULL ) {
     const char* id = NodeOp.getStr(msg, "id", NULL);
+    iONode enlang = NodeOp.findNode( msg, "en" );
+
     if( id != NULL ) {
       TraceOp.println( "added [%s] to map", id );
       MapOp.put( nodeMap, id, (obj)msg );
     }
+
+    if( enlang != NULL ) {
+      const char* id = NodeOp.getStr(enlang, "txt", NULL);
+      if( id != NULL ) {
+        TraceOp.println( "added [%s] to ENmap", id );
+        MapOp.put( enMap, id, (obj)msg );
+      }
+    }
+
     msg = NodeOp.findNextNode( root, msg );
   };
 
@@ -169,6 +182,10 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
     msg = NodeOp.findNextNode( xml, msg );
   */
   iONode msg = (iONode)MapOp.get( nodeMap, aid);
+  if( msg == NULL ) {
+    msg = (iONode)MapOp.get( enMap, aid);
+  }
+
   if( msg != NULL ) {
     iONode polang = NodeOp.findNode( msg, lang );
     if( polang == NULL ) {
@@ -212,7 +229,14 @@ msgstr "Gerade"
 
 static void __po2lang( char* po, iONode xml, const char* lang ) {
   int cnt = 0;
+  Boolean msgidMode = False;
   char* sid = StrOp.find( po, "# id=\"" );
+
+  if( sid == NULL ) {
+    /* no id given; switch to msgid mode */
+    msgidMode = True;
+    sid = StrOp.find( po, "msgid \"" );
+  }
 
   TraceOp.println( "sid=%10.10s", sid );
   while( sid != NULL ) {
@@ -254,7 +278,10 @@ static void __po2lang( char* po, iONode xml, const char* lang ) {
 
       cnt++;
     }
-    sid = StrOp.find( endline + 1, "# id=\"" );
+    if( msgidMode )
+      sid = StrOp.find( endline + 1, "msgid \"" );
+    else
+      sid = StrOp.find( endline + 1, "# id=\"" );
   };
   TraceOp.println( "Merged [%d] msgid's", cnt );
 

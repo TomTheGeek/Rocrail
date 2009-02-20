@@ -184,7 +184,8 @@ static char* __lang2pot( iONode xml ) {
       msgid "My name is %s.\n"
       msgstr ""
       */
-      char* msgid = StrOp.fmt( "#. %s\n# id=\"%s\"\n#, c-format\n", NodeOp.getStr(msg, "remark", "") );
+      char* msgid = StrOp.fmt( "#. %s\n# id=\"%s\"\n#, c-format\n",
+          NodeOp.getStr(msg, "remark", ""), NodeOp.getStr(msg, "id", "") );
       template = StrOp.cat( template, msgid );
       StrOp.free(msgid);
 
@@ -195,7 +196,7 @@ static char* __lang2pot( iONode xml ) {
       }
 
       msgid = StrOp.fmt( "msgid \"%s\"\nmsgstr \"\"\n\n",
-          NodeOp.getStr(msg, "id", "?"), NodeOp.getStr(en, "txt", "?") );
+          NodeOp.getStr(en, "txt", "?") );
       template = StrOp.cat( template, msgid );
       StrOp.free(msgid);
 
