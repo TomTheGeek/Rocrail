@@ -5,7 +5,7 @@ AppName=Rocrail
 AppVerName=Rocrail 1.2.0 snapshot-revxxxx-unicode
 DefaultDirName={pf}\Rocrail
 DefaultGroupName=Rocrail
-UninstallDisplayIcon={app}\rocgui.exe
+UninstallDisplayIcon={app}\rocview.exe
 Compression=lzma
 SolidCompression=yes
 DirExistsWarning=auto
@@ -46,7 +46,7 @@ Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; BeforeInstall: StopService
 Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; Tasks: not service
 Source: "stopservice.cmd"; DestDir: "{app}"
 Source: "mkservice.cmd"; DestDir: "{app}"
-Source: "..\..\winbin\rocgui.exe"; DestDir: "{app}"
+Source: "..\..\winbin\rocview.exe"; DestDir: "{app}"
 Source: "..\..\winbin\lcdriver.dll"; DestDir: "{app}"
 Source: "..\..\winbin\p50.dll"; DestDir: "{app}"
 Source: "..\..\winbin\p50x.dll"; DestDir: "{app}"
@@ -87,7 +87,7 @@ Source: "..\..\doc\*.*"; DestDir: "{app}\doc"; Tasks: doc;
 Source: "..\..\COPYING"; DestDir: "{app}"; Tasks: doc;
 
 [Icons]
-Name: "{group}\Rocrail GUI"; WorkingDir: "{app}"; Filename: "{app}\rocgui.exe"
+Name: "{group}\Rocrail GUI"; WorkingDir: "{app}"; Filename: "{app}\rocview.exe"
 Name: "{group}\Rocrail Server"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"""; WorkingDir: "{app}"; Filename: "{app}\rocrail.exe"
 Name: "{group}\Documentation"; WorkingDir: "{app}"; Filename: "{app}\doc\index.html"
 

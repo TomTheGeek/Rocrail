@@ -88,7 +88,7 @@ SOBJS=$(patsubst symbols/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard symbols/*.cpp))
 WOBJS=$(patsubst $(GENDIR)/rocgui/wrapper/impl/%.c,$(GENDIR)/rocgui/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocgui/wrapper/impl/*.c))
 ROBJS=$(patsubst $(GENDIR)/rocgui/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocgui/res/*.c))
 
-TARGET=$(OUTDIR)/rocgui$(BINSUFFIX)
+TARGET=$(OUTDIR)/rocview$(BINSUFFIX)
 
 all: $(TARGET)
 
@@ -140,5 +140,5 @@ messages:
 	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
 install:
-	-cp -p $(OUTDIR)/rocgui $(DESTDIR)
+	-cp -p $(OUTDIR)/rocview $(DESTDIR)
 	

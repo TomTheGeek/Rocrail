@@ -14,5 +14,5 @@ if [ ! -e ~/rocrail/icons ] ; then
 	ln -s /opt/rocrail/icons ~/rocrail/icons
 fi
 
-/opt/rocrail/rocgui $1 $2 $3
+/opt/rocrail/rocview $1 $2 $3
 

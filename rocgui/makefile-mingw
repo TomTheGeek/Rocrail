@@ -39,7 +39,7 @@ SOBJS=$(patsubst symbols/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard symbols/*.cpp))
 WOBJS=$(patsubst $(GENDIR)/rocgui/wrapper/impl/%.c,$(GENDIR)/rocgui/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocgui/wrapper/impl/*.c))
 ROBJS=$(patsubst $(GENDIR)/rocgui/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocgui/res/*.c))
 
-TARGET=$(OUTDIR)\rocgui.exe
+TARGET=$(OUTDIR)\rocview.exe
 
 all: $(TARGET)
 #	-del /Q $(TMPOUTDIR)\*.o

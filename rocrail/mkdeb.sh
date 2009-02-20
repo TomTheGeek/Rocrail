@@ -30,11 +30,11 @@ mkdir -p debian/etc/init.d
 cp ../rocrail/package/control debian/DEBIAN
 
 cp ../unxbin/rocrail debian/opt/rocrail
-cp ../unxbin/rocgui debian/opt/rocrail
+cp ../unxbin/rocview debian/opt/rocrail
 cp ../unxbin/*.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocrail
-strip debian/opt/rocrail/rocgui
+strip debian/opt/rocrail/rocview
 strip debian/opt/rocrail/*.so
 
 cp ../rocrail/package/Rocrail.directory debian/usr/share/desktop-directories

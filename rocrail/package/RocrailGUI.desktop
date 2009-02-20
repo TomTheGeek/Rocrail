@@ -3,5 +3,5 @@ Encoding=UTF-8
 Type=Application
 Exec=/opt/rocrail/rocgui.sh
 Icon=/opt/rocrail/rocrail.xpm
-Name=Rocrail GUI
+Name=Rocview
 Categories=Application;Rocrail;Game;

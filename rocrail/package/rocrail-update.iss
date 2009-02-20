@@ -5,7 +5,7 @@ AppName=Rocrail
 AppVerName=Rocrail 1.1.0 snapshot-svnxxxx-unicode
 DefaultDirName={pf}\Rocrail
 DefaultGroupName=Rocrail
-UninstallDisplayIcon={app}\rocgui.exe
+UninstallDisplayIcon={app}\rocview.exe
 Compression=lzma
 SolidCompression=yes
 DirExistsWarning=auto
@@ -17,7 +17,7 @@ OutputBaseFilename=rocrail-update-1.1.0-svnxxxx-snapshot-unicode
 
 [Files]
 Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"
-Source: "..\..\winbin\rocgui.exe"; DestDir: "{app}"
+Source: "..\..\winbin\rocview.exe"; DestDir: "{app}"
 Source: "..\..\winbin\lcdriver.dll"; DestDir: "{app}"
 Source: "..\..\winbin\p50.dll"; DestDir: "{app}"
 Source: "..\..\winbin\p50x.dll"; DestDir: "{app}"
