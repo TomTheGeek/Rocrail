@@ -121,6 +121,7 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -319,6 +320,24 @@ iONode RocGuiFrame::findLoc( const char* locid ) {
 
       if( id != NULL && StrOp.equals( locid, id ) ) {
         return lc;
+      }
+    }
+  }
+  return NULL;
+}
+
+
+iONode RocGuiFrame::findCar( const char* carid ) {
+  iONode model = wxGetApp().getModel();
+  iONode carlist = wPlan.getcarlist( model );
+  if( carlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( carlist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode car = NodeOp.getChild( carlist, i );
+      const char* id = wCar.getid( car );
+
+      if( id != NULL && StrOp.equals( carid, id ) ) {
+        return car;
       }
     }
   }

@@ -64,6 +64,8 @@ public:
     void onOK( wxCommandEvent& event );
     void onSetPage( wxCommandEvent& event );
     void onOperatorList( wxCommandEvent& event );
+    void onCarList( wxCommandEvent& event );
+
 };
 
 #endif // __operatordlg__

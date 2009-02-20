@@ -27,6 +27,10 @@
 #endif
 
 #include "rocgui/public/guiapp.h"
+
+#include "rocgui/dialogs/cardlg.h"
+#include "rocgui/dialogs/waybilldlg.h"
+
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -69,6 +73,9 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
 
   m_OperatorBook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OperatorDlg::onSetPage ), NULL, this );
   m_SetPage = 0;
+
+  m_ControlPanel->Enable(false);
+  m_ConsistPanel->Enable(false);
 
   if( m_Props != NULL ) {
     initValues();
@@ -191,6 +198,27 @@ void OperatorDlg::evaluate() {
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wOperator.setid( m_Props, m_Operator->GetValue().mb_str(wxConvUTF8) );
   wOperator.setlcid( m_Props, m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
+
+  int carcnt = m_CarList->GetCount();
+  char* consist = NULL;
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "carids[%d]", carcnt );
+  for( int i = 0; i < carcnt; i++ ) {
+    iONode car = (iONode)m_CarList->GetClientData(i);
+    TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding carid [%s]", wCar.getid(car) );
+    if( consist == NULL ) {
+      consist = StrOp.cat(consist, wCar.getid(car));
+    }
+    else {
+      consist = StrOp.cat(consist, ",");
+      consist = StrOp.cat(consist, wCar.getid(car));
+    }
+  }
+  if( consist == NULL )
+    wOperator.setcarids(m_Props, "");
+  else
+    wOperator.setcarids(m_Props, consist);
+
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "carids: [%s]", wOperator.getcarids(m_Props) );
 }
 
 
@@ -249,6 +277,8 @@ void OperatorDlg::initValues() {
     TraceOp.trc( "opdlg", TRCLEVEL_DEBUG, __LINE__, 9999, "no operator selected" );
     return;
   }
+  m_ControlPanel->Enable(true);
+  m_ConsistPanel->Enable(true);
 
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("operator").mb_str(wxConvUTF8), wOperator.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
@@ -263,8 +293,54 @@ void OperatorDlg::initValues() {
 }
 
 
-void OperatorDlg::initConsist() {
+void OperatorDlg::onCarList( wxCommandEvent& event ){
+  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+    if( car != NULL && wCar.getimage( car ) != NULL ) {
+      wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+      if( StrOp.endsWithi( wCar.getimage( car ), ".gif" ) )
+        bmptype = wxBITMAP_TYPE_GIF;
+      else if( StrOp.endsWithi( wCar.getimage( car ), ".png" ) )
+        bmptype = wxBITMAP_TYPE_PNG;
 
+      const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+      static char pixpath[256];
+      StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wCar.getimage( car ) ) );
+
+      if( FileOp.exist(pixpath)) {
+        TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+        m_CarImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+      }
+      else {
+        TraceOp.trc( "opdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+        m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      }
+      m_CarImage->SetToolTip(wxString(wCar.getroadname( car ),wxConvUTF8));
+
+
+    }
+    else {
+      m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    }
+    m_CarImage->Refresh();
+  }
+}
+
+void OperatorDlg::initConsist() {
+  m_CarList->Clear();
+
+  if( m_Props == NULL )
+    return;
+
+  const char* carids = wOperator.getcarids(m_Props);
+  iOStrTok strtok = StrTokOp.inst( carids, ',' );
+  while( StrTokOp.hasMoreTokens( strtok ) ) {
+    const char* carid  = StrTokOp.nextToken( strtok );
+    iONode car = wxGetApp().getFrame()->findCar( carid );
+    if( car != NULL ) {
+      m_CarList->Append( wxString(carid,wxConvUTF8), car );
+    }
+  }
 }
 
 
@@ -343,11 +419,21 @@ void OperatorDlg::onRun( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onCarImage( wxCommandEvent& event ) {
-
+  onCarCard(event);
 }
 
 
 void OperatorDlg::onAddCar( wxCommandEvent& event ) {
+  CarDlg* dlg = new CarDlg(this, NULL, false );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify Notebook. */
+    iONode car = dlg->getSelectedCar();
+    if( car != NULL ) {
+      const char* id = wCar.getid( car );
+      m_CarList->Append( wxString(id,wxConvUTF8), car );
+    }
+  }
+  dlg->Destroy();
 
 }
 
@@ -358,7 +444,16 @@ void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onCarCard( wxCommandEvent& event ) {
-
+  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+    if( car != NULL ) {
+      CarDlg* dlg = new CarDlg(this, car, false );
+      if( wxID_OK == dlg->ShowModal() ) {
+        /* Notify Notebook. */
+      }
+      dlg->Destroy();
+    }
+  }
 }
 
 

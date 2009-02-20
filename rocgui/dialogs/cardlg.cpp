@@ -318,6 +318,9 @@ void CarDlg::onCarList( wxCommandEvent& event ){
   }
 }
 
+iONode CarDlg::getSelectedCar() {
+  return m_Props;
+}
 
 void CarDlg::onNewCar( wxCommandEvent& event ){
   int i = m_CarList->FindString( _T("NEW") );
@@ -411,7 +414,7 @@ void CarDlg::onTypeSelect( wxCommandEvent& event ){
 
 
 void CarDlg::onApply( wxCommandEvent& event ){
-  if( m_Props == NULL )
+  if( m_Props == NULL || !m_bSave )
     return;
 
   evaluate();

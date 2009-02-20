@@ -78,6 +78,7 @@ class operatordlggen : public wxDialog
 		virtual void onReserve( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onRun( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarImage( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onCarList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onAddCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onLeaveCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarCard( wxCommandEvent& event ){ event.Skip(); }
