@@ -896,13 +896,15 @@ void CV::OnTimer(wxTimerEvent& event) {
     stopProgress();
   }
   else if( m_Progress != NULL && !m_bCleanUpProgress ) {
-    if( m_Progress->IsShownOnScreen() && !m_Progress->Pulse() ) {
-      stopProgress();
-      m_TimerCount = wCVconf.gettimeout(m_CVconf);
-    }
-    else {
-      TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timer for PT acknowledge" );
-      bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+    if( m_Progress->IsShownOnScreen() ) {
+      if( !m_Progress->Pulse() ) {
+        stopProgress();
+        m_TimerCount = wCVconf.gettimeout(m_CVconf);
+      }
+      else {
+        TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timer for PT acknowledge" );
+        bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+      }
     }
   }
 }
