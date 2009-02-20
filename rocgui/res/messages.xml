@@ -4553,16 +4553,21 @@
     <it txt="Segnali direzione indietro"/>
     <da txt="Signaler ved baglæns-kørsel"/>
   </Msg>
-  <Msg id="consist">
+  <Msg id="multipleunit">
     <de txt="Mehrfachtraktion"/>
-    <en txt="Consist"/>
+    <en txt="Multiple Unit"/>
     <nl txt="Multitractie"/>
     <sv txt="Multitraktion"/>
     <fr txt="Multi-traction"/>
-    <tr txt="Consist"/>
+    <tr txt="Multiple Unit"/>
     <es txt="Multitracción"/>
     <it txt="Multitrazione"/>
     <da txt="Forspandskørsel"/>
+  </Msg>
+  <Msg id="consist">
+    <de txt="Zusammenstellung"/>
+    <en txt="Consist"/>
+    <nl txt="Samenstelling"/>
   </Msg>
   <Msg id="members">
     <de txt="Mitglieder"/>
