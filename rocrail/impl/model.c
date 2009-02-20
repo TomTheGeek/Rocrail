@@ -2271,7 +2271,7 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
     if( idx == *scheduleIdx ) {
       const char* entryBlock = wScheduleEntry.getblock( entry );
       const char* entryLocation = wScheduleEntry.getlocation( entry );
-      if( entryBlock != NULL ) {
+      if( entryBlock != NULL && StrOp.len(entryBlock) > 0 ) {
         if( StrOp.equals( blockid, entryBlock ) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
               "schedule index[%d] matches block %s", *scheduleIdx, blockid );
@@ -2299,7 +2299,7 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
     const char* entryBlock = wScheduleEntry.getblock( entry );
     const char* entryLocation = wScheduleEntry.getlocation( entry );
 
-    if( entryBlock != NULL ) {
+    if( entryBlock != NULL && StrOp.len(entryBlock) > 0 ) {
       if( StrOp.equals( blockid, entryBlock ) ) {
         *scheduleIdx = idx;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -2365,7 +2365,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     const char* nextlocation = wScheduleEntry.getlocation( entry );
     const char* nextblock    = wScheduleEntry.getblock( entry );
 
-    if( nextlocation == NULL && nextblock == NULL ) {
+    if( (nextlocation == NULL || StrOp.len(nextlocation) == 0 ) && (nextblock == NULL || StrOp.len(nextblock) == 0) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "entry in schedule [%s] is undefined.", scheduleid );
       return NULL;
     }
