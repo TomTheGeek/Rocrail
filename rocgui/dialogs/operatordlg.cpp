@@ -190,6 +190,7 @@ void OperatorDlg::evaluate() {
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wOperator.setid( m_Props, m_Operator->GetValue().mb_str(wxConvUTF8) );
+  wOperator.setlcid( m_Props, m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
 }
 
 

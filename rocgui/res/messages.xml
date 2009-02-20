@@ -6227,6 +6227,12 @@
     <en txt="Waybill table" tip="Waybill table"/>
     <nl txt="Vrachtbrieven" tip="Vrachtbrieven tabel"/>
   </Msg>
+  <Msg id="operatortable" dialog="true" key="Alt-6">
+    <en txt="Operator table" tip="Operator table"/>
+  </Msg>
+  <Msg id="operator">
+    <en txt="Operator"/>
+  </Msg>
   <Msg id="waybill">
     <de txt="Frachtzettel"/>
     <en txt="Waybill"/>
