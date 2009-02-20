@@ -41,6 +41,8 @@ class OperatorDlg : public operatordlggen
   void evaluate();
   void initIndex();
   void initValues();
+  void initConsist();
+  void initLocos();
 
 public:
 	/** Constructor */
@@ -60,6 +62,8 @@ public:
     void onApply( wxCommandEvent& event );
     void onCancel( wxCommandEvent& event );
     void onOK( wxCommandEvent& event );
+    void onSetPage( wxCommandEvent& event );
+    void onOperatorList( wxCommandEvent& event );
 };
 
 #endif // __operatordlg__

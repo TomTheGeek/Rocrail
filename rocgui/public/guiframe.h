@@ -117,6 +117,7 @@ public:
 
   void OnEditLocs(wxCommandEvent& event);
   void OnEditCars(wxCommandEvent& event);
+  void OnEditOperators(wxCommandEvent& event);
   void OnEditWaybills(wxCommandEvent& event);
   void OnEditTurnouts(wxCommandEvent& event);
   void OnEditSensors(wxCommandEvent& event);
@@ -334,6 +335,7 @@ enum
     ME_CtrlMode,
     ME_EditLocs,
     ME_EditCars,
+    ME_EditOperators,
     ME_EditWaybills,
     ME_EditBlocks,
     ME_EditBlockGroups,

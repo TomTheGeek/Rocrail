@@ -70,6 +70,7 @@ class operatordlggen : public wxDialog
 		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onOperatorList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onNewOperator( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onDelOperator( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onLocoImage( wxCommandEvent& event ){ event.Skip(); }

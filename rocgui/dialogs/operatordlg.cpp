@@ -49,36 +49,275 @@
 OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
   :operatordlggen( parent )
 {
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "cardlg" );
+  m_TabAlign = wxGetApp().getTabAlign();
+  m_Props    = p_Props;
+  m_bSave    = true;
+  initLabels();
+  initIndex();
+
+  m_IndexPanel->GetSizer()->Layout();
+  m_ControlPanel->GetSizer()->Layout();
+  m_ConsistPanel->GetSizer()->Layout();
+
+  m_OperatorBook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
+  m_OperatorList->SetFocus();
+
+  m_OperatorBook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OperatorDlg::onSetPage ), NULL, this );
+  m_SetPage = 0;
+
+  if( m_Props != NULL ) {
+    initValues();
+    m_SetPage = 1;
+  }
+  wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, -1 );
+  wxPostEvent( m_OperatorBook, event );
 
 }
+
+
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
+void OperatorDlg::onSetPage(wxCommandEvent& event) {
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "set page to %d", m_SetPage );
+  m_OperatorBook->SetSelection( m_SetPage );
+}
+
+
+void OperatorDlg::initLocos() {
+  m_LocoID->Clear();
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode lclist = wPlan.getlclist( model );
+    if( lclist != NULL ) {
+      iOList list = ListOp.inst();
+      int cnt = NodeOp.getChildCnt( lclist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode lc = NodeOp.getChild( lclist, i );
+        const char* id = wLoc.getid( lc );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)lc);
+        }
+      }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode lc = (iONode)ListOp.get( list, i );
+        const char* id = wLoc.getid( lc );
+        m_LocoID->Append( wxString(id,wxConvUTF8), lc );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
+      if( m_Props != NULL ) {
+        m_LocoID->SetStringSelection( wxString(wOperator.getlcid( m_Props ),wxConvUTF8) );
+      }
+      else
+        TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
+    }
+
+  }
+
+  iONode lc = wxGetApp().getFrame()->findLoc( m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
+
+  if( lc != NULL && wLoc.getimage( lc ) != NULL ) {
+    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+    if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
+      bmptype = wxBITMAP_TYPE_GIF;
+    else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
+      bmptype = wxBITMAP_TYPE_PNG;
+
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixpath[256];
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
+
+    if( FileOp.exist(pixpath)) {
+      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      m_LocoImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+    }
+    else {
+      TraceOp.trc( "opdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    }
+    m_LocoImage->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
+
+
+  }
+  else {
+    m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  }
+  m_LocoImage->Refresh();
+}
+
 
 void OperatorDlg::initLabels() {
 
 }
 
 
-void OperatorDlg::evaluate() {
+void OperatorDlg::onOperatorList( wxCommandEvent& event ) {
+  if( m_OperatorList->GetSelection() != wxNOT_FOUND ) {
+    m_Props = (iONode)m_OperatorList->GetClientData(m_OperatorList->GetSelection());
+    if( m_Props != NULL )
+      initValues();
+    else
+      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
+}
 
+
+void OperatorDlg::evaluate() {
+  if( m_Props == NULL )
+    return;
+
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wOperator.getid( m_Props ) );
+
+  // evaluate General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+  wOperator.setid( m_Props, m_Operator->GetValue().mb_str(wxConvUTF8) );
 }
 
 
 void OperatorDlg::initIndex() {
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
+  iONode l_Props = m_Props;
+
+  SetTitle(wxGetApp().getMsg( "operatortable" ));
+
+  m_OperatorList->Clear();
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode operatorlist = wPlan.getoperatorlist( model );
+    if( operatorlist != NULL ) {
+      iOList list = ListOp.inst();
+      int cnt = NodeOp.getChildCnt( operatorlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode op = NodeOp.getChild( operatorlist, i );
+        const char* id = wOperator.getid( op );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)op);
+        }
+      }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode op = (iONode)ListOp.get( list, i );
+        const char* id = wOperator.getid( op );
+        m_OperatorList->Append( wxString(id,wxConvUTF8), op );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
+      if( l_Props != NULL ) {
+        m_OperatorList->SetStringSelection( wxString(wOperator.getid( l_Props ),wxConvUTF8) );
+        m_OperatorList->SetFirstItem( wxString(wOperator.getid( l_Props ),wxConvUTF8) );
+        m_Props = l_Props;
+        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("operator").mb_str(wxConvUTF8), wOperator.getid( m_Props ) );
+        SetTitle( wxString(title,wxConvUTF8) );
+        StrOp.free( title );
+      }
+      else
+        TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
+    }
+
+  }
+
 
 }
 
 
 void OperatorDlg::initValues() {
+  if( m_Props == NULL ) {
+    TraceOp.trc( "opdlg", TRCLEVEL_DEBUG, __LINE__, 9999, "no operator selected" );
+    return;
+  }
+
+  char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("operator").mb_str(wxConvUTF8), wOperator.getid( m_Props ) );
+  SetTitle( wxString(title,wxConvUTF8) );
+  StrOp.free( title );
+
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for operator [%s]", wOperator.getid( m_Props ) );
+
+  m_Operator->SetValue( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
+
+  initLocos();
+  initConsist();
+}
+
+
+void OperatorDlg::initConsist() {
 
 }
 
 
 void OperatorDlg::onNewOperator( wxCommandEvent& event ) {
-
+  int i = m_OperatorList->FindString( _T("NEW") );
+  if( i == wxNOT_FOUND ) {
+    m_OperatorList->Append( _T("NEW") );
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode operatorlist = wPlan.getoperatorlist( model );
+      if( operatorlist == NULL ) {
+        operatorlist = NodeOp.inst( wOperatorList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, operatorlist );
+      }
+      if( operatorlist != NULL ) {
+        iONode op = NodeOp.inst( wOperator.name(), operatorlist, ELEMENT_NODE );
+        NodeOp.addChild( operatorlist, op );
+        wOperator.setid( op, "NEW" );
+        m_Props = op;
+        initValues();
+      }
+    }
+  }
+  m_OperatorList->SetStringSelection( _T("NEW") );
+  m_OperatorList->SetFirstItem( _T("NEW") );
 }
 
 
 void OperatorDlg::onDelOperator( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
 
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
+  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
+  /* Notify RocRail. */
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.remove );
+  NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode operatorlist = wPlan.getoperatorlist( model );
+    if( operatorlist != NULL ) {
+      NodeOp.removeChild( operatorlist, m_Props );
+      m_Props = NULL;
+    }
+  }
+
+  initIndex();
 }
 
 

@@ -233,6 +233,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
     EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
+    EVT_MENU( ME_EditOperators  , RocGuiFrame::OnEditOperators)
     EVT_MENU( ME_EditWaybills   , RocGuiFrame::OnEditWaybills)
     EVT_MENU( ME_EditTurnouts   , RocGuiFrame::OnEditTurnouts)
     EVT_MENU( ME_EditTurntables , RocGuiFrame::OnEditTurntables)
@@ -973,8 +974,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
   acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
   acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
+  acc_entries[36].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
 
-  wxAcceleratorTable m_accel(36, acc_entries);
+  wxAcceleratorTable m_accel(37, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
@@ -1041,6 +1043,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuTables->Append(ME_EditLocs, wxGetApp().getMenu("loctable"), wxGetApp().getTip("loctable") );
   menuTables->Append(ME_EditCars, wxGetApp().getMenu("cartable"), wxGetApp().getTip("cartable") );
   menuTables->Append(ME_EditWaybills, wxGetApp().getMenu("waybilltable"), wxGetApp().getTip("waybilltable") );
+  menuTables->Append(ME_EditOperators, wxGetApp().getMenu("operatortable"), wxGetApp().getTip("operatortable") );
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
@@ -2049,6 +2052,14 @@ void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
+void RocGuiFrame::OnEditOperators( wxCommandEvent& event ) {
+  OperatorDlg* dlg = new OperatorDlg(this, NULL);
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify Notebook. */
+  }
+  dlg->Destroy();
+}
+
 void RocGuiFrame::OnEditWaybills( wxCommandEvent& event ) {
   WaybillDlg* dlg = new WaybillDlg(this, NULL );
   if( wxID_OK == dlg->ShowModal() ) {
@@ -2538,7 +2549,7 @@ void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
   OperatorDlg* dlg = new OperatorDlg(this, NULL);
-  dlg->Show(TRUE);
+  dlg->ShowModal();
 }
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){

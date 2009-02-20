@@ -38,7 +38,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_IndexPanel->SetSizer( bSizer5 );
 	m_IndexPanel->Layout();
 	bSizer5->Fit( m_IndexPanel );
-	m_OperatorBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_OperatorBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_ControlPanel = new wxPanel( m_OperatorBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -140,7 +140,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ConsistPanel->SetSizer( bSizer2 );
 	m_ConsistPanel->Layout();
 	bSizer2->Fit( m_ConsistPanel );
-	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), true );
+	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), false );
 	
 	bSizer1->Add( m_OperatorBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -159,6 +159,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer1->Fit( this );
 	
 	// Connect Events
+	m_OperatorList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onOperatorList ), NULL, this );
 	m_NewOperator->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onNewOperator ), NULL, this );
 	m_DelOperator->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onDelOperator ), NULL, this );
 	m_LocoImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLocoImage ), NULL, this );
@@ -178,6 +179,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 operatordlggen::~operatordlggen()
 {
 	// Disconnect Events
+	m_OperatorList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onOperatorList ), NULL, this );
 	m_NewOperator->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onNewOperator ), NULL, this );
 	m_DelOperator->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onDelOperator ), NULL, this );
 	m_LocoImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLocoImage ), NULL, this );
