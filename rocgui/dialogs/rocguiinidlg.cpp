@@ -105,7 +105,7 @@ RocguiIniDialog::RocguiIniDialog( wxWindow* parent, wxWindowID id, const wxStrin
 RocguiIniDialog::RocguiIniDialog( wxWindow* parent, iONode ini )
 {
   m_TabAlign = wxGetApp().getTabAlign();
-  Create(parent, -1, _("RocguiIni"));
+  Create(parent, -1, _("Rocview"));
   initLabels();
   m_Ini = ini;
   initValues();

@@ -1278,7 +1278,7 @@
     <en txt="The language setting of the user interface has been updated and will take effect the next time you start."/>
     <nl txt="De taalinstelling is bijgewerkt en zal bij de volgende start van het programma geactiveerd worden."/>
     <sv txt="Språkvalet är sparat och tas i bruk vid nästa start av Rocrail."/>
-    <fr txt="Le paramètre linguistique de l'interface utilisateur a été mis à jour et sera appliqué au prochain redémarrage de RocGUI"/>
+    <fr txt="Le paramètre linguistique de l'interface utilisateur a été mis à jour et sera appliqué au prochain redémarrage de Rocview"/>
     <tr txt="Kullanıcı ara yüzünün dil seçimi güncellendi; ancak tekrar başlatılınca aktif hale gelecek."/>
     <es txt="El idioma ha sido modificado, el cambio tendrá efecto la próxima vez que arranque."/>
     <it txt="La lingua da usare è stata aggiornata e sarà disponibile dal prossimo avvio del programma."/>
@@ -3817,15 +3817,15 @@
     <da txt="Stop ved afslutning"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
-    <de txt="Rocgui Eigenschaften" accel="0" tip="Rocgui Eigenschaften ändern."/>
-    <en txt="Rocgui Properties" accel="0" tip="Edit Rocgui properties."/>
-    <nl txt="Rocgui Eigenschappen" accel="0" tip="Rocgui eigenschappen bewerken."/>
-    <sv txt="Rocguiegenskaper" accel="0" tip="Ändra egenskaper för Rocgui."/>
-    <fr txt="Propriétés de Rocgui" accel="0" tip="Editer les propriétés de Rocgui"/>
-    <tr txt="Rocgui Özellikleri" accel="0" tip="Rocgui Özelliklerini Düzenle."/>
-    <es txt="Propiedades de Rocgui" accel="0" tip="Editar propiedades de Rocgui."/>
-    <it txt="Proprietà di Rocgui" tip="Edita le Proprietà di Rocgui."/>
-    <da txt="Rocgui Egenskaber" accel="0" tip="Ændre Rocgui egenskaber."/>
+    <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
+    <en txt="Rocview Properties" accel="0" tip="Edit Rocview properties."/>
+    <nl txt="Rocview Eigenschappen" accel="0" tip="Rocview eigenschappen bewerken."/>
+    <sv txt="Rocviewegenskaper" accel="0" tip="Ändra egenskaper för Rocview."/>
+    <fr txt="Propriétés de Rocview" accel="0" tip="Editer les propriétés de Rocview"/>
+    <tr txt="Rocview Özellikleri" accel="0" tip="Rocview Özelliklerini Düzenle."/>
+    <es txt="Propiedades de Rocview" accel="0" tip="Editar propiedades de Rocview."/>
+    <it txt="Proprietà di Rocview" tip="Edita le Proprietà di Rocview."/>
+    <da txt="Rocview Egenskaber" accel="0" tip="Ændre Rocview egenskaber."/>
   </Msg>
   <Msg id="bktext">
     <de txt="Blocktext Skalierung"/>
@@ -5237,15 +5237,15 @@
     <da txt="Funktionsgruppe"/>
   </Msg>
   <Msg id="iconnotfound">
-    <de txt="Rocgui Icon(s) konnte(n) nicht gefunden werden! Bitte Einstellungen überprüfen. [%s]"/>
-    <en txt="Rocgui Icon(s) could could not be found! Check your settings. [%s]"/>
-    <nl txt="Rocgui Icon(s) kan niet gevonden worden! Check je settings. [%s]"/>
-    <sv txt="Rocgui-ikoner kan inte hittas! Kontrollera inställningarna. [%s]"/>
+    <de txt="Rocview Icon(s) konnte(n) nicht gefunden werden! Bitte Einstellungen überprüfen. [%s]"/>
+    <en txt="Rocview Icon(s) could could not be found! Check your settings. [%s]"/>
+    <nl txt="Rocview Icon(s) kan niet gevonden worden! Check je settings. [%s]"/>
+    <sv txt="Rocview-ikoner kan inte hittas! Kontrollera inställningarna. [%s]"/>
     <fr txt="Les Icônes ne peuvent pas être trouvées! Vérifiez le chemin d'accès. [%s]"/>
-    <tr txt="Rocgui Icon(s) could could not be found! Check your settings. [%s]"/>
-    <es txt="Rocgui Icon(s) could could not be found! Check your settings. [%s]"/>
-    <it txt="Rocgui Icone non si trovano! Controlla il setting. [%s]"/>
-    <da txt="Kunne ikke finde Rocgui-ikon(er)! Check din opsætning. [%s]"/>
+    <tr txt="Rocview Icon(s) could could not be found! Check your settings. [%s]"/>
+    <es txt="Rocview Icon(s) could could not be found! Check your settings. [%s]"/>
+    <it txt="Rocview Icone non si trovano! Controlla il setting. [%s]"/>
+    <da txt="Kunne ikke finde Rocview-ikon(er)! Check din opsætning. [%s]"/>
   </Msg>
   <Msg id="dwarfsignal">
     <de txt="Zwergsignal"/>
