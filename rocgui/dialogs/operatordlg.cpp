@@ -28,6 +28,7 @@
 
 #include "rocgui/public/guiapp.h"
 
+#include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/cardlg.h"
 #include "rocgui/dialogs/waybilldlg.h"
 
@@ -40,6 +41,7 @@
 #include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/OperatorList.h"
+#include "rocrail/wrapper/public/Block.h"
 
 #include "rocgui/wrapper/public/Gui.h"
 
@@ -140,40 +142,34 @@ void OperatorDlg::initLocos() {
 
   }
 
-  iONode lc = wxGetApp().getFrame()->findLoc( m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
+  wxCommandEvent event( 0, 0 );
+  onLocomotiveCombo(event);
 
-  if( lc != NULL && wLoc.getimage( lc ) != NULL ) {
-    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
-    if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
-      bmptype = wxBITMAP_TYPE_GIF;
-    else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
-      bmptype = wxBITMAP_TYPE_PNG;
-
-    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
-    static char pixpath[256];
-    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
-
-    if( FileOp.exist(pixpath)) {
-      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
-      m_LocoImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
-    }
-    else {
-      TraceOp.trc( "opdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
-      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
-    }
-    m_LocoImage->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
-
-
-  }
-  else {
-    m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
-  }
-  m_LocoImage->Refresh();
 }
 
 
 void OperatorDlg::initLabels() {
 
+
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "init block combos" );
+  m_Location->Clear();
+  m_Goto->Clear();
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode bklist = wPlan.getbklist( model );
+    if( bklist != NULL ) {
+      int cnt = NodeOp.getChildCnt( bklist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        const char* id = wBlock.getid( bk );
+        if( id != NULL ) {
+          m_Location->Append( wxString(id,wxConvUTF8) );
+          m_Goto->Append( wxString(id,wxConvUTF8) );
+        }
+      }
+    }
+  }
 }
 
 
@@ -338,7 +334,7 @@ void OperatorDlg::initConsist() {
     const char* carid  = StrTokOp.nextToken( strtok );
     iONode car = wxGetApp().getFrame()->findCar( carid );
     if( car != NULL ) {
-      m_CarList->Append( wxString(carid,wxConvUTF8), car );
+      m_CarList->Append( wxString(carid,wxConvUTF8) + wxString(_T(" (waybills...)")), car );
     }
   }
 }
@@ -399,11 +395,54 @@ void OperatorDlg::onDelOperator( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onLocoImage( wxCommandEvent& event ) {
-
+  if( m_LocoID->GetSelection() != wxNOT_FOUND ) {
+    iONode lc = (iONode)m_LocoID->GetClientData(m_LocoID->GetSelection());
+    if( lc != NULL ) {
+      LocDialog* dlg = new LocDialog(this, lc, false );
+      if( wxID_OK == dlg->ShowModal() ) {
+        /* Notify Notebook. */
+      }
+      dlg->Destroy();
+    }
+  }
 }
 
 
 void OperatorDlg::onLocomotiveCombo( wxCommandEvent& event ) {
+  iONode lc = wxGetApp().getFrame()->findLoc( m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
+
+  if( lc != NULL && wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0  ) {
+    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+    if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
+      bmptype = wxBITMAP_TYPE_GIF;
+    else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
+      bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      m_LocoImage->Refresh();
+      return;
+    }
+
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixpath[256];
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
+
+    if( FileOp.exist(pixpath)) {
+      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      m_LocoImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+    }
+    else {
+      TraceOp.trc( "opdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    }
+    m_LocoImage->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
+
+
+  }
+  else {
+    m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  }
+  m_LocoImage->Refresh();
 
 }
 
@@ -430,7 +469,7 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     iONode car = dlg->getSelectedCar();
     if( car != NULL ) {
       const char* id = wCar.getid( car );
-      m_CarList->Append( wxString(id,wxConvUTF8), car );
+      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(" (waybills...)")), car );
     }
   }
   dlg->Destroy();

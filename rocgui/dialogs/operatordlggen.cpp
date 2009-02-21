@@ -109,7 +109,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ControlPanel->SetSizer( bSizer4 );
 	m_ControlPanel->Layout();
 	bSizer4->Fit( m_ControlPanel );
-	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), false );
+	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), true );
 	m_ConsistPanel = new wxPanel( m_OperatorBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -140,7 +140,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ConsistPanel->SetSizer( bSizer2 );
 	m_ConsistPanel->Layout();
 	bSizer2->Fit( m_ConsistPanel );
-	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), true );
+	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), false );
 	
 	bSizer1->Add( m_OperatorBook, 1, wxEXPAND | wxALL, 5 );
 	
