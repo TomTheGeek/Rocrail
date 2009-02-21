@@ -169,6 +169,8 @@ public:
   void OnLangSpanish(wxCommandEvent& event);
   void OnLangItalien(wxCommandEvent& event);
   void OnLangDanish(wxCommandEvent& event);
+  void OnLangCzech(wxCommandEvent& event);
+  void OnLangBosnian(wxCommandEvent& event);
 
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
@@ -376,6 +378,8 @@ enum
     ME_LangSpanish,
     ME_LangItalien,
     ME_LangDanish,
+    ME_LangBosnian,
+    ME_LangCzech,
     ME_RocrailIni,
     ME_RocguiIni,
     ME_Zoom25,

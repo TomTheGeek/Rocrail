@@ -83,7 +83,7 @@
     <tr txt="Türkçe" tip="Dil değişimi için tekrar çalıştırın."/>
     <es txt="Türkçe" tip="Reiniciar para cambiar idioma."/>
     <it txt="Türkçe" tip="Uscire per cambiare Lingua."/>
-  	<da txt="Türkçe" tip="Genstart for at ændre sprog."/>
+    <da txt="Türkçe" tip="Genstart for at ændre sprog."/>
   </Msg>
   <Msg id="lang_es">
     <de txt="Español" tip="Neu starten um Sprache zu ändern."/>
@@ -94,7 +94,7 @@
     <tr txt="Español" tip="Dil değişimi için tekrar çalıştırın."/>
     <es txt="Español" tip="Reiniciar para cambiar idioma."/>
     <it txt="Español" tip="Uscire per cambiare Lingua."/>
- 	<da txt="Español" tip="Genstart for at ændre sprog."/>
+    <da txt="Español" tip="Genstart for at ændre sprog."/>
   </Msg>
   <Msg id="lang_it">
     <de txt="Italiano" tip="Neu starten um Sprache zu ändern."/>
@@ -118,6 +118,28 @@
     <it txt="Dansk" tip="Uscire per cambiare Lingua."/>
     <da txt="Dansk" tip="Genstart for at ændre sprog."/>
   </Msg>
+  <Msg id="lang_cs">
+    <de txt="Česká" tip="Neu starten um Sprache zu ändern."/>
+    <en txt="Česká" tip="Restart to change language."/>
+    <nl txt="Česká" tip="Herstart voor andere taal."/>
+    <sv txt="Česká" tip="Starta om för att slutföra språkbytet."/>
+    <fr txt="Česká" tip="Redémarrer pour changer la langue."/>
+    <tr txt="Česká" tip="Dil değişimi için tekrar çalıştırın."/>
+    <es txt="Česká" tip="Reiniciar para cambiar idioma."/>
+    <it txt="Česká" tip="Uscire per cambiare Lingua."/>
+    <da txt="Česká" tip="Genstart for at ændre sprog."/>
+  </Msg>
+  <Msg id="lang_bs">
+    <de txt="Bosanski" tip="Neu starten um Sprache zu ändern."/>
+    <en txt="Bosanski" tip="Restart to change language."/>
+    <nl txt="Bosanski" tip="Herstart voor andere taal."/>
+    <sv txt="Bosanski" tip="Starta om för att slutföra språkbytet."/>
+    <fr txt="Bosanski" tip="Redémarrer pour changer la langue."/>
+    <tr txt="Bosanski" tip="Dil değişimi için tekrar çalıştırın."/>
+    <es txt="Bosanski" tip="Reiniciar para cambiar idioma."/>
+    <it txt="Bosanski" tip="Uscire per cambiare Lingua."/>
+    <da txt="Bosanski" tip="Genstart for at ændre sprog."/>
+  </Msg>
   <Msg id="cancel">
     <de txt="Abbrechen" tip="Dialog beenden."/>
     <en txt="Cancel" tip="Cancel the dialog."/>
@@ -128,6 +150,8 @@
     <es txt="Anular" tip="Anular dialogo."/>
     <it txt="Cancel" tip="Annullare il Dialogo."/>
     <da txt="Annulere" tip="Annulere dialogboksen."/>
+    <bs txt="Odustani"/>
+    <cs txt="Storno"/>
   </Msg>
   <Msg id="on">
     <de txt="an"/>
@@ -139,6 +163,8 @@
     <es txt="Marcha"/>
     <it txt="Avviare"/>
     <da txt="tænd"/>
+    <bs txt="uključeno"/>
+    <cs txt="zapnuto"/>
   </Msg>
   <Msg id="off">
     <de txt="aus"/>
@@ -150,6 +176,8 @@
     <es txt="Paro"/>
     <it txt="Fermare"/>
     <da txt="sluk"/>
+    <bs txt="isključeno"/>
+    <cs txt="vypnuto"/>
   </Msg>
   <Msg id="ok">
     <de txt="OK"/>
@@ -161,6 +189,8 @@
     <es txt="OK"/>
     <it txt="OK"/>
     <da txt="OK"/>
+    <bs txt="Uredu"/>
+    <cs txt="OK"/>
   </Msg>
   <Msg id="no">
     <de txt="nein"/>
@@ -172,6 +202,8 @@
     <es txt="No"/>
     <it txt="no"/>
     <da txt="Nej"/>
+    <bs txt="ne"/>
+    <cs txt="Ne"/>
   </Msg>
   <Msg id="yes">
     <de txt="ja"/>
@@ -183,6 +215,8 @@
     <es txt="Si"/>
     <it txt="Sì"/>
     <da txt="Ja"/>
+    <bs txt="da"/>
+    <cs txt="Ano"/>
   </Msg>
   <Msg id="only">
     <de txt="nur"/>
@@ -194,6 +228,7 @@
     <es txt="Solamente"/>
     <it txt="solo"/>
     <da txt="kun"/>
+    <cs txt="jen"/>
   </Msg>
   <Msg id="stop">
     <de txt="Stop" tip="Stopp Lokomotive"/>
@@ -205,6 +240,8 @@
     <es txt="Detener" tip="Detener la locomotora"/>
     <it txt="Stop" tip="Ferma le locomotive"/>
     <da txt="Stop" tip="Stop locomotivet"/>
+    <bs txt="Zaustavi"/>
+    <cs txt="Stop"/>
   </Msg>
   <Msg id="station">
     <de txt="Bahnhof"/>
@@ -216,6 +253,7 @@
     <es txt="Estación"/>
     <it txt="Stazione"/>
     <da txt="Station"/>
+    <cs txt="Stanice"/>
   </Msg>
   <Msg id="break">
     <de txt="B R E A K" tip="Nothalt aller Triebfahrzeuge!"/>
@@ -227,6 +265,7 @@
     <es txt="Parada de Emergencia" tip="Parar loc inmediatamente!"/>
     <it txt="E M E R G E N Z A" tip="Ferma Immediatamente!"/>
     <da txt="S T O P" tip="Nødstop!"/>
+    <cs txt="STOP"/>
   </Msg>
   <Msg id="connect" dialog="true">
     <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
@@ -238,6 +277,8 @@
     <es txt="Conectar a" tip="Conectar a servidor de Rocrail."/>
     <it txt="Connetti a" tip="Connetti al server Rocrail."/>
     <da txt="Forbind" tip="Opret forbindelse til Rocrail server"/>
+    <bs txt="Uspostavi vezu s"/>
+    <cs txt="Připojit k"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
     <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
@@ -249,6 +290,8 @@
     <es txt="Abrir" accel="0" tip="Abrir diagrama de circuito."/>
     <it txt="Apri" tip="Apri un file tracciato."/>
     <da txt="Åbne" accel="0" tip="Åbne en sporplan."/>
+    <bs txt="Otvori"/>
+    <cs txt="Otevřít"/>
   </Msg>
   <Msg id="upload" dialog="true">
     <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
@@ -260,6 +303,8 @@
     <es txt="Descargar" accel="0" tip="Enviar diagrama de circuito al servidor."/>
     <it txt="Carica" tip="Invia il file tracciato al server."/>
     <da txt="Send" accel="0" tip="Send sporplan til Rocrail server."/>
+    <bs txt="Postavi"/>
+    <cs txt="Nahrát"/>
   </Msg>
   <Msg id="server">
     <de txt="Server"/>
@@ -271,6 +316,8 @@
     <es txt="Servidor"/>
     <it txt="Server"/>
     <da txt="Server"/>
+    <bs txt="Server"/>
+    <cs txt="Server"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
     <de txt="Speichern" tip="Gleisbild speichern."/>
@@ -282,6 +329,8 @@
     <es txt="Salvar" tip="Salvar diagrama del circuito."/>
     <it txt="Salva" tip="Salva il file tracciato."/>
     <da txt="Gem" tip="Gemme sporplan."/>
+    <bs txt="Spremi"/>
+    <cs txt="Uložit"/>
   </Msg>
   <Msg id="saveas" dialog="true">
     <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
@@ -293,6 +342,8 @@
     <es txt="Salvar como" accel="5" tip="Salvar diagrama del circuito con otro nombre."/>
     <it txt="Salva come" tip="Salva il tracciato con nome...."/>
     <da txt="Gem som" accel="5" tip="Gem sporplan under et nyt navn."/>
+    <bs txt="Spremi kao"/>
+    <cs txt="Uložit jako"/>
   </Msg>
   <Msg id="shutdown">
     <de txt="Shutdown Rocrail und beenden" tip="Rocrail Server beenden."/>
@@ -303,7 +354,7 @@
     <tr txt="Rocrail'i kapat ve çık" tip="Rocrail vericisini kapat ve çık."/>
     <es txt="Cerrar Rocrail y salir" tip="Cerrar servidor de Rocrail y salir de GUI."/>
     <it txt="Ferma Rocrail ed esci" tip="Ferma Rocrail ed esci dal programma."/>
- 	<da txt="Afslut Rocrail" tip="Afslut Rocrail server og GUI."/>
+    <da txt="Afslut Rocrail" tip="Afslut Rocrail server og GUI."/>
   </Msg>
   <Msg id="exit">
     <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
@@ -315,6 +366,8 @@
     <es txt="Salir" tip="Salir del GUI."/>
     <it txt="Esci" tip="Esci dal programma."/>
     <da txt="Afslut" tip="Afslut Rocrail GUI."/>
+    <bs txt="Izađi"/>
+    <cs txt="Konec"/>
   </Msg>
   <Msg id="editmode">
     <de txt="Bearbeiten" tip="Gleisbild bearbeiten."/>
@@ -326,6 +379,7 @@
     <es txt="Editar" tip="Editar diagrama del circuito."/>
     <it txt="Editazione" tip="Edita il tracciato."/>
     <da txt="Redigere" tip="Ændre sporplan."/>
+    <cs txt="Editace plánu"/>
   </Msg>
   <Msg id="undo" key="Ctrl-Z">
     <de txt="Rückgängig" tip="Rückgängig"/>
@@ -337,6 +391,8 @@
     <es txt="Anular"/>
     <it txt="Annulla"/>
     <da txt="Annulere"/>
+    <bs txt="Povrati nazad"/>
+    <cs txt="Vrátit změny"/>
   </Msg>
   <Msg id="editlocs" dialog="true">
     <de txt="Lok Eigenschaften"/>
@@ -359,6 +415,8 @@
     <es txt="A cerca de" accel="0" tip="Informacion de Rocrail."/>
     <it txt="Informazioni" tip="Informazioni su Rocrail."/>
     <da txt="Om Rocrail" accel="0" tip="Information om Rocrail."/>
+    <bs txt="Informacije"/>
+    <cs txt="Informace"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
     <de txt="Fahrstrom ein" accel="5" tip="Fahrstrom einschalten."/>
@@ -370,6 +428,7 @@
     <es txt="Energizar" accel="6" tip="Poner en tensión con el comando GO."/>
     <it txt="Dai Alimentazione" tip="Dai tensione ai binari."/>
     <da txt="Kørestrøm tænd" accel="9" tip="Tænder for kørestrømmen."/>
+    <cs txt="Zapnout"/>
   </Msg>
   <Msg id="poweroff">
     <de txt="Fahrstrom aus" accel="5" tip="Fahrstrom ausschalten."/>
@@ -381,6 +440,8 @@
     <es txt="Desenergizar" accel="0" tip="Quitar tensión con el comando STOP."/>
     <it txt="Leva Alimentazione" tip="Togli tensione dai binari"/>
     <da txt="Kørestrøm sluk" accel="0" tip="Slukker for kørestrømmen."/>
+    <bs txt="Gašenje"/>
+    <cs txt="Vypnout"/>
   </Msg>
   <Msg id="initfield">
     <de txt="Weichen initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
@@ -392,6 +453,7 @@
     <es txt="Posicionar desvíos" accel="0" tip="Posicionar desvíos de acuerdo a diagrama del circuito."/>
     <it txt="Avvia Deviatoi" tip="Inizializza gli scambi in base al tracciato."/>
     <da txt="Initialisere anlæg" accel="8" tip="Stiller skifter og signaler i udgangsposition."/>
+    <cs txt="Inicializační pole zapnuté"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -404,7 +466,7 @@
     <it txt="Controllo Locomotive" tip="Finestra controllo locomotive."/>
     <da txt="Lokomotivkontrol" accel="0" tip="Åbner vindue med lokomotivkontrol."/>
   </Msg>
-  <Msg id="swctrl" dialog="true"  key="Ctrl-T">
+  <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichenbedienung" accel="0" tip="Dialog um Weichen zu testen."/>
     <en txt="Turnout Control" accel="0" tip="Dialog to test turnouts."/>
     <nl txt="Wissel Bediening" accel="0" tip="Window om wissels te testen."/>
@@ -491,6 +553,7 @@
     <es txt="Reinicializar las Locs ALL" tip=" Reinicializar las Locs automáticas."/>
     <it txt="Resetta tutte le locomotive" tip="Resetta tutte le locomotive."/>
     <da txt="Reset alt" tip="Sæt alt tilbage til udgangspunktet."/>
+    <cs txt="Resetovat vše"/>
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
@@ -502,6 +565,8 @@
     <es txt="Reinicializar las Locs" tip=" Reinicializar las Locs automáticas."/>
     <it txt="Resetta" tip="Resetta le loco, ma lascia il blocco corrente occupato."/>
     <da txt="Reset alle lokomotiver" tip="Sæt alt tilbage til udgangspunktet og gem blokstatus."/>
+    <bs txt="Resetuj"/>
+    <cs txt="Reset"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -513,6 +578,8 @@
     <es txt="Nivel"/>
     <it txt="Livello"/>
     <da txt="Niveau"/>
+    <bs txt="Nivo"/>
+    <cs txt="Úroveň"/>
   </Msg>
   <Msg id="levelup">
     <de txt="Nächste Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
@@ -524,6 +591,7 @@
     <es txt="Subir nivel" tip="Nivel superior del diagrama del circuito."/>
     <it txt="Un livello su" tip="livello superiore del tracciato"/>
     <da txt="Niveau op" tip="Næste niveau i sporplanen."/>
+    <cs txt="O úroveň výš"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="Vorherige Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -535,6 +603,7 @@
     <es txt="Bajar nivel" tip="Nivel inferior del diagrama del circuito."/>
     <it txt="Un livello giu" tip="livello sotto del tracciato."/>
     <da txt="Niveau ned" tip="Forrige niveau i sporplanen."/>
+    <cs txt="O úroveň níže"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -546,6 +615,8 @@
     <es txt="Propiedades" accel="0" tip="Ventana de propiedades."/>
     <it txt="Proprietà" tip="Finestra Proprietà."/>
     <da txt="Egenskaber" accel="0" tip="Dialog for at se og ændre egenskaber."/>
+    <bs txt="Svojstva"/>
+    <cs txt="Vlastnosti"/>
   </Msg>
   <Msg id="clearmsg">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
@@ -568,6 +639,8 @@
     <es txt="Fichero" accel="0"/>
     <it txt="File"/>
     <da txt="Fil" accel="0"/>
+    <bs txt="Datoteka"/>
+    <cs txt="Soubor"/>
   </Msg>
   <Msg id="edit">
     <de txt="Bearbeiten" accel="0"/>
@@ -579,6 +652,8 @@
     <es txt="Editar" accel="0"/>
     <it txt="Edita"/>
     <da txt="Ændre" accel="0"/>
+    <bs txt="Izmjeni"/>
+    <cs txt="Upravit"/>
   </Msg>
   <Msg id="control">
     <de txt="Steuerung" accel="0"/>
@@ -590,6 +665,8 @@
     <es txt="Accionamiento" accel="0"/>
     <it txt="Comandi"/>
     <da txt="Kontrol" accel="0"/>
+    <bs txt="Kontrola"/>
+    <cs txt="Ovládání"/>
   </Msg>
   <Msg id="test">
     <de txt="Test" accel="0"/>
@@ -601,6 +678,8 @@
     <es txt="Probar" accel="0"/>
     <it txt="Test"/>
     <da txt="Test" accel="0"/>
+    <bs txt="Test"/>
+    <cs txt="Test"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -610,8 +689,9 @@
     <fr txt="Activer Mode Automatique" accel="1" tip="Activer le mode automatique"/>
     <tr txt="Oto Mod" accel="1" tip="Oto Modu aç."/>
     <es txt="Modo automático" accel="1" tip="Activar modo automático."/>
-    <it txt="Modo Automatico " tip="attiva modalità automatica"/>
+    <it txt="Modo Automatico" tip="attiva modalità automatica"/>
     <da txt="Automatisk tilstand" accel="1" tip="Skift til automatisk driftstilstand."/>
+    <cs txt="Automatický mód"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Shutdown und beenden?"/>
@@ -711,6 +791,8 @@
     <es txt="Automático" accel="0"/>
     <it txt="Automatico"/>
     <da txt="Automatisk" accel="0"/>
+    <bs txt="Automatski"/>
+    <cs txt="Automatický"/>
   </Msg>
   <Msg id="view">
     <de txt="Ansicht" accel="1"/>
@@ -722,6 +804,8 @@
     <es txt="Vista" accel="0"/>
     <it txt="Vista"/>
     <da txt="Vis" accel="2"/>
+    <bs txt="Pogled"/>
+    <cs txt="Zobrazit"/>
   </Msg>
   <Msg id="extra">
     <de txt="Extra" accel="0"/>
@@ -733,6 +817,7 @@
     <es txt="Extra" accel="0"/>
     <it txt="Altro"/>
     <da txt="Extra" accel="0"/>
+    <cs txt="Extra"/>
   </Msg>
   <Msg id="help">
     <de txt="Hilfe" accel="0"/>
@@ -744,6 +829,8 @@
     <es txt="Ayuda" accel="0"/>
     <it txt="Aiuto"/>
     <da txt="Hjælp" accel="0"/>
+    <bs txt="Pomoć"/>
+    <cs txt="Nápověda"/>
   </Msg>
   <Msg id="function">
     <de txt="Funktion"/>
@@ -755,6 +842,8 @@
     <es txt="Función"/>
     <it txt="Funzioni"/>
     <da txt="Funktion"/>
+    <bs txt="Funkcija"/>
+    <cs txt="Funkce"/>
   </Msg>
   <Msg id="functioncount">
     <de txt="Anzahl Funktionen"/>
@@ -777,6 +866,8 @@
     <es txt="Funciones"/>
     <it txt="Funzioni"/>
     <da txt="Funktioner"/>
+    <bs txt="Funkcije"/>
+    <cs txt="Funkce"/>
   </Msg>
   <Msg id="changedirection">
     <de txt="Richtung" tip="Fahrtrichtung ändern."/>
@@ -799,6 +890,8 @@
     <es txt="Añadir"/>
     <it txt="Aggiungi"/>
     <da txt="Tilføj"/>
+    <bs txt="Dodaj"/>
+    <cs txt="Přidat"/>
   </Msg>
   <Msg id="delete">
     <de txt="Entfernen"/>
@@ -810,6 +903,8 @@
     <es txt="Borrar"/>
     <it txt="Cancella"/>
     <da txt="Slet"/>
+    <bs txt="Obriši"/>
+    <cs txt="Smazat"/>
   </Msg>
   <Msg id="name">
     <de txt="Name"/>
@@ -821,6 +916,8 @@
     <es txt="Nombre"/>
     <it txt="Nome"/>
     <da txt="Navn"/>
+    <bs txt="Ime"/>
+    <cs txt="Jméno"/>
   </Msg>
   <Msg id="value">
     <de txt="Wert"/>
@@ -832,6 +929,8 @@
     <es txt="Valor"/>
     <it txt="Valore"/>
     <da txt="Værdi"/>
+    <bs txt="Vrijednost"/>
+    <cs txt="Hodnota"/>
   </Msg>
   <Msg id="streetid">
     <de txt="Fahrstraßen Nummer"/>
@@ -843,6 +942,7 @@
     <es txt="Denominación de Ruta"/>
     <it txt="Identificativo Instradamento"/>
     <da txt="Rute-ID"/>
+    <cs txt="ID Vlakové cesty"/>
   </Msg>
   <Msg id="swcmds">
     <de txt="Weichenkommandos"/>
@@ -865,6 +965,8 @@
     <es txt="Decodificador" tip="Número del decodificador."/>
     <it txt="Decoder" tip="Decoder numero."/>
     <da txt="Dekoder" tip="Dekodernummer."/>
+    <bs txt="Dekoder"/>
+    <cs txt="Dekodér"/>
   </Msg>
   <Msg id="decoders">
     <de txt="Decoders" tip=""/>
@@ -876,6 +978,8 @@
     <es txt="Decodificadores" tip=""/>
     <it txt="Decoders" tip=""/>
     <da txt="Dekodere" tip=""/>
+    <bs txt="Dekoderi"/>
+    <cs txt="Dekodéry"/>
   </Msg>
   <Msg id="clickblock">
     <de txt="Linke Maustaste zum Starten/Stoppen %s."/>
@@ -953,6 +1057,7 @@
     <es txt="LN CV/SV"/>
     <it txt="LN CV/SV"/>
     <da txt="LN CV/SV"/>
+    <cs txt="LN CV/SV"/>
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
@@ -1030,6 +1135,7 @@
     <es txt="Plataforma giratoria" tip=" Plataforma giratoria"/>
     <it txt="Piattaforma girevole" tip="Piattaforma girevole"/>
     <da txt="drejeskiver" tip="Drejeskive-tabel"/>
+    <cs txt="Točna"/>
   </Msg>
   <Msg id="sensortable" dialog="true" key="Alt-1">
     <de txt="Rückmelder" tip="Rückmelder"/>
@@ -1096,6 +1202,7 @@
     <es txt="Diagrama de circuito" accel="0"/>
     <it txt="Diagramma del tracciato"/>
     <da txt="Sporplan" accel="0"/>
+    <cs txt="Barva plánu kolejiště"/>
   </Msg>
   <Msg id="tables">
     <de txt="Tabellen" accel="0"/>
@@ -1107,6 +1214,8 @@
     <es txt="Tablas" accel="0"/>
     <it txt="Tabelle"/>
     <da txt="Tabeller" accel="0"/>
+    <bs txt="Tabele"/>
+    <cs txt="Tabulky"/>
   </Msg>
   <Msg id="language">
     <de txt="Sprache" accel="0"/>
@@ -1118,6 +1227,8 @@
     <es txt="Idioma" accel="0"/>
     <it txt="Lingua"/>
     <da txt="Sprog" accel="0"/>
+    <bs txt="Jezik"/>
+    <cs txt="Jazyk"/>
   </Msg>
   <Msg id="activelocs">
     <de txt="Lokomotiven"/>
@@ -1140,6 +1251,8 @@
     <es txt="Denominación"/>
     <it txt="Identificativo"/>
     <da txt="ID"/>
+    <bs txt="ID"/>
+    <cs txt="ID"/>
   </Msg>
   <Msg id="address">
     <de txt="Adresse"/>
@@ -1151,6 +1264,8 @@
     <es txt="Dirección"/>
     <it txt="Indirizzo"/>
     <da txt="Adresse"/>
+    <bs txt="Adresa"/>
+    <cs txt="Adresa"/>
   </Msg>
   <Msg id="block">
     <de txt="Block"/>
@@ -1162,6 +1277,8 @@
     <es txt="Bloque"/>
     <it txt="Blocco"/>
     <da txt="Blok"/>
+    <bs txt="Blokiraj"/>
+    <cs txt="Blok"/>
   </Msg>
   <Msg id="blocks">
     <de txt="Blöcke"/>
@@ -1173,6 +1290,7 @@
     <es txt="Bloques"/>
     <it txt="Blocchi"/>
     <da txt="Blokke"/>
+    <cs txt="Bloky"/>
   </Msg>
   <Msg id="exceptions">
     <de txt="Ausnahmen:"/>
@@ -1195,6 +1313,7 @@
     <es txt="Advertencias:"/>
     <it txt="Avvertenze:"/>
     <da txt="Advarsler:"/>
+    <cs txt="Výstrahy:"/>
   </Msg>
   <Msg id="offline">
     <de txt="Nicht verbunden"/>
@@ -1206,6 +1325,8 @@
     <es txt="Desconectado"/>
     <it txt="Fuori Linea"/>
     <da txt="Ikke tilsluttet"/>
+    <bs txt="Isključen"/>
+    <cs txt="Offline"/>
   </Msg>
   <Msg id="plantitle" dialog="true">
     <de txt="Gleisplan Name" accel="0" tip="Gleisplan Name ändern."/>
@@ -1294,6 +1415,8 @@
     <es txt="Recta"/>
     <it txt="Rettilineo"/>
     <da txt="Lige"/>
+    <bs txt="Otvoren"/>
+    <cs txt="Přímá"/>
   </Msg>
   <Msg id="curve">
     <de txt="Gebogenes"/>
@@ -1305,6 +1428,8 @@
     <es txt="Curva"/>
     <it txt="Curvo"/>
     <da txt="Kurve"/>
+    <bs txt="Krivulja"/>
+    <cs txt="Zatáčka"/>
   </Msg>
   <Msg id="right">
     <de txt="Rechts"/>
@@ -1316,6 +1441,8 @@
     <es txt="Derecha"/>
     <it txt="Destro"/>
     <da txt="Højre"/>
+    <bs txt="Desno"/>
+    <cs txt="Vpravo"/>
   </Msg>
   <Msg id="left">
     <de txt="Links"/>
@@ -1327,6 +1454,8 @@
     <es txt="Idquierda"/>
     <it txt="Sinistro"/>
     <da txt="Venstre"/>
+    <bs txt="Lijevo"/>
+    <cs txt="Vlevo"/>
   </Msg>
   <Msg id="rightturnout">
     <de txt="Weiche rechts"/>
@@ -1360,6 +1489,7 @@
     <es txt="Cruce"/>
     <it txt="Incrocio"/>
     <da txt="Kryds"/>
+    <cs txt="Křížení"/>
   </Msg>
   <Msg id="dcrossing">
     <de txt="Doppelte Kreuzung"/>
@@ -1393,6 +1523,7 @@
     <es txt="Desvío tres direcciones"/>
     <it txt="Deviatoio triplo"/>
     <da txt="Trevejs-skiftespor"/>
+    <cs txt="Třícestná vyhybka"/>
   </Msg>
   <Msg id="additem">
     <de txt="Symbol hinzufügen"/>
@@ -1404,6 +1535,7 @@
     <es txt="Añadir elemento"/>
     <it txt="Aggiungi un elemento"/>
     <da txt="Tilføj symbol"/>
+    <cs txt="Přidat položku"/>
   </Msg>
   <Msg id="track">
     <de txt="Gleis"/>
@@ -1415,6 +1547,8 @@
     <es txt="Vía"/>
     <it txt="Binario"/>
     <da txt="Spor"/>
+    <bs txt="Traka"/>
+    <cs txt="Kolej"/>
   </Msg>
   <Msg id="tracks">
     <de txt="Gleise"/>
@@ -1426,6 +1560,8 @@
     <es txt="Vías"/>
     <it txt="Binari"/>
     <da txt="Spor"/>
+    <bs txt="Trake"/>
+    <cs txt="Koleje"/>
   </Msg>
   <Msg id="turnout">
     <de txt="Weiche"/>
@@ -1437,6 +1573,7 @@
     <es txt="Desvío"/>
     <it txt="Deviatoio"/>
     <da txt="Sporskifte"/>
+    <cs txt="Vyhybka"/>
   </Msg>
   <Msg id="switches">
     <de txt="Weichen"/>
@@ -1448,6 +1585,8 @@
     <es txt="Desvío"/>
     <it txt="Deviatoi"/>
     <da txt="Sporskifter"/>
+    <bs txt="Prekidači"/>
+    <cs txt="Přepínače"/>
   </Msg>
   <Msg id="signal">
     <de txt="Signal"/>
@@ -1459,6 +1598,8 @@
     <es txt="Señal"/>
     <it txt="Segnale"/>
     <da txt="Signal"/>
+    <bs txt="Signal"/>
+    <cs txt="Návěští"/>
   </Msg>
   <Msg id="signals">
     <de txt="Signale"/>
@@ -1470,6 +1611,7 @@
     <es txt="Señal"/>
     <it txt="Segnali"/>
     <da txt="Signaler"/>
+    <cs txt="Návěští"/>
   </Msg>
   <Msg id="sensor">
     <de txt="Rückmeldung"/>
@@ -1481,6 +1623,8 @@
     <es txt="Contacto"/>
     <it txt="Sensore"/>
     <da txt="Sensor"/>
+    <bs txt="Senzor"/>
+    <cs txt="Senzor"/>
   </Msg>
   <Msg id="setlocid" dialog="true">
     <de txt="Lokbelegung setzen"/>
@@ -1514,6 +1658,8 @@
     <es txt="Cerrar"/>
     <it txt="Chiudi"/>
     <da txt="Luk"/>
+    <bs txt="Zatvori"/>
+    <cs txt="Zavřít"/>
   </Msg>
   <Msg id="rotate">
     <de txt="Drehen"/>
@@ -1525,6 +1671,8 @@
     <es txt="Girar"/>
     <it txt="Ruota"/>
     <da txt="Drej"/>
+    <bs txt="Rotiraj"/>
+    <cs txt="Otočit"/>
   </Msg>
   <Msg id="type">
     <de txt="Typ"/>
@@ -1536,6 +1684,8 @@
     <es txt="Tipo"/>
     <it txt="Tipo"/>
     <da txt="Type"/>
+    <bs txt="Vrsta"/>
+    <cs txt="Typ"/>
   </Msg>
   <Msg id="nexttrack">
     <de txt="Folgendes Gleis"/>
@@ -1547,6 +1697,7 @@
     <es txt="Próxima vía"/>
     <it txt="Binario successivo"/>
     <da txt="Næste spor"/>
+    <cs txt="Další kolej"/>
   </Msg>
   <Msg id="prevtrack">
     <de txt="Vorheriges Gleis"/>
@@ -1569,6 +1720,7 @@
     <es txt="Girar 180°"/>
     <it txt="Ruota di 180 gradi"/>
     <da txt="Drej 180°"/>
+    <cs txt="Otoč o 180º"/>
   </Msg>
   <Msg id="gototrack">
     <de txt="Gehe zum Gleis"/>
@@ -1580,6 +1732,7 @@
     <es txt="Ir a vía"/>
     <it txt="Vai al binario"/>
     <da txt="Gå til spor"/>
+    <cs txt="Jdi na kolej"/>
   </Msg>
   <Msg id="rotationvelocity">
     <de txt="Drehgeschwindigkeit"/>
@@ -1613,6 +1766,8 @@
     <es txt="Arrancar"/>
     <it txt="Avvio"/>
     <da txt="Start"/>
+    <bs txt="Pokreni"/>
+    <cs txt="Start"/>
   </Msg>
   <Msg id="index">
     <de txt="Übersicht"/>
@@ -1624,6 +1779,8 @@
     <es txt="Indice"/>
     <it txt="Indice"/>
     <da txt="Index"/>
+    <bs txt="Indeks"/>
+    <cs txt="Index"/>
   </Msg>
   <Msg id="general">
     <de txt="Allgemein"/>
@@ -1635,18 +1792,22 @@
     <es txt="General"/>
     <it txt="Generale"/>
     <da txt="Generel"/>
+    <bs txt="Općenito"/>
+    <cs txt="Hlavní"/>
   </Msg>
   <Msg id="location">
-    <de txt="Position"/>
+    <de txt="Ortschaft"/>
     <en txt="Location"/>
     <nl txt="Positie"/>
-    <sv txt="Position"/>
-    <fr txt="Position"/>
+    <sv txt="Plats"/>
+    <fr txt="Place"/>
     <tr txt="Konum"/>
     <es txt="Lugar"/>
-    <it txt="Posizione"/>
+    <it txt="Località"/>
     <it txt="Località"/>
     <da txt="Position"/>
+    <bs txt="Lokacija"/>
+    <cs txt="Umístění"/>
   </Msg>
   <Msg id="wirering">
     <de txt="Verkabelung"/>
@@ -1658,6 +1819,7 @@
     <es txt="Cableado"/>
     <it txt="Cablaggio"/>
     <da txt="Tilslutning"/>
+    <cs txt="Zapojení"/>
   </Msg>
   <Msg id="details">
     <de txt="Details"/>
@@ -1669,6 +1831,8 @@
     <es txt="Detalles"/>
     <it txt="Dettagli"/>
     <da txt="Detaljer"/>
+    <bs txt="Detalji"/>
+    <cs txt="Detaily"/>
   </Msg>
   <Msg id="routes">
     <de txt="Fahrstraßen"/>
@@ -1680,6 +1844,7 @@
     <es txt="Rutas"/>
     <it txt="Instradamenti"/>
     <da txt="Togveje"/>
+    <cs txt="Vlakové cesty"/>
   </Msg>
   <Msg id="route">
     <de txt="Fahrstraße"/>
@@ -1691,6 +1856,7 @@
     <es txt="Ruta"/>
     <it txt="Instradamento"/>
     <da txt="Togvej"/>
+    <cs txt="Trasa"/>
   </Msg>
   <Msg id="new" key="Ctrl-N">
     <de txt="Neu" tip="Neues Gleisbild"/>
@@ -1702,6 +1868,8 @@
     <es txt="Nueva"/>
     <it txt="Nuovo"/>
     <da txt="Ny" tip="Ny sporlan"/>
+    <bs txt="Nova"/>
+    <cs txt="Nový"/>
   </Msg>
   <Msg id="description">
     <de txt="Beschreibung"/>
@@ -1724,6 +1892,8 @@
     <es txt="Longitud"/>
     <it txt="Lunghezza"/>
     <da txt="Beskrivelse"/>
+    <bs txt="Dužina"/>
+    <cs txt="Délka"/>
   </Msg>
   <Msg id="locid">
     <de txt="Lokkennung"/>
@@ -1735,6 +1905,7 @@
     <es txt="Denominación Loc"/>
     <it txt="Identificativo Locomotiva"/>
     <da txt="Lokomotiv-ID"/>
+    <cs txt="ID Lokomotivy"/>
   </Msg>
   <Msg id="turntableid">
     <de txt="Drehscheibekennung"/>
@@ -1779,6 +1950,7 @@
     <es txt="Cerrado"/>
     <it txt="Chiuso"/>
     <da txt="Lukket"/>
+    <cs txt="Zavřeno"/>
   </Msg>
   <Msg id="x">
     <de txt="X"/>
@@ -1790,6 +1962,8 @@
     <es txt="X"/>
     <it txt="X"/>
     <da txt="X"/>
+    <bs txt="X"/>
+    <cs txt="X"/>
   </Msg>
   <Msg id="y">
     <de txt="Y"/>
@@ -1801,6 +1975,8 @@
     <es txt="Y"/>
     <it txt="Y"/>
     <da txt="Y"/>
+    <bs txt="Y"/>
+    <cs txt="Y"/>
   </Msg>
   <Msg id="z">
     <de txt="Z"/>
@@ -1812,6 +1988,8 @@
     <es txt="Z"/>
     <it txt="Z"/>
     <da txt="Z"/>
+    <bs txt="Z"/>
+    <cs txt="Z"/>
   </Msg>
   <Msg id="orientation">
     <de txt="Lage"/>
@@ -1834,6 +2012,8 @@
     <es txt="Norte"/>
     <it txt="Nord"/>
     <da txt="Nord"/>
+    <bs txt="Sjever"/>
+    <cs txt="Sever"/>
   </Msg>
   <Msg id="east">
     <de txt="Ost"/>
@@ -1845,6 +2025,8 @@
     <es txt="Este"/>
     <it txt="Est"/>
     <da txt="Øst"/>
+    <bs txt="Istok"/>
+    <cs txt="Východ"/>
   </Msg>
   <Msg id="south">
     <de txt="Süd"/>
@@ -1856,6 +2038,8 @@
     <es txt="Sur"/>
     <it txt="Sud"/>
     <da txt="Syd"/>
+    <bs txt="Jug"/>
+    <cs txt="Jih"/>
   </Msg>
   <Msg id="west">
     <de txt="West"/>
@@ -1867,6 +2051,8 @@
     <es txt="Oeste"/>
     <it txt="Ovest"/>
     <da txt="Vest"/>
+    <bs txt="Zapad"/>
+    <cs txt="Západ"/>
   </Msg>
   <Msg id="speed">
     <de txt="Geschwindigkeit"/>
@@ -1878,6 +2064,8 @@
     <es txt="Velocidad"/>
     <it txt="Velocità"/>
     <da txt="Hastighed"/>
+    <bs txt="Brzina"/>
+    <cs txt="Rychlost"/>
   </Msg>
   <Msg id="speedsteps">
     <de txt="Dekoderstufen"/>
@@ -1900,6 +2088,7 @@
     <es txt="Min."/>
     <it txt="Min."/>
     <da txt="Min."/>
+    <cs txt="Min."/>
   </Msg>
   <Msg id="mid">
     <de txt="Mid."/>
@@ -1911,6 +2100,7 @@
     <es txt="Mid."/>
     <it txt="Mid."/>
     <da txt="Mid."/>
+    <cs txt="Střed"/>
   </Msg>
   <Msg id="cruise">
     <de txt="Mittel"/>
@@ -1922,6 +2112,7 @@
     <es txt="Crucero"/>
     <it txt="Media"/>
     <da txt="Mid."/>
+    <cs txt="Křižovatka"/>
   </Msg>
   <Msg id="max">
     <de txt="Max."/>
@@ -1933,6 +2124,7 @@
     <es txt="Max."/>
     <it txt="Max."/>
     <da txt="Max."/>
+    <cs txt="Max."/>
   </Msg>
   <Msg id="local">
     <de txt="Lokal"/>
@@ -1944,6 +2136,8 @@
     <es txt="Cercanias"/>
     <it txt="Locale"/>
     <da txt="Lokaltog"/>
+    <bs txt="Lokalno"/>
+    <cs txt="Místní"/>
   </Msg>
   <Msg id="ice">
     <de txt="ICE"/>
@@ -1955,6 +2149,7 @@
     <es txt="Intercity"/>
     <it txt="IC/EC"/>
     <da txt="Intercity"/>
+    <cs txt="Meziměstský"/>
   </Msg>
   <Msg id="goods">
     <de txt="Güter"/>
@@ -1966,6 +2161,7 @@
     <es txt="Mercancias"/>
     <it txt="Merci"/>
     <da txt="Godstog"/>
+    <cs txt="Náklad"/>
   </Msg>
   <Msg id="shunting">
     <de txt="Rangieren"/>
@@ -1977,6 +2173,7 @@
     <es txt="Lanzadera"/>
     <it txt="Manovra"/>
     <da txt="Rangering"/>
+    <cs txt="Sežazení"/>
   </Msg>
   <Msg id="incline">
     <de txt="Steigung"/>
@@ -1988,6 +2185,7 @@
     <es txt="Pendiente"/>
     <it txt="Pendenza"/>
     <da txt="Stigning"/>
+    <cs txt="Sklon"/>
   </Msg>
   <Msg id="none">
     <de txt="Keine"/>
@@ -1999,6 +2197,8 @@
     <es txt="Ninguna"/>
     <it txt="Nessuno"/>
     <da txt="Ingen"/>
+    <bs txt="Ništa"/>
+    <cs txt="Žádný"/>
   </Msg>
   <Msg id="up">
     <de txt="Aufwärts"/>
@@ -2010,6 +2210,8 @@
     <es txt="Ascandente"/>
     <it txt="Su"/>
     <da txt="Op"/>
+    <bs txt="Gore"/>
+    <cs txt="Nahoru"/>
   </Msg>
   <Msg id="down">
     <de txt="Herunter"/>
@@ -2021,6 +2223,8 @@
     <es txt="Descendente"/>
     <it txt="giu"/>
     <da txt="Ned"/>
+    <bs txt="Dole"/>
+    <cs txt="Dolů"/>
   </Msg>
   <Msg id="wait">
     <de txt="Warten"/>
@@ -2032,6 +2236,8 @@
     <es txt="Esperar"/>
     <it txt="Attendere"/>
     <da txt="Vent"/>
+    <bs txt="Čekaj"/>
+    <cs txt="Čekejte"/>
   </Msg>
   <Msg id="random">
     <de txt="Zufall"/>
@@ -2043,6 +2249,8 @@
     <es txt="Aleatorio"/>
     <it txt="Casuale"/>
     <da txt="Tilfældig"/>
+    <bs txt="Slučajno"/>
+    <cs txt="Náhodně"/>
   </Msg>
   <Msg id="fixed">
     <de txt="Fest"/>
@@ -2054,6 +2262,8 @@
     <es txt="Constante"/>
     <it txt="Fisso"/>
     <da txt="Fast"/>
+    <bs txt="Fiksno"/>
+    <cs txt="Pevné"/>
   </Msg>
   <Msg id="loc">
     <de txt="Lok"/>
@@ -2065,6 +2275,7 @@
     <es txt="Loc"/>
     <it txt="Loco"/>
     <da txt="Lokomotiv"/>
+    <cs txt="Lokomotiva"/>
   </Msg>
   <Msg id="waitdetails">
     <de txt="Wartedetails"/>
@@ -2109,6 +2320,8 @@
     <es txt="Aplicar"/>
     <it txt="Applica"/>
     <da txt="Tilføj"/>
+    <bs txt="Primjeni"/>
+    <cs txt="Použít"/>
   </Msg>
   <Msg id="title">
     <de txt="Überschrift"/>
@@ -2120,6 +2333,8 @@
     <es txt="Título"/>
     <it txt="Titolo"/>
     <da txt="Titel"/>
+    <bs txt="Naslov"/>
+    <cs txt="Název"/>
   </Msg>
   <Msg id="host">
     <de txt="Rechnername"/>
@@ -2131,6 +2346,8 @@
     <es txt="Hostname"/>
     <it txt="Nome del Server"/>
     <da txt="Server navn"/>
+    <bs txt="Naziv računala"/>
+    <cs txt="Název počítače"/>
   </Msg>
   <Msg id="port">
     <de txt="Port"/>
@@ -2142,6 +2359,8 @@
     <es txt="Puerto"/>
     <it txt="Porta"/>
     <da txt="Port"/>
+    <bs txt="Port"/>
+    <cs txt="Port"/>
   </Msg>
   <Msg id="interface">
     <de txt="Schnittstelle"/>
@@ -2153,6 +2372,8 @@
     <es txt="Interfaz"/>
     <it txt="Interfaccia"/>
     <da txt="Interface"/>
+    <bs txt="Interfejs"/>
+    <cs txt="Rozhraní"/>
   </Msg>
   <Msg id="state">
     <de txt="Status"/>
@@ -2164,6 +2385,7 @@
     <es txt="Estado"/>
     <it txt="Stato"/>
     <da txt="Status"/>
+    <cs txt="Status"/>
   </Msg>
   <Msg id="show">
     <de txt="Anzeigen"/>
@@ -2175,6 +2397,8 @@
     <es txt="Mostrar"/>
     <it txt="Visualizza"/>
     <da txt="Vis"/>
+    <bs txt="Prikaži"/>
+    <cs txt="Zobrazit"/>
   </Msg>
   <Msg id="iid">
     <de txt="Schnittstellenkennung"/>
@@ -2197,6 +2421,8 @@
     <es txt="Suceso"/>
     <it txt="Evento"/>
     <da txt="Hændelse"/>
+    <bs txt="Događaj"/>
+    <cs txt="Událost"/>
   </Msg>
   <Msg id="on_event">
     <de txt="Einschaltereignis"/>
@@ -2208,6 +2434,7 @@
     <es txt="Conectar"/>
     <it txt="evento attiva"/>
     <da txt="Hændelse ved aktiv"/>
+    <cs txt="Na událost"/>
   </Msg>
   <Msg id="off_event">
     <de txt="Ausschaltereignis"/>
@@ -2219,6 +2446,7 @@
     <es txt="Desconectar"/>
     <it txt="evento disattiva"/>
     <da txt="Hændelse ved indaktiv"/>
+    <cs txt="Vypnout událost"/>
   </Msg>
   <Msg id="catnr">
     <de txt="Katalognummer"/>
@@ -2248,10 +2476,11 @@
     <nl txt="Looptijd"/>
     <sv txt="Driftstid"/>
     <fr txt="Période d'action"/>
-    <tr txt="Çalışma zamanı"/>en
+    <tr txt="Çalışma zamanı"/>
     <es txt="Tiempo de funcionamiento"/>
     <it txt="Periodo di Servizio"/>
     <da txt="Køretid"/>
+    <cs txt="Čas spuštění"/>
   </Msg>
   <Msg id="protocol">
     <de txt="Protokoll"/>
@@ -2263,6 +2492,8 @@
     <es txt="Protocolo"/>
     <it txt="Protocollo"/>
     <da txt="Protokol"/>
+    <bs txt="Protokol"/>
+    <cs txt="Protokol"/>
   </Msg>
   <Msg id="protocol_version">
     <de txt="Protokollversion"/>
@@ -2285,6 +2516,8 @@
     <es txt="V_Min"/>
     <it txt="V_Min"/>
     <da txt="V_Min"/>
+    <bs txt="V_Min"/>
+    <cs txt="V Minimum"/>
   </Msg>
   <Msg id="v_mid">
     <de txt="V_Mid" tip="Mittlere Geschwindigkeit vorwärts"/>
@@ -2296,6 +2529,8 @@
     <es txt="V_Mid"/>
     <it txt="V_Mid"/>
     <da txt="V-Mid"/>
+    <bs txt="V_Mid"/>
+    <cs txt="V Střední"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -2307,6 +2542,8 @@
     <es txt="V_Max"/>
     <it txt="V_Max"/>
     <da txt="V-Max"/>
+    <bs txt="V_Max"/>
+    <cs txt="V Maximální"/>
   </Msg>
   <Msg id="v_rmin">
     <de txt="V_RMin" tip="Minimale Geschwindigkeit rückwärts"/>
@@ -2318,6 +2555,8 @@
     <es txt="V_RMin" tip="Mínima velocidad hacia atrás"/>
     <it txt="V_RMin"/>
     <da txt="V_RMin"/>
+    <bs txt="V_RMin"/>
+    <cs txt="V Minimální (zatáčka)"/>
   </Msg>
   <Msg id="v_rmid">
     <de txt="V_RMid" tip="Mittlere Geschwindigkeit rückwärts"/>
@@ -2329,6 +2568,8 @@
     <es txt="V_RMid" tip="Mídian velocidad hacia atrás"/>
     <it txt="V_RMid"/>
     <da txt="V_RMid"/>
+    <bs txt="V_RMid"/>
+    <cs txt="V Střední (zatáčka)"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -2340,6 +2581,8 @@
     <es txt="V_RMax" tip="Máxima velocidad hacia atrás"/>
     <it txt="V_RMax"/>
     <da txt="V_RMax"/>
+    <bs txt="V_RMax"/>
+    <cs txt="V Maximální (zatáčka)"/>
   </Msg>
   <Msg id="v_step">
     <de txt="V_Step"/>
@@ -2351,6 +2594,7 @@
     <es txt="V_Step"/>
     <it txt="V_passi"/>
     <da txt="V_Trin"/>
+    <cs txt="V Krok"/>
   </Msg>
   <Msg id="v_mode">
     <de txt="V_Modus"/>
@@ -2362,6 +2606,7 @@
     <es txt="V_Mode"/>
     <it txt="V_Modo"/>
     <da txt="V_Mode"/>
+    <cs txt="V Mód"/>
   </Msg>
   <Msg id="percent">
     <de txt="Prozent"/>
@@ -2373,6 +2618,8 @@
     <es txt="Porcentaje"/>
     <it txt="Percento"/>
     <da txt="Procent"/>
+    <bs txt="Procenat"/>
+    <cs txt="Procento"/>
   </Msg>
   <Msg id="driverlib">
     <de txt="Lokführerbibliothek"/>
@@ -2395,6 +2642,7 @@
     <es txt="Emplazamiento"/>
     <it txt="Posizionamento"/>
     <da txt="Placering"/>
+    <cs txt="Umísění"/>
   </Msg>
   <Msg id="default">
     <de txt="Normal"/>
@@ -2406,6 +2654,8 @@
     <es txt="Normal"/>
     <it txt="Di origine"/>
     <da txt="Normal"/>
+    <bs txt="Uobičajeno"/>
+    <cs txt="Výchozí"/>
   </Msg>
   <Msg id="fromto">
     <de txt="Von - Nach"/>
@@ -2417,6 +2667,7 @@
     <es txt="Desde - hacia"/>
     <it txt="Da - A"/>
     <da txt="Fra - Til"/>
+    <cs txt="Od - Do"/>
   </Msg>
   <Msg id="blockwait">
     <de txt="Blockwartezeit"/>
@@ -2439,6 +2690,8 @@
     <es txt="Máquina"/>
     <it txt="Motore"/>
     <da txt="Motor"/>
+    <bs txt="Motor"/>
+    <cs txt="Lokomotiva"/>
   </Msg>
   <Msg id="diesel">
     <de txt="Diesel"/>
@@ -2450,6 +2703,7 @@
     <es txt="Diesel"/>
     <it txt="Diesel"/>
     <da txt="Diesel"/>
+    <cs txt="Dislová"/>
   </Msg>
   <Msg id="steam">
     <de txt="Dampf"/>
@@ -2461,6 +2715,7 @@
     <es txt="Vapor"/>
     <it txt="Vapore"/>
     <da txt="Damp"/>
+    <cs txt="Parní"/>
   </Msg>
   <Msg id="electric">
     <de txt="Elektrisch"/>
@@ -2472,6 +2727,7 @@
     <es txt="Eléctrico"/>
     <it txt="Elettrica"/>
     <da txt="Elektrisk"/>
+    <cs txt="Elektrická"/>
   </Msg>
   <Msg id="cargo">
     <de txt="Zugart"/>
@@ -2483,6 +2739,7 @@
     <es txt="Carga"/>
     <it txt="Merci"/>
     <da txt="Togtype"/>
+    <cs txt="Typ vlaku"/>
   </Msg>
   <Msg id="passengers">
     <de txt="Personen"/>
@@ -2494,6 +2751,7 @@
     <es txt="Pasajeros"/>
     <it txt="Passeggeri"/>
     <da txt="Passagerer"/>
+    <cs txt="Pasažér"/>
   </Msg>
   <Msg id="mixed">
     <de txt="Personen und Güter"/>
@@ -2505,6 +2763,8 @@
     <es txt="Mixto"/>
     <it txt="Misto"/>
     <da txt="Blandet"/>
+    <bs txt="Miješano"/>
+    <cs txt="Smíšený"/>
   </Msg>
   <Msg id="cleaning">
     <de txt="Reinigungswagen"/>
@@ -2516,6 +2776,7 @@
     <es txt="Limpiador"/>
     <it txt="Pulizia"/>
     <da txt="Rensetog"/>
+    <cs txt="Vyčíštění"/>
   </Msg>
   <Msg id="ctrlmode">
     <de txt="Bedienung" tip="Gleisbild bedienen."/>
@@ -2527,6 +2788,7 @@
     <es txt="Operar" tip="Operar el diagrama del circuito"/>
     <it txt="Operazioni" tip="opera sul tracciato"/>
     <da txt="Anvend" tip="Anvende sporplan"/>
+    <cs txt="Obsluhovat"/>
   </Msg>
   <Msg id="zoom">
     <de txt="Zoom" tip="Gleisbildgröße."/>
@@ -2538,6 +2800,8 @@
     <es txt="Zoom" tip="Tamaño del diagrama del circuito."/>
     <it txt="Zoom" tip="Dimensione tracciato"/>
     <da txt="Zoom" tip="Zoom in på sporplanen"/>
+    <bs txt="Uvećaj"/>
+    <cs txt="Přiblížení"/>
   </Msg>
   <Msg id="trace">
     <de txt="Fehlerprotokoll"/>
@@ -2549,6 +2813,8 @@
     <es txt="Seguimiento"/>
     <it txt="Traccia"/>
     <da txt="Trace"/>
+    <bs txt="Prati"/>
+    <cs txt="Vllaková cesta"/>
   </Msg>
   <Msg id="tracefile">
     <de txt="Fehlerprotokolldatei"/>
@@ -2560,6 +2826,7 @@
     <es txt="Fichero de seguimiento"/>
     <it txt="File traccie"/>
     <da txt="Tracefil"/>
+    <cs txt="Soubor koleje"/>
   </Msg>
   <Msg id="tracelevel">
     <de txt="Fehlerprotokollstufe"/>
@@ -2582,6 +2849,8 @@
     <es txt="Depurar"/>
     <it txt="Ricerca Errori"/>
     <da txt="Debug"/>
+    <bs txt="Pronađi greške"/>
+    <cs txt="Ladicí režim"/>
   </Msg>
   <Msg id="byte">
     <de txt="Byte"/>
@@ -2593,6 +2862,8 @@
     <es txt="Byte"/>
     <it txt="Byte"/>
     <da txt="Byte"/>
+    <bs txt="Bajt"/>
+    <cs txt="Byte"/>
   </Msg>
   <Msg id="parse">
     <de txt="Analysieren"/>
@@ -2604,6 +2875,7 @@
     <es txt="Analizar"/>
     <it txt="Analizza"/>
     <da txt="Analysere"/>
+    <cs txt="Analýza"/>
   </Msg>
   <Msg id="service">
     <de txt="Dienste"/>
@@ -2615,6 +2887,7 @@
     <es txt="Servicio"/>
     <it txt="Servizio"/>
     <da txt="Service"/>
+    <cs txt="Služba"/>
   </Msg>
   <Msg id="controller">
     <de txt="Zentrale"/>
@@ -2626,6 +2899,7 @@
     <es txt="Central"/>
     <it txt="Centrale"/>
     <da txt="Central"/>
+    <cs txt="Řídící jednotka"/>
   </Msg>
   <Msg id="libpath">
     <de txt="Bibliotheksverzeichnis"/>
@@ -2659,6 +2933,8 @@
     <es txt="Disponible"/>
     <it txt="Abilita"/>
     <da txt="Start"/>
+    <bs txt="Uključi"/>
+    <cs txt="Povolit"/>
   </Msg>
   <Msg id="clientport">
     <de txt="Clientport"/>
@@ -2725,6 +3001,7 @@
     <es txt="Baudrate"/>
     <it txt="Baudrate"/>
     <da txt="Baudrate"/>
+    <cs txt="Přenosová rychlost (Baudrate)"/>
   </Msg>
   <Msg id="sensormodules">
     <de txt="Sensor Module (links, mitte, rechts, größe)"/>
@@ -2758,6 +3035,8 @@
     <es txt="Comandos"/>
     <it txt="Comandi"/>
     <da txt="Kommandoer"/>
+    <bs txt="Naredbe"/>
+    <cs txt="Příkazy"/>
   </Msg>
   <Msg id="command">
     <de txt="Befehl"/>
@@ -2769,6 +3048,8 @@
     <es txt="Comando"/>
     <it txt="Comando"/>
     <da txt="Kommando"/>
+    <bs txt="Naredba"/>
+    <cs txt="Příkaz"/>
   </Msg>
   <Msg id="fromblock">
     <de txt="Von Block"/>
@@ -2780,6 +3061,7 @@
     <es txt="Desde bloque"/>
     <it txt="Dal blocco"/>
     <da txt="Fra blok"/>
+    <cs txt="Z bloku"/>
   </Msg>
   <Msg id="toblock">
     <de txt="Nach Block"/>
@@ -2791,6 +3073,7 @@
     <es txt="Hacia bloque"/>
     <it txt="Al blocco"/>
     <da txt="Til blok"/>
+    <cs txt="Do bloku"/>
   </Msg>
   <Msg id="outputid">
     <de txt="Ausgangskennung"/>
@@ -2802,6 +3085,7 @@
     <es txt="Denominación Salida"/>
     <it txt="Identificativo uscita"/>
     <da txt="Udgangs ID"/>
+    <cs txt="ID Výstupu"/>
   </Msg>
   <Msg id="output">
     <de txt="Ausgang"/>
@@ -2813,6 +3097,7 @@
     <es txt="Salida"/>
     <it txt="Uscita"/>
     <da txt="Udgang"/>
+    <cs txt="Výstup"/>
   </Msg>
   <Msg id="turnoutid">
     <de txt="Weichenkennung"/>
@@ -2824,6 +3109,7 @@
     <es txt="Denominación Desvío"/>
     <it txt="Identificativo Deviatoio"/>
     <da txt="Sporskifte ID"/>
+    <cs txt="ID Vyhýbky"/>
   </Msg>
   <Msg id="turnout_left">
     <de txt="Abbiegen (links)"/>
@@ -2844,8 +3130,8 @@
     <fr txt="A droite (Aiguillage triple)"/>
     <tr txt="Sağ (3-yönlü)"/>
     <es txt="Derecha (3-direcciones)"/>
-	<it txt="A destra (3-vie)"/>
-	<da txt="Højre (3-vejs)"/>
+    <it txt="A destra (3-vie)"/>
+    <da txt="Højre (3-vejs)"/>
   </Msg>
   <Msg id="locked">
     <de txt="Belegt durch"/>
@@ -2857,6 +3143,7 @@
     <es txt="Enclavado por"/>
     <it txt="Bloccato da"/>
     <da txt="Låst"/>
+    <cs txt="Zamčeno"/>
   </Msg>
   <Msg id="invert">
     <de txt="Invertiert"/>
@@ -2868,6 +3155,7 @@
     <es txt="Invertir"/>
     <it txt="Inverti"/>
     <da txt="Inverteret"/>
+    <cs txt="Převrátit"/>
   </Msg>
   <Msg id="sensor_green">
     <de txt="Rückmeldung Gerade"/>
@@ -2901,6 +3189,7 @@
     <es txt="Opuesto"/>
     <it txt="Opposto"/>
     <da txt="Modsat"/>
+    <cs txt="Opačný"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -2934,6 +3223,7 @@
     <es txt="Contacto de Locomotora"/>
     <it txt="Sensore locomotiva"/>
     <da txt="Lokomotivsensor"/>
+    <cs txt="Senzor lokomotivy"/>
   </Msg>
   <Msg id="turntabletrack">
     <de txt="Drehscheibengleis"/>
@@ -2956,6 +3246,7 @@
     <es txt="Añadir vía"/>
     <it txt="Aggiungi un binario"/>
     <da txt="Tilføj spor"/>
+    <cs txt="Přidej kolej"/>
   </Msg>
   <Msg id="del_track">
     <de txt="Gleis entfernen"/>
@@ -2978,6 +3269,7 @@
     <es txt="Denominación del Bloque"/>
     <it txt="Identificativo blocco"/>
     <da txt="Blok-ID"/>
+    <cs txt="ID Bloku"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
     <de txt="Ziel setzen" tip="Lok stoppt nach erreichen des Ziels."/>
@@ -3000,6 +3292,7 @@
     <es txt="Introducir Denominación"/>
     <it txt="Inserire Identificativo"/>
     <da txt="Indtast ID"/>
+    <cs txt="Zadaj ID"/>
   </Msg>
   <Msg id="entertext">
     <de txt="Text eingeben"/>
@@ -3011,6 +3304,7 @@
     <es txt="Introducir texto"/>
     <it txt="Immettere testo"/>
     <da txt="Indtast teks"/>
+    <cs txt="Vlož text"/>
   </Msg>
   <Msg id="fill">
     <de txt="Gleis auffüllen" tip="Füllt Gleise grau auf."/>
@@ -3055,6 +3349,7 @@
     <es txt="Mostrar malla"/>
     <it txt="Mostra griglia"/>
     <da txt="Vis raster"/>
+    <cs txt="Zobrazit mřížku"/>
   </Msg>
   <Msg id="locseldlg">
     <de txt="Lok Auswahl"/>
@@ -3077,6 +3372,7 @@
     <es txt="Dirección"/>
     <it txt="Direzione"/>
     <da txt="Retning"/>
+    <cs txt="Směr"/>
   </Msg>
   <Msg id="dirall">
     <de txt="Beide Richtungen"/>
@@ -3099,6 +3395,7 @@
     <es txt="No usado"/>
     <it txt="Non usato"/>
     <da txt="ikke i brug"/>
+    <cs txt="Nepoužito"/>
   </Msg>
   <Msg id="lights">
     <de txt="Beleuchtung"/>
@@ -3110,6 +3407,7 @@
     <es txt="Luces"/>
     <it txt="Luci"/>
     <da txt="belysning"/>
+    <cs txt="Světla"/>
   </Msg>
   <Msg id="speedcontroller">
     <de txt="Geschwindigkeitsregler"/>
@@ -3198,6 +3496,7 @@
     <es txt="Versión"/>
     <it txt="Versione"/>
     <da txt="Version"/>
+    <cs txt="Verze"/>
   </Msg>
   <Msg id="manufactured_ID">
     <de txt="Herstellerkennung"/>
@@ -3221,6 +3520,7 @@
     <it txt="Aiuto" tip="Manuale on line"/>
     <sv txt="Hjælp" accel="0" tip="Online manual"/>
     <da txt="Hjælp" accel="0" tip="Online manual"/>
+    <cs txt="Ručně"/>
   </Msg>
   <Msg id="fbmodsize">
     <de txt="FB ports"/>
@@ -3232,6 +3532,7 @@
     <es txt="FB ports"/>
     <it txt="FB porte"/>
     <da txt="FB Porte"/>
+    <cs txt="FB porty"/>
   </Msg>
   <Msg id="swmodsize">
     <de txt="SW ports"/>
@@ -3243,6 +3544,7 @@
     <es txt="SW ports"/>
     <it txt="SW porte"/>
     <da txt="SW porte"/>
+    <cs txt="SW porty"/>
   </Msg>
   <Msg id="switchaction">
     <de txt="Weiche Aktion"/>
@@ -3309,6 +3611,7 @@
     <es txt="Acción"/>
     <it txt="Aziona"/>
     <da txt="Hændelse"/>
+    <cs txt="Akce"/>
   </Msg>
   <Msg id="mass">
     <de txt="Masse"/>
@@ -3320,6 +3623,7 @@
     <es txt="Masa"/>
     <it txt="Massa"/>
     <da txt="Vægt"/>
+    <cs txt="Hmotnost"/>
   </Msg>
   <Msg id="visible">
     <de txt="sichtbar"/>
@@ -3331,6 +3635,7 @@
     <es txt="visible"/>
     <it txt="visibile"/>
     <da txt="Synlig"/>
+    <cs txt="viditelný"/>
   </Msg>
   <Msg id="module">
     <de txt="Module"/>
@@ -3342,6 +3647,7 @@
     <es txt="Módulo"/>
     <it txt="modulo"/>
     <da txt="Modul"/>
+    <cs txt="modul"/>
   </Msg>
   <Msg id="trackdriver">
     <de txt="TD" tip="Analoge Loksteuerung"/>
@@ -3353,6 +3659,7 @@
     <es txt="TD" tip="Comando Analogico"/>
     <it txt="TD" tip="Comando Analogico"/>
     <da txt="TD" tip="Analog lok-styring"/>
+    <cs txt="TD"/>
   </Msg>
   <Msg id="sourceblock">
     <de txt="Quellblock"/>
@@ -3386,6 +3693,7 @@
     <es txt="Activado"/>
     <it txt="Attivare"/>
     <da txt="Aktivere"/>
+    <cs txt="Aktivovat"/>
   </Msg>
   <Msg id="signal_type">
     <de txt="Signaltyp"/>
@@ -3474,6 +3782,7 @@
     <es txt="Bus"/>
     <it txt="Bus"/>
     <da txt="Bus"/>
+    <cs txt="Sběrnice"/>
   </Msg>
   <Msg id="free">
     <de txt="frei"/>
@@ -3485,6 +3794,7 @@
     <es txt="libre"/>
     <it txt="libero"/>
     <da txt="ledig"/>
+    <cs txt="volný"/>
   </Msg>
   <Msg id="buffer">
     <de txt="Prellbock"/>
@@ -3496,6 +3806,7 @@
     <es txt="Tope"/>
     <it txt="Testata"/>
     <da txt="Puffer"/>
+    <cs txt="Vyrovnávací paměť"/>
   </Msg>
   <Msg id="decoupler">
     <de txt="Entkoppler"/>
@@ -3507,6 +3818,7 @@
     <es txt="Desenganchador"/>
     <it txt="Sganciatore"/>
     <da txt="Afkobler"/>
+    <cs txt="Rozpojovač"/>
   </Msg>
   <Msg id="endpulse">
     <de txt="Endimpuls"/>
@@ -3518,6 +3830,7 @@
     <es txt="Fin de impulsos"/>
     <it txt="Fine impulso"/>
     <da txt="Slutimpuls"/>
+    <cs txt="Koncový puls"/>
   </Msg>
   <Msg id="ghost">
     <de txt="Geist"/>
@@ -3529,6 +3842,7 @@
     <es txt="Fantasma"/>
     <it txt="Fantasma"/>
     <da txt="Spøgelse"/>
+    <cs txt="stín"/>
   </Msg>
   <Msg id="text">
     <de txt="Text"/>
@@ -3540,6 +3854,7 @@
     <es txt="Texto"/>
     <it txt="Testo"/>
     <da txt="Tekst"/>
+    <cs txt="Text"/>
   </Msg>
   <Msg id="deprecatedwirering">
     <de txt="Die neuen Events unter dem Fahrstraßenreiter sind vorzuziehen."/>
@@ -3584,6 +3899,7 @@
     <es txt="Horario"/>
     <it txt="Orario"/>
     <da txt="Køreplan"/>
+    <cs txt="Harmonogram"/>
   </Msg>
   <Msg id="hour">
     <de txt="Stunde"/>
@@ -3595,6 +3911,7 @@
     <es txt="hora"/>
     <it txt="ore"/>
     <da txt="time"/>
+    <cs txt="hodina"/>
   </Msg>
   <Msg id="minute">
     <de txt="Minute"/>
@@ -3606,6 +3923,7 @@
     <es txt="minuto"/>
     <it txt="minuti"/>
     <da txt="minut"/>
+    <cs txt="minuta"/>
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaften" tip="Ortschaften"/>
@@ -3626,8 +3944,9 @@
     <fr txt="Place"/>
     <tr txt="Yer"/>
     <es txt="Lugar"/>
-	<it txt="Località"/>
-	<da txt="Plads"/>
+    <it txt="Località"/>
+    <da txt="Plads"/>
+    <cs txt="Lokalita"/>
   </Msg>
   <Msg id="locations">
     <de txt="Ortschaften"/>
@@ -3639,6 +3958,7 @@
     <es txt="Lugares"/>
     <it txt="Località"/>
     <da txt="Pladser"/>
+    <cs txt="Lokality"/>
   </Msg>
   <Msg id="from">
     <de txt="von"/>
@@ -3650,6 +3970,7 @@
     <es txt="desde"/>
     <it txt="Da"/>
     <da txt="Fra"/>
+    <cs txt="od"/>
   </Msg>
   <Msg id="to">
     <de txt="nach"/>
@@ -3661,6 +3982,7 @@
     <es txt="hacia"/>
     <it txt="A"/>
     <da txt="Til"/>
+    <cs txt="do"/>
   </Msg>
   <Msg id="time">
     <de txt="Zeit"/>
@@ -3672,6 +3994,7 @@
     <es txt="tiempo"/>
     <it txt="tempo"/>
     <da txt="tid"/>
+    <cs txt="čas"/>
   </Msg>
   <Msg id="selectschedule" dialog="true">
     <de txt="Fahrplan auswählen"/>
@@ -3694,6 +4017,7 @@
     <es txt="cambiar"/>
     <it txt="modifica"/>
     <da txt="ændre"/>
+    <cs txt="změň"/>
   </Msg>
   <Msg id="refresh">
     <de txt="refresh"/>
@@ -3705,6 +4029,7 @@
     <es txt="refrescar"/>
     <it txt="Aggiorna"/>
     <da txt="updater"/>
+    <cs txt="obnovit"/>
   </Msg>
   <Msg id="webclient">
     <de txt="WebClient"/>
@@ -3716,6 +4041,7 @@
     <es txt="WebClient"/>
     <it txt="WebClient"/>
     <da txt="Webclient"/>
+    <cs txt="Internetový klient"/>
   </Msg>
   <Msg id="gomanual">
     <de txt="Halbautomatisch"/>
@@ -3738,6 +4064,7 @@
     <es txt="MIC" tip="Mouse Integrated Controller"/>
     <it txt="MIC" tip="Mouse Integrated Controller"/>
     <da txt="MIC" tip="Mouse Integrated Controller"/>
+    <cs txt="MIC"/>
   </Msg>
   <Msg id="mode">
     <de txt="Modus"/>
@@ -3749,6 +4076,7 @@
     <es txt="Modo"/>
     <it txt="Modo"/>
     <da txt="Mode"/>
+    <cs txt="Mód"/>
   </Msg>
   <Msg id="path">
     <de txt="Verzeichnis"/>
@@ -3760,6 +4088,7 @@
     <es txt="Directorio"/>
     <it txt="Percorso"/>
     <da txt="Søgesti"/>
+    <cs txt="Cesta"/>
   </Msg>
   <Msg id="power">
     <de txt="Fahrstrom"/>
@@ -3771,6 +4100,7 @@
     <es txt="Energizar"/>
     <it txt="Tensione"/>
     <da txt="Kørestrøm"/>
+    <cs txt="Napájení"/>
   </Msg>
   <Msg id="repeat">
     <de txt="Wiederholrate"/>
@@ -3782,6 +4112,7 @@
     <es txt="Iterar"/>
     <it txt="Ripeti"/>
     <da txt="Gentag"/>
+    <cs txt="Opakovat"/>
   </Msg>
   <Msg id="use">
     <de txt="Benutze"/>
@@ -3793,6 +4124,7 @@
     <es txt="Usar"/>
     <it txt="Uso"/>
     <da txt="Benyt"/>
+    <cs txt="Použít"/>
   </Msg>
   <Msg id="ric">
     <de txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -3804,6 +4136,7 @@
     <es txt="RIC" tip="Rocrail Innovative Controller"/>
     <it txt="RIC" tip="Rocrail Innovative Controller"/>
     <da txt="RIC" tip="Rocrail Innovative Controller"/>
+    <cs txt="RIC"/>
   </Msg>
   <Msg id="stoponexit">
     <de txt="Halt nach beenden"/>
@@ -3848,6 +4181,7 @@
     <es txt="Puerta"/>
     <it txt="Uscita"/>
     <da txt="Udgang"/>
+    <cs txt="Brána"/>
   </Msg>
   <Msg id="identifier">
     <de txt="Identifier"/>
@@ -3859,6 +4193,7 @@
     <es txt="Identificador" tip="En el caso que el sistema de detección no devuelva la dirección del decodificador."/>
     <it txt="Identifier" tip="Nel caso il sistema non ritorni l'indirizzo decoder"/>
     <da txt="Identifikation"/>
+    <cs txt="Identifikátor"/>
   </Msg>
   <Msg id="dispatch">
     <de txt="Bereitstellen für Regler" tip="Bereitstellung der Lokadresse für Übernahme am Regler."/>
@@ -3914,6 +4249,7 @@
     <es txt="Desactivado"/>
     <it txt="Deattivare"/>
     <da txt="Deaktivere"/>
+    <cs txt="Deaktivovat"/>
   </Msg>
   <Msg id="criticalsection">
     <de txt="Kritischer Blockabschnitt"/>
@@ -3958,6 +4294,7 @@
     <es txt="cx"/>
     <it txt="cx"/>
     <da txt="cx"/>
+    <cs txt="cx"/>
   </Msg>
   <Msg id="cy">
     <de txt="cy"/>
@@ -3969,6 +4306,7 @@
     <es txt="cy"/>
     <it txt="cy"/>
     <da txt="cy"/>
+    <cs txt="cy"/>
   </Msg>
   <Msg id="pointsize">
     <de txt="Punktgröße"/>
@@ -3980,6 +4318,7 @@
     <es txt="Tamaño de punto"/>
     <it txt="Dimensione punto"/>
     <da txt="Punktstørrelse"/>
+    <cs txt="Velikost bodu"/>
   </Msg>
   <Msg id="tip">
     <de txt="Hinweis"/>
@@ -3991,6 +4330,7 @@
     <es txt="Nota"/>
     <it txt="Tip"/>
     <da txt="Tip"/>
+    <cs txt="Tip"/>
   </Msg>
   <Msg id="device">
     <de txt="Gerät"/>
@@ -4002,6 +4342,7 @@
     <es txt="Aparato"/>
     <it txt="Dispositivo"/>
     <da txt="Apparat"/>
+    <cs txt="Zařízení"/>
   </Msg>
   <Msg id="terminalstation">
     <de txt="Kopfbahnhof"/>
@@ -4046,6 +4387,7 @@
     <es txt="DDL"/>
     <it txt="DDL"/>
     <da txt="DDL"/>
+    <cs txt="DDL"/>
   </Msg>
   <Msg id="dda">
     <de txt="Digital Direct for AWL"/>
@@ -4068,6 +4410,7 @@
     <es txt="Dinamo"/>
     <it txt="Dinamo"/>
     <da txt="Dinamo"/>
+    <cs txt="Dinamo"/>
   </Msg>
   <Msg id="srcp">
     <de txt="SRCP"/>
@@ -4079,6 +4422,7 @@
     <es txt="SRCP"/>
     <it txt="SRCP"/>
     <da txt="SRCP"/>
+    <cs txt="SRCP"/>
   </Msg>
   <Msg id="om32">
     <de txt="Dinamo OM32 serial"/>
@@ -4123,6 +4467,7 @@
     <es txt="SLX825"/>
     <it txt="SLX825"/>
     <da txt="SLX825"/>
+    <cs txt="SLX825"/>
   </Msg>
   <Msg id="inter10">
     <de txt="LDT"/>
@@ -4134,6 +4479,7 @@
     <es txt="LDT"/>
     <it txt="LDT"/>
     <da txt="LDT"/>
+    <cs txt="LDT (Littfinski Daten Technik)"/>
   </Msg>
   <Msg id="zimo">
     <de txt="Zimo MX1"/>
@@ -4145,6 +4491,7 @@
     <es txt="Zimo MX1"/>
     <it txt="Zimo MX1"/>
     <da txt="Zimo MX1"/>
+    <cs txt="Zimo MX1"/>
   </Msg>
   <Msg id="lenz">
     <de txt="Lenz"/>
@@ -4156,6 +4503,7 @@
     <es txt="Lenz"/>
     <it txt="Lenz"/>
     <da txt="Lenz"/>
+    <cs txt="Lenz"/>
   </Msg>
   <Msg id="dirpause">
     <de txt="Wechsel Pause" tip="Pause xxxms nach dem Schalten der letzten Weiche."/>
@@ -4244,6 +4592,7 @@
     <es txt="Salida"/>
     <it txt="Partenza"/>
     <da txt="Afgang"/>
+    <cs txt="Odjezd"/>
   </Msg>
   <Msg id="usepatterns">
     <de txt="Muster benutzen"/>
@@ -4272,7 +4621,7 @@
     <en txt="Use IDLE instead of GPOFF" tip="The LocoBuffer-USB needs the RailSync."/>
     <nl txt="Gebruik IDLE inplaats van GPOFF" tip="De LocoBuffer-USB heeft het RailSync nodig."/>
     <sv txt="Använd IDLE istället för GPOFF" tip="LocoBuffer-USB behöver RailSync."/>
-    <fr txt="Utiliser IDLE à la place de GPOFF" tip ="Le LocoBuffer-USB a besoin de RailSync"/>
+    <fr txt="Utiliser IDLE à la place de GPOFF" tip="Le LocoBuffer-USB a besoin de RailSync"/>
     <tr txt="Use IDLE instead of GPOFF"/>
     <es txt="Usa IDLE en lugar de GPOFF" tip="El LocoBuffer-USB necesita el RailSync."/>
     <it txt="Use IDLE instead of GPOFF"/>
@@ -4288,6 +4637,7 @@
     <es txt="PT IID" tip="Usa este controlador para programar."/>
     <it txt="PT IID" tip="Usa questo controller per programmazione."/>
     <da txt="PT IID" tip="Anvend denne controller til programmering."/>
+    <cs txt="PT IID"/>
   </Msg>
   <Msg id="sviid">
     <de txt="SV IID" tip="Diesen Controller zum LN-SV programmieren benutzen."/>
@@ -4299,6 +4649,7 @@
     <es txt="SV IID" tip="Usa este controlador para LN-SV programar."/>
     <it txt="SV IID" tip="Usa questo controller per LN-SV programmazione."/>
     <da txt="SV IID" tip="Anvend denne controller til LN-SV programmering."/>
+    <cs txt="SV IID"/>
   </Msg>
   <Msg id="lciid">
     <de txt="LC IID" tip="Diesen Controller zum fahren benutzen."/>
@@ -4310,6 +4661,7 @@
     <es txt="LC IID" tip="Use this controller for locomotives."/>
     <it txt="LC IID" tip="Usa questo controller per loco."/>
     <da txt="LC IID" tip="Use this controller for locomotives."/>
+    <cs txt="LC IID"/>
   </Msg>
   <Msg id="dpiid">
     <de txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
@@ -4321,17 +4673,19 @@
     <es txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
     <it txt="DP IID" tip="Usa questo controller per loco da usare con regolatore."/>
     <da txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
+    <cs txt="DP IID"/>
   </Msg>
   <Msg id="clocktype">
     <de txt="Uhranzeige"/>
     <en txt="Clocktype"/>
     <nl txt="Klokbeeld"/>
     <sv txt="Klocktyp"/>
-    <fr txt="Type d'horloge"/>
+    <fr txt="Type d&apos;horloge"/>
     <tr txt="Clocktype"/>
     <es txt="Tipo de reloj"/>
     <it txt="Tipo orologio"/>
     <da txt="Ur-type"/>
+    <cs txt="Typ času"/>
   </Msg>
   <Msg id="opendecoder" dialog="true">
     <de txt="OpenDecoder"/>
@@ -4354,6 +4708,7 @@
     <es txt="rojo"/>
     <it txt="rosso"/>
     <da txt="rød"/>
+    <cs txt="Červená"/>
   </Msg>
   <Msg id="yellow">
     <de txt="gelb"/>
@@ -4365,6 +4720,7 @@
     <es txt="amarillo"/>
     <it txt="giallo"/>
     <da txt="gul"/>
+    <cs txt="žlutá"/>
   </Msg>
   <Msg id="green">
     <de txt="grün"/>
@@ -4376,6 +4732,7 @@
     <es txt="verde"/>
     <it txt="verde"/>
     <da txt="grøn"/>
+    <cs txt="Zelená"/>
   </Msg>
   <Msg id="white">
     <de txt="weiß"/>
@@ -4387,6 +4744,7 @@
     <es txt="white"/>
     <it txt="bianco"/>
     <da txt="white"/>
+    <cs txt="Bílá"/>
   </Msg>
   <Msg id="permissions">
     <de txt="Berechtigungen"/>
@@ -4409,6 +4767,7 @@
     <es txt="Locomotora denegada"/>
     <it txt="Loco escluse"/>
     <da txt="Udeluk lokomotiv"/>
+    <cs txt="Zakázáná Lokomotiva"/>
   </Msg>
   <Msg id="include">
     <de txt="Lok zulassen"/>
@@ -4420,6 +4779,7 @@
     <es txt="Locomotora permitida"/>
     <it txt="Loco permesse"/>
     <da txt="Tillad lokomotiv"/>
+    <cs txt="Povolená Lokomotiva"/>
   </Msg>
   <Msg id="iconpath">
     <de txt="Iconverzeichnis"/>
@@ -4431,6 +4791,7 @@
     <es txt="Directorio de Iconos"/>
     <it txt="Percorso icone"/>
     <da txt="Ikon sti"/>
+    <cs txt="Cesta k ikonám"/>
   </Msg>
   <Msg id="imagepath">
     <de txt="Bilderverzeichnis"/>
@@ -4442,6 +4803,7 @@
     <es txt="Directorio Imagen"/>
     <it txt="Percorso immagini"/>
     <da txt="Billed sti"/>
+    <cs txt="Cesta k obrázku"/>
   </Msg>
   <Msg id="regulated">
     <de txt="Lastreglung" tip="Decoder verfügt über eine Lastreglung."/>
@@ -4453,6 +4815,7 @@
     <es txt="Regulado" tip="El decodoficador tiene regulación de motor."/>
     <it txt="Regulated" tip="Il Decoder ha motor regulator."/>
     <da txt="Lastreguleret" tip="Dekoder med motorregulering."/>
+    <cs txt="Rízený"/>
   </Msg>
   <Msg id="arrive">
     <de txt="Ankunft"/>
@@ -4464,6 +4827,7 @@
     <es txt="Llegada"/>
     <it txt="Arrivo"/>
     <da txt="Ankomst"/>
+    <cs txt="Příjezd"/>
   </Msg>
   <Msg id="tabalign">
     <de txt="Tab Ansicht"/>
@@ -4475,6 +4839,7 @@
     <es txt="Situar persianas"/>
     <it txt="Tab align"/>
     <da txt="Tab justering"/>
+    <cs txt="Uspřádaní tabulky"/>
   </Msg>
   <Msg id="multiline">
     <de txt="Mehrzeilig"/>
@@ -4486,6 +4851,7 @@
     <es txt="Multilinea"/>
     <it txt="Multilinee"/>
     <da txt="Flerlinie"/>
+    <cs txt="Multičára"/>
   </Msg>
   <Msg id="usage">
     <de txt="Benutzung"/>
@@ -4497,6 +4863,7 @@
     <es txt="Dirección de la Ruta"/>
     <it txt="Uso"/>
     <da txt="Anvendelse"/>
+    <cs txt="Použít"/>
   </Msg>
   <Msg id="rundirection">
     <de txt="Fahrrichtung"/>
@@ -4519,6 +4886,7 @@
     <es txt="Adelante"/>
     <it txt="Avanti"/>
     <da txt="Fremad"/>
+    <cs txt="Vpřed"/>
   </Msg>
   <Msg id="reverse">
     <de txt="Rückwärts"/>
@@ -4530,6 +4898,7 @@
     <es txt="Atrás"/>
     <it txt="Indietro"/>
     <da txt="Baglæns"/>
+    <cs txt="Zpět"/>
   </Msg>
   <Msg id="forwardsignals">
     <de txt="Signale bei Vorwärtsfahrt"/>
@@ -4565,9 +4934,13 @@
     <da txt="Forspandskørsel"/>
   </Msg>
   <Msg id="consist">
-    <de txt="Zusammenstellung"/>
+    <de txt="Mehrfachtraktion"/>
     <en txt="Consist"/>
     <nl txt="Samenstelling"/>
+    <it txt="Multitrazione"/>
+    <sv txt="Multitraktion"/>
+    <cs txt="Skládat se"/>
+    <fr txt="Multi-traction"/>
   </Msg>
   <Msg id="members">
     <de txt="Mitglieder"/>
@@ -4579,6 +4952,7 @@
     <es txt="Miembros"/>
     <it txt="Membri"/>
     <da txt="Medlemmer"/>
+    <cs txt="Členové"/>
   </Msg>
   <Msg id="zconnector">
     <de txt="Ebenenverbinder"/>
@@ -4612,6 +4986,7 @@
     <es txt="Acción"/>
     <it txt="Azioni"/>
     <da txt="Hændelser"/>
+    <cs txt="Akce"/>
   </Msg>
   <Msg id="number">
     <de txt="Nummer"/>
@@ -4623,6 +4998,7 @@
     <es txt="Número"/>
     <it txt="Numero"/>
     <da txt="Nummer"/>
+    <cs txt="Číslo"/>
   </Msg>
   <Msg id="activationtime">
     <de txt="Aktivierungszeit"/>
@@ -4645,6 +5021,7 @@
     <es txt="Próxima loco"/>
     <it txt="Prossima loco"/>
     <da txt="Næste lokomotiv"/>
+    <cs txt="Další lokomotiva"/>
   </Msg>
   <Msg id="swtype_raster">
     <de txt="Raster"/>
@@ -4656,6 +5033,7 @@
     <es txt="Centrado en cuadrícula"/>
     <it txt="Raster"/>
     <da txt="Raster"/>
+    <cs txt="Měřítko"/>
   </Msg>
   <Msg id="showall">
     <de txt="Zeige alle"/>
@@ -4667,6 +5045,7 @@
     <es txt="Mostrarlo todo"/>
     <it txt="Mostra tutti"/>
     <da txt="Vis alle"/>
+    <cs txt="Zobrazit vše"/>
   </Msg>
   <Msg id="startblock">
     <de txt="Anfangsblock"/>
@@ -4689,6 +5068,7 @@
     <es txt="Seleccionar"/>
     <it txt="Seleziona"/>
     <da txt="Vælg"/>
+    <cs txt="Zvolit"/>
   </Msg>
   <Msg id="range">
     <de txt="Auswahl"/>
@@ -4700,6 +5080,7 @@
     <es txt="Rango"/>
     <it txt="Range"/>
     <da txt="Område"/>
+    <cs txt="Rozsah"/>
   </Msg>
   <Msg id="target">
     <de txt="Ziel"/>
@@ -4711,6 +5092,7 @@
     <es txt="Objetivo"/>
     <it txt="Target"/>
     <da txt="Mål"/>
+    <cs txt="Cíl"/>
   </Msg>
   <Msg id="move">
     <de txt="Verschieben"/>
@@ -4722,6 +5104,7 @@
     <es txt="Mover"/>
     <it txt="Muovi"/>
     <da txt="Flyt"/>
+    <cs txt="Přesun"/>
   </Msg>
   <Msg id="copy">
     <de txt="Kopieren"/>
@@ -4733,6 +5116,7 @@
     <es txt="Copia"/>
     <it txt="Copia"/>
     <da txt="Kopier"/>
+    <cs txt="Kopírovat"/>
   </Msg>
   <Msg id="width">
     <de txt="Breite"/>
@@ -4744,6 +5128,7 @@
     <es txt="Ancho"/>
     <it txt="Largo"/>
     <da txt="Bredde"/>
+    <cs txt="Šířka"/>
   </Msg>
   <Msg id="height">
     <de txt="Höhe"/>
@@ -4755,6 +5140,7 @@
     <es txt="Alto"/>
     <it txt="Alto"/>
     <da txt="Højde"/>
+    <cs txt="Výška"/>
   </Msg>
   <Msg id="usescheduletime">
     <de txt="Fahrplan Abfahrtzeiten benutzen"/>
@@ -4777,6 +5163,7 @@
     <es txt="Reloj"/>
     <it txt="Orologio"/>
     <da txt="Ur"/>
+    <cs txt="Hodiny"/>
   </Msg>
   <Msg id="adjusttime">
     <de txt="Uhrzeit einstellen"/>
@@ -4799,6 +5186,7 @@
     <es txt="Observación"/>
     <it txt="Remark"/>
     <da txt="Bemærkning"/>
+    <cs txt="Poznámka"/>
   </Msg>
   <Msg id="option">
     <de txt="Option"/>
@@ -4810,6 +5198,7 @@
     <es txt="Opcione"/>
     <it txt="Opzion"/>
     <da txt="Muligheder"/>
+    <cs txt="Možnost"/>
   </Msg>
   <Msg id="swapplacing">
     <de txt="Ändern der Platzierung"/>
@@ -4854,6 +5243,7 @@
     <es txt="Obtener CV"/>
     <it txt="Ottieni CV"/>
     <da txt="Hent CV"/>
+    <cs txt="Načti CV"/>
   </Msg>
   <Msg id="waitforpt">
     <de txt="Warten auf Programmiergleis"/>
@@ -4876,6 +5266,7 @@
     <es txt="Obtener SO"/>
     <it txt="Ottieni SO"/>
     <da txt="Hent SO"/>
+    <cs txt="Načti SO"/>
   </Msg>
   <Msg id="waitforso">
     <de txt="Warten auf Command Station"/>
@@ -4997,6 +5388,7 @@
     <es txt="S88"/>
     <it txt="S88"/>
     <da txt="S88"/>
+    <cs txt="S88"/>
   </Msg>
   <Msg id="busses">
     <de txt="Busse"/>
@@ -5008,6 +5400,7 @@
     <es txt="Busses"/>
     <it txt="Busses"/>
     <da txt="Busser"/>
+    <cs txt="Sběrnice"/>
   </Msg>
   <Msg id="ecos">
     <de txt="Ecos"/>
@@ -5019,6 +5412,7 @@
     <es txt="Ecos"/>
     <it txt="Ecos"/>
     <da txt="Ecos"/>
+    <cs txt="Ecos"/>
   </Msg>
   <Msg id="sensors">
     <de txt="Sensoren"/>
@@ -5030,6 +5424,7 @@
     <es txt="Contactos"/>
     <it txt="Sensori"/>
     <da txt="Sensorer"/>
+    <cs txt="Senzory"/>
   </Msg>
   <Msg id="poll">
     <de txt="Abfragen"/>
@@ -5041,6 +5436,7 @@
     <es txt="Consultas"/>
     <it txt="Sondaggio"/>
     <da txt="Forespørgsel"/>
+    <cs txt="Volby"/>
   </Msg>
   <Msg id="options">
     <de txt="Optionen"/>
@@ -5052,6 +5448,7 @@
     <es txt="Opciones"/>
     <it txt="Opzioni"/>
     <da txt="Valgmuligheder"/>
+    <cs txt="Možnosti"/>
   </Msg>
   <Msg id="scentryactions">
     <de txt="Schedule Entry Actions"/>
@@ -5085,6 +5482,7 @@
     <es txt="grupo de usuarios" tip="comparte tu esperiencia, encuentra otros usuarios de RocRail y diviertete!"/>
     <it txt="User group" tip="Condividi le tue esperienze, incontra altri Rocrailers e divertiti!"/>
     <da txt="User group" tip="Del dine erfaringer, mød andre Rocrailere og have det sjovt!"/>
+    <cs txt="Uživatelská skupina"/>
   </Msg>
   <Msg id="rug">
     <all txt="http://forum.rocrail.net/portal.php"/>
@@ -5101,7 +5499,7 @@
     <da txt="Konfigurationsservice" tip="Interaktiv rocrail.ini konfiguration."/>
   </Msg>
   <Msg id="rocrail_consrv">
-    <all txt="http://rocrail.sourceforge.net/consrv.php"/>
+    <all txt="https://launchpad.net/rocrail"/>
   </Msg>
   <Msg id="bug" dialog="true">
     <de txt="Fehler melden" tip="Fehler gefunden..."/>
@@ -5115,7 +5513,7 @@
     <da txt="Fejlmelding" tip="Hvis du finder en fejl..."/>
   </Msg>
   <Msg id="rocrail_bug">
-    <all txt="http://sourceforge.net/tracker/?atid=501346&group_id=62652&func=browse"/>
+    <all txt="https://bugs.launchpad.net/rocrail"/>
   </Msg>
   <Msg id="feature" dialog="true">
     <de txt="Erweiterungsantrag" tip="Ich habe eine Idee..."/>
@@ -5129,7 +5527,7 @@
     <da txt="Feature request" tip="If you have a good idea..."/>
   </Msg>
   <Msg id="rocrail_feature">
-    <all txt="http://sourceforge.net/tracker/?group_id=62652&atid=501349"/>
+    <all txt="https://bugs.launchpad.net/rocrail"/>
   </Msg>
   <Msg id="usept">
     <de txt="PT benutzen"/>
@@ -5141,6 +5539,7 @@
     <es txt="Use PT"/>
     <it txt="Usa PT"/>
     <da txt="Anvend PT"/>
+    <cs txt="Použít PT"/>
   </Msg>
   <Msg id="shortcutchecking">
     <de txt="Kurzschlussüberwachung"/>
@@ -5163,6 +5562,7 @@
     <es txt="Invert DSR"/>
     <it txt="Inverti DSR"/>
     <da txt="Invertere DSR"/>
+    <cs txt="Invertuj DSR"/>
   </Msg>
   <Msg id="delay">
     <de txt="Verzögerung"/>
@@ -5174,6 +5574,7 @@
     <es txt="Delay"/>
     <it txt="Ritardo"/>
     <da txt="Forsinkelse"/>
+    <cs txt="Zpoždění"/>
   </Msg>
   <Msg id="locorefresh">
     <de txt="Lokdekoder Aktualisierung"/>
@@ -5207,6 +5608,7 @@
     <es txt="Aspects"/>
     <it txt="Aspetti"/>
     <da txt="Aspekt"/>
+    <cs txt="Aspekty"/>
   </Msg>
   <Msg id="aspect">
     <de txt="Begriff"/>
@@ -5218,6 +5620,7 @@
     <es txt="Aspect"/>
     <it txt="Aspetto"/>
     <da txt="Aspekt"/>
+    <cs txt="Aspekt"/>
   </Msg>
   <Msg id="panelcolor">
     <de txt="Gleisplanfarbe"/>
@@ -5317,6 +5720,7 @@
     <es txt="Pair gates"/>
     <it txt="Uscita doppia"/>
     <da txt="Par-udgange"/>
+    <cs txt="Dvojitá brána"/>
   </Msg>
   <Msg id="randomseed">
     <de txt="Zufallsgenerator"/>
@@ -5339,6 +5743,7 @@
     <es txt="Road"/>
     <it txt="Strada"/>
     <da txt="Vej"/>
+    <cs txt="Cesta"/>
   </Msg>
   <Msg id="turnoff">
     <de txt="Kreuzung"/>
@@ -5350,6 +5755,7 @@
     <es txt="Turnoff"/>
     <it txt="Spegnere"/>
     <da txt="Afkørsel"/>
+    <cs txt="Vypnout"/>
   </Msg>
   <Msg id="thrown">
     <de txt="Thrown"/>
@@ -5361,6 +5767,7 @@
     <es txt="Thrown"/>
     <it txt="Deviato"/>
     <da txt="Omlagt"/>
+    <cs txt="Zamítnout"/>
   </Msg>
   <Msg id="savepos">
     <de txt="Position speichern"/>
@@ -5394,6 +5801,7 @@
     <es txt="Theme"/>
     <it txt="Tema"/>
     <da txt="Tema"/>
+    <cs txt="Motiv"/>
   </Msg>
   <Msg id="check2in">
     <de txt="Check for free destination until reaching IN"/>
@@ -5416,6 +5824,7 @@
     <es txt="Loco Panel"/>
     <it txt="Pannello Loco"/>
     <da txt="Loco Panel"/>
+    <cs txt="Panel lokomotiv"/>
   </Msg>
   <Msg id="secondnextblock">
     <de txt="Zweiten Ziel-Block reservieren."/>
@@ -5438,6 +5847,7 @@
     <es txt="DCC Format" tip="Default DCC Format"/>
     <it txt="DCC Format" tip="Default DCC Format"/>
     <da txt="DCC format"/>
+    <cs txt="Formát DCC"/>
   </Msg>
   <Msg id="timing">
     <de txt="Timing" tip="Timing Takt puls S88-Bus."/>
@@ -5449,6 +5859,7 @@
     <es txt="Timing" tip="Pulse timing S88-Bus."/>
     <it txt="Timing" tip="Pulse timing S88-Bus."/>
     <da txt="Timing" tip="Pulse timing S88-bus."/>
+    <cs txt="Časování"/>
   </Msg>
   <Msg id="ptreset">
     <de txt="PT Resets" tip="Extended Reset Commands"/>
@@ -5460,6 +5871,7 @@
     <es txt="PT Resets" tip="Extended Reset Commands"/>
     <it txt="PT Resetta" tip="Extended Reset Commands"/>
     <da txt="PT Resets" tip="Extended Reset Commands"/>
+    <cs txt="PT Resety"/>
   </Msg>
   <Msg id="ptcommands">
     <de txt="PT Commands" tip="Extended Program Commands"/>
@@ -5482,6 +5894,7 @@
     <es txt="PT POM" tip="Command repetition for Programming on the Main."/>
     <it txt="PT POM" tip="Ripetizione comando per programmazione sulla linea principale."/>
     <da txt="PT POM" tip="Kommandogentagelse ved programmering påhovedsporet (POM)."/>
+    <cs txt="PT POM"/>
   </Msg>
   <Msg id="scdmain">
     <de txt="SCD Main" tip="Abschaltzeit bei Kurzschluß Hauptgleis."/>
@@ -5493,6 +5906,7 @@
     <es txt="SCD Main" tip="Power switch off time after short cut detection on the main."/>
     <it txt="SCD Main" tip="Tempo di apertura dopo corto circuito sulla linea."/>
     <da txt="SCD Main" tip="Tid inden strømmen slås fra efter opdagelse af kortslutning på hovedsporet."/>
+    <cs txt="Hlavní SCD"/>
   </Msg>
   <Msg id="scdpt">
     <de txt="SCD PT" tip="Abschaltzeit bei Kurzschluß Programmiergleis."/>
@@ -5504,6 +5918,7 @@
     <es txt="SCD PT" tip="Power switch off time after short cut detection on the programming track."/>
     <it txt="SCD PT" tip="Tempo di apertura dopo corto circuito su PT."/>
     <da txt="SCD PT" tip="Tid inden strømmen slås fra efter opdagelse af kortslutning påprogrammeringssporet"/>
+    <cs txt="SCD PT"/>
   </Msg>
   <Msg id="swsensors">
     <de txt="Weichenrückmeldung" tip=""/>
@@ -5570,6 +5985,7 @@
     <es txt="Scale"/>
     <it txt="Scala"/>
     <da txt="Skala" tip=""/>
+    <cs txt="Rozchod"/>
   </Msg>
   <Msg id="distance">
     <de txt="Abstand"/>
@@ -5581,6 +5997,7 @@
     <es txt="Distance"/>
     <it txt="Distanza"/>
     <da txt="Afstand" tip=""/>
+    <cs txt="Vzdálenost"/>
   </Msg>
   <Msg id="measurement">
     <de txt="Geschwindigkeitsmessung"/>
@@ -5603,6 +6020,7 @@
     <es txt="MVTrack" tip="Measure Velocity Track"/>
     <it txt="MVTrack" tip="Measure Velocity Track"/>
     <da txt="MVTrack" tip="Hastighedsmålingsspor"/>
+    <cs txt="kolej pro měření rychlosti"/>
   </Msg>
   <Msg id="convert2mph">
     <de txt="Nach MPH umrechnen"/>
@@ -5647,6 +6065,7 @@
     <es txt="Image"/>
     <it txt="Immagine"/>
     <da txt="Billede" tip=""/>
+    <cs txt="Obrázek"/>
   </Msg>
   <Msg id="activelow">
     <de txt="Aktiv niedrig"/>
@@ -5657,7 +6076,8 @@
     <tr txt="Active low"/>
     <es txt="Active low"/>
     <it txt="Active low"/>
-    <da txt="Aktiv lav" />
+    <da txt="Aktiv lav"/>
+    <cs txt="Aktivní nízká úroveň"/>
   </Msg>
   <Msg id="timedactions" dialog="true">
     <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einer bestimmten Zeit starten"/>
@@ -5680,6 +6100,7 @@
     <es txt="Attributes"/>
     <it txt="Attributi"/>
     <da txt="Attributter"/>
+    <cs txt="Atributy"/>
   </Msg>
   <Msg id="color">
     <de txt="Farbe"/>
@@ -5691,8 +6112,9 @@
     <es txt="Color"/>
     <it txt="Colore"/>
     <da txt="Farve"/>
+    <cs txt="Barva"/>
   </Msg>
-   <Msg id="background">
+  <Msg id="background">
     <de txt="Hintergrund"/>
     <en txt="Background"/>
     <nl txt="Achtergrond"/>
@@ -5702,6 +6124,7 @@
     <es txt="Background"/>
     <it txt="Sottofondo"/>
     <da txt="Baggrund"/>
+    <cs txt="Pozadí"/>
   </Msg>
   <Msg id="bold">
     <de txt="fett"/>
@@ -5713,6 +6136,7 @@
     <es txt="bold"/>
     <it txt="maiuscole"/>
     <da txt="fed"/>
+    <cs txt="tučné"/>
   </Msg>
   <Msg id="italic">
     <de txt="kursiv"/>
@@ -5724,6 +6148,7 @@
     <es txt="italic"/>
     <it txt="italico"/>
     <da txt="kursiv"/>
+    <cs txt="kurzíva"/>
   </Msg>
   <Msg id="underlined">
     <de txt="unterstrichen"/>
@@ -5735,6 +6160,7 @@
     <es txt="underlined"/>
     <it txt="sottolineate"/>
     <da txt="understreget"/>
+    <cs txt="podtržené"/>
   </Msg>
   <Msg id="transparent">
     <de txt="transparent"/>
@@ -5774,11 +6200,12 @@
     <en txt="XSL path"/>
     <nl txt="XSL pad"/>
     <sv txt="XSL-sökväg"/>
-    <fr txt="Répertoire XSL "/>
+    <fr txt="Répertoire XSL"/>
     <tr txt="XSL path"/>
     <es txt="XSL path"/>
     <it txt="XSL path"/>
     <da txt="XSL-sti"/>
+    <cs txt="Cesta k XSL"/>
   </Msg>
   <Msg id="showid">
     <de txt="Show ID's" tip="Show object ID's."/>
@@ -5790,6 +6217,7 @@
     <es txt="Show ID's" tip="Show object ID's."/>
     <it txt="Show ID's" tip="Show object ID's."/>
     <da txt="Vis ID's" tip="Vis objekt-ID."/>
+    <cs txt="Zobraz ID"/>
   </Msg>
   <Msg id="modpanel">
     <de txt="Modulenplan"/>
@@ -5812,6 +6240,7 @@
     <es txt="Add Module"/>
     <it txt="Aggiungi Modulo"/>
     <da txt="Tilføj Module"/>
+    <cs txt="Přidej modul"/>
   </Msg>
   <Msg id="blockoccupation">
     <de txt="Blockbelegung"/>
@@ -5845,6 +6274,7 @@
     <es txt="Módulo ID"/>
     <it txt="Modulo ID"/>
     <da txt="Module ID"/>
+    <cs txt="ID modulu"/>
   </Msg>
   <Msg id="connections">
     <de txt="Verbindungen"/>
@@ -5867,6 +6297,7 @@
     <es txt="Rotation"/>
     <it txt="Rotazione"/>
     <da txt="Rotation"/>
+    <cs txt="Rotace"/>
   </Msg>
   <Msg id="side">
     <de txt="Seite"/>
@@ -5878,6 +6309,7 @@
     <es txt="Side"/>
     <it txt="Lato"/>
     <da txt="Side"/>
+    <cs txt="Strana"/>
   </Msg>
   <Msg id="initfieldpause">
     <de txt="Init field pause"/>
@@ -5955,6 +6387,7 @@
     <es txt="Accessory"/>
     <it txt="Accessorio"/>
     <da txt="Tilbehør"/>
+    <cs txt="Příslušenství"/>
   </Msg>
   <Msg id="accnr">
     <de txt="Accessory#"/>
@@ -5966,6 +6399,7 @@
     <es txt="Accessory#"/>
     <it txt="Accessorio#"/>
     <da txt="Tilbehør#"/>
+    <cs txt="Příslušenství"/>
   </Msg>
   <Msg id="portbase">
     <de txt="Portbasis"/>
@@ -5977,6 +6411,7 @@
     <es txt="Port base"/>
     <it txt="Port base"/>
     <da txt="Port base"/>
+    <cs txt="Základní port"/>
   </Msg>
   <Msg id="ddx">
     <all txt="DDX"/>
@@ -5991,6 +6426,7 @@
     <es txt="Check Tx"/>
     <it txt="Controlla Tx"/>
     <da txt="Check Tx"/>
+    <cs txt="Zkontroluj TX"/>
   </Msg>
   <Msg id="signalreset">
     <de txt="Signal zurücksetzen"/>
@@ -6035,6 +6471,7 @@
     <es txt="Conditions"/>
     <it txt="Condizioni"/>
     <da txt="Conditions"/>
+    <cs txt="Podmínky"/>
   </Msg>
   <Msg id="resumeall">
     <de txt="Alle Züge wieder starten" tip="Versetzt alle Züge in den Automatikbetrieb aus der letzte Sitzung."/>
@@ -6112,6 +6549,7 @@
     <es txt="Denominación de Rutas"/>
     <it txt="Identificativo Instradamento"/>
     <da txt="Rute-IDs"/>
+    <cs txt="ID vlakové cesty"/>
   </Msg>
   <Msg id="sharedfb">
     <de txt="Shared sensors"/>
@@ -6156,6 +6594,7 @@
     <es txt="Gamepad"/>
     <it txt="Gamepad"/>
     <da txt="Gamepad"/>
+    <cs txt="Gamepad"/>
   </Msg>
   <Msg id="restrictedit4auto">
     <de txt="Begrenze Editieren im Automatikmodus"/>
@@ -6171,19 +6610,36 @@
     <de txt="Licht aus"/>
     <en txt="Lights off"/>
     <nl txt="Licht uit"/>
+    <it txt="Lights off"/>
+    <sv txt="Lights off"/>
+    <cs txt="Světla vypnuta"/>
+    <fr txt="Lights off"/>
   </Msg>
   <Msg id="svg">
     <en txt="SVG"/>
+    <it txt="SVG"/>
+    <sv txt="SVG"/>
+    <de txt="SVG"/>
+    <cs txt="SVG"/>
+    <fr txt="SVG"/>
   </Msg>
   <Msg id="followup">
     <de txt="Nachfolge"/>
     <en txt="Follow-up"/>
     <nl txt="Vervolg"/>
+    <sv txt="Follow-up"/>
+    <cs txt="Pokračuj"/>
+    <fr txt="Follow-up"/>
   </Msg>
   <Msg id="ctsflow">
     <en txt="CTS Flow"/>
+    <it txt="CTS Flow"/>
+    <sv txt="CTS Flow"/>
+    <de txt="CTS Flow"/>
+    <cs txt="CTS Řízení"/>
+    <fr txt="CTS Flow"/>
   </Msg>
-    <Msg id="savelocoiofileas">
+  <Msg id="savelocoiofileas">
     <de txt="Speichern der LocoIO-Datei als"/>
     <en txt="Save LocoIO file as"/>
     <nl txt="LocoIO bestand opslaan als"/>
@@ -6197,16 +6653,25 @@
     <de txt="Ringlokschuppen"/>
     <en txt="Roundhouse"/>
     <nl txt="Lokloods"/>
+    <it txt="Roundhouse"/>
+    <sv txt="Roundhouse"/>
+    <cs txt="Rotunda"/>
+    <fr txt="Roundhouse"/>
   </Msg>
   <Msg id="access">
     <de txt="Zufahrt"/>
     <en txt="Access"/>
     <nl txt="Toegang"/>
+    <sv txt="Access"/>
+    <cs txt="Přístup"/>
+    <fr txt="Access"/>
   </Msg>
   <Msg id="ttdirpause">
     <de txt="Richtungswechselwartezeit"/>
     <en txt="Direction change pause"/>
     <nl txt="Draairichtings wissel pause"/>
+    <sv txt="Direction change pause"/>
+    <fr txt="Direction change pause"/>
   </Msg>
   <Msg id="swaprotationdirection">
     <de txt="Wechsel der Drehrichtung"/>
@@ -6215,17 +6680,33 @@
   </Msg>
   <Msg id="shortid">
     <en txt="Short ID"/>
+    <it txt="Short ID"/>
+    <sv txt="Short ID"/>
+    <de txt="Short ID"/>
+    <cs txt="Krátké ID"/>
+    <fr txt="Short ID"/>
   </Msg>
   <Msg id="setshortid">
     <en txt="Set short ID"/>
+    <it txt="Set short ID"/>
+    <sv txt="Set short ID"/>
+    <de txt="Set short ID"/>
+    <fr txt="Set short ID"/>
   </Msg>
   <Msg id="txshortids">
     <en txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
+    <it txt="Transmit short IDs"/>
+    <sv txt="Transmit short IDs"/>
+    <de txt="Transmit short IDs"/>
+    <fr txt="Transmit short IDs"/>
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagonen" tip="Wagontabelle"/>
     <en txt="Car table" tip="Car table"/>
     <nl txt="Wagonnen" tip="Wagon lijst"/>
+    <sv txt="Cars"/>
+    <cs txt="Tabulka Aut"/>
+    <fr txt="Cars"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtzetteln" tip="Frachtzetteltabelle"/>
@@ -6242,43 +6723,75 @@
     <de txt="Frachtzettel"/>
     <en txt="Waybill"/>
     <nl txt="Vrachtbrief"/>
+    <it txt="Waybill"/>
+    <sv txt="Waybill"/>
+    <cs txt="Nákladní list"/>
   </Msg>
   <Msg id="freezetime">
     <de txt="Uhrzeit anhalten"/>
     <en txt="Freeze time"/>
     <nl txt="Tijd stoppen"/>
+    <it txt="Freeze time"/>
+    <sv txt="Freeze time"/>
+    <fr txt="Freeze time"/>
   </Msg>
   <Msg id="resumetime">
     <de txt="Uhrzeit fortsetzen"/>
     <en txt="Resume time"/>
     <nl txt="Tijd starten"/>
+    <it txt="Resume time"/>
+    <sv txt="Resume time"/>
+    <fr txt="Resume time"/>
   </Msg>
   <Msg id="code">
     <de txt="Kode"/>
     <en txt="Code"/>
     <nl txt="Code"/>
+    <it txt="Code"/>
+    <sv txt="Code"/>
+    <cs txt="Kód"/>
+    <fr txt="Code"/>
   </Msg>
   <Msg id="roadname">
     <de txt="Geselschaft"/>
     <en txt="Roadname"/>
     <nl txt="Maatschappij"/>
+    <it txt="Roadname"/>
+    <sv txt="Roadname"/>
+    <cs txt="Jméno cesty"/>
+    <fr txt="Roadname"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
     <en txt="Era"/>
     <nl txt="Periode"/>
+    <it txt="Era"/>
+    <sv txt="Era"/>
+    <cs txt="Éra"/>
+    <fr txt="Era"/>
   </Msg>
   <Msg id="subtype">
     <de txt="Untergruppe"/>
     <en txt="Subtype"/>
+    <it txt="Subtype"/>
+    <sv txt="Subtype"/>
+    <cs txt="Podtyp"/>
+    <fr txt="Subtype"/>
   </Msg>
   <Msg id="car">
     <de txt="Wagon"/>
     <en txt="Car"/>
     <nl txt="Wagon"/>
+    <sv txt="Car"/>
+    <cs txt="Auto"/>
+    <fr txt="Car"/>
   </Msg>
   <Msg id="poladdr">
     <en txt="Polarization addr."/>
+    <it txt="Polarization addr."/>
+    <sv txt="Polarization addr."/>
+    <de txt="Polarization addr."/>
+    <fr txt="Polarization addr."/>
   </Msg>
   <Msg id="ttbridgepolarization">
     <en txt="Bridge polarization"/>
@@ -6303,4 +6816,3 @@
     <en txt="Use shortin event"/>
   </Msg>
 </Messages>
-

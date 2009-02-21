@@ -186,6 +186,13 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
     msg = (iONode)MapOp.get( enMap, aid);
   }
 
+  if( StrOp.len(msgstr) == 0 ) {
+    TraceOp.println( "skip empty msgstr..." );
+    return;
+  }
+
+  TraceOp.println( "aid=[%s]", aid );
+
   if( msg != NULL ) {
     iONode polang = NodeOp.findNode( msg, lang );
     if( polang == NULL ) {
@@ -227,31 +234,41 @@ msgstr "Gerade"
 
 */
 
+/* po file witout id:
+#, c-format
+msgid "no"
+msgstr "Ne"
+*/
+
 static void __po2lang( char* po, iONode xml, const char* lang ) {
   int cnt = 0;
+  int idoffset = 6;
   Boolean msgidMode = False;
   char* sid = StrOp.find( po, "# id=\"" );
 
   if( sid == NULL ) {
     /* no id given; switch to msgid mode */
+    TraceOp.println( "no id given; switch to msgid mode..." );
     msgidMode = True;
     sid = StrOp.find( po, "msgid \"" );
+    idoffset = 7;
   }
 
-  TraceOp.println( "sid=%10.10s", sid );
   while( sid != NULL ) {
     char* msgstr = StrOp.find( sid, "msgstr \"" );
     char* endline = NULL;
     char* tmp = NULL;
     char* str = NULL;
 
+    TraceOp.println( "sid=%10.10s", sid );
+
     if( msgstr != NULL ) {
       char aid[10];
-      int idx = 6;
+      int idx = idoffset;
       TraceOp.println( "try to find end of id..." );
-      while( sid[idx] != '\"' && (idx-6) < 10 ) {
-        aid[idx-6  ] = sid[idx];
-        aid[idx-6+1] = '\0';
+      while( sid[idx] != '\"' && (idx-idoffset) < 10 ) {
+        aid[idx-idoffset  ] = sid[idx];
+        aid[idx-idoffset+1] = '\0';
         idx++;
       }
 
