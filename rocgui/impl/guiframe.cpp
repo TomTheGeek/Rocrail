@@ -1312,8 +1312,10 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   toolBar->EnableTool(ME_Update, false);
 
   // checking for new updates
-  iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
-  ThreadOp.start( updateReader );
+  if(wGui.ischeckupdates(m_Ini)) {
+    iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
+    ThreadOp.start( updateReader );
+  }
 
   wxLogo = NULL;
 
