@@ -335,7 +335,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     else
       LocOp.event( loc, manager, evt, 0 );
 
-    if( evt == enter2in_event || evt == in_event || shortin_event ) {
+    if( evt == enter2in_event || evt == in_event || evt == shortin_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
     }
