@@ -154,7 +154,11 @@ static void __blockEvent( iOLcDriver inst, obj emitter, int event ) {
     set velocity to V_mid
   */
   case pre2in_event:
-    eventPre2In( inst, blockId, curBlockEvent, dstBlockEvent );
+    if( wLoc.isinatpre2in( data->loc->base.properties( data->loc ) ) ) {
+      eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, False );
+    }
+    else
+      eventPre2In( inst, blockId, curBlockEvent, dstBlockEvent );
     break;
 
 

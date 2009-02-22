@@ -383,6 +383,7 @@ public:
     wxCheckBox* m_UseScheduleTime;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_ShortIn;
+    wxCheckBox* m_InAtPre2In;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;

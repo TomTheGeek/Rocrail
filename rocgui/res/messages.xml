@@ -6815,4 +6815,7 @@
   <Msg id="useshortinevent">
     <en txt="Use shortin event"/>
   </Msg>
+  <Msg id="inatpre2in">
+    <en txt="Stop at pre2in event"/>
+  </Msg>
 </Messages>

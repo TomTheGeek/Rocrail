@@ -1258,6 +1258,7 @@
         <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
         <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
         <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
+        <var name="inatpre2in" vt="bool" defval="false" remark="Use pre2in event to stop in blocks."/>
 
         <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
         <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>
