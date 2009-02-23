@@ -2,5 +2,5 @@
 <!-- Proposal for theme properties. -->
 <theme id="SpDrS60">
   <panel red="190" green="190" blue="190" border="false"/>
-  <block showid="false" red="0" green="0" blue="0"/>
+  <block showid="true" red="0" green="0" blue="0"/>
 </theme>

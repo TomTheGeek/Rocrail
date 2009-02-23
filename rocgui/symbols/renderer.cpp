@@ -180,6 +180,7 @@ void SymbolRenderer::initSym() {
         }
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft : switchtype::crossingright );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t : switchtype::crossingright_t );
           m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
         }
       }
@@ -767,6 +768,9 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, con
   const char* state = wSwitch.getstate( m_Props );
   Boolean hasUnit = wSwitch.getaddr1( m_Props ) > 0 ? True:False;
 
+  if( wSwitch.getaddr1( m_Props ) > 0 || wSwitch.getport1( m_Props ) > 0 )
+    hasUnit = True;
+
   // SVG Symbol:
   if( m_SvgSym1 != NULL && m_SvgSym2 != NULL ) {
     drawSvgSym(dc, occupied? m_SvgSym2:m_SvgSym1, ori);
@@ -783,6 +787,10 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, con
 void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean hasUnit = wSwitch.getaddr1( m_Props ) > 0 ? True:False;
+
+  if( wSwitch.getaddr1( m_Props ) > 0 || wSwitch.getport1( m_Props ) > 0 )
+    hasUnit = True;
+
 
   // SVG Symbol:
   if( !hasUnit && m_SvgSym1!=NULL ) {
