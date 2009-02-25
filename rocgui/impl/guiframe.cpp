@@ -599,6 +599,7 @@ void RocGuiFrame::modifyLoc( iONode props ) {
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( loc, 0 );
         NodeOp.removeChild( loc, child );
+        child->base.del(child);
         cnt = NodeOp.getChildCnt( loc );
       }
       cnt = NodeOp.getChildCnt( props );
