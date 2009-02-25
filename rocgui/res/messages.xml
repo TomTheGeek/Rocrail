@@ -6845,9 +6845,6 @@
   <Msg id="delivered">
     <en txt="Delivered"/>
   </Msg>
-  <Msg id="delivered">
-    <en txt="Delivered"/>
-  </Msg>
   <Msg id="empty">
     <en txt="Empty"/>
   </Msg>
