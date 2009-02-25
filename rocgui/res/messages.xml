@@ -6818,4 +6818,106 @@
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
   </Msg>
+  <Msg id="routing">
+    <en txt="Routing"/>
+  </Msg>
+  <Msg id="shipper">
+    <en txt="Shipper"/>
+  </Msg>
+  <Msg id="origin">
+    <en txt="Origin"/>
+  </Msg>
+  <Msg id="consignee">
+    <en txt="Consignee"/>
+  </Msg>
+  <Msg id="commodity">
+    <en txt="Commodity"/>
+  </Msg>
+  <Msg id="status">
+    <en txt="Status"/>
+  </Msg>
+  <Msg id="waiting">
+    <en txt="Waiting"/>
+  </Msg>
+  <Msg id="shipping">
+    <en txt="Shipping"/>
+  </Msg>
+  <Msg id="delivered">
+    <en txt="Delivered"/>
+  </Msg>
+  <Msg id="delivered">
+    <en txt="Delivered"/>
+  </Msg>
+  <Msg id="empty">
+    <en txt="Empty"/>
+  </Msg>
+  <Msg id="loaded">
+    <en txt="Loaded"/>
+  </Msg>
+  <Msg id="maintenance">
+    <en txt="Maintenance"/>
+  </Msg>
+  <Msg id="boxcar">
+    <en txt="Boxcar"/>
+  </Msg>
+  <Msg id="gondola">
+    <en txt="Gondola"/>
+  </Msg>
+  <Msg id="flatcar">
+    <en txt="Flatcar"/>
+  </Msg>
+  <Msg id="reefer">
+    <en txt="Reefer"/>
+  </Msg>
+  <Msg id="stockcar">
+    <en txt="Stockcar"/>
+  </Msg>
+  <Msg id="tankcar">
+    <en txt="Tankcar"/>
+  </Msg>
+  <Msg id="wellcar">
+    <en txt="Wellcar"/>
+  </Msg>
+  <Msg id="hopper">
+    <en txt="Hopper"/>
+  </Msg>
+  <Msg id="caboose">
+    <en txt="Caboose"/>
+  </Msg>
+  <Msg id="autorack">
+    <en txt="Autorack"/>
+  </Msg>
+  <Msg id="autocarrier">
+    <en txt="Autocarrier"/>
+  </Msg>
+  <Msg id="logdumpcar">
+    <en txt="Logdumpcar"/>
+  </Msg>
+  <Msg id="coilcar">
+    <en txt="Coilcar"/>
+  </Msg>
+  <Msg id="coach">
+    <en txt="Coach"/>
+  </Msg>
+  <Msg id="lounge">
+    <en txt="Lounge"/>
+  </Msg>
+  <Msg id="dome">
+    <en txt="Dome"/>
+  </Msg>
+  <Msg id="express">
+    <en txt="Express"/>
+  </Msg>
+  <Msg id="dinner">
+    <en txt="Dinner"/>
+  </Msg>
+  <Msg id="sleeper">
+    <en txt="Sleeper"/>
+  </Msg>
+  <Msg id="baggage">
+    <en txt="Baggage"/>
+  </Msg>
+  <Msg id="postoffice">
+    <en txt="Postoffice"/>
+  </Msg>
 </Messages>

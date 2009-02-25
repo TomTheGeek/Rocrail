@@ -97,6 +97,12 @@ void CarDlg::initLabels() {
   m_labColor->SetLabel( wxGetApp().getMsg( "color" ) );
   m_Era->SetLabel( wxGetApp().getMsg( "era" ) );
 
+  m_Status->SetLabel( wxGetApp().getMsg( "status" ) );
+  m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
+  m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
+  m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
+
+
   // Details
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
   m_Type->SetString( 0, wxGetApp().getMsg( "goods" ) );
@@ -261,11 +267,6 @@ void CarDlg::evaluate(){
   wCar.setimage( m_Props, m_ImageName->GetValue().mb_str(wxConvUTF8) );
   wCar.setera( m_Props, m_Era->GetSelection() );
 
-  m_Status->SetLabel( wxGetApp().getMsg( "status" ) );
-  m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
-  m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
-  m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
-
   if( m_Status->GetSelection() == 0 )
     wCar.setstatus( m_Props, wCar.status_empty );
   else if( m_Status->GetSelection() == 1 )
@@ -404,7 +405,8 @@ void CarDlg::initSubType(){
     m_SubType->Append( wxGetApp().getMsg( wCar.passenger_baggage ), (void*)wCar.passenger_baggage );
     m_SubType->Append( wxGetApp().getMsg( wCar.passenger_postoffice ), (void*)wCar.passenger_postoffice );
   }
-  m_SubType->SetStringSelection( wxGetApp().getMsg( wCar.getsubtype( m_Props ) ) );
+  if( StrOp.len( wCar.getsubtype( m_Props ) ) > 0 )
+    m_SubType->SetStringSelection( wxGetApp().getMsg( wCar.getsubtype( m_Props ) ) );
 }
 
 
