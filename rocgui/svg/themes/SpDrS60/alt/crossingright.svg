@@ -1,0 +1,17 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Gerade --> 
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 63,12 L  63,19 L 0,19 z " />
+    <!-- Diagonale links unten rechts oben -->  
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 12,31 L 42,0 L 51,0 L 21,31 z " />
+    <!-- Bogen oben -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 21,11 L 31,11 L 37,5 L 35,6 L 33,7 L 31,8 L 28,9 L 25,10 L 21,11 z " />
+    <!-- Bogen unten -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 43,19 L 33,19 L 26,26 L 28,25 L 30,24 L 32,23 L 35,22 L 38,21 L 42,20 z " />
+    <!-- Ausleuchtung gerade gelb -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 55,14 L 55,17 L 8,17 z " />
+    <!-- Ausleuchtung diagonal gelb -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 19,26 L 41,3 L 43,3 L 44,4 L 44,5 L 22,28 L 20,28 L 19,27 z " />
+
+  </g>
+</svg>
