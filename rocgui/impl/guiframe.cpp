@@ -947,15 +947,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
   SetIcon(wxIcon(rocrail_xpm));
 
-  //return;
-// Dirk 18.4.2007
-// switch to editing  mode, if Rocgui is running offline
-  bool l_bOffline = wxGetApp().isOffline();
-  if (l_bOffline){
-    m_bEditMode = true;
-  }
-// End Dirk 18.4.2007
-// define accelerator keys for some frequently used functions
+  // define accelerator keys for some frequently used functions
   wxAcceleratorEntry acc_entries[64];
   acc_entries[0].Set(wxACCEL_CTRL, (int) 'Z', ME_Undo);
   acc_entries[1].Set(wxACCEL_CTRL, (int) 'N', ME_New);
@@ -1243,43 +1235,40 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
 
   // Create tool bar
-  wxToolBar *toolBar = CreateToolBar();
-  toolBar->SetToolBitmapSize(wxSize(16, 16));
+  m_ToolBar = CreateToolBar();
+  m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
 
-  toolBar->AddTool(ME_Connect, wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("connect") );
-  toolBar->AddTool(ME_Upload, wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("upload") );
-  if (l_bOffline){
-     toolBar->EnableTool(ME_Upload, false );
-  }
+  m_ToolBar->AddTool(ME_Connect, wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_Upload, wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("upload") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
-  toolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
-  toolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
+  m_ToolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
+  m_ToolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
 // Dirk 18.4.2007 added Undo to toolbar
-  toolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
-  toolBar->EnableTool(ME_Undo, false );
+  m_ToolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
+  m_ToolBar->EnableTool(ME_Undo, false );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), wxBitmap(getIconPath("poweron"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), wxBitmap(getIconPath("poweron"), wxBITMAP_TYPE_PNG),
                         wxNullBitmap, wxGetApp().getTip("poweron") );
-  toolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG),
                         wxNullBitmap, wxGetApp().getTip("automode") );
-  toolBar->AddTool(ME_AutoStop, wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_AutoStop, wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stopall") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
-  toolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
-  toolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
-  toolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
-  toolBar->AddTool(ME_RouteDlg, wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stctrl") );
+  m_ToolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
+  m_ToolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
+  m_ToolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
+  m_ToolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
+  m_ToolBar->AddTool(ME_RouteDlg, wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stctrl") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  m_ScaleComboBox = new wxComboBox(toolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
+  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
   m_ScaleComboBox->Append(_T("10"));
   m_ScaleComboBox->Append(_T("20"));
   m_ScaleComboBox->Append(_T("30"));
@@ -1300,17 +1289,17 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ScaleComboBox->Append(_T("180"));
   m_ScaleComboBox->Append(_T("190"));
   m_ScaleComboBox->Append(_T("200"));
-  toolBar->AddControl(m_ScaleComboBox);
+  m_ToolBar->AddControl(m_ScaleComboBox);
 
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_Update, wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("softwareupdates") );
-  toolBar->AddTool(ME_Help, wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(ME_Update, wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("softwareupdates") );
+  m_ToolBar->AddTool(ME_Help, wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("documentation") );
 
-  toolBar->Realize();
+  m_ToolBar->Realize();
 
-  toolBar->EnableTool(ME_Update, false);
+  m_ToolBar->EnableTool(ME_Update, false);
 
   // checking for new updates
   if(wGui.ischeckupdates(m_Ini)) {
@@ -1365,6 +1354,12 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   create();
   initJS();
+}
+
+
+void RocGuiFrame::setOffline( bool p_bOffline ) {
+  m_bEditMode = p_bOffline;
+  m_ToolBar->EnableTool(ME_Upload, !p_bOffline );
 }
 
 

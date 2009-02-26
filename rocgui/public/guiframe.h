@@ -230,13 +230,14 @@ public:
   void InitActiveLocs(wxCommandEvent& event);
   void initLocCtrlDialogs();
   wxString getIconPath(const char* iconfile);
-
+  void setOffline( bool p_bOffline );
 
 private:
   void Save();
   void initJS();
   void modifyLoc( iONode props );
 
+  wxToolBar *       m_ToolBar;
   wxBitmapButton*   m_LocImage;
   wxNotebook*       m_StatNotebook;
   wxNotebook*       m_PlanNotebook;

@@ -494,6 +494,11 @@ bool RocGui::OnInit() {
   int iWidth  = wWindow.getcx( wGui.getwindow( m_Ini ) );
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
+  m_Frame = new RocGuiFrame( _T("Rocrail"),
+        wxPoint(iX, iY),
+        wxSize(iWidth, iHeight), m_Ini
+        );
+
   // check for offline mode:
   if( !CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) && m_LocalPlan.Len() == 0 ) {
     // connect to the rocrail daemon:
@@ -518,10 +523,6 @@ bool RocGui::OnInit() {
     m_bOffline = false;
   }
 
-  m_Frame = new RocGuiFrame( _T("Rocrail"),
-        wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini
-        );
   m_bInit = true;
 
   if( CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) || m_LocalPlan.Len() > 0 ) {
@@ -549,6 +550,8 @@ bool RocGui::OnInit() {
     m_Frame->SetStatusText( getMsg("offline"), status_rcon );
     m_bOffline = true;
   }
+
+  m_Frame->setOffline(m_bOffline);
 
   // stop the splash screen:
   if( splash != NULL ) {
@@ -583,7 +586,7 @@ static Boolean __hasIDinList(iONode list, const char* newid ) {
 static void rocrailCallback( obj me, iONode node ) {
   RocGui* guiApp = (RocGui*)me;
 
-  TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback node=%s",
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s",
                NodeOp.getName( node ) );
 
   /* Plan */

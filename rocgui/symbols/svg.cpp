@@ -68,7 +68,7 @@ int svgReader::evalCoord( const char* d, int* x, int* y ) {
     else {
       if( lastwasnum ) {
         int coord = atoi(val);
-        TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "idx=%d %c=%d", idx, hadfirst?'y':'x', coord );
+        TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "idx=%d %c=%d", idx, hadfirst?'y':'x', coord );
         lastwasnum=0;
         if(hadfirst) {
           *y = coord;
@@ -92,7 +92,7 @@ bool svgReader::parsePoly( const char* d, int xpoints[], int ypoints[], int* cnt
     if( d[i] == 'M' ) {
       /* Moveto */
       i += evalCoord( d+i, &x, &y );
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "Moveto[%d] %d,%d", *cnt, x, y );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "Moveto[%d] %d,%d", *cnt, x, y );
       xpoints[*cnt]=x;
       ypoints[*cnt]=y;
       *cnt = *cnt+1;
@@ -100,7 +100,7 @@ bool svgReader::parsePoly( const char* d, int xpoints[], int ypoints[], int* cnt
     else if( d[i] == 'L' ) {
       /* Lineto */
       i += evalCoord( d+i, &x, &y );
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "Lineto[%d] %d,%d", *cnt, x, y );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "Lineto[%d] %d,%d", *cnt, x, y );
       xpoints[*cnt]=x;
       ypoints[*cnt]=y;
       *cnt = *cnt+1;
@@ -109,24 +109,24 @@ bool svgReader::parsePoly( const char* d, int xpoints[], int ypoints[], int* cnt
       /* arc */
       arc = true;
       i += evalCoord( d+i, &x, &y );
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
       xpoints[*cnt]=x;
       ypoints[*cnt]=y;
       *cnt = *cnt+1;
       i += evalCoord( d+i, &x, &y );
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
       xpoints[*cnt]=x;
       ypoints[*cnt]=y;
       *cnt = *cnt+1;
       i += evalCoord( d+i, &x, &y );
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "Arc[%d] %d,%d", *cnt, x, y );
       xpoints[*cnt]=x;
       ypoints[*cnt]=y;
       *cnt = *cnt+1;
     }
     else if( d[i] == 'z' ) {
       /* end */
-      TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "End of path, %d coordinates", *cnt );
+      TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "End of path, %d coordinates", *cnt );
       break;
     }
   }
@@ -205,7 +205,7 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
     sym->width  = NodeOp.getInt( svg, "width", 0 );
     sym->height = NodeOp.getInt( svg, "height", 0 );
     iONode g = NodeOp.findNode( svg, "g" );
-    TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "svg size = %d, %d", sym->width, sym->height );
+    TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "svg size = %d, %d", sym->width, sym->height );
     if( g != NULL ) {
       iONode path = NodeOp.findNode( g, "path" );
       while( path != NULL ) {
@@ -216,9 +216,9 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
           int xpoints[__MAXPOINTS];
           int ypoints[__MAXPOINTS];
           int cnt;
-          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "d=[%s]", d );
+          TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "d=[%s]", d );
           bool arc = parsePoly(d, xpoints, ypoints, &cnt);
-          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "%d wxPoints", cnt );
+          TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "%d wxPoints", cnt );
           addPoly2List( polyList, cnt, xpoints, ypoints, stroke, fill, arc );
         }
         path = NodeOp.findNextNode( g, path );
@@ -276,12 +276,12 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
         long size = FileOp.fileSize( pathfileName );
         char* svgStr = (char*)allocMem( size+1 );
         iOFile f = FileOp.inst( pathfileName, OPEN_READONLY );
-        TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "reading %s", pathfileName );
+        TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "reading %s", pathfileName );
         FileOp.read( f, svgStr, size );
         FileOp.base.del( f );
         svgSymbol* sym = parseSvgSymbol( svgStr );
         if(sym != NULL) {
-          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "add [%s] to symbolMap", key );
+          TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "add [%s] to symbolMap", key );
           MapOp.put( symbolMap, key, (obj)sym );
         }
         else {
