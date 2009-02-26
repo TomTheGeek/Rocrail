@@ -818,8 +818,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
     }
+
     modifyLoc( node );
+
     m_LC->updateLoc( node );
+
     for( int i = 0; i < m_ActiveLocs->GetNumberRows(); i++ ) {
       char* locid = StrOp.dup( m_ActiveLocs->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
       if( StrOp.equals( wLoc.getid( node ), locid ) ) {
@@ -850,6 +853,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         }
         StrOp.free( locid );
         break;
+      }
+      else {
+        StrOp.free( locid );
       }
     }
   }
@@ -2606,11 +2612,6 @@ void RocGuiFrame::OnMIC(wxCommandEvent& event){
 
 void RocGuiFrame::OnLocEvent( wxCommandEvent& event ) {
   UpdateActiveLocs( event );
-  // Get the copied node:
-  //iONode node = (iONode)event.GetClientData();
-  //dlg->modelEvent( node );
-  // Cleanup the node:
-  //node->base.del( node );
 }
 
 void RocGuiFrame::OnAutoEvent( wxCommandEvent& event ) {

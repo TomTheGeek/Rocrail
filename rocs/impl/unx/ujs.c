@@ -49,17 +49,17 @@ int rocs_js_init( iOJSData data, int* devicemap ) {
       close( data->jsfd[devs] );
     data->jsfd[devs] = 0;
     if( ( data->jsfd[devs] = open( jsdevname, O_RDONLY|O_NONBLOCK ) ) < 0 ) {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "JS Device \"%s\" not available", jsdevname );
+      //TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "JS Device \"%s\" not available", jsdevname );
       StrOp.free( jsdevname ); jsdevname = NULL;
       data->jsfd[devs] = 0;
       if( ( data->jsfd[devs] = open( jsdevname_alt, O_RDONLY|O_NONBLOCK ) ) < 0 ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "JS Device \"%s\" not available", jsdevname_alt );
+        //TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "JS Device \"%s\" not available", jsdevname_alt );
         StrOp.free( jsdevname_alt ); jsdevname_alt = NULL;
         data->jsfd[devs] = 0;
         continue;
       }
     }
-    
+
     {
       ioctl (data->jsfd[devs], JSIOCGVERSION, &version);
       ioctl (data->jsfd[devs], JSIOCGAXES, &axes);
@@ -88,7 +88,7 @@ Boolean rocs_js_read( iOJSData data, int devnr, int* type, int* number, int* val
   *number = 0;
   *value  = 0;
   *msec   = 0L;
-  
+
   if( data->jsfd[devnr] > 0 ) {
 
     if( read ( data->jsfd[devnr], &js, sizeof (struct js_event) ) != sizeof (struct js_event) ) {
@@ -100,7 +100,7 @@ Boolean rocs_js_read( iOJSData data, int devnr, int* type, int* number, int* val
       }
       return False;
     }
-    
+
     if( js.type & JS_EVENT_INIT ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "handle=%d, devnr=%d JS_EVENT_INIT",
           data->jsfd[devnr], devnr );
