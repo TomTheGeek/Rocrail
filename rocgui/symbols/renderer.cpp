@@ -612,7 +612,7 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
 
 wxPen* SymbolRenderer::getPen( const char* stroke ) {
   if( stroke == NULL )
-    return (wxPen*)wxBLACK_PEN;
+    return new wxPen(_T("black"));
   else
     return new wxPen(wxString(stroke,wxConvUTF8), 1, wxSOLID);
 }
@@ -1367,6 +1367,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
     dc.SetBrush( *yellow );
     dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
     dc.SetBrush( b );
+    delete yellow;
   }
   else if( StrOp.equals( state, wSignal.green ) ) {
     const wxBrush& b = dc.GetBrush();
@@ -1514,6 +1515,11 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     // restore previous color
     dc.SetTextForeground(tfc);
   }
+
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+#else
+  delete font;
+#endif
 }
 
 
@@ -1568,6 +1574,11 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const 
     dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, (32 * nrtracks)-3, 90.0 );
   else
     dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, 5, 0.0 );
+
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+#else
+  delete font;
+#endif
 }
 
 
@@ -1672,6 +1683,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool fill, bool occupied, const ch
   else
     dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 3, 5, 0.0 );
 
+  delete font;
 }
 
 
@@ -1780,10 +1792,12 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   Boolean sensor1 = wTurntable.isstate1( m_Props );
   Boolean sensor2 = wTurntable.isstate2( m_Props );
 
+  wxBrush* yellow = NULL;
+
   if( sensor1 && sensor2 )
     dc.SetBrush( *wxRED_BRUSH );
   else if( sensor1 || sensor2 ) {
-    wxBrush* yellow = new wxBrush( _T("yellow"), wxSOLID );
+    yellow = new wxBrush( _T("yellow"), wxSOLID );
     dc.SetBrush( *yellow );
   }
   else
@@ -1791,7 +1805,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
 
   dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos ) );
   dc.SetBrush( b );
-
+  if( yellow != NULL )
+    delete yellow;
 
 }
 
