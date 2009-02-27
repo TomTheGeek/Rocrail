@@ -778,9 +778,12 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
 // NOT reentrant!!!
 wxString RocGuiFrame::getIconPath(const char* iconfile) {
   if( wxGetApp().getIni() != NULL ) {
-    const char* iconpath = m_IconPath != NULL ? m_IconPath:wGui.geticonpath(wxGetApp().getIni());
+    const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
     static char path[256];
-    StrOp.fmtb( path, "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
+    if( m_IconPath != NULL )
+      StrOp.fmtb( path, "%s%c%s.png", m_IconPath, SystemOp.getFileSeparator(), iconfile );
+    else
+      StrOp.fmtb( path, "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
     if( !FileOp.exist(path) ) {
       char* str = StrOp.fmt( wxGetApp().getMsg("iconnotfound").mb_str(wxConvUTF8), path );
       int action = wxMessageDialog( this, wxString(str,wxConvUTF8), _T("Rocrail"), wxCANCEL | wxICON_ERROR ).ShowModal();
