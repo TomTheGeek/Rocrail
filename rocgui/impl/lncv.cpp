@@ -38,8 +38,6 @@
 
 #include "rocgui/public/lncv.h"
 
-#include "rocgui/dialogs/decoders/63350.h"
-
 #include "rocrail/wrapper/public/Program.h"
 
 
@@ -76,8 +74,6 @@ void LNCV::OnButton(wxCommandEvent& event)
   if ( event.GetEventObject() == m_ModuleDialog ) {
     int modid = atoi( m_ModuleKey->GetValue().mb_str(wxConvUTF8) );
     if(modid == 6335 || modid == 6334) {
-      Uhl_63350_Dlg* dlg = new Uhl_63350_Dlg((wxWindow*)m_Parent);
-      int rc= dlg->ShowModal();
     }
   }
   else if ( event.GetEventObject() == m_ModuleDetect ) {

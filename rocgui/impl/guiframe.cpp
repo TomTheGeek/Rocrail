@@ -83,7 +83,6 @@
 #include "rocgui/dialogs/mvtrackdlg.h"
 #include "rocgui/dialogs/timedactions.h"
 
-#include "rocgui/dialogs/decoders/63350.h"
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
 
@@ -2213,11 +2212,6 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
-  Uhl_63350_Dlg* dlg = new Uhl_63350_Dlg(this);
-  if( wxID_OK == dlg->ShowModal() ) {
-    /* Notify RocRail. */
-  }
-  dlg->Destroy();
 }
 
 void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {
