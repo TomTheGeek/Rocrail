@@ -6920,7 +6920,4 @@
   <Msg id="lock">
     <en txt="Lock"/>
   </Msg>
-  <Msg id="tracknumber">
-    <en txt="Track number"/>
-  </Msg>
 </Messages>
