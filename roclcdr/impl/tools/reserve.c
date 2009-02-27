@@ -59,7 +59,7 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
  * @param inst      LcDriver instance
  * @param gotoBlock goto block ID
  */
-Boolean reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute ) {
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute ) {
   iOLcDriverData data = Data(inst);
 
   iORoute    nextRoute = NULL;

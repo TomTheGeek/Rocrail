@@ -19,7 +19,7 @@
 */
 
 void unlockBlockGroup( iOLcDriver inst, iONode group);
-Boolean reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute );
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute );
 void listBlocks(iOLcDriver inst);
 void resetNext2( iOLcDriver inst, Boolean unLock );
 
@@ -37,3 +37,4 @@ void checkRouteFunction( iILcDriverInt inst, iORoute route, iIBlockBase block );
 void checkScheduleActions( iILcDriverInt inst, int state);
 Boolean checkScheduleEntryActions( iILcDriverInt inst );
 
+Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int scheduleIdx );

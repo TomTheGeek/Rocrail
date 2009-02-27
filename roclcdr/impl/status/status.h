@@ -31,4 +31,5 @@ void statusPre2In( iILcDriverInt inst );
 void statusIn( iILcDriverInt inst );
 void statusWait( iILcDriverInt inst );
 void statusTimer( iILcDriverInt inst );
+void statusWait4Event( iILcDriverInt inst );
 
