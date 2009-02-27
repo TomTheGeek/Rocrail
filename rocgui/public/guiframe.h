@@ -57,7 +57,7 @@ class RocGuiFrame : public wxFrame
 {
 public:
   iONode m_Ini;
-  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini);
+  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme);
   void create();
 
   void setOnline( bool online );
@@ -287,6 +287,7 @@ private:
   iOList m_LocCtrlList;
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
+  const char* m_IconPath;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };

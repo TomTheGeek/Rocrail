@@ -374,6 +374,8 @@ bool RocGui::OnInit() {
   tracelevel  debug   = CmdLnOp.hasKey( m_CmdLn, wCmdline.debug ) ? TRCLEVEL_DEBUG:(tracelevel)0;
   tracelevel  parse   = CmdLnOp.hasKey( m_CmdLn, wCmdline.parse ) ? TRCLEVEL_PARSE:(tracelevel)0;
   const char* tf      = CmdLnOp.getStr( m_CmdLn, wCmdline.trcfile );
+  const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
+  const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
 
   bool modview = CmdLnOp.hasKey( m_CmdLn, wCmdline.modview );
 
@@ -496,7 +498,7 @@ bool RocGui::OnInit() {
 
   m_Frame = new RocGuiFrame( _T("Rocrail"),
         wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini
+        wxSize(iWidth, iHeight), m_Ini, icons, theme
         );
 
   // check for offline mode:

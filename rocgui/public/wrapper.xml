@@ -29,6 +29,8 @@
     <const name="port" vt="string" val="-p" defval="*" range="*" remark="Specifies target port: -p [port]"/>
     <const name="tabsel" vt="string" val="-s" defval="-1" range="*" remark="Tab index for selection."/>
     <const name="modview" vt="string" val="-modview" defval="false" remark="Activates model overview panel."/>
+    <const name="icons" vt="string" val="-icons" defval="" range="*" remark="Alternative icon path"/>
+    <const name="theme" vt="string" val="-theme" defval="" range="*" remark="Theme to use at startup"/>
   </Cmdline>
 
   <gui structname="GUI" wrappername="Gui">

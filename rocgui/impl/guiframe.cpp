@@ -778,7 +778,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
 // NOT reentrant!!!
 wxString RocGuiFrame::getIconPath(const char* iconfile) {
   if( wxGetApp().getIni() != NULL ) {
-    const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
+    const char* iconpath = m_IconPath != NULL ? m_IconPath:wGui.geticonpath(wxGetApp().getIni());
     static char path[256];
     StrOp.fmtb( path, "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
     if( !FileOp.exist(path) ) {
@@ -928,7 +928,7 @@ void RocGuiFrame::setDigintText( const char* text ) {
 // ----------------------------------------------------------------------------
 
 // frame constructor
-RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini)
+RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
   m_Ini = ini;
@@ -947,6 +947,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocCtrlList = ListOp.inst();
   m_LocDlgMap = MapOp.inst();
   m_bAutoMode = false;
+  m_IconPath = icons;
 
   // set the frame icon
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
@@ -1316,7 +1317,11 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   // read the svg symbols:
   svgReader* svg = new svgReader();
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
+  if( theme != NULL )
+    m_SymbolMap = svg->readSvgSymbols( theme, NULL );
+  else
+    m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
+
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath2( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath3( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath4( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
