@@ -51,40 +51,6 @@ fi
 echo "Building rocrail-setup-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.exe"
 echo ""
 
-# Make server
-
-echo "Making Rocrail Server"
-
-cd rocs
-make clean
-make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
-cd ../rocint
-make clean
-make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
-cd ../rocrail
-make clean
-make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
-cd ../roclcdr
-make clean
-make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
-cd ../rocdigs
-make clean
-make TOOLPREFIX=i586-mingw32msvc- PLATFORM=WIN32 all
-
-echo "    Done"
-echo ""
-
-# Make Rocview
-
-echo "Making Rocview Client"
-
-cd ../rocgui
-make clean
-make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
-
-echo "    Done"
-echo ""
-
 # Make all
 
 echo "Making All"
