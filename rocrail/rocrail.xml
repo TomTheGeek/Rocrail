@@ -49,6 +49,7 @@
     <fun name="getIniFile" vt="const char*" remark="Current ini filename."/>
     <fun name="listThreads" vt="void" remark=""/>
     <fun name="getLibPath" vt="const char*" remark="Path to the rocrail libraries."/>
+    <fun name="getImgPath" vt="const char*" remark="Path to images."/>
     <fun name="getrevno" vt="int"/>
     <fun name="isCreateModplan" vt="Boolean"/>
     <data>
@@ -63,6 +64,7 @@
       <var name="consoleMode" vt="Boolean" remark=""/>
       <var name="szIniFile" vt="const char*"/>
       <var name="szLibPath" vt="const char*"/>
+      <var name="szImgPath" vt="const char*"/>
       <var name="stress" vt="Boolean"/>
       <var name="createmodplan" vt="Boolean"/>
       <var name="revno" vt="int"/>

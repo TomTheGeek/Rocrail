@@ -410,7 +410,7 @@ static void __callback( obj inst, iONode nodeA ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DataReq filename=[%s]", wDataReq.getfilename(nodeA) );
       if( wDataReq.gettype(nodeA) == wDataReq.image ) {
         iOFile f = NULL;
-        char* filename = StrOp.fmt( "%s%c%s", wRocRail.getimgpath(AppOp.getIni()),
+        char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
             SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", filename );
         f = FileOp.inst( filename, OPEN_READONLY);

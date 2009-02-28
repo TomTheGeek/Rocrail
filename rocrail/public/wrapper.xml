@@ -25,6 +25,7 @@
     <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
     <const name="planfile" vt="string" val="-x" defval="" range="*" remark="Specifies plan filename"/>
     <const name="libpath" vt="string" val="-l" defval="" range="*" remark="Location of the rocrail libraries: -l [path]"/>
+    <const name="imgpath" vt="string" val="-img" defval="" range="*" remark="Location of images: -img [path]"/>
     <const name="debug" vt="string" val="-debug" defval="false" remark="Activates debug tracelevel."/>
     <const name="byte" vt="string" val="-byte" defval="false" remark="Activates byte tracelevel."/>
     <const name="monitor" vt="string" val="-monitor" defval="false" remark="Activates monitor tracelevel."/>
