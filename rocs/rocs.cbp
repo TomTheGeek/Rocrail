@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rocs" />
+		<Option makefile="makefile" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="rocs" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="clean">
+				<Option output="rocs" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="gen/addlang.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/lang2po.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/mdoc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/mergelang.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/ogen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/po2lang.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/wgen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gen/xml2cstr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/attr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/cmdln.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/converter.h" />
+		<Unit filename="impl/dir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/doc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ebcdic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/errstr.h" />
+		<Unit filename="impl/event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/gzip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/js.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/lib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/mime64.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/msg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/mutex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/node.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/res.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/serial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/socket.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/stats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/str.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/string.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/strtok.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/system.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/thread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/trace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/udir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/uevent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/ujs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/ulib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/umutex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/userial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/usocket.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/usystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx/uthread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/serial-sample/macosx-serial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/udir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/uevent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/ujs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/ulib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/umutex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/userial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/usocket.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/usystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/unx_mac/uthread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wdir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wevent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wjs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wmutex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wserial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wsocket.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wsystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/win/wthread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/wrpinf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/wutils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/xmlh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="public/objbase.h" />
+		<Unit filename="public/rocs.h" />
+		<Unit filename="public/rocsdirent.h" />
+		<Unit filename="public/stats.h" />
+		<Unit filename="public/wutils.h" />
+		<Unit filename="rocs.xml" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

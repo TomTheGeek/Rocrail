@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rocview" />
+		<Option makefile="makefile" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="rocview" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="clean">
+				<Option output="rocview" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="dialogs/actionsctrldlg.cpp" />
+		<Unit filename="dialogs/actionsctrldlg.h" />
+		<Unit filename="dialogs/basedlg.cpp" />
+		<Unit filename="dialogs/basedlg.h" />
+		<Unit filename="dialogs/blockdialog.cpp" />
+		<Unit filename="dialogs/blockdialog.h" />
+		<Unit filename="dialogs/blockgroupingdlg.cpp" />
+		<Unit filename="dialogs/blockgroupingdlg.h" />
+		<Unit filename="dialogs/cardlg.cpp" />
+		<Unit filename="dialogs/cardlg.h" />
+		<Unit filename="dialogs/cardlggen.cpp" />
+		<Unit filename="dialogs/cardlggen.h" />
+		<Unit filename="dialogs/clockdialog.cpp" />
+		<Unit filename="dialogs/clockdialog.h" />
+		<Unit filename="dialogs/connectiondialog.cpp" />
+		<Unit filename="dialogs/connectiondialog.h" />
+		<Unit filename="dialogs/controllers/barjutdlg.cpp" />
+		<Unit filename="dialogs/controllers/barjutdlg.h" />
+		<Unit filename="dialogs/controllers/ddxdlg.cpp" />
+		<Unit filename="dialogs/controllers/ddxdlg.h" />
+		<Unit filename="dialogs/controllers/dinamodlg.cpp" />
+		<Unit filename="dialogs/controllers/dinamodlg.h" />
+		<Unit filename="dialogs/controllers/ecosdlg.cpp" />
+		<Unit filename="dialogs/controllers/ecosdlg.h" />
+		<Unit filename="dialogs/controllers/gendlg.cpp" />
+		<Unit filename="dialogs/controllers/gendlg.h" />
+		<Unit filename="dialogs/controllers/hsi88dlg.cpp" />
+		<Unit filename="dialogs/controllers/hsi88dlg.h" />
+		<Unit filename="dialogs/controllers/lenzdlg.cpp" />
+		<Unit filename="dialogs/controllers/lenzdlg.h" />
+		<Unit filename="dialogs/controllers/loconetdlg.cpp" />
+		<Unit filename="dialogs/controllers/loconetdlg.h" />
+		<Unit filename="dialogs/controllers/opendcc.cpp" />
+		<Unit filename="dialogs/controllers/opendcc.h" />
+		<Unit filename="dialogs/controllers/srcpdlg.cpp" />
+		<Unit filename="dialogs/controllers/srcpdlg.h" />
+		<Unit filename="dialogs/decconfigdlg.cpp" />
+		<Unit filename="dialogs/decconfigdlg.h" />
+		<Unit filename="dialogs/decconfigdlggen.cpp" />
+		<Unit filename="dialogs/decconfigdlggen.h" />
+		<Unit filename="dialogs/decoders/dtopswdlg.cpp" />
+		<Unit filename="dialogs/decoders/dtopswdlg.h" />
+		<Unit filename="dialogs/decoders/dtopswdlggen.cpp" />
+		<Unit filename="dialogs/decoders/dtopswdlggen.h" />
+		<Unit filename="dialogs/decoders/locoio.cpp" />
+		<Unit filename="dialogs/decoders/locoio.h" />
+		<Unit filename="dialogs/decoders/opendecoder.cpp" />
+		<Unit filename="dialogs/decoders/opendecoder.h" />
+		<Unit filename="dialogs/decoders/uhl633x0dlg.cpp" />
+		<Unit filename="dialogs/decoders/uhl633x0dlg.h" />
+		<Unit filename="dialogs/decoders/uhl633x0gen.cpp" />
+		<Unit filename="dialogs/decoders/uhl633x0gen.h" />
+		<Unit filename="dialogs/feedbackdialog.cpp" />
+		<Unit filename="dialogs/feedbackdialog.h" />
+		<Unit filename="dialogs/fundialog.cpp" />
+		<Unit filename="dialogs/fundialog.h" />
+		<Unit filename="dialogs/infodialog.cpp" />
+		<Unit filename="dialogs/infodialog.h" />
+		<Unit filename="dialogs/locationsdlg.cpp" />
+		<Unit filename="dialogs/locationsdlg.h" />
+		<Unit filename="dialogs/loccontroldlg.cpp" />
+		<Unit filename="dialogs/loccontroldlg.h" />
+		<Unit filename="dialogs/locdialog.cpp" />
+		<Unit filename="dialogs/locdialog.h" />
+		<Unit filename="dialogs/locseldlg.cpp" />
+		<Unit filename="dialogs/locseldlg.h" />
+		<Unit filename="dialogs/modplandlg.cpp" />
+		<Unit filename="dialogs/modplandlg.h" />
+		<Unit filename="dialogs/modulepropsdlg.cpp" />
+		<Unit filename="dialogs/modulepropsdlg.h" />
+		<Unit filename="dialogs/mvtrackdlg.cpp" />
+		<Unit filename="dialogs/mvtrackdlg.h" />
+		<Unit filename="dialogs/operatordlg.cpp" />
+		<Unit filename="dialogs/operatordlg.h" />
+		<Unit filename="dialogs/operatordlggen.cpp" />
+		<Unit filename="dialogs/operatordlggen.h" />
+		<Unit filename="dialogs/outputdialog.cpp" />
+		<Unit filename="dialogs/outputdialog.h" />
+		<Unit filename="dialogs/planpaneldlg.cpp" />
+		<Unit filename="dialogs/planpaneldlg.h" />
+		<Unit filename="dialogs/rocguiinidlg.cpp" />
+		<Unit filename="dialogs/rocguiinidlg.h" />
+		<Unit filename="dialogs/rocrailinidialog.cpp" />
+		<Unit filename="dialogs/rocrailinidialog.h" />
+		<Unit filename="dialogs/routedialog.cpp" />
+		<Unit filename="dialogs/routedialog.h" />
+		<Unit filename="dialogs/scheduledialog.cpp" />
+		<Unit filename="dialogs/scheduledialog.h" />
+		<Unit filename="dialogs/selectdialog.cpp" />
+		<Unit filename="dialogs/selectdialog.h" />
+		<Unit filename="dialogs/seltabdlg.cpp" />
+		<Unit filename="dialogs/seltabdlg.h" />
+		<Unit filename="dialogs/seltabtrackdlg.cpp" />
+		<Unit filename="dialogs/seltabtrackdlg.h" />
+		<Unit filename="dialogs/signaldialog.cpp" />
+		<Unit filename="dialogs/signaldialog.h" />
+		<Unit filename="dialogs/softwareupdates.cpp" />
+		<Unit filename="dialogs/softwareupdates.h" />
+		<Unit filename="dialogs/speedcurvedlg.cpp" />
+		<Unit filename="dialogs/speedcurvedlg.h" />
+		<Unit filename="dialogs/speedcurvedlggen.cpp" />
+		<Unit filename="dialogs/speedcurvedlggen.h" />
+		<Unit filename="dialogs/switchdialog.cpp" />
+		<Unit filename="dialogs/switchdialog.h" />
+		<Unit filename="dialogs/textdialog.cpp" />
+		<Unit filename="dialogs/textdialog.h" />
+		<Unit filename="dialogs/timedactions.cpp" />
+		<Unit filename="dialogs/timedactions.h" />
+		<Unit filename="dialogs/trackdialog.cpp" />
+		<Unit filename="dialogs/trackdialog.h" />
+		<Unit filename="dialogs/tttrackdialog.cpp" />
+		<Unit filename="dialogs/tttrackdialog.h" />
+		<Unit filename="dialogs/turntabledialog.cpp" />
+		<Unit filename="dialogs/turntabledialog.h" />
+		<Unit filename="dialogs/undodlg.cpp" />
+		<Unit filename="dialogs/undodlg.h" />
+		<Unit filename="dialogs/waybilldlg.cpp" />
+		<Unit filename="dialogs/waybilldlg.h" />
+		<Unit filename="dialogs/waybilldlggen.cpp" />
+		<Unit filename="dialogs/waybilldlggen.h" />
+		<Unit filename="impl/basepanel.cpp" />
+		<Unit filename="impl/clock.cpp" />
+		<Unit filename="impl/cv.cpp" />
+		<Unit filename="impl/guiapp.cpp" />
+		<Unit filename="impl/guiframe.cpp" />
+		<Unit filename="impl/item.cpp" />
+		<Unit filename="impl/jssupport.cpp" />
+		<Unit filename="impl/lc.cpp" />
+		<Unit filename="impl/lncv.cpp" />
+		<Unit filename="impl/modpanel.cpp" />
+		<Unit filename="impl/planpanel.cpp" />
+		<Unit filename="impl/routedlg.cpp" />
+		<Unit filename="impl/statbar.cpp" />
+		<Unit filename="impl/swdlg.cpp" />
+		<Unit filename="impl/wxgui.rc" />
+		<Unit filename="public/base.h" />
+		<Unit filename="public/basepanel.h" />
+		<Unit filename="public/clock.h" />
+		<Unit filename="public/cv.h" />
+		<Unit filename="public/guiapp.h" />
+		<Unit filename="public/guiframe.h" />
+		<Unit filename="public/item.h" />
+		<Unit filename="public/jssupport.h" />
+		<Unit filename="public/lc.h" />
+		<Unit filename="public/lncv.h" />
+		<Unit filename="public/modpanel.h" />
+		<Unit filename="public/planpanel.h" />
+		<Unit filename="public/routedlg.h" />
+		<Unit filename="public/statbar.h" />
+		<Unit filename="public/swdlg.h" />
+		<Unit filename="rocgui.rc" />
+		<Unit filename="symbols/renderer.cpp" />
+		<Unit filename="symbols/renderer.h" />
+		<Unit filename="symbols/staticsymbols.h" />
+		<Unit filename="symbols/svg.cpp" />
+		<Unit filename="symbols/svg.h" />
+		<Unit filename="symbols/sym.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
