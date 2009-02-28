@@ -115,6 +115,7 @@ class wxGrid;
 #define ID_RADIOBOX_ENGINE 10002
 #define ID_RADIOBOX_CARGO 10003
 #define ID_PANEL_FUNCTIONS 10035
+#define ID_BUTTON_F0 10061
 #define wxID_STATIC_F1 10044
 #define ID_TEXTCTRL_F1 10036
 #define ID_BUTTON_F1 10037
@@ -139,7 +140,6 @@ class wxGrid;
 #define ID_BUTTON_F10 10048
 #define ID_BUTTON_F11 10054
 #define ID_BUTTON_F12 10057
-#define ID_CHECKBOX_LC_LIGHTS 10204
 #define ID_PANEL_LOC_CONSIST 10200
 #define ID_BUTTON_LOC_CONSIST_ADD 10201
 #define ID_BUTTON_LOC_CONSIST_DELETE 10213
@@ -223,6 +223,9 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOC_REGULATED
     void OnLocRegulatedClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F0
+    void OnButtonF0Click( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F1
     void OnButtonF1Click( wxCommandEvent& event );
@@ -387,6 +390,10 @@ public:
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;
+    wxStaticText* m_Label_f0;
+    wxTextCtrl* m_f0;
+    wxSpinCtrl* m_TimerF0;
+    wxButton* m_Button_f0;
     wxStaticText* m_Label_f1;
     wxTextCtrl* m_f1;
     wxSpinCtrl* m_TimerF1;
@@ -435,7 +442,6 @@ public:
     wxTextCtrl* m_f12;
     wxSpinCtrl* m_TimerF12;
     wxButton* m_Button_f12;
-    wxCheckBox* m_Lights;
     wxPanel* m_ConsistsPanel;
     wxStaticBox* m_labDetails;
     wxCheckBox* m_LightsOff;

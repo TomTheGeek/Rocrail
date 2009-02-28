@@ -120,6 +120,8 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="impl/web/webme.h" />
+		<Unit filename="public/wrapper.xml" />
+		<Unit filename="rocrail.xml" />
 		<Extensions>
 			<code_completion />
 			<envvars />

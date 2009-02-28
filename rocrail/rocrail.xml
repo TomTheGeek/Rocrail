@@ -419,6 +419,7 @@
       <var name="drvSpeed" vt="int"/>
       <var name="step" vt="int"/>
       <var name="speedstep" vt="int"/>
+      <var name="fn0" vt="Boolean"/>
       <var name="fn1" vt="Boolean"/>
       <var name="fn2" vt="Boolean"/>
       <var name="fn3" vt="Boolean"/>
@@ -433,7 +434,7 @@
       <var name="fn12" vt="Boolean"/>
       <var name="timedfn" vt="int"/>
       <var name="fntimer" vt="int"/>
-      <var name="fxtimer[12]" vt="int"/>
+      <var name="fxtimer[13]" vt="int"/>
       <var name="fnevent" vt="int"/>
       <var name="fneventblock" vt="char*"/>
       <var name="ignevt" vt="int"/>
@@ -1227,7 +1228,7 @@
     </struct>
   </object>
 
-  
+
   <object name="Display" use="node,js" remark="Display object for LCD">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Display node"/>
@@ -1419,7 +1420,7 @@
       <param name="cx" vt="int"/>
       <param name="cy" vt="int"/>
     </fun>
-    
+
     <data>
       <var name="module" vt="iONode"/>
     </data>

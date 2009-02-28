@@ -311,32 +311,35 @@ static void __engine( iOLoc inst, iONode cmd ) {
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       /* function timers */
+      if( !data->fn0 && wFunCmd.isf0( cmd ) )
+        data->fxtimer[0] = __getFnTimer( inst, 0);
       if( !data->fn1 && wFunCmd.isf1( cmd ) )
-        data->fxtimer[0] = __getFnTimer( inst, 1);
+        data->fxtimer[1] = __getFnTimer( inst, 1);
       if( !data->fn2 && wFunCmd.isf2( cmd ) )
-        data->fxtimer[1] = __getFnTimer( inst, 2);
+        data->fxtimer[2] = __getFnTimer( inst, 2);
       if( !data->fn3 && wFunCmd.isf3( cmd ) )
-        data->fxtimer[2] = __getFnTimer( inst, 3);
+        data->fxtimer[3] = __getFnTimer( inst, 3);
       if( !data->fn4 && wFunCmd.isf4( cmd ) )
-        data->fxtimer[3] = __getFnTimer( inst, 4);
+        data->fxtimer[4] = __getFnTimer( inst, 4);
       if( !data->fn5 && wFunCmd.isf5( cmd ) )
-        data->fxtimer[4] = __getFnTimer( inst, 5);
+        data->fxtimer[5] = __getFnTimer( inst, 5);
       if( !data->fn6 && wFunCmd.isf6( cmd ) )
-        data->fxtimer[5] = __getFnTimer( inst, 6);
+        data->fxtimer[6] = __getFnTimer( inst, 6);
       if( !data->fn7 && wFunCmd.isf7( cmd ) )
-        data->fxtimer[6] = __getFnTimer( inst, 7);
+        data->fxtimer[7] = __getFnTimer( inst, 7);
       if( !data->fn8 && wFunCmd.isf8( cmd ) )
-        data->fxtimer[7] = __getFnTimer( inst, 8);
+        data->fxtimer[8] = __getFnTimer( inst, 8);
       if( !data->fn9 && wFunCmd.isf9( cmd ) )
-        data->fxtimer[8] = __getFnTimer( inst, 9);
+        data->fxtimer[9] = __getFnTimer( inst, 9);
       if( !data->fn10 && wFunCmd.isf10( cmd ) )
-        data->fxtimer[9] = __getFnTimer( inst, 10);
+        data->fxtimer[10] = __getFnTimer( inst, 10);
       if( !data->fn11 && wFunCmd.isf11( cmd ) )
-        data->fxtimer[10] = __getFnTimer( inst, 11);
+        data->fxtimer[11] = __getFnTimer( inst, 11);
       if( !data->fn12 && wFunCmd.isf12( cmd ) )
-        data->fxtimer[11] = __getFnTimer( inst, 12);
+        data->fxtimer[12] = __getFnTimer( inst, 12);
 
       /* save the function status: */
+      data->fn0 = wFunCmd.isf0( cmd );
       data->fn1 = wFunCmd.isf1( cmd );
       data->fn2 = wFunCmd.isf2( cmd );
       data->fn3 = wFunCmd.isf3( cmd );
@@ -350,11 +353,11 @@ static void __engine( iOLoc inst, iONode cmd ) {
       data->fn11 = wFunCmd.isf11( cmd );
       data->fn12 = wFunCmd.isf12( cmd );
 
-      if( data->timedfn > 0 && wFunCmd.gettimedfn( cmd ) > 0 ) {
+      if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 ) {
         /* reset previous timed function */
         __resetTimedFunction(inst, cmd, 0);
       }
-      if( wFunCmd.gettimedfn( cmd ) > 0 ) {
+      if( wFunCmd.gettimedfn( cmd ) >= 0 ) {
         data->timedfn = wFunCmd.gettimedfn( cmd );
         data->fntimer = wFunCmd.gettimer( cmd );
 
@@ -622,11 +625,12 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   iONode fncmd = cmd==NULL?NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE ):cmd;
   int timedfn = data->timedfn;
 
-  if( function > 0 )
+  if( function >= 0 )
     timedfn = function;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", data->timedfn );
   wFunCmd.setid( fncmd, wLoc.getid(data->props) );
+  wFunCmd.setf0( fncmd, timedfn==0?False:data->fn0 );
   wFunCmd.setf1( fncmd, timedfn==1?False:data->fn1 );
   wFunCmd.setf2( fncmd, timedfn==2?False:data->fn2 );
   wFunCmd.setf3( fncmd, timedfn==3?False:data->fn3 );
@@ -639,7 +643,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   wFunCmd.setf10( fncmd, timedfn==10?False:data->fn10 );
   wFunCmd.setf11( fncmd, timedfn==11?False:data->fn11 );
   wFunCmd.setf12( fncmd, timedfn==12?False:data->fn12 );
-  data->timedfn = 0;
+  data->timedfn = -1;
   return fncmd;
 }
 
@@ -730,7 +734,7 @@ static void __runner( void* threadinst ) {
         }
       }
 
-      if( fncmd == NULL && data->timedfn > 0 && data->fntimer > 0 ) {
+      if( fncmd == NULL && data->timedfn >= 0 && data->fntimer >= 0 ) {
         data->fntimer--;
         if( data->fntimer == 0 ) {
           fncmd = __resetTimedFunction(loc, NULL, 0);
@@ -902,12 +906,13 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timedfn=%d fnevent=%d fnblock=%s evt=%d",
         data->timedfn, data->fnevent, data->fneventblock, evt );
-    if( data->timedfn > 0 && data->fnevent > 0 && data->fneventblock != NULL ) {
+    if( data->timedfn >= 0 && data->fnevent > 0 && data->fneventblock != NULL ) {
       if( StrOp.equals(data->fneventblock, block->base.id(block))) {
         if( data->fnevent == evt || data->fnevent == evt ) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", data->timedfn );
           wFunCmd.setid( cmd, LocOp.getId( inst ) );
+          wFunCmd.setf0( cmd, data->fn0 );
           wFunCmd.setf1( cmd, data->fn1 );
           wFunCmd.setf2( cmd, data->fn2 );
           wFunCmd.setf3( cmd, data->fn3 );
@@ -921,6 +926,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
           wFunCmd.setf11( cmd, data->fn11 );
           wFunCmd.setf12( cmd, data->fn12 );
           switch( data->timedfn ) {
+           case 0: wFunCmd.setf0( cmd, False ); data->fn0 = False; break;
            case 1: wFunCmd.setf1( cmd, False ); data->fn1 = False; break;
            case 2: wFunCmd.setf2( cmd, False ); data->fn2 = False; break;
            case 3: wFunCmd.setf3( cmd, False ); data->fn3 = False; break;

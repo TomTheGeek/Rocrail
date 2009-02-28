@@ -43,16 +43,17 @@ void checkRouteFunction( iILcDriverInt inst, iORoute route, iIBlockBase block ) 
   const char* deactivationevent = "none";
   int fnaction = route->getFunction(route, &activationtime, &deactivationevent);
   const char* blockid = block->base.id(block);
-  
+
   /* check for a function command */
-  if( fnaction > 0 ) {
+  if( fnaction >= 0 ) {
     iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, 
-        "function [%d] activated, event=[%s] block=[%s] time[%d]", 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "function [%d] activated, event=[%s] block=[%s] time[%d]",
         fnaction, deactivationevent, blockid, activationtime );
     wFunCmd.setid( cmd, data->loc->getId(data->loc) );
     data->loc->getFunctionStatus(data->loc, cmd);
-    
+
+    wFunCmd.setf0( cmd, fnaction==0?True:wFunCmd.isf0( cmd ) );
     wFunCmd.setf1( cmd, fnaction==1?True:wFunCmd.isf1( cmd ) );
     wFunCmd.setf2( cmd, fnaction==2?True:wFunCmd.isf2( cmd ) );
     wFunCmd.setf3( cmd, fnaction==3?True:wFunCmd.isf3( cmd ) );
@@ -76,8 +77,8 @@ void checkRouteFunction( iILcDriverInt inst, iORoute route, iIBlockBase block ) 
     wFunCmd.seteventblock( cmd, block->base.id(block) );
     data->loc->cmd( data->loc, cmd);
   }
-  
-  
+
+
 }
 
 
