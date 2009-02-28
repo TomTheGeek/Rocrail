@@ -271,6 +271,9 @@ private:
 
   iOMutex m_muxInitActiveLocs;
 
+  const char* m_IconPath;
+  const char* m_ThemePath;
+
   bool  m_bLocoBook;
   bool  m_bFill;
   bool  m_bShowID;
@@ -289,8 +292,6 @@ private:
   iOList m_LocCtrlList;
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
-  const char* m_IconPath;
-  const char* m_ThemePath;
 
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

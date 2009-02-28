@@ -775,21 +775,24 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   }
 }
 
-// NOT reentrant!!!
+
 wxString RocGuiFrame::getIconPath(const char* iconfile) {
   if( wxGetApp().getIni() != NULL ) {
     const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
-    static char path[256];
-    if( m_IconPath != NULL )
-      StrOp.fmtb( path, "%s%c%s.png", m_IconPath, SystemOp.getFileSeparator(), iconfile );
+    char* path = NULL;
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
+    if( m_IconPath != NULL ) {
+      path = StrOp.fmt( "%s%c%s.png", m_IconPath, SystemOp.getFileSeparator(), iconfile );
+    }
     else
-      StrOp.fmtb( path, "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
+      path = StrOp.fmt( "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
     if( !FileOp.exist(path) ) {
       char* str = StrOp.fmt( wxGetApp().getMsg("iconnotfound").mb_str(wxConvUTF8), path );
       int action = wxMessageDialog( this, wxString(str,wxConvUTF8), _T("Rocrail"), wxCANCEL | wxICON_ERROR ).ShowModal();
       StrOp.free(str);
       //exit(-1);
     }
+    StrOp.free(path);
     return wxString(path,wxConvUTF8);
   }
   else
@@ -953,12 +956,12 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_IconPath           = icons;
   m_ThemePath          = theme;
 
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
 }
 
 void RocGuiFrame::initFrame() {
-  // set the frame icon
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ThemePath=0x%08X", m_ThemePath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "init Frame..." );
   SetIcon(wxIcon(rocrail_xpm));
 
   // define accelerator keys for some frequently used functions
