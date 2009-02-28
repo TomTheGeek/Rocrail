@@ -231,6 +231,8 @@ public:
   void initLocCtrlDialogs();
   wxString getIconPath(const char* iconfile);
   void setOffline( bool p_bOffline );
+  void initFrame();
+
 
 private:
   void Save();
@@ -288,6 +290,8 @@ private:
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
   const char* m_IconPath;
+  const char* m_ThemePath;
+
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };

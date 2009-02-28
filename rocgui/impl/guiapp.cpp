@@ -496,10 +496,10 @@ bool RocGui::OnInit() {
   int iWidth  = wWindow.getcx( wGui.getwindow( m_Ini ) );
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
-  m_Frame = new RocGuiFrame( _T("Rocrail"),
-        wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini, icons, theme
-        );
+  m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
+        wxSize(iWidth, iHeight), m_Ini, icons, theme );
+  m_Frame->initFrame();
+
 
   // check for offline mode:
   if( !CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) && m_LocalPlan.Len() == 0 ) {

@@ -934,24 +934,29 @@ void RocGuiFrame::setDigintText( const char* text ) {
 RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
-  m_Ini = ini;
-  m_WarningPanel = NULL;
-  m_MonitorPanel = NULL;
-  m_bEditMode = false;
+  m_Ini                = ini;
+  m_WarningPanel       = NULL;
+  m_MonitorPanel       = NULL;
+  m_bEditMode          = false;
   m_bServerConsoleMode = false;
-  m_LocID = NULL;
-  m_iLcRowSelection = 0;
-  m_SymbolMap = NULL;
-  m_LocalPlan = _T("");
-  m_LocoIO = NULL;
-  m_DTOpSw = NULL;
-  m_RocrailIniDlg = NULL;
-  m_ModPanel = NULL;
-  m_LocCtrlList = ListOp.inst();
-  m_LocDlgMap = MapOp.inst();
-  m_bAutoMode = false;
-  m_IconPath = icons;
+  m_LocID              = NULL;
+  m_iLcRowSelection    = 0;
+  m_SymbolMap          = NULL;
+  m_LocalPlan          = _T("");
+  m_LocoIO             = NULL;
+  m_DTOpSw             = NULL;
+  m_RocrailIniDlg      = NULL;
+  m_ModPanel           = NULL;
+  m_LocCtrlList        = ListOp.inst();
+  m_LocDlgMap          = MapOp.inst();
+  m_bAutoMode          = false;
+  m_IconPath           = icons;
+  m_ThemePath          = theme;
 
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
+}
+
+void RocGuiFrame::initFrame() {
   // set the frame icon
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
   SetIcon(wxIcon(rocrail_xpm));
@@ -1320,8 +1325,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   // read the svg symbols:
   svgReader* svg = new svgReader();
-  if( theme != NULL )
-    m_SymbolMap = svg->readSvgSymbols( theme, NULL );
+  if( m_ThemePath != NULL )
+    m_SymbolMap = svg->readSvgSymbols( m_ThemePath, NULL );
   else
     m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
 
