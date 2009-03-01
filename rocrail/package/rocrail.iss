@@ -68,12 +68,12 @@ Source: "..\..\winbin\clock.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mcs2.dll"; DestDir: "{app}"
 Source: "..\..\winbin\barjut.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
-Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist
-Source: "neustadt.xml"; DestDir: "{userdocs}\Rocrail"
+Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "neustadt.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
-Source: "rocrail.ini"; DestDir: "{userdocs}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist
-Source: "rocgui.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocguiini; Flags: onlyifdoesntexist
-Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images;
+Source: "rocrail.ini"; DestDir: "{userdocs}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "rocgui.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocguiini; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "..\..\rocgui\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
 Source: "..\..\rocgui\svg\themes\Accessories\*.*"; DestDir: "{app}\svg\themes\Accessories"; Tasks: themes;
