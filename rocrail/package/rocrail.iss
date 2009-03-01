@@ -24,7 +24,6 @@ Name: icons; Description: "Rocview icons"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
 Name: symbols; Description: "WebClient Symbols"
-Name: doc; Description: "Documentation"
 
 [Run]
 Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
@@ -86,8 +85,7 @@ Source: "..\..\rocgui\svg\themes\NMBS-SNCB\*.*"; DestDir: "{app}\svg\themes\NMBS
 Source: "..\..\rocgui\svg\themes\NL\*.*"; DestDir: "{app}\svg\themes\NL"; Tasks: themes;
 Source: "..\..\rocgui\svg\themes\Roads\*.*"; DestDir: "{app}\svg\themes\Roads"; Tasks: themes;
 Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
-Source: "..\..\doc\*.*"; DestDir: "{app}\doc"; Tasks: doc;
-Source: "..\..\COPYING"; DestDir: "{app}"; Tasks: doc;
+Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
 Name: "{group}\Rocview"; Parameters: "-icons ""{app}\icons"" -theme ""{app}\svg\themes\SpDrS60"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
