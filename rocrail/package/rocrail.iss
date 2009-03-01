@@ -21,6 +21,7 @@ Name: demoplan; Description: "Demo plan"
 Name: rocrailini; Description: "Demo rocrail.ini"
 Name: rocguiini; Description: "Demo rocgui.ini"
 Name: icons; Description: "Rocview icons"
+Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
 Name: symbols; Description: "WebClient Symbols"
 Name: doc; Description: "Documentation"
@@ -68,11 +69,12 @@ Source: "..\..\winbin\clock.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mcs2.dll"; DestDir: "{app}"
 Source: "..\..\winbin\barjut.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
-Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist
-Source: "neustadt.xml"; DestDir: "{userappdata}\Rocrail"
-Source: "rocraild.ico"; DestDir: "{userappdata}\Rocrail"
-Source: "rocrail.ini"; DestDir: "{userappdata}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist
-Source: "rocgui.ini"; DestDir: "{userappdata}\Rocrail"; Tasks: rocguiini; Flags: onlyifdoesntexist
+Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist
+Source: "neustadt.xml"; DestDir: "{userdocs}\Rocrail"
+Source: "rocraild.ico"; DestDir: "{app}"
+Source: "rocrail.ini"; DestDir: "{userdocs}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist
+Source: "rocgui.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocguiini; Flags: onlyifdoesntexist
+Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images;
 Source: "..\..\rocgui\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
 Source: "..\..\rocgui\svg\themes\Accessories\*.*"; DestDir: "{app}\svg\themes\Accessories"; Tasks: themes;
@@ -88,7 +90,6 @@ Source: "..\..\doc\*.*"; DestDir: "{app}\doc"; Tasks: doc;
 Source: "..\..\COPYING"; DestDir: "{app}"; Tasks: doc;
 
 [Icons]
-Name: "{group}\Rocrail GUI"; Parameters: "-icons ""{app}\icons"" -theme ""{app}\svg\themes\SpDrS60"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocview.exe"
-Name: "{group}\Rocrail Server"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userappdata}\Rocrail\images"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocrail.exe"
-Name: "{group}\Documentation"; WorkingDir: "{app}"; Filename: "{app}\doc\index.html"
+Name: "{group}\Rocview"; Parameters: "-icons ""{app}\icons"" -theme ""{app}\svg\themes\SpDrS60"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
+Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userdocs}\Rocrail\images"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocrail.exe"
 
