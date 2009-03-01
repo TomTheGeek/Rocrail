@@ -14,5 +14,13 @@ if [ ! -e ~/rocrail/icons ] ; then
 	ln -s /opt/rocrail/icons ~/rocrail/icons
 fi
 
+if [ ! -e ~/rocrail/svg ] ; then
+	ln -s /opt/rocrail/svg ~/rocrail/svg
+fi
+
+if [ ! -e ~/rocrail/images ] ; then
+	cp -r /opt/rocrail/images ~/rocrail/images
+fi
+
 /opt/rocrail/rocview $1 $2 $3
 

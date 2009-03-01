@@ -4,5 +4,5 @@ Type=Application
 Terminal=true
 Exec=/opt/rocrail/rocrail.sh
 Icon=/opt/rocrail/rocraild.png
-Name=Rocrail Daemon
+Name=Rocrail
 Categories=Application;Rocrail;Game;
