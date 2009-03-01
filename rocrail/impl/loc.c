@@ -1666,6 +1666,7 @@ static iOLoc _inst( iONode props ) {
   data->props = props;
   data->cvMap = MapOp.inst();
   data->secondnextblock = wLoc.issecondnextblock( data->props );
+  data->timedfn = -1; /* function 0 is also used */
 
   /* reset velocity to zero */
   wLoc.setV( data->props, 0 );
