@@ -20,7 +20,7 @@ echo "Checking Parameters..."
 if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ]; then
   echo "Error: Missing parameters:"
   echo ""
-  echo "    Usage: makewin_full.sh <version> <patch> <type> <dist>"
+  echo "    Usage: makewin-full.sh <version> <patch> <type> <dist>"
   echo ""
   echo "    Example: \"makewin-full.sh 1.2 999 snapshot unicode\" will build "
   echo "    \"rocrail-setup-1.2.999-revXXX-snapshot-unicode.exe\" where \"XXX\" is "
@@ -115,22 +115,20 @@ echo "Creating Inno Setup installer file..."
 
 cd ../rocrail/package
 pwd
-sed s/\<BZR\>/$BAZAARREV/ < rocrail_template.iss > rocrail_temp2.iss
-mv rocrail_temp2.iss rocrail_temp.iss
+sed s/\<BZR\>/$BAZAARREV/ < rocrail-template.iss > rocrail-temp2.iss
+mv rocrail-temp2.iss rocrail-temp.iss
 
-sed s/\<VER\>/$VERSION/ < rocrail_temp.iss > rocrail_temp2.iss
-mv rocrail_temp2.iss rocrail_temp.iss
+sed s/\<VER\>/$VERSION/ < rocrail-temp.iss > rocrail-temp2.iss
+mv rocrail-temp2.iss rocrail-temp.iss
 
-sed s/\<PATCH\>/$PATCH/ < rocrail_temp.iss > rocrail_temp2.iss
-mv rocrail_temp2.iss rocrail_temp.iss
+sed s/\<PATCH\>/$PATCH/ < rocrail-temp.iss > rocrail-temp2.iss
+mv rocrail-temp2.iss rocrail-temp.iss
 
-sed s/\<DIST\>/$DIST/ < rocrail_temp.iss > rocrail_temp2.iss
-mv rocrail_temp2.iss rocrail_temp.iss
+sed s/\<DIST\>/$DIST/ < rocrail-temp.iss > rocrail-temp2.iss
+mv rocrail-temp2.iss rocrail-temp.iss
 
-sed s/\<TYPE\>/$TYPE/ < rocrail_temp.iss > rocrail_temp2.iss
-mv rocrail_temp2.iss rocrail_temp.iss
-
-cat rocrail_temp.iss
+sed s/\<TYPE\>/$TYPE/ < rocrail-temp.iss > rocrail-temp2.iss
+mv rocrail-temp2.iss rocrail-temp.iss
 
 echo "    Done"
 echo ""
@@ -140,8 +138,8 @@ echo ""
 echo "Using Wine to run Inno Setup..."
 echo ""
 
-wine "c:\\Program Files\\Inno Setup 5\\ISCC.exe" rocrail_temp.iss
-rm rocrail_temp.iss
+wine "c:\\Program Files\\Inno Setup 5\\ISCC.exe" rocrail-temp.iss
+rm rocrail-temp.iss
 
 echo "    Done"
 echo ""
