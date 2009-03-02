@@ -1,14 +1,14 @@
 #!/bin/sh
 #
-# makewin_full.sh -- Copyright 2009 Rocrail.net.  See www.rocrail.net for license details
+# makewin-full.sh -- Copyright 2009 Rocrail.net.  See www.rocrail.net for license details
 #
 
-# Check params
-# rocrail-setup-[version].[patch]-rev-[relname]-[dist].exe  (md5)
+echo ""
+echo "*** Rocrail makewin-full.sh starting (see www.rocrail.net)..."
+echo ""
 
-echo ""
-echo "*** Rocrail makewin_full.sh starting (see www.rocrail.net)..."
-echo ""
+# Check params
+# rocrail-setup-[version].[patch]-rev[revno]-[type]-[dist].exe  (md5)
 
 VERSION=$1
 PATCH=$2
@@ -22,7 +22,7 @@ if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ]; then
   echo ""
   echo "    Usage: makewin_full.sh <version> <patch> <type> <dist>"
   echo ""
-  echo "    Example: \"makewin_full.sh 1.2 999 snapshot unicode\" will build "
+  echo "    Example: \"makewin-full.sh 1.2 999 snapshot unicode\" will build "
   echo "    \"rocrail-setup-1.2.999-revXXX-snapshot-unicode.exe\" where \"XXX\" is "
   echo "    the Bazaar revision number or \"user\" if Bazaar is not installed."
   echo ""
@@ -55,7 +55,6 @@ echo ""
 
 echo "Making All"
 
-cd ..
 make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
 
 echo "    Done"
@@ -138,7 +137,8 @@ echo ""
 
 # Run Inno Setup via WINE
 
-echo Using Wine to run Inno Setup
+echo "Using Wine to run Inno Setup..."
+echo ""
 
 wine "c:\\Program Files\\Inno Setup 5\\ISCC.exe" rocrail_temp.iss
 rm rocrail_temp.iss
