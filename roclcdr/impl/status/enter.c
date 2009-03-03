@@ -191,7 +191,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
             wLoc.setV_hint( cmd, wLoc.climb );
           }
           else {
-            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route ) );
+            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route ) );
           }
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );

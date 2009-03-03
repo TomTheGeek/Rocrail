@@ -225,7 +225,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block V_hint [%s] (%s)", data->V_hint, onexit?"on exit":"on enter" );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] V_hint [%s] (%s)", block->base.id(block), data->V_hint, onexit?"on exit":"on enter" );
   return data->V_hint;
 }
 
