@@ -35,6 +35,7 @@
 #include "wx/progdlg.h"
 
 #include "rocs/public/node.h"
+#include "rocs/public/mutex.h"
 
 enum {
   GET_CV = 1000,
@@ -144,6 +145,7 @@ private:
     bool m_bCleanUpProgress;
     int m_Curve[28];
     int m_ConfigVal;
+    iOMutex m_TimerMutex;
 
     const char* m_Manu[256];
     wxWindow* m_Frame;

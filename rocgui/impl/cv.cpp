@@ -71,6 +71,7 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   m_CVcountAll = 0;
   m_CVoperation = 0;
   m_bCleanUpProgress = false;
+  m_TimerMutex = MutexOp.inst( NULL, True );
 
   for(int i = 0; i < 28; i++ ) {
     m_Curve[i] = 0;
@@ -879,6 +880,11 @@ void CV::doCV( int command, int index, int value ) {
 }
 
 void CV::OnTimer(wxTimerEvent& event) {
+  if( !MutexOp.trywait( m_TimerMutex, 100 ) ) {
+    TraceOp.trc( "cv", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on timer mutex!" );
+    return;
+  }
+
   if( m_bCleanUpProgress ) {
     if( m_Progress != NULL ) {
       wxProgressDialog* dlg = m_Progress;
@@ -887,6 +893,7 @@ void CV::OnTimer(wxTimerEvent& event) {
       TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
     }
     m_bCleanUpProgress = false;
+    MutexOp.post( m_TimerMutex );
     return;
   }
 
@@ -907,6 +914,7 @@ void CV::OnTimer(wxTimerEvent& event) {
       }
     }
   }
+  MutexOp.post( m_TimerMutex );
 }
 
 
