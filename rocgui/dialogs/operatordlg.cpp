@@ -478,6 +478,22 @@ void OperatorDlg::onRun( wxCommandEvent& event ) {
 }
 
 
+void OperatorDlg::onGotoMan( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.gotoblock );
+  wLoc.setblockid( cmd, m_Goto->GetStringSelection().mb_str(wxConvUTF8) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.gomanual );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
 void OperatorDlg::onCarImage( wxCommandEvent& event ) {
   onCarCard(event);
 }

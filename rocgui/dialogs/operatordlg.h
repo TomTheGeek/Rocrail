@@ -54,6 +54,7 @@ public:
     void onLocomotiveCombo( wxCommandEvent& event );
     void onReserve( wxCommandEvent& event );
     void onRun( wxCommandEvent& event );
+    void onGotoMan( wxCommandEvent& event );
     void onCarImage( wxCommandEvent& event );
     void onAddCar( wxCommandEvent& event );
     void onLeaveCar( wxCommandEvent& event );

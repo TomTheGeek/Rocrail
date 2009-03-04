@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 21 2008)
+// C++ code generated with wxFormBuilder (version Apr 17 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -79,32 +79,49 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer4->Add( fgSizer1, 0, wxEXPAND, 5 );
 	
+	wxStaticBoxSizer* m_labLocation;
+	m_labLocation = new wxStaticBoxSizer( new wxStaticBox( m_ControlPanel, wxID_ANY, wxT("Location") ), wxVERTICAL );
+	
 	wxFlexGridSizer* fgSizer2;
 	fgSizer2 = new wxFlexGridSizer( 2, 3, 0, 0 );
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labLocation = new wxStaticText( m_ControlPanel, wxID_ANY, wxT("Location"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labLocation->Wrap( -1 );
-	fgSizer2->Add( m_labLocation, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT, 5 );
-	
 	m_Location = new wxComboBox( m_ControlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
 	fgSizer2->Add( m_Location, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Reserve = new wxButton( m_ControlPanel, wxID_ANY, wxT("Reserve"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_Reserve, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer2->Add( m_Reserve, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_labGoto = new wxStaticText( m_ControlPanel, wxID_ANY, wxT("Goto"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGoto->Wrap( -1 );
-	fgSizer2->Add( m_labGoto, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	m_labLocation->Add( fgSizer2, 0, wxEXPAND, 5 );
+	
+	bSizer4->Add( m_labLocation, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* m_labGoto;
+	m_labGoto = new wxStaticBoxSizer( new wxStaticBox( m_ControlPanel, wxID_ANY, wxT("Goto") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer4;
+	fgSizer4 = new wxFlexGridSizer( 1, 3, 0, 0 );
+	fgSizer4->SetFlexibleDirection( wxBOTH );
+	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_Goto = new wxComboBox( m_ControlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
-	fgSizer2->Add( m_Goto, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	fgSizer4->Add( m_Goto, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
 	m_Run = new wxButton( m_ControlPanel, wxID_ANY, wxT("Run"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_Run, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizer7->Add( m_Run, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
-	bSizer4->Add( fgSizer2, 0, wxEXPAND, 5 );
+	m_GotoMan = new wxButton( m_ControlPanel, wxID_ANY, wxT("Manually"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer7->Add( m_GotoMan, 0, wxRIGHT|wxLEFT, 5 );
+	
+	fgSizer4->Add( bSizer7, 0, 0, 5 );
+	
+	m_labGoto->Add( fgSizer4, 0, wxEXPAND, 5 );
+	
+	bSizer4->Add( m_labGoto, 0, wxEXPAND, 5 );
 	
 	m_ControlPanel->SetSizer( bSizer4 );
 	m_ControlPanel->Layout();
@@ -166,6 +183,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_LocoID->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( operatordlggen::onLocomotiveCombo ), NULL, this );
 	m_Reserve->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onReserve ), NULL, this );
 	m_Run->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
+	m_GotoMan->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onGotoMan ), NULL, this );
 	m_CarImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
 	m_CarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onCarList ), NULL, this );
 	m_AddCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );
@@ -187,6 +205,7 @@ operatordlggen::~operatordlggen()
 	m_LocoID->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( operatordlggen::onLocomotiveCombo ), NULL, this );
 	m_Reserve->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onReserve ), NULL, this );
 	m_Run->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
+	m_GotoMan->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onGotoMan ), NULL, this );
 	m_CarImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
 	m_CarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onCarList ), NULL, this );
 	m_AddCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );

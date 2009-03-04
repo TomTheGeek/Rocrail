@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 21 2008)
+// C++ code generated with wxFormBuilder (version Apr 17 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -25,6 +25,7 @@
 #include <wx/statline.h>
 #include <wx/bmpbuttn.h>
 #include <wx/combobox.h>
+#include <wx/statbox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -51,12 +52,11 @@ class operatordlggen : public wxDialog
 		wxBitmapButton* m_LocoImage;
 		wxStaticText* m_labLocoID;
 		wxComboBox* m_LocoID;
-		wxStaticText* m_labLocation;
 		wxComboBox* m_Location;
 		wxButton* m_Reserve;
-		wxStaticText* m_labGoto;
 		wxComboBox* m_Goto;
 		wxButton* m_Run;
+		wxButton* m_GotoMan;
 		wxPanel* m_ConsistPanel;
 		wxBitmapButton* m_CarImage;
 		wxListBox* m_CarList;
@@ -77,6 +77,7 @@ class operatordlggen : public wxDialog
 		virtual void onLocomotiveCombo( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onReserve( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onRun( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onGotoMan( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarImage( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCarList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onAddCar( wxCommandEvent& event ){ event.Skip(); }
