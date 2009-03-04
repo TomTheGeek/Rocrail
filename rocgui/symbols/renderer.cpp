@@ -1068,51 +1068,68 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, cons
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.left ) ) {
     drawSvgSym(dc, m_SvgSym2, ori);
-    return;
   }
   else if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.right ) ) {
     drawSvgSym(dc, m_SvgSym3, ori);
-    return;
   }
   else if( m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
-    return;
-  }
-
-  const char* ori3w = ori;
-  if( StrOp.equals( ori, wItem.north ) )
-    ori3w = wItem.south;
-  else if( StrOp.equals( ori, wItem.south ) )
-    ori3w = wItem.north;
-  else if( StrOp.equals( ori, wItem.east ) )
-    ori3w = wItem.west;
-  else if( StrOp.equals( ori, wItem.west ) )
-    ori3w = wItem.east;
-
-  if( StrOp.equals( state, wSwitch.left ) ) {
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxBLACK_BRUSH );
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-    dc.SetBrush( b );
-  }
-  else if( StrOp.equals( state, wSwitch.right ) ) {
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxBLACK_BRUSH );
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-    dc.SetBrush( b );
   }
   else {
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-    dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxBLACK_BRUSH );
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.SetBrush( b );
+    const char* ori3w = ori;
+    if( StrOp.equals( ori, wItem.north ) )
+      ori3w = wItem.south;
+    else if( StrOp.equals( ori, wItem.south ) )
+      ori3w = wItem.north;
+    else if( StrOp.equals( ori, wItem.east ) )
+      ori3w = wItem.west;
+    else if( StrOp.equals( ori, wItem.west ) )
+      ori3w = wItem.east;
+
+    if( StrOp.equals( state, wSwitch.left ) ) {
+      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
+      const wxBrush& b = dc.GetBrush();
+      dc.SetBrush( *wxBLACK_BRUSH );
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
+      dc.SetBrush( b );
+    }
+    else if( StrOp.equals( state, wSwitch.right ) ) {
+      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
+      const wxBrush& b = dc.GetBrush();
+      dc.SetBrush( *wxBLACK_BRUSH );
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
+      dc.SetBrush( b );
+    }
+    else {
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
+      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
+      const wxBrush& b = dc.GetBrush();
+      dc.SetBrush( *wxBLACK_BRUSH );
+      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
+      dc.SetBrush( b );
+    }
   }
+
+  if( m_bShowID ) {
+    wxFont* font = new wxFont( dc.GetFont() );
+    font->SetPointSize( 7 );
+    dc.SetFont(*font);
+
+    if( StrOp.equals( ori, wItem.south ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+    else if( StrOp.equals( ori, wItem.north ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+    else if( StrOp.equals( ori, wItem.east ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 30, 180.0 );
+    else
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+    delete font;
+  }
+
+
+
 }
 
 
