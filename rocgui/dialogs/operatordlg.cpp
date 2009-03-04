@@ -155,6 +155,9 @@ void OperatorDlg::initLabels() {
   m_Location->Clear();
   m_Goto->Clear();
 
+  m_Location->Append( _T("") );
+  m_Goto->Append( _T("") );
+
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
@@ -448,12 +451,30 @@ void OperatorDlg::onLocomotiveCombo( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onReserve( wxCommandEvent& event ) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.block );
+  wLoc.setblockid( cmd, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 
 }
 
 
 void OperatorDlg::onRun( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.gotoblock );
+  wLoc.setblockid( cmd, m_Goto->GetStringSelection().mb_str(wxConvUTF8) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 
+  cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.go );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 
