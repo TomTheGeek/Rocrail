@@ -337,7 +337,7 @@ void OperatorDlg::initConsist() {
     const char* carid  = StrTokOp.nextToken( strtok );
     iONode car = wxGetApp().getFrame()->findCar( carid );
     if( car != NULL ) {
-      m_CarList->Append( wxString(carid,wxConvUTF8) + wxString(_T(" (waybills...)")), car );
+      m_CarList->Append( wxString(carid,wxConvUTF8) + wxString(_T(" (waybill)")), car );
     }
   }
 }
@@ -506,7 +506,7 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     iONode car = dlg->getSelectedCar();
     if( car != NULL ) {
       const char* id = wCar.getid( car );
-      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(" (waybills...)")), car );
+      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(" (waybill)")), car );
     }
   }
   dlg->Destroy();
@@ -515,7 +515,16 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
-
+  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
+    int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+    if( action == wxID_NO )
+      return;
+    m_CarList->Delete(m_CarList->GetSelection());
+    m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    m_CarImage->Refresh();
+    evaluate();
+    initConsist();
+  }
 }
 
 
@@ -534,6 +543,23 @@ void OperatorDlg::onCarCard( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onWayBill( wxCommandEvent& event ) {
+  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+    if( car != NULL ) {
+      iONode waybill = NULL;
+      const char* waybills = wCar.getwaybills(car);
+
+      if( waybills != NULL && StrOp.len(waybills) > 0 ) {
+        /* TODO: get waybill node for the first entry in the list */
+      }
+
+      WaybillDlg* dlg = new WaybillDlg(this, waybill, false );
+      if( wxID_OK == dlg->ShowModal() ) {
+        /* Notify Notebook. */
+      }
+      dlg->Destroy();
+    }
+  }
 
 }
 

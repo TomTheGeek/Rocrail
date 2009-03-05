@@ -52,6 +52,7 @@ WaybillDlg::WaybillDlg( wxWindow* parent, iONode p_Props, bool save )
   m_IndexPanel->GetSizer()->Layout();
   m_GeneralPanel->GetSizer()->Layout();
   m_RoutingPanel->GetSizer()->Layout();
+  m_RoutingPanel->Show(false);
 
   m_WaybillBook->Fit();
 
