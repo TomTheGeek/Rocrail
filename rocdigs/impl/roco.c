@@ -169,7 +169,7 @@ static void __handleSwitch(iORoco roco, int addr, int port, int value) {
   iORocoData data = Data(roco);
   int valuew = value;
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sw %d %d = %d", addr+1, port, value?"straight":"thrown" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %d", addr+1, port, value?"straight":"thrown" );
 
    {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -232,7 +232,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   /* sensor */
   if ( in[0] == 0x20 ) {
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Roco feedback ...");
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco feedback ...");
 
     int nomodules = ((int) in[1] & 0x0F) - 2;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Connected FB: %d",
@@ -250,7 +250,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
       //  process the inputs:
       for (l = 0; l < 8; l++) {
         if( sensorstate[count] != b0[7-l] ) {
-          __handleSensor(roco, k*8+l, b0[7-l]);
+          __handleSensor(roco, k*8+l+1, b0[7-l]);
           sensorstate[count] = b0[7-l];
         }
         count++;
@@ -547,6 +547,7 @@ static void __transactor( void* threadinst ) {
           in[0], in[1], in[2], in[3], in[4], in[5], in[6], datalen-1);
 
         if( bXor != in[datalen] && !( in[0] == 0x00 && in[1] == 0x02 && in[2] == 0x16 && in[3] == 0x80 && in[4] == 0x90 )) {
+          // message 00 02 16 80 90 is response to 00 F0 F0 initialisation and comes without xor
            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "xor bytes are not equal!" );
              continue;
         }
@@ -584,7 +585,7 @@ static void __transactor( void* threadinst ) {
         }
         // CS busy
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x81){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cs busy ... try again");
+           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cs busy ... trying again");
         }
         // XOR error
         else if ( in[0] == 0x00 && in[1] == 0x01 && in[2] == 0x01){
@@ -666,7 +667,7 @@ static void __translate( iORoco roco, iONode node ) {
     ThreadOp.post( data->transactor, (obj)outb );
 
     // wait a while for the cs to react
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 50 );
 
     byte* outbb = allocMem(256);
     outbb[0] = 4;
@@ -850,6 +851,7 @@ static void __translate( iORoco roco, iONode node ) {
     outa[6] = functions1;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
     ThreadOp.post( data->transactor, (obj)outa );
+    ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
 
     byte* outb = allocMem(256);
     outb[0] = 6;
@@ -860,6 +862,7 @@ static void __translate( iORoco roco, iONode node ) {
     outb[6] = functions2;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
     ThreadOp.post( data->transactor, (obj)outb );
+    ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
 
     byte* outc = allocMem(256);
     outc[0] = 6;
