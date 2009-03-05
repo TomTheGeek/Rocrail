@@ -551,6 +551,12 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
 
       if( waybills != NULL && StrOp.len(waybills) > 0 ) {
         /* TODO: get waybill node for the first entry in the list */
+        iOStrTok strtok = StrTokOp.inst( waybills, ',' );
+        while( StrTokOp.hasMoreTokens( strtok ) ) {
+          const char* billid  = StrTokOp.nextToken( strtok );
+          waybill = wxGetApp().getFrame()->findWaybill( billid );
+          break;
+        }
       }
 
       WaybillDlg* dlg = new WaybillDlg(this, waybill, false );

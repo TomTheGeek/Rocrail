@@ -140,6 +140,7 @@ public:
   void RemoveNotebookPage( iONode zlevel );
   iONode findLoc(const char* locid);
   iONode findCar(const char* carid);
+  iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid);
   void OnCellLeftDClick( wxGridEvent& event );
   void OnCellLeftClick( wxGridEvent& event );
