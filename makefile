@@ -35,8 +35,9 @@ release: version
 	
 install:
 	cd rocrail; make install_all
-#	cp doc/rocrail*.htb ~/rocrail
 
+newinst:
+	cd rocrail; make install_new
 
 version:
 	echo "const int bzr = " >  common/version.h

@@ -122,6 +122,23 @@ fromtar:
 	cd ../rocgui; make clean PLATFORM=$(PLATFORM); make all DEBUG=$(DEBUG) TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL);
 
 install_all:
+	-mkdir -p $(DESTDIR)
+	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
+	cd ../rocdigs; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	cd ../roclcdr; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	cd ../rocgui; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	-cp -p rocraild.png $(DESTDIR)
+	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
+	-cp -Rp ../rocgui/icons $(DESTDIR)
+	-cp -p package/rocrail.sh $(DESTDIR)
+	-cp -p package/rocgui.sh $(DESTDIR)
+	-cp -p package/rocguimod.sh $(DESTDIR)
+	-chmod +x $(DESTDIR)/rocrail.sh
+	-chmod +x $(DESTDIR)/rocgui.sh
+	-cp -p package/Rocrail.desktop /usr/share/applications
+	-cp -p package/RocrailGUI.desktop /usr/share/applications
+
+install_new:
 	-rm -Rf $(DESTDIR)
 	-mkdir -p $(DESTDIR)
 	-mkdir -p ~/rocrail
