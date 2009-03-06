@@ -146,6 +146,7 @@ private:
     int m_Curve[28];
     int m_ConfigVal;
     iOMutex m_TimerMutex;
+    bool m_bConfig;
 
     const char* m_Manu[256];
     wxWindow* m_Frame;

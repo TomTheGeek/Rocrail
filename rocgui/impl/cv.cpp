@@ -77,6 +77,7 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
     m_Curve[i] = 0;
   }
   m_bSpeedCurve = false;
+  m_bConfig = false;
 
 
   CVconf();
@@ -308,7 +309,7 @@ void CV::event( iONode event ) {
         onSpeedCurve();
       }
     }
-    else if( m_CVidx == 29 ) {
+    else if( m_CVidx == 29 && m_bConfig ) {
       /* post an event to activate the speed curve dialog */
       m_ConfigVal = ivalue;
       m_Timer->Stop();
@@ -382,6 +383,7 @@ void CV::onDecConfig(void) {
   }
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
   dlg->Destroy();
+  m_bConfig = false;
 }
 
 
@@ -726,6 +728,7 @@ void CV::OnButton(wxCommandEvent& event)
   else if( event.GetEventObject() == m_Config ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Config" );
     m_CVoperation = CVGET;
+    m_bConfig = true;
     doCV( wProgram.get, 29, 0 );
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
