@@ -2467,7 +2467,7 @@ static iONode _checkForBlockGroup(iOModel inst, const char* BlockId) {
 }
 
 
-static const char* __getManagedID(iOModel inst, const char* fromBlockId) {
+static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
   /* check if the block is managed by a selectioin table */
   iIBlockBase block = ModelOp.getBlock(inst, fromBlockId);
   if( block != NULL && block->getManager(block) != NULL ) {
@@ -2498,7 +2498,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
   Boolean destdir = False;
   Boolean samedir = False;
 
-  fromBlockId = __getManagedID(inst, fromBlockId);
+  fromBlockId = _getManagedID(inst, fromBlockId);
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "findDest fromBlockID [%s]", fromBlockId );

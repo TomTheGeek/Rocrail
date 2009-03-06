@@ -727,6 +727,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="routeId" vt="const char*"/>
     </fun>
+    <fun name="getManagedID" vt="const iONode">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="blockid" vt="const char*" remark="BlockID"/>
+    </fun>
     <data include="mvtrack,modplan">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>

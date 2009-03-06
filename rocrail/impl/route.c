@@ -268,6 +268,10 @@ static const char* _getToBlock( iORoute inst ) {
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
   Boolean lcdir = wRoute.islcdir( o->props );
+
+  /* in case of a managed block of a fiddle yard the manager ID is needed */
+  blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
+
   if( StrOp.equals( blockid, wRoute.getbka( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --from--", blockid, RouteOp.getId(inst) );
     *fromto = True;
@@ -279,7 +283,7 @@ static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto
     return !lcdir;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unknown blockid %s", blockid );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown blockid %s", blockid );
     return False;
   }
 }
