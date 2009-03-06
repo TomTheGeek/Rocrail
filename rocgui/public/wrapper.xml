@@ -35,11 +35,11 @@
 
   <gui structname="GUI" wrappername="Gui">
     <const name="productname" vt="string" val="Rocrail"/>
-    <const name="releasename" vt="string" val="Act"/>
-    <const name="releasesuffix" vt="string" val="rc1"/>
+    <const name="releasename" vt="string" val="snapshot"/>
+    <const name="releasesuffix" vt="string" val=""/>
     <const name="vmajor" vt="int" val="1"/>
-    <const name="vminor" vt="int" val="2"/>
-    <const name="patch" vt="int" val="0"/>
+    <const name="vminor" vt="int" val="3"/>
+    <const name="patch" vt="int" val="999"/>
     <const name="buildDate" vt="string" val="$__DATE__"/>
     <const name="buildTime" vt="string" val="$__TIME__"/>
     <const name="inifile" vt="string" val="rocgui.ini"/>
