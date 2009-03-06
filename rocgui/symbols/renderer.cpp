@@ -857,23 +857,23 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, cons
 
     if( m_iSymSubType == switchtype::i_crossingright ) {
       if( StrOp.equals( ori, wItem.south ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, 90.0 );
       else if( StrOp.equals( ori, wItem.north ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 63, 90.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, 90.0 );
       else if( StrOp.equals( ori, wItem.east ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0, 0.0 );
       else
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0, 0.0 );
     }
     else {
       if( StrOp.equals( ori, wItem.south ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 32, 270.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, 90.0 );
       else if( StrOp.equals( ori, wItem.north ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, 90.0 );
       else if( StrOp.equals( ori, wItem.east ) )
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21, 0.0 );
       else
-        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0 );
+        dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21, 0.0 );
     }
     delete font;
   }
@@ -1117,14 +1117,17 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, cons
     font->SetPointSize( 7 );
     dc.SetFont(*font);
 
+    wxSize wxfontsize = dc.GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8) );
+
     if( StrOp.equals( ori, wItem.south ) )
-      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, wxfontsize.GetWidth(), 90.0 );
     else if( StrOp.equals( ori, wItem.north ) )
-      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 31, 90.0 );
     else if( StrOp.equals( ori, wItem.east ) )
-      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 30, 180.0 );
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - wxfontsize.GetWidth(), 1, 0.0 );
     else
       dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+
     delete font;
   }
 
