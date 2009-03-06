@@ -391,6 +391,13 @@ bool RocGui::OnInit() {
 
   // process inifile:
   iOFile iniFile = FileOp.inst( m_IniFileName, True );
+  if( iniFile == NULL ) {
+    iniFile = FileOp.inst( wGui.previnifile, True );
+    if( iniFile != NULL ) {
+      FileOp.rename( wGui.previnifile, wGui.inifile );
+    }
+  }
+
   char* iniXml = NULL;
   if( iniFile != NULL ) {
     iniXml = (char*)allocMem( FileOp.size( iniFile ) + 1 );

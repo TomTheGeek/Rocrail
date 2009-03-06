@@ -42,7 +42,8 @@
     <const name="patch" vt="int" val="999"/>
     <const name="buildDate" vt="string" val="$__DATE__"/>
     <const name="buildTime" vt="string" val="$__TIME__"/>
-    <const name="inifile" vt="string" val="rocgui.ini"/>
+    <const name="previnifile" vt="string" val="rocgui.ini" remark="previous ini file name"/>
+    <const name="inifile" vt="string" val="rocview.ini"/>
     <const name="lang_english" vt="string" val="en"/>
     <const name="lang_german" vt="string" val="de"/>
     <const name="lang_dutch" vt="string" val="nl"/>
