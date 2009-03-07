@@ -25,10 +25,11 @@
 <ope date="733440" amount="-74.900000000000006" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="LodicRail FC" info="Fast Clock"/>
 <ope date="733442" amount="-181.90000000000001" account="0" dst_account="0" paymode="1" flags="1" payee="4" category="4" wording="BDL168, RX4" info="Transponding"/>
 <ope date="733448" amount="-26.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="DH163P" info="Transponding"/>
+<ope date="733448" amount="-46.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="DS64" info="Digitrax OptionSwitches"/>
 <ope date="733450" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="1" category="2" wording="6 Months Hosting" info="ManagedHosting S"/>
 <ope date="733454" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MATTHIAS VENNEKOTTER"/>
 <ope date="733455" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="HASELSTEINER, MARIO"/>
 <ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO"/>
 <ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST"/>
-<ope date="733448" amount="-46.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="DS64" info="Digitrax OptionSwitches"/>
+<ope date="733472" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
 </homebank>
