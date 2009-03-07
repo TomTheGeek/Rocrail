@@ -767,6 +767,7 @@ static void __runner( void* threadinst ) {
       wLoc.setdir( broadcast, wLoc.isdir( data->props ) );
       wLoc.setaddr( broadcast, wLoc.getaddr( data->props ) );
       wLoc.setV( broadcast, data->drvSpeed );
+      wLoc.setfn( broadcast, wLoc.isfn( data->props ) );
       wLoc.setplacing( broadcast, wLoc.isplacing( data->props ) );
       wLoc.setmode( broadcast, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( broadcast, wLoc.isresumeauto(data->props) );
@@ -1011,6 +1012,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
     wLoc.setdir( node, wLoc.isdir( data->props ) );
+    wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
@@ -1034,6 +1036,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setid( node, wLoc.getid( data->props ) );
   wLoc.setaddr( node, wLoc.getaddr( data->props ) );
   wLoc.setdir( node, wLoc.isdir( data->props ) );
+  wLoc.setfn( node, wLoc.isfn( data->props ) );
   wLoc.setV( node, data->drvSpeed );
   wLoc.setplacing( node, wLoc.isplacing( data->props ) );
   wLoc.setmode( node, wLoc.getmode( data->props ) );
@@ -1230,6 +1233,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
       wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
       wLoc.setV( nodeF, data->drvSpeed );
+      wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
       wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
@@ -1306,6 +1310,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
   wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
   wLoc.setV( nodeF, data->drvSpeed );
+  wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
   wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
   wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
   wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
@@ -1592,6 +1597,7 @@ static void _swapPlacing( iOLoc loc ) {
     wLoc.setdir( node, wLoc.isdir( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
     wLoc.setV( node, data->drvSpeed );
+    wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
