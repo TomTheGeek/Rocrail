@@ -3,5 +3,7 @@
     <!-- Block -->
     <path stroke="rgb(0,0,0)" fill="none" d="M 0,3 L 127,3 L 127,28 L 0,28 z " />
     <path stroke="rgb(0,0,0)" fill="none" d="M 1,4 L 126,4 L 126,27 L 1,27 z " />
+    <path stroke="rgb(255,255,255)" fill="rgb(200,200,200)" d="M 2,5 L 125,5 L 125,26 L 2,26 z " />
+
   </g>
 </svg>
