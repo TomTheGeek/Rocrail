@@ -180,7 +180,7 @@ class BlockDialog: public wxDialog
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   bool m_bSave;
   void initSensors();
   void initSensorCombos();
@@ -190,7 +190,7 @@ class BlockDialog: public wxDialog
   void initSwitchCombo();
   void initTurntableCombo();
   void initLocPermissionList();
-  
+
 public:
     /// Constructors
     BlockDialog( wxWindow* parent, iONode p_Props, bool save=true );

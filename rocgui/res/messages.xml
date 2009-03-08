@@ -6920,4 +6920,7 @@
   <Msg id="lock">
     <en txt="Lock"/>
   </Msg>
+  <Msg id="invalidid">
+    <en txt="The ID must be at least one character!"/>
+  </Msg>
 </Messages>
