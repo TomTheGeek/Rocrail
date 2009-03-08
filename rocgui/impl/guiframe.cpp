@@ -811,8 +811,8 @@ wxString RocGuiFrame::getIconPath(const char* iconfile) {
       StrOp.free(str);
       //exit(-1);
     }
-    StrOp.free(path);
     return wxString(path,wxConvUTF8);
+    StrOp.free(path);
   }
   else
     return wxString("",wxConvUTF8);
