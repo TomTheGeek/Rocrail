@@ -138,6 +138,10 @@ void ActionsCtrlDlg::initLabels() {
   m_labState->SetLabel( wxGetApp().getMsg( "state" ) );
   m_labDeact->SetLabel( wxGetApp().getMsg( "deactivate" ) );
 
+  m_Deact->Append(wxGetApp().getMsg( "none" ));
+  m_Deact->Append(_T("**enter** ") + wxGetApp().getMsg( "event" ));
+  m_Deact->Append(_T("**in** ") + wxGetApp().getMsg( "event" ));
+
   m_Auto->SetLabel( wxGetApp().getMsg( "automode" ) );
 
   m_Add->SetLabel( wxGetApp().getMsg( "add" ) );
@@ -179,7 +183,7 @@ static int __sortID(obj* _a, obj* _b)
 
 void ActionsCtrlDlg::initIndex() {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  m_CtrlList->Clear();
+  m_ID->Clear();
   iONode model = wxGetApp().getModel();
   iOList list = ListOp.inst();
 
@@ -210,6 +214,7 @@ void ActionsCtrlDlg::initIndex() {
   /* clean up the temp. list */
   ListOp.base.del(list);
 
+  m_CtrlList->Clear();
   iONode actionctrl = NodeOp.findNode( m_Props, wActionCtrl.name() );
   while( actionctrl != NULL ) {
     m_CtrlList->Append( wxString(wActionCtrl.getid(actionctrl),wxConvUTF8), NodeOp.base.clone(actionctrl) );
@@ -218,9 +223,6 @@ void ActionsCtrlDlg::initIndex() {
   if(m_CtrlList->GetCount() > 0)
     m_CtrlList->SetSelection(0);
 
-  m_Deact->Append(wxGetApp().getMsg( "none" ));
-  m_Deact->Append(_T("**enter** ") + wxGetApp().getMsg( "event" ));
-  m_Deact->Append(_T("**in** ") + wxGetApp().getMsg( "event" ));
 }
 
 
@@ -239,6 +241,15 @@ void ActionsCtrlDlg::initValues() {
 
 
     m_Deact->SetSelection(0);
+
+    if( StrOp.equals( "none", wActionCtrl.getdeact(actionctrl) ) )
+      m_Deact->SetSelection(0);
+    else if( StrOp.equals( "enter", wActionCtrl.getdeact(actionctrl) ) )
+      m_Deact->SetSelection(1);
+    else if( StrOp.equals( "in", wActionCtrl.getdeact(actionctrl) ) )
+      m_Deact->SetSelection(2);
+
+
     m_ConditionsPanel->Enable(true);
 
     m_Conditions->Clear();
@@ -346,6 +357,18 @@ void ActionsCtrlDlg::evaluate() {
     wActionCtrl.setid(node, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
     wActionCtrl.setauto(node, m_Auto->IsChecked() ? True:False );
     wActionCtrl.setstate(node, m_State->GetValue().mb_str(wxConvUTF8) );
+
+    switch( m_Deact->GetSelection() ) {
+    case 0:
+      wActionCtrl.setdeact(node, "none");
+      break;
+    case 1:
+      wActionCtrl.setdeact(node, "enter");
+      break;
+    case 2:
+      wActionCtrl.setdeact(node, "in");
+      break;
+    }
 
     m_CtrlList->SetString(cursel, m_ID->GetStringSelection() );
   }
@@ -760,7 +783,7 @@ void ActionsCtrlDlg::OnActionctrlDeleteClick( wxCommandEvent& event )
 void ActionsCtrlDlg::OnActionctrlModifyClick( wxCommandEvent& event )
 {
   evaluate();
-  initIndex();
+  //initIndex();
 }
 
 
