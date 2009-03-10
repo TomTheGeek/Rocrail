@@ -966,7 +966,7 @@ static Boolean _supportPT( obj inst ) {
   /* VERSION: */
 
 static int vmajor = 1;
-static int vminor = 2;
+static int vminor = 3;
 static int patch  = 0;
 
 /**

@@ -996,7 +996,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 1;
-static int vminor = 2;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;

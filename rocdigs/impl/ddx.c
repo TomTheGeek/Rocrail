@@ -541,7 +541,7 @@ static int _state( obj inst ) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 2;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   iODDXData data = Data(inst);
