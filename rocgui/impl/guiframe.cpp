@@ -2054,13 +2054,13 @@ void RocGuiFrame::OnShowID( wxCommandEvent& event ) {
 void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
   m_bLocoBook = mi->IsChecked();
-  m_StatNotebook->Show(m_bLocoBook);
   if(m_bLocoBook) {
     int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
-    m_PlanSplitter->SetSashPosition( pos );
+    m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
+
   }
   else {
-    m_PlanSplitter->SetSashPosition( 1 );
+    m_PlanSplitter->Unsplit( m_StatNotebook );
   }
 }
 
