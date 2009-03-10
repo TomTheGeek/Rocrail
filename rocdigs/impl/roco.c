@@ -299,9 +299,10 @@ static Boolean __sendRequest( iORoco roco, byte* outin ) {
   out[len-1] = bXor;
 
   // NO XOR
-  if ( (out[0] == 0x10) || // OK-byte
-       (out[0] == 0x40 && out[1] == 0xF0 && out[2] == 0xF0) )
-    len--;
+  if ( out[0] == 0x10 ) // OK-byte
+    len = 1;
+  if ( out[0] == 0x40 && out[1] == 0xF0 && out[2] == 0xF0 )
+    len = 3;
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "OUT: 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
       out[0], out[1], out[2], out[3], out[4], out[5], out[6], len);
@@ -333,12 +334,10 @@ static void __initializer( void* threadinst ) {
 
   // tree times the confirmation
   byte* outa = allocMem(256);
-  outa[0] = 3;
+  outa[0] = 1;
   outa[1] = 0x10;
-  outa[2] = 0x10;
-  outa[3] = 0x10;
   ThreadOp.post( data->transactor, (obj)outa );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** 3 times the confirmation...");
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** send confirmation. until response or 6 times");
 
   // put off programming track
   byte* outa0 = allocMem(256);
@@ -367,9 +366,9 @@ static void __initializer( void* threadinst ) {
   outb[0] = 3;
   outb[1] = 0x21;
   outb[2] = 0xf1;
-  outb[3] = 0x01;
+  outb[3] = data->readfb ? 0x01:0x00;
   ThreadOp.post( data->transactor, (obj)outb );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** set sensor repeat at rate 1 ..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** set sensor repeat at rate %d", outb[3] );
 
   // Infobyte FB
   byte* oute = allocMem(256);
@@ -449,7 +448,7 @@ static void __initializer( void* threadinst ) {
   outd[3] = 0x00;
   outd[4] = data->fbmod;
   ThreadOp.post( data->transactor, (obj)outd );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** Setting no of fb in group 0 to %X ...", outd[4] );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** Setting no of fb in group 0 to %X ...", outd[4] );
 
    // Setting no of fb in group 1 to %X //TODO
   byte* outg = allocMem(256);
@@ -506,7 +505,7 @@ static void __transactor( void* threadinst ) {
           out[0], out[1], out[2], out[3], out[4], out[5], out[6]);
 
         responceRecieved = !__sendRequest( roco, out );
-      }
+        }
     } else {
       if( post != NULL && numtries > 0) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command again %d ...", numtries );
@@ -544,7 +543,7 @@ static void __transactor( void* threadinst ) {
         }
 
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "IN:  0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
-          in[0], in[1], in[2], in[3], in[4], in[5], in[6], datalen-1);
+          in[0], in[1], in[2], in[3], in[4], in[5], in[6], datalen+1);
 
         if( bXor != in[datalen] && !( in[0] == 0x00 && in[1] == 0x02 && in[2] == 0x16 && in[3] == 0x80 && in[4] == 0x90 )) {
           // message 00 02 16 80 90 is response to 00 F0 F0 initialisation and comes without xor
@@ -558,12 +557,9 @@ static void __transactor( void* threadinst ) {
 
         // handshake
         if( in[0] == 0x00 && in[1] == 0x01 && in[2] == 0x00) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco handshake ...");
-          if( !data->dummyio ) {
-//            byte confirm = 0x10;
-//            SerialOp.write( data->serial, (char*)&confirm, 1 ); //once is enough, we already confirmed
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco command received without error");
+          if( !data->dummyio )
             responceRecieved = True;
-          }
         }
 
         // undocumented response to undocumented 00 F0 F0 initialisation command
@@ -585,11 +581,11 @@ static void __transactor( void* threadinst ) {
         }
         // CS busy
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x81){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cs busy ... trying again");
+           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... trying again");
         }
         // XOR error
         else if ( in[0] == 0x00 && in[1] == 0x01 && in[2] == 0x01){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XOR error");
+           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "XOR error");
         }
         // Command not known
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x82){
@@ -667,7 +663,7 @@ static void __translate( iORoco roco, iONode node ) {
     ThreadOp.post( data->transactor, (obj)outb );
 
     // wait a while for the cs to react
-    ThreadOp.sleep( 50 );
+    // ThreadOp.sleep( 50 );
 
     byte* outbb = allocMem(256);
     outbb[0] = 4;
@@ -726,13 +722,13 @@ static void __translate( iORoco roco, iONode node ) {
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
 
-    int reqid = 0x10; /* default 14 speed steps */
+    int reqid = 0x12; /* default 28 speed steps */
     switch( spcnt ) {
       case 27:
         reqid = 0x11;
         break;
-      case 28:
-        reqid = 0x12;
+      case 14:
+        reqid = 0x10;
         break;
       case 127:
       case 128:
@@ -740,8 +736,8 @@ static void __translate( iORoco roco, iONode node ) {
         spcnt = 127;
         break;
       default:
-        reqid = 0x10;
-        spcnt = 14;
+        reqid = 0x12;
+        spcnt = 28;
         break;
     }
     /*
@@ -807,7 +803,7 @@ static void __translate( iORoco roco, iONode node ) {
     byte* outb = allocMem(256);
     outb[0] = 6;
     outb[1] = 0x00;
-    outb[2] = 0xE4;
+    outb[2] = 0xE4; // rocomotion traces sometimes show E5 against E4 with additional 7th byte contianing 02 or 03
     outb[3] = reqid;
     __setLocAddr( addr, outb+4 );
     outb[6] = dir ? 0x80:0x00;
@@ -851,7 +847,7 @@ static void __translate( iORoco roco, iONode node ) {
     outa[6] = functions1;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
     ThreadOp.post( data->transactor, (obj)outa );
-    ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
+    //ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
 
     byte* outb = allocMem(256);
     outb[0] = 6;
@@ -862,7 +858,7 @@ static void __translate( iORoco roco, iONode node ) {
     outb[6] = functions2;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
     ThreadOp.post( data->transactor, (obj)outb );
-    ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
+    //ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
 
     byte* outc = allocMem(256);
     outc[0] = 6;
@@ -884,23 +880,21 @@ static void __translate( iORoco roco, iONode node ) {
 
     byte* outa = allocMem(256);
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
-      outa[0] = 4;
+      outa[0] = 3;
       outa[1] = 0x00;
       outa[2] = 0x21;
       outa[3] = 0x80;
-      outa[4] = 0xA1;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      outa[0] = 4;
+      outa[0] = 3;
       outa[1] = 0x00;
       outa[2] = 0x21;
       outa[3] = 0x81;
-      outa[4] = 0xA0;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      ThreadOp.post( data->transactor, (obj)outa );
     }
-
-    ThreadOp.post( data->transactor, (obj)outa );
   }
 
     /* Program command. */
@@ -954,8 +948,9 @@ static void __translate( iORoco roco, iONode node ) {
 
       } else {
 
-        if (cv > 0) cv--;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
+
+        if (cv > 0) cv--;
 
         byte* outa = allocMem(256);
         outa[0] = 6;
