@@ -41,6 +41,7 @@
 #include "rocs/public/lib.h"
 #include "rocs/public/system.h"
 
+#include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -748,6 +749,17 @@ static Boolean __initDigInts( iOControl inst ) {
     if (pDi == NULL)
       return False;
 
+    {
+      /* vmajor*10000 + vminor*100 */
+      int libVersion = pDi->version((obj)pDi);
+      int vmajor = libVersion/10000;
+      int vminor = (libVersion%10000)/100;
+      if( vmajor != wGlobal.vmajor || vminor != wGlobal.vminor ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "version mismatch for library [%s]; reports:[%d.%d] wanted:[%d.%d]", lib, vmajor, vminor, wGlobal.vmajor, wGlobal.vminor );
+        return False;
+      }
+    }
     pDi->setListener( (obj)pDi, (obj)inst, &__listener );
 
     if( iid != NULL )
