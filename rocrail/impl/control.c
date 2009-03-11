@@ -746,10 +746,11 @@ static Boolean __initDigInts( iOControl inst ) {
     if (pInitFun == NULL)
       return False;
     pDi = pInitFun(digint,TraceOp.get());
-    if (pDi == NULL)
-      return False;
 
-    {
+    if (pDi == NULL) {
+      return False;
+    }
+    else {
       /* vmajor*10000 + vminor*100 */
       int libVersion = pDi->version((obj)pDi);
       int vmajor = libVersion/10000;
@@ -760,6 +761,7 @@ static Boolean __initDigInts( iOControl inst ) {
         return False;
       }
     }
+
     pDi->setListener( (obj)pDi, (obj)inst, &__listener );
 
     if( iid != NULL )
