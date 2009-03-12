@@ -131,6 +131,7 @@ static void* __event( void* inst, const void* evt ) {
   }
   else if( StrOp.equals( wFunCmd.name(), NodeOp.getName(evtNode) )) {
     wLoc.setfn( data->props, wFunCmd.isf0(evtNode) );
+    data->fn0 = wFunCmd.isf0(evtNode);
     data->fn1 = wFunCmd.isf1(evtNode);
     data->fn2 = wFunCmd.isf2(evtNode);
     data->fn3 = wFunCmd.isf3(evtNode);
@@ -317,6 +318,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     if( NodeOp.findAttr(cmd,"fn") ) {
       /* Informing the P50 interface. */
       wLoc.setfn( data->props, wLoc.isfn( cmd ) );
+      data->fn0 = wLoc.isfn( cmd );
     }
 
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
@@ -639,7 +641,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   if( function >= 0 )
     timedfn = function;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", data->timedfn );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", timedfn );
   wFunCmd.setid( fncmd, wLoc.getid(data->props) );
   wFunCmd.setf0( fncmd, timedfn==0?False:data->fn0 );
   wFunCmd.setf1( fncmd, timedfn==1?False:data->fn1 );
