@@ -570,6 +570,7 @@ bool RocGui::OnInit() {
 
   TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False );
 
+  m_Frame->Raise();
   return TRUE;
 }
 
