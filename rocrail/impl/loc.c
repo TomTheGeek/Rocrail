@@ -366,7 +366,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 ) {
         /* reset previous timed function */
-        __resetTimedFunction(inst, cmd, 0);
+        __resetTimedFunction(inst, cmd, -1);
       }
       if( wFunCmd.gettimedfn( cmd ) >= 0 ) {
         data->timedfn = wFunCmd.gettimedfn( cmd );
@@ -748,7 +748,7 @@ static void __runner( void* threadinst ) {
       if( fncmd == NULL && data->timedfn >= 0 && data->fntimer >= 0 ) {
         data->fntimer--;
         if( data->fntimer == 0 ) {
-          fncmd = __resetTimedFunction(loc, NULL, 0);
+          fncmd = __resetTimedFunction(loc, NULL, -1);
         }
       }
       tick = 0;
