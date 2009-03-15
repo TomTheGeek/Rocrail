@@ -1652,6 +1652,7 @@ static Boolean _isResumeAutomode( iOLoc loc ) {
 static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
   /* save the function status: */
+  wFunCmd.setf0( cmd, wLoc.isfn(data->props) );
   wFunCmd.setf1( cmd, data->fn1 );
   wFunCmd.setf2( cmd, data->fn2 );
   wFunCmd.setf3( cmd, data->fn3 );
