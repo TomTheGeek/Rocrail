@@ -511,7 +511,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
     return False;
   }
 
-  if( StrOp.equals( locId, data->locId ) )
+  if( locId != NULL && StrOp.equals( locId, data->locId ) )
     return True;
 
 /* check all sensors... */

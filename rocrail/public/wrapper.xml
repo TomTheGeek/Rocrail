@@ -1535,6 +1535,8 @@
 
         <var name="sharedfb" vt="bool" defval="false" remark="Use one set of sensors for all blocks."/>
         <var name="manager" vt="bool" defval="false" remark="Manager mode: Act like a block and manage all sub blocks.(Tracks)"/>
+        <var name="minocc" vt="int" defval="0" range="0-*" required="false" remark="minimal tracks to be occupied before leaving the fiddle yard"/>
+        <var name="movedelay" vt="int" defval="0" range="0-*" required="false" units="s" remark="delay in seconds after an IN event before processing a new move"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
