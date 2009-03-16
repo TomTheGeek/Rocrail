@@ -1444,6 +1444,7 @@ void Symbol::modelEvent( iONode node ) {
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ) {
     const char* state = wSwitch.getstate( node );
     const char* locid = wSwitch.getlocid( node );
+    Boolean isSet = wSwitch.isset(node);
     int port = wSwitch.getport1( m_Props );
     int addr = wSwitch.getaddr1( m_Props );
     int gate = wSwitch.getgate1( m_Props );
@@ -1454,6 +1455,8 @@ void Symbol::modelEvent( iONode node ) {
       wSwitch.setstate( m_Props, state );
       refresh = true;
     }
+
+    SetBackgroundColour( isSet? m_PlanPanel->GetBackgroundColour():*wxRED );
 
     if( addr > 0 && port > 0 ) {
       pada = (addr-1) * 4 + port;

@@ -883,8 +883,8 @@ void CV::doCV( int command, int index, int value ) {
 }
 
 void CV::OnTimer(wxTimerEvent& event) {
-  if( !MutexOp.trywait( m_TimerMutex, 100 ) ) {
-    TraceOp.trc( "cv", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on timer mutex!" );
+  if( !MutexOp.trywait( m_TimerMutex, 1000 ) ) {
+    TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timeout on timer mutex!" );
     return;
   }
 

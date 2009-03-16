@@ -242,8 +242,10 @@ static const char* __checkFbState( iOSwitch inst ) {
 static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
   iOSwitchData data = Data(inst);
   const char* strState = __checkFbState( (iOSwitch)inst );
+  Boolean isSet = True;
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
+    isSet = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "Switch[%s] current state [%s], reported state [%s]",
       SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
@@ -252,6 +254,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int va
   {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( (iOSwitch)inst ) );
+    wSwitch.setset( nodeF, isSet );
     wSwitch.setstate( nodeF, strState );
     if( wSwitch.getiid( data->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( data->props ) );

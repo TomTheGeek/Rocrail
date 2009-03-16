@@ -782,6 +782,7 @@
         <const name="right" vt="string" val="right" remark="3way switch right command or right switch type."/>
         <const name="left" vt="string" val="left" remark="3way switch left command or left switch type."/>
         <var name="state" vt="string" defval="NULL" range="straight,turnout,red,green,left,right" remark="Current state og switch."/>
+        <var name="set" vt="bool" defval="true"/>
         <var name="savepos" vt="string" defval="none" range="none,straight,turnout,left,right" remark="save position of switch"/>
         <const name="flip" vt="string" val="flip" remark="Change current state."/>
         <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
