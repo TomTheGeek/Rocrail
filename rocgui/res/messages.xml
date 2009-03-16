@@ -6923,4 +6923,7 @@
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
   </Msg>
+  <Msg id="minocc">
+    <en txt="Minimal occupied"/>
+  </Msg>
 </Messages>

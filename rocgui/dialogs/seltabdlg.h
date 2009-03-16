@@ -169,6 +169,8 @@ public:
     wxSpinCtrl* m_NrTracks;
     wxCheckBox* m_SharedFB;
     wxCheckBox* m_Manager;
+    wxStaticText* m_labMinOcc;
+    wxSpinCtrl* m_MinOcc;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
