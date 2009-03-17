@@ -1551,6 +1551,11 @@
       <param name="inst" vt="this" remark="Thread instance."/>
       <param name="msg" vt="obj" remark="Post."/>
     </fun>
+    <fun name="prioPost" vt="Boolean" remark="Post a message into the queue.">
+      <param name="inst" vt="this" remark="Thread instance."/>
+      <param name="msg" vt="obj" remark="Post."/>
+      <param name="prio" vt="int" remark="priority"/>
+    </fun>
     <fun name="getPost" vt="obj" remark="Get post from the queue. (NULL if nothing is in queue.)">
       <param name="inst" vt="this" remark="Thread instance."/>
     </fun>

@@ -211,6 +211,14 @@ static Boolean _post( iOThread inst, obj msg ) {
   return False;
 }
 
+static Boolean _prioPost( iOThread inst, obj msg, int prio ) {
+  if( inst != NULL ) {
+    iOThreadData data = Data(inst);
+    return QueueOp.post( data->queue, msg, prio );
+  }
+  return False;
+}
+
 static obj _getPost( iOThread inst ) {
   if( inst != NULL ) {
     iOThreadData data = Data(inst);
