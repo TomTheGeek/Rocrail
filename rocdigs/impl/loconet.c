@@ -1923,12 +1923,13 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
   if( cmd != NULL ) {
     int outsize = __translate( (iOLocoNet)inst, cmd, out+1, &delnode );
+    Boolean lccmd = StrOp.equals( NodeOp.getName(cmd), wLoc.name() );
 
     if( outsize > 0 ) {
       byte* bcmd = allocMem( 64 );
       out[0] = outsize;
       MemOp.copy( bcmd, out, 64 );
-      ThreadOp.post( data->loconetWriter, (obj)bcmd );
+      ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, lccmd ? high:normal );
 
       /*LocoNetOp.transact( (iOLocoNet)inst, out+1, outsize, NULL, NULL, 0, 0 );*/
     }
