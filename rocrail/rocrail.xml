@@ -1318,6 +1318,7 @@
       <var name="psenState" vt="Boolean" remark="position sensor state"/>
       <var name="closereq" vt="Boolean"/>
       <var name="reverse" vt="Boolean"/>
+      <var name="unlockTick" vt="long"/>
     </data>
   </object>
 

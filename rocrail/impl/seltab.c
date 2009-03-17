@@ -37,6 +37,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
 
 
 #include "rocrail/wrapper/public/Block.h"
@@ -731,6 +732,15 @@ static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
     }
   }
 
+  if( wSelTab.getmovedelay(data->props) > 0 ) {
+    long ticks = wSelTab.getmovedelay(data->props) / 10;
+    long elapsed = SystemOp.getTick() - data->unlockTick;
+    if( elapsed < ticks ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] movedelay is [%ld] ticks, elapsed[%ld]",
+                     inst->base.id( inst ), ticks, elapsed );
+      return True;
+    }
+  }
 
   if( data->lockedId != NULL && StrOp.len(data->lockedId) > 0 && !StrOp.equals( locid, data->lockedId ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s], request ID[%s].",
@@ -1014,6 +1024,9 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
         wSelTab.setiid( nodeF, wSelTab.getiid( data->props ) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
     }
+
+    data->unlockTick = SystemOp.getTick();
+
     return True;
   }
   else if( data->lockedId != NULL ) {

@@ -171,6 +171,8 @@ public:
     wxCheckBox* m_Manager;
     wxStaticText* m_labMinOcc;
     wxSpinCtrl* m_MinOcc;
+    wxStaticText* m_labMoveDelay;
+    wxSpinCtrl* m_MoveDelay;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
