@@ -21,7 +21,7 @@
 
 
   <object name="LcDriver" interface="$../rocint/rocint.xml:LcDriverInt" use="node,trace" include="$rocrail/public/loc,$rocrail/public/model,$rocrail/public/route,$rocint/public/lcdriverint,$rocint/public/blockbase" remark="Loc driver object">
-    <typedef def="enum {LC_IDLE=0,LC_FINDDEST,LC_INITDEST,LC_CHECKROUTE,LC_GO,LC_EXITBLOCK,LC_OUTBLOCK,
+    <typedef def="enum {LC_IDLE=0,LC_FINDDEST,LC_INITDEST,LC_CHECKROUTE,LC_PRE2GO,LC_GO,LC_EXITBLOCK,LC_OUTBLOCK,
               LC_ENTERBLOCK,LC_RE_ENTERBLOCK,LC_PRE2INBLOCK,LC_INBLOCK,LC_PRE_WAITBLOCK,LC_WAITBLOCK,LC_TIMER,LC_WAIT4EVENT,
               LC_PAUSE} lc_state"/>
     <typedef def="enum {LC_DIR_FORWARDS=0,LC_DIR_BACKWARDS} lc_direction"/>

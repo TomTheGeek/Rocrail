@@ -98,11 +98,11 @@ void statusIn( iILcDriverInt inst ) {
 
     data->next1Block->link( data->next1Block, data->curBlock );
 
-    data->state = LC_GO;
+    data->state = LC_PRE2GO;
 
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_INBLOCK to LC_GO.",
+                   "Setting state for \"%s\" from LC_INBLOCK to LC_PRE2GO.",
                    data->loc->getId( data->loc ) );
   }
 }

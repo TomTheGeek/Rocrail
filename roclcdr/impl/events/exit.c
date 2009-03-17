@@ -62,7 +62,7 @@ void eventExit( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boo
                  "exit_block event for \"%s\" from \"%s\"...",
                  data->loc->getId( data->loc ), blockId );
 
-  if( newExitEvent && curBlockEvent && ( data->state == LC_GO || data->state == LC_CHECKROUTE ) ) {
+  if( newExitEvent && curBlockEvent && ( data->state == LC_GO || data->state == LC_GO || data->state == LC_CHECKROUTE ) ) {
     data->state = LC_EXITBLOCK;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -75,7 +75,7 @@ void eventExit( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boo
                      "Check wheels of leaving train for dirt or using some isolated wheels?" );
     }
     else {
-                             
+
       /* Exception! */
       /* Train too long??? */
       /* Leaving train has dirty wheels! */
@@ -90,17 +90,17 @@ void eventExit( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boo
       data->state = LC_IDLE;
       wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
       data->run = False;
-      
+
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                      "Loc set back in manual mode for \"%s\" in \"%s\"! (correct position of loc)",
                      data->loc->getId( data->loc ), blockId );
-      
+
 
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "*** Train too long or block too short!!!" );
     }
     /*AppOp.stop(  );*/
   }
-  
+
 }
 

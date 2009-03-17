@@ -85,11 +85,11 @@ void statusCheckRoute( iILcDriverInt inst ) {
       data->loc->cmd( data->loc, cmd );
     }
 
-    data->state = LC_GO;
+    data->state = LC_PRE2GO;
     data->eventTimeout = 0;
     data->signalReset  = 0;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_CHECKROUTE to LC_GO.",
+                   "Setting state for \"%s\" from LC_CHECKROUTE to LC_PRE2GO.",
                    data->loc->getId( data->loc ) );
   }
 }

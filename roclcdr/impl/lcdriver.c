@@ -250,10 +250,15 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
       break;
 
 
-    case LC_GO:
+    case LC_PRE2GO:
       __checkEventTimeout(inst);
       __checkSignalReset(inst);
       statusGo( inst );
+      data->state = LC_GO;
+      break;
+
+
+    case LC_GO:
       break;
 
 
