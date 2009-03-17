@@ -680,20 +680,20 @@ static struct OSelTab* _inst( iONode ini ) {
 }
 
 
-static int __getOccTrackBlocks(iIBlockBase inst, int* maxOccTime) {
+static int __getOccTrackBlocks(iIBlockBase inst, long* oldestOccTick) {
   iOSelTabData data = Data(inst);
   /* check for a free track block */
   iOModel model = AppOp.getModel();
   int occBlocks = 0;
   iONode pos = wSelTab.getseltabpos( data->props );
 
-  *maxOccTime = 0;
+  *oldestOccTick = 0;
 
   while( pos != NULL ) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( block != NULL && !block->isFree(block, NULL) ) {
-      if( block->getOccTime(block) > *maxOccTime )
-        *maxOccTime = block->getOccTime(block);
+      if( block->getOccTime(block) < *oldestOccTick || *oldestOccTick == 0 )
+        *oldestOccTick = block->getOccTime(block);
       occBlocks++;
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
@@ -712,19 +712,19 @@ static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
     iIBlockBase block = __getBlock4Loc((iIBlockBase)inst, locid);
     if( block != NULL ) {
       /* loc is on the FY */
-      int maxOccTime = 0;
-      int locOccTime = block->getOccTime(block);
-      int occBlocks  = __getOccTrackBlocks((iIBlockBase)inst, &maxOccTime);
-      int minOcc     = wSelTab.getminocc( data->props );
+      long oldestOccTick = 0;
+      long locOccTick    = block->getOccTime(block);
+      int  occBlocks     = __getOccTrackBlocks((iIBlockBase)inst, &oldestOccTick);
+      int  minOcc        = wSelTab.getminocc( data->props );
 
       if( minOcc > 0 && occBlocks < minOcc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] contains only [%d] trains; minimum is [%d]...",
                        inst->base.id( inst ), occBlocks, minOcc );
         return True;
       }
-      else if(locOccTime < maxOccTime) {
+      else if(locOccTick <= oldestOccTick) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], max[%d])",
-                       inst->base.id( inst ), locid, locOccTime, maxOccTime );
+                       inst->base.id( inst ), locid, locOccTick, oldestOccTick );
         return True;
       }
 

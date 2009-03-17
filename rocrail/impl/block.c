@@ -1091,6 +1091,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
                      id, data->id, data->locId==NULL?"?":data->locId );
     }
 
+    data->occtime = 0;
+
     /* Unlock the semaphore: */
     MutexOp.post( data->muxLock );
   }
