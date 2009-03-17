@@ -680,16 +680,20 @@ static struct OSelTab* _inst( iONode ini ) {
 }
 
 
-static int __getOccTrackBlocks(iIBlockBase inst) {
+static int __getOccTrackBlocks(iIBlockBase inst, int* maxOccTime) {
   iOSelTabData data = Data(inst);
   /* check for a free track block */
   iOModel model = AppOp.getModel();
   int occBlocks = 0;
   iONode pos = wSelTab.getseltabpos( data->props );
 
+  *maxOccTime = 0;
+
   while( pos != NULL ) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( block != NULL && !block->isFree(block, NULL) ) {
+      if( block->getOccTime(block) > *maxOccTime )
+        *maxOccTime = block->getOccTime(block);
       occBlocks++;
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
@@ -704,15 +708,26 @@ static int __getOccTrackBlocks(iIBlockBase inst) {
 static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
   iOSelTabData data = Data(inst);
 
+  if( locid != NULL ) {
+    iIBlockBase block = __getBlock4Loc((iIBlockBase)inst, locid);
+    if( block != NULL ) {
+      /* loc is on the FY */
+      int maxOccTime = 0;
+      int locOccTime = block->getOccTime(block);
+      int occBlocks  = __getOccTrackBlocks((iIBlockBase)inst, &maxOccTime);
+      int minOcc     = wSelTab.getminocc( data->props );
 
-  if( locid != NULL && __getBlock4Loc( (iIBlockBase)inst, locid ) != NULL ) {
-    /* loc is on the FY */
-    int occBlocks = __getOccTrackBlocks((iIBlockBase)inst);
-    int minOcc = wSelTab.getminocc( data->props );
-    if( minOcc > 0 && occBlocks < minOcc ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] contains only [%d] trains; minimum is [%d]...",
-                     inst->base.id( inst ), occBlocks, minOcc );
-      return True;
+      if( minOcc > 0 && occBlocks < minOcc ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] contains only [%d] trains; minimum is [%d]...",
+                       inst->base.id( inst ), occBlocks, minOcc );
+        return True;
+      }
+      else if(locOccTime < maxOccTime) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], max[%d])",
+                       inst->base.id( inst ), locid, locOccTime, maxOccTime );
+        return True;
+      }
+
     }
   }
 
@@ -811,6 +826,11 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 }
 
 static int _getVisitCnt( iIBlockBase inst, const char* id ) {
+  iOSelTabData data = Data(inst);
+  return 0;
+}
+
+static int _getOccTime( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
   return 0;
 }

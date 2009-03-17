@@ -1324,6 +1324,13 @@ static int _getVisitCnt( iIBlockBase inst, const char* id ) {
   return 0;
 }
 
+static int _getOccTime( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  return 0;
+}
+
+
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/tt.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

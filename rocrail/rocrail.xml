@@ -143,6 +143,7 @@
       <var name="mvMillis" vt="int"/>
       <var name="mvTime" vt="long"/>
       <var name="manager" vt="iIBlockBase"/>
+      <var name="occtime" vt="long"/>
     </data>
   </object>
 

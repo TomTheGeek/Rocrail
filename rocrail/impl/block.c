@@ -793,6 +793,12 @@ static int _getVisitCnt( iIBlockBase inst, const char* id ) {
 }
 
 
+static int _getOccTime( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return data->occtime;
+}
+
+
 static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
   iOBlockData data = NULL;
 
@@ -890,6 +896,11 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
     data->fromBlockId = blockid;
     if( reset )
       BlockOp.resetTrigs( inst );
+  }
+
+  if( ok ) {
+    /* reset occupation ticker */
+    data->occtime = SystemOp.getTick();
   }
 
   /* Unlock the semaphore: */

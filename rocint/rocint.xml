@@ -245,6 +245,9 @@
     <fun name="getManager" vt="this">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="getOccTime" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
 
