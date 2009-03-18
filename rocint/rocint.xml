@@ -130,6 +130,9 @@
     <fun name="getLoc" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getInLoc" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="BlockBase instance"/>
       <param name="cmd" vt="iONode" remark="Command node"/>

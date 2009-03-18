@@ -993,6 +993,11 @@ static const char* _getLoc( iIBlockBase inst ) {
   return data->locId;
 }
 
+static const char* _getInLoc( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.getlocid( data->props );
+}
+
 static void _setGroup( iIBlockBase inst, const char* group ) {
   iOBlockData data = Data(inst);
   data->group = group;

@@ -180,7 +180,7 @@ static int __getTrack4Loc(iIBlockBase inst, const char* locid) {
 
 
 
-static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
+static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* inBlock) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
 
@@ -189,6 +189,9 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
   while( pos != NULL ) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( StrOp.equals( locid, block->getLoc(block) ) ) {
+      if( inBlock != NULL && block->getInLoc(block) != NULL) {
+        *inBlock = StrOp.equals( locid, block->getInLoc(block) );
+      }
       return block;
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
@@ -710,7 +713,8 @@ static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
   iOSelTabData data = Data(inst);
 
   if( locid != NULL ) {
-    iIBlockBase block = __getBlock4Loc((iIBlockBase)inst, locid);
+    Boolean inBlock = False;
+    iIBlockBase block = __getBlock4Loc((iIBlockBase)inst, locid, &inBlock);
     if( block != NULL ) {
       /* loc is on the FY */
       long oldestOccTick = 0;
@@ -718,12 +722,13 @@ static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
       int  occBlocks     = __getOccTrackBlocks((iIBlockBase)inst, &oldestOccTick);
       int  minOcc        = wSelTab.getminocc( data->props );
 
-      if( minOcc > 0 && occBlocks < minOcc ) {
+      if( inBlock && minOcc > 0 && occBlocks < minOcc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] contains only [%d] trains; minimum is [%d]...",
                        inst->base.id( inst ), occBlocks, minOcc );
         return True;
       }
-      else if(locOccTick <= oldestOccTick) {
+
+      if( inBlock && locOccTick < oldestOccTick ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], max[%d])",
                        inst->base.id( inst ), locid, locOccTick, oldestOccTick );
         return True;
@@ -987,7 +992,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
   }
 
   if( !StrOp.startsWith(id, wRoute.routelock) && wSelTab.ismanager(data->props) ) {
-    iIBlockBase block = __getBlock4Loc(inst, id);
+    iIBlockBase block = __getBlock4Loc(inst, id, NULL);
 
       /* dispatch to active tracke block */
     if( block != NULL ) {
@@ -1041,6 +1046,13 @@ static const char* _getLoc( iIBlockBase inst ) {
   iIBlockBase block = __getActiveTrackBlock(inst, "getLoc");
   /* dispatch to active tracke block */
   return block != NULL ? block->getLoc( block ) : "";
+}
+
+static const char* _getInLoc( iIBlockBase inst ) {
+  iOSelTabData data = Data(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getLoc");
+  /* dispatch to active tracke block */
+  return block != NULL ? block->getInLoc( block ) : "";
 }
 
 static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, int val, iONode fbevt ) {
