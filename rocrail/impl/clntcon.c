@@ -38,6 +38,8 @@
 #include "rocrail/wrapper/public/Tcp.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/Exception.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 static int instCnt = 0;
 
@@ -343,6 +345,44 @@ static void __manager( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager ended." );
 }
+
+
+static void __stress( void* threadinst ) {
+  iOThread       th = (iOThread)threadinst;
+  iOClntCon clntcon = (iOClntCon)ThreadOp.getParm(th);
+  iOClntConData data = Data(clntcon);
+
+  ThreadOp.setDescription( th, "ClientCon Stress" );
+  ThreadOp.sleep( 5000 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stress started." );
+
+  do {
+    iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+    wException.settext(node, "STRESS!!!");
+    wException.setlevel( node, TRCLEVEL_MONITOR );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+
+    ThreadOp.sleep( 100 );
+    node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+    wException.settext(node, "Warning!!!");
+    wException.setlevel( node, TRCLEVEL_WARNING );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+
+    ThreadOp.sleep( 100 );
+    node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    /* test values: change to fit */
+    wLoc.setid(node, "G&O");
+    wLoc.setdestblockid( node, "2");
+    wLoc.setaddr(node, 4136);
+    wLoc.setV(node, 3);
+    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+
+    ThreadOp.sleep( 100 );
+  } while( True );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stress ended." );
+}
+
 /*
  ***** _Public functions.
  */
@@ -429,6 +469,11 @@ static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbac
 
   data->manager = ThreadOp.inst( "cconmngr", __manager, clntcon );
   ThreadOp.start( data->manager );
+
+  /* TEST THREAD
+  data->stress = ThreadOp.inst( "cconstress", __stress, clntcon );
+  ThreadOp.start( data->stress );
+  */
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClientConnection started on port %d.", port );
 

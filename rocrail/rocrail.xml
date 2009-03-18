@@ -179,6 +179,7 @@
       <var name="callbackObj" vt="obj"/>
       <var name="srvrsocket" vt="iOSocket"/>
       <var name="manager" vt="iOThread"/>
+      <var name="stress" vt="iOThread"/>
       <var name="infoWriters" vt="iOMap"/>
       <var name="muxMap" vt="iOMutex"/>
     </data>
