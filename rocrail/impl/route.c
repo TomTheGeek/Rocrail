@@ -611,6 +611,29 @@ static Boolean __checkSensors( iORoute inst ) {
 }
 
 
+static Boolean _isFree( iORoute inst, const char* id ) {
+  iORouteData data = Data(inst);
+
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
+    /* Check all switches: */
+    if( !__checkSensors( inst ) )
+      return False;
+
+    if( !__checkSwitches( inst, id ) )
+      return False;
+
+    if( !__checkCrossingBlocks( inst, id ) )
+      return False;
+
+    return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Street already locked by %s", data->lockedId );
+    return False;
+  }
+}
+
+
 static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
   iORouteData o = Data(inst);
   o->reverse = reverse;

@@ -863,21 +863,25 @@
       <param name="percent" vt="int*" remark="Speed percent"/>
     </fun>
     <fun name="isSwap" vt="Boolean">
-      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="isSwapPost" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="hasThrownSwitch" vt="Boolean">
-      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="getFunction" vt="int" remark="returns also 0 when the first turnout is left but not thrown">
-      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="inst" vt="this" remark="Route instance"/>
       <param name="activationtime" vt="int*"/>
       <param name="deactivationevent" vt="const char**"/>
     </fun>
     <fun name="isSet" vt="Boolean" remark="true if all turnouts are set">
-      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
+    <fun name="isFree" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+      <param name="locid" vt="const char*" remark="Locking locid"/>
     </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
