@@ -825,7 +825,7 @@ static Boolean _isSet( iORoute inst ) {
 
       if( isw != NULL && !SwitchOp.isSet(isw) ) {
         isSet = False;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                    "switch [%s] for route [%s] is not set",
                    swId,
                    RouteOp.getId( inst ) );

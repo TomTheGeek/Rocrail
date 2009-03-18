@@ -230,7 +230,7 @@ static const char* __checkFbState( iOSwitch inst ) {
     currentState = wSwitch.right;
 
   /* report */
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
     "Switch[%s] current state [%s], reported state [%s]",
     SwitchOp.getId( inst ), wSwitch.getstate( data->props), currentState );
 
