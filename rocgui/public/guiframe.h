@@ -207,6 +207,7 @@ public:
   bool isFill() { return m_bFill; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
+  bool isInitialized() { return m_bInitialized; }
   void setLocID( const char* locid );
   double getScale() { return m_Scale; }
   double getBktext() { return m_Bktext; }
@@ -280,6 +281,7 @@ private:
   bool  m_bShowID;
   bool  m_bRaster;
   bool  m_bServerConsoleMode;
+  bool  m_bInitialized;
 
   bool  showlogo;
   bool  m_bEditMode;

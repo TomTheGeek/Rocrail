@@ -571,6 +571,8 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   cursor = wxCursor(wxCURSOR_ARROW);
   SetCursor(cursor);
 
+  m_bInitialized = true;
+
 }
 
 static int locComparator(obj* o1, obj* o2) {
@@ -974,6 +976,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bAutoMode          = false;
   m_IconPath           = icons;
   m_ThemePath          = theme;
+  m_bInitialized       = false;
+
 
 }
 

@@ -153,12 +153,14 @@ static void rocrailCallback( obj me, iONode node );
 static void ExceptionCallback( int level, char* msg ) {
   /* Added check for VSC++ uninitialized pointer in debug mode */
   if ( ( wxGetApp().getFrame() != NULL ) && ( wxGetApp().getFrame() != (RocGuiFrame *)0xcdcdcdcd )) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
-    // Make a copy of the node for using it out of this scope:
-    iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
-    wException.settext( node, msg );
-    event.SetClientData( node );
-    wxPostEvent( wxGetApp().getFrame(), event );
+    if( wxGetApp().getFrame()->isInitialized() ) {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
+      // Make a copy of the node for using it out of this scope:
+      iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+      wException.settext( node, msg );
+      event.SetClientData( node );
+      wxPostEvent( wxGetApp().getFrame(), event );
+    }
   }
 }
 
@@ -625,8 +627,16 @@ static void rocrailCallback( obj me, iONode node ) {
 
     return;
   }
+
+
+  /* do not process server messages before the plan panels are initialized */
+  if( !wxGetApp().getFrame()->isInitialized() ) {
+    return;
+  }
+
+
   /* rocrail.ini */
-  else if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
+  if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
