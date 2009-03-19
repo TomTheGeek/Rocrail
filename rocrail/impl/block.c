@@ -1162,6 +1162,7 @@ static void _init( iIBlockBase inst ) {
       LocOp.setCurBlock( loc, data->id );
       /* overwrite data->locId with the static id from the loc object: */
       data->locId = LocOp.getId( loc );
+      data->occtime = SystemOp.getTick();
 
       BlockOp.red( inst, False, False );
       BlockOp.red( inst, True, False );
@@ -1190,6 +1191,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       iOLoc loc = ModelOp.getLoc( model, data->locId );
       if( loc != NULL ) {
         LocOp.setCurBlock( loc, NULL );
+        data->occtime = SystemOp.getTick();
       }
     }
     wBlock.setlocid( data->props, locid );
