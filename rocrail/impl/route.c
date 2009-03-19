@@ -614,6 +614,11 @@ static Boolean __checkSensors( iORoute inst ) {
 static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
 
+  if( data->lockedId != NULL && StrOp.equals(data->lockedId, id ) ) {
+    /* it is free for itself */
+    return True;
+  }
+
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
     /* Check all switches: */
     if( !__checkSensors( inst ) )
