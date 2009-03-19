@@ -674,7 +674,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
     wSwitch.setstate( nodeF, wSwitch.getstate( o->props ) );
 
     if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
-      wSwitch.setset( nodeF, False );
+      wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
 
     if( wSwitch.getiid( o->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( o->props ) );
