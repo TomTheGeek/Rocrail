@@ -668,10 +668,14 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
 
   /* Broadcast to clients. Node6 */
 
-  if( update && !(o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel())) ) {
+  if( update ) {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
     wSwitch.setstate( nodeF, wSwitch.getstate( o->props ) );
+
+    if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
+      wSwitch.setset( nodeF, False );
+
     if( wSwitch.getiid( o->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( o->props ) );
     if( o->lockedId != NULL )
