@@ -127,6 +127,9 @@ static const char* _getMsg( struct ORes* inst ,const char* key ) {
     if( msg != NULL ) {
       iONode lang = NodeOp.findNode( msg, data->language );
       if( lang != NULL ) {
+        const char* alttxt = NodeOp.getStr( lang, "alttxt", key );
+        if( alttxt != NULL )
+          return alttxt;
         return NodeOp.getStr( lang, "txt", key );
       }
       lang = NodeOp.findNode( msg, "all" );
@@ -150,7 +153,7 @@ static const char* _getMenu( struct ORes* inst ,const char* key ) {
   if( data->msgMap != NULL ) {
     iONode msg = (iONode)MapOp.get( data->msgMap, key );
     if( msg != NULL ) {
-      const char* key = NodeOp.getStr( msg, "key", NULL );
+      const char* shortcutkey = NodeOp.getStr( msg, "key", NULL );
       iONode lang = NodeOp.findNode( msg, data->language );
       if( lang == NULL )
         lang = NodeOp.findNode( msg, "all" );
@@ -159,10 +162,12 @@ static const char* _getMenu( struct ORes* inst ,const char* key ) {
       if( lang != NULL ) {
         Boolean dialog = NodeOp.getBool( msg, "dialog", False );
         int accel = NodeOp.getInt( lang, "accel", -1 );
-        const char* txt = NodeOp.getStr( lang, "txt", key );
+        const char* txt = NodeOp.getStr( lang, "alttxt", NULL );
         const char* menu = NodeOp.getStr( lang, "menu", NULL );
+        if( txt == NULL || StrOp.len(txt) == 0 )
+          txt = NodeOp.getStr( lang, "txt", key );
         if( menu == NULL ) {
-          char* menustr = StrOp.fmt( "%s%s%s%s", txt, dialog?"...":"", key!=NULL?"\t":"", key!=NULL?key:"" );
+          char* menustr = StrOp.fmt( "%s%s%s%s", txt, dialog?"...":"", shortcutkey!=NULL?"\t":"", shortcutkey!=NULL?shortcutkey:"" );
           if( accel != -1 ) {
             int strlen = StrOp.len( menustr );
             char* amenustr = allocIDMem( strlen + 2, RocsStrID );

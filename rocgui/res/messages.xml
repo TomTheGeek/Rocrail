@@ -457,7 +457,7 @@
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
-    <en txt="Loc Control" accel="0" tip="Dialog to control locs."/>
+    <en txt="Loc Control" alttxt="Throttle" accel="0" tip="Dialog to control locs."/>
     <nl txt="Loc Besturing" accel="0" tip="Window om locomotieven te besturen."/>
     <sv txt="Lokkontroll" accel="0" tip="Öppna körkontroll för lok."/>
     <fr txt="Poste de conduite" accel="0" tip="Affiche le poste de conduite."/>
@@ -1016,7 +1016,7 @@
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
-    <en txt="Locomotive table" tip="Locomotive table"/>
+    <en txt="Locomotive table" alttxt="Locomotives" tip="Locomotive table"/>
     <nl txt="Locomotieven" tip="Locomotieven"/>
     <sv txt="Lok" tip="Loktabell"/>
     <fr txt="Locomotives" tip="Locomotives"/>
@@ -1061,7 +1061,7 @@
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
-    <en txt="Route table" tip="Routes"/>
+    <en txt="Route table" alttxt="Routes" tip="Route table"/>
     <nl txt="Rijwegen" tip="Rijwegen"/>
     <sv txt="Tågvägar" tip="Tågvägstabell"/>
     <fr txt="Routes" tip="Routes"/>
@@ -1072,7 +1072,7 @@
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
-    <en txt="Block group table" tip="Block group table"/>
+    <en txt="Block group table" alttxt="Block groups" tip="Block group table"/>
     <nl txt="Blok groepen" tip="Blok groepen tabel"/>
     <sv txt="Blockgrupper" tip="Blockgruppstabell"/>
     <fr txt="Groupes de blocs" tip="Tableau des Groupes de blocs "/>
@@ -1083,7 +1083,7 @@
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
-    <en txt="Block table" tip="Block table"/>
+    <en txt="Block table" alttxt="Blocks" tip="Block table"/>
     <nl txt="Blokken" tip="Blokken"/>
     <sv txt="Block" tip="Blocktabell"/>
     <fr txt="Blocs" tip="Tableau de blocs"/>
@@ -1094,7 +1094,7 @@
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
-    <en txt="Turnout table" tip="Turnout table"/>
+    <en txt="Turnout table" alttxt="Turnouts" tip="Turnout table"/>
     <nl txt="Wissels" tip="Wissels"/>
     <sv txt="Växlar" tip="Växeltabell"/>
     <fr txt="Aiguillages" tip="Tableau d'aiguillages"/>
@@ -1105,7 +1105,7 @@
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
     <de txt="Ausgänge" tip="Ausgänge"/>
-    <en txt="Output table" tip="Output table"/>
+    <en txt="Output table" alttxt="Outputs" tip="Output table"/>
     <nl txt="Uitgangen" tip="Uitgangen"/>
     <sv txt="Utgångar" tip="Utgångstabell"/>
     <fr txt="Sorties" tip="Tableau de sorties"/>
@@ -1116,7 +1116,7 @@
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
     <de txt="Signale" tip="Signale"/>
-    <en txt="Signal table" tip="Signal table"/>
+    <en txt="Signal table" alttxt="Signals" tip="Signal table"/>
     <nl txt="Seinen" tip="Seinen"/>
     <sv txt="Signaler" tip="Signaltabell"/>
     <fr txt="Signaux" tip="Tableau de signaux"/>
@@ -1139,7 +1139,7 @@
   </Msg>
   <Msg id="sensortable" dialog="true" key="Alt-1">
     <de txt="Rückmelder" tip="Rückmelder"/>
-    <en txt="Sensor table" tip="Sensor table"/>
+    <en txt="Sensor table" alttxt="Sensors" tip="Sensor table"/>
     <nl txt="Melders" tip="Bezetmelders"/>
     <sv txt="Sensorer" tip="Sensortabell"/>
     <fr txt="Contacts" tip="Tableau des contacts"/>
@@ -3880,7 +3880,7 @@
   </Msg>
   <Msg id="scheduletable" dialog="true" key="Ctrl-4">
     <de txt="Fahrpläne" tip="Fahrpläne"/>
-    <en txt="Schedule table" tip="Schedule table"/>
+    <en txt="Schedule table" alttxt="Schedules" tip="Schedule table"/>
     <nl txt="Dienstroosters" tip="Dienstroosters"/>
     <sv txt="Tidtabeller" tip="Tidtabeller"/>
     <fr txt="Horaires" tip="Horaires"/>
@@ -3927,7 +3927,7 @@
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaften" tip="Ortschaften"/>
-    <en txt="Location table" tip="Location table"/>
+    <en txt="Location table" alttxt="Locations" tip="Location table"/>
     <nl txt="Plaatsen" tip="Plaatsen"/>
     <sv txt="Platser" tip="Destinationstabell"/>
     <fr txt="Places" tip="Places"/>
@@ -4967,7 +4967,7 @@
   </Msg>
   <Msg id="actiontable" dialog="true" key="Alt-3">
     <de txt="Aktionen"/>
-    <en txt="Action table"/>
+    <en txt="Action table" alttxt="Actions"/>
     <nl txt="Acties"/>
     <sv txt="Åtgärder"/>
     <fr txt="Actions"/>
@@ -6702,7 +6702,7 @@
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagonen" tip="Wagontabelle"/>
-    <en txt="Car table" tip="Car table"/>
+    <en txt="Car table" alttxt="Cars" tip="Car table"/>
     <nl txt="Wagonnen" tip="Wagon lijst"/>
     <sv txt="Cars"/>
     <cs txt="Tabulka Aut"/>
@@ -6710,11 +6710,11 @@
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtzetteln" tip="Frachtzetteltabelle"/>
-    <en txt="Waybill table" tip="Waybill table"/>
+    <en txt="Waybill table" alttxt="Waybills" tip="Waybill table"/>
     <nl txt="Vrachtbrieven" tip="Vrachtbrieven tabel"/>
   </Msg>
   <Msg id="operatortable" dialog="true" key="Alt-6">
-    <en txt="Operator table" tip="Operator table"/>
+    <en txt="Operator table" alttxt="Operators" tip="Operator table"/>
   </Msg>
   <Msg id="operator">
     <en txt="Operator"/>
