@@ -728,10 +728,12 @@ static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
         return True;
       }
 
-      if( inBlock && locOccTick > oldestOccTick ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], oldest[%d])",
-                       inst->base.id( inst ), locid, locOccTick, oldestOccTick );
-        return True;
+      if( wSelTab.isfifo(data->props) ) {
+        if( inBlock && locOccTick > oldestOccTick ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], oldest[%d])",
+                         inst->base.id( inst ), locid, locOccTick, oldestOccTick );
+          return True;
+        }
       }
 
     }

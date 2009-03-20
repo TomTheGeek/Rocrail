@@ -167,12 +167,13 @@ public:
     wxTextCtrl* m_Desc;
     wxStaticText* m_labNrTracks;
     wxSpinCtrl* m_NrTracks;
-    wxCheckBox* m_SharedFB;
-    wxCheckBox* m_Manager;
     wxStaticText* m_labMinOcc;
     wxSpinCtrl* m_MinOcc;
     wxStaticText* m_labMoveDelay;
     wxSpinCtrl* m_MoveDelay;
+    wxCheckBox* m_SharedFB;
+    wxCheckBox* m_Manager;
+    wxCheckBox* m_FiFo;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
