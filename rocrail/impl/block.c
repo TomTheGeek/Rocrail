@@ -794,8 +794,16 @@ static int _getVisitCnt( iIBlockBase inst, const char* id ) {
 
 
 static int _getOccTime( iIBlockBase inst ) {
-  iOBlockData data = Data(inst);
-  return data->occtime;
+  iOBlockData data  = Data(inst);
+  iOModel     model = AppOp.getModel();
+  /* check if the loco is in auto mode */
+  if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
+    iOLoc loc = ModelOp.getLoc( model, data->locId );
+    if( loc != NULL && LocOp.isAutomode(loc)) {
+      return data->occtime;
+    }
+  }
+  return 0;
 }
 
 
