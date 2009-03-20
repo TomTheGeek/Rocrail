@@ -127,7 +127,7 @@ static const char* _getMsg( struct ORes* inst ,const char* key ) {
     if( msg != NULL ) {
       iONode lang = NodeOp.findNode( msg, data->language );
       if( lang != NULL ) {
-        const char* alttxt = NodeOp.getStr( lang, "alttxt", key );
+        const char* alttxt = NodeOp.getStr( lang, "alttxt", NULL );
         if( alttxt != NULL )
           return alttxt;
         return NodeOp.getStr( lang, "txt", key );
