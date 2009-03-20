@@ -758,12 +758,10 @@ static void __runner( void* threadinst ) {
 
 
     if( fncmd != NULL ) {
+      wLoc.setV( fncmd, -1 );
       broadcast = (iONode)NodeOp.base.clone(fncmd);
-    }
+      __engine( loc, fncmd );
 
-    __engine( loc, fncmd );
-
-    if( broadcast != NULL ) {
       /* Broadcast to clients. */
       wLoc.setid( broadcast, wLoc.getid( data->props ) );
       wLoc.setdir( broadcast, wLoc.isdir( data->props ) );
