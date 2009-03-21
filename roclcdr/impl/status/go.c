@@ -39,9 +39,9 @@
 
 
 
-void statusGo( iILcDriverInt inst ) {
+void statusPre2Go( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
-  
+
   if( data->next1Block == NULL || data->curBlock == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "blocks are reseted while running!" );
     return;
@@ -49,12 +49,20 @@ void statusGo( iILcDriverInt inst ) {
 
   /* if the destination block hast an enter2route event set state to LC_ENTER */
   if( data->next1Block->hasEnter2Route( data->next1Block, data->curBlock->base.id(data->curBlock) ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "**enter2route** event for block [%s]", 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "**enter2route** event for block [%s]",
                  data->next1Block->base.id(data->next1Block) );
     data->state = LC_ENTERBLOCK;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for [%s] from LC_GO to LC_ENTERBLOCK.",
                    data->loc->getId( data->loc ) );
   }
+  else {
+    data->state = LC_GO;
+  }
 }
 
+
+void statusGo( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+
+}

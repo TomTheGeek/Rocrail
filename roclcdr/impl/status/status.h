@@ -23,6 +23,7 @@ void statusIdle( iILcDriverInt inst );
 void statusFindDest( iILcDriverInt inst );
 void statusInitDest( iILcDriverInt inst );
 void statusCheckRoute( iILcDriverInt inst );
+void statusPre2Go( iILcDriverInt inst );
 void statusGo( iILcDriverInt inst );
 void statusExit( iILcDriverInt inst );
 void statusOut( iILcDriverInt inst );
