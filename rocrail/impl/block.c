@@ -309,7 +309,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     StrOp.fmtb( identString, "%04d", ident );
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
-    wBlock.setlocid( nodeD, identString );
+    wBlock.setlocid( nodeD, puls ? identString:data->locId );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
   }
 
