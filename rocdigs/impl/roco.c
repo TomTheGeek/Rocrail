@@ -298,11 +298,9 @@ static Boolean __sendRequest( iORoco roco, byte* outin ) {
   }
   out[len-1] = bXor;
 
-  // NO XOR
-  if ( out[0] == 0x10 ) // OK-byte
+  // NO XOR for ok byte
+  if ( out[0] == 0x10 )
     len = 1;
-  if ( out[0] == 0x40 && out[1] == 0xF0 && out[2] == 0xF0 )
-    len = 3;
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "OUT: 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
       out[0], out[1], out[2], out[3], out[4], out[5], out[6], len);
@@ -341,10 +339,9 @@ static void __initializer( void* threadinst ) {
 
   // put off programming track
   byte* outa0 = allocMem(256);
-  outa0[0] = 3;
+  outa0[0] = 2;
   outa0[1] = 0x40;
   outa0[2] = 0xF0;
-  outa0[3] = 0xF0;
   ThreadOp.post( data->transactor, (obj)outa0 );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** put off programming track..." );
 
@@ -618,7 +615,7 @@ static void __transactor( void* threadinst ) {
            responceRecieved = True;
         }
 
-        // anything will go to rocgui ...
+        // anything will go to rocview ...
         __evaluateResponse( roco, in, datalen );
 
       }
@@ -661,9 +658,6 @@ static void __translate( iORoco roco, iONode node ) {
     outb[3] = addr;
     outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //deactivate gate first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
     ThreadOp.post( data->transactor, (obj)outb );
-
-    // wait a while for the cs to react
-    // ThreadOp.sleep( 50 );
 
     byte* outbb = allocMem(256);
     outbb[0] = 4;
@@ -803,7 +797,7 @@ static void __translate( iORoco roco, iONode node ) {
     byte* outb = allocMem(256);
     outb[0] = 6;
     outb[1] = 0x00;
-    outb[2] = 0xE4; // rocomotion traces sometimes show E5 against E4 with additional 7th byte contianing 02 or 03
+    outb[2] = 0xE4; // rocomotion traces sometimes show E5 against E4 with additional 7th byte contianing 02 or 03, but working with E4
     outb[3] = reqid;
     __setLocAddr( addr, outb+4 );
     outb[6] = dir ? 0x80:0x00;
@@ -815,6 +809,7 @@ static void __translate( iORoco roco, iONode node ) {
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
+    int   fncnt = wLoc.getfncnt( node ); //Lokmaus does not support 12 functions, Multimaus does, check number of functions of loco and decide wether or not to send function groups 2 and 3 accordingly
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
     Boolean f2 = wFunCmd.isf2( node );
@@ -832,7 +827,17 @@ static void __translate( iORoco roco, iONode node ) {
     byte functions2 = (f5?0x01:0) + (f6?0x02:0) + (f7?0x04:0) + (f8?0x08:0);
     byte functions3 = (f9?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+    if ( fncnt <=4 )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function %d light=%s f1=%s f2=%s f3=%s f4=%s",
+        addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF") );
+    else if ( fncnt <= 8 )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
+        addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
+        (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF") );
+    else
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
         addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
@@ -847,28 +852,30 @@ static void __translate( iORoco roco, iONode node ) {
     outa[6] = functions1;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
     ThreadOp.post( data->transactor, (obj)outa );
-    //ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
 
-    byte* outb = allocMem(256);
-    outb[0] = 6;
-    outb[1] = 0x00;
-    outb[2] = 0xE4;
-    outb[3] = 0x21;
-    __setLocAddr( addr, outb+4 );
-    outb[6] = functions2;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
-    ThreadOp.post( data->transactor, (obj)outb );
-    //ThreadOp.sleep( 50 ); //not too fast, enough cs busy messages already
+    if ( fncnt >= 5 ) {
+      byte* outb = allocMem(256);
+      outb[0] = 6;
+      outb[1] = 0x00;
+      outb[2] = 0xE4;
+      outb[3] = 0x21;
+      __setLocAddr( addr, outb+4 );
+      outb[6] = functions2;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
+      ThreadOp.post( data->transactor, (obj)outb );
+    }
 
-    byte* outc = allocMem(256);
-    outc[0] = 6;
-    outc[1] = 0x00;
-    outc[2] = 0xE4;
-    outc[3] = 0x22;
-    __setLocAddr( addr, outc+4 );
-    outc[6] = functions3;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
-    ThreadOp.post( data->transactor, (obj)outc );
+    if ( fncnt >= 9 ) {
+      byte* outc = allocMem(256);
+      outc[0] = 6;
+      outc[1] = 0x00;
+      outc[2] = 0xE4;
+      outc[3] = 0x22;
+      __setLocAddr( addr, outc+4 );
+      outc[6] = functions3;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
 
     /* save the function1 byte to use for setting the lights function... */
     data->lcfn[addr] = functions1;
@@ -970,10 +977,9 @@ static void __translate( iORoco roco, iONode node ) {
     }  // PT off, send: All ON"
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       byte* outb = allocMem(256);
-      outb[0] = 3;
+      outb[0] = 2;
       outb[1] = 0x40;
       outb[2] = 0xF0;
-      outb[3] = 0xF0;
       ThreadOp.post( data->transactor, (obj)outb );
     }
   }
