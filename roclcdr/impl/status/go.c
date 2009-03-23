@@ -53,10 +53,13 @@ void statusPre2Go( iILcDriverInt inst ) {
                  data->next1Block->base.id(data->next1Block) );
     data->state = LC_ENTERBLOCK;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for [%s] from LC_GO to LC_ENTERBLOCK.",
+                   "Setting state for [%s] from LC_PRE2GO to LC_ENTERBLOCK.",
                    data->loc->getId( data->loc ) );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Setting state for [%s] from LC_PRE2GO to LC_GO.",
+                   data->loc->getId( data->loc ) );
     data->state = LC_GO;
   }
 }
