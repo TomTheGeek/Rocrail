@@ -314,6 +314,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wFunCmd.setid( cmd, wAction.getid( data->action ) );
       LocOp.getFunctionStatus(lc, cmd);
 
+      wFunCmd.setf0( cmd, fnaction==0?fon:wFunCmd.isf0( cmd ) );
       wFunCmd.setf1( cmd, fnaction==1?fon:wFunCmd.isf1( cmd ) );
       wFunCmd.setf2( cmd, fnaction==2?fon:wFunCmd.isf2( cmd ) );
       wFunCmd.setf3( cmd, fnaction==3?fon:wFunCmd.isf3( cmd ) );
