@@ -892,28 +892,26 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, con
   if( has2Units ) {
     if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.left ) ) {
       drawSvgSym(dc, m_SvgSym3, ori);
-      return;
     }
     else if( m_SvgSym4!=NULL && StrOp.equals( state, wSwitch.right ) ) {
       drawSvgSym(dc, m_SvgSym4, ori);
-      return;
     }
     else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
       drawSvgSym(dc, m_SvgSym2, ori);
-      return;
     }
     else if( m_SvgSym1!=NULL ) {
       drawSvgSym(dc, m_SvgSym1, ori);
-      return;
     }
   }
 
-  if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
+  else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
     drawSvgSym(dc, m_SvgSym2, ori);
   }
+
   else if( m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
   }
+
   else {
     m_bRotateable = false;
     ori = wItem.west; // not rotateable.
