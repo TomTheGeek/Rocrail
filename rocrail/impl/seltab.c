@@ -509,7 +509,7 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "table at track [%d]: **ready**", gotopos );
   }
-  else if( gotopos >= 0 && gotopos < 16 ) {
+  else if( gotopos >= 0 && gotopos <= wSelTab.getnrtracks(data->props) ) {
     iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
 
     const char* iid = wSelTab.getiid( data->props );
