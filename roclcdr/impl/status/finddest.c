@@ -53,14 +53,17 @@ void statusFindDest( iILcDriverInt inst ) {
   }
   else {
     Boolean wait = False;
-    /* find destination using schedule */
-    data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), data->loc );
 
     /* evaluate departure time */
     if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
         !checkScheduleTime( inst, data->schedule, data->scheduleIdx ) ){
       wait = True;
+    }
+
+    if( !wait ) {
+    /* find destination using schedule */
+    data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
+                                                      data->loc->getCurBlock( data->loc ), data->loc );
     }
 
     if( !wait && data->next1Route != NULL ) {
