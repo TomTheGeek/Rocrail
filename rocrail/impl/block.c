@@ -340,10 +340,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
       data->fromBlockId = data->id;
     }
   }
-  else if( fbevt == NULL && data->fromBlockId == NULL && puls && loc == NULL ) {
+  else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
     if( !__acceptGhost((obj)inst) ) {
-      int tl = TRCLEVEL_DEBUG;
+      int tl = TRCLEVEL_USER1;
       if( ModelOp.isAuto( AppOp.getModel() ) ) {
         tl = TRCLEVEL_EXCEPTION;
         /* power off */

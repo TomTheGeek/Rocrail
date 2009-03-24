@@ -148,7 +148,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
                    data->loc->getId( data->loc ) );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "unexpected IN event for [%s], state=[%d]",
                    data->loc->getId( data->loc ), data->state );
 
