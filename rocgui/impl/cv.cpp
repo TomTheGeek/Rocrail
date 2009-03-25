@@ -388,6 +388,7 @@ void CV::onDecConfig(void) {
 
 
 void CV::update4POM(void) {
+  /*
   m_getAddress->Enable(!m_bPOM);
   m_getVstart->Enable(!m_bPOM);
   m_getAccel->Enable(!m_bPOM);
@@ -397,6 +398,7 @@ void CV::update4POM(void) {
   m_getVersion->Enable(!m_bPOM);
   m_getManu->Enable(!m_bPOM);
   m_Get->Enable(!m_bPOM);
+  */
   m_ReadAll->Enable(!m_bPOM);
   m_PTonoff->Enable(!m_bPOM);
 }
