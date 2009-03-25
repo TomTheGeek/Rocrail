@@ -52,9 +52,12 @@ MOUNTPOINT=..
 OUTDIR=../$(DIRPREFIX)bin
 GENDIR=../$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)/rocdigs/bin
+BUILDBINDIR=../rocs/bin
 DEBUG=-g
-DESTDIR=/opt/rocrail
-BINDIR=../rocs/bin
+DESTDIR?=
+PREFIX?=/usr/local
+LIBDIR?=$(PREFIX)/lib
+ROCRAIL_LIBDIR=$(LIBDIR)/rocrail
 
 CPP=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
@@ -182,27 +185,27 @@ clean:
 	-rm -f $(OUTDIR)/virtual$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/mcs2$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/clock$(SHAREDSUFFIX)
-	cd $(GENDIR)/rocdigs; ../$(BINDIR)/ogen ../../rocdigs/rocdigs.xml ../
-	cd $(GENDIR)/rocdigs; ../$(BINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
+	cd $(GENDIR)/rocdigs; ../$(BUILDBINDIR)/ogen ../../rocdigs/rocdigs.xml ../
+	cd $(GENDIR)/rocdigs; ../$(BUILDBINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
 
 install:
-	-cp -p $(OUTDIR)/p50$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/p50x$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/hsi88$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/srcp$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/lenz$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/roco$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/zimo$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/dinamo$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/om32$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/ddx$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/slx$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/inter10$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/barjut$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/ecos$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/loconet$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/virtual$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/clock$(SHAREDSUFFIX) $(DESTDIR)
-	
+	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/p50$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/p50x$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/hsi88$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/srcp$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/lenz$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/roco$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/zimo$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/dinamo$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/om32$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/ddx$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/slx$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/inter10$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/barjut$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/ecos$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/loconet$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/virtual$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/clock$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)

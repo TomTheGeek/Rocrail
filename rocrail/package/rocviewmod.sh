@@ -8,13 +8,16 @@ if [ "`which rocprops.sh`" != "" ] ; then
 	source rocprops.sh
 else
 	# Use default property values
-	ROCRAIL_LIBDIR=/usr/local/lib/rocrail
 	ROCRAIL_LIBEXECDIR=/usr/local/libexec/rocrail
 	ROCRAIL_DATADIR=/usr/local/share/rocrail
 fi
 
-if [ ! -e ~/rocrail/rocrail.ini ] ; then
-	cp $ROCRAIL_DATADIR/default/rocrail.ini ~/rocrail
+if [ ! -e ~/rocrail/rocrail.htb ] ; then
+	cp $ROCRAIL_DATADIR/rocrail.htb ~/rocrail
+fi
+
+if [ ! -e ~/rocrail/rocgui.ini ] ; then
+	cp $ROCRAIL_DATADIR/default/rocgui.ini ~/rocrail
 fi
 
 if [ ! -e ~/rocrail/plan.xml ] ; then
@@ -27,11 +30,8 @@ fi
 
 cd ~/rocrail
 
-if ps --no-heading -C rocrail
-  then
-    echo "rocrail is running"
-  else
-    echo "rocrail is not running. start..."
-#    gnome-terminal --hide-menubar --title=Rocrail --working-directory="~/rocrail" --geometry=132x50 -e "/opt/rocrail/rocrail -console -l /opt/rocrail"
-    $ROCRAIL_LIBEXECDIR/rocrail -console -l $ROCRAIL_LIBDIR
+if [ ! -e ~/rocrail/icons ] ; then
+	ln -s $ROCRAIL_DATADIR/icons ~/rocrail/icons
 fi
+
+$ROCRAIL_LIBEXECDIR/rocview $* -modview
