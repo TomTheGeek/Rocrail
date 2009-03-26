@@ -41,9 +41,19 @@ MOUNTPOINT=..
 OUTDIR=../$(DIRPREFIX)bin
 GENDIR=../$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)/rocrail/bin
+BUILDBINDIR=../rocs/bin
 DEBUG=-g
-DESTDIR=/opt/rocrail
-BINDIR=../rocs/bin
+DESTDIR?=
+PREFIX?=/usr/local
+BINDIR?=$(PREFIX)/bin
+LIBDIR?=$(PREFIX)/lib
+LIBEXECDIR?=$(PREFIX)/libexec
+DATADIR?=$(PREFIX)/share
+PIXMAPSDIR?=$(PREFIX)/share/pixmaps
+APPLICATIONSDIR=$(PREFIX)/share/applications
+ROCRAIL_LIBDIR=$(LIBDIR)/rocrail
+ROCRAIL_LIBEXECDIR=$(LIBEXECDIR)/rocrail
+ROCRAIL_DATADIR=$(DATADIR)/rocrail
 
 CPP=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)gcc
@@ -98,11 +108,11 @@ clean:
 	-rm -f $(GENDIR)/rocrail/wrapper/impl/*
 	-rm -f $(GENDIR)/rocrail/wrapper/bin/*
 	-rm -f $(GENDIR)/rocrail/wrapper/doc/*
-	cd $(GENDIR)/rocrail; ../$(BINDIR)/wgen ../../rocrail/public/wrapper.xml
-	cd $(GENDIR)/rocrail; ../$(BINDIR)/ogen ../../rocrail/rocrail.xml ../
-	cd $(GENDIR)/rocrail; ../$(BINDIR)/xml2cstr ../../rocrail/public/wrapper.xml wrapper/impl/wrapperinfo.c wrapperinfo
-	cd $(GENDIR)/rocrail; ../$(BINDIR)/xml2cstr wrapper/doc/wrapper-en.html wrapper/impl/rocrail_doc.c rocrail_doc
-	cd $(GENDIR)/rocrail; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
+	cd $(GENDIR)/rocrail; ../$(BUILDBINDIR)/wgen ../../rocrail/public/wrapper.xml
+	cd $(GENDIR)/rocrail; ../$(BUILDBINDIR)/ogen ../../rocrail/rocrail.xml ../
+	cd $(GENDIR)/rocrail; ../$(BUILDBINDIR)/xml2cstr ../../rocrail/public/wrapper.xml wrapper/impl/wrapperinfo.c wrapperinfo
+	cd $(GENDIR)/rocrail; ../$(BUILDBINDIR)/xml2cstr wrapper/doc/wrapper-en.html wrapper/impl/rocrail_doc.c rocrail_doc
+	cd $(GENDIR)/rocrail; ../$(BUILDBINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
 # TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
 rocrail:
@@ -121,46 +131,33 @@ fromtar:
 	cd ../roclcdr; make clean PLATFORM=$(PLATFORM); make all DEBUG=$(DEBUG) TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL);
 	cd ../rocgui; make clean PLATFORM=$(PLATFORM); make all DEBUG=$(DEBUG) TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL);
 
-install_all:
-	-mkdir -p $(DESTDIR)
-	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
-	cd ../rocdigs; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	cd ../roclcdr; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	cd ../rocgui; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	-cp -p rocraild.png $(DESTDIR)
-	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
-	-cp -Rp ../rocgui/icons $(DESTDIR)
-	-cp -p package/rocrail.sh $(DESTDIR)
-	-cp -p package/rocgui.sh $(DESTDIR)
-	-cp -p package/rocguimod.sh $(DESTDIR)
-	-chmod +x $(DESTDIR)/rocrail.sh
-	-chmod +x $(DESTDIR)/rocgui.sh
-	-cp -p package/Rocrail.desktop /usr/share/applications
-	-cp -p package/RocrailGUI.desktop /usr/share/applications
-
-install_new:
-	-rm -Rf $(DESTDIR)
-	-mkdir -p $(DESTDIR)
-	-mkdir -p ~/rocrail
-	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
-	cd ../rocdigs; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	cd ../roclcdr; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	cd ../rocgui; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
-	-cp -p rocraild.png $(DESTDIR)
-	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
-	-cp -Rp ../rocgui/icons $(DESTDIR)
-	-ln -s $(DESTDIR)/icons ~/rocrail/icons
-	-cp -pu package/*.xml ~/rocrail
-	-cp -pu package/*.ini ~/rocrail
-	-cp -p package/rocrail.sh $(DESTDIR)
-	-cp -p package/rocgui.sh $(DESTDIR)
-	-cp -p package/rocguimod.sh $(DESTDIR)
-	-chmod +x $(DESTDIR)/rocrail.sh
-	-chmod +x $(DESTDIR)/rocgui.sh
-	-cp -p package/Rocrail.desktop ~/Desktop
-	-cp -p package/RocrailGUI.desktop ~/Desktop
-	-chmod -R go+rw ~/rocrail
-
 install:
-	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
-
+	-mkdir -p $(DESTDIR)$(BINDIR)
+	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
+	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
+	cd ../rocdigs; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	cd ../roclcdr; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	cd ../rocgui; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	-cp -p package/rocrail.sh $(DESTDIR)$(BINDIR)/rocrail
+	-cp -p package/rocview.sh $(DESTDIR)$(BINDIR)/rocview
+	-cp -p package/rocviewmod.sh $(DESTDIR)$(BINDIR)/rocviewmod
+	-echo ROCRAIL_LIBDIR=$(ROCRAIL_LIBDIR) > $(DESTDIR)$(BINDIR)/rocprops.sh
+	-echo ROCRAIL_LIBEXECDIR=$(ROCRAIL_LIBEXECDIR) >> $(DESTDIR)$(BINDIR)/rocprops.sh
+	-echo ROCRAIL_DATADIR=$(ROCRAIL_DATADIR) >> $(DESTDIR)$(BINDIR)/rocprops.sh
+	-chmod +x $(DESTDIR)$(BINDIR)/rocrail
+	-chmod +x $(DESTDIR)$(BINDIR)/rocview
+	-chmod +x $(DESTDIR)$(BINDIR)/rocviewmod
+	-chmod +x $(DESTDIR)$(BINDIR)/rocprops.sh
+	-mkdir -p $(DESTDIR)$(ROCRAIL_DATADIR)/default
+	-cp -Rp ../stylesheets $(DESTDIR)$(ROCRAIL_DATADIR)
+	-cp -Rp symbols $(DESTDIR)$(ROCRAIL_DATADIR)
+	-cp -Rp package/images $(DESTDIR)$(ROCRAIL_DATADIR)
+	-cp -p package/*.xml $(DESTDIR)$(ROCRAIL_DATADIR)/default
+	-cp -p package/*.ini $(DESTDIR)$(ROCRAIL_DATADIR)/default
+	-mkdir -p $(DESTDIR)$(PIXMAPSDIR)
+	-cp -p rocraild.png $(DESTDIR)$(PIXMAPSDIR)
+	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)$(PIXMAPSDIR)
+	-mkdir -p $(DESTDIR)$(APPLICATIONSDIR)
+	-cp -p package/Rocrail.desktop $(DESTDIR)$(APPLICATIONSDIR)
+	-cp -p package/Rocview.desktop $(DESTDIR)$(APPLICATIONSDIR)
