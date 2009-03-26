@@ -341,8 +341,14 @@ void LC::OnButton(wxCommandEvent& event)
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_FG ) {
+    int maxgroups = 6;
+    if( m_LocProps != NULL ) {
+      maxgroups = wLoc.getfncnt(m_LocProps);
+      maxgroups = maxgroups / 4 + ((maxgroups % 4) > 0 ? 1:0 );
+      TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "max function goups is %d", maxgroups );
+    }
     m_iFnGroup++;
-    if( m_iFnGroup > 6 )
+    if( m_iFnGroup > maxgroups )
       m_iFnGroup = 0;
     setFLabels();
   }

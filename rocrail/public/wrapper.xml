@@ -592,7 +592,8 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
-    <var name="group" vt="int" defval="0" range="0-*" remark="0=all, 1=f0-f4, 2=f5-f8, 3=f9-f12, 4=f13-f20, 5=f21-f28"/>
+    <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
+    <var name="group" vt="int" defval="0" range="0-*" remark="0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28"/>
     <var name="f0" vt="bool" defval="false"/>
     <var name="f1" vt="bool" defval="false"/>
     <var name="f2" vt="bool" defval="false"/>
