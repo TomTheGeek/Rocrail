@@ -21,7 +21,7 @@
 #
 PLATFORM=LINUX
 
-DESTDIR?=
+DESTDIR?=/opt/rocrail
 PREFIX?=/usr/local
 
 offlineall: version
