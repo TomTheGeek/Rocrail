@@ -60,6 +60,111 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+
+static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd) {
+  iOLocData data = Data(inst);
+  switch( fn ) {
+    case  1: wFunCmd.setf1 ( cmd, OnOff ); data->fn1  = OnOff; break;
+    case  2: wFunCmd.setf2 ( cmd, OnOff ); data->fn2  = OnOff; break;
+    case  3: wFunCmd.setf3 ( cmd, OnOff ); data->fn3  = OnOff; break;
+    case  4: wFunCmd.setf4 ( cmd, OnOff ); data->fn4  = OnOff; break;
+    case  5: wFunCmd.setf5 ( cmd, OnOff ); data->fn5  = OnOff; break;
+    case  6: wFunCmd.setf6 ( cmd, OnOff ); data->fn6  = OnOff; break;
+    case  7: wFunCmd.setf7 ( cmd, OnOff ); data->fn7  = OnOff; break;
+    case  8: wFunCmd.setf8 ( cmd, OnOff ); data->fn8  = OnOff; break;
+    case  9: wFunCmd.setf9 ( cmd, OnOff ); data->fn9  = OnOff; break;
+    case 10: wFunCmd.setf10( cmd, OnOff ); data->fn10 = OnOff; break;
+    case 11: wFunCmd.setf11( cmd, OnOff ); data->fn11 = OnOff; break;
+    case 12: wFunCmd.setf12( cmd, OnOff ); data->fn12 = OnOff; break;
+    case 13: wFunCmd.setf13( cmd, OnOff ); data->fn13 = OnOff; break;
+    case 14: wFunCmd.setf14( cmd, OnOff ); data->fn14 = OnOff; break;
+    case 15: wFunCmd.setf15( cmd, OnOff ); data->fn15 = OnOff; break;
+    case 16: wFunCmd.setf16( cmd, OnOff ); data->fn16 = OnOff; break;
+    case 17: wFunCmd.setf17( cmd, OnOff ); data->fn17 = OnOff; break;
+    case 18: wFunCmd.setf18( cmd, OnOff ); data->fn18 = OnOff; break;
+    case 19: wFunCmd.setf19( cmd, OnOff ); data->fn19 = OnOff; break;
+    case 20: wFunCmd.setf20( cmd, OnOff ); data->fn20 = OnOff; break;
+    case 21: wFunCmd.setf21( cmd, OnOff ); data->fn21 = OnOff; break;
+    case 22: wFunCmd.setf22( cmd, OnOff ); data->fn22 = OnOff; break;
+    case 23: wFunCmd.setf23( cmd, OnOff ); data->fn23 = OnOff; break;
+    case 24: wFunCmd.setf24( cmd, OnOff ); data->fn24 = OnOff; break;
+    case 25: wFunCmd.setf25( cmd, OnOff ); data->fn25 = OnOff; break;
+    case 26: wFunCmd.setf26( cmd, OnOff ); data->fn26 = OnOff; break;
+    case 27: wFunCmd.setf27( cmd, OnOff ); data->fn27 = OnOff; break;
+    case 28: wFunCmd.setf28( cmd, OnOff ); data->fn28 = OnOff; break;
+   }
+}
+
+
+static void __cpFn2Node(iOLoc inst, iONode cmd) {
+  iOLocData data = Data(inst);
+  wFunCmd.setf0( cmd, data->fn0 );
+  wFunCmd.setf1( cmd, data->fn1 );
+  wFunCmd.setf2( cmd, data->fn2 );
+  wFunCmd.setf3( cmd, data->fn3 );
+  wFunCmd.setf4( cmd, data->fn4 );
+  wFunCmd.setf5( cmd, data->fn5 );
+  wFunCmd.setf6( cmd, data->fn6 );
+  wFunCmd.setf7( cmd, data->fn7 );
+  wFunCmd.setf8( cmd, data->fn8 );
+  wFunCmd.setf9( cmd, data->fn9 );
+  wFunCmd.setf10( cmd, data->fn10 );
+  wFunCmd.setf11( cmd, data->fn11 );
+  wFunCmd.setf12( cmd, data->fn12 );
+  wFunCmd.setf13( cmd, data->fn13 );
+  wFunCmd.setf14( cmd, data->fn14 );
+  wFunCmd.setf15( cmd, data->fn15 );
+  wFunCmd.setf16( cmd, data->fn16 );
+  wFunCmd.setf17( cmd, data->fn17 );
+  wFunCmd.setf18( cmd, data->fn18 );
+  wFunCmd.setf19( cmd, data->fn19 );
+  wFunCmd.setf20( cmd, data->fn20 );
+  wFunCmd.setf21( cmd, data->fn21 );
+  wFunCmd.setf22( cmd, data->fn22 );
+  wFunCmd.setf23( cmd, data->fn23 );
+  wFunCmd.setf24( cmd, data->fn24 );
+  wFunCmd.setf25( cmd, data->fn25 );
+  wFunCmd.setf26( cmd, data->fn26 );
+  wFunCmd.setf27( cmd, data->fn27 );
+  wFunCmd.setf28( cmd, data->fn28 );
+}
+
+
+static void __cpNode2Fn(iOLoc inst, iONode cmd) {
+  iOLocData data = Data(inst);
+  data->fn0  = wFunCmd.isf0( cmd );
+  data->fn1  = wFunCmd.isf1( cmd );
+  data->fn2  = wFunCmd.isf2( cmd );
+  data->fn3  = wFunCmd.isf3( cmd );
+  data->fn4  = wFunCmd.isf4( cmd );
+  data->fn5  = wFunCmd.isf5( cmd );
+  data->fn6  = wFunCmd.isf6( cmd );
+  data->fn7  = wFunCmd.isf7( cmd );
+  data->fn8  = wFunCmd.isf8( cmd );
+  data->fn9  = wFunCmd.isf9( cmd );
+  data->fn10 = wFunCmd.isf10( cmd );
+  data->fn11 = wFunCmd.isf11( cmd );
+  data->fn12 = wFunCmd.isf12( cmd );
+  data->fn13 = wFunCmd.isf13( cmd );
+  data->fn14 = wFunCmd.isf14( cmd );
+  data->fn15 = wFunCmd.isf15( cmd );
+  data->fn16 = wFunCmd.isf16( cmd );
+  data->fn17 = wFunCmd.isf17( cmd );
+  data->fn18 = wFunCmd.isf18( cmd );
+  data->fn19 = wFunCmd.isf19( cmd );
+  data->fn20 = wFunCmd.isf20( cmd );
+  data->fn21 = wFunCmd.isf21( cmd );
+  data->fn22 = wFunCmd.isf22( cmd );
+  data->fn23 = wFunCmd.isf23( cmd );
+  data->fn24 = wFunCmd.isf24( cmd );
+  data->fn25 = wFunCmd.isf25( cmd );
+  data->fn26 = wFunCmd.isf26( cmd );
+  data->fn27 = wFunCmd.isf27( cmd );
+  data->fn28 = wFunCmd.isf28( cmd );
+}
+
+
+
 static void* __event( void* inst, const void* evt ) {
   iOLocData data = Data(inst);
   iONode evtNode = (iONode)evt;
@@ -144,20 +249,8 @@ static void* __event( void* inst, const void* evt ) {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       wFunCmd.setid( node, wLoc.getid( data->props ) );
       wFunCmd.setaddr( node, wLoc.getaddr( data->props ) );
+      __cpFn2Node(inst, node);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
-      wFunCmd.setf1( node, data->fn1 );
-      wFunCmd.setf2( node, data->fn2 );
-      wFunCmd.setf3( node, data->fn3 );
-      wFunCmd.setf4( node, data->fn4 );
-      wFunCmd.setf5( node, data->fn5 );
-      wFunCmd.setf6( node, data->fn6 );
-      wFunCmd.setf7( node, data->fn7 );
-      wFunCmd.setf8( node, data->fn8 );
-      wFunCmd.setf9( node, data->fn9 );
-      wFunCmd.setf10( node, data->fn10 );
-      wFunCmd.setf11( node, data->fn11 );
-      wFunCmd.setf12( node, data->fn12 );
-
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
     }
   }
@@ -350,21 +443,41 @@ static void __engine( iOLoc inst, iONode cmd ) {
         data->fxtimer[11] = __getFnTimer( inst, 11);
       if( !data->fn12 && wFunCmd.isf12( cmd ) )
         data->fxtimer[12] = __getFnTimer( inst, 12);
+      if( !data->fn13 && wFunCmd.isf13( cmd ) )
+        data->fxtimer[13] = __getFnTimer( inst, 13);
+      if( !data->fn14 && wFunCmd.isf14( cmd ) )
+        data->fxtimer[14] = __getFnTimer( inst, 14);
+      if( !data->fn15 && wFunCmd.isf15( cmd ) )
+        data->fxtimer[15] = __getFnTimer( inst, 15);
+      if( !data->fn16 && wFunCmd.isf16( cmd ) )
+        data->fxtimer[16] = __getFnTimer( inst, 16);
+      if( !data->fn17 && wFunCmd.isf17( cmd ) )
+        data->fxtimer[17] = __getFnTimer( inst, 17);
+      if( !data->fn18 && wFunCmd.isf18( cmd ) )
+        data->fxtimer[18] = __getFnTimer( inst, 18);
+      if( !data->fn19 && wFunCmd.isf19( cmd ) )
+        data->fxtimer[19] = __getFnTimer( inst, 19);
+      if( !data->fn20 && wFunCmd.isf20( cmd ) )
+        data->fxtimer[20] = __getFnTimer( inst, 20);
+      if( !data->fn21 && wFunCmd.isf21( cmd ) )
+        data->fxtimer[21] = __getFnTimer( inst, 21);
+      if( !data->fn22 && wFunCmd.isf22( cmd ) )
+        data->fxtimer[22] = __getFnTimer( inst, 22);
+      if( !data->fn23 && wFunCmd.isf23( cmd ) )
+        data->fxtimer[23] = __getFnTimer( inst, 23);
+      if( !data->fn24 && wFunCmd.isf24( cmd ) )
+        data->fxtimer[24] = __getFnTimer( inst, 24);
+      if( !data->fn25 && wFunCmd.isf25( cmd ) )
+        data->fxtimer[25] = __getFnTimer( inst, 25);
+      if( !data->fn26 && wFunCmd.isf26( cmd ) )
+        data->fxtimer[26] = __getFnTimer( inst, 26);
+      if( !data->fn27 && wFunCmd.isf27( cmd ) )
+        data->fxtimer[27] = __getFnTimer( inst, 27);
+      if( !data->fn28 && wFunCmd.isf28( cmd ) )
+        data->fxtimer[28] = __getFnTimer( inst, 28);
 
       /* save the function status: */
-      data->fn0 = wFunCmd.isf0( cmd );
-      data->fn1 = wFunCmd.isf1( cmd );
-      data->fn2 = wFunCmd.isf2( cmd );
-      data->fn3 = wFunCmd.isf3( cmd );
-      data->fn4 = wFunCmd.isf4( cmd );
-      data->fn5 = wFunCmd.isf5( cmd );
-      data->fn6 = wFunCmd.isf6( cmd );
-      data->fn7 = wFunCmd.isf7( cmd );
-      data->fn8 = wFunCmd.isf8( cmd );
-      data->fn9 = wFunCmd.isf9( cmd );
-      data->fn10 = wFunCmd.isf10( cmd );
-      data->fn11 = wFunCmd.isf11( cmd );
-      data->fn12 = wFunCmd.isf12( cmd );
+      __cpNode2Fn(inst, cmd);
 
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 ) {
         /* reset previous timed function */
@@ -476,18 +589,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     wLoc.setid( cmd, wLoc.getid(data->props) );
 
     /* some controllers use this information because they make no diff between loc or fun cmd: */
-    wFunCmd.setf1( cmd, data->fn1 );
-    wFunCmd.setf2( cmd, data->fn2 );
-    wFunCmd.setf3( cmd, data->fn3 );
-    wFunCmd.setf4( cmd, data->fn4 );
-    wFunCmd.setf5( cmd, data->fn5 );
-    wFunCmd.setf6( cmd, data->fn6 );
-    wFunCmd.setf7( cmd, data->fn7 );
-    wFunCmd.setf8( cmd, data->fn8 );
-    wFunCmd.setf9( cmd, data->fn9 );
-    wFunCmd.setf10( cmd, data->fn10 );
-    wFunCmd.setf11( cmd, data->fn11 );
-    wFunCmd.setf12( cmd, data->fn12 );
+    __cpFn2Node(inst, cmd);
 
     if( wLoc.getV( cmd ) == -1 )
       wLoc.setV( cmd, data->drvSpeed );
@@ -656,6 +758,22 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   wFunCmd.setf10( fncmd, timedfn==10?False:data->fn10 );
   wFunCmd.setf11( fncmd, timedfn==11?False:data->fn11 );
   wFunCmd.setf12( fncmd, timedfn==12?False:data->fn12 );
+  wFunCmd.setf13( fncmd, timedfn==12?False:data->fn13 );
+  wFunCmd.setf14( fncmd, timedfn==12?False:data->fn14 );
+  wFunCmd.setf15( fncmd, timedfn==12?False:data->fn15 );
+  wFunCmd.setf16( fncmd, timedfn==12?False:data->fn16 );
+  wFunCmd.setf17( fncmd, timedfn==12?False:data->fn17 );
+  wFunCmd.setf18( fncmd, timedfn==12?False:data->fn18 );
+  wFunCmd.setf19( fncmd, timedfn==12?False:data->fn19 );
+  wFunCmd.setf20( fncmd, timedfn==12?False:data->fn20 );
+  wFunCmd.setf21( fncmd, timedfn==12?False:data->fn21 );
+  wFunCmd.setf22( fncmd, timedfn==12?False:data->fn22 );
+  wFunCmd.setf23( fncmd, timedfn==12?False:data->fn23 );
+  wFunCmd.setf24( fncmd, timedfn==12?False:data->fn24 );
+  wFunCmd.setf25( fncmd, timedfn==12?False:data->fn25 );
+  wFunCmd.setf26( fncmd, timedfn==12?False:data->fn26 );
+  wFunCmd.setf27( fncmd, timedfn==12?False:data->fn27 );
+  wFunCmd.setf28( fncmd, timedfn==12?False:data->fn28 );
   data->timedfn = -1;
   return fncmd;
 }
@@ -840,32 +958,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "On Event for funcion %d.", fn );
           wFunCmd.setid( cmd, LocOp.getId( inst ) );
-          wFunCmd.setf1( cmd, data->fn1 );
-          wFunCmd.setf2( cmd, data->fn2 );
-          wFunCmd.setf3( cmd, data->fn3 );
-          wFunCmd.setf4( cmd, data->fn4 );
-          wFunCmd.setf5( cmd, data->fn5 );
-          wFunCmd.setf6( cmd, data->fn6 );
-          wFunCmd.setf7( cmd, data->fn7 );
-          wFunCmd.setf8( cmd, data->fn8 );
-          wFunCmd.setf9( cmd, data->fn9 );
-          wFunCmd.setf10( cmd, data->fn10 );
-          wFunCmd.setf11( cmd, data->fn11 );
-          wFunCmd.setf12( cmd, data->fn12 );
-         switch( fn ) {
-           case 1: wFunCmd.setf1( cmd, True ); data->fn1 = True; break;
-           case 2: wFunCmd.setf2( cmd, True ); data->fn2 = True; break;
-           case 3: wFunCmd.setf3( cmd, True ); data->fn3 = True; break;
-           case 4: wFunCmd.setf4( cmd, True ); data->fn4 = True; break;
-           case 5: wFunCmd.setf5( cmd, True ); data->fn5 = True; break;
-           case 6: wFunCmd.setf6( cmd, True ); data->fn6 = True; break;
-           case 7: wFunCmd.setf7( cmd, True ); data->fn7 = True; break;
-           case 8: wFunCmd.setf8( cmd, True ); data->fn8 = True; break;
-           case 9: wFunCmd.setf9( cmd, True ); data->fn9 = True; break;
-           case 10: wFunCmd.setf10( cmd, True ); data->fn10 = True; break;
-           case 11: wFunCmd.setf11( cmd, True ); data->fn11 = True; break;
-           case 12: wFunCmd.setf12( cmd, True ); data->fn12 = True; break;
-          }
+          __cpFn2Node(inst, cmd);
+          __FnOnOff(inst, fn, True, cmd);
           LocOp.cmd( inst, cmd );
         }
       }
@@ -879,32 +973,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", fn );
           wFunCmd.setid( cmd, LocOp.getId( inst ) );
-          wFunCmd.setf1( cmd, data->fn1 );
-          wFunCmd.setf2( cmd, data->fn2 );
-          wFunCmd.setf3( cmd, data->fn3 );
-          wFunCmd.setf4( cmd, data->fn4 );
-          wFunCmd.setf5( cmd, data->fn5 );
-          wFunCmd.setf6( cmd, data->fn6 );
-          wFunCmd.setf7( cmd, data->fn7 );
-          wFunCmd.setf8( cmd, data->fn8 );
-          wFunCmd.setf9( cmd, data->fn9 );
-          wFunCmd.setf10( cmd, data->fn10 );
-          wFunCmd.setf11( cmd, data->fn11 );
-          wFunCmd.setf12( cmd, data->fn12 );
-          switch( fn ) {
-           case 1: wFunCmd.setf1( cmd, False ); data->fn1 = False; break;
-           case 2: wFunCmd.setf2( cmd, False ); data->fn2 = False; break;
-           case 3: wFunCmd.setf3( cmd, False ); data->fn3 = False; break;
-           case 4: wFunCmd.setf4( cmd, False ); data->fn4 = False; break;
-           case 5: wFunCmd.setf5( cmd, False ); data->fn5 = False; break;
-           case 6: wFunCmd.setf6( cmd, False ); data->fn6 = False; break;
-           case 7: wFunCmd.setf7( cmd, False ); data->fn7 = False; break;
-           case 8: wFunCmd.setf8( cmd, False ); data->fn8 = False; break;
-           case 9: wFunCmd.setf9( cmd, False ); data->fn9 = False; break;
-           case 10: wFunCmd.setf10( cmd, False ); data->fn10 = False; break;
-           case 11: wFunCmd.setf11( cmd, False ); data->fn11 = False; break;
-           case 12: wFunCmd.setf12( cmd, False ); data->fn12 = False; break;
-          }
+          __cpFn2Node(inst, cmd);
+          __FnOnOff(inst, fn, False, cmd);
           LocOp.cmd( inst, cmd );
         }
       }
@@ -924,34 +994,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", data->timedfn );
           wFunCmd.setid( cmd, LocOp.getId( inst ) );
-          wFunCmd.setf0( cmd, data->fn0 );
-          wFunCmd.setf1( cmd, data->fn1 );
-          wFunCmd.setf2( cmd, data->fn2 );
-          wFunCmd.setf3( cmd, data->fn3 );
-          wFunCmd.setf4( cmd, data->fn4 );
-          wFunCmd.setf5( cmd, data->fn5 );
-          wFunCmd.setf6( cmd, data->fn6 );
-          wFunCmd.setf7( cmd, data->fn7 );
-          wFunCmd.setf8( cmd, data->fn8 );
-          wFunCmd.setf9( cmd, data->fn9 );
-          wFunCmd.setf10( cmd, data->fn10 );
-          wFunCmd.setf11( cmd, data->fn11 );
-          wFunCmd.setf12( cmd, data->fn12 );
-          switch( data->timedfn ) {
-           case 0: wFunCmd.setf0( cmd, False ); data->fn0 = False; break;
-           case 1: wFunCmd.setf1( cmd, False ); data->fn1 = False; break;
-           case 2: wFunCmd.setf2( cmd, False ); data->fn2 = False; break;
-           case 3: wFunCmd.setf3( cmd, False ); data->fn3 = False; break;
-           case 4: wFunCmd.setf4( cmd, False ); data->fn4 = False; break;
-           case 5: wFunCmd.setf5( cmd, False ); data->fn5 = False; break;
-           case 6: wFunCmd.setf6( cmd, False ); data->fn6 = False; break;
-           case 7: wFunCmd.setf7( cmd, False ); data->fn7 = False; break;
-           case 8: wFunCmd.setf8( cmd, False ); data->fn8 = False; break;
-           case 9: wFunCmd.setf9( cmd, False ); data->fn9 = False; break;
-           case 10: wFunCmd.setf10( cmd, False ); data->fn10 = False; break;
-           case 11: wFunCmd.setf11( cmd, False ); data->fn11 = False; break;
-           case 12: wFunCmd.setf12( cmd, False ); data->fn12 = False; break;
-          }
+          __cpFn2Node(inst, cmd);
+          __FnOnOff(inst, data->timedfn, False, cmd);
           LocOp.cmd( inst, cmd );
           StrOp.free( data->fneventblock );
           data->fneventblock = NULL;
@@ -1650,19 +1694,8 @@ static Boolean _isResumeAutomode( iOLoc loc ) {
 static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
   /* save the function status: */
+  __cpFn2Node(loc, cmd);
   wFunCmd.setf0( cmd, wLoc.isfn(data->props) );
-  wFunCmd.setf1( cmd, data->fn1 );
-  wFunCmd.setf2( cmd, data->fn2 );
-  wFunCmd.setf3( cmd, data->fn3 );
-  wFunCmd.setf4( cmd, data->fn4 );
-  wFunCmd.setf5( cmd, data->fn5 );
-  wFunCmd.setf6( cmd, data->fn6 );
-  wFunCmd.setf7( cmd, data->fn7 );
-  wFunCmd.setf8( cmd, data->fn8 );
-  wFunCmd.setf9( cmd, data->fn9 );
-  wFunCmd.setf10( cmd, data->fn10 );
-  wFunCmd.setf11( cmd, data->fn11 );
-  wFunCmd.setf12( cmd, data->fn12 );
   return cmd;
 }
 

@@ -592,6 +592,7 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
+    <var name="group" vt="int" defval="0" range="0-*" remark="0=all, 1=f0-f4, 2=f5-f8, 3=f9-f12, 4=f13-f20, 5=f21-f28"/>
     <var name="f0" vt="bool" defval="false"/>
     <var name="f1" vt="bool" defval="false"/>
     <var name="f2" vt="bool" defval="false"/>
@@ -605,6 +606,22 @@
     <var name="f10" vt="bool" defval="false"/>
     <var name="f11" vt="bool" defval="false"/>
     <var name="f12" vt="bool" defval="false"/>
+    <var name="f13" vt="bool" d2efval="false"/>
+    <var name="f14" vt="bool" defval="false"/>
+    <var name="f15" vt="bool" defval="false"/>
+    <var name="f16" vt="bool" defval="false"/>
+    <var name="f17" vt="bool" defval="false"/>
+    <var name="f18" vt="bool" defval="false"/>
+    <var name="f19" vt="bool" defval="false"/>
+    <var name="f20" vt="bool" defval="false"/>
+    <var name="f21" vt="bool" defval="false"/>
+    <var name="f22" vt="bool" defval="false"/>
+    <var name="f23" vt="bool" defval="false"/>
+    <var name="f24" vt="bool" defval="false"/>
+    <var name="f25" vt="bool" defval="false"/>
+    <var name="f26" vt="bool" defval="false"/>
+    <var name="f27" vt="bool" defval="false"/>
+    <var name="f28" vt="bool" defval="false"/>
     <var name="timedfn" vt="int" defval="-1" range="0-*"/>
     <var name="timer" vt="int" defval="0" unit="s" range="0-*" remark="function activation timer"/>
     <var name="event" vt="const char*" defval="none" range="*" remark="function deactivation event"/>
@@ -622,6 +639,22 @@
     <var name="timerf10" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf11" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf12" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf13" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf14" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf15" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf16" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf17" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf18" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf19" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf20" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf21" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf22" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf23" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf24" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf25" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf26" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf27" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf28" vt="int" defval="0" unit="s" range="0-*"/>
   </fn>
 
   <custom remark="Custom Command for interfaces" wrappername="CustomCmd">

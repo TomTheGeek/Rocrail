@@ -79,7 +79,7 @@ private:
     Clock* m_Clock;
 
     bool m_bFn;
-    bool m_bFx[16];
+    bool m_bFx[32];
     bool m_bDir;
     int m_iSpeed;
     int m_iFnGroup;

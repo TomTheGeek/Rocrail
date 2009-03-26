@@ -434,9 +434,25 @@
       <var name="fn10" vt="Boolean"/>
       <var name="fn11" vt="Boolean"/>
       <var name="fn12" vt="Boolean"/>
+      <var name="fn13" vt="Boolean"/>
+      <var name="fn14" vt="Boolean"/>
+      <var name="fn15" vt="Boolean"/>
+      <var name="fn16" vt="Boolean"/>
+      <var name="fn17" vt="Boolean"/>
+      <var name="fn18" vt="Boolean"/>
+      <var name="fn19" vt="Boolean"/>
+      <var name="fn20" vt="Boolean"/>
+      <var name="fn21" vt="Boolean"/>
+      <var name="fn22" vt="Boolean"/>
+      <var name="fn23" vt="Boolean"/>
+      <var name="fn24" vt="Boolean"/>
+      <var name="fn25" vt="Boolean"/>
+      <var name="fn26" vt="Boolean"/>
+      <var name="fn27" vt="Boolean"/>
+      <var name="fn28" vt="Boolean"/>
       <var name="timedfn" vt="int"/>
       <var name="fntimer" vt="int"/>
-      <var name="fxtimer[13]" vt="int"/>
+      <var name="fxtimer[32]" vt="int"/>
       <var name="fnevent" vt="int"/>
       <var name="fneventblock" vt="char*"/>
       <var name="ignevt" vt="int"/>
