@@ -263,6 +263,7 @@ static void* __event( void* inst, const void* evt ) {
       wFunCmd.setaddr( node, wLoc.getaddr( data->props ) );
       __cpFn2Node(inst, node);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
+      wLoc.setfn( node, wLoc.isfn(data->props) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
     }
   }
@@ -490,9 +491,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       /* save the function status: */
       __cpNode2Fn(inst, cmd);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
           wLoc.getid( data->props ),
-          wLoc.isfn(data->props) ? "on":"off",
+          data->fn0  ? "on":"off",
           data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
           data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
           data->fn9  ? "09":"--", data->fn10 ? "10":"--", data->fn11 ? "11":"--", data->fn12 ? "12":"--",

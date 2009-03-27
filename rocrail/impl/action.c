@@ -345,6 +345,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wFunCmd.setf28( cmd, fnaction==28?fon:wFunCmd.isf28( cmd ) );
       wFunCmd.settimedfn( cmd, fon?fnaction:0 );
       wFunCmd.setgroup( cmd, fnaction/4 + ((fnaction%4 > 0) ? 1:0) );
+      wLoc.setfn( cmd, wFunCmd.isf0 ( cmd) );
 
       if( fon )
         wFunCmd.settimer( cmd, wAction.getactiontime(data->action) );

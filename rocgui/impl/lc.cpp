@@ -228,6 +228,11 @@ void LC::updateLoc( iONode node ) {
             );
 
         setFLabels();
+
+        m_bFn = wFunCmd.isf0( node )?true:false;
+        wLoc.setfn( m_LocProps, m_bFn?True:False );
+        setButtonColor( m_F0, !m_bFn );
+
       }
       else {
         m_iSpeed = wLoc.getV( node );
