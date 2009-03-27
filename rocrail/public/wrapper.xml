@@ -1176,9 +1176,6 @@
         <const name="V_none" vt="string" val="none" remark="No V_hint defined."/>
         <var name="speed" vt="string" defval="none" range="none,min,cruise,max" remark="Route speed on departure; overwrites block departure speed if set."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Route speed in percent."/>
-        <var name="function" vt="int" defval="-1" range="0-*" remark="function to activate"/>
-        <var name="funtime" vt="int" defval="1" range="1-10" unit="s" remark="function to activation time"/>
-        <var name="funevent" vt="const char*" defval="none" range="none,enter,in" remark="function deactivation event"/>
         <fbevent cardinality="n"/>
         <actionctrl cardinality="n"/>
       </st>
