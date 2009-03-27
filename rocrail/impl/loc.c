@@ -66,7 +66,7 @@ static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd) {
   int fgroup = 0;
 
   switch( fn ) {
-    case  0: wFunCmd.setf0 ( cmd, OnOff ); data->fn0  = OnOff; fgroup = 1; break;
+    case  0: wFunCmd.setf0 ( cmd, OnOff ); data->fn0  = OnOff; fgroup = 0; break;
     case  1: wFunCmd.setf1 ( cmd, OnOff ); data->fn1  = OnOff; fgroup = 1; break;
     case  2: wFunCmd.setf2 ( cmd, OnOff ); data->fn2  = OnOff; fgroup = 1; break;
     case  3: wFunCmd.setf3 ( cmd, OnOff ); data->fn3  = OnOff; fgroup = 1; break;
@@ -799,7 +799,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   wFunCmd.setf28( fncmd, timedfn==28?False:data->fn28 );
   data->timedfn = -1;
 
-  wFunCmd.setgroup( fncmd, timedfn / 4 + 1);
+  wFunCmd.setgroup( fncmd, timedfn/4 + ((timedfn%4 > 0) ? 1:0) );
 
   return fncmd;
 }

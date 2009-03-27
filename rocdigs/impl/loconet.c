@@ -1553,6 +1553,119 @@ static int __setFastClock(iOLocoNet loconet, iONode node, byte* cmd) {
 }
 
 
+/**
+ * Create packet for functions 9-28.
+ * Group 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
+ */
+static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd) {
+  int addr  = wFunCmd.getaddr(node);
+  int group = wFunCmd.getgroup(node);
+  int Fn    = 0;
+
+  byte REPS  = 0;
+  byte DHI   = 0;
+  byte IM1   = 0;
+  byte IM2   = 0;
+  byte IM3   = 0;
+  byte IM4   = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function command for address [%d] in group [%d]", addr, group );
+
+  /* static part of packet */
+  cmd[0] = OPC_IMM_PACKET;
+  cmd[1] = 0x0B;
+  cmd[2] = 0x7F;
+  cmd[9] = 0x00; /* IM5 */
+
+  if( group == 3 ) {
+    Fn |= wFunCmd.isf9 (node)?0x01:0x00;
+    Fn |= wFunCmd.isf10(node)?0x02:0x00;
+    Fn |= wFunCmd.isf11(node)?0x04:0x00;
+    Fn |= wFunCmd.isf12(node)?0x08:0x00;
+    REPS  = (addr < 128) ? 0x24:0x34;
+    DHI   = (addr < 128) ? 0x02:0x04;
+    if( addr < 128 ) {
+      IM2 = 0x20 | (Fn & 0x0F);
+    }
+    else {
+      IM3 = 0x20 | (Fn & 0x0F);
+    }
+  }
+
+  else if( group == 4 || group == 5 ) {
+    Fn |= wFunCmd.isf13(node)?0x01:0x00;
+    Fn |= wFunCmd.isf14(node)?0x02:0x00;
+    Fn |= wFunCmd.isf15(node)?0x04:0x00;
+    Fn |= wFunCmd.isf16(node)?0x08:0x00;
+    Fn |= wFunCmd.isf17(node)?0x10:0x00;
+    Fn |= wFunCmd.isf18(node)?0x20:0x00;
+    Fn |= wFunCmd.isf19(node)?0x40:0x00;
+    Fn |= wFunCmd.isf20(node)?0x80:0x00;
+    REPS  = (addr < 128) ? 0x34:0x44;
+    DHI   = (addr < 128) ? 0x02:0x04;
+    DHI  |= (Fn & 0x80)  ? 0x40:0x00;
+    if( addr < 128 ) {
+      IM2 = 0x5E;
+      IM3 = Fn & 0x7F;
+    }
+    else {
+      IM3 = 0x5E;
+      IM4 = Fn & 0x7F;
+    }
+  }
+
+  else if( group == 6 || group == 7 ) {
+    Fn |= wFunCmd.isf21(node)?0x01:0x00;
+    Fn |= wFunCmd.isf22(node)?0x02:0x00;
+    Fn |= wFunCmd.isf23(node)?0x04:0x00;
+    Fn |= wFunCmd.isf24(node)?0x08:0x00;
+    Fn |= wFunCmd.isf25(node)?0x10:0x00;
+    Fn |= wFunCmd.isf26(node)?0x20:0x00;
+    Fn |= wFunCmd.isf27(node)?0x40:0x00;
+    Fn |= wFunCmd.isf28(node)?0x80:0x00;
+    REPS  = (addr < 128) ? 0x34:0x44;
+    DHI   = (addr < 128) ? 0x06:0x06;
+    DHI  |= (Fn & 0x80)  ? 0x80:0x00;
+    if( addr < 128 ) {
+      IM2 = 0x5F;
+      IM3 = Fn & 0x7F;
+    }
+    else {
+      IM3 = 0x5F;
+      IM4 = Fn & 0x7F;
+    }
+  }
+
+
+  if( addr < 128 ) {
+    cmd[3] = REPS;  /* REPS */
+    cmd[4] = DHI;   /* DHI  */
+    cmd[5] = addr;  /* IM1  */
+    cmd[6] = IM2;   /* IM2 */
+    cmd[7] = IM3;   /* IM3  */
+    cmd[8] = IM4;   /* IM4  */
+  }
+  else {
+    cmd[3] = REPS;  /* REPS */
+    cmd[4] = DHI;   /* DHI  */
+
+    if( ((addr / 256) + 192) & 0x80 > 0 )
+      cmd[4] |= 0x01;
+
+    if( ((addr % 256) & 0x80) > 0 )
+      cmd[4] |= 0x02;
+
+    cmd[5] = ((addr / 256) + 192) & 0x7F; /* IM1 */
+    cmd[6] = (addr % 256) & 0x7F;         /* IM2 */
+    cmd[7] = IM3;   /* IM3 */
+    cmd[8] = IM4;   /* IM4  */
+  }
+
+
+  cmd[10] = LocoNetOp.checksum( cmd, 10 );
+  return 11;
+}
+
 
 static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean* delnode ) {
   iOLocoNetData data = Data(loconet_inst);
@@ -1646,6 +1759,13 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
     return 4;
   }
+
+  /* Function command groups > 1 */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) && wFunCmd.getgroup(node) > 2 ) {
+    return __processFunctions(loconet_inst, node, cmd);
+  }
+
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ||
            StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {

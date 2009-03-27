@@ -140,6 +140,8 @@ void LC::funCmd()
       );
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setgroup ( cmd, m_iFnGroup + 1 );
+  wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_LocProps ) );
   wFunCmd.setid ( cmd, wLoc.getid( m_LocProps ) );
   wFunCmd.setf0 ( cmd, m_bFn?True:False );
   wFunCmd.setf1 ( cmd, m_bFx[ 0]?True:False );
@@ -346,6 +348,8 @@ void LC::OnButton(wxCommandEvent& event)
       maxgroups = wLoc.getfncnt(m_LocProps);
       maxgroups = maxgroups / 4 + ((maxgroups % 4) > 0 ? 1:0 );
       TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "max function goups is %d", maxgroups );
+      // zero based index for this dialog
+      maxgroups--;
     }
     m_iFnGroup++;
     if( m_iFnGroup > maxgroups )
