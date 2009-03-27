@@ -171,19 +171,6 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
                        data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
-        checkRouteFunction(inst, data->next2Route, data->next2Block );
-        /*
-        if( StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) ||
-            data->next2Route->hasThrownSwitch(data->next1Route) ) {
-          data->next1Block->yellow( data->next1Block, True, !dir );
-          data->next1Block->yellow( data->next1Block, False, !dir );
-        }
-        else {
-          data->next1Block->green( data->next1Block, True, !dir );
-          data->next1Block->green( data->next1Block, False, !dir );
-        }
-        */
-
         if( !data->gomanual ) {
           if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
               data->direction == LC_DIR_FORWARDS &&

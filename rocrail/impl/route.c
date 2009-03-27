@@ -333,13 +333,6 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
   return False;
 }
 
-static int _getFunction( iORoute inst, int* activationtime, const char** deactivationevent ) {
-  iORouteData o = Data(inst);
-  *activationtime = wRoute.getfuntime(o->props);
-  *deactivationevent = wRoute.getfunevent(o->props);
-  return wRoute.getfunction(o->props);
-}
-
 static Boolean __checkSwitches( iORoute inst, const char* id ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );

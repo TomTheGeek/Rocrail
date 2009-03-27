@@ -33,7 +33,6 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
 void resetSignals(iOLcDriver inst );
 Boolean setSignals(iOLcDriver inst, Boolean onEnter );
 
-void checkRouteFunction( iILcDriverInt inst, iORoute route, iIBlockBase block );
 void checkScheduleActions( iILcDriverInt inst, int state);
 Boolean checkScheduleEntryActions( iILcDriverInt inst );
 

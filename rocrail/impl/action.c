@@ -343,7 +343,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wFunCmd.setf26( cmd, fnaction==26?fon:wFunCmd.isf26( cmd ) );
       wFunCmd.setf27( cmd, fnaction==27?fon:wFunCmd.isf27( cmd ) );
       wFunCmd.setf28( cmd, fnaction==28?fon:wFunCmd.isf28( cmd ) );
-      wFunCmd.settimedfn( cmd, fon?fnaction:0 );
+      wFunCmd.settimedfn( cmd, fon?fnaction:-1 );
       wFunCmd.setgroup( cmd, fnaction/4 + ((fnaction%4 > 0) ? 1:0) );
       wLoc.setfn( cmd, wFunCmd.isf0 ( cmd) );
 
