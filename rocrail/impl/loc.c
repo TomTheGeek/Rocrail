@@ -802,6 +802,8 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
 
   wFunCmd.setgroup( fncmd, timedfn/4 + ((timedfn%4 > 0) ? 1:0) );
 
+  wLoc.setfn(data->props, wFunCmd.isf0( fncmd ) );
+
   return fncmd;
 }
 
