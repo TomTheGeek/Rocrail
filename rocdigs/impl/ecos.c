@@ -790,9 +790,13 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
 
     if ( oid != NULL && StrOp.len( oid ) > 0 ) {
 
-      int i = 0;
+      int i     = 0;
+      int from  = 0;
+      int to    = 28;
+      int group = wFunCmd.getgroup( node );
 
-      int fn[ 12 ];
+      int fn[ 28 ];
+
       fn[ 0 ] = ( int )wFunCmd.isf1( node );
       fn[ 1 ] = ( int )wFunCmd.isf2( node );
       fn[ 2 ] = ( int )wFunCmd.isf3( node );
@@ -805,14 +809,37 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       fn[ 9 ] = ( int )wFunCmd.isf10( node );
       fn[ 10] = ( int )wFunCmd.isf11( node );
       fn[ 11] = ( int )wFunCmd.isf12( node );
+      fn[ 12] = ( int )wFunCmd.isf13( node );
+      fn[ 13] = ( int )wFunCmd.isf14( node );
+      fn[ 14] = ( int )wFunCmd.isf15( node );
+      fn[ 15] = ( int )wFunCmd.isf16( node );
+      fn[ 16] = ( int )wFunCmd.isf17( node );
+      fn[ 17] = ( int )wFunCmd.isf18( node );
+      fn[ 18] = ( int )wFunCmd.isf19( node );
+      fn[ 19] = ( int )wFunCmd.isf20( node );
+      fn[ 20] = ( int )wFunCmd.isf21( node );
+      fn[ 21] = ( int )wFunCmd.isf22( node );
+      fn[ 22] = ( int )wFunCmd.isf23( node );
+      fn[ 23] = ( int )wFunCmd.isf24( node );
+      fn[ 24] = ( int )wFunCmd.isf25( node );
+      fn[ 25] = ( int )wFunCmd.isf26( node );
+      fn[ 26] = ( int )wFunCmd.isf27( node );
+      fn[ 27] = ( int )wFunCmd.isf28( node );
 
       StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "request(%s, control, force)\n",
           oid );
 
-      for ( i = 0; i < 12; i++ ) {
+      if( group > 0 && group < 8 ) {
+        from = ( group - 1 ) * 4;
+        to   = ( group - 1 ) * 4 + 4;
+      }
+
+      for ( i = from; i < to; i++ ) {
         StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "set(%s, func[%d, %d])\n",
             oid, i + 1, fn[ i ] );
       }
+
+
 
       StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "release(%s, control)\n",
         oid );
