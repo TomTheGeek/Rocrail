@@ -258,6 +258,8 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
 
 
     case LC_GO:
+      __checkEventTimeout(inst);
+      __checkSignalReset(inst);
       statusGo( inst );
       break;
 
