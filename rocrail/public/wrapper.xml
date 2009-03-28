@@ -1047,6 +1047,7 @@
         <var name="mvscale" vt="int" defval="87" remark="Scale of locomotives."/>
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
+        <const name="ghost" vt="string" val="ghost"/>
         <const name="open" vt="string" val="open"/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>

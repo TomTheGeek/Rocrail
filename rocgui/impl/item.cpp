@@ -1596,6 +1596,10 @@ void Symbol::modelEvent( iONode node ) {
         l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
         occupied = 4;
       }
+      else if( StrOp.equals( wBlock.ghost, state ) ) {
+        l_locidStr = StrOp.fmt( "%s GHOST", wBlock.getid( node ) );
+        occupied = 5;
+      }
       else
         l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
 

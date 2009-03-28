@@ -456,6 +456,7 @@ void SymbolRenderer::initSym() {
         m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_res );
         m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ent );
         m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed );
+        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost );
       }
     }
   }
@@ -1474,7 +1475,10 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     ori = wItem.west;
 
   // SVG Symbol:
-  if( m_SvgSym1!=NULL && m_iOccupied == 0 || m_SvgSym1!=NULL && m_SvgSym5==NULL && m_iOccupied == 4 ) {
+  if( m_SvgSym1!=NULL && m_iOccupied == 0 ||
+      m_SvgSym1!=NULL && m_SvgSym5==NULL && m_iOccupied == 4 ||
+      m_SvgSym1!=NULL && m_SvgSym6==NULL && m_iOccupied == 5  )
+  {
     drawSvgSym(dc, m_SvgSym1, ori);
   }
   else if( m_SvgSym2!=NULL && m_iOccupied == 1 ) {
@@ -1491,6 +1495,10 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   else if( m_SvgSym5!=NULL && m_iOccupied == 4 ) {
     /* reserved state */
     drawSvgSym(dc, m_SvgSym5, ori);
+  }
+  else if( m_SvgSym6!=NULL && m_iOccupied == 5 ) {
+    /* reserved state */
+    drawSvgSym(dc, m_SvgSym6, ori);
   }
   else {
     dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );

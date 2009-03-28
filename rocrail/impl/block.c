@@ -349,8 +349,16 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
         /* power off */
         AppOp.stop();
       }
+      /* TODO: broadcast ghost state */
       TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%d",
           data->id, key, ident );
+      {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, data->id );
+        wBlock.setstate( nodeD, wBlock.ghost );
+        wBlock.setlocid( nodeD, data->locId );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      }
 
     }
   }
