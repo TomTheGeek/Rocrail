@@ -266,9 +266,9 @@ static iONode __translate( obj inst, const iONode node ) {
     int  spcnt = wLoc.getspcnt( node );
     int  speed = 0;
     int   info = 0;
-    Boolean fn = wLoc.isfn( node );
     Boolean sw = wLoc.issw( node );
 
+    Boolean fn0 = wFunCmd.isf0(node);
     Boolean fn1 = wFunCmd.isf1(node);
     Boolean fn2 = wFunCmd.isf2(node);
     Boolean fn3 = wFunCmd.isf3(node);
@@ -292,37 +292,37 @@ static iONode __translate( obj inst, const iONode node ) {
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_M ) && data->mm) {
       int protver = wLoc.getprotver( node );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=MM%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, protver, speed, dir?"forward":"reverse", fn?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+          addr, protver, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       switch( protver ) {
         case 1:
-          comp_maerklin_1(addr, dir, speed, fn);
+          comp_maerklin_1(addr, dir, speed, fn0);
           break;
         case 2:
-          comp_maerklin_2(addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+          comp_maerklin_2(addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
           break;
         case 3:
-          comp_maerklin_3(addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+          comp_maerklin_3(addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
           break;
         case 4:
-          comp_maerklin_4(addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+          comp_maerklin_4(addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
           break;
         case 5:
-          comp_maerklin_5(addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+          comp_maerklin_5(addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
           break;
         default:
-          comp_maerklin_1(addr, dir, speed, fn);
+          comp_maerklin_1(addr, dir, speed, fn0);
           break;
       }
-      update_MaerklinPacketPool_Loco_Data(addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+      update_MaerklinPacketPool_Loco_Data(addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) && data->dcc ) {
       int rc = 0;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, speed, dir?"forward":"reverse", fn?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+          addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 )
-        rc = comp_nmra_f4b7s128( addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b7s128( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
       else
-        rc = comp_nmra_f4b7s28( addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b7s28( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
       if( rc != 0 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error sending DCC packet" );
       }
@@ -330,11 +330,11 @@ static iONode __translate( obj inst, const iONode node ) {
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) && data->dcc ) {
       int rc = 0;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, speed, dir?"forward":"reverse", fn?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+          addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 )
-        rc = comp_nmra_f4b14s128( addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b14s128( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
       else
-        rc = comp_nmra_f4b14s28( addr, dir, speed, fn, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b14s28( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
       if( rc != 0 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error sending DCC packet" );
       }
