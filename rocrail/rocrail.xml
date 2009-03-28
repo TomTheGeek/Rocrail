@@ -144,6 +144,7 @@
       <var name="mvTime" vt="long"/>
       <var name="manager" vt="iIBlockBase"/>
       <var name="occtime" vt="long"/>
+      <var name="ghost" vt="Boolean"/>
     </data>
   </object>
 
