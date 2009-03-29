@@ -154,7 +154,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
         }
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime=%ld", modeltime );
 
-        ltm = gmtime( &modeltime );
+        ltm = localtime( &modeltime );
 
         modelminutes = ltm->tm_hour * 60 + ltm->tm_min;
         scheduleminutes = wScheduleEntry.gethour(entry) * 60 + wScheduleEntry.getminute(entry);
