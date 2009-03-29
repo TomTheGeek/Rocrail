@@ -388,6 +388,7 @@ void CV::onDecConfig(void) {
 
 
 void CV::update4POM(void) {
+  m_bPOM = m_POM->IsChecked()?True:False;
   /*
   m_getAddress->Enable(!m_bPOM);
   m_getVstart->Enable(!m_bPOM);
@@ -628,7 +629,6 @@ void CV::OnButton(wxCommandEvent& event)
     doCV( wProgram.load, m_CVnr->GetValue(), atoi( m_CVvalue->GetValue().mb_str(wxConvUTF8) ) );
   }
   else if ( event.GetEventObject() == m_POM ) {
-    m_bPOM = m_POM->IsChecked()?True:False;
     update4POM();
   }
   else if ( event.GetEventObject() == m_CVvalue ) {
@@ -861,6 +861,8 @@ void CV::doCV( int command, int index, int value ) {
   if( addr == 0 )
     addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
 
+
+  update4POM();
   wProgram.setcmd( cmd, command );
   wProgram.setaddr( cmd, addr );
   wProgram.setcv( cmd, index );
