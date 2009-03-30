@@ -1046,9 +1046,8 @@ void RocGuiFrame::initFrame() {
   acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
   acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
   acc_entries[36].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
-  acc_entries[37].Set(wxACCEL_CTRL, (int) 'f', ME_FullScreen);
 
-  wxAcceleratorTable m_accel(38, acc_entries);
+  wxAcceleratorTable m_accel(37, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
@@ -1217,7 +1216,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendCheckItem( ME_Fill, wxGetApp().getMenu("fill"), wxGetApp().getTip("fill") );
   menuView->AppendCheckItem( ME_ShowID, wxGetApp().getMenu("showid"), wxGetApp().getTip("showid") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
-  menuView->Append( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
+  menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
   menuView->Append( ME_BackColor, wxGetApp().getMenu("panelcolor"), wxGetApp().getTip("panelcolor") );
 
   // Programming
@@ -2075,13 +2074,15 @@ void RocGuiFrame::OnShowID( wxCommandEvent& event ) {
 
 
 void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
-  if( IsFullScreen() ) {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen off" );
-    ShowFullScreen(false);
-  }
-  else {
+  wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
+
+  if( mi_fullscreen->IsChecked() ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen on" );
     ShowFullScreen(true, wxFULLSCREEN_NOTOOLBAR | wxFULLSCREEN_NOSTATUSBAR | wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
+  }
+  else {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen off" );
+    ShowFullScreen(false);
   }
 }
 
