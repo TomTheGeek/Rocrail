@@ -6926,4 +6926,24 @@
   <Msg id="minocc">
     <en txt="Minimal occupied"/>
   </Msg>
+  <Msg id="timeprocessing">
+    <en txt="Time processing"/>
+    <de txt="Zeit verarbeitung"/>
+    <nl txt="Tijd verwerking"/>
+  </Msg>
+  <Msg id="real">
+    <en txt="Real"/>
+    <de txt="Echt"/>
+    <nl txt="Echt"/>
+  </Msg>
+  <Msg id="relative">
+    <en txt="Relative"/>
+    <de txt="Relativ"/>
+    <nl txt="Relatief"/>
+  </Msg>
+  <Msg id="hourly">
+    <en txt="Hourly"/>
+    <de txt="Stündlich"/>
+    <nl txt="Elk uur"/>
+  </Msg>
 </Messages>

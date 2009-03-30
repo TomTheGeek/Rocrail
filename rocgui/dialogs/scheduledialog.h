@@ -218,7 +218,7 @@ public:
     wxPanel* m_Destinations;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;
-    wxCheckBox* m_RelativeTime;
+    wxRadioBox* m_TimeProcessing;
     wxGrid* m_Entries;
     wxStaticText* m_LabelLocation;
     wxStaticText* m_LabelBlock;

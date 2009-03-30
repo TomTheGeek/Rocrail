@@ -1007,7 +1007,10 @@
         <const name="type_commuter" vt="string" val="commuter"/>
         <var name="type" vt="string" defval="cycle" range="cycle,commuter" required="true" remark="how the schedule should be used"/>
         <var name="cycles" vt="int" defval="0" range="0-*" remark="number of runs in case of cycle type: 0 is just one run"/>
-        <var name="relativetime" vt="bool" defval="false" remark="time is relative to the schedule start"/>
+        <const name="time_real" vt="int" val="0"/>
+        <const name="time_relative" vt="int" val="1"/>
+        <const name="time_hourly" vt="int" val="2"/>
+        <var name="timeprocessing" vt="int" defval="0" remark="0=real 1=relative 2=hourly"/>
         <scentry cardinality="n" wrappername="ScheduleEntry">
           <var name="location" vt="string" defval="NULL" range="*" required="false" remark="Location from the locationlist"/>
           <var name="block" vt="string" defval="NULL" range="*" required="false" remark="Block from the blocklist"/>

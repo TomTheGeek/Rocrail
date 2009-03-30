@@ -137,7 +137,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
 
   if( schedule != NULL ) {
     int idx = 0;
-    Boolean relativetime = wSchedule.isrelativetime(schedule);
+    int timeprocessing = wSchedule.gettimeprocessing(schedule);
     iONode entry = wSchedule.getscentry( schedule );
 
     /* check if the schedule index is correct: */
@@ -148,16 +148,26 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
         int modelminutes = 0;
         int scheduleminutes = 0;
 
-        if( relativetime ) {
+        if( timeprocessing == wSchedule.time_relative ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using relative time" );
           modeltime = modeltime - data->scheduletime;
         }
+
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime=%ld", modeltime );
 
         ltm = localtime( &modeltime );
 
-        modelminutes = ltm->tm_hour * 60 + ltm->tm_min;
         scheduleminutes = wScheduleEntry.gethour(entry) * 60 + wScheduleEntry.getminute(entry);
+
+        if(timeprocessing == wSchedule.time_hourly ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using hourly timing" );
+          /* processing hourly timing */
+          modelminutes = ltm->tm_min;
+        }
+        else {
+          modelminutes = ltm->tm_hour * 60 + ltm->tm_min;
+        }
+
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "check departure time schedule=%d model=%d index=%d",

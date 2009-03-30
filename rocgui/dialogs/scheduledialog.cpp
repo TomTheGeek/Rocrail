@@ -238,7 +238,11 @@ void ScheduleDialog::initLabels() {
 
   // Detail
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );
-  m_RelativeTime->SetLabel( wxGetApp().getMsg( "relativetime" ) );
+  m_TimeProcessing->SetLabel( wxGetApp().getMsg( "timeprocessing" ) );
+  m_TimeProcessing->SetString( 0, wxGetApp().getMsg( "real" ) );
+  m_TimeProcessing->SetString( 1, wxGetApp().getMsg( "relative" ) );
+  m_TimeProcessing->SetString( 2, wxGetApp().getMsg( "hourly" ) );
+
   m_LabelLocation->SetLabel( wxGetApp().getMsg( "location" ) );
   m_LabelBlock->SetLabel( wxGetApp().getMsg( "block" ) );
   m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
@@ -402,8 +406,7 @@ void ScheduleDialog::initSchedule() {
   StrOp.free( title );
 
   m_ID->SetValue(wxString(wSchedule.getid( m_Props ),wxConvUTF8));
-  m_RelativeTime->SetValue(wSchedule.isrelativetime( m_Props )?true:false);
-
+  m_TimeProcessing->SetSelection(wSchedule.gettimeprocessing( m_Props ));
 
   // Entries
   m_Entries->DeleteRows(0,m_Entries->GetNumberRows());
@@ -475,7 +478,7 @@ void ScheduleDialog::evaluate() {
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
 
   wSchedule.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
-  wSchedule.setrelativetime( m_Props, m_RelativeTime->IsChecked()?True:False );
+  wSchedule.settimeprocessing( m_Props, m_TimeProcessing->GetSelection() );
 
   wSchedule.setscaction( m_Props, m_ScheduleAction->GetValue().mb_str(wxConvUTF8) );
 
@@ -516,7 +519,7 @@ bool ScheduleDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Destinations = NULL;
     m_LabelID = NULL;
     m_ID = NULL;
-    m_RelativeTime = NULL;
+    m_TimeProcessing = NULL;
     m_Entries = NULL;
     m_LabelLocation = NULL;
     m_LabelBlock = NULL;
@@ -620,9 +623,13 @@ void ScheduleDialog::CreateControls()
     m_ID = new wxTextCtrl( m_Destinations, ID_TEXTCTRL_SCHEDULE_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_RelativeTime = new wxCheckBox( m_Destinations, wxID_ANY, _("Relative time"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_RelativeTime->SetValue(false);
-    itemBoxSizer16->Add(m_RelativeTime, 0, wxALIGN_LEFT|wxALL, 5);
+    wxArrayString m_TimeProcessingStrings;
+    m_TimeProcessingStrings.Add(_("&Real"));
+    m_TimeProcessingStrings.Add(_("&Relative"));
+    m_TimeProcessingStrings.Add(_("&Hourly"));
+    m_TimeProcessing = new wxRadioBox( m_Destinations, wxID_ANY, _("Time processing"), wxDefaultPosition, wxDefaultSize, m_TimeProcessingStrings, 1, wxRA_SPECIFY_ROWS );
+    m_TimeProcessing->SetSelection(0);
+    itemBoxSizer16->Add(m_TimeProcessing, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_Entries = new wxGrid( m_Destinations, ID_GRID_SCHEDULE, wxDefaultPosition, wxSize(-1, 150), wxSUNKEN_BORDER|wxVSCROLL );
     m_Entries->SetDefaultColSize(50);
