@@ -1,5 +1,8 @@
 #include "fxdlg.h"
 
+#include "rocs/public/trace.h"
+
+
 FxDlg::FxDlg( wxWindow* parent, int p_FX )
   :fxdlggen( parent )
 {
@@ -24,7 +27,8 @@ int FxDlg::getConfig() {
   return m_FX;
 }
 
-void FxDlg::onFunction( wxCommandEvent& event ) [
+void FxDlg::onFunction( wxCommandEvent& event ) {
+  int f = m_Function->GetSelection();
 }
 
 
