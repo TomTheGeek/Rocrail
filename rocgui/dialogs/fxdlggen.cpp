@@ -25,7 +25,7 @@ fxdlggen::fxdlggen( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxString m_GenerationChoices[] = { wxT("Normal"), wxT("Random flicker"), wxT("Mars light"), wxT("Single puls strobe"), wxT("Double pulse strobe"), wxT("Rotary beacon simulation"), wxT("Gyralite"), wxT("Rule 17 dimmable headlight"), wxT("FRED"), wxT("Right ditch light"), wxT("Left ditch light") };
+	wxString m_GenerationChoices[] = { wxT("Normal"), wxT("Random flicker"), wxT("Mars light"), wxT("Flashing head light"), wxT("Single puls strobe"), wxT("Double pulse strobe"), wxT("Rotary beacon simulation"), wxT("Gyralite"), wxT("Rule 17 dimmable headlight"), wxT("FRED"), wxT("Right ditch light"), wxT("Left ditch light") };
 	int m_GenerationNChoices = sizeof( m_GenerationChoices ) / sizeof( wxString );
 	m_Generation = new wxRadioBox( this, wxID_ANY, wxT("Effect"), wxDefaultPosition, wxDefaultSize, m_GenerationNChoices, m_GenerationChoices, 1, wxRA_SPECIFY_COLS );
 	m_Generation->SetSelection( 0 );
@@ -34,7 +34,7 @@ fxdlggen::fxdlggen( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxString m_WorkChoices[] = { wxT("Forward direction phase A"), wxT("Reverse direction phase B"), wxT("Non directional phase A"), wxT("Non directional phase B"), wxT("Forward direction, F0 on, phase A"), wxT("Reverse direction, F0 on, phase B"), wxT("Forwards ditch light or Rule 17"), wxT("Reverse ditch light or Rule 17"), wxT("Speed=0, non directional, phase A"), wxT("Speed>0, non directional, phase B"), wxT("Ditch off phase A"), wxT("Ditch off phase B") };
 	int m_WorkNChoices = sizeof( m_WorkChoices ) / sizeof( wxString );
 	m_Work = new wxRadioBox( this, wxID_ANY, wxT("Activation"), wxDefaultPosition, wxDefaultSize, m_WorkNChoices, m_WorkChoices, 1, wxRA_SPECIFY_COLS );
-	m_Work->SetSelection( 0 );
+	m_Work->SetSelection( 2 );
 	bSizer9->Add( m_Work, 0, wxALL, 5 );
 	
 	bSizer8->Add( bSizer9, 1, wxEXPAND, 5 );

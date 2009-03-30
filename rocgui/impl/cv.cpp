@@ -396,7 +396,7 @@ void CV::onDecConfig(void) {
 
 void CV::onDecFX(void) {
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FXVal (%d)", m_FxVal );
-  FxDlg*  dlg = new FxDlg(m_Frame, m_FxVal );
+  FxDlg*  dlg = new FxDlg(m_Frame, m_FxVal, m_CVnr );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
     m_FxVal = dlg->getConfig();
