@@ -145,27 +145,37 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
       if( idx == scheduleIdx ) {
         long modeltime = data->model->getTime( data->model );
         struct tm* ltm;
-        int modelminutes = 0;
+        int modelminutes    = 0;
         int scheduleminutes = 0;
+        int mins  = 0;
+        int hours = 0;
 
         if( timeprocessing == wSchedule.time_relative ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using relative time" );
           modeltime = modeltime - data->scheduletime;
+          modelminutes = modeltime / 60;
+          mins  = modelminutes % 60;
+          hours = modelminutes / 60;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using relative time: modeltime=%d", modeltime );
+        }
+        else {
+          ltm = localtime( &modeltime );
+          hours = ltm->tm_hour;
+          mins  = ltm->tm_min;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using real time: modeltime=%d", modeltime );
         }
 
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime=%ld", modeltime );
-
-        ltm = localtime( &modeltime );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime %02d:%02d (%ld)",
+            hours, mins, modeltime );
 
         scheduleminutes = wScheduleEntry.gethour(entry) * 60 + wScheduleEntry.getminute(entry);
 
         if(timeprocessing == wSchedule.time_hourly ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using hourly timing" );
           /* processing hourly timing */
-          modelminutes = ltm->tm_min;
+          modelminutes = mins;
         }
         else {
-          modelminutes = ltm->tm_hour * 60 + ltm->tm_min;
+          modelminutes = hours * 60 + mins;
         }
 
 
