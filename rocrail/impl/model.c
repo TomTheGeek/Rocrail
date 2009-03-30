@@ -2879,6 +2879,7 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId );
     if( loc != NULL ) {
       wOccupation.setauto( occ, LocOp.isResumeAutomode(loc) );
+      wOccupation.setscid( occ, LocOp.getSchedule(loc) );
     }
   }
 
@@ -2979,6 +2980,7 @@ static void _loadBlockOccupation( iOModel inst ) {
       iONode occ = NodeOp.getChild( modocc, i );
       const char* BlockID  = wOccupation.getbkid( occ );
       const char* LocoID   = wOccupation.getlcid( occ );
+      const char* ScID     = wOccupation.getscid( occ );
       int         placing  = wOccupation.getplacing( occ );
       Boolean     closed   = wOccupation.isclosed( occ );
       Boolean     automode = wOccupation.isauto( occ );
@@ -2990,6 +2992,13 @@ static void _loadBlockOccupation( iOModel inst ) {
       if( loco != NULL ) {
         iONode props = LocOp.base.properties(loco);
         wLoc.setresumeauto( props, automode );
+
+        if( ScID != NULL && StrOp.len(ScID) > 0) {
+          LocOp.useSchedule(loco, ScID);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore scheduleID [%s] for [%s]",
+              ScID, LocOp.getId(loco));
+        }
+
         if( placing > 0 ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set placing to [%s] for [%s]",
               placing == 1 ?"default":"reverse", LocOp.getId(loco) );

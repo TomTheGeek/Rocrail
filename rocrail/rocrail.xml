@@ -362,6 +362,9 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="scheduleid" vt="const char*"/>
     </fun>
+    <fun name="getSchedule" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="normalizeID" vt="char*">
       <param name="id" vt="const char*" remark="Loc ID"/>
     </fun>

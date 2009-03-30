@@ -444,9 +444,14 @@ static void _useschedule( iILcDriverInt inst, const char* scheduleid ) {
                  data->loc->getId( data->loc ) );
 }
 
+static const char* _getschedule( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  return data->schedule;
+}
+
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 1;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOLcDriverData data = Data(inst);

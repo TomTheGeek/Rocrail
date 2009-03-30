@@ -740,6 +740,7 @@
     <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
+      <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
       <var name="auto" vt="bool" defval="false" remark="The occupying loco is in automode."/>

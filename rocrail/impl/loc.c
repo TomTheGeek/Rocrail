@@ -1142,6 +1142,16 @@ static void _useSchedule( iOLoc inst, const char* id ) {
   }
 }
 
+static const char* _getSchedule( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  if( data->driver != NULL ) {
+    const char* schedule = data->driver->getschedule( data->driver );
+    if( schedule != NULL )
+      return schedule;
+  }
+  return "";
+}
+
 static void _go( iOLoc inst ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
