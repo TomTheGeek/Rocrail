@@ -39,6 +39,7 @@
 #include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/speedcurvedlg.h"
 #include "rocgui/dialogs/decconfigdlg.h"
+#include "rocgui/dialogs/fxdlg.h"
 
 #include "rocgui/public/cv.h"
 
@@ -315,6 +316,12 @@ void CV::event( iONode event ) {
       m_Timer->Stop();
       onDecConfig();
     }
+    else if( m_bFX ) {
+      /* post an event to activate the speed curve dialog */
+      m_FxVal = ivalue;
+      m_Timer->Stop();
+      onDecFX();
+    }
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
       if( tc != NULL ) {
@@ -384,6 +391,22 @@ void CV::onDecConfig(void) {
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
   dlg->Destroy();
   m_bConfig = false;
+}
+
+
+void CV::onDecFX(void) {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FXVal (%d)", m_FxVal );
+  FxDlg*  dlg = new FxDlg(m_Frame, m_FxVal );
+  int rc = dlg->ShowModal();
+  if( rc == wxID_OK ) {
+    m_FxVal = dlg->getConfig();
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FxVal (%d)", m_FxVal );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, m_CVnr->GetValue(), m_FxVal );
+  }
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FxVal (%d) rc=%d(%d)", m_FxVal, rc, dlg->GetReturnCode() );
+  dlg->Destroy();
+  m_bFX = false;
 }
 
 
@@ -732,6 +755,12 @@ void CV::OnButton(wxCommandEvent& event)
     m_CVoperation = CVGET;
     m_bConfig = true;
     doCV( wProgram.get, 29, 0 );
+  }
+  else if( event.GetEventObject() == m_FX ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FX" );
+    m_CVoperation = CVGET;
+    m_bFX = true;
+    doCV( wProgram.get, m_CVnr->GetValue(), 0 );
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
@@ -1259,6 +1288,8 @@ void CV::CreateControls() {
 
   m_Set = new wxButton( m_ItemPanel, -1, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
   m_CVSubBox1->Add(m_Set, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_FX = new wxButton( m_ItemPanel, -1, _("FX"), wxDefaultPosition, wxSize(40, 25), 0 );
+  m_CVSubBox1->Add(m_FX, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Bitfield..." );
 

@@ -1,18 +1,29 @@
 #include "fxdlg.h"
 
-fxdlg::fxdlg( wxWindow* parent )
-:
-fxdlggen( parent )
+FxDlg::FxDlg( wxWindow* parent, int p_FX )
+  :fxdlggen( parent )
 {
-
+  m_FX = p_FX;
 }
 
-void fxdlg::onCancel( wxCommandEvent& event )
+void FxDlg::onCancel( wxCommandEvent& event )
 {
 	// TODO: Implement onCancel
 }
 
-void fxdlg::onOK( wxCommandEvent& event )
+void FxDlg::onOK( wxCommandEvent& event )
 {
 	// TODO: Implement onOK
+}
+
+int FxDlg::getConfig() {
+  return m_FX;
+}
+
+
+
+void FxDlg::initLabels() {
+}
+
+void FxDlg::initValues() {
 }

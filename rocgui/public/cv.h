@@ -110,6 +110,7 @@ private:
     void writeAll();
 
     void onDecConfig();
+    void onDecFX();
     void onSpeedCurve();
 
     void loadCVfromFile();
@@ -145,8 +146,10 @@ private:
     bool m_bCleanUpProgress;
     int m_Curve[28];
     int m_ConfigVal;
+    int m_FxVal;
     iOMutex m_TimerMutex;
     bool m_bConfig;
+    bool m_bFX;
 
     const char* m_Manu[256];
     wxWindow* m_Frame;
@@ -216,6 +219,7 @@ private:
     wxButton* m_saveAllCVs;
     wxButton* m_SpeedCurve;
     wxButton* m_Config;
+    wxButton* m_FX;
     wxButton* m_loadCVs;
     wxButton* m_loadFile;
     wxButton* m_saveFile;
