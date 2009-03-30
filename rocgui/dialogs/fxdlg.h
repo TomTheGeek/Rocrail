@@ -18,6 +18,7 @@ protected:
 	// Handlers for fxdlggen events.
 	void onCancel( wxCommandEvent& event );
 	void onOK( wxCommandEvent& event );
+  void onFunction( wxCommandEvent& event );
 
 public:
 	/** Constructor */

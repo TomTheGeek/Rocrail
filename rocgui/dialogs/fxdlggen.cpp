@@ -52,6 +52,7 @@ fxdlggen::fxdlggen( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer8->Fit( this );
 	
 	// Connect Events
+	m_Function->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( fxdlggen::onFunction ), NULL, this );
 	m_sdButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( fxdlggen::onCancel ), NULL, this );
 	m_sdButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( fxdlggen::onOK ), NULL, this );
 }
@@ -59,6 +60,7 @@ fxdlggen::fxdlggen( wxWindow* parent, wxWindowID id, const wxString& title, cons
 fxdlggen::~fxdlggen()
 {
 	// Disconnect Events
+	m_Function->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( fxdlggen::onFunction ), NULL, this );
 	m_sdButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( fxdlggen::onCancel ), NULL, this );
 	m_sdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( fxdlggen::onOK ), NULL, this );
 }
