@@ -6946,4 +6946,8 @@
     <de txt="Stündlich"/>
     <nl txt="Elk uur"/>
   </Msg>
+  <Msg id="fullscreen">
+    <en txt="Full screen"/>
+    <de txt="Vollbild"/>
+  </Msg>
 </Messages>

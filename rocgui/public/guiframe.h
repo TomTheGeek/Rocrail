@@ -187,6 +187,7 @@ public:
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
+  void OnFullScreen(wxCommandEvent& event);
 
   void OnUhl63350(wxCommandEvent& event);
   void OnLocoIO(wxCommandEvent& event);
@@ -399,6 +400,7 @@ enum
     ME_LocoBook,
     ME_Fill,
     ME_ShowID,
+    ME_FullScreen,
     ME_Raster,
     NEWUPDATES_EVENT,
     ME_RUG,
