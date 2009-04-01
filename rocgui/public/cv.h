@@ -150,6 +150,7 @@ private:
     iOMutex m_TimerMutex;
     bool m_bConfig;
     bool m_bFX;
+    bool m_bLongAddress;
 
     const char* m_Manu[256];
     wxWindow* m_Frame;

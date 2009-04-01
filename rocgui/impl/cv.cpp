@@ -77,8 +77,10 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   for(int i = 0; i < 28; i++ ) {
     m_Curve[i] = 0;
   }
-  m_bSpeedCurve = false;
-  m_bConfig = false;
+  m_bSpeedCurve  = false;
+  m_bConfig      = false;
+  m_bFX          = false;
+  m_bLongAddress = false;
 
 
   CVconf();
@@ -286,6 +288,8 @@ void CV::event( iONode event ) {
       char* lval = StrOp.fmt("%d", laddr);
       m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
       StrOp.free(lval);
+      m_CVoperation = CVGET;
+      doCV( wProgram.get, 18, 0 );
     }
     else if( m_CVidx == 18 ) {
       m_CV18 = ivalue;
@@ -295,6 +299,7 @@ void CV::event( iONode event ) {
       char* lval = StrOp.fmt("%d", laddr);
       m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
       StrOp.free(lval);
+      m_bLongAddress = false;
     }
     else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
       m_Curve[m_CVidx-67] = ivalue;
@@ -823,8 +828,7 @@ void CV::getLongAddress() {
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
   m_CVoperation = CVGET;
   doCV( wProgram.get, 17, 0 );
-  m_CVoperation = CVGET;
-  doCV( wProgram.get, 18, 0 );
+  m_bLongAddress = true;
 }
 
 void CV::setLongAddress() {
