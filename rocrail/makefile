@@ -51,6 +51,7 @@ LIBEXECDIR?=$(PREFIX)/libexec
 DATADIR?=$(PREFIX)/share
 PIXMAPSDIR?=$(PREFIX)/share/pixmaps
 APPLICATIONSDIR=$(PREFIX)/share/applications
+DIRECTORIESDIR=$(PREFIX)/share/desktop-directories
 ROCRAIL_LIBDIR=$(LIBDIR)/rocrail
 ROCRAIL_LIBEXECDIR=$(LIBEXECDIR)/rocrail
 ROCRAIL_DATADIR=$(DATADIR)/rocrail
@@ -131,13 +132,19 @@ fromtar:
 	cd ../roclcdr; make clean PLATFORM=$(PLATFORM); make all DEBUG=$(DEBUG) TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL);
 	cd ../rocgui; make clean PLATFORM=$(PLATFORM); make all DEBUG=$(DEBUG) TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL);
 
+#
+# Install a new copy, overwriting existing files but not deleting additional user-created files
+#
 install:
 	-mkdir -p $(DESTDIR)$(BINDIR)
 	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBDIR)
 	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
+
 	cd ../rocdigs; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+
 	cd ../roclcdr; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+
 	cd ../rocgui; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	-cp -p package/rocrail.sh $(DESTDIR)$(BINDIR)/rocrail
 	-cp -p package/rocview.sh $(DESTDIR)$(BINDIR)/rocview
@@ -149,15 +156,27 @@ install:
 	-chmod +x $(DESTDIR)$(BINDIR)/rocview
 	-chmod +x $(DESTDIR)$(BINDIR)/rocviewmod
 	-chmod +x $(DESTDIR)$(BINDIR)/rocprops.sh
+
 	-mkdir -p $(DESTDIR)$(ROCRAIL_DATADIR)/default
 	-cp -Rp ../stylesheets $(DESTDIR)$(ROCRAIL_DATADIR)
 	-cp -Rp symbols $(DESTDIR)$(ROCRAIL_DATADIR)
 	-cp -Rp package/images $(DESTDIR)$(ROCRAIL_DATADIR)
 	-cp -p package/*.xml $(DESTDIR)$(ROCRAIL_DATADIR)/default
 	-cp -p package/*.ini $(DESTDIR)$(ROCRAIL_DATADIR)/default
+	-cp -p ../rocrail/package/*.menu $(DESTDIR)$(ROCRAIL_DATADIR)/default
+
 	-mkdir -p $(DESTDIR)$(PIXMAPSDIR)
 	-cp -p rocraild.png $(DESTDIR)$(PIXMAPSDIR)
 	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)$(PIXMAPSDIR)
+
+#
+# Note: this only installs icons correctly under GNOME using the xdg spec.  How to handle KDE?
+#
+
+	-if test -d /etc/xdg/menus/applications-merged; then cp $(DESTDIR)$(ROCRAIL_DATADIR)/default/*.menu /etc/xdg/menus/applications-merged; fi
+	-mkdir -p $(DESTDIR)$(DIRECTORIESDIR)
+	-cp -p package/Rocrail.directory $(DESTDIR)$(DIRECTORIESDIR)
 	-mkdir -p $(DESTDIR)$(APPLICATIONSDIR)
 	-cp -p package/Rocrail.desktop $(DESTDIR)$(APPLICATIONSDIR)
 	-cp -p package/Rocview.desktop $(DESTDIR)$(APPLICATIONSDIR)
+
