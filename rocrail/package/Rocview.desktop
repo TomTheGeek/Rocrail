@@ -4,4 +4,4 @@ Type=Application
 Exec=rocview
 Icon=rocrail.xpm
 Name=Rocview
-Categories=Application;Rocrail;Game;
+Categories=Rocrail;Game;
