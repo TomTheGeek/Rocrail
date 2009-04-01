@@ -5,4 +5,4 @@ Terminal=true
 Exec=rocrail
 Icon=rocraild.png
 Name=Rocrail
-Categories=Application;Rocrail;Game;
+Categories=Rocrail;Game;
