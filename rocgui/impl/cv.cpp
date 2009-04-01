@@ -768,6 +768,8 @@ void CV::OnButton(wxCommandEvent& event)
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FX" );
     m_CVoperation = CVGET;
     m_bFX = true;
+    if(m_CVnr->GetValue() < 49 )
+      m_CVnr->SetValue(49);
     doCV( wProgram.get, m_CVnr->GetValue(), 0 );
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
