@@ -428,6 +428,9 @@ void CV::update4POM(void) {
   m_getManu->Enable(!m_bPOM);
   m_Get->Enable(!m_bPOM);
   */
+  m_setlongAddress->Enable(!m_bPOM);
+  m_setAddress->Enable(!m_bPOM);
+
   m_ReadAll->Enable(!m_bPOM);
   m_PTonoff->Enable(!m_bPOM);
 }
@@ -1105,7 +1108,7 @@ void CV::CreateControls() {
   m_saveFile = new wxButton( m_ItemPanel, -1, _("Export"), wxDefaultPosition, wxSize(60, 26), 0 );
   m_LocBox->Add(m_saveFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_POM = new wxCheckBox( m_ItemPanel, -1, _T("POM"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_POM = new wxCheckBox( m_ItemPanel, -1, _T("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
   m_POM->SetToolTip(_T("Program On the Main") );
   m_LocBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
