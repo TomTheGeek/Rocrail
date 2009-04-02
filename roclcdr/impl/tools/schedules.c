@@ -149,6 +149,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
         int scheduleminutes = 0;
         int mins  = 0;
         int hours = 0;
+        int timeframe = 2;
 
         if( timeprocessing == wSchedule.time_relative ) {
           modeltime = modeltime - data->scheduletime;
@@ -173,6 +174,12 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using hourly timing" );
           /* processing hourly timing */
           modelminutes = mins;
+          if( modelminutes > scheduleminutes && modelminutes - scheduleminutes > timeframe ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "diff between schedule[%d] and model[%d] time is bigger then the allowed frame of %d; force wait for next hour...",
+                scheduleminutes, modelminutes, timeframe );
+            scheduleminutes += 60;
+          }
         }
         else {
           modelminutes = hours * 60 + mins;
