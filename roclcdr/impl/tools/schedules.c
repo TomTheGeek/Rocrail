@@ -138,6 +138,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
   if( schedule != NULL ) {
     int idx = 0;
     int timeprocessing = wSchedule.gettimeprocessing(schedule);
+    int timeframe = wSchedule.gettimeframe(schedule);
     iONode entry = wSchedule.getscentry( schedule );
 
     /* check if the schedule index is correct: */
@@ -149,7 +150,6 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
         int scheduleminutes = 0;
         int mins  = 0;
         int hours = 0;
-        int timeframe = 2;
 
         if( timeprocessing == wSchedule.time_relative ) {
           modeltime = modeltime - data->scheduletime;

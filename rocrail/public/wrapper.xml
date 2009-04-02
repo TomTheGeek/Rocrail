@@ -1012,6 +1012,7 @@
         <const name="time_relative" vt="int" val="1"/>
         <const name="time_hourly" vt="int" val="2"/>
         <var name="timeprocessing" vt="int" defval="0" remark="0=real 1=relative 2=hourly"/>
+        <var name="timeframe" vt="int" defval="1" range="0-*" units="min" remark="time frame for accepting a delay"/>
         <scentry cardinality="n" wrappername="ScheduleEntry">
           <var name="location" vt="string" defval="NULL" range="*" required="false" remark="Location from the locationlist"/>
           <var name="block" vt="string" defval="NULL" range="*" required="false" remark="Block from the blocklist"/>

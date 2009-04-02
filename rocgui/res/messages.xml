@@ -6950,4 +6950,7 @@
     <en txt="Full screen"/>
     <de txt="Vollbild"/>
   </Msg>
+  <Msg id="timeframe">
+    <en txt="Time frame"/>
+  </Msg>
 </Messages>
