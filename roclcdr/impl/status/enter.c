@@ -85,6 +85,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     }
     else {
       Boolean wait = False;
+      int scheduleIdx = data->scheduleIdx;
       /* find destination using schedule */
       if( data->next2Route == NULL ) {
         data->next2Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL,
@@ -95,12 +96,22 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       else {
         /* next2Route already locked by second next option; adjust the schedule index... */
         data->scheduleIdx += 1;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "adjust the schedule index to %d for second next option", data->scheduleIdx );
       }
 
       if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
           !checkScheduleTime( inst, data->schedule, data->scheduleIdx ) )
       {
         wait = True;
+
+        if( scheduleIdx != data->scheduleIdx ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "schedule index changed from %d to %d", scheduleIdx, data->scheduleIdx );
+          data->prewaitScheduleIdx = scheduleIdx;
+        }
+      }
+      else {
+        data->prewaitScheduleIdx = -1;
       }
 
       if( !wait && data->next2Route != NULL ) {
