@@ -144,7 +144,7 @@ static void _white( iOSignal inst ) {
 }
 
 
-static Boolean __processPairCmd( iOSignal inst, const char* state ) {
+static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean invert ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -164,33 +164,39 @@ static Boolean __processPairCmd( iOSignal inst, const char* state ) {
   /* reset */
   wSwitch.setaddr1( swcmd, wSignal.getaddr( o->props ) );
   wSwitch.setport1( swcmd, wSignal.getport1( o->props ) );
-  wSwitch.setcmd( swcmd, wSwitch.turnout );
+  wSwitch.setcmd( swcmd, invert?wSwitch.straight:wSwitch.turnout );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
 
-  if( wSignal.getaddr2( o->props ) > 0 )
-    wSwitch.setaddr1( swcmd, wSignal.getaddr2( o->props ) );
-  wSwitch.setport1( swcmd, wSignal.getport2( o->props ) );
-  ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  if( wSignal.getaddr2( o->props ) > 0 || wSignal.getport2( o->props ) > 0 ) {
+    if( wSignal.getaddr2( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr2( o->props ) );
+    wSwitch.setport1( swcmd, wSignal.getport2( o->props ) );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  }
 
-  if( wSignal.getaddr3( o->props ) > 0 )
-    wSwitch.setaddr1( swcmd, wSignal.getaddr3( o->props ) );
-  wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
-  ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  if( wSignal.getaddr3( o->props ) > 0 || wSignal.getport3( o->props ) > 0 ) {
+    if( wSignal.getaddr3( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr3( o->props ) );
+    wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  }
 
-  if( wSignal.getaddr4( o->props ) > 0 )
-    wSwitch.setaddr1( swcmd, wSignal.getaddr4( o->props ) );
-  wSwitch.setport1( swcmd, wSignal.getport4( o->props ) );
-  ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  if( wSignal.getaddr4( o->props ) > 0 || wSignal.getport4( o->props ) > 0 ) {
+    if( wSignal.getaddr4( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr4( o->props ) );
+    wSwitch.setport1( swcmd, wSignal.getport4( o->props ) );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  }
 
-  wSwitch.setcmd( swcmd, wSwitch.straight );
+  wSwitch.setcmd( swcmd, invert?wSwitch.turnout:wSwitch.straight );
 
-  if( StrOp.equals( state, wSignal.green ) ) {
+  if( StrOp.equals( state, wSignal.red ) ) {
     wSwitch.setport1( swcmd, wSignal.getport1( o->props ) );
   }
-  else if( StrOp.equals( state, wSignal.red ) ) {
+  else if( StrOp.equals( state, wSignal.yellow ) ) {
     wSwitch.setport1( swcmd, wSignal.getport2( o->props ) );
   }
-  else if( StrOp.equals( state, wSignal.yellow ) ) {
+  else if( StrOp.equals( state, wSignal.green ) ) {
     wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
   }
   else if( StrOp.equals( state, wSignal.white ) ) {
@@ -581,7 +587,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   }
   /* pair processing */
   else if( wSignal.ispair( o->props ) ) {
-    if( !__processPairCmd( inst, state ) ) {
+    if( !__processPairCmd( inst, state, inv ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
           "Signal [%s] could not be set!", wSignal.getid( o->props ) );
       ok = False;
