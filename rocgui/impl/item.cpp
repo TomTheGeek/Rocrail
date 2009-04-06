@@ -1456,6 +1456,8 @@ void Symbol::modelEvent( iONode node ) {
       refresh = true;
     }
 
+    wSwitch.setswitched( m_Props, wSwitch.getswitched(node) );
+
     SetBackgroundColour( isSet? m_PlanPanel->GetBackgroundColour():*wxRED );
 
     if( addr > 0 && port > 0 ) {

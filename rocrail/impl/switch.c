@@ -256,6 +256,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int va
     wSwitch.setid( nodeF, SwitchOp.getId( (iOSwitch)inst ) );
     wSwitch.setset( nodeF, isSet );
     wSwitch.setstate( nodeF, strState );
+    wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
     if( wSwitch.getiid( data->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( data->props ) );
     if( data->lockedId != NULL )
@@ -342,6 +343,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
       iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeF, wSwitch.getstate( data->props ) );
+      wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       if( data->lockedId != NULL )
         wSwitch.setlocid( nodeF, data->lockedId );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
@@ -365,6 +367,7 @@ static Boolean _unLock( iOSwitch inst, const char* id ) {
       iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeF, wSwitch.getstate( data->props ) );
+      wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       wSwitch.setlocid( nodeF, wSwitch.unlocked );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
     }
@@ -680,6 +683,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
     wSwitch.setstate( nodeF, wSwitch.getstate( o->props ) );
+    wSwitch.setswitched( nodeF, wSwitch.getswitched( o->props ) );
 
     if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
       wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
@@ -901,6 +905,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       iONode nodeD = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeD, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeD, wSwitch.getstate( data->props) );
+      wSwitch.setswitched( nodeD, wSwitch.getswitched( data->props ) );
       wSwitch.setaddr1( nodeD, wSwitch.getaddr1( data->props ) );
       wSwitch.setport1( nodeD, wSwitch.getport1( data->props ) );
       if( has2Units ) {
