@@ -46,6 +46,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
 
   /* reset schedule index */
   data->scheduleIdx = 0;
+  data->prewaitScheduleIdx = -1;
 
   if( data->schedule != NULL ) {
     iONode sc = data->model->getSchedule( data->model, data->schedule );
@@ -70,6 +71,16 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
         /* set the schedule start time: */
         data->scheduletime = data->model->getTime( data->model );
         data->schedule = scaction;
+        if( state == LC_FINDDEST )
+          data->next1Block = NULL;
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
+        resetNext2( (iOLcDriver)inst, True );
+      }
+      else if( wSchedule.gettimeprocessing(sc)  == wSchedule.time_hourly ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hourly schedule is recycled", scaction );
+        /* set the schedule start time: */
+        data->scheduletime = data->model->getTime( data->model );
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
 
@@ -138,7 +149,10 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
   if( schedule != NULL ) {
     int idx = 0;
     int timeprocessing = wSchedule.gettimeprocessing(schedule);
-    int timeframe = wSchedule.gettimeframe(schedule);
+    int timeframe      = wSchedule.gettimeframe(schedule);
+    int fromhour       = wSchedule.getfromhour(schedule);
+    int tohour         = wSchedule.gettohour(schedule);
+
     iONode entry = wSchedule.getscentry( schedule );
 
     /* check if the schedule index is correct: */
@@ -174,7 +188,13 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using hourly timing" );
           /* processing hourly timing */
           modelminutes = mins;
-          if( modelminutes > scheduleminutes && modelminutes - scheduleminutes > timeframe ) {
+          if( hours < fromhour || tohour > hours ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "current hour, %d, is not in the hourly range from %d to %d",
+                hours, fromhour, tohour );
+            scheduleminutes += 60;
+          }
+          else if( modelminutes > scheduleminutes && modelminutes - scheduleminutes > timeframe ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "diff between schedule[%d] and model[%d] time is bigger then the allowed frame of %d; force wait for next hour...",
                 scheduleminutes, modelminutes, timeframe );

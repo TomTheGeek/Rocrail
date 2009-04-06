@@ -224,6 +224,10 @@ public:
     wxTextCtrl* m_ID;
     wxStaticText* m_labTimeFrame;
     wxSpinCtrl* m_TimeFrame;
+    wxStaticText* m_labFromHour;
+    wxSpinCtrl* m_FromHour;
+    wxStaticText* m_labToHour;
+    wxSpinCtrl* m_ToHour;
     wxRadioBox* m_TimeProcessing;
     wxGrid* m_Entries;
     wxStaticText* m_LabelLocation;
