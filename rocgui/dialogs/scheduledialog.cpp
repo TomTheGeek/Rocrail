@@ -81,6 +81,8 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 
     EVT_TEXT( ID_TEXTCTRL_SCHEDULE_ID, ScheduleDialog::OnTextctrlScheduleIdUpdated )
 
+    EVT_SPINCTRL( ID_SCHEDULE_FROMHOUR, ScheduleDialog::OnScheduleFromhourUpdated )
+
     EVT_RADIOBOX( ID_SC_TIMEPROCESSING, ScheduleDialog::OnScTimeprocessingSelected )
 
     EVT_GRID_CELL_LEFT_CLICK( ScheduleDialog::OnCellLeftClick )
@@ -651,7 +653,7 @@ void ScheduleDialog::CreateControls()
     m_labFromHour = new wxStaticText( m_Destinations, wxID_ANY, _("From hour"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labFromHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_FromHour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
+    m_FromHour = new wxSpinCtrl( m_Destinations, ID_SCHEDULE_FROMHOUR, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer17->Add(m_FromHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labToHour = new wxStaticText( m_Destinations, wxID_ANY, _("To hour"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1129,5 +1131,16 @@ void ScheduleDialog::OnScTimeprocessingSelected( wxCommandEvent& event )
   m_TimeFrame->Enable(m_TimeProcessing->GetSelection() == wSchedule.time_hourly);
   m_FromHour->Enable(m_TimeProcessing->GetSelection() == wSchedule.time_hourly);
   m_ToHour->Enable(m_TimeProcessing->GetSelection() == wSchedule.time_hourly);
+}
+
+
+/*!
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SCHEDULE_FROMHOUR
+ */
+
+void ScheduleDialog::OnScheduleFromhourUpdated( wxSpinEvent& event )
+{
+  if( m_FromHour->GetValue() > m_ToHour->GetValue() )
+    m_ToHour->SetValue(m_FromHour->GetValue());
 }
 

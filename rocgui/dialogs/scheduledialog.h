@@ -65,6 +65,7 @@ class wxGrid;
 #define ID_PANEL_SCHEDULE_DESTINATIONS 10293
 #define wxID_STATIC_SCHEDULE_ID 10308
 #define ID_TEXTCTRL_SCHEDULE_ID 10307
+#define ID_SCHEDULE_FROMHOUR 10379
 #define ID_SC_TIMEPROCESSING 10204
 #define ID_GRID_SCHEDULE 10000
 #define ID_STATICTEXT_SCHEDULE_FROM 10001
@@ -149,6 +150,9 @@ public:
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SCHEDULE_ID
     void OnTextctrlScheduleIdUpdated( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SCHEDULE_FROMHOUR
+    void OnScheduleFromhourUpdated( wxSpinEvent& event );
 
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SC_TIMEPROCESSING
     void OnScTimeprocessingSelected( wxCommandEvent& event );
