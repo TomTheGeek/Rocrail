@@ -666,6 +666,14 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
 
   __checkAction( inst );
 
+  {
+    /* increase the switch counter */
+    int switched = wSwitch.getswitched(o->props);
+    switched++;
+    wSwitch.setswitched(o->props, switched);
+  }
+
+
   /* Broadcast to clients. Node6 */
 
   if( update ) {

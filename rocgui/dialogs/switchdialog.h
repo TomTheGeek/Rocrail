@@ -213,6 +213,8 @@ public:
     wxTextCtrl* m_Locked;
     wxStaticText* m_LabelState;
     wxTextCtrl* m_State;
+    wxStaticText* m_labSwitched;
+    wxTextCtrl* m_Switched;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
     wxStaticText* m_labAccNr;
