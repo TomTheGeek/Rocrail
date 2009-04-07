@@ -6953,4 +6953,7 @@
   <Msg id="timeframe">
     <en txt="Time frame"/>
   </Msg>
+  <Msg id="usebicom">
+    <en txt="Use Bi-Directional Communication"/>
+  </Msg>
 </Messages>

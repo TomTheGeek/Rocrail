@@ -46,6 +46,8 @@
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/BlockInclude.h"
 #include "rocrail/wrapper/public/BlockExclude.h"
+#include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 
 static int instCnt = 0;
@@ -303,14 +305,21 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
 
   /* handle a dedicated ident event */
-  if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {
-    /* display ident code */
-    char identString[32];
-    StrOp.fmtb( identString, "%04d", ident );
-    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    wBlock.setid( nodeD, data->id );
-    wBlock.setlocid( nodeD, puls ? identString:data->locId );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+  if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
+    if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {
+      /* display ident code */
+      char identString[32];
+      StrOp.fmtb( identString, "%04d", ident );
+      iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( nodeD, data->id );
+      wBlock.setlocid( nodeD, puls ? identString:data->locId );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    }
+  }
+  else if( ident > 0 ){
+    /* reset ident */
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "reset ident=%d to zero; bi-com is disabled", ident);
+    ident = 0;
   }
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {

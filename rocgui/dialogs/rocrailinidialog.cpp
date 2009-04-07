@@ -199,6 +199,7 @@ void RocrailIniDialog::initLabels() {
   m_GreenAspect->SetLabel( wxGetApp().getMsg( "greenaspect" ) );
   m_SkipSetSw->SetLabel( wxGetApp().getMsg( "skipsetsw" ) );
   m_SkipSetSw->SetToolTip(wxGetApp().getTip( "skipsetsw" ));
+  m_UseBiCom->SetLabel( wxGetApp().getMsg( "usebicom" ) );
   m_labSemaphoreWait->SetLabel( wxGetApp().getMsg( "semaphorewait" ) );
 
   // Controller
@@ -331,6 +332,7 @@ void RocrailIniDialog::initValues() {
   m_RouteSwTime->SetValue( wCtrl.getrouteswtime( ctrl ) );
   m_DisableRouteVreduce->SetValue( wCtrl.isdisablerouteVreduce( ctrl ) );
   m_SkipSetSw->SetValue( wCtrl.isskipsetsw( ctrl ) );
+  m_UseBiCom->SetValue( wCtrl.isusebicom( ctrl ) );
   m_SemaphoreWait->SetValue( wCtrl.getsemaphorewait( ctrl ) );
 
   if( StrOp.equals( wSignal.red, wCtrl.getdefaspect( ctrl ) ) )
@@ -482,6 +484,7 @@ void RocrailIniDialog::evaluate() {
   const char* defaspect[] = {wSignal.red,wSignal.green,wSignal.yellow,wSignal.white};
   wCtrl.setdefaspect( ctrl, defaspect[m_DefAspect->GetSelection()] );
   wCtrl.setskipsetsw( ctrl, m_SkipSetSw->IsChecked() ? True:False );
+  wCtrl.setusebicom( ctrl, m_UseBiCom->IsChecked() ? True:False );
 
 
 }
@@ -576,6 +579,7 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_DisableRouteVreduce = NULL;
     m_GreenAspect = NULL;
     m_SkipSetSw = NULL;
+    m_UseBiCom = NULL;
     m_DefAspect = NULL;
     m_ControllersPanel = NULL;
     m_Controllers = NULL;
@@ -901,6 +905,10 @@ void RocrailIniDialog::CreateControls()
     m_SkipSetSw->SetValue(false);
     itemFlexGridSizer84->Add(m_SkipSetSw, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    m_UseBiCom = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Use Bi-Directional Communication"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_UseBiCom->SetValue(false);
+    itemFlexGridSizer84->Add(m_UseBiCom, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
     wxArrayString m_DefAspectStrings;
     m_DefAspectStrings.Add(_("&red"));
     m_DefAspectStrings.Add(_("&green"));
@@ -913,24 +921,24 @@ void RocrailIniDialog::CreateControls()
     m_RRNotebook->AddPage(m_AtomatPanel, _("Automat"));
 
     m_ControllersPanel = new wxPanel( m_RRNotebook, ID_PANEL_RR_CONTROLLERS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer93 = new wxBoxSizer(wxVERTICAL);
-    m_ControllersPanel->SetSizer(itemBoxSizer93);
+    wxBoxSizer* itemBoxSizer94 = new wxBoxSizer(wxVERTICAL);
+    m_ControllersPanel->SetSizer(itemBoxSizer94);
 
     wxArrayString m_ControllersStrings;
     m_Controllers = new wxListBox( m_ControllersPanel, ID_LISTBOX_RR_CONTROLLERS, wxDefaultPosition, wxDefaultSize, m_ControllersStrings, wxLB_SINGLE );
-    itemBoxSizer93->Add(m_Controllers, 1, wxGROW|wxALL, 5);
+    itemBoxSizer94->Add(m_Controllers, 1, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer95 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer93->Add(itemBoxSizer95, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer96 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer94->Add(itemBoxSizer96, 0, wxGROW|wxALL, 5);
     m_ControllerDelete = new wxButton( m_ControllersPanel, ID_BUTTON_RR_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer95->Add(m_ControllerDelete, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer96->Add(m_ControllerDelete, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ControllerProps = new wxButton( m_ControllersPanel, ID_BUTTON_RR_PROPS, _("Properties"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer95->Add(m_ControllerProps, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer96->Add(m_ControllerProps, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer98Static = new wxStaticBox(m_ControllersPanel, wxID_ANY, _("Add Controller"));
-    m_AddControllerBox = new wxStaticBoxSizer(itemStaticBoxSizer98Static, wxHORIZONTAL);
-    itemBoxSizer93->Add(m_AddControllerBox, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer99Static = new wxStaticBox(m_ControllersPanel, wxID_ANY, _("Add Controller"));
+    m_AddControllerBox = new wxStaticBoxSizer(itemStaticBoxSizer99Static, wxHORIZONTAL);
+    itemBoxSizer94->Add(m_AddControllerBox, 0, wxGROW|wxALL, 5);
     wxArrayString m_LibStrings;
     m_Lib = new wxComboBox( m_ControllersPanel, ID_COMBOBOX_RR_LIB, _T(""), wxDefaultPosition, wxDefaultSize, m_LibStrings, wxCB_DROPDOWN );
     m_AddControllerBox->Add(m_Lib, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -942,22 +950,22 @@ void RocrailIniDialog::CreateControls()
 
     itemBoxSizer2->Add(m_RRNotebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer101 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer102 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer101, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer102, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer101->AddButton(m_OK);
+    itemStdDialogButtonSizer102->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer101->AddButton(m_Cancel);
+    itemStdDialogButtonSizer102->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     if (RocrailIniDialog::ShowToolTips())
         m_Apply->SetToolTip(_("Apply Controller settings locally."));
-    itemStdDialogButtonSizer101->AddButton(m_Apply);
+    itemStdDialogButtonSizer102->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer101->Realize();
+    itemStdDialogButtonSizer102->Realize();
 
 ////@end RocrailIniDialog content construction
 }
