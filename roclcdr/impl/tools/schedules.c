@@ -188,7 +188,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using hourly timing" );
           /* processing hourly timing */
           modelminutes = mins;
-          if( hours < fromhour || tohour > hours ) {
+          if( hours < fromhour || tohour < hours ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "current hour, %d, is not in the hourly range from %d to %d",
                 hours, fromhour, tohour );
