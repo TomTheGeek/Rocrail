@@ -10,7 +10,9 @@
 if [ "`which rocprops.sh`" != "" ] ; then
 	. rocprops.sh
 else
-	# Use default property values
+
+        # Use default property values
+
 	ROCRAIL_LIBEXECDIR=/usr/local/libexec/rocrail
 	ROCRAIL_DATADIR=/usr/local/share/rocrail
 fi
@@ -33,17 +35,25 @@ if [ ! -e ~/rocrail/images ] ; then
 fi
 
 #
-# Link artwork directories
+# Link icons
 #
 
 if [ ! -e ~/rocrail/icons ] ; then
 	ln -s $ROCRAIL_DATADIR/icons ~/rocrail/icons
 fi
-if [ ! -e ~/rocrail/svg ] ; then
-	ln -s $ROCRAIL_DATADIR/svg ~/rocrail/svg
-fi
 
+#
+# Overwrite themes, preserving user directories
+#
+
+if [ ! -e ~/rocrail/svg ] ; then
+	mkdir -p ~/rocrail/svg
+fi
+cp -Rp $ROCRAIL_DATADIR/svg/* ~/rocrail/svg
+
+#
 # Run Rocview
+#
 
 cd ~/rocrail
 $ROCRAIL_LIBEXECDIR/rocview $*
