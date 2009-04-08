@@ -85,6 +85,7 @@
 
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
+#include "rocgui/dialogs/decoders/uhl633x0dlg.h"
 
 #include "rocgui/public/guiapp.h"
 #include "rocgui/public/swdlg.h"
@@ -1222,10 +1223,13 @@ void RocGuiFrame::initFrame() {
   // Programming
   wxMenu *menuProgramming = new wxMenu();
   wxMenu *menuPTLN = new wxMenu();
-  //menuPTLN->Append( ME_UHL_63350, _T("Uhlenbrock 63350"), _T("Uhlenbrock 63350") );
   menuPTLN->Append( ME_LOCOIO, wxString(_T("LocoIO")) + wxString(_T("...")), _T("LocoIO") );
   menuPTLN->Append( ME_DTOpSw, wxString(_T("Digitrax")) + wxString(_T("...")), _T("Digitrax") );
-  menuPTLN->Append( ME_Uhlenbrock, wxString(_T("Uhlenbrock")) + wxString(_T("...")), _T("Uhlenbrock") );
+  wxMenu *menuUhlenbrock = new wxMenu();
+  menuUhlenbrock->Append( ME_UHL_63350, _T("Uhlenbrock 63340/63350") + wxString(_T("...")), _T("Uhlenbrock 63340/63350") );
+  menuUhlenbrock->Append( ME_UHL_68610, _T("Uhlenbrock 68610") + wxString(_T("...")), _T("Uhlenbrock 68610") );
+  menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
+
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
   wxMenu *menuPTDCC = new wxMenu();
@@ -1513,7 +1517,7 @@ void RocGuiFrame::create() {
   m_LNCVPanel->SetScrollbars(1, 1, 0, 0);
   m_LNCV = NULL;
   m_LNCV = new LNCV( m_LNCVPanel, this );
-  m_LNCVPanel->Show(false);
+  m_LNCVPanel->Show(wGui.islncvtab(m_Ini));
 
   m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
 
@@ -2283,6 +2287,11 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
+  Uhl633x0Dlg* dlg = new Uhl633x0Dlg(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
 }
 
 void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {

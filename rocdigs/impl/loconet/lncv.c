@@ -194,7 +194,9 @@ int makereqLNCV(byte *msg, int type, int addr, int cv, int val, Boolean setreq, 
   byte DAT[7] = {0,0,0,0,0,0,0};
   int i = 0;
 
-  TraceOp.trc( "lncv", TRCLEVEL_INFO, __LINE__, 9999, "makereqLNCV type=%d addr=%d cv=%d val=%d", type, addr, cv, val );
+  TraceOp.trc( "lncv", TRCLEVEL_INFO, __LINE__, 9999,
+      "makereqLNCV type=%d addr=%d cv=%d val=%d req=%s extracmd=%d",
+      type, addr, cv, val, setreq?"set":"get", extracmd );
 
   msg[0] = OPC_IMM_PACKET;
   msg[1] = UB_LNCVLEN;

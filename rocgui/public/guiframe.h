@@ -409,6 +409,7 @@ enum
     ME_Survey,
     ME_BackColor,
     ME_UHL_63350,
+    ME_UHL_68610,
     ME_LOCOIO,
     ME_OpenDecoder,
     ME_DTOpSw,
