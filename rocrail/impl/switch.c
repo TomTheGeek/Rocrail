@@ -447,7 +447,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
-  const char* state = wSwitch.getcmd( nodeA );
+  const char* state     = wSwitch.getcmd( nodeA );
+  const char* prevstate = wSwitch.getcmd( o->props );
   Boolean inv1 = wSwitch.isinv( o->props );
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
@@ -669,7 +670,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
 
   __checkAction( inst );
 
-  {
+  /* both strings can be compared by pointer because they both are of qualifier const */
+  if( prevstate != state ) {
     /* increase the switch counter */
     int switched = wSwitch.getswitched(o->props);
     switched++;
