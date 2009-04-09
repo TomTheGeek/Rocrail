@@ -491,6 +491,11 @@
       <param name="len" vt="int"/>
       <param name="out" vt="char*"/>
     </fun>
+    <fun name="getSlot" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="slot" vt="int"/>
+      <param name="wait4opc" vt="byte"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="loconet" vt="iONode"/>

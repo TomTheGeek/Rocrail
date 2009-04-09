@@ -226,8 +226,10 @@ int makereqLNCV(byte *msg, int type, int addr, int cv, int val, Boolean setreq, 
     msg[7+6] = UB_LNCVSTART;
   else if( extracmd == 2 ) {
     msg[0] = UB_RESPONSE;
-    msg[7+0] = (0xFFFF & 0x00FF);
-    msg[7+1] = (0xFFFF & 0xFF00) >> 8;
+    if( type == 6334 ) {
+      msg[7+0] = (0xFFFF & 0x00FF);
+      msg[7+1] = (0xFFFF & 0xFF00) >> 8;
+    }
     msg[7+6] = UB_LNCVEND;
   }
   else

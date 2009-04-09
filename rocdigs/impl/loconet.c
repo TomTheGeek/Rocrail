@@ -158,6 +158,10 @@ static void _stateChanged( iOLocoNet loconet ) {
 
 static int __rwLNCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeLNCV, int modid, int modaddr, int extracmd) {
   iOLocoNetData data = Data(loconet);
+  if( extracmd == 1 ) {
+    /* some modules need this to get in programming mode */
+    LocoNetOp.getSlot( loconet, 0, OPC_SL_RD_DATA );
+  }
   /* call lncv utilis */
   int size = makereqLNCV(cmd, modid, modaddr, cvnum, val, writeLNCV, extracmd);
   cmd[size-1] = LocoNetOp.checksum( cmd, size-1 );
@@ -1260,6 +1264,19 @@ static void __loconetReader( void* threadinst ) {
 }
 
 
+static void _getSlot(iOLocoNet loconet, int slot, byte wait4opc) {
+  iOLocoNetData data = Data(loconet);
+  byte cmd[8];
+  int i = 0;
+
+  cmd[0] = OPC_RQ_SL_DATA;
+  cmd[1] = slot;
+  cmd[2] = 0;
+  cmd[3] = LocoNetOp.checksum( cmd, 3 );
+  LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, wait4opc, 0, False );
+}
+
+
 static int __getSlots(iOLocoNet loconet) {
   iOLocoNetData data = Data(loconet);
   byte cmd[8];
@@ -1268,11 +1285,7 @@ static int __getSlots(iOLocoNet loconet) {
   int i = 0;
 
   for( i = 0; i < data->slots; i++ ) {
-    cmd[0] = OPC_RQ_SL_DATA;
-    cmd[1] = i;
-    cmd[2] = 0;
-    cmd[3] = LocoNetOp.checksum( cmd, 3 );
-    LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
+    LocoNetOp.getSlot(loconet, i, 0);
     ThreadOp.sleep( 100 );
   }
 }
