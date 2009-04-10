@@ -388,8 +388,6 @@ void CV::update4POM(void) {
   m_getAddress->Enable(!m_bPOM);
   m_getVstart->Enable(!m_bPOM);
   m_getAccel->Enable(!m_bPOM);
-  TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "#####event");
-
   m_getDecel->Enable(!m_bPOM);
   m_getVhigh->Enable(!m_bPOM);
   m_getVmid->Enable(!m_bPOM);
@@ -866,7 +864,7 @@ void CV::doCV( int command, int index, int value ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
   }
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
-      "sending program command for cmd=%d index=%d value=%d...", command, index, value );
+      "sending program command for addr=%d cmd=%d index=%d value=%d...", addr, command, index, value );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
   m_CVidx = index;

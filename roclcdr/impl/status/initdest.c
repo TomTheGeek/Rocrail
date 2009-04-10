@@ -42,46 +42,63 @@
 void statusInitDest( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   /* Lock the block and the needed street. */
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Init destination for \"%s\"...",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Init destination for [%s]...",
                  data->loc->getId( data->loc ) );
   {
-    Boolean dir = data->next1Route->getDirection( data->next1Route, 
-		    				  data->loc->getCurBlock( data->loc ), 
+    /*
+     * The getDirection function returns the loco direction and puts the route direction in the third parameter.
+     * The route direction flag is True if the train will travel "from" -> "to".
+     */
+    Boolean dir = data->next1Route->getDirection( data->next1Route,
+		    				  data->loc->getCurBlock( data->loc ),
 		    				  &data->next1RouteFromTo );
 
-    if( initializeGroup( (iOLcDriver)inst, data->next1Block ) &&  
-        initialize_Destination( (iOLcDriver)inst, 
-				data->next1Block, 
-				data->next1Route, 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "loco direction for [%s] is [%s], route direction [%s], swappost[%s]",
+                   data->loc->getId( data->loc ), dir?"forwards":"reverse",
+                   data->next1RouteFromTo?"fromTo":"toFrom",
+                   data->next1Route->isSwapPost( data->next1Route )?"true":"false");
+    /*
+     * The initializeDestination functions last parameter is for inverting the route direction.
+     * If the route direction is true there is no invert in traveling, so the default value should be the
+     * opposite of the route direction flag.
+     */
+    if( initializeGroup( (iOLcDriver)inst, data->next1Block ) &&
+        initializeDestination( (iOLcDriver)inst,
+				data->next1Block,
+				data->next1Route,
 				data->curBlock,
-	       			data->next1Route->isSwapPost( data->next1Route ) ? !dir : dir ) &&
-        initializeSwap( (iOLcDriver)inst, data->next1Route ) ) 
+                data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo ) &&
+        initializeSwap( (iOLcDriver)inst, data->next1Route ) )
     {
-      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
-      /* Send the first command to the loc with the direction: */
-      wLoc.setdir( cmd, dir );
-      wLoc.setV( cmd, 0 );
-      data->loc->cmd( data->loc, cmd );
-      
-      
+      if( !data->gomanual ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+        /* Send the first command to the loc with the direction: */
+        wLoc.setdir( cmd, dir );
+        wLoc.setV( cmd, 0 );
+        data->loc->cmd( data->loc, cmd );
+      }
+
+
       if( !data->next1Block->isLinked( data->next1Block ) ) {
         data->next1Block->link( data->next1Block, data->curBlock );
       }
-      
+
       checkRouteFunction(inst, data->next1Route, data->next1Block);
-      
+
       if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
-        reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route, 
+        reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route,
                                   &data->next2Block, &data->next2Route );
         if( data->next2Route != NULL ) {
           /* TODO: make sure the running direction does not change */
-          data->next2Route->getDirection( data->next2Route, 
+          data->next2Route->getDirection( data->next2Route,
               data->next1Block->base.id(data->next1Block), &data->next2RouteFromTo );
         }
         /* TODO: if a second next block was found and initialized show the right signal aspect */
       }
-      
+
       if( !data->gomanual ) {
         /* pause between the turnout commands and the new loco command: */
         if( wLoc.getdirpause( data->loc->base.properties( data->loc ) ) > 0 ) {

@@ -44,14 +44,16 @@ void statusIn( iILcDriverInt inst ) {
 
   /* Signal of destination block. (_event) */
   if( data->next2Block == NULL ) {
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV( cmd, 0 );
-    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    data->loc->cmd( data->loc, cmd );
+    if( !data->gomanual ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setV( cmd, 0 );
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+      data->loc->cmd( data->loc, cmd );
+    }
 
     data->state = LC_WAITBLOCK;
     data->prevState = LC_INBLOCK;
-    
+
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_INBLOCK to LC_WAITBLOCK.",
@@ -60,15 +62,17 @@ void statusIn( iILcDriverInt inst ) {
   }
   else if( data->next1Route != NULL && !data->next1Route->isSet(data->next1Route) ) {
     /* stop and go in status checkroute */
-    
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV( cmd, 0 );
-    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    data->loc->cmd( data->loc, cmd );
+
+    if( !data->gomanual ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setV( cmd, 0 );
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+      data->loc->cmd( data->loc, cmd );
+    }
 
     data->next1Block = data->next2Block;
     data->next2Block = data->next3Block;
-    
+
     data->next1Block->link( data->next1Block, data->curBlock );
 
     data->state = LC_CHECKROUTE;
@@ -77,23 +81,25 @@ void statusIn( iILcDriverInt inst ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "Setting state for [%s] from LC_INBLOCK to LC_CHECKROUTE.",
                    data->loc->getId( data->loc ) );
-    
+
 
   }
   else {
     /* set the block departure velocity: */
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, True, data->next1Route ) );
-    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    data->loc->cmd( data->loc, cmd );
+    if( !data->gomanual ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, True, data->next1Route ) );
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+      data->loc->cmd( data->loc, cmd );
+    }
 
     data->next1Block = data->next2Block;
     data->next2Block = data->next3Block;
-    
+
     data->next1Block->link( data->next1Block, data->curBlock );
-    
+
     data->state = LC_GO;
-    
+
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_INBLOCK to LC_GO.",

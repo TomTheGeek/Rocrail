@@ -54,27 +54,31 @@ void statusWait4Event( iILcDriverInt inst ) {
     }
     else {
       if( !data->next2Route->isSet(data->next2Route) ) {
-        /* set velocity to v_mid */
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )
-          wLoc.setV_hint( cmd, wLoc.mid );
-        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-        data->loc->cmd( data->loc, cmd );
-        data->slowdown4route = True;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "Slow down for **not set** route running %s",
-            data->loc->getId( data->loc ) );
+        if( !data->gomanual ) {
+          /* set velocity to v_mid */
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )
+            wLoc.setV_hint( cmd, wLoc.mid );
+          wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+          data->loc->cmd( data->loc, cmd );
+          data->slowdown4route = True;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "Slow down for **not set** route running %s",
+              data->loc->getId( data->loc ) );
+        }
       }
       else if(data->slowdown4route) {
-        /* set the velocity back */
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route ) );
-        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-        data->loc->cmd( data->loc, cmd );
-        data->slowdown4route = False;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "Restore normale velocity running %s",
-            data->loc->getId( data->loc ) );
+        if( !data->gomanual ) {
+          /* set the velocity back */
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route ) );
+          wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+          data->loc->cmd( data->loc, cmd );
+          data->slowdown4route = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "Restore normale velocity running %s",
+              data->loc->getId( data->loc ) );
+        }
       }
     }
   }

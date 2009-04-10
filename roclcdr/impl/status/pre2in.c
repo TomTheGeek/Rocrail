@@ -42,15 +42,17 @@
 void statusPre2In( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
-  /* set velocitiy to V_min if the train has to wait */ 
+  /* set velocitiy to V_min if the train has to wait */
   if( data->next2Block == NULL ) {
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV_hint( cmd, wLoc.min );
-    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    data->loc->cmd( data->loc, cmd );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting velocity for \"%s\" to V_Min",
-                   data->loc->getId( data->loc ) );
+    if( !data->gomanual ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setV_hint( cmd, wLoc.min );
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+      data->loc->cmd( data->loc, cmd );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Setting velocity for \"%s\" to V_Min",
+                     data->loc->getId( data->loc ) );
+    }
   }
   data->state = LC_WAIT4EVENT;
   data->eventTimeout = 0;

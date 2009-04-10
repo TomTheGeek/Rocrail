@@ -64,24 +64,26 @@ void statusCheckRoute( iILcDriverInt inst ) {
     else
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "light signal; go" );
 
-    /* Send the second command to the loc: */
-    wLoc.setdir( cmd, dir );
-    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route ) );
+    if( !data->gomanual ) {
+      /* Send the second command to the loc: */
+      wLoc.setdir( cmd, dir );
+      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route ) );
 
-    if( StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) ||
-        data->next1Route->hasThrownSwitch(data->next1Route) ) {
-      data->curBlock->yellow( data->curBlock, True, !dir );
-      data->curBlock->yellow( data->curBlock, False, !dir );
-      if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )
-        wLoc.setV_hint( cmd, wLoc.mid );
+      if( StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) ||
+          data->next1Route->hasThrownSwitch(data->next1Route) ) {
+        data->curBlock->yellow( data->curBlock, True, !dir );
+        data->curBlock->yellow( data->curBlock, False, !dir );
+        if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )
+          wLoc.setV_hint( cmd, wLoc.mid );
+      }
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Setting direction for [%s] to [%s] at velocity [%s].",
+                     data->loc->getId( data->loc ), dir?"forwards":"reverse",
+                     wLoc.getV_hint(cmd) );
+
+      /* Send the command to the loc: */
+      data->loc->cmd( data->loc, cmd );
     }
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting direction for [%s] to [%s] at velocity [%s].",
-                   data->loc->getId( data->loc ), dir?"forwards":"reverse",
-                   wLoc.getV_hint(cmd) );
-
-    /* Send the command to the loc: */
-    data->loc->cmd( data->loc, cmd );
 
     data->state = LC_GO;
     data->eventTimeout = 0;

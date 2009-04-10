@@ -870,6 +870,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       outb[2] = 0x31;
       ThreadOp.post( data->transactor, (obj)outb );
 
+
       /* if no interfaceVersion is set it might be a LI100
       * put off PT after each read. Elite on/off goes automatic */
       if ( interfaceVersion == 0 && !data->elite) {
@@ -984,7 +985,7 @@ static void __transactor( void* threadinst ) {
           expectEliteAnswer = True;
 
 
-  int timeoutval = 20;
+  int timeoutval = 100;
   int timeout = timeoutval;
 
   unsigned char* outc = NULL;
@@ -1013,21 +1014,28 @@ static void __transactor( void* threadinst ) {
 
         expectEliteAnswer = True;
 
-        /* special treatment for the elite */
-        if (data->elite) {
+        /* special treatment for the elite and LI-USB*/
+        /* TODO: this is not state of art ... we have to do something here !!!*/
+        if (data->elite || data->usb) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
      	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Elite reading cv %d", out[2] );
-  	       ThreadOp.sleep(9000);
+  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
+  	       if(data->elite)
+  	    	 ThreadOp.sleep(9000);
+  	       if(data->usb)
+  	    	 ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
   	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Elite writing cv %d with value %d", out[2], out[3]);
-  	       ThreadOp.sleep(9000);
+  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
+			 if(data->elite)
+  	       	   ThreadOp.sleep(9000);
+  	       	 if(data->usb)
+  	       	   ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
   	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response from Elite expected" );
+  	       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
           }
         }
 
@@ -1155,10 +1163,10 @@ static void __transactor( void* threadinst ) {
            iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
            if( data->iid != NULL )
              wState.setiid( node, data->iid );
-           wState.setpower( node, False );
-           wState.settrackbus( node, False );
-           wState.setsensorbus( node, False );
-           wState.setaccessorybus( node, False );
+			 wState.setpower( node, False );
+			 wState.settrackbus( node, False );
+			 wState.setsensorbus( node, False );
+			 wState.setaccessorybus( node, False );
 
            if( data->listenerFun != NULL && data->listenerObj != NULL )
              data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1195,7 +1203,8 @@ static void __transactor( void* threadinst ) {
         }
         /* transaction error*/
         else if (in[0] == 0x61 && in[1] == 0x80){
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transaction error ... try again");
+           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transaction error ... try again");
+           responceRecieved = True;
         }
         /* CS busy*/
         else if (in[0] == 0x61 && in[1] == 0x81){
@@ -1234,6 +1243,12 @@ static void __transactor( void* threadinst ) {
            responceRecieved = True;
            interfaceVersion = (int) in[1];
         }
+
+        /* Version of Interface*/
+		else if (in[0] == 0x01 && in[1] == 0x06){
+			TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
+		}
+
         /* Version of Command Station from version 3.0*/
         else if (in[0] == 0x63 && in[1] == 0x21){
           char* csname = NULL;
@@ -1257,7 +1272,7 @@ static void __transactor( void* threadinst ) {
 
         else {
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNKNOWN CMD");
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
         }
 

@@ -879,7 +879,8 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
   }
 
   if( ok ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s locked for [%s][%s][%s]", data->id, id, data->locId, blockid );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
     data->reverse = reverse;
     data->fromBlockId = blockid;
     if( reset )
