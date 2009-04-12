@@ -112,7 +112,7 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OMCS2 ----- */
 
-static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, long addr, int subcmd ) {
+static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, long addr, int subcmd, int subcmd2 ) {
   msg[0]  = (prio << 1);
   msg[0] |= (cmd >> 7);
   msg[1]  = ((cmd & 0x7F) << 1 );
@@ -125,6 +125,7 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
   msg[7]  = (addr & 0x0000FF00) >> 8;
   msg[8]  = (addr & 0x000000FF);
   msg[9]  = subcmd;
+  msg[10] = subcmd2;
 }
 
 static iONode __translate( iOMCS2 inst, iONode node ) {
@@ -138,16 +139,41 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System STOP" );
-      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System GO" );
-      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
+  }
+
+  /* Turnout command */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int module = wSwitch.getaddr1( node );
+    if ( module == 0 ) //pada used, port will be actual cs2 lineair address
+      module = 1;
+
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+    if( port == 0 )    //fada used, convert to address, port
+      fromFADA( module, &module, &port, &gate );
+
+    long address = (( module - 1 ) * 4 ) + port + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders
+
+    if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d %d to turnout", module, port );
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 0, 1);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d %d to straight", module, port );
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 1, 1);
+    }
+    ThreadOp.post( data->writer, (obj)out );
+    return rsp;
   }
 
   freeMem(out);
@@ -238,8 +264,8 @@ static void __writer( void* threadinst ) {
 
 
 /* VERSION: */
-static int vmajor = 0;
-static int vminor = 0;
+static int vmajor = 1;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOMCS2Data data = Data(inst);
