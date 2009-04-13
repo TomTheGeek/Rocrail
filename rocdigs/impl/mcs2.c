@@ -162,14 +162,14 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     if( port == 0 )    //fada used, convert to address, port
       fromFADA( module, &module, &port, &gate );
 
-    long address = (( module - 1 ) * 4 ) + port + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders
+    long address = (( module - 1 ) * 4 ) + port - 1 + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders address 00 is called 1 by cs2
 
     if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d %d to turnout", module, port );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d to turnout", (address - 0x2FFF) );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 0, 1);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d %d to straight", module, port );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d to straight", (address - 0x2FFF) );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 1, 1);
     }
     ThreadOp.post( data->writer, (obj)out );
