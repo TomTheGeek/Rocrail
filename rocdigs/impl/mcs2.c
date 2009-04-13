@@ -176,6 +176,29 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     return rsp;
   }
 
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int module = wOutput.getaddr( node );
+    if ( module == 0 ) //pada used, port will be actual cs2 lineair address
+      module = 1;
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    if( port == 0 )    //fada used convert to address, port
+      fromFADA( module, &module, &port, &gate );
+    long address = (( module - 1 ) * 4 ) + port -1 + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders
+
+    if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Ouput %d %s on", (address - 0x2FFF), gate?"b":"a" );
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s off", (address - 0x2FFF), gate?"b":"a" );
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0);
+    }
+    ThreadOp.post( data->writer, (obj)out );
+    return rsp;
+  }
+
   freeMem(out);
   return NULL;
 }
