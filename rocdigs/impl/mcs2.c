@@ -131,6 +131,19 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 static iONode __translate( iOMCS2 inst, iONode node ) {
   iOMCS2Data data = Data(inst);
   byte*  out = allocMem(32);
+  byte*  f0  = allocMem(32);
+  byte*  f1  = allocMem(32);
+  byte*  f2  = allocMem(32);
+  byte*  f3  = allocMem(32);
+  byte*  f4  = allocMem(32);
+  byte*  f5  = allocMem(32);
+  byte*  f6  = allocMem(32);
+  byte*  f7  = allocMem(32);
+  byte*  f8  = allocMem(32);
+  byte*  f9  = allocMem(32);
+  byte*  f10 = allocMem(32);
+  byte*  f11 = allocMem(32);
+  byte*  f12 = allocMem(32);
   iONode rsp = NULL;
 
   /* System command. */
@@ -227,7 +240,71 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     return rsp;
   }
 
+ /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int   addr = wFunCmd.getaddr( node );
+    long address = addr + 0x0000;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders
+    Boolean fn0 = wFunCmd.isf0( node );
+    Boolean fn1 = wFunCmd.isf1( node );
+    Boolean fn2 = wFunCmd.isf2( node );
+    Boolean fn3 = wFunCmd.isf3( node );
+    Boolean fn4 = wFunCmd.isf4( node );
+    Boolean fn5 = wFunCmd.isf5( node );
+    Boolean fn6 = wFunCmd.isf6( node );
+    Boolean fn7 = wFunCmd.isf7( node );
+    Boolean fn8 = wFunCmd.isf8( node );
+    Boolean fn9  = wFunCmd.isf9 ( node );
+    Boolean fn10 = wFunCmd.isf10( node );
+    Boolean fn11 = wFunCmd.isf11( node );
+    Boolean fn12 = wFunCmd.isf12( node );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
+        addr, (fn0?"ON":"OFF"), (fn1?"ON":"OFF"), (fn2?"ON":"OFF"), (fn3?"ON":"OFF"), (fn4?"ON":"OFF"),
+        (fn5?"ON":"OFF"), (fn6?"ON":"OFF"), (fn7?"ON":"OFF"), (fn8?"ON":"OFF"),
+        (fn9?"ON":"OFF"), (fn10?"ON":"OFF"), (fn11?"ON":"OFF"), (fn12?"ON":"OFF") );
+    __setSysMsg(f0, 0, CMD_LOCO_FUNCTION , False, 6, address, 0, fn0);
+    ThreadOp.post( data->writer, (obj)f0 );
+    __setSysMsg(f1, 0, CMD_LOCO_FUNCTION , False, 6, address, 1, fn1);
+    ThreadOp.post( data->writer, (obj)f1 );
+    __setSysMsg(f2, 0, CMD_LOCO_FUNCTION , False, 6, address, 2, fn2);
+    ThreadOp.post( data->writer, (obj)f2 );
+    __setSysMsg(f3, 0, CMD_LOCO_FUNCTION , False, 6, address, 3, fn3);
+    ThreadOp.post( data->writer, (obj)f3 );
+    __setSysMsg(f4, 0, CMD_LOCO_FUNCTION , False, 6, address, 4, fn4);
+    ThreadOp.post( data->writer, (obj)f4 );
+    __setSysMsg(f5, 0, CMD_LOCO_FUNCTION , False, 6, address, 5, fn5);
+    ThreadOp.post( data->writer, (obj)f5 );
+    __setSysMsg(f6, 0, CMD_LOCO_FUNCTION , False, 6, address, 6, fn6);
+    ThreadOp.post( data->writer, (obj)f6 );
+    __setSysMsg(f7, 0, CMD_LOCO_FUNCTION , False, 6, address, 7, fn7);
+    ThreadOp.post( data->writer, (obj)f7 );
+    __setSysMsg(f8, 0, CMD_LOCO_FUNCTION , False, 6, address, 8, fn8);
+    ThreadOp.post( data->writer, (obj)f8 );
+    __setSysMsg(f9, 0, CMD_LOCO_FUNCTION , False, 6, address, 9, fn9);
+    ThreadOp.post( data->writer, (obj)f9 );
+    __setSysMsg(f10, 0, CMD_LOCO_FUNCTION , False, 6, address, 10, fn10);
+    ThreadOp.post( data->writer, (obj)f10 );
+    __setSysMsg(f11, 0, CMD_LOCO_FUNCTION , False, 6, address, 11, fn11);
+    ThreadOp.post( data->writer, (obj)f11 );
+    __setSysMsg(f12, 0, CMD_LOCO_FUNCTION , False, 6, address, 12, fn12);
+    ThreadOp.post( data->writer, (obj)f12 );
+    return rsp;
+  }
+
   freeMem(out);
+  freeMem(f0);
+  freeMem(f1);
+  freeMem(f2);
+  freeMem(f3);
+  freeMem(f4);
+  freeMem(f5);
+  freeMem(f6);
+  freeMem(f7);
+  freeMem(f8);
+  freeMem(f9);
+  freeMem(f10);
+  freeMem(f11);
+  freeMem(f12);
   return NULL;
 }
 
