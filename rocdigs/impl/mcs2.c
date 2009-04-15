@@ -216,13 +216,14 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int addr   = wLoc.getaddr( node );
     int dir    = 2 - wLoc.isdir( node );  // for cs2 1 is forwards, 2 is backwards, from server 1 = forwards, 0 is backwards
+    Boolean mfx = StrOp.equals( wLoc.getprot( node ), wLoc.prot_P );
     int speed  = 0;
     int speed1 = 0;
     int speed2 = 0;
-    long address = addr + 0x0000;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders
+    long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
     Boolean sw = wLoc.issw( node );
     if (sw) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s", addr, (dir==1)?"forwards":"backwards" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s %s", addr, mfx?"mfx":"mm", (dir==1)?"forwards":"backwards" );
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);  //cs2 reverses direction and sets speed to 0
     } else {
       if( wLoc.getV( node ) != -1 ) {
@@ -230,7 +231,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
           speed = wLoc.getV( node ) * 10;
         else if( wLoc.getV_max( node ) > 0 )
           speed = (wLoc.getV( node ) * 1000) / wLoc.getV_max( node );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speedstep=%d", addr, (speed * wLoc.getspcnt( node ) / 1000));
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s speedstep=%d", addr, mfx?"mfx":"mm", (speed * wLoc.getspcnt( node ) / 1000));
         speed1 = (speed & 0xFF00) >>8;
         speed2 = speed & 0x00FF;
         __setSysMsg(out, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
@@ -243,7 +244,8 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
  /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
-    long address = addr + 0x0000;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders
+    Boolean mfx = StrOp.equals( wLoc.getprot( node ), wLoc.prot_P );
+    long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
     Boolean fn0 = wFunCmd.isf0( node );
     Boolean fn1 = wFunCmd.isf1( node );
     Boolean fn2 = wFunCmd.isf2( node );
@@ -258,8 +260,8 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     Boolean fn11 = wFunCmd.isf11( node );
     Boolean fn12 = wFunCmd.isf12( node );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, (fn0?"ON":"OFF"), (fn1?"ON":"OFF"), (fn2?"ON":"OFF"), (fn3?"ON":"OFF"), (fn4?"ON":"OFF"),
+        "function %d %s light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
+        addr, mfx?"mfx":"mm", (fn0?"ON":"OFF"), (fn1?"ON":"OFF"), (fn2?"ON":"OFF"), (fn3?"ON":"OFF"), (fn4?"ON":"OFF"),
         (fn5?"ON":"OFF"), (fn6?"ON":"OFF"), (fn7?"ON":"OFF"), (fn8?"ON":"OFF"),
         (fn9?"ON":"OFF"), (fn10?"ON":"OFF"), (fn11?"ON":"OFF"), (fn12?"ON":"OFF") );
     __setSysMsg(f0, 0, CMD_LOCO_FUNCTION , False, 6, address, 0, fn0);
