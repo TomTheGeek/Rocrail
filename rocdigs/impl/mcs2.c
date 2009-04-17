@@ -38,7 +38,13 @@
 #include "rocdigs/impl/mcs2_impl.h"
 #include "rocdigs/impl/mcs2/mcs2-const.h"
 
+#include "rocs/public/trace.h"
+#include "rocs/public/node.h"
+#include "rocs/public/attr.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/str.h"
+#include "rocs/public/system.h"
+
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -333,7 +339,10 @@ static void _halt( obj inst ) {
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iOMCS2Data data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  return True;
 }
 
 
@@ -348,12 +357,69 @@ static Boolean _supportPT( obj inst ) {
   return False;
 }
 
+static void __feedbackMCS2Reader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
+  iOMCS2Data data = Data(mcs2);
+  int mod = 0;
+  long dummy = 0x5263526C;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 feedbackpoll started, polling %d S88 units", data->fbmod );
+  do {
+    ThreadOp.sleep( 250 );
+
+    if( data->fbmod == 0 )
+      continue;
+
+    for( mod = 0; mod < data->fbmod; mod++ ) {
+      byte* out = allocMem(16);
+      __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0); //unofficial command 0x10 request status of feedback module mod, one module has 16 inputs
+      ThreadOp.post( data->writer, (obj)out );
+      out = NULL;
+      freeMem( out );
+    }
+  } while( data->run );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback MCS2 reader ended." );
+}
+
+static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) {
+//  iOMCS2Data data = Data(mcs2);
+  int s88base = in[9] * 16;
+  int n = 0;
+  int addr = 0;
+  int state = 0;
+  int t = 0;
+  for( t = 0; t < 2; t++) {
+    for( n = 0; n < 8; n++ ) {
+      addr = s88base + n + 1 + (t * 8);
+      state = (in[11 - t] & (0x01 << n)) ? 1:0; //cs2 uses big endian, in11 contains lower 8 inputs, in10 the higher 8
+      if( prev[addr - 1] != state ) {           //this feedback changed state since previous poll
+        prev[addr - 1] = state;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb %d = %d", addr, state );
+        {
+          /* inform listener: Node */
+          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setaddr( nodeC, addr );
+          wFeedback.setstate( nodeC, state?True:False );
+          if( mcs2->iid != NULL )
+            wFeedback.setiid( nodeC, mcs2->iid );
+          mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+    }
+  }
+}
 
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
   char in[16];
+  int mod = 0;
+  unsigned char store[1024];
+  for( mod = 0; mod < 1024; mod++) {
+    store[mod] = 0;  //storage container for feedback states to check on changes
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
@@ -361,8 +427,9 @@ static void __reader( void* threadinst ) {
 
     SocketOp.recvfrom( data->readUDP, in, 13 );
     TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
-
-    ThreadOp.sleep(0);
+    if( in[1] == 0x21 )   //unoffcial answer to unofficial 0x10 command with response bit set
+      __evaluateMCS2S88( data, in, store );
+    ThreadOp.sleep(10);
 
   } while( data->run );
 
@@ -374,13 +441,14 @@ static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
+  byte* cmd = allocMem( 32 );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 writer started." );
 
   do {
-    byte* cmd = (byte*)ThreadOp.getPost( th );
+    cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.dump( NULL, TRCLEVEL_INFO, cmd, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_DEBUG, cmd, 13 );
       SocketOp.sendto( data->writeUDP, cmd, 13 );
       freeMem( cmd );
     }
@@ -432,7 +500,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True );
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True );
-
+  data->fbmod    = wDigInt.getfbmod( ini );
+  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->run = True;
 
   data->reader = ThreadOp.inst( "mcs2reader", &__reader, __MCS2 );
@@ -440,6 +509,11 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
+
+  if( data->fbmod > 0 ) {
+    data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
+    ThreadOp.start( data->feedbackReader );
+  }
 
   instCnt++;
   return __MCS2;
