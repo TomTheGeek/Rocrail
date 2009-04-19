@@ -118,6 +118,42 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OMCS2 ----- */
 
+static Boolean __getFunctionState(iONode node, int fnchanged) {
+  switch( fnchanged ) {
+  case 0: return wFunCmd.isf0(node);
+  case 1: return wFunCmd.isf1(node);
+  case 2: return wFunCmd.isf2(node);
+  case 3: return wFunCmd.isf3(node);
+  case 4: return wFunCmd.isf4(node);
+  case 5: return wFunCmd.isf5(node);
+  case 6: return wFunCmd.isf6(node);
+  case 7: return wFunCmd.isf7(node);
+  case 8: return wFunCmd.isf8(node);
+  case 9: return wFunCmd.isf9(node);
+  case 10: return wFunCmd.isf10(node);
+  case 11: return wFunCmd.isf11(node);
+  case 12: return wFunCmd.isf12(node);
+  case 13: return wFunCmd.isf13(node);
+  case 14: return wFunCmd.isf14(node);
+  case 15: return wFunCmd.isf15(node);
+  case 16: return wFunCmd.isf16(node);
+  case 17: return wFunCmd.isf17(node);
+  case 18: return wFunCmd.isf18(node);
+  case 19: return wFunCmd.isf19(node);
+  case 20: return wFunCmd.isf20(node);
+  case 21: return wFunCmd.isf21(node);
+  case 22: return wFunCmd.isf22(node);
+  case 23: return wFunCmd.isf23(node);
+  case 24: return wFunCmd.isf24(node);
+  case 25: return wFunCmd.isf25(node);
+  case 26: return wFunCmd.isf26(node);
+  case 27: return wFunCmd.isf27(node);
+  case 28: return wFunCmd.isf28(node);
+  }
+  return False;
+}
+
+
 static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, long addr, int subcmd, int subcmd2 ) {
   msg[0]  = (prio << 1);
   msg[0] |= (cmd >> 7);
@@ -137,19 +173,6 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 static iONode __translate( iOMCS2 inst, iONode node ) {
   iOMCS2Data data = Data(inst);
   byte*  out = allocMem(32);
-  byte*  f0  = allocMem(32);
-  byte*  f1  = allocMem(32);
-  byte*  f2  = allocMem(32);
-  byte*  f3  = allocMem(32);
-  byte*  f4  = allocMem(32);
-  byte*  f5  = allocMem(32);
-  byte*  f6  = allocMem(32);
-  byte*  f7  = allocMem(32);
-  byte*  f8  = allocMem(32);
-  byte*  f9  = allocMem(32);
-  byte*  f10 = allocMem(32);
-  byte*  f11 = allocMem(32);
-  byte*  f12 = allocMem(32);
   iONode rsp = NULL;
 
   /* System command. */
@@ -252,6 +275,8 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int   addr = wFunCmd.getaddr( node );
     Boolean mfx = StrOp.equals( wLoc.getprot( node ), wLoc.prot_P );
     long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
+    int fnchanged = wFunCmd.getfnchanged(node);
+
     Boolean fn0 = wFunCmd.isf0( node );
     Boolean fn1 = wFunCmd.isf1( node );
     Boolean fn2 = wFunCmd.isf2( node );
@@ -270,49 +295,16 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
         addr, mfx?"mfx":"mm", (fn0?"ON":"OFF"), (fn1?"ON":"OFF"), (fn2?"ON":"OFF"), (fn3?"ON":"OFF"), (fn4?"ON":"OFF"),
         (fn5?"ON":"OFF"), (fn6?"ON":"OFF"), (fn7?"ON":"OFF"), (fn8?"ON":"OFF"),
         (fn9?"ON":"OFF"), (fn10?"ON":"OFF"), (fn11?"ON":"OFF"), (fn12?"ON":"OFF") );
-    __setSysMsg(f0, 0, CMD_LOCO_FUNCTION , False, 6, address, 0, fn0);
-    ThreadOp.post( data->writer, (obj)f0 );
-    __setSysMsg(f1, 0, CMD_LOCO_FUNCTION , False, 6, address, 1, fn1);
-    ThreadOp.post( data->writer, (obj)f1 );
-    __setSysMsg(f2, 0, CMD_LOCO_FUNCTION , False, 6, address, 2, fn2);
-    ThreadOp.post( data->writer, (obj)f2 );
-    __setSysMsg(f3, 0, CMD_LOCO_FUNCTION , False, 6, address, 3, fn3);
-    ThreadOp.post( data->writer, (obj)f3 );
-    __setSysMsg(f4, 0, CMD_LOCO_FUNCTION , False, 6, address, 4, fn4);
-    ThreadOp.post( data->writer, (obj)f4 );
-    __setSysMsg(f5, 0, CMD_LOCO_FUNCTION , False, 6, address, 5, fn5);
-    ThreadOp.post( data->writer, (obj)f5 );
-    __setSysMsg(f6, 0, CMD_LOCO_FUNCTION , False, 6, address, 6, fn6);
-    ThreadOp.post( data->writer, (obj)f6 );
-    __setSysMsg(f7, 0, CMD_LOCO_FUNCTION , False, 6, address, 7, fn7);
-    ThreadOp.post( data->writer, (obj)f7 );
-    __setSysMsg(f8, 0, CMD_LOCO_FUNCTION , False, 6, address, 8, fn8);
-    ThreadOp.post( data->writer, (obj)f8 );
-    __setSysMsg(f9, 0, CMD_LOCO_FUNCTION , False, 6, address, 9, fn9);
-    ThreadOp.post( data->writer, (obj)f9 );
-    __setSysMsg(f10, 0, CMD_LOCO_FUNCTION , False, 6, address, 10, fn10);
-    ThreadOp.post( data->writer, (obj)f10 );
-    __setSysMsg(f11, 0, CMD_LOCO_FUNCTION , False, 6, address, 11, fn11);
-    ThreadOp.post( data->writer, (obj)f11 );
-    __setSysMsg(f12, 0, CMD_LOCO_FUNCTION , False, 6, address, 12, fn12);
-    ThreadOp.post( data->writer, (obj)f12 );
-    return rsp;
+
+
+    if( fnchanged != -1 ) {
+      __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged));
+      ThreadOp.post( data->writer, (obj)out );
+      return rsp;
+    }
   }
 
   freeMem(out);
-  freeMem(f0);
-  freeMem(f1);
-  freeMem(f2);
-  freeMem(f3);
-  freeMem(f4);
-  freeMem(f5);
-  freeMem(f6);
-  freeMem(f7);
-  freeMem(f8);
-  freeMem(f9);
-  freeMem(f10);
-  freeMem(f11);
-  freeMem(f12);
   return NULL;
 }
 

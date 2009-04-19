@@ -98,6 +98,7 @@ static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd) {
   }
   wFunCmd.setfncnt( cmd, wLoc.getfncnt( data->props ) );
   wFunCmd.setgroup( cmd, fgroup );
+  wFunCmd.setfnchanged( cmd, fn );
 }
 
 
@@ -429,65 +430,127 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
+      int fnchanged = -1;
+
       /* function timers */
-      if( !data->fn0 && wFunCmd.isf0( cmd ) )
+      if( !data->fn0 && wFunCmd.isf0( cmd ) ) {
         data->fxtimer[0] = __getFnTimer( inst, 0);
-      if( !data->fn1 && wFunCmd.isf1( cmd ) )
+        fnchanged = 0;
+      }
+      if( !data->fn1 && wFunCmd.isf1( cmd ) ) {
         data->fxtimer[1] = __getFnTimer( inst, 1);
-      if( !data->fn2 && wFunCmd.isf2( cmd ) )
+        fnchanged = 1;
+      }
+      if( !data->fn2 && wFunCmd.isf2( cmd ) ) {
         data->fxtimer[2] = __getFnTimer( inst, 2);
-      if( !data->fn3 && wFunCmd.isf3( cmd ) )
+        fnchanged = 2;
+      }
+      if( !data->fn3 && wFunCmd.isf3( cmd ) ) {
         data->fxtimer[3] = __getFnTimer( inst, 3);
-      if( !data->fn4 && wFunCmd.isf4( cmd ) )
+        fnchanged = 3;
+      }
+      if( !data->fn4 && wFunCmd.isf4( cmd ) ) {
         data->fxtimer[4] = __getFnTimer( inst, 4);
-      if( !data->fn5 && wFunCmd.isf5( cmd ) )
+        fnchanged = 4;
+      }
+      if( !data->fn5 && wFunCmd.isf5( cmd ) ) {
         data->fxtimer[5] = __getFnTimer( inst, 5);
-      if( !data->fn6 && wFunCmd.isf6( cmd ) )
+        fnchanged = 5;
+      }
+      if( !data->fn6 && wFunCmd.isf6( cmd ) ) {
         data->fxtimer[6] = __getFnTimer( inst, 6);
-      if( !data->fn7 && wFunCmd.isf7( cmd ) )
+        fnchanged = 6;
+      }
+      if( !data->fn7 && wFunCmd.isf7( cmd ) ) {
         data->fxtimer[7] = __getFnTimer( inst, 7);
-      if( !data->fn8 && wFunCmd.isf8( cmd ) )
+        fnchanged = 7;
+      }
+      if( !data->fn8 && wFunCmd.isf8( cmd ) ) {
         data->fxtimer[8] = __getFnTimer( inst, 8);
-      if( !data->fn9 && wFunCmd.isf9( cmd ) )
+        fnchanged = 8;
+      }
+      if( !data->fn9 && wFunCmd.isf9( cmd ) ) {
         data->fxtimer[9] = __getFnTimer( inst, 9);
-      if( !data->fn10 && wFunCmd.isf10( cmd ) )
+        fnchanged = 9;
+      }
+      if( !data->fn10 && wFunCmd.isf10( cmd ) ) {
         data->fxtimer[10] = __getFnTimer( inst, 10);
-      if( !data->fn11 && wFunCmd.isf11( cmd ) )
+        fnchanged = 10;
+      }
+      if( !data->fn11 && wFunCmd.isf11( cmd ) ) {
         data->fxtimer[11] = __getFnTimer( inst, 11);
-      if( !data->fn12 && wFunCmd.isf12( cmd ) )
+        fnchanged = 11;
+      }
+      if( !data->fn12 && wFunCmd.isf12( cmd ) ) {
         data->fxtimer[12] = __getFnTimer( inst, 12);
-      if( !data->fn13 && wFunCmd.isf13( cmd ) )
+        fnchanged = 12;
+      }
+      if( !data->fn13 && wFunCmd.isf13( cmd ) ) {
         data->fxtimer[13] = __getFnTimer( inst, 13);
-      if( !data->fn14 && wFunCmd.isf14( cmd ) )
+        fnchanged = 13;
+      }
+      if( !data->fn14 && wFunCmd.isf14( cmd ) ) {
         data->fxtimer[14] = __getFnTimer( inst, 14);
-      if( !data->fn15 && wFunCmd.isf15( cmd ) )
+        fnchanged = 14;
+      }
+      if( !data->fn15 && wFunCmd.isf15( cmd ) ) {
         data->fxtimer[15] = __getFnTimer( inst, 15);
-      if( !data->fn16 && wFunCmd.isf16( cmd ) )
+        fnchanged = 15;
+      }
+      if( !data->fn16 && wFunCmd.isf16( cmd ) ) {
         data->fxtimer[16] = __getFnTimer( inst, 16);
-      if( !data->fn17 && wFunCmd.isf17( cmd ) )
+        fnchanged = 16;
+      }
+      if( !data->fn17 && wFunCmd.isf17( cmd ) ) {
         data->fxtimer[17] = __getFnTimer( inst, 17);
-      if( !data->fn18 && wFunCmd.isf18( cmd ) )
+        fnchanged = 17;
+      }
+      if( !data->fn18 && wFunCmd.isf18( cmd ) ) {
         data->fxtimer[18] = __getFnTimer( inst, 18);
-      if( !data->fn19 && wFunCmd.isf19( cmd ) )
+        fnchanged = 18;
+      }
+      if( !data->fn19 && wFunCmd.isf19( cmd ) ) {
         data->fxtimer[19] = __getFnTimer( inst, 19);
-      if( !data->fn20 && wFunCmd.isf20( cmd ) )
+        fnchanged = 19;
+      }
+      if( !data->fn20 && wFunCmd.isf20( cmd ) ) {
         data->fxtimer[20] = __getFnTimer( inst, 20);
-      if( !data->fn21 && wFunCmd.isf21( cmd ) )
+        fnchanged = 20;
+      }
+      if( !data->fn21 && wFunCmd.isf21( cmd ) ) {
         data->fxtimer[21] = __getFnTimer( inst, 21);
-      if( !data->fn22 && wFunCmd.isf22( cmd ) )
+        fnchanged = 21;
+      }
+      if( !data->fn22 && wFunCmd.isf22( cmd ) ) {
         data->fxtimer[22] = __getFnTimer( inst, 22);
-      if( !data->fn23 && wFunCmd.isf23( cmd ) )
+        fnchanged = 22;
+      }
+      if( !data->fn23 && wFunCmd.isf23( cmd ) ) {
         data->fxtimer[23] = __getFnTimer( inst, 23);
-      if( !data->fn24 && wFunCmd.isf24( cmd ) )
+        fnchanged = 23;
+      }
+      if( !data->fn24 && wFunCmd.isf24( cmd ) ) {
         data->fxtimer[24] = __getFnTimer( inst, 24);
-      if( !data->fn25 && wFunCmd.isf25( cmd ) )
+        fnchanged = 24;
+      }
+      if( !data->fn25 && wFunCmd.isf25( cmd ) ) {
         data->fxtimer[25] = __getFnTimer( inst, 25);
-      if( !data->fn26 && wFunCmd.isf26( cmd ) )
+        fnchanged = 25;
+      }
+      if( !data->fn26 && wFunCmd.isf26( cmd ) ) {
         data->fxtimer[26] = __getFnTimer( inst, 26);
-      if( !data->fn27 && wFunCmd.isf27( cmd ) )
+        fnchanged = 26;
+      }
+      if( !data->fn27 && wFunCmd.isf27( cmd ) ) {
         data->fxtimer[27] = __getFnTimer( inst, 27);
-      if( !data->fn28 && wFunCmd.isf28( cmd ) )
+        fnchanged = 27;
+      }
+      if( !data->fn28 && wFunCmd.isf28( cmd ) ) {
         data->fxtimer[28] = __getFnTimer( inst, 28);
+        fnchanged = 28;
+      }
+
+      wFunCmd.setfnchanged(cmd, fnchanged);
 
       /* save the function status: */
       __cpNode2Fn(inst, cmd);
