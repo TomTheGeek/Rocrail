@@ -60,12 +60,13 @@ static Boolean isHourlyInRange(iILcDriverInt inst, iONode schedule) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime %02d:%02d (%ld)",
       hours, mins, modeltime );
 
-  if( hours < fromhour || tohour < hours ) {
+  if( hours < fromhour || tohour < hours || tohour == hours ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "current hour, %d, is not in the hourly range from %d to %d",
+        "current hour, %d, is no longer in the hourly range from %d to %d",
         hours, fromhour, tohour );
     inRange = False;
   }
+
 
   return inRange;
 }
