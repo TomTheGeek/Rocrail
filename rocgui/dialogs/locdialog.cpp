@@ -241,7 +241,10 @@ void LocDialog::initLabels() {
   m_Show->SetLabel( wxGetApp().getMsg( "show" ) );
   m_labMTime->SetLabel( wxGetApp().getMsg( "mtime" ) );
   m_labMInt->SetLabel( wxGetApp().getMsg( "mint" ) );
+  m_MTime->SetToolTip( wxGetApp().getTip( "mtime" ) );
+  m_MInt->SetToolTip( wxGetApp().getTip( "mint" ) );
   m_Serviced->SetLabel( wxGetApp().getMsg( "serviced" ) );
+  m_Serviced->SetToolTip( wxGetApp().getTip( "serviced" ) );
 
   // Interface
   m_Label_Bus->SetLabel( wxGetApp().getMsg( "bus" ) );

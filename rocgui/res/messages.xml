@@ -6956,4 +6956,13 @@
   <Msg id="usebicom">
     <en txt="Use Bi-Directional Communication"/>
   </Msg>
+  <Msg id="serviced">
+    <en txt="Serviced" tip="Set locomotive to serviced."/>
+  </Msg>
+  <Msg id="mtime">
+    <en txt="M-Time" tip="Last serviced run time."/>
+  </Msg>
+  <Msg id="mint">
+    <en txt="M-Int" tip="Maintenance interval in hours."/>
+  </Msg>
 </Messages>
