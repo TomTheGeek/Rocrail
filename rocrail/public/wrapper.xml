@@ -1418,6 +1418,8 @@
         <var name="ttlib" vt="string" defval="./ttdriver" remark="TurntableDriver library"/>
         <var name="purchased" vt="string" defval="" remark="Date of purchase"/>
         <var name="runtime" vt="long" defval="0" remark="Auto runtime in seconds"/>
+        <var name="mtime" vt="long" defval="0" remark="last maintenance in seconds"/>
+        <var name="mint" vt="int" defval="0" remark="maintenance interval in hours"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
 
         <const name="mode_idle" vt="string" val="idle"/>

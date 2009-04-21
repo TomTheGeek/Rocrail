@@ -737,6 +737,16 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
                 m_ActiveLocs->GetCellBackgroundColour(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK):
                   wxColour(240,200,200));
 
+        if( wLoc.getmint( lc ) > 0 ) {
+          if(wLoc.getruntime( lc ) - wLoc.getmtime( lc ) > wLoc.getmint( lc ) * 3600 ) {
+            m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_ID, wxColour(255,200,200));
+          }
+          else {
+            m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_ID,
+                m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_ID));
+          }
+        }
+
         int jsdev = m_JsSupport->getDev4ID(wLoc.getid( lc ));
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
@@ -875,6 +885,18 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         StrOp.free( val );
         m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_V,
             wLoc.isplacing(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));
+
+        if( wLoc.getmint( node ) > 0 ) {
+          if(wLoc.getruntime( node ) - wLoc.getmtime( node ) > wLoc.getmint( node ) * 3600 ) {
+            m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_ID, wxColour(255,200,200));
+          }
+          else {
+            m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_ID,
+                m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_ID));
+          }
+        }
+
+
 
         int jsdev = m_JsSupport->getDev4ID(locid);
         if( jsdev != -1 )
