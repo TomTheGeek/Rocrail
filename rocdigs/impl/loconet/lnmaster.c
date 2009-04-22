@@ -22,19 +22,19 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/trace.h"
- 
+
 #include "rocdigs/impl/loconet_impl.h"
 
 #include "rocdigs/impl/loconet/lnconst.h"
 #include "rocdigs/impl/loconet/lnmaster.h"
- 
+
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/LNSlotServer.h"
- 
+
 /* Slot services */
 
 
@@ -79,10 +79,10 @@ void lnmasterThread( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLocoNet loconet = (iOLocoNet)ThreadOp.getParm( th );
   iOLocoNetData data = Data(loconet);
-  
+
   struct __lnslot* slot = allocMem( 128 * sizeof(struct __lnslot) );
   int dispatchedslot = 0;
-  
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet SlotServer started." );
 
   do {
@@ -105,7 +105,7 @@ void lnmasterThread( void* threadinst ) {
         LocoNetOp.ascii2byte( arg, strlen, msg );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message = [%s] len=%d", arg, strlen );
         TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, strlen/2 );
-        
+
         switch( msg[0] ) {
           case OPC_GPON:
             data->listenerFun( data->listenerObj, __sysCmd( loconet, wSysCmd.go), TRCLEVEL_INFO );
@@ -142,17 +142,17 @@ void lnmasterThread( void* threadinst ) {
             slotnr = __setslotdata(loconet,msg,slot);
             break;
         }
-        
+
         if( slotnr != -1 ) {
           slot[slotnr].accessed = currtime;
-        } 
-        
+        }
+
       }
 
 
       node->base.del( node );
     }
-    
+
     /* check slots for setting to idle: purge */
     if( wLNSlotServer.ispurge(data->slotserver) && data->purgetime > 0 ) {
       int i = 0;
@@ -168,10 +168,10 @@ void lnmasterThread( void* threadinst ) {
         }
       }
     }
-    
+
 
     ThreadOp.sleep(10);
-    
+
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet SlotServer ended." );
@@ -180,24 +180,26 @@ void lnmasterThread( void* threadinst ) {
 
 static iONode __swCmd(iOLocoNet loconet, byte* req ) {
   iOLocoNetData data = Data(loconet);
-  
+
   int addr = (((req[2] & 0x0f) * 128) + (req[1] & 0x7f));
   int value = (req[2] & 0x10) >> 4;
   int port  = (req[2] & 0x20) >> 5;
-  
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw request %d=%s", addr, port?"straight":"thrown" );
   {
     iONode nodeCmd = NodeOp.inst( wCommand.name(), NULL, ELEMENT_NODE );
     iONode nodeSw  = NodeOp.inst( wSwitch.name(), nodeCmd, ELEMENT_NODE );
+
+    NodeOp.addChild( nodeCmd, nodeSw );
 
     wSwitch.setaddr1( nodeSw, addr );
     wSwitch.setport1( nodeSw, port );
 
     if( data->iid != NULL )
       wSwitch.setiid( nodeSw, data->iid );
-      
+
     wSwitch.setcmd( nodeSw, port?wSwitch.straight:wSwitch.turnout );
-  
+
     return nodeCmd;
   }
 }
@@ -235,7 +237,7 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot# %d format=%d steps=%d", slotnr, slot[slotnr].format, slot[slotnr].steps );
 
-  /* TODO: send a wLoc node only to inform the loco object who knows all its settings, 
+  /* TODO: send a wLoc node only to inform the loco object who knows all its settings,
    * the iid in this node must overwrite the one set for the loco. */
   wCommand.setiid( nodeCmd, wLNSlotServer.getiid( data->slotserver ) );
   wLoc.setiid( nodeSpd, wLNSlotServer.getiid( data->slotserver ) );
@@ -268,8 +270,8 @@ static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
 }
 
 
-int lnLocoAddr(int addrH, int addrL) { 
-  return (((addrH & 0x7f) * 128) + (addrL & 0x7f)); 
+int lnLocoAddr(int addrH, int addrL) {
+  return (((addrH & 0x7f) * 128) + (addrL & 0x7f));
 }
 
 static int __findSlot4Addr( int addr, struct __lnslot* slot, int* firstavail ) {
@@ -303,7 +305,7 @@ static byte __getstat1byte(struct __lnslot* slot, int slotnr) {
 static void __setstat1byte(struct __lnslot* slot, int slotnr, byte stat) {
   slot[slotnr].inuse = (stat & LOCO_IN_USE) ? True:False;
   slot[slotnr].format = 0;
- 
+
   if( stat & DEC_MODE_128 ) {
     slot[slotnr].steps == 128;
   }
@@ -391,7 +393,7 @@ static int __locoaddress(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   int addr = lnLocoAddr(msg[1], msg[2]);
   int avail = -1;
   int slotnr = __findSlot4Addr( addr, slot, &avail );
-  
+
   if( slotnr == -1 && avail != -1 ) {
     slotnr = avail;
     /* set the slot */
@@ -423,10 +425,10 @@ static int __getslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
 
 static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int* dispatchedslot) {
   iOLocoNetData data = Data(loconet);
-  int src = msg[1] & 0x7F; 
-  int dst = msg[2] & 0x7F; 
+  int src = msg[1] & 0x7F;
+  int dst = msg[2] & 0x7F;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "move slots %d, %d", src, dst );
-  
+
   if( src == 0 ) {
     /* DISPATCH GET */
     /* send slot data */
@@ -471,14 +473,14 @@ static int __locodirf(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "illegal slot# %d addr %d", slotnr, slot[slotnr].addr );
     return slotnr;
   }
-  
+
   slot[slotnr].dir = (msg[2] & DIRF_DIR) ? False:True;
   slot[slotnr].f0  = (msg[2] & DIRF_F0) ? True:False;
   slot[slotnr].f1  = (msg[2] & DIRF_F1) ? True:False;
   slot[slotnr].f2  = (msg[2] & DIRF_F2) ? True:False;
   slot[slotnr].f3  = (msg[2] & DIRF_F3) ? True:False;
   slot[slotnr].f4  = (msg[2] & DIRF_F4) ? True:False;
-    
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d dirf", slotnr );
   data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
@@ -497,7 +499,7 @@ static int __locosound(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].f6  = (msg[2] & SND_F6) ? True:False;
   slot[slotnr].f7  = (msg[2] & SND_F7) ? True:False;
   slot[slotnr].f8  = (msg[2] & SND_F8) ? True:False;
-    
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d snd", slotnr );
   data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   return slotnr;
@@ -523,15 +525,15 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   int slotnr = msg[2] & 0x7F;
   int addr = ((msg[9] & 0x0f) * 128) + (msg[4] & 0x7f);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d addr %d data", slotnr, addr );
-  
+
   if( addr == 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "illegal address %d", addr );
     __longAck( loconet, OPC_WR_SL_DATA, 0 );
     return slotnr;
   }
-  
+
   /* translating slotdata into the internal representation: */
-  
+
   slot[slotnr].addr = addr;
   slot[slotnr].speed = msg[5];
   slot[slotnr].dir = ((msg[5] & DIRF_DIR) ? True:False);
@@ -546,7 +548,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].f8 = ((msg[10] & SND_F8) ? True:False);
 
   __setstat1byte( slot, slotnr, msg[2]);
-  
+
   data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   __longAck( loconet, OPC_WR_SL_DATA, -1 );
@@ -556,7 +558,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
 
 /*
  * DCS100 answers Fredi
- * 
+ *
 
 =====FREDI
 20080901.223201.278 r9999c lnreader lnmon    0288 Request slot for loco address 54
