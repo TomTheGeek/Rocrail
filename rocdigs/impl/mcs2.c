@@ -277,25 +277,8 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
     int fnchanged = wFunCmd.getfnchanged(node);
 
-    Boolean fn0 = wFunCmd.isf0( node );
-    Boolean fn1 = wFunCmd.isf1( node );
-    Boolean fn2 = wFunCmd.isf2( node );
-    Boolean fn3 = wFunCmd.isf3( node );
-    Boolean fn4 = wFunCmd.isf4( node );
-    Boolean fn5 = wFunCmd.isf5( node );
-    Boolean fn6 = wFunCmd.isf6( node );
-    Boolean fn7 = wFunCmd.isf7( node );
-    Boolean fn8 = wFunCmd.isf8( node );
-    Boolean fn9  = wFunCmd.isf9 ( node );
-    Boolean fn10 = wFunCmd.isf10( node );
-    Boolean fn11 = wFunCmd.isf11( node );
-    Boolean fn12 = wFunCmd.isf12( node );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "function %d %s light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, mfx?"mfx":"mm", (fn0?"ON":"OFF"), (fn1?"ON":"OFF"), (fn2?"ON":"OFF"), (fn3?"ON":"OFF"), (fn4?"ON":"OFF"),
-        (fn5?"ON":"OFF"), (fn6?"ON":"OFF"), (fn7?"ON":"OFF"), (fn8?"ON":"OFF"),
-        (fn9?"ON":"OFF"), (fn10?"ON":"OFF"), (fn11?"ON":"OFF"), (fn12?"ON":"OFF") );
-
+        "Loc %d %s function f%d to %s", addr, mfx?"mfx":"mm", fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
 
     if( fnchanged != -1 ) {
       __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged));
