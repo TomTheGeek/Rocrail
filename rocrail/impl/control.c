@@ -348,6 +348,10 @@ static void __callback( obj inst, iONode nodeA ) {
       }
     }
     else {
+      iONode clockini = wRocRail.getclock( AppOp.getIni() );
+      if( clockini != NULL ) {
+        wClock.setdivider( clockini, wClock.getdivider(nodeA) );
+      }
       data->devider = wClock.getdivider(nodeA);
       data->time = wClock.gettime(nodeA);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting time with devider %d", data->devider );
