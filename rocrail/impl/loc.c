@@ -424,12 +424,6 @@ static void __engine( iOLoc inst, iONode cmd ) {
       wLoc.setdir( data->props, wLoc.isdir(cmd) );
     }
 
-    if( NodeOp.findAttr(cmd,"fn") ) {
-      /* Informing the P50 interface. */
-      wLoc.setfn( data->props, wLoc.isfn( cmd ) );
-      data->fn0 = wLoc.isfn( cmd );
-    }
-
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       int fnchanged = -1;
@@ -618,6 +612,15 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       }
     }
+
+    if( NodeOp.findAttr(cmd,"fn") ) {
+      /* Informing the P50 interface. */
+      wLoc.setfn( data->props, wLoc.isfn( cmd ) );
+      data->fn0 = wLoc.isfn( cmd );
+    }
+
+
+
   }
 
 
