@@ -407,6 +407,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
   int         V_new  = -1;
   iONode      cmdTD  = NULL;
   iONode      cmdFn  = NULL;
+  static Boolean f0changed = False;
 
   if( cmd != NULL )
   {
@@ -424,6 +425,14 @@ static void __engine( iOLoc inst, iONode cmd ) {
       wLoc.setdir( data->props, wLoc.isdir(cmd) );
     }
 
+    if( NodeOp.findAttr(cmd,"fn") ) {
+      /* Informing the P50 interface. */
+      wLoc.setfn( data->props, wLoc.isfn( cmd ) );
+      if( data->fn0 != wLoc.isfn( cmd ) )
+        f0changed = True;
+      data->fn0 = wLoc.isfn( cmd );
+    }
+
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       int fnchanged = -1;
@@ -431,8 +440,10 @@ static void __engine( iOLoc inst, iONode cmd ) {
       /* function timers */
       if( !data->fn0 && wFunCmd.isf0( cmd ) )
         data->fxtimer[0] = __getFnTimer( inst, 0);
-      if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) )
+      if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
+        f0changed = False;
+      }
 
       if( !data->fn1 && wFunCmd.isf1( cmd ) )
         data->fxtimer[1] = __getFnTimer( inst, 1);
@@ -612,15 +623,6 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       }
     }
-
-    if( NodeOp.findAttr(cmd,"fn") ) {
-      /* Informing the P50 interface. */
-      wLoc.setfn( data->props, wLoc.isfn( cmd ) );
-      data->fn0 = wLoc.isfn( cmd );
-    }
-
-
-
   }
 
 
