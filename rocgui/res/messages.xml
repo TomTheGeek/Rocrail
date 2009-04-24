@@ -6965,4 +6965,7 @@
   <Msg id="mint">
     <en txt="M-Int" tip="Maintenance interval in hours."/>
   </Msg>
+  <Msg id="offpos">
+    <en txt="Power off position"/>
+  </Msg>
 </Messages>
