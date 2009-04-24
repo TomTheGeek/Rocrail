@@ -414,6 +414,7 @@ static __checkConsole( iOAppData data ) {
   else if( c == wConCmd.quit ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown requested." );
     data->consoleMode = False;
+    AppOp.stop();
     AppOp.shutdown();
   }
   else if( c == wConCmd.initfield ) {
