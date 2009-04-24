@@ -307,9 +307,11 @@ static void __evaluatePosition( obj inst ) {
 
 static void _sysEvent( obj inst, const char* cmd ) {
   iOSelTabData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s]...", cmd );
   if( StrOp.equals( wSysCmd.stop, cmd ) ) {
     /* goto offpos */
-    if( wSelTab.getoffpos(data->props) > 0 && SelTabOp.isLocked((iOSelTab)inst, NULL) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Power Off sysEvent: offpos=%d", wSelTab.getoffpos(data->props) );
+    if( wSelTab.getoffpos(data->props) > 0 && !SelTabOp.isLocked((iOSelTab)inst, NULL) ) {
       iONode node = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
       wSelTab.setid( node, wSelTab.getid( data->props ) );
       NodeOp.setInt( node, "cmd", wSelTab.getoffpos(data->props) );
