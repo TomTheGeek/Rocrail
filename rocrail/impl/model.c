@@ -1397,16 +1397,14 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) ) {
-    if( StrOp.equals( wSysCmd.stop, cmdVal ) || StrOp.equals( wSysCmd.go, cmdVal ) ) {
-      /* TODO: inform objects of a power on/off */
-      obj listener = ListOp.first( data->sysEventListeners );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
-      while( listener != NULL ) {
-        listener->event(listener, cmd);
-        listener = ListOp.next( data->sysEventListeners );
-      };
-    }
+    /* inform objects of a power on/off */
+    obj listener = ListOp.first( data->sysEventListeners );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
+    while( listener != NULL ) {
+      listener->event(listener, cmd);
+      listener = ListOp.next( data->sysEventListeners );
+    };
   }
   else if( StrOp.equals( wAutoCmd.name(), cmdName ) ) {
     if( StrOp.equals( wAutoCmd.on, cmdVal ) || StrOp.equals( wAutoCmd.off, cmdVal ) ) {
