@@ -820,7 +820,7 @@ void SelTabDialog::CreateControls()
     itemFlexGridSizer6->Add(m_MinOcc, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labMoveDelay = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Move delay"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labMoveDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_labMoveDelay, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_MoveDelay = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 5, 0 );
     itemFlexGridSizer6->Add(m_MoveDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
