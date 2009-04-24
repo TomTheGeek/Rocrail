@@ -1583,6 +1583,7 @@
         <var name="minocc" vt="int" defval="0" range="0-*" required="false" remark="minimal tracks to be occupied before leaving the fiddle yard"/>
         <var name="movedelay" vt="int" defval="0" range="0-*" required="false" units="s" remark="delay in seconds after an IN event before processing a new move"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="offpos" vt="int" defval="0" range="0-*" required="false" remark="Goto position at power off."/>
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>

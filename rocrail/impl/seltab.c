@@ -50,8 +50,10 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 
 static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val );
+static void _sysEvent( obj inst, const char* cmd );
 
 static int instCnt = 0;
 
@@ -66,6 +68,9 @@ static void* __event( void* inst, const void* evt ) {
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wFeedback.name(), NodeOp.getName(node) ) ) {
     _fbEvent( inst ,wFeedback.isstate(node), wFeedback.getid(node), wFeedback.getidentifier(node), wFeedback.getval(node) );
+  }
+  else if( node != NULL && StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
+    _sysEvent( inst ,wSysCmd.getcmd(node) );
   }
   return NULL;
 }
@@ -297,6 +302,20 @@ static void __evaluatePosition( obj inst ) {
       SelTabOp.base.id( inst ), data->lockedId!=NULL?data->lockedId:"-" );
 
 
+}
+
+
+static void _sysEvent( obj inst, const char* cmd ) {
+  iOSelTabData data = Data(inst);
+  if( StrOp.equals( wSysCmd.stop, cmd ) ) {
+    /* goto offpos */
+    if( wSelTab.getoffpos(data->props) > 0 && SelTabOp.isLocked((iOSelTab)inst, NULL) ) {
+      iONode node = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
+      wSelTab.setid( node, wSelTab.getid( data->props ) );
+      NodeOp.setInt( node, "cmd", wSelTab.getoffpos(data->props) );
+      SelTabOp.cmd((iIBlockBase)inst, node);
+    }
+  }
 }
 
 
@@ -678,6 +697,8 @@ static struct OSelTab* _inst( iONode ini ) {
   __initFeedbackEvents( __SelTab );
   data->tablepos = -1;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] initialized.", wSelTab.getid(ini) );
+
+  ModelOp.addSysEventListener( AppOp.getModel(), (obj)__SelTab );
 
   instCnt++;
   return __SelTab;

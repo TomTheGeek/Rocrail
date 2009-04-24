@@ -227,6 +227,12 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       }
     }
 
+
+    if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
+      /* inform model */
+      ModelOp.cmd( AppOp.getModel(), (iONode)NodeOp.base.clone(node));
+    }
+
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node) ||
         StrOp.equals( wClock.name(), NodeOp.getName(node) ) )
     {
