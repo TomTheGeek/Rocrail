@@ -325,6 +325,97 @@ static Boolean __processPatternCmd( iOSignal inst, const char* state ) {
 }
 
 
+static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
+  iOSignalData o = Data(inst);
+  iOControl control = AppOp.getControl(  );
+  const char* iid = wSignal.getiid( o->props );
+
+  iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "4 aspects processing for signal [%s][%s]...", wSignal.getid( o->props ), state );
+
+  /* reset all outputs */
+  if( iid != NULL )
+    wOutput.setiid( cmd, iid );
+
+  wOutput.setprot( cmd, wSignal.getprot( o->props ) );
+  wOutput.setcmd( cmd, wOutput.off );
+  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wOutput.setport( cmd, wSignal.getport1( o->props ) );
+  wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+  if( wSignal.getaddr2( o->props ) > 0 )
+    wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
+  else
+    wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wOutput.setport( cmd, wSignal.getport2( o->props ) );
+  wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+  if( wSignal.getaddr3( o->props ) > 0 )
+    wOutput.setaddr( cmd, wSignal.getaddr3( o->props ) );
+  else
+    wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wOutput.setport( cmd, wSignal.getport3( o->props ) );
+  wOutput.setgate( cmd, wSignal.getgate3( o->props ) );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+
+  if( wSignal.getaddr4( o->props ) > 0 )
+    wOutput.setaddr( cmd, wSignal.getaddr4( o->props ) );
+  else
+    wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wOutput.setport( cmd, wSignal.getport4( o->props ) );
+  wOutput.setgate( cmd, wSignal.getgate4( o->props ) );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+
+  wOutput.setcmd( cmd, wOutput.on );
+
+  if( StrOp.equals( wSignal.white, state ) ) {
+    if( wSignal.getaddr4( o->props ) > 0 )
+      wOutput.setaddr( cmd, wSignal.getaddr4( o->props ) );
+    else
+      wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wOutput.setport( cmd, wSignal.getport4( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate4( o->props ) );
+  }
+  else if( StrOp.equals( wSignal.green, state ) ) {
+    if( wSignal.getaddr3( o->props ) > 0 )
+      wOutput.setaddr( cmd, wSignal.getaddr3( o->props ) );
+    else
+      wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wOutput.setport( cmd, wSignal.getport3( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate3( o->props ) );
+  }
+  else if( StrOp.equals( wSignal.yellow, state ) ) {
+    if( wSignal.getaddr2( o->props ) > 0 )
+      wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
+    else
+      wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wOutput.setport( cmd, wSignal.getport2( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
+  }
+  else {
+    wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wOutput.setport( cmd, wSignal.getport1( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  }
+
+
+  /* invoke the command by calling the control */
+  if( !ControlOp.cmd( control, cmd, NULL ) ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+    return False;
+  }
+
+  return True;
+}
+
+
 static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -593,7 +684,15 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       ok = False;
     }
   }
-  else if( wSignal.getaspects(o->props) > 2 ){
+  else if( wSignal.getaspects(o->props) == 4 ){
+    /* invoke the command by calling the control */
+    if( !__process4AspectsCmd( inst, state ) ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+      ok = False;
+    }
+  }
+  else if( wSignal.getaspects(o->props) == 3 ){
     /* invoke the command by calling the control */
     if( !__process3AspectsCmd( inst, state ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
