@@ -32,7 +32,11 @@
 <ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO"/>
 <ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST"/>
 <ope date="733472" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
-<ope date="733481" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann"/>
+<ope date="733473" amount="-120.95" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Sweat shirts for Kaarst" info="Project Team"/>
+<ope date="733473" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Dirk Adolphs"/>
+<ope date="733473" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Peter Giling"/>
+<ope date="733481" amount="60" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="2 Sweat Shirts" info="Christian Wichmann"/>
 <ope date="733489" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG"/>
 <ope date="733491" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto"/>
+<ope date="733524" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET"/>
 </homebank>
