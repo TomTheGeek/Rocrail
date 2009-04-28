@@ -2421,14 +2421,26 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_InitField);
   if( mi != NULL ) mi->Enable( !m_bAutoMode );
 
-  mi = menuBar->FindItem(ME_EditMode);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode );
-  mi = menuBar->FindItem(ME_CtrlMode);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode );
-  mi = menuBar->FindItem(ME_AddPanel);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode );
-  mi = menuBar->FindItem(ME_PanelProps);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode );
+  if( wxGetApp().isModView() ) {
+    mi = menuBar->FindItem(ME_EditMode);
+    if( mi != NULL ) mi->Enable( false );
+    mi = menuBar->FindItem(ME_CtrlMode);
+    if( mi != NULL ) mi->Enable( false );
+    mi = menuBar->FindItem(ME_AddPanel);
+    if( mi != NULL ) mi->Enable( false );
+    mi = menuBar->FindItem(ME_PanelProps);
+    if( mi != NULL ) mi->Enable( false );
+  }
+  else {
+    mi = menuBar->FindItem(ME_EditMode);
+    if( mi != NULL ) mi->Enable( !m_bAutoMode );
+    mi = menuBar->FindItem(ME_CtrlMode);
+    if( mi != NULL ) mi->Enable( !m_bAutoMode );
+    mi = menuBar->FindItem(ME_AddPanel);
+    if( mi != NULL ) mi->Enable( !m_bAutoMode );
+    mi = menuBar->FindItem(ME_PanelProps);
+    if( mi != NULL ) mi->Enable( !m_bAutoMode );
+  }
 
   mi = menuBar->FindItem(ME_LangEnglish);
   if( mi != NULL )
