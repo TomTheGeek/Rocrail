@@ -226,6 +226,7 @@
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
       <const name="clock" vt="string" val="clock"/>
+      <const name="railcom" vt="string" val="railcom"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
