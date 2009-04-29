@@ -302,6 +302,7 @@ void Symbol::sizeToScale() {
 void Symbol::blockEvent( const char* id ) {
   if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
+      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( StrOp.equals( wTrack.getblockid( m_Props ), id ) ) {
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block occ id=[%s]", id );

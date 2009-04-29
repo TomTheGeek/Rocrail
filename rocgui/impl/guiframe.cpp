@@ -278,7 +278,10 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LangDanish     , RocGuiFrame::OnLangDanish)
     EVT_MENU( ME_LangCzech      , RocGuiFrame::OnLangCzech)
     EVT_MENU( ME_LangBosnian    , RocGuiFrame::OnLangBosnian)
-
+    EVT_MENU( ME_LangBulgarian  , RocGuiFrame::OnLangBulgarian)
+    EVT_MENU( ME_LangCatalan    , RocGuiFrame::OnLangCatalan)
+    EVT_MENU( ME_LangGreek      , RocGuiFrame::OnLangGreek)
+    EVT_MENU( ME_LangRussian    , RocGuiFrame::OnLangRussian)
     EVT_GRID_CELL_LEFT_CLICK( RocGuiFrame::OnCellLeftClick )
     EVT_GRID_CELL_LEFT_DCLICK( RocGuiFrame::OnCellLeftDClick )
     EVT_GRID_CELL_RIGHT_CLICK( RocGuiFrame::OnCellRightClick )
@@ -1205,17 +1208,22 @@ void RocGuiFrame::initFrame() {
   menuAuto->Append(ME_AutoReset, wxGetApp().getMenu("resetall"), wxGetApp().getTip("resetall") );
 
   wxMenu *menuLang = new wxMenu();
-  menuLang->AppendCheckItem( ME_LangBosnian , wxGetApp().getMenu("lang_bs"), wxGetApp().getTip("lang_bs") );
-  menuLang->AppendCheckItem( ME_LangCzech   , wxGetApp().getMenu("lang_cs"), wxGetApp().getTip("lang_cs") );
-  menuLang->AppendCheckItem( ME_LangDanish  , wxGetApp().getMenu("lang_da"), wxGetApp().getTip("lang_da") );
-  menuLang->AppendCheckItem( ME_LangGerman  , wxGetApp().getMenu("lang_de"), wxGetApp().getTip("lang_de") );
-  menuLang->AppendCheckItem( ME_LangEnglish , wxGetApp().getMenu("lang_en"), wxGetApp().getTip("lang_en") );
-  menuLang->AppendCheckItem( ME_LangSpanish , wxGetApp().getMenu("lang_es"), wxGetApp().getTip("lang_es") );
-  menuLang->AppendCheckItem( ME_LangFrench  , wxGetApp().getMenu("lang_fr"), wxGetApp().getTip("lang_fr") );
-  menuLang->AppendCheckItem( ME_LangItalien , wxGetApp().getMenu("lang_it"), wxGetApp().getTip("lang_it") );
-  menuLang->AppendCheckItem( ME_LangDutch   , wxGetApp().getMenu("lang_nl"), wxGetApp().getTip("lang_nl") );
-  menuLang->AppendCheckItem( ME_LangSwedisch, wxGetApp().getMenu("lang_sv"), wxGetApp().getTip("lang_sv") );
-  menuLang->AppendCheckItem( ME_LangTurkish , wxGetApp().getMenu("lang_tr"), wxGetApp().getTip("lang_tr") );
+  menuLang->AppendCheckItem( ME_LangBosnian  , wxGetApp().getMenu("lang_bs"), wxGetApp().getTip("lang_bs") );
+  menuLang->AppendCheckItem( ME_LangCzech    , wxGetApp().getMenu("lang_cs"), wxGetApp().getTip("lang_cs") );
+  menuLang->AppendCheckItem( ME_LangDanish   , wxGetApp().getMenu("lang_da"), wxGetApp().getTip("lang_da") );
+  menuLang->AppendCheckItem( ME_LangGerman   , wxGetApp().getMenu("lang_de"), wxGetApp().getTip("lang_de") );
+  menuLang->AppendCheckItem( ME_LangEnglish  , wxGetApp().getMenu("lang_en"), wxGetApp().getTip("lang_en") );
+  menuLang->AppendCheckItem( ME_LangSpanish  , wxGetApp().getMenu("lang_es"), wxGetApp().getTip("lang_es") );
+  menuLang->AppendCheckItem( ME_LangFrench   , wxGetApp().getMenu("lang_fr"), wxGetApp().getTip("lang_fr") );
+  menuLang->AppendCheckItem( ME_LangItalien  , wxGetApp().getMenu("lang_it"), wxGetApp().getTip("lang_it") );
+  menuLang->AppendCheckItem( ME_LangDutch    , wxGetApp().getMenu("lang_nl"), wxGetApp().getTip("lang_nl") );
+  menuLang->AppendCheckItem( ME_LangSwedisch , wxGetApp().getMenu("lang_sv"), wxGetApp().getTip("lang_sv") );
+  menuLang->AppendCheckItem( ME_LangTurkish  , wxGetApp().getMenu("lang_tr"), wxGetApp().getTip("lang_tr") );
+  menuLang->AppendCheckItem( ME_LangBulgarian, wxGetApp().getMenu("lang_bg"), wxGetApp().getTip("lang_bg") );
+  menuLang->AppendCheckItem( ME_LangCatalan  , wxGetApp().getMenu("lang_ca"), wxGetApp().getTip("lang_ca") );
+  menuLang->AppendCheckItem( ME_LangGreek    , wxGetApp().getMenu("lang_el"), wxGetApp().getTip("lang_el") );
+  menuLang->AppendCheckItem( ME_LangRussian  , wxGetApp().getMenu("lang_ru"), wxGetApp().getTip("lang_ru") );
+
 
   wxMenu *menuZoom = new wxMenu();
   menuZoom->AppendCheckItem( ME_Zoom25, _T("25%") );
@@ -2475,6 +2483,21 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LangBosnian);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_bosnian, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangBosnian);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_bulgarian, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangBulgarian);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_catalan, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangCatalan);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_catalan, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangGreek);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_greek, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangRussian);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_russian, wGui.getlang( wxGetApp().getIni() ) ) );
 
   mi = menuBar->FindItem(ME_RocrailIni);
   if( mi != NULL )
@@ -3225,6 +3248,26 @@ void RocGuiFrame::OnLangCzech(wxCommandEvent& event) {
 }
 void RocGuiFrame::OnLangBosnian(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_bosnian );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangBulgarian(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_bulgarian );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangCatalan(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_catalan );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangGreek(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_greek );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangRussian(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_russian );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 
