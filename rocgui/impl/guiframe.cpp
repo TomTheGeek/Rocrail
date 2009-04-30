@@ -1208,21 +1208,21 @@ void RocGuiFrame::initFrame() {
   menuAuto->Append(ME_AutoReset, wxGetApp().getMenu("resetall"), wxGetApp().getTip("resetall") );
 
   wxMenu *menuLang = new wxMenu();
-  menuLang->AppendCheckItem( ME_LangBosnian  , _T("Bosnian")  , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangBulgarian, _T("Bulgarian"), wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangCatalan  , _T("Catalan")  , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangCzech    , _T("Czech")    , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangDanish   , _T("Danish")   , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangDutch    , _T("Dutch")    , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangEnglish  , _T("English")  , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangFrench   , _T("French")   , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangGerman   , _T("German")   , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangGreek    , _T("Greek")    , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangItalien  , _T("Italien")  , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangRussian  , _T("Russia")   , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangSpanish  , _T("Spanish")  , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangSwedisch , _T("Swedisch") , wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangTurkish  , _T("Turkish")  , wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangBosnian  , wxGetApp().getMenu("lang_bs"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangBulgarian, wxGetApp().getMenu("lang_bg"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangCatalan  , wxGetApp().getMenu("lang_ca"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangCzech    , wxGetApp().getMenu("lang_cs"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangDanish   , wxGetApp().getMenu("lang_da"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangDutch    , wxGetApp().getMenu("lang_nl"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangEnglish  , wxGetApp().getMenu("lang_en"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangFrench   , wxGetApp().getMenu("lang_fr"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangGerman   , wxGetApp().getMenu("lang_de"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangGreek    , wxGetApp().getMenu("lang_el"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangItalien  , wxGetApp().getMenu("lang_it"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangRussian  , wxGetApp().getMenu("lang_ru"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangSpanish  , wxGetApp().getMenu("lang_es"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangSwedisch , wxGetApp().getMenu("lang_sv"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangTurkish  , wxGetApp().getMenu("lang_tr"), wxGetApp().getMsg("changelang") );
 
 
   wxMenu *menuZoom = new wxMenu();

@@ -19,6 +19,51 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 -->
 <Messages>
+  <Msg id="lang_nl">
+    <en txt="Nederlands" tip="Dutch"/>
+  </Msg>
+  <Msg id="lang_de">
+    <en txt="Deutsch" tip="German"/>
+  </Msg>
+  <Msg id="lang_en">
+    <en txt="English" tip="English"/>
+  </Msg>
+  <Msg id="lang_sv">
+    <en txt="Svenska" tip="Swedisch"/>
+  </Msg>
+  <Msg id="lang_fr">
+    <en txt="Français" tip="French"/>
+  </Msg>
+  <Msg id="lang_tr">
+    <en txt="Türkçe" tip="Turkish"/>
+  </Msg>
+  <Msg id="lang_es">
+    <en txt="Español" tip="Spanish"/>
+  </Msg>
+  <Msg id="lang_it">
+    <en txt="Italiano" tip="Italien"/>
+  </Msg>
+  <Msg id="lang_da">
+    <en txt="Dansk" tip="Danish"/>
+  </Msg>
+  <Msg id="lang_cs">
+    <en txt="Česká" tip="Czech"/>
+  </Msg>
+  <Msg id="lang_bs">
+    <en txt="Bosanski" tip="Bosnian"/>
+  </Msg>
+  <Msg id="lang_bg">
+    <en txt="България" tip="Bulgarian"/>
+  </Msg>
+  <Msg id="lang_ca">
+    <en txt="Català" tip="Catalan"/>
+  </Msg>
+  <Msg id="lang_el">
+    <en txt="ελληνικά" tip="Greek"/>
+  </Msg>
+  <Msg id="lang_ru">
+    <en txt="русский язык" tip="Russian"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Neu starten um Sprache zu ändern."/>
