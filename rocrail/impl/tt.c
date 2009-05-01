@@ -974,27 +974,16 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
 
     if( polarization ) {
-      addr++;
-      wSwitch.setaddr1( cmd, addr / 4 + 1 );
-      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
       wSwitch.setcmd( cmd, wSwitch.turnout );
-      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-      addr--;
-      wSwitch.setaddr1( cmd, addr / 4 + 1 );
-      wSwitch.setport1( cmd, addr % 4 + 1 );
-      wSwitch.setcmd( cmd, wSwitch.straight );
       ControlOp.cmd( control, cmd, NULL );
     }
     else {
-      wSwitch.setaddr1( cmd, addr / 4 + 1 );
-      wSwitch.setport1( cmd, addr % 4 + 1 );
-      wSwitch.setcmd( cmd, wSwitch.turnout );
-      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-      addr++;
-      wSwitch.setaddr1( cmd, addr / 4 + 1 );
-      wSwitch.setport1( cmd, addr % 4 + 1 );
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
       wSwitch.setcmd( cmd, wSwitch.straight );
-      ControlOp.cmd( control, cmd, NULL );
+      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
     }
 
   }
