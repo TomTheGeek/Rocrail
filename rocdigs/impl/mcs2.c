@@ -469,6 +469,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wDigInt.gethost(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast tx port [%d]", 15731 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast rx port [%d]", 15730 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules       [%d]", wDigInt.getfbmod( ini ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
