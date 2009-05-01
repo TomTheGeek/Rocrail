@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rocrail" />
+		<Option makefile="makefile" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="rocrail" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="clean">
+				<Option output="rocrail" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="impl/action.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/analyse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/app.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/block.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/car.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/clntcon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/control.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/display.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/fback.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/hclient.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/http.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/model.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/modplan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/module.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/mvtrack.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/operator.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/output.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/pclient.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rcon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/route.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/seltab.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/signal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/switch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/text.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/throttle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/track.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/traverser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/web/web.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/web/web.h" />
+		<Unit filename="impl/web/webme.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/web/webme.h" />
+		<Unit filename="public/wrapper.xml" />
+		<Unit filename="rocrail.xml" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

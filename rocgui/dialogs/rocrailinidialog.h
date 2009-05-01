@@ -269,6 +269,7 @@ public:
     wxCheckBox* m_DisableRouteVreduce;
     wxCheckBox* m_GreenAspect;
     wxCheckBox* m_SkipSetSw;
+    wxCheckBox* m_UseBiCom;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

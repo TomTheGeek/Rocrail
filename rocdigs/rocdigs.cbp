@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rocdigs" />
+		<Option makefile="makefile" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="rocdigs" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="clean">
+				<Option output="rocdigs" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="impl/barjut.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/clock.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/common/fada.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/common/fada.h" />
+		<Unit filename="impl/ddx.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/accpool.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/accpool.h" />
+		<Unit filename="impl/ddx/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/init.h" />
+		<Unit filename="impl/ddx/locpool.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/locpool.h" />
+		<Unit filename="impl/ddx/motorola.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/motorola.h" />
+		<Unit filename="impl/ddx/motorolacodes.h" />
+		<Unit filename="impl/ddx/nmra.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/nmra.h" />
+		<Unit filename="impl/ddx/queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/queue.h" />
+		<Unit filename="impl/ddx/s88.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ddx/s88.h" />
+		<Unit filename="impl/dinamo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ecos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ecos/ecos-parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/ecos/ecos-parser.h" />
+		<Unit filename="impl/hsi88.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/inter10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/lenz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/dtopsw.h" />
+		<Unit filename="impl/loconet/lbserial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lbserial.h" />
+		<Unit filename="impl/loconet/lbserver.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lbserver.h" />
+		<Unit filename="impl/loconet/lbudp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lbudp.h" />
+		<Unit filename="impl/loconet/lncmdstn.h" />
+		<Unit filename="impl/loconet/lnconst.h" />
+		<Unit filename="impl/loconet/lncv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lncv.h" />
+		<Unit filename="impl/loconet/lnmaster.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lnmaster.h" />
+		<Unit filename="impl/loconet/lnmon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/lnmon.h" />
+		<Unit filename="impl/loconet/lnutils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/locoio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/loconet/locoio.h" />
+		<Unit filename="impl/mcs2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/mcs2/mcs2-const.h" />
+		<Unit filename="impl/om32.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/opendcc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/opendcc/openthrottle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/opendcc/openthrottle.h" />
+		<Unit filename="impl/p50.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/p50x.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/rn-serial.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/rn-udp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/rn-utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/rn-utils.h" />
+		<Unit filename="impl/rocnet/rocnet-const.h" />
+		<Unit filename="impl/rocnet/rocnet-parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/rocnet-parser.h" />
+		<Unit filename="impl/rocnet/rocnet-sublib.h" />
+		<Unit filename="impl/rocnet/stubs/rn-serial-stub.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/stubs/rn-tcpip-stub.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/stubs/rn-udp-stub.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/stubs/rocnet-stub.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/rocnet/stubs/rocnet-stub.h" />
+		<Unit filename="impl/roco.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/slx.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/srcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/srcp07.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/srcp08.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/virtual.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/zimo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rocdigs.xml" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

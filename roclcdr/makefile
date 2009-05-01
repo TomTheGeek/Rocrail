@@ -52,9 +52,12 @@ MOUNTPOINT=..
 OUTDIR=../$(DIRPREFIX)bin
 GENDIR=../$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)/roclcdr/bin
+BUILDBINDIR=../rocs/bin
 DEBUG=-g
-DESTDIR=/opt/rocrail
-BINDIR=../rocs/bin
+DESTDIR?=
+PREFIX?=/usr/local
+LIBDIR?=$(PREFIX)/lib
+ROCRAIL_LIBDIR=$(LIBDIR)/rocrail
 
 CPP=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
@@ -101,10 +104,10 @@ clean:
 	-rm -f $(TMPOUTDIR)/events/*.o
 	-rm -f $(TMPOUTDIR)/status/*.o
 	-rm -f $(TMPOUTDIR)/tools/*.o
-	cd $(GENDIR)/roclcdr; ../$(BINDIR)/ogen ../../roclcdr/roclcdr.xml ../
+	cd $(GENDIR)/roclcdr; ../$(BUILDBINDIR)/ogen ../../roclcdr/roclcdr.xml ../
 
 install:
   ifeq ($(PLATFORM),LINUX)
-	-cp -p $(OUTDIR)/lcdriver.so $(DESTDIR)
+	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/lcdriver.so $(DESTDIR)$(ROCRAIL_LIBDIR)
   endif
-

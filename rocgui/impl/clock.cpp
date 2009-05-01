@@ -56,9 +56,9 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   start = true;
   run   = true;
   deviderchanged = false;
-  wxString platepath = ((RocGuiFrame*)parent)->getIconPath("plate");
+  wxString platepath = wxGetApp().getFrame()->getIconPath("plate");
   TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "platepath=[%s]", (const char*)platepath.mb_str(wxConvUTF8));
-  wxString logopath = ((RocGuiFrame*)parent)->getIconPath("logo");
+  wxString logopath = wxGetApp().getFrame()->getIconPath("logo");
   m_Plate = NULL;
   m_Logo  = NULL;
 

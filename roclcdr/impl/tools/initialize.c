@@ -79,58 +79,61 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   }
 
 
-  if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, reverse ) ) {
-    if( street->lock( street, data->loc->getId( data->loc ), reverse ) ) {
-      if( street->go( street ) ) {
+  if( street->isFree(street, data->loc->getId( data->loc )) ) {
+    if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, reverse ) ) {
+      if( street->lock( street, data->loc->getId( data->loc ), reverse ) ) {
+        if( street->go( street ) ) {
 
-        if( data->gotoBlock != NULL && StrOp.equals( data->gotoBlock, block->base.id( block ) ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                         "GotoBlock %s found for \"%s\"",
-                         data->gotoBlock, data->loc->getId( data->loc ) );
+          if( data->gotoBlock != NULL && StrOp.equals( data->gotoBlock, block->base.id( block ) ) ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                           "GotoBlock %s found for \"%s\"",
+                           data->gotoBlock, data->loc->getId( data->loc ) );
 
-          /* stop after reaching the gotoBlock */
-          data->gotoBlock = NULL;
-          data->run = False;
+            /* stop after reaching the gotoBlock */
+            data->gotoBlock = NULL;
+            data->run = False;
+          }
+
+          if( street->isSwap( street ) ) {
+            /* swap only now for a next block, not for a second next block! */
+            /* data->loc->swapPlacing( data->loc ); initializeSwap??!! */
+          }
+
+          data->slowdown4route = False;
+
+          return True;
         }
-
-        if( street->isSwap( street ) ) {
-          /* swap only now for a next block, not for a second next block! */
-          /* data->loc->swapPlacing( data->loc ); initializeSwap??!! */
+        else {
+          block->unLock( block, data->loc->getId( data->loc ) );
+          street->unLock( street, data->loc->getId( data->loc ), NULL );
+          if(grouplocked) {
+            unlockBlockGroup(inst, group);
+          }
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "Could not switch street \"%s\", for \"%s\"...",
+              street->getId( street ), data->loc->getId( data->loc ) );
         }
-
-        data->slowdown4route = False;
-
-        return True;
       }
       else {
         block->unLock( block, data->loc->getId( data->loc ) );
-        street->unLock( street, data->loc->getId( data->loc ) );
         if(grouplocked) {
           unlockBlockGroup(inst, group);
         }
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-            "Could not switch street \"%s\", for \"%s\"...",
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "Could not lock route \"%s\", for \"%s\"...",
             street->getId( street ), data->loc->getId( data->loc ) );
       }
     }
     else {
-      block->unLock( block, data->loc->getId( data->loc ) );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+          "Could not lock block \"%s\", for \"%s\"...",
+          block->base.id( block ), data->loc->getId( data->loc ) );
       if(grouplocked) {
         unlockBlockGroup(inst, group);
       }
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-          "Could not lock route \"%s\", for \"%s\"...",
-          street->getId( street ), data->loc->getId( data->loc ) );
     }
   }
-  else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-        "Could not lock block \"%s\", for \"%s\"...",
-        block->base.id( block ), data->loc->getId( data->loc ) );
-    if(grouplocked) {
-      unlockBlockGroup(inst, group);
-    }
-  }
+
   return False;
 }
 
@@ -225,7 +228,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block V_hint [%s] (%s)", data->V_hint, onexit?"on exit":"on enter" );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] V_hint [%s] (%s)", block->base.id(block), data->V_hint, onexit?"on exit":"on enter" );
   return data->V_hint;
 }
 

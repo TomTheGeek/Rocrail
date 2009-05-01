@@ -52,7 +52,7 @@ void statusWait( iILcDriverInt inst ) {
 
     data->state = LC_TIMER;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
-    
+
     if( data->curBlock->wait(data->curBlock, data->loc ) ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
@@ -65,10 +65,10 @@ void statusWait( iILcDriverInt inst ) {
       if( ice && data->prevState == LC_FINDDEST )
         data->timer = 1; /* just wait 100ms */
       else
-        data->timer = 5; /* just wait 1 second, 10 x 100ms */
+        data->timer = 10; /* just wait 1 second, 10 x 100ms */
     }
-    
-    
+
+
     data->curBlock->resetTrigs( data->curBlock );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for [%s] timer=%d from LC_WAITBLOCK to LC_TIMER.",

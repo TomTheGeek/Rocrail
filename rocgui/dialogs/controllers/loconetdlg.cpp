@@ -137,6 +137,8 @@ void LocoNetCtrlDlg::initValues() {
     m_Baudrate->SetSelection(0);
   else if( wDigInt.getbps( m_Props ) == 57600 )
     m_Baudrate->SetSelection(1);
+  else if( wDigInt.getbps( m_Props ) == 115200 )
+    m_Baudrate->SetSelection(2);
   else
     m_Baudrate->SetSelection(0);
 
@@ -245,6 +247,8 @@ void LocoNetCtrlDlg::evaluate() {
     wDigInt.setbps( m_Props, 19200 );
   else if( m_Baudrate->GetSelection() == 1 )
     wDigInt.setbps( m_Props, 57600 );
+  else if( m_Baudrate->GetSelection() == 2 )
+    wDigInt.setbps( m_Props, 115200 );
 
   wDigInt.setflow(m_Props, m_Flow->GetValue() ? wDigInt.cts:wDigInt.no );
 
@@ -407,6 +411,7 @@ void LocoNetCtrlDlg::CreateControls()
     wxArrayString m_BaudrateStrings;
     m_BaudrateStrings.Add(_("&19200"));
     m_BaudrateStrings.Add(_("&57600"));
+    m_BaudrateStrings.Add(_("&115200"));
     m_Baudrate = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_COLS );
     m_Baudrate->SetSelection(0);
     itemBoxSizer15->Add(m_Baudrate, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);

@@ -1,0 +1,12 @@
+<svg width="64" height="32">
+  <g>
+    <!-- rechte gerade -->
+    <path stroke-width="1" stroke="black" fill="rgb(255, 255, 255)" d="M 32,15 L 34,13 L 61,13 L 63,15 L 63,16 L 61,18 L 34,18 L 32,16 L 32,15 z " />
+    <!-- Abzweig unten links -->
+    <path stroke-width="1" stroke="black" fill="rgb(255, 255, 255)" d="M 31,16 L 28,16 L 16,28 L 16,31 L 19,31 L 31,19 L31,16 z " />
+    <!-- linke gerade -->
+    <path stroke-width="1" stroke="black" fill="rgb(0, 0, 0)" d="M 0,15 L 2,13 L 29,13 L 31,15 L 31,16 L 29,18 L 2,18 L 0,16 L 0,16 z " />
+    <!-- Abzweig oben rechts -->
+    <path stroke-width="1" stroke="black" fill="rgb(0, 0, 0)" d="M 47,0 L 47,3 L 35,15 L 32,15 L 32,12 L 44,0 L 47,0 z " />
+  </g>
+</svg>

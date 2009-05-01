@@ -187,6 +187,7 @@
 #define OPS_BIT_FEEDBACK        (OPS_BIT_NO_FEEDBACK | PCMD_TY0)
 
 /* Programmer Status error flags */
+#define PSTAT_OPS_READ      0x10    /* OPS read */
 #define PSTAT_USER_ABORTED  0x08    /* User aborted this command */
 #define PSTAT_READ_FAIL     0x04    /* Failed to detect Read Compare Acknowledge from decoder */
 #define PSTAT_WRITE_FAIL    0x02    /* No Write acknowledge from decoder                      */

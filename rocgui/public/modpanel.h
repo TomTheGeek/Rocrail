@@ -36,8 +36,9 @@ class ModPanel : public BasePanel
   int m_mouseY;
   int m_X;
   int m_Y;
+  wxWindow* m_Parent;
   ModPlanDlg* m_ModPlanDlg;
-  
+
 public:
   ModPanel(wxWindow *parent, int itemsize, double scale );
   void OnPaint(wxPaintEvent& event);

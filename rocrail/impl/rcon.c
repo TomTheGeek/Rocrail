@@ -127,6 +127,7 @@ static void _infoReader( void* threadinst ) {
       /* Allocate read buffer: */
       long size = XmlhOp.getSizeByTagName( xmlh, XmlhOp.xml_tagname, 0 );
       info = allocMem( size + 1 );
+      info[0] = '\0';
       ok = SocketOp.read( sock, info, size );
 
       /* Call clallback: */
@@ -136,6 +137,8 @@ static void _infoReader( void* threadinst ) {
         iONode root = NULL;
         if( infoDoc == NULL ) {
           /* Invalid XML string? */
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid XML string: [%.20s]...", info );
+          freeMem(info);
           continue;
         }
         root = DocOp.getRootNode( infoDoc );
@@ -153,6 +156,9 @@ static void _infoReader( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Callback used %ld of rocs memory.", mem );
           /* Cleanup root node: */
           root->base.del( root );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "XML string not parsed: [%.20s]...", info );
         }
       }
       else if( o->callback == NULL ) {
@@ -194,16 +200,21 @@ static void _close( iORCon inst ) {
 
 static Boolean _write( iORCon inst, char* cmdStr ) {
   iORConData o = Data(inst);
-  iOXmlh hdr = XmlhOp.inst( True, NULL, NULL );
-  iONode node = NodeOp.inst( XmlhOp.xml_tagname, NULL, ELEMENT_NODE );
-  /* Write string incl. terminating zero. */
-  int len = strlen( cmdStr ) + 1;
-  NodeOp.setInt( node, "size", len );
-  XmlhOp.addNode( hdr, node );
+
   /* Write string incl. terminating zero. */
   if( !SocketOp.isBroken( o->sh ) ) {
-    long hdrLen = 0;
-    char* xmlhStr = (char*)XmlhOp.base.serialize( hdr, &hdrLen );
+    iOXmlh xmlh    = XmlhOp.inst( True, NULL, NULL );
+    iONode node    = NodeOp.inst( XmlhOp.xml_tagname, NULL, ELEMENT_NODE );
+    long   hdrLen  = 0;
+    int    len     = 0;
+    char*  xmlhStr = NULL;
+
+    /* Write string incl. terminating zero. */
+    len = strlen( cmdStr ) + 1;
+    NodeOp.setInt( node, "size", len );
+    XmlhOp.addNode( xmlh, node );
+    xmlhStr = (char*)XmlhOp.base.serialize( xmlh, &hdrLen );
+    XmlhOp.base.del( xmlh );
 
     if( SocketOp.write( o->sh, xmlhStr, hdrLen ) )
       return SocketOp.write( o->sh, cmdStr, len );
@@ -213,7 +224,7 @@ static Boolean _write( iORCon inst, char* cmdStr ) {
   else {
     /* Try to recover connection: */
     o->sh = SocketOp.inst( o->host, o->port, False, False );
-    if( o->sh != NULL ) 
+    if( o->sh != NULL )
       return SocketOp.connect( o->sh );
     return False;
   }

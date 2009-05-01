@@ -776,9 +776,12 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d direction=%s", addr, speed, (dir?"fwd":"rev") );
   }
+
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    int   addr = wFunCmd.getaddr( node );
+    int addr  = wFunCmd.getaddr( node );
+    int group = wFunCmd.getgroup( node );
+
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
     Boolean f2 = wFunCmd.isf2( node );
@@ -792,9 +795,28 @@ static iONode __translate( iOLenz lenz, iONode node ) {
     Boolean f10 = wFunCmd.isf10( node );
     Boolean f11 = wFunCmd.isf11( node );
     Boolean f12 = wFunCmd.isf12( node );
-    byte functions1 = (f1?0x01:0) + (f2?0x02:0) + (f3?0x04:0) + (f4?0x08:0) + (f0?0x10:0);
-    byte functions2 = (f5?0x01:0) + (f6?0x02:0) + (f7?0x04:0) + (f8?0x08:0);
-    byte functions3 = (f9?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
+    Boolean f13 = wFunCmd.isf13( node );
+    Boolean f14 = wFunCmd.isf14( node );
+    Boolean f15 = wFunCmd.isf15( node );
+    Boolean f16 = wFunCmd.isf16( node );
+    Boolean f17 = wFunCmd.isf17( node );
+    Boolean f18 = wFunCmd.isf18( node );
+    Boolean f19 = wFunCmd.isf19( node );
+    Boolean f20 = wFunCmd.isf20( node );
+    Boolean f21 = wFunCmd.isf21( node );
+    Boolean f22 = wFunCmd.isf22( node );
+    Boolean f23 = wFunCmd.isf23( node );
+    Boolean f24 = wFunCmd.isf24( node );
+    Boolean f25 = wFunCmd.isf25( node );
+    Boolean f26 = wFunCmd.isf26( node );
+    Boolean f27 = wFunCmd.isf27( node );
+    Boolean f28 = wFunCmd.isf28( node );
+
+    byte functions1 = (f1 ?0x01:0) + (f2 ?0x02:0) + (f3 ?0x04:0) + (f4 ?0x08:0) + (f0 ?0x10:0);
+    byte functions2 = (f5 ?0x01:0) + (f6 ?0x02:0) + (f7 ?0x04:0) + (f8 ?0x08:0);
+    byte functions3 = (f9 ?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
+    byte functions4 = (f13?0x01:0) + (f14?0x02:0) + (f15?0x04:0) + (f16?0x08:0) + (f17?0x10:0) + (f18?0x20:0) + (f19?0x40:0) + (f20?0x80:0);
+    byte functions5 = (f21?0x01:0) + (f22?0x02:0) + (f23?0x04:0) + (f24?0x08:0) + (f25?0x10:0) + (f26?0x20:0) + (f27?0x40:0) + (f28?0x80:0);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
@@ -802,29 +824,56 @@ static iONode __translate( iOLenz lenz, iONode node ) {
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
 
-    byte* outa = allocMem(256);
-    outa[0] = 0xE4;
-    outa[1] = 0x20;
-    __setLocAddr( addr, outa+2 );
-    outa[4] = functions1;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
-    ThreadOp.post( data->transactor, (obj)outa );
+    if( group == 0 || group == 1 ) {
+      byte* outa = allocMem(256);
+      outa[0] = 0xE4;
+      outa[1] = 0x20;
+      __setLocAddr( addr, outa+2 );
+      outa[4] = functions1;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
 
-    byte* outb = allocMem(256);
-    outb[0] = 0xE4;
-    outb[1] = 0x21;
-    __setLocAddr( addr, outb+2 );
-    outb[4] = functions2;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
-    ThreadOp.post( data->transactor, (obj)outb );
+    if( group == 0 || group == 2 ) {
+      byte* outb = allocMem(256);
+      outb[0] = 0xE4;
+      outb[1] = 0x21;
+      __setLocAddr( addr, outb+2 );
+      outb[4] = functions2;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
+      ThreadOp.post( data->transactor, (obj)outb );
+    }
 
-    byte* outc = allocMem(256);
-    outc[0] = 0xE4;
-    outc[1] = 0x22;
-    __setLocAddr( addr, outc+2 );
-    outc[4] = functions3;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
-    ThreadOp.post( data->transactor, (obj)outc );
+
+    if( group == 0 || group == 3 ) {
+      byte* outc = allocMem(256);
+      outc[0] = 0xE4;
+      outc[1] = 0x22;
+      __setLocAddr( addr, outc+2 );
+      outc[4] = functions3;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
+
+    if( group == 0 || group == 4 || group == 5 ) {
+      byte* outc = allocMem(256);
+      outc[0] = 0xE4;
+      outc[1] = 0x23;
+      __setLocAddr( addr, outc+2 );
+      outc[4] = functions4;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
+
+    if( group == 0 || group == 6 || group == 7 ) {
+      byte* outc = allocMem(256);
+      outc[0] = 0xE4;
+      outc[1] = 0x28;
+      __setLocAddr( addr, outc+2 );
+      outc[4] = functions5;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 5" );
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
 
     /* save the function1 byte to use for setting the lights function... */
     data->lcfn[addr] = functions1;
@@ -1387,7 +1436,7 @@ static int _state( obj inst ) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 2;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOLenzData data = Data(inst);

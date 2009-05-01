@@ -82,6 +82,9 @@
       <param name="inst" vt="this" remark="LcDriver instance"/>
       <param name="scheduleid" vt="const char*" remark="Schedule to use."/>
     </fun>
+    <fun name="getschedule" vt="const char*">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
     <fun name="version" vt="int" remark="vmajor*1000 + vminor*100 + patch">
       <param name="inst" vt="obj"/>
     </fun>
@@ -128,6 +131,9 @@
       <param name="locid" vt="const char*" remark="Unlocking loc"/>
     </fun>
     <fun name="getLoc" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="getInLoc" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="cmd" vt="Boolean">
@@ -243,6 +249,9 @@
       <param name="manager" vt="this"/>
     </fun>
     <fun name="getManager" vt="this">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
+    <fun name="getOccTime" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
   </interface>

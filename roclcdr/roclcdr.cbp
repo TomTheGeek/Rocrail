@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="roclcdr" />
+		<Option makefile="makefile" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="roclcdr" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="clean">
+				<Option output="roclcdr" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="impl/events/enter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/events/events.h" />
+		<Unit filename="impl/events/exit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/events/in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/events/pre2in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/lcdriver.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/checkroute.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/enter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/exit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/finddest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/go.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/idle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/initdest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/out.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/pause.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/pre2in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/prewait.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/status.h" />
+		<Unit filename="impl/status/timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/wait.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/status/wait4event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/actions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/initialize.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/reserve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/schedules.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/signals.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="impl/tools/tools.h" />
+		<Unit filename="roclcdr.xml" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

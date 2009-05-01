@@ -154,13 +154,20 @@ static void __blockEvent( iOLcDriver inst, obj emitter, int event ) {
     set velocity to V_mid
   */
   case pre2in_event:
-    eventPre2In( inst, blockId, curBlockEvent, dstBlockEvent );
+    if( wLoc.isinatpre2in( data->loc->base.properties( data->loc ) ) ) {
+      eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, False );
+    }
+    else
+      eventPre2In( inst, blockId, curBlockEvent, dstBlockEvent );
     break;
 
 
   /*---------- IN ----------*/
+  case shortin_event:
+    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, True );
+    break;
   case in_event:
-    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent );
+    eventIn( inst, blockId, block, curBlockEvent, dstBlockEvent, False );
     break;
 
 
@@ -240,6 +247,13 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
 
     case LC_CHECKROUTE:
       statusCheckRoute( inst );
+      break;
+
+
+    case LC_PRE2GO:
+      __checkEventTimeout(inst);
+      __checkSignalReset(inst);
+      statusPre2Go( inst );
       break;
 
 
@@ -350,11 +364,11 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
   /* unlock routes */
   unlockBlockGroup( (iOLcDriver)inst, data->blockgroup );
   if( data->next1Route != NULL )
-    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ) );
+    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL );
   if( data->next2Route != NULL )
-    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ) );
+    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL );
   if( data->next3Route != NULL )
-    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ) );
+    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL );
 
   if( data->curBlock == NULL ) {
     data->curBlock  = data->model->getBlock( data->model, data->loc->getCurBlock( data->loc ) );
@@ -424,15 +438,21 @@ static void _useschedule( iILcDriverInt inst, const char* scheduleid ) {
   iOLcDriverData data = Data(inst);
   data->schedule = scheduleid;
   data->scheduleIdx = 0;
+  data->prewaitScheduleIdx = -1;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                  "use schedule \"%s\" for \"%s\"...",
                  scheduleid,
                  data->loc->getId( data->loc ) );
 }
 
+static const char* _getschedule( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  return data->schedule;
+}
+
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 1;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOLcDriverData data = Data(inst);

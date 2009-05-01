@@ -33,7 +33,7 @@ COMMONOBJS=$(patsubst impl/common/%.c,$(TMPOUTDIR)/common/%.o,$(wildcard impl/co
 all: $(OBJS) $(OUTDIR)\opendcc.dll $(OUTDIR)\p50.dll $(OUTDIR)\p50x.dll $(OUTDIR)\hsi88.dll $(OUTDIR)\barjut.dll $(OUTDIR)\srcp.dll \
 	$(OUTDIR)\lenz.dll $(OUTDIR)\roco.dll $(OUTDIR)\zimo.dll $(OUTDIR)\dinamo.dll $(OUTDIR)\om32.dll \
 	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll \
-	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\nce.dll $(OUTDIR)\rci.dll $(OUTDIR)\sprog.dll $(OUTDIR)\clock.dll
+	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll
 #	-del /Q $(TMPOUTDIR)\*.o
 
 # ------------------------------------------------------------
@@ -75,12 +75,6 @@ $(OUTDIR)\virtual.dll: $(TMPOUTDIR)\virtual.o $(COMMONOBJS) $(OUTDIR)\librocs.a 
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\virtual.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\virtual.dll
 $(OUTDIR)\mcs2.dll: $(TMPOUTDIR)\mcs2.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\mcs2.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\mcs2.dll
-$(OUTDIR)\nce.dll: $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
-	dllwrap --def rocdigs.def $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\nce.dll
-$(OUTDIR)\rci.dll: $(TMPOUTDIR)\rci.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
-	dllwrap --def rocdigs.def $(TMPOUTDIR)\rci.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\rci.dll
-$(OUTDIR)\sprog.dll: $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
-	dllwrap --def rocdigs.def $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\sprog.dll
 $(OUTDIR)\clock.dll: $(TMPOUTDIR)\clock.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\clock.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\clock.dll
 
@@ -137,9 +131,6 @@ clean:
 	-del /Q $(OUTDIR)\ddx.dll
 	-del /Q $(OUTDIR)\virtual.dll
 	-del /Q $(OUTDIR)\mcs2.dll
-	-del /Q $(OUTDIR)\rci.dll
-	-del /Q $(OUTDIR)\nce.dll
-	-del /Q $(OUTDIR)\sprog.dll
 	-del /Q $(OUTDIR)\clock.dll
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\ogen.exe ..\..\rocdigs\rocdigs.xml ..\\
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml impl\version.c svnLog

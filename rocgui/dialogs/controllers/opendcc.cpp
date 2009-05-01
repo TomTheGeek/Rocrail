@@ -167,13 +167,17 @@ void OpenDCCCtrlDlg::OnTimer(wxTimerEvent& event) {
     return;
   }
 
-
   if( m_bCleanUpProgress ) {
+    if( m_Progress != NULL ) {
+      wxProgressDialog* dlg = m_Progress;
+      m_Progress = NULL;
+      dlg->Destroy();
+      TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
+    }
     m_bCleanUpProgress = false;
-    m_Progress->Destroy();
-    m_Progress = NULL;
     return;
   }
+
 
   m_TimerCount++;
   if( m_TimerCount >= 1000 ) {
@@ -535,6 +539,11 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
       }
       else {
         stopProgress();
+        m_DecoderPanel->Enable(true);
+        m_S88Panel->Enable(true);
+        m_ProgrammingTab->Enable(true);
+        m_SCDPanel->Enable(true);
+        m_SwitchPanel->Enable(true);
       }
     }
     else

@@ -25,6 +25,7 @@
     <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
     <const name="planfile" vt="string" val="-x" defval="" range="*" remark="Specifies plan filename"/>
     <const name="libpath" vt="string" val="-l" defval="" range="*" remark="Location of the rocrail libraries: -l [path]"/>
+    <const name="imgpath" vt="string" val="-img" defval="" range="*" remark="Location of images: -img [path]"/>
     <const name="debug" vt="string" val="-debug" defval="false" remark="Activates debug tracelevel."/>
     <const name="byte" vt="string" val="-byte" defval="false" remark="Activates byte tracelevel."/>
     <const name="monitor" vt="string" val="-monitor" defval="false" remark="Activates monitor tracelevel."/>
@@ -65,15 +66,15 @@
 
   <Global structname="GC" remark="For internal use only.">
     <const name="productname" vt="string" val="Rocrail"/>
-    <const name="releasename" vt="string" val="Snapshot"/>
+    <const name="releasename" vt="string" val="snapshot"/>
     <const name="releasesuffix" vt="string" val=""/>
     <const name="vmajor" vt="int" val="1"/>
-    <const name="vminor" vt="int" val="2"/>
+    <const name="vminor" vt="int" val="3"/>
     <const name="patch" vt="int" val="999"/>
     <const name="buildDate" vt="string" val="$__DATE__"/>
     <const name="buildTime" vt="string" val="$__TIME__"/>
   </Global>
-  
+
   <netreq wrappername="NetReq">
     <var name="id" vt="string" defval="" remark="Local server name."/>
     <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
@@ -99,7 +100,7 @@
   <log wrappername="SvnLog">
     <logentry wrappername="SvnLogEntry" cardinality="1">
       <var name="revision" vt="int" defval="0" range="0-*"/>
-    </logentry>  
+    </logentry>
   </log>
 
   <rocrail structname="RRI" wrappername="RocRail">
@@ -116,11 +117,11 @@
     <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
-    </lcd>  
+    </lcd>
     <throttle wrappername="Throttle" cardinality="1" remark="Throttle ini">
       <var name="type" vt="string" defval="opendcc" range="*" remark="throttle type"/>
       <var name="iid" vt="string" defval="" range="*" remark="IID to use for sending throttle commands."/>
-    </throttle>  
+    </throttle>
     <jsmap wrappername="JsMap">
       <var name="select" vt="int" defval="9" range="*"/>
       <var name="updown" vt="int" defval="5" range="*" remark="Y"/>
@@ -147,7 +148,7 @@
       <const name="set" vt="string" val="set"/>
       <const name="sync" vt="string" val="sync"/>
       <var name="cmd" vt="string" defval="" range="*"/>
-    </clock>  
+    </clock>
     <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
       <var name="port" vt="int" defval="53701" range="0-65535" remark="Port number for server socket. Deactivated when 0."/>
       <var name="path" vt="string" defval="." range="*" remark="Path where to look for external HTML documents."/>
@@ -224,14 +225,11 @@
       <const name="vcs" vt="string" val="virtual"/>
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
-      <const name="rci" vt="string" val="rci"/>
-      <const name="nce" vt="string" val="nce"/>
-      <const name="sprog" vt="string" val="sprog"/>
       <const name="clock" vt="string" val="clock"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
-      
+
       <!-- -->
       <const name="sublib_serial" vt="string" val="serial"/>
       <const name="sublib_socket" vt="string" val="socket"/>
@@ -297,7 +295,7 @@
         <var name="lib" vt="string" defval="p50x"/>
         <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>
       </opendcc>
-      
+
       <srcp remark="SRCP init" wrappername="SRCP">
         <var name="cmdport" vt="int" defval="4303" remark="SRCP command port."/>
         <var name="infoport" vt="int" defval="0" remark="SRCP infoport."/>
@@ -314,7 +312,7 @@
         <var name="srcpbusFB_m6051" vt="int" defval="9" remark="m6051 feedback bus"/>
         <var name="srcpbusFB_i8255" vt="int" defval="10" remark="i8255 feedback bus"/>
       </srcp>
-  
+
       <ddx remark="DDX init" wrappername="DDX">
         <var name="port" vt="string" defval="/dev/ttyS0" range="*"/>
         <var name="portbase" vt="string" defval="0x0000" range="*"/>
@@ -336,7 +334,7 @@
         <var name="fastcvget" vt="bool" defval="true" remark="Fast cv get for real rs232."/>
         <var name="realnmratiming" vt="bool" defval="false" remark="experimental: do not use"/>
       </ddx>
-        
+
       <rocnet remark="rocNet options" wrappername="RocNet">
         <var name="id" vt="int" defval="1" range="0-*" remark="rocNet sender ID, 1 is default for rocrail."/>
         <const name="rn_type_udp" vt="string" val="udp"/>
@@ -350,7 +348,7 @@
           <var name="device" vt="string" defval="com1" remark="The roc lib will map this to /dev/ttyS0 when running linux."/>
         </rnserial>
       </rocnet>
-      
+
       <loconet remark="LocoNet options" wrappername="LocoNet">
         <var name="purgetime" vt="int" defval="200" unit="s" range="0-*" remark="set to zero if the command station does not purge"/>
         <var name="slots" vt="int" defval="22" range="0-*" remark="number of slots for loco's"/>
@@ -379,7 +377,7 @@
           <var name="speedstep" vt="int" defval="128" range="14,28,128" remark="default decoder speed steps"/>
         </slotserver>
       </loconet>
-      
+
     </digint>
     <tcp remark="Client service port." wrappername="Tcp">
       <var name="port" vt="int" defval="62842" range="1-65535"/>
@@ -406,6 +404,7 @@
       <var name="greenaspect" vt="bool" defval="false" remark="Use green aspect instead of yellow if next block has red."/>
       <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commonds in routes for switches already in model position."/>
       <var name="semaphorewait" vt="int" defval="1" range="0-*" unit="s" remark="Time needed by a semaphore to get in position."/>
+      <var name="usebicom" vt="bool" defval="true" remark="Use bi-directional communication."/>
     </ctrl>
   </rocrail>
 
@@ -417,7 +416,7 @@
     <var name="iid" vt="string" defval="NULL" range="*"/>
     <var name="arg" vt="string" defval="NULL" range="*" remark="command arguments"/>
   </command>
-  
+
   <fbinfo wrappername="FbInfo">
     <fbmods cardinality="n" remark="feedback module listing" wrappername="FbMods">
       <var name="bus" vt="int" defval="0" range="0-*" remark="bus number"/>
@@ -432,7 +431,7 @@
     <var name="outlen" vt="int" defval="0" range="0-*" remark="out length in bytes"/>
     <var name="inendbyte" vt="int" defval="-1" range="0-*" remark="Read response until detecting this byte within the inlen."/>
   </bincmd>
-  
+
   <datareq remark="Data request" wrappername="DataReq">
     <var name="id" vt="string" defval="NULL" range="*" remark="reference ID"/>
     <const name="get" vt="int" val="0"/>
@@ -442,7 +441,7 @@
     <var name="filename" vt="string" defval="NULL" range="*"/>
     <var name="data" vt="string" defval="NULL" range="*" remark="one byte represented by 2 ascii chars; StrOp.byteToStr()"/>
   </datareq>
-  
+
   <program remark="Program." wrappername="Program">
     <var name="iid" vt="string" defval="NULL" range="*"/>
     <const name="get" vt="int" val="0"/>
@@ -511,12 +510,12 @@
   <ext remark="External command." wrappername="ExtCmd">
     <var name="cmdline" vt="string" defval="" range="*"/>
   </ext>
-  
+
   <thr remark="Throttle packet." wrappername="ThrottleCmd">
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
     <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
   </thr>
-  
+
   <sys remark="System command." wrappername="SysCmd">
     <const name="stoplocs" vt="string" val="stoplocs"/>
     <const name="stop" vt="string" val="stop"/>
@@ -594,7 +593,9 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
-    <var name="f0" vt="bool" defval="true"/>
+    <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
+    <var name="group" vt="int" defval="0" range="0-*" remark="0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28"/>
+    <var name="f0" vt="bool" defval="false"/>
     <var name="f1" vt="bool" defval="false"/>
     <var name="f2" vt="bool" defval="false"/>
     <var name="f3" vt="bool" defval="false"/>
@@ -607,10 +608,27 @@
     <var name="f10" vt="bool" defval="false"/>
     <var name="f11" vt="bool" defval="false"/>
     <var name="f12" vt="bool" defval="false"/>
-    <var name="timedfn" vt="int" defval="0" range="0-*"/>
+    <var name="f13" vt="bool" d2efval="false"/>
+    <var name="f14" vt="bool" defval="false"/>
+    <var name="f15" vt="bool" defval="false"/>
+    <var name="f16" vt="bool" defval="false"/>
+    <var name="f17" vt="bool" defval="false"/>
+    <var name="f18" vt="bool" defval="false"/>
+    <var name="f19" vt="bool" defval="false"/>
+    <var name="f20" vt="bool" defval="false"/>
+    <var name="f21" vt="bool" defval="false"/>
+    <var name="f22" vt="bool" defval="false"/>
+    <var name="f23" vt="bool" defval="false"/>
+    <var name="f24" vt="bool" defval="false"/>
+    <var name="f25" vt="bool" defval="false"/>
+    <var name="f26" vt="bool" defval="false"/>
+    <var name="f27" vt="bool" defval="false"/>
+    <var name="f28" vt="bool" defval="false"/>
+    <var name="timedfn" vt="int" defval="-1" range="0-*"/>
     <var name="timer" vt="int" defval="0" unit="s" range="0-*" remark="function activation timer"/>
     <var name="event" vt="const char*" defval="none" range="*" remark="function deactivation event"/>
     <var name="eventblock" vt="char*" defval="NULL" range="*" remark="function deactivation block"/>
+    <var name="timerf0" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf1" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf2" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf3" vt="int" defval="0" unit="s" range="0-*"/>
@@ -623,6 +641,22 @@
     <var name="timerf10" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf11" vt="int" defval="0" unit="s" range="0-*"/>
     <var name="timerf12" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf13" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf14" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf15" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf16" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf17" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf18" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf19" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf20" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf21" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf22" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf23" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf24" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf25" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf26" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf27" vt="int" defval="0" unit="s" range="0-*"/>
+    <var name="timerf28" vt="int" defval="0" unit="s" range="0-*"/>
   </fn>
 
   <custom remark="Custom Command for interfaces" wrappername="CustomCmd">
@@ -701,12 +735,13 @@
       </connection>
     </module>
   </modplan>
-  
+
   <modocc wrappername="ModOcc" remark="Root node of the block occupation.">
     <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of associated plan."/>
     <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
+      <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
       <var name="auto" vt="bool" defval="false" remark="The occupying loco is in automode."/>
@@ -755,7 +790,8 @@
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
-        
+        <var name="switched" vt="int" defval="0" range="0-*" remark="Number of switch commands."/>
+
         <!-- Addressing -->
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
@@ -765,7 +801,7 @@
         <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address in case of type 3way"/>
         <var name="port2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
-        
+
         <var name="singlegate" vt="bool" defval="false" remark="Switch works with only one gate."/>
         <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
         <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
@@ -783,6 +819,7 @@
         <const name="right" vt="string" val="right" remark="3way switch right command or right switch type."/>
         <const name="left" vt="string" val="left" remark="3way switch left command or left switch type."/>
         <var name="state" vt="string" defval="NULL" range="straight,turnout,red,green,left,right" remark="Current state og switch."/>
+        <var name="set" vt="bool" defval="true"/>
         <var name="savepos" vt="string" defval="none" range="none,straight,turnout,left,right" remark="save position of switch"/>
         <const name="flip" vt="string" val="flip" remark="Change current state."/>
         <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
@@ -875,14 +912,14 @@
         <var name="signal" vt="string" defval="main" range="main,distant,shunting"/>
         <var name="aspects" vt="int" defval="3" range="2-4" remark="number of aspects to show"/>
         <var name="dwarf" vt="bool" defval="false"/>
-        
+
         <!-- patterns -->
         <var name="usepatterns" vt="bool" defval="false"/>
         <var name="green" vt="int" defval="0" range="0-3" remark="pattern for green"/>
         <var name="red" vt="int" defval="0" range="0-3" remark="pattern for red"/>
         <var name="yellow" vt="int" defval="0" range="0-3" remark="pattern for yellow"/>
         <var name="white" vt="int" defval="0" range="0-3" remark="pattern for white"/>
-        
+
         <actionctrl cardinality="n"/>
       </sg>
     </sglist>
@@ -900,7 +937,7 @@
         <var name="port" deprecated="true" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
-        
+
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <const name="on" vt="string" val="on"/>
         <const name="active" vt="string" val="active"/>
@@ -965,7 +1002,7 @@
         <var name="blocks" vt="string" defval="" range="*" required="true" remark="location related blocks as csv"/>
       </location>
     </locationlist>
-      
+
     <sclist cardinality="1" remark="Schedule table" wrappername="ScheduleList">
       <sc cardinality="n" wrappername="Schedule">
         <var name="id" vt="string" defval="" range="*" required="true" remark="schedule name"/>
@@ -973,7 +1010,13 @@
         <const name="type_commuter" vt="string" val="commuter"/>
         <var name="type" vt="string" defval="cycle" range="cycle,commuter" required="true" remark="how the schedule should be used"/>
         <var name="cycles" vt="int" defval="0" range="0-*" remark="number of runs in case of cycle type: 0 is just one run"/>
-        <var name="relativetime" vt="bool" defval="false" remark="time is relative to the schedule start"/>
+        <const name="time_real" vt="int" val="0"/>
+        <const name="time_relative" vt="int" val="1"/>
+        <const name="time_hourly" vt="int" val="2"/>
+        <var name="timeprocessing" vt="int" defval="0" remark="0=real 1=relative 2=hourly"/>
+        <var name="timeframe" vt="int" defval="1" range="0-*" units="min" remark="time frame for accepting a delay"/>
+        <var name="fromhour" vt="int" defval="0" range="0-23*" units="hours"/>
+        <var name="tohour" vt="int" defval="0" range="0-23*" units="hours"/>
         <scentry cardinality="n" wrappername="ScheduleEntry">
           <var name="location" vt="string" defval="NULL" range="*" required="false" remark="Location from the locationlist"/>
           <var name="block" vt="string" defval="NULL" range="*" required="false" remark="Block from the blocklist"/>
@@ -1013,6 +1056,7 @@
         <var name="mvscale" vt="int" defval="87" remark="Scale of locomotives."/>
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
+        <const name="ghost" vt="string" val="ghost"/>
         <const name="open" vt="string" val="open"/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
@@ -1066,12 +1110,13 @@
         <!-- New feedback handling: -->
         <fbevent cardinality="n" wrappername="FeedbackEvent">
           <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
-          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
+          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
           <const name="ident_event" vt="string" val="ident"/>
           <const name="enter_event" vt="string" val="enter"/>
           <const name="enter2route_event" vt="string" val="enter2route"/>
           <const name="enter2in_event" vt="string" val="enter2in"/>
           <const name="in_event" vt="string" val="in"/>
+          <const name="shortin_event" vt="string" val="shortin"/>
           <const name="exit_event" vt="string" val="exit"/>
           <const name="pre2in_event" vt="string" val="pre2in"/>
           <const name="occupied_event" vt="string" val="occupied"/>
@@ -1121,7 +1166,7 @@
         <const name="point_e" vt="string" val="point-e" remark="for single track modules"/>
         <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
         <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
-        <var name="bkc" vt="string" defval="NULL" range="*" required="false" 
+        <var name="bkc" vt="string" defval="NULL" range="*" required="false"
           remark="Crossing block: optional incase a block overlaps turnouts used by this route. This is a csv list of blocks."/>
         <var name="dir" vt="bool" defval="true" remark="Direction permission; true is from-to only, false is both directions."/>
         <var name="lcdir" vt="bool" defval="true" remark="Loco running direction from-to; true is forwards, false is backwards."/>
@@ -1141,9 +1186,6 @@
         <const name="V_none" vt="string" val="none" remark="No V_hint defined."/>
         <var name="speed" vt="string" defval="none" range="none,min,cruise,max" remark="Route speed on departure; overwrites block departure speed if set."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Route speed in percent."/>
-        <var name="function" vt="int" defval="0" range="0-12" remark="function to activate"/>
-        <var name="funtime" vt="int" defval="1" range="1-10" unit="s" remark="function to activation time"/>
-        <var name="funevent" vt="const char*" defval="none" range="none,enter,in" remark="function deactivation event"/>
         <fbevent cardinality="n"/>
         <actionctrl cardinality="n"/>
       </st>
@@ -1254,11 +1296,13 @@
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-255" required="true" remark="Digital address. (0 == analog)"/>
-        <var name="port" vt="int" defval="0" range="0-*" required="false" 
+        <var name="port" vt="int" defval="0" range="0-*" required="false"
           remark="Block number in the Dinamo system. (Block property)"/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Total length of loc with wagons to check with block length.."/>
         <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
         <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
+        <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
+        <var name="inatpre2in" vt="bool" defval="false" remark="Use pre2in event to stop in blocks."/>
 
         <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
         <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>
@@ -1374,7 +1418,7 @@
         <var name="purchased" vt="string" defval="" remark="Date of purchase"/>
         <var name="runtime" vt="long" defval="0" remark="Auto runtime in seconds"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
-        
+
         <const name="mode_idle" vt="string" val="idle"/>
         <const name="mode_wait" vt="string" val="wait"/>
         <const name="mode_halfauto" vt="string" val="halfauto"/>
@@ -1389,10 +1433,19 @@
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
         <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
-        
+
         <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
       </lc>
     </lclist>
+
+    <operatorlist cardinality="1" remark="Operator table" wrappername="OperatorList">
+      <operator cardinality="n" wrappername="Operator" remark="Operator consist definition.">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="lcid" vt="string" defval="" range="*" required="true"/>
+        <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
+      </operator>
+    </operatorlist>
+
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
@@ -1477,7 +1530,7 @@
         <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
       </tx>
     </txlist>
-    
+
     <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
       <ac cardinality="n" wrappername="Action" remark="">
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
@@ -1495,7 +1548,7 @@
         <var name="actiontime" vt="int" defval="0" unit="s" remark="function activation time"/>
       </ac>
     </aclist>
-    
+
     <seltablist cardinality="1" remark="selection table list" wrappername="SelTabList">
       <seltab cardinality="n" wrappername="SelTab" remark="Selection Table">
         <var name="id" vt="string" defval="NULL" range="*" remark="object id"/>
@@ -1523,6 +1576,9 @@
 
         <var name="sharedfb" vt="bool" defval="false" remark="Use one set of sensors for all blocks."/>
         <var name="manager" vt="bool" defval="false" remark="Manager mode: Act like a block and manage all sub blocks.(Tracks)"/>
+        <var name="fifo" vt="bool" defval="true" remark="Firts in, First out"/>
+        <var name="minocc" vt="int" defval="0" range="0-*" required="false" remark="minimal tracks to be occupied before leaving the fiddle yard"/>
+        <var name="movedelay" vt="int" defval="0" range="0-*" required="false" units="s" remark="delay in seconds after an IN event before processing a new move"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
@@ -1599,7 +1655,7 @@
       </traverser>
     </traverserlist>
 
-    
+
   </plan>
 
 

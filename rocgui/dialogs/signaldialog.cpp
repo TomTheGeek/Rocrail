@@ -352,6 +352,7 @@ void SignalDialog::initValues() {
     m_Gate1->Enable(false);
     m_Gate2->Enable(false);
     m_Gate3->Enable(false);
+    m_Gate4->Enable(false);
   }
 
   /* patterns */
@@ -1109,18 +1110,11 @@ void SignalDialog::OnApplyClick( wxCommandEvent& event )
 
 void SignalDialog::OnCheckboxSgPairgatesClick( wxCommandEvent& event )
 {
-  if( m_PairGates->IsChecked()) {
-    m_Gate1->Enable(false);
-    m_Gate2->Enable(false);
-    m_Gate3->Enable(false);
-    m_Gate4->Enable(false);
-  }
-  else {
-    m_Gate1->Enable(true);
-    m_Gate2->Enable(true);
-    m_Gate3->Enable(true);
-    m_Gate4->Enable(true);
-  }
+  bool enable = m_PairGates->IsChecked();
+  m_Gate1->Enable(!enable);
+  m_Gate2->Enable(!enable);
+  m_Gate3->Enable(!enable);
+  m_Gate4->Enable(!enable);
 }
 
 
@@ -1135,6 +1129,9 @@ void SignalDialog::OnCheckboxSgUsepatternsClick( wxCommandEvent& event )
   m_Gate2->Enable(!enable);
   m_Gate3->Enable(!enable);
   m_Gate4->Enable(!enable);
+  if( !enable )
+    OnCheckboxSgPairgatesClick(event);
+
   m_Address3->Enable(!enable);
   m_Port3->Enable(!enable);
   m_Address4->Enable(!enable);

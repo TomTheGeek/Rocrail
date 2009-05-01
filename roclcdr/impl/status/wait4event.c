@@ -54,7 +54,7 @@ void statusWait4Event( iILcDriverInt inst ) {
     }
     else {
       if( !data->next2Route->isSet(data->next2Route) ) {
-        if( !data->gomanual ) {
+        if( !data->gomanual && !data->slowdown4route ) {
           /* set velocity to v_mid */
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )

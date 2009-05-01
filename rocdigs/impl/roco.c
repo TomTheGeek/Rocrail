@@ -169,7 +169,7 @@ static void __handleSwitch(iORoco roco, int addr, int port, int value) {
   iORocoData data = Data(roco);
   int valuew = value;
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sw %d %d = %d", addr+1, port, value?"straight":"thrown" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %d", addr+1, port, value?"straight":"thrown" );
 
    {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -212,7 +212,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   __dec2bin( &b3[0], i3);
 
   /* tunout */
-  if ( i0 == 66 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
+  if ( i0 == 0x42 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
     int baseadress = i1;
     int k, start;
 
@@ -232,7 +232,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   /* sensor */
   if ( in[0] == 0x20 ) {
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Roco feedback ...");
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco feedback ...");
 
     int nomodules = ((int) in[1] & 0x0F) - 2;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Connected FB: %d",
@@ -250,7 +250,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
       //  process the inputs:
       for (l = 0; l < 8; l++) {
         if( sensorstate[count] != b0[7-l] ) {
-          __handleSensor(roco, k*8+l, b0[7-l]);
+          __handleSensor(roco, k*8+l+1, b0[7-l]);
           sensorstate[count] = b0[7-l];
         }
         count++;
@@ -298,12 +298,11 @@ static Boolean __sendRequest( iORoco roco, byte* outin ) {
   }
   out[len-1] = bXor;
 
-  // NO XOR
-  if ( (out[0] == 0x10) || // OK-byte
-       (out[0] == 0x40 && out[1] == 0xF0 && out[2] == 0xF0) )
-    len--;
+  // NO XOR for ok byte
+  if ( out[0] == 0x10 )
+    len = 1;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OUT: 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "OUT: 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
       out[0], out[1], out[2], out[3], out[4], out[5], out[6], len);
 
   // write out
@@ -332,21 +331,18 @@ static void __initializer( void* threadinst ) {
 
 
   // tree times the confirmation
-  for (i=0; i<3; i++) {
-    byte* outa = allocMem(256);
-    outa[0] = 1;
-    outa[1] = 0x10;
-    ThreadOp.post( data->transactor, (obj)outa );
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** %d times the confirmation...", i+1 );
-  }
+  byte* outa = allocMem(256);
+  outa[0] = 1;
+  outa[1] = 0x10;
+  ThreadOp.post( data->transactor, (obj)outa );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** send confirmation. until response or 6 times");
 
   // put off programming track
-  byte* outa = allocMem(256);
-  outa[0] = 3;
-  outa[1] = 0x40;
-  outa[2] = 0xF0;
-  outa[3] = 0xF0;
-  ThreadOp.post( data->transactor, (obj)outa );
+  byte* outa0 = allocMem(256);
+  outa0[0] = 2;
+  outa0[1] = 0x40;
+  outa0[2] = 0xF0;
+  ThreadOp.post( data->transactor, (obj)outa0 );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** put off programming track..." );
 
 
@@ -367,9 +363,9 @@ static void __initializer( void* threadinst ) {
   outb[0] = 3;
   outb[1] = 0x21;
   outb[2] = 0xf1;
-  outb[3] = 0x01;
+  outb[3] = data->readfb ? 0x01:0x00;
   ThreadOp.post( data->transactor, (obj)outb );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** set sensor repeat at rate 1 ..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** set sensor repeat at rate %d", outb[3] );
 
   // Infobyte FB
   byte* oute = allocMem(256);
@@ -393,16 +389,15 @@ static void __initializer( void* threadinst ) {
 
   // Global Power ON
   byte* outc = allocMem(256);
-  outc[0] = 4;
+  outc[0] = 3;
   outc[1] = 0x00;
   outc[2] = 0x21;
   outc[3] = 0x81;
-  outc[4] = 0xA0;
   ThreadOp.post( data->transactor, (obj)outc );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** Global Power ON ..." );
 
 
-  //00 F0 F0
+  //00 F0 F0, gives response 00 02 16 80 90
   byte* outc1 = allocMem(256);
   outc1[0] = 2;
   outc1[1] = 0x00;
@@ -412,9 +407,10 @@ static void __initializer( void* threadinst ) {
 
   //00 21
   byte* outc2 = allocMem(256);
-  outc2[0] = 2;
+  outc2[0] = 3;
   outc2[1] = 0x00;
   outc2[2] = 0x21;
+  outc2[3] = 0x21;
   ThreadOp.post( data->transactor, (obj)outc2 );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** sending: 00 21 ..." );
 
@@ -429,7 +425,7 @@ static void __initializer( void* threadinst ) {
   ThreadOp.post( data->transactor, (obj)outc3 );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** sending: 00 F3 0B 00 00 ..." );
 
-  //00 E3 00 00 03 E0
+  /*00 E3 00 00 03 E0 not found in rocomotion sniffer trace
   byte* outc4 = allocMem(256);
   outc4[0] = 5;
   outc4[1] = 0x00;
@@ -439,6 +435,7 @@ static void __initializer( void* threadinst ) {
   outc4[5] = 0x00;
   ThreadOp.post( data->transactor, (obj)outc4 );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** sending: 00 E3 00 00 03 ..." );
+  */
 
   // Setting no of fb in group 0 to %X
   byte* outd = allocMem(256);
@@ -448,7 +445,7 @@ static void __initializer( void* threadinst ) {
   outd[3] = 0x00;
   outd[4] = data->fbmod;
   ThreadOp.post( data->transactor, (obj)outd );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "*** Setting no of fb in group 0 to %X ...", outd[4] );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** Setting no of fb in group 0 to %X ...", outd[4] );
 
    // Setting no of fb in group 1 to %X //TODO
   byte* outg = allocMem(256);
@@ -505,7 +502,7 @@ static void __transactor( void* threadinst ) {
           out[0], out[1], out[2], out[3], out[4], out[5], out[6]);
 
         responceRecieved = !__sendRequest( roco, out );
-      }
+        }
     } else {
       if( post != NULL && numtries > 0) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command again %d ...", numtries );
@@ -542,10 +539,11 @@ static void __transactor( void* threadinst ) {
           bXor ^= in[i];
         }
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IN:  0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X",
-          in[0], in[1], in[2], in[3], in[4], in[5], in[6]);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "IN:  0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X %d",
+          in[0], in[1], in[2], in[3], in[4], in[5], in[6], datalen+1);
 
-        if( bXor != in[datalen]) {
+        if( bXor != in[datalen] && !( in[0] == 0x00 && in[1] == 0x02 && in[2] == 0x16 && in[3] == 0x80 && in[4] == 0x90 )) {
+          // message 00 02 16 80 90 is response to 00 F0 F0 initialisation and comes without xor
            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "xor bytes are not equal!" );
              continue;
         }
@@ -556,12 +554,15 @@ static void __transactor( void* threadinst ) {
 
         // handshake
         if( in[0] == 0x00 && in[1] == 0x01 && in[2] == 0x00) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco handshake ...");
-          if( !data->dummyio ) {
-            byte confirm = 0x10;
-            SerialOp.write( data->serial, (char*)&confirm, 1 );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Roco command received without error");
+          if( !data->dummyio )
             responceRecieved = True;
-          }
+        }
+
+        // undocumented response to undocumented 00 F0 F0 initialisation command
+        else if( in[0] == 0x00 && in[1] == 0x02 && in[2] == 0x16 && in[3] == 0x80 && in[4] == 0x90 ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "00 F0 F0 response");
+          responceRecieved = True;
         }
 
         /* INCOMING COMMANDS */
@@ -577,11 +578,11 @@ static void __transactor( void* threadinst ) {
         }
         // CS busy
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x81){
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... try again");
+           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... trying again");
         }
         // XOR error
         else if ( in[0] == 0x00 && in[1] == 0x01 && in[2] == 0x01){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XOR error");
+           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "XOR error");
         }
         // Command not known
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x82){
@@ -614,7 +615,7 @@ static void __transactor( void* threadinst ) {
            responceRecieved = True;
         }
 
-        // anything will go to rocgui ...
+        // anything will go to rocview ...
         __evaluateResponse( roco, in, datalen );
 
       }
@@ -640,6 +641,8 @@ static void __translate( iORoco roco, iONode node ) {
 
     if( port == 0 )
       fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      fromPADA( port, &addr, &port );
 
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
@@ -653,9 +656,16 @@ static void __translate( iORoco roco, iONode node ) {
     outb[1] = 0x00;
     outb[2] = 0x52;
     outb[3] = addr;
-    outb[4] = 0x80 | 0x00 | (port << 1) | gate1;
+    outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //deactivate gate first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
     ThreadOp.post( data->transactor, (obj)outb );
 
+    byte* outbb = allocMem(256);
+    outbb[0] = 4;
+    outbb[1] = 0x00;
+    outbb[2] = 0x52;
+    outbb[3] = addr;
+    outbb[4] = 0x90 | 0x00 | (port << 1) | gate1;  //activate gate
+    ThreadOp.post( data->transactor, (obj)outbb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
         addr+1, port+1, wSwitch.getcmd( node ) );
@@ -671,6 +681,8 @@ static void __translate( iORoco roco, iONode node ) {
 
     if( port == 0 )
       fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      fromPADA( port, &addr, &port );
 
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
@@ -684,7 +696,7 @@ static void __translate( iORoco roco, iONode node ) {
     outb[1] = 0x00;
     outb[2] = 0x52;
     outb[3] = addr;
-    outb[4] = 0x80 | action1 | (port << 1) | gate;
+    outb[4] = 0x90 | action1 | (port << 1) | gate;  //same nibble story as with the turnouts
     ThreadOp.post( data->transactor, (obj)outb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s",
@@ -704,13 +716,13 @@ static void __translate( iORoco roco, iONode node ) {
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
 
-    int reqid = 0x10; /* default 14 speed steps */
+    int reqid = 0x12; /* default 28 speed steps */
     switch( spcnt ) {
       case 27:
         reqid = 0x11;
         break;
-      case 28:
-        reqid = 0x12;
+      case 14:
+        reqid = 0x10;
         break;
       case 127:
       case 128:
@@ -718,8 +730,8 @@ static void __translate( iORoco roco, iONode node ) {
         spcnt = 127;
         break;
       default:
-        reqid = 0x10;
-        spcnt = 14;
+        reqid = 0x12;
+        spcnt = 28;
         break;
     }
     /*
@@ -785,7 +797,7 @@ static void __translate( iORoco roco, iONode node ) {
     byte* outb = allocMem(256);
     outb[0] = 6;
     outb[1] = 0x00;
-    outb[2] = 0xE4;
+    outb[2] = 0xE4; // rocomotion traces sometimes show E5 against E4 with additional 7th byte contianing 02 or 03, but working with E4
     outb[3] = reqid;
     __setLocAddr( addr, outb+4 );
     outb[6] = dir ? 0x80:0x00;
@@ -797,6 +809,7 @@ static void __translate( iORoco roco, iONode node ) {
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
+    int   fncnt = wLoc.getfncnt( node ); //Lokmaus does not support 12 functions, Multimaus does, check number of functions of loco and decide wether or not to send function groups 2 and 3 accordingly
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
     Boolean f2 = wFunCmd.isf2( node );
@@ -814,7 +827,17 @@ static void __translate( iORoco roco, iONode node ) {
     byte functions2 = (f5?0x01:0) + (f6?0x02:0) + (f7?0x04:0) + (f8?0x08:0);
     byte functions3 = (f9?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+    if ( fncnt <=4 )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function %d light=%s f1=%s f2=%s f3=%s f4=%s",
+        addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF") );
+    else if ( fncnt <= 8 )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
+        addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
+        (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF") );
+    else
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
         addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
@@ -830,25 +853,29 @@ static void __translate( iORoco roco, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
     ThreadOp.post( data->transactor, (obj)outa );
 
-    byte* outb = allocMem(256);
-    outb[0] = 6;
-    outb[1] = 0x00;
-    outb[2] = 0xE4;
-    outb[3] = 0x21;
-    __setLocAddr( addr, outb+4 );
-    outb[6] = functions2;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
-    ThreadOp.post( data->transactor, (obj)outb );
+    if ( fncnt >= 5 ) {
+      byte* outb = allocMem(256);
+      outb[0] = 6;
+      outb[1] = 0x00;
+      outb[2] = 0xE4;
+      outb[3] = 0x21;
+      __setLocAddr( addr, outb+4 );
+      outb[6] = functions2;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
+      ThreadOp.post( data->transactor, (obj)outb );
+    }
 
-    byte* outc = allocMem(256);
-    outc[0] = 6;
-    outc[1] = 0x00;
-    outc[2] = 0xE4;
-    outc[3] = 0x22;
-    __setLocAddr( addr, outc+4 );
-    outc[6] = functions3;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
-    ThreadOp.post( data->transactor, (obj)outc );
+    if ( fncnt >= 9 ) {
+      byte* outc = allocMem(256);
+      outc[0] = 6;
+      outc[1] = 0x00;
+      outc[2] = 0xE4;
+      outc[3] = 0x22;
+      __setLocAddr( addr, outc+4 );
+      outc[6] = functions3;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
 
     /* save the function1 byte to use for setting the lights function... */
     data->lcfn[addr] = functions1;
@@ -860,23 +887,21 @@ static void __translate( iORoco roco, iONode node ) {
 
     byte* outa = allocMem(256);
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
-      outa[0] = 4;
+      outa[0] = 3;
       outa[1] = 0x00;
       outa[2] = 0x21;
       outa[3] = 0x80;
-      outa[4] = 0xA1;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      outa[0] = 4;
+      outa[0] = 3;
       outa[1] = 0x00;
       outa[2] = 0x21;
       outa[3] = 0x81;
-      outa[4] = 0xA0;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      ThreadOp.post( data->transactor, (obj)outa );
     }
-
-    ThreadOp.post( data->transactor, (obj)outa );
   }
 
     /* Program command. */
@@ -930,8 +955,9 @@ static void __translate( iORoco roco, iONode node ) {
 
       } else {
 
-        if (cv > 0) cv--;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
+
+        if (cv > 0) cv--;
 
         byte* outa = allocMem(256);
         outa[0] = 6;
@@ -951,10 +977,9 @@ static void __translate( iORoco roco, iONode node ) {
     }  // PT off, send: All ON"
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       byte* outb = allocMem(256);
-      outb[0] = 3;
+      outb[0] = 2;
       outb[1] = 0x40;
       outb[2] = 0xF0;
-      outb[3] = 0xF0;
       ThreadOp.post( data->transactor, (obj)outb );
     }
   }
@@ -977,7 +1002,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 1;
-static int vminor = 2;
+static int vminor = 3;
 static int patch  = 0;
 static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;

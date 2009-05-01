@@ -158,6 +158,17 @@ static const char* _getLibPath( void ) {
   return NULL;
 }
 
+static const char* _getImgPath( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    if( data->szImgPath == NULL )
+      return wRocRail.getimgpath(AppOp.getIni());
+    else
+      return data->szImgPath;
+  }
+  return NULL;
+}
+
 static int _getrevno( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);
@@ -326,6 +337,7 @@ static __help( void ) {
   TraceOp.println( "-nocom                   | Switch off communication." );
   TraceOp.println( "-w [workdir]             | Change the programs working directory." );
   TraceOp.println( "-l [libdir]              | Library directory." );
+  TraceOp.println( "-img [imgdir]            | Images directory." );
   TraceOp.println( "-p [portnr]              | Service port for clients. [%d]", wTcp.getport(NULL) );
   TraceOp.println( "-i [inifile]             | Ini file. [%s].", wRocRail.getfile(NULL) );
   TraceOp.println( "-t [tracefile]           | Ini file. [%s].", wTrace.getrfile(NULL) );
@@ -467,6 +479,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   data->stress        = CmdLnOp.hasKey( arg, wCmdline.stress );
   data->createmodplan = CmdLnOp.hasKey( arg, wCmdline.modplan );
   data->szLibPath     = CmdLnOp.getStr( arg, wCmdline.libpath );
+  data->szImgPath     = CmdLnOp.getStr( arg, wCmdline.imgpath );
 
   /* change the programs working directory */
   if( wd != NULL ) {

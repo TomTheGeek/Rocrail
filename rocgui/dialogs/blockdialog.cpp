@@ -87,6 +87,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_BK_LOCPROPS, BlockDialog::OnButtonBkLocpropsClick )
 
+    EVT_CHECKBOX( wxID_BLOCK_WAIT, BlockDialog::OnBlockWaitClick )
+
     EVT_LISTBOX( ID_LISTBOX_BLOCK_TURNOUTS, BlockDialog::OnListboxBlockTurnoutsSelected )
 
     EVT_BUTTON( ID_BUTTON_BLOCK_ADD_TURNOUT, BlockDialog::OnButtonBlockAddTurnoutClick )
@@ -100,6 +102,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_BK_SIGNAL_R, BlockDialog::OnButtonBkSignalRClick )
 
     EVT_BUTTON( ID_BUTTON_BK_WSIGNAL_R, BlockDialog::OnButtonBkWsignalRClick )
+
+    EVT_RADIOBOX( ID_RADIOBOX_BK_WAIT, BlockDialog::OnRadioboxBkWaitSelected )
 
     EVT_LISTBOX( ID_LISTBOX_BK_ROUTES, BlockDialog::OnListboxBkRoutesSelected )
 
@@ -388,9 +392,9 @@ void BlockDialog::initLabels() {
   m_ForwardSignalsBox->SetLabel( wxGetApp().getMsg( "forwardsignals" ) );
   m_ReverseSignalsBox->SetLabel( wxGetApp().getMsg( "reversesignals" ) );
   m_LabelSignal->SetLabel( wxGetApp().getMsg( "signal" ) );
-  m_LabelWSignal->SetLabel( wxGetApp().getMsg( "distantsignal" ) );
+  m_LabelWSignal->SetLabel( wxGetApp().getMsg( "distant_signal" ) );
   m_LabelSignalR->SetLabel( wxGetApp().getMsg( "signal" ) );
-  m_LabelWSignalR->SetLabel( wxGetApp().getMsg( "distantsignal" ) );
+  m_LabelWSignalR->SetLabel( wxGetApp().getMsg( "distant_signal" ) );
 
   // Initialize sorted Signal Combos
   initSignalCombos();
@@ -424,6 +428,7 @@ void BlockDialog::initLabels() {
   m_Wait->SetString( 0, wxGetApp().getMsg( "random" ) );
   m_Wait->SetString( 1, wxGetApp().getMsg( "fixed" ) );
   m_Wait->SetString( 2, wxGetApp().getMsg( "loc" ) );
+  m_Wait->SetString( 3, wxGetApp().getMsg( "no" ) );
   m_WaitDetails->GetStaticBox()->SetLabel( wxGetApp().getMsg( "waitdetails" ) );
   m_LabelRandomMin->SetLabel( wxGetApp().getMsg( "randommin" ) );
   m_LabelRandomMax->SetLabel( wxGetApp().getMsg( "randommax" ) );
@@ -642,6 +647,8 @@ void BlockDialog::initValues() {
     wait = 1;
   else if( StrOp.equals( wBlock.wait_loc, wBlock.getwaitmode( m_Props ) ) )
     wait = 2;
+  if( !wBlock.iswait(m_Props) )
+    wait = 3;
   m_Wait->SetSelection( wait );
 
   val.Printf( _T("%d"), wBlock.getminwaittime( m_Props ) );
@@ -730,10 +737,15 @@ void BlockDialog::initValues() {
 
 }
 
-void BlockDialog::evaluate() {
+bool BlockDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
 
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wBlock.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
   // General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wBlock.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -859,6 +871,9 @@ void BlockDialog::evaluate() {
     wBlock.setwaitmode( m_Props, wBlock.wait_fixed );
   else if( m_Wait->GetSelection() == 2 )
     wBlock.setwaitmode( m_Props, wBlock.wait_loc );
+  else
+    wBlock.setwait( m_Props, False );
+
 
   wBlock.setminwaittime( m_Props, atoi( m_RandomMin->GetValue().mb_str(wxConvUTF8) ) );
   wBlock.setmaxwaittime( m_Props, atoi( m_RandomMax->GetValue().mb_str(wxConvUTF8) ) );
@@ -964,7 +979,7 @@ void BlockDialog::evaluate() {
   }
   ListOp.base.del(delList);
 
-
+  return true;
 }
 
 /*!
@@ -1227,7 +1242,7 @@ void BlockDialog::CreateControls()
     m_Closed->SetValue(false);
     itemBoxSizer29->Add(m_Closed, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    m_WaitFlag = new wxCheckBox( m_General_Panel, wxID_ANY, _("Wait"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_WaitFlag = new wxCheckBox( m_General_Panel, wxID_BLOCK_WAIT, _("Wait"), wxDefaultPosition, wxDefaultSize, 0 );
     m_WaitFlag->SetValue(false);
     itemBoxSizer29->Add(m_WaitFlag, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
@@ -1382,7 +1397,7 @@ void BlockDialog::CreateControls()
     m_TypeStrings.Add(_("&turntable"));
     m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_COLS );
     m_Type->SetSelection(0);
-    itemFlexGridSizer78->Add(m_Type, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer78->Add(m_Type, 0, wxGROW|wxALIGN_TOP|wxALL, 5);
 
     wxArrayString m_InclineStrings;
     m_InclineStrings.Add(_("&none"));
@@ -1390,15 +1405,16 @@ void BlockDialog::CreateControls()
     m_InclineStrings.Add(_("&down"));
     m_Incline = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_INCLINE, _("Incline"), wxDefaultPosition, wxDefaultSize, m_InclineStrings, 1, wxRA_SPECIFY_COLS );
     m_Incline->SetSelection(0);
-    itemFlexGridSizer78->Add(m_Incline, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer78->Add(m_Incline, 0, wxGROW|wxALIGN_TOP|wxALL, 5);
 
     wxArrayString m_WaitStrings;
     m_WaitStrings.Add(_("&random"));
     m_WaitStrings.Add(_("&fixed"));
     m_WaitStrings.Add(_("&loc"));
+    m_WaitStrings.Add(_("&no"));
     m_Wait = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_WAIT, _("Wait"), wxDefaultPosition, wxDefaultSize, m_WaitStrings, 1, wxRA_SPECIFY_COLS );
     m_Wait->SetSelection(0);
-    itemFlexGridSizer78->Add(m_Wait, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer78->Add(m_Wait, 0, wxGROW|wxALIGN_TOP|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer82 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer77->Add(itemBoxSizer82, 0, wxALIGN_LEFT|wxALL, 5);
@@ -1797,7 +1813,9 @@ void BlockDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -2052,6 +2070,7 @@ void BlockDialog::initSensorCombos() {
     acts[i]->Append( wxString(wFeedbackEvent.pre2in_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.occupied_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.ident_event,wxConvUTF8) );
+    acts[i]->Append( wxString(wFeedbackEvent.shortin_event,wxConvUTF8) );
   }
 
   iONode model = wxGetApp().getModel();
@@ -2309,5 +2328,36 @@ void BlockDialog::OnButtonBkWsignalClick( wxCommandEvent& event )
     // Before editing this code, remove the block markers.
     event.Skip();
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BK_WSIGNAL in BlockDialog.
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_BLOCK_WAIT
+ */
+
+void BlockDialog::OnBlockWaitClick( wxCommandEvent& event )
+{
+  int wait = 0;
+  if( !m_WaitFlag->GetValue() )
+    wait = 3;
+  else {
+    if( StrOp.equals( wBlock.wait_random, wBlock.getwaitmode( m_Props ) ) )
+      wait = 0;
+    else if( StrOp.equals( wBlock.wait_fixed, wBlock.getwaitmode( m_Props ) ) )
+      wait = 1;
+    else if( StrOp.equals( wBlock.wait_loc, wBlock.getwaitmode( m_Props ) ) )
+      wait = 2;
+  }
+  m_Wait->SetSelection( wait );
+}
+
+
+/*!
+ * wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX_BK_WAIT
+ */
+
+void BlockDialog::OnRadioboxBkWaitSelected( wxCommandEvent& event )
+{
+  m_WaitFlag->SetValue(m_Wait->GetSelection() != 3);
 }
 

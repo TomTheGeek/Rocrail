@@ -22,6 +22,7 @@ mkdir -p debian/opt/rocrail/default
 mkdir -p debian/opt/rocrail/icons
 mkdir -p debian/opt/rocrail/stylesheets
 mkdir -p debian/opt/rocrail/symbols
+mkdir -p debian/opt/rocrail/images
 mkdir -p debian/opt/rocrail/svg
 mkdir -p debian/usr/share/applications
 mkdir -p debian/usr/share/desktop-directories
@@ -30,11 +31,11 @@ mkdir -p debian/etc/init.d
 cp ../rocrail/package/control debian/DEBIAN
 
 cp ../unxbin/rocrail debian/opt/rocrail
-cp ../unxbin/rocgui debian/opt/rocrail
+cp ../unxbin/rocview debian/opt/rocrail
 cp ../unxbin/*.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocrail
-strip debian/opt/rocrail/rocgui
+strip debian/opt/rocrail/rocview
 strip debian/opt/rocrail/*.so
 
 cp ../rocrail/package/Rocrail.directory debian/usr/share/desktop-directories
@@ -48,6 +49,7 @@ cp -u ../rocrail/package/roc*.ini debian/opt/rocrail/default
 cp -u ../rocrail/package/plan.xml debian/opt/rocrail/default
 cp -u ../rocrail/package/neustadt.xml debian/opt/rocrail/default
 
+cp -R ../rocrail/package/images/*.* debian/opt/rocrail/images
 cp -R ../rocgui/icons/*.* debian/opt/rocrail/icons
 cp -R ../stylesheets/*.* debian/opt/rocrail/stylesheets
 cp -R ../rocgui/svg/* debian/opt/rocrail/svg

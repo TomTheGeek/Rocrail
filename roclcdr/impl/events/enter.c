@@ -65,9 +65,9 @@ void eventEnter( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Bo
 
   if( newEnterEvent ) {/* check if the exitblock or outblock state are able to get active: */
     Boolean dontcare = False;
-    if( data->state == LC_GO || data->state == LC_CHECKROUTE )
+    if( data->state == LC_GO || data->state == LC_PRE2GO || data->state == LC_CHECKROUTE )
       dontcare = True;
-    
+
     if( dstBlockEvent && data->state == LC_EXITBLOCK ||
         dstBlockEvent && data->state == LC_OUTBLOCK ||
         dstBlockEvent && dontcare )
@@ -110,6 +110,6 @@ void eventEnter( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Bo
       }
     }
   }
-  
+
 }
 

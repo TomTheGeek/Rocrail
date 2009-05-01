@@ -1134,6 +1134,12 @@ static const char* _getLoc( iIBlockBase inst ) {
   return "";
 }
 
+static const char* _getInLoc( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  /* TODO: dispatch to active tracke block */
+  return "";
+}
+
 static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, int val, iONode fbevt ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
@@ -1323,6 +1329,13 @@ static int _getVisitCnt( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
   return 0;
 }
+
+static int _getOccTime( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  return 0;
+}
+
+
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/tt.fm"

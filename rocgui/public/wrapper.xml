@@ -29,18 +29,21 @@
     <const name="port" vt="string" val="-p" defval="*" range="*" remark="Specifies target port: -p [port]"/>
     <const name="tabsel" vt="string" val="-s" defval="-1" range="*" remark="Tab index for selection."/>
     <const name="modview" vt="string" val="-modview" defval="false" remark="Activates model overview panel."/>
+    <const name="icons" vt="string" val="-icons" defval="" range="*" remark="Alternative icon path"/>
+    <const name="theme" vt="string" val="-theme" defval="" range="*" remark="Theme to use at startup"/>
   </Cmdline>
 
   <gui structname="GUI" wrappername="Gui">
     <const name="productname" vt="string" val="Rocrail"/>
-    <const name="releasename" vt="string" val="Snapshot"/>
+    <const name="releasename" vt="string" val="snapshot"/>
     <const name="releasesuffix" vt="string" val=""/>
     <const name="vmajor" vt="int" val="1"/>
-    <const name="vminor" vt="int" val="2"/>
+    <const name="vminor" vt="int" val="3"/>
     <const name="patch" vt="int" val="999"/>
     <const name="buildDate" vt="string" val="$__DATE__"/>
     <const name="buildTime" vt="string" val="$__TIME__"/>
-    <const name="inifile" vt="string" val="rocgui.ini"/>
+    <const name="previnifile" vt="string" val="rocgui.ini" remark="previous ini file name"/>
+    <const name="inifile" vt="string" val="rocview.ini"/>
     <const name="lang_english" vt="string" val="en"/>
     <const name="lang_german" vt="string" val="de"/>
     <const name="lang_dutch" vt="string" val="nl"/>
@@ -50,6 +53,8 @@
     <const name="lang_spanish" vt="string" val="es"/>
     <const name="lang_italien" vt="string" val="it"/>
     <const name="lang_danish" vt="string" val="da"/>
+    <const name="lang_czech" vt="string" val="cs"/>
+    <const name="lang_bosnian" vt="string" val="bs"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
@@ -68,6 +73,7 @@
     <var name="modview" vt="bool" defval="false"/>
     <var name="restrictedit4auto" vt="bool" defval="true"/>
     <var name="id" vt="string" defval="rocgui" range="*" remark="Rocgui ID"/>
+    <var name="lncvtab" vt="bool" defval="false"/>
     <trace extern="true"/>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>

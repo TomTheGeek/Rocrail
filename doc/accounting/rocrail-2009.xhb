@@ -5,19 +5,34 @@
  number="3974310" bankname="Postbank" initial="-352.51999999999998" minimum="0"
  cheque1="0" cheque2="0"/>
 <pay key="1" name="Domain Factory"/>
-<pay key="2" name="MayNet"/>
+<pay key="2" name="MAB"/>
+<pay key="3" name="MayNet"/>
+<pay key="4" name="RD-Hobby"/>
 <cat key="1" parent="0" flags="0" name="Domain Registration"/>
 <cat key="2" parent="0" flags="0" name="Hosting"/>
 <cat key="3" parent="0" flags="0" name="Promotion"/>
-<cat key="4" parent="0" flags="2" name="Donation"/>
-<ope date="733409" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="R Berkel en E Berkel-Beentjes"/>
-<ope date="733410" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Hannes Hoerting"/>
-<ope date="733412" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="FIEDLER, STEFAN"/>
-<ope date="733412" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Sbaffi Sergio"/>
-<ope date="733413" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="DIRK ADOLPHS"/>
-<ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Heiner Schacht"/>
-<ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="MAGNIDOFF, JOERN"/>
-<ope date="733423" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Hartmut Neu"/>
-<ope date="733429" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="4" wording="Donation" info="Christian Wichmann"/>
+<cat key="4" parent="0" flags="0" name="Research"/>
+<cat key="5" parent="0" flags="2" name="Donation"/>
+<ope date="733409" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="R Berkel en E Berkel-Beentjes"/>
+<ope date="733410" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hannes Hoerting"/>
+<ope date="733412" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="FIEDLER, STEFAN"/>
+<ope date="733412" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
+<ope date="733413" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="DIRK ADOLPHS"/>
+<ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Heiner Schacht"/>
+<ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MAGNIDOFF, JOERN"/>
+<ope date="733423" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hartmut Neu"/>
+<ope date="733429" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann"/>
+<ope date="733440" amount="-74.900000000000006" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="LodicRail FC" info="Fast Clock"/>
+<ope date="733442" amount="-181.90000000000001" account="0" dst_account="0" paymode="1" flags="1" payee="4" category="4" wording="BDL168, RX4" info="Transponding"/>
+<ope date="733448" amount="-26.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="DH163P" info="Transponding"/>
+<ope date="733448" amount="-46.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="4" wording="DS64" info="Digitrax OptionSwitches"/>
 <ope date="733450" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="1" category="2" wording="6 Months Hosting" info="ManagedHosting S"/>
+<ope date="733454" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MATTHIAS VENNEKOTTER"/>
+<ope date="733455" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="HASELSTEINER, MARIO"/>
+<ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO"/>
+<ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST"/>
+<ope date="733472" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
+<ope date="733481" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann"/>
+<ope date="733489" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG"/>
+<ope date="733491" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto"/>
 </homebank>

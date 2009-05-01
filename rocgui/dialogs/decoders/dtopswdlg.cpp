@@ -92,7 +92,7 @@ void DTOpSwDlg::onReadAll( wxCommandEvent& event ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setlntype( cmd, wProgram.lntype_opsw );
     wProgram.setcmd( cmd, wProgram.lncvget );
-    wProgram.setaddr( cmd, addr );
+    wProgram.setaddr( cmd, addr-1 );
     wProgram.setmodid( cmd, DT_msgType[selectedBoard] );
     wProgram.setcv( cmd, DT_idxOpSw[selectedBoard][idx] );
     QueueOp.post( m_Queue, (obj)cmd, normal );
@@ -125,7 +125,7 @@ void DTOpSwDlg::onWriteAll( wxCommandEvent& event ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setlntype( cmd, wProgram.lntype_opsw );
     wProgram.setcmd( cmd, wProgram.lncvset );
-    wProgram.setaddr( cmd, addr );
+    wProgram.setaddr( cmd, addr-1 );
     wProgram.setmodid( cmd, DT_msgType[selectedBoard] );
     wProgram.setcv( cmd, DT_idxOpSw[selectedBoard][idx] );
     wProgram.setvalue( cmd, m_OpSwList->IsChecked(idx) ? 1:0 );

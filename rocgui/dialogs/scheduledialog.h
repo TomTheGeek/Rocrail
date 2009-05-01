@@ -30,8 +30,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/grid.h"
 #include "wx/spinctrl.h"
+#include "wx/grid.h"
 ////@end includes
 
 #include "basedlg.h"
@@ -45,8 +45,8 @@
 
 ////@begin forward declarations
 class wxNotebook;
-class wxGrid;
 class wxSpinCtrl;
+class wxGrid;
 ////@end forward declarations
 
 /*!
@@ -65,6 +65,8 @@ class wxSpinCtrl;
 #define ID_PANEL_SCHEDULE_DESTINATIONS 10293
 #define wxID_STATIC_SCHEDULE_ID 10308
 #define ID_TEXTCTRL_SCHEDULE_ID 10307
+#define ID_SCHEDULE_FROMHOUR 10379
+#define ID_SC_TIMEPROCESSING 10204
 #define ID_GRID_SCHEDULE 10000
 #define ID_STATICTEXT_SCHEDULE_FROM 10001
 #define ID_STATICTEXT_SCHEDULE_TO 10002
@@ -149,6 +151,12 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SCHEDULE_ID
     void OnTextctrlScheduleIdUpdated( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SCHEDULE_FROMHOUR
+    void OnScheduleFromhourUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SC_TIMEPROCESSING
+    void OnScTimeprocessingSelected( wxCommandEvent& event );
+
     /// wxEVT_GRID_CELL_LEFT_CLICK event handler for ID_GRID_SCHEDULE
     void OnCellLeftClick( wxGridEvent& event );
 
@@ -218,7 +226,13 @@ public:
     wxPanel* m_Destinations;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;
-    wxCheckBox* m_RelativeTime;
+    wxStaticText* m_labTimeFrame;
+    wxSpinCtrl* m_TimeFrame;
+    wxStaticText* m_labFromHour;
+    wxSpinCtrl* m_FromHour;
+    wxStaticText* m_labToHour;
+    wxSpinCtrl* m_ToHour;
+    wxRadioBox* m_TimeProcessing;
     wxGrid* m_Entries;
     wxStaticText* m_LabelLocation;
     wxStaticText* m_LabelBlock;

@@ -1,9 +1,9 @@
 Package: rocrail
 Version: 1.2.0
-Section: games
+Section: other
 Priority: optional
 Architecture: i386
 Depends: libwxgtk2.8-0
 Maintainer: Rob Versluis <support@rocrail.net>
-Description: C/C++ Control Viewing Program for a Digital Model Railroad in Manual and Automatic Mode. Supported Multiple Controllers: Marklin 6050 IntelliBox P50x SRCP HSI88 Dinamo OM32 Lenz Selectrix Zimo ECoS Loconet. Linux and Windows. MinGW compatible.    
+Description: Rocrail - Model Railroad Control System.    
 

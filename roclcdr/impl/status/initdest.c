@@ -86,8 +86,6 @@ void statusInitDest( iILcDriverInt inst ) {
         data->next1Block->link( data->next1Block, data->curBlock );
       }
 
-      checkRouteFunction(inst, data->next1Route, data->next1Block);
-
       if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
         reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route,
                                   &data->next2Block, &data->next2Route );

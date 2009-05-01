@@ -230,7 +230,7 @@ static const char* __checkFbState( iOSwitch inst ) {
     currentState = wSwitch.right;
 
   /* report */
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
     "Switch[%s] current state [%s], reported state [%s]",
     SwitchOp.getId( inst ), wSwitch.getstate( data->props), currentState );
 
@@ -242,8 +242,10 @@ static const char* __checkFbState( iOSwitch inst ) {
 static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
   iOSwitchData data = Data(inst);
   const char* strState = __checkFbState( (iOSwitch)inst );
+  Boolean isSet = True;
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
+    isSet = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "Switch[%s] current state [%s], reported state [%s]",
       SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
@@ -252,7 +254,9 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int va
   {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( (iOSwitch)inst ) );
+    wSwitch.setset( nodeF, isSet );
     wSwitch.setstate( nodeF, strState );
+    wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
     if( wSwitch.getiid( data->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( data->props ) );
     if( data->lockedId != NULL )
@@ -339,6 +343,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
       iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeF, wSwitch.getstate( data->props ) );
+      wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       if( data->lockedId != NULL )
         wSwitch.setlocid( nodeF, data->lockedId );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
@@ -362,6 +367,7 @@ static Boolean _unLock( iOSwitch inst, const char* id ) {
       iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeF, wSwitch.getstate( data->props ) );
+      wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       wSwitch.setlocid( nodeF, wSwitch.unlocked );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
     }
@@ -441,7 +447,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
-  const char* state = wSwitch.getcmd( nodeA );
+  const char* state     = wSwitch.getcmd( nodeA );
+  const char* prevstate = wSwitch.getcmd( o->props );
   Boolean inv1 = wSwitch.isinv( o->props );
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
@@ -663,12 +670,26 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
 
   __checkAction( inst );
 
+  /* both strings can be compared by pointer because they both are of qualifier const */
+  if( prevstate != state ) {
+    /* increase the switch counter */
+    int switched = wSwitch.getswitched(o->props);
+    switched++;
+    wSwitch.setswitched(o->props, switched);
+  }
+
+
   /* Broadcast to clients. Node6 */
 
-  if( update && !(o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel())) ) {
+  if( update ) {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
     wSwitch.setstate( nodeF, wSwitch.getstate( o->props ) );
+    wSwitch.setswitched( nodeF, wSwitch.getswitched( o->props ) );
+
+    if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
+      wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
+
     if( wSwitch.getiid( o->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( o->props ) );
     if( o->lockedId != NULL )
@@ -886,6 +907,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       iONode nodeD = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( nodeD, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeD, wSwitch.getstate( data->props) );
+      wSwitch.setswitched( nodeD, wSwitch.getswitched( data->props ) );
       wSwitch.setaddr1( nodeD, wSwitch.getaddr1( data->props ) );
       wSwitch.setport1( nodeD, wSwitch.getport1( data->props ) );
       if( has2Units ) {

@@ -52,8 +52,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->state = LC_IDLE;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_ENTERBLOCK to LC_IDLE.",
-                   data->loc->getId( data->loc ) );
+                   "Setting state for \"%s\" from %s to LC_IDLE.",
+                   data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
     return;
   }
 
@@ -88,6 +88,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     }
     else {
       Boolean wait = False;
+      int scheduleIdx = data->scheduleIdx;
       /* find destination using schedule */
       if( data->next2Route == NULL ) {
         data->next2Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL,
@@ -98,12 +99,22 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       else {
         /* next2Route already locked by second next option; adjust the schedule index... */
         data->scheduleIdx += 1;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "adjust the schedule index to %d for second next option", data->scheduleIdx );
       }
 
       if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
           !checkScheduleTime( inst, data->schedule, data->scheduleIdx ) )
       {
         wait = True;
+
+        if( scheduleIdx != data->scheduleIdx ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "schedule index changed from %d to %d", scheduleIdx, data->scheduleIdx );
+          data->prewaitScheduleIdx = scheduleIdx;
+        }
+      }
+      else {
+        data->prewaitScheduleIdx = -1;
       }
 
       if( !wait && data->next2Route != NULL ) {
@@ -171,21 +182,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
         wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Setting state for \"%s\" from LC_ENTERBLOCK to LC_WAIT4EVENT.",
-                       data->loc->getId( data->loc ) );
-
-        checkRouteFunction(inst, data->next2Route, data->next2Block );
-        /*
-        if( StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) ||
-            data->next2Route->hasThrownSwitch(data->next1Route) ) {
-          data->next1Block->yellow( data->next1Block, True, !dir );
-          data->next1Block->yellow( data->next1Block, False, !dir );
-        }
-        else {
-          data->next1Block->green( data->next1Block, True, !dir );
-          data->next1Block->green( data->next1Block, False, !dir );
-        }
-        */
+                       "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
+                       data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
         if( !data->gomanual ) {
           if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
@@ -194,7 +192,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
             wLoc.setV_hint( cmd, wLoc.climb );
           }
           else {
-            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route ) );
+            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route ) );
           }
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );
@@ -259,8 +257,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->signalReset  = 0;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_ENTERBLOCK to LC_WAIT4EVENT.",
-                   data->loc->getId( data->loc ) );
+                   "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
+                   data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
   }
 
 

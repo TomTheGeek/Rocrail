@@ -131,10 +131,17 @@ void LC::funCmd()
   wLoc.setfx(m_LocProps,
       (m_bFx[ 0]?0x0001:0x00) | (m_bFx[ 1]?0x0002:0x00) | (m_bFx[ 2]?0x0004:0x00) | (m_bFx[ 3]?0x0008:0x00) |
       (m_bFx[ 4]?0x0010:0x00) | (m_bFx[ 5]?0x0020:0x00) | (m_bFx[ 6]?0x0040:0x00) | (m_bFx[ 7]?0x0080:0x00) |
-      (m_bFx[ 8]?0x0100:0x00) | (m_bFx[ 9]?0x0200:0x00) | (m_bFx[10]?0x0400:0x00) | (m_bFx[11]?0x0800:0x00)
+      (m_bFx[ 8]?0x0100:0x00) | (m_bFx[ 9]?0x0200:0x00) | (m_bFx[10]?0x0400:0x00) | (m_bFx[11]?0x0800:0x00) |
+
+      (m_bFx[12]?0x00001000:0x00) | (m_bFx[13]?0x00002000:0x00) | (m_bFx[14]?0x00004000:0x00) | (m_bFx[15]?0x00008000:0x00) |
+      (m_bFx[16]?0x00010000:0x00) | (m_bFx[17]?0x00020000:0x00) | (m_bFx[18]?0x00040000:0x00) | (m_bFx[19]?0x00080000:0x00) |
+      (m_bFx[20]?0x00100000:0x00) | (m_bFx[21]?0x00200000:0x00) | (m_bFx[22]?0x00400000:0x00) | (m_bFx[23]?0x00800000:0x00) |
+      (m_bFx[24]?0x01000000:0x00) | (m_bFx[25]?0x02000000:0x00) | (m_bFx[26]?0x04000000:0x00) | (m_bFx[27]?0x08000000:0x00)
       );
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setgroup ( cmd, m_iFnGroup + 1 );
+  wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_LocProps ) );
   wFunCmd.setid ( cmd, wLoc.getid( m_LocProps ) );
   wFunCmd.setf0 ( cmd, m_bFn?True:False );
   wFunCmd.setf1 ( cmd, m_bFx[ 0]?True:False );
@@ -149,6 +156,22 @@ void LC::funCmd()
   wFunCmd.setf10( cmd, m_bFx[ 9]?True:False );
   wFunCmd.setf11( cmd, m_bFx[10]?True:False );
   wFunCmd.setf12( cmd, m_bFx[11]?True:False );
+  wFunCmd.setf13( cmd, m_bFx[12]?True:False );
+  wFunCmd.setf14( cmd, m_bFx[13]?True:False );
+  wFunCmd.setf15( cmd, m_bFx[14]?True:False );
+  wFunCmd.setf16( cmd, m_bFx[15]?True:False );
+  wFunCmd.setf17( cmd, m_bFx[16]?True:False );
+  wFunCmd.setf18( cmd, m_bFx[17]?True:False );
+  wFunCmd.setf19( cmd, m_bFx[18]?True:False );
+  wFunCmd.setf20( cmd, m_bFx[19]?True:False );
+  wFunCmd.setf21( cmd, m_bFx[20]?True:False );
+  wFunCmd.setf22( cmd, m_bFx[21]?True:False );
+  wFunCmd.setf23( cmd, m_bFx[22]?True:False );
+  wFunCmd.setf24( cmd, m_bFx[23]?True:False );
+  wFunCmd.setf25( cmd, m_bFx[24]?True:False );
+  wFunCmd.setf26( cmd, m_bFx[25]?True:False );
+  wFunCmd.setf27( cmd, m_bFx[26]?True:False );
+  wFunCmd.setf28( cmd, m_bFx[27]?True:False );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -185,10 +208,31 @@ void LC::updateLoc( iONode node ) {
             (wFunCmd.isf9 (node)?0x0100:0x00) |
             (wFunCmd.isf10(node)?0x0200:0x00) |
             (wFunCmd.isf11(node)?0x0400:0x00) |
-            (wFunCmd.isf12(node)?0x0800:0x00)
+            (wFunCmd.isf12(node)?0x0800:0x00) |
+            (wFunCmd.isf13(node)?0x1000:0x00) |
+            (wFunCmd.isf14(node)?0x2000:0x00) |
+            (wFunCmd.isf15(node)?0x4000:0x00) |
+            (wFunCmd.isf16(node)?0x8000:0x00) |
+            (wFunCmd.isf17(node)?0x10000:0x00) |
+            (wFunCmd.isf18(node)?0x20000:0x00) |
+            (wFunCmd.isf19(node)?0x40000:0x00) |
+            (wFunCmd.isf20(node)?0x80000:0x00) |
+            (wFunCmd.isf21(node)?0x100000:0x00) |
+            (wFunCmd.isf22(node)?0x200000:0x00) |
+            (wFunCmd.isf23(node)?0x400000:0x00) |
+            (wFunCmd.isf24(node)?0x800000:0x00) |
+            (wFunCmd.isf25(node)?0x1000000:0x00) |
+            (wFunCmd.isf26(node)?0x2000000:0x00) |
+            (wFunCmd.isf27(node)?0x4000000:0x00) |
+            (wFunCmd.isf28(node)?0x8000000:0x00)
             );
 
         setFLabels();
+
+        m_bFn = wFunCmd.isf0( node )?true:false;
+        wLoc.setfn( m_LocProps, m_bFn?True:False );
+        setButtonColor( m_F0, !m_bFn );
+
       }
       else {
         m_iSpeed = wLoc.getV( node );
@@ -241,6 +285,30 @@ void LC::setFLabels() {
     m_F3->SetLabel( _T("F11") );
     m_F4->SetLabel( _T("F12") );
   }
+  else if( m_iFnGroup == 3 ) {
+    m_F1->SetLabel( _T("F13") );
+    m_F2->SetLabel( _T("F14") );
+    m_F3->SetLabel( _T("F15") );
+    m_F4->SetLabel( _T("F16") );
+  }
+  else if( m_iFnGroup == 4 ) {
+    m_F1->SetLabel( _T("F17") );
+    m_F2->SetLabel( _T("F18") );
+    m_F3->SetLabel( _T("F19") );
+    m_F4->SetLabel( _T("F20") );
+  }
+  else if( m_iFnGroup == 5 ) {
+    m_F1->SetLabel( _T("F21") );
+    m_F2->SetLabel( _T("F22") );
+    m_F3->SetLabel( _T("F23") );
+    m_F4->SetLabel( _T("F24") );
+  }
+  else if( m_iFnGroup == 6 ) {
+    m_F1->SetLabel( _T("F25") );
+    m_F2->SetLabel( _T("F26") );
+    m_F3->SetLabel( _T("F27") );
+    m_F4->SetLabel( _T("F28") );
+  }
 
   if( m_LocProps != NULL ) {
     int fx = wLoc.getfx(m_LocProps);
@@ -280,8 +348,16 @@ void LC::OnButton(wxCommandEvent& event)
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_FG ) {
+    int maxgroups = 6;
+    if( m_LocProps != NULL ) {
+      maxgroups = wLoc.getfncnt(m_LocProps);
+      maxgroups = maxgroups / 4 + ((maxgroups % 4) > 0 ? 1:0 );
+      TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "max function goups is %d", maxgroups );
+      // zero based index for this dialog
+      maxgroups--;
+    }
     m_iFnGroup++;
-    if( m_iFnGroup > 2 )
+    if( m_iFnGroup > maxgroups )
       m_iFnGroup = 0;
     setFLabels();
   }
@@ -384,6 +460,106 @@ void LC::OnButton(wxCommandEvent& event)
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
     funCmd();
   }
+
+  else if ( event.GetId() == ME_F13 ) {
+    m_iFnGroup = 3;
+    setFLabels();
+    m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F14 ) {
+    m_iFnGroup = 3;
+    setFLabels();
+    m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F15 ) {
+    m_iFnGroup = 3;
+    setFLabels();
+    m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F16 ) {
+    m_iFnGroup = 3;
+    setFLabels();
+    m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
+    funCmd();
+  }
+
+  else if ( event.GetId() == ME_F17 ) {
+    m_iFnGroup = 4;
+    setFLabels();
+    m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F18 ) {
+    m_iFnGroup = 4;
+    setFLabels();
+    m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F19 ) {
+    m_iFnGroup = 4;
+    setFLabels();
+    m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F20 ) {
+    m_iFnGroup = 4;
+    setFLabels();
+    m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
+    funCmd();
+  }
+
+  else if ( event.GetId() == ME_F21 ) {
+    m_iFnGroup = 5;
+    setFLabels();
+    m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F22 ) {
+    m_iFnGroup = 5;
+    setFLabels();
+    m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F23 ) {
+    m_iFnGroup = 5;
+    setFLabels();
+    m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F24 ) {
+    m_iFnGroup = 5;
+    setFLabels();
+    m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
+    funCmd();
+  }
+
+  else if ( event.GetId() == ME_F25 ) {
+    m_iFnGroup = 6;
+    setFLabels();
+    m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F26 ) {
+    m_iFnGroup = 6;
+    setFLabels();
+    m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F27 ) {
+    m_iFnGroup = 6;
+    setFLabels();
+    m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
+    funCmd();
+  }
+  else if ( event.GetId() == ME_F28 ) {
+    m_iFnGroup = 6;
+    setFLabels();
+    m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
+    funCmd();
+  }
 }
 
 
@@ -410,18 +586,34 @@ bool LC::Create()
     m_Stop = NULL;
 
     m_bFn = false;
-    m_bFx[0] = false;
-    m_bFx[1] = false;
-    m_bFx[2] = false;
-    m_bFx[3] = false;
-    m_bFx[4] = false;
-    m_bFx[5] = false;
-    m_bFx[6] = false;
-    m_bFx[7] = false;
-    m_bFx[8] = false;
-    m_bFx[9] = false;
+    m_bFx[ 0] = false;
+    m_bFx[ 1] = false;
+    m_bFx[ 2] = false;
+    m_bFx[ 3] = false;
+    m_bFx[ 4] = false;
+    m_bFx[ 5] = false;
+    m_bFx[ 6] = false;
+    m_bFx[ 7] = false;
+    m_bFx[ 8] = false;
+    m_bFx[ 9] = false;
     m_bFx[10] = false;
     m_bFx[11] = false;
+    m_bFx[12] = false;
+    m_bFx[13] = false;
+    m_bFx[14] = false;
+    m_bFx[15] = false;
+    m_bFx[16] = false;
+    m_bFx[17] = false;
+    m_bFx[18] = false;
+    m_bFx[19] = false;
+    m_bFx[20] = false;
+    m_bFx[21] = false;
+    m_bFx[22] = false;
+    m_bFx[23] = false;
+    m_bFx[24] = false;
+    m_bFx[25] = false;
+    m_bFx[26] = false;
+    m_bFx[27] = false;
     m_bDir = true;
     m_iSpeed = 0;
     m_iFnGroup = 0;

@@ -1,0 +1,14 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+  </g>
+  <g>
+	<!-- Signal -->
+	<path stroke="black" fill="black" d="M 9,30 L 11,31 L 20,31 L 22,30 L 23,28 L 32,28 L 32,26 L 23,26 L 22,24 L 20,23 L 11,23 L 9,24 L 8,26 L 8,28 L 9,30 z " />
+    <path stroke="grey" fill="grey" d="M 17,26 L 18,25 L 20,25 L 21,26 L 21,28 L 20,29 L 18,29 L 17,28 L 17,26 z " />
+    <path stroke="red" fill="red" d="M 10,26 L 11,25 L 13,25 L 14,26 L 14,28 L 13,29 L 11,29 L 10,28 L 10,26 z " />
+  </g>
+</svg>

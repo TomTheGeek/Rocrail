@@ -21,19 +21,19 @@
              default the 63350 has an module addr of 65535=0xFFFF
              and could react on this broadcast:
              ED 0F 01 05 00 21 33 7F 7F 00 00 7F 7F 00 0B
-             
+
              But if the 63350 has a real module address it won't.
-             Next step is to set the module type(6335) and address(1): 
+             Next step is to set the module type(6335) and address(1):
              ED 0F 01 05 00 21 41 3F 18 00 00 01 00 00 5F
-             
+
              the module with this address will respond and blinks it LED:
              E5 0F 05 49 4B 1F 01 3F 18 00 00 01 00 00 2A
-             
+
              after this positive response you can go on and send LNCV
              get's and set's
              Set's are ack with a long ack:
              B4 6D 7F 59
-             
+
              IB sends this message for end of programming:
              E5 0F 01 05 00 21 03 7F 7F 00 00 03 00 40 70
 -------------------------------------------------------------------
@@ -53,13 +53,44 @@
              [0D] = extra flags: 0x40 = quit programming mode
              [0E] = checksum
 -------------------------------------------------------------------
+
+Traces from the LocoNet Tool:
+
+broadcast to module 68610 with addr 65535:
+
+HEX: ED 0F 01 05 00 21 71 4D 1A 00 00 7F 7F 00 1E
+HEX: E5 0F 05 49 4B 1F 01 4D 1A 00 00 01 00 00 5A
+
+read all:
+
+046150,430 - HEX: ED 0F 01 05 00 21 01 4D 1A 01 00 00 00 00 6F
+046150,430 - HEX: E5 0F 05 49 4B 1F 01 4D 1A 01 00 02 00 00 58
+046150,480 - HEX: ED 0F 01 05 00 21 01 4D 1A 02 00 00 00 00 6C
+046150,480 - HEX: E5 0F 05 49 4B 1F 01 4D 1A 02 00 01 00 00 58
+
+...
+
+046161,500 - HEX: ED 0F 01 05 00 21 01 4D 1A 7E 00 00 00 00 10
+046161,530 - HEX: E5 0F 05 49 4B 1F 01 4D 1A 7E 00 00 00 00 25
+046161,600 - HEX: ED 0F 01 05 00 21 01 4D 1A 7F 00 00 00 00 11
+046161,630 - HEX: E5 0F 05 49 4B 1F 01 4D 1A 7F 00 00 00 00 24
+
+
+set address of second sensor, lncv 1, to 2:
+
+ED 0F 01 05 00 20 01 4D 1A 01 00 02 00 00 6C
+B4 6D 7F 59
+
+
+
+
 */
 #include "rocs/public/rocs.h"
 #include "rocs/public/objbase.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/trace.h"
- 
+
 #include "rocdigs/impl/loconet/lnconst.h"
 #include "rocdigs/impl/loconet/lncv.h"
 
@@ -128,7 +159,7 @@ Boolean evaluateLNCV(byte *msg, int* type, int* addr, int* cv, int* val)
     aucData[i] = msg[7+i];
     if (msg[6] & (1<<i)) aucData[i] |= 0x80;  // PXCT1.n is MSB of Dn
   }
-  
+
   // Module type (Uhlenbrock Art.Nr./10)
   *type = aucData[1];
   *type <<= 8;
@@ -143,17 +174,17 @@ Boolean evaluateLNCV(byte *msg, int* type, int* addr, int* cv, int* val)
   *val = aucData[5];
   *val <<= 8;
   *val |= aucData[4];
-  
+
   // LED/Key message???
   bLED = aucData[6] == 0xFF? 1:0;
-  
+
   return (ucREQ==UB_LNCVSET)?1:0;
 }
 
 
 /**
  * req  0 = get, 1 = set
- * 
+ *
  * checksum is done on a higher level
  * extracmd 0 is normal get/set, 1 start, 2 end
  */
@@ -162,44 +193,48 @@ int makereqLNCV(byte *msg, int type, int addr, int cv, int val, Boolean setreq, 
   byte PXCT1  = 0;
   byte DAT[7] = {0,0,0,0,0,0,0};
   int i = 0;
-  
-  TraceOp.trc( "lncv", TRCLEVEL_INFO, __LINE__, 9999, "makereqLNCV type=%d addr=%d cv=%d val=%d", type, addr, cv, val );
-  
+
+  TraceOp.trc( "lncv", TRCLEVEL_INFO, __LINE__, 9999,
+      "makereqLNCV type=%d addr=%d cv=%d val=%d req=%s extracmd=%d",
+      type, addr, cv, val, setreq?"set":"get", extracmd );
+
   msg[0] = OPC_IMM_PACKET;
   msg[1] = UB_LNCVLEN;
   msg[2] = UB_SRC_KPU;
-  
+
   // DST (TODO: make converter for word to array)
   msg[3] = 0x05;
   msg[4] = 0x00;
-  
+
   // set or get request:
   msg[5] = setreq?UB_LNCVSET:UB_LNCVGET;
-  
+
   // Module type (Uhlenbrock Art.Nr./10)
   msg[7+0] = (type & 0x00FF);
   msg[7+1] = (type & 0xFF00) >> 8;
-  
+
   // cv index
   msg[7+2] = (cv & 0x00FF);
   msg[7+3] = (cv & 0xFF00) >> 8;
-  
+
   // cv value
   msg[7+4] = (val & 0x00FF);
   msg[7+5] = (val & 0xFF00) >> 8;
-  
+
   // extra info
   if( extracmd == 1 )
     msg[7+6] = UB_LNCVSTART;
   else if( extracmd == 2 ) {
     msg[0] = UB_RESPONSE;
-    msg[7+0] = (0xFFFF & 0x00FF);
-    msg[7+1] = (0xFFFF & 0xFF00) >> 8;
+    if( type == 6334 ) {
+      msg[7+0] = (0xFFFF & 0x00FF);
+      msg[7+1] = (0xFFFF & 0xFF00) >> 8;
+    }
     msg[7+6] = UB_LNCVEND;
   }
   else
     msg[7+6] = 0x00;
-  
+
   for( i = 0; i < 7; i++ ) {
     if( msg[7+i] & 0x80 ) {
       PXCT1 |= 1 << i;
@@ -207,7 +242,7 @@ int makereqLNCV(byte *msg, int type, int addr, int cv, int val, Boolean setreq, 
     }
   }
   msg[6] = PXCT1;
-  
+
   return UB_LNCVLEN;
 }
 

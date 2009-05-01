@@ -46,6 +46,8 @@
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/BlockInclude.h"
 #include "rocrail/wrapper/public/BlockExclude.h"
+#include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 
 static int instCnt = 0;
@@ -174,6 +176,8 @@ static int _getEventCode( const char* evtname ) {
     return occupied_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
     return ident_event;
+  else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) )
+    return shortin_event;
   else
     return 0;
 }
@@ -291,6 +295,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   if( data->crossing ) {
     /* ignore all events */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore events for crossing block %s", data->id );
     return;
   }
 
@@ -300,14 +305,22 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
 
   /* handle a dedicated ident event */
-  if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {
-    /* display ident code */
-    char identString[32];
-    StrOp.fmtb( identString, "%04d", ident );
-    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    wBlock.setid( nodeD, data->id );
-    wBlock.setlocid( nodeD, identString );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+  if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
+    if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {
+      /* display ident code */
+      char identString[32];
+      StrOp.fmtb( identString, "%04d", ident );
+      iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( nodeD, data->id );
+      wBlock.setlocid( nodeD, puls ? identString:data->locId );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    }
+  }
+  else if( ident > 0 ){
+    /* reset ident */
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
+        "reset ident[%d] in block[%s] to zero; bi-com is disabled", ident, data->id);
+    ident = 0;
   }
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {
@@ -332,21 +345,48 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     else
       LocOp.event( loc, manager, evt, 0 );
 
-    if( evt == enter2in_event || evt == in_event ) {
+    if( evt == enter2in_event || evt == in_event || evt == shortin_event ) {
+      /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
     }
   }
-  else if( fbevt == NULL && data->fromBlockId == NULL && puls && loc == NULL ) {
+  else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
     if( !__acceptGhost((obj)inst) ) {
-      int tl = TRCLEVEL_DEBUG;
+      int tl = TRCLEVEL_USER1;
       if( ModelOp.isAuto( AppOp.getModel() ) ) {
         tl = TRCLEVEL_EXCEPTION;
         /* power off */
         AppOp.stop();
       }
+      /* broadcast ghost state */
       TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%d",
           data->id, key, ident );
+      data->ghost = True;
+      {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, data->id );
+        wBlock.setstate( nodeD, wBlock.ghost );
+        wBlock.setlocid( nodeD, data->locId );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      }
+
+    }
+  }
+  else if( data->fromBlockId == NULL && !puls && loc == NULL && data->ghost ) {
+    /* ghost train! */
+    if( !__acceptGhost((obj)inst) ) {
+      /* broadcast ghost state */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
+          data->id, key, ident );
+      data->ghost = False;
+      {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, data->id );
+        wBlock.setstate( nodeD, wBlock.getstate(data->props) );
+        wBlock.setlocid( nodeD, data->locId );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      }
 
     }
   }
@@ -507,7 +547,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
     return False;
   }
 
-  if( StrOp.equals( locId, data->locId ) )
+  if( locId != NULL && StrOp.equals( locId, data->locId ) )
     return True;
 
 /* check all sensors... */
@@ -789,6 +829,20 @@ static int _getVisitCnt( iIBlockBase inst, const char* id ) {
 }
 
 
+static int _getOccTime( iIBlockBase inst ) {
+  iOBlockData data  = Data(inst);
+  iOModel     model = AppOp.getModel();
+  /* check if the loco is in auto mode */
+  if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
+    iOLoc loc = ModelOp.getLoc( model, data->locId );
+    if( loc != NULL && LocOp.isAutomode(loc)) {
+      return data->occtime;
+    }
+  }
+  return 0;
+}
+
+
 static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
   iOBlockData data = NULL;
 
@@ -851,6 +905,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, data->locId, False, 0 );
   }
   else if( StrOp.equals( id, data->locId ) ) {
+    data->crossing = crossing;
     ok = True;
   }
 
@@ -885,6 +940,11 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
     data->fromBlockId = blockid;
     if( reset )
       BlockOp.resetTrigs( inst );
+  }
+
+  if( ok ) {
+    /* reset occupation ticker */
+    data->occtime = SystemOp.getTick();
   }
 
   /* Unlock the semaphore: */
@@ -977,6 +1037,11 @@ static const char* _getLoc( iIBlockBase inst ) {
   return data->locId;
 }
 
+static const char* _getInLoc( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.getlocid( data->props );
+}
+
 static void _setGroup( iIBlockBase inst, const char* group ) {
   iOBlockData data = Data(inst);
   data->group = group;
@@ -1034,6 +1099,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       data->locId = NULL;
       BlockOp.resetTrigs( inst );
       wBlock.setlocid(data->props, "");
+      data->crossing = False;
 
       if( data->closereq ) {
         wBlock.setstate( data->props, wBlock.closed );
@@ -1073,6 +1139,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
                      "\"%s\" tried to unlock block \"%s\" but \"%s\" owns it!",
                      id, data->id, data->locId==NULL?"?":data->locId );
     }
+
+    data->occtime = 0;
 
     /* Unlock the semaphore: */
     MutexOp.post( data->muxLock );
@@ -1138,6 +1206,7 @@ static void _init( iIBlockBase inst ) {
       LocOp.setCurBlock( loc, data->id );
       /* overwrite data->locId with the static id from the loc object: */
       data->locId = LocOp.getId( loc );
+      data->occtime = SystemOp.getTick();
 
       BlockOp.red( inst, False, False );
       BlockOp.red( inst, True, False );
@@ -1166,6 +1235,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       iOLoc loc = ModelOp.getLoc( model, data->locId );
       if( loc != NULL ) {
         LocOp.setCurBlock( loc, NULL );
+        data->occtime = SystemOp.getTick();
       }
     }
     wBlock.setlocid( data->props, locid );

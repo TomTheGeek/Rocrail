@@ -106,6 +106,10 @@
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/CarList.h"
+#include "rocrail/wrapper/public/OperatorList.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "common/version.h"
 
@@ -149,12 +153,14 @@ static void rocrailCallback( obj me, iONode node );
 static void ExceptionCallback( int level, char* msg ) {
   /* Added check for VSC++ uninitialized pointer in debug mode */
   if ( ( wxGetApp().getFrame() != NULL ) && ( wxGetApp().getFrame() != (RocGuiFrame *)0xcdcdcdcd )) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
-    // Make a copy of the node for using it out of this scope:
-    iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
-    wException.settext( node, msg );
-    event.SetClientData( node );
-    wxPostEvent( wxGetApp().getFrame(), event );
+    if( wxGetApp().getFrame()->isInitialized() ) {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
+      // Make a copy of the node for using it out of this scope:
+      iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+      wException.settext( node, msg );
+      event.SetClientData( node );
+      wxPostEvent( wxGetApp().getFrame(), event );
+    }
   }
 }
 
@@ -370,6 +376,8 @@ bool RocGui::OnInit() {
   tracelevel  debug   = CmdLnOp.hasKey( m_CmdLn, wCmdline.debug ) ? TRCLEVEL_DEBUG:(tracelevel)0;
   tracelevel  parse   = CmdLnOp.hasKey( m_CmdLn, wCmdline.parse ) ? TRCLEVEL_PARSE:(tracelevel)0;
   const char* tf      = CmdLnOp.getStr( m_CmdLn, wCmdline.trcfile );
+  const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
+  const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
 
   bool modview = CmdLnOp.hasKey( m_CmdLn, wCmdline.modview );
 
@@ -385,6 +393,13 @@ bool RocGui::OnInit() {
 
   // process inifile:
   iOFile iniFile = FileOp.inst( m_IniFileName, True );
+  if( iniFile == NULL ) {
+    iniFile = FileOp.inst( wGui.previnifile, True );
+    if( iniFile != NULL ) {
+      FileOp.rename( wGui.previnifile, wGui.inifile );
+    }
+  }
+
   char* iniXml = NULL;
   if( iniFile != NULL ) {
     iniXml = (char*)allocMem( FileOp.size( iniFile ) + 1 );
@@ -490,6 +505,11 @@ bool RocGui::OnInit() {
   int iWidth  = wWindow.getcx( wGui.getwindow( m_Ini ) );
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
+  m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
+        wxSize(iWidth, iHeight), m_Ini, icons, theme );
+  m_Frame->initFrame();
+
+
   // check for offline mode:
   if( !CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) && m_LocalPlan.Len() == 0 ) {
     // connect to the rocrail daemon:
@@ -514,10 +534,6 @@ bool RocGui::OnInit() {
     m_bOffline = false;
   }
 
-  m_Frame = new RocGuiFrame( _T("Rocrail"),
-        wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini
-        );
   m_bInit = true;
 
   if( CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) || m_LocalPlan.Len() > 0 ) {
@@ -546,6 +562,8 @@ bool RocGui::OnInit() {
     m_bOffline = true;
   }
 
+  m_Frame->setOffline(m_bOffline);
+
   // stop the splash screen:
   if( splash != NULL ) {
     //splash->Show(false);
@@ -554,6 +572,7 @@ bool RocGui::OnInit() {
 
   TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False );
 
+  m_Frame->Raise();
   return TRUE;
 }
 
@@ -579,7 +598,7 @@ static Boolean __hasIDinList(iONode list, const char* newid ) {
 static void rocrailCallback( obj me, iONode node ) {
   RocGui* guiApp = (RocGui*)me;
 
-  TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback node=%s",
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s",
                NodeOp.getName( node ) );
 
   /* Plan */
@@ -608,8 +627,16 @@ static void rocrailCallback( obj me, iONode node ) {
 
     return;
   }
+
+
+  /* do not process server messages before the plan panels are initialized */
+  if( !wxGetApp().getFrame()->isInitialized() ) {
+    return;
+  }
+
+
   /* rocrail.ini */
-  else if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
+  if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
@@ -759,6 +786,18 @@ static void rocrailCallback( obj me, iONode node ) {
           wxPostEvent( wxGetApp().getFrame(), event );
 
         }
+        planItems = false;
+      }
+      else if( StrOp.equals( childName, wCar.name() ) ) {
+        iONode carlist = wPlan.getcarlist( model );
+        if( carlist != NULL && !__hasIDinList(carlist, wItem.getid(child)) )
+          NodeOp.addChild( carlist, (iONode)NodeOp.base.clone(child) );
+        planItems = false;
+      }
+      else if( StrOp.equals( childName, wOperator.name() ) ) {
+        iONode oplist = wPlan.getoperatorlist( model );
+        if( oplist != NULL && !__hasIDinList(oplist, wItem.getid(child)) )
+          NodeOp.addChild( oplist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wRoute.name() ) ) {

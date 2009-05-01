@@ -268,6 +268,10 @@ static const char* _getToBlock( iORoute inst ) {
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
   Boolean lcdir = wRoute.islcdir( o->props );
+
+  /* in case of a managed block of a fiddle yard the manager ID is needed */
+  blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
+
   if( StrOp.equals( blockid, wRoute.getbka( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --from--", blockid, RouteOp.getId(inst) );
     *fromto = True;
@@ -279,7 +283,7 @@ static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto
     return !lcdir;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unknown blockid %s", blockid );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown blockid %s", blockid );
     return False;
   }
 }
@@ -327,13 +331,6 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
   }
 
   return False;
-}
-
-static int _getFunction( iORoute inst, int* activationtime, const char** deactivationevent ) {
-  iORouteData o = Data(inst);
-  *activationtime = wRoute.getfuntime(o->props);
-  *deactivationevent = wRoute.getfunevent(o->props);
-  return wRoute.getfunction(o->props);
 }
 
 static Boolean __checkSwitches( iORoute inst, const char* id ) {
@@ -406,7 +403,7 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
   return True;
 }
 
-static Boolean __unlockCrossingBlocks( iORoute inst, const char* id );
+static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks );
 static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );
@@ -433,7 +430,24 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
 }
 
 
-static Boolean __unlockCrossingBlocks( iORoute inst, const char* id ) {
+static Boolean __isReservedBlock(const char* id, const char** resblocks) {
+  int i = 0;
+  if( resblocks != NULL ) {
+    while( resblocks[i] != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "compare crossing block[%s] with reserved block[%s]", id, resblocks[i] );
+      if( StrOp.equals(id, resblocks[i]) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "crossing block[%s] equals reserved block[%s]", id, resblocks[i] );
+        return True;
+      }
+      i++;
+    }
+  }
+  return False;
+}
+
+static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks ) {
   iORouteData  o = Data(inst);
   Boolean      ok = True;
   iOModel   model = AppOp.getModel(  );
@@ -444,14 +458,16 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id ) {
 
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* bk = StrTokOp.nextToken( tok );
-      iIBlockBase block = ModelOp.getBlock( model, bk );
-      if( block != NULL ) {
-        if( !block->unLock( block, id ) )
+      if( !__isReservedBlock(bk, resblocks) ) {
+        iIBlockBase block = ModelOp.getBlock( model, bk );
+        if( block != NULL ) {
+          if( !block->unLock( block, id ) )
+            ok = False;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
           ok = False;
-      }
-      else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
-        ok = False;
+        }
       }
     };
 
@@ -476,11 +492,11 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
-        if( !TTOp.lock( (iIBlockBase)itt, 
-			locId, 
-			NULL, 
-			False, 
-			False, 
+        if( !TTOp.lock( (iIBlockBase)itt,
+			locId,
+			NULL,
+			False,
+			False,
 			wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
@@ -491,11 +507,11 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
-        if( !SelTabOp.lock( (iIBlockBase)iseltab, 
-			    locId, 
-			    SelTabOp.isManager( iseltab)?o->routeLockId:locId, 
-			    False, 
-			    False, 
+        if( !SelTabOp.lock( (iIBlockBase)iseltab,
+			    locId,
+			    SelTabOp.isManager( iseltab)?o->routeLockId:locId,
+			    False,
+			    False,
 			    wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
@@ -588,6 +604,34 @@ static Boolean __checkSensors( iORoute inst ) {
 }
 
 
+static Boolean _isFree( iORoute inst, const char* id ) {
+  iORouteData data = Data(inst);
+
+  if( data->lockedId != NULL && StrOp.equals(data->lockedId, id ) ) {
+    /* it is free for itself */
+    return True;
+  }
+
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
+    /* Check all switches: */
+    if( !__checkSensors( inst ) )
+      return False;
+
+    if( !__checkSwitches( inst, id ) )
+      return False;
+
+    if( !__checkCrossingBlocks( inst, id ) )
+      return False;
+
+    return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Street already locked by %s", data->lockedId );
+    return False;
+  }
+}
+
+
 static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
   iORouteData o = Data(inst);
   o->reverse = reverse;
@@ -623,11 +667,11 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
   }
 }
 
-static Boolean _unLock( iORoute inst, const char* id ) {
+static Boolean _unLock( iORoute inst, const char* id, const char** resblocks ) {
   iORouteData o = Data(inst);
   if( StrOp.equals( id, o->lockedId ) ) {
     __unlockSwitches( inst, id );
-    __unlockCrossingBlocks( inst, id );
+    __unlockCrossingBlocks( inst, id, resblocks );
     o->lockedId = NULL;
     return True;
   }
@@ -721,7 +765,7 @@ static void _reset( iORoute inst ) {
   iORouteData o = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset route [%s]", RouteOp.getId( inst ) );
-  RouteOp.unLock( inst, o->lockedId );
+  RouteOp.unLock( inst, o->lockedId, NULL );
 }
 
 
@@ -779,7 +823,7 @@ static Boolean _isSet( iORoute inst ) {
 
       if( isw != NULL && !SwitchOp.isSet(isw) ) {
         isSet = False;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                    "switch [%s] for route [%s] is not set",
                    swId,
                    RouteOp.getId( inst ) );

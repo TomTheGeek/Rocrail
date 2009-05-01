@@ -83,9 +83,9 @@
 #include "rocgui/dialogs/mvtrackdlg.h"
 #include "rocgui/dialogs/timedactions.h"
 
-#include "rocgui/dialogs/decoders/63350.h"
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
+#include "rocgui/dialogs/decoders/uhl633x0dlg.h"
 
 #include "rocgui/public/guiapp.h"
 #include "rocgui/public/swdlg.h"
@@ -121,6 +121,8 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Waybill.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -233,6 +235,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
     EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
+    EVT_MENU( ME_EditOperators  , RocGuiFrame::OnEditOperators)
     EVT_MENU( ME_EditWaybills   , RocGuiFrame::OnEditWaybills)
     EVT_MENU( ME_EditTurnouts   , RocGuiFrame::OnEditTurnouts)
     EVT_MENU( ME_EditTurntables , RocGuiFrame::OnEditTurntables)
@@ -257,6 +260,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
     EVT_MENU( ME_Fill           , RocGuiFrame::OnFill)
     EVT_MENU( ME_ShowID         , RocGuiFrame::OnShowID)
+    EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
@@ -272,6 +276,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LangSpanish    , RocGuiFrame::OnLangSpanish)
     EVT_MENU( ME_LangItalien    , RocGuiFrame::OnLangItalien)
     EVT_MENU( ME_LangDanish     , RocGuiFrame::OnLangDanish)
+    EVT_MENU( ME_LangCzech      , RocGuiFrame::OnLangCzech)
+    EVT_MENU( ME_LangBosnian    , RocGuiFrame::OnLangBosnian)
 
     EVT_GRID_CELL_LEFT_CLICK( RocGuiFrame::OnCellLeftClick )
     EVT_GRID_CELL_LEFT_DCLICK( RocGuiFrame::OnCellLeftDClick )
@@ -300,6 +306,22 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_F10, RocGuiFrame::OnButton)
     EVT_MENU( ME_F11, RocGuiFrame::OnButton)
     EVT_MENU( ME_F12, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F13, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F14, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F15, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F16, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F17, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F18, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F19, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F20, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F21, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F22, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F23, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F24, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F25, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F26, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F27, RocGuiFrame::OnButton)
+    EVT_MENU( ME_F28, RocGuiFrame::OnButton)
 
     EVT_MENU( ME_INITACTIVELOCS, RocGuiFrame::InitActiveLocs)
 
@@ -318,6 +340,42 @@ iONode RocGuiFrame::findLoc( const char* locid ) {
 
       if( id != NULL && StrOp.equals( locid, id ) ) {
         return lc;
+      }
+    }
+  }
+  return NULL;
+}
+
+
+iONode RocGuiFrame::findCar( const char* carid ) {
+  iONode model = wxGetApp().getModel();
+  iONode carlist = wPlan.getcarlist( model );
+  if( carlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( carlist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode car = NodeOp.getChild( carlist, i );
+      const char* id = wCar.getid( car );
+
+      if( id != NULL && StrOp.equals( carid, id ) ) {
+        return car;
+      }
+    }
+  }
+  return NULL;
+}
+
+
+iONode RocGuiFrame::findWaybill( const char* billid ) {
+  iONode model = wxGetApp().getModel();
+  iONode waybilllist = wPlan.getwaybilllist( model );
+  if( waybilllist != NULL ) {
+    int cnt = NodeOp.getChildCnt( waybilllist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode waybill = NodeOp.getChild( waybilllist, i );
+      const char* id = wWaybill.getid( waybill );
+
+      if( id != NULL && StrOp.equals( billid, id ) ) {
+        return waybill;
       }
     }
   }
@@ -531,6 +589,8 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   cursor = wxCursor(wxCURSOR_ARROW);
   SetCursor(cursor);
 
+  m_bInitialized = true;
+
 }
 
 static int locComparator(obj* o1, obj* o2) {
@@ -577,6 +637,7 @@ void RocGuiFrame::modifyLoc( iONode props ) {
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( loc, 0 );
         NodeOp.removeChild( loc, child );
+        child->base.del(child);
         cnt = NodeOp.getChildCnt( loc );
       }
       cnt = NodeOp.getChildCnt( props );
@@ -753,12 +814,17 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   }
 }
 
-// NOT reentrant!!!
+
 wxString RocGuiFrame::getIconPath(const char* iconfile) {
   if( wxGetApp().getIni() != NULL ) {
     const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
-    static char path[256];
-    StrOp.fmtb( path, "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
+    char* path = NULL;
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
+    if( m_IconPath != NULL ) {
+      path = StrOp.fmt( "%s%c%s.png", m_IconPath, SystemOp.getFileSeparator(), iconfile );
+    }
+    else
+      path = StrOp.fmt( "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
     if( !FileOp.exist(path) ) {
       char* str = StrOp.fmt( wxGetApp().getMsg("iconnotfound").mb_str(wxConvUTF8), path );
       int action = wxMessageDialog( this, wxString(str,wxConvUTF8), _T("Rocrail"), wxCANCEL | wxICON_ERROR ).ShowModal();
@@ -766,6 +832,7 @@ wxString RocGuiFrame::getIconPath(const char* iconfile) {
       //exit(-1);
     }
     return wxString(path,wxConvUTF8);
+    StrOp.free(path);
   }
   else
     return wxString("",wxConvUTF8);
@@ -795,8 +862,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
     }
+
     modifyLoc( node );
+
     m_LC->updateLoc( node );
+
     for( int i = 0; i < m_ActiveLocs->GetNumberRows(); i++ ) {
       char* locid = StrOp.dup( m_ActiveLocs->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
       if( StrOp.equals( wLoc.getid( node ), locid ) ) {
@@ -827,6 +897,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         }
         StrOp.free( locid );
         break;
+      }
+      else {
+        StrOp.free( locid );
       }
     }
   }
@@ -900,39 +973,39 @@ void RocGuiFrame::setDigintText( const char* text ) {
 // ----------------------------------------------------------------------------
 
 // frame constructor
-RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini)
+RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
-  m_Ini = ini;
-  m_WarningPanel = NULL;
-  m_MonitorPanel = NULL;
-  m_bEditMode = false;
+  m_Ini                = ini;
+  m_WarningPanel       = NULL;
+  m_MonitorPanel       = NULL;
+  m_bEditMode          = false;
   m_bServerConsoleMode = false;
-  m_LocID = NULL;
-  m_iLcRowSelection = 0;
-  m_SymbolMap = NULL;
-  m_LocalPlan = _T("");
-  m_LocoIO = NULL;
-  m_DTOpSw = NULL;
-  m_RocrailIniDlg = NULL;
-  m_ModPanel = NULL;
-  m_LocCtrlList = ListOp.inst();
-  m_LocDlgMap = MapOp.inst();
-  m_bAutoMode = false;
+  m_LocID              = NULL;
+  m_iLcRowSelection    = 0;
+  m_SymbolMap          = NULL;
+  m_LocalPlan          = _T("");
+  m_LocoIO             = NULL;
+  m_DTOpSw             = NULL;
+  m_RocrailIniDlg      = NULL;
+  m_ModPanel           = NULL;
+  m_LocCtrlList        = ListOp.inst();
+  m_LocDlgMap          = MapOp.inst();
+  m_bAutoMode          = false;
+  m_IconPath           = icons;
+  m_ThemePath          = theme;
+  m_bInitialized       = false;
 
-  // set the frame icon
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "SetIcon..." );
+
+}
+
+void RocGuiFrame::initFrame() {
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ThemePath=0x%08X", m_ThemePath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "init Frame..." );
   SetIcon(wxIcon(rocrail_xpm));
 
-  //return;
-// Dirk 18.4.2007
-// switch to editing  mode, if Rocgui is running offline
-  bool l_bOffline = wxGetApp().isOffline();
-  if (l_bOffline){
-    m_bEditMode = true;
-  }
-// End Dirk 18.4.2007
-// define accelerator keys for some frequently used functions
+  // define accelerator keys for some frequently used functions
   wxAcceleratorEntry acc_entries[64];
   acc_entries[0].Set(wxACCEL_CTRL, (int) 'Z', ME_Undo);
   acc_entries[1].Set(wxACCEL_CTRL, (int) 'N', ME_New);
@@ -973,8 +1046,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
   acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
   acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
+  acc_entries[36].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
 
-  wxAcceleratorTable m_accel(36, acc_entries);
+  wxAcceleratorTable m_accel(37, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
@@ -1041,6 +1115,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuTables->Append(ME_EditLocs, wxGetApp().getMenu("loctable"), wxGetApp().getTip("loctable") );
   menuTables->Append(ME_EditCars, wxGetApp().getMenu("cartable"), wxGetApp().getTip("cartable") );
   menuTables->Append(ME_EditWaybills, wxGetApp().getMenu("waybilltable"), wxGetApp().getTip("waybilltable") );
+  menuTables->Append(ME_EditOperators, wxGetApp().getMenu("operatortable"), wxGetApp().getTip("operatortable") );
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
@@ -1108,6 +1183,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuAuto->Append(ME_AutoReset, wxGetApp().getMenu("resetall"), wxGetApp().getTip("resetall") );
 
   wxMenu *menuLang = new wxMenu();
+  menuLang->AppendCheckItem( ME_LangBosnian , wxGetApp().getMenu("lang_bs"), wxGetApp().getTip("lang_bs") );
+  menuLang->AppendCheckItem( ME_LangCzech   , wxGetApp().getMenu("lang_cs"), wxGetApp().getTip("lang_cs") );
   menuLang->AppendCheckItem( ME_LangDanish  , wxGetApp().getMenu("lang_da"), wxGetApp().getTip("lang_da") );
   menuLang->AppendCheckItem( ME_LangGerman  , wxGetApp().getMenu("lang_de"), wxGetApp().getTip("lang_de") );
   menuLang->AppendCheckItem( ME_LangEnglish , wxGetApp().getMenu("lang_en"), wxGetApp().getTip("lang_en") );
@@ -1140,14 +1217,19 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   menuView->AppendCheckItem( ME_Fill, wxGetApp().getMenu("fill"), wxGetApp().getTip("fill") );
   menuView->AppendCheckItem( ME_ShowID, wxGetApp().getMenu("showid"), wxGetApp().getTip("showid") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
+  menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
   menuView->Append( ME_BackColor, wxGetApp().getMenu("panelcolor"), wxGetApp().getTip("panelcolor") );
 
   // Programming
   wxMenu *menuProgramming = new wxMenu();
   wxMenu *menuPTLN = new wxMenu();
-  //menuPTLN->Append( ME_UHL_63350, _T("Uhlenbrock 63350"), _T("Uhlenbrock 63350") );
-  menuPTLN->Append( ME_LOCOIO, _T("LocoIO"), _T("LocoIO") );
-  menuPTLN->Append( ME_DTOpSw, _T("Digitrax"), _T("Digitrax") );
+  menuPTLN->Append( ME_LOCOIO, wxString(_T("LocoIO")) + wxString(_T("...")), _T("LocoIO") );
+  menuPTLN->Append( ME_DTOpSw, wxString(_T("Digitrax")) + wxString(_T("...")), _T("Digitrax") );
+  wxMenu *menuUhlenbrock = new wxMenu();
+  menuUhlenbrock->Append( ME_UHL_63350, _T("Uhlenbrock 63340/63350") + wxString(_T("...")), _T("Uhlenbrock 63340/63350") );
+  menuUhlenbrock->Append( ME_UHL_68610, _T("Uhlenbrock 68610") + wxString(_T("...")), _T("Uhlenbrock 68610") );
+  menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
+
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
   wxMenu *menuPTDCC = new wxMenu();
@@ -1215,43 +1297,40 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
 
   // Create tool bar
-  wxToolBar *toolBar = CreateToolBar();
-  toolBar->SetToolBitmapSize(wxSize(16, 16));
+  m_ToolBar = CreateToolBar();
+  m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
 
-  toolBar->AddTool(ME_Connect, wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("connect") );
-  toolBar->AddTool(ME_Upload, wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("upload") );
-  if (l_bOffline){
-     toolBar->EnableTool(ME_Upload, false );
-  }
+  m_ToolBar->AddTool(ME_Connect, wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_Upload, wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("upload") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
-  toolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
-  toolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
+  m_ToolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
+  m_ToolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
 // Dirk 18.4.2007 added Undo to toolbar
-  toolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
-  toolBar->EnableTool(ME_Undo, false );
+  m_ToolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
+  m_ToolBar->EnableTool(ME_Undo, false );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), wxBitmap(getIconPath("poweron"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), wxBitmap(getIconPath("poweron"), wxBITMAP_TYPE_PNG),
                         wxNullBitmap, wxGetApp().getTip("poweron") );
-  toolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG),
                         wxNullBitmap, wxGetApp().getTip("automode") );
-  toolBar->AddTool(ME_AutoStop, wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_AutoStop, wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stopall") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
-  toolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
-  toolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
-  toolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
-  toolBar->AddTool(ME_RouteDlg, wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stctrl") );
+  m_ToolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
+  m_ToolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
+  m_ToolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
+  m_ToolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
+  m_ToolBar->AddTool(ME_RouteDlg, wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stctrl") );
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  m_ScaleComboBox = new wxComboBox(toolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
+  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
   m_ScaleComboBox->Append(_T("10"));
   m_ScaleComboBox->Append(_T("20"));
   m_ScaleComboBox->Append(_T("30"));
@@ -1272,27 +1351,33 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ScaleComboBox->Append(_T("180"));
   m_ScaleComboBox->Append(_T("190"));
   m_ScaleComboBox->Append(_T("200"));
-  toolBar->AddControl(m_ScaleComboBox);
+  m_ToolBar->AddControl(m_ScaleComboBox);
 
 
-  toolBar->AddSeparator();
+  m_ToolBar->AddSeparator();
 
-  toolBar->AddTool(ME_Update, wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("softwareupdates") );
-  toolBar->AddTool(ME_Help, wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(ME_Update, wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("softwareupdates") );
+  m_ToolBar->AddTool(ME_Help, wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("documentation") );
 
-  toolBar->Realize();
+  m_ToolBar->Realize();
 
-  toolBar->EnableTool(ME_Update, false);
+  m_ToolBar->EnableTool(ME_Update, false);
 
   // checking for new updates
-  iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
-  ThreadOp.start( updateReader );
+  if(wGui.ischeckupdates(m_Ini)) {
+    iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
+    ThreadOp.start( updateReader );
+  }
 
   wxLogo = NULL;
 
   // read the svg symbols:
   svgReader* svg = new svgReader();
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
+  if( m_ThemePath != NULL )
+    m_SymbolMap = svg->readSvgSymbols( m_ThemePath, NULL );
+  else
+    m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
+
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath2( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath3( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath4( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
@@ -1335,6 +1420,12 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 
   create();
   initJS();
+}
+
+
+void RocGuiFrame::setOffline( bool p_bOffline ) {
+  m_bEditMode = p_bOffline;
+  m_ToolBar->EnableTool(ME_Upload, !p_bOffline );
 }
 
 
@@ -1426,7 +1517,7 @@ void RocGuiFrame::create() {
   m_LNCVPanel->SetScrollbars(1, 1, 0, 0);
   m_LNCV = NULL;
   m_LNCV = new LNCV( m_LNCVPanel, this );
-  //m_LNCVPanel->Enable(false);
+  m_LNCVPanel->Show(wGui.islncvtab(m_Ini));
 
   m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
 
@@ -1654,7 +1745,7 @@ void RocGuiFrame::Save() {
   if( f != NULL ) {
     long size = 0;
     char* buffer = NULL;
-    char* version = StrOp.fmt( "%d.%d.%d svn%d", wGui.vmajor, wGui.vminor, wGui.patch,  wxGetApp().getSvn() );
+    char* version = StrOp.fmt( "%d.%d.%d revision %d", wGui.vmajor, wGui.vminor, wGui.patch,  wxGetApp().getSvn() );
     wPlan.setrocguiversion( model, version );
     buffer = (char*)NodeOp.base.toString( model );
     size = StrOp.len( buffer );
@@ -1986,16 +2077,30 @@ void RocGuiFrame::OnShowID( wxCommandEvent& event ) {
 }
 
 
+void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
+  wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
+
+  if( mi_fullscreen->IsChecked() ) {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen on" );
+    ShowFullScreen(true, wxFULLSCREEN_NOTOOLBAR | wxFULLSCREEN_NOSTATUSBAR | wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
+  }
+  else {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen off" );
+    ShowFullScreen(false);
+  }
+}
+
+
 void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
   m_bLocoBook = mi->IsChecked();
-  m_StatNotebook->Show(m_bLocoBook);
   if(m_bLocoBook) {
     int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
-    m_PlanSplitter->SetSashPosition( pos );
+    m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
+
   }
   else {
-    m_PlanSplitter->SetSashPosition( 1 );
+    m_PlanSplitter->Unsplit( m_StatNotebook );
   }
 }
 
@@ -2042,6 +2147,14 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
   CarDlg* dlg = new CarDlg(this, NULL );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify Notebook. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnEditOperators( wxCommandEvent& event ) {
+  OperatorDlg* dlg = new OperatorDlg(this, NULL);
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
   }
@@ -2174,7 +2287,7 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
-  Uhl_63350_Dlg* dlg = new Uhl_63350_Dlg(this);
+  Uhl633x0Dlg* dlg = new Uhl633x0Dlg(this);
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }
@@ -2322,6 +2435,12 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LangDanish);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_danish, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangCzech);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_czech, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangBosnian);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_bosnian, wGui.getlang( wxGetApp().getIni() ) ) );
 
   mi = menuBar->FindItem(ME_RocrailIni);
   if( mi != NULL )
@@ -2537,7 +2656,7 @@ void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
   OperatorDlg* dlg = new OperatorDlg(this, NULL);
-  dlg->Show(TRUE);
+  dlg->ShowModal();
 }
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
@@ -2567,11 +2686,6 @@ void RocGuiFrame::OnMIC(wxCommandEvent& event){
 
 void RocGuiFrame::OnLocEvent( wxCommandEvent& event ) {
   UpdateActiveLocs( event );
-  // Get the copied node:
-  //iONode node = (iONode)event.GetClientData();
-  //dlg->modelEvent( node );
-  // Cleanup the node:
-  //node->base.del( node );
 }
 
 void RocGuiFrame::OnAutoEvent( wxCommandEvent& event ) {
@@ -3069,6 +3183,14 @@ void RocGuiFrame::OnLangItalien(wxCommandEvent& event) {
 }
 void RocGuiFrame::OnLangDanish(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_danish );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+void RocGuiFrame::OnLangCzech(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_czech );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+void RocGuiFrame::OnLangBosnian(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_bosnian );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 

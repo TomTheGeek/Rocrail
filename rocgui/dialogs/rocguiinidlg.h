@@ -170,6 +170,7 @@ public:
     wxTextCtrl* m_XSLPath;
     wxButton* m_XSLPathDlg;
     wxCheckBox* m_RestrictEdit4Auto;
+    wxCheckBox* m_Check4Updates;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

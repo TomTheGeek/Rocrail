@@ -23,11 +23,11 @@ mkdir -p debian/opt/rocrail
 cp ../rocrail/package/control debian/DEBIAN
 
 cp ../unxbin/rocrail debian/opt/rocrail
-cp ../unxbin/rocgui debian/opt/rocrail
+cp ../unxbin/rocview debian/opt/rocrail
 cp ../unxbin/*.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocrail
-strip debian/opt/rocrail/rocgui
+strip debian/opt/rocrail/rocview
 strip debian/opt/rocrail/*.so
 
 cp -R ../COPYING debian/opt/rocrail

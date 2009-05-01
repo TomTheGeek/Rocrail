@@ -1293,7 +1293,7 @@ void traceLocoNet(byte* msg) {
                     /* and will have the resulting status byte                 */
 
                     if (command == OPC_SL_RD_DATA) {
-                        if (pstat != 0) {
+                        if ((pstat&0x0F) != 0) {
                             if ((pstat & PSTAT_USER_ABORTED) != 0) {
                                 TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Status = Failed, User Aborted" );
                             }
@@ -1308,9 +1308,6 @@ void traceLocoNet(byte* msg) {
 
                             if ((pstat & PSTAT_NO_DECODER) != 0 ) {
                                 TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Status = Failed, Service Mode programming track empty");
-                            }
-                            if ((pstat & 0xF0) != 0) {
-                                TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Unexpected PSTAT value = 0x%02X",pstat);
                             }
                         } else {
                             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Status = Success" );

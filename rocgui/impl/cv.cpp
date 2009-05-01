@@ -39,6 +39,7 @@
 #include "rocgui/dialogs/locdialog.h"
 #include "rocgui/dialogs/speedcurvedlg.h"
 #include "rocgui/dialogs/decconfigdlg.h"
+#include "rocgui/dialogs/fxdlg.h"
 
 #include "rocgui/public/cv.h"
 
@@ -71,11 +72,15 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   m_CVcountAll = 0;
   m_CVoperation = 0;
   m_bCleanUpProgress = false;
+  m_TimerMutex = MutexOp.inst( NULL, True );
 
   for(int i = 0; i < 28; i++ ) {
     m_Curve[i] = 0;
   }
-  m_bSpeedCurve = false;
+  m_bSpeedCurve  = false;
+  m_bConfig      = false;
+  m_bFX          = false;
+  m_bLongAddress = false;
 
 
   CVconf();
@@ -283,6 +288,8 @@ void CV::event( iONode event ) {
       char* lval = StrOp.fmt("%d", laddr);
       m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
       StrOp.free(lval);
+      m_CVoperation = CVGET;
+      doCV( wProgram.get, 18, 0 );
     }
     else if( m_CVidx == 18 ) {
       m_CV18 = ivalue;
@@ -292,6 +299,7 @@ void CV::event( iONode event ) {
       char* lval = StrOp.fmt("%d", laddr);
       m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
       StrOp.free(lval);
+      m_bLongAddress = false;
     }
     else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
       m_Curve[m_CVidx-67] = ivalue;
@@ -307,11 +315,17 @@ void CV::event( iONode event ) {
         onSpeedCurve();
       }
     }
-    else if( m_CVidx == 29 ) {
+    else if( m_CVidx == 29 && m_bConfig ) {
       /* post an event to activate the speed curve dialog */
       m_ConfigVal = ivalue;
       m_Timer->Stop();
       onDecConfig();
+    }
+    else if( m_bFX ) {
+      /* post an event to activate the speed curve dialog */
+      m_FxVal = ivalue;
+      m_Timer->Stop();
+      onDecFX();
     }
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
@@ -381,10 +395,29 @@ void CV::onDecConfig(void) {
   }
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
   dlg->Destroy();
+  m_bConfig = false;
+}
+
+
+void CV::onDecFX(void) {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FXVal (%d)", m_FxVal );
+  FxDlg*  dlg = new FxDlg(m_Frame, m_FxVal, m_CVnr );
+  int rc = dlg->ShowModal();
+  if( rc == wxID_OK ) {
+    m_FxVal = dlg->getConfig();
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FxVal (%d)", m_FxVal );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, m_CVnr->GetValue(), m_FxVal );
+  }
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FxVal (%d) rc=%d(%d)", m_FxVal, rc, dlg->GetReturnCode() );
+  dlg->Destroy();
+  m_bFX = false;
 }
 
 
 void CV::update4POM(void) {
+  m_bPOM = m_POM->IsChecked()?True:False;
+  /*
   m_getAddress->Enable(!m_bPOM);
   m_getVstart->Enable(!m_bPOM);
   m_getAccel->Enable(!m_bPOM);
@@ -394,6 +427,10 @@ void CV::update4POM(void) {
   m_getVersion->Enable(!m_bPOM);
   m_getManu->Enable(!m_bPOM);
   m_Get->Enable(!m_bPOM);
+  */
+  m_setlongAddress->Enable(!m_bPOM);
+  m_setAddress->Enable(!m_bPOM);
+
   m_ReadAll->Enable(!m_bPOM);
   m_PTonoff->Enable(!m_bPOM);
 }
@@ -623,7 +660,6 @@ void CV::OnButton(wxCommandEvent& event)
     doCV( wProgram.load, m_CVnr->GetValue(), atoi( m_CVvalue->GetValue().mb_str(wxConvUTF8) ) );
   }
   else if ( event.GetEventObject() == m_POM ) {
-    m_bPOM = m_POM->IsChecked()?True:False;
     update4POM();
   }
   else if ( event.GetEventObject() == m_CVvalue ) {
@@ -725,7 +761,16 @@ void CV::OnButton(wxCommandEvent& event)
   else if( event.GetEventObject() == m_Config ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Config" );
     m_CVoperation = CVGET;
+    m_bConfig = true;
     doCV( wProgram.get, 29, 0 );
+  }
+  else if( event.GetEventObject() == m_FX ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FX" );
+    m_CVoperation = CVGET;
+    m_bFX = true;
+    if(m_CVnr->GetValue() < 49 )
+      m_CVnr->SetValue(49);
+    doCV( wProgram.get, m_CVnr->GetValue(), 0 );
   }
   else if( event.GetEventObject() == m_SpeedCurve ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Speed Curve" );
@@ -788,8 +833,7 @@ void CV::getLongAddress() {
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
   m_CVoperation = CVGET;
   doCV( wProgram.get, 17, 0 );
-  m_CVoperation = CVGET;
-  doCV( wProgram.get, 18, 0 );
+  m_bLongAddress = true;
 }
 
 void CV::setLongAddress() {
@@ -855,6 +899,8 @@ void CV::doCV( int command, int index, int value ) {
   if( addr == 0 )
     addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
 
+
+  update4POM();
   wProgram.setcmd( cmd, command );
   wProgram.setaddr( cmd, addr );
   wProgram.setcv( cmd, index );
@@ -879,6 +925,11 @@ void CV::doCV( int command, int index, int value ) {
 }
 
 void CV::OnTimer(wxTimerEvent& event) {
+  if( !MutexOp.trywait( m_TimerMutex, 1000 ) ) {
+    TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timeout on timer mutex!" );
+    return;
+  }
+
   if( m_bCleanUpProgress ) {
     if( m_Progress != NULL ) {
       wxProgressDialog* dlg = m_Progress;
@@ -887,6 +938,7 @@ void CV::OnTimer(wxTimerEvent& event) {
       TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
     }
     m_bCleanUpProgress = false;
+    MutexOp.post( m_TimerMutex );
     return;
   }
 
@@ -896,15 +948,18 @@ void CV::OnTimer(wxTimerEvent& event) {
     stopProgress();
   }
   else if( m_Progress != NULL && !m_bCleanUpProgress ) {
-    if( m_Progress->IsShownOnScreen() && !m_Progress->Pulse() ) {
-      stopProgress();
-      m_TimerCount = wCVconf.gettimeout(m_CVconf);
-    }
-    else {
-      TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timer for PT acknowledge" );
-      bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+    if( m_Progress->IsShownOnScreen() ) {
+      if( !m_Progress->Pulse() ) {
+        stopProgress();
+        m_TimerCount = wCVconf.gettimeout(m_CVconf);
+      }
+      else {
+        TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timer for PT acknowledge" );
+        bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+      }
     }
   }
+  MutexOp.post( m_TimerMutex );
 }
 
 
@@ -1055,7 +1110,7 @@ void CV::CreateControls() {
   m_saveFile = new wxButton( m_ItemPanel, -1, _("Export"), wxDefaultPosition, wxSize(60, 26), 0 );
   m_LocBox->Add(m_saveFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_POM = new wxCheckBox( m_ItemPanel, -1, _T("POM"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_POM = new wxCheckBox( m_ItemPanel, -1, _T("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
   m_POM->SetToolTip(_T("Program On the Main") );
   m_LocBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
@@ -1242,6 +1297,8 @@ void CV::CreateControls() {
 
   m_Set = new wxButton( m_ItemPanel, -1, _("Set"), wxDefaultPosition, wxSize(40, 25), 0 );
   m_CVSubBox1->Add(m_Set, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_FX = new wxButton( m_ItemPanel, -1, _("FX"), wxDefaultPosition, wxSize(40, 25), 0 );
+  m_CVSubBox1->Add(m_FX, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Bitfield..." );
 

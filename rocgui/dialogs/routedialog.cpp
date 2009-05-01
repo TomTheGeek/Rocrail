@@ -211,7 +211,7 @@ void RouteDialog::initLabels() {
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_LabelSwitchId->SetLabel( wxGetApp().getMsg( "turnoutid" ) );
-  m_labTrackNumber->SetLabel( wxGetApp().getMsg( "tracknumber" ) );
+  m_labTrackNumber->SetLabel( wxGetApp().getMsg( "tracknr" ) );
   m_SwitchCmd->SetLabel( wxGetApp().getMsg( "command" ) );
   m_SwitchCmd->SetString( 0, wxGetApp().getMsg( "straight" ) );
   m_SwitchCmd->SetString( 1, wxGetApp().getMsg( "turnout" ) );
@@ -462,7 +462,7 @@ void RouteDialog::initValues() {
   m_ReduceV->SetValue(wRoute.isreduceV( m_Props ));
 
   m_Swap->SetValue(wRoute.isswap( m_Props ));
-  
+
   m_SwapPost->SetValue(wRoute.isswappost( m_Props ));
 
   initCommands();
@@ -544,7 +544,7 @@ void RouteDialog::evaluate() {
   wRoute.setreduceV( m_Props, m_ReduceV->IsChecked()?True:False);
 
   wRoute.setswap( m_Props, m_Swap->IsChecked()?True:False);
-  
+
   wRoute.setswappost( m_Props, m_SwapPost->IsChecked()?True:False);
 
 }

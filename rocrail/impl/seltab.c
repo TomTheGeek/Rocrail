@@ -37,6 +37,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
 
 
 #include "rocrail/wrapper/public/Block.h"
@@ -121,12 +122,12 @@ static void* __properties( void* inst ) {
 /** ----- OSelTab ----- */
 
 
-static iIBlockBase __getActiveTrackBlock(iIBlockBase inst) {
+static iIBlockBase __getActiveTrackBlock(iIBlockBase inst, const char* msg ) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
 
   iONode pos = wSelTab.getseltabpos( data->props );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "get active block for track %d...", data->tablepos );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "get active block for track %d (%s)...", data->tablepos, msg );
   while( pos != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block nr %d...", wSelTabPos.getnr(pos) );
     if( data->tablepos == wSelTabPos.getnr(pos) ) {
@@ -179,7 +180,7 @@ static int __getTrack4Loc(iIBlockBase inst, const char* locid) {
 
 
 
-static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
+static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* inBlock) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
 
@@ -188,6 +189,9 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
   while( pos != NULL ) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( StrOp.equals( locid, block->getLoc(block) ) ) {
+      if( inBlock != NULL && block->getInLoc(block) != NULL) {
+        *inBlock = StrOp.equals( locid, block->getInLoc(block) );
+      }
       return block;
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
@@ -505,7 +509,7 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "table at track [%d]: **ready**", gotopos );
   }
-  else if( gotopos >= 0 && gotopos < 16 ) {
+  else if( gotopos >= 0 && gotopos <= wSelTab.getnrtracks(data->props) ) {
     iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
 
     const char* iid = wSelTab.getiid( data->props );
@@ -680,9 +684,72 @@ static struct OSelTab* _inst( iONode ini ) {
 }
 
 
+static int __getOccTrackBlocks(iIBlockBase inst, long* oldestOccTick) {
+  iOSelTabData data = Data(inst);
+  /* check for a free track block */
+  iOModel model = AppOp.getModel();
+  int occBlocks = 0;
+  iONode pos = wSelTab.getseltabpos( data->props );
+
+  *oldestOccTick = 0;
+
+  while( pos != NULL ) {
+    iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
+    if( block != NULL && !block->isFree(block, NULL) ) {
+      long blockOccTime = block->getOccTime(block);
+      if( blockOccTime > 0 && blockOccTime < *oldestOccTick || blockOccTime > 0 && *oldestOccTick == 0 )
+        *oldestOccTick = block->getOccTime(block);
+      occBlocks++;
+    }
+    pos = wSelTab.nextseltabpos( data->props, pos );
+  };
+  return occBlocks;
+}
+
+
+
+
 /**  */
 static Boolean _isLocked( struct OSelTab* inst ,const char* locid ) {
   iOSelTabData data = Data(inst);
+
+  if( locid != NULL ) {
+    Boolean inBlock = False;
+    iIBlockBase block = __getBlock4Loc((iIBlockBase)inst, locid, &inBlock);
+    if( block != NULL ) {
+      /* loc is on the FY */
+      long oldestOccTick = 0;
+      long locOccTick    = block->getOccTime(block);
+      int  occBlocks     = __getOccTrackBlocks((iIBlockBase)inst, &oldestOccTick);
+      int  minOcc        = wSelTab.getminocc( data->props );
+
+      if( inBlock && minOcc > 0 && occBlocks < minOcc ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] contains only [%d] trains; minimum is [%d]...",
+                       inst->base.id( inst ), occBlocks, minOcc );
+        return True;
+      }
+
+      if( wSelTab.isfifo(data->props) ) {
+        if( inBlock && locOccTick > oldestOccTick && oldestOccTick > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s]: loco[%s] is not at turn. (loco[%d], oldest[%d])",
+                         inst->base.id( inst ), locid, locOccTick, oldestOccTick );
+          return True;
+        }
+      }
+
+    }
+  }
+
+  if( wSelTab.getmovedelay(data->props) > 0 ) {
+    long ticks = wSelTab.getmovedelay(data->props) / 10;
+    long elapsed = SystemOp.getTick() - data->unlockTick;
+    if( elapsed < ticks ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FY[%s] movedelay is [%ld] ticks, elapsed[%ld]",
+                     inst->base.id( inst ), ticks, elapsed );
+      return True;
+    }
+  }
+
   if( data->lockedId != NULL && StrOp.len(data->lockedId) > 0 && !StrOp.equals( locid, data->lockedId ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s], request ID[%s].",
                    inst->base.id( inst ), data->lockedId, locid );
@@ -744,6 +811,7 @@ static iIBlockBase __getFreeTrackBlock(iIBlockBase inst, const char* locId, int*
       *trackpos = wSelTabPos.getnr(pos);
       return block;
     }
+
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
   return NULL;
@@ -776,6 +844,11 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 }
 
 static int _getVisitCnt( iIBlockBase inst, const char* id ) {
+  iOSelTabData data = Data(inst);
+  return 0;
+}
+
+static int _getOccTime( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
   return 0;
 }
@@ -922,7 +995,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
   }
 
   if( !StrOp.startsWith(id, wRoute.routelock) && wSelTab.ismanager(data->props) ) {
-    iIBlockBase block = __getBlock4Loc(inst, id);
+    iIBlockBase block = __getBlock4Loc(inst, id, NULL);
 
       /* dispatch to active tracke block */
     if( block != NULL ) {
@@ -959,6 +1032,9 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
         wSelTab.setiid( nodeF, wSelTab.getiid( data->props ) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
     }
+
+    data->unlockTick = SystemOp.getTick();
+
     return True;
   }
   else if( data->lockedId != NULL ) {
@@ -970,14 +1046,21 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
 
 static const char* _getLoc( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getLoc");
   /* dispatch to active tracke block */
   return block != NULL ? block->getLoc( block ) : "";
 }
 
+static const char* _getInLoc( iIBlockBase inst ) {
+  iOSelTabData data = Data(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getLoc");
+  /* dispatch to active tracke block */
+  return block != NULL ? block->getInLoc( block ) : "";
+}
+
 static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, int val, iONode fbevt ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */
   if( block != NULL )
     block->event( block, puls, id, ident, val, fbevt );
@@ -986,14 +1069,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
 static const char* _getFromBlockId( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getFromBlockId");
   /* dispatch to active tracke block */
   return block != NULL ? block->getFromBlockId( block ) : "";
 }
 
 static const char* _getTDiid( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getTDiid");
   /* dispatch to active tracke block */
   return block != NULL ? block->getTDiid( block ) : "";
 }
@@ -1001,7 +1084,7 @@ static const char* _getTDiid( iIBlockBase inst ) {
 
 static int _getTDaddress( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getTDaddress");
   /* dispatch to active tracke block */
   return block != NULL ? block->getTDaddress( block ) : 0;
 }
@@ -1009,7 +1092,7 @@ static int _getTDaddress( iIBlockBase inst ) {
 
 static int _getTDport( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getTDport");
   /* dispatch to active tracke block */
   return block != NULL ? block->getTDport( block ) : 0;
 }
@@ -1017,7 +1100,7 @@ static int _getTDport( iIBlockBase inst ) {
 
 static void _setAnalog( iIBlockBase inst, Boolean analog ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "setAnalog");
   /* dispatch to active tracke block */
   if( block != NULL )
     block->setAnalog( block, analog );
@@ -1026,14 +1109,14 @@ static void _setAnalog( iIBlockBase inst, Boolean analog ) {
 
 static Boolean _isLinked( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "isLinked");
   /* dispatch to active tracke block */
   return block != NULL ? block->isLinked( block ) : False;
 }
 
 static void _setGroup( iIBlockBase inst, const char* group ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "setGroup");
   /* dispatch to active tracke block */
   if( block != NULL )
     block->setGroup( block, group );
@@ -1041,7 +1124,7 @@ static void _setGroup( iIBlockBase inst, const char* group ) {
 
 static void _enterBlock( iIBlockBase inst, const char* id ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "enterBlock");
   /* dispatch to active tracke block */
   if( block != NULL )
     block->enterBlock( block, id );
@@ -1049,7 +1132,7 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
 
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getVelocity");
   *percent = 0;
   /* dispatch to active tracke block */
   return block != NULL ? block->getVelocity( block, percent, onexit ) : "";
@@ -1057,14 +1140,14 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit 
 
 static int _getWait( iIBlockBase inst, iOLoc loc ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "getWait");
   /* dispatch to active tracke block */
   return block != NULL ? block->getWait( block, loc ) : 0;
 }
 
 static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "green");
   /* dispatch to active tracke block */
   if( block != NULL )
     return block->green( block, distant, reverse );
@@ -1074,7 +1157,7 @@ static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
 
 static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "red");
   /* dispatch to active tracke block */
   if( block != NULL )
     return block->red( block, distant, reverse );
@@ -1084,7 +1167,7 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
 
 static Boolean _yellow( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "yellow");
   /* dispatch to active tracke block */
   if( block != NULL )
     return block->yellow( block, distant, reverse );
@@ -1094,7 +1177,7 @@ static Boolean _yellow( iIBlockBase inst, Boolean distant, Boolean reverse ) {
 
 static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "white");
   /* dispatch to active tracke block */
   if( block != NULL )
     return block->white( block, distant, reverse );
@@ -1104,21 +1187,21 @@ static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
 
 static Boolean _hasEnter2Route( iIBlockBase inst, const char* fromBlockID ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "hasEnter2Route");
   /* dispatch to active tracke block */
   return block != NULL ? block->hasEnter2Route( block, fromBlockID ) : False;
 }
 
 static Boolean _hasPre2In( iIBlockBase inst, const char* fromBlockID ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "hasPre2In");
   /* dispatch to active tracke block */
   return block != NULL ? block->hasPre2In( block, fromBlockID ) : False;
 }
 
 static void _inBlock( iIBlockBase inst, const char* id ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "inBlock");
   /* dispatch to active tracke block */
   if( block != NULL )
     block->inBlock( block, id );
@@ -1126,21 +1209,21 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
 
 static Boolean _isTerminalStation( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "isTerminalStation");
   /* dispatch to active tracke block */
   return block != NULL ? block->isTerminalStation( block ) : False;
 }
 
 static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "link");
   /* dispatch to active tracke block */
   return block != NULL ? block->link( block, linkto ) : False;
 }
 
 static Boolean _unLink( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "unLink");
   /* dispatch to active tracke block */
   return block != NULL ? block->unLink( block ) : False;
 }
@@ -1148,14 +1231,14 @@ static Boolean _unLink( iIBlockBase inst ) {
 
 static Boolean _lockForGroup( iIBlockBase inst, const char* id ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "lockForGroup");
   /* dispatch to active tracke block */
   return block != NULL ? block->lockForGroup( block, id ) : False;
 }
 
 static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "unLockForGroup");
   /* dispatch to active tracke block */
   return block != NULL ? block->unLockForGroup( block, id ) : False;
 }
@@ -1163,7 +1246,7 @@ static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
 
 static void _resetTrigs( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "resetTrigs");
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset trigs" );
   /* dispatch to active tracke block */
   if( block != NULL )
@@ -1172,7 +1255,7 @@ static void _resetTrigs( iIBlockBase inst ) {
 
 static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
   iOSelTabData data = Data(inst);
-  iIBlockBase block = __getActiveTrackBlock(inst);
+  iIBlockBase block = __getActiveTrackBlock(inst, "wait");
   /* dispatch to active tracke block */
   return block != NULL ? block->wait( block, loc ) : False;
 }

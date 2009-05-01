@@ -21,5 +21,5 @@
 
 void eventEnter( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boolean dstBlockEvent );
 void eventPre2In( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boolean dstBlockEvent );
-void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean curBlockEvent, Boolean dstBlockEvent );
+void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean curBlockEvent, Boolean dstBlockEvent, Boolean shortIn );
 void eventExit( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boolean dstBlockEvent );

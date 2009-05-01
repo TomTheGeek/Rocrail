@@ -57,7 +57,7 @@ class RocGuiFrame : public wxFrame
 {
 public:
   iONode m_Ini;
-  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini);
+  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme);
   void create();
 
   void setOnline( bool online );
@@ -117,6 +117,7 @@ public:
 
   void OnEditLocs(wxCommandEvent& event);
   void OnEditCars(wxCommandEvent& event);
+  void OnEditOperators(wxCommandEvent& event);
   void OnEditWaybills(wxCommandEvent& event);
   void OnEditTurnouts(wxCommandEvent& event);
   void OnEditSensors(wxCommandEvent& event);
@@ -138,6 +139,8 @@ public:
   BasePanel* initModPanel( iONode zlevel );
   void RemoveNotebookPage( iONode zlevel );
   iONode findLoc(const char* locid);
+  iONode findCar(const char* carid);
+  iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid);
   void OnCellLeftDClick( wxGridEvent& event );
   void OnCellLeftClick( wxGridEvent& event );
@@ -167,6 +170,8 @@ public:
   void OnLangSpanish(wxCommandEvent& event);
   void OnLangItalien(wxCommandEvent& event);
   void OnLangDanish(wxCommandEvent& event);
+  void OnLangCzech(wxCommandEvent& event);
+  void OnLangBosnian(wxCommandEvent& event);
 
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
@@ -182,6 +187,7 @@ public:
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
+  void OnFullScreen(wxCommandEvent& event);
 
   void OnUhl63350(wxCommandEvent& event);
   void OnLocoIO(wxCommandEvent& event);
@@ -202,6 +208,7 @@ public:
   bool isFill() { return m_bFill; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
+  bool isInitialized() { return m_bInitialized; }
   void setLocID( const char* locid );
   double getScale() { return m_Scale; }
   double getBktext() { return m_Bktext; }
@@ -226,6 +233,8 @@ public:
   void InitActiveLocs(wxCommandEvent& event);
   void initLocCtrlDialogs();
   wxString getIconPath(const char* iconfile);
+  void setOffline( bool p_bOffline );
+  void initFrame();
 
 
 private:
@@ -233,6 +242,7 @@ private:
   void initJS();
   void modifyLoc( iONode props );
 
+  wxToolBar *       m_ToolBar;
   wxBitmapButton*   m_LocImage;
   wxNotebook*       m_StatNotebook;
   wxNotebook*       m_PlanNotebook;
@@ -264,11 +274,15 @@ private:
 
   iOMutex m_muxInitActiveLocs;
 
+  const char* m_IconPath;
+  const char* m_ThemePath;
+
   bool  m_bLocoBook;
   bool  m_bFill;
   bool  m_bShowID;
   bool  m_bRaster;
   bool  m_bServerConsoleMode;
+  bool  m_bInitialized;
 
   bool  showlogo;
   bool  m_bEditMode;
@@ -282,6 +296,7 @@ private:
   iOList m_LocCtrlList;
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
+
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };
@@ -334,6 +349,7 @@ enum
     ME_CtrlMode,
     ME_EditLocs,
     ME_EditCars,
+    ME_EditOperators,
     ME_EditWaybills,
     ME_EditBlocks,
     ME_EditBlockGroups,
@@ -373,6 +389,8 @@ enum
     ME_LangSpanish,
     ME_LangItalien,
     ME_LangDanish,
+    ME_LangBosnian,
+    ME_LangCzech,
     ME_RocrailIni,
     ME_RocguiIni,
     ME_Zoom25,
@@ -382,6 +400,7 @@ enum
     ME_LocoBook,
     ME_Fill,
     ME_ShowID,
+    ME_FullScreen,
     ME_Raster,
     NEWUPDATES_EVENT,
     ME_RUG,
@@ -390,9 +409,11 @@ enum
     ME_Survey,
     ME_BackColor,
     ME_UHL_63350,
+    ME_UHL_68610,
     ME_LOCOIO,
     ME_OpenDecoder,
     ME_DTOpSw,
+    ME_Uhlenbrock,
     ME_F1,
     ME_F2,
     ME_F3,
@@ -405,6 +426,22 @@ enum
     ME_F10,
     ME_F11,
     ME_F12,
+    ME_F13,
+    ME_F14,
+    ME_F15,
+    ME_F16,
+    ME_F17,
+    ME_F18,
+    ME_F19,
+    ME_F20,
+    ME_F21,
+    ME_F22,
+    ME_F23,
+    ME_F24,
+    ME_F25,
+    ME_F26,
+    ME_F27,
+    ME_F28,
     ID_SCALE_COMBO,
     ME_INITACTIVELOCS,
 };

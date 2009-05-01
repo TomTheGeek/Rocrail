@@ -35,6 +35,7 @@
 #include "wx/progdlg.h"
 
 #include "rocs/public/node.h"
+#include "rocs/public/mutex.h"
 
 enum {
   GET_CV = 1000,
@@ -109,6 +110,7 @@ private:
     void writeAll();
 
     void onDecConfig();
+    void onDecFX();
     void onSpeedCurve();
 
     void loadCVfromFile();
@@ -144,6 +146,11 @@ private:
     bool m_bCleanUpProgress;
     int m_Curve[28];
     int m_ConfigVal;
+    int m_FxVal;
+    iOMutex m_TimerMutex;
+    bool m_bConfig;
+    bool m_bFX;
+    bool m_bLongAddress;
 
     const char* m_Manu[256];
     wxWindow* m_Frame;
@@ -213,6 +220,7 @@ private:
     wxButton* m_saveAllCVs;
     wxButton* m_SpeedCurve;
     wxButton* m_Config;
+    wxButton* m_FX;
     wxButton* m_loadCVs;
     wxButton* m_loadFile;
     wxButton* m_saveFile;

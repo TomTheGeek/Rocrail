@@ -70,6 +70,7 @@ class wxSpinCtrl;
 #define ID_CHECKBOX_BK_ELECTRIFIED 10068
 #define ID_CHECKBOX_BK_STATION 10069
 #define ID_CHECKBOX_BK_CLOSED 10071
+#define wxID_BLOCK_WAIT 10350
 #define ID_CHECKBOX_BK_GOMANUAL 10325
 #define ID_CHECKBOX_BK_ACCGHOST 10165
 #define ID_PANEL_BK_LOCATION 10002
@@ -179,7 +180,7 @@ class BlockDialog: public wxDialog
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   bool m_bSave;
   void initSensors();
   void initSensorCombos();
@@ -189,7 +190,7 @@ class BlockDialog: public wxDialog
   void initSwitchCombo();
   void initTurntableCombo();
   void initLocPermissionList();
-  
+
 public:
     /// Constructors
     BlockDialog( wxWindow* parent, iONode p_Props, bool save=true );
@@ -218,6 +219,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BK_LOCPROPS
     void OnButtonBkLocpropsClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_BLOCK_WAIT
+    void OnBlockWaitClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_BLOCK_TURNOUTS
     void OnListboxBlockTurnoutsSelected( wxCommandEvent& event );
 
@@ -238,6 +242,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BK_WSIGNAL_R
     void OnButtonBkWsignalRClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX_BK_WAIT
+    void OnRadioboxBkWaitSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_BK_ROUTES
     void OnListboxBkRoutesSelected( wxCommandEvent& event );
