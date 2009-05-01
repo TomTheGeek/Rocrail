@@ -624,6 +624,8 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
 
     if(wTurntable.getactfn( data->props ) > 0) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( iid != NULL )
+        wTurntable.setiid( fcmd, iid );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
       __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), True );
@@ -768,10 +770,10 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
       wLoc.setfn( cmd, False );
       wLoc.setdir( cmd, data->dir );
 
-      ControlOp.cmd( control, cmd, NULL );
-
       if(wTurntable.getactfn( data->props ) > 0) {
         iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+        if( iid != NULL )
+          wTurntable.setiid( fcmd, iid );
         wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
         wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
         __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
@@ -784,6 +786,9 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
         ControlOp.cmd( control, fcmd, NULL );
       }
+
+      ControlOp.cmd( control, cmd, NULL );
+
 
     }
 
@@ -934,10 +939,10 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     wLoc.setfn( cmd, False );
     wLoc.setdir( cmd, data->dir );
 
-    ControlOp.cmd( control, cmd, NULL );
-
     if(wTurntable.getactfn( data->props ) > 0) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( iid != NULL )
+        wTurntable.setiid( fcmd, iid );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
       __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
@@ -950,6 +955,9 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
 
       ControlOp.cmd( control, fcmd, NULL );
     }
+
+    ControlOp.cmd( control, cmd, NULL );
+
   }
 
   if( wTurntable.getpoladdr( data->props ) > 0 ) {
