@@ -37,6 +37,7 @@
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/TTTrack.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -547,30 +548,37 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 }
 
 
+static void __setLocDecFn( iONode cmd, int fn, Boolean state ) {
+  char fStr[32];
+  StrOp.fmtb( fStr, "f%d", fn );
+  NodeOp.setBool( cmd, fStr, state );
+}
+
+
 static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   Boolean ok = True;
   iOControl control = AppOp.getControl();
   const char* cmdStr = wTurntable.getcmd( nodeA );
   Boolean ttdir = True;
-  iONode cmd = NULL;
+  iONode vcmd = NULL;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     ttdir = False;
     data->gotopos = -1;
     data->skippos = -1;
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     ttdir = True;
     data->gotopos = -1;
     data->skippos = -1;
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     data->gotopos = data->tablepos;
     data->skippos = data->tablepos;
   }
@@ -584,7 +592,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
 
     if( move ) {
       data->gotopos = tracknr;
-      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
@@ -593,26 +601,42 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
 
   }
 
-  if( cmd != NULL && control != NULL )
+  if( vcmd != NULL && control != NULL )
   {
     const char* iid = wTurntable.getiid( data->props );
     if( iid != NULL )
-      wTurntable.setiid( cmd, iid );
+      wTurntable.setiid( vcmd, iid );
 
     /* pending move operation */
     data->pending = True;
 
-    wLoc.setaddr( cmd, wTurntable.getaddr( data->props ) );
+    wLoc.setaddr( vcmd, wTurntable.getaddr( data->props ) );
 
     /* Using the Loc wrapper for the other parameters: */
-    wLoc.setV_mode( cmd, wLoc.V_mode_percent );
-    wLoc.setV( cmd, wTurntable.getV( data->props ) );
-    wLoc.setprot( cmd, wTurntable.getprot( data->props ) );
-    wLoc.setfn( cmd, True );
-    wLoc.setdir( cmd, ttdir );
+    wLoc.setV_mode( vcmd, wLoc.V_mode_percent );
+    wLoc.setV( vcmd, wTurntable.getV( data->props ) );
+    wLoc.setprot( vcmd, wTurntable.getprot( data->props ) );
+    wLoc.setfn( vcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
+    wLoc.setdir( vcmd, ttdir );
     data->dir = ttdir;
 
-    ControlOp.cmd( control, cmd, NULL );
+    ControlOp.cmd( control, vcmd, NULL );
+
+    if(wTurntable.getactfn( data->props ) > 0) {
+      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+      wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
+      __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), True );
+
+      wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
+      wLoc.setV( fcmd, wTurntable.getV( data->props ) );
+      wLoc.setprot( fcmd, wTurntable.getprot( data->props ) );
+      wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
+      wLoc.setdir( fcmd, ttdir );
+
+      ControlOp.cmd( control, fcmd, NULL );
+    }
+
   }
 
 
@@ -745,6 +769,22 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
       wLoc.setdir( cmd, data->dir );
 
       ControlOp.cmd( control, cmd, NULL );
+
+      if(wTurntable.getactfn( data->props ) > 0) {
+        iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+        wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+        wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
+        __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
+
+        wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
+        wLoc.setV( fcmd, wTurntable.getV( data->props ) );
+        wLoc.setprot( fcmd, wTurntable.getprot( data->props ) );
+        wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
+        wLoc.setdir( fcmd, data->dir );
+
+        ControlOp.cmd( control, fcmd, NULL );
+      }
+
     }
 
   }
@@ -895,6 +935,21 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     wLoc.setdir( cmd, data->dir );
 
     ControlOp.cmd( control, cmd, NULL );
+
+    if(wTurntable.getactfn( data->props ) > 0) {
+      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+      wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
+      __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
+
+      wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
+      wLoc.setV( fcmd, wTurntable.getV( data->props ) );
+      wLoc.setprot( fcmd, wTurntable.getprot( data->props ) );
+      wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
+      wLoc.setdir( fcmd, data->dir );
+
+      ControlOp.cmd( control, fcmd, NULL );
+    }
   }
 
   if( wTurntable.getpoladdr( data->props ) > 0 ) {

@@ -1264,6 +1264,7 @@
         <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>
         <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
         <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
+        <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
         <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupation on the bridge."/>

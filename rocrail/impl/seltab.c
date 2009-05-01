@@ -325,7 +325,7 @@ static void _sysEvent( obj inst, const char* cmd ) {
 static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int val ) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "fbid=%s state=%s ident=%d",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbid=%s state=%s ident=%d",
                  id, state?"true":"false", ident );
   /* process the event */
   /* when reaching the wanted position the GUI must be informed by setting the SelTabPos sensors to "true" */
