@@ -47,6 +47,7 @@
 static int instCnt = 0;
 
 static int __getMappedTrack( iOTT inst, int tracknr );
+static void __polarize(obj inst, int pos, Boolean polarization);
 
 
 /*
@@ -308,6 +309,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
     }
   }
 
@@ -596,6 +598,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
     }
 
 
@@ -868,6 +871,54 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 }
 
 
+static void __polarize(obj inst, int pos, Boolean polarization) {
+  iOTTData data = Data(inst);
+  iOControl control = AppOp.getControl();
+
+
+  if( pos != -1 ) {
+    iONode track = wTurntable.gettrack( data->props );
+    while( track != NULL ) {
+      if( wTTTrack.getnr( track ) == pos ) {
+        polarization = wTTTrack.ispolarization(track);
+        break;
+      }
+      track = wTurntable.nexttrack( data->props, track );
+    }
+  }
+
+
+  if( wTurntable.getpoladdr( data->props ) > 0 ) {
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    int addr = wTurntable.getpoladdr( data->props );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "setting bridge polarization to %d", polarization );
+
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( cmd, iid );
+
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+    if( polarization ) {
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
+      wSwitch.setcmd( cmd, wSwitch.turnout );
+      ControlOp.cmd( control, cmd, NULL );
+    }
+    else {
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
+      wSwitch.setcmd( cmd, wSwitch.straight );
+      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    }
+
+  }
+
+}
+
+
 static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, int val ) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
@@ -960,33 +1011,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
 
   }
 
-  if( wTurntable.getpoladdr( data->props ) > 0 ) {
-    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    int addr = wTurntable.getpoladdr( data->props );
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "setting bridge polarization to %d", polarization );
-
-    const char* iid = wTurntable.getiid( data->props );
-    if( iid != NULL )
-      wSwitch.setiid( cmd, iid );
-
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-
-    if( polarization ) {
-      wSwitch.setaddr1( cmd, 0 );
-      wSwitch.setport1( cmd, addr );
-      wSwitch.setcmd( cmd, wSwitch.turnout );
-      ControlOp.cmd( control, cmd, NULL );
-    }
-    else {
-      wSwitch.setaddr1( cmd, 0 );
-      wSwitch.setport1( cmd, addr );
-      wSwitch.setcmd( cmd, wSwitch.straight );
-      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-    }
-
-  }
+  __polarize(inst, -1, polarization );
 
 }
 
