@@ -927,11 +927,16 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
   int pos = __evaluatePos( (iOTT)inst, puls, id, &polarization );
   Boolean stop = False;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] pos=[%d] polarization=[%d] ",
-      inst->id(inst), id, pos, polarization );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] val=[%d] pos=[%d] polarization=[%d] ",
+      inst->id(inst), id, val, pos, polarization );
 
   if( control == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "controller is not initialized..." );
+    return;
+  }
+
+  if( !puls ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OFF events are not used..." );
     return;
   }
 
