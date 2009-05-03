@@ -1218,6 +1218,7 @@
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="Digital address."/>
         <var name="poladdr" vt="int" defval="0" range="0-*" required="false" remark="Polarization relay address."/>
+        <var name="motoroffdelay" vt="int" defval="1000" range="0-*" required="false" remark="shut off delay for locdec motor"/>
 
         <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>

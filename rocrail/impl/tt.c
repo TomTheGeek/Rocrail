@@ -769,7 +769,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
       /* Using the Loc wrapper for the other parameters: */
       wLoc.setV_mode( cmd, wLoc.V_mode_percent );
-      wLoc.setV( cmd, wTurntable.getV( data->props ) );
+      wLoc.setV( cmd, 0 );
       wLoc.setfn( cmd, False );
       wLoc.setdir( cmd, data->dir );
 
@@ -787,9 +787,11 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
         wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
         wLoc.setdir( fcmd, data->dir );
 
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn function %d off...", wTurntable.getactfn( data->props ) );
         ControlOp.cmd( control, fcmd, NULL );
       }
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn motor off..." );
       ControlOp.cmd( control, cmd, NULL );
 
 
@@ -991,7 +993,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
 
     /* Using the Loc wrapper for the other parameters: */
     wLoc.setV_mode( cmd, wLoc.V_mode_percent );
-    wLoc.setV( cmd, wTurntable.getV( data->props ) );
+    wLoc.setV( cmd, 0 );
     wLoc.setfn( cmd, False );
     wLoc.setdir( cmd, data->dir );
 
@@ -1009,9 +1011,14 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
       wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
       wLoc.setdir( fcmd, data->dir );
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn function %d off...", wTurntable.getactfn( data->props ) );
       ControlOp.cmd( control, fcmd, NULL );
     }
 
+    /* TODO: wait in a thread to prevent blocking the system*/
+    ThreadOp.sleep(10 + wTurntable.getmotoroffdelay( data->props ));
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn motor off..." );
     ControlOp.cmd( control, cmd, NULL );
 
   }
@@ -1201,6 +1208,7 @@ static iOTT _inst( iONode props ) {
   data->muxLock = MutexOp.inst( NULL, True );
   __initCallback( tt );
   data->tablepos = wTurntable.getbridgepos(data->props);
+  data->gotopos = -1;
   data->lcdir = True;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "turntable [%s] initialized at position [%d]", tt->base.id(tt), data->tablepos );
