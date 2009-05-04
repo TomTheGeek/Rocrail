@@ -52,6 +52,9 @@
 
 static int instCnt = 0;
 
+static Boolean __isElectricallyFree(iOBlock inst);
+
+
 /*
  ***** OBase functions.
  */
@@ -144,6 +147,7 @@ static Boolean __acceptGhost( obj inst ) {
 
   if( ( data->locId == NULL || StrOp.equals( data->locId, "") || StrOp.equals( data->locId, "?") || StrOp.equals( data->locId, "GHOST")) && wBlock.isacceptghost( data->props ) ) {
     data->locId = "GHOST";
+    data->ghost = True;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block:%s accepted a Ghosttrain",
                  data->id );
     {
@@ -375,11 +379,16 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( data->fromBlockId == NULL && !puls && loc == NULL && data->ghost ) {
     /* ghost train! */
-    if( !__acceptGhost((obj)inst) ) {
-      /* broadcast ghost state */
+    /* broadcast ghost state */
+    if( __isElectricallyFree((iOBlock)inst) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
           data->id, key, ident );
       data->ghost = False;
+
+      if(StrOp.equals( data->locId, "GHOST")) {
+        data->locId = NULL;
+      }
+
       {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
@@ -387,7 +396,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
         wBlock.setlocid( nodeD, data->locId );
         ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
       }
-
     }
   }
   else if( fbevt == NULL && puls && loc != NULL ) {
@@ -535,6 +543,28 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean __isElectricallyFree(iOBlock inst) {
+  iOBlockData data = Data(inst);
+  /* check all sensors... */
+
+  iONode fbevt = wBlock.getfbevent( data->props );
+
+  while( fbevt != NULL ) {
+    iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
+    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block \"%s\" is electrically occupied.",
+                     data->id );
+
+      return False;
+    }
+    fbevt = wBlock.nextfbevent( data->props, fbevt );
+  };
+
+  return True;
+}
+
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
@@ -552,29 +582,14 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
 /* check all sensors... */
 
-  {
-    iONode fbevt = wBlock.getfbevent( data->props );
-
-    while( fbevt != NULL ) {
-      iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
-      if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Block \"%s\" is electrically occupied.",
-                       data->id );
-
-        if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                         "Block \"%s\" is electrically occupied without locId set!",
-                         data->id );
-        }
-
-        return False;
-
-      }
-      fbevt = wBlock.nextfbevent( data->props, fbevt );
-    };
+  if( !__isElectricallyFree((iOBlock)inst) ) {
+    if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                     "Block \"%s\" is electrically occupied without locId set!",
+                     data->id );
+    }
+    return False;
   }
-
 
   if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId ) )
     return True;
@@ -1199,6 +1214,7 @@ static void _init( iIBlockBase inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init block %s", data->id );
   /* this string pointer is not persistent! */
   data->locId = wBlock.getlocid( data->props );
+  data->ghost = False;
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOLoc loc = ModelOp.getLoc( model, data->locId );
