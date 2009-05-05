@@ -356,9 +356,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
-    if( !__acceptGhost((obj)inst) ) {
-      int tl = TRCLEVEL_USER1;
-      if( ModelOp.isAuto( AppOp.getModel() ) ) {
+
+    if( ModelOp.isAuto( AppOp.getModel() ) ) {
+      if( !__acceptGhost((obj)inst) ) {
+        int tl = TRCLEVEL_USER1;
         tl = TRCLEVEL_EXCEPTION;
         /* power off */
         AppOp.stop();
@@ -373,9 +374,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
         }
-      }
 
+      }
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "train in block [%s], fbid=[%s], ident=[%d]", data->id, key, ident );
+    }
+
   }
   else if( data->fromBlockId == NULL && !puls && loc == NULL && data->ghost ) {
     /* ghost train! */
@@ -418,6 +424,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
     /* undefined event! */
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d",
+                   key, data->id, ident );
+  }
+  else {
+    /* unhandled event! */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! ident=[%d]",
                    key, data->id, ident );
   }
 }
