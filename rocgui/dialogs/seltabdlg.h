@@ -55,16 +55,12 @@ class wxGrid;
 #define ID_LISTBOX_SELTAB_ROUTES 10034
 #define wxID_SELTAB_ROUTESENSOR_1 10362
 #define wxID_SELTAB_ROUTEEVENT_1 10366
-#define wxID_SELTAB_ROUTEGHOST_1 10370
 #define wxID_SELTAB_ROUTESENSOR_2 10363
 #define wxID_SELTAB_ROUTEEVENT_2 10367
-#define wxID_SELTAB_ROUTEGHOST_2 10371
 #define wxID_SELTAB_ROUTESENSOR_3 10364
 #define wxID_SELTAB_ROUTEEVENT_3 10368
-#define wxID_SELTAB_ROUTEGHOST_3 10372
 #define wxID_SELTAB_ROUTESENSOR_4 10365
 #define wxID_SELTAB_ROUTEEVENT_4 10369
-#define wxID_SELTAB_ROUTEGHOST_4 10373
 #define SYMBOL_SELTABDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SELTABDIALOG_TITLE _("SelTabDialog")
 #define SYMBOL_SELTABDIALOG_IDNAME ID_SENTAB_DIALOG
@@ -232,19 +228,14 @@ public:
     wxStaticText* m_LabelSensorsFromBlock;
     wxStaticText* m_LabelSensorIDs;
     wxStaticText* m_LabelSensorActions;
-    wxStaticText* m_LabelGhost;
     wxComboBox* m_SensorID1;
     wxComboBox* m_SensorAction1;
-    wxCheckBox* m_Ghost1;
     wxComboBox* m_SensorID2;
     wxComboBox* m_SensorAction2;
-    wxCheckBox* m_Ghost2;
     wxComboBox* m_SensorID3;
     wxComboBox* m_SensorAction3;
-    wxCheckBox* m_Ghost3;
     wxComboBox* m_SensorID4;
     wxComboBox* m_SensorAction4;
-    wxCheckBox* m_Ghost4;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end SelTabDialog member variables

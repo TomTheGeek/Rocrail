@@ -404,23 +404,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
       }
     }
   }
-  else if( fbevt == NULL && puls && loc != NULL ) {
-    /* ghost train! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Maybe ghost train in block %s, fbid=%s, ident=%d",
-        data->id, key, ident );
-
-    fbevt = (iONode)ListOp.first( data->fbGhostEvents );
-    while( fbevt != NULL ) {
-      /* notify loc */
-      int evt = _getEventCode( wFeedbackEvent.getaction( fbevt ) );
-      if( evt == enter2in_event )
-        LocOp.event( loc, manager, enter_event, 0 );
-      else
-        LocOp.event( loc, manager, evt, 0 );
-
-      fbevt = (iONode)ListOp.next( data->fbGhostEvents );
-    }
-  }
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
     /* undefined event! */
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d",
@@ -447,7 +430,6 @@ static void __initFeedbackEvents( iOBlock inst ) {
   char key[256] = {'\0'};
   iONode fbevt = wBlock.getfbevent( data->props );
 
-  ListOp.clear( data->fbGhostEvents );
   MapOp.clear( data->fbEvents );
 
   while( fbevt != NULL ) {
@@ -456,8 +438,6 @@ static void __initFeedbackEvents( iOBlock inst ) {
 
     if( StrOp.len( fbid ) > 0 && fb != NULL ) {
       iOStrTok tok = StrTokOp.inst( wFeedbackEvent.getfrom( fbevt ), ',' );
-      if( wFeedbackEvent.isghostdetection( fbevt ) )
-        ListOp.add( data->fbGhostEvents, (obj)fbevt );
 
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -1528,7 +1508,6 @@ static iOBlock _inst( iONode props ) {
   data->locId = NodeOp.getStr( props, "locid", NULL );
   data->minbklc = wCtrl.getminbklc( AppOp.getIniNode( wCtrl.name() ) );
   data->fbEvents = MapOp.inst();
-  data->fbGhostEvents = ListOp.inst();
   data->timer = wBlock.getevttimer( props );
   data->id = wBlock.getid( props );
 

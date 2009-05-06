@@ -107,32 +107,26 @@ class wxSpinCtrl;
 #define ID_STATICTEXT_BLOCK_SENSORID 10043
 #define ID_STATICTEXT_BLOCK_SENSOR_ACTION 10044
 #define wxID_STATIC_BLOCK_SENSOR_END 10267
-#define wxID_STATIC_BLOCK_GHOST 10277
 #define ID_STATICTEXT_BLOCK_SENSOR_FREE 10045
 #define ID_COMBOBOX_BLOCK_SENSOR_ID1 10046
 #define ID_COMBOBOX_BLOCK_SENSOR_ACTION1 10047
 #define ID_CHECKBOX_BLOCK_SENSOR_END1 10268
-#define ID_CHECKBOX_BLOCK_GHOST1 10276
 #define ID_BUTTON_BLOCKS_SENSOR_PROPS1 10262
 #define ID_COMBOBOX_BLOCK_SENSOR_ID2 10049
 #define ID_COMBOBOX_BLOCK_SENSOR_ACTION2 10050
 #define ID_CHECKBOX_BLOCK_SENSOR_END2 10269
-#define ID_CHECKBOX_BLOCK_GHOST2 10278
 #define ID_BUTTON_BLOCK_SENSOR_PROPS2 10263
 #define ID_COMBOBOX_BLOCK_SENSOR_ID3 10052
 #define ID_COMBOBOX_BLOCK_SENSOR_ACTION3 10053
 #define ID_CHECKBOX_BLOCK_SENSOR_END3 10270
-#define ID_CHECKBOX_BLOCK_GHOST3 10279
 #define ID_BUTTON_BLOCKS_SENSOR_PROPS3 10264
 #define ID_COMBOBOX_BLOCK_SENSOR_ID4 10055
 #define ID_COMBOBOX_BLOCK_SENSOR_ACTION4 10056
 #define ID_CHECKBOX_BLOCK_SENSOR_END4 10271
-#define ID_CHECKBOX_BLOCK_GHOST4 10280
 #define ID_BUTTON_BLOCKS_SENSOR_PROPS4 10265
 #define ID_COMBOBOX_BLOCK_SENSOR_ID5 10058
 #define ID_COMBOBOX_BLOCK_SENSOR_ACTION5 10059
 #define ID_CHECKBOX_BLOCK_SENSOR_END5 10272
-#define ID_CHECKBOX_BLOCK_GHOST5 10281
 #define ID_BUTTON_BLOCKS_SENSOR_PROPS5 10266
 #define wxID_STATIC_BK_TIMER 10164
 #define ID_TEXTCTRL_BK_TIMER 10163
@@ -372,32 +366,26 @@ public:
     wxStaticText* m_LabelSensorIDs;
     wxStaticText* m_LabelSensorActions;
     wxStaticText* m_LabelSensorEnd;
-    wxStaticText* m_LabelGhost;
     wxStaticText* m_LabelProps;
     wxComboBox* m_SensorID1;
     wxComboBox* m_SensorAction1;
     wxCheckBox* m_SensorEnd1;
-    wxCheckBox* m_Ghost1;
     wxButton* m_SensorProps1;
     wxComboBox* m_SensorID2;
     wxComboBox* m_SensorAction2;
     wxCheckBox* m_SensorEnd2;
-    wxCheckBox* m_Ghost2;
     wxButton* m_SensorProps2;
     wxComboBox* m_SensorID3;
     wxComboBox* m_SensorAction3;
     wxCheckBox* m_SensorEnd3;
-    wxCheckBox* m_Ghost3;
     wxButton* m_SensorProps3;
     wxComboBox* m_SensorID4;
     wxComboBox* m_SensorAction4;
     wxCheckBox* m_SensorEnd4;
-    wxCheckBox* m_Ghost4;
     wxButton* m_SensorProps4;
     wxComboBox* m_SensorID5;
     wxComboBox* m_SensorAction5;
     wxCheckBox* m_SensorEnd5;
-    wxCheckBox* m_Ghost5;
     wxButton* m_SensorProps5;
     wxStaticText* m_labTimer;
     wxTextCtrl* m_Timer;

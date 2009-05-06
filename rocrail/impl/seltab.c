@@ -457,7 +457,6 @@ static void __initFeedbackEvents( iOSelTab inst ) {
   char key[256] = {'\0'};
   iONode fbevt = wSelTab.getfbevent( data->props );
 
-  ListOp.clear( data->fbGhostEvents );
   MapOp.clear( data->fbEvents );
 
   while( fbevt != NULL ) {
@@ -466,8 +465,6 @@ static void __initFeedbackEvents( iOSelTab inst ) {
 
     if( StrOp.len( fbid ) > 0 && fb != NULL ) {
       iOStrTok tok = StrTokOp.inst( wFeedbackEvent.getfrom( fbevt ), ',' );
-      if( wFeedbackEvent.isghostdetection( fbevt ) )
-        ListOp.add( data->fbGhostEvents, (obj)fbevt );
 
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -692,7 +689,6 @@ static struct OSelTab* _inst( iONode ini ) {
 
   data->muxLock = MutexOp.inst( NULL, True );
   data->fbEvents = MapOp.inst();
-  data->fbGhostEvents = ListOp.inst();
   data->lockedId = wSelTab.getlocid(ini);
 
   __initSensors( __SelTab );

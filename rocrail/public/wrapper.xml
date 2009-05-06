@@ -1130,7 +1130,6 @@
           <const name="from_all" vt="string" val="all"/>
           <const name="from_all_reverse" vt="string" val="all-reverse"/>
           <var name="from" vt="string" defval="" range="*" remark="from block id (csv list for more blocks)"/>
-          <var name="ghostdetection" vt="bool" defval="false" remark=""/>
         </fbevent>
       </bk>
     </bklist>
