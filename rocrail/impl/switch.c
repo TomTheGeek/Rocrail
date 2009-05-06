@@ -855,14 +855,14 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       __normalizeAddr( &addr1, &port1 );
       __normalizeAddr( &addr2, &port2 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr=%d port=%d", addr, port );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] addr=%d port=%d", SwitchOp.getId(inst), addr, port );
       if( addr == addr1 && port == port1 ) {
         if( inv )
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
         else
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState1=%d", data->fieldState1 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState1=%d", SwitchOp.getId(inst), data->fieldState1 );
       }
       if( addr == addr2 && port == port2 ) {
         if( inv2 )
@@ -870,10 +870,10 @@ static void _event( iOSwitch inst, iONode nodeC ) {
         else
           data->fieldState2 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState2=%d", data->fieldState2 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState2=%d", SwitchOp.getId(inst), data->fieldState2 );
       }
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState1=%d, fieldState2=%d", data->fieldState1, data->fieldState2 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState1=%d, fieldState2=%d", SwitchOp.getId(inst), data->fieldState1, data->fieldState2 );
 
       if( StrOp.equals( wSwitch.gettype( data->props ), wSwitch.threeway ) ) {
         if( data->fieldState1 == 0 && data->fieldState2 == 0)
@@ -907,7 +907,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       }
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "field state=%s", wSwitch.getstate( data->props) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s", SwitchOp.getId(inst), wSwitch.getstate( data->props) );
 
     __checkAction( inst );
 
