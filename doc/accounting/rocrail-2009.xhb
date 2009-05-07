@@ -39,4 +39,6 @@
 <ope date="733489" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG"/>
 <ope date="733491" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto"/>
 <ope date="733524" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET"/>
+<ope date="733534" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Kuempel"/>
+<ope date="733532" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Volker Hanchen"/>
 </homebank>
