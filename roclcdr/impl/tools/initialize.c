@@ -71,6 +71,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
         grouplocked = gblock->lockForGroup( gblock, data->loc->getId( data->loc ) );
       }
     };
+    StrTokOp.base.del(tok);
     if(!grouplocked) {
       unlockBlockGroup(inst, group);
       return False;
@@ -169,6 +170,7 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
         grouplocked = gblock->lockForGroup( gblock, data->loc->getId( data->loc ) );
       }
     };
+    StrTokOp.base.del(tok);
     if(!grouplocked) {
       unlockBlockGroup(inst, group);
       return False;
