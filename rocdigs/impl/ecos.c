@@ -884,14 +884,11 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     */
 
   } else if ( StrOp.equals( oname, wProgram.name()) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: program command: UNDOCUMENTED" );
-
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "program command: UNDOCUMENTED" );
       /* Missing programming commands */
 
   } else {
-
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "WARNING: Unknown command [%s]", oname );
-
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Unknown command [%s]", oname );
   }
 
     /* Return length of command created */
