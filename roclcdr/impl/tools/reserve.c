@@ -49,6 +49,7 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
       gblock->unLockForGroup( gblock, data->loc->getId( data->loc ) );
     }
   };
+  StrTokOp.base.del(tok);
 }
 
 

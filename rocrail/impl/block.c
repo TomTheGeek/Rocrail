@@ -445,6 +445,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
         StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
         MapOp.put( data->fbEvents, key, (obj)fbevt );
       };
+      StrTokOp.base.del(tok);
 
       FBackOp.setListener( fb, (obj)inst, &_fbEvent );
     }

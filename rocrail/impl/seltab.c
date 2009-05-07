@@ -472,6 +472,7 @@ static void __initFeedbackEvents( iOSelTab inst ) {
         StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
         MapOp.put( data->fbEvents, key, (obj)fbevt );
       };
+      StrTokOp.base.del(tok);
 
       FBackOp.addListener( fb, (obj)inst );
     }

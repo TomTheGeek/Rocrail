@@ -391,6 +391,7 @@ static void __initGroups( iOModel inst ) {
             block->setGroup( block, group);
         }
       }
+      StrTokOp.base.del(tok);
 
       link = wLinkList.nextlink( linklist, link );
     }
@@ -2471,6 +2472,7 @@ static iONode _checkForBlockGroup(iOModel inst, const char* BlockId) {
         }
       };
       link = wLinkList.nextlink(linklist, link);
+      StrTokOp.base.del(tok);
     };
   }
   return group;
