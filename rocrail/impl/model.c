@@ -1396,7 +1396,17 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
-  if( StrOp.equals( wAutoCmd.name(), cmdName ) ) {
+  if( StrOp.equals( wSysCmd.name(), cmdName ) ) {
+    /* inform objects of a power on/off */
+    obj listener = ListOp.first( data->sysEventListeners );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
+    while( listener != NULL ) {
+      listener->event(listener, cmd);
+      listener = ListOp.next( data->sysEventListeners );
+    };
+  }
+  else if( StrOp.equals( wAutoCmd.name(), cmdName ) ) {
     if( StrOp.equals( wAutoCmd.on, cmdVal ) || StrOp.equals( wAutoCmd.off, cmdVal ) ) {
       Boolean autoMode = StrOp.equals( wAutoCmd.on, cmdVal );
       if( !autoMode && data->autoMode ) {
@@ -3048,6 +3058,12 @@ static const char* _getRouteAlias(iOModel inst, const char* routeId) {
 }
 
 
+static void _addSysEventListener(iOModel inst, obj listener) {
+  iOModelData data = Data(inst);
+  ListOp.add( data->sysEventListeners, listener );
+}
+
+
 static iOModel _inst( const char* fileName ) {
   iOModel     model = allocMem( sizeof( struct OModel ) );
   iOModelData data  = allocMem( sizeof( struct OModelData ) );
@@ -3084,6 +3100,8 @@ static iOModel _inst( const char* fileName ) {
   data->coAddrMap   = MapOp.inst();
 
   data->levelItemsMap = MapOp.inst();
+
+  data->sysEventListeners = ListOp.inst();
 
   data->muxFindDest = MutexOp.inst( "muxFindDest", True );
 

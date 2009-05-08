@@ -50,8 +50,10 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 
 static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val );
+static void _sysEvent( obj inst, const char* cmd );
 
 static int instCnt = 0;
 
@@ -66,6 +68,9 @@ static void* __event( void* inst, const void* evt ) {
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wFeedback.name(), NodeOp.getName(node) ) ) {
     _fbEvent( inst ,wFeedback.isstate(node), wFeedback.getid(node), wFeedback.getidentifier(node), wFeedback.getval(node) );
+  }
+  else if( node != NULL && StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
+    _sysEvent( inst ,wSysCmd.getcmd(node) );
   }
   return NULL;
 }
@@ -300,11 +305,27 @@ static void __evaluatePosition( obj inst ) {
 }
 
 
+static void _sysEvent( obj inst, const char* cmd ) {
+  iOSelTabData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s]...", cmd );
+  if( StrOp.equals( wSysCmd.shutdown, cmd ) ) {
+    /* goto offpos */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Power Off sysEvent: offpos=%d", wSelTab.getoffpos(data->props) );
+    if( wSelTab.getoffpos(data->props) > 0 && !SelTabOp.isLocked((iOSelTab)inst, NULL) ) {
+      iONode node = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
+      wSelTab.setid( node, wSelTab.getid( data->props ) );
+      NodeOp.setInt( node, "cmd", wSelTab.getoffpos(data->props) );
+      SelTabOp.cmd((iIBlockBase)inst, node);
+    }
+  }
+}
+
+
 /**  */
 static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int val ) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "fbid=%s state=%s ident=%d",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbid=%s state=%s ident=%d",
                  id, state?"true":"false", ident );
   /* process the event */
   /* when reaching the wanted position the GUI must be informed by setting the SelTabPos sensors to "true" */
@@ -678,6 +699,8 @@ static struct OSelTab* _inst( iONode ini ) {
   __initFeedbackEvents( __SelTab );
   data->tablepos = -1;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] initialized.", wSelTab.getid(ini) );
+
+  ModelOp.addSysEventListener( AppOp.getModel(), (obj)__SelTab );
 
   instCnt++;
   return __SelTab;

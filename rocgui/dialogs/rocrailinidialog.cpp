@@ -350,25 +350,26 @@ void RocrailIniDialog::initValues() {
   // Controllers
   initControllerList();
 
-  m_Lib->Append( wxString( wDigInt.p50, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.p50x, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.opendcc, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.hsi88, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.barjut, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.clock, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ddx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.dinamo, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.om32, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.inter10, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.lenz, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ecos, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.hsi88, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.inter10, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.lenz, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.loconet, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
-  m_Lib->Append( wxString( wDigInt.clock, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mcs2, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.om32, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.opendcc, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.p50, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.p50x, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.railcom, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
 
   m_Lib->SetSelection( 0 );
   m_Controller = NULL;

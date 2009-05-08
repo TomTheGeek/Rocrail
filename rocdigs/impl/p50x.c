@@ -1023,7 +1023,7 @@ static void __statusReader( void* threadinst ) {
       out[0] = (byte)'x';
       out[1] = 0xA2; /* xStatus */
       if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
-        if( !SerialOp.read( o->serial, (char*)in, 1 ) ) {
+        if( SerialOp.read( o->serial, (char*)in, 1 ) ) {
           Boolean power = (in[0] & 0x08) ? True:False;
           Boolean hot   = (in[0] & 0x04) ? True:False;
           Boolean halt  = (in[0] & 0x10) ? True:False;
@@ -1334,7 +1334,7 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
 /* Support for dynamic Loading */
 iIDigInt rocGetDigInt( const iONode ini ,const iOTrace trc )
 {
-	return (iIDigInt)_inst(ini,trc);
+  return (iIDigInt)_inst(ini,trc);
 }
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocdigs/impl/p50x.fm"

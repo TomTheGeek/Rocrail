@@ -21,6 +21,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 #include "rocs/public/node.h"
 
@@ -29,6 +30,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -112,6 +114,8 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
     wxTextCtrl* m_Port;
+    wxStaticText* m_labFBMod;
+    wxSpinCtrl* m_FBMod;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end ECoSCtrlDialog member variables

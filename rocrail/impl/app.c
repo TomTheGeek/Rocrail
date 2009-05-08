@@ -803,6 +803,15 @@ static Boolean _shutdown( void ) {
 
     iOAppData data = Data(__appinst);
 
+    /* send shutdown command */
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
+    wSysCmd.setcmd( cmd, wSysCmd.shutdown );
+    wSysCmd.setinformall( cmd, True );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SHUTDOWN" );
+    if( data->control != NULL )
+      ControlOp.cmd( data->control, cmd, NULL );
+
+
     /* Inform Model. */
     if( data->model != NULL )
       ModelOp.save(data->model);
@@ -862,7 +871,6 @@ static void _stop( void ) {
       ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
   }
 }
-
 
 static void _go( void ) {
   if( __appinst != NULL ) {

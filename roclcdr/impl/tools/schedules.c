@@ -41,6 +41,38 @@
 #include "rocrail/wrapper/public/ActionCtrl.h"
 
 
+
+static Boolean isHourlyInRange(iILcDriverInt inst, iONode schedule) {
+  iOLcDriverData data = Data(inst);
+  Boolean inRange  = True;
+  int     fromhour = wSchedule.getfromhour(schedule);
+  int     tohour   = wSchedule.gettohour(schedule);
+  int     hours    = 0;
+  int     mins     = 0;
+
+  long modeltime = data->model->getTime( data->model );
+  struct tm* ltm;
+
+  ltm = localtime( &modeltime );
+  hours = ltm->tm_hour;
+  mins  = ltm->tm_min;
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modeltime %02d:%02d (%ld)",
+      hours, mins, modeltime );
+
+  if( hours < fromhour || tohour < hours || tohour == hours ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "current hour, %d, is no longer in the hourly range from %d to %d",
+        hours, fromhour, tohour );
+    inRange = False;
+  }
+
+
+  return inRange;
+}
+
+
+
 void checkScheduleActions( iILcDriverInt inst, int state) {
   iOLcDriverData data = Data(inst);
 
@@ -65,22 +97,22 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
         actionctrl = wSchedule.nextactionctrl(sc, actionctrl);
       };
 
-      /* check for a next action */
-      if( scaction != NULL && StrOp.len(scaction) > 0  ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next schedule [%s] activated", scaction );
+      if( wSchedule.gettimeprocessing(sc) == wSchedule.time_hourly && isHourlyInRange(inst, sc) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hourly schedule is recycled", scaction );
         /* set the schedule start time: */
         data->scheduletime = data->model->getTime( data->model );
-        data->schedule = scaction;
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
         resetNext2( (iOLcDriver)inst, True );
       }
-      else if( wSchedule.gettimeprocessing(sc)  == wSchedule.time_hourly ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hourly schedule is recycled", scaction );
+      /* check for a next action */
+      else if( scaction != NULL && StrOp.len(scaction) > 0  ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next schedule [%s] activated", scaction );
         /* set the schedule start time: */
         data->scheduletime = data->model->getTime( data->model );
+        data->schedule = scaction;
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
 

@@ -187,6 +187,7 @@ ECoS Keywords:
 static const int OID_ECOS       = 1;
 static const int OID_LCMANAGER  = 10;
 static const int OID_SWMANAGER  = 11;
+static const int OID_SNIFFER    = 25;
 static const int OID_S88MANAGER = 26;
 
 static int instCnt = 0;
@@ -194,7 +195,7 @@ static int instCnt = 0;
 
 static const int PORTSPERCHAR   = 4;     /* Each character = 4 ports */
 static const int CHARSPERMODULE = 4;     /* Each module has 4 characters */
-static const int S88BUFLEN      = 64;   /* Maximum number of sensors under ECoS is 32 * 16, sb 128 */
+static const int S88BUFLEN      = 64;    /* Maximum number of sensors under ECoS is 32 * 16, sb 128 */
 
 
   /** -----
@@ -526,12 +527,23 @@ static void __requestViews( iOECoS inst ) {
       What is diff between 26 and 100?
 
     */
-
+  
   StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_S88MANAGER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
   __inits88( inst, S88BUFLEN );
   StrOp.fmtb( ecosCmd, "request(100, view)\n", OID_S88MANAGER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
+  /* switch manager */
+  StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_SWMANAGER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+  
+  /* sniffer */
+  StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_SNIFFER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
+  StrOp.fmtb( ecosCmd, "request(%d, view)\n", 20000 );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 }
 
@@ -543,7 +555,18 @@ static void __requestViews( iOECoS inst ) {
 static void __releaseViews( iOECoS inst ) {
   iOECoSData data     = Data( inst );
   char ecosCmd[ 256 ] = {'\0'};
+    
+  StrOp.fmtb( ecosCmd, "release(%d, view)\n", 20000 );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
+  /* sniffer */
+  StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_SNIFFER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
+  /* switch manager */
+  StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_SWMANAGER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+    
     /* ECoS */
 
   StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_ECOS );
@@ -615,6 +638,9 @@ static Boolean __connect( iOECoS inst ) {
     /* queryObjects: */
 
   StrOp.fmtb( ecosCmd, "queryObjects(%d, addr, name, protocol)\n", OID_LCMANAGER );
+  __transact( inst, ecosCmd, StrOp.len(ecosCmd));
+
+  StrOp.fmtb( ecosCmd, "queryObjects(%d, addr, name1)\n", OID_SWMANAGER );
   __transact( inst, ecosCmd, StrOp.len(ecosCmd));
 
   return True;
@@ -1209,14 +1235,18 @@ static void __processReply( iOECoS inst, iONode node ) {
 
     } else if ( StrOp.equals( "create", rname ) && oid == OID_LCMANAGER ) {
       __processLocCreate( inst, node );
+    } else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "other reply, rname = [%s]", rname );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "other reply, oid = [%d]", oid );
     }
-
   } else if ( rtype == REPLY_TYPE_EVENT ) {
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event, rname = [%s]", rname );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event, oid = [%d]", oid );
 
     if ( oid >= 100 ) {
       __processS88Events( inst, node );
     }
-
   }
 }
 

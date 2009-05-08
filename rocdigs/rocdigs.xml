@@ -42,8 +42,8 @@
       <var name="timeout" vt="int"/>
       <var name="fbmod" vt="int"/>
       <var name="swtime" vt="int"/>
-      <var name="psleep" vt="int"/>        
-      
+      <var name="psleep" vt="int"/>
+
       <var name="dummyio" vt="Boolean"/>
       <var name="ctsretry" vt="int"/>
       <var name="state" vt="p50state"/>
@@ -291,7 +291,7 @@
       <var name="lcfn[10000]" vt="byte"/>
     </data>
   </object>
-  
+
   <object name="Roco" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -316,8 +316,8 @@
       <var name="lcfn[10000]" vt="byte"/>
     </data>
   </object>
-  
-  
+
+
    <object name="Virtual" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -691,6 +691,8 @@
       <var name="writeUDP" vt="iOSocket"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="feedbackReader" vt="iOThread"/>
+      <var name="fbmod" vt="int"/>
     </data>
   </object>
 
@@ -713,5 +715,23 @@
     </data>
   </object>
 
+
+  <object name="RailCom" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex,map" include="$rocint/public/digint" remark="railcom object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode" remark="DigInt Ini"/>
+      <var name="trace" vt="iOTrace" remark="Trace pointer"/>
+      <var name="listenerObj" vt="obj" remark="Listener pointer"/>
+      <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
+      <var name="iid" vt="const char*" remark="Interface ID"/>
+      <var name="run" vt="Boolean"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+    </data>
+  </object>
 
 </Project>

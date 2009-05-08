@@ -226,6 +226,7 @@
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
       <const name="clock" vt="string" val="clock"/>
+      <const name="railcom" vt="string" val="railcom"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -593,6 +594,7 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
+    <var name="fnchanged" vt="int" defval="-1" remark="actual changed function"/>
     <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
     <var name="group" vt="int" defval="0" range="0-*" remark="0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28"/>
     <var name="f0" vt="bool" defval="false"/>
@@ -1262,6 +1264,7 @@
         <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>
         <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
         <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
+        <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
         <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupation on the bridge."/>
@@ -1417,6 +1420,8 @@
         <var name="ttlib" vt="string" defval="./ttdriver" remark="TurntableDriver library"/>
         <var name="purchased" vt="string" defval="" remark="Date of purchase"/>
         <var name="runtime" vt="long" defval="0" remark="Auto runtime in seconds"/>
+        <var name="mtime" vt="long" defval="0" remark="last maintenance in seconds"/>
+        <var name="mint" vt="int" defval="0" remark="maintenance interval in hours"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
 
         <const name="mode_idle" vt="string" val="idle"/>
@@ -1580,6 +1585,7 @@
         <var name="minocc" vt="int" defval="0" range="0-*" required="false" remark="minimal tracks to be occupied before leaving the fiddle yard"/>
         <var name="movedelay" vt="int" defval="0" range="0-*" required="false" units="s" remark="delay in seconds after an IN event before processing a new move"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="offpos" vt="int" defval="0" range="0-*" required="false" remark="Goto position at power off."/>
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>

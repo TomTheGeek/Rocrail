@@ -94,7 +94,6 @@ void GenericCtrlDlg::initLabels() {
   m_labLib->SetLabel( wxGetApp().getMsg( "type" ) );
   m_Baudrate->SetLabel( wxGetApp().getMsg( "bps" ) );
   m_labFeedbackBox->SetLabel( wxGetApp().getMsg( "sensors" ) );
-  m_labFeedbackBox->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labFbMod->SetLabel( wxGetApp().getMsg( "number" ) );
   m_FbPoll->SetLabel( wxGetApp().getMsg( "poll" ) );
   m_PTSupport->SetLabel( wxGetApp().getMsg( "pt" ) );
@@ -104,17 +103,17 @@ void GenericCtrlDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
   m_Lib->SetValue( wxString( wDigInt.getlib( m_Props ), wxConvUTF8 ) );
-  
+
   char* str = StrOp.fmt("%d",wDigInt.getfbmod( m_Props ));
   m_FbMod->SetValue( wxString( str, wxConvUTF8 ) ); StrOp.free(str);
   m_FbPoll->SetValue( wDigInt.isfbpoll( m_Props ) );
   m_PTSupport->SetValue( wDigInt.isptsupport( m_Props ) );
-  
+
   // flow control
   {
     const char* flow = wDigInt.getflow( m_Props );
     m_HardwareFlow->SetSelection(0);
-    
+
     if( StrOp.equals( flow, wDigInt.cts ) )
       m_HardwareFlow->SetSelection(1);
     else if( StrOp.equals( flow, wDigInt.dsr ) )
@@ -122,7 +121,7 @@ void GenericCtrlDlg::initValues() {
     else if( StrOp.equals( flow, wDigInt.xon ) )
       m_HardwareFlow->SetSelection(3);
   }
-  
+
   if( wDigInt.getbps( m_Props ) == 2400 )
     m_Baudrate->SetSelection(0);
   else if( wDigInt.getbps( m_Props ) == 4800 )
@@ -137,9 +136,9 @@ void GenericCtrlDlg::initValues() {
     m_Baudrate->SetSelection(5);
   else
     m_Baudrate->SetSelection(2);
-  
-  
-  
+
+
+
 }
 
 void GenericCtrlDlg::evaluate() {
@@ -148,7 +147,7 @@ void GenericCtrlDlg::evaluate() {
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   //wDigInt.setswtime( m_Props, atoi( m_SwTime->GetValue().mb_str(wxConvUTF8) ) );
-  
+
   wDigInt.setfbmod( m_Props, atoi(m_FbMod->GetValue().mb_str(wxConvUTF8)) );
   wDigInt.setfbpoll( m_Props, m_FbPoll->IsChecked()?True:False );
   wDigInt.setptsupport( m_Props, m_PTSupport->IsChecked()?True:False );
@@ -163,7 +162,7 @@ void GenericCtrlDlg::evaluate() {
       wDigInt.setflow( m_Props, wDigInt.dsr );
     else if( m_HardwareFlow->GetSelection() == 3 )
       wDigInt.setflow( m_Props, wDigInt.xon );
-    
+
   }
 
   if( m_Baudrate->GetSelection() == 0 )
@@ -224,7 +223,7 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
  */
 
 void GenericCtrlDlg::CreateControls()
-{    
+{
 ////@begin GenericCtrlDlg content construction
     GenericCtrlDlg* itemDialog1 = this;
 

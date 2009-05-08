@@ -73,6 +73,8 @@ BEGIN_EVENT_TABLE( SwitchDialog, wxDialog )
 
     EVT_BUTTON( ID_SWITCH_ACTIONS, SwitchDialog::OnSwitchActionsClick )
 
+    EVT_CHECKBOX( ID_SWITCH_SINGLEGATE, SwitchDialog::OnSwitchSinglegateClick )
+
     EVT_CHECKBOX( ID_CHECKBOX_SW_DELAY, SwitchDialog::OnCheckboxSwDelayClick )
 
     EVT_BUTTON( wxID_CANCEL, SwitchDialog::OnCancelClick )
@@ -339,6 +341,7 @@ void SwitchDialog::initValues() {
   m_Gate->SetSelection( wSwitch.getgate1(m_Props) );
   m_Invert1->SetValue( wSwitch.isinv(m_Props) );
   m_SingleGate->SetValue( wSwitch.issinglegate(m_Props) );
+  m_Gate->Enable(m_SingleGate->IsChecked());
 
   str = StrOp.fmt( "%d", wSwitch.getaddr2(m_Props) );
   m_Address2->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
@@ -849,7 +852,7 @@ void SwitchDialog::CreateControls()
     m_Gate->SetSelection(0);
     itemFlexGridSizer45->Add(m_Gate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_SingleGate = new wxCheckBox( m_InterfacePanel, wxID_ANY, _("single gate"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SingleGate = new wxCheckBox( m_InterfacePanel, ID_SWITCH_SINGLEGATE, _("single gate"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SingleGate->SetValue(false);
     itemFlexGridSizer45->Add(m_SingleGate, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1166,5 +1169,15 @@ void SwitchDialog::OnSwitchActionsClick( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_SWITCH_SINGLEGATE
+ */
+
+void SwitchDialog::OnSwitchSinglegateClick( wxCommandEvent& event )
+{
+  m_Gate->Enable(m_SingleGate->IsChecked());
 }
 

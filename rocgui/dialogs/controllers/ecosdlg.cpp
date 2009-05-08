@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // Name:        ecosdlg.cpp
-// Purpose:     
-// Author:      
-// Modified by: 
+// Purpose:
+// Author:
+// Modified by:
 // Created:     Fri 27 Jul 2007 20:32:42 CEST
-// RCS-ID:      
-// Copyright:   
-// Licence:     
+// RCS-ID:
+// Copyright:
+// Licence:
 /////////////////////////////////////////////////////////////////////////////
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
@@ -72,6 +72,14 @@ ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props )
   initLabels();
   initValues();
 
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+    m_Port->Enable(false);
+    this->SetTitle( _T("CS2") );
+  }
+  else {
+    m_FBMod->Enable(false);
+  }
+
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
@@ -83,18 +91,20 @@ void ECoSCtrlDialog::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
   m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labFBMod->SetLabel( wxGetApp().getMsg( "sensors" ) );
 }
 
 void ECoSCtrlDialog::initValues() {
   if( m_Props == NULL )
     return;
-    
+
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
 
   char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
   m_Port->SetValue( wxString( val, wxConvUTF8 ) );
   StrOp.free( val );
+  m_FBMod->SetValue( wDigInt.getfbmod( m_Props ) );
 }
 
 
@@ -104,6 +114,7 @@ void ECoSCtrlDialog::evaluate() {
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setport( m_Props, atoi( m_Port->GetValue().mb_str(wxConvUTF8) ) );
+  wDigInt.setfbmod( m_Props, m_FBMod->GetValue() );
 }
 
 
@@ -138,7 +149,7 @@ ECoSCtrlDialog::~ECoSCtrlDialog()
 }
 
 /*!
- * Member initialisation 
+ * Member initialisation
  */
 
 void ECoSCtrlDialog::Init()
@@ -150,6 +161,8 @@ void ECoSCtrlDialog::Init()
     m_Host = NULL;
     m_labPort = NULL;
     m_Port = NULL;
+    m_labFBMod = NULL;
+    m_FBMod = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -160,7 +173,7 @@ void ECoSCtrlDialog::Init()
  */
 
 void ECoSCtrlDialog::CreateControls()
-{    
+{
 ////@begin ECoSCtrlDialog content construction
     ECoSCtrlDialog* itemDialog1 = this;
 
@@ -196,17 +209,23 @@ void ECoSCtrlDialog::CreateControls()
     m_Port->SetMaxLength(5);
     itemFlexGridSizer5->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer12 = new wxStdDialogButtonSizer;
+    m_labFBMod = new wxStaticText( itemPanel3, wxID_ANY, _("FBmod"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer5->Add(m_labFBMod, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer12, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_FBMod = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 64, 0 );
+    itemFlexGridSizer5->Add(m_FBMod, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer14 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer12->AddButton(m_OK);
+    itemStdDialogButtonSizer14->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer12->AddButton(m_Cancel);
+    itemStdDialogButtonSizer14->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer12->Realize();
+    itemStdDialogButtonSizer14->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }

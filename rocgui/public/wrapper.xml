@@ -55,6 +55,10 @@
     <const name="lang_danish" vt="string" val="da"/>
     <const name="lang_czech" vt="string" val="cs"/>
     <const name="lang_bosnian" vt="string" val="bs"/>
+    <const name="lang_bulgarian" vt="string" val="bg"/>
+    <const name="lang_catalan" vt="string" val="ca"/>
+    <const name="lang_greek" vt="string" val="el"/>
+    <const name="lang_russian" vt="string" val="ru"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>

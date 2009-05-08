@@ -88,6 +88,7 @@ class wxSpinCtrl;
 #define wxID_STATIC_SW_PORT1 10026
 #define ID_TEXTCTRL_SW_PORT1 10027
 #define wxID_STATIC_SW_GATE 10328
+#define ID_SWITCH_SINGLEGATE 10314
 #define ID_CHECKBOX_SW_INVERT1 10029
 #define wxID_STATIC_SW_ADDRESS2 10030
 #define ID_TEXTCTRL_SW_ADDRESS2 10031
@@ -168,6 +169,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SWITCH_ACTIONS
     void OnSwitchActionsClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_SWITCH_SINGLEGATE
+    void OnSwitchSinglegateClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SW_DELAY
     void OnCheckboxSwDelayClick( wxCommandEvent& event );

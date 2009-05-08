@@ -193,6 +193,8 @@ public:
     wxTextCtrl* m_Address;
     wxStaticText* m_labPolAddr;
     wxTextCtrl* m_PolAddr;
+    wxStaticText* m_labActFn;
+    wxSpinCtrl* m_ActFn;
     wxStaticText* m_labProt;
     wxComboBox* m_Prot;
     wxStaticText* m_labBridgeSensor1;
