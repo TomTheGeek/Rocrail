@@ -78,7 +78,6 @@ class wxNotebook;
 #define wxID_STATIC_FB_IID 10000
 #define ID_TEXTCTRL_FB_IID 10001
 #define wxID_STATIC_FB_BUS 10254
-#define ID_TEXTCTRL_FB_BUS 10253
 #define wxID_STATIC_FB_ADDRESS1 10002
 #define ID_TEXTCTRL_FB_ADDRESS1 10003
 #define SYMBOL_FEEDBACKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -203,7 +202,7 @@ public:
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
     wxStaticText* m_Label_Bus;
-    wxTextCtrl* m_Bus;
+    wxRadioBox* m_Bus;
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
     wxCheckBox* m_ActiveLow;
