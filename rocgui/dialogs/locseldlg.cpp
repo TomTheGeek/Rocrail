@@ -147,10 +147,10 @@ void LocSelDlg::InitValues() {
       bmptype = wxBITMAP_TYPE_PNG;
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
-    static char pixpath[256]; 
+    static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( m_Props ) ) );
 
-    if( FileOp.exist(pixpath)) { 
+    if( FileOp.exist(pixpath)) {
       TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
@@ -159,8 +159,8 @@ void LocSelDlg::InitValues() {
       m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
     }
     m_LocImageIndex->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
-    
-    
+
+
     //m_LocImage->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
   }
@@ -233,7 +233,7 @@ bool LocSelDlg::Create( wxWindow* parent, wxWindowID id, const wxString& caption
  */
 
 void LocSelDlg::CreateControls()
-{    
+{
 ////@begin LocSelDlg content construction
     LocSelDlg* itemDialog1 = this;
 
@@ -260,7 +260,7 @@ void LocSelDlg::OnListboxSelLocSelected( wxCommandEvent& event )
     event.Skip();
     return;
   }
-    
+
   int sel = m_List->GetSelection();
   if( sel == wxNOT_FOUND )
     return;
@@ -313,17 +313,18 @@ void LocSelDlg::OnBitmapbuttonSelLocClick( wxCommandEvent& event )
     event.Skip();
     return;
   }
-    
+
   int sel = m_List->GetSelection();
   if( sel == wxNOT_FOUND )
     return;
 
   m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
-  
+
   if( m_Props != NULL ) {
     // Entering MIC mode!
+    wxCursor cursor = wxCursor(wxCURSOR_BULLSEYE);
+    SetCursor( cursor );
     CaptureMouse();
-    
   }
 }
 
@@ -332,7 +333,7 @@ void LocSelDlg::OnStop(wxMouseEvent& event) {
     event.Skip();
     return;
   }
-  
+
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wLoc.getid( m_Props ) );
   wLoc.setV( cmd, 0 );
@@ -347,6 +348,8 @@ void LocSelDlg::OnEscape(wxMouseEvent& event) {
     event.Skip();
     return;
   }
+  wxCursor cursor = wxCursor(wxCURSOR_ARROW);
+  SetCursor( cursor );
   ReleaseMouse();
 
   if( wMIC.isexitstop(m_MICini) ) {
@@ -365,12 +368,12 @@ void LocSelDlg::OnSpeed(wxMouseEvent& event) {
     event.Skip();
     return;
   }
-  
+
   bool dirchange = event.MiddleDown();
   int rotation   = event.GetWheelRotation();
   int V_max      = wLoc.getV_max(m_Props);
   int V          = wLoc.getV(m_Props);
-  
+
   if( dirchange ) {
     wLoc.setdir(m_Props, wLoc.isdir(m_Props)?False:True );
     wLoc.setV( m_Props, 0);
