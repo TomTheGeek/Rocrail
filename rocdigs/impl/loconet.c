@@ -477,6 +477,7 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( nodeC, lissyaddr );
+    wFeedback.setbus( nodeC, 2 );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
 
     if( data->iid != NULL )
