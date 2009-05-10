@@ -909,6 +909,8 @@ static iONode _cmd( obj inst, const iONode cmd ) {
 
   if ( !data->connected ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ECoS connection" );
+    if( cmd != NULL )
+      NodeOp.base.del(cmd);
     return NULL;
   } else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Connected to ECoS" );
@@ -930,6 +932,9 @@ static iONode _cmd( obj inst, const iONode cmd ) {
   } else {
    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "WARNING: NULL cmd node" );
   }
+
+  if( cmd != NULL )
+    NodeOp.base.del(cmd);
 
   return NULL;
 }
@@ -1060,6 +1065,7 @@ static void __processLocList( iOECoS inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "oid = [%s]", oid );
 
       if ( oid != NULL ) {
+        char* oldVal = NULL;
 
           /*
 
@@ -1070,6 +1076,11 @@ static void __processLocList( iOECoS inst, iONode node ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                       "Saving id [%s] in map @ [%d]", id, data->objmap );
         MutexOp.wait( data->mapmux );
+        oldVal = (char*)MapOp.get( data->objmap, id );
+        if( oldVal != NULL ) {
+          MapOp.remove(data->objmap, id);
+          StrOp.free(oldVal);
+        }
         MapOp.put( data->objmap, id, ( obj )StrOp.dup( oid ));
         MutexOp.post( data->mapmux );
       } else {
@@ -1098,8 +1109,14 @@ static void __processLocCreate( iOECoS inst, iONode node ) {
     /* Add it to the data object */
 
   if ( id != NULL && oid != NULL ) {
+    char* oldVal = NULL;
     /* existing id's are overwritten... */
     MutexOp.wait( data->mapmux );
+    oldVal = (char*)MapOp.get( data->objmap, id );
+    if( oldVal != NULL ) {
+      MapOp.remove(data->objmap, id);
+      StrOp.free(oldVal);
+    }
     MapOp.put( data->objmap, id, ( obj )StrOp.dup( oid ));
     MutexOp.post( data->mapmux );
   }
