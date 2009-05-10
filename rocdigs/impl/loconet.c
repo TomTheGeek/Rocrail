@@ -147,13 +147,16 @@ static byte _checksum(const byte *cmd, int len)
 
 static void _stateChanged( iOLocoNet loconet ) {
   iOLocoNetData data = Data(loconet);
-  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-  wState.setiid( node, data->iid );
-  wState.setpower( node, data->power?True:False );
-  wState.setprogramming( node, data->pt?True:False );
-  wState.settrackbus( node, data->comm?True:False );
 
-  data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  if( data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+    wState.setiid( node, data->iid );
+    wState.setpower( node, data->power?True:False );
+    wState.setprogramming( node, data->pt?True:False );
+    wState.settrackbus( node, data->comm?True:False );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
 }
 
 static int __rwLNCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeLNCV, int modid, int modaddr, int extracmd) {
