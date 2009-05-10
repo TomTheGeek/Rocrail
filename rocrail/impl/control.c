@@ -287,6 +287,7 @@ static void  __grouplink( obj inst, iONode link ) {
         }
       }
     }
+    StrTokOp.base.del(tok);
   }
 }
 

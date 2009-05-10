@@ -622,6 +622,8 @@
       <var name="connected" vt="Boolean" remark="Connection Flag"/>
       <var name="olds88[64]" vt="int" remark="Previous sensor states"/>
       <var name="mapmux" vt="iOMutex"/>
+      <var name="dccSwitchObjMap" vt="iOMap" remark="DCC Switch OID Mapper"/>
+      <var name="dccSwitchStates[2048]" vt="unsigned char" remark="DCC Switch state control"/>
     </data>
   </object>
 

@@ -446,7 +446,6 @@ void BlockDialog::initLabels() {
   m_LabelSensorIDs->SetLabel( wxGetApp().getMsg( "id" ) );
   m_LabelSensorActions->SetLabel( wxGetApp().getMsg( "event" ) );
   m_LabelSensorEnd->SetLabel( wxGetApp().getMsg( "endpulse" ) );
-  m_LabelGhost->SetLabel( wxGetApp().getMsg( "ghost" ) );
   m_labTimer->SetLabel( wxGetApp().getMsg( "eventtimer" ) );
   initSensorCombos();
 
@@ -1073,32 +1072,26 @@ bool BlockDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_LabelSensorIDs = NULL;
     m_LabelSensorActions = NULL;
     m_LabelSensorEnd = NULL;
-    m_LabelGhost = NULL;
     m_LabelProps = NULL;
     m_SensorID1 = NULL;
     m_SensorAction1 = NULL;
     m_SensorEnd1 = NULL;
-    m_Ghost1 = NULL;
     m_SensorProps1 = NULL;
     m_SensorID2 = NULL;
     m_SensorAction2 = NULL;
     m_SensorEnd2 = NULL;
-    m_Ghost2 = NULL;
     m_SensorProps2 = NULL;
     m_SensorID3 = NULL;
     m_SensorAction3 = NULL;
     m_SensorEnd3 = NULL;
-    m_Ghost3 = NULL;
     m_SensorProps3 = NULL;
     m_SensorID4 = NULL;
     m_SensorAction4 = NULL;
     m_SensorEnd4 = NULL;
-    m_Ghost4 = NULL;
     m_SensorProps4 = NULL;
     m_SensorID5 = NULL;
     m_SensorAction5 = NULL;
     m_SensorEnd5 = NULL;
-    m_Ghost5 = NULL;
     m_SensorProps5 = NULL;
     m_labTimer = NULL;
     m_Timer = NULL;
@@ -1505,7 +1498,7 @@ void BlockDialog::CreateControls()
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_STATIC_SENSORS_TITLE, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer105->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer108 = new wxFlexGridSizer(2, 5, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer108 = new wxFlexGridSizer(2, 4, 0, 0);
     itemBoxSizer105->Add(itemFlexGridSizer108, 0, wxGROW|wxALL, 5);
     m_LabelSensorIDs = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSORID, _("Sensor ID:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer108->Add(m_LabelSensorIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
@@ -1514,10 +1507,7 @@ void BlockDialog::CreateControls()
     itemFlexGridSizer108->Add(m_LabelSensorActions, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_LabelSensorEnd = new wxStaticText( m_RoutesPanel, wxID_STATIC_BLOCK_SENSOR_END, _("End:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer108->Add(m_LabelSensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 2);
-
-    m_LabelGhost = new wxStaticText( m_RoutesPanel, wxID_STATIC_BLOCK_GHOST, _("Ghost:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer108->Add(m_LabelGhost, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxADJUST_MINSIZE, 2);
+    itemFlexGridSizer108->Add(m_LabelSensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_LabelProps = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSOR_FREE, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer108->Add(m_LabelProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 5);
@@ -1534,10 +1524,6 @@ void BlockDialog::CreateControls()
     m_SensorEnd1->SetValue(false);
     itemFlexGridSizer108->Add(m_SensorEnd1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost1 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_GHOST1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost1->SetValue(false);
-    itemFlexGridSizer108->Add(m_Ghost1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     m_SensorProps1 = new wxButton( m_RoutesPanel, ID_BUTTON_BLOCKS_SENSOR_PROPS1, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
     itemFlexGridSizer108->Add(m_SensorProps1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
@@ -1552,10 +1538,6 @@ void BlockDialog::CreateControls()
     m_SensorEnd2 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_SENSOR_END2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_SensorEnd2->SetValue(false);
     itemFlexGridSizer108->Add(m_SensorEnd2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
-    m_Ghost2 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_GHOST2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost2->SetValue(false);
-    itemFlexGridSizer108->Add(m_Ghost2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     m_SensorProps2 = new wxButton( m_RoutesPanel, ID_BUTTON_BLOCK_SENSOR_PROPS2, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
     itemFlexGridSizer108->Add(m_SensorProps2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
@@ -1572,10 +1554,6 @@ void BlockDialog::CreateControls()
     m_SensorEnd3->SetValue(false);
     itemFlexGridSizer108->Add(m_SensorEnd3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost3 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_GHOST3, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost3->SetValue(false);
-    itemFlexGridSizer108->Add(m_Ghost3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     m_SensorProps3 = new wxButton( m_RoutesPanel, ID_BUTTON_BLOCKS_SENSOR_PROPS3, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
     itemFlexGridSizer108->Add(m_SensorProps3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
@@ -1590,10 +1568,6 @@ void BlockDialog::CreateControls()
     m_SensorEnd4 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_SENSOR_END4, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_SensorEnd4->SetValue(false);
     itemFlexGridSizer108->Add(m_SensorEnd4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
-    m_Ghost4 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_GHOST4, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost4->SetValue(false);
-    itemFlexGridSizer108->Add(m_Ghost4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     m_SensorProps4 = new wxButton( m_RoutesPanel, ID_BUTTON_BLOCKS_SENSOR_PROPS4, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
     itemFlexGridSizer108->Add(m_SensorProps4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
@@ -1610,101 +1584,97 @@ void BlockDialog::CreateControls()
     m_SensorEnd5->SetValue(false);
     itemFlexGridSizer108->Add(m_SensorEnd5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost5 = new wxCheckBox( m_RoutesPanel, ID_CHECKBOX_BLOCK_GHOST5, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost5->SetValue(false);
-    itemFlexGridSizer108->Add(m_Ghost5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     m_SensorProps5 = new wxButton( m_RoutesPanel, ID_BUTTON_BLOCKS_SENSOR_PROPS5, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
     itemFlexGridSizer108->Add(m_SensorProps5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    wxBoxSizer* itemBoxSizer139 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer105->Add(itemBoxSizer139, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer133 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer105->Add(itemBoxSizer133, 0, wxGROW|wxALL, 5);
     m_labTimer = new wxStaticText( m_RoutesPanel, wxID_STATIC_BK_TIMER, _("Event timer"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer139->Add(m_labTimer, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer133->Add(m_labTimer, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Timer = new wxTextCtrl( m_RoutesPanel, ID_TEXTCTRL_BK_TIMER, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Timer->SetMaxLength(5);
-    itemBoxSizer139->Add(m_Timer, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer133->Add(m_Timer, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer142 = new wxFlexGridSizer(1, 3, 0, 0);
-    itemFlexGridSizer142->AddGrowableCol(0);
-    itemBoxSizer105->Add(itemFlexGridSizer142, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer136 = new wxFlexGridSizer(1, 3, 0, 0);
+    itemFlexGridSizer136->AddGrowableCol(0);
+    itemBoxSizer105->Add(itemFlexGridSizer136, 0, wxGROW|wxALL, 5);
     m_RouteProps = new wxButton( m_RoutesPanel, ID_BUTTON1, _("Properties..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer142->Add(m_RouteProps, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer136->Add(m_RouteProps, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_RouteTest = new wxButton( m_RoutesPanel, ID_BUTTON2, _("Test"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer142->Add(m_RouteTest, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer136->Add(m_RouteTest, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_RoutesPanel, _("Routes"));
 
     m_Interface = new wxPanel( m_Notebook, ID_PANEL_BK_INTERFACE, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxFlexGridSizer* itemFlexGridSizer146 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer146->AddGrowableCol(1);
-    m_Interface->SetSizer(itemFlexGridSizer146);
+    wxFlexGridSizer* itemFlexGridSizer140 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer140->AddGrowableCol(1);
+    m_Interface->SetSizer(itemFlexGridSizer140);
 
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_BK_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer146->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer140->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer146->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer140->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_BK_ADDRESS, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer146->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer140->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_ADDRESS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer146->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer140->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPort = new wxStaticText( m_Interface, wxID_STATIC_BK_PORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer146->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer140->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Port = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_PORT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer146->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer140->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labTD = new wxStaticText( m_Interface, wxID_STATIC_BK_TD, _("TD"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer146->Add(m_labTD, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer140->Add(m_labTD, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_TD = new wxCheckBox( m_Interface, ID_CHECKBOX_BKTD, _("(TrackDriver)"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_TD->SetValue(false);
-    itemFlexGridSizer146->Add(m_TD, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer140->Add(m_TD, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_Interface, _("Interface"));
 
     m_PermissionsPanel = new wxPanel( m_Notebook, ID__PANEL_BK_PERMISSIONS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer156 = new wxBoxSizer(wxVERTICAL);
-    m_PermissionsPanel->SetSizer(itemBoxSizer156);
+    wxBoxSizer* itemBoxSizer150 = new wxBoxSizer(wxVERTICAL);
+    m_PermissionsPanel->SetSizer(itemBoxSizer150);
 
     m_labInclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Include"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer156->Add(m_labInclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer150->Add(m_labInclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_IncludeListStrings;
     m_IncludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_INCLUDE, wxDefaultPosition, wxDefaultSize, m_IncludeListStrings, wxLB_MULTIPLE );
-    itemBoxSizer156->Add(m_IncludeList, 1, wxGROW|wxALL, 5);
+    itemBoxSizer150->Add(m_IncludeList, 1, wxGROW|wxALL, 5);
 
     m_labExclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Exclude"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer156->Add(m_labExclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer150->Add(m_labExclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_ExcludeListStrings;
     m_ExcludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_EXCLUDE, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_MULTIPLE );
-    itemBoxSizer156->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
+    itemBoxSizer150->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
     itemBoxSizer2->Add(m_Notebook, 0, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer161 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer155 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer161, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer155, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer161->AddButton(m_Cancel);
+    itemStdDialogButtonSizer155->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer161->AddButton(m_Apply);
+    itemStdDialogButtonSizer155->AddButton(m_Apply);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer161->AddButton(m_OK);
+    itemStdDialogButtonSizer155->AddButton(m_OK);
 
-    itemStdDialogButtonSizer161->Realize();
+    itemStdDialogButtonSizer155->Realize();
 
 ////@end BlockDialog content construction
 }
@@ -2051,7 +2021,6 @@ void BlockDialog::initSensorCombos() {
   wxComboBox* ids[5] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4,m_SensorID5};
   wxComboBox* acts[5] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4,m_SensorAction5};
   wxCheckBox* end[5] = {m_SensorEnd1,m_SensorEnd2,m_SensorEnd3,m_SensorEnd4,m_SensorEnd5};
-  wxCheckBox* ghost[5] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4,m_Ghost5};
 
   for( int i = 0; i < 5; i++ ) {
     ids[i]->Clear();
@@ -2060,7 +2029,6 @@ void BlockDialog::initSensorCombos() {
     acts[i]->Append( wxString("-",wxConvUTF8) );
 
     end[i]->SetValue( false );
-    ghost[i]->SetValue( false );
 
     acts[i]->Append( wxString(wFeedbackEvent.enter_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2route_event,wxConvUTF8) );
@@ -2108,7 +2076,6 @@ void BlockDialog::initSensors() {
   wxComboBox* ids[5] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4,m_SensorID5};
   wxComboBox* acts[5] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4,m_SensorAction5};
   wxCheckBox* end[5] = {m_SensorEnd1,m_SensorEnd2,m_SensorEnd3,m_SensorEnd4,m_SensorEnd5};
-  wxCheckBox* ghost[5] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4,m_Ghost5};
 
   for( int i = 0; i < 5; i++ ) {
     ids[i]->SetStringSelection( wxString("-",wxConvUTF8) );
@@ -2172,7 +2139,6 @@ void BlockDialog::initSensors() {
       ids[idx]->SetStringSelection( wxString(wFeedbackEvent.getid( fb ),wxConvUTF8) );
       acts[idx]->SetStringSelection( wxString(wFeedbackEvent.getaction( fb ),wxConvUTF8) );
       end[idx]->SetValue( wFeedbackEvent.isendpuls( fb ) );
-      ghost[idx]->SetValue( wFeedbackEvent.isghostdetection( fb ) );
 
       m_fbEvents[idx] = fb;
       idx++;
@@ -2191,7 +2157,6 @@ void BlockDialog::evaluateSensors() {
   wxComboBox* ids[5] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4,m_SensorID5};
   wxComboBox* acts[5] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4,m_SensorAction5};
   wxCheckBox* end[5] = {m_SensorEnd1,m_SensorEnd2,m_SensorEnd3,m_SensorEnd4,m_SensorEnd5};
-  wxCheckBox* ghost[5] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4,m_Ghost5};
 
   for( int i = 0; i < 5; i++ ) {
     if( StrOp.equals( "-", ids[i]->GetValue().mb_str(wxConvUTF8) ) &&
@@ -2218,7 +2183,6 @@ void BlockDialog::evaluateSensors() {
       wFeedbackEvent.setaction( m_fbEvents[i], acts[i]->GetValue().mb_str(wxConvUTF8) );
       wFeedbackEvent.setfrom( m_fbEvents[i], m_FromBlockID );
       wFeedbackEvent.setendpuls( m_fbEvents[i], end[i]->GetValue()?True:False );
-      wFeedbackEvent.setghostdetection( m_fbEvents[i], ghost[i]->GetValue()?True:False );
     }
 
   }

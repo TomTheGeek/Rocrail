@@ -47,9 +47,6 @@ private:
   void speedCmd( int device );
   void funCmd( int device );
   LocSelDlg* m_LocDialog[4];
-  int m_iSpeed[4];
-  bool m_bDir[4];
-  bool m_bFn[4];
   bool m_bF1[4];
   bool m_bF2[4];
   bool m_bF3[4];
@@ -57,7 +54,7 @@ private:
   iONode m_Ini;
   void initJS();
   void OnJsEvent(wxCommandEvent& event);
-  
+
   bool m_bRun;
   iOThread repeater;
 

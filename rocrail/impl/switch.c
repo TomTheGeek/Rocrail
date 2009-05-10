@@ -456,7 +456,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
   o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
 
   if( StrOp.equals( wSwitch.unlock, wSwitch.getcmd( nodeA ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock switch [%s]",
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unlock switch [%s]",
                  SwitchOp.getId( inst ) );
     SwitchOp.unLock( inst, o->lockedId );
     return True;
@@ -515,6 +515,12 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
     }
   }
 
+  // backup cmd nodeA for retry purpose
+  o->backupNodeA = (iONode)nodeA->base.clone( nodeA );
+  wSwitch.setstate( o->backupNodeA, state );
+  wSwitch.setcmd( o->backupNodeA, state );
+  o->retrytimer   = 30;
+  
   wSwitch.setstate( o->props, state );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s]",
                  SwitchOp.getId( inst ), state );
@@ -855,14 +861,14 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       __normalizeAddr( &addr1, &port1 );
       __normalizeAddr( &addr2, &port2 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr=%d port=%d", addr, port );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] addr=%d port=%d", SwitchOp.getId(inst), addr, port );
       if( addr == addr1 && port == port1 ) {
         if( inv )
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
         else
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState1=%d", data->fieldState1 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState1=%d", SwitchOp.getId(inst), data->fieldState1 );
       }
       if( addr == addr2 && port == port2 ) {
         if( inv2 )
@@ -870,10 +876,10 @@ static void _event( iOSwitch inst, iONode nodeC ) {
         else
           data->fieldState2 = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState2=%d", data->fieldState2 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState2=%d", SwitchOp.getId(inst), data->fieldState2 );
       }
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fieldState1=%d, fieldState2=%d", data->fieldState1, data->fieldState2 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] fieldState1=%d, fieldState2=%d", SwitchOp.getId(inst), data->fieldState1, data->fieldState2 );
 
       if( StrOp.equals( wSwitch.gettype( data->props ), wSwitch.threeway ) ) {
         if( data->fieldState1 == 0 && data->fieldState2 == 0)
@@ -907,7 +913,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       }
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "field state=%s", wSwitch.getstate( data->props) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s", SwitchOp.getId(inst), wSwitch.getstate( data->props) );
 
     __checkAction( inst );
 
@@ -954,6 +960,24 @@ static void _checkSenPos( iOSwitch inst ) {
   iOModel      model = AppOp.getModel();
   Boolean      isSet = True;
 
+  if( data->retrytimer > 0 ) {
+    data->retrytimer--;
+      
+    if ( ( data->retrytimer == 0) 
+      && data->hasFbSignal 
+      && ModelOp.isEnableSwFb( AppOp.getModel())
+      && data->activated 
+      && !SwitchOp.isSet(inst) ) {
+      
+      int error = 0;
+      iONode cmd = ( iONode)data->backupNodeA->base.clone( data->backupNodeA );
+      
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] once more cmd [%s]", SwitchOp.getId( inst ), wSwitch.getcmd( cmd) );
+      
+      SwitchOp.cmd( inst, cmd, False, &error );
+    }
+  }
+
   if( data->savepostimer > 0 ) {
     data->savepostimer--;
 
@@ -963,6 +987,8 @@ static void _checkSenPos( iOSwitch inst ) {
       {
       /* check the savepos */
       if( !StrOp.equals( wSwitch.getsavepos(data->props), wSwitch.getstate( data->props ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] to save position", wSwitch.name() );
+        
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
@@ -970,7 +996,6 @@ static void _checkSenPos( iOSwitch inst ) {
       }
     }
   }
-
 }
 
 

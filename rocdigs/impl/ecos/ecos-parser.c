@@ -134,7 +134,7 @@ iONode ecos_reader( iOSocket socket ) {
       if ( SocketOp.readln( socket, tmp )) {
 
           /* check for start of reply or event */
-        TraceOp.trc( "ecosparser", TRCLEVEL_MONITOR, __LINE__, 9999, tmp );
+        TraceOp.trc( "ecosparser", TRCLEVEL_DEBUG, __LINE__, 9999, tmp );
 
         if ( !bstart ) {
           if ( StrOp.startsWith( tmp, "<REPLY" ) || StrOp.startsWith( tmp, "<EVENT" )) {

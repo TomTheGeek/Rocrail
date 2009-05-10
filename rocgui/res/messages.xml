@@ -8413,4 +8413,10 @@
   <Msg id="offpos">
     <en txt="Shutdown position"/>
   </Msg>
+  <Msg id="position">
+    <en txt="Position"/>
+  </Msg>
+  <Msg id="motoroffdelay">
+    <en txt="Motor off delay"/>
+  </Msg>
 </Messages>

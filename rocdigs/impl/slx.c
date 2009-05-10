@@ -288,6 +288,7 @@ static __evaluateFB( iOSLX slx, byte in, int addr, int bus ) {
           /* inform listener: Node3 */
           iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
           wFeedback.setaddr( nodeC, addr*8+pin+1 );
+          wFeedback.setbus( nodeC, bus );
           wFeedback.setstate( nodeC, state?True:False );
           if( data->iid != NULL )
             wFeedback.setiid( nodeC, data->iid );

@@ -695,6 +695,7 @@ __getBarjutData(
 
 									wFeedback.setstate( evt, True );
 									wFeedback.setaddr( evt, address );
+                  wFeedback.setbus( evt, 3 );
 									wFeedback.setidentifier( evt, barcode );
 									if( o->iid != NULL )
 										wFeedback.setiid( evt, o->iid );

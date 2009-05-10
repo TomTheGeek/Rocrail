@@ -137,7 +137,6 @@
       <var name="linkto" vt="iIBlockBase"/>
       <var name="props" vt="iONode" remark="Block properties"/>
       <var name="fbEvents" vt="iOMap"/>
-      <var name="fbGhostEvents" vt="iOList"/>
       <var name="timer" vt="int" remark="event timer"/>
       <var name="muxLock" vt="iOMutex"/>
       <var name="mvMillis" vt="int"/>
@@ -1010,6 +1009,8 @@
       <var name="activated" vt="Boolean"/>
       <var name="fieldState1" vt="int"/>
       <var name="fieldState2" vt="int"/>
+      <var name="retrytimer" vt="int"/>
+      <var name="backupNodeA" vt="iONode"/>
     </data>
   </object>
 
@@ -1339,7 +1340,6 @@
       <var name="muxLock" vt="iOMutex"/>
       <var name="reportedPos" vt="int"/>
       <var name="fbEvents" vt="iOMap"/>
-      <var name="fbGhostEvents" vt="iOList"/>
       <var name="psenState" vt="Boolean" remark="position sensor state"/>
       <var name="closereq" vt="Boolean"/>
       <var name="reverse" vt="Boolean"/>

@@ -47,6 +47,7 @@
 static int instCnt = 0;
 
 static int __getMappedTrack( iOTT inst, int tracknr );
+static void __polarize(obj inst, int pos, Boolean polarization);
 
 
 /*
@@ -308,6 +309,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
     }
   }
 
@@ -596,6 +598,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
     }
 
 
@@ -766,7 +769,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
       /* Using the Loc wrapper for the other parameters: */
       wLoc.setV_mode( cmd, wLoc.V_mode_percent );
-      wLoc.setV( cmd, wTurntable.getV( data->props ) );
+      wLoc.setV( cmd, 0 );
       wLoc.setfn( cmd, False );
       wLoc.setdir( cmd, data->dir );
 
@@ -784,9 +787,11 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
         wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
         wLoc.setdir( fcmd, data->dir );
 
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn function %d off...", wTurntable.getactfn( data->props ) );
         ControlOp.cmd( control, fcmd, NULL );
       }
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn motor off..." );
       ControlOp.cmd( control, cmd, NULL );
 
 
@@ -868,6 +873,54 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 }
 
 
+static void __polarize(obj inst, int pos, Boolean polarization) {
+  iOTTData data = Data(inst);
+  iOControl control = AppOp.getControl();
+
+
+  if( pos != -1 ) {
+    iONode track = wTurntable.gettrack( data->props );
+    while( track != NULL ) {
+      if( wTTTrack.getnr( track ) == pos ) {
+        polarization = wTTTrack.ispolarization(track);
+        break;
+      }
+      track = wTurntable.nexttrack( data->props, track );
+    }
+  }
+
+
+  if( wTurntable.getpoladdr( data->props ) > 0 ) {
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    int addr = wTurntable.getpoladdr( data->props );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "setting bridge polarization to %d", polarization );
+
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( cmd, iid );
+
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+    if( polarization ) {
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
+      wSwitch.setcmd( cmd, wSwitch.turnout );
+      ControlOp.cmd( control, cmd, NULL );
+    }
+    else {
+      wSwitch.setaddr1( cmd, 0 );
+      wSwitch.setport1( cmd, addr );
+      wSwitch.setcmd( cmd, wSwitch.straight );
+      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    }
+
+  }
+
+}
+
+
 static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, int val ) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
@@ -876,11 +929,16 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
   int pos = __evaluatePos( (iOTT)inst, puls, id, &polarization );
   Boolean stop = False;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] pos=[%d] polarization=[%d] ",
-      inst->id(inst), id, pos, polarization );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] val=[%d] pos=[%d] polarization=[%d] ",
+      inst->id(inst), id, val, pos, polarization );
 
   if( control == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "controller is not initialized..." );
+    return;
+  }
+
+  if( !puls ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OFF events are not used..." );
     return;
   }
 
@@ -935,7 +993,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
 
     /* Using the Loc wrapper for the other parameters: */
     wLoc.setV_mode( cmd, wLoc.V_mode_percent );
-    wLoc.setV( cmd, wTurntable.getV( data->props ) );
+    wLoc.setV( cmd, 0 );
     wLoc.setfn( cmd, False );
     wLoc.setdir( cmd, data->dir );
 
@@ -953,40 +1011,19 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
       wLoc.setfn( fcmd, wTurntable.getactfn( data->props ) == 0 ? True:False );
       wLoc.setdir( fcmd, data->dir );
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn function %d off...", wTurntable.getactfn( data->props ) );
       ControlOp.cmd( control, fcmd, NULL );
     }
 
+    /* TODO: wait in a thread to prevent blocking the system*/
+    ThreadOp.sleep(10 + wTurntable.getmotoroffdelay( data->props ));
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn motor off..." );
     ControlOp.cmd( control, cmd, NULL );
 
   }
 
-  if( wTurntable.getpoladdr( data->props ) > 0 ) {
-    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    int addr = wTurntable.getpoladdr( data->props );
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "setting bridge polarization to %d", polarization );
-
-    const char* iid = wTurntable.getiid( data->props );
-    if( iid != NULL )
-      wSwitch.setiid( cmd, iid );
-
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-
-    if( polarization ) {
-      wSwitch.setaddr1( cmd, 0 );
-      wSwitch.setport1( cmd, addr );
-      wSwitch.setcmd( cmd, wSwitch.turnout );
-      ControlOp.cmd( control, cmd, NULL );
-    }
-    else {
-      wSwitch.setaddr1( cmd, 0 );
-      wSwitch.setport1( cmd, addr );
-      wSwitch.setcmd( cmd, wSwitch.straight );
-      ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-    }
-
-  }
+  __polarize(inst, -1, polarization );
 
 }
 
@@ -1171,6 +1208,7 @@ static iOTT _inst( iONode props ) {
   data->muxLock = MutexOp.inst( NULL, True );
   __initCallback( tt );
   data->tablepos = wTurntable.getbridgepos(data->props);
+  data->gotopos = -1;
   data->lcdir = True;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "turntable [%s] initialized at position [%d]", tt->base.id(tt), data->tablepos );

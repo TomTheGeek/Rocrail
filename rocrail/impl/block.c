@@ -52,6 +52,9 @@
 
 static int instCnt = 0;
 
+static Boolean __isElectricallyFree(iOBlock inst);
+
+
 /*
  ***** OBase functions.
  */
@@ -144,6 +147,7 @@ static Boolean __acceptGhost( obj inst ) {
 
   if( ( data->locId == NULL || StrOp.equals( data->locId, "") || StrOp.equals( data->locId, "?") || StrOp.equals( data->locId, "GHOST")) && wBlock.isacceptghost( data->props ) ) {
     data->locId = "GHOST";
+    data->ghost = True;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block:%s accepted a Ghosttrain",
                  data->id );
     {
@@ -352,9 +356,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
-    if( !__acceptGhost((obj)inst) ) {
-      int tl = TRCLEVEL_USER1;
-      if( ModelOp.isAuto( AppOp.getModel() ) ) {
+
+    if( ModelOp.isAuto( AppOp.getModel() ) ) {
+      if( !__acceptGhost((obj)inst) ) {
+        int tl = TRCLEVEL_USER1;
         tl = TRCLEVEL_EXCEPTION;
         /* power off */
         AppOp.stop();
@@ -369,17 +374,27 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
         }
-      }
 
+      }
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "train in block [%s], fbid=[%s], ident=[%d]", data->id, key, ident );
+    }
+
   }
   else if( data->fromBlockId == NULL && !puls && loc == NULL && data->ghost ) {
     /* ghost train! */
-    if( !__acceptGhost((obj)inst) ) {
-      /* broadcast ghost state */
+    /* broadcast ghost state */
+    if( __isElectricallyFree((iOBlock)inst) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
           data->id, key, ident );
       data->ghost = False;
+
+      if(StrOp.equals( data->locId, "GHOST")) {
+        data->locId = NULL;
+      }
+
       {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
@@ -387,29 +402,16 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
         wBlock.setlocid( nodeD, data->locId );
         ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
       }
-
-    }
-  }
-  else if( fbevt == NULL && puls && loc != NULL ) {
-    /* ghost train! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Maybe ghost train in block %s, fbid=%s, ident=%d",
-        data->id, key, ident );
-
-    fbevt = (iONode)ListOp.first( data->fbGhostEvents );
-    while( fbevt != NULL ) {
-      /* notify loc */
-      int evt = _getEventCode( wFeedbackEvent.getaction( fbevt ) );
-      if( evt == enter2in_event )
-        LocOp.event( loc, manager, enter_event, 0 );
-      else
-        LocOp.event( loc, manager, evt, 0 );
-
-      fbevt = (iONode)ListOp.next( data->fbGhostEvents );
     }
   }
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
     /* undefined event! */
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d",
+                   key, data->id, ident );
+  }
+  else {
+    /* unhandled event! */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! ident=[%d]",
                    key, data->id, ident );
   }
 }
@@ -428,7 +430,6 @@ static void __initFeedbackEvents( iOBlock inst ) {
   char key[256] = {'\0'};
   iONode fbevt = wBlock.getfbevent( data->props );
 
-  ListOp.clear( data->fbGhostEvents );
   MapOp.clear( data->fbEvents );
 
   while( fbevt != NULL ) {
@@ -437,8 +438,6 @@ static void __initFeedbackEvents( iOBlock inst ) {
 
     if( StrOp.len( fbid ) > 0 && fb != NULL ) {
       iOStrTok tok = StrTokOp.inst( wFeedbackEvent.getfrom( fbevt ), ',' );
-      if( wFeedbackEvent.isghostdetection( fbevt ) )
-        ListOp.add( data->fbGhostEvents, (obj)fbevt );
 
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -446,6 +445,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
         StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
         MapOp.put( data->fbEvents, key, (obj)fbevt );
       };
+      StrTokOp.base.del(tok);
 
       FBackOp.setListener( fb, (obj)inst, &_fbEvent );
     }
@@ -535,6 +535,28 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean __isElectricallyFree(iOBlock inst) {
+  iOBlockData data = Data(inst);
+  /* check all sensors... */
+
+  iONode fbevt = wBlock.getfbevent( data->props );
+
+  while( fbevt != NULL ) {
+    iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
+    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block \"%s\" is electrically occupied.",
+                     data->id );
+
+      return False;
+    }
+    fbevt = wBlock.nextfbevent( data->props, fbevt );
+  };
+
+  return True;
+}
+
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
@@ -552,29 +574,14 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
 /* check all sensors... */
 
-  {
-    iONode fbevt = wBlock.getfbevent( data->props );
-
-    while( fbevt != NULL ) {
-      iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
-      if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Block \"%s\" is electrically occupied.",
-                       data->id );
-
-        if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                         "Block \"%s\" is electrically occupied without locId set!",
-                         data->id );
-        }
-
-        return False;
-
-      }
-      fbevt = wBlock.nextfbevent( data->props, fbevt );
-    };
+  if( !__isElectricallyFree((iOBlock)inst) ) {
+    if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                     "Block \"%s\" is electrically occupied without locId set!",
+                     data->id );
+    }
+    return False;
   }
-
 
   if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId ) )
     return True;
@@ -1199,6 +1206,7 @@ static void _init( iIBlockBase inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init block %s", data->id );
   /* this string pointer is not persistent! */
   data->locId = wBlock.getlocid( data->props );
+  data->ghost = False;
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOLoc loc = ModelOp.getLoc( model, data->locId );
@@ -1501,7 +1509,6 @@ static iOBlock _inst( iONode props ) {
   data->locId = NodeOp.getStr( props, "locid", NULL );
   data->minbklc = wCtrl.getminbklc( AppOp.getIniNode( wCtrl.name() ) );
   data->fbEvents = MapOp.inst();
-  data->fbGhostEvents = ListOp.inst();
   data->timer = wBlock.getevttimer( props );
   data->id = wBlock.getid( props );
 

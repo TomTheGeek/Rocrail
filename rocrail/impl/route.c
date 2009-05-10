@@ -388,14 +388,17 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
       if( block != NULL ) {
         if( !block->isFree( block, id ) ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "crossing block [%s] is not free or closed.", id );
+          StrTokOp.base.del(tok);
           return False;
         }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+        StrTokOp.base.del(tok);
         return False;
       }
     };
+    StrTokOp.base.del(tok);
 
 
   }
@@ -415,14 +418,18 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
       const char* bk = StrTokOp.nextToken( tok );
       iIBlockBase block = ModelOp.getBlock( model, bk );
       if( block != NULL ) {
-        if( !block->lock( block, id, "", True, False, False ) )
+        if( !block->lock( block, id, "", True, False, False ) ) {
+          StrTokOp.base.del(tok);
           return False;
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+        StrTokOp.base.del(tok);
         return False;
       }
     };
+    StrTokOp.base.del(tok);
 
   }
 
@@ -466,10 +473,12 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
         }
         else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+          StrTokOp.base.del(tok);
           ok = False;
         }
       }
     };
+    StrTokOp.base.del(tok);
 
   }
 

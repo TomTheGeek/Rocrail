@@ -99,25 +99,17 @@ BEGIN_EVENT_TABLE( SelTabDialog, wxDialog )
 
     EVT_COMBOBOX( wxID_SELTAB_ROUTEEVENT_1, SelTabDialog::OnBlockSensor )
 
-    EVT_CHECKBOX( wxID_SELTAB_ROUTEGHOST_1, SelTabDialog::OnBlockSensor )
-
     EVT_COMBOBOX( wxID_SELTAB_ROUTESENSOR_2, SelTabDialog::OnBlockSensor )
 
     EVT_COMBOBOX( wxID_SELTAB_ROUTEEVENT_2, SelTabDialog::OnBlockSensor )
-
-    EVT_CHECKBOX( wxID_SELTAB_ROUTEGHOST_2, SelTabDialog::OnBlockSensor )
 
     EVT_COMBOBOX( wxID_SELTAB_ROUTESENSOR_3, SelTabDialog::OnBlockSensor )
 
     EVT_COMBOBOX( wxID_SELTAB_ROUTEEVENT_3, SelTabDialog::OnBlockSensor )
 
-    EVT_CHECKBOX( wxID_SELTAB_ROUTEGHOST_3, SelTabDialog::OnBlockSensor )
-
     EVT_COMBOBOX( wxID_SELTAB_ROUTESENSOR_4, SelTabDialog::OnBlockSensor )
 
     EVT_COMBOBOX( wxID_SELTAB_ROUTEEVENT_4, SelTabDialog::OnBlockSensor )
-
-    EVT_CHECKBOX( wxID_SELTAB_ROUTEGHOST_4, SelTabDialog::OnBlockSensor )
 
     EVT_BUTTON( wxID_OK, SelTabDialog::OnOkClick )
 
@@ -270,7 +262,6 @@ void SelTabDialog::initLabels() {
   // Route Sensors
   m_LabelSensorIDs->SetLabel( wxGetApp().getMsg( "id" ) );
   m_LabelSensorActions->SetLabel( wxGetApp().getMsg( "event" ) );
-  m_LabelGhost->SetLabel( wxGetApp().getMsg( "ghost" ) );
   initSensorCombos();
 
 }
@@ -481,15 +472,12 @@ void SelTabDialog::evaluate() {
 void SelTabDialog::initSensorCombos() {
   wxComboBox* ids[4] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4};
   wxComboBox* acts[4] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4};
-  wxCheckBox* ghost[4] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4};
 
   for( int i = 0; i < 4; i++ ) {
     ids[i]->Clear();
     acts[i]->Clear();
     ids[i]->Append( wxString("-",wxConvUTF8) );
     acts[i]->Append( wxString("-",wxConvUTF8) );
-
-    ghost[i]->SetValue( false );
 
     acts[i]->Append( wxString(wFeedbackEvent.enter_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2route_event,wxConvUTF8) );
@@ -533,7 +521,6 @@ void SelTabDialog::initSensors() {
 
   wxComboBox* ids[4] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4};
   wxComboBox* acts[4] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4};
-  wxCheckBox* ghost[4] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4};
 
   for( int i = 0; i < 4; i++ ) {
     ids[i]->SetStringSelection( wxString("-",wxConvUTF8) );
@@ -592,7 +579,6 @@ void SelTabDialog::initSensors() {
     if( StrOp.equals( m_FromBlockID, wFeedbackEvent.getfrom( fb ) ) ) {
       ids[idx]->SetStringSelection( wxString(wFeedbackEvent.getid( fb ),wxConvUTF8) );
       acts[idx]->SetStringSelection( wxString(wFeedbackEvent.getaction( fb ),wxConvUTF8) );
-      ghost[idx]->SetValue( wFeedbackEvent.isghostdetection( fb ) );
 
       m_fbEvents[idx] = fb;
       idx++;
@@ -610,7 +596,6 @@ void SelTabDialog::evaluateSensors() {
 
   wxComboBox* ids[4] = {m_SensorID1,m_SensorID2,m_SensorID3,m_SensorID4};
   wxComboBox* acts[4] = {m_SensorAction1,m_SensorAction2,m_SensorAction3,m_SensorAction4};
-  wxCheckBox* ghost[4] = {m_Ghost1,m_Ghost2,m_Ghost3,m_Ghost4};
 
   for( int i = 0; i < 4; i++ ) {
     if( StrOp.equals( "-", ids[i]->GetValue().mb_str(wxConvUTF8) ) &&
@@ -636,7 +621,6 @@ void SelTabDialog::evaluateSensors() {
 
       wFeedbackEvent.setaction( m_fbEvents[i], acts[i]->GetValue().mb_str(wxConvUTF8) );
       wFeedbackEvent.setfrom( m_fbEvents[i], m_FromBlockID );
-      wFeedbackEvent.setghostdetection( m_fbEvents[i], ghost[i]->GetValue()?True:False );
     }
 
   }
@@ -755,19 +739,14 @@ void SelTabDialog::Init()
     m_LabelSensorsFromBlock = NULL;
     m_LabelSensorIDs = NULL;
     m_LabelSensorActions = NULL;
-    m_LabelGhost = NULL;
     m_SensorID1 = NULL;
     m_SensorAction1 = NULL;
-    m_Ghost1 = NULL;
     m_SensorID2 = NULL;
     m_SensorAction2 = NULL;
-    m_Ghost2 = NULL;
     m_SensorID3 = NULL;
     m_SensorAction3 = NULL;
-    m_Ghost3 = NULL;
     m_SensorID4 = NULL;
     m_SensorAction4 = NULL;
-    m_Ghost4 = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end SelTabDialog member initialisation
@@ -1057,16 +1036,13 @@ void SelTabDialog::CreateControls()
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_ANY, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer86->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer89 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer89 = new wxFlexGridSizer(2, 2, 0, 0);
     itemBoxSizer86->Add(itemFlexGridSizer89, 0, wxGROW|wxALL, 5);
     m_LabelSensorIDs = new wxStaticText( m_RoutesPanel, wxID_ANY, _("Sensor ID:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer89->Add(m_LabelSensorIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_LabelSensorActions = new wxStaticText( m_RoutesPanel, wxID_ANY, _("Event:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer89->Add(m_LabelSensorActions, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
-
-    m_LabelGhost = new wxStaticText( m_RoutesPanel, wxID_ANY, _("Ghost:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer89->Add(m_LabelGhost, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxADJUST_MINSIZE, 2);
 
     wxArrayString m_SensorID1Strings;
     m_SensorID1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_1, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID1Strings, wxCB_READONLY );
@@ -1076,10 +1052,6 @@ void SelTabDialog::CreateControls()
     m_SensorAction1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_1, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction1Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost1 = new wxCheckBox( m_RoutesPanel, wxID_SELTAB_ROUTEGHOST_1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost1->SetValue(false);
-    itemFlexGridSizer89->Add(m_Ghost1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     wxArrayString m_SensorID2Strings;
     m_SensorID2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_2, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID2Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
@@ -1087,10 +1059,6 @@ void SelTabDialog::CreateControls()
     wxArrayString m_SensorAction2Strings;
     m_SensorAction2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_2, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction2Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
-    m_Ghost2 = new wxCheckBox( m_RoutesPanel, wxID_SELTAB_ROUTEGHOST_2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost2->SetValue(false);
-    itemFlexGridSizer89->Add(m_Ghost2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorID3Strings;
     m_SensorID3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_3, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID3Strings, wxCB_READONLY );
@@ -1100,10 +1068,6 @@ void SelTabDialog::CreateControls()
     m_SensorAction3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_3, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction3Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost3 = new wxCheckBox( m_RoutesPanel, wxID_SELTAB_ROUTEGHOST_3, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost3->SetValue(false);
-    itemFlexGridSizer89->Add(m_Ghost3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     wxArrayString m_SensorID4Strings;
     m_SensorID4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_4, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID4Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
@@ -1112,25 +1076,21 @@ void SelTabDialog::CreateControls()
     m_SensorAction4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_4, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction4Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Ghost4 = new wxCheckBox( m_RoutesPanel, wxID_SELTAB_ROUTEGHOST_4, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Ghost4->SetValue(false);
-    itemFlexGridSizer89->Add(m_Ghost4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
-
     m_Notebook->AddPage(m_RoutesPanel, _("Routes"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer105 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer100 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer105, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer100, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer105->AddButton(m_OK);
+    itemStdDialogButtonSizer100->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer105->AddButton(m_Cancel);
+    itemStdDialogButtonSizer100->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer105->Realize();
+    itemStdDialogButtonSizer100->Realize();
 
 ////@end SelTabDialog content construction
 }

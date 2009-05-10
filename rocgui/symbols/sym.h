@@ -69,14 +69,20 @@ namespace tracktype {
 }
 
 namespace switchtype {
-  static const char* crossing       = "crossing.svg";
   static const char* ccrossing      = "ccrossing.svg";
   static const char* ccrossing_occ  = "ccrossing-occ.svg";
+  static const char* crossing       = "crossing.svg";
+  static const char* crossing_occ   = "crossing-occ.svg";
   static const char* crossing_t     = "crossing-t.svg";
+  static const char* crossing_t_occ = "crossing-t-occ.svg";
   static const char* crossingleft   = "crossingleft.svg";
-  static const char* crossingright  = "crossingright.svg";
   static const char* crossingleft_t = "crossingleft-t.svg";
+  static const char* crossingleft_occ   = "crossingleft-occ.svg";
+  static const char* crossingleft_t_occ = "crossingleft-t-occ.svg";
+  static const char* crossingright  = "crossingright.svg";
   static const char* crossingright_t= "crossingright-t.svg";
+  static const char* crossingright_occ  = "crossingright-occ.svg";
+  static const char* crossingright_t_occ= "crossingright-t-occ.svg";
 
   static const char* road_crossing       = "road-crossing.svg";
   static const char* road_ccrossing      = "road-ccrossing.svg";
@@ -86,26 +92,45 @@ namespace switchtype {
   static const char* dcrossingleft_t  = "dcrossingleft-t.svg";
   static const char* dcrossingleft_tl = "dcrossingleft-tl.svg";
   static const char* dcrossingleft_tr = "dcrossingleft-tr.svg";
+  static const char* dcrossingleft_occ    = "dcrossingleft-occ.svg";
+  static const char* dcrossingleft_t_occ  = "dcrossingleft-t-occ.svg";
+  static const char* dcrossingleft_tl_occ = "dcrossingleft-tl-occ.svg";
+  static const char* dcrossingleft_tr_occ = "dcrossingleft-tr-occ.svg";
 
   static const char* dcrossingright    = "dcrossingright.svg";
   static const char* dcrossingright_t  = "dcrossingright-t.svg";
   static const char* dcrossingright_tl = "dcrossingright-tl.svg";
   static const char* dcrossingright_tr = "dcrossingright-tr.svg";
+  static const char* dcrossingright_occ    = "dcrossingright-occ.svg";
+  static const char* dcrossingright_t_occ  = "dcrossingright-t-occ.svg";
+  static const char* dcrossingright_tl_occ = "dcrossingright-tl-occ.svg";
+  static const char* dcrossingright_tr_occ = "dcrossingright-tr-occ.svg";
 
   // raster dcrossings
   static const char* dcrossingleft_r    = "dcrossingleft-r.svg";
   static const char* dcrossingleft_r_t  = "dcrossingleft-r-t.svg";
   static const char* dcrossingleft_r_tl = "dcrossingleft-r-tl.svg";
   static const char* dcrossingleft_r_tr = "dcrossingleft-r-tr.svg";
+  static const char* dcrossingleft_r_occ    = "dcrossingleft-r-occ.svg";
+  static const char* dcrossingleft_r_t_occ  = "dcrossingleft-r-t-occ.svg";
+  static const char* dcrossingleft_r_tl_occ = "dcrossingleft-r-tl-occ.svg";
+  static const char* dcrossingleft_r_tr_occ = "dcrossingleft-r-tr-occ.svg";
 
   static const char* dcrossingright_r    = "dcrossingright-r.svg";
   static const char* dcrossingright_r_t  = "dcrossingright-r-t.svg";
   static const char* dcrossingright_r_tl = "dcrossingright-r-tl.svg";
   static const char* dcrossingright_r_tr = "dcrossingright-r-tr.svg";
+  static const char* dcrossingright_r_occ    = "dcrossingright-r-occ.svg";
+  static const char* dcrossingright_r_t_occ  = "dcrossingright-r-t-occ.svg";
+  static const char* dcrossingright_r_tl_occ = "dcrossingright-r-tl-occ.svg";
+  static const char* dcrossingright_r_tr_occ = "dcrossingright-r-tr-occ.svg";
 
   static const char* threeway       = "threeway.svg";
   static const char* threeway_tl    = "threeway-tl.svg";
   static const char* threeway_tr    = "threeway-tr.svg";
+  static const char* threeway_occ    = "threeway-occ.svg";
+  static const char* threeway_tl_occ = "threeway-tl-occ.svg";
+  static const char* threeway_tr_occ = "threeway-tr-occ.svg";
 
   static const char* decoupler        = "decoupler.svg";
   static const char* decoupler_on     = "decoupler-on.svg";
@@ -117,9 +142,13 @@ namespace switchtype {
 
   static const char* turnoutleft    = "turnoutleft.svg";
   static const char* turnoutleft_t  = "turnoutleft-t.svg";
+  static const char* turnoutleft_occ    = "turnoutleft-occ.svg";
+  static const char* turnoutleft_t_occ  = "turnoutleft-t-occ.svg";
 
   static const char* turnoutright   = "turnoutright.svg";
   static const char* turnoutright_t = "turnoutright-t.svg";
+  static const char* turnoutright_occ   = "turnoutright-occ.svg";
+  static const char* turnoutright_t_occ = "turnoutright-t-occ.svg";
 
   static const char* road_turnoutleft    = "road-turnoutleft.svg";
   static const char* road_turnoutleft_t  = "road-turnoutleft-t.svg";
@@ -130,9 +159,13 @@ namespace switchtype {
   // Raster turnouts
   static const char* turnoutleft_r    = "turnoutleft-r.svg";
   static const char* turnoutleft_r_t  = "turnoutleft-r-t.svg";
+  static const char* turnoutleft_r_occ    = "turnoutleft-r-occ.svg";
+  static const char* turnoutleft_r_t_occ  = "turnoutleft-r-t-occ.svg";
 
   static const char* turnoutright_r   = "turnoutright-r.svg";
   static const char* turnoutright_r_t = "turnoutright-r-t.svg";
+  static const char* turnoutright_r_occ   = "turnoutright-r-occ.svg";
+  static const char* turnoutright_r_t_occ = "turnoutright-r-t-occ.svg";
 
   // Accessory
   static const char* accessory_on  = "accessory-%d-on.svg";

@@ -263,8 +263,7 @@ void FeedbackDialog::initValues() {
   // Interface
   char * str;
   m_iid->SetValue( wFeedback.getiid( m_Props )==NULL?_T(""):wxString(wFeedback.getiid( m_Props ),wxConvUTF8) );
-  str = StrOp.fmt( "%d", wFeedback.getbus(m_Props) );
-  m_Bus->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+  m_Bus->SetSelection( wFeedback.getbus(m_Props) );
   str = StrOp.fmt( "%d", wFeedback.getaddr(m_Props) );
   m_Address->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
   m_ActiveLow->SetValue( wFeedback.isactivelow( m_Props ) ? true:false);
@@ -304,7 +303,7 @@ void FeedbackDialog::evaluate() {
 
   // Interface
   wFeedback.setiid( m_Props, m_iid->GetValue().mb_str(wxConvUTF8) );
-  wFeedback.setbus( m_Props, atoi( m_Bus->GetValue().mb_str(wxConvUTF8) ) );
+  wFeedback.setbus( m_Props, m_Bus->GetSelection() );
   wFeedback.setaddr( m_Props, atoi( m_Address->GetValue().mb_str(wxConvUTF8) ) );
   wFeedback.setactivelow( m_Props , m_ActiveLow->GetValue() ? True:False);
 
@@ -515,7 +514,17 @@ void FeedbackDialog::CreateControls()
     m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer40->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Bus = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_BUS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    wxArrayString m_BusStrings;
+    m_BusStrings.Add(_("&0 Sensor"));
+    m_BusStrings.Add(_("&1 Transponding"));
+    m_BusStrings.Add(_("&2 Lissy"));
+    m_BusStrings.Add(_("&3 Barcode"));
+    m_BusStrings.Add(_("&4 Railcom"));
+    m_BusStrings.Add(_("&5"));
+    m_BusStrings.Add(_("&6"));
+    m_BusStrings.Add(_("&7"));
+    m_Bus = new wxRadioBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );
+    m_Bus->SetSelection(0);
     itemFlexGridSizer40->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_FB_ADDRESS1, _("address"), wxDefaultPosition, wxDefaultSize, 0 );

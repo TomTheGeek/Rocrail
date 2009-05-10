@@ -8,6 +8,7 @@
 <pay key="2" name="MAB"/>
 <pay key="3" name="MayNet"/>
 <pay key="4" name="RD-Hobby"/>
+<pay key="5" name="VonEinsBisZett"/>
 <cat key="1" parent="0" flags="0" name="Domain Registration"/>
 <cat key="2" parent="0" flags="0" name="Hosting"/>
 <cat key="3" parent="0" flags="0" name="Promotion"/>
@@ -31,6 +32,7 @@
 <ope date="733455" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="HASELSTEINER, MARIO"/>
 <ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO"/>
 <ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST"/>
+<ope date="733463" amount="-145" account="0" dst_account="0" paymode="4" flags="1" payee="5" category="4" wording="Uhlenbrock 63120, 63340" info="LNCV Development"/>
 <ope date="733472" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
 <ope date="733473" amount="-120.95" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Sweat shirts for Kaarst" info="Project Team"/>
 <ope date="733473" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Dirk Adolphs"/>
@@ -39,4 +41,7 @@
 <ope date="733489" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG"/>
 <ope date="733491" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto"/>
 <ope date="733524" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET"/>
+<ope date="733532" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Volker Hanchen"/>
+<ope date="733534" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Kuempel"/>
+<ope date="733414" amount="-180.40000000000001" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="4" wording="Digitrax Zephyr" info="Command Station Test"/>
 </homebank>

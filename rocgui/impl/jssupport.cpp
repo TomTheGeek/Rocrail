@@ -101,22 +101,10 @@ void JsSupport::funCmd( int device )
 void JsSupport::speedCmd( int device )
 {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  
-  // Keep the node up to date:
-  wLoc.setV( m_Selected[device] , m_iSpeed[device] );
-  wLoc.setfn( m_Selected[device] , m_bFn[device]?True:False );
-  wLoc.setdir( m_Selected[device] , m_bDir[device]?True:False );
-  
-  float V_max = wLoc.getV_max(m_Selected[device]);
-  float V_step = V_max / (float)wLoc.getspcnt(m_Selected[device]);
-  float V = V_step * m_iSpeed[device];
-
-  TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "V_max=%f, V_step=%f, m_iSpeed=%d V=%d", V_max, V_step, m_iSpeed[device], (int)V );
-  
   wLoc.setid( cmd, wLoc.getid(m_Selected[device]) );
-  wLoc.setV( cmd, (int)V );
-  wLoc.setfn( cmd, m_bFn[device]?True:False );
-  wLoc.setdir( cmd, m_bDir[device]?True:False );
+  wLoc.setV( cmd, wLoc.getV(m_Selected[device]) );
+  wLoc.setfn( cmd, wLoc.isfn(m_Selected[device]) );
+  wLoc.setdir( cmd, wLoc.isdir(m_Selected[device]) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -130,14 +118,6 @@ JsSupport::JsSupport( iONode ini ) {
   m_Selected[1] = NULL;
   m_Selected[2] = NULL;
   m_Selected[3] = NULL;
-  m_iSpeed[0] = 0;
-  m_iSpeed[1] = 0;
-  m_iSpeed[2] = 0;
-  m_iSpeed[3] = 0;
-  m_bDir[0] = true;
-  m_bDir[1] = true;
-  m_bDir[2] = true;
-  m_bDir[3] = true;
   m_Ini = ini;
   initJS();
 }
@@ -164,7 +144,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
   int type = wJsEvent.gettype(js);
   int number = wJsEvent.getnumber(js);
   int value = wJsEvent.getvalue(js);
-  
+
   if( device < 0 || device > 3 ) {
     NodeOp.base.del(js);
     return;
@@ -173,7 +153,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
   TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999,
     "JsEvent dev=%d, type=%d, number=%d, value=%d, msec=%d",
     device, type, number, value, wJsEvent.getmsec(js) );
-    
+
   if( type == 1 ) {
     // buttons
     if( number == wJsMap.getselect( ini ) ) {
@@ -194,8 +174,6 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
               cmd->base.del(cmd);
             }
             m_Selected[device] = m_LocDialog[device]->getProperties();
-            m_iSpeed[device] = wLoc.getV( m_Selected[device] );
-            m_bDir[device] = wLoc.isdir( m_Selected[device] );
             m_LocDialog[device]->Destroy();
             m_LocDialog[device] = NULL;
             if( m_Selected[device] != NULL ) {
@@ -230,7 +208,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           cmd->base.del(cmd);
         }
     }
-    
+
     if(  m_Selected[device] != NULL ) {
 
       if( number == wJsMap.getf1( ini ) ) {
@@ -268,16 +246,16 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
       else if( number == wJsMap.getreverse( ini ) ) {
           if( value == 1 ) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "reverse" );
-            m_bDir[device] = ! m_bDir[device];
             // reverse
+            wLoc.setdir(m_Selected[device], wLoc.isdir(m_Selected[device])==True ? False:True );
             speedCmd( device );
           }
       }
       else if( number == wJsMap.getlight( ini ) ) {
           if( value == 1 ) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "light" );
-            m_bFn[device] = ! m_bFn[device];
             // light
+            wLoc.setfn(m_Selected[device], wLoc.isfn(m_Selected[device])==True ? False:True );
             speedCmd( device );
           }
       }
@@ -285,7 +263,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           if( value == 1 ) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "stop" );
             // stop
-            m_iSpeed[device] = 0;
+            wLoc.setV( m_Selected[device], 0 );
             speedCmd( device );
           }
       }
@@ -314,15 +292,17 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           m_bUp[device] = false;
           m_DownTime[device] = 0;
           m_UpTime[device] = 0;
+          int V = wLoc.getV(m_Selected[device]);
 
           if( m_LocDialog[device] != NULL )
             m_LocDialog[device]->SelectNext();
           else if( m_Selected[device] != NULL ) {
-            if( m_iSpeed[device] > 0 )
-              m_iSpeed[device] -= step;
-            if( m_iSpeed[device] < 0 )
-              m_iSpeed[device] = 0;
+            if( V > 0 )
+              V -= step;
+            if( V < 0 )
+              V = 0;
 
+            wLoc.setV( m_Selected[device], V );
             speedCmd( device );
           }
         }
@@ -333,15 +313,18 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           m_bUp[device] = true;
           m_DownTime[device] = 0;
           m_UpTime[device] = 0;
+          int V     = wLoc.getV(m_Selected[device]);
+          int V_max = wLoc.getV_max(m_Selected[device]);
 
           if( m_LocDialog[device] != NULL )
             m_LocDialog[device]->SelectPrev();
           else if( m_Selected != NULL ) {
-            if( m_iSpeed[device] < wLoc.getspcnt( m_Selected[device] ) )
-              m_iSpeed[device] += step;
-            if( m_iSpeed[device] > wLoc.getspcnt( m_Selected[device] ) )
-              m_iSpeed[device] = wLoc.getspcnt( m_Selected[device] );
+            if( V < V_max )
+              V += step;
+            if( V > V_max )
+              V = V_max;
 
+            wLoc.setV( m_Selected[device] , V );
             speedCmd( device );
           }
         }
@@ -364,11 +347,11 @@ static void jsRepeater( void* threadinst ) {
     ThreadOp.sleep( 100 );
     if( wJsMap.getrepeat( js->getIni() ) == 0 )
       continue;
-      
+
     for( int i = 0; i < 4; i++ ) {
       if( js->m_Selected[i] == NULL )
         continue;
-        
+
       if( js->m_bUp[i] && js->m_UpTime[i] >= wJsMap.getrepeat( js->getIni() ) ) {
         js->m_UpTime[i] = 0;
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, JSSUPPORT_EVENT );
@@ -384,7 +367,7 @@ static void jsRepeater( void* threadinst ) {
       else if( js->m_bUp[i] ) {
         js->m_UpTime[i] += 100;
       }
-       
+
       if( js->m_bDown[i] && js->m_DownTime[i] >= wJsMap.getrepeat( js->getIni() ) ) {
         js->m_DownTime[i] = 0;
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, JSSUPPORT_EVENT );
@@ -400,9 +383,9 @@ static void jsRepeater( void* threadinst ) {
       else if( js->m_bDown[i] ) {
         js->m_DownTime[i] += 100;
       }
-       
+
     }
-    
+
   } while( js->isRunning() );
 }
 
