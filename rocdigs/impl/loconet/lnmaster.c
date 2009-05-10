@@ -278,8 +278,10 @@ static int __findSlot4Addr( int addr, struct __lnslot* slot, int* firstavail ) {
   int i = 0;
   *firstavail = -1;
   for( i = 1; i < 120; i++ ) {
-    if( slot[i].addr == addr )
+    if( slot[i].addr == addr ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot# %d has address %d", i, addr );
       return i;
+    }
     if( *firstavail == -1 && !slot[i].inuse )
       *firstavail = i;
   }
@@ -367,7 +369,7 @@ static void __slotdataRsp( iOLocoNet loconet, struct __lnslot* slot, int slotnr 
   rsp[6] = __getdirfbyte(slot, slotnr);
   rsp[7] = __gettrkbyte(loconet);
   rsp[8] = 0x00;
-  rsp[9] = (slot[slotnr].addr / 128) & 0x0F;
+  rsp[9] = (slot[slotnr].addr / 128) & 0x7F;
   rsp[10] = __getsndbyte(slot, slotnr);
   rsp[11] = 0x00;
   rsp[12] = 0x00;
@@ -523,7 +525,7 @@ static int __locospeed(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
 static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   iOLocoNetData data = Data(loconet);
   int slotnr = msg[2] & 0x7F;
-  int addr = ((msg[9] & 0x0f) * 128) + (msg[4] & 0x7f);
+  int addr = ((msg[9] & 0x7f) * 128) + (msg[4] & 0x7f);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d addr %d data", slotnr, addr );
 
   if( addr == 0 ) {
