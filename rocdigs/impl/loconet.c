@@ -148,7 +148,7 @@ static byte _checksum(const byte *cmd, int len)
 static void _stateChanged( iOLocoNet loconet ) {
   iOLocoNetData data = Data(loconet);
 
-  if( data->listenerObj != NULL ) {
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
     wState.setiid( node, data->iid );
     wState.setpower( node, data->power?True:False );
@@ -1225,6 +1225,8 @@ static void __loconetReader( void* threadinst ) {
   int port = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet reader started." );
+
+  ThreadOp.sleep(100); /* resume some time to get it all being setup */
 
   /* try to get the system status: */
   {
