@@ -170,6 +170,14 @@ void SwitchDialog::initLabels() {
         m_BlockID->Append( wxString(wBlock.getid( bk ),wxConvUTF8), bk );
       }
     }
+    iONode fblist = wPlan.getfblist( model );
+    if( fblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( fblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = NodeOp.getChild( fblist, i );
+        m_BlockID->Append( wxString(wFeedback.getid( fb ),wxConvUTF8), fb );
+      }
+    }
   }
 
   m_Type->Append( wxGetApp().getMsg( "turnout" ), (void*)wSwitch.left );

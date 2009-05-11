@@ -1133,7 +1133,8 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
     if( StrOp.equals( nodeName, wTurntable.name() ) ) {
       item->modelEvent( node );
     }
-    else if( StrOp.equals( nodeName, wTrack.name() ) || StrOp.equals( nodeName, wSignal.name() ) || StrOp.equals( nodeName, wFeedback.name() ) ) {
+    else if( StrOp.equals( nodeName, wTrack.name() ) || StrOp.equals( nodeName, wSignal.name() ) ||
+             StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ) {
       TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "feedback event id=[%s]", wFeedback.getid(node) );
       item->blockEvent( wFeedback.getid(node));
     }
