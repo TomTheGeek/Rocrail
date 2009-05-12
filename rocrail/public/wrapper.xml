@@ -370,7 +370,7 @@
         </options>
         <slotserver wrappername="LNSlotServer">
           <var name="active" vt="bool" defval="false" remark="activate slot server support"/>
-          <var name="lconly" vt="bool" defval="false" remark="serve loco commands only"/>
+          <var name="lconly" vt="bool" defval="true" remark="serve loco commands only"/>
           <var name="purge" vt="bool" defval="true" remark="activate slot purging (purgtime from parent node)"/>
           <var name="stopatpurge" vt="bool" defval="false" remark="stop loc after purge"/>
           <var name="iid" vt="string" defval="" range="*" remark="redirect commands to this interface ID"/>
