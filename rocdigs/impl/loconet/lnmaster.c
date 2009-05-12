@@ -195,8 +195,7 @@ static iONode __swCmd(iOLocoNet loconet, byte* req ) {
     wSwitch.setaddr1( nodeSw, addr );
     wSwitch.setport1( nodeSw, port );
 
-    if( data->iid != NULL )
-      wSwitch.setiid( nodeSw, data->iid );
+    wSwitch.setiid( nodeSw, wLNSlotServer.getiid( data->slotserver ) );
 
     wSwitch.setcmd( nodeSw, port?wSwitch.straight:wSwitch.turnout );
 
