@@ -394,8 +394,8 @@
       <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands to the CS"/>
       <var name="seed" vt="int" defval="4711" range="0-65535" remark="random seed for block selection"/>
       <var name="savepostime" vt="int" defval="10" range="0-100" unit="s" remark="save positio timer"/>
-      <var name="switchretrytime" vt="int" defval="3" range="0-100" unit="s" remark="switch retry timer"/>
-      <var name="switchretrycount" vt="int" defval="10" range="0-100" unit="s" remark="switch retry counter"/>
+      <var name="switchretrytime" vt="int" defval="0" range="0-100" unit="s" remark="switch retry timer"/>
+      <var name="switchretrycount" vt="int" defval="0" range="0-100" unit="s" remark="switch retry counter"/>
       <var name="check2in" vt="bool" defval="false" remark="Check for a free new destination between the enter and in event."/>
       <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
       <var name="enableswfb" vt="bool" defval="true" remark="Enable switch position feedbacks."/>

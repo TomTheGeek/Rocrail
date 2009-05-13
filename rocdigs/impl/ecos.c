@@ -535,16 +535,13 @@ static void __requestViews( iOECoS inst ) {
   StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_S88_ALL_MODULES );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
-  // switch manager
+  /* switch manager */
   memset( data->dccSwitchStates, 0, sizeof( data->dccSwitchStates));
   StrOp.fmtb( ecosCmd, "request(%d, view, viewswitch)\n", OID_SWMANAGER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
-/*  
-  // sniffer
-  StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_SNIFFER );
-  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
-  StrOp.fmtb( ecosCmd, "request(%d, view)\n", 20012 );
+/*  
+  StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_SNIFFER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 */
 }
@@ -558,14 +555,11 @@ static void __releaseViews( iOECoS inst ) {
   iOECoSData data     = Data( inst );
   char ecosCmd[ 256 ] = {'\0'};
 /*    
-  StrOp.fmtb( ecosCmd, "release(%d, view)\n", 20012 );
-  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
-
-  // sniffer
   StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_SNIFFER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 */
-  // switch manager
+
+  /* switch manager */
   StrOp.fmtb( ecosCmd, "release(%d, view, viewswitch)\n", OID_SWMANAGER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
     
@@ -1200,7 +1194,7 @@ static void __processSwitchList( iOECoS inst, iONode node ) {
         MapOp.put( data->dccSwitchObjMap, oid, ( obj )StrOp.dup( addr ));
         MutexOp.post( data->mapmux );
 
-        // view switch
+        /* view switch */
         StrOp.fmtb( ecosCmd, "request(%s, view)\n", oid );
         __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
@@ -1237,7 +1231,7 @@ static void __processSwitchSet( iOECoS inst, iONode node ) {
     
     if ( switchAddress && ( switchAddress <= 2048) && ( ( switchPosition == 'g') || ( switchPosition == 'r'))) {
     
-      // set switch requests          
+      /* set switch requests */          
       if ( switchPosition == 'r') {
          data->dccSwitchStates[switchAddress-1] |= 0x01;
          data->dccSwitchStates[switchAddress-1] &= ~0x02;
@@ -1324,7 +1318,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
               wFeedback.setstate( eventGreen, ( data->dccSwitchStates[switchAddress-1] & 0x02) ? True : False );
               data->listenerFun( data->listenerObj, eventGreen, TRCLEVEL_MONITOR );
 
-              // clear switch requests          
+              /* clear switch requests */          
               data->dccSwitchStates[switchAddress-1] &= ~0x03;
             } else {
 
