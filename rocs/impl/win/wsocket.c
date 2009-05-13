@@ -534,7 +534,8 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
     treaded += readed;
   }
   o->readed = treaded;
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes readed from socket.", treaded );
+  if( treaded > 1 )
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes readed from socket.", treaded );
 #endif
   return True;
 }
