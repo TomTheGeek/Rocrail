@@ -6947,6 +6947,17 @@
     <it txt="Salva tempo di posizionamento"/>
     <da txt="Gem positionstid"/>
   </Msg>
+  <Msg id="switchretrytime">
+    <de txt="Switch retry timer"/>
+    <en txt="Switch retry timer"/>
+    <nl txt="Switch retry timer"/>
+    <sv txt="Switch retry timer"/>
+    <fr txt="Switch retry timer"/>
+    <tr txt="Switch retry timer"/>
+    <es txt="Switch retry timer"/>
+    <it txt="Switch retry timer"/>
+    <da txt="Switch retry timer"/>
+  </Msg>
   <Msg id="theme">
     <de txt="Thema"/>
     <en txt="Theme"/>

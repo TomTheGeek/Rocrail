@@ -283,6 +283,8 @@ void OpenDCCCtrlDlg::evaluate() {
     wDigInt.setbps( m_Props, 57600 );
   else if( m_Baudrate->GetSelection() == 6 )
     wDigInt.setbps( m_Props, 115200 );
+
+  wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue()*2 + m_S88Bus2->GetValue()*2 + m_S88Bus3->GetValue()*2 );
 }
 
 void OpenDCCCtrlDlg::initValues() {

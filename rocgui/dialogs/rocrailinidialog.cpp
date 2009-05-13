@@ -184,6 +184,7 @@ void RocrailIniDialog::initLabels() {
   m_labInitPower->SetLabel( wxGetApp().getMsg( "initfieldpower" ) );
   m_labSeed->SetLabel( wxGetApp().getMsg( "randomseed" ) );
   m_labSavePosTime->SetLabel( wxGetApp().getMsg( "savepostime" ) );
+  m_labSwitchRetryTime->SetLabel( wxGetApp().getMsg( "switchretrytime" ) );
   m_Check2In->SetLabel( wxGetApp().getMsg( "check2in" ) );
   m_secondNextBlock->SetLabel( wxGetApp().getMsg( "secondnextblock" ) );
   m_EnableSwFb->SetLabel( wxGetApp().getMsg( "enableswfb" ) );
@@ -321,6 +322,7 @@ void RocrailIniDialog::initValues() {
   StrOp.free( val );
   m_Seed->SetValue( wCtrl.getseed( ctrl ) );
   m_SavePosTime->SetValue( wCtrl.getsavepostime( ctrl ) );
+  m_SwitchRetryTime->SetValue( wCtrl.getswitchretrytime( ctrl ) );
   m_Check2In->SetValue( wCtrl.ischeck2in( ctrl ) );
   m_secondNextBlock->SetValue( wCtrl.issecondnextblock( ctrl ) );
   m_InitfieldPower->SetValue( wCtrl.isinitfieldpower( ctrl ) );
@@ -471,6 +473,7 @@ void RocrailIniDialog::evaluate() {
   wCtrl.setinitfieldpause( ctrl, atoi( m_PauseInit->GetValue().mb_str(wxConvUTF8) ) );
   wCtrl.setseed( ctrl, m_Seed->GetValue() );
   wCtrl.setsavepostime( ctrl, m_SavePosTime->GetValue() );
+  wCtrl.setswitchretrytime( ctrl, m_SwitchRetryTime->GetValue() );
   wCtrl.setcheck2in( ctrl, m_Check2In->IsChecked() ? True:False );
   wCtrl.setsecondnextblock( ctrl, m_secondNextBlock->IsChecked() ? True:False );
   wCtrl.setinitfieldpower( ctrl, m_InitfieldPower->IsChecked() ? True:False );
@@ -566,6 +569,8 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_Seed = NULL;
     m_labSavePosTime = NULL;
     m_SavePosTime = NULL;
+    m_labSwitchRetryTime = NULL;
+    m_SwitchRetryTime = NULL;
     m_labEventTimeout = NULL;
     m_EventTimeout = NULL;
     m_labSignalReset = NULL;
@@ -855,6 +860,12 @@ void RocrailIniDialog::CreateControls()
 
     m_SavePosTime = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer61->Add(m_SavePosTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    m_labSwitchRetryTime = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Switch retry time"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer61->Add(m_labSwitchRetryTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    m_SwitchRetryTime = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemFlexGridSizer61->Add(m_SwitchRetryTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labEventTimeout = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Event timeout"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer61->Add(m_labEventTimeout, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);

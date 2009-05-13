@@ -515,11 +515,13 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
     }
   }
 
-  // backup cmd nodeA for retry purpose
-  o->backupNodeA = (iONode)nodeA->base.clone( nodeA );
-  wSwitch.setstate( o->backupNodeA, state );
-  wSwitch.setcmd( o->backupNodeA, state );
-  o->retrytimer   = 30;
+  // clear old backupNodeA and clone new nodeA with state and cmd for retry purpose
+  if ( o->backupNodeA)
+    NodeOp.base.del( o->backupNodeA);
+  o->backupNodeA = (iONode)nodeA->base.clone( nodeA);
+  wSwitch.setstate( o->backupNodeA, state);
+  wSwitch.setcmd( o->backupNodeA, state);
+  o->retrytimer = wCtrl.getswitchretrytime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
   
   wSwitch.setstate( o->props, state );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s]",

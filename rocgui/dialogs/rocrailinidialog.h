@@ -255,6 +255,8 @@ public:
     wxSpinCtrl* m_Seed;
     wxStaticText* m_labSavePosTime;
     wxSpinCtrl* m_SavePosTime;
+    wxStaticText* m_labSwitchRetryTime;
+    wxSpinCtrl* m_SwitchRetryTime;
     wxStaticText* m_labEventTimeout;
     wxTextCtrl* m_EventTimeout;
     wxStaticText* m_labSignalReset;
