@@ -220,9 +220,23 @@ static Boolean _go( iORoute inst ) {
   {
     iOModel model = AppOp.getModel(  );
     iONode nodeD = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
-    const char* routeId = ModelOp.getRouteAlias( model, wRoute.getid(o->props) );
-    wRoute.setid( nodeD, routeId );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    const char* routeId = wRoute.getid(o->props);
+    iOList aliases = ModelOp.getRouteAliases( model, routeId );
+
+    if( aliases == NULL ) {
+      wRoute.setid( nodeD, routeId );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    }
+    else {
+      int i = 0;
+      for( i = 0; i < ListOp.size(aliases); i++ ) {
+        iONode routeseg = (iONode)ListOp.get( aliases, i );
+        wRoute.setid( nodeD, wRoute.getid(routeseg) );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(nodeD) );
+      }
+      NodeOp.base.del(nodeD);
+    }
+
   }
 
 

@@ -3052,18 +3052,17 @@ static void _loadBlockOccupation( iOModel inst ) {
   MutexOp.post( data->occMux );
 }
 
-static const char* _getRouteAlias(iOModel inst, const char* routeId) {
+static iOList _getRouteAliases(iOModel inst, const char* routeId) {
   iOModelData data = Data(inst);
-  const char* alias = routeId;
+  iOList aliases = NULL;
   if( data->moduleplan != NULL ) {
-    const char* tmp = ModPlanOp.getModuleRouteID(data->moduleplan, routeId);
-    if( tmp != NULL ) {
-      alias = tmp;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route alias [%s] found for [%s]", alias, routeId );
+    aliases = ModPlanOp.getModuleRouteIDs(data->moduleplan, routeId);
+    if( aliases != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d route alias found for [%s]", ListOp.size(aliases), routeId );
     }
   }
 
-  return alias;
+  return aliases;
 }
 
 

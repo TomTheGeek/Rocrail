@@ -744,9 +744,9 @@
       <param name="key" vt="const char*" remark="output key"/>
       <param name="co" vt="iOOutput" remark="output object"/>
     </fun>
-    <fun name="getRouteAlias" vt="const char*">
+    <fun name="getRouteAliases" vt="iOList">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="routeId" vt="const char*"/>
+      <param name="routeIds" vt="const char*"/>
     </fun>
     <fun name="getManagedID" vt="const char*">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -1402,9 +1402,9 @@
       <param name="comingfrom" vt="const char*"/>
       <param name="eventid" vt="const char*"/>
     </fun>
-    <fun name="getModuleRouteID" vt="const char*">
+    <fun name="getModuleRouteIDs" vt="iOList">
       <param name="inst" vt="this" remark="instance"/>
-      <param name="routeid" vt="const char*"/>
+      <param name="routeids" vt="const char*"/>
     </fun>
     <fun name="getResolvedRouteID" vt="const char*">
       <param name="inst" vt="this" remark="instance"/>

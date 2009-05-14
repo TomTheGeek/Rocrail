@@ -385,14 +385,15 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
          * val = "bka-point-x"
          */
         StrOp.fmtb( key, "%s-%s", wRoute.getbka( route ), wRoute.getbkb(toRoute) );
-        val = StrOp.fmt( "%s-%s", wRoute.getbka( route ), wRoute.getbkb(route) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "add [%s]-[%s] to routeIdMap", key, val );
-        MapOp.put(data->routeIdMap, key, (obj)val);
+            "add %d aliases for route [%s] to routeIdMap", ListOp.size(routeList), key );
+        MapOp.put(data->routeIdMap, key, (obj)routeList);
 
       }
+      else {
+        ListOp.base.del(routeList);
+      }
 
-      ListOp.base.del(routeList);
     }
   }
 
@@ -402,9 +403,9 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
 /**
  * Return the unresolved routeID by generated routeID.
  */
-static const char* _getModuleRouteID(iOModPlan inst, const char* routeid) {
+static iOList _getModuleRouteIDs(iOModPlan inst, const char* routeid) {
   iOModPlanData data = Data(inst);
-  return (const char*)MapOp.get(data->routeIdMap, routeid);
+  return (iOList)MapOp.get(data->routeIdMap, routeid);
 }
 
 
