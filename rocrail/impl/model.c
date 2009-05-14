@@ -1865,7 +1865,14 @@ static iOOutput _getOutput( iOModel inst, const char* id ) {
 
 static iORoute _getRoute( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
-  return (iORoute)MapOp.get( o->routeMap, id );
+  iORoute route = (iORoute)MapOp.get( o->routeMap, id );
+  if( route == NULL && o->moduleplan != NULL ) {
+    const char* routeID = ModPlanOp.getResolvedRouteID( o->moduleplan, id );
+    if( routeID != NULL ) {
+      route = (iORoute)MapOp.get( o->routeMap, routeID );
+    }
+  }
+  return route;
 }
 
 
