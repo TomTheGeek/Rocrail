@@ -212,6 +212,7 @@ static void __RFIReader( void* threadinst ) {
 
           wFeedback.setstate( evt, True );
           wFeedback.setaddr( evt, reader );
+          wFeedback.setbus( evt, 5 );
           wFeedback.setidentifier( evt, ident );
           if( data->iid != NULL )
             wFeedback.setiid( evt, data->iid );
@@ -240,6 +241,7 @@ static void __RFIReader( void* threadinst ) {
 
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, reader );
+        wFeedback.setbus( evt, 5 );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
