@@ -160,14 +160,23 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   int r = 0;
   char* routeID = NULL;
   char* bkc = NULL;
+
   wRoute.setbka( newRoute, wRoute.getbka( fromRoute ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s] to[%s]",
       wRoute.getbka( newRoute ), wRoute.getbkb( newRoute ) );
+
+  routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
+  wRoute.setid( newRoute, routeID );
+  StrOp.free(routeID);
 
   /* merge all crossing blocks: */
   /* merge all commands */
   for( r = 0; r < ListOp.size(routeList); r++ ) {
     iONode routeseg = (iONode)ListOp.get( routeList, r );
+
+    /* add to map to lookup the new route ID with the segment route ID */
+    MapOp.put( data->mod2routeIdMap, wRoute.getid(routeseg), (obj)wRoute.getid( newRoute ) );
+
     if( wRoute.getbkc(routeseg) != NULL &&  StrOp.len( wRoute.getbkc(routeseg) ) > 0 ) {
       if( bkc == NULL )
         bkc = StrOp.fmt( "%s", wRoute.getbkc(routeseg) );
@@ -193,9 +202,6 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   /* the route is generated so remove the module ID */
   wRoute.setmodid( newRoute, wRoute.modid_auto_gen );
 
-  routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
-  wRoute.setid( newRoute, routeID );
-  StrOp.free(routeID);
 
   /* add to the list: */
   {
@@ -399,6 +405,15 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
 static const char* _getModuleRouteID(iOModPlan inst, const char* routeid) {
   iOModPlanData data = Data(inst);
   return (const char*)MapOp.get(data->routeIdMap, routeid);
+}
+
+
+/**
+ * Return the resolved routeID by module routeID.
+ */
+static const char* _getResolvedRouteID(iOModPlan inst, const char* routeid) {
+  iOModPlanData data = Data(inst);
+  return (const char*)MapOp.get(data->mod2routeIdMap, routeid);
 }
 
 
@@ -1286,6 +1301,7 @@ static struct OModPlan* _inst( iONode modplan ) {
   data->fbeventMap          = MapOp.inst();
   data->blockMap            = MapOp.inst();
   data->routeIdMap          = MapOp.inst();
+  data->mod2routeIdMap      = MapOp.inst();
 
   instCnt++;
   __modplan = __ModPlan;

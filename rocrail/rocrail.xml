@@ -1406,6 +1406,10 @@
       <param name="inst" vt="this" remark="instance"/>
       <param name="routeid" vt="const char*"/>
     </fun>
+    <fun name="getResolvedRouteID" vt="const char*">
+      <param name="inst" vt="this" remark="instance"/>
+      <param name="routeid" vt="const char*"/>
+    </fun>
     <data>
       <var name="model" vt="iONode"/>
       <var name="modplan" vt="iONode"/>
@@ -1415,6 +1419,7 @@
       <var name="fbeventMap" vt="iOMap"/>
       <var name="blockMap" vt="iOMap"/>
       <var name="routeIdMap" vt="iOMap"/>
+      <var name="mod2routeIdMap" vt="iOMap"/>
     </data>
   </object>
 
