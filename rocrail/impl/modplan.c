@@ -624,6 +624,7 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     __mergeList(wTurntableList.name(), model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    __mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -729,6 +730,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
   dbkey = wTextList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wActionList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wLocationList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
 
 
