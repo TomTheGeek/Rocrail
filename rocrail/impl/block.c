@@ -322,7 +322,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( ident > 0 ){
     /* reset ident */
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "reset ident[%d] in block[%s] to zero; bi-com is disabled", ident, data->id);
     ident = 0;
   }
@@ -336,6 +336,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     if( ident > 0 && locident > 0 && ident != locident || ident > 0 && locident == 0 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s loc=%d ident=%d",
           data->id, locident, ident );
+      /* Power off? */
+      if( wCtrl.ispoweroffonidentmismatch( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off for mismatching ident" );
+        AppOp.stop();
+      }
     }
     else if( ident > 0 && locident > 0 && ident == locident ) {
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc=%d ident=%d",

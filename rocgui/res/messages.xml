@@ -8419,4 +8419,7 @@
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
   </Msg>
+  <Msg id="stopatidentmismatch">
+    <en txt="Power off at ident mismatch"/>
+  </Msg>
 </Messages>

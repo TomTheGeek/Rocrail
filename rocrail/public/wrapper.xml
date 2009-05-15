@@ -406,6 +406,7 @@
       <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commonds in routes for switches already in model position."/>
       <var name="semaphorewait" vt="int" defval="1" range="0-*" unit="s" remark="Time needed by a semaphore to get in position."/>
       <var name="usebicom" vt="bool" defval="true" remark="Use bi-directional communication."/>
+      <var name="poweroffonidentmismatch" vt="bool" defval="false" remark="Power off if the ident code does not match."/>
     </ctrl>
   </rocrail>
 
