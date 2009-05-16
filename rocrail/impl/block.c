@@ -608,11 +608,13 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit 
   *percent = wBlock.getspeedpercent(data->props);
 
   /* check for manual operated signals */
-  if( signal != NULL && SignalOp.isState( onexit ? signal:distand, wSignal.yellow) ) {
+  if( signal != NULL && SignalOp.isState( onexit ? signal:distand, onexit ? wSignal.yellow:wSignal.red) ) {
     if( !StrOp.equals( wBlock.getspeed( data->props ), wBlock.min ) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "set block %s velocity to mid for yellow aspect of signal %s",
-          inst->base.id(inst), onexit ? signal->base.id(signal):distand->base.id(distand) );
+          "set block %s velocity to Vmid for %s aspect of signal %s",
+          inst->base.id(inst),
+          onexit ? wSignal.yellow:wSignal.red,
+          onexit ? signal->base.id(signal):distand->base.id(distand) );
       return wBlock.mid;
     }
   }
