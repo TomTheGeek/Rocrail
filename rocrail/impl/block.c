@@ -804,9 +804,11 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
   iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
     return True; /* wait until it is set to green */
   }
   else if( signal != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a NONE red manual signal", inst->base.id(inst) );
     return False;
   }
 

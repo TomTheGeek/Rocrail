@@ -816,6 +816,9 @@ static iOSignal _inst( iONode props ) {
   MemOp.basecpy( sg, &SignalOp, 0, sizeof( struct OSignal ), data );
 
   data->props = props;
+  if( wSignal.getstate( data->props ) == NULL || StrOp.len(wSignal.getstate( data->props )) == 0) {
+    wSignal.setstate( data->props, wSignal.red );
+  }
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s", instCnt, _getId(sg) );
 
@@ -827,6 +830,8 @@ static iOSignal _inst( iONode props ) {
 
 static Boolean _isState( iOSignal inst, const char* state ) {
   iOSignalData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "signal [%s] is %s (%s)",
+      _getId(inst), wSignal.getstate(data->props), state );
   return StrOp.equals( state, wSignal.getstate(data->props) );
 }
 
