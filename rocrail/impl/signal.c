@@ -46,7 +46,8 @@ static int instCnt = 0;
  ***** OBase functions.
  */
 static const char* __id( void* inst ) {
-  return NULL;
+  iOSignalData data = Data(inst);
+  return wSignal.getid(data->props);
 }
 
 static void* __event( void* inst, const void* evt ) {

@@ -600,9 +600,22 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
 
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
-  iOBlockData data = Data(inst);
-  const char* V_hint = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
+  iOBlockData data    = Data(inst);
+  iOSignal    signal  = (iOSignal)inst->hasManualSignal(inst, False, False );
+  iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, False );
+  const char* V_hint  = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
+
   *percent = wBlock.getspeedpercent(data->props);
+
+  /* check for manual operated signals */
+  if( signal != NULL && SignalOp.isState( onexit ? signal:distand, wSignal.yellow) ) {
+    if( !StrOp.equals( wBlock.getspeed( data->props ), wBlock.min ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "set block %s velocity to mid for yellow aspect of signal %s",
+          inst->base.id(inst), onexit ? signal->base.id(signal):distand->base.id(distand) );
+      return wBlock.mid;
+    }
+  }
   return V_hint;
 }
 
