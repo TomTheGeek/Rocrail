@@ -868,6 +868,7 @@
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="manual" vt="bool" defval="false" remark="operator controlled signal to influence auto mode"/>
 
         <!-- Addressing -->
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
