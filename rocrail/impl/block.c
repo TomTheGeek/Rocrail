@@ -1406,7 +1406,7 @@ static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse 
     iOModel model = AppOp.getModel(  );
     iOSignal sg = ModelOp.getSignal( model, sgId );
     if( sg != NULL && SignalOp.isManualOperated(sg) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "block [%s] has a manual operated signal [%s]", inst->base.id(inst), sgId );
       return (obj)sg;
     }
