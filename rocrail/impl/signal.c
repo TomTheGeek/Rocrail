@@ -101,7 +101,7 @@ static void* _getProperties( void* inst ) {
 
 
 static void _green( iOSignal inst ) {
-  if( inst != NULL ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setcmd( node, wSignal.green );
@@ -111,7 +111,7 @@ static void _green( iOSignal inst ) {
 }
 
 static void _yellow( iOSignal inst ) {
-  if( inst != NULL ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     if( wSignal.getaspects( data->props ) == 2 )
@@ -124,7 +124,7 @@ static void _yellow( iOSignal inst ) {
 }
 
 static void _red( iOSignal inst ) {
-  if( inst != NULL ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setcmd( node, wSignal.red );
@@ -134,7 +134,7 @@ static void _red( iOSignal inst ) {
 }
 
 static void _white( iOSignal inst ) {
-  if( inst != NULL ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setcmd( node, wSignal.white );

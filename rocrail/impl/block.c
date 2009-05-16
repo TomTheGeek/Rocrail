@@ -609,6 +609,16 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit 
 
 static int _getWait( iIBlockBase inst, iOLoc loc ) {
   iOBlockData data = Data(inst);
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+
+  /* check the manual operated signal */
+  if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    return -1; /* wait until it is set to green */
+  }
+  else if( signal != NULL ) {
+    return 0;
+  }
+
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return 0;
   }
@@ -791,6 +801,16 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
   iOBlockData data = Data(inst);
   Boolean wait = False;
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+
+  if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    return True; /* wait until it is set to green */
+  }
+  else if( signal != NULL ) {
+    return False;
+  }
+
+
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return False;
   }

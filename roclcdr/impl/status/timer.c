@@ -42,9 +42,15 @@
 void statusTimer( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
-  data->timer--;
-  if( data->timer < 1 || !data->run || data->reqstop ) {
-    
+  if( data->timer == -1 ) {
+    /* handle manual operated signal */
+    if( !data->curBlock->wait(data->curBlock, data->loc ) ) {
+      data->timer = 0;
+    }
+  }
+
+  if( data->timer == 0 || !data->run || data->reqstop ) {
+
     /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
     if( data->curBlock->isTerminalStation( data->curBlock ) ) {
       /* TODO: only swap after the IN block event! */
@@ -53,19 +59,19 @@ void statusTimer( iILcDriverInt inst ) {
         data->swapBlock = data->curBlock;
       }
     }
-    
+
     if( data->reqstop ) {
       data->reqstop = False;
       data->run = False;
       data->warningnodestfound = False;
     }
-    
+
     data->state = LC_IDLE;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_TIMER to LC_IDLE.",
                    data->loc->getId( data->loc ) );
-    
+
     if( data->next1Block != NULL )
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next1Block for [%s] is [%s]",
                      data->loc->getId( data->loc ), data->next1Block->base.id(data->next1Block) );
@@ -88,5 +94,9 @@ void statusTimer( iILcDriverInt inst ) {
                    data->loc->getId( data->loc ) );
     }
     */
+  }
+  else {
+    if( data->timer > 0 )
+      data->timer--;
   }
 }

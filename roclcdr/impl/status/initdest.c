@@ -118,7 +118,10 @@ void statusInitDest( iILcDriverInt inst ) {
     }
     else {
       /* Error! */
-      data->pause = data->curBlock->getWait(data->curBlock, data->loc ) * 10;
+      data->pause = data->curBlock->getWait(data->curBlock, data->loc );
+      if( data->pause != -1 )
+        data->pause = data->pause * 10;
+
       data->state = data->run ? LC_PAUSE:LC_IDLE;
       wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
