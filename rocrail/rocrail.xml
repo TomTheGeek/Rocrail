@@ -1045,6 +1045,9 @@
       <param name="inst" vt="this"/>
       <param name="state" vt="const char*" remark="State to compare with."/>
     </fun>
+    <fun name="isManualOperated" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="isStateInverted" vt="Boolean"/>

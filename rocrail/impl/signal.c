@@ -831,6 +831,12 @@ static Boolean _isState( iOSignal inst, const char* state ) {
 }
 
 
+static Boolean _isManualOperated( iOSignal inst ) {
+  iOSignalData data = Data(inst);
+  return wSignal.ismanual(data->props);
+}
+
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/signal.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

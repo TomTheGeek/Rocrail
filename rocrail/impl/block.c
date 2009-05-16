@@ -1372,6 +1372,29 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
 
 }
 
+
+static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse ) {
+  iOBlockData data = Data(inst);
+  const char* sgId = NULL;
+
+  if( distant )
+    sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
+  else
+    sgId = reverse ? wBlock.getsignalR( data->props ):wBlock.getsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel(  );
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL && SignalOp.isManualOperated(sg) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "block [%s] has a manual operated signal [%s]", inst->base.id(inst), sgId );
+      return (obj)sg;
+    }
+  }
+  return NULL;
+
+}
+
 /**
  * Checks for property changes.
  * todo: Range checking?

@@ -1320,6 +1320,13 @@ static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   return False;
 }
 
+static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse ) {
+  iOSelTabData data = Data(inst);
+  /* TODO: dispatch to active tracke block */
+  return NULL;
+}
+
+
 static Boolean _hasEnter2Route( iIBlockBase inst, const char* fromBlockID ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
