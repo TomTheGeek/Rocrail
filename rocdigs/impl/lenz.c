@@ -182,44 +182,51 @@ static void __handleSwitch(iOLenz lenz, int addr, int port, int value) {
 
 /* extract the bits */
 static void __dec2bin(int *b0, int num) {
-	int i, rest;
-	for (i =0; i < 8; i++){
-		rest = num % 2;
-		num = num / 2;
-		b0[7-i] = rest;
-	}
+  int i, rest;
+  for (i =0; i < 8; i++){
+    rest = num % 2;
+    num = num / 2;
+    b0[7-i] = rest;
+  }
 }
 
 static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
   iOLenzData data = Data(lenz);
 
-	int i0 = in[0];
-	int i1 = in[1];
-	int i2 = in[2];
-	int i3 = in[3];
+  int i0 = in[0];
+  int i1 = in[1];
+  int i2 = in[2];
+  int i3 = in[3];
 
-	int b0[8], b1[8], b2[8], b3[8];
+  int b0[8], b1[8], b2[8], b3[8];
 
-	__dec2bin( &b0[0], i0);
-	__dec2bin( &b1[0], i1);
-	__dec2bin( &b2[0], i2);
-	__dec2bin( &b3[0], i3);
+  __dec2bin( &b0[0], i0);
+  __dec2bin( &b1[0], i1);
+  __dec2bin( &b2[0], i2);
+  __dec2bin( &b3[0], i3);
 
   /* Turnout broadcast: */
-	if ( i0 == 0x42 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
-		int baseadress = i1;
-		int k, start;
+  if ( i0 == 0x42 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
+    int baseadress = i1;
+    int k, start;
 
-		if( b2[3] == 0 )
-			start = 1;
-		else
-			start = 3;
+    if( b2[3] == 0 )
+      start = 1;
+    else
+      start = 3;
 
-		for (k = 0; k < 2; k++) {
-			__handleSwitch(lenz, baseadress, start+k, b2[7-k*2]);
-		}
-		TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Updating lenz turnouts in group: %d", baseadress );
-	}
+    for (k = 0; k < 2; k++) {
+      if( (b2[7-k*2] + b2[6-k*2]) == 1 ) {       // only handle changed turnouts ignore those unchanged (00) or invalid (11)
+        __handleSwitch(lenz, baseadress, start+k, b2[7-k*2]);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout status change address %d port %d", baseadress+1, start+k );
+      } else {
+        if( (b2[7-k*2] + b2[6-k*2]) == 2 )       // turnout reported invalid position
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Lenz turnout reports invalid position address %d port %d", baseadress+1, start+k );
+        else                                     // turnout not yet operated since power on
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout not operated yet address %d port %d", baseadress+1, start+k );
+      }
+    }
+  }
 
   /* Feedback broadcast: */
   if( (in[0] & 0xF0) == 0x40 && (b2[1] == 1 && b2[2] == 0) ) {
@@ -336,7 +343,7 @@ static void __statusRequestSender( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
   iOLenzData data = Data(lenz);
-	int i;
+  int i;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender started." );
 
@@ -358,7 +365,7 @@ static void __initializer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
   iOLenzData data = Data(lenz);
-	int i;
+  int i;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initializer started.");
 
@@ -526,11 +533,11 @@ static iONode __translate( iOLenz lenz, iONode node ) {
        address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
     */
     if (data->elite) {
-  	  port++;
-  	  if (port > 4) {
-    		port =1;
-    		addr++;
-  	  }
+      port++;
+      if (port > 4) {
+        port =1;
+        addr++;
+      }
     }
 
     /* Rocrail starts at address 1, port 1, Lenz at address 0, port 0 */
@@ -578,10 +585,10 @@ static iONode __translate( iOLenz lenz, iONode node ) {
        to get address, port and gate right again */
     if (data->elite) {
       port--;
-  	  if (port < 0) {
-    		port = 3;
-    		addr--;
-  	  }
+      if (port < 0) {
+        port = 3;
+        addr--;
+      }
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
@@ -606,11 +613,11 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       fromPADA( port, &addr, &port );
 
     if (data->elite) {
-  	port++;
+    port++;
       if (port > 4) {
-    		port =1;
-    		addr++;
-  	  }
+        port =1;
+        addr++;
+      }
     }
 
     if( port > 0 ) port--;
@@ -632,11 +639,11 @@ static iONode __translate( iOLenz lenz, iONode node ) {
     }
 
     if (data->elite) {
-  	  port--;
-  	  if (port < 0) {
-    		port = 3;
-    		addr--;
-  	  }
+      port--;
+      if (port < 0) {
+        port = 3;
+        addr--;
+      }
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s",
@@ -721,9 +728,9 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
     }
 
-  	lenzspeed = speed;
+    lenzspeed = speed;
 
-  	 	/* Remove e-stop in 14 and 127 speed step mode */
+      /* Remove e-stop in 14 and 127 speed step mode */
     if ( spcnt == 14 || spcnt == 127 ){
       if ( lenzspeed > 0 )
         lenzspeed = lenzspeed + 1;
@@ -1067,24 +1074,24 @@ static void __transactor( void* threadinst ) {
         /* TODO: this is not state of art ... we have to do something here !!!*/
         if (data->elite || data->usb) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
-     	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
-  	       if(data->elite)
-  	    	 ThreadOp.sleep(9000);
-  	       if(data->usb)
-  	    	 ThreadOp.sleep(1000);
+             expectEliteAnswer = False;
+           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
+           if(data->elite)
+           ThreadOp.sleep(9000);
+           if(data->usb)
+           ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
-  	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
-			 if(data->elite)
-  	       	   ThreadOp.sleep(9000);
-  	       	 if(data->usb)
-  	       	   ThreadOp.sleep(1000);
+           expectEliteAnswer = False;
+           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
+       if(data->elite)
+               ThreadOp.sleep(9000);
+             if(data->usb)
+               ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
-  	       expectEliteAnswer = False;
-  	       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
+           expectEliteAnswer = False;
+           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
           }
         }
 
@@ -1152,13 +1159,13 @@ static void __transactor( void* threadinst ) {
             continue;
           }
 
-	        datalen = (in[0] & 0x0f) + 1;
-	        ok = SerialOp.read( data->serial, (char*)in+2, datalen-1 );
-	        MutexOp.post( data->mux );
+          datalen = (in[0] & 0x0f) + 1;
+          ok = SerialOp.read( data->serial, (char*)in+2, datalen-1 );
+          MutexOp.post( data->mux );
 
 
-	        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-	        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+2 );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+2 );
         }
 
         if( !ok )
@@ -1212,10 +1219,10 @@ static void __transactor( void* threadinst ) {
            iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
            if( data->iid != NULL )
              wState.setiid( node, data->iid );
-			 wState.setpower( node, False );
-			 wState.settrackbus( node, False );
-			 wState.setsensorbus( node, False );
-			 wState.setaccessorybus( node, False );
+       wState.setpower( node, False );
+       wState.settrackbus( node, False );
+       wState.setsensorbus( node, False );
+       wState.setaccessorybus( node, False );
 
            if( data->listenerFun != NULL && data->listenerObj != NULL )
              data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1294,9 +1301,9 @@ static void __transactor( void* threadinst ) {
         }
 
         /* Version of Interface*/
-		else if (in[0] == 0x01 && in[1] == 0x06){
-			TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
-		}
+    else if (in[0] == 0x01 && in[1] == 0x06){
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
+    }
 
         /* Version of Command Station from version 3.0*/
         else if (in[0] == 0x63 && in[1] == 0x21){
