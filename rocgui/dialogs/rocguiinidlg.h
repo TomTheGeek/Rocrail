@@ -182,6 +182,7 @@ public:
     wxTextCtrl* m_CVnrs;
     wxStaticText* m_labTimeout;
     wxTextCtrl* m_Timeout;
+    wxCheckBox* m_Lissy;
     wxPanel* m_SVGpanel;
     wxStaticBox* m_SVGPathBox;
     wxTextCtrl* m_SVGPath;
