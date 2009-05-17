@@ -1200,7 +1200,7 @@ static void __processSwitchList( iOECoS inst, iONode node ) {
         MapOp.put( data->dccSwitchObjMap, oid, ( obj )StrOp.dup( addr ));
         MutexOp.post( data->mapmux );
 
-        // view switch
+        /* view switch */
         StrOp.fmtb( ecosCmd, "request(%s, view)\n", oid );
         __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
@@ -1237,7 +1237,7 @@ static void __processSwitchSet( iOECoS inst, iONode node ) {
     
     if ( switchAddress && ( switchAddress <= 2048) && ( ( switchPosition == 'g') || ( switchPosition == 'r'))) {
     
-      // set switch requests          
+      /* set switch requests */         
       if ( switchPosition == 'r') {
          data->dccSwitchStates[switchAddress-1] |= 0x01;
          data->dccSwitchStates[switchAddress-1] &= ~0x02;

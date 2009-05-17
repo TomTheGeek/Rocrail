@@ -515,7 +515,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int retryCount
     }
   }
 
-  // clear old backupNodeA and clone new nodeA with state and cmd for retry purpose
+  /* clear old backupNodeA and clone new nodeA with state and cmd for retry purpose */
   if ( o->backupNodeA)
     NodeOp.base.del( o->backupNodeA);
   o->backupNodeA = (iONode)nodeA->base.clone( nodeA);
