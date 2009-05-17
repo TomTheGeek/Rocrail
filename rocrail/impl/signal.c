@@ -622,6 +622,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   const char* iid        = wSignal.getiid( o->props );
   const char* savedState = wSignal.getstate( o->props );
   Boolean     inv        = wSignal.isinv( o->props );
+  Boolean     chgState   = True;
 
 
   if( control == NULL ) {
@@ -652,79 +653,94 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       state = wSignal.green;
     }
   }
+  else if( StrOp.equals( wSignal.autooperated, state ) ) {
+    wSignal.setmanual( o->props, False);
+    chgState = False;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to auto",
+                 wSignal.getid( o->props ) );
+  }
+  else if( StrOp.equals( wSignal.manualoperated, state ) ) {
+    wSignal.setmanual( o->props, True);
+    chgState = False;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to manual",
+                 wSignal.getid( o->props ) );
+  }
 
   /* save the new state of the signal */
-  wSignal.setstate( o->props, state );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s",
-               wSignal.getid( o->props ), wSignal.getstate( o->props ) );
+  if( chgState ) {
+    wSignal.setstate( o->props, state );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s",
+                 wSignal.getid( o->props ), wSignal.getstate( o->props ) );
 
+    /* invert only 2 aspect signals */
+    if( inv && wSignal.getaspects( o->props ) == 2 ) {
+      if( inv && StrOp.equals( wSignal.red, state ) )
+        state = wSignal.green;
+      else if( inv && StrOp.equals( wSignal.green, state ) )
+        state = wSignal.red;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inverting signal %s to %s",
+                   wSignal.getid( o->props ), state );
+    }
 
-  /* invert only 2 aspect signals */
-  if( inv && wSignal.getaspects( o->props ) == 2 ) {
-    if( inv && StrOp.equals( wSignal.red, state ) )
-      state = wSignal.green;
-    else if( inv && StrOp.equals( wSignal.green, state ) )
-      state = wSignal.red;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inverting signal %s to %s",
-                 wSignal.getid( o->props ), state );
-  }
+    /* check using patterns */
+    if( wSignal.isusepatterns( o->props ) ) {
+      if( !__processPatternCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    /* pair processing */
+    else if( wSignal.ispair( o->props ) ) {
+      if( !__processPairCmd( inst, state, inv ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else if( wSignal.getaspects(o->props) == 4 ){
+      /* invoke the command by calling the control */
+      if( !__process4AspectsCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else if( wSignal.getaspects(o->props) == 3 ){
+      /* invoke the command by calling the control */
+      if( !__process3AspectsCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else if( wSignal.isasswitch(o->props) ) {
+      /* invoke the command by calling the control */
+      if( !__process2AspectsAsSwitchCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else {
+      /* invoke the command by calling the control */
+      if( !__process2AspectsCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
 
-  /* check using patterns */
-  if( wSignal.isusepatterns( o->props ) ) {
-    if( !__processPatternCmd( inst, state ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      return False;
-    }
+    if( ok )
+      __checkAction( inst );
   }
-  /* pair processing */
-  else if( wSignal.ispair( o->props ) ) {
-    if( !__processPairCmd( inst, state, inv ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      ok = False;
-    }
-  }
-  else if( wSignal.getaspects(o->props) == 4 ){
-    /* invoke the command by calling the control */
-    if( !__process4AspectsCmd( inst, state ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      ok = False;
-    }
-  }
-  else if( wSignal.getaspects(o->props) == 3 ){
-    /* invoke the command by calling the control */
-    if( !__process3AspectsCmd( inst, state ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      ok = False;
-    }
-  }
-  else if( wSignal.isasswitch(o->props) ) {
-    /* invoke the command by calling the control */
-    if( !__process2AspectsAsSwitchCmd( inst, state ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      ok = False;
-    }
-  }
-  else {
-    /* invoke the command by calling the control */
-    if( !__process2AspectsCmd( inst, state ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-          "Signal [%s] could not be set!", wSignal.getid( o->props ) );
-      ok = False;
-    }
-  }
-
-  __checkAction( inst );
 
   /* Broadcast to clients. Node6 */
   if( ok && update ) {
     iONode nodeF = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setid( nodeF, wSignal.getid( o->props ) );
     wSignal.setstate( nodeF, wSignal.getstate( o->props ) );
+    wSignal.setmanual( nodeF, wSignal.ismanual( o->props ) );
     if( wSignal.getiid( o->props ) != NULL )
       wSignal.setiid( nodeF, wSignal.getiid( o->props ) );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );

@@ -8425,4 +8425,7 @@
   <Msg id="manualoperated">
     <en txt="Manual operated"/>
   </Msg>
+  <Msg id="autooperated">
+    <en txt="Automatically operated"/>
+  </Msg>
 </Messages>
