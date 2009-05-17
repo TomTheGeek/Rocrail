@@ -523,6 +523,12 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
 static void __mergeList( const char* listname, iONode model, iONode module, int level, int r, int cx, int cy, Boolean broadcast ) {
   iONode modellist = NodeOp.findNode( model, listname );
   iONode list = NodeOp.findNode( module, listname );
+
+  if( modellist == NULL ) {
+    modellist = NodeOp.inst( listname, NULL, ELEMENT_NODE );
+    NodeOp.addChild(model, modellist);
+  }
+
   if( list != NULL ) {
     int i = 0;
     int cnt = NodeOp.getChildCnt( list );
@@ -1081,6 +1087,8 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
 
   iONode model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
   char* xml = NULL;
+  if( wPlan.getsclist(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getsclist(data->model) ) );
 
   /* only routes without a modid set */
   if( wPlan.getstlist(data->model) != NULL ) {
