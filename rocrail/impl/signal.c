@@ -656,14 +656,14 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   else if( StrOp.equals( wSignal.autooperated, state ) ) {
     wSignal.setmanual( o->props, False);
     chgState = False;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to auto",
-                 wSignal.getid( o->props ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to auto (%s)",
+                 wSignal.getid( o->props ), state );
   }
   else if( StrOp.equals( wSignal.manualoperated, state ) ) {
     wSignal.setmanual( o->props, True);
     chgState = False;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to manual",
-                 wSignal.getid( o->props ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to manual (%s)",
+                 wSignal.getid( o->props ), state );
   }
 
   /* save the new state of the signal */
