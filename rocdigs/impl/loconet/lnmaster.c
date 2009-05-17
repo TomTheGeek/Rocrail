@@ -159,6 +159,7 @@ void lnmasterThread( void* threadinst ) {
       for( i = 1; i < 120; i++ ) {
         if( slot[i].inuse && ((currtime - slot[i].accessed) > (data->purgetime)) ) {
           slot[i].inuse = False;
+          slot[i].addr = 0;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "slot# %d is purged", i );
           if( wLNSlotServer.isstopatpurge(data->slotserver) ) {
             slot[i].speed = 0;
@@ -195,8 +196,7 @@ static iONode __swCmd(iOLocoNet loconet, byte* req ) {
     wSwitch.setaddr1( nodeSw, addr );
     wSwitch.setport1( nodeSw, port );
 
-    if( data->iid != NULL )
-      wSwitch.setiid( nodeSw, data->iid );
+    wSwitch.setiid( nodeSw, wLNSlotServer.getiid( data->slotserver ) );
 
     wSwitch.setcmd( nodeSw, port?wSwitch.straight:wSwitch.turnout );
 
@@ -282,7 +282,7 @@ static int __findSlot4Addr( int addr, struct __lnslot* slot, int* firstavail ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot# %d has address %d", i, addr );
       return i;
     }
-    if( *firstavail == -1 && !slot[i].inuse )
+    if( *firstavail == -1 && !slot[i].inuse && slot[i].addr == 0)
       *firstavail = i;
   }
   return -1; // send LACK back <B4> <3F> <0> <CHK>
@@ -400,6 +400,7 @@ static int __locoaddress(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
     slotnr = avail;
     /* set the slot */
     slot[slotnr].addr = addr;
+    /*slot[slotnr].inuse = True;*/
   }
   else if( slotnr == -1 && avail == -1 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no slot free for address %d", addr );
@@ -429,7 +430,7 @@ static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int*
   iOLocoNetData data = Data(loconet);
   int src = msg[1] & 0x7F;
   int dst = msg[2] & 0x7F;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "move slots %d, %d", src, dst );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "move slots %d, %d (dps=%d)", src, dst, *dispatchedslot );
 
   if( src == 0 ) {
     /* DISPATCH GET */

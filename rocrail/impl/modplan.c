@@ -34,6 +34,7 @@
 #include "rocrail/wrapper/public/ScheduleList.h"
 #include "rocrail/wrapper/public/LinkList.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/ActionList.h"
 
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Track.h"
@@ -606,6 +607,7 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     __mergeList(wTextList.name()     , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wTurntableList.name(), model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    __mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -709,6 +711,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
   dbkey = wOutputList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wTextList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wActionList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
 
 

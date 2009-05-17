@@ -305,7 +305,7 @@ void Symbol::blockEvent( const char* id ) {
       StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( StrOp.equals( wTrack.getblockid( m_Props ), id ) ) {
-      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block occ id=[%s]", id );
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block[%s] occ id=[%s]", id, wItem.getid(m_Props) );
       Refresh();
     }
   }
@@ -394,8 +394,12 @@ void Symbol::OnPaint(wxPaintEvent& event)
         StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSwitch.name()  , NodeOp.getName( m_Props ) ) )
       {
-      if( wTrack.getblockid( m_Props ) != NULL && StrOp.len( wItem.getblockid( m_Props )) >0 )
+      if( wTrack.getblockid( m_Props ) != NULL && StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
         occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
+        TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s is %s occupied by %s",
+            wItem.getid( m_Props ), occupied? "":"not", wItem.getblockid( m_Props ));
+      }
+
     }
     else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
       occupied = wSelTab.ispending(m_Props);

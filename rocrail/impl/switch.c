@@ -405,7 +405,7 @@ static void _green( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.straight );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error );
 }
 
 static void _red( iOSwitch inst ) {
@@ -414,7 +414,7 @@ static void _red( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.turnout );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error );
 }
 
 
@@ -443,7 +443,7 @@ static Boolean _isSet( iOSwitch inst ) {
 }
 
 
-static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
+static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int retryCount, int* error ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -522,7 +522,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
   wSwitch.setstate( o->backupNodeA, state);
   wSwitch.setcmd( o->backupNodeA, state);
   o->retrytimer = wCtrl.getswitchretrytime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
-  
+  o->retrycounter = retryCount;
+
   wSwitch.setstate( o->props, state );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s]",
                  SwitchOp.getId( inst ), state );
@@ -969,14 +970,16 @@ static void _checkSenPos( iOSwitch inst ) {
       && data->hasFbSignal 
       && ModelOp.isEnableSwFb( AppOp.getModel())
       && data->activated 
-      && !SwitchOp.isSet(inst) ) {
+      && !SwitchOp.isSet(inst)
+      && ( data->retrycounter < wCtrl.getswitchretrycount( wRocRail.getctrl( AppOp.getIni(  ) ) ) ) ) {
       
       int error = 0;
       iONode cmd = ( iONode)data->backupNodeA->base.clone( data->backupNodeA );
       
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] once more cmd [%s]", SwitchOp.getId( inst ), wSwitch.getcmd( cmd) );
       
-      SwitchOp.cmd( inst, cmd, False, &error );
+      data->retrycounter++;
+      SwitchOp.cmd( inst, cmd, False, data->retrycounter, &error );
     }
   }
 
@@ -994,7 +997,7 @@ static void _checkSenPos( iOSwitch inst ) {
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
-        SwitchOp.cmd( inst, cmd, True, &error );
+        SwitchOp.cmd( inst, cmd, True, 0, &error );
       }
     }
   }

@@ -1,0 +1,19 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Gerade --> 
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 63,12 L 63,19 L 0,19 z " />
+    <!-- Ausleuchtung gerade links grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- Ausleuchtung gerade rechts grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 40,14 L 55,14 L 55,17 L 40,17 z " />
+    <!-- Diagonale links unten rechts oben -->  
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 43,0 L 51,0 L 20,31 L 12,31 z " />
+    <!-- Ausleuchtung rechts oben rot -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 42,3 L 44,5 L 38,11 L 36,9 z " />
+    <!-- Ausleuchtung links unten rot -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 25,20 L 27,22 L 21,28 L 19,26 z " />
+    <!-- Winkel -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 24,9 L 29,9 L 32,6 L 31,5 L 28,8 L 24,8 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 32,24 L 35,21 L 39,21 L 39,22 L 36,22 L 33,25  z " />
+  </g>
+</svg>

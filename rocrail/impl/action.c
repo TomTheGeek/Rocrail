@@ -216,7 +216,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       int error = 0;
       iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
-      SwitchOp.cmd( sw, cmd, True, &error );
+      SwitchOp.cmd( sw, cmd, True, 0, &error );
     }
   }
 

@@ -1258,7 +1258,7 @@ static void __processSwitchSet( iOECoS inst, iONode node ) {
       /* clear event green, inform listener: Node */
       iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setbus( eventGreen, 4 );
-      wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) + 1);
+      wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
       if ( data->iid != NULL )
         wFeedback.setiid( eventGreen, data->iid );
       wFeedback.setstate( eventGreen, False );
@@ -1318,7 +1318,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
               /* event green, inform listener: Node */
               iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
               wFeedback.setbus( eventGreen, 4 );
-              wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) + 1);
+              wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
               if ( data->iid != NULL )
                 wFeedback.setiid( eventGreen, data->iid );
               wFeedback.setstate( eventGreen, ( data->dccSwitchStates[switchAddress-1] & 0x02) ? True : False );
@@ -1340,7 +1340,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
               /* clear event green, inform listener: Node */
               iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
               wFeedback.setbus( eventGreen, 4 );
-              wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) + 1);
+              wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
               if ( data->iid != NULL )
                 wFeedback.setiid( eventGreen, data->iid );
               wFeedback.setstate( eventGreen, False );

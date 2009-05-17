@@ -6958,6 +6958,17 @@
     <it txt="Switch retry timer"/>
     <da txt="Switch retry timer"/>
   </Msg>
+  <Msg id="switchretrycount">
+    <de txt="Switch retry counter"/>
+    <en txt="Switch retry counter"/>
+    <nl txt="Switch retry counter"/>
+    <sv txt="Switch retry counter"/>
+    <fr txt="Switch retry counter"/>
+    <tr txt="Switch retry counter"/>
+    <es txt="Switch retry counter"/>
+    <it txt="Switch retry counter"/>
+    <da txt="Switch retry counter"/>
+  </Msg>
   <Msg id="theme">
     <de txt="Thema"/>
     <en txt="Theme"/>

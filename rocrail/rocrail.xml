@@ -933,6 +933,7 @@
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="cmd" vt="iONode" remark="Command node"/>
       <param name="update" vt="Boolean" remark="Send update events"/>
+      <param name="retryCount" vt="int" remark="retry count"/>
       <param name="error" vt="int*" remark="error code"/>
     </fun>
     <fun name="modify" vt="void">
@@ -1010,6 +1011,7 @@
       <var name="fieldState1" vt="int"/>
       <var name="fieldState2" vt="int"/>
       <var name="retrytimer" vt="int"/>
+      <var name="retrycounter" vt="int"/>
       <var name="backupNodeA" vt="iONode"/>
     </data>
   </object>

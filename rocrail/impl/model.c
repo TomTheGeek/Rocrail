@@ -1952,14 +1952,14 @@ static void __initFieldRunner( void* threadinst ) {
 
     /* Flip the switch. */
     wSwitch.setcmd( cmd, wSwitch.flip );
-    SwitchOp.cmd( sw, cmd, False, &error );
+    SwitchOp.cmd( sw, cmd, False, 0, &error );
 
     ThreadOp.sleep( pause );
 
     /* Set the switch. */
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setcmd( cmd, wSwitch.flip );
-    SwitchOp.cmd( sw, cmd, True, &error );
+    SwitchOp.cmd( sw, cmd, True, 0, &error );
 
     sw = (iOSwitch)MapOp.next( o->switchMap );
     ThreadOp.sleep( 10 );
