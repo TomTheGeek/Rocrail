@@ -1140,6 +1140,8 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wTextList.name() );
   __copyLevel( inst, model, level, wTurntableList.name() );
   __copyLevel( inst, model, level, wSelTabList.name() );
+  __copyLevel( inst, model, level, wLocationList.name() );
+  __copyLevel( inst, model, level, wScheduleList.name() );
 
   __copyResolvedRoutes( inst, model, wModule.getid(module) );
   __copyUnresolvedRoutes( inst, model, level );
