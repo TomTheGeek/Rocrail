@@ -60,6 +60,13 @@ public:
   void OnCmdLeft(wxCommandEvent& event);
   void OnCmdRight(wxCommandEvent& event);
 
+  void OnCmdSignalAuto(wxCommandEvent& event);
+  void OnCmdSignalManual(wxCommandEvent& event);
+  void OnCmdSignalRed(wxCommandEvent& event);
+  void OnCmdSignalGreen(wxCommandEvent& event);
+  void OnCmdSignalYellow(wxCommandEvent& event);
+  void OnCmdSignalWhite(wxCommandEvent& event);
+
   void OnTimer(wxTimerEvent& event);
 
   void OnTTLight(wxCommandEvent& event);

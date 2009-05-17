@@ -160,14 +160,23 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   int r = 0;
   char* routeID = NULL;
   char* bkc = NULL;
+
   wRoute.setbka( newRoute, wRoute.getbka( fromRoute ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s] to[%s]",
       wRoute.getbka( newRoute ), wRoute.getbkb( newRoute ) );
+
+  routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
+  wRoute.setid( newRoute, routeID );
+  StrOp.free(routeID);
 
   /* merge all crossing blocks: */
   /* merge all commands */
   for( r = 0; r < ListOp.size(routeList); r++ ) {
     iONode routeseg = (iONode)ListOp.get( routeList, r );
+
+    /* add to map to lookup the new route ID with the segment route ID */
+    MapOp.put( data->mod2routeIdMap, wRoute.getid(routeseg), (obj)wRoute.getid( newRoute ) );
+
     if( wRoute.getbkc(routeseg) != NULL &&  StrOp.len( wRoute.getbkc(routeseg) ) > 0 ) {
       if( bkc == NULL )
         bkc = StrOp.fmt( "%s", wRoute.getbkc(routeseg) );
@@ -193,9 +202,6 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   /* the route is generated so remove the module ID */
   wRoute.setmodid( newRoute, wRoute.modid_auto_gen );
 
-  routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
-  wRoute.setid( newRoute, routeID );
-  StrOp.free(routeID);
 
   /* add to the list: */
   {
@@ -379,14 +385,15 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
          * val = "bka-point-x"
          */
         StrOp.fmtb( key, "%s-%s", wRoute.getbka( route ), wRoute.getbkb(toRoute) );
-        val = StrOp.fmt( "%s-%s", wRoute.getbka( route ), wRoute.getbkb(route) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "add [%s]-[%s] to routeIdMap", key, val );
-        MapOp.put(data->routeIdMap, key, (obj)val);
+            "add %d aliases for route [%s] to routeIdMap", ListOp.size(routeList), key );
+        MapOp.put(data->routeIdMap, key, (obj)routeList);
 
       }
+      else {
+        ListOp.base.del(routeList);
+      }
 
-      ListOp.base.del(routeList);
     }
   }
 
@@ -396,9 +403,18 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
 /**
  * Return the unresolved routeID by generated routeID.
  */
-static const char* _getModuleRouteID(iOModPlan inst, const char* routeid) {
+static iOList _getModuleRouteIDs(iOModPlan inst, const char* routeid) {
   iOModPlanData data = Data(inst);
-  return (const char*)MapOp.get(data->routeIdMap, routeid);
+  return (iOList)MapOp.get(data->routeIdMap, routeid);
+}
+
+
+/**
+ * Return the resolved routeID by module routeID.
+ */
+static const char* _getResolvedRouteID(iOModPlan inst, const char* routeid) {
+  iOModPlanData data = Data(inst);
+  return (const char*)MapOp.get(data->mod2routeIdMap, routeid);
 }
 
 
@@ -507,6 +523,12 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
 static void __mergeList( const char* listname, iONode model, iONode module, int level, int r, int cx, int cy, Boolean broadcast ) {
   iONode modellist = NodeOp.findNode( model, listname );
   iONode list = NodeOp.findNode( module, listname );
+
+  if( modellist == NULL ) {
+    modellist = NodeOp.inst( listname, NULL, ELEMENT_NODE );
+    NodeOp.addChild(model, modellist);
+  }
+
   if( list != NULL ) {
     int i = 0;
     int cnt = NodeOp.getChildCnt( list );
@@ -608,6 +630,7 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     __mergeList(wTurntableList.name(), model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    __mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -713,6 +736,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
   dbkey = wTextList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wActionList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wLocationList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
 
 
@@ -1062,8 +1087,6 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
 
   iONode model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
   char* xml = NULL;
-  if( wPlan.getlocationlist(data->model) != NULL )
-    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlocationlist(data->model) ) );
   if( wPlan.getsclist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getsclist(data->model) ) );
 
@@ -1125,6 +1148,8 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wTextList.name() );
   __copyLevel( inst, model, level, wTurntableList.name() );
   __copyLevel( inst, model, level, wSelTabList.name() );
+  __copyLevel( inst, model, level, wLocationList.name() );
+  __copyLevel( inst, model, level, wScheduleList.name() );
 
   __copyResolvedRoutes( inst, model, wModule.getid(module) );
   __copyUnresolvedRoutes( inst, model, level );
@@ -1286,6 +1311,7 @@ static struct OModPlan* _inst( iONode modplan ) {
   data->fbeventMap          = MapOp.inst();
   data->blockMap            = MapOp.inst();
   data->routeIdMap          = MapOp.inst();
+  data->mod2routeIdMap      = MapOp.inst();
 
   instCnt++;
   __modplan = __ModPlan;

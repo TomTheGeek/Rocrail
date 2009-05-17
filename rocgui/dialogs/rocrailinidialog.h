@@ -274,6 +274,7 @@ public:
     wxCheckBox* m_GreenAspect;
     wxCheckBox* m_SkipSetSw;
     wxCheckBox* m_UseBiCom;
+    wxCheckBox* m_StopAtIdentMisMatch;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

@@ -43,13 +43,16 @@ void statusIdle( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
   /* Waiting for run-flag. */
-  if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL ) {
+  if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL &&
+      data->curBlock->getWait(data->curBlock, data->loc ) != -1 )
+  {
+
     data->state = LC_FINDDEST;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_IDLE to LC_FINDDEST.",
                    data->loc->getId( data->loc ) );
-    
+
     /* reset blocks and routes */
     data->next1Block = NULL;
     data->next1Route = NULL;
@@ -57,7 +60,7 @@ void statusIdle( iILcDriverInt inst ) {
     data->next2Route = NULL;
     data->next3Block = NULL;
     data->next3Route = NULL;
-    
+
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "Finding destination for \"%s\", current block \"%s\"...",
         data->loc->getId( data->loc ), data->loc->getCurBlock( data->loc ) );
@@ -68,6 +71,6 @@ void statusIdle( iILcDriverInt inst ) {
       data->run = False;
       data->warningnodestfound = False;
     }
-    
+
   }
 }

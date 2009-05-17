@@ -202,6 +202,11 @@
       <param name="distant" vt="Boolean" remark="distant signal"/>
       <param name="reverse" vt="Boolean" remark="reverse signal"/>
     </fun>
+    <fun name="hasManualSignal" vt="obj">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="distant" vt="Boolean" remark="distant signal"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
+    </fun>
     <fun name="resetTrigs" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>

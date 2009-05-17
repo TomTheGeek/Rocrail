@@ -57,8 +57,11 @@ void statusWait( iILcDriverInt inst ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
         data->timer = 1; /* just wait 100ms */
-      else
-        data->timer = data->curBlock->getWait( data->curBlock, data->loc ) * 10;
+      else {
+        data->timer = data->curBlock->getWait( data->curBlock, data->loc );
+        if( data->timer != -1 )
+          data->timer = data->timer * 10;
+      }
     }
     else {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );

@@ -96,6 +96,10 @@ void LC::setLocProps( iONode props ) {
 
     m_Vslider->SetRange( 0, wLoc.getV_max(m_LocProps) );
     m_Vslider->SetValue( wLoc.getV(m_LocProps) );
+    m_iSpeed = wLoc.getV(m_LocProps);
+    wxString value;
+    value.Printf( _T("%d"), m_iSpeed );
+    m_V->SetValue( value );
     m_bDir = wLoc.isdir(m_LocProps)?true:false;
     m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
     m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );

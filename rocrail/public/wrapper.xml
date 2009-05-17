@@ -408,6 +408,7 @@
       <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commonds in routes for switches already in model position."/>
       <var name="semaphorewait" vt="int" defval="1" range="0-*" unit="s" remark="Time needed by a semaphore to get in position."/>
       <var name="usebicom" vt="bool" defval="true" remark="Use bi-directional communication."/>
+      <var name="poweroffonidentmismatch" vt="bool" defval="false" remark="Power off if the ident code does not match."/>
     </ctrl>
   </rocrail>
 
@@ -869,6 +870,7 @@
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="manual" vt="bool" defval="false" remark="operator controlled signal to influence auto mode"/>
 
         <!-- Addressing -->
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
@@ -898,6 +900,8 @@
         <const name="green" vt="string" val="green" remark="Signal green command."/>
         <const name="white" vt="string" val="white" remark="Signal white command."/>
         <const name="flip" vt="string" val="flip"/>
+        <const name="manualoperated" vt="string" val="manualoperated"/>
+        <const name="autooperated" vt="string" val="autooperated"/>
         <var name="state" vt="string" defval="NULL" range="*" remark="Current state of signal."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="prot" vt="string" defval="M" range="M,N,D,mdd,om32"

@@ -103,6 +103,12 @@ enum {
     ME_CmdTurnout,
     ME_CmdLeft,
     ME_CmdRight,
+    ME_CmdSignalManual,
+    ME_CmdSignalAuto,
+    ME_CmdSignalRed,
+    ME_CmdSignalGreen,
+    ME_CmdSignalYellow,
+    ME_CmdSignalWhite,
     ME_Loc,
     ME_UnLoc,
     ME_LocGoTo,
@@ -163,6 +169,13 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_CmdTurnout, Symbol::OnCmdTurnout )
   EVT_MENU     (ME_CmdLeft, Symbol::OnCmdLeft )
   EVT_MENU     (ME_CmdRight, Symbol::OnCmdRight )
+
+  EVT_MENU     (ME_CmdSignalAuto, Symbol::OnCmdSignalAuto )
+  EVT_MENU     (ME_CmdSignalManual, Symbol::OnCmdSignalManual )
+  EVT_MENU     (ME_CmdSignalRed, Symbol::OnCmdSignalRed )
+  EVT_MENU     (ME_CmdSignalYellow, Symbol::OnCmdSignalYellow )
+  EVT_MENU     (ME_CmdSignalGreen, Symbol::OnCmdSignalGreen )
+  EVT_MENU     (ME_CmdSignalWhite, Symbol::OnCmdSignalWhite )
 
   EVT_MENU     (ME_Info, Symbol::OnInfo)
 
@@ -473,6 +486,57 @@ void Symbol::OnCmdRight(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
+
+void Symbol::OnCmdSignalRed(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.red );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalGreen(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.green );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalYellow(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.yellow );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalWhite(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.white );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalAuto(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.autooperated );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalManual(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+  wSignal.setid( cmd, wSignal.getid( m_Props ) );
+  wSignal.setcmd( cmd, wSignal.manualoperated );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+
 
 void Symbol::OnLeftDClick(wxMouseEvent& event) {
   if( wxGetApp().getFrame()->isEditMode() ) {
@@ -790,6 +854,22 @@ void Symbol::OnPopup(wxMouseEvent& event)
         }
       }
       menu.Append( -1, wxGetApp().getMenu("command"), menuSwCmd );
+    }
+    else if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
+      wxMenu* menuSgCmd = new wxMenu();
+      if( wSignal.ismanual( m_Props ) ) {
+        menuSgCmd->Append( ME_CmdSignalAuto, wxGetApp().getMenu("autooperated") );
+      }
+      else {
+        menuSgCmd->Append( ME_CmdSignalManual, wxGetApp().getMenu("manualoperated") );
+      }
+      menuSgCmd->Append( ME_CmdSignalRed, wxGetApp().getMenu("red") );
+      menuSgCmd->Append( ME_CmdSignalGreen, wxGetApp().getMenu("green") );
+      if( wSignal.getaspects( m_Props ) > 2 )
+        menuSgCmd->Append( ME_CmdSignalYellow, wxGetApp().getMenu("yellow") );
+      if( wSignal.getaspects( m_Props ) > 3 )
+        menuSgCmd->Append( ME_CmdSignalWhite, wxGetApp().getMenu("white") );
+      menu.Append( -1, wxGetApp().getMenu("command"), menuSgCmd );
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
       menu.Append( ME_TTLightOn, wxGetApp().getMenu("lights") + _T(" ") + wxGetApp().getMenu("on") );
@@ -1381,6 +1461,11 @@ void Symbol::modelEvent( iONode node ) {
     }
     Refresh();
     return;
+  }
+
+  if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "signal set to %s", wSignal.ismanual(node) ? "manual":"auto" );
+    wSignal.setmanual( m_Props, wSignal.ismanual(node) );
   }
 
   if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {

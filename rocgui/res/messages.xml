@@ -8441,4 +8441,13 @@
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
   </Msg>
+  <Msg id="stopatidentmismatch">
+    <en txt="Power off at ident mismatch"/>
+  </Msg>
+  <Msg id="manualoperated">
+    <en txt="Manual operated"/>
+  </Msg>
+  <Msg id="autooperated">
+    <en txt="Automatically operated"/>
+  </Msg>
 </Messages>

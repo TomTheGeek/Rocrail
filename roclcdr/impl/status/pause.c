@@ -42,13 +42,24 @@
 void statusPause( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
-  if( data->pause <= 0 ) {
+  if( data->pause == -1 ) {
+    /* handle manual operated signal */
+    if( !data->curBlock->wait(data->curBlock, data->loc ) ) {
+      data->pause = 0;
+      data->state = LC_IDLE;
+      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Setting state for \"%s\" from LC_PAUSE to LC_IDLE for manual signal.",
+                     data->loc->getId( data->loc ) );
+    }
+  }
+  else if( data->pause == 0 ) {
     data->state = LC_IDLE;
     wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_PAUSE to LC_IDLE.",
                    data->loc->getId( data->loc ) );
   }
-  else
+  else if( data->pause > 0 )
     data->pause--;
 }

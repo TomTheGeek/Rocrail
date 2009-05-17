@@ -520,7 +520,7 @@ void FeedbackDialog::CreateControls()
     m_BusStrings.Add(_("&2 Lissy"));
     m_BusStrings.Add(_("&3 Barcode"));
     m_BusStrings.Add(_("&4 Railcom"));
-    m_BusStrings.Add(_("&5"));
+    m_BusStrings.Add(_("&5 RFID"));
     m_BusStrings.Add(_("&6"));
     m_BusStrings.Add(_("&7"));
     m_Bus = new wxRadioBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );

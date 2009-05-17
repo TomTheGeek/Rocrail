@@ -322,7 +322,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( ident > 0 ){
     /* reset ident */
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "reset ident[%d] in block[%s] to zero; bi-com is disabled", ident, data->id);
     ident = 0;
   }
@@ -336,6 +336,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     if( ident > 0 && locident > 0 && ident != locident || ident > 0 && locident == 0 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s loc=%d ident=%d",
           data->id, locident, ident );
+      /* Power off? */
+      if( wCtrl.ispoweroffonidentmismatch( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off for mismatching ident" );
+        AppOp.stop();
+      }
     }
     else if( ident > 0 && locident > 0 && ident == locident ) {
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc=%d ident=%d",
@@ -595,15 +600,50 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
 
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
-  iOBlockData data = Data(inst);
-  const char* V_hint = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
+  iOBlockData data    = Data(inst);
+  iOSignal    signal  = (iOSignal)inst->hasManualSignal(inst, False, False );
+  iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, False );
+  const char* V_hint  = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
+
   *percent = wBlock.getspeedpercent(data->props);
+
+  /* check for manual operated signals */
+  if( onexit && signal != NULL && SignalOp.isState( signal, wSignal.yellow) ) {
+    if( !StrOp.equals( wBlock.getspeed( data->props ), wBlock.min ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "set block %s velocity to Vmid for %s aspect of signal %s",
+          inst->base.id(inst),
+          wSignal.yellow,
+          signal->base.id(signal) );
+      return wBlock.mid;
+    }
+  }
+  else if( !onexit && distand != NULL && SignalOp.isState( distand, wSignal.red) ) {
+    if( !StrOp.equals( wBlock.getspeed( data->props ), wBlock.min ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "set block %s velocity to Vmid for %s aspect of signal %s",
+          inst->base.id(inst),
+          wSignal.red,
+          distand->base.id(distand) );
+      return wBlock.mid;
+    }
+  }
   return V_hint;
 }
 
 
 static int _getWait( iIBlockBase inst, iOLoc loc ) {
   iOBlockData data = Data(inst);
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+
+  /* check the manual operated signal */
+  if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    return -1; /* wait until it is set to green */
+  }
+  else if( signal != NULL ) {
+    return 0;
+  }
+
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return 0;
   }
@@ -786,6 +826,18 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
   iOBlockData data = Data(inst);
   Boolean wait = False;
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+
+  if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
+    return True; /* wait until it is set to green */
+  }
+  else if( signal != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a NONE red manual signal", inst->base.id(inst) );
+    return False;
+  }
+
+
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return False;
   }
@@ -1364,6 +1416,29 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
     }
   }
   return semaphore;
+
+}
+
+
+static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse ) {
+  iOBlockData data = Data(inst);
+  const char* sgId = NULL;
+
+  if( distant )
+    sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
+  else
+    sgId = reverse ? wBlock.getsignalR( data->props ):wBlock.getsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel(  );
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL && SignalOp.isManualOperated(sg) ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+          "block [%s] has a manual operated signal [%s]", inst->base.id(inst), sgId );
+      return (obj)sg;
+    }
+  }
+  return NULL;
 
 }
 
