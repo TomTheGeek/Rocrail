@@ -8450,4 +8450,7 @@
   <Msg id="autooperated">
     <en txt="Automatically operated"/>
   </Msg>
+  <Msg id="import" dialog="true">
+    <en txt="Import"/>
+  </Msg>
 </Messages>
