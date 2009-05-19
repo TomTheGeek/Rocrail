@@ -120,6 +120,12 @@ void DDXCtrlDlg::initLabels() {
   m_LocoRefreshBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_QueueCheck->SetLabel( wxGetApp().getMsg( "queuecheck" ) );
 
+  m_labBusses->SetLabel( wxGetApp().getMsg( "chains" ) );
+  m_labBus0->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 0") );
+  m_labBus1->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 1") );
+  m_labBus2->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 2") );
+  m_labBus3->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 3") );
+
   /*
   LPT1           378
   LPT2           278

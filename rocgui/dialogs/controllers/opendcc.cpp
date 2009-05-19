@@ -224,13 +224,13 @@ void OpenDCCCtrlDlg::initLabels() {
   m_labS88Timing->SetLabel( wxGetApp().getMsg( "timing" ) );
   m_S88Timing->SetToolTip( wxGetApp().getTip( "timing" ) );
 
-  m_S88BusBox->SetLabel( wxGetApp().getMsg( "busses" ) );
-  m_labS88Bus1->SetLabel( wxGetApp().getMsg( "bus" ) + _T(" 1") );
-  m_S88Bus1->SetToolTip( wxGetApp().getTip( "bus" ) + _T(" 1") );
-  m_labS88Bus2->SetLabel( wxGetApp().getMsg( "bus" ) + _T(" 2") );
-  m_S88Bus2->SetToolTip( wxGetApp().getTip( "bus" ) + _T(" 2") );
-  m_labS88Bus3->SetLabel( wxGetApp().getMsg( "bus" ) + _T(" 3") );
-  m_S88Bus3->SetToolTip( wxGetApp().getTip( "bus" ) + _T(" 3") );
+  m_S88BusBox->SetLabel( wxGetApp().getMsg( "chains" ) );
+  m_labS88Bus1->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 1") );
+  m_S88Bus1->SetToolTip( wxGetApp().getTip( "chain" ) + _T(" 1") );
+  m_labS88Bus2->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 2") );
+  m_S88Bus2->SetToolTip( wxGetApp().getTip( "chain" ) + _T(" 2") );
+  m_labS88Bus3->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 3") );
+  m_S88Bus3->SetToolTip( wxGetApp().getTip( "chain" ) + _T(" 3") );
 
   m_S88SettingsBox->SetLabel( wxGetApp().getMsg( "mode" ) );
   m_S88Active->SetLabel( wxGetApp().getMsg( "activate" ) );
