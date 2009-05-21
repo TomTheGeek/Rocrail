@@ -194,6 +194,7 @@ public:
   void OnFullScreen(wxCommandEvent& event);
 
   void OnUhl63350(wxCommandEvent& event);
+  void OnUhl68610(wxCommandEvent& event);
   void OnLocoIO(wxCommandEvent& event);
   void OnOpenDecoder(wxCommandEvent& event);
   void OnDTOpSw(wxCommandEvent& event);

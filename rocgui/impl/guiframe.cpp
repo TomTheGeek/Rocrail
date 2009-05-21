@@ -86,6 +86,7 @@
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
 #include "rocgui/dialogs/decoders/uhl633x0dlg.h"
+#include "rocgui/dialogs/decoders/uhl68610dlg.h"
 
 #include "rocgui/public/guiapp.h"
 #include "rocgui/public/swdlg.h"
@@ -264,6 +265,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
+    EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
     EVT_MENU( ME_LOCOIO         , RocGuiFrame::OnLocoIO)
     EVT_MENU( ME_DTOpSw         , RocGuiFrame::OnDTOpSw)
 
@@ -2318,6 +2320,14 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
   Uhl633x0Dlg* dlg = new Uhl633x0Dlg(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnUhl68610( wxCommandEvent& event ) {
+  Uhl68610Dlg* dlg = new Uhl68610Dlg(this);
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }
