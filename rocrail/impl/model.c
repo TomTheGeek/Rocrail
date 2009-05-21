@@ -2091,14 +2091,25 @@ static void _event( iOModel inst, iONode nodeC ) {
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( nodeC ) ) ||
       StrOp.equals( wFunCmd.name(), NodeOp.getName( nodeC ) ) )
   {
-    int addr = wLoc.getaddr( nodeC );
-    const char* iid = wLoc.getiid( nodeC );
-    iOLoc lc = ModelOp.getLocByAddress(inst, addr);
+    iOLoc lc = NULL;
+    
+    const char* id = wLoc.getid( nodeC );
+    if ( id != NULL) {
+      lc = ModelOp.getLoc(inst, id);
+    }
+
+    if( lc == NULL ) {
+      int addr = wLoc.getaddr( nodeC );
+      lc = ModelOp.getLocByAddress(inst, addr);
+    }
+
     if( lc != NULL ) {
       LocOp.base.event( lc, nodeC );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN LC %d", addr );
+      const char* id = wLoc.getid( nodeC );
+      int addr = wLoc.getaddr( nodeC );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN LC %s,%d", id, addr );
       /* Cleanup Node3 */
     }
     nodeC->base.del(nodeC);

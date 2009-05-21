@@ -392,6 +392,9 @@ void CV::onDecConfig(void) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 2 (%d)", m_ConfigVal );
     m_CVoperation = CVSET;
     doCV( wProgram.set, 29, m_ConfigVal );
+    if(wCVconf.islissy( m_CVconf )) {
+      doCV( wProgram.set, 129, m_ConfigVal & 0x20 ? 32:0 );
+    }
   }
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "ConfigVal 3 (%d) rc=%d(%d)", m_ConfigVal, rc, dlg->GetReturnCode() );
   dlg->Destroy();
@@ -845,6 +848,12 @@ void CV::setLongAddress() {
     doCV( wProgram.set, 17, (addr / 256) + 192 );
     m_CVoperation = CVSET;
     doCV( wProgram.set, 18, addr - 256 * (addr / 256) );
+    if( wCVconf.islissy( m_CVconf ) ) {
+      m_CVoperation = CVSET;
+      doCV( wProgram.set, 117, (addr / 256) + 192 );
+      m_CVoperation = CVSET;
+      doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
+    }
   }
 }
 
@@ -890,6 +899,12 @@ void CV::doCV( int id ) {
 
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "doCV for id=%d", id );
   doCV( command, index, val );
+
+  if( index == 1 && wCVconf.islissy( m_CVconf ) ) {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "do Lissy CV for address=%d", val );
+    doCV( command, 116, val );
+  }
+
 }
 
 
