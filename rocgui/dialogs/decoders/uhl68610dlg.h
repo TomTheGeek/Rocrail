@@ -23,6 +23,7 @@ class Uhl68610Dlg : public uhl68610dlggen
   void onTimer(wxTimerEvent& event);
   void sendPacket();
   void evaluateEvent( int cv, int val );
+  int getFactor();
 
   iOQueue m_Queue;
   iONode m_SendedCmd;
@@ -40,6 +41,8 @@ public:
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void event( iONode event );
+  void onScale( wxCommandEvent& event );
+  void onGap( wxSpinEvent& event );
 
 };
 

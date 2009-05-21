@@ -458,7 +458,7 @@
                         <event name="OnMouseEvents"></event>
                         <event name="OnMouseWheel"></event>
                         <event name="OnPaint"></event>
-                        <event name="OnRadioBox"></event>
+                        <event name="OnRadioBox">onScale</event>
                         <event name="OnRightDClick"></event>
                         <event name="OnRightDown"></event>
                         <event name="OnRightUp"></event>
@@ -584,7 +584,7 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnSpinCtrl"></event>
+                                <event name="OnSpinCtrl">onGap</event>
                                 <event name="OnSpinCtrlText"></event>
                                 <event name="OnUpdateUI"></event>
                             </object>

@@ -100,6 +100,8 @@ uhl68610dlggen::uhl68610dlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	m_Reporting->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( uhl68610dlggen::onReporting ), NULL, this );
+	m_Scale->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( uhl68610dlggen::onScale ), NULL, this );
+	m_Gap->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( uhl68610dlggen::onGap ), NULL, this );
 	m_Read->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onRead ), NULL, this );
 	m_Write->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onWrite ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onCancel ), NULL, this );
@@ -110,6 +112,8 @@ uhl68610dlggen::~uhl68610dlggen()
 {
 	// Disconnect Events
 	m_Reporting->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( uhl68610dlggen::onReporting ), NULL, this );
+	m_Scale->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( uhl68610dlggen::onScale ), NULL, this );
+	m_Gap->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( uhl68610dlggen::onGap ), NULL, this );
 	m_Read->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onRead ), NULL, this );
 	m_Write->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onWrite ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( uhl68610dlggen::onCancel ), NULL, this );
