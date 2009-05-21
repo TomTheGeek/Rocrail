@@ -817,6 +817,10 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_LocoIO->event( node );
     else if( m_DTOpSw != NULL )
       m_DTOpSw->event( node );
+    else if( m_Uhl68610 != NULL )
+      m_Uhl68610->event( node );
+    else if( m_Uhl633x0 != NULL )
+      m_Uhl633x0->event( node );
     else
       m_LNCV->event( node );
   }
@@ -1015,6 +1019,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocoIO             = NULL;
   m_DTOpSw             = NULL;
   m_RocrailIniDlg      = NULL;
+  m_Uhl68610           = NULL;
+  m_Uhl633x0           = NULL;
   m_ModPanel           = NULL;
   m_LocCtrlList        = ListOp.inst();
   m_LocDlgMap          = MapOp.inst();
@@ -2319,19 +2325,21 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
-  Uhl633x0Dlg* dlg = new Uhl633x0Dlg(this);
-  if( wxID_OK == dlg->ShowModal() ) {
+  m_Uhl633x0 = new Uhl633x0Dlg(this);
+  if( wxID_OK == m_Uhl633x0->ShowModal() ) {
     /* Notify RocRail. */
   }
-  dlg->Destroy();
+  m_Uhl633x0->Destroy();
+  m_Uhl633x0 = NULL;
 }
 
 void RocGuiFrame::OnUhl68610( wxCommandEvent& event ) {
-  Uhl68610Dlg* dlg = new Uhl68610Dlg(this);
-  if( wxID_OK == dlg->ShowModal() ) {
+  m_Uhl68610 = new Uhl68610Dlg(this);
+  if( wxID_OK == m_Uhl68610->ShowModal() ) {
     /* Notify RocRail. */
   }
-  dlg->Destroy();
+  m_Uhl68610->Destroy();
+  m_Uhl68610 = NULL;
 }
 
 void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {

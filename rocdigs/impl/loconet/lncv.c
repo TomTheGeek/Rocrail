@@ -137,10 +137,13 @@ Boolean isLNCV(byte* msg) {
       return True;
     }
   }
+  else if( msg[0] == OPC_LONG_ACK) {
+    return True;
+  }
   return False;
 }
 
-
+/* returns True if it was a set command */
 Boolean evaluateLNCV(byte *msg, int* type, int* addr, int* cv, int* val)
 {
   unsigned char  ucSRC = msg[2];
@@ -148,7 +151,15 @@ Boolean evaluateLNCV(byte *msg, int* type, int* addr, int* cv, int* val)
   unsigned short usDST;
   int            bLED;
   unsigned char  aucData[7];
-  int i = 0;;
+  int i = 0;
+
+  if( msg[0] == OPC_LONG_ACK) {
+    *type = 0;
+    *addr = 0;
+    *cv   = 0;
+    *val  = 0;
+    return True;
+  }
 
   usDST = msg[4];
   usDST <<= 8;
@@ -178,7 +189,7 @@ Boolean evaluateLNCV(byte *msg, int* type, int* addr, int* cv, int* val)
   // LED/Key message???
   bLED = aucData[6] == 0xFF? 1:0;
 
-  return (ucREQ==UB_LNCVSET)?1:0;
+  return (ucREQ==UB_LNCVSET)?True:False;
 }
 
 
