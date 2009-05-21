@@ -40,6 +40,7 @@ class uhl68610dlggen : public wxDialog
 		wxRadioBox* m_Scale;
 		wxStaticText* m_labGap;
 		wxSpinCtrl* m_Gap;
+		wxStaticText* m_labGapVal;
 		wxButton* m_Read;
 		wxButton* m_Write;
 		wxStdDialogButtonSizer* m_sdbSizer1;

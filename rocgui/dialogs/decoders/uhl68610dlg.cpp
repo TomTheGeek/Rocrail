@@ -211,18 +211,27 @@ void Uhl68610Dlg::onWrite( wxCommandEvent& event ) {
   QueueOp.post( m_Queue, (obj)cmd, normal );
 
   // scaling factor for calculating velocity in case of double sensor mode, cv 14
-  /* TODO
+  int factor = 0;
+  int scale = m_Scale->GetSelection();
+  switch( scale ) {
+    case 0: factor = 18 *  32; break;
+    case 1: factor = 18 *  45; break;
+    case 2: factor = 18 *  87; break;
+    case 3: factor = 18 * 120; break;
+    case 4: factor = 18 * 160; break;
+    case 5: factor = 18 * 220; break;
+  }
+
   TraceOp.trc( "uhl68610", TRCLEVEL_INFO, __LINE__, 9999,
       "%s lncv %d program command for module %d", "get", 14, addr );
   cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setlntype( cmd, wProgram.lntype_cv );
   wProgram.setcmd( cmd, wProgram.lncvset );
   wProgram.setcv( cmd, 14 );
-  wProgram.setvalue( cmd, 0 );
+  wProgram.setvalue( cmd, m_Gap->GetValue() * factor );
   wProgram.setaddr( cmd, addr );
   wProgram.setmodid( cmd, 6861 );
   QueueOp.post( m_Queue, (obj)cmd, normal );
-  */
 
   // report format, cv 15
   TraceOp.trc( "uhl68610", TRCLEVEL_INFO, __LINE__, 9999,
@@ -316,6 +325,9 @@ void Uhl68610Dlg::evaluateEvent( int cv, int val ) {
       m_Scale->Enable(val == 0 ? true:false);
       m_labGap->Enable(val == 0 ? true:false);
       m_Gap->Enable(val == 0 ? true:false);
+      break;
+    case 14:
+      m_labGapVal->SetLabel(wxString::Format(_T("(%d)"),val));
       break;
     case 15:
       m_Format->SetSelection(val);

@@ -56,7 +56,7 @@ uhl68610dlggen::uhl68610dlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer1->Add( m_Scale, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer2;
-	fgSizer2 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer2 = new wxFlexGridSizer( 1, 3, 0, 0 );
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -64,8 +64,12 @@ uhl68610dlggen::uhl68610dlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_labGap->Wrap( -1 );
 	fgSizer2->Add( m_labGap, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
-	m_Gap = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+	m_Gap = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 100, 0 );
 	fgSizer2->Add( m_Gap, 0, wxALL, 5 );
+	
+	m_labGapVal = new wxStaticText( this, wxID_ANY, wxT("(0)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labGapVal->Wrap( -1 );
+	fgSizer2->Add( m_labGapVal, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer1->Add( fgSizer2, 0, wxEXPAND, 5 );
 	
