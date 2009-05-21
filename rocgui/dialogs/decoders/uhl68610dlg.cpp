@@ -313,6 +313,9 @@ void Uhl68610Dlg::evaluateEvent( int cv, int val ) {
       break;
     case 2:
       m_Reporting->SetSelection(val);
+      m_Scale->Enable(val == 0 ? true:false);
+      m_labGap->Enable(val == 0 ? true:false);
+      m_Gap->Enable(val == 0 ? true:false);
       break;
     case 15:
       m_Format->SetSelection(val);

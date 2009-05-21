@@ -1264,7 +1264,7 @@ void RocGuiFrame::initFrame() {
   menuPTLN->Append( ME_LOCOIO, wxString(_T("LocoIO")) + wxString(_T("...")), _T("LocoIO") );
   menuPTLN->Append( ME_DTOpSw, wxString(_T("Digitrax")) + wxString(_T("...")), _T("Digitrax") );
   wxMenu *menuUhlenbrock = new wxMenu();
-  menuUhlenbrock->Append( ME_UHL_63350, _T("Uhlenbrock 63340/63350") + wxString(_T("...")), _T("Uhlenbrock 63340/63350") );
+  //menuUhlenbrock->Append( ME_UHL_63350, _T("Uhlenbrock 63340/63350") + wxString(_T("...")), _T("Uhlenbrock 63340/63350") );
   menuUhlenbrock->Append( ME_UHL_68610, _T("Uhlenbrock 68610") + wxString(_T("...")), _T("Uhlenbrock 68610") );
   menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
 
