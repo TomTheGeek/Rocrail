@@ -350,7 +350,7 @@
                         <event name="OnMouseEvents"></event>
                         <event name="OnMouseWheel"></event>
                         <event name="OnPaint"></event>
-                        <event name="OnRadioBox"></event>
+                        <event name="OnRadioBox">onReporting</event>
                         <event name="OnRightDClick"></event>
                         <event name="OnRightDown"></event>
                         <event name="OnRightUp"></event>

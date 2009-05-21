@@ -47,6 +47,7 @@ class uhl68610dlggen : public wxDialog
 		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onReporting( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onRead( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onWrite( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
