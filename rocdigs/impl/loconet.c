@@ -1152,6 +1152,27 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
     }
+    if( isLNCV(rsp) ) {
+      int modid, addr, cv, val;
+      Boolean lncvset = evaluateLNCV(rsp, &modid, &addr, &cv, &val);
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV response" );
+
+      wProgram.setlncv( node, True );
+      wProgram.setlntype( node, wProgram.lntype_cv );
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, wProgram.datarsp );
+      wProgram.setcv( node, cv );
+      wProgram.setdecaddr( node, addr );
+      wProgram.setmodid( node, modid );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+    }
     break;
 
   case OPC_SL_RD_DATA:

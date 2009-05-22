@@ -1386,12 +1386,12 @@ static void __processLocoEvents( iOECoS inst, iONode node ) {
       rrLocoNameStr[StrOp.len( rrLocoNameStr)-1] = '\0';
 
       parameterStr = NodeOp.getStr( child, "speed", NULL );
-      if ( parameterStr) {
+      if ( parameterStr && ( StrOp.len( parameterStr) >= 1)) {
         int velocityVal = -1;
     
         sscanf( parameterStr, "%d", &velocityVal);
 
-        if ( velocityVal != -1) {
+        if ( ( velocityVal != -1) && ( velocityVal <= 127)) {
           iONode nodeC = NULL;
       
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "velocity [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, velocityVal);
@@ -1401,7 +1401,57 @@ static void __processLocoEvents( iOECoS inst, iONode node ) {
             wLoc.setiid( nodeC, data->iid);
           wLoc.setid( nodeC, rrLocoNameStr);
           wLoc.setV_raw( nodeC, velocityVal);
+          wLoc.setV_rawMax( nodeC, 127);
+          wLoc.setcmd( nodeC, wLoc.velocity);
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO);
+        }
+      }
+
+      parameterStr = NodeOp.getStr( child, "dir", NULL );
+      if ( parameterStr && ( StrOp.len( parameterStr) >= 1)) {
+        int directionVal = -1;
+    
+        sscanf( parameterStr, "%d", &directionVal);
+
+        if ( ( directionVal != -1) && ( directionVal <= 1)) {
+          iONode nodeC = NULL;
+      
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "direction [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, directionVal);
+          
+          nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          if( data->iid != NULL)
+            wLoc.setiid( nodeC, data->iid);
+          wLoc.setid( nodeC, rrLocoNameStr);
+          wLoc.setdir( nodeC, ( directionVal ? True : False));
+          wLoc.setcmd( nodeC, wLoc.direction);
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO);
+        }
+      }
+
+      parameterStr = NodeOp.getStr( child, "func", NULL );
+      if ( parameterStr && ( StrOp.len( parameterStr) >= 3)) {
+        int functionNumber = -1;
+        int functionVal    = -1;
+    
+        sscanf( parameterStr, "%d", &functionNumber);
+        functionVal = parameterStr[StrOp.len( parameterStr) - 1] - '0';
+
+        if ( ( functionVal != -1) && ( functionVal <= 1)) {
+          if ( functionNumber == 0) {
+            iONode nodeC = NULL;
+        
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, functionVal);
+            
+            nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+            if( data->iid != NULL)
+              wLoc.setiid( nodeC, data->iid);
+            wLoc.setid( nodeC, rrLocoNameStr);
+            wLoc.setfn( nodeC, ( functionVal ? True : False));
+            wLoc.setcmd( nodeC, wLoc.function);
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO);
+          } else {
+            /* functions */
+          }
         }
       }
     }

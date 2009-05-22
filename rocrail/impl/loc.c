@@ -205,11 +205,26 @@ static void* __event( void* inst, const void* evt ) {
 
     if( !StrOp.equals( wLoc.velocity, wLoc.getcmd(evtNode) ) ) {
       /* function and dir update */
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s dir=%d fn=%d",
-          wLoc.getid(data->props), wLoc.isdir(evtNode), wLoc.isfn(evtNode) );
-      if( !data->go ) {
-        wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
-        wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+          wLoc.getid(data->props), wLoc.isdir(evtNode), wLoc.isfn(evtNode));
+      
+      if ( StrOp.equals( wLoc.direction, wLoc.getcmd( evtNode) ) ) {
+        /* only direction */
+        if ( !data->go ) {
+          wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
+        }
+      } else if ( StrOp.equals( wLoc.direction, wLoc.getcmd( evtNode) ) ) {
+        /* only function */
+        if ( !data->go ) {
+          wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+        }
+      } else {
+        /* other, set both */
+        if ( !data->go ) {
+          wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
+          wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+        }
       }
     }
 
@@ -219,6 +234,7 @@ static void* __event( void* inst, const void* evt ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d dir=%s",
         wLoc.getid(data->props), V_raw, V, wLoc.isdir(data->props)?"Forwards":"Reverse" );
+
     /* Broadcast to clients. */
     {
       iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );

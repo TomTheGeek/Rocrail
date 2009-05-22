@@ -8453,4 +8453,14 @@
   <Msg id="import" dialog="true">
     <en txt="Import"/>
   </Msg>
+  <Msg id="chain">
+    <en txt="Chain"/>
+    <de txt="Strang"/>
+    <nl txt="Lijn"/>
+  </Msg>
+  <Msg id="chains">
+    <en txt="Chains"/>
+    <de txt="Strangen"/>
+    <nl txt="Lijnen"/>
+  </Msg>
 </Messages>

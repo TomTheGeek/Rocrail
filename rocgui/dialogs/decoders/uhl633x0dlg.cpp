@@ -6,3 +6,10 @@ uhl633x0dlggen( parent )
 {
 
 }
+
+void Uhl633x0Dlg::event( iONode event ) {
+  /* clean up event node */
+  NodeOp.base.del(event);
+
+}
+
