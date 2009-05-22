@@ -1307,53 +1307,71 @@ static void __processSwitchManagerEvents( iOECoS inst, iONode node ) {
     
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "switchStr [%s]", switchStr );
 
-      if ( ( StrOp.len( switchStr) >= 5) && StrOp.startsWith( switchStr, "DCC" )) {
+      if ( StrOp.len( switchStr) >= 5) {
+        if ( StrOp.startsWith( switchStr, "DCC" )) {
       
-        sscanf( &switchStr[3], "%d", &switchAddress );
-        switchPosition = switchStr[StrOp.len( switchStr) - 1];
-        
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "switchAddress [%d,%c]", switchAddress, switchPosition );
-      
-        if ( switchAddress && ( switchAddress <= 2048) && ( ( switchPosition == 'g') || ( switchPosition == 'r'))) {
-          /* set switch requests */          
-          if ( switchPosition == 'r') {
-             data->dccSwitchStates[switchAddress-1] |= 0x01;
-             data->dccSwitchStates[switchAddress-1] &= ~0x02;
-          } else {
-             data->dccSwitchStates[switchAddress-1] |= 0x02;
-             data->dccSwitchStates[switchAddress-1] &= ~0x01;
-          }
-
-          /* clear event red, inform listener: Node */
-          iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          wFeedback.setbus( eventRed, 4 );
-          wFeedback.setaddr( eventRed, switchAddress * 2 );
-          if ( data->iid != NULL )
-            wFeedback.setiid( eventRed, data->iid );
-          wFeedback.setstate( eventRed, False );
-          data->listenerFun( data->listenerObj, eventRed, TRCLEVEL_MONITOR );
-
-          /* clear event green, inform listener: Node */
-          iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          wFeedback.setbus( eventGreen, 4 );
-          wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
-          if ( data->iid != NULL )
-            wFeedback.setiid( eventGreen, data->iid );
-          wFeedback.setstate( eventGreen, False );
-          data->listenerFun( data->listenerObj, eventGreen, TRCLEVEL_MONITOR );
+          sscanf( &switchStr[3], "%d", &switchAddress );
+          switchPosition = switchStr[StrOp.len( switchStr) - 1];
           
-          /* inform upper nodes */
-          iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "DCC switchAddress [%d,%c]", switchAddress, switchPosition );
+        
+          if ( switchAddress && ( switchAddress <= 2048) && ( ( switchPosition == 'g') || ( switchPosition == 'r'))) {
+            /* set switch requests */          
+            if ( switchPosition == 'r') {
+               data->dccSwitchStates[switchAddress-1] |= 0x01;
+               data->dccSwitchStates[switchAddress-1] &= ~0x02;
+            } else {
+               data->dccSwitchStates[switchAddress-1] |= 0x02;
+               data->dccSwitchStates[switchAddress-1] &= ~0x01;
+            }
 
-          wSwitch.setaddr1( nodeC, ( ( ( ( switchAddress - 1) / 4) + 1)));
-          wSwitch.setport1( nodeC, ( ( ( ( switchAddress - 1) % 4) + 1)));
+            /* clear event red, inform listener: Node */
+            iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+            wFeedback.setbus( eventRed, 4 );
+            wFeedback.setaddr( eventRed, switchAddress * 2 );
+            if ( data->iid != NULL )
+              wFeedback.setiid( eventRed, data->iid );
+            wFeedback.setstate( eventRed, False );
+            data->listenerFun( data->listenerObj, eventRed, TRCLEVEL_MONITOR );
 
-          if( data->iid != NULL )
-            wSwitch.setiid( nodeC, data->iid );
-
-          wSwitch.setstate( nodeC, ( switchPosition == 'g') ? "straight" : "turnout" );
-
-          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+            /* clear event green, inform listener: Node */
+            iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+            wFeedback.setbus( eventGreen, 4 );
+            wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
+            if ( data->iid != NULL )
+              wFeedback.setiid( eventGreen, data->iid );
+            wFeedback.setstate( eventGreen, False );
+            data->listenerFun( data->listenerObj, eventGreen, TRCLEVEL_MONITOR );
+            
+            /* inform upper nodes */
+            iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+            if( data->iid != NULL )
+              wSwitch.setiid( nodeC, data->iid );
+            wSwitch.setprot( nodeC, wSwitch.prot_N);
+            wSwitch.setaddr1( nodeC, ( ( ( ( switchAddress - 1) / 4) + 1)));
+            wSwitch.setport1( nodeC, ( ( ( ( switchAddress - 1) % 4) + 1)));
+            wSwitch.setstate( nodeC, ( switchPosition == 'g') ? "straight" : "turnout" );
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+          }
+        } else if ( StrOp.startsWith( switchStr, "MOT" )) {
+      
+          sscanf( &switchStr[3], "%d", &switchAddress );
+          switchPosition = switchStr[StrOp.len( switchStr) - 1];
+          
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "MOT switchAddress [%d,%c]", switchAddress, switchPosition );
+        
+          if ( switchAddress && ( switchAddress < 320) && ( ( switchPosition == 'g') || ( switchPosition == 'r'))) {
+            
+            /* inform upper nodes */
+            iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+            if( data->iid != NULL )
+              wSwitch.setiid( nodeC, data->iid );
+            wSwitch.setprot( nodeC, wSwitch.prot_M);
+            wSwitch.setaddr1( nodeC, ( ( ( ( switchAddress - 1) / 4) + 1)));
+            wSwitch.setport1( nodeC, ( ( ( ( switchAddress - 1) % 4) + 1)));
+            wSwitch.setstate( nodeC, ( switchPosition == 'g') ? "straight" : "turnout" );
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+          }
         }
       }
     }
@@ -1436,22 +1454,57 @@ static void __processLocoEvents( iOECoS inst, iONode node ) {
         sscanf( parameterStr, "%d", &functionNumber);
         functionVal = parameterStr[StrOp.len( parameterStr) - 1] - '0';
 
-        if ( ( functionVal != -1) && ( functionVal <= 1)) {
-          if ( functionNumber == 0) {
-            iONode nodeC = NULL;
+        if ( ( functionNumber != -1) && ( functionNumber <= 28) && ( functionVal != -1) && ( functionVal <= 1)) {
         
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, functionVal);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, functionVal);
             
-            nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          if ( functionNumber == 0) {
+            iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
             if( data->iid != NULL)
               wLoc.setiid( nodeC, data->iid);
             wLoc.setid( nodeC, rrLocoNameStr);
             wLoc.setfn( nodeC, ( functionVal ? True : False));
             wLoc.setcmd( nodeC, wLoc.function);
             data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO);
-          } else {
-            /* functions */
           }
+          
+          iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wLoc.setiid( nodeD, data->iid );
+          wFunCmd.setid( nodeD, rrLocoNameStr);
+          wFunCmd.setfnchanged( nodeD, functionNumber);
+          switch ( functionNumber) {
+            case 0 : wFunCmd.setf0( nodeD, ( functionVal ? True : False)); break;
+            case 1 : wFunCmd.setf1( nodeD, ( functionVal ? True : False)); break;
+            case 2 : wFunCmd.setf2( nodeD, ( functionVal ? True : False)); break;
+            case 3 : wFunCmd.setf3( nodeD, ( functionVal ? True : False)); break;
+            case 4 : wFunCmd.setf4( nodeD, ( functionVal ? True : False)); break;
+            case 5 : wFunCmd.setf5( nodeD, ( functionVal ? True : False)); break;
+            case 6 : wFunCmd.setf6( nodeD, ( functionVal ? True : False)); break;
+            case 7 : wFunCmd.setf7( nodeD, ( functionVal ? True : False)); break;
+            case 8 : wFunCmd.setf8( nodeD, ( functionVal ? True : False)); break;
+            case 9 : wFunCmd.setf9( nodeD, ( functionVal ? True : False)); break;
+            case 10 : wFunCmd.setf10( nodeD, ( functionVal ? True : False)); break;
+            case 11 : wFunCmd.setf11( nodeD, ( functionVal ? True : False)); break;
+            case 12 : wFunCmd.setf12( nodeD, ( functionVal ? True : False)); break;
+            case 13 : wFunCmd.setf13( nodeD, ( functionVal ? True : False)); break;
+            case 14 : wFunCmd.setf14( nodeD, ( functionVal ? True : False)); break;
+            case 15 : wFunCmd.setf15( nodeD, ( functionVal ? True : False)); break;
+            case 16 : wFunCmd.setf16( nodeD, ( functionVal ? True : False)); break;
+            case 17 : wFunCmd.setf17( nodeD, ( functionVal ? True : False)); break;
+            case 18 : wFunCmd.setf18( nodeD, ( functionVal ? True : False)); break;
+            case 19 : wFunCmd.setf19( nodeD, ( functionVal ? True : False)); break;
+            case 20 : wFunCmd.setf20( nodeD, ( functionVal ? True : False)); break;
+            case 21 : wFunCmd.setf21( nodeD, ( functionVal ? True : False)); break;
+            case 22 : wFunCmd.setf22( nodeD, ( functionVal ? True : False)); break;
+            case 23 : wFunCmd.setf23( nodeD, ( functionVal ? True : False)); break;
+            case 24 : wFunCmd.setf24( nodeD, ( functionVal ? True : False)); break;
+            case 25 : wFunCmd.setf25( nodeD, ( functionVal ? True : False)); break;
+            case 26 : wFunCmd.setf26( nodeD, ( functionVal ? True : False)); break;
+            case 27 : wFunCmd.setf27( nodeD, ( functionVal ? True : False)); break;
+            case 28 : wFunCmd.setf28( nodeD, ( functionVal ? True : False)); break;
+          }
+          data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
         }
       }
     }

@@ -170,6 +170,76 @@ static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   data->fn28 = wFunCmd.isf28( cmd );
 }
 
+static void __copyNode2SelectiveFunction( iOLoc inst, iONode cmd) {
+  iOLocData data = Data(inst);
+  int fnchanged = wFunCmd.getfnchanged( cmd);
+
+  if ( fnchanged != -1) {
+
+    switch ( fnchanged) {
+      case 0 : data->fn0  = wFunCmd.isf0 ( cmd ); break;
+      case 1 : data->fn1  = wFunCmd.isf1 ( cmd ); break;
+      case 2 : data->fn2  = wFunCmd.isf2 ( cmd ); break;
+      case 3 : data->fn3  = wFunCmd.isf3 ( cmd ); break;
+      case 4 : data->fn4  = wFunCmd.isf4 ( cmd ); break;
+      case 5 : data->fn5  = wFunCmd.isf5 ( cmd ); break;
+      case 6 : data->fn6  = wFunCmd.isf6 ( cmd ); break;
+      case 7 : data->fn7  = wFunCmd.isf7 ( cmd ); break;
+      case 8 : data->fn8  = wFunCmd.isf8 ( cmd ); break;
+      case 9 : data->fn9  = wFunCmd.isf9 ( cmd ); break;
+      case 10 : data->fn10 = wFunCmd.isf10( cmd ); break;
+      case 11 : data->fn11 = wFunCmd.isf11( cmd ); break;
+      case 12 : data->fn12 = wFunCmd.isf12( cmd ); break;
+      case 13 : data->fn13 = wFunCmd.isf13( cmd ); break;
+      case 14 : data->fn14 = wFunCmd.isf14( cmd ); break;
+      case 15 : data->fn15 = wFunCmd.isf15( cmd ); break;
+      case 16 : data->fn16 = wFunCmd.isf16( cmd ); break;
+      case 17 : data->fn17 = wFunCmd.isf17( cmd ); break;
+      case 18 : data->fn18 = wFunCmd.isf18( cmd ); break;
+      case 19 : data->fn19 = wFunCmd.isf19( cmd ); break;
+      case 20 : data->fn20 = wFunCmd.isf20( cmd ); break;
+      case 21 : data->fn21 = wFunCmd.isf21( cmd ); break;
+      case 22 : data->fn22 = wFunCmd.isf22( cmd ); break;
+      case 23 : data->fn23 = wFunCmd.isf23( cmd ); break;
+      case 24 : data->fn24 = wFunCmd.isf24( cmd ); break;
+      case 25 : data->fn25 = wFunCmd.isf25( cmd ); break;
+      case 26 : data->fn26 = wFunCmd.isf26( cmd ); break;
+      case 27 : data->fn27 = wFunCmd.isf27( cmd ); break;
+      case 28 : data->fn28 = wFunCmd.isf28( cmd ); break;
+    }
+  } else {
+    data->fn0  = wFunCmd.isf0 ( cmd );
+    data->fn1  = wFunCmd.isf1 ( cmd );
+    data->fn2  = wFunCmd.isf2 ( cmd );
+    data->fn3  = wFunCmd.isf3 ( cmd );
+    data->fn4  = wFunCmd.isf4 ( cmd );
+    data->fn5  = wFunCmd.isf5 ( cmd );
+    data->fn6  = wFunCmd.isf6 ( cmd );
+    data->fn7  = wFunCmd.isf7 ( cmd );
+    data->fn8  = wFunCmd.isf8 ( cmd );
+    data->fn9  = wFunCmd.isf9 ( cmd );
+    data->fn10 = wFunCmd.isf10( cmd );
+    data->fn11 = wFunCmd.isf11( cmd );
+    data->fn12 = wFunCmd.isf12( cmd );
+    data->fn13 = wFunCmd.isf13( cmd );
+    data->fn14 = wFunCmd.isf14( cmd );
+    data->fn15 = wFunCmd.isf15( cmd );
+    data->fn16 = wFunCmd.isf16( cmd );
+    data->fn17 = wFunCmd.isf17( cmd );
+    data->fn18 = wFunCmd.isf18( cmd );
+    data->fn19 = wFunCmd.isf19( cmd );
+    data->fn20 = wFunCmd.isf20( cmd );
+    data->fn21 = wFunCmd.isf21( cmd );
+    data->fn22 = wFunCmd.isf22( cmd );
+    data->fn23 = wFunCmd.isf23( cmd );
+    data->fn24 = wFunCmd.isf24( cmd );
+    data->fn25 = wFunCmd.isf25( cmd );
+    data->fn26 = wFunCmd.isf26( cmd );
+    data->fn27 = wFunCmd.isf27( cmd );
+    data->fn28 = wFunCmd.isf28( cmd );
+  }
+}
+
 
 
 static void* __event( void* inst, const void* evt ) {
@@ -260,9 +330,13 @@ static void* __event( void* inst, const void* evt ) {
 
   }
   else if( StrOp.equals( wFunCmd.name(), NodeOp.getName(evtNode) )) {
+    
     /* TODO: the digint library should provide the function group to prevent overwriting not reported functions */
-    __cpNode2Fn(inst, evtNode);
-    wLoc.setfn( data->props, wFunCmd.isf0(evtNode) );
+    
+    __copyNode2SelectiveFunction( inst, evtNode);
+    if ( ( wFunCmd.getfnchanged( evtNode) == -1) || ( wFunCmd.getfnchanged( evtNode) == 0)) {
+      wLoc.setfn( data->props, wFunCmd.isf0( evtNode));
+    }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
         wLoc.getid( data->props ),
