@@ -44,7 +44,6 @@
 
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
-#include "rocgui/dialogs/decoders/opendecoder.h"
 #include "rocgui/dialogs/rocrailinidialog.h"
 #include "rocgui/dialogs/decoders/uhl68610dlg.h"
 #include "rocgui/dialogs/decoders/uhl633x0dlg.h"
@@ -275,7 +274,6 @@ private:
   wxComboBox*       m_ScaleComboBox;
 
   LocoIO* m_LocoIO;
-  OpenDecoderDlg* m_OpenDecoder;
   DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
