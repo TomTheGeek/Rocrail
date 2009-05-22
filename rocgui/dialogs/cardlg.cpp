@@ -252,12 +252,17 @@ void CarDlg::initValues() {
 
 
 
-void CarDlg::evaluate(){
+bool CarDlg::evaluate(){
   if( m_Props == NULL )
-    return;
+    return false;
 
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wCar.getid( m_Props ) );
 
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wCar.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wCar.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -284,7 +289,7 @@ void CarDlg::evaluate(){
   wCar.setlen( m_Props, m_Length->GetValue() );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
 
-
+  return true;
 }
 
 
@@ -419,7 +424,9 @@ void CarDlg::onApply( wxCommandEvent& event ){
   if( m_Props == NULL || !m_bSave )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

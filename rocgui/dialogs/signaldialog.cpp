@@ -375,9 +375,16 @@ void SignalDialog::initValues() {
 }
 
 
-void SignalDialog::evaluate() {
+bool SignalDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wSignal.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
   // General
   wSignal.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wSignal.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
@@ -451,6 +458,8 @@ void SignalDialog::evaluate() {
   wSignal.setred   ( m_Props, m_Red1->GetSelection()    + (m_Red2->GetSelection()    << 4) );
   wSignal.setyellow( m_Props, m_Yellow1->GetSelection() + (m_Yellow2->GetSelection() << 4) );
   wSignal.setwhite ( m_Props, m_White1->GetSelection()  + (m_White2->GetSelection()  << 4) );
+
+  return true;
 }
 
 
@@ -1098,7 +1107,8 @@ void SignalDialog::OnApplyClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
-  evaluate();
+  if( !evaluate() )
+    return;
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

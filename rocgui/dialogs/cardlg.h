@@ -38,7 +38,7 @@ class CarDlg : public cardlggen
   int    m_SetPage;
 
   void initLabels();
-  void evaluate();
+  bool evaluate();
   void initIndex();
   void initValues();
   void initSubType();

@@ -93,7 +93,7 @@ class TrackDialog: public wxDialog
 
   void initLabels();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

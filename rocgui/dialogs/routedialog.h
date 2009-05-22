@@ -111,7 +111,7 @@ class RouteDialog: public wxDialog, public BaseDialog
   void initIndex();
   void initValues();
   void initCommands();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
   void initBlockCombos();
   void initSwitchCombo();

@@ -503,9 +503,15 @@ void RouteDialog::initCommands() {
 }
 
 
-void RouteDialog::evaluate() {
+bool RouteDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_Id->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_Id->SetValue( wxString(wRoute.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
 
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wRoute.setid( m_Props, m_Id->GetValue().mb_str(wxConvUTF8) );
@@ -547,6 +553,7 @@ void RouteDialog::evaluate() {
 
   wRoute.setswappost( m_Props, m_SwapPost->IsChecked()?True:False);
 
+  return true;
 }
 
 /*!
@@ -1128,7 +1135,9 @@ void RouteDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

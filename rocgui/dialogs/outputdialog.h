@@ -102,14 +102,14 @@ class wxSpinCtrl;
  */
 
 class OutputDialog: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( OutputDialog )
     DECLARE_EVENT_TABLE()
 
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

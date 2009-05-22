@@ -99,7 +99,7 @@ class wxGrid;
  */
 
 class ScheduleDialog: public wxDialog, public BaseDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( ScheduleDialog )
     DECLARE_EVENT_TABLE()
 
@@ -107,7 +107,7 @@ class ScheduleDialog: public wxDialog, public BaseDialog
   void initIndex();
   void initSchedule();
   void initEntry( int row );
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
   void initBlockCombo();
   void initLocationCombo();

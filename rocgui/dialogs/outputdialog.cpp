@@ -199,13 +199,13 @@ void OutputDialog::initValues() {
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("output").mb_str(wxConvUTF8), wOutput.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
   StrOp.free( title );
-  
+
   // General
   m_ID->SetValue( wxString(wOutput.getid( m_Props ),wxConvUTF8) );
   m_Description->SetValue( wxString(wOutput.getdesc( m_Props ),wxConvUTF8) );
   m_Show->SetValue( wOutput.isshow( m_Props ) ? true:false);
   m_SVG->SetValue( wOutput.getsvgtype( m_Props ) );
-  
+
 
   // Interface
   m_iid->SetValue( wxString(wOutput.getiid( m_Props ),wxConvUTF8) );
@@ -252,9 +252,15 @@ void OutputDialog::initValues() {
 }
 
 
-void OutputDialog::evaluate() {
+bool OutputDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wOutput.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
   // General
   wOutput.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wOutput.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
@@ -282,7 +288,7 @@ void OutputDialog::evaluate() {
     wOutput.setprot( m_Props, wOutput.prot_VO );
   else
     wOutput.setprot( m_Props, wOutput.prot_DEF );
-    
+
   // Location
   wOutput.setx( m_Props, atoi( m_x->GetValue().mb_str(wxConvUTF8) ) );
   wOutput.sety( m_Props, atoi( m_y->GetValue().mb_str(wxConvUTF8) ) );
@@ -296,7 +302,9 @@ void OutputDialog::evaluate() {
     wOutput.setori( m_Props, wItem.south );
   else if( ori == 3 )
     wOutput.setori( m_Props, wItem.west );
-    
+
+  return true;
+
 }
 
 
@@ -368,7 +376,7 @@ bool OutputDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
  */
 
 void OutputDialog::CreateControls()
-{    
+{
 ////@begin OutputDialog content construction
     OutputDialog* itemDialog1 = this;
 
@@ -639,7 +647,7 @@ void OutputDialog::OnButtonCoDeleteClick( wxCommandEvent& event )
     return;
 
   wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
-  
+
   /* Notify RocRail. */
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.remove );
@@ -686,7 +694,9 @@ void OutputDialog::OnApplyClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -708,7 +718,7 @@ void OutputDialog::OnNotebookCoPageChanged( wxNotebookEvent& event )
 ////@begin wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in OutputDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in OutputDialog. 
+////@end wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in OutputDialog.
 }
 
 
@@ -721,13 +731,13 @@ void OutputDialog::OnOutputActionsClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
-  
+
   ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
-  
+
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform
   }
-  
+
   dlg->Destroy();
 }
 

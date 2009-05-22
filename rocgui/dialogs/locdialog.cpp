@@ -637,11 +637,17 @@ void LocDialog::InitValues() {
 }
 
 
-void LocDialog::Evaluate() {
+bool LocDialog::Evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
 
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wLoc.getid( m_Props ) );
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wLoc.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
 
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
@@ -860,6 +866,7 @@ void LocDialog::Evaluate() {
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "Consist [%s]", consist );
   StrOp.free(consist);
 
+  return true;
 }
 
 
@@ -1759,7 +1766,9 @@ void LocDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  Evaluate();
+  if( !Evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

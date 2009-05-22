@@ -175,7 +175,7 @@ class LocDialog: public wxDialog, public BaseDialog
   void initLabels();
   void InitIndex();
   void InitValues();
-  void Evaluate();
+  bool Evaluate();
   bool m_bSave;
   void EditFunction( int nr, wxString txt );
   int m_TabAlign;

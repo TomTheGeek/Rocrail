@@ -59,14 +59,14 @@ class wxSpinCtrl;
  */
 
 class TimedActions: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( TimedActions )
     DECLARE_EVENT_TABLE()
 
   void initIndex();
   void initLabels();
   void initValues();
-  void evaluate();
+  bool evaluate();
   void initOutputList();
   iONode m_Props;
 

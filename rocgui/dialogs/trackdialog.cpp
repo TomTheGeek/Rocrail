@@ -174,9 +174,16 @@ void TrackDialog::initValues() {
 }
 
 
-void TrackDialog::evaluate() {
+bool TrackDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wTrack.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
   // General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wTrack.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -199,6 +206,7 @@ void TrackDialog::evaluate() {
   else if( ori == 3 )
     wTrack.setori( m_Props, wItem.west );
 
+  return true;
 }
 
 
@@ -360,7 +368,9 @@ void TrackDialog::CreateControls()
 
 void TrackDialog::OnOkClick( wxCommandEvent& event )
 {
-  evaluate();
+  if( !evaluate() )
+    return;
+
   EndModal( wxID_OK );
 }
 

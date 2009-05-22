@@ -150,7 +150,7 @@ void BlockGroupingDialog::initLabels() {
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_LabelDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_Critical->SetLabel( wxGetApp().getMsg( "criticalsection" ) );
-  
+
   // Properties
   m_LabelMainBlock->SetLabel( wxGetApp().getMsg( "sourceblock" ) );
   m_LabelLinked->SetLabel( wxGetApp().getMsg( "linkedblocks" ) );
@@ -172,7 +172,7 @@ void BlockGroupingDialog::initLabels() {
       }
     }
   }
-  
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -184,7 +184,7 @@ void BlockGroupingDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
   m_List->Clear();
-  
+
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode linklist = wPlan.getlinklist( model );
@@ -217,14 +217,14 @@ void BlockGroupingDialog::initValues() {
   m_ID->SetValue( wxString(wLink.getid( m_Props ),wxConvUTF8) );
   m_Desc->SetValue( wxString(wLink.getdesc( m_Props ),wxConvUTF8) );
   m_Critical->SetValue( (wLink.getusage( m_Props ) == wLink.usage_critsect));
-  
+
   // Properties
   m_MainBlock->SetStringSelection( wxString(wLink.getsrc( m_Props ),wxConvUTF8) );
-  
+
   m_MainBlock->Enable(!m_Critical->IsChecked());
   m_Activate->Enable(!m_Critical->IsChecked());
   m_DeActivate->Enable(!m_Critical->IsChecked());
-  
+
   m_BlockList->Clear();
   iOStrTok tok = StrTokOp.inst( wLink.getdst( m_Props ), ',' );
   while( StrTokOp.hasMoreTokens( tok ) )  {
@@ -234,20 +234,25 @@ void BlockGroupingDialog::initValues() {
   }
 }
 
-void BlockGroupingDialog::evaluate() {
+bool BlockGroupingDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
 
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wLink.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
   // General
   wLink.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wLink.setdesc ( m_Props, m_Desc->GetValue().mb_str(wxConvUTF8) );
-  
+
   // Properties
   wLink.setsrc( m_Props, m_MainBlock->GetValue().mb_str(wxConvUTF8) );
-  
+
   wLink.setusage( m_Props, (m_Critical->IsChecked() ? wLink.usage_critsect : wLink.usage_manual ) );
-  
-  
+
+
   int cnt = m_BlockList->GetCount();
   char* dst = NULL;
   for( int i = 0; i < cnt; i++ ) {
@@ -259,6 +264,8 @@ void BlockGroupingDialog::evaluate() {
     wLink.setdst( m_Props, dst );
     StrOp.free( dst );
   }
+
+  return true;
 }
 
 /*!
@@ -313,7 +320,7 @@ bool BlockGroupingDialog::Create( wxWindow* parent, wxWindowID id, const wxStrin
  */
 
 void BlockGroupingDialog::CreateControls()
-{    
+{
 ////@begin BlockGroupingDialog content construction
     BlockGroupingDialog* itemDialog1 = this;
 
@@ -473,7 +480,7 @@ void BlockGroupingDialog::OnNotebookLinkPageChanged( wxNotebookEvent& event )
 ////@begin wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in BlockGroupingDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in BlockGroupingDialog. 
+////@end wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO in BlockGroupingDialog.
 }
 
 /*!
@@ -541,7 +548,7 @@ void BlockGroupingDialog::OnButtonLinkDeleteClick( wxCommandEvent& event )
       return;
 
     wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
-    
+
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.remove );
@@ -572,7 +579,7 @@ void BlockGroupingDialog::OnCancelClick( wxCommandEvent& event )
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL in BlockGroupingDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL in BlockGroupingDialog. 
+////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL in BlockGroupingDialog.
 }
 
 /*!
@@ -595,7 +602,9 @@ void BlockGroupingDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -617,7 +626,7 @@ void BlockGroupingDialog::OnListboxLinkListSelected( wxCommandEvent& event )
 ////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LINK_LIST in BlockGroupingDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LINK_LIST in BlockGroupingDialog. 
+////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LINK_LIST in BlockGroupingDialog.
 }
 
 
@@ -630,7 +639,7 @@ void BlockGroupingDialog::OnComboboxLinkMainSelected( wxCommandEvent& event )
 ////@begin wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_LINK_MAIN in BlockGroupingDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_LINK_MAIN in BlockGroupingDialog. 
+////@end wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_LINK_MAIN in BlockGroupingDialog.
 }
 
 
