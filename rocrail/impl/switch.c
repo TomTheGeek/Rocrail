@@ -525,8 +525,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int retryCount
   o->retrycounter = retryCount;
 
   wSwitch.setstate( o->props, state );
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s]",
-                 SwitchOp.getId( inst ), state );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s,%d,%d]",
+                 SwitchOp.getId( inst ), state, wSwitch.issinglegate( o->props ), wSwitch.getgate1( o->props ) );
 
   if( iid != NULL )
     wSwitch.setiid( nodeA, iid );

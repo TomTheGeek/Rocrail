@@ -684,10 +684,11 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
 
       /* calculate address, modules have 4 ports each */
 
-    int address      = (( module - 1 ) * 4 ) + port;
+    int address = (( module - 1 ) * 4 ) + port;
 
     char direction  = 'g';      /* default to green/straight */
-    if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
+    if ( ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) && !wSwitch.issinglegate( node )) 
+      || ( wSwitch.issinglegate( node ) && wSwitch.getgate1( node ))) {
       direction = 'r';          /* red/thrown */
     }
 
