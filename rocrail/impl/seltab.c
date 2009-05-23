@@ -1005,6 +1005,14 @@ static void _reset( iIBlockBase inst ) {
 }
 
 
+static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
+  Boolean ok = False;
+  if( inst != NULL && scid != NULL ) {
+    iOSelTabData data = Data(inst);
+  }
+  return ok;
+}
+
 /**  */
 static Boolean _unLock( iIBlockBase inst ,const char* id ) {
   iOSelTabData data = Data(inst);

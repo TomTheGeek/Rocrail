@@ -1131,6 +1131,17 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
   return ok;
 }
 
+
+static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
+  Boolean ok = False;
+  if( inst != NULL && scid != NULL ) {
+    iOTTData data = Data(inst);
+  }
+  return ok;
+}
+
+
+
 static Boolean _unLock( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
   if( StrOp.equals( id, data->lockedId ) ) {
