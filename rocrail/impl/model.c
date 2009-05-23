@@ -2092,8 +2092,15 @@ static void _event( iOModel inst, iONode nodeC ) {
       StrOp.equals( wFunCmd.name(), NodeOp.getName( nodeC ) ) )
   {
     int addr = wLoc.getaddr( nodeC );
+    const char* id = wLoc.getid( nodeC );
     const char* iid = wLoc.getiid( nodeC );
     iOLoc lc = ModelOp.getLocByAddress(inst, addr);
+
+    /* check if the loco ID ist set if not found by address */
+    if( lc == NULL && id != NULL && StrOp.len(id) > 0 ) {
+      lc = ModelOp.getLoc(inst, id);
+    }
+
     if( lc != NULL ) {
       LocOp.base.event( lc, nodeC );
     }
