@@ -235,7 +235,9 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
   wLoc.setprot( nodeSpd, slot[slotnr].format == 0 ? wLoc.prot_N:wLoc.prot_M );
   wLoc.setspcnt( nodeSpd, slot[slotnr].steps == 0 ? 128:slot[slotnr].steps );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot# %d format=%d steps=%d", slotnr, slot[slotnr].format, slot[slotnr].steps );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "slot# %d format=%d steps=%d dir=%s",
+      slotnr, slot[slotnr].format, slot[slotnr].steps, slot[slotnr].dir?"fwd":"rev" );
 
   /* TODO: send a wLoc node only to inform the loco object who knows all its settings,
    * the iid in this node must overwrite the one set for the loco. */
@@ -527,7 +529,8 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   iOLocoNetData data = Data(loconet);
   int slotnr = msg[2] & 0x7F;
   int addr = ((msg[9] & 0x7f) * 128) + (msg[4] & 0x7f);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d addr %d data", slotnr, addr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "set slot# %d addr %d data (dir=%s)", slotnr, addr, ((msg[5] & DIRF_DIR) ? "fwd":"rev") );
 
   if( addr == 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "illegal address %d", addr );
@@ -539,7 +542,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
 
   slot[slotnr].addr = addr;
   slot[slotnr].speed = msg[5];
-  slot[slotnr].dir = ((msg[5] & DIRF_DIR) ? True:False);
+  slot[slotnr].dir = ((msg[5] & DIRF_DIR) ? False:True);
   slot[slotnr].f0 = ((msg[5] & DIRF_F0) ? True:False);
   slot[slotnr].f1 = ((msg[5] & DIRF_F1) ? True:False);
   slot[slotnr].f2 = ((msg[5] & DIRF_F2) ? True:False);

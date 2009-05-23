@@ -1819,7 +1819,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         /* set as purged: */
         data->locoslot[slot] = 0;
         data->slotaccessed[slot] = 0;
-        size = makereqDispatch(cmd, slot, wLoc.getaddr(node), status );
+        size = makereqDispatch(cmd, slot, node, status, data->activeSlotServer );
       }
       else if( slot > 0 ) {
         Boolean fn1 = wFunCmd.isf1(node);
@@ -2034,7 +2034,9 @@ static void __writeStatus( iOLocoNet loconet, int slot, byte status, int statusf
  * A Fred queries slot 0, and when there is a dispatched loco in it,
  * it will get a OPC_SL_RD_DATA reply.
  */
-int makereqDispatch(byte *msg, int slot, int addr, int status) {
+int makereqDispatch(byte *msg, int slot, iONode node, int status, Boolean activeSlotServer) {
+  int addr = wLoc.getaddr(node);
+
   msg[0] = OPC_SLOT_STAT1;
   msg[1] = slot;
   msg[2] = (status&~LOCOSTAT_MASK)|LOCO_COMMON;
@@ -2045,7 +2047,8 @@ int makereqDispatch(byte *msg, int slot, int addr, int status) {
   msg[6] = 0;
   msg[7] = LocoNetOp.checksum( msg+4, 3 );
 
-  return 8;
+
+  return 16;
 }
 
 
