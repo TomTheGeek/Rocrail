@@ -1270,9 +1270,9 @@ void RocGuiFrame::initFrame() {
 
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
-  wxMenu *menuPTDCC = new wxMenu();
-  menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
-  menuProgramming->Append( -1, _T("NMRA DCC"), menuPTDCC );
+  //wxMenu *menuPTDCC = new wxMenu();
+  //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
+  //menuProgramming->Append( -1, _T("NMRA DCC"), menuPTDCC );
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();

@@ -89,14 +89,14 @@ class wxNotebook;
  */
 
 class BlockGroupingDialog: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( BlockGroupingDialog )
     DECLARE_EVENT_TABLE()
 
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

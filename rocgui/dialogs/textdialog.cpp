@@ -91,7 +91,7 @@ TextDialog::TextDialog( wxWindow* parent, iONode p_Props )
   m_Props = p_Props;
   initLabels();
   initValues();
-  
+
   m_GeneralPanel->GetSizer()->Layout();
   m_LocationPanel->GetSizer()->Layout();
   m_Notebook->Fit();
@@ -116,7 +116,7 @@ void TextDialog::initLabels() {
   m_Italic->SetLabel(wxGetApp().getMsg( "italic" ) );
   m_Underlined->SetLabel(wxGetApp().getMsg( "underlined" ) );
   m_Transparent->SetLabel(wxGetApp().getMsg( "transparent" ) );
-  
+
   m_Ori->SetLabel(wxGetApp().getMsg( "orientation" ) );
   m_Ori->SetString( 0, wxGetApp().getMsg( "default" ) );
   m_Ori->SetString( 1, wxGetApp().getMsg( "up" ) );
@@ -143,17 +143,17 @@ void TextDialog::initValues() {
   char* str = StrOp.fmt( "%d", wText.getpointsize( m_Props ) );
   m_Pointsize->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
 
-  
+
   m_Bold->SetValue( wText.isbold( m_Props) );
   m_Underlined->SetValue( wText.isunderlined( m_Props) );
   m_Italic->SetValue( wText.isitalic( m_Props ) );
   m_Transparent->SetValue( wText.istransparent( m_Props ) );
-  
+
   wxColour color( wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props) );
   m_Color->SetBackgroundColour(color);
   wxColour bcolor( wText.getbackred(m_Props), wText.getbackgreen(m_Props), wText.getbackblue(m_Props) );
   m_Background->SetBackgroundColour(bcolor);
-  
+
   if( StrOp.equals( wText.getori(m_Props), wItem.north ) )
     m_Ori->SetSelection(1);
   else if( StrOp.equals( wText.getori(m_Props), wItem.south ) )
@@ -161,7 +161,7 @@ void TextDialog::initValues() {
   else
     m_Ori->SetSelection(0);
 
-  
+
   // Location
   str = StrOp.fmt( "%d", wText.getx( m_Props ) );
   m_x->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
@@ -177,9 +177,16 @@ void TextDialog::initValues() {
 }
 
 
-void TextDialog::evaluate() {
+bool TextDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wText.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
   // General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wText.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -198,13 +205,15 @@ void TextDialog::evaluate() {
     wText.setori(m_Props, wItem.north );
   else if( m_Ori->GetSelection() == 2 )
     wText.setori(m_Props, wItem.south );
-  
+
   // Location
   wText.setx( m_Props, atoi( m_x->GetValue().mb_str(wxConvUTF8) ) );
   wText.sety( m_Props, atoi( m_y->GetValue().mb_str(wxConvUTF8) ) );
   wText.setz( m_Props, atoi( m_z->GetValue().mb_str(wxConvUTF8) ) );
   wText.setcx( m_Props, atoi( m_Cx->GetValue().mb_str(wxConvUTF8) ) );
   wText.setcy( m_Props, atoi( m_Cy->GetValue().mb_str(wxConvUTF8) ) );
+
+  return true;
 }
 
 
@@ -271,7 +280,7 @@ bool TextDialog::Create( wxWindow* parent, wxWindowID id, const wxString& captio
  */
 
 void TextDialog::CreateControls()
-{    
+{
 ////@begin TextDialog content construction
     TextDialog* itemDialog1 = this;
 
@@ -419,7 +428,8 @@ void TextDialog::CreateControls()
 
 void TextDialog::OnOkClick( wxCommandEvent& event )
 {
-  evaluate();
+  if( !evaluate() )
+    return;
   EndModal( wxID_OK );
 }
 
@@ -476,8 +486,8 @@ void TextDialog::OnButtonTxtImageClick( wxCommandEvent& event )
 {
   const char* imagepath = wGui.getimagepath( wxGetApp().getIni() );
   TraceOp.trc( "textdialog", TRCLEVEL_INFO, __LINE__, 9999, "imagepath = [%s]", imagepath );
-  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search image"), 
-      wxString(imagepath,wxConvUTF8), _T(""), 
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search image"),
+      wxString(imagepath,wxConvUTF8), _T(""),
       _T("PNG files (*.png)|*.png"), wxOPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     TraceOp.trc( "textdialog", TRCLEVEL_INFO, __LINE__, 9999, "Loading %s...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
@@ -501,13 +511,13 @@ void TextDialog::OnButtonTextColorClick( wxCommandEvent& event )
   wxColourDialog* dlg = new wxColourDialog(this);
   if( wxID_OK == dlg->ShowModal() ) {
     wxColour &color = dlg->GetColourData().GetColour();
-    
+
     wText.setred( m_Props, (int)color.Red() );
     wText.setgreen( m_Props, (int)color.Green() );
     wText.setblue( m_Props, (int)color.Blue() );
-    
+
     m_Color->SetBackgroundColour( color );
-    
+
   }
   dlg->Destroy();
 }
@@ -522,12 +532,12 @@ void TextDialog::OnButtonTextBackgroundClick( wxCommandEvent& event )
   wxColourDialog* dlg = new wxColourDialog(this);
   if( wxID_OK == dlg->ShowModal() ) {
     wxColour &color = dlg->GetColourData().GetColour();
-    
+
     wText.setbackred( m_Props, (int)color.Red() );
     wText.setbackgreen( m_Props, (int)color.Green() );
     wText.setbackblue( m_Props, (int)color.Blue() );
     m_Background->SetBackgroundColour( color );
-    
+
   }
   dlg->Destroy();
 }

@@ -38,7 +38,7 @@ class WaybillDlg : public waybillgen
   int    m_SetPage;
 
   void initLabels();
-  void evaluate();
+  bool evaluate();
   void initIndex();
   void initValues();
 

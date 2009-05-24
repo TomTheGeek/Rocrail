@@ -20,6 +20,7 @@
 <ope date="733412" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
 <ope date="733413" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="DIRK ADOLPHS"/>
 <ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Heiner Schacht"/>
+<ope date="733414" amount="-180.40000000000001" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="4" wording="Digitrax Zephyr" info="Command Station Test"/>
 <ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MAGNIDOFF, JOERN"/>
 <ope date="733423" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hartmut Neu"/>
 <ope date="733429" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann"/>
@@ -43,5 +44,5 @@
 <ope date="733524" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET"/>
 <ope date="733532" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Volker Hanchen"/>
 <ope date="733534" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Kuempel"/>
-<ope date="733414" amount="-180.40000000000001" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="4" wording="Digitrax Zephyr" info="Command Station Test"/>
+<ope date="733549" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Klaus Peter Glitz"/>
 </homebank>

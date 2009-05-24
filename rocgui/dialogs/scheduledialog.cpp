@@ -483,9 +483,15 @@ void ScheduleDialog::initEntry(int row) {
 }
 
 
-void ScheduleDialog::evaluate() {
+bool ScheduleDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wSchedule.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
 
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
 
@@ -498,7 +504,7 @@ void ScheduleDialog::evaluate() {
   wSchedule.setscaction( m_Props, m_ScheduleAction->GetValue().mb_str(wxConvUTF8) );
 
   if( m_SelectedRow == -1 )
-    return;
+    return false;
 
   iONode entry = (iONode)ListOp.get( m_EntryPropsList, m_SelectedRow );
 
@@ -511,6 +517,8 @@ void ScheduleDialog::evaluate() {
   }
 
   initSchedule();
+
+  return true;
 }
 
 
@@ -897,7 +905,9 @@ void ScheduleDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

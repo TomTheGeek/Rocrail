@@ -92,13 +92,13 @@ class wxNotebook;
  */
 
 class TextDialog: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( TextDialog )
     DECLARE_EVENT_TABLE()
 
   void initLabels();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

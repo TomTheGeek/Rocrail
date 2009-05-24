@@ -1143,6 +1143,23 @@ static Boolean _unLink( iIBlockBase inst ) {
   return False;
 }
 
+static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
+  Boolean ok = False;
+  if( inst != NULL && scid != NULL ) {
+    iOBlockData data = Data(inst);
+
+    if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
+      iOModel model = AppOp.getModel();
+      iOLoc loc = ModelOp.getLoc( model, data->locId );
+      if( loc != NULL ) {
+        LocOp.useSchedule( loc, scid );
+        LocOp.go(loc);
+      }
+    }
+
+  }
+  return ok;
+}
 
 static Boolean _unLock( iIBlockBase inst, const char* id ) {
   if( inst != NULL && id != NULL ) {

@@ -247,9 +247,15 @@ void TimedActions::initIndex() {
 }
 
 
-void TimedActions::evaluate() {
+bool TimedActions::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ActionID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ActionID->SetValue( wxString(wAction.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
 
   wAction.setid( m_Props, m_ActionID->GetValue().mb_str(wxConvUTF8) );
   wAction.settype( m_Props, m_Type->GetSelection() == 0 ? "co":"ext");
@@ -275,6 +281,8 @@ void TimedActions::evaluate() {
     case 7: wAction.settype(m_Props, wLoc.name()); break;
     case 8: wAction.settype(m_Props, wFunCmd.name()); break;
   }
+
+  return true;
 
 }
 
@@ -620,7 +628,9 @@ void TimedActions::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

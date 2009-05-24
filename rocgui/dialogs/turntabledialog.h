@@ -108,7 +108,7 @@ class TurntableDialog: public wxDialog
 
   void initLabels();
   void initValues();
-  void evaluate();
+  bool evaluate();
   void OnProps(wxCommandEvent& event);
   void OnTTTrackAdd(wxCommandEvent& event);
   void OnTTTrackDelete(wxCommandEvent& event);

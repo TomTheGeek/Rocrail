@@ -110,7 +110,7 @@ class FeedbackDialog: public wxDialog, public BaseDialog
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

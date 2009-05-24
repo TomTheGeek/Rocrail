@@ -74,13 +74,13 @@
  */
 
 class LocationsDialog: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( LocationsDialog )
     DECLARE_EVENT_TABLE()
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

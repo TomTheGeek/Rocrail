@@ -137,7 +137,7 @@ class SwitchDialog: public wxDialog
   void initLabels();
   void initIndex();
   void initValues();
-  void evaluate();
+  bool evaluate();
   int m_TabAlign;
 
 public:

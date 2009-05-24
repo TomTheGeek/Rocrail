@@ -394,9 +394,16 @@ void SelTabDialog::initValues() {
 }
 
 
-void SelTabDialog::evaluate() {
+bool SelTabDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wSelTab.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
   // General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wSelTab.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -467,6 +474,7 @@ void SelTabDialog::evaluate() {
   else
     wSelTab.setb3sen( m_Props, m_b3Sen->GetStringSelection().mb_str(wxConvUTF8) );
 
+  return true;
 }
 
 void SelTabDialog::initSensorCombos() {
@@ -1200,7 +1208,9 @@ void SelTabDialog::OnButtonSeltabModifytrackClick( wxCommandEvent& event )
 
 void SelTabDialog::OnOkClick( wxCommandEvent& event )
 {
-  evaluate();
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

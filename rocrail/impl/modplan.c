@@ -152,7 +152,7 @@ static iONode _parsePlan( const char* filename ) {
  * Resolve module routes to complete routes.
  *
  */
-static void __createRoute( iOModPlanData data, iONode model, iOList routeList, iONode toRoute ) {
+static void __createRoute( iOModPlanData data, iONode model, iOList routeList, iONode toRoute, const char* modid ) {
   /* create the new route, merge all crossing blocks and use the properties of the last route. */
   iONode fromRoute = (iONode)ListOp.get( routeList, 0 );
 
@@ -161,6 +161,7 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   char* routeID = NULL;
   char* bkc = NULL;
 
+  NodeOp.setStr( toRoute, "tomodid", modid );
   wRoute.setbka( newRoute, wRoute.getbka( fromRoute ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s] to[%s]",
       wRoute.getbka( newRoute ), wRoute.getbkb( newRoute ) );
@@ -281,7 +282,7 @@ static iONode __findRouteFromPoint( iOModPlanData data, iONode model, iOList rou
 
       if( !StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {
         /* assume end of route is found */
-        __createRoute(data, model, routeList, route );
+        __createRoute(data, model, routeList, route, modid );
       }
       else {
         iOList clonedRouteList = __cloneRouteList(routeList);
@@ -327,8 +328,8 @@ static iONode __findConnection( iOModPlanData data, iONode model, iOList routeLi
             /* look up a route from modToid which starts with "point-*" */
             /* TODO: regard second character of the compass point */
             routeTo = __findRouteFromPoint( data, model, routeList, modToid, wModuleConnection.getside(modTocon), to, routecnt );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connection found: from[%s] - to[%s]",
-                wRoute.getbka(routeTo), wRoute.getbkb(routeTo) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connection found: from[%s](%s) - to[%s](%s)",
+                wRoute.getbka(routeTo), modid, wRoute.getbkb(routeTo), modToid );
             return routeTo;
           }
         }
@@ -369,15 +370,32 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
         char key[64];
         char* val;
         iOList list = NULL;
+
+        /* event list for first part of routes */
         StrOp.fmtb( key, "%s-%s", modid, to );
         list = (iOList)MapOp.get(data->fbeventMap, key);
         if( list == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating list for [%s]", key );
           list = ListOp.inst();
           MapOp.put(data->fbeventMap, key, (obj)list);
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Adding [%s] to fbeventMapKey [%s]", wRoute.getbkb(toRoute), key );
         ListOp.add(list, (obj)wRoute.getbkb(toRoute));
+
+        /* TODO: event list for last part of routes */
+        StrOp.fmtb( key, "%s-%s", NodeOp.getStr(toRoute, "tomodid", "?"), wRoute.getbka(toRoute) );
+        list = (iOList)MapOp.get(data->fbeventMap, key);
+        if( list == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating list for [%s]", key );
+          list = ListOp.inst();
+          MapOp.put(data->fbeventMap, key, (obj)list);
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Adding [%s] to fbeventMapKey [%s]", wRoute.getbka(route), key );
+        ListOp.add(list, (obj)wRoute.getbka(route));
+
+
 
         /*
          * make a mapping for route activation
@@ -453,13 +471,15 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
       iOList blockids = NULL;
 
       StrOp.fmtb( key, "%s-%s", modid, from );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get list for [%s]..." );
       blockids = (iOList)MapOp.get(data->fbeventMap, key);
 
       if( blockids != NULL && ListOp.size(blockids) > 0 ) {
         int i = 0;
         for( i = 0; i < ListOp.size(blockids); i++ ) {
           const char* blockid = (const char*)ListOp.get( blockids, i );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "eventmap[%s] = [%s]", key, blockid );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "eventmap[%s]=[%s], fbid=%s, comingfrom=%s, eventid=%s", key, blockid, fbid, comingfrom, eventid );
           if( StrOp.equals(blockid, comingfrom) && StrOp.equals(fbid, eventid) ) {
             return fbevent;
           }
@@ -1150,6 +1170,7 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wSelTabList.name() );
   __copyLevel( inst, model, level, wLocationList.name() );
   __copyLevel( inst, model, level, wScheduleList.name() );
+  __copyLevel( inst, model, level, wActionList.name() );
 
   __copyResolvedRoutes( inst, model, wModule.getid(module) );
   __copyUnresolvedRoutes( inst, model, level );

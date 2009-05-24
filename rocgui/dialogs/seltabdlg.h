@@ -74,13 +74,13 @@ class wxGrid;
  */
 
 class SelTabDialog: public wxDialog
-{    
+{
     DECLARE_DYNAMIC_CLASS( SelTabDialog )
     DECLARE_EVENT_TABLE()
-    
+
     void initLabels();
     void initValues();
-    void evaluate();
+    bool evaluate();
     int m_TabAlign;
     iONode m_Props;
     int m_TrackNr;

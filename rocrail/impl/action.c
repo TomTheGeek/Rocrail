@@ -250,6 +250,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals( wSignal.red, wAction.getcmd( data->action ) ) ) {
         bl->red(bl, False, False);
       }
+      else if( StrOp.equals( "schedule", wAction.getcmd( data->action ) ) ) {
+        bl->setLocSchedule(bl, wAction.getparam( data->action ));
+      }
     }
   }
 

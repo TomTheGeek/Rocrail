@@ -201,9 +201,16 @@ void WaybillDlg::initValues() {
 }
 
 
-void WaybillDlg::evaluate(){
+bool WaybillDlg::evaluate(){
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wWaybill.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
 
   TraceOp.trc( "waybilldlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wWaybill.getid( m_Props ) );
 
@@ -224,6 +231,7 @@ void WaybillDlg::evaluate(){
   else
     wWaybill.setstatus( m_Props, wWaybill.status_delivered );
 
+  return true;
 }
 
 
@@ -296,7 +304,8 @@ void WaybillDlg::onApply( wxCommandEvent& event ){
   if( m_Props == NULL )
     return;
 
-  evaluate();
+  if( !evaluate() )
+    return;
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

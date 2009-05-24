@@ -112,12 +112,12 @@ LocationsDialog::LocationsDialog( wxWindow* parent, iONode p_Props )
 }
 
 void LocationsDialog::initLabels() {
-  
+
   // Labels
   m_LabLocations->SetLabel( wxGetApp().getMsg( "locations" ) );
   m_LabName->SetLabel( wxGetApp().getMsg( "name" ) );
   m_LabBlocks->SetLabel( wxGetApp().getMsg( "blocks" ) );
-  
+
   // Buttons
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
@@ -126,7 +126,7 @@ void LocationsDialog::initLabels() {
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
   m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
-  
+
   // Listbox
   m_BlockList->Clear();
   iONode model = wxGetApp().getModel();
@@ -144,7 +144,7 @@ void LocationsDialog::initLabels() {
 }
 
 void LocationsDialog::initIndex() {
-  
+
   int selected = m_LocationList->GetSelection();
   // Listbox
   m_LocationList->Clear();
@@ -159,7 +159,7 @@ void LocationsDialog::initIndex() {
       }
     }
   }
-  
+
   if( selected != wxNOT_FOUND ) {
     m_LocationList->SetSelection( selected );
     m_Props = (iONode)m_LocationList->GetClientData( selected );
@@ -172,15 +172,15 @@ void LocationsDialog::initValues() {
   if( m_Props == NULL ) {
     return;
   }
-  
+
   wxArrayInt ai;
   int cnt = m_BlockList->GetSelections(ai);
   for( int i = 0; i < cnt; i++ ) {
     m_BlockList->Deselect( ai.Item(i) );
   }
-  
+
   m_Name->SetValue( m_LocationList->GetStringSelection() );
-  
+
   iOStrTok  blocks = StrTokOp.inst( wLocation.getblocks ( m_Props ), ',' );
   while( StrTokOp.hasMoreTokens( blocks ) ) {
     const char* tok = StrTokOp.nextToken( blocks );
@@ -191,13 +191,18 @@ void LocationsDialog::initValues() {
 }
 
 
-void LocationsDialog::evaluate() {
+bool LocationsDialog::evaluate() {
   if( m_Props == NULL ) {
-    return;
-  } 
+    return false;
+  }
 
+  if( m_Name->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_Name->SetValue( wxString(wItem.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
-  
+
   wxArrayInt ai;
   int cnt = m_BlockList->GetSelections(ai);
   if( cnt > 0 ) {
@@ -207,7 +212,7 @@ void LocationsDialog::evaluate() {
       char* p = ids;
       if( StrOp.len(ids) == 0 )
         ids = StrOp.fmt( "%s", (const char*)m_BlockList->GetString(idx).mb_str(wxConvUTF8) );
-      else 
+      else
         ids = StrOp.fmt( "%s,%s", ids, (const char*)m_BlockList->GetString(idx).mb_str(wxConvUTF8) );
       StrOp.free( p );
     }
@@ -216,9 +221,10 @@ void LocationsDialog::evaluate() {
   }
   else
     wLocation.setblocks( m_Props, "" );
-    
+
   wLocation.setid( m_Props, m_Name->GetValue().mb_str(wxConvUTF8) );
 
+  return true;
 }
 
 
@@ -262,7 +268,7 @@ bool LocationsDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
  */
 
 void LocationsDialog::CreateControls()
-{    
+{
 ////@begin LocationsDialog content construction
     LocationsDialog* itemDialog1 = this;
 
@@ -378,7 +384,7 @@ void LocationsDialog::OnButtonLocationsNewClick( wxCommandEvent& event )
         locationlist = NodeOp.inst( wLocationList.name(), model, ELEMENT_NODE );
         NodeOp.addChild( model, locationlist );
       }
-      
+
       if( locationlist != NULL ) {
         iONode location = NodeOp.inst( wLocation.name(), locationlist, ELEMENT_NODE );
         NodeOp.addChild( locationlist, location );
@@ -446,8 +452,9 @@ void LocationsDialog::OnApplyClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  evaluate();
-  
+  if( !evaluate() )
+    return;
+
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -478,7 +485,7 @@ void LocationsDialog::OnOkClick( wxCommandEvent& event )
 
 void LocationsDialog::OnListboxLocationsLocationsSelected( wxCommandEvent& event )
 {
-  m_Props = (iONode)m_LocationList->GetClientData(m_LocationList->GetSelection() );  
+  m_Props = (iONode)m_LocationList->GetClientData(m_LocationList->GetSelection() );
   initValues();
 }
 
@@ -492,7 +499,7 @@ void LocationsDialog::OnListboxLocationsBlocksSelected( wxCommandEvent& event )
 ////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LOCATIONS_BLOCKS in LocationsDialog.
     // Before editing this code, remove the block markers.
     event.Skip();
-////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LOCATIONS_BLOCKS in LocationsDialog. 
+////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LOCATIONS_BLOCKS in LocationsDialog.
 }
 
 

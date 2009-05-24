@@ -365,9 +365,16 @@ void TurntableDialog::initValues() {
 }
 
 
-void TurntableDialog::evaluate() {
+bool TurntableDialog::evaluate() {
   if( m_Props == NULL )
-    return;
+    return false;
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wItem.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+
   // General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wTurntable.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
@@ -414,6 +421,7 @@ void TurntableDialog::evaluate() {
 
   wTurntable.setswaprotation( m_Props, m_SwapRotation->IsChecked()?True:False );
 
+  return true;
 }
 
 
@@ -733,7 +741,8 @@ wxIcon TurntableDialog::GetIconResource( const wxString& name )
 
 void TurntableDialog::OnOkClick( wxCommandEvent& event )
 {
-  evaluate();
+  if( !evaluate() )
+    return;
   EndModal( wxID_OK );
 }
 
