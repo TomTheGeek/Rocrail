@@ -37,6 +37,7 @@
 #include "rocrail/wrapper/public/State.h"
 
 #include "rocdigs/impl/ddx/s88.h"
+#include "rocdigs/impl/ddx/nmra.h"
 
 #include "rocdigs/impl/common/fada.h"
 
@@ -274,6 +275,15 @@ static iONode __translate( obj inst, const iONode node ) {
     Boolean fn3 = wFunCmd.isf3(node);
     Boolean fn4 = wFunCmd.isf4(node);
 
+    int f[28];
+    MemOp.set(f, 0, 28);
+
+    f[0] = fn0;
+    f[1] = fn1;
+    f[2] = fn2;
+    f[3] = fn3;
+    f[4] = fn4;
+
     if( spcnt > 127 ) spcnt = 127;
 
     if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -320,9 +330,9 @@ static iONode __translate( obj inst, const iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
           addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 )
-        rc = comp_nmra_f4b7s128( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b7s128( addr, dir, speed, f);
       else
-        rc = comp_nmra_f4b7s28( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b7s28( addr, dir, speed, f);
       if( rc != 0 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error sending DCC packet" );
       }
@@ -332,9 +342,9 @@ static iONode __translate( obj inst, const iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
           addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 )
-        rc = comp_nmra_f4b14s128( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b14s128( addr, dir, speed, f);
       else
-        rc = comp_nmra_f4b14s28( addr, dir, speed, fn0, fn1, fn2, fn3, fn4);
+        rc = comp_nmra_f4b14s28( addr, dir, speed, f);
       if( rc != 0 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error sending DCC packet" );
       }
@@ -351,6 +361,7 @@ static iONode __translate( obj inst, const iONode node ) {
     int   addr = wFunCmd.getaddr( node );
     int   info = 0;
     Boolean sw = wLoc.issw( node );
+    int fgroup = wFunCmd.getgroup(node);
     int f[28];
 
     f[ 0] = wFunCmd.isf0(node);
@@ -398,10 +409,10 @@ static iONode __translate( obj inst, const iONode node ) {
     }
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
-      comp_nmra_fb7( addr, wFunCmd.getgroup(node), f);
+      comp_nmra_fb7( addr, fgroup, f);
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) ) {
-      comp_nmra_fb14( addr, wFunCmd.getgroup(node), f);
+      comp_nmra_fb14( addr, fgroup, f);
     }
     else {
       /* default */

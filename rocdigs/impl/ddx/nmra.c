@@ -358,7 +358,7 @@ void calc_function_group(char* byte, int group, int* f) {
      if (f[12]==1) byte[4]='1';
      byte[8]=0;
    }
-   else if( group > 2 ) {
+   else if( group == 3 || group == 4 ) {
      byte[0]='1';
      byte[1]='1';
      byte[2]='0';
@@ -366,16 +366,36 @@ void calc_function_group(char* byte, int group, int* f) {
      byte[4]='1';
      byte[5]='1';
      byte[6]='1';
-     byte[7]= group == 4 ? '1':'0';
+     byte[7]='0';
      byte[8]='0';
-     if (f[1]==1) byte[ 9]='1';
-     if (f[2]==1) byte[10]='1';
-     if (f[3]==1) byte[11]='1';
-     if (f[4]==1) byte[12]='1';
-     if (f[5]==1) byte[13]='1';
-     if (f[6]==1) byte[14]='1';
-     if (f[7]==1) byte[15]='1';
-     if (f[8]==1) byte[16]='1';
+     if (f[13]==1) byte[ 9]='1';
+     if (f[14]==1) byte[10]='1';
+     if (f[15]==1) byte[11]='1';
+     if (f[16]==1) byte[12]='1';
+     if (f[17]==1) byte[13]='1';
+     if (f[18]==1) byte[14]='1';
+     if (f[19]==1) byte[15]='1';
+     if (f[20]==1) byte[16]='1';
+     byte[17]=0;
+   }
+   else if( group == 5 || group == 6 ) {
+     byte[0]='1';
+     byte[1]='1';
+     byte[2]='0';
+     byte[3]='1';
+     byte[4]='1';
+     byte[5]='1';
+     byte[6]='1';
+     byte[7]='1';
+     byte[8]='0';
+     if (f[21]==1) byte[ 9]='1';
+     if (f[22]==1) byte[10]='1';
+     if (f[23]==1) byte[11]='1';
+     if (f[24]==1) byte[12]='1';
+     if (f[25]==1) byte[13]='1';
+     if (f[26]==1) byte[14]='1';
+     if (f[27]==1) byte[15]='1';
+     if (f[28]==1) byte[16]='1';
      byte[17]=0;
    }
 }
