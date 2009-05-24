@@ -623,7 +623,8 @@
       <var name="mapmux" vt="iOMutex"/>
       <var name="locoNameToEcosOidMap" vt="iOMap" remark="Loco Name to OID Mapper"/>
       <var name="ecosOidToLocoNameMap" vt="iOMap" remark="OID to Loco Name Mapper"/>
-      <var name="dccSwitchObjMap" vt="iOMap" remark="DCC Switch OID Mapper"/>
+      <var name="dccSwitchAddrToOidMap" vt="iOMap" remark="DCC Switch Addr to OID Mapper"/>
+      <var name="dccOidToSwitchAddrMap" vt="iOMap" remark="DCC OID to Switch Addr Mapper"/>
       <var name="dccSwitchStates[2048]" vt="unsigned char" remark="DCC Switch state control"/>
     </data>
   </object>

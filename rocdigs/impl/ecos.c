@@ -567,8 +567,42 @@ static void __releaseViews( iOECoS inst ) {
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 */
 
+  /* release selective switch views */
+  MutexOp.wait( data->mapmux );
+  {
+    const char *oid = ( const char *)MapOp.first( data->dccSwitchAddrToOidMap);
+    while( oid != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                   "switch list drop oid [%s] from map @ [%d]", oid, data->dccSwitchAddrToOidMap);
+        
+      StrOp.fmtb( ecosCmd, "release(%d, view)\n", oid);
+      __transact( inst, ecosCmd, StrOp.len( ecosCmd));
+      oid = ( const char *)MapOp.next( data->dccSwitchAddrToOidMap);
+    }
+  }
+  MutexOp.post( data->mapmux );
+
   /* switch manager */
   StrOp.fmtb( ecosCmd, "release(%d, view, viewswitch)\n", OID_SWMANAGER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+    
+  /* release selective loco views */
+  MutexOp.wait( data->mapmux );
+  {
+    const char *oid = ( const char *)MapOp.first( data->locoNameToEcosOidMap);
+    while( oid != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                   "loco list drop oid [%s] from map @ [%d]", oid, data->locoNameToEcosOidMap);
+        
+      StrOp.fmtb( ecosCmd, "release(%d, view)\n", oid);
+      __transact( inst, ecosCmd, StrOp.len( ecosCmd));
+      oid = ( const char *)MapOp.next( data->locoNameToEcosOidMap);
+    }
+  }
+  MutexOp.post( data->mapmux );
+
+  /* release loco manager view */
+  StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_LCMANAGER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
     
     /* ECoS */
@@ -1107,9 +1141,13 @@ static void __processLocList( iOECoS inst, iONode node ) {
         MutexOp.wait( data->mapmux );
         oldVal = (char*)MapOp.get( data->locoNameToEcosOidMap, id );
         if ( oldVal != NULL ) {
+          char *oldVal2 = (char*)MapOp.get( data->ecosOidToLocoNameMap, oldVal);
           MapOp.remove( data->locoNameToEcosOidMap, id);
-          MapOp.remove( data->ecosOidToLocoNameMap, oldVal);
           StrOp.free( oldVal);
+          if ( oldVal2 != NULL ) {
+              MapOp.remove( data->ecosOidToLocoNameMap, oldVal);
+              StrOp.free( oldVal2);
+          }
         }
         MapOp.put( data->locoNameToEcosOidMap, id, ( obj)StrOp.dup( oid));
         MapOp.put( data->ecosOidToLocoNameMap, oid, ( obj)StrOp.dup( id));
@@ -1155,9 +1193,13 @@ static void __processLocCreate( iOECoS inst, iONode node ) {
     MutexOp.wait( data->mapmux );
     oldVal = (char*)MapOp.get( data->locoNameToEcosOidMap, id );
     if ( oldVal != NULL ) {
+      char *oldVal2 = (char*)MapOp.get( data->ecosOidToLocoNameMap, oldVal);
       MapOp.remove( data->locoNameToEcosOidMap, id);
-      MapOp.remove( data->ecosOidToLocoNameMap, oldVal);
       StrOp.free( oldVal);
+      if ( oldVal2 != NULL ) {
+          MapOp.remove( data->ecosOidToLocoNameMap, oldVal);
+          StrOp.free( oldVal2);
+      }
     }
     MapOp.put( data->locoNameToEcosOidMap, id, ( obj)StrOp.dup( oid));
     MapOp.put( data->ecosOidToLocoNameMap, oid, ( obj)StrOp.dup( id));
@@ -1211,9 +1253,10 @@ static void __processSwitchList( iOECoS inst, iONode node ) {
           */
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-                      "Saving switch oid [%s] addr [%s,%s] in map @ [%d]", oid, addr, protocol, data->dccSwitchObjMap );
+                      "Saving switch oid [%s] addr [%s,%s] in map @ [%d]", oid, addr, protocol, data->dccOidToSwitchAddrMap );
         MutexOp.wait( data->mapmux );
-        MapOp.put( data->dccSwitchObjMap, oid, ( obj )StrOp.dup( addr ));
+        MapOp.put( data->dccSwitchAddrToOidMap, addr, ( obj)StrOp.dup( oid));
+        MapOp.put( data->dccOidToSwitchAddrMap, oid, ( obj)StrOp.dup( addr));
         MutexOp.post( data->mapmux );
 
         /* view switch */
@@ -1530,7 +1573,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
   for( idx = 0; idx < cnt; idx++ ) {
 
     iONode      child         = NodeOp.getChild( node, idx );
-    const char* switchStr     = ( const char *)MapOp.get( data->dccSwitchObjMap, NodeOp.getName( child ));
+    const char* switchStr     = ( const char *)MapOp.get( data->dccOidToSwitchAddrMap, NodeOp.getName( child ));
     int         switchAddress = 0;
     const char* positionStr   = NodeOp.getStr( child, "position", NULL );
     int         positionOk    = 0;
@@ -1826,10 +1869,11 @@ static struct OECoS* _inst( const iONode ini, const iOTrace trace ) {
 
     /* Initialize data->xxx members... */
 
-  data->writemux             = MutexOp.inst( NULL, True );
-  data->locoNameToEcosOidMap = MapOp.inst();
-  data->ecosOidToLocoNameMap = MapOp.inst();
-  data->dccSwitchObjMap      = MapOp.inst();
+  data->writemux              = MutexOp.inst( NULL, True );
+  data->locoNameToEcosOidMap  = MapOp.inst();
+  data->ecosOidToLocoNameMap  = MapOp.inst();
+  data->dccSwitchAddrToOidMap = MapOp.inst();
+  data->dccOidToSwitchAddrMap = MapOp.inst();
 
   /* Start the reader thread */
 
