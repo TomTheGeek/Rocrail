@@ -1213,8 +1213,7 @@ static void _dispatch( iOLoc inst ) {
   iOLocData data = Data(inst);
   iOControl control = AppOp.getControl();
 
-  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  wLoc.setaddr( cmd, wLoc.getaddr( data->props ) );
+  iONode cmd = (iONode)NodeOp.base.clone(data->props);
   wLoc.setcmd( cmd, wLoc.dispatch );
   ControlOp.cmd( control, cmd, NULL );
 

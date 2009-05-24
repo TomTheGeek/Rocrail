@@ -51,6 +51,14 @@ private:
   bool m_bF2[4];
   bool m_bF3[4];
   bool m_bF4[4];
+  bool m_bF5[4];
+  bool m_bF6[4];
+  bool m_bF7[4];
+  bool m_bF8[4];
+  bool m_bF9[4];
+  bool m_bF10[4];
+  bool m_bF11[4];
+  bool m_bF12[4];
   iONode m_Ini;
   void initJS();
   void OnJsEvent(wxCommandEvent& event);
