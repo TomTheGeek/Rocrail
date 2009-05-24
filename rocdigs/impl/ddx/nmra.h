@@ -268,20 +268,16 @@ int translateBitstream2Packetstream(char *Bitstream, char *Packetstream);
 int comp_nmra_baseline(int address, int direction, int speed);
 
 /* 4-func,7-bit-addr,28 sp-st.*/
-int comp_nmra_f4b7s28(int address, int direction, int speed, int func,
-                      int f1, int f2, int f3, int f4);
+int comp_nmra_f4b7s28(int address, int direction, int speed, int* f);
 
 /* 4-func,7-bit-addr,128 sp-st*/
-int comp_nmra_f4b7s128(int address, int direction, int speed, int func,
-                       int f1, int f2, int f3, int f4);
+int comp_nmra_f4b7s128(int address, int direction, int speed, int* f);
 
 /* 4-func,14-bit-addr,28 sp-st*/
-int comp_nmra_f4b14s28(int address, int direction, int speed, int func,
-                       int f1, int f2, int f3, int f4);
+int comp_nmra_f4b14s28(int address, int direction, int speed, int* f);
 
 /* 4-func,14-bit-addr,128 sp-st*/
-int comp_nmra_f4b14s128(int address, int direction, int speed, int func,
-                       int f1, int f2, int f3, int f4);
+int comp_nmra_f4b14s128(int address, int direction, int speed, int* f);
 
 /* NMRA accessory decoder     */
 int comp_nmra_accessory(int addr, int port, int gate, int activate);

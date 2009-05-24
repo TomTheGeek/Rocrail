@@ -312,32 +312,72 @@ void calc_28spst_speed_byte(char *byte, int direction, int speed) {
  * controlled by bit 0 and function F12 being controlled by bit 3.  A value of "1"
  * shall indicate that the function is "on" while a value of "0" shall indicate that the
  * function is "off".
+ *
+ * Feature Expansion Instruction (110)
+ * The format of two byte instructions in this group is:   110CCCCC 0 DDDDDDDD.
+ * The format of three byte instructions in this group is: 110CCCC 0 DDDDDDDD 0 DDDDDDDD
+ *
+ * CCCCC = 11110:  F13-F20 Function Control
+ * The least significant bit (Bit 0) controlling F13, and the most significant bit (bit 7) controlling F20.
+ *
+ * CCCCC = 11111:  F21-F28 Function Control
+ * The least significant bit (Bit 0) controlling F21, and the most significant bit (bit 7) controlling F28.
  */
-void calc_function_group(char* byte, int group, int f[5]) {
-   /* calculating function byte: group 0 = f0-f4, 1 = f5-f8, 2 = f9-12 */
+void calc_function_group(char* byte, int group, int* f) {
+   /* calculating function byte:
+    * group 0 = f0-f4, 1 = f5-f8, 2 = f9-12, 3 = f13-20, 4 = f17-28
+    */
 
-   memset(byte, '0', 9);
-   byte[0]='1';
-   byte[1]='0';
-   if( group > 0 )
-     byte[2]='1';
-   else
-     byte[2]='0';
+   memset(byte, '0', 18);
 
    if( group == 0 ) {
+     byte[0]='1';
+     byte[1]='0';
+     byte[2]='0';
      if (f[0]==1) byte[3]='1'; /* F0*/
    }
    else if( group == 1 ) {
+     byte[0]='1';
+     byte[1]='0';
+     byte[2]='1';
      byte[3]='1'; /* F5-F8*/
+     if (f[ 5]==1) byte[7]='1';
+     if (f[ 6]==1) byte[6]='1';
+     if (f[ 7]==1) byte[5]='1';
+     if (f[ 8]==1) byte[4]='1';
+     byte[8]=0;
    }
    else if( group == 2 ) {
+     byte[0]='1';
+     byte[1]='0';
+     byte[2]='1';
      byte[3]='0'; /* F9-F12*/
+     if (f[ 9]==1) byte[7]='1';
+     if (f[10]==1) byte[6]='1';
+     if (f[11]==1) byte[5]='1';
+     if (f[12]==1) byte[4]='1';
+     byte[8]=0;
    }
-   if (f[1]==1) byte[7]='1';
-   if (f[2]==1) byte[6]='1';
-   if (f[3]==1) byte[5]='1';
-   if (f[4]==1) byte[4]='1';
-   byte[8]=0;
+   else if( group > 2 ) {
+     byte[0]='1';
+     byte[1]='1';
+     byte[2]='0';
+     byte[3]='1';
+     byte[4]='1';
+     byte[5]='1';
+     byte[6]='1';
+     byte[7]= group == 4 ? '1':'0';
+     byte[8]='0';
+     if (f[1]==1) byte[ 9]='1';
+     if (f[2]==1) byte[10]='1';
+     if (f[3]==1) byte[11]='1';
+     if (f[4]==1) byte[12]='1';
+     if (f[5]==1) byte[13]='1';
+     if (f[6]==1) byte[14]='1';
+     if (f[7]==1) byte[15]='1';
+     if (f[8]==1) byte[16]='1';
+     byte[17]=0;
+   }
 }
 
 void calc_128spst_adv_op_bytes(char *byte1, char *byte2,
@@ -527,7 +567,7 @@ int comp_nmra_baseline(int address, int direction, int speed) {
 
 
 /* function-decoder with 7-bit address */
-int comp_nmra_fb7(int address, int group, int func, int f1, int f2, int f3, int f4) {
+int comp_nmra_fb7(int address, int group, int* f) {
 
    char addrbyte[9];
    char funcbyte[9];
@@ -536,12 +576,9 @@ int comp_nmra_fb7(int address, int group, int func, int f1, int f2, int f3, int 
    char packetstream[PKTSIZE];
 
    int adr = 0;
-   int f[5];
    int i,j;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
-
    /* no special error handling, it's job of the clients */
    if (address<1 || address>99 )
       return 1;
@@ -573,7 +610,7 @@ int comp_nmra_fb7(int address, int group, int func, int f1, int f2, int f3, int 
    return 1;
 }
 /* function-decoder with 14-bit address */
-int comp_nmra_fb14(int address, int group, int func, int f1, int f2, int f3, int f4) {
+int comp_nmra_fb14(int address, int group, int* f) {
 
    char addrbyte1[9];
    char addrbyte2[9];
@@ -584,11 +621,9 @@ int comp_nmra_fb14(int address, int group, int func, int f1, int f2, int f3, int
    char packetstream[PKTSIZE];
 
    int adr       = 0;
-   int f[5];
    int i,j;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
 
    /* no special error handling, it's job of the clients */
    if (address<1 || address>10239)
@@ -626,8 +661,7 @@ int comp_nmra_fb14(int address, int group, int func, int f1, int f2, int f3, int
 
 
 
-int comp_nmra_f4b7s28(int address, int direction, int speed, int func,
-                           int f1, int f2, int f3, int f4) {
+int comp_nmra_f4b7s28(int address, int direction, int speed, int *f) {
      /* 4-function-decoder with 7-bit address and 28 speed steps */
      /* N1 001 1 18 1 0 0 0 0                                    */
 
@@ -641,11 +675,9 @@ int comp_nmra_f4b7s28(int address, int direction, int speed, int func,
    char packetstream2[PKTSIZE];
 
    int adr       = 0;
-   int f[5];
    int i,j,jj;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
 
    /* no special error handling, it's job of the clients */
    if (address<1 || address>99 || direction<0 || direction>1 ||
@@ -698,8 +730,7 @@ int comp_nmra_f4b7s28(int address, int direction, int speed, int func,
    return 1;
 }
 
-int comp_nmra_f4b7s128(int address, int direction, int speed, int func,
-                            int f1, int f2, int f3, int f4) {
+int comp_nmra_f4b7s128(int address, int direction, int speed, int* f) {
      /* 4-function-decoder with 7-bit address and 128 speed steps */
      /* N2 001 1 057 1 0 0 0 0                                    */
 
@@ -715,11 +746,9 @@ int comp_nmra_f4b7s128(int address, int direction, int speed, int func,
    char packetstream2[PKTSIZE];
 
    int adr       = 0;
-   int f[5];
    int i,j,jj;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
 
    /* no special error handling, it's job of the clients */
    if (address<1 || address>99 || direction<0 || direction>1 ||
@@ -775,8 +804,7 @@ int comp_nmra_f4b7s128(int address, int direction, int speed, int func,
    return 1;
 }
 
-int comp_nmra_f4b14s28(int address, int direction, int speed, int func,
-                       int f1, int f2, int f3, int f4) {
+int comp_nmra_f4b14s28(int address, int direction, int speed, int* f) {
      /* 4-function-decoder with 14-bit address and 28 speed steps */
      /* N3 0001 1 18 1 0 0 0 0                                    */
 
@@ -792,11 +820,9 @@ int comp_nmra_f4b14s28(int address, int direction, int speed, int func,
    char packetstream2[PKTSIZE];
 
    int adr       = 0;
-   int f[5];
    int i,j,jj;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
 
    /* no special error handling, it's job of the clients */
    if (address<1 || address>10239 || direction<0 || direction>1 ||
@@ -856,8 +882,7 @@ int comp_nmra_f4b14s28(int address, int direction, int speed, int func,
    return 1;
 }
 
-int comp_nmra_f4b14s128(int address, int direction, int speed, int func,
-                        int f1, int f2, int f3, int f4) {
+int comp_nmra_f4b14s128(int address, int direction, int speed, int* f) {
      /* 4-function-decoder with 14-bit address and 128 speed steps */
      /* N4 001 1 057 1 0 0 0 0                                    */
 
@@ -874,11 +899,9 @@ int comp_nmra_f4b14s128(int address, int direction, int speed, int func,
    char packetstream2[PKTSIZE];
 
    int adr       = 0;
-   int f[5];
    int i,j,jj;
 
    adr=address;
-   f[0]=func; f[1]=f1; f[2]=f2; f[3]=f3; f[4]=f4;
 
    /* no special error handling, it's job of the clients */
    if (address<1 || address>10239 || direction<0 || direction>1 ||

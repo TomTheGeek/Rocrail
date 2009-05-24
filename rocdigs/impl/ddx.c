@@ -350,28 +350,45 @@ static iONode __translate( obj inst, const iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
     int   info = 0;
-    Boolean fn = wFunCmd.isf0( node );
     Boolean sw = wLoc.issw( node );
+    int f[28];
 
-    Boolean fn1  = wFunCmd.isf1(node);
-    Boolean fn2  = wFunCmd.isf2(node);
-    Boolean fn3  = wFunCmd.isf3(node);
-    Boolean fn4  = wFunCmd.isf4(node);
-    Boolean fn5  = wFunCmd.isf5(node);
-    Boolean fn6  = wFunCmd.isf6(node);
-    Boolean fn7  = wFunCmd.isf7(node);
-    Boolean fn8  = wFunCmd.isf8(node);
-    Boolean fn9  = wFunCmd.isf9(node);
-    Boolean fn10 = wFunCmd.isf10(node);
-    Boolean fn11 = wFunCmd.isf11(node);
-    Boolean fn12 = wFunCmd.isf12(node);
+    f[ 0] = wFunCmd.isf0(node);
+    f[ 1] = wFunCmd.isf1(node);
+    f[ 2] = wFunCmd.isf2(node);
+    f[ 3] = wFunCmd.isf3(node);
+    f[ 4] = wFunCmd.isf4(node);
+    f[ 5] = wFunCmd.isf5(node);
+    f[ 6] = wFunCmd.isf6(node);
+    f[ 7] = wFunCmd.isf7(node);
+    f[ 8] = wFunCmd.isf8(node);
+    f[ 9] = wFunCmd.isf9(node);
+    f[10] = wFunCmd.isf10(node);
+    f[11] = wFunCmd.isf11(node);
+    f[12] = wFunCmd.isf12(node);
+    f[13] = wFunCmd.isf13(node);
+    f[14] = wFunCmd.isf14(node);
+    f[15] = wFunCmd.isf15(node);
+    f[16] = wFunCmd.isf16(node);
+    f[17] = wFunCmd.isf17(node);
+    f[18] = wFunCmd.isf18(node);
+    f[19] = wFunCmd.isf19(node);
+    f[20] = wFunCmd.isf20(node);
+    f[21] = wFunCmd.isf21(node);
+    f[22] = wFunCmd.isf22(node);
+    f[23] = wFunCmd.isf23(node);
+    f[24] = wFunCmd.isf24(node);
+    f[25] = wFunCmd.isf25(node);
+    f[26] = wFunCmd.isf26(node);
+    f[27] = wFunCmd.isf27(node);
+    f[28] = wFunCmd.isf28(node);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "lc=%d lights=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, fn?"on":"off",
-        fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off",
-        fn5?"on":"off", fn6?"on":"off", fn7?"on":"off", fn8?"on":"off",
-        fn9?"on":"off", fn10?"on":"off", fn11?"on":"off", fn12?"on":"off" );
+        addr, f[0]?"on":"off",
+        f[1]?"on":"off", f[2]?"on":"off", f[3]?"on":"off", f[4]?"on":"off",
+        f[5]?"on":"off", f[6]?"on":"off", f[7]?"on":"off", f[8]?"on":"off",
+        f[9]?"on":"off", f[10]?"on":"off", f[11]?"on":"off", f[12]?"on":"off" );
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
       if( data->dcc )
@@ -381,14 +398,10 @@ static iONode __translate( obj inst, const iONode node ) {
     }
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
-      comp_nmra_fb7( addr, 0, fn, fn1, fn2, fn3, fn4);
-      comp_nmra_fb7( addr, 1, fn, fn5, fn6, fn7, fn8);
-      comp_nmra_fb7( addr, 2, fn, fn9, fn10, fn11, fn12);
+      comp_nmra_fb7( addr, wFunCmd.getgroup(node), f);
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) ) {
-      comp_nmra_fb14( addr, 0, fn, fn1, fn2, fn3, fn4);
-      comp_nmra_fb14( addr, 1, fn, fn5, fn6, fn7, fn8);
-      comp_nmra_fb14( addr, 2, fn, fn9, fn10, fn11, fn12);
+      comp_nmra_fb14( addr, wFunCmd.getgroup(node), f);
     }
     else {
       /* default */
