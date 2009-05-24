@@ -695,6 +695,8 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     StrOp.fmtb( ecosCmd, "set(%d, switch[%s%d%c])\n",
                 OID_SWMANAGER, ( protocol[ 0 ] == 'M' ? "MOT" : "DCC" ), address, direction );
 
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS switch command set(%d, switch[%s%d%c])",
+                 OID_SWMANAGER, ( protocol[ 0 ] == 'M' ? "MOT" : "DCC" ), address, direction);
     /*
 
       Signal command.
