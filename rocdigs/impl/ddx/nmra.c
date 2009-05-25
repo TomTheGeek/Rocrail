@@ -590,7 +590,7 @@ int comp_nmra_baseline(int address, int direction, int speed) {
 int comp_nmra_fb7(int address, int group, int* f) {
 
    char addrbyte[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char bitstream[BUFFERSIZE];
    char packetstream[PKTSIZE];
@@ -634,7 +634,7 @@ int comp_nmra_fb14(int address, int group, int* f) {
 
    char addrbyte1[9];
    char addrbyte2[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char dummy[9];
    char bitstream[BUFFERSIZE];
@@ -687,7 +687,7 @@ int comp_nmra_f4b7s28(int address, int direction, int speed, int *f) {
 
    char addrbyte[9];
    char spdrbyte[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char bitstream[BUFFERSIZE];
    char bitstream2[BUFFERSIZE];
@@ -757,7 +757,7 @@ int comp_nmra_f4b7s128(int address, int direction, int speed, int* f) {
    char addrbyte[9];
    char spdrbyte1[9];
    char spdrbyte2[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char dummy[9];
    char bitstream[BUFFERSIZE];
@@ -831,7 +831,7 @@ int comp_nmra_f4b14s28(int address, int direction, int speed, int* f) {
    char addrbyte1[9];
    char addrbyte2[9];
    char spdrbyte[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char dummy[9];
    char bitstream[BUFFERSIZE];
@@ -910,7 +910,7 @@ int comp_nmra_f4b14s128(int address, int direction, int speed, int* f) {
    char addrbyte2[9];
    char spdrbyte1[9];
    char spdrbyte2[9];
-   char funcbyte[9];
+   char funcbyte[18];
    char errdbyte[9];
    char dummy[9];
    char bitstream[BUFFERSIZE];
