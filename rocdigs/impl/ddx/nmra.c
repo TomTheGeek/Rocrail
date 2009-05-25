@@ -325,7 +325,7 @@ void calc_28spst_speed_byte(char *byte, int direction, int speed) {
  */
 void calc_function_group(char* byte, int group, int* f) {
    /* calculating function byte:
-    * group 0 = f0-f4, 1 = f5-f8, 2 = f9-12, 3 = f13-20, 4 = f17-28
+    * group 0 = f0-f4, 1 = f5-f8, 2 = f9-12, 3 = f13-16, 4 = f17-20, 5 = f21-24, 6 = f25-28
     */
 
    memset(byte, '0', 18);
