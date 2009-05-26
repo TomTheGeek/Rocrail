@@ -633,7 +633,7 @@ int comp_nmra_fb7(int address, int group, int* f) {
    strcat(bitstream, "0");
    if(funcbyte2[0] != 0 ) {
      TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"extended function group %d", group);
-     xor_two_bytes(errdbyte, funcbyte, funcbyte2);
+     xor_two_bytes(errdbyte, errdbyte, funcbyte2);
      strcat(bitstream, funcbyte2);
      strcat(bitstream, "0");
    }
@@ -689,7 +689,7 @@ int comp_nmra_fb14(int address, int group, int* f) {
    strcat(bitstream, funcbyte);
    strcat(bitstream, "0");
    if(funcbyte2[0] != 0 ) {
-     xor_two_bytes(errdbyte, funcbyte, funcbyte2);
+     xor_two_bytes(errdbyte, errdbyte, funcbyte2);
      strcat(bitstream, funcbyte2);
      strcat(bitstream, "0");
    }

@@ -394,12 +394,17 @@ static iONode __translate( obj inst, const iONode node ) {
     f[27] = wFunCmd.isf27(node);
     f[28] = wFunCmd.isf28(node);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "lc=%d lights=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, f[0]?"on":"off",
-        f[1]?"on":"off", f[2]?"on":"off", f[3]?"on":"off", f[4]?"on":"off",
-        f[5]?"on":"off", f[6]?"on":"off", f[7]?"on":"off", f[8]?"on":"off",
-        f[9]?"on":"off", f[10]?"on":"off", f[11]?"on":"off", f[12]?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+        addr,
+        f[0]  ? "on":"off",
+        f[1]  ? "01":"--", f[2]  ? "02":"--", f[3]  ? "03":"--", f[4]  ? "04":"--",
+        f[5]  ? "05":"--", f[6]  ? "06":"--", f[7]  ? "07":"--", f[8]  ? "08":"--",
+        f[9]  ? "09":"--", f[10] ? "10":"--", f[11] ? "11":"--", f[12] ? "12":"--",
+        f[13] ? "13":"--", f[14] ? "14":"--", f[15] ? "15":"--", f[16] ? "16":"--",
+        f[17] ? "17":"--", f[18] ? "18":"--", f[19] ? "19":"--", f[20] ? "20":"--",
+        f[21] ? "21":"--", f[22] ? "22":"--", f[23] ? "23":"--", f[24] ? "24":"--",
+        f[25] ? "25":"--", f[26] ? "26":"--", f[27] ? "27":"--", f[28] ? "28":"--"
+    );
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
       if( data->dcc )
