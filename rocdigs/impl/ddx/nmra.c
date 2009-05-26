@@ -323,7 +323,7 @@ void calc_28spst_speed_byte(char *byte, int direction, int speed) {
  * CCCCC = 11111:  F21-F28 Function Control
  * The least significant bit (Bit 0) controlling F21, and the most significant bit (bit 7) controlling F28.
  */
-void calc_function_group(char* byte, int group, int* f) {
+void calc_function_group(char* byte1, char* byte2, int group, int* f) {
    /* calculating function byte:
     * group 0 = f0-f4, 1 = f5-f8, 2 = f9-12, 3 = f13-16, 4 = f17-20, 5 = f21-24, 6 = f25-28
     */
@@ -332,81 +332,87 @@ void calc_function_group(char* byte, int group, int* f) {
     group--; /* function group from Rocview starts with 1 */
   TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"function group %d", group);
 
-   memset(byte, 0, 18);
+  if( byte2 == NULL && group > 2 ) {
+    TraceOp.trc( "nmra", TRCLEVEL_WARNING, __LINE__, 9999,"no byte reserved for function group %d", group);
+    return;
+  }
+  memset(byte1, 0, 9);
+  memset(byte2, 0, 9);
 
    if( group == 0 ) {
-     byte[0] ='1';
-     byte[1] ='0';
-     byte[2] ='0';
-     byte[3] = f[0]==1 ? '1':'0'; /* F0*/
-     byte[4] = f[4]==1 ? '1':'0';
-     byte[5] = f[3]==1 ? '1':'0';
-     byte[6] = f[2]==1 ? '1':'0';
-     byte[7] = f[1]==1 ? '1':'0';
-     byte[8] = 0;
+     byte1[0] ='1';
+     byte1[1] ='0';
+     byte1[2] ='0';
+     byte1[3] = f[0]==1 ? '1':'0'; /* F0*/
+     byte1[4] = f[4]==1 ? '1':'0';
+     byte1[5] = f[3]==1 ? '1':'0';
+     byte1[6] = f[2]==1 ? '1':'0';
+     byte1[7] = f[1]==1 ? '1':'0';
+     byte1[8] = 0;
    }
    else if( group == 1 ) {
-     byte[0] = '1';
-     byte[1] = '0';
-     byte[2] = '1';
-     byte[3] = '1'; /* F5-F8*/
-     byte[4] = f[8]==1 ? '1':'0';
-     byte[5] = f[7]==1 ? '1':'0';
-     byte[6] = f[6]==1 ? '1':'0';
-     byte[7] = f[5]==1 ? '1':'0';
-     byte[8] = 0;
+     byte1[0] = '1';
+     byte1[1] = '0';
+     byte1[2] = '1';
+     byte1[3] = '1'; /* F5-F8*/
+     byte1[4] = f[8]==1 ? '1':'0';
+     byte1[5] = f[7]==1 ? '1':'0';
+     byte1[6] = f[6]==1 ? '1':'0';
+     byte1[7] = f[5]==1 ? '1':'0';
+     byte1[8] = 0;
    }
    else if( group == 2 ) {
-     byte[0] = '1';
-     byte[1] = '0';
-     byte[2] = '1';
-     byte[3] = '0'; /* F9-F12*/
-     byte[4] = f[ 9]==1 ? '1':'0';
-     byte[5] = f[10]==1 ? '1':'0';
-     byte[6] = f[11]==1 ? '1':'0';
-     byte[7] = f[12]==1 ? '1':'0';
-     byte[8] = 0;
+     byte1[0] = '1';
+     byte1[1] = '0';
+     byte1[2] = '1';
+     byte1[3] = '0'; /* F9-F12*/
+     byte1[4] = f[ 9]==1 ? '1':'0';
+     byte1[5] = f[10]==1 ? '1':'0';
+     byte1[6] = f[11]==1 ? '1':'0';
+     byte1[7] = f[12]==1 ? '1':'0';
+     byte1[8] = 0;
    }
    else if( group == 3 || group == 4 ) {
-     byte[0] = '1';
-     byte[1] = '1';
-     byte[2] = '0';
-     byte[3] = '1';
-     byte[4] = '1';
-     byte[5] = '1';
-     byte[6] = '1';
-     byte[7] = '0';
-     byte[8] = '0';
-     byte[ 9] = f[13]==1 ? '1':'0';
-     byte[10] = f[14]==1 ? '1':'0';
-     byte[11] = f[15]==1 ? '1':'0';
-     byte[12] = f[16]==1 ? '1':'0';
-     byte[13] = f[17]==1 ? '1':'0';
-     byte[14] = f[18]==1 ? '1':'0';
-     byte[15] = f[19]==1 ? '1':'0';
-     byte[16] = f[20]==1 ? '1':'0';
-     byte[17]=0;
+     byte1[0] = '1';
+     byte1[1] = '1';
+     byte1[2] = '0';
+     byte1[3] = '1';
+     byte1[4] = '1';
+     byte1[5] = '1';
+     byte1[6] = '1';
+     byte1[7] = '0';
+     byte1[8] = 0;
+     byte2[0] = f[20]==1 ? '1':'0';
+     byte2[1] = f[19]==1 ? '1':'0';
+     byte2[2] = f[18]==1 ? '1':'0';
+     byte2[3] = f[17]==1 ? '1':'0';
+     byte2[4] = f[16]==1 ? '1':'0';
+     byte2[5] = f[15]==1 ? '1':'0';
+     byte2[6] = f[14]==1 ? '1':'0';
+     byte2[7] = f[13]==1 ? '1':'0';
+     byte2[8] = 0;
    }
    else if( group == 5 || group == 6 ) {
-     byte[0] = '1';
-     byte[1] = '1';
-     byte[2] = '0';
-     byte[3] = '1';
-     byte[4] = '1';
-     byte[5] = '1';
-     byte[6] = '1';
-     byte[7] = '1';
-     byte[8] = '0';
-     byte[ 9] = f[21]==1 ? '1':'0';
-     byte[10] = f[22]==1 ? '1':'0';
-     byte[11] = f[23]==1 ? '1':'0';
-     byte[12] = f[24]==1 ? '1':'0';
-     byte[13] = f[25]==1 ? '1':'0';
-     byte[14] = f[26]==1 ? '1':'0';
-     byte[15] = f[27]==1 ? '1':'0';
-     byte[16] = f[28]==1 ? '1':'0';
-     byte[17] = 0;
+     byte1[0] = '1';
+     byte1[1] = '1';
+     byte1[2] = '0';
+     byte1[3] = '1';
+     byte1[4] = '1';
+     byte1[5] = '1';
+     byte1[6] = '1';
+     byte1[7] = '1';
+     byte1[8] = 0;
+     byte2[0] = f[28]==1 ? '1':'0';
+     byte2[1] = f[27]==1 ? '1':'0';
+     byte2[2] = f[26]==1 ? '1':'0';
+     byte2[3] = f[25]==1 ? '1':'0';
+     byte2[4] = f[24]==1 ? '1':'0';
+     byte2[5] = f[23]==1 ? '1':'0';
+     byte2[6] = f[22]==1 ? '1':'0';
+     byte2[7] = f[21]==1 ? '1':'0';
+     byte2[8] = 0;
    }
+   TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"function datagram %s %s", byte1, byte2!=NULL?byte2:"");
 }
 
 void calc_128spst_adv_op_bytes(char *byte1, char *byte2,
@@ -598,9 +604,10 @@ int comp_nmra_baseline(int address, int direction, int speed) {
 /* function-decoder with 7-bit address */
 int comp_nmra_fb7(int address, int group, int* f) {
 
-   char addrbyte[9];
-   char funcbyte[18];
-   char errdbyte[9];
+   char addrbyte[9] = {0};
+   char funcbyte[9] = {0};
+   char funcbyte2[9] = {0};
+   char errdbyte[9] = {0};
    char bitstream[BUFFERSIZE];
    char packetstream[PKTSIZE];
 
@@ -613,9 +620,10 @@ int comp_nmra_fb7(int address, int group, int* f) {
       return 1;
 
    calc_7bit_address_byte(addrbyte, address);
-   calc_function_group(funcbyte, group, f);
+   calc_function_group(funcbyte, funcbyte2, group, f);
 
    xor_two_bytes(errdbyte, addrbyte, funcbyte);
+
 
    /* putting all together in a 'bitstream' (char array) (functions) */
    memset(bitstream, 0, 100);
@@ -625,6 +633,11 @@ int comp_nmra_fb7(int address, int group, int* f) {
    strcat(bitstream, "0");
    strcat(bitstream, funcbyte);
    strcat(bitstream, "0");
+   if(funcbyte2[0] != 0 ) {
+     xor_two_bytes(errdbyte, funcbyte, funcbyte2);
+     strcat(bitstream, funcbyte2);
+     strcat(bitstream, "0");
+   }
    strcat(bitstream, errdbyte);
    strcat(bitstream, "1");
 
@@ -641,11 +654,12 @@ int comp_nmra_fb7(int address, int group, int* f) {
 /* function-decoder with 14-bit address */
 int comp_nmra_fb14(int address, int group, int* f) {
 
-   char addrbyte1[9];
-   char addrbyte2[9];
-   char funcbyte[18];
-   char errdbyte[9];
-   char dummy[9];
+   char addrbyte1[9] = {0};
+   char addrbyte2[9] = {0};
+   char funcbyte[9] = {0};
+   char funcbyte2[9] = {0};
+   char errdbyte[9] = {0};
+   char dummy[9] = {0};
    char bitstream[BUFFERSIZE];
    char packetstream[PKTSIZE];
 
@@ -659,10 +673,11 @@ int comp_nmra_fb14(int address, int group, int* f) {
       return 1;
 
    calc_14bit_address_byte(addrbyte1, addrbyte2, address);
-   calc_function_group(funcbyte, group, f);
+   calc_function_group(funcbyte, funcbyte2, group, f);
 
    xor_two_bytes(dummy, addrbyte1, addrbyte2);
    xor_two_bytes(errdbyte, dummy, funcbyte);
+
 
    /* putting all together in a 'bitstream' (char array) (functions) */
    memset(bitstream, 0, 100);
@@ -674,6 +689,11 @@ int comp_nmra_fb14(int address, int group, int* f) {
    strcat(bitstream, "0");
    strcat(bitstream, funcbyte);
    strcat(bitstream, "0");
+   if(funcbyte2[0] != 0 ) {
+     xor_two_bytes(errdbyte, funcbyte, funcbyte2);
+     strcat(bitstream, funcbyte2);
+     strcat(bitstream, "0");
+   }
    strcat(bitstream, errdbyte);
    strcat(bitstream, "1");
 
@@ -718,7 +738,7 @@ int comp_nmra_f4b7s28(int address, int direction, int speed, int *f) {
 
    calc_7bit_address_byte(addrbyte, address);
    calc_28spst_speed_byte(spdrbyte, direction, speed);
-   calc_function_group(funcbyte, 0, f);
+   calc_function_group(funcbyte, NULL, 0, f);
    xor_two_bytes(errdbyte, addrbyte, spdrbyte);
 
    /* putting all together in a 'bitstream' (char array) (speed & direction) */
@@ -789,7 +809,7 @@ int comp_nmra_f4b7s128(int address, int direction, int speed, int* f) {
 
    calc_7bit_address_byte(addrbyte, address);
    calc_128spst_adv_op_bytes(spdrbyte1, spdrbyte2, direction, speed);
-   calc_function_group(funcbyte, 0, f);
+   calc_function_group(funcbyte, NULL, 0, f);
    xor_two_bytes(dummy, addrbyte, spdrbyte1);
    xor_two_bytes(errdbyte, dummy, spdrbyte2);
 
@@ -863,7 +883,7 @@ int comp_nmra_f4b14s28(int address, int direction, int speed, int* f) {
 
    calc_14bit_address_byte(addrbyte1, addrbyte2, address);
    calc_28spst_speed_byte(spdrbyte, direction, speed);
-   calc_function_group(funcbyte, 0, f);
+   calc_function_group(funcbyte, NULL, 0, f);
 
    xor_two_bytes(dummy, addrbyte1, addrbyte2);
    xor_two_bytes(errdbyte, dummy, spdrbyte);
@@ -942,7 +962,7 @@ int comp_nmra_f4b14s128(int address, int direction, int speed, int* f) {
 
    calc_14bit_address_byte(addrbyte1, addrbyte2, address);
    calc_128spst_adv_op_bytes(spdrbyte1, spdrbyte2, direction, speed);
-   calc_function_group(funcbyte, 0, f);
+   calc_function_group(funcbyte, NULL, 0, f);
    xor_two_bytes(errdbyte, addrbyte1, addrbyte2);
    xor_two_bytes(dummy, errdbyte, spdrbyte1);
    xor_two_bytes(errdbyte, dummy, spdrbyte2);
