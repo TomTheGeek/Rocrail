@@ -107,8 +107,8 @@ static const tTranslateData_v3 TranslateData_v3[32][2] = {
 };
 
 static char *preamble = "111111111111111";
-static const int STACKSIZE  = 200;
-static const int BUFFERSIZE = 230;
+static const int STACKSIZE  = 300;
+static const int BUFFERSIZE = 360;
 
 int translateabel(char *bs) {     /* the result is only an index, no warranty */
    int  i,size;
@@ -336,8 +336,6 @@ void calc_function_group(char* byte1, char* byte2, int group, int* f) {
     TraceOp.trc( "nmra", TRCLEVEL_WARNING, __LINE__, 9999,"no byte reserved for function group %d", group);
     return;
   }
-  memset(byte1, 0, 9);
-  memset(byte2, 0, 9);
 
    if( group == 0 ) {
      byte1[0] ='1';
@@ -634,6 +632,7 @@ int comp_nmra_fb7(int address, int group, int* f) {
    strcat(bitstream, funcbyte);
    strcat(bitstream, "0");
    if(funcbyte2[0] != 0 ) {
+     TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"extended function group %d", group);
      xor_two_bytes(errdbyte, funcbyte, funcbyte2);
      strcat(bitstream, funcbyte2);
      strcat(bitstream, "0");
