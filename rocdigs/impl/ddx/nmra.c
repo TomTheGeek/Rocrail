@@ -328,75 +328,84 @@ void calc_function_group(char* byte, int group, int* f) {
     * group 0 = f0-f4, 1 = f5-f8, 2 = f9-12, 3 = f13-16, 4 = f17-20, 5 = f21-24, 6 = f25-28
     */
 
-   memset(byte, '0', 18);
+  if( group > 0 )
+    group--; /* function group from Rocview starts with 1 */
+  TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"function group %d", group);
+
+   memset(byte, 0, 18);
 
    if( group == 0 ) {
-     byte[0]='1';
-     byte[1]='0';
-     byte[2]='0';
-     if (f[0]==1) byte[3]='1'; /* F0*/
+     byte[0] ='1';
+     byte[1] ='0';
+     byte[2] ='0';
+     byte[3] = f[0]==1 ? '1':'0'; /* F0*/
+     byte[4] = f[4]==1 ? '1':'0';
+     byte[5] = f[3]==1 ? '1':'0';
+     byte[6] = f[2]==1 ? '1':'0';
+     byte[7] = f[1]==1 ? '1':'0';
+     byte[8] = 0;
    }
    else if( group == 1 ) {
-     byte[0]='1';
-     byte[1]='0';
-     byte[2]='1';
-     byte[3]='1'; /* F5-F8*/
-     if (f[ 5]==1) byte[7]='1';
-     if (f[ 6]==1) byte[6]='1';
-     if (f[ 7]==1) byte[5]='1';
-     if (f[ 8]==1) byte[4]='1';
-     byte[8]=0;
+     byte[0] = '1';
+     byte[1] = '0';
+     byte[2] = '1';
+     byte[3] = '1'; /* F5-F8*/
+     byte[4] = f[8]==1 ? '1':'0';
+     byte[5] = f[7]==1 ? '1':'0';
+     byte[6] = f[6]==1 ? '1':'0';
+     byte[7] = f[5]==1 ? '1':'0';
+     byte[8] = 0;
    }
    else if( group == 2 ) {
-     byte[0]='1';
-     byte[1]='0';
-     byte[2]='1';
-     byte[3]='0'; /* F9-F12*/
-     if (f[ 9]==1) byte[7]='1';
-     if (f[10]==1) byte[6]='1';
-     if (f[11]==1) byte[5]='1';
-     if (f[12]==1) byte[4]='1';
-     byte[8]=0;
+     byte[0] = '1';
+     byte[1] = '0';
+     byte[2] = '1';
+     byte[3] = '0'; /* F9-F12*/
+     byte[4] = f[ 9]==1 ? '1':'0';
+     byte[5] = f[10]==1 ? '1':'0';
+     byte[6] = f[11]==1 ? '1':'0';
+     byte[7] = f[12]==1 ? '1':'0';
+     byte[8] = 0;
    }
    else if( group == 3 || group == 4 ) {
-     byte[0]='1';
-     byte[1]='1';
-     byte[2]='0';
-     byte[3]='1';
-     byte[4]='1';
-     byte[5]='1';
-     byte[6]='1';
-     byte[7]='0';
-     byte[8]='0';
-     if (f[13]==1) byte[ 9]='1';
-     if (f[14]==1) byte[10]='1';
-     if (f[15]==1) byte[11]='1';
-     if (f[16]==1) byte[12]='1';
-     if (f[17]==1) byte[13]='1';
-     if (f[18]==1) byte[14]='1';
-     if (f[19]==1) byte[15]='1';
-     if (f[20]==1) byte[16]='1';
+     byte[0] = '1';
+     byte[1] = '1';
+     byte[2] = '0';
+     byte[3] = '1';
+     byte[4] = '1';
+     byte[5] = '1';
+     byte[6] = '1';
+     byte[7] = '0';
+     byte[8] = '0';
+     byte[ 9] = f[13]==1 ? '1':'0';
+     byte[10] = f[14]==1 ? '1':'0';
+     byte[11] = f[15]==1 ? '1':'0';
+     byte[12] = f[16]==1 ? '1':'0';
+     byte[13] = f[17]==1 ? '1':'0';
+     byte[14] = f[18]==1 ? '1':'0';
+     byte[15] = f[19]==1 ? '1':'0';
+     byte[16] = f[20]==1 ? '1':'0';
      byte[17]=0;
    }
    else if( group == 5 || group == 6 ) {
-     byte[0]='1';
-     byte[1]='1';
-     byte[2]='0';
-     byte[3]='1';
-     byte[4]='1';
-     byte[5]='1';
-     byte[6]='1';
-     byte[7]='1';
-     byte[8]='0';
-     if (f[21]==1) byte[ 9]='1';
-     if (f[22]==1) byte[10]='1';
-     if (f[23]==1) byte[11]='1';
-     if (f[24]==1) byte[12]='1';
-     if (f[25]==1) byte[13]='1';
-     if (f[26]==1) byte[14]='1';
-     if (f[27]==1) byte[15]='1';
-     if (f[28]==1) byte[16]='1';
-     byte[17]=0;
+     byte[0] = '1';
+     byte[1] = '1';
+     byte[2] = '0';
+     byte[3] = '1';
+     byte[4] = '1';
+     byte[5] = '1';
+     byte[6] = '1';
+     byte[7] = '1';
+     byte[8] = '0';
+     byte[ 9] = f[21]==1 ? '1':'0';
+     byte[10] = f[22]==1 ? '1':'0';
+     byte[11] = f[23]==1 ? '1':'0';
+     byte[12] = f[24]==1 ? '1':'0';
+     byte[13] = f[25]==1 ? '1':'0';
+     byte[14] = f[26]==1 ? '1':'0';
+     byte[15] = f[27]==1 ? '1':'0';
+     byte[16] = f[28]==1 ? '1':'0';
+     byte[17] = 0;
    }
 }
 
