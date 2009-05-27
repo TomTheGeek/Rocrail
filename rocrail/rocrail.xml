@@ -858,6 +858,7 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
       <param name="reverse" vt="Boolean" remark="running direction"/>
+      <param name="resblocks" vt="const char**" remark="Reserved blocks; do not lock already used blocks as crossing"/>
     </fun>
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>

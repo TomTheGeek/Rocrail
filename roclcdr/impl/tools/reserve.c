@@ -53,7 +53,6 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
 }
 
 
-
 /**
  * Try to reserve a SECOND NEXT BLOCK if the train does not have to wait in the next block.
  *
@@ -70,7 +69,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
   /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
   /* TODO: use the right direction for finding the next block in the same direction */
 
-  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop )   {
+  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock) && data->run && !data->reqstop ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "finding a second next block for [%s]", data->loc->getId( data->loc ) );
 
@@ -105,36 +104,52 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
                    nextBlock->base.id(nextBlock), nextRoute->getId(nextRoute) );
 
       nextRoute->getDirection( nextRoute, fromBlock->base.id(fromBlock), &fromto );
-      /* lock second next destination */
-      if( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), False, True, !fromto ) ) {
-        if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto ) ) {
-          *toBlock = nextBlock;
-          *toRoute = nextRoute;
-          /* TODO: test if this will not hold other actions... */
-          /* TODO: check if the destination is the same before fire a go command for the street */
-          nextRoute->go(nextRoute);
-        }
-        else {
-          nextBlock->unLock( nextBlock, data->loc->getId( data->loc ) );
-          *toBlock = NULL;
-          *toRoute = NULL;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "could not lock [%s]/[%s] for [%s]",
-                       nextBlock->base.id(nextBlock), nextRoute->getId(nextRoute),
-                       data->loc->getId( data->loc ) );
+      
+      {
+        /*
+         * lock the route except already reserved blocks
+         */
+        const char* resblocks[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+        int resBlockCount = 0;
+
+        if( data->curBlock != NULL )
+          resblocks[resBlockCount++] = data->curBlock->base.id( data->curBlock);
+        if( data->gotoBlock != NULL )
+          resblocks[resBlockCount++] = data->gotoBlock;
+        if( data->next1Block != NULL )
+          resblocks[resBlockCount++] = data->next1Block->base.id(data->next1Block);
+        if( data->next2Block != NULL )
+          resblocks[resBlockCount++] = data->next2Block->base.id(data->next2Block);
+        if( data->next3Block != NULL )
+          resblocks[resBlockCount++] = data->next3Block->base.id(data->next3Block);
+  
+        /* lock second next destination */
+        if ( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), False, True, !fromto ) ) {
+          if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, resblocks ) ) {
+            *toBlock = nextBlock;
+            *toRoute = nextRoute;
+            /* TODO: test if this will not hold other actions... */
+            /* TODO: check if the destination is the same before fire a go command for the street */
+            nextRoute->go(nextRoute);
+          }
+          else {
+            nextBlock->unLock( nextBlock, data->loc->getId( data->loc ) );
+            *toBlock = NULL;
+            *toRoute = NULL;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                         "could not lock [%s]/[%s] for [%s]",
+                         nextBlock->base.id(nextBlock), nextRoute->getId(nextRoute),
+                         data->loc->getId( data->loc ) );
+          }
         }
       }
-
     }
-
   }
   else {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "second next block: wait in next block for [%s]", data->loc->getId( data->loc ) );
   }
-
 }
-
 
 
 void listBlocks(iOLcDriver inst) {
@@ -150,7 +165,6 @@ void listBlocks(iOLcDriver inst) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next2Block [%s]", data->next2Block->base.id(data->next2Block) );
   if( data->next3Block != NULL )
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next3Block [%s]", data->next3Block->base.id(data->next3Block) );
-
 }
 
 
@@ -173,8 +187,6 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
     data->next3Block = NULL;
     data->next3Route = NULL;
   }
-
-
 
   if( data->next2Block != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block [%s]", data->next2Block->base.id(data->next2Block) );
@@ -208,6 +220,5 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
       data->next3Route = NULL;
     }
   }
-
 }
 
