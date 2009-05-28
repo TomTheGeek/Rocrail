@@ -261,6 +261,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
   char    key[256] = {'\0'};
+  Boolean blockEventsDefined = 0;
 
   StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
 
@@ -272,18 +273,17 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   if( fbevt == NULL ) {
     /* event without description; look up in map */
-    fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id);
+    fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id, &blockEventsDefined);
   }
 
-  if( fbevt == NULL ) {
+  /* check for generic blocks only if NO apropriate sensors are defined for the block comming from */
+  /* even if this specific sensor is not part of the well fitted sensor bank */
+  if ( ( fbevt == NULL ) && ( blockEventsDefined == False)) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...",
         data->id, data->fromBlockId?data->fromBlockId:"?" );
 
     /* TODO: check running direction -> from_all or from_all_reverse */
-/*
-    if ( ( data->reverse && !data->next1Route->isSwapPost( data->next1Route ) )
-      || ( !data->reverse && data->next1Route->isSwapPost( data->next1Route ) ) ) {
-*/
+  
     if ( data->reverse ) {
       StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
     }

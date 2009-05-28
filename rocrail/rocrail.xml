@@ -1409,6 +1409,7 @@
       <param name="block" vt="iONode"/>
       <param name="comingfrom" vt="const char*"/>
       <param name="eventid" vt="const char*"/>
+      <param name="blockEventsDefined" vt="Boolean*"/>
     </fun>
     <fun name="getModuleRouteIDs" vt="iOList">
       <param name="inst" vt="this" remark="instance"/>

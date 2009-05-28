@@ -204,15 +204,31 @@ void LocControlDialog::modelEvent( iONode evt ) {
   const char* id = wLoc.getid( evt );
   wxString listid = m_LcList->GetStringSelection();
   if( StrOp.equals( wLoc.name(), et ) && StrOp.equals( id, listid.mb_str(wxConvUTF8) ) ) {
+    /* update speed */
     wxString value;
     value.Printf( _T("%d"), wLoc.getV( evt ) );
     m_Speed->SetValue( value );
     m_SpeedCtrl->SetValue( wLoc.getV( evt ) );
+    
+    /* update direction */
+    m_bDir = wLoc.isdir( evt)?true:false;
+    m_Dir->SetBitmapLabel( m_bDir?wxBitmap(rocrail_forwards_xpm):wxBitmap(rocrail_reverse_xpm) );
+    m_Dir->SetToolTip( m_bDir? wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
+    m_Dir->Refresh();
+
+    /* update function "n" */
+    m_bFn = wLoc.isfn( evt)?true:false;
+    setButtonColor( m_Fn, !m_bFn);
   }
   else if( StrOp.equals( wFunCmd.name(), et ) && StrOp.equals( id, listid.mb_str(wxConvUTF8) ) ) {
     iONode lc = (iONode)MapOp.get( m_lcMap, listid.mb_str(wxConvUTF8) );
 
     if(lc != NULL) {
+      /* update function "n" */
+      m_bFn = wFunCmd.isf0( evt)?true:false;
+      setButtonColor( m_Fn, !m_bFn);
+      
+      /* update further functions */
       wLoc.setfx(lc,
           (wFunCmd.isf1 (evt)?0x0001:0x00) |
           (wFunCmd.isf2 (evt)?0x0002:0x00) |
