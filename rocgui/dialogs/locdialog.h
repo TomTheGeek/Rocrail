@@ -116,6 +116,7 @@ class wxGrid;
 #define ID_RADIOBOX_CARGO 10003
 #define ID_PANEL_FUNCTIONS 10035
 #define ID_BUTTON_F0 10061
+#define ID_LOC_FN_GROUP 10276
 #define wxID_STATIC_F1 10044
 #define ID_TEXTCTRL_F1 10036
 #define ID_BUTTON_F1 10037
@@ -128,18 +129,6 @@ class wxGrid;
 #define wxID_STATIC_F4 10047
 #define ID_TEXTCTRL_F4 10042
 #define ID_BUTTON_F4 10043
-#define ID_TEXTCTRL_F5 10049
-#define ID_BUTTON_F5 10050
-#define ID_TEXTCTRL_F6 10052
-#define ID_BUTTON_F6 10053
-#define ID_TEXTCTRL_F7 10055
-#define ID_BUTTON_F7 10056
-#define ID_TEXTCTRL_F8 10058
-#define ID_BUTTON_F8 10059
-#define ID_BUTTON_F9 10051
-#define ID_BUTTON_F10 10048
-#define ID_BUTTON_F11 10054
-#define ID_BUTTON_F12 10057
 #define ID_PANEL_LOC_CONSIST 10200
 #define ID_BUTTON_LOC_CONSIST_ADD 10201
 #define ID_BUTTON_LOC_CONSIST_DELETE 10213
@@ -175,7 +164,9 @@ class LocDialog: public wxDialog, public BaseDialog
   void initLabels();
   void InitIndex();
   void InitValues();
+  void initFunctions();
   bool Evaluate();
+  bool evaluateFunctions();
   bool m_bSave;
   void EditFunction( int nr, wxString txt );
   int m_TabAlign;
@@ -183,6 +174,7 @@ class LocDialog: public wxDialog, public BaseDialog
   const char* m_CVDesc[257];
   int m_iSelectedCV;
   iONode m_CVNodes[257];
+  int m_iFunGroup;
 
 public:
     /// Constructors
@@ -233,6 +225,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F0
     void OnButtonF0Click( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_FN_GROUP
+    void OnLocFnGroupClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F1
     void OnButtonF1Click( wxCommandEvent& event );
 
@@ -244,30 +239,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F4
     void OnButtonF4Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F5
-    void OnButtonF5Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F6
-    void OnButtonF6Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F7
-    void OnButtonF7Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F8
-    void OnButtonF8Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F9
-    void OnButtonF9Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F10
-    void OnButtonF10Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F11
-    void OnButtonF11Click( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F12
-    void OnButtonF12Click( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOC_CONSIST_ADD
     void OnButtonLocConsistAddClick( wxCommandEvent& event );
@@ -406,6 +377,7 @@ public:
     wxTextCtrl* m_f0;
     wxSpinCtrl* m_TimerF0;
     wxButton* m_Button_f0;
+    wxButton* m_FunctionGroup;
     wxStaticText* m_Label_f1;
     wxTextCtrl* m_f1;
     wxSpinCtrl* m_TimerF1;
@@ -422,38 +394,6 @@ public:
     wxTextCtrl* m_f4;
     wxSpinCtrl* m_TimerF4;
     wxButton* m_Button_f4;
-    wxStaticText* m_Label_f5;
-    wxTextCtrl* m_f5;
-    wxSpinCtrl* m_TimerF5;
-    wxButton* m_Button_f5;
-    wxStaticText* m_Label_f6;
-    wxTextCtrl* m_f6;
-    wxSpinCtrl* m_TimerF6;
-    wxButton* m_Button_f6;
-    wxStaticText* m_Label_f7;
-    wxTextCtrl* m_f7;
-    wxSpinCtrl* m_TimerF7;
-    wxButton* m_Button_f7;
-    wxStaticText* m_Label_f8;
-    wxTextCtrl* m_f8;
-    wxSpinCtrl* m_TimerF8;
-    wxButton* m_Button_f8;
-    wxStaticText* m_Label_f9;
-    wxTextCtrl* m_f9;
-    wxSpinCtrl* m_TimerF9;
-    wxButton* m_Button_f9;
-    wxStaticText* m_Label_f10;
-    wxTextCtrl* m_f10;
-    wxSpinCtrl* m_TimerF10;
-    wxButton* m_Button_f10;
-    wxStaticText* m_Label_f11;
-    wxTextCtrl* m_f11;
-    wxSpinCtrl* m_TimerF11;
-    wxButton* m_Button_f11;
-    wxStaticText* m_Label_f12;
-    wxTextCtrl* m_f12;
-    wxSpinCtrl* m_TimerF12;
-    wxButton* m_Button_f12;
     wxPanel* m_ConsistsPanel;
     wxStaticBox* m_labDetails;
     wxCheckBox* m_LightsOff;
