@@ -278,7 +278,7 @@ static int __logo( void ) {
   TraceOp.println( " rrr     ooo ooo ccc    rrr     aaa aaa iii lll   " );
   TraceOp.println( " rrr      ooooo   ccccc rrr      aaaaaa iii  lll  " );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " Copyright (c) 2002-2008 Rob Versluis"              );
+  TraceOp.println( " Copyright (c) Rob Versluis"              );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
   TraceOp.println( " License: GNU GPL 2"                                );
