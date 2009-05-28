@@ -322,6 +322,11 @@ void LC::setFLabels() {
     m_bFx[2+m_iFnGroup * 4] = setButtonColor( m_F3, (fx & 0x04)?false:true );
     m_bFx[3+m_iFnGroup * 4] = setButtonColor( m_F4, (fx & 0x08)?false:true );
 
+    m_F1->SetToolTip( wxString::Format(_T("F%d"), 1 + (m_iFnGroup * 4 ) ));
+    m_F2->SetToolTip( wxString::Format(_T("F%d"), 2 + (m_iFnGroup * 4 ) ));
+    m_F3->SetToolTip( wxString::Format(_T("F%d"), 3 + (m_iFnGroup * 4 ) ));
+    m_F4->SetToolTip( wxString::Format(_T("F%d"), 4 + (m_iFnGroup * 4 ) ));
+
     iONode fundef = wLoc.getfundef( m_LocProps );
     while( fundef != NULL ) {
       wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
