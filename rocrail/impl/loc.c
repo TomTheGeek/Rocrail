@@ -1797,6 +1797,7 @@ static iOLoc _inst( iONode props ) {
 
   /* reset velocity to zero */
   wLoc.setV( data->props, 0 );
+  wLoc.setfx( data->props, 0 );
 
   __initCVmap( loc );
 

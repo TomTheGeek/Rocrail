@@ -92,6 +92,8 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_F0, LocDialog::OnButtonF0Click )
 
+    EVT_BUTTON( ID_LOC_FN_GROUP_PREV, LocDialog::OnLocFnGroupPrevClick )
+
     EVT_BUTTON( ID_LOC_FN_GROUP, LocDialog::OnLocFnGroupClick )
 
     EVT_BUTTON( ID_BUTTON_F1, LocDialog::OnButtonF1Click )
@@ -387,10 +389,10 @@ void LocDialog::initFunctions() {
   for( int i = 0; i < 5; i++ ) {
     l_fx[i]->SetValue( _T("") );
   }
-  for( int i = 0; i < 4; i++ ) {
+  for( int i = 0; i < 5; i++ ) {
     l_labfx[i]->SetLabel( wxString::Format(_T("F%d"), i+1+m_iFunGroup*4 ) );
   }
-  m_FunctionGroup->SetLabel( wxString::Format(_T("Fg %d"),1+m_iFunGroup ) );
+  m_labFnGroup->SetLabel( wxString::Format(_T("%d"),1+m_iFunGroup ) );
 
   m_FunctionPanel->GetSizer()->Layout();
 
@@ -405,8 +407,8 @@ void LocDialog::initFunctions() {
         "function[%d] name[%s]", funnr, wFunDef.gettext( fundef ) );
 
     if( funnr == 0 ) {
-      l_fx[funnr]->SetValue( fntxt );
-      l_timer[funnr]->SetValue( wFunDef.gettimer(fundef) );
+      l_fx[0]->SetValue( fntxt );
+      l_timer[0]->SetValue( wFunDef.gettimer(fundef) );
     }
     else if( funnr == m_iFunGroup * 4 + 1 ) {
       l_fx[1]->SetValue( fntxt );
@@ -654,14 +656,14 @@ bool LocDialog::evaluateFunctions() {
   // evaluate Functions
   wxTextCtrl* l_fx[] = {m_f0,m_f1,m_f2,m_f3,m_f4};
   wxSpinCtrl* l_timer[] = {m_TimerF0,m_TimerF1,m_TimerF2,m_TimerF3,m_TimerF4};
-  int function = 0;
+  int function[] = {0,0,0,0,0};
 
   if( l_fx[0]->GetValue().Length() > 0 )
-    function |= 1;
+    function[0] = 1;
 
   for( int i = 1; i < 5; i++ ) {
     if( l_fx[i]->GetValue().Length() > 0 )
-      function |= (1 << (i+m_iFunGroup*4));
+      function[i] = 1;
   }
 
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "evaluate function group %d", m_iFunGroup + 1);
@@ -673,8 +675,10 @@ bool LocDialog::evaluateFunctions() {
     int fnr = wFunDef.getfn( fundef );
 
     if( fnr == 0 ) {
+      TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "modify function  %d", fnr );
       wFunDef.settext( fundef, m_f0->GetValue().mb_str(wxConvUTF8)  );
       wFunDef.settimer( fundef, m_TimerF0->GetValue() );
+      function[0] = 0;
     }
     else if( fnr >= 1 + m_iFunGroup*4 && fnr <= 5 + m_iFunGroup*4 ) {
       TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "modify function  %d", fnr );
@@ -682,46 +686,44 @@ bool LocDialog::evaluateFunctions() {
         case 1 :
           wFunDef.settext( fundef, m_f1->GetValue().mb_str(wxConvUTF8)  );
           wFunDef.settimer( fundef, m_TimerF1->GetValue() );
-          function = (function & (~0x0001<<fnr));
+          function[fnr - m_iFunGroup*4] = 0;
           break;
         case 2 :
           wFunDef.settext( fundef, m_f2->GetValue().mb_str(wxConvUTF8)  );
           wFunDef.settimer( fundef, m_TimerF2->GetValue() );
-          function = (function & (~0x0002<<fnr));
+          function[fnr - m_iFunGroup*4] = 0;
           break;
         case 3 :
           wFunDef.settext( fundef, m_f3->GetValue().mb_str(wxConvUTF8)  );
           wFunDef.settimer( fundef, m_TimerF3->GetValue() );
-          function = (function & (~0x0004<<fnr));
+          function[fnr - m_iFunGroup*4] = 0;
           break;
         case 4 :
           wFunDef.settext( fundef, m_f4->GetValue().mb_str(wxConvUTF8)  );
           wFunDef.settimer( fundef, m_TimerF4->GetValue() );
-          function = (function & (~0x0008<<fnr));
+          function[fnr - m_iFunGroup*4] = 0;
           break;
       }
     }
     fundef = wLoc.nextfundef( m_Props, fundef );
   }
 
-  if( function > 0 ) {
-    TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "function 0x%016X", function );
-    if( function & 0x00000001 ) {
+  if( function[0] == 1 ) {
+    fundef = NodeOp.inst( wFunDef.name(), m_Props, ELEMENT_NODE );
+    NodeOp.addChild( m_Props, fundef );
+    wFunDef.setfn( fundef, 0 );
+    wFunDef.settext( fundef, l_fx[0]->GetValue().mb_str(wxConvUTF8) );
+    wFunDef.settimer( fundef, m_TimerF0->GetValue() );
+  }
+  for( int i = 1; i < 5; i++ ) {
+    if( function[i] == 1 ) {
+      int f = i + m_iFunGroup*4;
+      TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding function  %d", f );
       fundef = NodeOp.inst( wFunDef.name(), m_Props, ELEMENT_NODE );
       NodeOp.addChild( m_Props, fundef );
-      wFunDef.setfn( fundef, 0 );
-      wFunDef.settext( fundef, l_fx[0]->GetValue().mb_str(wxConvUTF8) );
-      function &= (function & (~(0x00000001)));
-    }
-    for( int i = 1+m_iFunGroup*4; i <= 5+m_iFunGroup*4; i++ ) {
-      if( function & (0x00000001 << i) ) {
-        TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding function  %d", i );
-        fundef = NodeOp.inst( wFunDef.name(), m_Props, ELEMENT_NODE );
-        NodeOp.addChild( m_Props, fundef );
-        wFunDef.setfn( fundef, i );
-        wFunDef.settext( fundef, l_fx[i - m_iFunGroup*4]->GetValue().mb_str(wxConvUTF8) );
-        function &= (function & (~(0x00000001<<i)));
-      }
+      wFunDef.setfn( fundef, f );
+      wFunDef.settext( fundef, l_fx[i]->GetValue().mb_str(wxConvUTF8) );
+      wFunDef.settimer( fundef, l_timer[i]->GetValue() );
     }
   }
 
@@ -973,6 +975,7 @@ bool LocDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     m_f0 = NULL;
     m_TimerF0 = NULL;
     m_Button_f0 = NULL;
+    m_labFnGroup = NULL;
     m_FunctionGroup = NULL;
     m_Label_f1 = NULL;
     m_f1 = NULL;
@@ -1415,106 +1418,115 @@ void LocDialog::CreateControls()
     wxStaticLine* itemStaticLine118 = new wxStaticLine( m_FunctionPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     itemBoxSizer112->Add(itemStaticLine118, 0, wxGROW|wxALL, 5);
 
-    m_FunctionGroup = new wxButton( m_FunctionPanel, ID_LOC_FN_GROUP, _("Function group 1"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer112->Add(m_FunctionGroup, 0, wxALIGN_LEFT|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer119 = new wxFlexGridSizer(2, 3, 0, 0);
+    itemBoxSizer112->Add(itemFlexGridSizer119, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    wxButton* itemButton120 = new wxButton( m_FunctionPanel, ID_LOC_FN_GROUP_PREV, _("< Fg"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer119->Add(itemButton120, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer120 = new wxFlexGridSizer(2, 4, 0, 0);
-    itemFlexGridSizer120->AddGrowableCol(1);
-    itemBoxSizer112->Add(itemFlexGridSizer120, 0, wxGROW|wxALL, 5);
+    m_labFnGroup = new wxStaticText( m_FunctionPanel, wxID_ANY, _("1"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labFnGroup->SetFont(wxFont(12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT("Sans")));
+    itemFlexGridSizer119->Add(m_labFnGroup, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_FunctionGroup = new wxButton( m_FunctionPanel, ID_LOC_FN_GROUP, _("Fg >"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer119->Add(m_FunctionGroup, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer123 = new wxFlexGridSizer(2, 4, 0, 0);
+    itemFlexGridSizer123->AddGrowableCol(1);
+    itemBoxSizer112->Add(itemFlexGridSizer123, 0, wxGROW|wxALL, 5);
     m_Label_f1 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F1, _("f1"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_Label_f1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 2);
+    itemFlexGridSizer123->Add(m_Label_f1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_f1 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_f1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
+    itemFlexGridSizer123->Add(m_f1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
 
     m_TimerF1 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer120->Add(m_TimerF1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer123->Add(m_TimerF1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f1 = new wxButton( m_FunctionPanel, ID_BUTTON_F1, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
-    itemFlexGridSizer120->Add(m_Button_f1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_Button_f1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Label_f2 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F2, _("f2"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_Label_f2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
+    itemFlexGridSizer123->Add(m_Label_f2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
 
     m_f2 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_f2, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_f2, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_TimerF2 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer120->Add(m_TimerF2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer123->Add(m_TimerF2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f2 = new wxButton( m_FunctionPanel, ID_BUTTON_F2, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
-    itemFlexGridSizer120->Add(m_Button_f2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_Button_f2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Label_f3 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F3, _("f3"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_Label_f3, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
+    itemFlexGridSizer123->Add(m_Label_f3, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
 
     m_f3 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F3, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_f3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_f3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_TimerF3 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer120->Add(m_TimerF3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer123->Add(m_TimerF3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f3 = new wxButton( m_FunctionPanel, ID_BUTTON_F3, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
-    itemFlexGridSizer120->Add(m_Button_f3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_Button_f3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Label_f4 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F4, _("f4"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_Label_f4, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
+    itemFlexGridSizer123->Add(m_Label_f4, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 2);
 
     m_f4 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F4, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer120->Add(m_f4, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_f4, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_TimerF4 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer120->Add(m_TimerF4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer123->Add(m_TimerF4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f4 = new wxButton( m_FunctionPanel, ID_BUTTON_F4, _("..."), wxDefaultPosition, wxSize(25, 25), 0 );
-    itemFlexGridSizer120->Add(m_Button_f4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
+    itemFlexGridSizer123->Add(m_Button_f4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Notebook->AddPage(m_FunctionPanel, _("Functions"));
 
     m_ConsistsPanel = new wxPanel( m_Notebook, ID_PANEL_LOC_CONSIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer138 = new wxBoxSizer(wxVERTICAL);
-    m_ConsistsPanel->SetSizer(itemBoxSizer138);
+    wxBoxSizer* itemBoxSizer141 = new wxBoxSizer(wxVERTICAL);
+    m_ConsistsPanel->SetSizer(itemBoxSizer141);
 
     m_labDetails = new wxStaticBox(m_ConsistsPanel, wxID_ANY, _("Details"));
-    wxStaticBoxSizer* itemStaticBoxSizer139 = new wxStaticBoxSizer(m_labDetails, wxVERTICAL);
-    itemBoxSizer138->Add(itemStaticBoxSizer139, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer142 = new wxStaticBoxSizer(m_labDetails, wxVERTICAL);
+    itemBoxSizer141->Add(itemStaticBoxSizer142, 0, wxGROW|wxALL, 5);
     m_LightsOff = new wxCheckBox( m_ConsistsPanel, wxID_ANY, _("Keep lights off"), wxDefaultPosition, wxDefaultSize, 0 );
     m_LightsOff->SetValue(false);
-    itemStaticBoxSizer139->Add(m_LightsOff, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer142->Add(m_LightsOff, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStaticLine* itemStaticLine141 = new wxStaticLine( m_ConsistsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-    itemBoxSizer138->Add(itemStaticLine141, 0, wxGROW|wxALL, 5);
+    wxStaticLine* itemStaticLine144 = new wxStaticLine( m_ConsistsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    itemBoxSizer141->Add(itemStaticLine144, 0, wxGROW|wxALL, 5);
 
     m_labConsistList = new wxStaticText( m_ConsistsPanel, wxID_ANY, _("Locomotives"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer138->Add(m_labConsistList, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer141->Add(m_labConsistList, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxArrayString m_ConsistListStrings;
     m_ConsistList = new wxListBox( m_ConsistsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ConsistListStrings, wxLB_SINGLE );
-    itemBoxSizer138->Add(m_ConsistList, 1, wxGROW|wxALL, 5);
+    itemBoxSizer141->Add(m_ConsistList, 1, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer144 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer144->AddGrowableCol(1);
-    itemBoxSizer138->Add(itemFlexGridSizer144, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer147 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer147->AddGrowableCol(1);
+    itemBoxSizer141->Add(itemFlexGridSizer147, 0, wxGROW|wxALL, 5);
     m_labConsistLocID = new wxStaticText( m_ConsistsPanel, wxID_ANY, _("LocID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer144->Add(m_labConsistLocID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer147->Add(m_labConsistLocID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_ConsistLocIDStrings;
     m_ConsistLocID = new wxComboBox( m_ConsistsPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_ConsistLocIDStrings, wxCB_DROPDOWN );
-    itemFlexGridSizer144->Add(m_ConsistLocID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer147->Add(m_ConsistLocID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer147 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer138->Add(itemBoxSizer147, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer150 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer141->Add(itemBoxSizer150, 0, wxGROW|wxALL, 5);
     m_AddConsistLoc = new wxButton( m_ConsistsPanel, ID_BUTTON_LOC_CONSIST_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer147->Add(m_AddConsistLoc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer150->Add(m_AddConsistLoc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DeleteConsistLoc = new wxButton( m_ConsistsPanel, ID_BUTTON_LOC_CONSIST_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer147->Add(m_DeleteConsistLoc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer150->Add(m_DeleteConsistLoc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_ConsistsPanel, _("Consists"));
 
     m_CVPanel = new wxPanel( m_Notebook, ID_PANEL_LOC_CV, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer151 = new wxBoxSizer(wxVERTICAL);
-    m_CVPanel->SetSizer(itemBoxSizer151);
+    wxBoxSizer* itemBoxSizer154 = new wxBoxSizer(wxVERTICAL);
+    m_CVPanel->SetSizer(itemBoxSizer154);
 
     m_CVList = new wxGrid( m_CVPanel, ID_GRID_LOC_CV, wxDefaultPosition, wxSize(200, 150), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
     m_CVList->SetDefaultColSize(50);
@@ -1522,38 +1534,38 @@ void LocDialog::CreateControls()
     m_CVList->SetColLabelSize(25);
     m_CVList->SetRowLabelSize(50);
     m_CVList->CreateGrid(1, 3, wxGrid::wxGridSelectCells);
-    itemBoxSizer151->Add(m_CVList, 1, wxGROW|wxALL, 5);
+    itemBoxSizer154->Add(m_CVList, 1, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer153 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer153->AddGrowableCol(1);
-    itemBoxSizer151->Add(itemFlexGridSizer153, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer156 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer156->AddGrowableCol(1);
+    itemBoxSizer154->Add(itemFlexGridSizer156, 0, wxGROW|wxALL, 5);
     m_labCVDesc = new wxStaticText( m_CVPanel, wxID_ANY, _("Description"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer153->Add(m_labCVDesc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer156->Add(m_labCVDesc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CVDescription = new wxTextCtrl( m_CVPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer153->Add(m_CVDescription, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer156->Add(m_CVDescription, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CVDescModify = new wxButton( m_CVPanel, ID_BUTTON_LC_CV_DESC, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer153->Add(m_CVDescModify, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer156->Add(m_CVDescModify, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_CVPanel, _("CV's"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer157 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer160 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer157, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer160, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer157->AddButton(m_Cancel);
+    itemStdDialogButtonSizer160->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer157->AddButton(m_Apply);
+    itemStdDialogButtonSizer160->AddButton(m_Apply);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer157->AddButton(m_OK);
+    itemStdDialogButtonSizer160->AddButton(m_OK);
 
-    itemStdDialogButtonSizer157->Realize();
+    itemStdDialogButtonSizer160->Realize();
 
 ////@end LocDialog content construction
 }
@@ -2079,6 +2091,20 @@ void LocDialog::OnLocFnGroupClick( wxCommandEvent& event )
   m_iFunGroup++;
   if( m_iFunGroup > 6 )
     m_iFunGroup = 0;
+
+  initFunctions();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_FN_GROUP_PREV
+ */
+
+void LocDialog::OnLocFnGroupPrevClick( wxCommandEvent& event )
+{
+  evaluateFunctions();
+  if( m_iFunGroup > 0 )
+    m_iFunGroup--;
 
   initFunctions();
 }

@@ -116,6 +116,7 @@ class wxGrid;
 #define ID_RADIOBOX_CARGO 10003
 #define ID_PANEL_FUNCTIONS 10035
 #define ID_BUTTON_F0 10061
+#define ID_LOC_FN_GROUP_PREV 10054
 #define ID_LOC_FN_GROUP 10276
 #define wxID_STATIC_F1 10044
 #define ID_TEXTCTRL_F1 10036
@@ -224,6 +225,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F0
     void OnButtonF0Click( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_FN_GROUP_PREV
+    void OnLocFnGroupPrevClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_FN_GROUP
     void OnLocFnGroupClick( wxCommandEvent& event );
@@ -377,6 +381,7 @@ public:
     wxTextCtrl* m_f0;
     wxSpinCtrl* m_TimerF0;
     wxButton* m_Button_f0;
+    wxStaticText* m_labFnGroup;
     wxButton* m_FunctionGroup;
     wxStaticText* m_Label_f1;
     wxTextCtrl* m_f1;
