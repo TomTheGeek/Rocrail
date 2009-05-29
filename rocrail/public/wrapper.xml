@@ -130,6 +130,14 @@
       <var name="f2" vt="int" defval="1" range="*"/>
       <var name="f3" vt="int" defval="2" range="*"/>
       <var name="f4" vt="int" defval="3" range="*"/>
+      <var name="f5" vt="int" defval="-1" range="*"/>
+      <var name="f6" vt="int" defval="-1" range="*"/>
+      <var name="f7" vt="int" defval="-1" range="*"/>
+      <var name="f8" vt="int" defval="-1" range="*"/>
+      <var name="f9" vt="int" defval="-1" range="*"/>
+      <var name="f10" vt="int" defval="-1" range="*"/>
+      <var name="f11" vt="int" defval="-1" range="*"/>
+      <var name="f12" vt="int" defval="-1" range="*"/>
       <var name="reverse" vt="int" defval="4" range="*"/>
       <var name="light" vt="int" defval="5" range="*"/>
       <var name="stop" vt="int" defval="6" range="*"/>

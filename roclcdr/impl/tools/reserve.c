@@ -59,25 +59,38 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
  * @param inst      LcDriver instance
  * @param gotoBlock goto block ID
  */
-void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute ) {
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, 
+                             iIBlockBase baseBlock, iORoute baseRoute, 
+                             iIBlockBase fromBlock, iORoute fromRoute, 
+                             iIBlockBase* toBlock, iORoute* toRoute ) {
   iOLcDriverData data = Data(inst);
 
-  iORoute    nextRoute = NULL;
+  iORoute     nextRoute = NULL;
   iIBlockBase nextBlock = NULL;
   Boolean     fromto    = False;
 
-  /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
+  /* Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto ); */
   /* TODO: use the right direction for finding the next block in the same direction */
 
-  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock) && data->run && !data->reqstop ) {
+  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock) && data->run && !data->reqstop )   {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "finding a second next block for [%s]", data->loc->getId( data->loc ) );
 
-    if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
+    if ( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
+      Boolean overAllSwap = False;
+
+      if ( fromRoute == baseRoute)
+		    overAllSwap = fromRoute->isSwapPost( fromRoute);
+      else {
+          /* calculate the swap from the beginning of this calculation */
+		      if ( ( baseRoute->isSwapPost( baseRoute) && !fromRoute->isSwapPost( fromRoute)) 
+		        || ( !baseRoute->isSwapPost( baseRoute) && fromRoute->isSwapPost( fromRoute)))
+            overAllSwap = True;
+      }
       nextRoute = NULL;
       nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock),
                                          data->loc, &nextRoute, gotoBlock, True, False, True, /* force same dir */
-		      			 fromRoute->isSwapPost( fromRoute ) );
+		      			                         overAllSwap);
     }
     else {
       /* find destination using schedule */

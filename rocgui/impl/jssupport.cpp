@@ -94,6 +94,14 @@ void JsSupport::funCmd( int device )
   wFunCmd.setf2( cmd, m_bF2[device]?True:False );
   wFunCmd.setf3( cmd, m_bF3[device]?True:False );
   wFunCmd.setf4( cmd, m_bF4[device]?True:False );
+  wFunCmd.setf5( cmd, m_bF5[device]?True:False );
+  wFunCmd.setf6( cmd, m_bF6[device]?True:False );
+  wFunCmd.setf7( cmd, m_bF7[device]?True:False );
+  wFunCmd.setf8( cmd, m_bF8[device]?True:False );
+  wFunCmd.setf9( cmd, m_bF9[device]?True:False );
+  wFunCmd.setf10( cmd, m_bF10[device]?True:False );
+  wFunCmd.setf11( cmd, m_bF11[device]?True:False );
+  wFunCmd.setf12( cmd, m_bF12[device]?True:False );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -240,6 +248,70 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f4" );
             // f4
             m_bF4[device] = ! m_bF4[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf5( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f5" );
+            // f5
+            m_bF5[device] = ! m_bF5[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf6( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f6" );
+            // f6
+            m_bF6[device] = ! m_bF6[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf7( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f7" );
+            // f7
+            m_bF7[device] = ! m_bF7[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf8( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f8" );
+            // f8
+            m_bF8[device] = ! m_bF8[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf9( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f9" );
+            // f9
+            m_bF9[device] = ! m_bF9[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf10( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f10" );
+            // f10
+            m_bF10[device] = ! m_bF10[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf11( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f11" );
+            // f11
+            m_bF11[device] = ! m_bF11[device];
+            funCmd( device );
+          }
+      }
+      else if( number == wJsMap.getf12( ini ) ) {
+          if( value == 1 ) {
+            TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f12" );
+            // f12
+            m_bF12[device] = ! m_bF12[device];
             funCmd( device );
           }
       }

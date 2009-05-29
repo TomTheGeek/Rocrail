@@ -87,8 +87,10 @@ void statusInitDest( iILcDriverInt inst ) {
       }
 
       if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
-        reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route,
-                                  &data->next2Block, &data->next2Route );
+        reserveSecondNextBlock( ( iOLcDriver)inst, data->gotoBlock, 
+                                data->next1Block, data->next1Route,
+                                data->next1Block, data->next1Route,
+                                &data->next2Block, &data->next2Route );
         if( data->next2Route != NULL ) {
           /* TODO: make sure the running direction does not change */
           data->next2Route->getDirection( data->next2Route,
