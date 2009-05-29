@@ -26,7 +26,7 @@
 #
 include ../makefile.common
 
-DCC_LIBS=opendcc p50 p50x srcp hsi88 lenz roco zimo dinamo om32 ddx slx inter10 barjut ecos loconet rocnet virtual mcs2 clock
+DCC_LIBS=opendcc p50 p50x srcp hsi88 lenz roco zimo dinamo om32 ddx slx inter10 barjut ecos loconet rocnet virtual mcs2 clock sprog
 
 ifeq ($(PLATFORM),WIN32)
 	LDFLAGS=--def rocdigs.def
@@ -80,7 +80,7 @@ build: generate $(OBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR)/p50$(SHAREDSU
 	$(OUTDIR)/ddx$(SHAREDSUFFIX) $(OUTDIR)/slx$(SHAREDSUFFIX) $(OUTDIR)/ecos$(SHAREDSUFFIX) \
 	$(OUTDIR)/inter10$(SHAREDSUFFIX) $(OUTDIR)/barjut$(SHAREDSUFFIX) $(OUTDIR)/loconet$(SHAREDSUFFIX) \
 	$(OUTDIR)/virtual$(SHAREDSUFFIX) $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(OUTDIR)/mcs2$(SHAREDSUFFIX) \
-	$(OUTDIR)/clock$(SHAREDSUFFIX)
+	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -126,6 +126,8 @@ $(OUTDIR)/mcs2$(SHAREDSUFFIX): $(TMPOUTDIR)/mcs2.o $(COMMONOBJS) $(RRLIBS)
 	$(LD) $(LDFLAGS) -o $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(TMPOUTDIR)/mcs2.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)/clock$(SHAREDSUFFIX): $(TMPOUTDIR)/clock.o $(COMMONOBJS) $(RRLIBS)
 	$(LD) $(LDFLAGS) -o $(OUTDIR)/clock$(SHAREDSUFFIX) $(TMPOUTDIR)/clock.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/sprog$(SHAREDSUFFIX): $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS)
+	$(LD) $(LDFLAGS) -o $(OUTDIR)/sprog$(SHAREDSUFFIX) $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
