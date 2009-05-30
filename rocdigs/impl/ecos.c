@@ -820,7 +820,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       StrOp.fmtb( ecosCmd,
                   "request(%s, control, force)\nset(%s, dir[%d], speed[%d])\nset(%s, func[%d, %d])\nrelease(%s, control)\n",
                     oid,
-                    oid, dir /* ??? isn't rocrail direction not the same ??? dir ? 0 : 1*/, V,
+                    oid, dir ? 0 : 1, V,
                     oid, 0, wLoc.isfn( node ) ? 1 : 0,
                     oid );
       
@@ -1489,7 +1489,7 @@ static void __processLocoEvents( iOECoS inst, iONode node ) {
           if( data->iid != NULL)
             wLoc.setiid( nodeC, data->iid);
           wLoc.setid( nodeC, rrLocoNameStr);
-          wLoc.setdir( nodeC, ( directionVal ? True : False));
+          wLoc.setdir( nodeC, ( directionVal ? False : True));
           wLoc.setcmd( nodeC, wLoc.direction);
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO);
         }
