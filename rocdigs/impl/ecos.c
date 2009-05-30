@@ -1360,7 +1360,10 @@ static void __processSwitchManagerEvents( iOECoS inst, iONode node ) {
         if ( StrOp.startsWith( switchStr, "DCC" )) {
       
           sscanf( &switchStr[3], "%d", &switchAddress );
-          switchPosition = switchStr[StrOp.len( switchStr) - 1];
+          if ( switchStr[StrOp.len( switchStr) - 1] == '+')
+            switchPosition = switchStr[StrOp.len( switchStr) - 2];
+          else
+            switchPosition = switchStr[StrOp.len( switchStr) - 1];
           
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "DCC switchAddress [%d,%c]", switchAddress, switchPosition );
         
@@ -1405,7 +1408,10 @@ static void __processSwitchManagerEvents( iOECoS inst, iONode node ) {
         } else if ( StrOp.startsWith( switchStr, "MOT" )) {
       
           sscanf( &switchStr[3], "%d", &switchAddress );
-          switchPosition = switchStr[StrOp.len( switchStr) - 1];
+          if ( switchStr[StrOp.len( switchStr) - 1] == '+')
+            switchPosition = switchStr[StrOp.len( switchStr) - 2];
+          else
+            switchPosition = switchStr[StrOp.len( switchStr) - 1];
           
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "MOT switchAddress [%d,%c]", switchAddress, switchPosition );
         
