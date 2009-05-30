@@ -318,13 +318,30 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      StrOp.fmtb( outa, "-\r" );
+      StrOp.fmtb( outa, "--\r" );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      StrOp.fmtb( outa, "+\r" );
+      StrOp.fmtb( outa, "+-\r" );
     }
   }
+
+
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
+      StrOp.fmtb( outa, "V %d\r", wProgram.getcv(node) );
+      data->lastcmd = CV_READ;
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
+      StrOp.fmtb( outa, "V %d %d\r", wProgram.getcv(node), wProgram.getvalue(node) );
+      data->lastcmd = CV_WRITE;
+    }
+  }
+
+  return rsp;
 
 }
 
@@ -394,6 +411,81 @@ static int _version( obj inst ) {
 }
 
 
+static int __parseValue(const char* in) {
+  int val = 0;
+  /* TODO: parse the value string */
+  return val;
+}
+
+static void __handleResponse(iOSprog sprog, const char* in) {
+  iOSprogData data = Data(sprog);
+  iONode rsp = NULL;
+
+  switch( data->lastcmd ) {
+  case CV_READ:
+    rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( rsp, data->lastcv );
+    wProgram.setvalue( rsp, __parseValue(in) );
+    wProgram.setcmd( rsp, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( rsp, data->iid );
+    break;
+  case CV_WRITE:
+    rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( rsp, data->lastcv );
+    wProgram.setvalue( rsp, __parseValue(in) );
+    wProgram.setcmd( rsp, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( rsp, data->iid );
+    break;
+  }
+
+  if( rsp != NULL ) {
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+  }
+
+}
+
+
+static void __sprogReader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSprog sprog = (iOSprog)ThreadOp.getParm( th );
+  iOSprogData data = Data(sprog);
+
+  char in[256] = {0};
+  int idx = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG reader started." );
+  ThreadOp.sleep( 1000 );
+
+  do {
+
+    ThreadOp.sleep( 10 );
+
+    if( MutexOp.wait( data->mux ) ) {
+
+      if( SerialOp.available(data->serial) ) {
+        if( SerialOp.read(data->serial, &in[idx], 1) ) {
+          if( in[idx] == '\r' ) {
+            in[idx+1] = '\0';
+            idx = 0;
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG readed: [%s]", in );
+            __handleResponse(sprog, in);
+          }
+          else
+            idx++;
+        }
+      }
+
+      /* Release the mutex. */
+      MutexOp.post( data->mux );
+    }
+
+  } while(data->run);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG reader ended." );
+}
 
 
 /**  */
@@ -427,6 +519,8 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setDTR(data->serial, True);
   SerialOp.setRTS(data->serial, True);
 
+  data->reader = ThreadOp.inst( "sprogrdr", &__sprogReader, __Sprog );
+  ThreadOp.start( data->reader );
 
   instCnt++;
   return __Sprog;
