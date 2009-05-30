@@ -215,7 +215,7 @@ void LocControlDialog::modelEvent( iONode evt ) {
     m_Dir->SetBitmapLabel( m_bDir?wxBitmap(rocrail_forwards_xpm):wxBitmap(rocrail_reverse_xpm) );
     m_Dir->SetToolTip( m_bDir? wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
     m_Dir->Refresh();
-
+      
     /* update function "n" */
     m_bFn = wLoc.isfn( evt)?true:false;
     setButtonColor( m_Fn, !m_bFn);

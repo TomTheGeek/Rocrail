@@ -823,6 +823,9 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
                     oid, dir ? 0 : 1, V,
                     oid, 0, wLoc.isfn( node ) ? 1 : 0,
                     oid );
+      
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, ecosCmd);
+    
     } else if ( oid == NULL ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "WARNING: NULL oid" );
     } else if ( StrOp.len( oid ) <= 0 ) {
@@ -1480,7 +1483,7 @@ static void __processLocoEvents( iOECoS inst, iONode node ) {
         if ( ( directionVal != -1) && ( directionVal <= 1)) {
           iONode nodeC = NULL;
       
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "direction [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, directionVal);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "direction [%s,%s,%d]", ecosLocoNameStr, rrLocoNameStr, directionVal);
           
           nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           if( data->iid != NULL)
