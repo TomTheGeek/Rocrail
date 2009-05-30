@@ -738,4 +738,26 @@
     </data>
   </object>
 
+  <object name="Sprog" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="NCE object">
+    <typedef def="enum {CV_READ=1, CV_WRITE} sprogcmd"/>
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="device" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="run" vt="Boolean"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="lastcmd" vt="int"/>
+      <var name="lastcv" vt="int"/>
+    </data>
+  </object>
+
+
 </Project>

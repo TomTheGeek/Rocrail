@@ -284,11 +284,11 @@ void FunctionDialog::CreateControls()
     itemFlexGridSizer3->Add(m_Label_Block, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_BlockOnStrings;
-    m_BlockOn = new wxListBox( itemDialog1, ID_LISTBOX_BLOCK_ON, wxDefaultPosition, wxDefaultSize, m_BlockOnStrings, wxLB_MULTIPLE|wxLB_ALWAYS_SB|wxSUNKEN_BORDER );
+    m_BlockOn = new wxListBox( itemDialog1, ID_LISTBOX_BLOCK_ON, wxDefaultPosition, wxSize(-1, 120), m_BlockOnStrings, wxLB_MULTIPLE|wxLB_ALWAYS_SB|wxSUNKEN_BORDER );
     itemFlexGridSizer3->Add(m_BlockOn, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW|wxALL, 5);
 
     wxArrayString m_BlockOffStrings;
-    m_BlockOff = new wxListBox( itemDialog1, ID_LISTBOX_BLOCK_OFF, wxDefaultPosition, wxDefaultSize, m_BlockOffStrings, wxLB_MULTIPLE|wxLB_ALWAYS_SB|wxSUNKEN_BORDER );
+    m_BlockOff = new wxListBox( itemDialog1, ID_LISTBOX_BLOCK_OFF, wxDefaultPosition, wxSize(-1, 120), m_BlockOffStrings, wxLB_MULTIPLE|wxLB_ALWAYS_SB|wxSUNKEN_BORDER );
     itemFlexGridSizer3->Add(m_BlockOff, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW|wxALL, 5);
 
     m_Label_Event = new wxStaticText( itemDialog1, wxID_STATIC_EVENT, _("Event:"), wxDefaultPosition, wxDefaultSize, 0 );

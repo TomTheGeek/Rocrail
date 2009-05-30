@@ -410,7 +410,7 @@ void calc_function_group(char* byte1, char* byte2, int group, int* f) {
      byte2[7] = f[21]==1 ? '1':'0';
      byte2[8] = 0;
    }
-   TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"function datagram %s %s", byte1, byte2!=NULL?byte2:"");
+   TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,"function datagram %s %s", byte1, byte2!=NULL?byte2:"");
 }
 
 void calc_128spst_adv_op_bytes(char *byte1, char *byte2,
@@ -637,11 +637,14 @@ int comp_nmra_fb7(int address, int group, int* f) {
      xor_two_bytes(errdbyte, tmp, funcbyte2);
      strcat(bitstream, funcbyte2);
      strcat(bitstream, "0");
-     TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,
+     TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,
          "extended function group %d, errdbyte=%s", group, errdbyte);
    }
    strcat(bitstream, errdbyte);
    strcat(bitstream, "1");
+
+   TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,
+       "7 bit addr bitstream: %s", bitstream);
 
    j=translateBitstream2Packetstream(bitstream, packetstream);
 
@@ -700,6 +703,9 @@ int comp_nmra_fb14(int address, int group, int* f) {
    }
    strcat(bitstream, errdbyte);
    strcat(bitstream, "1");
+
+   TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,
+       "14 bit addr bitstream: %s", bitstream);
 
    j=translateBitstream2Packetstream(bitstream, packetstream);
 

@@ -57,7 +57,7 @@
 #define SYMBOL_BARJUTCNTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxDIALOG_MODAL
 #define SYMBOL_BARJUTCNTRLDLG_TITLE _("BarJuT")
 #define SYMBOL_BARJUTCNTRLDLG_IDNAME ID_DIALOG_BARJUT_SETTINGS
-#define SYMBOL_BARJUTCNTRLDLG_SIZE wxSize(400, 300)
+#define SYMBOL_BARJUTCNTRLDLG_SIZE wxDefaultSize
 #define SYMBOL_BARJUTCNTRLDLG_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -122,8 +122,6 @@ public:
     wxTextCtrl* m_Device;
     wxStaticText* m_labPolling;
     wxTextCtrl* m_Polling;
-    wxButton* m_OK;
-    wxButton* m_Cancel;    
 ////@end BarJuTCntrlDlg member variables
 };
 

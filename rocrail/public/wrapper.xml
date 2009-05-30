@@ -235,6 +235,7 @@
       <const name="mcs2" vt="string" val="mcs2"/>
       <const name="clock" vt="string" val="clock"/>
       <const name="railcom" vt="string" val="railcom"/>
+      <const name="sprog" vt="string" val="sprog"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

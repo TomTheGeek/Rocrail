@@ -96,7 +96,7 @@ class LocControlDialog: public wxDialog
   void initLocMap(const char* locid);
   void updateFnText( wxString& selVal );
   bool setButtonColor( wxButton* button, bool state );
-  void funCmd();
+  void funCmd(int group);
   void speedCmd(bool sendCmd);
   void initFx(iONode lc);
 

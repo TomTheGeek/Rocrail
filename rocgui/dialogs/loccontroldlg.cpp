@@ -612,7 +612,7 @@ void LocControlDialog::OnButtonLocctrlFnClick( wxCommandEvent& event )
 {
   m_bFn = setButtonColor( m_Fn, m_bFn );
   speedCmd(true);
-  funCmd();
+  funCmd(0);
 }
 
 
@@ -636,7 +636,7 @@ void LocControlDialog::speedCmd(bool sendCmd)
 }
 
 
-void LocControlDialog::funCmd()
+void LocControlDialog::funCmd(int group)
 {
   wxString id = m_LcList->GetStringSelection();
 
@@ -659,6 +659,7 @@ void LocControlDialog::funCmd()
   }
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setgroup ( cmd, group+1 );
   wFunCmd.setid( cmd, id.mb_str(wxConvUTF8) );
   wFunCmd.setf0( cmd, m_bFn?True:False );
   wFunCmd.setf1( cmd, m_bF1?True:False );
@@ -686,7 +687,7 @@ void LocControlDialog::OnButtonLocctrlF1Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF1 = setButtonColor( m_F1, m_bF1 );
-  funCmd();
+  funCmd(0);
 }
 
 /*!
@@ -698,7 +699,7 @@ void LocControlDialog::OnButtonLocctrlF2Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF2 = setButtonColor( m_F2, m_bF2 );
-  funCmd();
+  funCmd(0);
 }
 
 /*!
@@ -710,7 +711,7 @@ void LocControlDialog::OnButtonLocctrlF3Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF3 = setButtonColor( m_F3, m_bF3 );
-  funCmd();
+  funCmd(0);
 }
 
 /*!
@@ -722,7 +723,7 @@ void LocControlDialog::OnButtonLocctrlF4Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF4 = setButtonColor( m_F4, m_bF4 );
-  funCmd();
+  funCmd(0);
 }
 
 /*!
@@ -859,7 +860,7 @@ void LocControlDialog::OnButtonLocctrlF5Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF5 = setButtonColor( m_F5, m_bF5 );
-  funCmd();
+  funCmd(1);
 }
 
 /*!
@@ -871,7 +872,7 @@ void LocControlDialog::OnButtonLocctrlF6Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF6 = setButtonColor( m_F6, m_bF6 );
-  funCmd();
+  funCmd(1);
 }
 
 /*!
@@ -883,7 +884,7 @@ void LocControlDialog::OnButtonLcctrlF7Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF7 = setButtonColor( m_F7, m_bF7 );
-  funCmd();
+  funCmd(1);
 }
 
 /*!
@@ -895,7 +896,7 @@ void LocControlDialog::OnButtonLcctrlF8Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF8 = setButtonColor( m_F8, m_bF8 );
-  funCmd();
+  funCmd(1);
 }
 
 
@@ -908,7 +909,7 @@ void LocControlDialog::OnButtonLcctrlF12Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF12 = setButtonColor( m_F12, m_bF12 );
-  funCmd();
+  funCmd(2);
 }
 
 
@@ -921,7 +922,7 @@ void LocControlDialog::OnButtonLcctrl9Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF9 = setButtonColor( m_F9, m_bF9 );
-  funCmd();
+  funCmd(2);
 }
 
 
@@ -934,7 +935,7 @@ void LocControlDialog::OnButtonLcctrlF10Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF10 = setButtonColor( m_F10, m_bF10 );
-  funCmd();
+  funCmd(2);
 }
 
 
@@ -947,7 +948,7 @@ void LocControlDialog::OnButtonLcctrlF11Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bF11 = setButtonColor( m_F11, m_bF11 );
-  funCmd();
+  funCmd(2);
 }
 
 
@@ -985,51 +986,51 @@ void LocControlDialog::OnKeyDown( wxKeyEvent& event )
   switch( event.GetKeyCode()) {
     case WXK_F1:
       m_bF1 = setButtonColor( m_F1, m_bF1 );
-      funCmd();
+      funCmd(0);
       break;
     case WXK_F2:
       m_bF2 = setButtonColor( m_F2, m_bF2 );
-      funCmd();
+      funCmd(0);
       break;
     case WXK_F3:
       m_bF3 = setButtonColor( m_F3, m_bF3 );
-      funCmd();
+      funCmd(0);
       break;
     case WXK_F4:
       m_bF4 = setButtonColor( m_F4, m_bF4 );
-      funCmd();
+      funCmd(0);
       break;
     case WXK_F5:
       m_bF5 = setButtonColor( m_F5, m_bF5 );
-      funCmd();
+      funCmd(1);
       break;
     case WXK_F6:
       m_bF6 = setButtonColor( m_F6, m_bF6 );
-      funCmd();
+      funCmd(1);
       break;
     case WXK_F7:
       m_bF7 = setButtonColor( m_F7, m_bF7 );
-      funCmd();
+      funCmd(1);
       break;
     case WXK_F8:
       m_bF8 = setButtonColor( m_F8, m_bF8 );
-      funCmd();
+      funCmd(1);
       break;
     case WXK_F9:
       m_bF9 = setButtonColor( m_F9, m_bF9 );
-      funCmd();
+      funCmd(2);
       break;
     case WXK_F10:
       m_bF10 = setButtonColor( m_F10, m_bF10 );
-      funCmd();
+      funCmd(2);
       break;
     case WXK_F11:
       m_bF11 = setButtonColor( m_F11, m_bF11 );
-      funCmd();
+      funCmd(2);
       break;
     case WXK_F12:
       m_bF12 = setButtonColor( m_F12, m_bF12 );
-      funCmd();
+      funCmd(2);
       break;
   }
 }

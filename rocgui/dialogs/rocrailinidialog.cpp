@@ -373,6 +373,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.railcom, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.sprog, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
@@ -1110,6 +1111,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new LenzDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.roco, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
+  else if( StrOp.equals( wDigInt.sprog, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
 

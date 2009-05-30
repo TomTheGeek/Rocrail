@@ -274,8 +274,8 @@
           <bool name="proxy-Fit to content">1</bool>
           <long name="proxy-X">-1</long>
           <long name="proxy-Y">-1</long>
-          <long name="proxy-Width">400</long>
-          <long name="proxy-Height">300</long>
+          <long name="proxy-Width">-1</long>
+          <long name="proxy-Height">-1</long>
           <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
           <document>
@@ -290,14 +290,6 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
-            <string name="proxy-AlignH">"Centre"</string>
-            <string name="proxy-AlignV">"Centre"</string>
-            <long name="proxy-Stretch factor">0</long>
-            <long name="proxy-Border">5</long>
-            <bool name="proxy-wxLEFT">1</bool>
-            <bool name="proxy-wxRIGHT">1</bool>
-            <bool name="proxy-wxTOP">1</bool>
-            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -390,7 +382,7 @@
                 <string name="proxy-Member variable name">""</string>
                 <string name="proxy-AlignH">"Centre"</string>
                 <string name="proxy-AlignV">"Centre"</string>
-                <long name="proxy-Stretch factor">0</long>
+                <long name="proxy-Stretch factor">1</long>
                 <long name="proxy-Border">5</long>
                 <bool name="proxy-wxLEFT">1</bool>
                 <bool name="proxy-wxRIGHT">1</bool>
@@ -411,7 +403,7 @@
                   <long name="locked">0</long>
                   <string name="created">"29/4/2007"</string>
                   <string name="proxy-type">"wbFlexGridSizerProxy"</string>
-                  <string name="proxy-GrowableColumns">""</string>
+                  <string name="proxy-GrowableColumns">"1"</string>
                   <string name="proxy-GrowableRows">""</string>
                   <long name="proxy-Columns">2</long>
                   <long name="proxy-Rows">2</long>
@@ -570,7 +562,7 @@
                     <long name="proxy-Height">-1</long>
                     <string name="proxy-AlignH">"Left"</string>
                     <string name="proxy-AlignV">"Centre"</string>
-                    <long name="proxy-Stretch factor">0</long>
+                    <long name="proxy-Stretch factor">1</long>
                     <long name="proxy-Border">5</long>
                     <bool name="proxy-wxLEFT">1</bool>
                     <bool name="proxy-wxRIGHT">1</bool>
@@ -581,7 +573,6 @@
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Custom arguments">""</string>
                     <string name="proxy-Custom ctor arguments">""</string>
-                    <bool name="proxy-wxTE_LINEWRAP">0</bool>
                   </document>
                   <document>
                     <string name="title">"wxStaticText: ID_STATICTEXT_BARJUT_DEVICE"</string>
@@ -719,7 +710,7 @@
                     <string name="proxy-Custom styles">""</string>
                     <long name="proxy-X">-1</long>
                     <long name="proxy-Y">-1</long>
-                    <long name="proxy-Width">-1</long>
+                    <long name="proxy-Width">120</long>
                     <long name="proxy-Height">-1</long>
                     <string name="proxy-AlignH">"Left"</string>
                     <string name="proxy-AlignV">"Centre"</string>
@@ -734,7 +725,6 @@
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Custom arguments">""</string>
                     <string name="proxy-Custom ctor arguments">""</string>
-                    <bool name="proxy-wxTE_LINEWRAP">0</bool>
                   </document>
                   <document>
                     <string name="title">"wxStaticText: ID_STATICTEXT_BARJUT_POLLING"</string>
@@ -887,7 +877,6 @@
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Custom arguments">""</string>
                     <string name="proxy-Custom ctor arguments">""</string>
-                    <bool name="proxy-wxTE_LINEWRAP">0</bool>
                   </document>
                 </document>
               </document>
@@ -912,7 +901,7 @@
               <bool name="proxy-wxID_SAVE">0</bool>
               <bool name="proxy-wxID_CONTEXT_HELP">0</bool>
               <string name="proxy-Member variable name">""</string>
-              <string name="proxy-AlignH">"Centre"</string>
+              <string name="proxy-AlignH">"Right"</string>
               <string name="proxy-AlignV">"Centre"</string>
               <long name="proxy-Stretch factor">0</long>
               <long name="proxy-Border">5</long>
@@ -9738,14 +9727,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -11095,14 +11076,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -11203,6 +11176,8 @@
               <string name="proxy-Implementation filename">""</string>
               <string name="proxy-Header filename">""</string>
               <string name="proxy-Member variable name">"m_GenerelPanel"</string>
+              <string name="proxy-Tab label">"Generel"</string>
+              <string name="proxy-Tab icon">""</string>
               <string name="proxy-Help text">""</string>
               <string name="proxy-Tooltip text">""</string>
               <string name="proxy-Background colour">""</string>
@@ -11255,8 +11230,6 @@
               <string name="proxy-Custom ctor arguments">""</string>
               <bool name="proxy-AUI manager">0</bool>
               <string name="proxy-Event sources">""</string>
-              <string name="proxy-Tab label">"Generel"</string>
-              <string name="proxy-Tab icon">""</string>
               <document>
                 <string name="title">"wxBoxSizer V"</string>
                 <string name="type">"dialog-control-document"</string>
@@ -12100,6 +12073,8 @@
               <string name="proxy-Implementation filename">""</string>
               <string name="proxy-Header filename">""</string>
               <string name="proxy-Member variable name">"m_BussesPanel"</string>
+              <string name="proxy-Tab label">"Busses"</string>
+              <string name="proxy-Tab icon">""</string>
               <string name="proxy-Help text">""</string>
               <string name="proxy-Tooltip text">""</string>
               <string name="proxy-Background colour">""</string>
@@ -12152,8 +12127,6 @@
               <string name="proxy-Custom ctor arguments">""</string>
               <bool name="proxy-AUI manager">0</bool>
               <string name="proxy-Event sources">""</string>
-              <string name="proxy-Tab label">"Busses"</string>
-              <string name="proxy-Tab icon">""</string>
               <document>
                 <string name="title">"wxFlexGridSizer"</string>
                 <string name="type">"dialog-control-document"</string>
@@ -13977,14 +13950,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
