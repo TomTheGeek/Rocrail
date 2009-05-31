@@ -1839,6 +1839,15 @@ static Boolean _getDir( iOLoc loc ) {
 }
 
 
+/**
+ * get the placing of the locomotive
+ */
+static Boolean _getPlacing( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.isplacing( data->props );
+}
+
+
 static int _getV( iOLoc loc ) {
   iOLocData data = Data(loc);
   return data->drvSpeed;

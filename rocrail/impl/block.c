@@ -281,17 +281,27 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   if ( ( fbevt == NULL ) && ( blockEventsDefined == False)) {
     Boolean reverse = data->reverse;
     iOModel model = AppOp.getModel();
-    iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
    
+    if ( data->locId) {
+      iOLoc loc = ModelOp.getLoc( model, data->locId);
+
+      if ( !loc->getDir( loc))
+        reverse = !reverse;
+    }
+
+    if ( data->viaRouteId) {
+      iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
+     
+      /* to keep the selection of the entry side of the block simple, we asume the following: */
+      /* 1. Single direction routes which are usable only in reverse order are reversed also for this view */
+      /*    in this case the side where the route allway (because single direction) terminates is allways the "to" side */
+      /* 2. With the option "swapPostRoute" the termination of this route is also swapped */
+
+      if ( ( viaRoute->getDir( viaRoute) && viaRoute->getLcDir( viaRoute)) || viaRoute->isSwapPost( viaRoute)) 
+        reverse = !reverse;
+    }
+
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...", data->id, data->fromBlockId?data->fromBlockId:"?" );
-
-    /* to keep the selection of the entry side of the block simple, we asume the following: */
-    /* 1. Single direction routes which are usable only in reverse order are reversed also for this view */
-    /*    in this case the side where the route allway (because single direction) terminates is allways the "to" side */
-    /* 2. With the option "swapPostRoute" the termination of this route is also swapped */
-
-    if ( ( viaRoute->getDir( viaRoute) && viaRoute->getLcDir( viaRoute)) || viaRoute->isSwapPost( viaRoute)) 
-      reverse = !reverse;
 
     if ( reverse ) {
       StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
@@ -302,7 +312,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
-/*
+
   if ( data->viaRouteId) {
     iOModel model = AppOp.getModel();
     iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
@@ -313,7 +323,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
                  viaRoute->isSwapPost( viaRoute), 
                  data->reverse ? "reverse" : "forward");
   }
-*/
+
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: fbid=%s state=%s ident=%d fbfrom=%s from=%s",
       data->id, key, puls?"true":"false", ident,
