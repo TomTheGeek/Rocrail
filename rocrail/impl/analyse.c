@@ -78,6 +78,7 @@ Starting with block A:
 */
 
 #include "rocrail/impl/analyse_impl.h"
+#include "rocrail/public/route.h"
 #include "rocrail/public/app.h"
 
 #include "rocs/public/mem.h"

@@ -338,6 +338,12 @@ static Boolean _getDir( iORoute inst ) {
 }
 
 
+static Boolean _getLcDir( iORoute inst ) {
+  iORouteData o = Data(inst);
+  return wRoute.islcdir( o->props );
+}
+
+
 static Boolean _isSwap( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.isswap( o->props );
@@ -478,7 +484,7 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id, const char** 
       if( !__isReservedBlock(bk, resblocks) ) {
         iIBlockBase block = ModelOp.getBlock( model, bk );
         if( block != NULL ) {
-          if( !block->lock( block, id, "", True, False, False ) ) {
+          if( !block->lock( block, id, "", NULL, True, False, False ) ) {
             StrTokOp.base.del(tok);
             return False;
           }
@@ -543,12 +549,13 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
-        if( !TTOp.lock( (iIBlockBase)itt,
-			locId,
-			NULL,
-			False,
-			False,
-			wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+        if( !TTOp.lock( ( iIBlockBase)itt,
+                        locId,
+                        NULL,
+                        NULL,
+                        False,
+                        False,
+                        wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;
@@ -558,12 +565,13 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
-        if( !SelTabOp.lock( (iIBlockBase)iseltab,
-			    locId,
-			    SelTabOp.isManager( iseltab)?o->routeLockId:locId,
-			    False,
-			    False,
-			    wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+        if( !SelTabOp.lock( ( iIBlockBase)iseltab,
+			                      locId,
+                            SelTabOp.isManager( iseltab)?o->routeLockId:locId,
+                            NULL,
+                            False,
+                            False,
+                            wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;

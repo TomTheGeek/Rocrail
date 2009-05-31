@@ -95,8 +95,8 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
     if( data->next3Block != NULL )
       resblocks[resBlockCount++] = data->next3Block->base.id( data->next3Block);
   
-    if( street->isFree(street, data->loc->getId( data->loc )) ) {
-      if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, reverse ) ) {
+    if( street->isFree( street, data->loc->getId( data->loc )) ) {
+      if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), street->getId( street), False, True, reverse ) ) {
         if( street->lock( street, data->loc->getId( data->loc ), reverse, resblocks ) ) {
           if( street->go( street ) ) {
 
