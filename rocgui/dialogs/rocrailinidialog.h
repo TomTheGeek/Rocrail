@@ -209,6 +209,8 @@ public:
     wxTextCtrl* m_DPIID;
     wxStaticText* m_labSVIID;
     wxTextCtrl* m_SVIID;
+    wxStaticText* m_labScSensor;
+    wxComboBox* m_ScSensor;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Auto;

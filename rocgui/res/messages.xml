@@ -8441,4 +8441,9 @@
     <de txt="Strangen"/>
     <nl txt="Lijnen"/>
   </Msg>
+  <Msg id="shortcutsensor">
+    <de txt="Kurzschlussmelder"/>
+    <en txt="Shortcut sensor"/>
+    <nl txt="Kortsluiting sensor"/>
+  </Msg>
 </Messages>
