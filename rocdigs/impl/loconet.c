@@ -870,6 +870,7 @@ static void __post2SlotServer( iOLocoNet loconet, byte* rsp, int len ) {
     LocoNetOp.byte2ascii( rsp, len, msg );
     wCommand.setarg( cmd, msg );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting [%s] to slotServer", msg );
+    traceLocoNet(rsp);
     ThreadOp.post( data->slotServer, (obj)cmd );
   }
 }
