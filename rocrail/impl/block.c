@@ -281,7 +281,20 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   if ( ( fbevt == NULL ) && ( blockEventsDefined == False)) {
     Boolean reverse = data->reverse;
     iOModel model = AppOp.getModel();
-   
+/*
+    if ( data->locId) {
+      iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
+      iOLoc loc = ModelOp.getLoc( model, data->locId);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event Block: %s Route: %s, %d %d %d, %d %d dir: %s",
+                   data->id, data->viaRouteId, 
+                   viaRoute->getDir( viaRoute),
+                   viaRoute->getLcDir( viaRoute),
+                   viaRoute->isSwapPost( viaRoute), 
+                   loc->getDir( loc),
+                   loc->getPlacing( loc),
+                   data->reverse ? "reverse" : "forward");
+    }
+*/
 /*
     if ( data->locId) {
       iOLoc loc = ModelOp.getLoc( model, data->locId);
@@ -314,22 +327,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     }
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
-
-
-  if ( ( data->viaRouteId) && ( data->locId)) {
-    iOModel model = AppOp.getModel();
-    iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
-    iOLoc loc = ModelOp.getLoc( model, data->locId);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event Block: %s Route: %s, %d %d %d, %d %d dir: %s",
-                 data->id, data->viaRouteId, 
-                 viaRoute->getDir( viaRoute),
-                 viaRoute->getLcDir( viaRoute),
-                 viaRoute->isSwapPost( viaRoute), 
-                 loc->getDir( loc),
-                 loc->getPlacing( loc),
-                 data->reverse ? "reverse" : "forward");
-  }
-
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: fbid=%s state=%s ident=%d fbfrom=%s from=%s",
       data->id, key, puls?"true":"false", ident,
