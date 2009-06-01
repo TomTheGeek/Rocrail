@@ -56,6 +56,12 @@ _state(
 	return state;
 }
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOBarjutData data = Data( inst );
+}
+
+
 /* VERSION: */
 /** vmajor*1000 + vminor*100 + patch */
 static int      vmajor = 1;

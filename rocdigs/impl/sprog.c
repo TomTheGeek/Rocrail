@@ -394,6 +394,12 @@ static int _state( obj inst ) {
 }
 
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOSprogData data = Data( inst );
+}
+
+
 /**  */
 static Boolean _supportPT( obj inst ) {
   iOSprogData data = Data(inst);

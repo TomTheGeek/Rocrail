@@ -29,7 +29,7 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iORailComData data = Data(inst);
     /* Cleanup data->xxx members...*/
-    
+
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -101,6 +101,12 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
 /** bit0=power, bit1=programming, bit2=connection */
 static int _state( obj inst ) {
   return 0;
+}
+
+
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iORailComData data = Data( inst );
 }
 
 

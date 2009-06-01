@@ -43,6 +43,9 @@
     <fun name="state" vt="int" remark="bit0=power, bit1=programming, bit2=connection">
       <param name="inst" vt="obj"/>
     </fun>
+    <fun name="shortcut" vt="void" remark="external shortcut event">
+      <param name="inst" vt="obj"/>
+    </fun>
   </interface>
 
 

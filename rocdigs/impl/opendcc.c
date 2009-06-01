@@ -263,6 +263,12 @@ static int _state( obj inst ) {
 }
 
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOOpenDCCData data = Data( inst );
+}
+
+
 /**  */
 static Boolean _supportPT( obj inst ) {
   iOOpenDCCData data = Data(inst);

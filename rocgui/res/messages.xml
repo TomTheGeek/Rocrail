@@ -8446,4 +8446,9 @@
     <en txt="Shortcut sensor"/>
     <nl txt="Kortsluiting sensor"/>
   </Msg>
+  <Msg id="shortcut">
+    <de txt="Kurzschluss"/>
+    <en txt="Shortcut"/>
+    <nl txt="Kortsluiting"/>
+  </Msg>
 </Messages>

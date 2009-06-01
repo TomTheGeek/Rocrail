@@ -115,6 +115,7 @@
     <var name="dpiid" vt="string" defval="" range="*" remark="IID to use for dispathing a loco; using default in case not set."/>
     <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
     <var name="scsensor" vt="string" defval="" range="0-*" remark="Shortcut sensor ID."/>
+    <var name="sciid" vt="string" defval="" range="0-*" remark="Shortcut command station IID"/>
     <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
