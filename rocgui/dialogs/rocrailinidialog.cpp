@@ -160,7 +160,7 @@ void RocrailIniDialog::initLabels() {
   m_DPIID->SetToolTip( wxGetApp().getTip( "dpiid" ) );
   m_labSVIID->SetLabel( wxGetApp().getMsg( "sviid" ) );
   m_SVIID->SetToolTip( wxGetApp().getTip( "sviid" ) );
-  m_labScSensor->SetLabel( wxGetApp().getMsg( "shortcutsensor" ) );
+  m_labScSensor->SetLabel( wxGetApp().getMsg( "sensor" ) );
   m_ScBox->SetLabel( wxGetApp().getMsg( "shortcut" ) );
 
 
@@ -767,7 +767,7 @@ void RocrailIniDialog::CreateControls()
     itemFlexGridSizer26->Add(m_labScIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ScIID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer26->Add(m_ScIID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer26->Add(m_ScIID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_RRNotebook->AddPage(m_GeneralPanel, _("General"));
 
