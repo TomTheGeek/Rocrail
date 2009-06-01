@@ -64,6 +64,7 @@ LC::LC( wxPanel* parent ) {
 }
 
 void LC::init() {
+  m_iFnGroup = 0;
 }
 
 void LC::SyncClock( iONode node ) {
