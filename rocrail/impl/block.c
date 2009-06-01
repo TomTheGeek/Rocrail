@@ -282,22 +282,25 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     Boolean reverse = data->reverse;
     iOModel model = AppOp.getModel();
    
+/*
     if ( data->locId) {
       iOLoc loc = ModelOp.getLoc( model, data->locId);
-
       if ( !loc->getDir( loc))
         reverse = !reverse;
     }
+*/
 
     if ( data->viaRouteId) {
       iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
-     
       /* to keep the selection of the entry side of the block simple, we asume the following: */
+      
       /* 1. Single direction routes which are usable only in reverse order are reversed also for this view */
       /*    in this case the side where the route allway (because single direction) terminates is allways the "to" side */
-      /* 2. With the option "swapPostRoute" the termination of this route is also swapped */
+      if ( viaRoute->getDir( viaRoute) && !viaRoute->getLcDir( viaRoute))
+        reverse = !reverse;
 
-      if ( ( viaRoute->getDir( viaRoute) && viaRoute->getLcDir( viaRoute)) || viaRoute->isSwapPost( viaRoute)) 
+      /* 2. With the option "swapPostRoute" the termination of this route is also swapped */
+      if ( viaRoute->isSwapPost( viaRoute)) 
         reverse = !reverse;
     }
 
@@ -313,14 +316,17 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
 
 
-  if ( data->viaRouteId) {
+  if ( ( data->viaRouteId) && ( data->locId)) {
     iOModel model = AppOp.getModel();
     iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event Block: %s Route: %s %d %d %d dir: %s",
+    iOLoc loc = ModelOp.getLoc( model, data->locId);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event Block: %s Route: %s, %d %d %d, %d %d dir: %s",
                  data->id, data->viaRouteId, 
                  viaRoute->getDir( viaRoute),
                  viaRoute->getLcDir( viaRoute),
                  viaRoute->isSwapPost( viaRoute), 
+                 loc->getDir( loc),
+                 loc->getPlacing( loc),
                  data->reverse ? "reverse" : "forward");
   }
 
