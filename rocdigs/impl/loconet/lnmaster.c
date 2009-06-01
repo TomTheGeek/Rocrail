@@ -55,7 +55,8 @@ struct __lnslot {
   Boolean f6;
   Boolean f7;
   Boolean f8;
-  int id;       // throttle ID
+  int idl;       // throttle ID low part
+  int idh;       // throttle ID high part
   time_t accessed;
 };
 
@@ -373,8 +374,8 @@ static void __slotdataRsp( iOLocoNet loconet, struct __lnslot* slot, int slotnr 
   rsp[8] = 0x00;
   rsp[9] = (slot[slotnr].addr / 128) & 0x7F;
   rsp[10] = __getsndbyte(slot, slotnr);
-  rsp[11] = 0x00;
-  rsp[12] = 0x00;
+  rsp[11] = slot[slotnr].idl;
+  rsp[12] = slot[slotnr].idh;
   rsp[13] = LocoNetOp.checksum( rsp, 13);
   LocoNetOp.write( loconet, rsp, 14 );
 }
@@ -552,6 +553,9 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].f6 = ((msg[10] & SND_F6) ? True:False);
   slot[slotnr].f7 = ((msg[10] & SND_F7) ? True:False);
   slot[slotnr].f8 = ((msg[10] & SND_F8) ? True:False);
+  slot[slotnr].idl = msg[11];
+  slot[slotnr].idh = msg[12];
+
 
   __setstat1byte( slot, slotnr, msg[2]);
 
