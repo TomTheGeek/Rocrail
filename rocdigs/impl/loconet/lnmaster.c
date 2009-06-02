@@ -329,15 +329,21 @@ static byte __getstat1byte(struct __lnslot* slot, int slotnr) {
 }
 
 
+static int __LOCO_STAT(int s)   { // encode loco status as a string
+   return ((s & LOCOSTAT_MASK) == LOCO_IN_USE) ? LOCO_IN_USE :
+              ( ((s & LOCOSTAT_MASK) == LOCO_IDLE)   ? LOCO_IDLE :
+        ( ((s & LOCOSTAT_MASK) == LOCO_COMMON) ? LOCO_COMMON:LOCO_FREE));
+   }
+
 static void __setstat1byte(struct __lnslot* slot, int slotnr, byte stat) {
-  if( stat & LOCO_IN_USE == LOCO_IDLE ) {
+  if( __LOCO_STAT(stat) == LOCO_IDLE ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot# %d released", slotnr );
     slot[slotnr].inuse = False;
     slot[slotnr].idl = 0;
     slot[slotnr].idh = 0;
   }
   else
-    slot[slotnr].inuse = (stat & LOCO_IN_USE) ? True:False;
+    slot[slotnr].inuse = __LOCO_STAT(stat) == LOCO_IN_USE ? True:False;
 
   slot[slotnr].format = 0;
 
@@ -501,7 +507,7 @@ static int __slotstatus1(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
     return slotnr;
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d status", slotnr );
-  __setstat1byte( slot, slotnr, msg[2]);
+  __setstat1byte( slot, slotnr, msg[3]);
   data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   return slotnr;
 }
@@ -609,7 +615,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].idh   = msg[12];
 
 
-  __setstat1byte( slot, slotnr, msg[2]);
+  __setstat1byte( slot, slotnr, msg[3]);
 
   data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
   data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
