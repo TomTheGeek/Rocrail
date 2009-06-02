@@ -279,7 +279,7 @@
       <var name="fbpoll" vt="bool" defval="false" remark="Poll sensor events in p50x instead of xEvtSen."/>
       <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
-	  <var name="sensordebounce" vt="int" defval="100" remark="No of cycles for Sensor debounce"/>
+	  <var name="sensordebounce" vt="int" defval="0" remark="No of cycles for Sensor debounce"/>
 
 
       <!-- HSI88 -->
