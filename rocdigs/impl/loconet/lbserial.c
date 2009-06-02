@@ -208,6 +208,7 @@ Boolean lbserialWrite( obj inst, unsigned char *msg, int len ) {
       data->comm = False;
       LocoNetOp.stateChanged((iOLocoNet)inst);
     }
+    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "CTS has timed out: please check the wiring." );
     return False;
   }
 
@@ -215,8 +216,10 @@ Boolean lbserialWrite( obj inst, unsigned char *msg, int len ) {
     ok = SerialOp.write( data->serial, (char*)&msg[i], 1 );
   }
 
-  if( i < len )
+  if( i < len ) {
     return False;
+    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "CTS has timed out: please check the wiring." );
+  }
 
   return ok;
 }

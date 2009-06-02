@@ -295,14 +295,14 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not send the packet!" );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not send the packet!" );
     }
 
     /* Release the mutex. */
     MutexOp.post( data->mux );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on mutex." );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "timeout on mutex." );
   }
 
   return ok;
@@ -870,7 +870,6 @@ static void __post2SlotServer( iOLocoNet loconet, byte* rsp, int len ) {
     LocoNetOp.byte2ascii( rsp, len, msg );
     wCommand.setarg( cmd, msg );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting [%s] to slotServer", msg );
-    traceLocoNet(rsp);
     ThreadOp.post( data->slotServer, (obj)cmd );
   }
 }
@@ -2049,7 +2048,7 @@ int makereqDispatch(byte *msg, int slot, iONode node, int status, Boolean active
   msg[7] = LocoNetOp.checksum( msg+4, 3 );
 
 
-  return 16;
+  return 8;
 }
 
 
