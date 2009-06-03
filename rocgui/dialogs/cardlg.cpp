@@ -382,6 +382,71 @@ void CarDlg::onDeleteCar( wxCommandEvent& event ){
 }
 
 
+void CarDlg::onImport( wxCommandEvent& event ){
+  wxString ms_FileExt = wxGetApp().getMsg("planfiles");
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+
+    wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
+    // strip filename:
+    wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
+
+    if( fdlg->GetPath().Len() > 0 && FileOp.exist(fdlg->GetPath().mb_str(wxConvUTF8)) ) {
+      iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
+      char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
+      FileOp.read( f, buffer, FileOp.size( f ) );
+      FileOp.base.del( f );
+      iODoc doc = DocOp.parse( buffer );
+      if( doc != NULL ) {
+        iONode plan = DocOp.getRootNode( doc );
+        DocOp.base.del( doc );
+        TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "Plan [%s] is successfully parsed!", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
+
+        /* TODO: read all loco's and add them to the list */
+        iONode list = NodeOp.findNode( plan, wCarList.name() );
+
+        if( list != NULL ) {
+          int i = 0;
+          int cnt = NodeOp.getChildCnt( list );
+          TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "%d cars in list", cnt );
+          for( i = 0; i < cnt; i++ ) {
+            m_Props = (iONode)NodeOp.base.clone( NodeOp.getChild( list, i ) );
+
+            iONode model = wxGetApp().getModel();
+            if( model != NULL ) {
+              iONode carlist = wPlan.getcarlist( model );
+              if( carlist == NULL ) {
+                carlist = NodeOp.inst( wCarList.name(), model, ELEMENT_NODE );
+                NodeOp.addChild( model, carlist );
+              }
+              if( carlist != NULL ) {
+                iONode car = NodeOp.inst( wCar.name(), carlist, ELEMENT_NODE );
+                NodeOp.addChild( carlist, m_Props );
+                initValues();
+                onApply(event);
+              }
+            }
+          }
+        }
+        else {
+          TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "No cars found in %s", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
+        }
+
+
+        NodeOp.base.del( plan );
+      }
+      else {
+        TraceOp.trc( "cardlg", TRCLEVEL_EXCEPTION, __LINE__, 9999, "Plan [%s] is not parseable!", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
+      }
+    }
+
+  }
+  fdlg->Destroy();
+}
+
+
+
 void CarDlg::initSubType(){
   m_SubType->Clear();
 

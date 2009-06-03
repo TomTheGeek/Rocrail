@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 21 2008)
+// C++ code generated with wxFormBuilder (version Apr 17 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -48,6 +48,7 @@ class cardlggen : public wxDialog
 		wxListBox* m_CarList;
 		wxButton* m_NewCar;
 		wxButton* m_DeleteCar;
+		wxButton* m_Import;
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
@@ -84,6 +85,7 @@ class cardlggen : public wxDialog
 		virtual void onCarList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onNewCar( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onDeleteCar( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onImport( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onTypeSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onApply( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
