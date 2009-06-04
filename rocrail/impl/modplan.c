@@ -36,6 +36,7 @@
 #include "rocrail/wrapper/public/LinkList.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/ActionList.h"
+#include "rocrail/wrapper/public/WaybillList.h"
 
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Track.h"
@@ -694,10 +695,11 @@ static Boolean __mergeRoutes( iOModPlanData data, iONode model, const char* fnam
   iONode root = ModPlanOp.parsePlan( fname );
   if( root != NULL ) {
 
-    __mergeList(wRouteList.name()  , model, root, -1, 0,0,0, False);
+    __mergeList(wRouteList.name()   , model, root, -1, 0,0,0, False);
     __mergeList(wLinkList.name()    , model, root, -1, 0,0,0, False);
     __mergeList(wLocationList.name(), model, root, -1, 0,0,0, False);
     __mergeList(wScheduleList.name(), model, root, -1, 0,0,0, False);
+    __mergeList(wWaybillList.name() , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
@@ -1130,6 +1132,9 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
   char* xml = NULL;
   if( wPlan.getsclist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getsclist(data->model) ) );
+
+  if( wPlan.getwaybilllist(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getwaybilllist(data->model) ) );
 
   /* only routes without a modid set */
   if( wPlan.getstlist(data->model) != NULL ) {
