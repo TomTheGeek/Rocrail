@@ -57,38 +57,55 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+
 static void* __event( void* inst, const void* evt ) {
   return NULL;
 }
 
+
 static const char* __name(void) {
   return name;
 }
+
+
 static unsigned char* __serialize(void* inst, long* size) {
   return NULL;
 }
+
 static void __deserialize(void* inst, unsigned char* a) {
 }
+
+
 static char* __toString(void* inst) {
   iORouteData data = Data(inst);
   return (char*)RouteOp.getId( (iORoute)inst );
 }
+
+
 static void __del(void* inst) {
   iORouteData data = Data(inst);
   freeMem( data );
   freeMem( inst );
   instCnt--;
 }
+
+
 static void* __properties(void* inst) {
   iORouteData data = Data(inst);
   return data->props;
 }
+
+
 static struct OBase* __clone( void* inst ) {
   return NULL;
 }
+
+
 static Boolean __equals( void* inst1, void* inst2 ) {
   return False;
 }
+
+
 static int __count(void) {
   return instCnt;
 }
@@ -172,7 +189,7 @@ static Boolean _go( iORoute inst ) {
           wSwitch.setcmd( cmd, swCmd );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
 
-          if( !SwitchOp.cmd( isw, cmd, True, &error ) ) {
+          if( !SwitchOp.cmd( isw, cmd, True, 0, &error ) ) {
             if( error == CMD_ERROR ) {
               return False;
             }
@@ -239,9 +256,9 @@ static Boolean _go( iORoute inst ) {
 
   }
 
-
   return True;
 }
+
 
 static Boolean _cmd( iORoute inst, iONode nodeA ) {
   iORouteData o = Data(inst);
@@ -259,6 +276,7 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   return ok;
 }
 
+
 static const char* _getId( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.getid( o->props );
@@ -269,15 +287,18 @@ static void* _getProperties( void* inst ) {
   return o->props;
 }
 
+
 static const char* _getFromBlock( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.getbka( o->props );
 }
 
+
 static const char* _getToBlock( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.getbkb( o->props );
 }
+
 
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
@@ -316,15 +337,24 @@ static Boolean _getDir( iORoute inst ) {
   return wRoute.isdir( o->props );
 }
 
+
+static Boolean _getLcDir( iORoute inst ) {
+  iORouteData o = Data(inst);
+  return wRoute.islcdir( o->props );
+}
+
+
 static Boolean _isSwap( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.isswap( o->props );
 }
 
+
 static Boolean _isSwapPost( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.isswappost( o->props );
 }
+
 
 static Boolean _hasThrownSwitch( iORoute inst ) {
   iORouteData o = Data(inst);
@@ -346,6 +376,7 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
 
   return False;
 }
+
 
 static Boolean __checkSwitches( iORoute inst, const char* id ) {
   iORouteData o = Data(inst);
@@ -389,6 +420,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
   return True;
 }
 
+
 static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );
@@ -420,36 +452,6 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
   return True;
 }
 
-static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks );
-static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
-  iORouteData o = Data(inst);
-  iOModel  model = AppOp.getModel(  );
-  const char* bkc = wRoute.getbkc( o->props );
-  if( bkc != NULL && StrOp.len( bkc ) > 0 ) {
-    iOStrTok tok = StrTokOp.inst( bkc, ',' );
-
-    while( StrTokOp.hasMoreTokens(tok) ) {
-      const char* bk = StrTokOp.nextToken( tok );
-      iIBlockBase block = ModelOp.getBlock( model, bk );
-      if( block != NULL ) {
-        if( !block->lock( block, id, "", True, False, False ) ) {
-          StrTokOp.base.del(tok);
-          return False;
-        }
-      }
-      else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
-        StrTokOp.base.del(tok);
-        return False;
-      }
-    };
-    StrTokOp.base.del(tok);
-
-  }
-
-  return True;
-}
-
 
 static Boolean __isReservedBlock(const char* id, const char** resblocks) {
   int i = 0;
@@ -467,6 +469,40 @@ static Boolean __isReservedBlock(const char* id, const char** resblocks) {
   }
   return False;
 }
+
+
+static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks );
+static Boolean __lockCrossingBlocks( iORoute inst, const char* id, const char** resblocks ) {
+  iORouteData o = Data(inst);
+  iOModel  model = AppOp.getModel(  );
+  const char* bkc = wRoute.getbkc( o->props );
+  if( bkc != NULL && StrOp.len( bkc ) > 0 ) {
+    iOStrTok tok = StrTokOp.inst( bkc, ',' );
+
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* bk = StrTokOp.nextToken( tok );
+      if( !__isReservedBlock(bk, resblocks) ) {
+        iIBlockBase block = ModelOp.getBlock( model, bk );
+        if( block != NULL ) {
+          if( !block->lock( block, id, "", NULL, True, False, False ) ) {
+            StrTokOp.base.del(tok);
+            return False;
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+          StrTokOp.base.del(tok);
+          return False;
+        }
+      }
+    };
+    StrTokOp.base.del(tok);
+
+  }
+
+  return True;
+}
+
 
 static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks ) {
   iORouteData  o = Data(inst);
@@ -500,8 +536,6 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
 }
 
 
-
-
 static Boolean __unlockSwitches( iORoute inst, const char* locId );
 static Boolean __lockSwitches( iORoute inst, const char* locId ) {
   iORouteData o = Data(inst);
@@ -515,12 +549,13 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
-        if( !TTOp.lock( (iIBlockBase)itt,
-			locId,
-			NULL,
-			False,
-			False,
-			wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+        if( !TTOp.lock( ( iIBlockBase)itt,
+                        locId,
+                        NULL,
+                        NULL,
+                        False,
+                        False,
+                        wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;
@@ -530,12 +565,13 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
-        if( !SelTabOp.lock( (iIBlockBase)iseltab,
-			    locId,
-			    SelTabOp.isManager( iseltab)?o->routeLockId:locId,
-			    False,
-			    False,
-			    wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+        if( !SelTabOp.lock( ( iIBlockBase)iseltab,
+			                      locId,
+                            SelTabOp.isManager( iseltab)?o->routeLockId:locId,
+                            NULL,
+                            False,
+                            False,
+                            wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;
@@ -655,7 +691,7 @@ static Boolean _isFree( iORoute inst, const char* id ) {
 }
 
 
-static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
+static Boolean _lock( iORoute inst, const char* id, Boolean reverse, const char** resblocks ) {
   iORouteData o = Data(inst);
   o->reverse = reverse;
 
@@ -673,7 +709,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
     if( !__lockSwitches( inst, id ) )
       return False;
 
-    if( !__lockCrossingBlocks( inst, id ) ) {
+    if( !__lockCrossingBlocks( inst, id, resblocks ) ) {
       __unlockSwitches( inst, id );
       return False;
     }

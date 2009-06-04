@@ -20,6 +20,7 @@
 #include <time.h>
 
 #include "rocrail/impl/action_impl.h"
+#include "rocrail/public/route.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/control.h"
@@ -38,8 +39,8 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
-#include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -216,7 +217,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       int error = 0;
       iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
-      SwitchOp.cmd( sw, cmd, True, &error );
+      SwitchOp.cmd( sw, cmd, True, 0, &error );
     }
   }
 

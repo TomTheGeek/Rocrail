@@ -45,11 +45,11 @@ void statusFindDest( iILcDriverInt inst ) {
   /* Find a free destination. */
   if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
     data->next1Block = data->model->findDest( data->model, data->loc->getCurBlock( data->loc ),
-                                        data->loc, &data->next1Route, data->gotoBlock,
-                                        wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                        wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
-                                        wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
-                                        False ); /* currently is no prev route running */
+                                              data->loc, &data->next1Route, data->gotoBlock,
+                                              wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
+                                              wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
+                                              wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
+                                              False ); /* currently is no prev route running */
   }
   else {
     Boolean wait = False;
@@ -69,7 +69,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->prewaitScheduleIdx = -1;
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), data->loc );
+                                                             data->loc->getCurBlock( data->loc ), data->loc );
     }
 
     if( !wait && data->next1Route != NULL ) {

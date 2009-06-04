@@ -19,7 +19,10 @@
 */
 
 void unlockBlockGroup( iOLcDriver inst, iONode group);
-void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute );
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, 
+                             iIBlockBase baseBlock, iORoute baseRoute, 
+                             iIBlockBase fromBlock, iORoute fromRoute, 
+                             iIBlockBase* toBlock, iORoute* toRoute );
 void listBlocks(iOLcDriver inst);
 void resetNext2( iOLcDriver inst, Boolean unLock );
 

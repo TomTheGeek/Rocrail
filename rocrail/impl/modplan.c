@@ -446,7 +446,12 @@ static iOList _getBlocks4Point(iOModPlan inst, const char* modid, const char* po
 }
 
 
-static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, const char* comingfrom, const char* eventid) {
+static iONode _getEvent4Block( iOModPlan  inst, 
+                               const char *modid, 
+                               iONode     block, 
+                               const char *comingfrom, 
+                               const char *eventid, 
+                               Boolean    *blockEventsDefined) {
   if( inst != NULL || __modplan != NULL ) {
     iOModPlanData data = Data(inst!=NULL?inst:__modplan);
     char key[64];
@@ -463,6 +468,9 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "searching event[%s] from block[%s] to block[%s-%s]...", eventid, comingfrom, modid, wBlock.getid(block) );
+
+    if ( blockEventsDefined)
+      *blockEventsDefined = False;
 
     /* iterate all fbevents */
     /* <fbevent id="1f2" action="enter" from="point-e" endpuls="false" ghostdetection="false"/> */
@@ -482,8 +490,15 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
           const char* blockid = (const char*)ListOp.get( blockids, i );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
               "eventmap[%s]=[%s], fbid=%s, comingfrom=%s, eventid=%s", key, blockid, fbid, comingfrom, eventid );
-          if( StrOp.equals(blockid, comingfrom) && StrOp.equals(fbid, eventid) ) {
-            return fbevent;
+          if ( StrOp.equals(blockid, comingfrom)) {
+            
+            /* inform about available feedbacks */
+            if ( blockEventsDefined)
+              *blockEventsDefined = True;
+            
+            if ( StrOp.equals(fbid, eventid) ) {
+              return fbevent;
+            }
           }
         }
       }

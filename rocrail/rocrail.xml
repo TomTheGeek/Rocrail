@@ -120,6 +120,7 @@
       <var name="reverse" vt="Boolean"/>
       <var name="group" vt="const char*"/>
       <var name="fromBlockId" vt="const char*"/>
+      <var name="viaRouteId" vt="const char *"/>
       <var name="prevLocIdCnt" vt="int"/>
       <var name="prevLocId" vt="const char*"/>
       <var name="listenerObj" vt="obj"/>
@@ -388,6 +389,9 @@
       <param name="curblockid" vt="const char*" remark="Current block ID"/>
     </fun>
     <fun name="getDir" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="getPlacing" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="isAutomode" vt="Boolean">
@@ -858,6 +862,7 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
       <param name="reverse" vt="Boolean" remark="running direction"/>
+      <param name="resblocks" vt="const char**" remark="Reserved blocks; do not lock already used blocks as crossing"/>
     </fun>
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
@@ -881,6 +886,9 @@
       <param name="fromto" vt="Boolean*"/>
     </fun>
     <fun name="getDir" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
+    <fun name="getLcDir" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="getVelocity" vt="const char*">
@@ -933,6 +941,7 @@
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="cmd" vt="iONode" remark="Command node"/>
       <param name="update" vt="Boolean" remark="Send update events"/>
+      <param name="retryCount" vt="int" remark="retry count"/>
       <param name="error" vt="int*" remark="error code"/>
     </fun>
     <fun name="modify" vt="void">
@@ -1404,6 +1413,7 @@
       <param name="block" vt="iONode"/>
       <param name="comingfrom" vt="const char*"/>
       <param name="eventid" vt="const char*"/>
+      <param name="blockEventsDefined" vt="Boolean*"/>
     </fun>
     <fun name="getModuleRouteIDs" vt="iOList">
       <param name="inst" vt="this" remark="instance"/>

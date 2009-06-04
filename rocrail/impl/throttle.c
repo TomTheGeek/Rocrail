@@ -338,11 +338,11 @@ static void touch_curr_turnout() {
   /* touch the turnout
   iOSwitch to0 = (iOSwitch) ListOp.get(turnoutList, currTurnout0);
   iONode cmd0 = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-  SwitchOp.cmd( to0, cmd0, True, 0);
+  SwitchOp.cmd( to0, cmd0, True, 0, 0);
 
   iOSwitch to1 = (iOSwitch) ListOp.get(turnoutList, currTurnout1);
   iONode cmd1 = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-  SwitchOp.cmd( to1, cmd1, False, 0);
+  SwitchOp.cmd( to1, cmd1, False, 0, 0);
 */
 }
 
@@ -534,7 +534,7 @@ void action_weiche(t_navicode par) {
         iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout0);
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd(cmd, wSwitch.straight);
-        SwitchOp.cmd( to, cmd, True, 0);
+        SwitchOp.cmd( to, cmd, True, 0, 0);
       }
       break;
     case KEY_SOFT_2:
@@ -542,7 +542,7 @@ void action_weiche(t_navicode par) {
          iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout0);
          iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
          wSwitch.setcmd(cmd, wSwitch.turnout);
-         SwitchOp.cmd( to, cmd, True, 0);
+         SwitchOp.cmd( to, cmd, True, 0, 0);
        }
       break;
     case KEY_SOFT_3:
@@ -550,7 +550,7 @@ void action_weiche(t_navicode par) {
         iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout1);
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd(cmd, wSwitch.straight);
-        SwitchOp.cmd( to, cmd, True, 0);
+        SwitchOp.cmd( to, cmd, True, 0, 0);
       }
       break;
     case KEY_SOFT_4:
@@ -558,7 +558,7 @@ void action_weiche(t_navicode par) {
          iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout1);
          iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
          wSwitch.setcmd(cmd, wSwitch.turnout);
-         SwitchOp.cmd( to, cmd, True, 0);
+         SwitchOp.cmd( to, cmd, True, 0, 0);
        }
       break;
     case KEY_KNOB_TURNED:

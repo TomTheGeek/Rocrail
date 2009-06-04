@@ -327,14 +327,18 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set direction address=%d, port=%d, gate=%s",
           addr, DIGITALBAHN_DIR, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
-      int addrCmd = (addr + DIGITALBAHN_DIR) / 4 + 1;
-      int portCmd = (addr + DIGITALBAHN_DIR) % 4 + 1;
+
+      int addrCmd = ( addr + DIGITALBAHN_DIR) / 4 + 1;
+      int portCmd = ( addr + DIGITALBAHN_DIR) % 4 + 1;
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
       wSwitch.setcmd  ( cmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-      ControlOp.cmd( control, cmd, NULL );
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...", 
+                   addrCmd, portCmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW);
+
+      ControlOp.cmd( control, cmd, NULL );
       /* give the decoder some time to think... */
       ThreadOp.sleep( wTurntable.getpause( data->props ) * 1000 );
     }
@@ -348,7 +352,6 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     if( iid != NULL )
       wSwitch.setiid( cmd, iid );
 
-
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set position address=%d, port=%d, gate=%s",
         addr, port, cmdstr );
 
@@ -357,13 +360,28 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, cmdstr );
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d]...", addrCmd, portCmd );
-
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...", 
+                 addrCmd, portCmd, cmdstr );
+
     ControlOp.cmd( control, cmd, NULL );
     /* give the decoder some time to think... */
     ThreadOp.sleep(100);
+
+    /* set tablepos optimistic predicted, if fb is not defined for destination track */
+    iONode track = wTurntable.gettrack( data->props );
+    while ( track != NULL ) {
+      if ( ( wTTTrack.getnr( track ) == data->gotopos) 
+        && ( ( wTTTrack.getposfb( track) == NULL) || StrOp.equals( wTTTrack.getposfb( track), "\0"))) {
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set optimistic tablepos %d", data->tablepos );
+        
+        data->tablepos = data->gotopos;
+        wTurntable.setbridgepos( data->props, data->tablepos );
+      }
+      track = wTurntable.nexttrack( data->props, track );
+    }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no command sended" );

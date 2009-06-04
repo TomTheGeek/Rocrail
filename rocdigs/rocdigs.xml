@@ -611,7 +611,6 @@
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
       <var name="iid" vt="const char*" remark="Interface ID"/>
       <var name="swtime" vt="int" remark="Turnout switch time?"/>
-      <var name="objmap" vt="iOMap" remark="Data Mapper"/>
       <var name="socket" vt="iOSocket" remark="IO Socket"/>
       <var name="writemux" vt="iOMutex" remark="Mutex Handler"/>
       <var name="reader" vt="iOThread" remark="Reader Thread"/>
@@ -622,6 +621,11 @@
       <var name="connected" vt="Boolean" remark="Connection Flag"/>
       <var name="olds88[64]" vt="int" remark="Previous sensor states"/>
       <var name="mapmux" vt="iOMutex"/>
+      <var name="locoNameToEcosOidMap" vt="iOMap" remark="Loco Name to OID Mapper"/>
+      <var name="ecosOidToLocoNameMap" vt="iOMap" remark="OID to Loco Name Mapper"/>
+      <var name="dccSwitchAddrToOidMap" vt="iOMap" remark="DCC Switch Addr to OID Mapper"/>
+      <var name="dccOidToSwitchAddrMap" vt="iOMap" remark="DCC OID to Switch Addr Mapper"/>
+      <var name="dccSwitchStates[2048]" vt="unsigned char" remark="DCC Switch state control"/>
     </data>
   </object>
 
