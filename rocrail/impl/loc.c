@@ -318,7 +318,7 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setmode( node, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
       wLoc.setblockid( node, data->curBlock );
-      // double ??? wLoc.setdir( node, wLoc.isdir(data->props) );
+      /* double ??? wLoc.setdir( node, wLoc.isdir(data->props) );*/
       wLoc.setfn( node, wLoc.isfn(data->props) );
       wLoc.setruntime( node, wLoc.getruntime(data->props) );
       wLoc.setmtime( node, wLoc.getmtime(data->props) );

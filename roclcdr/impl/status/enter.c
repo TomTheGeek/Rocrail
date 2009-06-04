@@ -62,10 +62,10 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
   */
   data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
-    
-  // unLock crossing bloks and switches before new calculation in eventEnter
-  // data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ) );
-    
+
+  /* unLock crossing bloks and switches before new calculation in eventEnter */
+  /* data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ) ); */
+
   if( !data->next1Block->wait( data->next1Block, data->loc ) &&
       data->run &&
       !data->reqstop &&
@@ -78,7 +78,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
                                                   data->loc, &data->next2Route, data->gotoBlock,
                                                   wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                                  wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ), 
+                                                  wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
 					                                        wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
 		       			                                  data->next1Route->isSwapPost( data->next1Route ) );
       }
@@ -145,7 +145,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     if( data->next2Block != NULL ) {
       /* fix: if a loc is running, and the new destination is opposite, the loc should reject the new destination and stop. */
       Boolean dir = data->next2Route->getDirection( data->next2Route,
-          					                                data->next1Block->base.id(data->next1Block), 
+          					                                data->next1Block->base.id(data->next1Block),
 						                                        &data->next2RouteFromTo );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "loco direction for [%s] is [%s], route direction [%s]",
@@ -265,7 +265,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   /* SECOND NEXT BLOCK */
   else if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
     /* try to reserve next3Block if the train does not have to wait in the next next2Block */
-    reserveSecondNextBlock( ( iOLcDriver)inst, data->gotoBlock, 
+    reserveSecondNextBlock( ( iOLcDriver)inst, data->gotoBlock,
                             data->next1Block, data->next1Route,
                             data->next2Block, data->next2Route,
                             &data->next3Block, &data->next3Route );
