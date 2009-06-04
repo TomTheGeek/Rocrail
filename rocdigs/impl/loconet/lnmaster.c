@@ -242,6 +242,8 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
   wLoc.setprot( nodeSpd, slot[slotnr].format == 0 ? wLoc.prot_N:wLoc.prot_M );
   wLoc.setspcnt( nodeSpd, slot[slotnr].steps == 0 ? 128:slot[slotnr].steps );
 
+  wLoc.setthrottleid( nodeSpd, slot[slotnr].idl + slot[slotnr].idh * 127 );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "slot# %d format=%d steps=%d speed=%d(%d) dir=%s inuse=%d",
       slotnr, slot[slotnr].format, slot[slotnr].steps, slot[slotnr].speed, (int)speed, slot[slotnr].dir?"fwd":"rev", slot[slotnr].inuse );
@@ -613,7 +615,6 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].f8    = ((msg[10] & SND_F8) != 0 ? True:False);
   slot[slotnr].idl   = msg[11];
   slot[slotnr].idh   = msg[12];
-
 
   __setstat1byte( slot, slotnr, msg[3]);
 

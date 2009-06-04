@@ -753,8 +753,11 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         }
 
         int jsdev = m_JsSupport->getDev4ID(wLoc.getid( lc ));
+        int throttleid = wLoc.getthrottleid(lc);
         if( jsdev != -1 )
-          m_ActiveLocs->SetCellValue( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
+        else if( throttleid > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), throttleid) );
         else
           m_ActiveLocs->SetCellValue( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxString(wLoc.isresumeauto( lc ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( lc ),wxConvUTF8) );
 
@@ -908,8 +911,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
 
         int jsdev = m_JsSupport->getDev4ID(locid);
+        int throttleid = wLoc.getthrottleid(node);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
+        else if( throttleid > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), throttleid) );
         else
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.isresumeauto( node ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( node ),wxConvUTF8) );
 
