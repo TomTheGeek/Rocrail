@@ -484,8 +484,9 @@ void ScheduleDialog::initEntry(int row) {
 
 
 bool ScheduleDialog::evaluate() {
-  if( m_Props == NULL )
+  if( m_Props == NULL ) {
     return false;
+  }
 
   if( m_ID->GetValue().Len() == 0 ) {
     wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
@@ -504,7 +505,7 @@ bool ScheduleDialog::evaluate() {
   wSchedule.setscaction( m_Props, m_ScheduleAction->GetValue().mb_str(wxConvUTF8) );
 
   if( m_SelectedRow == -1 )
-    return false;
+    return true;
 
   iONode entry = (iONode)ListOp.get( m_EntryPropsList, m_SelectedRow );
 
@@ -902,11 +903,16 @@ void ScheduleDialog::OnListboxScheduleListSelected( wxCommandEvent& event )
 
 void ScheduleDialog::OnApplyClick( wxCommandEvent& event )
 {
-  if( m_Props == NULL )
+  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "apply" );
+  if( m_Props == NULL ) {
+    TraceOp.trc( "scdlg", TRCLEVEL_WARNING, __LINE__, 9999, "no valid properties" );
     return;
+  }
 
-  if( !evaluate() )
+  if( !evaluate() ) {
+    TraceOp.trc( "scdlg", TRCLEVEL_WARNING, __LINE__, 9999, "error on evaluate" );
     return;
+  }
 
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
@@ -999,6 +1005,8 @@ void ScheduleDialog::OnAddLocationClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
+  wSchedule.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+
   iONode scentry = NodeOp.inst( wScheduleEntry.name(), m_Props, ELEMENT_NODE );
   wScheduleEntry.setlocation( scentry, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
   wScheduleEntry.sethour( scentry, m_Hour->GetValue() );
@@ -1017,6 +1025,8 @@ void ScheduleDialog::OnAddBlockClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
+
+  wSchedule.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
 
   iONode scentry = NodeOp.inst( wScheduleEntry.name(), m_Props, ELEMENT_NODE );
   wScheduleEntry.setblock( scentry, m_Block->GetStringSelection().mb_str(wxConvUTF8) );

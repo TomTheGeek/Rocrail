@@ -114,6 +114,8 @@
     <var name="lciid" vt="string" defval="" range="*" remark="IID to use for mobile decoders; using default in case not set."/>
     <var name="dpiid" vt="string" defval="" range="*" remark="IID to use for dispathing a loco; using default in case not set."/>
     <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
+    <var name="scsensor" vt="string" defval="" range="0-*" remark="Shortcut sensor ID."/>
+    <var name="sciid" vt="string" defval="" range="0-*" remark="Shortcut command station IID"/>
     <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
@@ -277,7 +279,7 @@
       <var name="fbpoll" vt="bool" defval="false" remark="Poll sensor events in p50x instead of xEvtSen."/>
       <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
-	  <var name="sensordebounce" vt="int" defval="100" remark="No of cycles for Sensor debounce"/>
+	  <var name="sensordebounce" vt="int" defval="0" remark="No of cycles for Sensor debounce"/>
 
 
       <!-- HSI88 -->

@@ -394,6 +394,12 @@ static int _state( obj inst ) {
 }
 
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOSprogData data = Data( inst );
+}
+
+
 /**  */
 static Boolean _supportPT( obj inst ) {
   iOSprogData data = Data(inst);
@@ -411,9 +417,25 @@ static int _version( obj inst ) {
 }
 
 
-static int __parseValue(const char* in) {
+static int __parseCVValue(const char* in) {
   int val = 0;
-  /* TODO: parse the value string */
+  /* parse the value string */
+  if( in[0] == 'h' ) {
+    /* hex value */
+    if( in[1] >= '0' && in[1] <= '9' ) {
+      val = (in[1] - '0') << 4;
+    }
+    else if( in[1] >= 'A' && in[1] <= 'F' ) {
+      val = (in[1] - 'A') << 4;
+    }
+
+    if( in[2] >= '0' && in[2] <= '9' ) {
+      val += (in[2] - '0');
+    }
+    else if( in[2] >= 'A' && in[2] <= 'F' ) {
+      val += (in[2] - 'A');
+    }
+  }
   return val;
 }
 
@@ -425,7 +447,7 @@ static void __handleResponse(iOSprog sprog, const char* in) {
   case CV_READ:
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcv( rsp, data->lastcv );
-    wProgram.setvalue( rsp, __parseValue(in) );
+    wProgram.setvalue( rsp, __parseCVValue(in) );
     wProgram.setcmd( rsp, wProgram.datarsp );
     if( data->iid != NULL )
       wProgram.setiid( rsp, data->iid );
@@ -433,7 +455,7 @@ static void __handleResponse(iOSprog sprog, const char* in) {
   case CV_WRITE:
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcv( rsp, data->lastcv );
-    wProgram.setvalue( rsp, __parseValue(in) );
+    wProgram.setvalue( rsp, __parseCVValue(in) );
     wProgram.setcmd( rsp, wProgram.datarsp );
     if( data->iid != NULL )
       wProgram.setiid( rsp, data->iid );

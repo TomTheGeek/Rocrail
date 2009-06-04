@@ -602,6 +602,12 @@ static int _state( obj inst ) {
   return state;
 }
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOHSI88Data data = Data( inst );
+}
+
+
 /* VERSION: */
 static int vmajor = 1;
 static int vminor = 3;

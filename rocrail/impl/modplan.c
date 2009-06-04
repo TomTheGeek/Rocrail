@@ -23,6 +23,7 @@
 #include "rocrail/wrapper/public/BlockList.h"
 #include "rocrail/wrapper/public/TrackList.h"
 #include "rocrail/wrapper/public/LocList.h"
+#include "rocrail/wrapper/public/CarList.h"
 #include "rocrail/wrapper/public/TurntableList.h"
 #include "rocrail/wrapper/public/SelTabList.h"
 #include "rocrail/wrapper/public/SwitchList.h"
@@ -724,6 +725,7 @@ static Boolean __mergeLocs( iONode model, const char* fname ) {
   if( root != NULL ) {
 
     __mergeList(wLocList.name()  , model, root, -1, 0,0,0, False);
+    __mergeList(wCarList.name()  , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
@@ -759,6 +761,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
   dbkey = wFeedbackList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wLocList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wCarList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wRouteList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
@@ -1085,6 +1089,8 @@ static void __saveLocs( iOModPlan inst, const char* filename ) {
   char* xml = NULL;
   if( wPlan.getlclist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlclist(data->model) ) );
+  if( wPlan.getcarlist(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getcarlist(data->model) ) );
 
   /* Serialize plan. */
   xml = model->base.toString( model );

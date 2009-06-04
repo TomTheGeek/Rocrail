@@ -295,14 +295,14 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not send the packet!" );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not send the packet!" );
     }
 
     /* Release the mutex. */
     MutexOp.post( data->mux );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on mutex." );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "timeout on mutex." );
   }
 
   return ok;
@@ -2048,7 +2048,7 @@ int makereqDispatch(byte *msg, int slot, iONode node, int status, Boolean active
   msg[7] = LocoNetOp.checksum( msg+4, 3 );
 
 
-  return 16;
+  return 8;
 }
 
 
@@ -2159,6 +2159,12 @@ static int _state( obj inst ) {
   state |= data->comm << 2;
   return state;
 }
+
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOLocoNetData data = Data( inst );
+}
+
 
 /* VERSION: */
 static int vmajor = 1;

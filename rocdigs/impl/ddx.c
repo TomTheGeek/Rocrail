@@ -568,6 +568,15 @@ static int _state( obj inst ) {
   return state;
 }
 
+
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iODDXData data = Data( inst );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "external shortcut event; power off." );
+  stop_voltage(inst);
+}
+
+
 /* VERSION: */
 static int vmajor = 1;
 static int vminor = 3;

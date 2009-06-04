@@ -56,6 +56,7 @@ public:
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
+  void onImport( wxCommandEvent& event );
   iONode getSelectedCar();
 
 };

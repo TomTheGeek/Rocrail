@@ -90,6 +90,7 @@ void JsSupport::funCmd( int device )
 {
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   wFunCmd.setid( cmd, wLoc.getid(m_Selected[device]) );
+  wFunCmd.setf0( cmd, wLoc.isfn(m_Selected[device]) );
   wFunCmd.setf1( cmd, m_bF1[device]?True:False );
   wFunCmd.setf2( cmd, m_bF2[device]?True:False );
   wFunCmd.setf3( cmd, m_bF3[device]?True:False );

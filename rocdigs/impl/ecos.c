@@ -1049,6 +1049,12 @@ static int _state( obj inst ) {
 }
 
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOECoSData data = Data( inst );
+}
+
+
 /**
  * _supportPT -- Not implemented yet
  *

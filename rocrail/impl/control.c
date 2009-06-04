@@ -84,6 +84,31 @@ static const char* __id( void* inst ) {
 }
 
 static void* __event( void* inst, const void* evt ) {
+  iOControlData data = Data(inst);
+  iONode node = (iONode)evt;
+  if( node != NULL && StrOp.equals( wFeedback.name(), NodeOp.getName(node) ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "sensor event [%s][%s]", wFeedback.getid(node), wFeedback.isstate(node)?"ON":"OFF" );
+    if( StrOp.equals( wFeedback.getid(node), wRocRail.getscsensor(AppOp.getIni()) ) ) {
+      if( wFeedback.isstate(node) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ShortCut!" );
+        /* inform command station */
+        if( wRocRail.getsciid(AppOp.getIni()) != NULL && StrOp.len( wRocRail.getsciid(AppOp.getIni()) ) > 0 ) {
+          const char* iid = wRocRail.getsciid(AppOp.getIni());
+          iIDigInt pDi = (iIDigInt)MapOp.get( data->diMap, iid );
+          if( pDi != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "informing fitting DigInt [%s]...", iid );
+            pDi->shortcut( (obj)pDi );
+          }
+
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster reports normal operation" );
+      }
+    }
+  }
   return NULL;
 }
 
@@ -120,6 +145,23 @@ static struct OBase* __clone( void* inst ) {
 }
 static Boolean __equals( void* inst1, void* inst2 ) {
   return False;
+}
+
+
+static void __initSensors( iOControl inst ) {
+  iOControlData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iOFBack s = ModelOp.getFBack( model, wRocRail.getscsensor(AppOp.getIni()) );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init shortcut sensor..." );
+
+  if( s != NULL ) {
+    FBackOp.addListener( s, (obj)inst );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Shortcut sensor could not be initialized." );
+  }
+
 }
 
 
@@ -991,6 +1033,8 @@ static iOControl _inst( Boolean nocom ) {
 
     data->checker = ThreadOp.inst( "checker", __checker, control );
     ThreadOp.start( data->checker );
+
+    __initSensors(control);
 
     instCnt++;
 

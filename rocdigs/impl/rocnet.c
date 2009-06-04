@@ -373,6 +373,13 @@ static int _state( obj inst ) {
 }
 
 
+/* external shortcut event */
+static void _shortcut(obj inst) {
+  iOrocNetData data = Data( inst );
+}
+
+
+
 /**  */
 static Boolean _supportPT( obj inst ) {
   return 0;
