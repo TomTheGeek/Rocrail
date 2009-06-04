@@ -757,7 +757,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
         else if( throttleid > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), throttleid) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
         else
           m_ActiveLocs->SetCellValue( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxString(wLoc.isresumeauto( lc ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( lc ),wxConvUTF8) );
 
@@ -877,8 +877,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) )
   {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] destblock=[%s]",
-        wLoc.getid( node ), (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] destblock=[%s] throttleID=%d",
+        wLoc.getid( node ), (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-"), wLoc.getthrottleid(node) );
 
     for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
@@ -915,7 +915,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
         else if( throttleid > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), throttleid) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
         else
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.isresumeauto( node ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( node ),wxConvUTF8) );
 

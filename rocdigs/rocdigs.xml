@@ -525,6 +525,7 @@
       <var name="opsw[10]" vt="byte"/>
       <var name="opswreaded" vt="Boolean"/>
       <var name="locoslot[128]" vt="int"/>
+      <var name="locothrottle[128]" vt="int"/>
       <var name="slotV[128]" vt="byte"/>
       <var name="slotaccessed[128]" vt="time_t"/>
       <var name="purgetime" vt="int"/>

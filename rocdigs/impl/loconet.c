@@ -622,6 +622,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   int spd  = rsp[2];
   int dirf = rsp[2];
   int addr = data->locoslot[slot];
+  int throttleid = data->locothrottle[slot];
 
   if( rsp[0] == OPC_LOCO_SPD ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d spd=%d", slot, addr, spd );
@@ -632,6 +633,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, spd );
     wLoc.setV_rawMax( nodeC, 127 );
+    wLoc.setthrottleid( nodeC, throttleid );
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
