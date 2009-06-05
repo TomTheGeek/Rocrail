@@ -507,6 +507,7 @@ void CV::stopProgress() {
 
 void CV::loadCVfromFile() {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxString ms_FileExt = _T("LocoIO (*.csv)|*.csv");
   wxFileDialog* fdlg = new wxFileDialog(wxGetApp().getFrame(), wxGetApp().getMenu("opencvfile"),
       wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
@@ -580,6 +581,7 @@ void CV::loadCVfromFile() {
 
 void CV::saveCVtoFile() {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxString ms_FileExt = _T("LocoIO (*.csv)|*.csv");
   wxFileDialog* fdlg = new wxFileDialog(wxGetApp().getFrame(), wxGetApp().getMenu("savelocoiofileas"),
       wxString(l_openpath,wxConvUTF8),

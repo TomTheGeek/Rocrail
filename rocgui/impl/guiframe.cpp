@@ -1826,6 +1826,7 @@ void RocGuiFrame::OnSave( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnSaveAs( wxCommandEvent& event ) {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveplanfileas"), wxString(l_openpath,wxConvUTF8), m_LocalPlan, ms_FileExt, wxSAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
@@ -1889,6 +1890,7 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
 void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     setLocalPlan( fdlg->GetPath() );
