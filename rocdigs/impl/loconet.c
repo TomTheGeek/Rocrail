@@ -1201,7 +1201,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
       }
-      else if( slot == 0x7B ) {
+      else if( slot == FC_SLOT ) {
         /* TODO: Fast Clock */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO: Fast Clock slot read" );
       }
@@ -1579,7 +1579,9 @@ static int __setFastClock(iOLocoNet loconet, iONode node, byte* cmd) {
       cmd[12] = 0x70;
       cmd[13] = LocoNetOp.checksum( cmd, 13 );
 
-      return 14;
+      ok = LocoNetOp.transact( loconet, cmd, 14, rsp, &insize, 0, 0, True );
+
+      return 0;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Could not get fast clock slot. (un expected response 0x%02X...)", rsp[0] );

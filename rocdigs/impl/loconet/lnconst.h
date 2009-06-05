@@ -141,7 +141,7 @@
 #define GTRK_IDLE         0x02      /* 0=TRACK is PAUSED, B'cast EMERG STOP.                */
 #define GTRK_POWER        0x01      /* 1=DCC packets are ON in MASTER, Global POWER up      */
 
-#define FC_SLOT           0x7b      /* Fast clock is in this slot                           */
+#define FC_SLOT           123      /* Fast clock is in this slot                           */
 #define PRG_SLOT          0x7c      /* This slot communicates with the programming track    */
 
 /* values and macros to decode programming messages */

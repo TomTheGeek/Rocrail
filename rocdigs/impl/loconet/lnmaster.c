@@ -57,6 +57,11 @@ struct __lnslot {
   Boolean f8;
   int idl;       // throttle ID low part
   int idh;       // throttle ID high part
+  // fast clock
+  int divider;
+  int minutes;
+  int hours;
+  int init;
   time_t accessed;
 };
 
@@ -432,6 +437,29 @@ static void __slotdataRsp( iOLocoNet loconet, struct __lnslot* slot, int slotnr 
 }
 
 
+
+
+static void __slotclockRsp( iOLocoNet loconet, struct __lnslot* slot ) {
+  byte rsp[32];
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock slot response" );
+  rsp[0] = OPC_SL_RD_DATA;
+  rsp[1] = 0x0E;
+  rsp[2] = FC_SLOT;
+  rsp[3] = slot[FC_SLOT].divider;
+  rsp[4] = 0x7F;
+  rsp[5] = 0x7F;
+  rsp[6] = slot[FC_SLOT].minutes;
+  rsp[7] = __gettrkbyte(loconet);
+  rsp[8] = slot[FC_SLOT].hours;
+  rsp[9] = 0;
+  rsp[10] = 0x70;
+  rsp[11] = 0x7F;
+  rsp[12] = 0x70;
+  rsp[13] = LocoNetOp.checksum( rsp, 13);
+  LocoNetOp.write( loconet, rsp, 14 );
+}
+
+
 /*B4 6F 7F*/
 static void __longAck( iOLocoNet loconet, int opc, int rc ) {
   byte rsp[32];
@@ -475,7 +503,10 @@ static int __getslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   iOLocoNetData data = Data(loconet);
   int slotnr = msg[1] & 0x7F;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get slot# %d data", msg[1] );
-  __slotdataRsp( loconet, slot, slotnr );
+  if( slotnr == FC_SLOT )
+    __slotclockRsp( loconet, slot );
+  else
+    __slotdataRsp( loconet, slot, slotnr );
   return slotnr;
 }
 
@@ -610,24 +641,37 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
    int id2       = msg[12];    // ms 7 bits of ID code
    */
 
-  slot[slotnr].addr  = addr;
-  slot[slotnr].speed = msg[5];
-  slot[slotnr].dir   = ((msg[6] & DIRF_DIR) != 0 ? False:True); /* True is fwd in Rocrail */
-  slot[slotnr].f0    = ((msg[6] & DIRF_F0) != 0 ? True:False);
-  slot[slotnr].f1    = ((msg[6] & DIRF_F1) != 0 ? True:False);
-  slot[slotnr].f2    = ((msg[6] & DIRF_F2) != 0 ? True:False);
-  slot[slotnr].f3    = ((msg[6] & DIRF_F3) != 0 ? True:False);
-  slot[slotnr].f4    = ((msg[6] & DIRF_F4) != 0 ? True:False);
-  slot[slotnr].f5    = ((msg[10] & SND_F5) != 0 ? True:False);
-  slot[slotnr].f6    = ((msg[10] & SND_F6) != 0 ? True:False);
-  slot[slotnr].f7    = ((msg[10] & SND_F7) != 0 ? True:False);
-  slot[slotnr].f8    = ((msg[10] & SND_F8) != 0 ? True:False);
-  slot[slotnr].idl   = msg[11];
-  slot[slotnr].idh   = msg[12];
+  if( slotnr == FC_SLOT ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set fast clock slot" );
+    slot[slotnr].divider = msg[3];
+    slot[slotnr].minutes = msg[6];
+    slot[slotnr].hours   = msg[8];
+  }
+  else {
+    slot[slotnr].addr  = addr;
+    slot[slotnr].speed = msg[5];
+    slot[slotnr].dir   = ((msg[6] & DIRF_DIR) != 0 ? False:True); /* True is fwd in Rocrail */
+    slot[slotnr].f0    = ((msg[6] & DIRF_F0) != 0 ? True:False);
+    slot[slotnr].f1    = ((msg[6] & DIRF_F1) != 0 ? True:False);
+    slot[slotnr].f2    = ((msg[6] & DIRF_F2) != 0 ? True:False);
+    slot[slotnr].f3    = ((msg[6] & DIRF_F3) != 0 ? True:False);
+    slot[slotnr].f4    = ((msg[6] & DIRF_F4) != 0 ? True:False);
+    slot[slotnr].f5    = ((msg[10] & SND_F5) != 0 ? True:False);
+    slot[slotnr].f6    = ((msg[10] & SND_F6) != 0 ? True:False);
+    slot[slotnr].f7    = ((msg[10] & SND_F7) != 0 ? True:False);
+    slot[slotnr].f8    = ((msg[10] & SND_F8) != 0 ? True:False);
+    slot[slotnr].idl   = msg[11];
+    slot[slotnr].idh   = msg[12];
 
-  data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, __setstat1byte( slot, slotnr, msg[3])), TRCLEVEL_INFO );
-  data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
+    data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, __setstat1byte( slot, slotnr, msg[3])), TRCLEVEL_INFO );
+    data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
+  }
   __longAck( loconet, OPC_WR_SL_DATA, -1 );
+
+  if( slotnr == FC_SLOT && slot[slotnr].init == 0) {
+    slot[slotnr].init = 1;
+    __slotclockRsp(loconet, slot);
+  }
   return slotnr;
 }
 
