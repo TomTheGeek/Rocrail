@@ -405,7 +405,7 @@ static void _green( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.straight );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, 0, &error );
+  SwitchOp.cmd( inst, node, True, &error );
 }
 
 static void _red( iOSwitch inst ) {
@@ -414,7 +414,7 @@ static void _red( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.turnout );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, 0, &error );
+  SwitchOp.cmd( inst, node, True, &error );
 }
 
 
@@ -443,7 +443,7 @@ static Boolean _isSet( iOSwitch inst ) {
 }
 
 
-static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int retryCount, int* error ) {
+static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -920,7 +920,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
       if( data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
         wSwitch.setset( nodeD, SwitchOp.isSet(inst) );
-      
+
       wSwitch.setaddr1( nodeD, wSwitch.getaddr1( data->props ) );
       wSwitch.setport1( nodeD, wSwitch.getport1( data->props ) );
       if( has2Units ) {
@@ -968,11 +968,11 @@ static void _checkSenPos( iOSwitch inst ) {
       /* check the savepos */
       if( !StrOp.equals( wSwitch.getsavepos(data->props), wSwitch.getstate( data->props ) ) ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] to save position", wSwitch.name() );
-        
+
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
-        SwitchOp.cmd( inst, cmd, True, 0, &error );
+        SwitchOp.cmd( inst, cmd, True, &error );
       }
     }
   }

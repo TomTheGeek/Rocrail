@@ -534,7 +534,7 @@ void action_weiche(t_navicode par) {
         iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout0);
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd(cmd, wSwitch.straight);
-        SwitchOp.cmd( to, cmd, True, 0, 0);
+        SwitchOp.cmd( to, cmd, True, 0);
       }
       break;
     case KEY_SOFT_2:
@@ -542,7 +542,7 @@ void action_weiche(t_navicode par) {
          iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout0);
          iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
          wSwitch.setcmd(cmd, wSwitch.turnout);
-         SwitchOp.cmd( to, cmd, True, 0, 0);
+         SwitchOp.cmd( to, cmd, True, 0);
        }
       break;
     case KEY_SOFT_3:
@@ -550,7 +550,7 @@ void action_weiche(t_navicode par) {
         iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout1);
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd(cmd, wSwitch.straight);
-        SwitchOp.cmd( to, cmd, True, 0, 0);
+        SwitchOp.cmd( to, cmd, True, 0);
       }
       break;
     case KEY_SOFT_4:
@@ -558,7 +558,7 @@ void action_weiche(t_navicode par) {
          iOSwitch to = (iOSwitch) ListOp.get(turnoutList, currTurnout1);
          iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
          wSwitch.setcmd(cmd, wSwitch.turnout);
-         SwitchOp.cmd( to, cmd, True, 0, 0);
+         SwitchOp.cmd( to, cmd, True, 0);
        }
       break;
     case KEY_KNOB_TURNED:
