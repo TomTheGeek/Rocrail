@@ -318,11 +318,11 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      StrOp.fmtb( outa, "--\r" );
+      StrOp.fmtb( outa, "-\r" );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      StrOp.fmtb( outa, "+-\r" );
+      StrOp.fmtb( outa, "+\r" );
     }
   }
 
@@ -331,13 +331,15 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
     if( wProgram.getcmd( node ) == wProgram.get ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
-      StrOp.fmtb( outa, "V %d\r", wProgram.getcv(node) );
+      StrOp.fmtb( outa, "C %d\r", wProgram.getcv(node) );
       data->lastcmd = CV_READ;
+      data->lastvalue = 0;
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
-      StrOp.fmtb( outa, "V %d %d\r", wProgram.getcv(node), wProgram.getvalue(node) );
+      StrOp.fmtb( outa, "C %d %d\r", wProgram.getcv(node), wProgram.getvalue(node) );
       data->lastcmd = CV_WRITE;
+      data->lastvalue = wProgram.getvalue(node);
     }
   }
 
@@ -419,22 +421,15 @@ static int _version( obj inst ) {
 
 static int __parseCVValue(const char* in) {
   int val = 0;
+  int idx = 0;
   /* parse the value string */
-  if( in[0] == 'h' ) {
-    /* hex value */
-    if( in[1] >= '0' && in[1] <= '9' ) {
-      val = (in[1] - '0') << 4;
+  while( in[idx] != 0 ) {
+    if( in[idx] == 'h' ) {
+      /* hex value */
+      val = (int)strtol( in+(idx+1), NULL, 16 );
+      break;
     }
-    else if( in[1] >= 'A' && in[1] <= 'F' ) {
-      val = (in[1] - 'A') << 4;
-    }
-
-    if( in[2] >= '0' && in[2] <= '9' ) {
-      val += (in[2] - '0');
-    }
-    else if( in[2] >= 'A' && in[2] <= 'F' ) {
-      val += (in[2] - 'A');
-    }
+    idx++;
   }
   return val;
 }
@@ -445,6 +440,7 @@ static void __handleResponse(iOSprog sprog, const char* in) {
 
   switch( data->lastcmd ) {
   case CV_READ:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CV read response" );
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcv( rsp, data->lastcv );
     wProgram.setvalue( rsp, __parseCVValue(in) );
@@ -453,9 +449,10 @@ static void __handleResponse(iOSprog sprog, const char* in) {
       wProgram.setiid( rsp, data->iid );
     break;
   case CV_WRITE:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CV write response" );
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcv( rsp, data->lastcv );
-    wProgram.setvalue( rsp, __parseCVValue(in) );
+    wProgram.setvalue( rsp, StrOp.find(in, "OK") ?data->lastvalue:0 );
     wProgram.setcmd( rsp, wProgram.datarsp );
     if( data->iid != NULL )
       wProgram.setiid( rsp, data->iid );
@@ -481,6 +478,9 @@ static void __sprogReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG reader started." );
   ThreadOp.sleep( 1000 );
 
+  StrOp.fmtb( in, "?\r" );
+  SerialOp.write(data->serial, in, StrOp.len(in));
+
   do {
 
     ThreadOp.sleep( 10 );
@@ -492,6 +492,8 @@ static void __sprogReader( void* threadinst ) {
           if( in[idx] == '\r' ) {
             in[idx+1] = '\0';
             idx = 0;
+            StrOp.replaceAll( in, '\n', ' ' );
+            StrOp.replaceAll( in, '\r', ' ' );
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG readed: [%s]", in );
             __handleResponse(sprog, in);
           }
@@ -523,6 +525,7 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini    = ini;
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
   data->device = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->run    = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sprog %d.%d.%d", vmajor, vminor, patch );

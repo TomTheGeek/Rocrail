@@ -757,6 +757,7 @@
       <var name="reader" vt="iOThread"/>
       <var name="lastcmd" vt="int"/>
       <var name="lastcv" vt="int"/>
+      <var name="lastvalue" vt="int"/>
     </data>
   </object>
 
