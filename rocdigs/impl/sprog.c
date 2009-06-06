@@ -205,7 +205,9 @@ unlock bit of the Mode Word.
 
 
 #include "rocdigs/impl/sprog_impl.h"
+#include "rocdigs/impl/common/nmrapacket.h"
 
+#include "rocs/public/str.h"
 #include "rocs/public/mem.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
@@ -281,6 +283,21 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OSprog ----- */
 
+static char* __byteToStr( char* s, unsigned char* data, int size ) {
+  static char cHex[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  int i = 0;
+  for( i = 0; i < size; i++ ) {
+    int b = data[i];
+    s[i*3]   = cHex[(b&0xF0)>>4 ];
+    s[i*3+1] = cHex[ b&0x0F     ];
+    s[i*3+2] = ' ';
+  }
+  s[size*3] = '\0';
+  return s;
+}
+
+
+
 
 static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int insize ) {
   iOSprogData data = Data(sprog);
@@ -302,6 +319,21 @@ static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int 
   }
 
   return rc;
+}
+
+
+static int __getLocoSlot(iOSprog sprog, iONode node) {
+  iOSprogData data = Data(sprog);
+  int i    = 0;
+  int addr = wLoc.getaddr(node);
+
+  /* lookup slot for address: */
+  for( i = 0; i < 128; i++ ) {
+    if( data->slots[i].addr == addr || data->slots[i].addr == 0 ) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 
@@ -342,6 +374,44 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
       data->lastvalue = wProgram.getvalue(node);
     }
   }
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int slot   = 0;
+    int size   = 0;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco command for address %d", wLoc.getaddr( node ) );
+
+    slot =  __getLocoSlot( sprog, node);
+
+    if( slot >= 0 ) {
+      int V = 0;
+      int steps = wLoc.getspcnt( node );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco slot=%d", slot );
+
+      if( wLoc.getV( node ) != -1 ) {
+        if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+          V = (wLoc.getV( node ) * steps) / 100;
+        else if( wLoc.getV_max( node ) > 0 )
+          V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
+      }
+
+      /* keep this value for the ping thread */
+      data->slots[slot].dir = wLoc.isdir( node );
+      data->slots[slot].V = V;
+      data->slots[slot].steps = steps;
+      data->slots[slot].addr = wLoc.getaddr( node );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "slot=%d addr=%d V=%d steps=%d dir=%d long=%d", slot,
+          data->slots[slot].addr, data->slots[slot].V, data->slots[slot].steps, data->slots[slot].dir, data->slots[slot].longaddr );
+
+      size = 0;
+    }
+  }
+
+
 
   return rsp;
 
@@ -467,6 +537,52 @@ static void __handleResponse(iOSprog sprog, const char* in) {
 }
 
 
+static void __sprogWriter( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSprog sprog = (iOSprog)ThreadOp.getParm( th );
+  iOSprogData data = Data(sprog);
+  int slotidx = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG writer started." );
+
+  while(data->run) {
+
+    ThreadOp.sleep(100);
+
+    if( MutexOp.wait( data->mux ) ) {
+      if( data->slots[slotidx].addr > 0 ) {
+        byte dcc[12];
+        char cmd[32] = {0};
+        char out[64] = {0};
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
+        if( data->slots[slotidx].steps == 128 )  {
+          int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
+              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC out: %s", out );
+          SerialOp.write(data->serial, out, StrOp.len(out));
+        }
+        else if( data->slots[slotidx].steps == 28 )  {
+        }
+        else {
+        }
+        slotidx++;
+      }
+      else {
+        slotidx = 0;
+      }
+      /* Release the mutex. */
+      MutexOp.post( data->mux );
+    }
+
+
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG writer ended." );
+}
+
+
 static void __sprogReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOSprog sprog = (iOSprog)ThreadOp.getParm( th );
@@ -489,7 +605,14 @@ static void __sprogReader( void* threadinst ) {
 
       if( SerialOp.available(data->serial) ) {
         if( SerialOp.read(data->serial, &in[idx], 1) ) {
-          if( in[idx] == '\r' ) {
+          if( idx > 254 ) {
+            in[idx] = 0;
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "reader overflow [%d]\n%s", idx, in );
+            idx = 0;
+          }
+
+
+          else if( in[idx] == '\r' ) {
             in[idx+1] = '\0';
             idx = 0;
             StrOp.replaceAll( in, '\n', ' ' );
@@ -497,8 +620,9 @@ static void __sprogReader( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG readed: [%s]", in );
             __handleResponse(sprog, in);
           }
-          else
+          else {
             idx++;
+          }
         }
       }
 
@@ -520,12 +644,16 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
 
   /* Initialize data->xxx members... */
-  data->mux    = MutexOp.inst( NULL, True );
+  data->mux     = MutexOp.inst( NULL, True );
+  data->slotmux = MutexOp.inst( NULL, True );
 
   data->ini    = ini;
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
   data->device = StrOp.dup( wDigInt.getdevice( ini ) );
   data->run    = True;
+
+  MemOp.set( data->slots, 0, 128 * sizeof( struct slot ) );
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sprog %d.%d.%d", vmajor, vminor, patch );
@@ -544,8 +672,10 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setDTR(data->serial, True);
   SerialOp.setRTS(data->serial, True);
 
-  data->reader = ThreadOp.inst( "sprogrdr", &__sprogReader, __Sprog );
+  data->reader = ThreadOp.inst( "sprogrx", &__sprogReader, __Sprog );
   ThreadOp.start( data->reader );
+  data->writer = ThreadOp.inst( "sprogtx", &__sprogWriter, __Sprog );
+  ThreadOp.start( data->writer );
 
   instCnt++;
   return __Sprog;
