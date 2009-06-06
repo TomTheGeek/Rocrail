@@ -1109,7 +1109,7 @@ static void __transactor( void* threadinst ) {
           responceRecieved = True;
           waitForAnswer = False;
 
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "COMMAND LOST" );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
         }
 
     }
