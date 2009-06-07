@@ -33,7 +33,7 @@ COMMONOBJS=$(patsubst impl/common/%.c,$(TMPOUTDIR)/common/%.o,$(wildcard impl/co
 all: $(OBJS) $(OUTDIR)\opendcc.dll $(OUTDIR)\p50.dll $(OUTDIR)\p50x.dll $(OUTDIR)\hsi88.dll $(OUTDIR)\barjut.dll $(OUTDIR)\srcp.dll \
 	$(OUTDIR)\lenz.dll $(OUTDIR)\roco.dll $(OUTDIR)\zimo.dll $(OUTDIR)\dinamo.dll $(OUTDIR)\om32.dll \
 	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll \
-	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll
+	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll $(OUTDIR)\sprog.dll
 #	-del /Q $(TMPOUTDIR)\*.o
 
 # ------------------------------------------------------------
@@ -77,6 +77,8 @@ $(OUTDIR)\mcs2.dll: $(TMPOUTDIR)\mcs2.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTD
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\mcs2.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\mcs2.dll
 $(OUTDIR)\clock.dll: $(TMPOUTDIR)\clock.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\clock.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\clock.dll
+$(OUTDIR)\sprog.dll: $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
+	dllwrap --def rocdigs.def $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\sprog.dll
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -132,6 +134,7 @@ clean:
 	-del /Q $(OUTDIR)\virtual.dll
 	-del /Q $(OUTDIR)\mcs2.dll
 	-del /Q $(OUTDIR)\clock.dll
+	-del /Q $(OUTDIR)\sprog.dll
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\ogen.exe ..\..\rocdigs\rocdigs.xml ..\\
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml impl\version.c svnLog
 	
