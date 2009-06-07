@@ -680,20 +680,6 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       wFunCmd.setfnchanged(cmd, fnchanged);
 
-      /* save the function status: */
-      __cpNode2Fn(inst, cmd);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
-          wLoc.getid( data->props ),
-          data->fn0  ? "on":"off",
-          data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
-          data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
-          data->fn9  ? "09":"--", data->fn10 ? "10":"--", data->fn11 ? "11":"--", data->fn12 ? "12":"--",
-          data->fn13 ? "13":"--", data->fn14 ? "14":"--", data->fn15 ? "15":"--", data->fn16 ? "16":"--",
-          data->fn17 ? "17":"--", data->fn18 ? "18":"--", data->fn19 ? "19":"--", data->fn20 ? "20":"--",
-          data->fn21 ? "21":"--", data->fn22 ? "22":"--", data->fn23 ? "23":"--", data->fn24 ? "24":"--",
-          data->fn25 ? "25":"--", data->fn26 ? "26":"--", data->fn27 ? "27":"--", data->fn28 ? "28":"--"
-      );
-
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 ) {
         /* reset previous timed function */
         __resetTimedFunction(inst, cmd, -1);
@@ -715,6 +701,24 @@ static void __engine( iOLoc inst, iONode cmd ) {
         data->fneventblock = StrOp.dup( wFunCmd.geteventblock( cmd ) );
 
       }
+
+      /* save the function status: */
+      __cpNode2Fn(inst, cmd);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+          wLoc.getid( data->props ),
+          data->fn0  ? "on":"off",
+          data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
+          data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
+          data->fn9  ? "09":"--", data->fn10 ? "10":"--", data->fn11 ? "11":"--", data->fn12 ? "12":"--",
+          data->fn13 ? "13":"--", data->fn14 ? "14":"--", data->fn15 ? "15":"--", data->fn16 ? "16":"--",
+          data->fn17 ? "17":"--", data->fn18 ? "18":"--", data->fn19 ? "19":"--", data->fn20 ? "20":"--",
+          data->fn21 ? "21":"--", data->fn22 ? "22":"--", data->fn23 ? "23":"--", data->fn24 ? "24":"--",
+          data->fn25 ? "25":"--", data->fn26 ? "26":"--", data->fn27 ? "27":"--", data->fn28 ? "28":"--"
+      );
+
+
+
     }
   }
 
@@ -885,6 +889,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   if( function >= 0 ) {
     timedfn = function;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", timedfn );
+    wFunCmd.settimedfn( cmd, -1 );
   }
 
   wFunCmd.setid ( fncmd, wLoc.getid(data->props) );
@@ -1004,11 +1009,11 @@ static void __runner( void* threadinst ) {
         wLoc.setruntime( data->props, data->runtime );
       }
 
-      for( i = 0; i < 12; i++ ) {
+      for( i = 0; i < 28; i++ ) {
         if( data->fxtimer[i] > 0 ) {
           data->fxtimer[i]--;
           if( data->fxtimer[i] == 0 ) {
-            fncmd = __resetTimedFunction(loc, NULL, i+1);
+            fncmd = __resetTimedFunction(loc, NULL, i);
           }
         }
       }
