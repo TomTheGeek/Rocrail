@@ -862,7 +862,6 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
       <param name="reverse" vt="Boolean" remark="running direction"/>
-      <param name="resblocks" vt="const char**" remark="Reserved blocks; do not lock already used blocks as crossing"/>
     </fun>
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
@@ -1416,7 +1415,6 @@
       <param name="block" vt="iONode"/>
       <param name="comingfrom" vt="const char*"/>
       <param name="eventid" vt="const char*"/>
-      <param name="blockEventsDefined" vt="Boolean*"/>
     </fun>
     <fun name="getModuleRouteIDs" vt="iOList">
       <param name="inst" vt="this" remark="instance"/>

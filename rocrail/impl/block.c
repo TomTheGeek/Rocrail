@@ -261,7 +261,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
   char    key[256] = {'\0'};
-  Boolean blockEventsDefined = 0;
 
   StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
 
@@ -273,53 +272,19 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   if( fbevt == NULL ) {
     /* event without description; look up in map */
-    fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id, &blockEventsDefined);
+    fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id);
   }
 
-  /* check for generic blocks only if NO apropriate sensors are defined for the block comming from */
-  /* even if this specific sensor is not part of the well fitted sensor bank */
-  if ( ( fbevt == NULL ) && ( blockEventsDefined == False)) {
-    Boolean reverse = data->reverse;
-    iOModel model = AppOp.getModel();
+  if( fbevt == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...",
+        data->id, data->fromBlockId?data->fromBlockId:"?" );
+
+    /* TODO: check running direction -> from_all or from_all_reverse */
 /*
-    if ( data->locId) {
-      iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
-      iOLoc loc = ModelOp.getLoc( model, data->locId);
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "event Block: %s Route: %s, %d %d %d, %d %d dir: %s",
-                   data->id, data->viaRouteId, 
-                   viaRoute->getDir( viaRoute),
-                   viaRoute->getLcDir( viaRoute),
-                   viaRoute->isSwapPost( viaRoute), 
-                   loc->getDir( loc),
-                   loc->getPlacing( loc),
-                   data->reverse ? "reverse" : "forward");
-    }
+    if ( ( data->reverse && !data->next1Route->isSwapPost( data->next1Route ) )
+      || ( !data->reverse && data->next1Route->isSwapPost( data->next1Route ) ) ) {
 */
-/*
-    if ( data->locId) {
-      iOLoc loc = ModelOp.getLoc( model, data->locId);
-      if ( !loc->getDir( loc))
-        reverse = !reverse;
-    }
-*/
-
-    if ( data->viaRouteId) {
-      iORoute viaRoute = ModelOp.getRoute( model, data->viaRouteId);
-      /* to keep the selection of the entry side of the block simple, we asume the following: */
-      
-      /* 1. Single direction routes which are usable only in reverse order are reversed also for this view */
-      /*    in this case the side where the route allway (because single direction) terminates is allways the "to" side */
-      if ( viaRoute->getDir( viaRoute) && !viaRoute->getLcDir( viaRoute))
-        reverse = !reverse;
-
-      /* 2. With the option "swapPostRoute" the termination of this route is also swapped */
-      if ( viaRoute->isSwapPost( viaRoute)) 
-        reverse = !reverse;
-    }
-
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...", data->id, data->fromBlockId?data->fromBlockId:"?" );
-
-    if ( reverse ) {
+    if ( data->reverse ) {
       StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
     }
     else {
@@ -392,7 +357,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     if( evt == enter2in_event || evt == in_event || evt == shortin_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
-      data->viaRouteId  = NULL;
     }
   }
   else if( data->fromBlockId == NULL && puls && loc == NULL ) {
@@ -965,8 +929,7 @@ static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
 /**
  * Ignore all events wenn the crossing flag is set.
  */
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char *viaRouteId,
-                      Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boolean crossing, Boolean reset, Boolean reverse ) {
   iOBlockData data = NULL;
   Boolean ok = False;
 
@@ -1034,7 +997,6 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
     data->reverse = reverse;
     data->fromBlockId = blockid;
-    data->viaRouteId  = viaRouteId;
     if( reset )
       BlockOp.resetTrigs( inst );
   }

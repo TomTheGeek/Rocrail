@@ -125,7 +125,6 @@
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*" remark="Locking loc"/>
       <param name="blockid" vt="const char*" remark="Comming from block"/>
-      <param name="viaRouteId" vt="const char *" remark="Comming via route"/>
       <param name="crossing" vt="Boolean" remark="if this block overlaps turnouts used by other routes, this flag does ignore all events!"/>
       <param name="reset" vt="Boolean" remark="reset all triggers"/>
       <param name="reverse" vt="Boolean" remark="reverse enter"/>

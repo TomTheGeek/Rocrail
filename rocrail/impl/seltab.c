@@ -426,7 +426,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int va
                 wSelTab.getid( data->props ), fromBlockId?fromBlockId:"?" );
 
             /* TODO: check running direction -> from_all or from_all_reverse */
-            if ( data->reverse ) {
+            if( data->reverse ) {
               StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
             }
             else {
@@ -889,7 +889,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
   if( !StrOp.startsWith(blockid, wRoute.routelock) && wSelTab.ismanager(data->props) ) {
     manager = True;
     block = __getFreeTrackBlock( inst, id, &pos );
-    if( block == NULL || !block->lock(block, id, blockid, NULL, crossing, reset, reverse ) ) {
+    if( block == NULL || !block->lock(block, id, blockid, crossing, reset, reverse ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "could not lock block [%s] for [%s]", block->base.id(block), id);
       ok = False;
     }
