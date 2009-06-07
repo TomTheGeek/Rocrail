@@ -1028,6 +1028,9 @@
     <fun name="getId" vt="const char*">
       <param name="inst" vt="this" remark="Signal instance"/>
     </fun>
+    <fun name="getState" vt="const char*">
+      <param name="inst" vt="this" remark="Signal instance"/>
+    </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Signal instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>

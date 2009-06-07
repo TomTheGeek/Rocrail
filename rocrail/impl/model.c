@@ -1930,6 +1930,7 @@ static void __initFieldRunner( void* threadinst ) {
   iOModelData o = Data(model);
   iOControl cntrl = AppOp.getControl(  );
   iOSwitch sw = NULL;
+  iOSignal sg = NULL;
   int error = 0;
   int pause = wCtrl.getinitfieldpause( wRocRail.getctrl( AppOp.getIni(  ) ) );
   Boolean gpON = wCtrl.isinitfieldpower( wRocRail.getctrl( AppOp.getIni(  ) ) );
@@ -1969,7 +1970,33 @@ static void __initFieldRunner( void* threadinst ) {
     SwitchOp.cmd( sw, cmd, True, &error );
 
     sw = (iOSwitch)MapOp.next( o->switchMap );
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( pause );
+  }
+
+  ThreadOp.sleep( pause );
+
+  sg = (iOSignal)MapOp.first( o->signalMap );
+  while( sg != NULL && !ThreadOp.isQuit(th) ) {
+    iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+    const char* cmdStr = NULL;
+    const char* state = NULL;
+
+    if(sg->base.properties != NULL) {
+
+      state = SignalOp.getState(sg);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg \"%s\"", SignalOp.getId( sg ) );
+
+      /* Set the signal to its last known state. */
+      if( state != NULL && StrOp.len(state) > 0 ) {
+        wSignal.setcmd( cmd, state );
+        SignalOp.cmd( sg, cmd, True );
+      }
+    }
+
+
+    sg = (iOSignal)MapOp.next( o->signalMap );
+    ThreadOp.sleep( pause );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init field ready" );

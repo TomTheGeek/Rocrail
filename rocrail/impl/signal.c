@@ -95,6 +95,11 @@ static const char* _getId( iOSignal inst ) {
   return wSignal.getid( data->props );
 }
 
+static const char* _getState( iOSignal inst ) {
+  iOSignalData data = Data(inst);
+  return wSignal.getstate( data->props );
+}
+
 static void* _getProperties( void* inst ) {
   iOSignalData data = Data((iOSignal)inst);
   return data->props;
