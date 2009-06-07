@@ -405,7 +405,7 @@ static void _green( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.straight );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error );
 }
 
 static void _red( iOSwitch inst ) {
@@ -414,7 +414,7 @@ static void _red( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.turnout );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error );
 }
 
 
@@ -443,7 +443,7 @@ static Boolean _isSet( iOSwitch inst ) {
 }
 
 
-static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int* error ) {
+static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -972,7 +972,7 @@ static void _checkSenPos( iOSwitch inst ) {
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
-        SwitchOp.cmd( inst, cmd, True, &error );
+        SwitchOp.cmd( inst, cmd, True, 0, &error );
       }
     }
   }

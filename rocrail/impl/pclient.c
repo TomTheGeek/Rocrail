@@ -723,7 +723,7 @@ static void __doSW( iOPClient inst, const char* req ) {
     wSwitch.setid( cmd, id );
     wSwitch.setcmd( cmd, wSwitch.flip );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flip switch ID [%s]", id );
-    SwitchOp.cmd( sw, cmd, True, NULL );
+    SwitchOp.cmd( sw, cmd, True, 0, NULL );
   }
   else
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown switch ID [%s]", id );

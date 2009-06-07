@@ -941,6 +941,7 @@
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="cmd" vt="iONode" remark="Command node"/>
       <param name="update" vt="Boolean" remark="Send update events"/>
+      <param name="extra" vt="int" remark="extra parameter for special cases"/>
       <param name="error" vt="int*" remark="error code"/>
     </fun>
     <fun name="modify" vt="void">
