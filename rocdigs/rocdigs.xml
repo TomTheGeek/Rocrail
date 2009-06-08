@@ -750,7 +750,8 @@
       <var name="longaddr" vt="Boolean"/>
       <var name="steps" vt="int"/>
       <var name="lights" vt="Boolean"/>
-      <var name="fn[28]" vt="Boolean"/>
+      <var name="fn[29]" vt="Boolean"/>
+      <var name="changedfgrp" vt="int"/>
       <var name="V" vt="int"/>
       <var name="dir" vt="Boolean"/>
     </struct>

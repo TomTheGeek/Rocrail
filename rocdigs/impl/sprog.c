@@ -492,6 +492,8 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
       data->slots[slot].V = V;
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
+      data->slots[slot].changedfgrp = -1;
+
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "slot=%d addr=%d V=%d steps=%d dir=%d long=%d", slot,
@@ -501,6 +503,54 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     }
   }
 
+  /* Function */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int addr  = wFunCmd.getaddr( node );
+    int group = wFunCmd.getgroup( node );
+
+    int slot =  __getLocoSlot( sprog, node);
+
+    if( slot >= 0 ) {
+      if( data->slots[slot].addr == 0 ) {
+        /* first use of this slot */
+        data->slots[slot].addr = addr;
+      }
+      data->slots[slot].changedfgrp = group;
+      data->slots[slot].lights = wFunCmd.isf0 ( node );
+      data->slots[slot].fn[ 0] = wFunCmd.isf0 ( node );
+      data->slots[slot].fn[ 1] = wFunCmd.isf1 ( node );
+      data->slots[slot].fn[ 2] = wFunCmd.isf2 ( node );
+      data->slots[slot].fn[ 3] = wFunCmd.isf3 ( node );
+      data->slots[slot].fn[ 4] = wFunCmd.isf4 ( node );
+      data->slots[slot].fn[ 5] = wFunCmd.isf5 ( node );
+      data->slots[slot].fn[ 6] = wFunCmd.isf6 ( node );
+      data->slots[slot].fn[ 7] = wFunCmd.isf7 ( node );
+      data->slots[slot].fn[ 8] = wFunCmd.isf8 ( node );
+      data->slots[slot].fn[ 9] = wFunCmd.isf9 ( node );
+      data->slots[slot].fn[10] = wFunCmd.isf10( node );
+      data->slots[slot].fn[11] = wFunCmd.isf11( node );
+      data->slots[slot].fn[12] = wFunCmd.isf12( node );
+      data->slots[slot].fn[13] = wFunCmd.isf13( node );
+      data->slots[slot].fn[14] = wFunCmd.isf14( node );
+      data->slots[slot].fn[15] = wFunCmd.isf15( node );
+      data->slots[slot].fn[16] = wFunCmd.isf16( node );
+      data->slots[slot].fn[17] = wFunCmd.isf17( node );
+      data->slots[slot].fn[18] = wFunCmd.isf18( node );
+      data->slots[slot].fn[19] = wFunCmd.isf19( node );
+      data->slots[slot].fn[20] = wFunCmd.isf20( node );
+      data->slots[slot].fn[21] = wFunCmd.isf21( node );
+      data->slots[slot].fn[22] = wFunCmd.isf22( node );
+      data->slots[slot].fn[23] = wFunCmd.isf23( node );
+      data->slots[slot].fn[24] = wFunCmd.isf24( node );
+      data->slots[slot].fn[25] = wFunCmd.isf25( node );
+      data->slots[slot].fn[26] = wFunCmd.isf26( node );
+      data->slots[slot].fn[27] = wFunCmd.isf27( node );
+      data->slots[slot].fn[28] = wFunCmd.isf28( node );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "lc=%d function group %d changed for loco %d", group, addr );
+    }
+  }
 
 
   return rsp;
@@ -640,7 +690,7 @@ static void __sprogWriter( void* threadinst ) {
 
   while(data->run) {
 
-    ThreadOp.sleep(100);
+    ThreadOp.sleep(30);
 
     if( data->power ) {
       if( data->slots[slotidx].addr > 0 ) {
@@ -674,6 +724,44 @@ static void __sprogWriter( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "14 DCC out: %s", out );
           __transact( sprog, out, StrOp.len(out), in, 2 );
         }
+
+        if( data->slots[slotidx].changedfgrp > 0 ) {
+          int size = 0;
+          ThreadOp.sleep(10);
+          if( data->slots[slotidx].changedfgrp == 1 ) {
+            size = function0Through4Packet(dcc, data->slots[slotidx].addr,
+                data->slots[slotidx].longaddr,
+                data->slots[slotidx].fn[0],
+                data->slots[slotidx].fn[1],
+                data->slots[slotidx].fn[2],
+                data->slots[slotidx].fn[3],
+                data->slots[slotidx].fn[4] );
+          }
+          else if( data->slots[slotidx].changedfgrp == 2 ) {
+            size = function5Through8Packet(dcc, data->slots[slotidx].addr,
+                data->slots[slotidx].longaddr,
+                data->slots[slotidx].fn[5],
+                data->slots[slotidx].fn[6],
+                data->slots[slotidx].fn[7],
+                data->slots[slotidx].fn[8] );
+          }
+          else if( data->slots[slotidx].changedfgrp == 3 ) {
+            size = function9Through12Packet(dcc, data->slots[slotidx].addr,
+                data->slots[slotidx].longaddr,
+                data->slots[slotidx].fn[9],
+                data->slots[slotidx].fn[10],
+                data->slots[slotidx].fn[12],
+                data->slots[slotidx].fn[13] );
+          }
+
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "function group %d DCC out: %s", data->slots[slotidx].changedfgrp, out );
+          __transact( sprog, out, StrOp.len(out), in, 2 );
+        }
+
+
+
         slotidx++;
       }
       else {
