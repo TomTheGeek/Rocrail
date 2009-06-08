@@ -305,6 +305,8 @@ static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int 
 
   if( MutexOp.wait( data->mux ) ) {
 
+    ThreadOp.sleep(5);
+
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_transact outsize=%d insize=%d", outsize, insize );
 
     if( rc = SerialOp.write( data->serial, out, outsize ) ) {
@@ -405,7 +407,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     __byteToStr( cmd, dcc, cmdsize );
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
-    *insize = 2;
+    *insize = 3;
   }
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
@@ -441,7 +443,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     __byteToStr( cmd, dcc, cmdsize );
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
-    *insize = 2;
+    *insize = 3;
   }
 
   /* Program command. */
@@ -470,7 +472,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
         __byteToStr( cmd, dcc, cmdsize );
         StrOp.fmtb( outa, "O %s\r", cmd );
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "POM DCC out: %s", outa );
-        *insize = 2;
+        *insize = 3;
       }
     }
     else {
@@ -505,7 +507,9 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
       data->slots[slot].V = V;
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
-      data->slots[slot].changedfgrp = -1;
+      data->slots[slot].lights = wLoc.isfn( node );
+      data->slots[slot].fn[0]  = wLoc.isfn( node );
+      data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
 
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -703,7 +707,7 @@ static void __sprogWriter( void* threadinst ) {
 
   while(data->run) {
 
-    ThreadOp.sleep(30);
+    ThreadOp.sleep(25);
 
     if( data->power ) {
       if( data->slots[slotidx].addr > 0 ) {
@@ -718,7 +722,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 2 );
+          __transact( sprog, out, StrOp.len(out), in, 3 );
         }
         else if( data->slots[slotidx].steps == 28 )  {
           int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
@@ -726,7 +730,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 2 );
+          __transact( sprog, out, StrOp.len(out), in, 3 );
         }
         else {
           int size = speedStep14Packet(dcc, data->slots[slotidx].addr,
@@ -735,12 +739,12 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "14 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 2 );
+          __transact( sprog, out, StrOp.len(out), in, 3 );
         }
 
         if( data->slots[slotidx].changedfgrp > 0 ) {
           int size = 0;
-          ThreadOp.sleep(30);
+          ThreadOp.sleep(25);
           if( data->slots[slotidx].changedfgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
@@ -794,7 +798,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "function group %d DCC out: %s", data->slots[slotidx].changedfgrp, out );
-          __transact( sprog, out, StrOp.len(out), in, 2 );
+          __transact( sprog, out, StrOp.len(out), in, 3 );
         }
 
 
