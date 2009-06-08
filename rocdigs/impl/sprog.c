@@ -552,37 +552,35 @@ static void __sprogWriter( void* threadinst ) {
 
     ThreadOp.sleep(100);
 
-    if( MutexOp.wait( data->mux ) ) {
-      if( data->slots[slotidx].addr > 0 ) {
-        byte dcc[12];
-        char cmd[32] = {0};
-        char out[64] = {0};
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
-        if( data->slots[slotidx].steps == 128 )  {
-          int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
-              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-          __byteToStr( cmd, dcc, size );
-          StrOp.fmtb( out, "O %s\r", cmd );
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
-          SerialOp.write(data->serial, out, StrOp.len(out));
-        }
-        else if( data->slots[slotidx].steps == 28 )  {
-          int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
-              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-          __byteToStr( cmd, dcc, size );
-          StrOp.fmtb( out, "O %s\r", cmd );
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
-          SerialOp.write(data->serial, out, StrOp.len(out));
-        }
-        else {
-        }
-        slotidx++;
+    if( data->slots[slotidx].addr > 0 ) {
+      byte dcc[12];
+      char cmd[32] = {0};
+      char out[64] = {0};
+      char in [64] = {0};
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
+      if( data->slots[slotidx].steps == 128 )  {
+        int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
+            data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+        __byteToStr( cmd, dcc, size );
+        StrOp.fmtb( out, "O %s\r", cmd );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
+        __transact( sprog, out, StrOp.len(out), in, 2 );
+        //SerialOp.write(data->serial, out, StrOp.len(out));
+      }
+      else if( data->slots[slotidx].steps == 28 )  {
+        int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
+            data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+        __byteToStr( cmd, dcc, size );
+        StrOp.fmtb( out, "O %s\r", cmd );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
+        __transact( sprog, out, StrOp.len(out), in, 2 );
       }
       else {
-        slotidx = 0;
       }
-      /* Release the mutex. */
-      MutexOp.post( data->mux );
+      slotidx++;
+    }
+    else {
+      slotidx = 0;
     }
 
 
@@ -617,7 +615,7 @@ static void __sprogReader( void* threadinst ) {
           TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, StrOp.len(in) );
           if( idx > 254 ) {
             in[idx] = 0;
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "reader overflow [%d]\n%s", idx, in );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reader overflow [%d]\n%s", idx, in );
             idx = 0;
           }
           else if( in[idx] == '\r' || in[idx] == '\n' ) {
@@ -629,7 +627,8 @@ static void __sprogReader( void* threadinst ) {
             __handleResponse(sprog, in);
             in[idx] = '\0';
           }
-          else if( StrOp.equals( in, "P> ") ) {
+          else if( StrOp.equals( in, "P> ") || StrOp.equals( in, " P>") || StrOp.equals( in, " P> ") ) {
+            idx = 0;
             in[idx] = '\0'; /* ignore prompt */
           }
           else {
