@@ -770,6 +770,7 @@
       <var name="lastvalue" vt="int"/>
       <var name="writer" vt="iOThread"/>
       <var name="slots[128]" vt="struct slot"/>
+      <var name="power" vt="Boolean"/>
     </data>
   </object>
 

@@ -351,27 +351,117 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       StrOp.fmtb( outa, "-\r" );
+      data->power = False;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       StrOp.fmtb( outa, "+\r" );
+      data->power = True;
     }
   }
 
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+
+    int addr = wSwitch.getaddr1( node );
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+    int fada = 0;
+    int pada = 0;
+    int dir  = 1;
+    int action = 1;
+    int cmdsize = 0;
+    byte dcc[12];
+    char cmd[32] = {0};
+
+    if( port == 0 ) {
+      fada = addr;
+      fromFADA( addr, &addr, &port, &gate );
+    }
+    else if( addr == 0 && port > 0 ) {
+      pada = port;
+      fromPADA( port, &addr, &port );
+    }
+
+    if( fada == 0 )
+      fada = toFADA( addr, port, gate );
+    if( pada == 0 )
+      pada = toPADA( addr, port );
+
+    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+      dir = 0; /* thrown */
+
+    if( wSwitch.issinglegate( node ) ) {
+      dir = gate;
+      if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) )
+        action = 0;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
+        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
+
+    cmdsize = accDecoderPkt2(dcc, fada, action, dir);
+    __byteToStr( cmd, dcc, cmdsize );
+    StrOp.fmtb( outa, "O %s\r", cmd );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
+    *insize = 2;
+  }
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    int fada = 0;
+    int pada = 0;
+    int cmdsize = 0;
+    byte dcc[12];
+    char cmd[32] = {0};
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+    if( port == 0 ) {
+      fada = addr;
+      fromFADA( addr, &addr, &port, &gate );
+    }
+    else if( addr == 0 && port > 0 ) {
+      pada = port;
+      fromPADA( port, &addr, &port );
+    }
+
+    if( fada == 0 )
+      fada = toFADA( addr, port, gate );
+    if( pada == 0 )
+      pada = toPADA( addr, port );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
+        addr, port, gate, fada, pada );
+
+    cmdsize = accDecoderPkt(dcc, fada, action);
+    __byteToStr( cmd, dcc, cmdsize );
+    StrOp.fmtb( outa, "O %s\r", cmd );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
+    *insize = 2;
+  }
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    if( wProgram.getcmd( node ) == wProgram.get ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
-      StrOp.fmtb( outa, "C %d\r", wProgram.getcv(node) );
-      data->lastcmd = CV_READ;
-      data->lastvalue = 0;
+    if( !data->power ) {
+      if( wProgram.getcmd( node ) == wProgram.get ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
+        StrOp.fmtb( outa, "C %d\r", wProgram.getcv(node) );
+        data->lastcmd = CV_READ;
+        data->lastvalue = 0;
+      }
+      else if( wProgram.getcmd( node ) == wProgram.set ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
+        StrOp.fmtb( outa, "C %d %d\r", wProgram.getcv(node), wProgram.getvalue(node) );
+        data->lastcmd = CV_WRITE;
+        data->lastvalue = wProgram.getvalue(node);
+      }
     }
-    else if( wProgram.getcmd( node ) == wProgram.set ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
-      StrOp.fmtb( outa, "C %d %d\r", wProgram.getcv(node), wProgram.getvalue(node) );
-      data->lastcmd = CV_WRITE;
-      data->lastvalue = wProgram.getvalue(node);
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turn power off before programming" );
     }
   }
 
@@ -552,35 +642,43 @@ static void __sprogWriter( void* threadinst ) {
 
     ThreadOp.sleep(100);
 
-    if( data->slots[slotidx].addr > 0 ) {
-      byte dcc[12];
-      char cmd[32] = {0};
-      char out[64] = {0};
-      char in [64] = {0};
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
-      if( data->slots[slotidx].steps == 128 )  {
-        int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
-            data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-        __byteToStr( cmd, dcc, size );
-        StrOp.fmtb( out, "O %s\r", cmd );
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
-        __transact( sprog, out, StrOp.len(out), in, 2 );
-        //SerialOp.write(data->serial, out, StrOp.len(out));
-      }
-      else if( data->slots[slotidx].steps == 28 )  {
-        int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
-            data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-        __byteToStr( cmd, dcc, size );
-        StrOp.fmtb( out, "O %s\r", cmd );
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
-        __transact( sprog, out, StrOp.len(out), in, 2 );
+    if( data->power ) {
+      if( data->slots[slotidx].addr > 0 ) {
+        byte dcc[12];
+        char cmd[32] = {0};
+        char out[64] = {0};
+        char in [64] = {0};
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
+        if( data->slots[slotidx].steps == 128 )  {
+          int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
+              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
+          __transact( sprog, out, StrOp.len(out), in, 2 );
+        }
+        else if( data->slots[slotidx].steps == 28 )  {
+          int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
+              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
+          __transact( sprog, out, StrOp.len(out), in, 2 );
+        }
+        else {
+          int size = speedStep14Packet(dcc, data->slots[slotidx].addr,
+              data->slots[slotidx].longaddr, data->slots[slotidx].V,
+              data->slots[slotidx].dir, data->slots[slotidx].lights );
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "14 DCC out: %s", out );
+          __transact( sprog, out, StrOp.len(out), in, 2 );
+        }
+        slotidx++;
       }
       else {
+        slotidx = 0;
       }
-      slotidx++;
-    }
-    else {
-      slotidx = 0;
     }
 
 
