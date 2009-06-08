@@ -913,8 +913,12 @@ void CV::doCV( int id ) {
 void CV::doCV( int command, int index, int value ) {
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   int addr = atoi( m_CVaddress->GetValue().mb_str(wxConvUTF8) );
-  if( addr == 0 )
+  wProgram.setlongaddr( cmd, False );
+
+  if( addr == 0 ) {
     addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlongaddr( cmd, True );
+  }
 
 
   update4POM();

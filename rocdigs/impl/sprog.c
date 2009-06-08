@@ -446,7 +446,9 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    if( !data->power ) {
+    Boolean pom = wProgram.ispom( node );
+
+    if( !pom && !data->power ) {
       if( wProgram.getcmd( node ) == wProgram.get ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
         StrOp.fmtb( outa, "C %d\r", wProgram.getcv(node) );
@@ -460,8 +462,19 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
         data->lastvalue = wProgram.getvalue(node);
       }
     }
+    else if( pom && data->power ) {
+      if( wProgram.getcmd( node ) == wProgram.set ) {
+        byte dcc[12];
+        char cmd[32] = {0};
+        int cmdsize = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
+        __byteToStr( cmd, dcc, cmdsize );
+        StrOp.fmtb( outa, "O %s\r", cmd );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "POM DCC out: %s", outa );
+        *insize = 2;
+      }
+    }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turn power off before programming" );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turn power %s before programming", pom?"ON (POM)":"OFF" );
     }
   }
 

@@ -474,6 +474,7 @@
     <const name="lncvend" vt="int" val="2"/>
     <var name="lncvcmd" vt="int" defval="0" range="0-*"/>
     <var name="addr" vt="int" defval="0" range="*" remark="loco address for POM"/>
+    <var name="longaddr" vt="bool" defval="false" remark="loco address for POM"/>
     <var name="cv" vt="int" defval="0" range="0-1023" remark="CV number"/>
     <var name="value" vt="int" defval="0" range="0-255" remark="CV value"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
