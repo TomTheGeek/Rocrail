@@ -727,7 +727,7 @@ static void __sprogWriter( void* threadinst ) {
 
         if( data->slots[slotidx].changedfgrp > 0 ) {
           int size = 0;
-          ThreadOp.sleep(10);
+          ThreadOp.sleep(30);
           if( data->slots[slotidx].changedfgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
@@ -750,8 +750,32 @@ static void __sprogWriter( void* threadinst ) {
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[9],
                 data->slots[slotidx].fn[10],
-                data->slots[slotidx].fn[12],
-                data->slots[slotidx].fn[13] );
+                data->slots[slotidx].fn[11],
+                data->slots[slotidx].fn[12] );
+          }
+          else if( data->slots[slotidx].changedfgrp == 4 || data->slots[slotidx].changedfgrp == 5 ) {
+            size = function13Through20Packet(dcc, data->slots[slotidx].addr,
+                data->slots[slotidx].longaddr,
+                data->slots[slotidx].fn[13],
+                data->slots[slotidx].fn[14],
+                data->slots[slotidx].fn[15],
+                data->slots[slotidx].fn[16],
+                data->slots[slotidx].fn[17],
+                data->slots[slotidx].fn[18],
+                data->slots[slotidx].fn[19],
+                data->slots[slotidx].fn[20] );
+          }
+          else if( data->slots[slotidx].changedfgrp == 6 || data->slots[slotidx].changedfgrp == 7 ) {
+            size = function21Through28Packet(dcc, data->slots[slotidx].addr,
+                data->slots[slotidx].longaddr,
+                data->slots[slotidx].fn[21],
+                data->slots[slotidx].fn[22],
+                data->slots[slotidx].fn[23],
+                data->slots[slotidx].fn[24],
+                data->slots[slotidx].fn[25],
+                data->slots[slotidx].fn[26],
+                data->slots[slotidx].fn[27],
+                data->slots[slotidx].fn[28] );
           }
 
           __byteToStr( cmd, dcc, size );
