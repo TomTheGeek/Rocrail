@@ -39,9 +39,9 @@ SUBDIRS=rocs rocint rocrail rocdigs roclcdr rocgui rocpkg
 
 all: online
 
-online: version build
+online: version clean build
 
-offline: build
+offline: clean build
 
 generate:
 	@for d in $(SUBDIRS) ; do $(MAKE) -C $$d $@ || exit 2 ; done

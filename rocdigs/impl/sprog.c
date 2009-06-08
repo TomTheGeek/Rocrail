@@ -492,6 +492,7 @@ static int _version( obj inst ) {
 static int __parseCVValue(const char* in) {
   int val = 0;
   int idx = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "string to parse: \"%s\"", in );
   /* parse the value string */
   while( in[idx] != 0 ) {
     if( in[idx] == 'h' ) {
@@ -517,6 +518,7 @@ static void __handleResponse(iOSprog sprog, const char* in) {
     wProgram.setcmd( rsp, wProgram.datarsp );
     if( data->iid != NULL )
       wProgram.setiid( rsp, data->iid );
+    data->lastcmd = 0;
     break;
   case CV_WRITE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CV write response" );
@@ -526,6 +528,7 @@ static void __handleResponse(iOSprog sprog, const char* in) {
     wProgram.setcmd( rsp, wProgram.datarsp );
     if( data->iid != NULL )
       wProgram.setiid( rsp, data->iid );
+    data->lastcmd = 0;
     break;
   }
 
@@ -560,10 +563,16 @@ static void __sprogWriter( void* threadinst ) {
               data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC out: %s", out );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
           SerialOp.write(data->serial, out, StrOp.len(out));
         }
         else if( data->slots[slotidx].steps == 28 )  {
+          int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
+              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
+          __byteToStr( cmd, dcc, size );
+          StrOp.fmtb( out, "O %s\r", cmd );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
+          SerialOp.write(data->serial, out, StrOp.len(out));
         }
         else {
         }
@@ -605,20 +614,23 @@ static void __sprogReader( void* threadinst ) {
 
       if( SerialOp.available(data->serial) ) {
         if( SerialOp.read(data->serial, &in[idx], 1) ) {
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, StrOp.len(in) );
           if( idx > 254 ) {
             in[idx] = 0;
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "reader overflow [%d]\n%s", idx, in );
             idx = 0;
           }
-
-
-          else if( in[idx] == '\r' ) {
+          else if( in[idx] == '\r' || in[idx] == '\n' ) {
             in[idx+1] = '\0';
             idx = 0;
             StrOp.replaceAll( in, '\n', ' ' );
             StrOp.replaceAll( in, '\r', ' ' );
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG readed: [%s]", in );
             __handleResponse(sprog, in);
+            in[idx] = '\0';
+          }
+          else if( StrOp.equals( in, "P> ") ) {
+            in[idx] = '\0'; /* ignore prompt */
           }
           else {
             idx++;

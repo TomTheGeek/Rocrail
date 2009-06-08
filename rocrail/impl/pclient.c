@@ -187,18 +187,18 @@ static char* __getAddrImage( char* s, int addr, const char* dir, const char* sym
   else
     dir = "";
   if( addr > 0 ) {
-    StrOp.fmtb( s, "<img border=\"0\" src=\"%s/%d%s.%s\">%s<img border=\"0\" src=\"%s/%d%s.%s\">%s<img border=\"0\" src=\"%s/%d%s.%s\">",
-                symbolpath, x100, dir, symboltype, brk,
-                symbolpath,  x10, dir, symboltype, brk,
-                symbolpath,   x1, dir, symboltype );
+    StrOp.fmtb( s, "<img border=\"0\" src=\"%s/%d%s.%s\">%s<img border=\"0\" src=\"%s/%d%s.%s\">%s<img border=\"0\" src=\"%s/%d%s.%s\">", 
+                symbolpath, x100, dir, symboltype, brk, 
+                symbolpath,  x10, dir, symboltype, brk, 
+                symbolpath,   x1, dir, symboltype ); 
   }
   else {
-    StrOp.fmtb( s, "<img border=\"0\" src=\"%s/%s%s.%s\">%s<img border=\"0\" src=\"%s/%s%s.%s\">%s<img border=\"0\" src=\"%s/%s%s.%s\">",
-                symbolpath, "hyphen", dir, symboltype, brk,
-                symbolpath, "hyphen", dir, symboltype, brk,
-                symbolpath, "hyphen", dir, symboltype );
+    StrOp.fmtb( s, "<img border=\"0\" src=\"%s/%s%s.%s\">%s<img border=\"0\" src=\"%s/%s%s.%s\">%s<img border=\"0\" src=\"%s/%s%s.%s\">", 
+                symbolpath, "hyphen", dir, symboltype, brk, 
+                symbolpath, "hyphen", dir, symboltype, brk, 
+                symbolpath, "hyphen", dir, symboltype ); 
   }
-
+  
   return s;
 }
 
@@ -212,22 +212,22 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
   char sbuffer[256];
   int colspan = 1;
   int ori = 1; /* 1 = west, 2 = north, 3 = east, 4 = south */
-
+  
   __counter++;
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "createItemTD for level %d", level );
-
+  
   if( StrOp.equals( wTrack.getori(item), wItem.west ) )
-    ori = 1;
+    ori = 1; 
   else if( StrOp.equals( wTrack.getori(item), wItem.north ) )
-    ori = 2;
+    ori = 2; 
   else if( StrOp.equals( wTrack.getori(item), wItem.east ) )
-    ori = 3;
+    ori = 3; 
   else if( StrOp.equals( wTrack.getori(item), wItem.south ) )
-    ori = 4;
-
+    ori = 4; 
+  
 
   TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "creating item [%s]", id );
-
+  
   if( StrOp.equals( itemname, wTrack.name() ) ) {
     if( StrOp.equals( wTrack.gettype(item), wTrack.curve ) ) {
       if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\" + \" src=\"%s/curve-%d.%s\"/></td>\n", symbolpath, ori, symboltype );
@@ -252,38 +252,38 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
     else if( ori == 3 )
       ori = 1;
     if( StrOp.equals( wSwitch.gettype(item), wSwitch.right ) || StrOp.equals( wSwitch.gettype(item), wSwitch.left ) ) {
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, dr?'r':'l', st?'s':'t', ori, symboltype  );
     }
     else if( StrOp.equals( wSwitch.gettype(item), wSwitch.turnout ) ) {
       dr = wSwitch.isdir(item);
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, dr?'r':'l', st?'s':'t', ori, symboltype  );
     }
     else if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) ) {
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/cross.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/cross.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, symboltype );
     }
     else if( StrOp.equals( wSwitch.gettype(item), wSwitch.dcrossing ) ) {
       dr = wSwitch.isdir(item);
       colspan = 2;
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td colspan=\"2\"><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"32\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/dcross-%c%c-%d.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td colspan=\"2\"><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"32\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/dcross-%c%c-%d.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, dr?'r':'l', st?'s':'t', ori, symboltype  );
     }
     else if( StrOp.equals( wSwitch.gettype(item), wSwitch.decoupler ) ) {
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/decoupler-%d.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/decoupler-%d.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, ori % 2 == 0 ? 2:1, symboltype  );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown sw type [%s][%s] (assume turnout)", id, wSwitch.gettype(item) );
       dr = wSwitch.isdir(item);
-      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sw-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"=//\" title=\"%s\" src=\"%s/turnout-%c%c-%d.%s\"/></a></td>\n", 
                     id, level, __counter, selected, wItem.getid(item), symbolpath, dr?'r':'l', st?'s':'t', ori, symboltype  );
     }
   }
   else if( StrOp.equals( itemname, wFeedback.name() ) ) {
     char* state = wFeedback.isstate(item) ? "on":"off";
-    if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" title=\"%s\" src=\"%s/sensor-%s-%d.%s\"/></td>\n",
+    if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" title=\"%s\" src=\"%s/sensor-%s-%d.%s\"/></td>\n", 
                   id, symbolpath, state, ori % 2 == 0 ? 2:1, symboltype );
   }
   else if( StrOp.equals( itemname, wSignal.name() ) ) {
@@ -301,20 +301,20 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
       ori = 1;
     if( StrOp.equals( wSignal.semaphore, wSignal.gettype(item) ) )
       type = "semaphore";
-    if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sg-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" src=\"%s/%s-%c-%d.%s\"/></a></td>\n",
+    if(ok) ok=SocketOp.fmt( data->socket, "  <td><a href=\"?sg-flip=%s&level=%d&cnt=%d&selected=%s\"><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" src=\"%s/%s-%c-%d.%s\"/></a></td>\n", 
                                  id, level, __counter, selected, symbolpath, type, state, ori, symboltype );
   }
   else if( StrOp.equals( itemname, wBlock.name() ) ) {
     int addr = 0;
     const char* locid = wBlock.getlocid(item);
-
+ 
     if( StrOp.equals( wTrack.getori(item), wItem.north ) || StrOp.equals( wTrack.getori(item), wItem.south ) ) {
       /* vertical block */
       char key[32];
       iOExtraItem extraItem = NULL;
 
       if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" src=\"%s/block-l-2.%s\"/></td>\n", symbolpath, symboltype );
-
+      
       StrOp.fmtb( key, "%d,%d", x, y+1 );
       extraItem = allocMem( sizeof( struct extraItem ) );
       extraItem->skip = False;
@@ -329,16 +329,16 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
                     locid, normID, level, __getAddrImage( sbuffer, addr, "v", symbolpath, symboltype) );
         StrOp.free(normID);
       }
-      else
-        StrOp.fmtb( extraItem->html, "  <td rowspan=\"2\" align=\"center\" valign=\"center\" title=\"%s\">%s</td>\n",
+      else              
+        StrOp.fmtb( extraItem->html, "  <td rowspan=\"2\" align=\"center\" valign=\"center\" title=\"%s\">%s</td>\n", 
             wItem.getid(item), __getAddrImage( sbuffer, 0, "v", symbolpath, symboltype) );
       MapOp.put( extraItems, key, (obj)extraItem );
-
+      
       StrOp.fmtb( key, "%d,%d", x, y+2 );
       extraItem = allocMem( sizeof( struct extraItem ) );
       extraItem->skip = True;
       MapOp.put( extraItems, key, (obj)extraItem );
-
+      
       StrOp.fmtb( key, "%d,%d", x, y+3 );
       extraItem = allocMem( sizeof( struct extraItem ) );
       extraItem->skip = False;
@@ -356,13 +356,13 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
         if(ok) ok=SocketOp.fmt( data->socket, "  <td colspan=\"2\" align=\"center\"><a title=\"%s\" href=\"?stopgo=%s&level=%d\">%s</a></td>\n",
                       locid, normID, level, __getAddrImage( sbuffer, addr, "h", symbolpath, symboltype) );
       }
-      else {
-        if(ok) ok=SocketOp.fmt( data->socket, "  <td colspan=\"2\" align=\"center\" title=\"%s\">%s</td>\n",
+      else {             
+        if(ok) ok=SocketOp.fmt( data->socket, "  <td colspan=\"2\" align=\"center\" title=\"%s\">%s</td>\n", 
             wItem.getid(item), __getAddrImage( sbuffer, 0, "h", symbolpath, symboltype) );
       }
       if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" src=\"%s/block-r-1.%s\"/></td>\n", symbolpath, symboltype );
     }
-
+    
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unsupported item [%s][%s]", wItem.getid(item), NodeOp.getName(item) );
@@ -388,7 +388,7 @@ static Boolean __generateLayout( iOPClient inst, int level, const char* selected
   TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "generateLayout for level %d", level );
 
   TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "got %d items for level %d plansize=%d,%d", size, level, cx, cy );
-
+  
   if( idx < size ) {
     item = (iONode)ListOp.get( list, idx );
     ix = wItem.getx( item );
@@ -396,11 +396,11 @@ static Boolean __generateLayout( iOPClient inst, int level, const char* selected
     idx++;
     TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "item on level %d at %d,%d [%d,%d]", level, ix, iy, x, y );
   }
-
+  
   for( y = 0; y <= cy && ok; y++ ) {
     /* start table row: */
     if(ok) ok=SocketOp.fmt( data->socket, "<tr>\n" );
-
+    
     for( x = 0; x <= cx && ok; x++ ) {
       char key[32];
       iOExtraItem extraItem = NULL;
@@ -414,12 +414,12 @@ static Boolean __generateLayout( iOPClient inst, int level, const char* selected
         freeMem( extraItem );
         continue;
       }
-
+      
       if( item != NULL && ix == x && iy == y && ok) {
         /* create an item table data section: */
         int colspan = __createItemTD( inst, item, level, selected, x, y, symbolpath, symboltype, extraItems );
         x = x + colspan-1;
-
+        
         item = NULL;
         /* get the next item: */
         do {
@@ -440,12 +440,12 @@ static Boolean __generateLayout( iOPClient inst, int level, const char* selected
         if(ok) ok=SocketOp.fmt( data->socket, "  <td></td>\n" );
       }
     }
-
+    
     /* end table row: */
     if(ok) ok=SocketOp.fmt( data->socket, "</tr>\n" );
-
+    
   }
-
+  
   MapOp.base.del( extraItems );
   TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "generateLayout for level %d ready", level );
   return ok;
@@ -460,7 +460,7 @@ static Boolean __doWebCamBottom(iOPClient inst) {
   if( webcam != NULL ) {
     if(ok) ok=SocketOp.fmt( data->socket, "<br><table border=\"1\" rules=\"cols\" cellspacing=\"0\" cellpadding=\"5\">\n  <tr>\n" );
     while( webcam != NULL && ok) {
-      if(ok) ok=SocketOp.fmt( data->socket, "    <td>%s<br><img src=\"%s/%s\"></td>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "    <td>%s<br><img src=\"%s/%s\"></td>\n", 
                     wWebCam.gettitle( webcam ), wWebClient.getwebcampath( data->ini ), wWebCam.getimagefile( webcam ) );
       webcam = wWebClient.nextwebcam( data->ini, webcam );
     }
@@ -481,7 +481,7 @@ static Boolean __doWebCamRight(iOPClient inst) {
   if( webcam != NULL ) {
     if(ok) ok=SocketOp.fmt( data->socket, "<table border=\"1\" rules=\"cols\" cellspacing=\"0\" cellpadding=\"5\">\n\n" );
     while( webcam != NULL && ok) {
-      if(ok) ok=SocketOp.fmt( data->socket, "    <tr><td>%s<br><img src=\"%s/%s\"></td></tr>\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "    <tr><td>%s<br><img src=\"%s/%s\"></td></tr>\n", 
                     wWebCam.gettitle( webcam ), wWebClient.getwebcampath( data->ini ), wWebCam.getimagefile( webcam ) );
       webcam = wWebClient.nextwebcam( data->ini, webcam );
     }
@@ -503,7 +503,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
     const char* light = "off";
     int V = 0;
     const char* V_mode = "";
-
+    
     if( selected != NULL && StrOp.len(selected) > 0 ) {
       iOLoc loc = ModelOp.getLoc( AppOp.getModel(), selected );
       if( loc != NULL ) {
@@ -517,7 +517,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
           V_mode = "%";
       }
     }
-
+    
     if(ok) ok= webHeader( data->socket );
 
     if( !StrOp.equals( wWebClient.getwebcampos( data->ini ), wWebClient.bottom ) ) {
@@ -533,15 +533,15 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
         StrOp.fmtb( strX, "width=\"%d\"", cx );
       if( cy > 0 )
         StrOp.fmtb( strY, "height=\"%d\"", cy );
-      if(ok) ok=SocketOp.fmt( data->socket, "<table bgcolor=\"%s\" border=\"1\" rules=\"cols\" %s %s cellspacing=\"0\" cellpadding=\"0\">\n",
+      if(ok) ok=SocketOp.fmt( data->socket, "<table bgcolor=\"%s\" border=\"1\" rules=\"cols\" %s %s cellspacing=\"0\" cellpadding=\"0\">\n", 
                     wWebClient.getplanbackground(data->ini), strX, strY );
     }
     if(ok) ok=SocketOp.fmt( data->socket, "<tr vvalign=\"top\"><td>" );
-
+    
     if(ok) ok=SocketOp.fmt( data->socket, "<form method=\"get\" action=\"\">" );
     if(ok) ok=SocketOp.fmt( data->socket, "<table bgcolor=\"%s\" cellspacing=\"0\" rules=\"rows\" cellpadding=\"1\" border=\"1\" width=\"100%\"><tr>",
                   wWebClient.getrulerbackground(data->ini) );
-
+                  
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"hidden\" name=\"level\" value=\"%d\"></td>", level );
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" title=\"Level Down\" src=\"%s/arrow-down.%s\" name=\"leveldown\"></td>", symbolpath, symboltype );
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" title=\"Level Up\" src=\"%s/arrow-up.%s\" name=\"levelup\"></td>", symbolpath, symboltype );
@@ -549,7 +549,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" title=\"Power ON\" src=\"%s/power-on.%s\" name=\"poweron\"></td>", symbolpath, symboltype );
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" title=\"Power OFF\" src=\"%s/power-off.%s\" name=\"poweroff\"></td>", symbolpath, symboltype );
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" title=\"Automat\" src=\"%s/auto.%s\" name=\"autoon\"></td>", symbolpath, symboltype );
-
+    
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"hidden\" name=\"selected\" value=\"%s\"></td>", selected );
     if(ok) ok=SocketOp.fmt( data->socket, "<td aalign=\"center\"><select name=\"locsel\">" );
     if(ok) ok=SocketOp.fmt( data->socket, "  <option>%s</option>", "-" );
@@ -557,7 +557,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
       int i;
       int n = ListOp.size( data->locIDs );
       for( i = 0; i < n; i++ ) {
-        const char* id = (const char*)ListOp.get(data->locIDs, i);
+        const char* id = (const char*)ListOp.get(data->locIDs, i); 
         char* encID = StrOp.encode4URL(id);
         /*char* encID = StrOp.dup(id);*/
         Boolean bselected = False;
@@ -568,7 +568,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
       }
     }
     if(ok) ok=SocketOp.fmt( data->socket, "</select></td>" );
-
+    
 /*    SocketOp.fmt( data->socket, "<td><input type=\"image\" src=\"%s/enter.png\" value=\"enter;\" name=\"enter\"></td>", symbolpath );*/
     if(ok) ok=SocketOp.fmt( data->socket, "<td><small>%d%s</small></td>", V, V_mode );
     if(ok) ok=SocketOp.fmt( data->socket, "<td><input type=\"image\" src=\"%s/ric.%s\" name=\"ricselect\"></td>", symbolpath, symboltype );
@@ -587,20 +587,20 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
 
     if(ok) ok=SocketOp.fmt( data->socket, "</tr>" );
     if(ok) ok=SocketOp.fmt( data->socket, "</table></form>" );
-
+    
     if(ok) ok=SocketOp.fmt( data->socket, "</td></tr>" );
-
-    if(ok) ok=SocketOp.fmt( data->socket, "<tr valign=\"top\" bgcolor=\"%s\"><td>\n",
+    
+    if(ok) ok=SocketOp.fmt( data->socket, "<tr valign=\"top\" bgcolor=\"%s\"><td>\n", 
                   wWebClient.getplanbackground(data->ini) );
-    if(ok) ok=SocketOp.fmt( data->socket, "<table cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"%s\">\n",
+    if(ok) ok=SocketOp.fmt( data->socket, "<table cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"%s\">\n", 
                   wWebClient.getplanbackground(data->ini) );
 
     if(ok) ok=__generateLayout( inst, level, selected, symbolpath, symboltype );
 
     if(ok) ok=SocketOp.fmt( data->socket, "</table>\n" );
-    if(ok) ok=SocketOp.fmt( data->socket, "</td></tr>\n" );
+    if(ok) ok=SocketOp.fmt( data->socket, "</td></tr>\n" );    
     if(ok) ok=SocketOp.fmt( data->socket, "</table>\n" );
-
+    
     if( StrOp.equals( wWebClient.getwebcampos( data->ini ), wWebClient.bottom ) )
       if(ok) ok=__doWebCamBottom( inst );
     else {
@@ -659,11 +659,11 @@ static char* __getID( const char* offset, const char* str ) {
         *p = ' ';
       p++;
     };
-
+    
     decodedID = StrOp.decode4URL(nid);
     StrOp.free(nid);
     return decodedID;
-
+    
     /*return nid;*/
   }
   return NULL;
@@ -673,7 +673,7 @@ static char* __getID( const char* offset, const char* str ) {
 static int __getLevel( const char* str ) {
   int level = 0;
   char* lp = StrOp.find( str, "level=" );
-
+  
   if( lp != NULL ) {
     char* nid = StrOp.dup( lp + StrOp.len("level=") );
     char* p = StrOp.findc( nid, '&' );
@@ -729,7 +729,7 @@ static void __doSW( iOPClient inst, const char* req ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown switch ID [%s]", id );
 
   StrOp.free( id );
-
+    
 }
 
 
@@ -747,7 +747,7 @@ static void __doStopGo( iOPClient inst, const char* req ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown loc ID [%s]", id );
 
   StrOp.free( id );
-
+    
 }
 
 
@@ -757,7 +757,7 @@ static void __doSG( iOPClient inst, const char* req ) {
 
 static void __doFunction( iOLoc loc, const char* req ) {
   const char* id = LocOp.getId(loc);
-
+  
   if( StrOp.find(req, "function0") ) {
     iONode props = LocOp.base.properties(loc);
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -802,7 +802,7 @@ static void __doFunction( iOLoc loc, const char* req ) {
 
 static void __doSpeed( iOLoc loc, const char* req, Boolean direction ) {
   const char* id = LocOp.getId(loc);
-
+  
   if( StrOp.find(req, "speedstop") ) {
     iONode props = LocOp.base.properties(loc);
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -897,8 +897,8 @@ static Boolean _work( struct OPClient* inst ) {
       return True;
     }
     TraceOp.dump( name, TRCLEVEL_USER2, str, StrOp.len(str) );
-
-
+    
+    
     /* Flag if post data is comming: */
     if( StrOp.find( str, "POST" ) )
       readPost = True;
@@ -911,7 +911,7 @@ static Boolean _work( struct OPClient* inst ) {
     }
     else if( StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getsymbolpath( data->ini ) ) && StrOp.find( str, " /" ) ||
              StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getwebcampath( data->ini ) ) && StrOp.find( str, " /" ) ||
-             StrOp.find( str, "GET" ) && StrOp.find( str, "images" ) && StrOp.find( str, " /" ) )
+             StrOp.find( str, "GET" ) && StrOp.find( str, "images" ) && StrOp.find( str, " /" ) ) 
     {
       char* symbolfile = StrOp.dup( StrOp.find( str, " /" ) + 2 ) ;
       char* p = StrOp.find( symbolfile, "HTTP" );
@@ -927,17 +927,17 @@ static Boolean _work( struct OPClient* inst ) {
       rocWebME( inst, str );
     }
     else {
-
+    
       selected = __getID( "locsel=", str );
       if( selected == NULL )
         selected = __getID( "selected=", str );
-
+  
       direction = __getID( "direction=", str );
       if( direction == NULL )
         direction = "true";
-
+        
       bdirection = StrOp.equals( direction, "true" );
-
+  
       if( StrOp.find( str, "GET" ) && StrOp.find( str, " / " ) ) {
         __getHome( inst, __getLevel(str), selected, bdirection );
       }
@@ -980,7 +980,7 @@ static Boolean _work( struct OPClient* inst ) {
         __doLC( inst, str, selected, bdirection );
         __getHome( inst, __getLevel(str), selected, bdirection );
       }
-
+      
     }
 
     /* Reading rest of HTTP header: */
@@ -1025,7 +1025,7 @@ static Boolean _work( struct OPClient* inst ) {
 /*      return True;
     }*/
   }
-
+  
   return True;
 }
 

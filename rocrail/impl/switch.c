@@ -456,7 +456,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
 
   if( StrOp.equals( wSwitch.unlock, wSwitch.getcmd( nodeA ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unlock switch [%s]",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock switch [%s]",
                  SwitchOp.getId( inst ) );
     SwitchOp.unLock( inst, o->lockedId );
     return True;
@@ -832,7 +832,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
   iOSwitchData data = Data(inst);
   Boolean has2Units = ( wSwitch.getaddr2( data->props ) > 0 || wSwitch.getport2( data->props ) > 0 )  ? True:False;
 
-  /* if( !data->hasFbSignal ) */ {
+  if( !data->hasFbSignal ) {
     Boolean inv  = wSwitch.isinv( data->props );
     Boolean inv2 = wSwitch.isinv2( data->props );
     const char* state = wSwitch.getstate( nodeC );
@@ -917,10 +917,6 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       wSwitch.setid( nodeD, SwitchOp.getId( inst ) );
       wSwitch.setstate( nodeD, wSwitch.getstate( data->props) );
       wSwitch.setswitched( nodeD, wSwitch.getswitched( data->props ) );
-
-      if( data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
-        wSwitch.setset( nodeD, SwitchOp.isSet(inst) );
-
       wSwitch.setaddr1( nodeD, wSwitch.getaddr1( data->props ) );
       wSwitch.setport1( nodeD, wSwitch.getport1( data->props ) );
       if( has2Units ) {
@@ -967,8 +963,6 @@ static void _checkSenPos( iOSwitch inst ) {
       {
       /* check the savepos */
       if( !StrOp.equals( wSwitch.getsavepos(data->props), wSwitch.getstate( data->props ) ) ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] to save position", wSwitch.name() );
-
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
@@ -976,6 +970,7 @@ static void _checkSenPos( iOSwitch inst ) {
       }
     }
   }
+
 }
 
 

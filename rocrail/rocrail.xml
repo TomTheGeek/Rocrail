@@ -120,7 +120,6 @@
       <var name="reverse" vt="Boolean"/>
       <var name="group" vt="const char*"/>
       <var name="fromBlockId" vt="const char*"/>
-      <var name="viaRouteId" vt="const char *"/>
       <var name="prevLocIdCnt" vt="int"/>
       <var name="prevLocId" vt="const char*"/>
       <var name="listenerObj" vt="obj"/>
@@ -389,9 +388,6 @@
       <param name="curblockid" vt="const char*" remark="Current block ID"/>
     </fun>
     <fun name="getDir" vt="Boolean">
-      <param name="inst" vt="this" remark="Loc instance"/>
-    </fun>
-    <fun name="getPlacing" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="isAutomode" vt="Boolean">
@@ -885,9 +881,6 @@
       <param name="fromto" vt="Boolean*"/>
     </fun>
     <fun name="getDir" vt="Boolean">
-      <param name="inst" vt="this" remark="Route instance"/>
-    </fun>
-    <fun name="getLcDir" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="getVelocity" vt="const char*">

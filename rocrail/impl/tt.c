@@ -327,9 +327,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set direction address=%d, port=%d, gate=%s",
           addr, DIGITALBAHN_DIR, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
-
-      int addrCmd = ( addr + DIGITALBAHN_DIR) / 4 + 1;
-      int portCmd = ( addr + DIGITALBAHN_DIR) % 4 + 1;
+      int addrCmd = (addr + DIGITALBAHN_DIR) / 4 + 1;
+      int portCmd = (addr + DIGITALBAHN_DIR) % 4 + 1;
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
       wSwitch.setcmd  ( cmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
@@ -352,6 +351,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     if( iid != NULL )
       wSwitch.setiid( cmd, iid );
 
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set position address=%d, port=%d, gate=%s",
         addr, port, cmdstr );
 
@@ -360,11 +360,10 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, cmdstr );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d]...", addrCmd, portCmd );
+
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...", 
-                 addrCmd, portCmd, cmdstr );
-
     ControlOp.cmd( control, cmd, NULL );
     /* give the decoder some time to think... */
     ThreadOp.sleep(100);

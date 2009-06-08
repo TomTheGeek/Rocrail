@@ -316,13 +316,6 @@ static Boolean _getDir( iORoute inst ) {
   return wRoute.isdir( o->props );
 }
 
-
-static Boolean _getLcDir( iORoute inst ) {
-  iORouteData o = Data(inst);
-  return wRoute.islcdir( o->props );
-}
-
-
 static Boolean _isSwap( iORoute inst ) {
   iORouteData o = Data(inst);
   return wRoute.isswap( o->props );
