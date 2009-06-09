@@ -752,8 +752,11 @@
       <var name="lights" vt="Boolean"/>
       <var name="fn[29]" vt="Boolean"/>
       <var name="changedfgrp" vt="int"/>
+      <var name="fgrp" vt="int"/>
       <var name="V" vt="int"/>
+      <var name="V_prev" vt="int"/>
       <var name="dir" vt="Boolean"/>
+      <var name="idle" vt="unsigned long"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>

@@ -209,6 +209,7 @@ unlock bit of the Mode Word.
 
 #include "rocs/public/str.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -510,7 +511,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
       data->slots[slot].lights = wLoc.isfn( node );
       data->slots[slot].fn[0]  = wLoc.isfn( node );
       data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
-
+      data->slots[slot].idle = SystemOp.getTick();
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "slot=%d addr=%d V=%d steps=%d dir=%d long=%d", slot,
@@ -716,6 +717,29 @@ static void __sprogWriter( void* threadinst ) {
         char out[64] = {0};
         char in [64] = {0};
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
+
+        if( data->slots[slotidx].V == data->slots[slotidx].V_prev && data->slots[slotidx].changedfgrp == 0 ) {
+          if( data->slots[slotidx].idle + 8000 < SystemOp.getTick() ) {
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
+            data->slots[slotidx].addr = 0;
+            data->slots[slotidx].idle = 0;
+            data->slots[slotidx].fgrp = 0;
+            data->slots[slotidx].changedfgrp = 0;
+            data->slots[slotidx].V_prev = 0;
+            data->slots[slotidx].V = 0;
+            slotidx++;
+            continue;
+          }
+        }
+        else {
+          data->slots[slotidx].V_prev == data->slots[slotidx].V;
+          data->slots[slotidx].fgrp = data->slots[slotidx].changedfgrp;
+          data->slots[slotidx].changedfgrp = 0;
+          data->slots[slotidx].idle = SystemOp.getTick();
+        }
+
+
         if( data->slots[slotidx].steps == 128 )  {
           int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
               data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
@@ -742,10 +766,11 @@ static void __sprogWriter( void* threadinst ) {
           __transact( sprog, out, StrOp.len(out), in, 3 );
         }
 
-        if( data->slots[slotidx].changedfgrp > 0 ) {
+        if( data->slots[slotidx].fgrp > 0 ) {
           int size = 0;
+
           ThreadOp.sleep(25);
-          if( data->slots[slotidx].changedfgrp == 1 ) {
+          if( data->slots[slotidx].fgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[0],
@@ -754,7 +779,7 @@ static void __sprogWriter( void* threadinst ) {
                 data->slots[slotidx].fn[3],
                 data->slots[slotidx].fn[4] );
           }
-          else if( data->slots[slotidx].changedfgrp == 2 ) {
+          else if( data->slots[slotidx].fgrp == 2 ) {
             size = function5Through8Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[5],
@@ -762,7 +787,7 @@ static void __sprogWriter( void* threadinst ) {
                 data->slots[slotidx].fn[7],
                 data->slots[slotidx].fn[8] );
           }
-          else if( data->slots[slotidx].changedfgrp == 3 ) {
+          else if( data->slots[slotidx].fgrp == 3 ) {
             size = function9Through12Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[9],
@@ -770,7 +795,7 @@ static void __sprogWriter( void* threadinst ) {
                 data->slots[slotidx].fn[11],
                 data->slots[slotidx].fn[12] );
           }
-          else if( data->slots[slotidx].changedfgrp == 4 || data->slots[slotidx].changedfgrp == 5 ) {
+          else if( data->slots[slotidx].fgrp == 4 || data->slots[slotidx].fgrp == 5 ) {
             size = function13Through20Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[13],
@@ -782,7 +807,7 @@ static void __sprogWriter( void* threadinst ) {
                 data->slots[slotidx].fn[19],
                 data->slots[slotidx].fn[20] );
           }
-          else if( data->slots[slotidx].changedfgrp == 6 || data->slots[slotidx].changedfgrp == 7 ) {
+          else if( data->slots[slotidx].fgrp == 6 || data->slots[slotidx].fgrp == 7 ) {
             size = function21Through28Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
                 data->slots[slotidx].fn[21],
@@ -800,8 +825,6 @@ static void __sprogWriter( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "function group %d DCC out: %s", data->slots[slotidx].changedfgrp, out );
           __transact( sprog, out, StrOp.len(out), in, 3 );
         }
-
-
 
         slotidx++;
       }
@@ -892,6 +915,7 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
 
   MemOp.set( data->slots, 0, 128 * sizeof( struct slot ) );
 
+  SystemOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sprog %d.%d.%d", vmajor, vminor, patch );
