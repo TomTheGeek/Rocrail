@@ -422,7 +422,10 @@ static iONode __translate( obj inst, const iONode node ) {
     }
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
-      comp_nmra_fb7( addr, fgroup, f);
+      if( addr > 127 )
+        comp_nmra_fb14( addr, fgroup, f);
+      else
+        comp_nmra_fb7( addr, fgroup, f);
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) ) {
       comp_nmra_fb14( addr, fgroup, f);
