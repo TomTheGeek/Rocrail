@@ -151,18 +151,20 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
         data->schedule, data->scheduleIdx );
 
     if( sc != NULL ) {
-      iONode entry = NodeOp.getChild(sc,data->scheduleIdx-1);
-      iONode actionctrl = wScheduleEntry.getactionctrl(entry);
+      iONode entry = NodeOp.getChild(sc,data->scheduleIdx);
+      if( entry != NULL ) {
+        iONode actionctrl = wScheduleEntry.getactionctrl(entry);
 
-      while( actionctrl != NULL ) {
-        iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
-        if( action != NULL ) {
-          action->exec(action, actionctrl);
-        }
-        actionctrl = wSchedule.nextactionctrl(entry, actionctrl);
-      };
+        while( actionctrl != NULL ) {
+          iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
+          if( action != NULL ) {
+            action->exec(action, actionctrl);
+          }
+          actionctrl = wSchedule.nextactionctrl(entry, actionctrl);
+        };
 
-      return wScheduleEntry.isswap(entry);
+        return wScheduleEntry.isswap(entry);
+      }
     }
   }
   return False;
