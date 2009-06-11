@@ -567,7 +567,7 @@ int comp_nmra_baseline(int address, int direction, int speed) {
    adr=address;
 
    /* no special error handling, it's job of the clients */
-   if (address<1 || address>99 || direction<0 || direction>1 ||
+   if (address<1 || address>127 || direction<0 || direction>1 ||
        speed<0 || speed>15)
       return 1;
 
@@ -614,7 +614,7 @@ int comp_nmra_fb7(int address, int group, int* f) {
 
    adr=address;
    /* no special error handling, it's job of the clients */
-   if (address<1 || address>99 )
+   if (address<1 || address>127 )
       return 1;
 
    calc_7bit_address_byte(addrbyte, address);
@@ -739,7 +739,7 @@ int comp_nmra_f4b7s28(int address, int direction, int speed, int *f) {
    adr=address;
 
    /* no special error handling, it's job of the clients */
-   if (address<1 || address>99 || direction<0 || direction>1 ||
+   if (address<1 || address>127 || direction<0 || direction>1 ||
        speed<0 || speed>28)
       return 1;
    for (i=0; i<5; i++)
@@ -810,7 +810,7 @@ int comp_nmra_f4b7s128(int address, int direction, int speed, int* f) {
    adr=address;
 
    /* no special error handling, it's job of the clients */
-   if (address<1 || address>99 || direction<0 || direction>1 ||
+   if (address<1 || address>127 || direction<0 || direction>1 ||
        speed<0 || speed>128)
       return 1;
    for (i=0; i<5; i++)
