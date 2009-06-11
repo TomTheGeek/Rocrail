@@ -65,14 +65,9 @@ MOUNTPOINT=..
 OUTDIR=../$(DIRPREFIX)bin
 GENDIR=../$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)/rocgui/bin
-BUILDBINDIR=../rocs/bin
 DEBUG=-g
-DESTDIR?=
-PREFIX?=/usr/local
-LIBEXECDIR?=$(PREFIX)/libexec
-DATADIR?=$(PREFIX)/share
-ROCRAIL_LIBEXECDIR=$(LIBEXECDIR)/rocrail
-ROCRAIL_DATADIR=$(DATADIR)/rocrail
+DESTDIR=/opt/rocrail
+BINDIR=../rocs/bin
 
 CPP=$(TOOLPREFIX)c++
 CC=$(TOOLPREFIX)gcc
@@ -129,27 +124,21 @@ clean:
 	-mkdir -p $(GENDIR)/rocgui
 	-mkdir -p $(GENDIR)/rocgui/res
 	-mkdir -p $(TMPOUTDIR)
-	-rm -f $(TARGET)
-	-rm -f $(OUTDIR)/rocgui$(BINSUFFIX)
 	-rm -f $(TMPOUTDIR)/*.o
 	-rm -f $(GENDIR)/rocgui/wrapper/public/*
 	-rm -f $(GENDIR)/rocgui/wrapper/impl/*
 	-rm -f $(GENDIR)/rocgui/wrapper/bin/*
 	-rm -f $(GENDIR)/rocgui/wrapper/doc/*
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/wgen ../../rocgui/public/wrapper.xml
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../rocgui/res/messages.xml res/messages.c messages
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../rocgui/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/wgen ../../rocgui/public/wrapper.xml
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../rocgui/res/messages.xml res/messages.c messages
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../rocgui/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
 messages:
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../rocgui/res/messages.xml res/messages.c messages
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../rocgui/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
-	cd $(GENDIR)/rocgui; ../$(BUILDBINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../rocgui/res/messages.xml res/messages.c messages
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../rocgui/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
+	cd $(GENDIR)/rocgui; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
 install:
-	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
-	-cp -p $(OUTDIR)/rocview $(DESTDIR)$(ROCRAIL_LIBEXECDIR)
-	-mkdir -p $(DESTDIR)$(ROCRAIL_DATADIR)
-	-cp -Rp icons $(DESTDIR)$(ROCRAIL_DATADIR)
-	-cp -Rp svg $(DESTDIR)$(ROCRAIL_DATADIR)
-	-cp -Rp xpm $(DESTDIR)$(ROCRAIL_DATADIR)
+	-cp -p $(OUTDIR)/rocview $(DESTDIR)
+	
