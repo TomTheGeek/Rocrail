@@ -24,26 +24,33 @@
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
 #
-include ../makefile.common
+PLATFORM=LINUX
+ifeq ($(PLATFORM),WIN32)
+	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 $(SSLLIBS)
+	COREDIR=win
+	BINSUFFIX=.exe
+	CC_EXTRA_FLAGS=
+else
+	COREDIR=unx
+	BINSUFFIX=
+	CC_EXTRA_FLAGS=-fPIC
+endif
 
+MOUNTPOINT=..
+OUTDIR=../$(COREDIR)bin
+GENDIR=../$(COREDIR)gen
 TMPOUTDIR=$(GENDIR)/rocint/bin
+DEBUG=-g
+BINDIR=../rocs/bin
 
+CPP=gcc
+LNK=gcc
+INCL_PATH=$(MOUNTPOINT)
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
 
-all: build
-
-generate: $(GENDIR)/rocint
-
-$(GENDIR)/rocint: rocint.xml
-	$(RM) -r $(GENDIR)/rocint
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)/rocint
-	cd $(GENDIR)/rocint; ../$(BUILDBINDIR)/ogen ../../rocint/rocint.xml
-
-build: generate
+all:
+	cd $(GENDIR)/rocint; ../$(BINDIR)/ogen ../../rocint/rocint.xml
 
 clean:
-	$(RM) -r $(GENDIR)/rocint
-
-install: ;
-
-uninstall: ;
+	-mkdir -p $(OUTDIR)
+	-mkdir -p $(GENDIR)/rocint

@@ -24,19 +24,44 @@
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
 #
-include ../makefile.common
-
+PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
-	LDFLAGS=--def lcdriver.def
+	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32
+	DIRPREFIX=win
+	CC_EXTRA_FLAGS=
+	LNK_FLAGS=--def lcdriver.def
+	LNK=$(TOOLPREFIX)dllwrap
+	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),MACOSX)
-	LDFLAGS=-dynamiclib -flat_namespace -undefined suppress
+	LIBS=-lpthread -ldl
+	DIRPREFIX=unx
+	CC_EXTRA_FLAGS=-fPIC
+	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
+	LNK=gcc
+	SHAREDSUFFIX=.so
 else
-	LDFLAGS=-shared
+	LIBS=-lpthread -ldl
+	DIRPREFIX=unx
+	CC_EXTRA_FLAGS=-fPIC
+	LNK_FLAGS=-shared
+	LNK=gcc
+	SHAREDSUFFIX=.so
 endif
 
+MOUNTPOINT=..
+OUTDIR=../$(DIRPREFIX)bin
+GENDIR=../$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)/roclcdr/bin
+BUILDBINDIR=../rocs/bin
+DEBUG=-g
+DESTDIR?=
+PREFIX?=/usr/local
+LIBDIR?=$(PREFIX)/lib
+ROCRAIL_LIBDIR=$(LIBDIR)/rocrail
 
-CFLAGS+= -ansi
+CPP=$(TOOLPREFIX)gcc
+INCL_PATH=$(MOUNTPOINT)
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
 RRLIBS=$(OUTDIR)/libwrapper.a $(OUTDIR)/librocs.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
@@ -44,56 +69,45 @@ EVENTSOBJS=$(patsubst impl/events/%.c,$(TMPOUTDIR)/events/%.o,$(wildcard impl/ev
 STATUSOBJS=$(patsubst impl/status/%.c,$(TMPOUTDIR)/status/%.o,$(wildcard impl/status/*.c))
 TOOLSOBJS=$(patsubst impl/tools/%.c,$(TMPOUTDIR)/tools/%.o,$(wildcard impl/tools/*.c))
 
-all: build
+all: $(OBJS) $(OUTDIR)/lcdriver$(SHAREDSUFFIX)
+#	-rm -f $(TMPOUTDIR)/*.o
 
-generate: $(GENDIR)/roclcdr
+# ------------------------------------------------------------
+# The LocDrivers as shared libraries.
+# ------------------------------------------------------------
+$(OUTDIR)/lcdriver$(SHAREDSUFFIX): $(TMPOUTDIR)/lcdriver.o $(RRLIBS) $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/lcdriver$(SHAREDSUFFIX) $(TMPOUTDIR)/lcdriver.o $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS) $(RRLIBS) $(LIBS)
 
-$(GENDIR)/roclcdr: roclcdr.xml
-	$(RM) -r $(GENDIR)/roclcdr
+# ------------------------------------------------------------
+# The RocLcDr objects.
+# ------------------------------------------------------------
+$(TMPOUTDIR)/%.o: impl/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/events/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/status/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+$(TMPOUTDIR)/%.o: impl/tools/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
+clean:
 	-mkdir -p $(OUTDIR)
 	-mkdir -p $(GENDIR)/roclcdr
 	-mkdir -p $(TMPOUTDIR)
 	-mkdir -p $(TMPOUTDIR)/events
 	-mkdir -p $(TMPOUTDIR)/status
 	-mkdir -p $(TMPOUTDIR)/tools
-	$(RM) $(TMPOUTDIR)/*.o
-	$(RM) $(TMPOUTDIR)/events/*.o
-	$(RM) $(TMPOUTDIR)/status/*.o
-	$(RM) $(TMPOUTDIR)/tools/*.o
+	-rm -f $(TMPOUTDIR)/*.o
+	-rm -f $(TMPOUTDIR)/events/*.o
+	-rm -f $(TMPOUTDIR)/status/*.o
+	-rm -f $(TMPOUTDIR)/tools/*.o
 	cd $(GENDIR)/roclcdr; ../$(BUILDBINDIR)/ogen ../../roclcdr/roclcdr.xml ../
-
-build: generate $(OBJS) $(OUTDIR)/lcdriver$(SHAREDSUFFIX)
-
-# ------------------------------------------------------------
-# The LocDrivers as shared libraries.
-# ------------------------------------------------------------
-$(OUTDIR)/lcdriver$(SHAREDSUFFIX): $(TMPOUTDIR)/lcdriver.o $(RRLIBS) $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS)
-	$(LD) $(LDFLAGS) -o $(OUTDIR)/lcdriver$(SHAREDSUFFIX) $(TMPOUTDIR)/lcdriver.o $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS) $(RRLIBS) $(LIBS)
-
-# ------------------------------------------------------------
-# The RocLcDr objects.
-# ------------------------------------------------------------
-$(TMPOUTDIR)/%.o: impl/%.c
-	$(CC) $(CFLAGS) $< -o $@
-
-$(TMPOUTDIR)/%.o: impl/events/%.c
-	$(CC) $(CFLAGS) $< -o $@
-
-$(TMPOUTDIR)/%.o: impl/status/%.c
-	$(CC) $(CFLAGS) $< -o $@
-
-$(TMPOUTDIR)/%.o: impl/tools/%.c
-	$(CC) $(CFLAGS) $< -o $@
-
-clean:
-	$(RM) $(OUTDIR)/lcdriver$(SHAREDSUFFIX)
-	$(RM) -r $(GENDIR)/roclcdr
 
 install:
   ifeq ($(PLATFORM),LINUX)
 	-mkdir -p $(DESTDIR)$(ROCRAIL_LIBDIR)
 	-cp -p $(OUTDIR)/lcdriver.so $(DESTDIR)$(ROCRAIL_LIBDIR)
   endif
-
-uninstall:
-	$(RM) $(DESTDIR)$(ROCRAIL_LIBDIR)/lcdriver.so

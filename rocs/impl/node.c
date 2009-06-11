@@ -315,7 +315,10 @@ static int _getChildCnt( iONode inst ) {
 
 static iONode _getChild( iONode inst, int idx ) {
   iONodeData data = Data(inst);
-  return data->childs[idx];
+  if( idx < data->childCnt && idx >= 0 )
+    return data->childs[idx];
+  else
+    return NULL;
 }
 
 
