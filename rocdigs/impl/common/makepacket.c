@@ -93,8 +93,10 @@
 
 static int preambleLength = 15;
 /* This should be a multiple of 5. */
+
 #define BITSTREAM_BITS_PER_BYTE 9
-/* number of bits per byte/
+/* number of bits per byte */
+
 /* nmra   s01234567s (hex equiv - note that in signal, 0 bit is left) */
 #define BITS_0     0xF0 /* 0      _____----- (0xF0) */
 #define BITS_00    0xC6 /* 00     __--___--- (0xC6) */
@@ -161,7 +163,7 @@ int createStream(byte* serialStream, byte* packet, int packetsize) {
   /**
    * Now do the hard part - convert this into a serial stream
    */
-  return bitStreamToSerialBytes(serialStream, bitStream, bitStreamIndex);
+  return bitStreamToSerialBytes(serialStream, bitStream, bitStreamIndex+1);
 }
 
 /* BitStreamToSerialBytes
