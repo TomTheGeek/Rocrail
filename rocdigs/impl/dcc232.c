@@ -253,7 +253,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 
       /* keep this value for the ping thread */
       data->slots[slot].dir = wLoc.isdir( node );
-      data->slots[slot].V = V;
+      data->slots[slot].V = (V > 127 ? 127:V);
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
       data->slots[slot].lights = wLoc.isfn( node );
@@ -402,6 +402,9 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   bitstreamsize = __bytesToBitStream(bitstream, dcc, size);
 
   rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
+  while( !SerialOp.isUartEmpty(data->serial, True) ) {
+    ThreadOp.sleep(0);
+  };
   if( !rc ) {
     /* error */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit error=%d", SerialOp.getRc(data->serial) );
@@ -532,9 +535,8 @@ static void __dccWriter( void* threadinst ) {
       else {
         if( slotidx == 0 ) {
           /* send an idle packet */
-          byte dcc[12];
-          int size = speedStep128Packet(dcc, 0, False, 0, True );
-          __transmit( dcc232, dcc, size );
+          byte dcc[3] = {0xFF,0x00,0xFF};
+          __transmit( dcc232, dcc, 3 );
         }
         slotidx = 0;
       }
@@ -574,7 +576,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   //SerialOp.setBlocking( data->serial, False );
-  SerialOp.setLine( data->serial, 19200, 8, 0, 0 );
+  SerialOp.setLine( data->serial, 19200, 8, 1, 0 );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );
