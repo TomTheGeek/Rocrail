@@ -150,7 +150,7 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
         "check schedule entry actions [%s:%d]",
         data->schedule, data->scheduleIdx );
 
-    if( sc != NULL ) {
+    if( sc != NULL && data->scheduleIdx < NodeOp.getChildCnt(sc)) {
       iONode entry = NodeOp.getChild(sc,data->scheduleIdx);
       if( entry != NULL ) {
         iONode actionctrl = wScheduleEntry.getactionctrl(entry);
@@ -165,6 +165,11 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
 
         return wScheduleEntry.isswap(entry);
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "schedule index %d is out of bounds for schedule %s",
+          data->scheduleIdx, data->schedule );
     }
   }
   return False;
