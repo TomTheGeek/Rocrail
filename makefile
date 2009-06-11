@@ -21,9 +21,6 @@
 #
 PLATFORM=LINUX
 
-DESTDIR?=
-PREFIX?=/usr/local
-
 offlineall: version
 	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
 
@@ -37,7 +34,9 @@ release: version
 	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
 	
 install:
-	cd rocrail; make install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX) TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
+	cd rocrail; make install_all
+#	cp doc/rocrail*.htb ~/rocrail
+
 
 version:
 	echo "const int bzr = " >  common/version.h
