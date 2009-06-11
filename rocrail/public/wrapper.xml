@@ -238,6 +238,7 @@
       <const name="clock" vt="string" val="clock"/>
       <const name="railcom" vt="string" val="railcom"/>
       <const name="sprog" vt="string" val="sprog"/>
+      <const name="dcc232" vt="string" val="dcc232"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

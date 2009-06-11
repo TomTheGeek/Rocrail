@@ -400,6 +400,7 @@ void RocrailIniDialog::initValues() {
 
   m_Lib->Append( wxString( wDigInt.barjut, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.clock, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.dcc232, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ddx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.dinamo, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ecos, wxConvUTF8 ) );
@@ -1169,6 +1170,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.roco, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
   else if( StrOp.equals( wDigInt.sprog, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
+  else if( StrOp.equals( wDigInt.dcc232, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));

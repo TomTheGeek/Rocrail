@@ -32,3 +32,6 @@ int analogControl(byte* retVal, int address, Boolean longAddr, int function, int
 int consistControl(byte* retVal, int address, Boolean longAddr, int consist, Boolean directionNormal);
 
 Boolean addressCheck(int address, Boolean longAddr);
+
+int createStream(byte* serialStream, byte* packet, int packetsize);
+

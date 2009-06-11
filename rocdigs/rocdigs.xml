@@ -739,7 +739,47 @@
     </data>
   </object>
 
-  <object name="Sprog" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="NCE object">
+  <object name="Sprog" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="SPROG II">
+    <typedef def="enum {CV_READ=1, CV_WRITE} sprogcmd"/>
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="addr" vt="int"/>
+      <var name="longaddr" vt="Boolean"/>
+      <var name="steps" vt="int"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="fn[29]" vt="Boolean"/>
+      <var name="changedfgrp" vt="int"/>
+      <var name="fgrp" vt="int"/>
+      <var name="V" vt="int"/>
+      <var name="V_prev" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="idle" vt="unsigned long"/>
+    </struct>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="device" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="slotmux" vt="iOMutex"/>
+      <var name="run" vt="Boolean"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="lastcmd" vt="int"/>
+      <var name="lastcv" vt="int"/>
+      <var name="lastvalue" vt="int"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="slots[128]" vt="struct slot"/>
+      <var name="power" vt="Boolean"/>
+    </data>
+  </object>
+
+
+  <object name="DCC232" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="Easy DCC for RS232">
     <typedef def="enum {CV_READ=1, CV_WRITE} sprogcmd"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>

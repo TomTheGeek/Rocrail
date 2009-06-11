@@ -76,13 +76,14 @@ BarJuTCntrlDlg::BarJuTCntrlDlg()
 BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props )
 {
   int isSPROGII = StrOp.equals( wDigInt.sprog, wDigInt.getlib(props) );
-  Create(parent, -1, isSPROGII ? _T("SPROG II"):_T("BarJut"));
+  int isDCC232  = StrOp.equals( wDigInt.dcc232, wDigInt.getlib(props) );
+  Create(parent, -1, isSPROGII ? _T("SPROG II"):(isDCC232?_T("DCC232"):_T("BarJut")));
   m_Props = props;
   initLabels();
   initValues();
 
-  m_labPolling->Enable(!isSPROGII);
-  m_Polling->Enable(!isSPROGII);
+  m_labPolling->Enable(!isSPROGII && !isDCC232);
+  m_Polling->Enable(!isSPROGII && !isDCC232);
 
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);

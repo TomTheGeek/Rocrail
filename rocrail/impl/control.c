@@ -811,6 +811,7 @@ static Boolean __initDigInts( iOControl inst ) {
       if( vmajor != wGlobal.vmajor || vminor != wGlobal.vminor ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "version mismatch for library [%s]; reports:[%d.%d] wanted:[%d.%d]", lib, vmajor, vminor, wGlobal.vmajor, wGlobal.vminor );
+        pDi->halt((obj)pDi);
         return False;
       }
     }

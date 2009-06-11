@@ -79,7 +79,7 @@ all: $(OBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR)/p50$(SHAREDSUFFIX) $(OUT
 	$(OUTDIR)/ddx$(SHAREDSUFFIX) $(OUTDIR)/slx$(SHAREDSUFFIX) $(OUTDIR)/ecos$(SHAREDSUFFIX) \
 	$(OUTDIR)/inter10$(SHAREDSUFFIX) $(OUTDIR)/barjut$(SHAREDSUFFIX) $(OUTDIR)/loconet$(SHAREDSUFFIX) \
 	$(OUTDIR)/virtual$(SHAREDSUFFIX) $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(OUTDIR)/mcs2$(SHAREDSUFFIX) \
-	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/railcom$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX)
+	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/railcom$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX) $(OUTDIR)/dcc232$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -129,6 +129,8 @@ $(OUTDIR)/railcom$(SHAREDSUFFIX): $(TMPOUTDIR)/railcom.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/railcom$(SHAREDSUFFIX) $(TMPOUTDIR)/railcom.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)/sprog$(SHAREDSUFFIX): $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/sprog$(SHAREDSUFFIX) $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/dcc232$(SHAREDSUFFIX): $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -191,6 +193,7 @@ clean:
 	-rm -f $(OUTDIR)/clock$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/railcom$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/sprog$(SHAREDSUFFIX)
+	-rm -f $(OUTDIR)/dcc232$(SHAREDSUFFIX)
 	cd $(GENDIR)/rocdigs; ../$(BUILDBINDIR)/ogen ../../rocdigs/rocdigs.xml ../
 	cd $(GENDIR)/rocdigs; ../$(BUILDBINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
 
@@ -217,4 +220,5 @@ install:
 	-cp -p $(OUTDIR)/clock$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
 	-cp -p $(OUTDIR)/railcom$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
 	-cp -p $(OUTDIR)/sprog$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
+	-cp -p $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(DESTDIR)$(ROCRAIL_LIBDIR)
 	
