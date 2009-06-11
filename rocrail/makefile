@@ -131,17 +131,16 @@ install_all:
 	cd ../rocgui; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	-cp -p rocraild.png $(DESTDIR)
 	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
-	-cp -p ../rocgui/xpm/locxpm/*.xpm ~/rocrail/locxpm
 	-cp -Rp ../rocgui/icons ~/rocrail
 	-cp -pu package/*.xml ~/rocrail
 	-cp -pu package/*.ini ~/rocrail
 	-cp -p package/rocrail.sh $(DESTDIR)
-	-cp -p package/rocgui.sh $(DESTDIR)
-	-cp -p package/rocguimod.sh $(DESTDIR)
+	-cp -p package/rocview.sh $(DESTDIR)
+	-cp -p package/rocviewmod.sh $(DESTDIR)
 	-chmod +x $(DESTDIR)/rocrail.sh
-	-chmod +x $(DESTDIR)/rocgui.sh
+	-chmod +x $(DESTDIR)/rocview.sh
 	-cp -p package/Rocrail.desktop ~/Desktop
-	-cp -p package/RocrailGUI.desktop ~/Desktop
+	-cp -p package/Rocrview.desktop ~/Desktop
 	-chmod -R go+rw ~/rocrail
 
 install:

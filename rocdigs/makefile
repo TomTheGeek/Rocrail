@@ -212,7 +212,6 @@ install:
 	-cp -p $(OUTDIR)/loconet$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/virtual$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)/modbus$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/clock$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/railcom$(SHAREDSUFFIX) $(DESTDIR)
