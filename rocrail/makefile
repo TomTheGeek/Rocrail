@@ -133,6 +133,8 @@ install_all:
 	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
 	-cp -Rp ../rocgui/icons ~/rocrail
 	-cp -Rp ../rocgui/svg $(DESTDIR)
+	-cp -Rpu symbols $(DESTDIR)
+	-cp -Rpu package/images $(DESTDIR)
 	-cp -pu package/*.xml ~/rocrail
 	-cp -pu package/*.ini ~/rocrail
 	-cp -p package/rocrail.sh $(DESTDIR)
