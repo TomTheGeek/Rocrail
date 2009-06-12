@@ -254,6 +254,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     if( slot >= 0 ) {
       int V = 0;
       int steps = wLoc.getspcnt( node );
+      Boolean longaddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco slot=%d", slot );
 
@@ -269,6 +270,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       data->slots[slot].V = (V > 127 ? 127:V);
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
+      data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:longaddr;
       data->slots[slot].lights = wLoc.isfn( node );
       data->slots[slot].fn[0]  = wLoc.isfn( node );
       data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
@@ -293,6 +295,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       if( data->slots[slot].addr == 0 ) {
         /* first use of this slot */
         data->slots[slot].addr = addr;
+        data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:False;
       }
       data->slots[slot].changedfgrp = group;
       data->slots[slot].lights = wFunCmd.isf0 ( node );
@@ -432,7 +435,10 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   };
   if( !rc ) {
     /* error */
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit error=%d", SerialOp.getRc(data->serial) );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "transmit error=%d (Power Off)", SerialOp.getRc(data->serial) );
+    data->power = False;
+    SerialOp.setDTR(data->serial, False);
+    __stateChanged(dcc232);
   }
 
   return rc;
