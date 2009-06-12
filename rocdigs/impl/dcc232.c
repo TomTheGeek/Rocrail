@@ -437,9 +437,6 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   bitstreamsize = __bytesToBitStream(bitstream, dcc, size);
 
   rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
-  while( !SerialOp.isUartEmpty(data->serial, True) ) {
-    ThreadOp.sleep(0);
-  };
   if( !rc ) {
     /* error */
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "transmit error=%d (Power Off)", SerialOp.getRc(data->serial) );
@@ -512,7 +509,7 @@ static void __dccWriter( void* threadinst ) {
 
   while(data->run) {
 
-    ThreadOp.sleep(10);
+    ThreadOp.sleep(5);
 
     if( data->power ) {
       byte * post = NULL;
@@ -524,7 +521,7 @@ static void __dccWriter( void* threadinst ) {
         freeMem( post);
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "posted packet %d", acc[0] );
         __transmit( dcc232, acc+1, acc[0] );
-        ThreadOp.sleep(10);
+        ThreadOp.sleep(5);
       }
 
       if( data->slots[slotidx].addr > 0 ) {
@@ -576,7 +573,7 @@ static void __dccWriter( void* threadinst ) {
         if( data->slots[slotidx].fgrp > 0 ) {
           int size = 0;
 
-          ThreadOp.sleep(10);
+          ThreadOp.sleep(5);
           if( data->slots[slotidx].fgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
