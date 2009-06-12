@@ -107,6 +107,20 @@ static int __getLocoSlot(iODCC232 dcc232, iONode node) {
   return -1;
 }
 
+void __stateChanged( iODCC232 dcc232 ) {
+  iODCC232Data data = Data(dcc232);
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+  wState.setiid( node, wDigInt.getiid( data->ini ) );
+  wState.setpower( node, data->power );
+  wState.setprogramming( node, False );
+  wState.settrackbus( node, False );
+  wState.setsensorbus( node, False );
+  wState.setaccessorybus( node, False );
+  if( data->listenerFun != NULL ) {
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
 
 
 static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
@@ -123,12 +137,14 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       data->power = False;
       SerialOp.setDTR(data->serial, False);
+      __stateChanged(dcc232);
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       SerialOp.setDTR(data->serial, True);
       SerialOp.setOutputFlow(data->serial, True);
       data->power = True;
+      __stateChanged(dcc232);
     }
   }
 
@@ -344,31 +360,43 @@ static void _halt( obj inst ) {
   SerialOp.setDTR(data->serial, False);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down [%s]...", data->iid );
   SerialOp.close( data->serial );
+  __stateChanged((iODCC232)inst);
   return;
 }
 
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iODCC232Data data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  return True;
 }
 
 
 /** external shortcut event */
 static void _shortcut( obj inst ) {
+  iODCC232Data data = Data(inst);
+  data->power = False;
+  SerialOp.setDTR(data->serial, False);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "external shortcut event [%s]...", data->iid );
+  __stateChanged((iODCC232)inst);
   return;
 }
 
 
 /** bit0=power, bit1=programming, bit2=connection */
 static int _state( obj inst ) {
-  return 0;
+  iODCC232Data data = Data(inst);
+  int state = 0;
+  state |= data->power << 0;
+  return state;
 }
 
 
 /**  */
 static Boolean _supportPT( obj inst ) {
-  return 0;
+  return False;
 }
 
 
@@ -436,11 +464,15 @@ static void __watchDog( void* threadinst ) {
           scdetected = False;
           data->power = False;
           SerialOp.setDTR(data->serial, False);
+          __stateChanged(dcc232);
         }
         else if(!scdetected) {
           TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "shortcut timer started [%dms]", 1000 );
           scdelay++;
           scdetected = True;
+        }
+        else if(scdetected) {
+          scdelay++;
         }
       }
       else {
