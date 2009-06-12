@@ -132,6 +132,7 @@ install_all:
 	-cp -p rocraild.png $(DESTDIR)
 	-cp -p ../rocgui/xpm/rocrail.xpm $(DESTDIR)
 	-cp -Rp ../rocgui/icons ~/rocrail
+	-cp -Rp ../rocgui/svg $(DESTDIR)
 	-cp -pu package/*.xml ~/rocrail
 	-cp -pu package/*.ini ~/rocrail
 	-cp -p package/rocrail.sh $(DESTDIR)
@@ -140,7 +141,7 @@ install_all:
 	-chmod +x $(DESTDIR)/rocrail.sh
 	-chmod +x $(DESTDIR)/rocview.sh
 	-cp -p package/Rocrail.desktop ~/Desktop
-	-cp -p package/Rocrview.desktop ~/Desktop
+	-cp -p package/Rocview.desktop ~/Desktop
 	-chmod -R go+rw ~/rocrail
 
 install:
