@@ -442,6 +442,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       int fnchanged = -1;
 
+      wFunCmd.setaddr(cmd, wLoc.getaddr( data->props ));
+
       /* function timers */
       if( !data->fn0 && wFunCmd.isf0( cmd ) )
         data->fxtimer[0] = __getFnTimer( inst, 0);

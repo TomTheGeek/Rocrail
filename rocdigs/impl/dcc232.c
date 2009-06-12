@@ -337,7 +337,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       data->slots[slot].fn[28] = wFunCmd.isf28( node );
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "lc=%d function group %d changed for loco %d", group, addr );
+          "function group %d changed for loco %d", group, addr );
     }
   }
 
@@ -509,7 +509,7 @@ static void __dccWriter( void* threadinst ) {
 
   while(data->run) {
 
-    ThreadOp.sleep(5);
+    ThreadOp.sleep(0);
 
     if( data->power ) {
       byte * post = NULL;
@@ -521,7 +521,7 @@ static void __dccWriter( void* threadinst ) {
         freeMem( post);
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "posted packet %d", acc[0] );
         __transmit( dcc232, acc+1, acc[0] );
-        ThreadOp.sleep(5);
+        //ThreadOp.sleep(0);
       }
 
       if( data->slots[slotidx].addr > 0 ) {
@@ -532,7 +532,7 @@ static void __dccWriter( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
 
         if( data->slots[slotidx].V == data->slots[slotidx].V_prev && data->slots[slotidx].changedfgrp == 0 ) {
-          if( data->slots[slotidx].idle + 8000 < SystemOp.getTick() ) {
+          if( data->slots[slotidx].idle + 10000 < SystemOp.getTick() ) {
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                 "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
             data->slots[slotidx].addr = 0;
@@ -572,8 +572,10 @@ static void __dccWriter( void* threadinst ) {
 
         if( data->slots[slotidx].fgrp > 0 ) {
           int size = 0;
+          /* send an idle packet */
+          byte dcc[3] = {0xFF,0x00,0xFF};
+          __transmit( dcc232, dcc, 3 );
 
-          ThreadOp.sleep(5);
           if( data->slots[slotidx].fgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
                 data->slots[slotidx].longaddr,
@@ -630,13 +632,15 @@ static void __dccWriter( void* threadinst ) {
         slotidx++;
       }
       else {
-        if( slotidx == 0 ) {
-          /* send an idle packet */
-          byte dcc[3] = {0xFF,0x00,0xFF};
-          __transmit( dcc232, dcc, 3 );
-        }
         slotidx = 0;
       }
+
+      {
+        /* send an idle packet */
+        byte dcc[3] = {0xFF,0x00,0xFF};
+        __transmit( dcc232, dcc, 3 );
+      }
+
     }
   };
 
@@ -673,7 +677,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   //SerialOp.setBlocking( data->serial, False );
-  SerialOp.setLine( data->serial, 19200, 8, 1, 0 );
+  SerialOp.setLine( data->serial, 19200, 8, 0, 0 );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );

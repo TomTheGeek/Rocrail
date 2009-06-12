@@ -250,7 +250,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
     }
 
     /* check for locomotive commands which must be send to other than the default */
-    if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
       if( iid == NULL || StrOp.len(iid) == 0 ) {
         const char* lciid = wRocRail.getlciid( AppOp.getIni() );
         const char* dpiid = wRocRail.getdpiid( AppOp.getIni() );
