@@ -1,8 +1,9 @@
+
 [Desktop Entry]
 Encoding=UTF-8
 Type=Application
 Terminal=true
-Exec=rocrail
+Exec=/opt/rocrail/rocrail.sh
 Icon=rocraild.png
 Name=Rocrail
 Categories=Rocrail;Game;
