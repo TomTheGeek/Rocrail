@@ -174,8 +174,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
 
     cmdsize = accDecoderPkt2(dcc, fada, action, dir);
-    __byteToStr( cmd, dcc, cmdsize );
-    StrOp.fmtb( outa, "O %s\r", cmd );
+    /* TODO */
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
   }
   /* Output command. */
@@ -209,8 +208,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         addr, port, gate, fada, pada );
 
     cmdsize = accDecoderPkt(dcc, fada, action);
-    __byteToStr( cmd, dcc, cmdsize );
-    StrOp.fmtb( outa, "O %s\r", cmd );
+    /* TODO: */
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
   }
 
@@ -222,8 +220,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         byte dcc[12];
         char cmd[32] = {0};
         int cmdsize = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
-        __byteToStr( cmd, dcc, cmdsize );
-        StrOp.fmtb( outa, "O %s\r", cmd );
+        /* TODO: */
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "POM DCC out: %s", outa );
       }
     }
@@ -413,6 +410,52 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   return rc;
 }
 
+static void __watchDog( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iODCC232 dcc232 = (iODCC232)ThreadOp.getParm( th );
+  iODCC232Data data = Data(dcc232);
+
+  int scdelay = 0;
+  Boolean scdetected = False;
+  Boolean inversedsr = False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 watchdog started." );
+
+  while(data->run) {
+
+    ThreadOp.sleep(100);
+
+    if( data->power ) {
+
+      if ( ( SerialOp.isDSR(data->serial) && !inversedsr ) ) {
+        TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "shortcut detected" );
+
+        if( scdetected && scdelay > 10 ) {
+          TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "shortcut detected!" );
+          scdelay = 0;
+          scdetected = False;
+          data->power = False;
+          SerialOp.setDTR(data->serial, False);
+        }
+        else if(!scdetected) {
+          TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "shortcut timer started [%dms]", 1000 );
+          scdelay++;
+          scdetected = True;
+        }
+      }
+      else {
+        scdelay = 0;
+        scdetected = False;
+      }
+    }
+
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 watchdog ended." );
+
+}
+
+
 
 static void __dccWriter( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -585,6 +628,8 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
   SerialOp.setDTR(data->serial,False); /* disable booster output */
 
+  data->watchdog = ThreadOp.inst( "watchdog", &__watchDog, __DCC232 );
+  ThreadOp.start( data->watchdog );
   data->writer = ThreadOp.inst( "dcc232tx", &__dccWriter, __DCC232 );
   ThreadOp.start( data->writer );
 
