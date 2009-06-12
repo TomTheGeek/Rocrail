@@ -124,6 +124,8 @@ clean:
 	-mkdir -p $(GENDIR)/rocgui
 	-mkdir -p $(GENDIR)/rocgui/res
 	-mkdir -p $(TMPOUTDIR)
+	-rm -f $(TARGET)
+	-rm -f $(OUTDIR)/rocgui$(BINSUFFIX)
 	-rm -f $(TMPOUTDIR)/*.o
 	-rm -f $(GENDIR)/rocgui/wrapper/public/*
 	-rm -f $(GENDIR)/rocgui/wrapper/impl/*

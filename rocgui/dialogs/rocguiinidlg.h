@@ -171,6 +171,7 @@ public:
     wxButton* m_XSLPathDlg;
     wxCheckBox* m_RestrictEdit4Auto;
     wxCheckBox* m_Check4Updates;
+    wxCheckBox* m_JsSupport;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

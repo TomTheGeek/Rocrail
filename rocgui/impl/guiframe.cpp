@@ -752,7 +752,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           }
         }
 
-        int jsdev = m_JsSupport->getDev4ID(wLoc.getid( lc ));
+        int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(wLoc.getid( lc )) : -1;
         int throttleid = wLoc.getthrottleid(lc);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
@@ -910,7 +910,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
 
 
-        int jsdev = m_JsSupport->getDev4ID(locid);
+        int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(locid) : -1;
         int throttleid = wLoc.getthrottleid(node);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
@@ -1463,7 +1463,10 @@ void RocGuiFrame::initFrame() {
   StrOp.free(propPath);
 
   create();
-  initJS();
+
+  m_JsSupport = NULL;
+  if( wGui.isjssupport(m_Ini) )
+    initJS();
 }
 
 
