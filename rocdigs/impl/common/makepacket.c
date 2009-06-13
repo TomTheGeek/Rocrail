@@ -226,14 +226,14 @@ static int bitStreamToSerialBytes(byte* serialStream, byte* inputBitStream, int 
           }
           if (treeIndex == 0) {
             serialStream[0] = 0;
-            return inlen;
+            return 0;
           }
         }
       }
     }
   }
   serialStream[0] = --treeIndex;
-  return inlen;
+  return serialStream[0];
 }
 
 /* ReadNextChild

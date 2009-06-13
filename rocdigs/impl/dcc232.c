@@ -421,7 +421,10 @@ static int _version( obj inst ) {
 
 
 static int __bytesToBitStream( byte* bits, byte* dcc, int size ) {
-  return createStream(bits, dcc, size);
+  byte tmp[64] = {0};
+  int len = createStream(tmp, dcc, size);
+  MemOp.copy(bits, tmp+1, len);
+  return len;
 }
 
 
