@@ -479,6 +479,7 @@
     <var name="cv" vt="int" defval="0" range="0-1023" remark="CV number"/>
     <var name="value" vt="int" defval="0" range="0-255" remark="CV value"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
+    <var name="direct" vt="bool" defval="false" remark="Direct mode programming; default is paged."/>
     <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>
     <var name="modid" vt="int" defval="0" range="*" remark="module id for use with lncv"/>
     <var name="version" vt="int" defval="0" range="*" remark="firmware version"/>

@@ -199,7 +199,7 @@ static int __rwLNOPSW(iOLocoNet loconet, int addr, int type, int opsw, int val, 
 }
 
 
-static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeCV, Boolean pom, int decaddr) {
+static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeCV, Boolean pom, Boolean direct, int decaddr) {
   iOLocoNetData data = Data(loconet);
   int addr  = cvnum-1; /* cvnum is in human readable form; addr is what's sent over loconet */
   int lopsa = decaddr & 0x007F;
@@ -213,8 +213,12 @@ static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writ
     pcmd = 0x03; /* LPE imples 0x00, but 0x03 is observed */
   }
 
-  /* DIRECTBYTEMODE */
-  pcmd = pcmd | 0x28;
+  if( direct )
+    pcmd = pcmd | 0x28; /* DIRECTBYTEMODE */
+  else
+    pcmd = pcmd | 0x20; /* PAGEBYTEMODE */
+
+
   if(pom)
     pcmd = pcmd | 0x04;
 
@@ -1931,7 +1935,8 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      int size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, addr);
+      Boolean direct = wProgram.isdirect( node );
+      int size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, direct, addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d of %d (ops=%d)...", cv, addr, pom );
       return size;
     }
@@ -1941,7 +1946,8 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      int size = __rwCV(loconet_inst, cv, value, cmd, True, pom, addr);
+      Boolean direct = wProgram.isdirect( node );
+      int size = __rwCV(loconet_inst, cv, value, cmd, True, pom, direct, addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d of %d (ops=%d)...", cv, value, addr, pom );
       return size;
     }

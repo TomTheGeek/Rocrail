@@ -162,6 +162,7 @@ void CV::init() {
     }
   }
   m_bPOM = False;
+  m_bDirect = False;
 }
 
 
@@ -927,6 +928,7 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setcv( cmd, index );
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_bPOM );
+  wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
   if( m_LocProps != NULL ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
   }
@@ -1135,6 +1137,9 @@ void CV::CreateControls() {
   m_POM->SetToolTip(_T("Program On the Main") );
   m_LocBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
+  m_Direct = new wxCheckBox( m_ItemPanel, -1, _T("Direct"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_Direct->SetToolTip(_T("Direct programming mode") );
+  m_LocBox->Add(m_Direct, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_TableBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_TableBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);

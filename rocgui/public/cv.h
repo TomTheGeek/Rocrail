@@ -141,6 +141,7 @@ private:
     int m_CVcountAll;
     int m_CVidxAll;
     Boolean m_bPOM;
+    Boolean m_bDirect;
     bool m_bSpeedCurve;
     int m_CVoperation;
     bool m_bCleanUpProgress;
@@ -245,6 +246,7 @@ private:
     wxStaticText* m_labTable;
     wxGrid*       m_CVTable;
     wxCheckBox*   m_POM;
+    wxCheckBox*   m_Direct;
     wxStaticText* m_labLoc;
     wxComboBox*   m_LcList;
 };
