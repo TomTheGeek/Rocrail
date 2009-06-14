@@ -434,15 +434,27 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   Boolean     rc = False;
   byte bitstream[100];
   int bitstreamsize = 0;
+  byte idlestream[100];
+  int idlestreamsize = 0;
+  byte idle[3] = {0xFF,0x00,0xFF};
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", size );
 
-  bitstreamsize = __bytesToBitStream(bitstream, dcc, size);
+  bitstreamsize  = __bytesToBitStream(bitstream, dcc, size);
+  idlestreamsize = __bytesToBitStream(idlestream, idle, size);
 
   while( !SerialOp.isUartEmpty(data->serial, True) ) {
     ThreadOp.sleep(0);
   };
+
   rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
+  if( rc )
+    rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+  if( rc )
+    rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
+  if( rc )
+    rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+
   if( !rc ) {
     /* error */
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "transmit error=%d (Power Off)", SerialOp.getRc(data->serial) );
@@ -578,9 +590,6 @@ static void __dccWriter( void* threadinst ) {
 
         if( data->slots[slotidx].fgrp > 0 ) {
           int size = 0;
-          /* send an idle packet */
-          byte dcc[3] = {0xFF,0x00,0xFF};
-          __transmit( dcc232, dcc, 3 );
           ThreadOp.sleep(5);
 
           if( data->slots[slotidx].fgrp == 1 ) {
