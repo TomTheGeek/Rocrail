@@ -443,13 +443,12 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
   bitstreamsize  = __bytesToBitStream(bitstream, dcc, size);
   idlestreamsize = __bytesToBitStream(idlestream, idle, size);
 
-  while( !SerialOp.isUartEmpty(data->serial, True) ) {
-    ThreadOp.sleep(0);
-  };
-
   rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
   if( rc )
     rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+
+  ThreadOp.sleep(5);
+
   if( rc )
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
   if( rc )
@@ -462,6 +461,8 @@ static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
     SerialOp.setDTR(data->serial, False);
     __stateChanged(dcc232);
   }
+
+  ThreadOp.sleep(5);
 
   return rc;
 }
@@ -527,8 +528,6 @@ static void __dccWriter( void* threadinst ) {
 
   while(data->run) {
 
-    ThreadOp.sleep(5);
-
     if( data->power ) {
       byte * post = NULL;
       byte acc[64] = {0};
@@ -539,7 +538,6 @@ static void __dccWriter( void* threadinst ) {
         freeMem( post);
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "posted packet %d", acc[0] );
         __transmit( dcc232, acc+1, acc[0] );
-        ThreadOp.sleep(5);
       }
 
       if( data->slots[slotidx].addr > 0 ) {
@@ -590,7 +588,6 @@ static void __dccWriter( void* threadinst ) {
 
         if( data->slots[slotidx].fgrp > 0 ) {
           int size = 0;
-          ThreadOp.sleep(5);
 
           if( data->slots[slotidx].fgrp == 1 ) {
             size = function0Through4Packet(dcc, data->slots[slotidx].addr,
@@ -648,13 +645,10 @@ static void __dccWriter( void* threadinst ) {
         slotidx++;
       }
       else {
-        slotidx = 0;
-      }
-
-      {
         /* send an idle packet */
         byte dcc[3] = {0xFF,0x00,0xFF};
         __transmit( dcc232, dcc, 3 );
+        slotidx = 0;
       }
 
     }
