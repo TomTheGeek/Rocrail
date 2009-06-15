@@ -445,9 +445,6 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize )
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
     if( rc )
       rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
-
-    ThreadOp.sleep(5);
-
     if( rc )
       rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
     if( rc )
@@ -463,8 +460,15 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize )
     SerialOp.setDTR(data->serial, False);
     __stateChanged(dcc232);
   }
+  else {
+    int remaining = SerialOp.getWaiting( data->serial );
+    if (remaining>2 ) {
+      /* If directIO, wait sligthly less than remaining*0,52ms
+       * else wait sligthly more than remaining*0,52ms*/
+      ThreadOp.sleep(remaining*502/1000-1);
+    }
 
-  ThreadOp.sleep(5);
+  }
 
   return rc;
 }
