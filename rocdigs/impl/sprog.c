@@ -205,7 +205,7 @@ unlock bit of the Mode Word.
 
 
 #include "rocdigs/impl/sprog_impl.h"
-#include "rocdigs/impl/common/nmrapacket.h"
+#include "rocdigs/impl/nmra/nmrapacket.h"
 
 #include "rocs/public/str.h"
 #include "rocs/public/mem.h"

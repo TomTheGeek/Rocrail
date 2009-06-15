@@ -68,10 +68,11 @@ DDXOBJS=$(patsubst impl/ddx/%.c,$(TMPOUTDIR)/ddx/%.o,$(wildcard impl/ddx/*.c))
 LNOBJS=$(patsubst impl/loconet/%.c,$(TMPOUTDIR)/loconet/%.o,$(wildcard impl/loconet/*.c))
 ECOSOBJS=$(patsubst impl/ecos/%.c,$(TMPOUTDIR)/ecos/%.o,$(wildcard impl/ecos/*.c))
 COMMONOBJS=$(patsubst impl/common/%.c,$(TMPOUTDIR)/common/%.o,$(wildcard impl/common/*.c))
+NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c))
 ROCNETOBJS=$(patsubst impl/rocnet/%.c,$(TMPOUTDIR)/rocnet/%.o,$(wildcard impl/rocnet/*.c))
 OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl/opendcc/*.c))
 
-all: $(OBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR)/p50$(SHAREDSUFFIX) $(OUTDIR)/p50x$(SHAREDSUFFIX) $(OUTDIR)/hsi88$(SHAREDSUFFIX) $(OUTDIR)/srcp$(SHAREDSUFFIX) \
+all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR)/p50$(SHAREDSUFFIX) $(OUTDIR)/p50x$(SHAREDSUFFIX) $(OUTDIR)/hsi88$(SHAREDSUFFIX) $(OUTDIR)/srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)/lenz$(SHAREDSUFFIX) $(OUTDIR)/roco$(SHAREDSUFFIX) $(OUTDIR)/zimo$(SHAREDSUFFIX) $(OUTDIR)/dinamo$(SHAREDSUFFIX) $(OUTDIR)/om32$(SHAREDSUFFIX) \
 	$(OUTDIR)/ddx$(SHAREDSUFFIX) $(OUTDIR)/slx$(SHAREDSUFFIX) $(OUTDIR)/ecos$(SHAREDSUFFIX) \
 	$(OUTDIR)/inter10$(SHAREDSUFFIX) $(OUTDIR)/barjut$(SHAREDSUFFIX) $(OUTDIR)/loconet$(SHAREDSUFFIX) \
@@ -124,10 +125,10 @@ $(OUTDIR)/clock$(SHAREDSUFFIX): $(TMPOUTDIR)/clock.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/clock$(SHAREDSUFFIX) $(TMPOUTDIR)/clock.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)/railcom$(SHAREDSUFFIX): $(TMPOUTDIR)/railcom.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/railcom$(SHAREDSUFFIX) $(TMPOUTDIR)/railcom.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)/sprog$(SHAREDSUFFIX): $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/sprog$(SHAREDSUFFIX) $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)/dcc232$(SHAREDSUFFIX): $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/sprog$(SHAREDSUFFIX): $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/sprog$(SHAREDSUFFIX) $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/dcc232$(SHAREDSUFFIX): $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -147,6 +148,9 @@ $(TMPOUTDIR)/ecos/%.o: impl/ecos/%.c
 $(TMPOUTDIR)/common/%.o: impl/common/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
+$(TMPOUTDIR)/nmra/%.o: impl/nmra/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
 $(TMPOUTDIR)/rocnet/%.o: impl/rocnet/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 	
@@ -160,6 +164,7 @@ clean:
 	-mkdir -p $(TMPOUTDIR)/rocnet
 	-mkdir -p $(TMPOUTDIR)/ecos
 	-mkdir -p $(TMPOUTDIR)/common
+	-mkdir -p $(TMPOUTDIR)/nmra
 	-mkdir -p $(TMPOUTDIR)/opendcc
 	-mkdir -p $(GENDIR)/rocdigs
 	-rm -f $(TMPOUTDIR)/*.o

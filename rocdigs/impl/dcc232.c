@@ -16,7 +16,7 @@
 
 #include "rocdigs/impl/dcc232_impl.h"
 
-#include "rocdigs/impl/common/nmrapacket.h"
+#include "rocdigs/impl/nmra/nmra.h"
 
 #include "rocs/public/str.h"
 #include "rocs/public/mem.h"
@@ -189,7 +189,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
         addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
 
-    packetlen = accDecoderPkt2(dcc, fada, action, dir);
+    packetlen = compAccessory(dcc, addr, port, dir, action);
     cmd = allocMem(64);
     cmd[0] = packetlen;
     MemOp.copy(cmd+1, dcc, packetlen );
@@ -226,7 +226,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );
 
-    packetlen = accDecoderPkt(dcc, fada, action);
+    packetlen = compAccessory(dcc, addr, port, gate, action);
     cmd = allocMem(64);
     cmd[0] = packetlen;
     MemOp.copy(cmd+1, dcc, packetlen );
@@ -238,6 +238,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     Boolean pom = wProgram.ispom( node );
     if( pom ) {
       if( wProgram.getcmd( node ) == wProgram.set ) {
+        /*
         byte dcc[12];
         byte* cmd = NULL;
         int packetlen = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
@@ -245,6 +246,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         cmd[0] = packetlen;
         MemOp.copy(cmd+1, dcc, packetlen );
         ThreadOp.post( data->writer, (obj)cmd );
+        */
       }
     }
   }
@@ -429,29 +431,29 @@ static int __bytesToBitStream( byte* bits, byte* dcc, int size ) {
 
 
 
-static Boolean __transmit( iODCC232 dcc232, char* dcc, int size ) {
+static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize ) {
   iODCC232Data data = Data(dcc232);
   Boolean     rc = False;
-  byte bitstream[100];
-  int bitstreamsize = 0;
   byte idlestream[100];
   int idlestreamsize = 0;
-  byte idle[3] = {0xFF,0x00,0xFF};
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", size );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
 
-  bitstreamsize  = __bytesToBitStream(bitstream, dcc, size);
-  idlestreamsize = __bytesToBitStream(idlestream, idle, size);
+  idlestreamsize = idlePacket(idlestream);
 
-  rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
-  if( rc )
-    rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
-
-  ThreadOp.sleep(5);
-
-  if( rc )
+  if( bitstreamsize > 0 ) {
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
-  if( rc )
+    if( rc )
+      rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+
+    ThreadOp.sleep(5);
+
+    if( rc )
+      rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
+    if( rc )
+      rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+  }
+  else
     rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
 
   if( !rc ) {
@@ -524,13 +526,13 @@ static void __dccWriter( void* threadinst ) {
   iODCC232Data data = Data(dcc232);
   int slotidx = 0;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer started." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer started. (0x%08X)", dcc232 );
 
   while(data->run) {
 
     if( data->power ) {
       byte * post = NULL;
-      byte acc[64] = {0};
+      byte acc[100] = {0};
       post = (byte*)ThreadOp.getPost( th );
 
       if (post != NULL) {
@@ -541,12 +543,14 @@ static void __dccWriter( void* threadinst ) {
       }
 
       if( data->slots[slotidx].addr > 0 ) {
-        byte dcc[12];
+        int size = 0;
+        byte dcc[100];
         char cmd[32] = {0};
         char out[64] = {0};
         char in [64] = {0};
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
 
+        /* check if the slot should be purged */
         if( data->slots[slotidx].V == data->slots[slotidx].V_prev && data->slots[slotidx].changedfgrp == 0 ) {
           if( data->slots[slotidx].idle + 10000 < SystemOp.getTick() ) {
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -569,75 +573,14 @@ static void __dccWriter( void* threadinst ) {
         }
 
 
-        if( data->slots[slotidx].steps == 128 )  {
-          int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
-              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-          __transmit( dcc232, dcc, size );
-        }
-        else if( data->slots[slotidx].steps == 28 )  {
-          int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
-              data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
-          __transmit( dcc232, dcc, size );
-        }
-        else {
-          int size = speedStep14Packet(dcc, data->slots[slotidx].addr,
-              data->slots[slotidx].longaddr, data->slots[slotidx].V,
-              data->slots[slotidx].dir, data->slots[slotidx].lights );
-          __transmit( dcc232, dcc, size );
-        }
+        /* refresh speed packet */
+        size = compSpeed(dcc, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
+                         data->slots[slotidx].dir, data->slots[slotidx].V, data->slots[slotidx].steps);
+        __transmit( dcc232, dcc, size );
 
         if( data->slots[slotidx].fgrp > 0 ) {
-          int size = 0;
-
-          if( data->slots[slotidx].fgrp == 1 ) {
-            size = function0Through4Packet(dcc, data->slots[slotidx].addr,
-                data->slots[slotidx].longaddr,
-                data->slots[slotidx].fn[0],
-                data->slots[slotidx].fn[1],
-                data->slots[slotidx].fn[2],
-                data->slots[slotidx].fn[3],
-                data->slots[slotidx].fn[4] );
-          }
-          else if( data->slots[slotidx].fgrp == 2 ) {
-            size = function5Through8Packet(dcc, data->slots[slotidx].addr,
-                data->slots[slotidx].longaddr,
-                data->slots[slotidx].fn[5],
-                data->slots[slotidx].fn[6],
-                data->slots[slotidx].fn[7],
-                data->slots[slotidx].fn[8] );
-          }
-          else if( data->slots[slotidx].fgrp == 3 ) {
-            size = function9Through12Packet(dcc, data->slots[slotidx].addr,
-                data->slots[slotidx].longaddr,
-                data->slots[slotidx].fn[9],
-                data->slots[slotidx].fn[10],
-                data->slots[slotidx].fn[11],
-                data->slots[slotidx].fn[12] );
-          }
-          else if( data->slots[slotidx].fgrp == 4 || data->slots[slotidx].fgrp == 5 ) {
-            size = function13Through20Packet(dcc, data->slots[slotidx].addr,
-                data->slots[slotidx].longaddr,
-                data->slots[slotidx].fn[13],
-                data->slots[slotidx].fn[14],
-                data->slots[slotidx].fn[15],
-                data->slots[slotidx].fn[16],
-                data->slots[slotidx].fn[17],
-                data->slots[slotidx].fn[18],
-                data->slots[slotidx].fn[19],
-                data->slots[slotidx].fn[20] );
-          }
-          else if( data->slots[slotidx].fgrp == 6 || data->slots[slotidx].fgrp == 7 ) {
-            size = function21Through28Packet(dcc, data->slots[slotidx].addr,
-                data->slots[slotidx].longaddr,
-                data->slots[slotidx].fn[21],
-                data->slots[slotidx].fn[22],
-                data->slots[slotidx].fn[23],
-                data->slots[slotidx].fn[24],
-                data->slots[slotidx].fn[25],
-                data->slots[slotidx].fn[26],
-                data->slots[slotidx].fn[27],
-                data->slots[slotidx].fn[28] );
-          }
+          size = compFunction(dcc, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
+                              data->slots[slotidx].fgrp, data->slots[slotidx].fn);
 
           __transmit( dcc232, dcc, size );
         }
@@ -645,9 +588,7 @@ static void __dccWriter( void* threadinst ) {
         slotidx++;
       }
       else {
-        /* send an idle packet */
-        byte dcc[3] = {0xFF,0x00,0xFF};
-        __transmit( dcc232, dcc, 3 );
+        __transmit( dcc232, NULL, 0 );
         slotidx = 0;
       }
 
