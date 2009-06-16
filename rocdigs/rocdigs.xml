@@ -802,6 +802,7 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="device" vt="const char*"/>
+      <var name="portbase" vt="int"/>
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="slotmux" vt="iOMutex"/>

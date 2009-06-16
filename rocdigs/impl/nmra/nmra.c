@@ -404,7 +404,7 @@ static int translateBitstream2Packetstream(char *Bitstream, char *Packetstream) 
           second_try = True;
           generate_packet = restart_packet;
           if (restart_read == last_restart)
-          TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "sorry, restart algorithm doesn't work as expected for NMRA-Packet %s", Bitstream);
+          TraceOp.trc( __FILE__, TRCLEVEL_WARNING, __LINE__, 9999, "sorry, restart algorithm doesn't work as expected for NMRA-Packet %s", Bitstream);
           last_restart = restart_read;
           read_ptr = restart_read;
           act_six = read_next_six_bits (read_ptr);
@@ -572,7 +572,7 @@ static void calc_function_group(char* byte1, char* byte2, int group, Boolean f[]
 
   if( group > 0 )
     group--; /* function group from Rocview starts with 1 */
-  TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,"function group %d", group);
+  TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,"function group %d", group);
 
   if( byte2 == NULL && group > 2 ) {
     TraceOp.trc( "nmra", TRCLEVEL_WARNING, __LINE__, 9999,"no byte reserved for function group %d", group);
@@ -754,7 +754,7 @@ int compAccessory(char* packetstream, int address, int pairnr, int gate, int act
      return 0;
    }
 
-   TraceOp.trc( "nmra", TRCLEVEL_MONITOR, __LINE__, 9999,
+   TraceOp.trc( "nmra", TRCLEVEL_DEBUG, __LINE__, 9999,
        "accessory(NMRA): %d %d %d %s", address, pairnr, gate, (activate?"ON":"OFF") );
 
     /* packet is not available */

@@ -32,6 +32,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/DDX.h"
 
 #include "rocdigs/impl/common/fada.h"
 
@@ -159,7 +160,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     int dir  = 1;
     int action = 1;
     int packetlen = 0;
-    byte dcc[12];
+    byte dccpacket[64];
     byte* cmd = NULL;
 
     if( port == 0 ) {
@@ -185,14 +186,13 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         action = 0;
     }
 
+    packetlen = compAccessory(dccpacket, addr, port, dir, action);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
-        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
-
-    packetlen = compAccessory(dcc, addr, port, dir, action);
+        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d packetlen=%d",
+        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action, packetlen );
     cmd = allocMem(64);
     cmd[0] = packetlen;
-    MemOp.copy(cmd+1, dcc, packetlen );
+    MemOp.copy(cmd+1, dccpacket, packetlen );
     ThreadOp.post( data->writer, (obj)cmd );
 
   }
@@ -205,7 +205,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     int fada = 0;
     int pada = 0;
     int packetlen = 0;
-    byte dcc[12];
+    byte dccpacket[64];
     byte* cmd = NULL;
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
@@ -226,10 +226,10 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );
 
-    packetlen = compAccessory(dcc, addr, port, gate, action);
+    packetlen = compAccessory(dccpacket, addr, port, gate, action);
     cmd = allocMem(64);
     cmd[0] = packetlen;
-    MemOp.copy(cmd+1, dcc, packetlen );
+    MemOp.copy(cmd+1, dccpacket, packetlen );
     ThreadOp.post( data->writer, (obj)cmd );
   }
 
@@ -239,12 +239,12 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     if( pom ) {
       if( wProgram.getcmd( node ) == wProgram.set ) {
         /*
-        byte dcc[12];
+        byte dccpacket[64];
         byte* cmd = NULL;
-        int packetlen = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
+        int packetlen = opsCvWriteByte(dccpacket, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
         cmd = allocMem(64);
         cmd[0] = packetlen;
-        MemOp.copy(cmd+1, dcc, packetlen );
+        MemOp.copy(cmd+1, dccpacket, packetlen );
         ThreadOp.post( data->writer, (obj)cmd );
         */
       }
@@ -255,6 +255,9 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int slot   = 0;
     int size   = 0;
+    int packetlen = 0;
+    byte dccpacket[64];
+    byte* cmd = NULL;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco command for address %d", wLoc.getaddr( node ) );
 
@@ -289,6 +292,13 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
           "slot=%d addr=%d V=%d steps=%d dir=%d long=%d", slot,
           data->slots[slot].addr, data->slots[slot].V, data->slots[slot].steps, data->slots[slot].dir, data->slots[slot].longaddr );
 
+      packetlen = compSpeed(dccpacket, data->slots[slot].addr, data->slots[slot].longaddr,
+                       data->slots[slot].dir, data->slots[slot].V, data->slots[slot].steps);
+      cmd = allocMem(64);
+      cmd[0] = packetlen;
+      MemOp.copy(cmd+1, dccpacket, packetlen );
+      ThreadOp.post( data->writer, (obj)cmd );
+
       size = 0;
     }
   }
@@ -297,6 +307,9 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr  = wFunCmd.getaddr( node );
     int group = wFunCmd.getgroup( node );
+    int packetlen = 0;
+    byte dccpacket[64];
+    byte* cmd = NULL;
 
     int slot =  __getLocoSlot( dcc232, node);
 
@@ -340,6 +353,14 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "function group %d changed for loco %d", group, addr );
+
+      packetlen = compFunction(dccpacket, data->slots[slot].addr, data->slots[slot].longaddr,
+                          data->slots[slot].fgrp, data->slots[slot].fn);
+      cmd = allocMem(64);
+      cmd[0] = packetlen;
+      MemOp.copy(cmd+1, dccpacket, packetlen );
+      ThreadOp.post( data->writer, (obj)cmd );
+
     }
   }
 
@@ -422,15 +443,6 @@ static int _version( obj inst ) {
 }
 
 
-static int __bytesToBitStream( byte* bits, byte* dcc, int size ) {
-  byte tmp[64] = {0};
-  int len = createStream(tmp, dcc, size);
-  MemOp.copy(bits, tmp+1, len);
-  return len;
-}
-
-
-
 static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize ) {
   iODCC232Data data = Data(dcc232);
   Boolean     rc = False;
@@ -450,8 +462,10 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize )
     if( rc )
       rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
   }
-  else
+  else {
     rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+  }
+
 
   if( !rc ) {
     /* error */
@@ -532,23 +546,28 @@ static void __dccWriter( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer started. (0x%08X)", dcc232 );
 
+  ThreadOp.setHigh( th );
+  SerialOp.setSerialMode(data->serial,dcc);
+
+
   while(data->run) {
 
     if( data->power ) {
       byte * post = NULL;
-      byte acc[100] = {0};
+      byte dccpacket[64] = {0};
       post = (byte*)ThreadOp.getPost( th );
 
-      if (post != NULL) {
-        MemOp.copy( acc, post, 64);
+      while (post != NULL) {
+        MemOp.copy( dccpacket, post, 64);
         freeMem( post);
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "posted packet %d", acc[0] );
-        __transmit( dcc232, acc+1, acc[0] );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
+        __transmit( dcc232, dccpacket+1, dccpacket[0] );
+        post = (byte*)ThreadOp.getPost( th );
       }
 
       if( data->slots[slotidx].addr > 0 ) {
         int size = 0;
-        byte dcc[100];
+        byte dccpacket[64];
         char cmd[32] = {0};
         char out[64] = {0};
         char in [64] = {0};
@@ -578,15 +597,15 @@ static void __dccWriter( void* threadinst ) {
 
 
         /* refresh speed packet */
-        size = compSpeed(dcc, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
+        size = compSpeed(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
                          data->slots[slotidx].dir, data->slots[slotidx].V, data->slots[slotidx].steps);
-        __transmit( dcc232, dcc, size );
+        __transmit( dcc232, dccpacket, size );
 
         if( data->slots[slotidx].fgrp > 0 ) {
-          size = compFunction(dcc, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
+          size = compFunction(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
                               data->slots[slotidx].fgrp, data->slots[slotidx].fn);
 
-          __transmit( dcc232, dcc, size );
+          __transmit( dcc232, dccpacket, size );
         }
 
         slotidx++;
@@ -620,6 +639,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
   data->device = StrOp.dup( wDigInt.getdevice( ini ) );
   data->run    = True;
+  data->portbase = (int)strtol( wDDX.getportbase( ini ), (char**)NULL, 16 );
 
   MemOp.set( data->slots, 0, 128 * sizeof( struct slot ) );
 
@@ -628,9 +648,10 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc232 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = [%s]", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = [%d]ms", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = [%s]", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = [%s]", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portbase = 0x%X", data->portbase );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout  = [%d]ms", wDigInt.gettimeout( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
