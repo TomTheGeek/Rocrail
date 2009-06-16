@@ -655,6 +655,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
+  SerialOp.setPortBase( data->serial, data->portbase );
   SerialOp.setBlocking( data->serial, False );
   SerialOp.setLine( data->serial, 19200, 8, 0, 0 );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
