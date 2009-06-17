@@ -340,6 +340,10 @@ static const int BUFFERSIZE = 360;
 
 #define PKTSIZE 60
 #define MAXDATA 52
+static char idle_data[MAXDATA];
+static char NMRA_idle_data[PKTSIZE];
+static Boolean IdleInit = False;
+static int IdlePacketSize = 0;
 
 static int translateabel(char *bs) {     /* the result is only an index, no warranty */
    int  i,size;
@@ -425,13 +429,32 @@ static int translateBitstream2Packetstream(char *Bitstream, char *Packetstream) 
 }
 
 
-int idlePacket(char* packetstream) {
+int idlePacket(char* packetstream, Boolean longIdle) {
   int i,j;
   int error;
   char idle_packet[] = "11111111111111101111111100000000001111111110";
   char idle_pktstr[PKTSIZE];
 
-  return translateBitstream2Packetstream(idle_packet, packetstream);
+  if( !IdleInit ) {
+    j = translateBitstream2Packetstream(idle_packet, idle_pktstr);
+    IdlePacketSize = j;
+  
+    /* generate idle_data */
+    for (i=0; i<MAXDATA; i++)
+      idle_data[i]=idle_pktstr[i % j];
+    for (i=(MAXDATA/j)*j; i<MAXDATA; i++)
+      idle_data[i]=0xC6;
+    memcpy(NMRA_idle_data,idle_pktstr,j);
+    
+    IdleInit = True;
+  }
+
+  if( longIdle )
+    memcpy(packetstream, idle_data, MAXDATA);
+  else
+    memcpy(packetstream, NMRA_idle_data, IdlePacketSize);
+
+  return longIdle ? MAXDATA:IdlePacketSize;
 
 }
 

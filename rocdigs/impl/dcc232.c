@@ -443,7 +443,7 @@ static int _version( obj inst ) {
 }
 
 
-static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize ) {
+static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, Boolean longIdle ) {
   iODCC232Data data = Data(dcc232);
   Boolean     rc = False;
   byte idlestream[100];
@@ -451,7 +451,9 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize )
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
 
-  idlestreamsize = idlePacket(idlestream);
+  idlestreamsize = idlePacket(idlestream, longIdle);
+  
+  SerialOp.setSerialMode(data->serial,dcc);
 
   if( bitstreamsize > 0 ) {
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
@@ -557,15 +559,16 @@ static void __dccWriter( void* threadinst ) {
       byte dccpacket[64] = {0};
       post = (byte*)ThreadOp.getPost( th );
 
-      while (post != NULL) {
-        MemOp.copy( dccpacket, post, 64);
-        freeMem( post);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
-        __transmit( dcc232, dccpacket+1, dccpacket[0] );
-        post = (byte*)ThreadOp.getPost( th );
+      if (post != NULL) {
+        while (post != NULL) {
+          MemOp.copy( dccpacket, post, 64);
+          freeMem( post);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
+          __transmit( dcc232, dccpacket+1, dccpacket[0], False );
+          post = (byte*)ThreadOp.getPost( th );
+        }
       }
-
-      if( data->slots[slotidx].addr > 0 ) {
+      else if( data->slots[slotidx].addr > 0 ) {
         int size = 0;
         byte dccpacket[64];
         char cmd[32] = {0};
@@ -599,21 +602,25 @@ static void __dccWriter( void* threadinst ) {
         /* refresh speed packet */
         size = compSpeed(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
                          data->slots[slotidx].dir, data->slots[slotidx].V, data->slots[slotidx].steps);
-        __transmit( dcc232, dccpacket, size );
+        __transmit( dcc232, dccpacket, size, False );
 
         if( data->slots[slotidx].fgrp > 0 ) {
+          /* transmit big idle packet */
+          __transmit( dcc232, NULL, 0, True );
           size = compFunction(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
                               data->slots[slotidx].fgrp, data->slots[slotidx].fn);
 
-          __transmit( dcc232, dccpacket, size );
+          __transmit( dcc232, dccpacket, size, False );
         }
 
         slotidx++;
       }
       else {
-        __transmit( dcc232, NULL, 0 );
         slotidx = 0;
       }
+
+     /* transmit big idle packet */
+      __transmit( dcc232, NULL, 0, True );
 
     }
     else {

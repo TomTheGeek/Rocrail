@@ -26,7 +26,7 @@
 
 /* signal generating functions for nmra dcc */
 
-int idlePacket(char* packetstream);
+int idlePacket(char* packetstream, Boolean longIdle);
 
 /* standard decoder */
 int compSpeed14(char* packetstream, int address, int direction, int speed);
