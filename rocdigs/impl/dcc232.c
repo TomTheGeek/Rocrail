@@ -452,7 +452,7 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
 
   idlestreamsize = idlePacket(idlestream, longIdle);
-  
+
   SerialOp.setSerialMode(data->serial,dcc);
 
   if( bitstreamsize > 0 ) {
@@ -574,7 +574,7 @@ static void __dccWriter( void* threadinst ) {
         char cmd[32] = {0};
         char out[64] = {0};
         char in [64] = {0};
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot refresh for %d", data->slots[slotidx].addr );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot[%d] refresh for %d", slotidx, data->slots[slotidx].addr );
 
         /* check if the slot should be purged */
         if( data->slots[slotidx].V == data->slots[slotidx].V_prev && data->slots[slotidx].changedfgrp == 0 ) {
@@ -592,7 +592,7 @@ static void __dccWriter( void* threadinst ) {
           }
         }
         else {
-          data->slots[slotidx].V_prev == data->slots[slotidx].V;
+          data->slots[slotidx].V_prev = data->slots[slotidx].V;
           data->slots[slotidx].fgrp = data->slots[slotidx].changedfgrp;
           data->slots[slotidx].changedfgrp = 0;
           data->slots[slotidx].idle = SystemOp.getTick();
