@@ -278,7 +278,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
           else if( wLoc.getV_max( node ) > 0 )
             V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
         }
-      
+
         /* keep this value for the ping thread */
         data->slots[slot].dir = wLoc.isdir( node );
         data->slots[slot].V = (V > 127 ? 127:V);
@@ -289,9 +289,9 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].fn[0]  = wLoc.isfn( node );
         data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
         data->slots[slot].idle = SystemOp.getTick();
-        
-        data->slots[slot].lcstream[0] = compSpeed(data->slots[slot].lcstream+1, data->slots[slot].addr, 
-                                                  data->slots[slot].longaddr  , data->slots[slot].dir, 
+
+        data->slots[slot].lcstream[0] = compSpeed(data->slots[slot].lcstream+1, data->slots[slot].addr,
+                                                  data->slots[slot].longaddr  , data->slots[slot].dir,
                                                   data->slots[slot].V, data->slots[slot].steps);
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -358,8 +358,8 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].fn[26] = wFunCmd.isf26( node );
         data->slots[slot].fn[27] = wFunCmd.isf27( node );
         data->slots[slot].fn[28] = wFunCmd.isf28( node );
-        
-        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr, 
+
+        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
                                                      data->slots[slot].longaddr, data->slots[slot].fgrp, data->slots[slot].fn);
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -601,6 +601,7 @@ static void __dccWriter( void* threadinst ) {
             MemOp.set( data->slots[slotidx].lcstream, 0, 64 );
             MemOp.set( data->slots[slotidx].fnstream, 0, 64 );
             slotidx++;
+            MutexOp.post( data->slotmux );
             continue;
           }
         }
@@ -610,8 +611,7 @@ static void __dccWriter( void* threadinst ) {
           data->slots[slotidx].changedfgrp = 0;
           data->slots[slotidx].idle = SystemOp.getTick();
         }
-        
-        MutexOp.post( data->slotmux );
+
 
         /* refresh speed packet */
         __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
@@ -621,6 +621,8 @@ static void __dccWriter( void* threadinst ) {
           __transmit( dcc232, NULL, 0, True );
         __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
         }
+
+        MutexOp.post( data->slotmux );
 
         slotidx++;
       }
