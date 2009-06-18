@@ -261,45 +261,51 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco command for address %d", wLoc.getaddr( node ) );
 
-    slot =  __getLocoSlot( dcc232, node);
+    if( MutexOp.wait( data->slotmux ) ) {
 
-    if( slot >= 0 ) {
-      int V = 0;
-      int steps = wLoc.getspcnt( node );
-      Boolean longaddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
+      slot =  __getLocoSlot( dcc232, node);
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco slot=%d", slot );
+      if( slot >= 0 ) {
+        int V = 0;
+        int steps = wLoc.getspcnt( node );
+        Boolean longaddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
 
-      if( wLoc.getV( node ) != -1 ) {
-        if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-          V = (wLoc.getV( node ) * steps) / 100;
-        else if( wLoc.getV_max( node ) > 0 )
-          V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
-      }
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco slot=%d", slot );
 
-      /* keep this value for the ping thread */
-      data->slots[slot].dir = wLoc.isdir( node );
-      data->slots[slot].V = (V > 127 ? 127:V);
-      data->slots[slot].steps = steps;
-      data->slots[slot].addr = wLoc.getaddr( node );
-      data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:longaddr;
-      data->slots[slot].lights = wLoc.isfn( node );
-      data->slots[slot].fn[0]  = wLoc.isfn( node );
-      data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
-      data->slots[slot].idle = SystemOp.getTick();
+        if( wLoc.getV( node ) != -1 ) {
+          if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+            V = (wLoc.getV( node ) * steps) / 100;
+          else if( wLoc.getV_max( node ) > 0 )
+            V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
+        }
+      
+        /* keep this value for the ping thread */
+        data->slots[slot].dir = wLoc.isdir( node );
+        data->slots[slot].V = (V > 127 ? 127:V);
+        data->slots[slot].steps = steps;
+        data->slots[slot].addr = wLoc.getaddr( node );
+        data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:longaddr;
+        data->slots[slot].lights = wLoc.isfn( node );
+        data->slots[slot].fn[0]  = wLoc.isfn( node );
+        data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
+        data->slots[slot].idle = SystemOp.getTick();
+        
+        data->slots[slot].lcstream[0] = compSpeed(data->slots[slot].lcstream+1, data->slots[slot].addr, 
+                                                  data->slots[slot].longaddr  , data->slots[slot].dir, 
+                                                  data->slots[slot].V, data->slots[slot].steps);
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "slot=%d addr=%d V=%d steps=%d dir=%d long=%d", slot,
           data->slots[slot].addr, data->slots[slot].V, data->slots[slot].steps, data->slots[slot].dir, data->slots[slot].longaddr );
 
-      packetlen = compSpeed(dccpacket, data->slots[slot].addr, data->slots[slot].longaddr,
-                       data->slots[slot].dir, data->slots[slot].V, data->slots[slot].steps);
-      cmd = allocMem(64);
-      cmd[0] = packetlen;
-      MemOp.copy(cmd+1, dccpacket, packetlen );
-      ThreadOp.post( data->writer, (obj)cmd );
+        cmd = allocMem(64);
+        MemOp.copy(cmd, data->slots[slot].lcstream, data->slots[slot].lcstream[0] + 1 );
+        ThreadOp.post( data->writer, (obj)cmd );
 
-      size = 0;
+        size = 0;
+      }
+    /* Release the mutex. */
+    MutexOp.post( data->slotmux );
     }
   }
 
@@ -307,60 +313,65 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr  = wFunCmd.getaddr( node );
     int group = wFunCmd.getgroup( node );
+    Boolean longaddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
     int packetlen = 0;
     byte dccpacket[64];
     byte* cmd = NULL;
 
-    int slot =  __getLocoSlot( dcc232, node);
+    if( MutexOp.wait( data->slotmux ) ) {
+      int slot =  __getLocoSlot( dcc232, node);
 
-    if( slot >= 0 ) {
-      if( data->slots[slot].addr == 0 ) {
-        /* first use of this slot */
-        data->slots[slot].addr = addr;
-        data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:False;
-      }
-      data->slots[slot].changedfgrp = group;
-      data->slots[slot].lights = wFunCmd.isf0 ( node );
-      data->slots[slot].fn[ 0] = wFunCmd.isf0 ( node );
-      data->slots[slot].fn[ 1] = wFunCmd.isf1 ( node );
-      data->slots[slot].fn[ 2] = wFunCmd.isf2 ( node );
-      data->slots[slot].fn[ 3] = wFunCmd.isf3 ( node );
-      data->slots[slot].fn[ 4] = wFunCmd.isf4 ( node );
-      data->slots[slot].fn[ 5] = wFunCmd.isf5 ( node );
-      data->slots[slot].fn[ 6] = wFunCmd.isf6 ( node );
-      data->slots[slot].fn[ 7] = wFunCmd.isf7 ( node );
-      data->slots[slot].fn[ 8] = wFunCmd.isf8 ( node );
-      data->slots[slot].fn[ 9] = wFunCmd.isf9 ( node );
-      data->slots[slot].fn[10] = wFunCmd.isf10( node );
-      data->slots[slot].fn[11] = wFunCmd.isf11( node );
-      data->slots[slot].fn[12] = wFunCmd.isf12( node );
-      data->slots[slot].fn[13] = wFunCmd.isf13( node );
-      data->slots[slot].fn[14] = wFunCmd.isf14( node );
-      data->slots[slot].fn[15] = wFunCmd.isf15( node );
-      data->slots[slot].fn[16] = wFunCmd.isf16( node );
-      data->slots[slot].fn[17] = wFunCmd.isf17( node );
-      data->slots[slot].fn[18] = wFunCmd.isf18( node );
-      data->slots[slot].fn[19] = wFunCmd.isf19( node );
-      data->slots[slot].fn[20] = wFunCmd.isf20( node );
-      data->slots[slot].fn[21] = wFunCmd.isf21( node );
-      data->slots[slot].fn[22] = wFunCmd.isf22( node );
-      data->slots[slot].fn[23] = wFunCmd.isf23( node );
-      data->slots[slot].fn[24] = wFunCmd.isf24( node );
-      data->slots[slot].fn[25] = wFunCmd.isf25( node );
-      data->slots[slot].fn[26] = wFunCmd.isf26( node );
-      data->slots[slot].fn[27] = wFunCmd.isf27( node );
-      data->slots[slot].fn[28] = wFunCmd.isf28( node );
+      if( slot >= 0 ) {
+        if( data->slots[slot].addr == 0 ) {
+          /* first use of this slot */
+          data->slots[slot].addr = addr;
+          data->slots[slot].longaddr = wLoc.getaddr( node ) > 127 ? True:longaddr;
+        }
+        data->slots[slot].changedfgrp = group;
+        data->slots[slot].lights = wFunCmd.isf0 ( node );
+        data->slots[slot].fn[ 0] = wFunCmd.isf0 ( node );
+        data->slots[slot].fn[ 1] = wFunCmd.isf1 ( node );
+        data->slots[slot].fn[ 2] = wFunCmd.isf2 ( node );
+        data->slots[slot].fn[ 3] = wFunCmd.isf3 ( node );
+        data->slots[slot].fn[ 4] = wFunCmd.isf4 ( node );
+        data->slots[slot].fn[ 5] = wFunCmd.isf5 ( node );
+        data->slots[slot].fn[ 6] = wFunCmd.isf6 ( node );
+        data->slots[slot].fn[ 7] = wFunCmd.isf7 ( node );
+        data->slots[slot].fn[ 8] = wFunCmd.isf8 ( node );
+        data->slots[slot].fn[ 9] = wFunCmd.isf9 ( node );
+        data->slots[slot].fn[10] = wFunCmd.isf10( node );
+        data->slots[slot].fn[11] = wFunCmd.isf11( node );
+        data->slots[slot].fn[12] = wFunCmd.isf12( node );
+        data->slots[slot].fn[13] = wFunCmd.isf13( node );
+        data->slots[slot].fn[14] = wFunCmd.isf14( node );
+        data->slots[slot].fn[15] = wFunCmd.isf15( node );
+        data->slots[slot].fn[16] = wFunCmd.isf16( node );
+        data->slots[slot].fn[17] = wFunCmd.isf17( node );
+        data->slots[slot].fn[18] = wFunCmd.isf18( node );
+        data->slots[slot].fn[19] = wFunCmd.isf19( node );
+        data->slots[slot].fn[20] = wFunCmd.isf20( node );
+        data->slots[slot].fn[21] = wFunCmd.isf21( node );
+        data->slots[slot].fn[22] = wFunCmd.isf22( node );
+        data->slots[slot].fn[23] = wFunCmd.isf23( node );
+        data->slots[slot].fn[24] = wFunCmd.isf24( node );
+        data->slots[slot].fn[25] = wFunCmd.isf25( node );
+        data->slots[slot].fn[26] = wFunCmd.isf26( node );
+        data->slots[slot].fn[27] = wFunCmd.isf27( node );
+        data->slots[slot].fn[28] = wFunCmd.isf28( node );
+        
+        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr, 
+                                                     data->slots[slot].longaddr, data->slots[slot].fgrp, data->slots[slot].fn);
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "function group %d changed for loco %d", group, addr );
 
-      packetlen = compFunction(dccpacket, data->slots[slot].addr, data->slots[slot].longaddr,
-                          data->slots[slot].fgrp, data->slots[slot].fn);
-      cmd = allocMem(64);
-      cmd[0] = packetlen;
-      MemOp.copy(cmd+1, dccpacket, packetlen );
-      ThreadOp.post( data->writer, (obj)cmd );
+        cmd = allocMem(64);
+        MemOp.copy(cmd, data->slots[slot].fnstream, data->slots[slot].fnstream[0] + 1 );
+        ThreadOp.post( data->writer, (obj)cmd );
 
+      }
+      /* Release the mutex. */
+      MutexOp.post( data->slotmux );
     }
   }
 
@@ -568,7 +579,7 @@ static void __dccWriter( void* threadinst ) {
           post = (byte*)ThreadOp.getPost( th );
         }
       }
-      else if( data->slots[slotidx].addr > 0 ) {
+      else if( data->slots[slotidx].addr > 0 && MutexOp.trywait( data->slotmux, 5 ) ) {
         int size = 0;
         byte dccpacket[64];
         char cmd[32] = {0};
@@ -587,6 +598,8 @@ static void __dccWriter( void* threadinst ) {
             data->slots[slotidx].changedfgrp = 0;
             data->slots[slotidx].V_prev = 0;
             data->slots[slotidx].V = 0;
+            MemOp.set( data->slots[slotidx].lcstream, 0, 64 );
+            MemOp.set( data->slots[slotidx].fnstream, 0, 64 );
             slotidx++;
             continue;
           }
@@ -597,20 +610,16 @@ static void __dccWriter( void* threadinst ) {
           data->slots[slotidx].changedfgrp = 0;
           data->slots[slotidx].idle = SystemOp.getTick();
         }
-
+        
+        MutexOp.post( data->slotmux );
 
         /* refresh speed packet */
-        size = compSpeed(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
-                         data->slots[slotidx].dir, data->slots[slotidx].V, data->slots[slotidx].steps);
-        __transmit( dcc232, dccpacket, size, False );
+        __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
 
         if( data->slots[slotidx].fgrp > 0 ) {
           /* transmit big idle packet */
           __transmit( dcc232, NULL, 0, True );
-          size = compFunction(dccpacket, data->slots[slotidx].addr, data->slots[slotidx].longaddr,
-                              data->slots[slotidx].fgrp, data->slots[slotidx].fn);
-
-          __transmit( dcc232, dccpacket, size, False );
+        __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
         }
 
         slotidx++;

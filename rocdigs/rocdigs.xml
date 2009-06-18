@@ -797,6 +797,8 @@
       <var name="V_prev" vt="int"/>
       <var name="dir" vt="Boolean"/>
       <var name="idle" vt="unsigned long"/>
+      <var name="lcstream[64]" vt="byte"/>
+      <var name="fnstream[64]" vt="byte"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
