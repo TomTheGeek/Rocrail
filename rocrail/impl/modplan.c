@@ -37,6 +37,7 @@
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/WaybillList.h"
+#include "rocrail/wrapper/public/BoosterList.h"
 
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Track.h"
@@ -653,6 +654,7 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     __mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
+    __mergeList(wBoosterList.name()  , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -764,6 +766,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
   dbkey = wActionList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wLocationList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wBoosterList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
 
 
@@ -1182,6 +1186,7 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wLocationList.name() );
   __copyLevel( inst, model, level, wScheduleList.name() );
   __copyLevel( inst, model, level, wActionList.name() );
+  __copyLevel( inst, model, level, wBoosterList.name() );
 
   __copyResolvedRoutes( inst, model, wModule.getid(module) );
   __copyUnresolvedRoutes( inst, model, level );

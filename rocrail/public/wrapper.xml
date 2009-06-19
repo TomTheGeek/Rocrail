@@ -816,6 +816,7 @@
         <var name="scfb" vt="string" defval="" range="*"/>
         <var name="powerfb" vt="string" defval="" range="*"/>
         <var name="powersw" vt="string" defval="" range="*"/>
+        <var name="repoweron" vt="bool" defval="false" remark="Repower on incase the shortcat is cleared."/>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">

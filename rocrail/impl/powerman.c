@@ -121,6 +121,13 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
             wBooster.getid(scbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(scbooster) );
     wPwrEvent.setshortcut( pwrevent, pulse );
+
+    if( wBooster.isrepoweron(scbooster) || pulse ) {
+      iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+      wPwrCmd.setid( pwrcmd, wBooster.getid(scbooster) );
+      wPwrCmd.setcmd( pwrcmd, pulse?wPwrCmd.off:wPwrCmd.on );
+      PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
+    }
   }
   if( pwbooster != NULL ) {
     TraceOp.trc( name, pulse?TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
