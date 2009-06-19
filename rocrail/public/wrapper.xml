@@ -532,12 +532,18 @@
     <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
   </thr>
 
-  <power remark="Power Manager command." wrappername="PwrCmd">
+  <powercmd remark="Power Manager command." wrappername="PwrCmd">
     <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <const name="on" vt="string" val="on"/>
     <const name="off" vt="string" val="off"/>
-  </power>
+  </powercmd>
+  
+  <powerevent remark="Power Manager event." wrappername="PwrEvent">
+    <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>
+    <var name="power" vt="bool" defval="false"/>
+    <var name="shortcut" vt="bool" defval="false"/>
+  </powerevent>
   
   <sys remark="System command." wrappername="SysCmd">
     <const name="stoplocs" vt="string" val="stoplocs"/>
@@ -808,7 +814,7 @@
         <var name="blockids" vt="string" defval="" range="*"/>
         <var name="scfb" vt="string" defval="" range="*"/>
         <var name="powerfb" vt="string" defval="" range="*"/>
-        <var name="poweron" vt="string" defval="" range="*"/>
+        <var name="powersw" vt="string" defval="" range="*"/>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">

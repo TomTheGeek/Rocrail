@@ -68,6 +68,7 @@
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ThrottleCmd.h"
+#include "rocrail/wrapper/public/PwrCmd.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -273,6 +274,11 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
       /* inform model */
       ModelOp.cmd( AppOp.getModel(), (iONode)NodeOp.base.clone(node));
+    }
+
+    if( StrOp.equals( wPwrCmd.name(), NodeOp.getName(node) ) && data->powerman != NULL ) {
+      /* inform power manager */
+      PowerManOp.cmd( data->powerman, node);
     }
 
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node) ||

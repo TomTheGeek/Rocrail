@@ -1605,12 +1605,17 @@
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="The booster list"/>
     </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="PowerMan instance"/>
+      <param name="cmd" vt="iONode" remark="PwrCmd node"/>
+    </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="PowerMan instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>
+      <var name="boostermap" vt="iOMap"/>
       <var name="scmap" vt="iOMap"/>
       <var name="pwmap" vt="iOMap"/>
     </data>
