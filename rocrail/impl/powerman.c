@@ -117,13 +117,15 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
 
   if( scbooster != NULL ) {
     TraceOp.trc( name, pulse?TRCLEVEL_WARNING:TRCLEVEL_INFO, __LINE__, 9999,
-        "shortcut %s[%s] event for booster [%s]", pulse?"":"cleared ", id, wBooster.getid(scbooster) );
+        "shortcut %s[%s] event for booster [%s][%s]", pulse?"":"cleared ", id,
+            wBooster.getid(scbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(scbooster) );
     wPwrEvent.setshortcut( pwrevent, pulse );
   }
   if( pwbooster != NULL ) {
     TraceOp.trc( name, pulse?TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
-        "power %s [%s] event for booster [%s]", pulse?"on":"off", id, wBooster.getid(pwbooster) );
+        "power %s [%s] event for booster [%s][%s]", pulse?"on":"off", id,
+            wBooster.getid(pwbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(pwbooster) );
     wPwrEvent.setpower( pwrevent, pulse );
   }

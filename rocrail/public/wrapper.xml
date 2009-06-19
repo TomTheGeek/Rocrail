@@ -810,6 +810,7 @@
     <boosterlist cardinality="1" remark="Booster list for power management" wrappername="BoosterList">
       <booster cardinality="n" remark="Booster definition" wrappername="Booster">
         <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="district" vt="string" defval="" range="*" remark="Power district description."/>
         <var name="modids" vt="string" defval="" range="*"/>
         <var name="blockids" vt="string" defval="" range="*"/>
         <var name="scfb" vt="string" defval="" range="*"/>

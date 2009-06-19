@@ -205,14 +205,14 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   if( update ) {
     iONode nodeF = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setid( nodeF, wOutput.getid( o->props ) );
-    wOutput.setstate( nodeF, state );
+    wOutput.setstate( nodeF, wOutput.getstate( o->props ) );
     if( wOutput.getiid( o->props ) != NULL )
       wOutput.setiid( nodeF, wOutput.getiid( o->props ) );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
   }
 
   __checkActions(inst, state );
-  
+
   return True;
 }
 
