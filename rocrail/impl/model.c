@@ -299,18 +299,24 @@ static Boolean _parsePlan( iOModelData o ) {
       freeMem( planXml );
       if( o->planDoc != NULL ) {
         iONode root = DocOp.getRootNode( o->planDoc );
-        if( StrOp.equalsi( wPlan.name(), NodeOp.getName(root) ) ) {
-          o->model = root;
-          o->title = wPlan.gettitle( o->model );
-        }
-        else if( StrOp.equalsi( wModPlan.name(), NodeOp.getName(root) ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Module Plan [%s]", wModPlan.gettitle( o->model ) );
-          o->moduleplan = ModPlanOp.inst(root);
-          o->model = ModPlanOp.parse( o->moduleplan );
-          o->title = wModPlan.gettitle( o->model );
+        if( root != NULL ) {
+          if( StrOp.equalsi( wPlan.name(), NodeOp.getName(root) ) ) {
+            o->model = root;
+            o->title = wPlan.gettitle( o->model );
+          }
+          else if( StrOp.equalsi( wModPlan.name(), NodeOp.getName(root) ) ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Module Plan [%s]", wModPlan.gettitle( o->model ) );
+            o->moduleplan = ModPlanOp.inst(root);
+            o->model = ModPlanOp.parse( o->moduleplan );
+            o->title = wModPlan.gettitle( o->model );
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unsupported Plan: %s", NodeOp.getName(root) );
+            return False;
+          }
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unsupported Plan: %s", NodeOp.getName(root) );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid Plan!" );
           return False;
         }
       }

@@ -794,6 +794,16 @@
       <var name="modviewcx" vt="int" defval="0" range="0-*" remark="x size on an overview panel"/>
       <var name="modviewcy" vt="int" defval="0" range="0-*" remark="y size on an overview panel"/>
     </zlevel>
+    <boosterlist cardinality="1" remark="Booster list for power management" wrappername="BoosterList">
+      <booster cardinality="n" remark="Booster definition" wrappername="Booster">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="modids" vt="string" defval="" range="*"/>
+        <var name="blockids" vt="string" defval="" range="*"/>
+        <var name="scfb" vt="string" defval="" range="*"/>
+        <var name="powerfb" vt="string" defval="" range="*"/>
+        <var name="poweron" vt="string" defval="" range="*"/>
+      </booster>
+    </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">
       <var name="distance" vt="int" defval="0" units="mm" remark="Distance between the two events."/>
       <var name="scale" vt="int" defval="87" remark="Scale of locomotives."/>

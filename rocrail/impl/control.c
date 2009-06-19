@@ -1009,6 +1009,16 @@ static iOThrottle _getThrottle(iOControl control) {
   return data->throttle;
 }
 
+static void _setBoosters(iOControl control, iONode ini) {
+  iOControlData data = Data(control);
+  if( ini != NULL ) {
+    data->powerman = PowerManOp.inst(ini);
+  }
+
+}
+
+
+
 static iOControl _inst( Boolean nocom ) {
     iOControl     control = allocMem( sizeof( struct OControl ) );
     iOControlData data    = allocMem( sizeof( struct OControlData ) );
@@ -1027,6 +1037,16 @@ static iOControl _inst( Boolean nocom ) {
     if( wRocRail.getthrottle(ini) != NULL ) {
       data->throttle = ThrottleOp.inst(wRocRail.getthrottle(ini));
     }
+
+    if( 1 ) {
+      iOModel model = AppOp.getModel();
+      iONode plan = ModelOp.getModel( model );
+
+      ControlOp.setBoosters(control, wPlan.getboosterlist(plan));
+    }
+
+
+
 
     data->clockrun = True;
     data->clockticker = ThreadOp.inst( "clockticker", __clockticker, control );

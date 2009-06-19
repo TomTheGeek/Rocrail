@@ -186,7 +186,7 @@
   </object>
 
 
-  <object name="Control" use="node,map,thread" include="throttle,clntcon,$rocint/public/digint" remark="Control center for RocRail">
+  <object name="Control" use="node,map,thread" include="throttle,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
     <typedef def="enum {CMD_OK=0,CMD_RETRY,CMD_ERROR} cmd_state"/>
     <typedef def="void(*control_callback)(obj,iONode)"/>
     <fun name="inst" vt="this">
@@ -215,6 +215,10 @@
     <fun name="getThrottle" vt="iOThrottle">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
+    <fun name="setBoosters" vt="void">
+      <param name="inst" vt="this" remark="Control instance"/>
+      <param name="boosterlist" vt="iONode" remark="Booster list"/>
+    </fun>
     <data>
       <var name="pDi" vt="iIDigInt" remark="Interface"/>
       <var name="iid" vt="const char*" remark="Interface Id"/>
@@ -231,6 +235,7 @@
       <var name="accessorybus" vt="Boolean"/>
       <var name="checker" vt="iOThread"/>
       <var name="throttle" vt="iOThrottle"/>
+      <var name="powerman" vt="iOPowerMan"/>
     </data>
   </object>
 
@@ -1584,10 +1589,24 @@
 
   <object name="Operator" interface="HtmlInt" use="node" include="htmlint" remark="Operator object">
     <fun name="inst" vt="this">
-      <param name="ini" vt="iONode" remark="Car node"/>
+      <param name="ini" vt="iONode" remark="Operator node"/>
     </fun>
     <fun name="modify" vt="void">
-      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
+    </data>
+  </object>
+
+
+  <object name="PowerMan" interface="HtmlInt" use="node" include="htmlint" remark="Power Manager object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="The booster list"/>
+    </fun>
+    <fun name="modify" vt="void">
+      <param name="inst" vt="this" remark="PowerMan instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
     </fun>
     <data>
