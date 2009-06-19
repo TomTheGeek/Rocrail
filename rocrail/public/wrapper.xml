@@ -532,6 +532,13 @@
     <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
   </thr>
 
+  <power remark="Power Manager command." wrappername="PwrCmd">
+    <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>
+    <var name="cmd" vt="string" defval="" range="*"/>
+    <const name="on" vt="string" val="on"/>
+    <const name="off" vt="string" val="off"/>
+  </power>
+  
   <sys remark="System command." wrappername="SysCmd">
     <const name="stoplocs" vt="string" val="stoplocs"/>
     <const name="stop" vt="string" val="stop"/>

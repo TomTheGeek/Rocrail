@@ -28,6 +28,8 @@
 
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/PwrCmd.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
@@ -87,7 +89,30 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+
+static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, int val ) {
+  iOPowerManData data = Data(inst);
+  iONode scbooster = (iONode)MapOp.get( data->scmap, id );
+  iONode pwbooster = (iONode)MapOp.get( data->pwmap, id );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "booster sensors [%s] event", id );
+
+  if( scbooster != NULL ) {
+    TraceOp.trc( name, pulse?TRCLEVEL_WARNING:TRCLEVEL_INFO, __LINE__, 9999,
+        "shortcut %s[%s] event for booster [%s]", pulse?"":"cleared ", id, wBooster.getid(scbooster) );
+  }
+  if( pwbooster != NULL ) {
+    TraceOp.trc( name, pulse?TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
+        "power %s [%s] event for booster [%s]", pulse?"on":"off", id, wBooster.getid(pwbooster) );
+  }
+}
+
 static void* __event( void* inst, const void* evt ) {
+  iOPowerManData data = Data(inst);
+  iONode node = (iONode)evt;
+  if( node != NULL && StrOp.equals( wFeedback.name(), NodeOp.getName(node) ) ) {
+    __processEvent( inst ,wFeedback.isstate(node), wFeedback.getid(node), wFeedback.getidentifier(node), wFeedback.getval(node) );
+  }
   return NULL;
 }
 
@@ -117,6 +142,34 @@ static char* _toHtml( void* object ) {
   return 0;
 }
 
+static void __initSensors( iOPowerMan inst ) {
+  iOPowerManData data = Data(inst);
+  iOModel model = AppOp.getModel();
+
+  iONode booster = wBoosterList.getbooster(data->props);
+  while( booster != NULL ) {
+    iOFBack scfb = ModelOp.getFBack( model, wBooster.getscfb( booster ) );
+    iOFBack pwfb = ModelOp.getFBack( model, wBooster.getpowerfb( booster ) );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Init sensors for booster [%s]...", wBooster.getid(booster) );
+
+    if( scfb != NULL && pwfb != NULL ) {
+      FBackOp.addListener( scfb, (obj)inst );
+      FBackOp.addListener( pwfb, (obj)inst );
+      MapOp.put( data->scmap, wBooster.getscfb( booster ), (obj)booster );
+      MapOp.put( data->pwmap, wBooster.getpowerfb( booster ), (obj)booster );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "Sensors for booster %s could not be initialized.", wBooster.getid(booster) );
+    }
+
+    booster = wBoosterList.nextbooster(data->props, booster);
+  }
+
+}
+
 
 /**  */
 static struct OPowerMan* _inst( iONode ini ) {
@@ -126,7 +179,10 @@ static struct OPowerMan* _inst( iONode ini ) {
 
   /* Initialize data->xxx members... */
   data->props = ini;
+  data->scmap = MapOp.inst();
+  data->pwmap = MapOp.inst();
 
+  __initSensors(__PowerMan);
 
 
   TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power Manager instantiated.");
