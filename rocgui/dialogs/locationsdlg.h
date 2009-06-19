@@ -51,6 +51,8 @@
 #define ID_TEXTCTRL_LOCATION_NAME 10301
 #define wxID_STATIC_LOCATIONS_BLOCKS 10309
 #define ID_LISTBOX_LOCATIONS_BLOCKS 10302
+#define ID__LOCATIONS_BLOCK_ADD 10278
+#define ID__LOCATIONS_BLOCK_DELETE 10279
 #define ID_BUTTON_LOCATIONS_NEW 10303
 #define ID_BUTTON_LOCATIONS_MODIFY 10310
 #define ID_BUTTON_LOCATIONS_DELETE 10304
@@ -103,6 +105,12 @@ public:
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_LOCATIONS_BLOCKS
     void OnListboxLocationsBlocksSelected( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID__LOCATIONS_BLOCK_ADD
+    void OnLocationsBlockAddClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID__LOCATIONS_BLOCK_DELETE
+    void OnLocationsBlockDeleteClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCATIONS_NEW
     void OnButtonLocationsNewClick( wxCommandEvent& event );
 
@@ -142,6 +150,9 @@ public:
     wxTextCtrl* m_Name;
     wxStaticText* m_LabBlocks;
     wxListBox* m_BlockList;
+    wxComboBox* m_BlockCombo;
+    wxButton* m_AddBlock;
+    wxButton* m_DeleteBlock;
     wxButton* m_New;
     wxButton* m_Modify;
     wxButton* m_Delete;
