@@ -58,7 +58,7 @@ public:
   const char* getZID(){ return NULL; }
   iONode getZLevel();
   void refresh(bool eraseBackground = true);
-  bool SetBackgroundColor(int red, int green, int blue);
+  bool SetBackgroundColor(int red, int green, int blue, bool savecolor);
   void OnPanelProps(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
   void OnModuleProps(wxCommandEvent& event);

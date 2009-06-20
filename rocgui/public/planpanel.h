@@ -91,7 +91,7 @@ public:
   const char* getZID();
   iONode getZLevel() { return m_zLevel; }
   bool isModView(){ return m_bModView;}
-  bool SetBackgroundColor(int red, int green, int blue);
+  bool SetBackgroundColor(int red, int green, int blue, bool savecolor);
   void refresh(bool eraseBackground = true);
   void setPosition();
   iONode m_zLevel;

@@ -249,17 +249,11 @@ void PlanPanel::OnModProps(wxCommandEvent& event) {
 
   if( StrOp.equals( wModule.cmd_state, wModule.getcmd(ini) ) ) {
     if( StrOp.equals( wModule.state_shortcut, wModule.getstate(ini) ) ) {
-      int l_Red   = m_Red;
-      int l_Green = m_Green;
-      int l_Blue  = m_Blue;
-      SetBackgroundColor( 255, 0, 0);
-      m_Red   = l_Red;
-      m_Green = l_Green;
-      m_Blue  = l_Blue;
+      SetBackgroundColor( 255, 0, 0, false);
     }
     else {
       /* normal state */
-      SetBackgroundColor( m_Red, m_Green, m_Blue);
+      SetBackgroundColor( m_Red, m_Green, m_Blue, false);
     }
   }
   else if( ini != NULL && zlevel != NULL ) {
@@ -1592,10 +1586,12 @@ char* PlanPanel::itemKey( const char* nodename, const char* id, char* key ) {
   return key;
 }
 
-bool PlanPanel::SetBackgroundColor(int red, int green, int blue) {
-  m_Red   = red;
-  m_Green = green;
-  m_Blue  = blue;
+bool PlanPanel::SetBackgroundColor(int red, int green, int blue, bool savecolor) {
+  if( savecolor ) {
+    m_Red   = red;
+    m_Green = green;
+    m_Blue  = blue;
+  }
   wxColor color((byte)red, (byte)green, (byte)blue);
   return SetBackgroundColour(color);
 }

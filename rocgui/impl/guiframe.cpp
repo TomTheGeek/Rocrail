@@ -439,7 +439,7 @@ BasePanel* RocGuiFrame::initModPanel( iONode zlevel  ) {
 
   p->SetPosition( wxPoint( xpos, ypos) );
 
-  p->SetBackgroundColor((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini));
+  p->SetBackgroundColor((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini), true);
   p->clean();
   p->init(true);
   return p;
@@ -2166,7 +2166,7 @@ void RocGuiFrame::OnBackColor( wxCommandEvent& event ) {
     int pages = m_PlanNotebook->GetPageCount();
     for( int i = 0; i < pages; i++ ) {
       BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
-      p->SetBackgroundColor(color.Red(),color.Green(),color.Blue());
+      p->SetBackgroundColor(color.Red(),color.Green(),color.Blue(), true);
       p->reScale( m_Scale );
     }
   }

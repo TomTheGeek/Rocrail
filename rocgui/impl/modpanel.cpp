@@ -245,10 +245,10 @@ void ModPanel::refresh(bool eraseBackground) {
 }
 
 
-bool ModPanel::SetBackgroundColor(int red, int green, int blue) {
+bool ModPanel::SetBackgroundColor(int red, int green, int blue, bool savecolor) {
   BasePanel* p = (BasePanel*)ListOp.first(m_ModList);
   while( p != NULL ) {
-    p->SetBackgroundColor(red, green, blue);
+    p->SetBackgroundColor(red, green, blue, true);
     p = (BasePanel*)ListOp.next(m_ModList);
   }
   /*

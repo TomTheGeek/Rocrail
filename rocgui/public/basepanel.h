@@ -21,7 +21,7 @@ public:
   virtual const char* getZID() = 0;
   virtual iONode getZLevel() = 0;
   virtual void refresh(bool eraseBackground = true) = 0;
-  virtual bool SetBackgroundColor(int red, int green, int blue) = 0;
+  virtual bool SetBackgroundColor(int red, int green, int blue, bool savecolor) = 0;
   virtual void OnPanelProps(wxCommandEvent& event) = 0;
   virtual BasePanel* updateZLevel(iONode zlevel) = 0;
 
