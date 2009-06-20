@@ -1221,6 +1221,9 @@ static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   return False;
 }
 
+static void _setDefaultAspect(iIBlockBase inst) {
+}
+
 static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "red");

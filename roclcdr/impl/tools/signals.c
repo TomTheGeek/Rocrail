@@ -61,9 +61,9 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
 
   /* set signal current block on enter */
   if( onEnter && data->curBlock != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock to red" );
-    data->curBlock->red( data->curBlock, True, !data->next1RouteFromTo );
-    data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock to default aspect" );
+    data->curBlock->setDefaultAspect( data->curBlock );
+    data->curBlock->setDefaultAspect( data->curBlock );
   }
 
   /* set signal current block */

@@ -100,7 +100,7 @@ static int __count(void) {
 }
 
 
-static void __setDefaultAspect(iIBlockBase inst) {
+static void _setDefaultAspect(iIBlockBase inst) {
   iOBlockData data = Data(inst);
   /* set default signal aspect */
   int aspect = 0;
@@ -1206,7 +1206,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       }
       /* Set signal. */
 
-      __setDefaultAspect(inst);
+      _setDefaultAspect(inst);
 
       ok = True;
     }
@@ -1294,7 +1294,7 @@ static void _init( iIBlockBase inst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "init() unknown locId: %s", data->locId );
   }
   else {
-    __setDefaultAspect(inst);
+    _setDefaultAspect(inst);
   }
 }
 
