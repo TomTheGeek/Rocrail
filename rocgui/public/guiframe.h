@@ -132,6 +132,9 @@ public:
   void OnEditTurntables(wxCommandEvent& event);
   void OnEditMVTrack(wxCommandEvent& event);
   void OnEditTimedActions(wxCommandEvent& event);
+  void OnEditBoosters(wxCommandEvent& event);
+
+  void OnCtrlBoosters(wxCommandEvent& event);
 
   void setLocalPlan( wxString plan );
   void OnInitNotebook(wxCommandEvent& event);
@@ -425,6 +428,8 @@ enum
     ME_OpenDecoder,
     ME_DTOpSw,
     ME_Uhlenbrock,
+    ME_EditBoosters,
+    ME_CtrlBoosters,
     ME_F1,
     ME_F2,
     ME_F3,

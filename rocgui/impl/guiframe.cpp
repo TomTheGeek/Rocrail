@@ -82,6 +82,8 @@
 #include "rocgui/dialogs/softwareupdates.h"
 #include "rocgui/dialogs/mvtrackdlg.h"
 #include "rocgui/dialogs/timedactions.h"
+#include "rocgui/dialogs/powermandlg.h"
+#include "rocgui/dialogs/powerctrldlg.h"
 
 #include "rocgui/dialogs/decoders/locoio.h"
 #include "rocgui/dialogs/decoders/dtopswdlg.h"
@@ -250,6 +252,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditLocations  , RocGuiFrame::OnEditLocations)
     EVT_MENU( ME_EditMVTrack    , RocGuiFrame::OnEditMVTrack)
     EVT_MENU( ME_EditTimedActions, RocGuiFrame::OnEditTimedActions)
+    EVT_MENU( ME_EditBoosters   , RocGuiFrame::OnEditBoosters)
+    EVT_MENU( ME_CtrlBoosters   , RocGuiFrame::OnCtrlBoosters)
     EVT_MENU( ME_PanelProps     , RocGuiFrame::OnPanelProps)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
     EVT_MENU( ME_Undo           , RocGuiFrame::OnUndo)
@@ -1166,12 +1170,14 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditSensors, wxGetApp().getMenu("sensortable"), wxGetApp().getTip("sensortable") );
   menuTables->Append(ME_EditMVTrack, wxGetApp().getMenu("mvtrack"), wxGetApp().getTip("mvtrack") );
   menuTables->Append(ME_EditTimedActions, wxGetApp().getMenu("actiontable"), wxGetApp().getTip("actiontable") );
+  menuTables->Append(ME_EditBoosters, wxGetApp().getMenu("boostertable"), wxGetApp().getTip("boostertable") );
 
   // Turntable dialog has no index tab... disable
   //menuTables->Append(ME_EditTurntables, wxGetApp().getMenu("turntabletable"), wxGetApp().getTip("turntabletable") );
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
+  menuControl->Append(ME_CtrlBoosters, wxGetApp().getMenu("powerctrl"), wxGetApp().getTip("powerctrl") );
 
   menuControl->AppendSeparator();
   menuControl->Append(ME_InitField, wxGetApp().getMenu("initfield"), wxGetApp().getTip("initfield") );
@@ -2292,6 +2298,22 @@ void RocGuiFrame::OnEditMVTrack( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditTimedActions( wxCommandEvent& event ) {
   TimedActions*  dlg = new TimedActions(this );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
+  PowerManDlg*  dlg = new PowerManDlg(this );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnCtrlBoosters( wxCommandEvent& event ) {
+  PowerCtrlDlg*  dlg = new PowerCtrlDlg(this );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }

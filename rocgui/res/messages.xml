@@ -8451,4 +8451,10 @@
     <en txt="Shortcut"/>
     <nl txt="Kortsluiting"/>
   </Msg>
+  <Msg id="boostertable" dialog="true">
+    <en txt="Boosters" tip="Booster setup for power manager."/>
+  </Msg>
+  <Msg id="powerctrl" dialog="true">
+    <en txt="Power control" tip="Power manager booster control."/>
+  </Msg>
 </Messages>
