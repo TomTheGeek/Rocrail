@@ -246,7 +246,23 @@ void PlanPanel::OnModProps(wxCommandEvent& event) {
   // Get the copied node:
   iONode ini = (iONode)event.GetClientData();
   iONode zlevel = (ini!=NULL ? NodeOp.findNode(ini, wZLevel.name() ) : NULL);
-  if( ini != NULL && zlevel != NULL ) {
+
+  if( StrOp.equals( wModule.cmd_state, wModule.getcmd(ini) ) ) {
+    if( StrOp.equals( wModule.state_shortcut, wModule.getstate(ini) ) ) {
+      int l_Red   = m_Red;
+      int l_Green = m_Green;
+      int l_Blue  = m_Blue;
+      SetBackgroundColor( 255, 0, 0);
+      m_Red   = l_Red;
+      m_Green = l_Green;
+      m_Blue  = l_Blue;
+    }
+    else {
+      /* normal state */
+      SetBackgroundColor( m_Red, m_Green, m_Blue);
+    }
+  }
+  else if( ini != NULL && zlevel != NULL ) {
     wZLevel.setmodviewcx( m_zLevel, wZLevel.getmodviewcx(zlevel) );
     wZLevel.setmodviewcy( m_zLevel, wZLevel.getmodviewcy(zlevel) );
     reScale(m_Scale);
@@ -1577,6 +1593,9 @@ char* PlanPanel::itemKey( const char* nodename, const char* id, char* key ) {
 }
 
 bool PlanPanel::SetBackgroundColor(int red, int green, int blue) {
+  m_Red   = red;
+  m_Green = green;
+  m_Blue  = blue;
   wxColor color((byte)red, (byte)green, (byte)blue);
   return SetBackgroundColour(color);
 }

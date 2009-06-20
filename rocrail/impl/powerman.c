@@ -32,6 +32,7 @@
 #include "rocrail/wrapper/public/PwrEvent.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Module.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
@@ -117,7 +118,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
   if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( blockids, ',' );
 
-    /* put all blockid's in the map */
+    /* iterate all blockid's */
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* blockid = StrTokOp.nextToken( tok );
       iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), blockid );
@@ -133,6 +134,21 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
 
   }
 
+  if( modids != NULL && StrOp.len( modids ) > 0 ) {
+    iOStrTok tok = StrTokOp.inst( modids, ',' );
+
+    /* iterate all modid's */
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* modid = StrTokOp.nextToken( tok );
+      iONode nodeD = NodeOp.inst( wModule.name(), NULL, ELEMENT_NODE );
+      wModule.setid( nodeD, modid );
+      wModule.setcmd( nodeD, wModule.cmd_state );
+      wModule.setstate( nodeD, cleared?wModule.state_normal:wModule.state_shortcut );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), nodeD );
+    };
+    StrTokOp.base.del(tok);
+
+  }
 }
 
 

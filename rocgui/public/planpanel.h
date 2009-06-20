@@ -121,6 +121,10 @@ private:
   bool m_ProcessingSelect;
   bool m_bModView;
   iONode m_lastAddedItem;
+  int m_Red;
+  int m_Green;
+  int m_Blue;
+
   DECLARE_EVENT_TABLE()
 };
 

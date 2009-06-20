@@ -754,6 +754,10 @@
       <const name="cmd_west" vt="string" val="west"/>
       <const name="cmd_move" vt="string" val="move"/>
       <const name="cmd_connect" vt="string" val="connect"/>
+      <const name="cmd_state" vt="string" val="state"/>
+      <var name="state" vt="string" defval="" range="*" remark="module state"/>
+      <const name="state_normal" vt="string" val="normal"/>
+      <const name="state_shortcut" vt="string" val="shortcut"/>
       <connection cardinality="n" remark="Connection specification" wrappername="ModuleConnection">
         <var name="id" vt="string" defval="" range="*" remark="Module ID; for internal use only."/>
         <var name="modid" vt="string" defval="" range="*" remark="Module ID which connects to this module."/>
