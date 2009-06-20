@@ -334,7 +334,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
       wSwitch.setcmd  ( cmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...", 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...",
                    addrCmd, portCmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW);
 
       ControlOp.cmd( control, cmd, NULL );
@@ -371,11 +371,11 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     /* set tablepos optimistic predicted, if fb is not defined for destination track */
     iONode track = wTurntable.gettrack( data->props );
     while ( track != NULL ) {
-      if ( ( wTTTrack.getnr( track ) == data->gotopos) 
+      if ( ( wTTTrack.getnr( track ) == data->gotopos)
         && ( ( wTTTrack.getposfb( track) == NULL) || StrOp.equals( wTTTrack.getposfb( track), "\0"))) {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set optimistic tablepos %d", data->tablepos );
-        
+
         data->tablepos = data->gotopos;
         wTurntable.setbridgepos( data->props, data->tablepos );
       }
@@ -1251,6 +1251,12 @@ static const char* _getLoc( iIBlockBase inst ) {
   /* TODO: dispatch to active tracke block */
   return "";
 }
+
+static const char* _getState( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  return "";
+}
+
 
 static const char* _getInLoc( iIBlockBase inst ) {
   iOTTData data = Data(inst);

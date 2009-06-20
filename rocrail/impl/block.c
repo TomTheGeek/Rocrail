@@ -1524,6 +1524,12 @@ static char* _toHtml( void* inst ) {
 }
 
 
+static const char* _getState( iIBlockBase inst ) {
+  iOBlockData data = Data((iOBlock)inst);
+  return wBlock.getstate(data->props);
+}
+
+
 static char* _getForm( void* inst ) {
   iOBlockData data = Data((iOBlock)inst);
   return NULL;

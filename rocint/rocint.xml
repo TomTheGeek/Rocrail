@@ -266,6 +266,9 @@
     <fun name="getOccTime" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="getState" vt="const char*">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
 

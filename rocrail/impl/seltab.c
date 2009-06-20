@@ -1072,6 +1072,14 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
   return False;
 }
 
+
+static const char* _getState( iIBlockBase inst ) {
+  iOSelTabData data = Data(inst);
+  return "";
+}
+
+
+
 static const char* _getLoc( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getLoc");

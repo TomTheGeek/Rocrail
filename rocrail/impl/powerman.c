@@ -31,12 +31,14 @@
 #include "rocrail/wrapper/public/PwrCmd.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Block.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
 #include "rocs/public/thread.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 
 
 static int instCnt = 0;
@@ -106,6 +108,34 @@ static void __sysEvent( obj inst ,const char* cmd ) {
 
 }
 
+
+static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared ) {
+  iOPowerManData data = Data(inst);
+  const char* blockids = wBooster.getblockids(booster);
+  const char* modids   = wBooster.getmodids(booster);
+
+  if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
+    iOStrTok tok = StrTokOp.inst( blockids, ',' );
+
+    /* put all blockid's in the map */
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* blockid = StrTokOp.nextToken( tok );
+      iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), blockid );
+      if( block != NULL ) {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, blockid );
+        wBlock.setlocid( nodeD, block->getLoc(block) );
+        wBlock.setstate( nodeD, cleared?block->getState(block):wBlock.shortcut );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(), nodeD );
+      }
+    };
+    StrTokOp.base.del(tok);
+
+  }
+
+}
+
+
 static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, int val ) {
   iOPowerManData data = Data(inst);
   iONode scbooster = (iONode)MapOp.get( data->scmap, id );
@@ -122,6 +152,8 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
     wPwrEvent.setid( pwrevent, wBooster.getid(scbooster) );
     wPwrEvent.setshortcut( pwrevent, pulse );
 
+    __informClientOfShortcut(inst, scbooster, !pulse);
+
     if( wBooster.isrepoweron(scbooster) || pulse ) {
       iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
       wPwrCmd.setid( pwrcmd, wBooster.getid(scbooster) );
@@ -135,6 +167,12 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
             wBooster.getid(pwbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(pwbooster) );
     wPwrEvent.setpower( pwrevent, pulse );
+    if( !pulse ) {
+      iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+      wPwrCmd.setid( pwrcmd, wBooster.getid(pwbooster) );
+      wPwrCmd.setcmd( pwrcmd, wPwrCmd.off );
+      PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
+    }
   }
 
   /* Broadcast to clients. */
