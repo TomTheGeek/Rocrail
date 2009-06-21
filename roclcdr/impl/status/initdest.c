@@ -118,9 +118,15 @@ void statusInitDest( iILcDriverInt inst ) {
     }
     else {
       /* Error! */
+      /* if running a schedule the schedule index should be decreased by one to match the current block */
       data->pause = data->curBlock->getWait(data->curBlock, data->loc );
       if( data->pause != -1 )
         data->pause = data->pause * 10;
+
+      if( data->schedule != NULL ) {
+        data->scheduleIdx--;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set schedule index back to %d to match the current entry", data->scheduleIdx );
+      }
 
       data->state = data->run ? LC_PAUSE:LC_IDLE;
       wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
