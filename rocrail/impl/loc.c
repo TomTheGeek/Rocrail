@@ -1306,6 +1306,30 @@ static void __checkConsist( iOLoc inst, iONode nodeA ) {
 
 }
 
+static void __swapConsist( iOLoc inst ) {
+  iOLocData data = Data(inst);
+
+  /* swap consist */
+  if( StrOp.len( wLoc.getconsist(data->props) ) > 0 ) {
+    iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swapping the consist member [%s]",
+                   wLoc.getconsist(data->props) );
+
+    while( StrTokOp.hasMoreTokens( consist ) ) {
+      const char* tok = StrTokOp.nextToken( consist );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok );
+      if( consistloc != NULL ) {
+        LocOp.swapPlacing( consistloc );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
+      }
+    };
+    StrTokOp.base.del( consist );
+  }
+
+}
+
 static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   iOLocData data = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -1724,6 +1748,8 @@ static void _swapPlacing( iOLoc loc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
   /* inform model to keep this setting in the occupation file */
   ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2 );
+
+  __swapConsist(loc);
 
   /* Broadcast to clients. */
   {
