@@ -8457,4 +8457,13 @@
   <Msg id="powerctrl" dialog="true">
     <en txt="Power control" tip="Power manager booster control."/>
   </Msg>
+  <Msg id="boosterid">
+    <en txt="Booster ID"/>
+  </Msg>
+  <Msg id="trackpower">
+    <en txt="Track power"/>
+  </Msg>
+  <Msg id="powerdistrict">
+    <en txt="District"/>
+  </Msg>
 </Messages>

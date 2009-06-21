@@ -118,7 +118,7 @@
                         <property name="permission">protected</property>
                         <property name="pos"></property>
                         <property name="row_label_horiz_alignment">wxALIGN_CENTRE</property>
-                        <property name="row_label_size">0</property>
+                        <property name="row_label_size">40</property>
                         <property name="row_label_values"></property>
                         <property name="row_label_vert_alignment">wxALIGN_CENTRE</property>
                         <property name="row_sizes"></property>
@@ -133,9 +133,9 @@
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
                         <event name="OnGridCellChange"></event>
-                        <event name="OnGridCellLeftClick"></event>
+                        <event name="OnGridCellLeftClick">onCellLeftClick</event>
                         <event name="OnGridCellLeftDClick"></event>
-                        <event name="OnGridCellRightClick"></event>
+                        <event name="OnGridCellRightClick">onCellRightClick</event>
                         <event name="OnGridCellRightDClick"></event>
                         <event name="OnGridCmdCellChange"></event>
                         <event name="OnGridCmdCellLeftClick"></event>

@@ -278,7 +278,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
 
     if( StrOp.equals( wPwrCmd.name(), NodeOp.getName(node) ) && data->powerman != NULL ) {
       /* inform power manager */
-      PowerManOp.cmd( data->powerman, node);
+      PowerManOp.cmd( data->powerman, (iONode)NodeOp.base.clone(node));
     }
 
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node) ||

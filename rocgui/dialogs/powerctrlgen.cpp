@@ -35,7 +35,7 @@ powerctrlgen::powerctrlgen( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Rows
 	m_Boosters->AutoSizeRows();
 	m_Boosters->EnableDragRowSize( true );
-	m_Boosters->SetRowLabelSize( 0 );
+	m_Boosters->SetRowLabelSize( 40 );
 	m_Boosters->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	// Label Appearance
@@ -66,6 +66,8 @@ powerctrlgen::powerctrlgen( wxWindow* parent, wxWindowID id, const wxString& tit
 	bSizer11->Fit( this );
 	
 	// Connect Events
+	m_Boosters->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( powerctrlgen::onCellLeftClick ), NULL, this );
+	m_Boosters->Connect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( powerctrlgen::onCellRightClick ), NULL, this );
 	m_On->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOn ), NULL, this );
 	m_Off->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOff ), NULL, this );
 	m_sdbSizer2OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOK ), NULL, this );
@@ -74,6 +76,8 @@ powerctrlgen::powerctrlgen( wxWindow* parent, wxWindowID id, const wxString& tit
 powerctrlgen::~powerctrlgen()
 {
 	// Disconnect Events
+	m_Boosters->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( powerctrlgen::onCellLeftClick ), NULL, this );
+	m_Boosters->Disconnect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( powerctrlgen::onCellRightClick ), NULL, this );
 	m_On->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOn ), NULL, this );
 	m_Off->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOff ), NULL, this );
 	m_sdbSizer2OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powerctrlgen::OnOK ), NULL, this );

@@ -36,6 +36,8 @@ class powerctrlgen : public wxDialog
 		wxButton* m_sdbSizer2OK;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onCellLeftClick( wxGridEvent& event ){ event.Skip(); }
+		virtual void onCellRightClick( wxGridEvent& event ){ event.Skip(); }
 		virtual void OnOn( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOff( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }

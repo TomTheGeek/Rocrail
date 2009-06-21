@@ -820,7 +820,9 @@
         <var name="scfb" vt="string" defval="" range="*"/>
         <var name="powerfb" vt="string" defval="" range="*"/>
         <var name="powersw" vt="string" defval="" range="*"/>
-        <var name="repoweron" vt="bool" defval="false" remark="Repower on incase the shortcat is cleared."/>
+        <var name="repoweron" vt="bool" defval="false" remark="Repower on incase the shortcut is cleared."/>
+        <var name="power" vt="bool" defval="false" remark="Track power flag."/>
+        <var name="shortcut" vt="bool" defval="false" remark="Shortcut flag."/>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">
