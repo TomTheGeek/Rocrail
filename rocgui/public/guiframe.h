@@ -47,6 +47,7 @@
 #include "rocgui/dialogs/rocrailinidialog.h"
 #include "rocgui/dialogs/decoders/uhl68610dlg.h"
 #include "rocgui/dialogs/decoders/uhl633x0dlg.h"
+#include "rocgui/dialogs/powerctrldlg.h"
 
 #include <wx/splitter.h>
 #include <wx/textctrl.h>
@@ -184,6 +185,8 @@ public:
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
 
+  void OnPowerEvent(wxCommandEvent& event);
+
   void Zoom(int zoom );
   void OnZoom25(wxCommandEvent& event);
   void OnZoom50(wxCommandEvent& event);
@@ -281,6 +284,7 @@ private:
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
   Uhl633x0Dlg* m_Uhl633x0;
+  PowerCtrlDlg* m_PowerCtrl;
 
   iOMutex m_muxInitActiveLocs;
 
@@ -406,6 +410,7 @@ enum
     ME_LangGreek,
     ME_LangRussian,
     ME_RocrailIni,
+    ME_PowerEvent,
     ME_RocguiIni,
     ME_Zoom25,
     ME_Zoom50,

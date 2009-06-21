@@ -136,6 +136,9 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/MVTrack.h"
+#include "rocrail/wrapper/public/Booster.h"
+#include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/PwrEvent.h"
 
 #include "rocgui/symbols/svg.h"
 // ----------------------------------------------------------------------------
@@ -198,6 +201,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( UPDATE_ACTIVELOCS_EVENT, RocGuiFrame::UpdateActiveLocs)
     EVT_MENU( UPDATE_LOC_IMAGE_EVENT, RocGuiFrame::UpdateLocImage)
     EVT_MENU( CV_EVENT, RocGuiFrame::CVevent)
+    EVT_MENU( ME_PowerEvent, RocGuiFrame::OnPowerEvent)
 
     EVT_MENU( ME_Quit           , RocGuiFrame::OnQuit)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
@@ -815,6 +819,31 @@ void RocGuiFrame::initLocCtrlDialogs() {
 
 }
 
+void RocGuiFrame::OnPowerEvent( wxCommandEvent& event ) {
+  iONode node = (iONode)event.GetClientData();
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode boosterlist = wPlan.getboosterlist( model );
+    if( boosterlist != NULL ) {
+      iONode booster = wBoosterList.getbooster( boosterlist );
+      while( booster != NULL ) {
+        if( StrOp.equals( wPwrEvent.getid(node), wBooster.getid(booster) ) ) {
+          wBooster.setpower( booster, wPwrEvent.ispower(node) );
+          wBooster.setshortcut( booster, wPwrEvent.isshortcut(node) );
+          break;
+        }
+        booster = wBoosterList.nextbooster( boosterlist, booster );
+      };
+    }
+  }
+
+
+  if( m_PowerCtrl != NULL ) {
+    m_PowerCtrl->powerEvent(node);
+  }
+}
+
 
 void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   // Get copied node:
@@ -1038,7 +1067,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_IconPath           = icons;
   m_ThemePath          = theme;
   m_bInitialized       = false;
-
+  m_PowerCtrl          = NULL;
 
 }
 
@@ -2313,11 +2342,12 @@ void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnCtrlBoosters( wxCommandEvent& event ) {
-  PowerCtrlDlg*  dlg = new PowerCtrlDlg(this );
-  if( wxID_OK == dlg->ShowModal() ) {
+  m_PowerCtrl = new PowerCtrlDlg(this );
+  if( wxID_OK == m_PowerCtrl->ShowModal() ) {
     /* Notify RocRail. */
   }
-  dlg->Destroy();
+  m_PowerCtrl->Destroy();
+  m_PowerCtrl = NULL;
 }
 
 void RocGuiFrame::OnEditSensors( wxCommandEvent& event ) {

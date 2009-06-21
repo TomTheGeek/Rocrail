@@ -110,6 +110,7 @@
 #include "rocrail/wrapper/public/OperatorList.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/PwrEvent.h"
 
 #include "common/version.h"
 
@@ -638,6 +639,12 @@ static void rocrailCallback( obj me, iONode node ) {
   /* rocrail.ini */
   if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
+    // Make a copy of the node for using it out of this scope:
+    event.SetClientData( node->base.clone( node ) );
+    wxPostEvent( guiApp->getFrame(), event );
+  }
+  else if( StrOp.equals( wPwrEvent.name(), NodeOp.getName( node ) ) ) {
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_PowerEvent );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );

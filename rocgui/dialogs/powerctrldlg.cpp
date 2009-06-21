@@ -125,6 +125,7 @@ void PowerCtrlDlg::onCellRightClick( wxGridEvent& event ) {
 
 
 void PowerCtrlDlg::powerEvent(iONode event) {
+  initValues();
 }
 
 
