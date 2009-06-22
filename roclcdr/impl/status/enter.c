@@ -215,8 +215,10 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
       wLoc.setV_hint( cmd, blockV_hint );
 
-    if( StrOp.equals(blockV_hint, wBlock.cruise) || StrOp.equals(blockV_hint, wBlock.max) )
-      wLoc.setV_hint( cmd, wBlock.mid );
+    if( StrOp.equals(blockV_hint, wBlock.cruise) || StrOp.equals(blockV_hint, wBlock.max) ) {
+      if( data->loc->compareVhint( data->loc, wBlock.mid) == -1 )
+        wLoc.setV_hint( cmd, wBlock.mid );
+    }
 
     if( data->next1Block != NULL ) {
       /* data->curBlock is set after event out_block:
