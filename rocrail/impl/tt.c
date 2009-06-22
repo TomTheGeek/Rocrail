@@ -455,7 +455,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       ControlOp.cmd( control, cmd, NULL );
 
     }
-    else if( wTurntable.isswcmd(data->props) ){
+    else {
       iONode lcmd = NULL;
 
       NodeOp.setName( cmd, wSwitch.name() );
@@ -501,55 +501,6 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
-    }
-    else {
-      iONode lcmd = NULL;
-      /* set the protocol */
-      wOutput.setprot( cmd, wTurntable.getprot(data->props) );
-
-      /* signal new position will be set: */
-      wOutput.setaddr( cmd, wTurntable.getaddr4(data->props) );
-      wOutput.setport( cmd, wTurntable.getport4(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate4(data->props) );
-      wOutput.setcmd( cmd, wOutput.on );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
-
-      wOutput.setaddr( cmd, wTurntable.getaddr0(data->props) );
-      wOutput.setport( cmd, wTurntable.getport0(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate0(data->props) );
-      wOutput.setcmd( cmd, data->gotopos & 0x01 ? wOutput.on:wOutput.off );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
-
-      wOutput.setaddr( cmd, wTurntable.getaddr1(data->props) );
-      wOutput.setport( cmd, wTurntable.getport1(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate1(data->props) );
-      wOutput.setcmd( cmd, data->gotopos & 0x02 ? wOutput.on:wOutput.off );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
-
-      wOutput.setaddr( cmd, wTurntable.getaddr2(data->props) );
-      wOutput.setport( cmd, wTurntable.getport2(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate2(data->props) );
-      wOutput.setcmd( cmd, data->gotopos & 0x04 ? wOutput.on:wOutput.off );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
-
-      wOutput.setaddr( cmd, wTurntable.getaddr3(data->props) );
-      wOutput.setport( cmd, wTurntable.getport3(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate3(data->props) );
-      wOutput.setcmd( cmd, data->gotopos & 0x08 ? wOutput.on:wOutput.off );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
-
-      /* signal new position is set: */
-      wOutput.setaddr( cmd, wTurntable.getaddr4(data->props) );
-      wOutput.setport( cmd, wTurntable.getport4(data->props) );
-      wOutput.setgate( cmd, wTurntable.getgate4(data->props) );
-      wOutput.setcmd( cmd, wOutput.off );
-      lcmd = (iONode)NodeOp.base.clone(cmd);
-      ControlOp.cmd( control, lcmd, NULL );
     }
 
     data->dir = ttdir;
