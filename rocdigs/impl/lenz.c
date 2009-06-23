@@ -21,9 +21,13 @@
 
 #include "rocdigs/impl/lenz_impl.h"
 
+#include "rocs/public/trace.h"
+#include "rocs/public/node.h"
+#include "rocs/public/attr.h"
 #include "rocs/public/mem.h"
-#include "rocs/public/objbase.h"
-#include "rocs/public/string.h"
+#include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -38,8 +42,11 @@
 #include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 #include "rocdigs/impl/common/fada.h"
+
+#include <time.h>
 
 static int instCnt = 0;
 static int interfaceVersion = 0;
@@ -512,8 +519,58 @@ static iONode __translate( iOLenz lenz, iONode node ) {
   iOLenzData data = Data(lenz);
   iONode rsp = NULL;
 
+  /* Clock command. */
+  if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+    /*
+    from Slave to Command Station / and from Command Station to Slave:
+
+    0x00 0x01 TCODE0 {TCODE1 TCODE2 TCODE3} Timecode transfer, accelerated layout time.
+    A TCODE consists of one byte, coded binary as CCDDDDDD, where CC denotes the type of
+    code and DDDDDDD the corresponding data.
+    TCODE Content
+    CC=00 DDDDDD = mmmmmm, this denotes the minute, range 0..59.
+    CC=10 DDDDDD = 0HHHHHH, this denotes the hour, range 0..23
+    CC=01 DDDDDD = 000WWW, this denotes the day of week,
+    0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday.
+    CC=11 DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
+    an acceleration factor of 0 means clock is stopped, a factor of 1 means clock is running
+    real time, a factor of 2 means clock is running twice as fast a real time.
+    This message is issued as broadcast once every (layout-) minute. The command is not repeated.
+
+    When no Parameters are given, it is a query and the answer will be sent only to the requesting slave.
+    */
+    long l_time = wClock.gettime(node);
+    struct tm* lTime = localtime( &l_time );
+
+    int mins    = lTime->tm_min;
+    int hours   = lTime->tm_hour;
+    int wday    = lTime->tm_wday;
+    int divider = wClock.getdivider(node);
+    byte* outa  = NULL;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
+
+    outa = allocMem(8);
+    outa[0] = 0x01;
+    outa[1] = 0x10 + hours;
+    ThreadOp.post( data->transactor, (obj)outa );
+    outa = allocMem(8);
+    outa[0] = 0x01;
+    outa[1] = 0x00 + mins;
+    ThreadOp.post( data->transactor, (obj)outa );
+    outa = allocMem(8);
+    outa[0] = 0x01;
+    outa[1] = 0x01 + wday;
+    ThreadOp.post( data->transactor, (obj)outa );
+    outa = allocMem(8);
+    outa[0] = 0x01;
+    outa[1] = 0x11 + divider;
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
+
+
   /* Switch command. */
-  if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
 
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
