@@ -404,7 +404,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
         "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
         addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
 
-    cmdsize = accDecoderPkt2(dcc, fada, action, dir);
+    cmdsize = accDecoderPkt2(dcc, addr, 1, (port-1)*2+dir);
     __byteToStr( cmd, dcc, cmdsize );
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
