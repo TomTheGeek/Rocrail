@@ -18,6 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+
 #include "powermandlg.h"
 
 #include "wx/wxprec.h"
@@ -36,10 +37,14 @@
 #include "rocs/public/trace.h"
 
 
-PowerManDlg::PowerManDlg( wxWindow* parent )
-:
-powermandlggen( parent )
+PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
 {
+  m_TabAlign = wxGetApp().getTabAlign();
+  m_BoosterBook->SetWindowStyleFlag(m_TabAlign);
+  m_BoosterBook->Refresh();
+  UpdateWindowUI();
+  Refresh();
+
 
 }
 

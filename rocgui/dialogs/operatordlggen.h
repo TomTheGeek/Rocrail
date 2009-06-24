@@ -8,6 +8,8 @@
 #ifndef __operatordlggen__
 #define __operatordlggen__
 
+class basenotebook;
+
 #include <wx/string.h>
 #include <wx/listbox.h>
 #include <wx/gdicmn.h>
@@ -40,7 +42,7 @@ class operatordlggen : public wxDialog
 	private:
 	
 	protected:
-		wxNotebook* m_OperatorBook;
+		basenotebook* m_OperatorBook;
 		wxPanel* m_IndexPanel;
 		wxListBox* m_OperatorList;
 		wxButton* m_NewOperator;

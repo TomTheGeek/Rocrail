@@ -5,6 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
+#include "basenotebook.h"
+
 #include "cardlggen.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -19,7 +21,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_CarImage = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 280,80 ), wxBU_AUTODRAW );
 	bSizer1->Add( m_CarImage, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_CarBook = new wxNotebook( this, ID_CARBOOK, wxDefaultPosition, wxDefaultSize, 0 );
+	m_CarBook = new basenotebook( this, ID_CARBOOK, wxDefaultPosition, wxDefaultSize, 0 );
 	m_IndexPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );

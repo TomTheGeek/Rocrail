@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 21 2008)
+// C++ code generated with wxFormBuilder (version Apr 17 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -7,6 +7,8 @@
 
 #ifndef __waybilldlggen__
 #define __waybilldlggen__
+
+class basenotebook;
 
 #include <wx/string.h>
 #include <wx/listbox.h>
@@ -38,7 +40,7 @@ class waybillgen : public wxDialog
 	private:
 	
 	protected:
-		wxNotebook* m_WaybillBook;
+		basenotebook* m_WaybillBook;
 		wxPanel* m_IndexPanel;
 		wxListBox* m_WaybillList;
 		wxButton* m_NewWaybill;

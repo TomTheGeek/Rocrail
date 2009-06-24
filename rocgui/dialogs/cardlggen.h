@@ -8,6 +8,8 @@
 #ifndef __cardlggen__
 #define __cardlggen__
 
+class basenotebook;
+
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -43,7 +45,7 @@ class cardlggen : public wxDialog
 	
 	protected:
 		wxBitmapButton* m_CarImage;
-		wxNotebook* m_CarBook;
+		basenotebook* m_CarBook;
 		wxPanel* m_IndexPanel;
 		wxListBox* m_CarList;
 		wxButton* m_NewCar;
