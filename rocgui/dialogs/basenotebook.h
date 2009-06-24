@@ -1,3 +1,6 @@
+#ifndef __basenotebook__
+#define __basenotebook__
+
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
@@ -17,4 +20,6 @@ public:
   basenotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0, const wxString& name = wxNotebookNameStr);
 
 };
+
+#endif
 

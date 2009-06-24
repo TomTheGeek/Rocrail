@@ -32,6 +32,7 @@ class basenotebook;
 
 ///////////////////////////////////////////////////////////////////////////
 
+#define ID_BOOSTERBOOK 1000
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class powermandlggen
@@ -42,17 +43,17 @@ class powermandlggen : public wxDialog
 	
 	protected:
 		basenotebook* m_BoosterBook;
-		wxPanel* m_Index;
+		wxPanel* m_IndexPanel;
 		wxStaticText* m_labBoosters;
-		wxListBox* m_Boosters;
+		wxListBox* m_BoosterList;
 		wxButton* m_AddBooster;
 		wxButton* m_DelBooster;
-		wxPanel* m_Generel;
+		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
 		wxStaticText* m_labDistrict;
 		wxTextCtrl* m_District;
-		wxPanel* m_ModulePanel;
+		wxPanel* m_ModulesPanel;
 		wxStaticText* m_labModules;
 		wxListBox* m_Modules;
 		wxComboBox* m_ModulesCombo;

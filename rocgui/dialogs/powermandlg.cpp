@@ -39,13 +39,33 @@
 
 PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
 {
-  m_TabAlign = wxGetApp().getTabAlign();
-  m_BoosterBook->SetWindowStyleFlag(m_TabAlign);
-  m_BoosterBook->Refresh();
-  UpdateWindowUI();
-  Refresh();
+  initLabels();
+  initIndex();
+
+  m_IndexPanel->GetSizer()->Layout();
+  m_GeneralPanel->GetSizer()->Layout();
+  m_ModulesPanel->GetSizer()->Layout();
+  m_BlocksPanel->GetSizer()->Layout();
+  m_DetailsPanel->GetSizer()->Layout();
+
+  m_BoosterBook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
+  m_BoosterList->SetFocus();
+
+  m_BoosterBook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( PowerManDlg::onSetPage ), NULL, this );
+  m_SetPage = 0;
+
+  wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_BOOSTERBOOK );
+  wxPostEvent( m_BoosterBook, event );
+}
 
 
+void PowerManDlg::onSetPage(wxCommandEvent& event) {
+  TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "set page to %d", m_SetPage );
+  m_BoosterBook->SetSelection( m_SetPage );
 }
 
 
@@ -53,9 +73,29 @@ void PowerManDlg::initLabels() {
 }
 
 
-void PowerManDlg::initValues() {
+void PowerManDlg::initIndex() {
+  SetTitle(wxGetApp().getMsg( "boostertable" ));
+
+  m_BoosterList->Clear();
+
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode boosterlist = wPlan.getboosterlist( model );
+    if( boosterlist != NULL ) {
+      iONode booster = wBoosterList.getbooster( boosterlist );
+      while( booster != NULL ) {
+        const char* id = wBooster.getid( booster );
+        m_BoosterList->Append( wxString(id,wxConvUTF8), booster );
+        booster = wBoosterList.nextbooster( boosterlist, booster );
+      }
+    }
+  }
 }
 
+
+void PowerManDlg::initValues() {
+}
 
 void PowerManDlg::evaluate() {
 }

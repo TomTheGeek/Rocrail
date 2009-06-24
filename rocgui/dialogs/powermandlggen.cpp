@@ -18,45 +18,45 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
 	
-	m_BoosterBook = new basenotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_Index = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_BoosterBook = new basenotebook( this, ID_BOOSTERBOOK, wxDefaultPosition, wxDefaultSize, 0 );
+	m_IndexPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	m_labBoosters = new wxStaticText( m_Index, wxID_ANY, wxT("Boosters"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labBoosters = new wxStaticText( m_IndexPanel, wxID_ANY, wxT("Boosters"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labBoosters->Wrap( -1 );
 	bSizer3->Add( m_labBoosters, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_Boosters = new wxListBox( m_Index, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
-	bSizer3->Add( m_Boosters, 1, wxALL|wxEXPAND, 5 );
+	m_BoosterList = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
+	bSizer3->Add( m_BoosterList, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_AddBooster = new wxButton( m_Index, wxID_ANY, wxT("Add"), wxDefaultPosition, wxSize( -1,30 ), 0 );
+	m_AddBooster = new wxButton( m_IndexPanel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxSize( -1,30 ), 0 );
 	bSizer8->Add( m_AddBooster, 0, wxALL, 5 );
 	
-	m_DelBooster = new wxButton( m_Index, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxSize( -1,30 ), 0 );
+	m_DelBooster = new wxButton( m_IndexPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxSize( -1,30 ), 0 );
 	bSizer8->Add( m_DelBooster, 0, wxALL, 5 );
 	
 	bSizer3->Add( bSizer8, 0, 0, 5 );
 	
-	m_Index->SetSizer( bSizer3 );
-	m_Index->Layout();
-	bSizer3->Fit( m_Index );
-	m_BoosterBook->AddPage( m_Index, wxT("Index"), true );
-	m_Generel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_IndexPanel->SetSizer( bSizer3 );
+	m_IndexPanel->Layout();
+	bSizer3->Fit( m_IndexPanel );
+	m_BoosterBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_GeneralPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer( wxVERTICAL );
 	
 	wxBoxSizer* bSizer61;
 	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_labID = new wxStaticText( m_Generel, wxID_ANY, wxT("ID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labID = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("ID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labID->Wrap( -1 );
 	bSizer61->Add( m_labID, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_ID = new wxTextCtrl( m_Generel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer61->Add( m_ID, 1, wxRIGHT|wxLEFT, 5 );
 	
 	bSizer14->Add( bSizer61, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
@@ -64,48 +64,48 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_labDistrict = new wxStaticText( m_Generel, wxID_ANY, wxT("District"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labDistrict = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("District"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labDistrict->Wrap( -1 );
 	bSizer7->Add( m_labDistrict, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_District = new wxTextCtrl( m_Generel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_District = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer7->Add( m_District, 1, wxRIGHT, 5 );
 	
 	bSizer14->Add( bSizer7, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
-	m_Generel->SetSizer( bSizer14 );
-	m_Generel->Layout();
-	bSizer14->Fit( m_Generel );
-	m_BoosterBook->AddPage( m_Generel, wxT("Generel"), false );
-	m_ModulePanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_GeneralPanel->SetSizer( bSizer14 );
+	m_GeneralPanel->Layout();
+	bSizer14->Fit( m_GeneralPanel );
+	m_BoosterBook->AddPage( m_GeneralPanel, wxT("Generel"), true );
+	m_ModulesPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	m_labModules = new wxStaticText( m_ModulePanel, wxID_ANY, wxT("Modules"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labModules = new wxStaticText( m_ModulesPanel, wxID_ANY, wxT("Modules"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labModules->Wrap( -1 );
 	bSizer4->Add( m_labModules, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_Modules = new wxListBox( m_ModulePanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
+	m_Modules = new wxListBox( m_ModulesPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
 	bSizer4->Add( m_Modules, 1, wxALL|wxEXPAND, 5 );
 	
-	m_ModulesCombo = new wxComboBox( m_ModulePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_ModulesCombo = new wxComboBox( m_ModulesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	bSizer4->Add( m_ModulesCombo, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_AddModule = new wxButton( m_ModulePanel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxSize( -1,30 ), 0 );
+	m_AddModule = new wxButton( m_ModulesPanel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxSize( -1,30 ), 0 );
 	bSizer9->Add( m_AddModule, 0, wxALL, 5 );
 	
-	m_DelModule = new wxButton( m_ModulePanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxSize( -1,30 ), 0 );
+	m_DelModule = new wxButton( m_ModulesPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxSize( -1,30 ), 0 );
 	bSizer9->Add( m_DelModule, 0, wxALL, 5 );
 	
 	bSizer4->Add( bSizer9, 0, wxEXPAND, 5 );
 	
-	m_ModulePanel->SetSizer( bSizer4 );
-	m_ModulePanel->Layout();
-	bSizer4->Fit( m_ModulePanel );
-	m_BoosterBook->AddPage( m_ModulePanel, wxT("Modules"), false );
+	m_ModulesPanel->SetSizer( bSizer4 );
+	m_ModulesPanel->Layout();
+	bSizer4->Fit( m_ModulesPanel );
+	m_BoosterBook->AddPage( m_ModulesPanel, wxT("Modules"), false );
 	m_BlocksPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
