@@ -23,10 +23,6 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	m_labBoosters = new wxStaticText( m_IndexPanel, wxID_ANY, wxT("Boosters"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labBoosters->Wrap( -1 );
-	bSizer3->Add( m_labBoosters, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
-	
 	m_BoosterList = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
 	bSizer3->Add( m_BoosterList, 1, wxALL|wxEXPAND, 5 );
 	
@@ -76,14 +72,10 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GeneralPanel->SetSizer( bSizer14 );
 	m_GeneralPanel->Layout();
 	bSizer14->Fit( m_GeneralPanel );
-	m_BoosterBook->AddPage( m_GeneralPanel, wxT("Generel"), true );
+	m_BoosterBook->AddPage( m_GeneralPanel, wxT("Generel"), false );
 	m_ModulesPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
-	
-	m_labModules = new wxStaticText( m_ModulesPanel, wxID_ANY, wxT("Modules"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labModules->Wrap( -1 );
-	bSizer4->Add( m_labModules, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Modules = new wxListBox( m_ModulesPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
 	bSizer4->Add( m_Modules, 1, wxALL|wxEXPAND, 5 );
@@ -109,10 +101,6 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_BlocksPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
-	
-	m_labBlocks = new wxStaticText( m_BlocksPanel, wxID_ANY, wxT("Blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labBlocks->Wrap( -1 );
-	bSizer5->Add( m_labBlocks, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Blocks = new wxListBox( m_BlocksPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
 	bSizer5->Add( m_Blocks, 1, wxALL|wxEXPAND, 5 );
@@ -159,7 +147,7 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_DetailsPanel->SetSizer( bSizer15 );
 	m_DetailsPanel->Layout();
 	bSizer15->Fit( m_DetailsPanel );
-	m_BoosterBook->AddPage( m_DetailsPanel, wxT("Details"), false );
+	m_BoosterBook->AddPage( m_DetailsPanel, wxT("Details"), true );
 	
 	bSizer6->Add( m_BoosterBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -177,6 +165,7 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	this->Layout();
 	
 	// Connect Events
+	m_BoosterList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onSelect ), NULL, this );
 	m_AddBooster->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBooster ), NULL, this );
 	m_DelBooster->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBooster ), NULL, this );
 	m_AddModule->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddModule ), NULL, this );
@@ -191,6 +180,7 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 powermandlggen::~powermandlggen()
 {
 	// Disconnect Events
+	m_BoosterList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onSelect ), NULL, this );
 	m_AddBooster->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBooster ), NULL, this );
 	m_DelBooster->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBooster ), NULL, this );
 	m_AddModule->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddModule ), NULL, this );

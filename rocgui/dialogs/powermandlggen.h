@@ -11,18 +11,18 @@
 class basenotebook;
 
 #include <wx/string.h>
-#include <wx/stattext.h>
+#include <wx/listbox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/listbox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
 #include <wx/checkbox.h>
@@ -44,7 +44,6 @@ class powermandlggen : public wxDialog
 	protected:
 		basenotebook* m_BoosterBook;
 		wxPanel* m_IndexPanel;
-		wxStaticText* m_labBoosters;
 		wxListBox* m_BoosterList;
 		wxButton* m_AddBooster;
 		wxButton* m_DelBooster;
@@ -54,13 +53,11 @@ class powermandlggen : public wxDialog
 		wxStaticText* m_labDistrict;
 		wxTextCtrl* m_District;
 		wxPanel* m_ModulesPanel;
-		wxStaticText* m_labModules;
 		wxListBox* m_Modules;
 		wxComboBox* m_ModulesCombo;
 		wxButton* m_AddModule;
 		wxButton* m_DelModule;
 		wxPanel* m_BlocksPanel;
-		wxStaticText* m_labBlocks;
 		wxListBox* m_Blocks;
 		wxComboBox* m_BlocksCombo;
 		wxButton* m_AddBlock;
@@ -75,6 +72,7 @@ class powermandlggen : public wxDialog
 		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddBooster( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDelBooster( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddModule( wxCommandEvent& event ){ event.Skip(); }

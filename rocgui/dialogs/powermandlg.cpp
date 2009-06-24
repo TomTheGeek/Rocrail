@@ -33,12 +33,14 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/Item.h"
 
 #include "rocs/public/trace.h"
 
 
 PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
 {
+  m_Props = NULL;
   initLabels();
   initIndex();
 
@@ -70,6 +72,21 @@ void PowerManDlg::onSetPage(wxCommandEvent& event) {
 
 
 void PowerManDlg::initLabels() {
+  TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
+  SetTitle(wxGetApp().getMsg( "boostertable" ));
+  m_BoosterBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  m_BoosterBook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
+  m_BoosterBook->SetPageText( 2, wxGetApp().getMsg( "modules" ) );
+  m_BoosterBook->SetPageText( 3, wxGetApp().getMsg( "blocks" ) );
+  m_BoosterBook->SetPageText( 4, wxGetApp().getMsg( "details" ) );
+
+  // Index
+  m_AddBooster->SetLabel( wxGetApp().getMsg( "new" ) );
+  m_DelBooster->SetLabel( wxGetApp().getMsg( "delete" ) );
+
+  // General
+  m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labDistrict->SetLabel( wxGetApp().getMsg( "district" ) );
 }
 
 
@@ -94,10 +111,50 @@ void PowerManDlg::initIndex() {
 }
 
 
-void PowerManDlg::initValues() {
+void PowerManDlg::onSelect( wxCommandEvent& event ){
+  if( m_BoosterList->GetSelection() != wxNOT_FOUND ) {
+    m_Props = (iONode)m_BoosterList->GetClientData(m_BoosterList->GetSelection());
+    if( m_Props != NULL )
+      initValues();
+    else
+      TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
 }
 
-void PowerManDlg::evaluate() {
+
+
+void PowerManDlg::initValues() {
+  if( m_Props == NULL ) {
+    TraceOp.trc( "boosterdlg", TRCLEVEL_DEBUG, __LINE__, 9999, "no booster selected" );
+    return;
+  }
+
+  char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("booster").mb_str(wxConvUTF8), wBooster.getid( m_Props ) );
+  SetTitle( wxString(title,wxConvUTF8) );
+  StrOp.free( title );
+
+  // init General
+  m_ID->SetValue( wxString(wBooster.getid( m_Props ),wxConvUTF8) );
+  m_District->SetValue( wxString(wBooster.getdistrict( m_Props ),wxConvUTF8) );
+}
+
+bool PowerManDlg::evaluate() {
+  if( m_Props == NULL )
+    return false;
+
+  TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "Evaluate %s", wBooster.getid( m_Props ) );
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wBooster.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+  // evaluate General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+  wBooster.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  wBooster.setdistrict( m_Props, m_District->GetValue().mb_str(wxConvUTF8) );
+
+  return true;
 }
 
 
@@ -133,15 +190,30 @@ void PowerManDlg::OnDelBlock( wxCommandEvent& event )
 
 void PowerManDlg::OnApply( wxCommandEvent& event )
 {
-	// TODO: Implement OnApply
+  if( m_Props == NULL )
+    return;
+
+  if( !evaluate() )
+    return;
+
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  initIndex();
 }
 
 void PowerManDlg::OnCancel( wxCommandEvent& event )
 {
-	// TODO: Implement OnCancel
+  EndModal( 0 );
 }
 
 void PowerManDlg::OnOK( wxCommandEvent& event )
 {
-	// TODO: Implement OnOK
+  OnApply(event);
+  EndModal( wxID_OK );
 }
