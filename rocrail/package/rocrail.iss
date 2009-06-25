@@ -84,6 +84,7 @@ Source: "..\..\rocgui\svg\themes\SBB-RHB\*.*"; DestDir: "{app}\svg\themes\SBB-RH
 Source: "..\..\rocgui\svg\themes\NMBS-SNCB\*.*"; DestDir: "{app}\svg\themes\NMBS-SNCB"; Tasks: themes;
 Source: "..\..\rocgui\svg\themes\NL\*.*"; DestDir: "{app}\svg\themes\NL"; Tasks: themes;
 Source: "..\..\rocgui\svg\themes\Roads\*.*"; DestDir: "{app}\svg\themes\Roads"; Tasks: themes;
+Source: "..\..\rocgui\svg\themes\ILTIS\*.*"; DestDir: "{app}\svg\themes\ILTIS"; Tasks: themes;
 Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
 Source: "..\..\COPYING"; DestDir: "{app}"
 
