@@ -557,6 +557,7 @@ void BlockDialog::initValues() {
     if( StrOp.len( id ) > 0 )
       m_TurnoutList->Append( wxString(id,wxConvUTF8) );
   }
+  StrTokOp.base.del( tok );
 
 
   /*

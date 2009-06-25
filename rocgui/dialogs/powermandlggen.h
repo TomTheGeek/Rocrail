@@ -53,12 +53,13 @@ class powermandlggen : public wxDialog
 		wxStaticText* m_labDistrict;
 		wxTextCtrl* m_District;
 		wxPanel* m_ModulesPanel;
-		wxListBox* m_Modules;
-		wxComboBox* m_ModulesCombo;
+		wxListBox* m_ModuleList;
+		wxStaticText* m_labModuleID;
+		wxTextCtrl* m_ModuleID;
 		wxButton* m_AddModule;
 		wxButton* m_DelModule;
 		wxPanel* m_BlocksPanel;
-		wxListBox* m_Blocks;
+		wxListBox* m_BlockList;
 		wxComboBox* m_BlocksCombo;
 		wxButton* m_AddBlock;
 		wxButton* m_DelBlock;
@@ -72,11 +73,13 @@ class powermandlggen : public wxDialog
 		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void onSelect( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onBoosterSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddBooster( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDelBooster( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onModuleSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddModule( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDelModule( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onBlockSelect( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddBlock( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDelBlock( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnApply( wxCommandEvent& event ){ event.Skip(); }

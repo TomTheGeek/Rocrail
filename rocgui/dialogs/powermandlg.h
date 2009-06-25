@@ -54,7 +54,9 @@ protected:
 	void OnCancel( wxCommandEvent& event );
 	void OnOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
-  void onSelect( wxCommandEvent& event );
+  void onBoosterSelect( wxCommandEvent& event );
+  void onBlockSelect( wxCommandEvent& event );
+  void onModuleSelect( wxCommandEvent& event );
 
 public:
 	/** Constructor */

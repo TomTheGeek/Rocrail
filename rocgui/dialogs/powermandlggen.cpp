@@ -77,11 +77,20 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	m_Modules = new wxListBox( m_ModulesPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
-	bSizer4->Add( m_Modules, 1, wxALL|wxEXPAND, 5 );
+	m_ModuleList = new wxListBox( m_ModulesPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
+	bSizer4->Add( m_ModuleList, 1, wxALL|wxEXPAND, 5 );
 	
-	m_ModulesCombo = new wxComboBox( m_ModulesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer4->Add( m_ModulesCombo, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_labModuleID = new wxStaticText( m_ModulesPanel, wxID_ANY, wxT("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labModuleID->Wrap( -1 );
+	bSizer12->Add( m_labModuleID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ModuleID = new wxTextCtrl( m_ModulesPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( m_ModuleID, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer4->Add( bSizer12, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
@@ -97,13 +106,13 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ModulesPanel->SetSizer( bSizer4 );
 	m_ModulesPanel->Layout();
 	bSizer4->Fit( m_ModulesPanel );
-	m_BoosterBook->AddPage( m_ModulesPanel, wxT("Modules"), false );
+	m_BoosterBook->AddPage( m_ModulesPanel, wxT("Modules"), true );
 	m_BlocksPanel = new wxPanel( m_BoosterBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	m_Blocks = new wxListBox( m_BlocksPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
-	bSizer5->Add( m_Blocks, 1, wxALL|wxEXPAND, 5 );
+	m_BlockList = new wxListBox( m_BlocksPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,100 ), 0, NULL, wxLB_ALWAYS_SB ); 
+	bSizer5->Add( m_BlockList, 1, wxALL|wxEXPAND, 5 );
 	
 	m_BlocksCombo = new wxComboBox( m_BlocksPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	bSizer5->Add( m_BlocksCombo, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
@@ -147,7 +156,7 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_DetailsPanel->SetSizer( bSizer15 );
 	m_DetailsPanel->Layout();
 	bSizer15->Fit( m_DetailsPanel );
-	m_BoosterBook->AddPage( m_DetailsPanel, wxT("Details"), true );
+	m_BoosterBook->AddPage( m_DetailsPanel, wxT("Details"), false );
 	
 	bSizer6->Add( m_BoosterBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -165,11 +174,13 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 	this->Layout();
 	
 	// Connect Events
-	m_BoosterList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onSelect ), NULL, this );
+	m_BoosterList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onBoosterSelect ), NULL, this );
 	m_AddBooster->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBooster ), NULL, this );
 	m_DelBooster->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBooster ), NULL, this );
+	m_ModuleList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onModuleSelect ), NULL, this );
 	m_AddModule->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddModule ), NULL, this );
 	m_DelModule->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelModule ), NULL, this );
+	m_BlockList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onBlockSelect ), NULL, this );
 	m_AddBlock->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBlock ), NULL, this );
 	m_DelBlock->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBlock ), NULL, this );
 	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnApply ), NULL, this );
@@ -180,11 +191,13 @@ powermandlggen::powermandlggen( wxWindow* parent, wxWindowID id, const wxString&
 powermandlggen::~powermandlggen()
 {
 	// Disconnect Events
-	m_BoosterList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onSelect ), NULL, this );
+	m_BoosterList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onBoosterSelect ), NULL, this );
 	m_AddBooster->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBooster ), NULL, this );
 	m_DelBooster->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBooster ), NULL, this );
+	m_ModuleList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onModuleSelect ), NULL, this );
 	m_AddModule->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddModule ), NULL, this );
 	m_DelModule->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelModule ), NULL, this );
+	m_BlockList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( powermandlggen::onBlockSelect ), NULL, this );
 	m_AddBlock->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnAddBlock ), NULL, this );
 	m_DelBlock->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnDelBlock ), NULL, this );
 	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( powermandlggen::OnApply ), NULL, this );

@@ -34,8 +34,11 @@
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/BlockList.h"
 
 #include "rocs/public/trace.h"
+#include "rocs/public/strtok.h"
 
 
 PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
@@ -54,6 +57,11 @@ PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
 
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
+
+  m_GeneralPanel->Enable(false);
+  m_ModulesPanel->Enable(false);
+  m_BlocksPanel->Enable(false);
+  m_DetailsPanel->Enable(false);
 
   m_BoosterList->SetFocus();
 
@@ -83,10 +91,28 @@ void PowerManDlg::initLabels() {
   // Index
   m_AddBooster->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DelBooster->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_AddModule->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_DelModule->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_AddBlock->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_DelBlock->SetLabel( wxGetApp().getMsg( "delete" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labDistrict->SetLabel( wxGetApp().getMsg( "district" ) );
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode blocklist = wPlan.getbklist( model );
+    if( blocklist != NULL ) {
+      iONode block = wBlockList.getbk( blocklist );
+      while( block != NULL ) {
+        const char* id = wBlock.getid( block );
+        m_BlocksCombo->Append( wxString(id,wxConvUTF8) );
+        block = wBlockList.nextbk( blocklist, block );
+      }
+    }
+  }
+
 }
 
 
@@ -99,6 +125,10 @@ void PowerManDlg::initIndex() {
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode boosterlist = wPlan.getboosterlist( model );
+    if( boosterlist == NULL ) {
+      boosterlist = NodeOp.inst( wBoosterList.name(), model, ELEMENT_NODE );
+      NodeOp.addChild( model, boosterlist );
+    }
     if( boosterlist != NULL ) {
       iONode booster = wBoosterList.getbooster( boosterlist );
       while( booster != NULL ) {
@@ -111,13 +141,40 @@ void PowerManDlg::initIndex() {
 }
 
 
-void PowerManDlg::onSelect( wxCommandEvent& event ){
+void PowerManDlg::onBoosterSelect( wxCommandEvent& event ){
   if( m_BoosterList->GetSelection() != wxNOT_FOUND ) {
     m_Props = (iONode)m_BoosterList->GetClientData(m_BoosterList->GetSelection());
-    if( m_Props != NULL )
+    if( m_Props != NULL ) {
+      m_GeneralPanel->Enable(true);
+      m_ModulesPanel->Enable(true);
+      m_BlocksPanel->Enable(true);
+      //m_DetailsPanel->Enable(true);
       initValues();
-    else
+    }
+    else {
       TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+      m_GeneralPanel->Enable(false);
+      m_ModulesPanel->Enable(false);
+      m_BlocksPanel->Enable(false);
+      //m_DetailsPanel->Enable(false);
+    }
+  }
+}
+
+
+
+void PowerManDlg::onModuleSelect( wxCommandEvent& event ){
+  if( m_ModuleList->GetSelection() != wxNOT_FOUND ) {
+    m_DelModule->Enable(true);
+    m_ModuleID->SetValue(m_ModuleList->GetStringSelection());
+  }
+}
+
+
+
+void PowerManDlg::onBlockSelect( wxCommandEvent& event ){
+  if( m_BlockList->GetSelection() != wxNOT_FOUND ) {
+    m_DelBlock->Enable(true);
   }
 }
 
@@ -129,6 +186,9 @@ void PowerManDlg::initValues() {
     return;
   }
 
+  m_DelModule->Enable(false);
+  m_DelBlock->Enable(false);
+
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("booster").mb_str(wxConvUTF8), wBooster.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
   StrOp.free( title );
@@ -136,7 +196,29 @@ void PowerManDlg::initValues() {
   // init General
   m_ID->SetValue( wxString(wBooster.getid( m_Props ),wxConvUTF8) );
   m_District->SetValue( wxString(wBooster.getdistrict( m_Props ),wxConvUTF8) );
+
+  m_ModuleList->Clear();
+  iOStrTok tok = StrTokOp.inst( wBooster.getmodids( m_Props ), ',' );
+  while( StrTokOp.hasMoreTokens( tok ) )  {
+    const char* id = StrTokOp.nextToken( tok );
+    if( StrOp.len( id ) > 0 )
+      m_ModuleList->Append( wxString(id,wxConvUTF8) );
+  }
+  StrTokOp.base.del( tok );
+
+  m_BlockList->Clear();
+  tok = StrTokOp.inst( wBooster.getblockids( m_Props ), ',' );
+  while( StrTokOp.hasMoreTokens( tok ) )  {
+    const char* id = StrTokOp.nextToken( tok );
+    if( StrOp.len( id ) > 0 )
+      m_BlockList->Append( wxString(id,wxConvUTF8) );
+  }
+  StrTokOp.base.del( tok );
+
+  m_ModuleID->SetValue(_T(""));
+
 }
+
 
 bool PowerManDlg::evaluate() {
   if( m_Props == NULL )
@@ -160,32 +242,77 @@ bool PowerManDlg::evaluate() {
 
 void PowerManDlg::OnAddBooster( wxCommandEvent& event )
 {
-	// TODO: Implement OnAddBooster
+  int i = m_BoosterList->FindString( _T("NEW") );
+  if( i == wxNOT_FOUND ) {
+    iONode model = wxGetApp().getModel();
+    iONode boosterlist = wPlan.getboosterlist( model );
+    iONode booster = NodeOp.inst( wBooster.name(), boosterlist, ELEMENT_NODE );
+    wBooster.setid(booster, "NEW");
+    NodeOp.addChild( boosterlist, booster );
+
+    m_BoosterList->Append( _T("NEW"), booster );
+  }
 }
 
 void PowerManDlg::OnDelBooster( wxCommandEvent& event )
 {
-	// TODO: Implement OnDelBooster
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
+  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
+
+  if( m_BoosterList->GetSelection() != wxNOT_FOUND ) {
+    m_BoosterList->Delete(m_BoosterList->GetSelection());
+    m_ID->SetValue(_T(""));
+    m_District->SetValue(_T(""));
+    m_GeneralPanel->Enable(false);
+    m_ModulesPanel->Enable(false);
+    m_BlocksPanel->Enable(false);
+    //m_DetailsPanel->Enable(false);
+    m_ModuleList->Clear();
+    m_BlockList->Clear();
+    m_ModuleID->SetValue(_T(""));
+  }
 }
 
 void PowerManDlg::OnAddModule( wxCommandEvent& event )
 {
-	// TODO: Implement OnAddModule
+  if( m_ModuleID->GetValue().Len() > 0 )
+    m_ModuleList->Append(m_ModuleID->GetValue());
 }
 
 void PowerManDlg::OnDelModule( wxCommandEvent& event )
 {
-	// TODO: Implement OnDelModule
+  if( m_Props == NULL )
+    return;
+
+  if( m_ModuleList->GetSelection() != wxNOT_FOUND ) {
+    m_ModuleList->Delete(m_ModuleList->GetSelection());
+    m_ModuleID->SetValue(_T(""));
+    m_DelModule->Enable(false);
+  }
 }
 
 void PowerManDlg::OnAddBlock( wxCommandEvent& event )
 {
-	// TODO: Implement OnAddBlock
+  if( m_BlocksCombo->GetSelection() != wxNOT_FOUND ) {
+    m_BlockList->Append(m_BlocksCombo->GetStringSelection());
+  }
 }
 
 void PowerManDlg::OnDelBlock( wxCommandEvent& event )
 {
-	// TODO: Implement OnDelBlock
+  if( m_Props == NULL )
+    return;
+
+  if( m_BlockList->GetSelection() != wxNOT_FOUND ) {
+    m_BlockList->Delete(m_BlockList->GetSelection());
+    m_DelBlock->Enable(false);
+  }
 }
 
 void PowerManDlg::OnApply( wxCommandEvent& event )
