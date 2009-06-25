@@ -439,8 +439,10 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );
-
-    cmdsize = accDecoderPkt(dcc, fada, action);
+        
+        
+    cmdsize = accDecoderPkt2(dcc, addr, action, (port-1)*2+gate);
+    /*cmdsize = accDecoderPkt(dcc, fada, action);*/
     __byteToStr( cmd, dcc, cmdsize );
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
