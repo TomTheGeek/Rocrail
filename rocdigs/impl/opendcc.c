@@ -26,10 +26,13 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/lib.h"
 #include "rocs/public/system.h"
+
+#include <time.h>
 
 static int instCnt = 0;
 
@@ -103,8 +106,53 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
    * wProgram.getval -> SO value
    *  */
 
+  /* Clock command. */
+  if( StrOp.equals( NodeOp.getName( cmd ), wClock.name() ) ) {
+    /*
+    # XClkSet (0xC0) - Length = 5 Bytes
+
+    command bytes:
+    0: 0xC0 XClkSet: fast clock
+    1: TCODE0: 00mmmmmm, this denotes the minute, range 0..59.
+    2: TCODE1: 100HHHHH, this denotes the hour, range 0..23
+    3: TCODE2: 01000WWW, this denotes the day of week,
+    0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday.
+    4: TCODE3: 110FFFFF, this denotes the acceleration factor, range 0..31;
+    an acceleration factor of 0 means clock is stopped,
+    a factor of 1 means clock is running real time,
+    a factor of 2 means clock is running twice as fast a real time.
+
+    Answer: 0 (Kommando okay)   
+    */
+    iONode clockcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+    char* byteStr = NULL;
+    byte outBytes[6];
+    long l_time = wClock.gettime(cmd);
+    struct tm* lTime = localtime( &l_time );
+
+    int mins    = lTime->tm_min;
+    int hours   = lTime->tm_hour;
+    int wday    = lTime->tm_wday;
+    int divider = wClock.getdivider(cmd);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
+    
+    outBytes[0] = (byte)'x';
+    outBytes[1] = 0xC0;
+    outBytes[2] = 0x00 + mins;
+    outBytes[3] = 0x80 + hours;
+    outBytes[4] = 0x40 + wday;
+    outBytes[5] = 0xC0 + divider;
+
+    byteStr = StrOp.byteToStr( outBytes, 6 );
+    wBinCmd.setoutlen( clockcmd, 6 );
+    wBinCmd.setinlen( clockcmd, 1 );
+    wBinCmd.setout( clockcmd, byteStr );
+    StrOp.free( byteStr );
+  }
+
   /* Program command. */
-  if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) &&
+  else if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) &&
       wProgram.getlntype( cmd ) == wProgram.lntype_cs )
   {
     iONode ptcmd = NULL;
