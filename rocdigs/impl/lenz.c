@@ -551,19 +551,19 @@ static iONode __translate( iOLenz lenz, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
 
     outa = allocMem(8);
-    outa[0] = 0x01;
+    outa[0] = 0xF1;
     outa[1] = 0x10 + hours;
     ThreadOp.post( data->transactor, (obj)outa );
     outa = allocMem(8);
-    outa[0] = 0x01;
+    outa[0] = 0xF1;
     outa[1] = 0x00 + mins;
     ThreadOp.post( data->transactor, (obj)outa );
     outa = allocMem(8);
-    outa[0] = 0x01;
+    outa[0] = 0xF1;
     outa[1] = 0x01 + wday;
     ThreadOp.post( data->transactor, (obj)outa );
     outa = allocMem(8);
-    outa[0] = 0x01;
+    outa[0] = 0xF1;
     outa[1] = 0x11 + divider;
     ThreadOp.post( data->transactor, (obj)outa );
   }
