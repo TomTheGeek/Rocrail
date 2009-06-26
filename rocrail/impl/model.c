@@ -104,6 +104,8 @@
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/ModuleConnection.h"
+#include "rocrail/wrapper/public/Booster.h"
+#include "rocrail/wrapper/public/BoosterList.h"
 
 static int instCnt = 0;
 
@@ -608,6 +610,16 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     NodeOp.addChild( linklist, clone );
     added = True;
   }
+  else if( StrOp.equals( wBooster.name(), itemName ) ) {
+    iONode boosterlist = wPlan.getboosterlist( data->model );
+    iONode clone = (iONode)item->base.clone( item );
+    if( boosterlist == NULL ) {
+      boosterlist = NodeOp.inst( wBoosterList.name(), data->model, ELEMENT_NODE );
+      NodeOp.addChild( data->model, boosterlist );
+    }
+    NodeOp.addChild( boosterlist, clone );
+    added = True;
+  }
   else if( StrOp.equals( wLocation.name(), itemName ) ) {
     iONode locationlist = wPlan.getlocationlist( data->model );
     iONode clone = (iONode)item->base.clone( item );
@@ -907,6 +919,25 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       }
     }
     if( link == NULL && wLink.getid( item ) != NULL && StrOp.len( wLink.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
+  else if( StrOp.equals( wBooster.name(), name ) ) {
+    /* modify bosters... */
+    iONode booster = NULL;
+    iONode boosterlist = wPlan.getboosterlist( data->model );
+    if( boosterlist != NULL ) {
+      iONode node = wBoosterList.getbooster( boosterlist );
+      while( node != NULL ) {
+        if( StrOp.equals( wBooster.getid( item ), wBooster.getid( node ) ) ) {
+          NodeOp.mergeNode( node, item, True, True, True );
+          booster = node;
+          break;
+        }
+        node = wBoosterList.nextbooster( boosterlist, node );
+      }
+    }
+    if( booster == NULL && wBooster.getid( item ) != NULL && StrOp.len( wBooster.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
   }

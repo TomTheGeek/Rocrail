@@ -69,6 +69,8 @@
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/PwrCmd.h"
+#include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/Booster.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -349,7 +351,11 @@ static void __callback( obj inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__callback..." );
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "nodeName=%s", nodeName );
 
-  if( StrOp.equals( wClock.name(), nodeName ) ) {
+  if( StrOp.equals( wBooster.name(), nodeName ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify booster %s", wBooster.getid(nodeA) );
+    ModelOp.cmd( AppOp.getModel, nodeA );
+  }
+  else if( StrOp.equals( wClock.name(), nodeName ) ) {
     if( StrOp.equals( wClock.getcmd(nodeA), wClock.freeze ) ) {
       if( data->devider > 1 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );

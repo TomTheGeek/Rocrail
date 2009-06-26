@@ -119,8 +119,9 @@ void PowerManDlg::initLabels() {
 void PowerManDlg::initIndex() {
   SetTitle(wxGetApp().getMsg( "boostertable" ));
 
-  m_BoosterList->Clear();
+  int selected = m_BoosterList->GetSelection();
 
+  m_BoosterList->Clear();
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
@@ -138,6 +139,12 @@ void PowerManDlg::initIndex() {
       }
     }
   }
+
+  if( selected != wxNOT_FOUND ) {
+    m_BoosterList->SetSelection(selected);
+    initValues();
+  }
+
 }
 
 
@@ -236,6 +243,27 @@ bool PowerManDlg::evaluate() {
   wBooster.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wBooster.setdistrict( m_Props, m_District->GetValue().mb_str(wxConvUTF8) );
 
+  int cnt = m_ModuleList->GetCount();
+  char* modids = NULL;
+  for( int i = 0; i < cnt; i++ ) {
+    if( i > 0 )
+      modids = StrOp.cat( modids, "," );
+    modids = StrOp.cat( modids, m_ModuleList->GetString(i).mb_str(wxConvUTF8) );
+  }
+  wBooster.setmodids( m_Props, modids==NULL ? "":modids );
+  StrOp.free(modids);
+
+  cnt = m_BlockList->GetCount();
+  char* blockids = NULL;
+  for( int i = 0; i < cnt; i++ ) {
+    if( i > 0 )
+      blockids = StrOp.cat( blockids, "," );
+    blockids = StrOp.cat( blockids, m_BlockList->GetString(i).mb_str(wxConvUTF8) );
+  }
+  wBooster.setblockids( m_Props, blockids==NULL ? "":blockids );
+  StrOp.free(blockids);
+
+
   return true;
 }
 
@@ -263,9 +291,8 @@ void PowerManDlg::OnDelBooster( wxCommandEvent& event )
   if( action == wxID_NO )
     return;
 
-  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
-
   if( m_BoosterList->GetSelection() != wxNOT_FOUND ) {
+    wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
     m_BoosterList->Delete(m_BoosterList->GetSelection());
     m_ID->SetValue(_T(""));
     m_District->SetValue(_T(""));
@@ -276,6 +303,14 @@ void PowerManDlg::OnDelBooster( wxCommandEvent& event )
     m_ModuleList->Clear();
     m_BlockList->Clear();
     m_ModuleID->SetValue(_T(""));
+
+    iONode model = wxGetApp().getModel();
+    iONode boosterlist = wPlan.getboosterlist( model );
+
+    NodeOp.removeChild( boosterlist, m_Props );
+    m_Props = NULL;
+
+    initIndex();
   }
 }
 
