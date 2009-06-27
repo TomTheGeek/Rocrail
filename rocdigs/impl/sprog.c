@@ -300,19 +300,21 @@ static char* __byteToStr( char* s, unsigned char* data, int size ) {
 
 
 
-static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int insize ) {
+static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int insize, int repeat ) {
   iOSprogData data = Data(sprog);
   Boolean     rc = False;
 
   if( MutexOp.wait( data->mux ) ) {
-
+    int i = 0;
     ThreadOp.sleep(5);
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_transact outsize=%d insize=%d", outsize, insize );
 
-    if( rc = SerialOp.write( data->serial, out, outsize ) ) {
-      if( insize > 0 ) {
-        rc = SerialOp.read( data->serial, in, insize );
+    for( i = 0; i < repeat; i++ ) {
+      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+        if( insize > 0 ) {
+          rc = SerialOp.read( data->serial, in, insize );
+        }
       }
     }
 
@@ -439,8 +441,8 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );
-        
-        
+
+
     cmdsize = accDecoderPkt2(dcc, addr, action, (port-1)*2+gate);
     /*cmdsize = accDecoderPkt(dcc, fada, action);*/
     __byteToStr( cmd, dcc, cmdsize );
@@ -589,7 +591,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   if( nodeA != NULL ) {
     nodeB = __translate( (iOSprog)inst, nodeA, outa, &insize );
     if( StrOp.len(outa) > 0 ) {
-      __transact( (iOSprog)inst, outa, StrOp.len(outa), ina, insize );
+      __transact( (iOSprog)inst, outa, StrOp.len(outa), ina, insize, 2 );
     }
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
@@ -748,7 +750,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "128 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 3 );
+          __transact( sprog, out, StrOp.len(out), in, 3, 1 );
         }
         else if( data->slots[slotidx].steps == 28 )  {
           int size = speedStep28Packet(dcc, data->slots[slotidx].addr,
@@ -756,7 +758,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "28 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 3 );
+          __transact( sprog, out, StrOp.len(out), in, 3, 1 );
         }
         else {
           int size = speedStep14Packet(dcc, data->slots[slotidx].addr,
@@ -765,7 +767,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "14 DCC out: %s", out );
-          __transact( sprog, out, StrOp.len(out), in, 3 );
+          __transact( sprog, out, StrOp.len(out), in, 3, 1 );
         }
 
         if( data->slots[slotidx].fgrp > 0 ) {
@@ -825,7 +827,7 @@ static void __sprogWriter( void* threadinst ) {
           __byteToStr( cmd, dcc, size );
           StrOp.fmtb( out, "O %s\r", cmd );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "function group %d DCC out: %s", data->slots[slotidx].changedfgrp, out );
-          __transact( sprog, out, StrOp.len(out), in, 3 );
+          __transact( sprog, out, StrOp.len(out), in, 3, 1 );
         }
 
         slotidx++;
