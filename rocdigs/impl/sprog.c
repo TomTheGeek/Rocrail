@@ -342,9 +342,9 @@ static int __getLocoSlot(iOSprog sprog, iONode node) {
 }
 
 
-static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
+static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
   iOSprogData data = Data(sprog);
-  iONode rsp = NULL;
+  int repeat = 1;
 
   outa[0] = '\0';
   *insize = 0;
@@ -411,6 +411,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
     *insize = 3;
+    repeat = 2;
   }
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
@@ -449,6 +450,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
     StrOp.fmtb( outa, "O %s\r", cmd );
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
     *insize = 3;
+    repeat = 2;
   }
 
   /* Program command. */
@@ -575,7 +577,7 @@ static iONode __translate( iOSprog sprog, iONode node, char* outa, int* insize )
   }
 
 
-  return rsp;
+  return repeat;
 
 }
 
@@ -589,9 +591,9 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   int insize = 0;
 
   if( nodeA != NULL ) {
-    nodeB = __translate( (iOSprog)inst, nodeA, outa, &insize );
+    int repeat = __translate( (iOSprog)inst, nodeA, outa, &insize );
     if( StrOp.len(outa) > 0 ) {
-      __transact( (iOSprog)inst, outa, StrOp.len(outa), ina, insize, 2 );
+      __transact( (iOSprog)inst, outa, StrOp.len(outa), ina, insize, repeat );
     }
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
