@@ -283,12 +283,13 @@
       <var name="listenerFun" vt="digint_listener"/>
       <var name="swtime" vt="int"/>
       <var name="startpwstate" vt="Boolean"/>
-      <var name="sensordebounce" vt="int"/>
+      <var name="sensordebounce" vt="Boolean"/>
       <var name="swTime0[256*4]" vt="int"/>
       <var name="swTime1[256*4]" vt="int"/>
       <var name="fbState[128*8]" vt="Boolean"/>
       <var name="fbPreState[128*8]" vt="Boolean"/>
       <var name="lcfn[10000]" vt="byte"/>
+      <var name="fastclock" vt="Boolean"/>
     </data>
   </object>
 

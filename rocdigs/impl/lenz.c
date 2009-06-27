@@ -539,25 +539,27 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     When no Parameters are given, it is a query and the answer will be sent only to the requesting slave.
     */
-    long l_time = wClock.gettime(node);
-    struct tm* lTime = localtime( &l_time );
+    if( data->fastclock ) {
+      long l_time = wClock.gettime(node);
+      struct tm* lTime = localtime( &l_time );
 
-    int mins    = lTime->tm_min;
-    int hours   = lTime->tm_hour;
-    int wday    = lTime->tm_wday;
-    int divider = wClock.getdivider(node);
-    byte* outa  = NULL;
+      int mins    = lTime->tm_min;
+      int hours   = lTime->tm_hour;
+      int wday    = lTime->tm_wday;
+      int divider = wClock.getdivider(node);
+      byte* outa  = NULL;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
 
-    outa = allocMem(8);
-    outa[0] = 0x05;
-    outa[1] = 0xF1;
-    outa[2] = 0x00 + mins;
-    outa[3] = 0x10 + hours;
-    outa[4] = 0x40 + wday;
-    outa[5] = 0xC0 + divider;
-    ThreadOp.post( data->transactor, (obj)outa );
+      outa = allocMem(8);
+      outa[0] = 0x05;
+      outa[1] = 0xF1;
+      outa[2] = 0x00 + mins;
+      outa[3] = 0x10 + hours;
+      outa[4] = 0x40 + wday;
+      outa[5] = 0xC0 + divider;
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
   }
 
 
@@ -1528,7 +1530,8 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   data->serial        = SerialOp.inst( wDigInt.getdevice( ini ) );
   data->startpwstate  = wDigInt.isstartpwstate( ini );
   data->bincmd        = False;
-  data->sensordebounce = wDigInt.getsensordebounce( ini );
+  data->sensordebounce= wDigInt.getsensordebounce( ini );
+  data->fastclock     = wDigInt.isfastclock(data->ini);
 
   MemOp.set( data->swTime0, -1, sizeof( data->swTime0 ) );
   MemOp.set( data->swTime1, -1, sizeof( data->swTime1 ) );
@@ -1554,7 +1557,8 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor debounce = %d", data->sensordebounce );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor debounce = %s", data->sensordebounce ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   if( !SerialOp.open( data->serial ) && !data->dummyio ) {

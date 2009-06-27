@@ -119,6 +119,7 @@ public:
     wxSpinCtrl* m_SwitchTime;
     wxStaticBox* m_labPower;
     wxCheckBox* m_PowerAtStartup;
+    wxCheckBox* m_FastClock;
 ////@end LenzDlg member variables
     iONode m_Props;
 };
