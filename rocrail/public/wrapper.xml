@@ -821,13 +821,11 @@
         <var name="scfb" vt="string" defval="" range="*"/>
         <var name="powerfb" vt="string" defval="" range="*"/>
         <var name="powersw" vt="string" defval="" range="*"/>
-        <var name="repoweron" vt="bool" defval="false" remark="Repower on incase the shortcut is cleared."/>
         <var name="power" vt="bool" defval="false" remark="Track power flag."/>
         <var name="shortcut" vt="bool" defval="false" remark="Shortcut flag."/>
         <var name="scopt_poweroffall" vt="bool" defval="false" remark="Power off all boosters at shortcut."/>
         <var name="scopt_stoplocos" vt="bool" defval="false" remark="Stop all locos in the district at shortcut."/>
-        <var name="scopt_retry" vt="bool" defval="false" remark="Retry to restore power after a shortcut periodically."/>
-        <var name="lastretry" vt="long" defval="0" remark="System tick of last power restore retry."/>
+        <var name="scopt_repoweron" vt="bool" defval="false" remark="Repower on incase the shortcut is cleared."/>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">

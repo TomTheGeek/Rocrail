@@ -119,7 +119,7 @@ void PowerManDlg::initLabels() {
   // Options
   m_StopDistrictLocos->SetLabel( wxGetApp().getMsg( "scopt_stoplocos" ) );
   m_PowerOffAll->SetLabel( wxGetApp().getMsg( "scopt_poweroffall" ) );
-  m_RetryPowerOn->SetLabel( wxGetApp().getMsg( "scopt_retry" ) );
+  m_RetryPowerOn->SetLabel( wxGetApp().getMsg( "scopt_repoweron" ) );
 
 
 }
@@ -236,7 +236,7 @@ void PowerManDlg::initValues() {
 
   m_StopDistrictLocos->SetValue( wBooster.isscopt_stoplocos( m_Props ) );
   m_PowerOffAll->SetValue( wBooster.isscopt_poweroffall( m_Props ) );
-  m_RetryPowerOn->SetValue( wBooster.isscopt_retry( m_Props ) );
+  m_RetryPowerOn->SetValue( wBooster.isscopt_repoweron( m_Props ) );
 
 }
 
@@ -279,7 +279,7 @@ bool PowerManDlg::evaluate() {
 
   wBooster.setscopt_stoplocos( m_Props, m_StopDistrictLocos->IsChecked()?True:False );
   wBooster.setscopt_poweroffall( m_Props, m_PowerOffAll->IsChecked()?True:False );
-  wBooster.setscopt_retry( m_Props, m_RetryPowerOn->IsChecked()?True:False );
+  wBooster.setscopt_repoweron( m_Props, m_RetryPowerOn->IsChecked()?True:False );
 
 
   return true;

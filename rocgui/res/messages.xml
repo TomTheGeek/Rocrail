@@ -8484,7 +8484,7 @@
   <Msg id="scopt_stoplocos">
     <en txt="Stop all locos in this district."/>
   </Msg>
-  <Msg id="scopt_retry">
-    <en txt="Retry periodically to restore power."/>
+  <Msg id="scopt_repoweron">
+    <en txt="Repower on after the shortcut is cleared."/>
   </Msg>
 </Messages>

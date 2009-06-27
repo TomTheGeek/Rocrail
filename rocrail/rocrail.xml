@@ -1618,7 +1618,6 @@
       <var name="boostermap" vt="iOMap"/>
       <var name="scmap" vt="iOMap"/>
       <var name="pwmap" vt="iOMap"/>
-      <var name="boostermanager" vt="iOThread" remark="Booster manager thread."/>
     </data>
   </object>
 
