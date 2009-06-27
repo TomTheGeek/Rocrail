@@ -93,7 +93,7 @@ void LenzDlg::initLabels() {
   m_labSwitch->SetLabel( wxGetApp().getMsg( "switches" ) );
   m_labSwitchTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPower->SetLabel( wxGetApp().getMsg( "options" ) );
-  m_PowerAtStartup->SetLabel( wxGetApp().getMsg( "startup" ) );
+  m_PowerAtStartup->SetLabel( wxGetApp().getMsg( "poweronstartup" ) );
   m_FastClock->SetLabel( wxGetApp().getMsg( "fastclock" ) );
 }
 

@@ -8466,4 +8466,16 @@
   <Msg id="powerdistrict">
     <en txt="District"/>
   </Msg>
+  <Msg id="fastclock">
+    <en txt="Fastclock"/>
+  </Msg>
+  <Msg id="poweronstartup">
+    <en txt="Power on at startup"/>
+  </Msg>
+  <Msg id="offset">
+    <en txt="Offset"/>
+  </Msg>
+  <Msg id="debounce">
+    <en txt="Debounce"/>
+  </Msg>
 </Messages>
