@@ -8478,4 +8478,13 @@
   <Msg id="debounce">
     <en txt="Debounce"/>
   </Msg>
+  <Msg id="scopt_poweroffall">
+    <en txt="Power off all boosters."/>
+  </Msg>
+  <Msg id="scopt_stoplocos">
+    <en txt="Stop all locos in this district."/>
+  </Msg>
+  <Msg id="scopt_retry">
+    <en txt="Retry periodically to restore power."/>
+  </Msg>
 </Messages>

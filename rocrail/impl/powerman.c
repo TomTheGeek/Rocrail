@@ -40,6 +40,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
 
 
 static int instCnt = 0;
@@ -168,6 +169,9 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
     wPwrEvent.setid( pwrevent, wBooster.getid(scbooster) );
     wPwrEvent.setshortcut( pwrevent, pulse );
 
+    wBooster.setshortcut( scbooster, pulse );
+    wBooster.setlastretry( scbooster, (pulse ? SystemOp.getTick():0));
+
     __informClientOfShortcut(inst, scbooster, !pulse);
 
     if( wBooster.isrepoweron(scbooster) || pulse ) {
@@ -176,6 +180,14 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
       wPwrCmd.setcmd( pwrcmd, pulse?wPwrCmd.off:wPwrCmd.on );
       PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
     }
+
+    if( wBooster.isscopt_poweroffall(scbooster) && pulse ) {
+      iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+      wPwrCmd.setcmd( pwrcmd, wPwrCmd.off );
+      PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
+    }
+
+
   }
   if( pwbooster != NULL ) {
     TraceOp.trc( name, pulse?TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
@@ -311,6 +323,39 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
 }
 
 
+static void __boostermanager( void* threadinst ) {
+  iOThread         th = (iOThread)threadinst;
+  iOPowerMan   pwrman = (iOPowerMan)ThreadOp.getParm(th);
+  iOPowerManData data = Data(pwrman);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Booster manager thread started." );
+
+  while( !ThreadOp.isQuit(th) ) {
+
+    iONode booster = (iONode)MapOp.first( data->boostermap );
+    while( booster != NULL ) {
+      if( wBooster.isshortcut( booster ) ) {
+        if( wBooster.getlastretry( booster ) + 100 * 5 < SystemOp.getTick() ) {
+          iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+          wPwrCmd.setid( pwrcmd, wBooster.getid(booster) );
+          wPwrCmd.setcmd( pwrcmd, wPwrCmd.on );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "Try to recover booster [%s] (%ld,%ld)...",
+              wBooster.getid(booster), wBooster.getlastretry( booster ), SystemOp.getTick() );
+          PowerManOp.cmd(pwrman, pwrcmd);
+
+          wBooster.setlastretry( booster, SystemOp.getTick());
+        }
+      }
+      booster = (iONode)MapOp.next( data->boostermap );
+    }
+
+    ThreadOp.sleep(100);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Booster manager thread ended." );
+}
+
+
 /**  */
 static struct OPowerMan* _inst( iONode ini ) {
   iOPowerMan __PowerMan = allocMem( sizeof( struct OPowerMan ) );
@@ -328,6 +373,9 @@ static struct OPowerMan* _inst( iONode ini ) {
   ModelOp.addSysEventListener( AppOp.getModel(), (obj)__PowerMan );
 
   TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power Manager instantiated.");
+
+  data->boostermanager = ThreadOp.inst( "boostermanager", __boostermanager, __PowerMan );
+  ThreadOp.start( data->boostermanager );
 
   instCnt++;
   return __PowerMan;

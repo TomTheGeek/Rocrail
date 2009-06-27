@@ -353,7 +353,7 @@ static void __callback( obj inst, iONode nodeA ) {
 
   if( StrOp.equals( wBooster.name(), nodeName ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify booster %s", wBooster.getid(nodeA) );
-    ModelOp.cmd( AppOp.getModel, nodeA );
+    ModelOp.cmd( AppOp.getModel(), nodeA );
   }
   else if( StrOp.equals( wClock.name(), nodeName ) ) {
     if( StrOp.equals( wClock.getcmd(nodeA), wClock.freeze ) ) {

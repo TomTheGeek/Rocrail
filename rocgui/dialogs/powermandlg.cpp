@@ -63,6 +63,9 @@ PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
   m_BlocksPanel->Enable(false);
   m_DetailsPanel->Enable(false);
 
+  // not jet supported
+  m_StopDistrictLocos->Enable(false);
+
   m_BoosterList->SetFocus();
 
   m_BoosterBook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( PowerManDlg::onSetPage ), NULL, this );
@@ -113,6 +116,12 @@ void PowerManDlg::initLabels() {
     }
   }
 
+  // Options
+  m_StopDistrictLocos->SetLabel( wxGetApp().getMsg( "scopt_stoplocos" ) );
+  m_PowerOffAll->SetLabel( wxGetApp().getMsg( "scopt_poweroffall" ) );
+  m_RetryPowerOn->SetLabel( wxGetApp().getMsg( "scopt_retry" ) );
+
+
 }
 
 
@@ -155,7 +164,7 @@ void PowerManDlg::onBoosterSelect( wxCommandEvent& event ){
       m_GeneralPanel->Enable(true);
       m_ModulesPanel->Enable(true);
       m_BlocksPanel->Enable(true);
-      //m_DetailsPanel->Enable(true);
+      m_DetailsPanel->Enable(true);
       initValues();
     }
     else {
@@ -163,7 +172,7 @@ void PowerManDlg::onBoosterSelect( wxCommandEvent& event ){
       m_GeneralPanel->Enable(false);
       m_ModulesPanel->Enable(false);
       m_BlocksPanel->Enable(false);
-      //m_DetailsPanel->Enable(false);
+      m_DetailsPanel->Enable(false);
     }
   }
 }
@@ -224,6 +233,11 @@ void PowerManDlg::initValues() {
 
   m_ModuleID->SetValue(_T(""));
 
+
+  m_StopDistrictLocos->SetValue( wBooster.isscopt_stoplocos( m_Props ) );
+  m_PowerOffAll->SetValue( wBooster.isscopt_poweroffall( m_Props ) );
+  m_RetryPowerOn->SetValue( wBooster.isscopt_retry( m_Props ) );
+
 }
 
 
@@ -263,6 +277,10 @@ bool PowerManDlg::evaluate() {
   wBooster.setblockids( m_Props, blockids==NULL ? "":blockids );
   StrOp.free(blockids);
 
+  wBooster.setscopt_stoplocos( m_Props, m_StopDistrictLocos->IsChecked()?True:False );
+  wBooster.setscopt_poweroffall( m_Props, m_PowerOffAll->IsChecked()?True:False );
+  wBooster.setscopt_retry( m_Props, m_RetryPowerOn->IsChecked()?True:False );
+
 
   return true;
 }
@@ -299,7 +317,7 @@ void PowerManDlg::OnDelBooster( wxCommandEvent& event )
     m_GeneralPanel->Enable(false);
     m_ModulesPanel->Enable(false);
     m_BlocksPanel->Enable(false);
-    //m_DetailsPanel->Enable(false);
+    m_DetailsPanel->Enable(false);
     m_ModuleList->Clear();
     m_BlockList->Clear();
     m_ModuleID->SetValue(_T(""));

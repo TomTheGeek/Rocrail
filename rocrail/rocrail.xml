@@ -1601,7 +1601,7 @@
   </object>
 
 
-  <object name="PowerMan" interface="HtmlInt" use="node,map" include="htmlint" remark="Power Manager object">
+  <object name="PowerMan" interface="HtmlInt" use="node,map,thread" include="htmlint" remark="Power Manager object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="The booster list"/>
     </fun>
@@ -1618,6 +1618,7 @@
       <var name="boostermap" vt="iOMap"/>
       <var name="scmap" vt="iOMap"/>
       <var name="pwmap" vt="iOMap"/>
+      <var name="boostermanager" vt="iOThread" remark="Booster manager thread."/>
     </data>
   </object>
 
