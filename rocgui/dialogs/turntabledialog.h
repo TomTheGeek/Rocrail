@@ -74,6 +74,7 @@ class wxGrid;
 #define ID_TEXTCTRL_TT_ADDRESS 10132
 #define wxID_STATIC_TT_TYPE 10004
 #define ID_COMBOBOX_TT_TYPE 10005
+#define ID_MULTIPORTPANEL 10277
 #define ID_PANEL_TT_TRACKS 10007
 #define ID_GRID 10008
 #define ID_BUTTON_TT_ADDTRACK 10106
@@ -214,6 +215,35 @@ public:
     wxStaticText* m_labPause;
     wxSpinCtrl* m_Pause;
     wxCheckBox* m_SwapRotation;
+    wxPanel* m_MultiPortPanel;
+    wxStaticBox* m_PositionBox;
+    wxStaticText* m_labAddr0;
+    wxTextCtrl* m_Addr0;
+    wxStaticText* m_labPort0;
+    wxTextCtrl* m_Port0;
+    wxStaticText* m_labAddr1;
+    wxTextCtrl* m_Addr1;
+    wxStaticText* m_labPort1;
+    wxTextCtrl* m_Port1;
+    wxStaticText* m_labAddr2;
+    wxTextCtrl* m_Addr2;
+    wxStaticText* m_labPort2;
+    wxTextCtrl* m_Port2;
+    wxStaticText* m_labAddr3;
+    wxTextCtrl* m_Addr3;
+    wxStaticText* m_labPort3;
+    wxTextCtrl* m_Port3;
+    wxStaticText* m_labAddr4;
+    wxTextCtrl* m_Addr4;
+    wxStaticText* m_labPort4;
+    wxTextCtrl* m_Port4;
+    wxCheckBox* m_InvertPos;
+    wxStaticBox* m_NewPositionFlagBox;
+    wxStaticText* m_labAddr5;
+    wxTextCtrl* m_Addr5;
+    wxStaticText* m_labPort5;
+    wxTextCtrl* m_Port5;
+    wxCheckBox* m_InvertNew;
     wxPanel* m_TracksPanel;
     wxGrid* m_TracksGrid;
     wxButton* m_AddTrack;

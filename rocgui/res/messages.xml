@@ -8487,4 +8487,7 @@
   <Msg id="scopt_repoweron">
     <en txt="Repower on after the shortcut is cleared."/>
   </Msg>
+  <Msg id="multiport">
+    <en txt="Multiport"/>
+  </Msg>
 </Messages>
