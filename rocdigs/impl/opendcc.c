@@ -122,7 +122,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     a factor of 1 means clock is running real time,
     a factor of 2 means clock is running twice as fast a real time.
 
-    Answer: 0 (Kommando okay)   
+    Answer: 0 (Kommando okay)
     */
     iONode clockcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
     char* byteStr = NULL;
@@ -136,7 +136,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     int divider = wClock.getdivider(cmd);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
-    
+
     outBytes[0] = (byte)'x';
     outBytes[1] = 0xC0;
     outBytes[2] = 0x00 + mins;
@@ -149,6 +149,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     wBinCmd.setinlen( clockcmd, 1 );
     wBinCmd.setout( clockcmd, byteStr );
     StrOp.free( byteStr );
+    response = data->sublib->cmd((obj)data->sublib, clockcmd);
   }
 
   /* Program command. */
