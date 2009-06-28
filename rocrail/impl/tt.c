@@ -696,6 +696,21 @@ static int __evaluatePos( iOTT inst, Boolean puls, const char* id, Boolean* pola
 }
 
 
+static Boolean __getPolarization( iOTT inst, int tracknr ) {
+  iOTTData data = Data(inst);
+
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    if( wTTTrack.getnr( track ) == tracknr ) {
+      return wTTTrack.ispolarization(track);
+    }
+    track = wTurntable.nexttrack( data->props, track );
+  }
+
+  return False;
+}
+
+
 static int __getMappedTrack( iOTT inst, int tracknr ) {
   iOTTData data = Data(inst);
 
@@ -722,6 +737,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
     if( data->gotopos != -1 ) {
       data->tablepos = data->gotopos;
+      __polarize(inst, -1, __getPolarization((iOTT)inst, data->tablepos) );
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbPositionEvent for Turntable [%s] fb=[%s]",
@@ -912,6 +928,10 @@ static void __polarize(obj inst, int pos, Boolean polarization) {
       ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
     }
 
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "polarization address is not set" );
   }
 
 }
