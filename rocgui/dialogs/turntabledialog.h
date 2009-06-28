@@ -130,6 +130,9 @@ public:
 
 ////@begin TurntableDialog event handler declarations
 
+    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_TT_TYPE
+    void OnTypeSelected( wxCommandEvent& event );
+
     /// wxEVT_GRID_CELL_LEFT_CLICK event handler for ID_GRID
     void OnCellLeftClick( wxGridEvent& event );
 

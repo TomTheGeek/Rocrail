@@ -68,6 +68,8 @@ enum {
 BEGIN_EVENT_TABLE( TurntableDialog, wxDialog )
 
 ////@begin TurntableDialog event table entries
+    EVT_COMBOBOX( ID_COMBOBOX_TT_TYPE, TurntableDialog::OnTypeSelected )
+
     EVT_GRID_CELL_LEFT_CLICK( TurntableDialog::OnCellLeftClick )
     EVT_GRID_CELL_RIGHT_CLICK( TurntableDialog::OnCellRightClick )
 
@@ -409,6 +411,9 @@ void TurntableDialog::initValues() {
   m_TracksGrid->FitInside();
   m_TracksGrid->UpdateDimensions();
   m_TracksPanel->GetSizer()->Layout();
+
+  wxCommandEvent event( wxEVT_COMMAND_COMBOBOX_SELECTED, ID_COMBOBOX_TT_TYPE );
+  wxPostEvent( this, event );
 
 }
 
@@ -1012,4 +1017,17 @@ void TurntableDialog::OnButtonTtModifytrackClick( wxCommandEvent& event )
   OnProps(event);
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_TT_TYPE
+ */
+
+void TurntableDialog::OnTypeSelected( wxCommandEvent& event )
+{
+  int type = m_Type->GetSelection();
+
+  m_MultiPortPanel->Enable( type == 2 ? true:false );
+  m_Address->Enable( type != 2 ? true:false );
+}
 
