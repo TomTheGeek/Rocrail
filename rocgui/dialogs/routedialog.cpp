@@ -478,6 +478,7 @@ void RouteDialog::initValues() {
   m_Lock->SetValue(true);
 
   // Sensors
+  m_SensorList->Clear();
   iONode fb = wRoute.getfbevent( m_Props );
   while( fb != NULL ) {
     m_SensorList->Append( wxString(wFeedbackEvent.getid( fb ),wxConvUTF8), fb );
