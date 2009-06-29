@@ -399,6 +399,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   const char* cmdStr = wTurntable.getcmd( nodeA );
   Boolean ttdir = True;
   iONode cmd = NULL;
+  int tracknr = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
 
@@ -421,7 +422,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   }
   else {
     /* Tracknumber */
-    int tracknr = atoi( cmdStr );
+    tracknr = atoi( cmdStr );
     Boolean move = __bridgeDir(inst, tracknr, &ttdir );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -429,6 +430,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 
     if( move ) {
       data->gotopos = tracknr;
+      tracknr = __getMappedTrack( inst, tracknr );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     }
     else {
@@ -444,6 +446,8 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     if( iid != NULL )
       wTurntable.setiid( cmd, iid );
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
+
     /* pending move operation */
     data->pending = True;
 
@@ -456,7 +460,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       wProgram.setaddr( cmd, wTurntable.getaddr0(data->props) );
       wProgram.setmodid( cmd, wTurntable.getaddr1(data->props) );
       wProgram.setcv( cmd, 0x000F ); /* mask */
-      wProgram.setvalue( cmd, data->gotopos ); /* value */
+      wProgram.setvalue( cmd, tracknr ); /* value */
       ControlOp.cmd( control, cmd, NULL );
 
     }
@@ -480,45 +484,45 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       wSwitch.setaddr1( cmd, wTurntable.getaddr0(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport0(data->props) );
       if( invpos )
-        wSwitch.setcmd( cmd, data->gotopos & 0x01 ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, tracknr & 0x01 ? wSwitch.straight:wSwitch.turnout );
       else
-        wSwitch.setcmd( cmd, data->gotopos & 0x01 ? wSwitch.turnout:wSwitch.straight );
+        wSwitch.setcmd( cmd, tracknr & 0x01 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr1(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport1(data->props) );
       if( invpos )
-        wSwitch.setcmd( cmd, data->gotopos & 0x02 ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, tracknr & 0x02 ? wSwitch.straight:wSwitch.turnout );
       else
-        wSwitch.setcmd( cmd, data->gotopos & 0x02 ? wSwitch.turnout:wSwitch.straight );
+        wSwitch.setcmd( cmd, tracknr & 0x02 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr2(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport2(data->props) );
       if( invpos )
-        wSwitch.setcmd( cmd, data->gotopos & 0x04 ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, tracknr & 0x04 ? wSwitch.straight:wSwitch.turnout );
       else
-        wSwitch.setcmd( cmd, data->gotopos & 0x04 ? wSwitch.turnout:wSwitch.straight );
+        wSwitch.setcmd( cmd, tracknr & 0x04 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr3(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport3(data->props) );
       if( invpos )
-        wSwitch.setcmd( cmd, data->gotopos & 0x08 ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, tracknr & 0x08 ? wSwitch.straight:wSwitch.turnout );
       else
-        wSwitch.setcmd( cmd, data->gotopos & 0x08 ? wSwitch.turnout:wSwitch.straight );
+        wSwitch.setcmd( cmd, tracknr & 0x08 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr4(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport4(data->props) );
       if( invpos )
-        wSwitch.setcmd( cmd, data->gotopos & 0x10 ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, tracknr & 0x10 ? wSwitch.straight:wSwitch.turnout );
       else
-        wSwitch.setcmd( cmd, data->gotopos & 0x10 ? wSwitch.turnout:wSwitch.straight );
+        wSwitch.setcmd( cmd, tracknr & 0x10 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
