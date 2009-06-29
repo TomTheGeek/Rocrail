@@ -375,15 +375,18 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "opendcc %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-
   data->ini = ini;
   data->opendccini = wDigInt.getopendcc(ini);
 
   if( data->opendccini == NULL )
     data->opendccini = NodeOp.inst( wOpenDCC.name(), ini, ELEMENT_NODE );
+
+  data->sublibname = wOpenDCC.getlib( data->opendccini );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "opendcc %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib = %s", data->sublibname );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* load sub library */
   {
@@ -391,7 +394,7 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
     /* TODO: get the library path! */
     char* libpath = StrOp.fmt( "%s%c%s", wDigInt.getlibpath(data->ini),
-        SystemOp.getFileSeparator(), wOpenDCC.getlib( data->opendccini ) );
+        SystemOp.getFileSeparator(), data->sublibname );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to load [%s]", libpath );
     pLib = LibOp.inst( libpath );
     StrOp.free( libpath );

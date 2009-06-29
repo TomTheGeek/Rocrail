@@ -643,7 +643,8 @@
       <var name="listenerObj" vt="obj" remark="Listener pointer"/>
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
       <var name="iid" vt="const char*" remark="Interface ID"/>
-      <var name="sublib" vt="iIDigInt" remark="Sub library (mostly p50x)"/>
+      <var name="sublib" vt="iIDigInt" remark="Sub library, p50x or lenz"/>
+      <var name="sublibname" vt="const char*" remark="Name of the sub library"/>
       <var name="swdelay" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
     </data>

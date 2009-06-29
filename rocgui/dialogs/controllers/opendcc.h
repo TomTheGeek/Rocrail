@@ -45,6 +45,7 @@ class wxSpinCtrl;
 
 ////@begin control identifiers
 #define ID_OPENDCCCTRLDLG 10016
+#define ID_OPENDCCSUBLIB 10050
 #define ID_READCVS 10042
 #define ID_WRITECVS 10049
 #define ID_LISTCTRL_DECEXCEPTIONS 10051
@@ -171,6 +172,7 @@ public:
     wxTextCtrl* m_Version;
     wxStaticText* m_labDevice;
     wxTextCtrl* m_Device;
+    wxRadioBox* m_SubLib;
     wxRadioBox* m_Baudrate;
     wxButton* m_ReadCVs;
     wxButton* m_WriteCVs;

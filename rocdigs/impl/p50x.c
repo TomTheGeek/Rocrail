@@ -541,7 +541,7 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
 static Boolean __getversion( iOP50x inst ) {
   iOP50xData data = Data(inst);
   char out[8] = {'x',0xA0};
-  char in[32];
+  char in[256];
   char rl = 0;
   int idx = 0;
   int outsize = 2;
@@ -1006,7 +1006,7 @@ static void __statusReader( void* threadinst ) {
   iOP50x p50 = (iOP50x)ThreadOp.getParm( th );
   iOP50xData o = Data(p50);
   byte out[8];
-  byte in[64];
+  byte in[512];
   p50state state = P50_OK;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Status reader started." );
