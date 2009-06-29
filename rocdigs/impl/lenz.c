@@ -1,5 +1,5 @@
 
- /*
+/*
  Rocrail - Model Railroad Software
 
  Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 
 #include "rocdigs/impl/lenz_impl.h"
 
@@ -155,7 +155,7 @@ static void __handleSwitch(iOLenz lenz, int addr, int port, int value) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sw %d %d = %s", addr+1, port, value?"straight":"thrown" );
 
-   {
+  {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
 
     wSwitch.setaddr1( nodeC, ( addr+1  ));
@@ -206,6 +206,11 @@ static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
   int i3 = in[3];
 
   int b0[8], b1[8], b2[8], b3[8];
+
+  if( i0 == 0x05 && i1 == 0x01 ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "clock response" );
+    return;
+  }
 
   __dec2bin( &b0[0], i0);
   __dec2bin( &b1[0], i1);
@@ -270,7 +275,7 @@ static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
     NodeOp.setInt( node, "val", in[4] );
 
     /* fill the node with data... */
-     if( data->listenerFun != NULL && data->listenerObj != NULL )
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 
@@ -354,17 +359,17 @@ static void __statusRequestSender( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender started." );
 
-    unsigned char out[256];
+  unsigned char out[256];
 
-    out[0] = 0x21;
-    out[1] = 0x24;
-    out[2] = 0x05;
+  out[0] = 0x21;
+  out[1] = 0x24;
+  out[2] = 0x05;
 
-    do {
+  do {
     ThreadOp.sleep( 1000 );
     __sendRequest( lenz, out );
-    } while( data->run );
-   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender ended." );
+  } while( data->run );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender ended." );
 
 }
 
@@ -400,11 +405,11 @@ static void __initializer( void* threadinst ) {
     ThreadOp.post( data->transactor, (obj)outd );
   } else {
     /* ALL OFF*/
-     byte* outc = allocMem(256);
-     outc[0] = 0x21;
-     outc[1] = 0x80;
-     outc[2] = 0xA1;
-     ThreadOp.post( data->transactor, (obj)outc );
+    byte* outc = allocMem(256);
+    outc[0] = 0x21;
+    outc[1] = 0x80;
+    outc[2] = 0xA1;
+    ThreadOp.post( data->transactor, (obj)outc );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initializer ended." );
@@ -438,9 +443,9 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
 
   /* WRITE */
   else if( outBytes[0] == 0x78 && outBytes[1] == 0xA3) {
-      outBytes[0] = 0x24;
-      outBytes[1] = 0x29;
-      __sendRequest( lenz, outBytes );
+    outBytes[0] = 0x24;
+    outBytes[1] = 0x29;
+    __sendRequest( lenz, outBytes );
   }
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out II" );
@@ -472,16 +477,16 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
 
         /* SO Answer */
         if( in[0] == 0x24 && in[1] == 0x28) {
-            in[0] = 0x00;
-            in[1] = in[4];
-            ok = True;
+          in[0] = 0x00;
+          in[1] = in[4];
+          ok = True;
         }
 
         /* SO Error */
         else if( in[0] == 0x61 && in[1] == 0x82) {
-            in[0] = 0x01;
-            in[1] = 0x01;
-            ok = True;
+          in[0] = 0x01;
+          in[1] = 0x01;
+          ok = True;
         } else {
           in[0] = 0x01;
         }
@@ -503,7 +508,7 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
   }
 
   /* is NULL */
- return NULL;
+  return NULL;
 }
 
 /**
@@ -538,7 +543,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
     This message is issued as broadcast once every (layout-) minute. The command is not repeated.
 
     When no Parameters are given, it is a query and the answer will be sent only to the requesting slave.
-    */
+     */
     if( data->fastclock ) {
       long l_time = wClock.gettime(node);
       struct tm* lTime = localtime( &l_time );
@@ -555,7 +560,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       outa[0] = 0x05;
       outa[1] = 0xF1;
       outa[2] = 0x00 + mins;
-      outa[3] = 0x10 + hours;
+      outa[3] = 0x80 + hours;
       outa[4] = 0x40 + wday;
       outa[5] = 0xC0 + divider;
       ThreadOp.post( data->transactor, (obj)outa );
@@ -582,7 +587,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
     /* when sending to elite we have to correct for elite (version 1.3) addressing fault
        address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
        address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
-    */
+     */
     if (data->elite) {
       port++;
       if (port > 4) {
@@ -598,20 +603,20 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     if( wSwitch.issinglegate( node ) ) {
 
-        /* make message:*/
-        /* activate the gate not to be used */
-        byte* outa = allocMem(256);
-        outa[0] = 0x52;
-        outa[1] = addr;
-        outa[2] = 0x80 | 0x08 | (port << 1) | gate;
-        ThreadOp.post( data->transactor, (obj)outa );
+      /* make message:*/
+      /* activate the gate not to be used */
+      byte* outa = allocMem(256);
+      outa[0] = 0x52;
+      outa[1] = addr;
+      outa[2] = 0x80 | 0x08 | (port << 1) | gate;
+      ThreadOp.post( data->transactor, (obj)outa );
 
-        /* deactivate the gate to be used */
-        byte* outb = allocMem(256);
-        outb[0] = 0x52;
-        outb[1] = addr;
-        outb[2] = 0x80 | 0x00 | (port << 1) | gate;
-        ThreadOp.post( data->transactor, (obj)outb );
+      /* deactivate the gate to be used */
+      byte* outb = allocMem(256);
+      outb[0] = 0x52;
+      outb[1] = addr;
+      outb[2] = 0x80 | 0x00 | (port << 1) | gate;
+      ThreadOp.post( data->transactor, (obj)outb );
 
 
     } else {
@@ -644,7 +649,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
         addr+1, port+1, wSwitch.getcmd( node ) );
-     ThreadOp.sleep( data->swtime );
+    ThreadOp.sleep( data->swtime );
 
   }
   /* Output command. */
@@ -664,7 +669,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       fromPADA( port, &addr, &port );
 
     if (data->elite) {
-    port++;
+      port++;
       if (port > 4) {
         port =1;
         addr++;
@@ -726,21 +731,21 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     int reqid = 0x10; /* default 14 speed steps */
     switch( spcnt ) {
-      case 27:
-        reqid = 0x11;
-        break;
-      case 28:
-        reqid = 0x12;
-        break;
-      case 127:
-      case 128:
-        reqid = 0x13;
-        spcnt = 127;
-        break;
-      default:
-        reqid = 0x10;
-        spcnt = 14;
-        break;
+    case 27:
+      reqid = 0x11;
+      break;
+    case 28:
+      reqid = 0x12;
+      break;
+    case 127:
+    case 128:
+      reqid = 0x13;
+      spcnt = 127;
+      break;
+    default:
+      reqid = 0x10;
+      spcnt = 14;
+      break;
     }
     /*
       General Lenz speed values
@@ -781,7 +786,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     lenzspeed = speed;
 
-      /* Remove e-stop in 14 and 127 speed step mode */
+    /* Remove e-stop in 14 and 127 speed step mode */
     if ( spcnt == 14 || spcnt == 127 ){
       if ( lenzspeed > 0 )
         lenzspeed = lenzspeed + 1;
@@ -814,9 +819,9 @@ static iONode __translate( iOLenz lenz, iONode node ) {
       outa[4] = (data->lcfn[addr]&0x0F) + (fn?0x10:0);
 
       int test[8];
-     __dec2bin( &test[0], outa[4]);
-     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lights: %d %d %d %d %d %d %d %d",
-       test[0], test[1], test[2], test[3], test[4], test[5], test[6], test[7]);
+      __dec2bin( &test[0], outa[4]);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lights: %d %d %d %d %d %d %d %d",
+          test[0], test[1], test[2], test[3], test[4], test[5], test[6], test[7]);
 
 
       data->lcfn[addr] = outa[4];
@@ -979,7 +984,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
 
       /* if no interfaceVersion is set it might be a LI100
-      * put off PT after each read. Elite on/off goes automatic */
+       * put off PT after each read. Elite on/off goes automatic */
       if ( interfaceVersion == 0 && !data->elite) {
         byte* outc = allocMem(256);
         outc[0] = 0x21;
@@ -1009,7 +1014,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
         outb[6] = value & 0xFF;
 
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
-          outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
+            outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
 
         if ( cv != 0 )
           ThreadOp.post( data->transactor, (obj)outb );
@@ -1049,7 +1054,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
-       /* CS will go ton Pt on on first programming request */
+      /* CS will go ton Pt on on first programming request */
     }  /* PT off, send: All ON" */
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       byte* outb = allocMem(256);
@@ -1088,8 +1093,8 @@ static void __transactor( void* threadinst ) {
   obj post = NULL;
 
   Boolean responceRecieved = True,
-          waitForAnswer = False,
-          expectEliteAnswer = True;
+  waitForAnswer = False,
+  expectEliteAnswer = True;
 
 
   int timeoutval = 100;
@@ -1125,43 +1130,43 @@ static void __transactor( void* threadinst ) {
         /* TODO: this is not state of art ... we have to do something here !!!*/
         if (data->elite || data->usb) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
-             expectEliteAnswer = False;
-           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
-           if(data->elite)
-           ThreadOp.sleep(9000);
-           if(data->usb)
-           ThreadOp.sleep(1000);
+            expectEliteAnswer = False;
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
+            if(data->elite)
+              ThreadOp.sleep(9000);
+            if(data->usb)
+              ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
-           expectEliteAnswer = False;
-           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
-       if(data->elite)
-               ThreadOp.sleep(9000);
-             if(data->usb)
-               ThreadOp.sleep(1000);
+            expectEliteAnswer = False;
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
+            if(data->elite)
+              ThreadOp.sleep(9000);
+            if(data->usb)
+              ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
-           expectEliteAnswer = False;
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
+            expectEliteAnswer = False;
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
           }
         }
 
 
       }
     } else {
-        if( post != NULL && numtries > 0 && expectEliteAnswer) {
-          /* send again */
-          __sendRequest( lenz, out );
+      if( post != NULL && numtries > 0 && expectEliteAnswer) {
+        /* send again */
+        __sendRequest( lenz, out );
 
-          waitForAnswer = True;
-          numtries--;
+        waitForAnswer = True;
+        numtries--;
 
-        } else {
-          responceRecieved = True;
-          waitForAnswer = False;
+      } else {
+        responceRecieved = True;
+        waitForAnswer = False;
 
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
-        }
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
+      }
 
     }
 
@@ -1186,22 +1191,24 @@ static void __transactor( void* threadinst ) {
 
         if ( data->usb) {
 
-            if( !SerialOp.read( data->serial, (char*) in, 3 ) ) {
-              MutexOp.post( data->mux );
-              continue;
-            }
-
-            datalen = (in[2] & 0x0f) + 1;
-
-            ok = SerialOp.read( data->serial, (char*)in+3, datalen );
+          if( !SerialOp.read( data->serial, (char*) in, 3 ) ) {
             MutexOp.post( data->mux );
+            continue;
+          }
 
-            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-            TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 10 );
+          datalen = (in[2] & 0x0f) + 1;
 
-            /* remove extra header from LI-USB */
-            for (i = 0; i < 254; i++)
-                in[i] = in[i+2];
+          ok = SerialOp.read( data->serial, (char*)in+3, datalen );
+          MutexOp.post( data->mux );
+
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, 10 );
+
+          /* remove extra header from LI-USB */
+          for (i = 0; i < 254; i++)
+            in[i] = in[i+2];
+
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, in[0]+2 );
 
         } else {
 
@@ -1230,131 +1237,131 @@ static void __transactor( void* threadinst ) {
         }
 
         if( bXor != in[datalen])
-           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor bytes are not equal!" );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor bytes are not equal!" );
 
         /* Evaluate XprerssNet Answers
          check if last command was recieved, the cs answers: 1 4 5 */
         if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command OK");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command OK");
+          responceRecieved = True;
         }
         /* Feedback */
         else if( in[0] == 0x42 ) {
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
+          responceRecieved = True;
         }
         /* Feedback */
         else if( (in[0] >> 4) == 0x4 ) {
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
+          responceRecieved = True;
         }
         /* Track Power OFF */
         else if( in[0] == 0x81 && in[1] == 0x00) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "STOP");
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "STOP");
 
-           iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-           if( data->iid != NULL )
-             wState.setiid( node, data->iid );
-           wState.setpower( node, False );
-           wState.settrackbus( node, False );
-
-           if( data->listenerFun != NULL && data->listenerObj != NULL )
-             data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-
-           responceRecieved = True;
-        }
-        /* Track Power OFF */
-        else if( in[0] == 0x61 && in[1] == 0x00) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
-
-           iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-           if( data->iid != NULL )
-             wState.setiid( node, data->iid );
-       wState.setpower( node, False );
-       wState.settrackbus( node, False );
-       wState.setsensorbus( node, False );
-       wState.setaccessorybus( node, False );
-
-           if( data->listenerFun != NULL && data->listenerObj != NULL )
-             data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-
-           responceRecieved = True;
-        }
-        /* Normal operation resumed */
-        else if( in[0] == 0x61 && in[1] == 0x01) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Normal operation resumed.");
-
-           iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-           if( data->iid != NULL )
-             wState.setiid( node, data->iid );
-           wState.setpower( node, True );
-           wState.settrackbus( node, True );
-           wState.setsensorbus( node, True );
-           wState.setaccessorybus( node, True );
+          iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wState.setiid( node, data->iid );
+          wState.setpower( node, False );
+          wState.settrackbus( node, False );
 
           if( data->listenerFun != NULL && data->listenerObj != NULL )
             data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-           responceRecieved = True;
+          responceRecieved = True;
+        }
+        /* Track Power OFF */
+        else if( in[0] == 0x61 && in[1] == 0x00) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
+
+          iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wState.setiid( node, data->iid );
+          wState.setpower( node, False );
+          wState.settrackbus( node, False );
+          wState.setsensorbus( node, False );
+          wState.setaccessorybus( node, False );
+
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+          responceRecieved = True;
+        }
+        /* Normal operation resumed */
+        else if( in[0] == 0x61 && in[1] == 0x01) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Normal operation resumed.");
+
+          iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wState.setiid( node, data->iid );
+          wState.setpower( node, True );
+          wState.settrackbus( node, True );
+          wState.setsensorbus( node, True );
+          wState.setaccessorybus( node, True );
+
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+          responceRecieved = True;
         }
         /* Prog Mode*/
         else if (in[0] == 0x61 && in[1] == 0x02){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming mode entered");
-           responceRecieved = True;
-           expectProgResult = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming mode entered");
+          responceRecieved = True;
+          expectProgResult = True;
         }
         /* Prog Mode*/
         else if (in[0] == 0x61 && in[1] == 0x11){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Prog. Ready");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Prog. Ready");
+          responceRecieved = True;
         }
         /* transaction error*/
         else if (in[0] == 0x61 && in[1] == 0x80){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transaction error ... try again");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transaction error ... try again");
+          responceRecieved = True;
         }
         /* CS busy*/
         else if (in[0] == 0x61 && in[1] == 0x81){
-           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... try again");
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... try again");
         }
         /* PT busy*/
         else if (in[0] == 0x61 && in[1] == 0x1F){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT busy ... try again");
-           expectProgResult = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT busy ... try again");
+          expectProgResult = True;
         }
         /* Command not known*/
         else if (in[0] == 0x61 && in[1] == 0x82){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not known.");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not known.");
+          responceRecieved = True;
         }
         /* Shortcut*/
         else if (in[0] == 0x61 && in[1] == 0x12){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shortcut!");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shortcut!");
+          responceRecieved = True;
         }
         /* No data*/
         else if (in[0] == 0x61 && in[1] == 0x13){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No Data");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No Data");
+          responceRecieved = True;
         }
         /* cv answer*/
         else if ((in[0] == 0x63 && in[1] == 0x10) || (in[0] == 0x63 && in[1] == 0x14)){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming answer recieved ...");
-           responceRecieved = True;
-           expectProgResult = False;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming answer recieved ...");
+          responceRecieved = True;
+          expectProgResult = False;
         }
         /* Version of Interface*/
         else if (in[0] == 0x02){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Interface version: %1.1f-%d",
-           in[1]/10.0 , in[2] );
-           responceRecieved = True;
-           interfaceVersion = (int) in[1];
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Interface version: %1.1f-%d",
+              in[1]/10.0 , in[2] );
+          responceRecieved = True;
+          interfaceVersion = (int) in[1];
         }
 
         /* Version of Interface*/
-    else if (in[0] == 0x01 && in[1] == 0x06){
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
-    }
+        else if (in[0] == 0x01 && in[1] == 0x06){
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
+        }
 
         /* Version of Command Station from version 3.0*/
         else if (in[0] == 0x63 && in[1] == 0x21){
@@ -1368,13 +1375,18 @@ static void __transactor( void* threadinst ) {
           else if( in[3] == 0x03 )
             csname = "Control Plus";
 
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %1.0x.%1.0d",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %1.0x.%1.0d",
               csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F));
-           responceRecieved = True;
+          responceRecieved = True;
         }
         /* SO */
         else if (in[0] == 0x78){
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SO xx %d = %d",in[2], in[3]);
+        }
+        /* clock */
+        else if (in[0] == 0x05){
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
+          responceRecieved = True;
         }
 
         else {
@@ -1383,8 +1395,8 @@ static void __transactor( void* threadinst ) {
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
         }
 
-       /* anything will go to rocgui ...*/
-       __evaluateResponse( lenz, in, datalen );
+        /* anything will go to rocgui ...*/
+        __evaluateResponse( lenz, in, datalen );
 
       }
     }
@@ -1407,7 +1419,7 @@ static void __transactor( void* threadinst ) {
             data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-             "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
+              "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
         }
       }
     }
@@ -1427,7 +1439,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
     if( StrOp.equals( wThrottleCmd.name(), NodeOp.getName(nodeA) ) ) {
 
       /* TODO: throttle command processing */
-/*
+      /*
       const char * str  = NodeOp.getStr(nodeA, "str",  0 );
       int msgsize = StrOp.len( str);
       int i;
@@ -1448,7 +1460,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
       ThreadOp.post(data->transactor, (obj) outc);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Throttle Command sended.");
-      */
+       */
 
       /* Bin Commands (opendcc)*/
     } else if (StrOp.equals( NodeOp.getName( nodeA ), wBinCmd.name() )) {
