@@ -137,19 +137,26 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
 
-    outBytes[0] = (byte)'x';
-    outBytes[1] = 0xC0;
-    outBytes[2] = 0x00 + mins;
-    outBytes[3] = 0x80 + hours;
-    outBytes[4] = 0x40 + wday;
-    outBytes[5] = 0xC0 + divider;
+    if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+      outBytes[0] = (byte)'x';
+      outBytes[1] = 0xC0;
+      outBytes[2] = 0x00 + mins;
+      outBytes[3] = 0x80 + hours;
+      outBytes[4] = 0x40 + wday;
+      outBytes[5] = 0xC0 + divider;
 
-    byteStr = StrOp.byteToStr( outBytes, 6 );
-    wBinCmd.setoutlen( clockcmd, 6 );
-    wBinCmd.setinlen( clockcmd, 1 );
-    wBinCmd.setout( clockcmd, byteStr );
-    StrOp.free( byteStr );
-    response = data->sublib->cmd((obj)data->sublib, clockcmd);
+      byteStr = StrOp.byteToStr( outBytes, 6 );
+      wBinCmd.setoutlen( clockcmd, 6 );
+      wBinCmd.setinlen( clockcmd, 1 );
+      wBinCmd.setout( clockcmd, byteStr );
+      StrOp.free( byteStr );
+      response = data->sublib->cmd((obj)data->sublib, clockcmd);
+    }
+    else {
+      /* the lenz protocol knows the clock command */
+      response = data->sublib->cmd((obj)data->sublib, cmd);
+    }
+
   }
 
   /* Program command. */
@@ -160,37 +167,41 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     Boolean getCV = False;
 
     if(  wProgram.getcmd( cmd ) == wProgram.set ) {
-      ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-      char* byteStr = NULL;
-      byte outBytes[5];
-      outBytes[0] = (byte)'x';
-      outBytes[1] = 0xA3;
-      outBytes[2] = wProgram.getcv(cmd) % 256;
-      outBytes[3] = wProgram.getcv(cmd) / 256;
-      outBytes[4] = wProgram.getvalue(cmd);
+      if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+        ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        char* byteStr = NULL;
+        byte outBytes[5];
+        outBytes[0] = (byte)'x';
+        outBytes[1] = 0xA3;
+        outBytes[2] = wProgram.getcv(cmd) % 256;
+        outBytes[3] = wProgram.getcv(cmd) / 256;
+        outBytes[4] = wProgram.getvalue(cmd);
 
-      byteStr = StrOp.byteToStr( outBytes, 5 );
-      wBinCmd.setoutlen( ptcmd, 5 );
-      wBinCmd.setinlen( ptcmd, 1 );
-      wBinCmd.setout( ptcmd, byteStr );
-      StrOp.free( byteStr );
+        byteStr = StrOp.byteToStr( outBytes, 5 );
+        wBinCmd.setoutlen( ptcmd, 5 );
+        wBinCmd.setinlen( ptcmd, 1 );
+        wBinCmd.setout( ptcmd, byteStr );
+        StrOp.free( byteStr );
+      }
     }
     else if(  wProgram.getcmd( cmd ) == wProgram.get ) {
-      ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-      char* byteStr = NULL;
-      byte outBytes[4];
-      outBytes[0] = (byte)'x';
-      outBytes[1] = 0xA4;
-      outBytes[2] = wProgram.getcv(cmd) % 256;
-      outBytes[3] = wProgram.getcv(cmd) / 256;
+      if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+        ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        char* byteStr = NULL;
+        byte outBytes[4];
+        outBytes[0] = (byte)'x';
+        outBytes[1] = 0xA4;
+        outBytes[2] = wProgram.getcv(cmd) % 256;
+        outBytes[3] = wProgram.getcv(cmd) / 256;
 
-      byteStr = StrOp.byteToStr( outBytes, 4 );
-      wBinCmd.setoutlen( ptcmd, 4 );
-      wBinCmd.setinlen( ptcmd, 2 );
-      wBinCmd.setout( ptcmd, byteStr );
-      StrOp.free( byteStr );
+        byteStr = StrOp.byteToStr( outBytes, 4 );
+        wBinCmd.setoutlen( ptcmd, 4 );
+        wBinCmd.setinlen( ptcmd, 2 );
+        wBinCmd.setout( ptcmd, byteStr );
+        StrOp.free( byteStr );
 
-      getCV = True;
+        getCV = True;
+      }
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -243,7 +254,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "addr=%d spcnt=%d shortID=[%s]", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
       /* send short ID to OpenDCC */
-      {
+      if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* add the loco to the data bank, or overwrite the existing */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* byteStr = StrOp.fmt( "x LOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
@@ -262,7 +273,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   else if( StrOp.equals( NodeOp.getName( cmd ), wSysCmd.name() ) ) {
     if( StrOp.equals( wSysCmd.txshortids, wSysCmd.getcmd(cmd) ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short IDs to the throttle" );
-      {
+      if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* dump the loco data base in the throttle */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* byteStr = StrOp.fmt( "x LOCXMT\r" );
@@ -377,14 +388,16 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->ini = ini;
   data->opendccini = wDigInt.getopendcc(ini);
+  data->iid        = StrOp.dup( wDigInt.getiid( ini ) );
 
   if( data->opendccini == NULL )
     data->opendccini = NodeOp.inst( wOpenDCC.name(), ini, ELEMENT_NODE );
 
-  data->sublibname = wOpenDCC.getlib( data->opendccini );
+  data->sublibname = StrOp.dup( wOpenDCC.getlib( data->opendccini ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "opendcc %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib = %s", data->sublibname );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
