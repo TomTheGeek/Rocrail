@@ -96,6 +96,7 @@ TTTrackDialog::TTTrackDialog( wxWindow* parent, wxWindowID id, const wxString& c
 void TTTrackDialog::initLabels() {
   m_LabelTrackNr->SetLabel( wxGetApp().getMsg( "tracknr" ) );
   m_labDecoder->SetLabel( wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("tracknr") );
+  m_labOppTrackNr->SetLabel( wxGetApp().getMsg("opposite") + _T(" ") + wxGetApp().getMsg("tracknr") );
   m_LabelDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_LabelPosFB->SetLabel( wxGetApp().getMsg( "posfb" ) );
   m_Polarization->SetLabel( wxGetApp().getMsg( "ttbridgepolarization" ) );
@@ -112,6 +113,7 @@ void TTTrackDialog::initValues() {
   // General
   m_TrackNr->SetValue( wTTTrack.getnr( m_Props ) );
   m_DecTrackNr->SetValue( wTTTrack.getdecnr( m_Props ) );
+  m_OppTrackNr->SetValue( wTTTrack.getoppositetrack( m_Props ) );
   m_Desc->SetValue( wxString( wTTTrack.getdesc( m_Props ),wxConvUTF8) );
 
   iONode model = wxGetApp().getModel();
@@ -141,6 +143,7 @@ void TTTrackDialog::evaluate() {
   // General
   wTTTrack.setnr( m_Props, m_TrackNr->GetValue() );
   wTTTrack.setdecnr( m_Props, m_DecTrackNr->GetValue() );
+  wTTTrack.setoppositetrack( m_Props, m_OppTrackNr->GetValue() );
   wTTTrack.setdesc( m_Props, m_Desc->GetValue().mb_str(wxConvUTF8) );
   wTTTrack.setposfb( m_Props, m_PosFB->GetStringSelection().mb_str(wxConvUTF8) );
 
@@ -160,6 +163,8 @@ bool TTTrackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_TrackNr = NULL;
     m_labDecoder = NULL;
     m_DecTrackNr = NULL;
+    m_labOppTrackNr = NULL;
+    m_OppTrackNr = NULL;
     m_LabelDesc = NULL;
     m_Desc = NULL;
     m_LabelPosFB = NULL;
@@ -208,8 +213,14 @@ void TTTrackDialog::CreateControls()
     m_labDecoder = new wxStaticText( itemDialog1, wxID_STATIC, _("Decoder Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labDecoder, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_DecTrackNr = new wxSpinCtrl( itemDialog1, ID_SPINCTRL, _T("-1"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
+    m_DecTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
     itemFlexGridSizer3->Add(m_DecTrackNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labOppTrackNr = new wxStaticText( itemDialog1, wxID_ANY, _("Opposite track Nr."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labOppTrackNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_OppTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
+    itemFlexGridSizer3->Add(m_OppTrackNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDesc = new wxStaticText( itemDialog1, wxID_STATIC_TTT_DESC, _("Description"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelDesc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
@@ -228,17 +239,17 @@ void TTTrackDialog::CreateControls()
     m_Polarization->SetValue(false);
     itemBoxSizer2->Add(m_Polarization, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer13 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer15 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer13, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer15, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer13->AddButton(m_OK);
+    itemStdDialogButtonSizer15->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer13->AddButton(m_Cancel);
+    itemStdDialogButtonSizer15->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer13->Realize();
+    itemStdDialogButtonSizer15->Realize();
 
 ////@end TTTrackDialog content construction
 }

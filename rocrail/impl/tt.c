@@ -47,6 +47,7 @@
 static int instCnt = 0;
 
 static int __getMappedTrack( iOTT inst, int tracknr );
+static int __getOppositeTrack( iOTT inst, int tracknr );
 static void __polarize(obj inst, int pos, Boolean polarization);
 
 
@@ -404,21 +405,35 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
-    /*cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );*/
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     ttdir = False;
-    data->gotopos = -1;
+    data->gotopos = data->tablepos + 1;
+    if( data->gotopos > 47 )
+      data->gotopos = 0;
+    tracknr = data->gotopos;
     data->skippos = -1;
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
-    /*cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );*/
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     ttdir = True;
-    data->gotopos = -1;
+    data->gotopos = data->tablepos - 1;
+    if( data->gotopos < 0 )
+      data->gotopos = 47;
+    tracknr = data->gotopos;
     data->skippos = -1;
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
-    /*cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );*/
-    data->gotopos = data->tablepos;
-    data->skippos = data->tablepos;
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    tracknr = __getOppositeTrack( inst, data->tablepos );
+
+    if( tracknr == -1 ) {
+      if( data->tablepos <= 24 )
+        data->gotopos = data->tablepos + 24;
+      else
+        data->gotopos = data->tablepos - 24;
+      tracknr = data->gotopos;
+    }
+    data->skippos = -1;
   }
   else {
     /* Tracknumber */
@@ -430,7 +445,6 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 
     if( move ) {
       data->gotopos = tracknr;
-      tracknr = __getMappedTrack( inst, tracknr );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     }
     else {
@@ -445,6 +459,8 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     const char* iid = wTurntable.getiid( data->props );
     if( iid != NULL )
       wTurntable.setiid( cmd, iid );
+
+    tracknr = __getMappedTrack( inst, tracknr );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
 
@@ -729,6 +745,23 @@ static int __getMappedTrack( iOTT inst, int tracknr ) {
   }
 
   return tracknr;
+}
+
+
+static int __getOppositeTrack( iOTT inst, int tracknr ) {
+  iOTTData data = Data(inst);
+
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    if( tracknr == wTTTrack.getnr( track ) ) {
+      if( wTTTrack.getdecnr( track ) != -1 ) {
+        return wTTTrack.getoppositetrack( track );
+      }
+    }
+    track = wTurntable.nexttrack( data->props, track );
+  }
+
+  return -1;
 }
 
 

@@ -400,7 +400,7 @@ void RocrailIniDialog::initValues() {
 
   m_Lib->Append( wxString( wDigInt.barjut, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.clock, wxConvUTF8 ) );
-  //m_Lib->Append( wxString( wDigInt.dcc232, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.dcc232, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ddx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.dinamo, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ecos, wxConvUTF8 ) );
@@ -409,6 +409,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.lenz, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.loconet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mcs2, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.nce, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.om32, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.opendcc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.p50, wxConvUTF8 ) );

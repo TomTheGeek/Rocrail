@@ -76,7 +76,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR
 	$(OUTDIR)/lenz$(SHAREDSUFFIX) $(OUTDIR)/roco$(SHAREDSUFFIX) $(OUTDIR)/zimo$(SHAREDSUFFIX) $(OUTDIR)/dinamo$(SHAREDSUFFIX) $(OUTDIR)/om32$(SHAREDSUFFIX) \
 	$(OUTDIR)/ddx$(SHAREDSUFFIX) $(OUTDIR)/slx$(SHAREDSUFFIX) $(OUTDIR)/ecos$(SHAREDSUFFIX) \
 	$(OUTDIR)/inter10$(SHAREDSUFFIX) $(OUTDIR)/barjut$(SHAREDSUFFIX) $(OUTDIR)/loconet$(SHAREDSUFFIX) \
-	$(OUTDIR)/virtual$(SHAREDSUFFIX) $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(OUTDIR)/mcs2$(SHAREDSUFFIX) \
+	$(OUTDIR)/virtual$(SHAREDSUFFIX) $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(OUTDIR)/nce$(SHAREDSUFFIX) \
 	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/railcom$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX) $(OUTDIR)/dcc232$(SHAREDSUFFIX)
 	
 
@@ -129,6 +129,8 @@ $(OUTDIR)/sprog$(SHAREDSUFFIX): $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(NMRAOBJS) $
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/sprog$(SHAREDSUFFIX) $(TMPOUTDIR)/sprog.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)/dcc232$(SHAREDSUFFIX): $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/nce$(SHAREDSUFFIX): $(TMPOUTDIR)/nce.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/nce$(SHAREDSUFFIX) $(TMPOUTDIR)/nce.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -196,6 +198,7 @@ clean:
 	-rm -f $(OUTDIR)/railcom$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/sprog$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/dcc232$(SHAREDSUFFIX)
+	-rm -f $(OUTDIR)/nce$(SHAREDSUFFIX)
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/ogen ../../rocdigs/rocdigs.xml ../
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
 
@@ -222,5 +225,6 @@ install:
 	-cp -p $(OUTDIR)/railcom$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/sprog$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)/nce$(SHAREDSUFFIX) $(DESTDIR)
 	
 	

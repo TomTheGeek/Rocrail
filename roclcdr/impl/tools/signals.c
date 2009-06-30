@@ -93,7 +93,14 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
         "setting signals for curBlock to yellow%s, reverse[%s]",
         data->greenaspect ? " (force green)":"", data->next1RouteFromTo?"false":"true");
 
-    if( data->greenaspect ) {
+    if( data->next1Route != NULL && data->next1Route->hasThrownSwitch(data->next1Route) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "setting signals for curBlock to white: thrown switches in route [%s], reverse[%s]",
+          data->next1Route->getId(data->next1Route), data->next1RouteFromTo?"false":"true" );
+      semaphore |= data->curBlock->white( data->curBlock, True, !data->next1RouteFromTo );
+      semaphore |= data->curBlock->white( data->curBlock, False, !data->next1RouteFromTo );
+    }
+    else if( data->greenaspect ) {
       semaphore |= data->curBlock->green( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->green( data->curBlock, False, !data->next1RouteFromTo );
     }

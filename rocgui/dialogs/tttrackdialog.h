@@ -49,7 +49,6 @@ class wxSpinCtrl;
 ////@begin control identifiers
 #define ID_DIALOG_TTTRACK 10134
 #define wxID_STATIC_TTT_NR 10140
-#define ID_SPINCTRL 10327
 #define wxID_STATIC_TTT_DESC 10141
 #define ID_TEXTCTRL_TTT_DESC 10136
 #define wxID_STATIC_TTT_POSFB 10142
@@ -127,6 +126,8 @@ public:
     wxSpinCtrl* m_TrackNr;
     wxStaticText* m_labDecoder;
     wxSpinCtrl* m_DecTrackNr;
+    wxStaticText* m_labOppTrackNr;
+    wxSpinCtrl* m_OppTrackNr;
     wxStaticText* m_LabelDesc;
     wxTextCtrl* m_Desc;
     wxStaticText* m_LabelPosFB;

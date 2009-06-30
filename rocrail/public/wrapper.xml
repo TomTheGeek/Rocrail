@@ -239,6 +239,7 @@
       <const name="railcom" vt="string" val="railcom"/>
       <const name="sprog" vt="string" val="sprog"/>
       <const name="dcc232" vt="string" val="dcc232"/>
+      <const name="nce" vt="string" val="nce"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -1275,22 +1276,18 @@
 
         <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="gate0" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="gate1" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="gate2" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="gate3" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="gate4" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="addr5" vt="int" defval="0" range="0-*" required="true" remark="new position set flag address"/>
         <var name="port5" vt="int" defval="0" range="0-4" required="true" remark="new position set flag port"/>
-        <var name="gate5" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="addr6" vt="int" defval="0" range="0-*" required="true" remark="new position set flag address"/>
+        <var name="port6" vt="int" defval="0" range="0-4" required="true" remark="new position set flag port"/>
 
         <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
         <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
@@ -1338,6 +1335,7 @@
           <var name="posfb" vt="string" defval="" range="*" required="true" remark="Feedback ID for positioning the TT."/>
           <var name="nr" vt="int" defval="0" range="0-48*" required="true" remark="Track number."/>
           <var name="decnr" vt="int" defval="-1" range="*" required="false" remark="Decoder track number."/>
+          <var name="oppositetrack" vt="int" defval="-1" range="*" required="false" remark="Opposite track to do a 180 degree turn."/>
           <var name="state" vt="bool" defval="false" remark="pos feedback state."/>
           <var name="desc" vt="string" defval="" range="*" remark="description"/>
           <var name="polarization" vt="bool" defval="false" remark="Flip bridge polarization when entering this track."/>

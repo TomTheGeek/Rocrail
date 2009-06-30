@@ -34,7 +34,7 @@ NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c
 all: $(OBJS) $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\opendcc.dll $(OUTDIR)\p50.dll $(OUTDIR)\p50x.dll $(OUTDIR)\hsi88.dll $(OUTDIR)\barjut.dll $(OUTDIR)\srcp.dll \
 	$(OUTDIR)\lenz.dll $(OUTDIR)\roco.dll $(OUTDIR)\zimo.dll $(OUTDIR)\dinamo.dll $(OUTDIR)\om32.dll \
 	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll \
-	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll $(OUTDIR)\sprog.dll
+	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll $(OUTDIR)\sprog.dll $(OUTDIR)\nce.dll
 #	-del /Q $(TMPOUTDIR)\*.o
 
 # ------------------------------------------------------------
@@ -82,6 +82,8 @@ $(OUTDIR)\sprog.dll: $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\li
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\sprog.o $(COMMONOBJS) $(NMRAOBJS) $(LIBS) -o $(OUTDIR)\sprog.dll
 $(OUTDIR)\dcc232.dll: $(TMPOUTDIR)\dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(LIBS) -o $(OUTDIR)\dcc232.dll
+$(OUTDIR)\nce.dll: $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
+	dllwrap --def rocdigs.def $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\nce.dll
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -143,6 +145,7 @@ clean:
 	-del /Q $(OUTDIR)\clock.dll
 	-del /Q $(OUTDIR)\sprog.dll
 	-del /Q $(OUTDIR)\dcc232.dll
+	-del /Q $(OUTDIR)\nce.dll
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\ogen.exe ..\..\rocdigs\rocdigs.xml ..\\
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml impl\version.c svnLog
 	

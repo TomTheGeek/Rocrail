@@ -110,6 +110,7 @@ TurntableDialog::TurntableDialog( wxWindow* parent, iONode p_Props )
   m_TracksGrid->SetColLabelValue(1, wxGetApp().getMsg("posfb") );
   m_TracksGrid->SetColLabelValue(2, wxGetApp().getMsg("description") );
   m_TracksGrid->SetColLabelValue(3, wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("tracknr") );
+  m_TracksGrid->SetColLabelValue(4, wxGetApp().getMsg("opposite") + _T(" ") + wxGetApp().getMsg("tracknr") );
   m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->AutoSizeRows();
 
@@ -397,10 +398,14 @@ void TurntableDialog::initValues() {
     nr = StrOp.fmt( "%d", wTTTrack.getdecnr( track ) );
     m_TracksGrid->SetCellValue(m_TracksGrid->GetNumberRows()-1, 3, wxString(nr,wxConvUTF8 ) );
     StrOp.free( nr );
+    nr = StrOp.fmt( "%d", wTTTrack.getoppositetrack( track ) );
+    m_TracksGrid->SetCellValue(m_TracksGrid->GetNumberRows()-1, 4, wxString(nr,wxConvUTF8 ) );
+    StrOp.free( nr );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 0, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 1, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 2, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 3, true );
+    m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 4, true );
     track = wTurntable.nexttrack( m_Props, track );
   };
 
@@ -863,7 +868,7 @@ void TurntableDialog::CreateControls()
     m_TracksGrid->SetDefaultRowSize(20);
     m_TracksGrid->SetColLabelSize(20);
     m_TracksGrid->SetRowLabelSize(0);
-    m_TracksGrid->CreateGrid(1, 4, wxGrid::wxGridSelectRows);
+    m_TracksGrid->CreateGrid(1, 5, wxGrid::wxGridSelectRows);
     itemBoxSizer84->Add(m_TracksGrid, 2, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer86 = new wxBoxSizer(wxHORIZONTAL);
