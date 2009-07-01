@@ -140,6 +140,39 @@ static Boolean __transact( iONCEData data, byte* out, int outsize, byte* in, int
 }
 
 
+static void __cpFunctions( byte* fn, iONode node ) {
+  fn[ 0] = wFunCmd.isf0 ( node );
+  fn[ 1] = wFunCmd.isf1 ( node );
+  fn[ 2] = wFunCmd.isf2 ( node );
+  fn[ 3] = wFunCmd.isf3 ( node );
+  fn[ 4] = wFunCmd.isf4 ( node );
+  fn[ 5] = wFunCmd.isf5 ( node );
+  fn[ 6] = wFunCmd.isf6 ( node );
+  fn[ 7] = wFunCmd.isf7 ( node );
+  fn[ 8] = wFunCmd.isf8 ( node );
+  fn[ 9] = wFunCmd.isf9 ( node );
+  fn[10] = wFunCmd.isf10( node );
+  fn[11] = wFunCmd.isf11( node );
+  fn[12] = wFunCmd.isf12( node );
+  fn[13] = wFunCmd.isf13( node );
+  fn[14] = wFunCmd.isf14( node );
+  fn[15] = wFunCmd.isf15( node );
+  fn[16] = wFunCmd.isf16( node );
+  fn[17] = wFunCmd.isf17( node );
+  fn[18] = wFunCmd.isf18( node );
+  fn[19] = wFunCmd.isf19( node );
+  fn[20] = wFunCmd.isf20( node );
+  fn[21] = wFunCmd.isf21( node );
+  fn[22] = wFunCmd.isf22( node );
+  fn[23] = wFunCmd.isf23( node );
+  fn[24] = wFunCmd.isf24( node );
+  fn[25] = wFunCmd.isf25( node );
+  fn[26] = wFunCmd.isf26( node );
+  fn[27] = wFunCmd.isf27( node );
+  fn[28] = wFunCmd.isf28( node );
+}
+
+
 static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
   *insize = 0;
 
@@ -206,6 +239,9 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     else {
       cmd = dir ? 4 : 3;
     }
+    
+    if( addr > 127 || StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) )
+      addr += 0xC000;
 
     out[0] = 0xA2;
     out[1] = addr / 256;
@@ -220,23 +256,50 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
-    Boolean f0 = wFunCmd.isf0( node );
-    Boolean f1 = wFunCmd.isf1( node );
-    Boolean f2 = wFunCmd.isf2( node );
-    Boolean f3 = wFunCmd.isf3( node );
-    Boolean f4 = wFunCmd.isf4( node );
+    int  group = wFunCmd.getgroup(node);
+    byte fn [32];
+    byte info = 0;
+    byte op_1 = 0;
+   
+    __cpFunctions(fn, node);
+    if( group > 0 )
+    group--;
     
-    byte info = (f0?0x10:0) + (f1?0x01:0) + (f2?0x02:0) + (f3?0x04:0) + (f4?0x08:0);
+    switch( group ) {
+      case 0:
+        info = (fn[0]?0x10:0) + (fn[1]?0x01:0) + (fn[2]?0x02:0) + (fn[3]?0x04:0) + (fn[4]?0x08:0);
+        op_1 = 7;
+        break;
+      case 1:
+        info = (fn[5]?0x01:0) + (fn[6]?0x02:0) + (fn[7]?0x04:0) + (fn[8]?0x08:0);
+        op_1 = 8;
+        break;
+      case 2:
+        info = (fn[9]?0x01:0) + (fn[10]?0x02:0) + (fn[11]?0x04:0) + (fn[12]?0x08:0);
+        op_1 = 9;
+        break;
+      case 3:
+      case 4:
+        info = (fn[13]?0x01:0) + (fn[14]?0x02:0) + (fn[15]?0x04:0) + (fn[16]?0x08:0 + fn[17]?0x10:0) + (fn[18]?0x20:0) + (fn[19]?0x40:0) + (fn[20]?0x80:0);
+        op_1 = 15;
+        break;
+      case 5:
+      case 6:
+        info = (fn[21]?0x01:0) + (fn[22]?0x02:0) + (fn[23]?0x04:0) + (fn[24]?0x08:0 + fn[25]?0x10:0) + (fn[26]?0x20:0) + (fn[27]?0x40:0) + (fn[28]?0x80:0);
+        op_1 = 16;
+        break;
+    }
 
+    if( addr > 127 || StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) )
+      addr += 0xC000;
+      
     out[0] = 0xA2;
     out[1] = addr / 256;
     out[2] = addr & 0xFF;
-    out[3] = 7;
+    out[3] = op_1;
     out[4] = info;
     *insize = 1; /* Return code from NCE. */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "loc %d f0=%s f1=%s f2=%s f3=%s f4=%s",
-            addr, f0?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d function group=%d fn=%02x", addr, group, info );
     return 5;
   }
   
@@ -333,9 +396,19 @@ static void __pollerThread( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iONCE nce = (iONCE)ThreadOp.getParm( th );
   iONCEData data = Data(nce);
+  byte cmd = 0;
+  byte rev[4];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "AIU poller started." );
   ThreadOp.sleep( 1000 );
+
+  cmd = 0xAA;
+  if( __transact( data, &cmd, 1, rev, 3 ) ) {
+    /* software revision */ 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NCE Software revision %d.%d.%d", rev[0], rev[1], rev[2] );
+  }
+  
+  
   do {
     unsigned char out[32];
     unsigned char in [32];

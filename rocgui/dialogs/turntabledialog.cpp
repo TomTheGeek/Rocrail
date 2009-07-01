@@ -406,6 +406,16 @@ void TurntableDialog::initValues() {
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 2, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 3, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 4, true );
+
+    if( wTTTrack.isshow( track )) {
+      m_TracksGrid->SetCellBackgroundColour( m_TracksGrid->GetNumberRows()-1, 0,
+          m_TracksGrid->GetCellBackgroundColour(m_TracksGrid->GetNumberRows()-1, 0));
+    }
+    else {
+      m_TracksGrid->SetCellBackgroundColour( m_TracksGrid->GetNumberRows()-1, 0, wxColour(255,200,200));
+    }
+
+
     track = wTurntable.nexttrack( m_Props, track );
   };
 

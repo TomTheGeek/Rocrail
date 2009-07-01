@@ -133,6 +133,7 @@ public:
     wxStaticText* m_LabelPosFB;
     wxComboBox* m_PosFB;
     wxCheckBox* m_Polarization;
+    wxCheckBox* m_Show;
     wxButton* m_OK;
     wxButton* m_Cancel;
     iONode m_Props;

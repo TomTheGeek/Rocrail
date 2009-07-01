@@ -48,6 +48,8 @@ static int instCnt = 0;
 
 static int __getMappedTrack( iOTT inst, int tracknr );
 static int __getOppositeTrack( iOTT inst, int tracknr );
+static int __getNextTrack( iOTT inst, int tracknr );
+static int __getPrevTrack( iOTT inst, int tracknr );
 static void __polarize(obj inst, int pos, Boolean polarization);
 
 
@@ -405,22 +407,20 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    ttdir = False;
-    data->gotopos = data->tablepos + 1;
-    if( data->gotopos > 47 )
-      data->gotopos = 0;
-    tracknr = data->gotopos;
-    data->skippos = -1;
+    tracknr = __getNextTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    ttdir = True;
-    data->gotopos = data->tablepos - 1;
-    if( data->gotopos < 0 )
-      data->gotopos = 47;
-    tracknr = data->gotopos;
-    data->skippos = -1;
+    tracknr = __getPrevTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -432,6 +432,9 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       else
         data->gotopos = data->tablepos - 24;
       tracknr = data->gotopos;
+    }
+    else {
+      data->gotopos = tracknr;
     }
     data->skippos = -1;
   }
@@ -759,6 +762,55 @@ static int __getOppositeTrack( iOTT inst, int tracknr ) {
       }
     }
     track = wTurntable.nexttrack( data->props, track );
+  }
+
+  return -1;
+}
+
+
+static int __getNextTrack( iOTT inst, int tracknr ) {
+  iOTTData data = Data(inst);
+
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    if( tracknr == wTTTrack.getnr( track ) ) {
+      track = wTurntable.nexttrack( data->props, track );
+      if( track != NULL ) {
+        return wTTTrack.getnr( track );
+      }
+      else {
+        track = wTurntable.gettrack( data->props );
+        return wTTTrack.getnr( track );
+      }
+    }
+    track = wTurntable.nexttrack( data->props, track );
+  }
+
+  return -1;
+}
+
+
+static int __getPrevTrack( iOTT inst, int tracknr ) {
+  iOTTData data = Data(inst);
+  
+  Boolean useLast = False;
+  iONode prevtrack = NULL;
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    if( tracknr == wTTTrack.getnr( track ) ) {
+      if( prevtrack != NULL ) {
+        return wTTTrack.getnr( prevtrack );
+      }
+      else {
+        useLast = True;
+      }
+    }
+    prevtrack = track;
+    track = wTurntable.nexttrack( data->props, track );
+  }
+  
+  if( useLast && prevtrack != NULL ) {
+    return wTTTrack.getnr( prevtrack );
   }
 
   return -1;

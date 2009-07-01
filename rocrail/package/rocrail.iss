@@ -67,6 +67,9 @@ Source: "..\..\winbin\opendcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\clock.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mcs2.dll"; DestDir: "{app}"
 Source: "..\..\winbin\barjut.dll"; DestDir: "{app}"
+Source: "..\..\winbin\sprog.dll"; DestDir: "{app}"
+Source: "..\..\winbin\nce.dll"; DestDir: "{app}"
+Source: "..\..\winbin\dcc232.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{commondocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "neustadt.xml"; DestDir: "{commondocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall

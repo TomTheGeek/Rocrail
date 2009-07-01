@@ -1864,7 +1864,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
       dc.SetPen(*pen);
     }
 
-    dc.DrawLine( 79, 79, x, y );
+    if( wTTTrack.isshow( track ) )
+      dc.DrawLine( 79, 79, x, y );
 
     track = wTurntable.nexttrack( m_Props, track );
   }
@@ -1876,6 +1877,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   dc.DrawCircle( 79, 79, 36 );
   dc.DrawCircle( 79, 79, 32 );
   dc.DrawPolygon( 5, rotateBridge( *bridgepos ) );
+  //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
   const wxBrush& b = dc.GetBrush();
   Boolean sensor1 = wTurntable.isstate1( m_Props );
@@ -2030,5 +2032,29 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori ) {
   }
   return p;
 }
+
+wxPoint* SymbolRenderer::rotateBridgeNose( double ori ) {
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge nose ori=%f", ori );
+  static wxPoint p[5];
+  double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
+
+  for( int i = 0; i < 4; i++ ) {
+    double angle = ori+bp[i];
+    if( angle > 360.0 )
+      angle = angle -360.0;
+    double a = (angle*2*PI25DT)/360;
+    double xa = cos(a) * 10.0;
+    double ya = sin(a) * 10.0;
+    p[i].x = 79 + (int)xa;
+    p[i].y = 79 - (int)ya;
+    if( i == 0 ) {
+      // end point to close the polygon
+      p[4].x = p[i].x;
+      p[4].y = p[i].y;
+    }
+  }
+  return p;
+}
+
 
 
