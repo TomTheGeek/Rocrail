@@ -106,11 +106,11 @@ TurntableDialog::TurntableDialog( wxWindow* parent, iONode p_Props )
   wxFont* font = new wxFont( m_TracksGrid->GetDefaultCellFont() );
   font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_TracksGrid->SetDefaultCellFont( *font );
-  m_TracksGrid->SetColLabelValue(0, wxGetApp().getMsg("tracknr") );
+  m_TracksGrid->SetColLabelValue(0, wxGetApp().getMsg("track") );
   m_TracksGrid->SetColLabelValue(1, wxGetApp().getMsg("posfb") );
   m_TracksGrid->SetColLabelValue(2, wxGetApp().getMsg("description") );
-  m_TracksGrid->SetColLabelValue(3, wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("tracknr") );
-  m_TracksGrid->SetColLabelValue(4, wxGetApp().getMsg("opposite") + _T(" ") + wxGetApp().getMsg("tracknr") );
+  m_TracksGrid->SetColLabelValue(3, wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("track") );
+  m_TracksGrid->SetColLabelValue(4, wxGetApp().getMsg("opposite") + _T(" ") + wxGetApp().getMsg("track") );
   m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->AutoSizeRows();
 
