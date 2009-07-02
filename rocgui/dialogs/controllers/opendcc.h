@@ -62,8 +62,14 @@ class wxSpinCtrl;
  */
 
 enum {
+  mode_type_xpr  = 0x01,
+  mode_fastclock = 0x10,
+};
+
+enum {
   so_version = 0,
   so_bps = 1,
+  so_mode = 2,
   so_dcc_format = 24,
   so_loco_format_low = 40,
   so_loco_format_high = 41,
@@ -104,6 +110,7 @@ class OpenDCCCtrlDlg: public wxDialog
     int m_soNewValue[256];
 
     bool m_bLenz;
+    int m_OpenDCCmode;
 
     int m_TimerCount;
     bool m_bStartUpProgress;
@@ -170,10 +177,11 @@ public:
     wxPanel* m_GeneralPanel;
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
-    wxStaticText* m_labVersion;
-    wxTextCtrl* m_Version;
     wxStaticText* m_labDevice;
     wxTextCtrl* m_Device;
+    wxStaticText* m_labVersion;
+    wxTextCtrl* m_Version;
+    wxTextCtrl* m_Mode;
     wxRadioBox* m_SubLib;
     wxRadioBox* m_Baudrate;
     wxButton* m_ReadCVs;
