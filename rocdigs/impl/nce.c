@@ -47,7 +47,7 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iONCEData data = Data(inst);
     /* Cleanup data->xxx members...*/
-    
+
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -203,14 +203,14 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     out[2] = addr & 0xFF;
     out[3] = cmd;
     out[4] = 0;
-    
+
     *insize = 1; /* Return code from NCE. */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %s", addr, wSwitch.getcmd( node ) );
     return 4;
   }
-  
-  /* Loc command. 
-  
+
+  /* Loc command.
+
   01 0-7f Reverse 28 speed command
   02 0-7f Forward 28 speed command
   03 0-7f Reverse 128 speed command
@@ -232,14 +232,14 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d lights=%s dir=%s",
         addr, speed, fn?"on":"off", dir?"forwards":"reverse" );
-        
+
     if( spcnt == 28 ) {
       cmd = dir ? 2 : 1;
     }
     else {
       cmd = dir ? 4 : 3;
     }
-    
+
     if( addr > 127 || StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) )
       addr += 0xC000;
 
@@ -248,11 +248,11 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     out[2] = addr & 0xFF;
     out[3] = cmd;
     out[4] = speed;
-    
+
     *insize = 1; /* Return code from NCE. */
     return 6;
   }
-  
+
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
@@ -260,11 +260,11 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     byte fn [32];
     byte info = 0;
     byte op_1 = 0;
-   
+
     __cpFunctions(fn, node);
     if( group > 0 )
     group--;
-    
+
     switch( group ) {
       case 0:
         info = (fn[0]?0x10:0) + (fn[1]?0x01:0) + (fn[2]?0x02:0) + (fn[3]?0x04:0) + (fn[4]?0x08:0);
@@ -292,7 +292,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
 
     if( addr > 127 || StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) )
       addr += 0xC000;
-      
+
     out[0] = 0xA2;
     out[1] = addr / 256;
     out[2] = addr & 0xFF;
@@ -302,8 +302,8 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d function group=%d fn=%02x", addr, group, info );
     return 5;
   }
-  
-  
+
+
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
@@ -319,7 +319,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       return 1;
     }
-  }  
+  }
 
   return 0;
 }
@@ -341,7 +341,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
     if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
     }
   }
-  
+
   return nodeB;
 }
 
@@ -404,18 +404,18 @@ static void __pollerThread( void* threadinst ) {
 
   cmd = 0xAA;
   if( __transact( data, &cmd, 1, rev, 3 ) ) {
-    /* software revision */ 
+    /* software revision */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NCE Software revision %d.%d.%d", rev[0], rev[1], rev[2] );
   }
-  
-  
+
+
   do {
     unsigned char out[32];
     unsigned char in [32];
     int i = 0;
 
     ThreadOp.sleep( 100 );
-    
+
     for( i = 0; i < data->aiucnt; i++ ) {
 
       out[0] = 0x8A;
@@ -426,7 +426,7 @@ static void __pollerThread( void* threadinst ) {
       }
       ThreadOp.sleep( 0 );
     }
-    
+
   } while( data->run );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "AIU poller ended." );
 }
@@ -440,6 +440,10 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
   iONCEData data = allocMem( sizeof( struct ONCEData ) );
   MemOp.basecpy( __NCE, &NCEOp, 0, sizeof( struct ONCE ), data );
 
+  TraceOp.set( trc );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "initializing nce library..." );
+
   /* Initialize data->xxx members... */
   data->mux     = MutexOp.inst( NULL, True );
 
@@ -449,8 +453,6 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
   data->aiucnt = wDigInt.getfbmod( ini );
 
   data->run    = True;
-
-  SystemOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "nce %d.%d.%d", vmajor, vminor, patch );
@@ -466,7 +468,7 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );
-  
+
   data->poller = ThreadOp.inst( "poller", &__pollerThread, __NCE );
   ThreadOp.start( data->poller );
 
