@@ -94,6 +94,7 @@ OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props )
   m_Progress = NULL;
   m_bCleanUpProgress = false;
   m_bStartUpProgress = false;
+  m_bLenz = false;
   m_Props = props;
   MemOp.set( m_soValue, 0, sizeof(m_soValue) );
 
@@ -356,7 +357,41 @@ void OpenDCCCtrlDlg::writeAll() {
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "write all" );
 
   if( m_soValue[so_bps] != m_Baudrate->GetSelection() ) {
-    sendSet( so_bps, m_Baudrate->GetSelection() );
+    int value = m_Baudrate->GetSelection();
+    if( m_bLenz ) {
+      /*
+      lenz
+        0:   9600 Baud
+        1:   19200 Baud (default)
+        2:   38400 Baud
+        3:   57600 Baud
+        4:   115200 Baud
+        5:   2400 Baud
+        6:   4800 Baud
+
+      p50x
+        0:   2400 Baud
+        1:   4800 Baud
+        2:   9600 Baud
+        3:   19200 Baud
+        4:   38400 Baud
+        5:   57600 Baud
+        6:   115200 Baud
+
+      */
+      switch( value ) {
+      case 0: value = 5; break;
+      case 1: value = 6; break;
+      case 2: value = 0; break;
+      case 3: value = 1; break;
+      case 4: value = 2; break;
+      case 5: value = 3; break;
+      case 6: value = 4; break;
+      }
+
+    }
+
+    sendSet( so_bps, value );
   }
   if( m_soValue[so_dcc_format] != m_DecSpeedSteps->GetSelection() ) {
     sendSet( so_dcc_format, m_DecSpeedSteps->GetSelection() );
@@ -431,6 +466,38 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
   }
   else if( so == so_bps ) {
     TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "baudrate = %d", value );
+    if( m_bLenz ) {
+      /*
+      lenz
+        0:   9600 Baud
+        1:   19200 Baud (default)
+        2:   38400 Baud
+        3:   57600 Baud
+        4:   115200 Baud
+        5:   2400 Baud
+        6:   4800 Baud
+
+      p50x
+        0:   2400 Baud
+        1:   4800 Baud
+        2:   9600 Baud
+        3:   19200 Baud
+        4:   38400 Baud
+        5:   57600 Baud
+        6:   115200 Baud
+
+      */
+      switch( value ) {
+      case 0: value = 2; break;
+      case 1: value = 2; break;
+      case 2: value = 4; break;
+      case 3: value = 5; break;
+      case 4: value = 6; break;
+      case 5: value = 0; break;
+      case 6: value = 1; break;
+      }
+
+    }
     m_Baudrate->SetSelection(value);
     sendGet( so_dcc_format );
   }
@@ -579,6 +646,7 @@ void OpenDCCCtrlDlg::OnPTEvent( wxCommandEvent& event ) {
 
   int so = wProgram.getcv(node);
   int value = wProgram.getvalue(node);
+  m_bLenz = StrOp.equals( wDigInt.lenz, wOpenDCC.getlib(node) ) ? true:false;
 
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "%s node received: [%d][%d]",
       NodeOp.getName(node), so, value );

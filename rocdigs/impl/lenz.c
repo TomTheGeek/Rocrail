@@ -429,27 +429,34 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out I" );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
 
-  /* Flip around the address bytes*/
-  byte tmp = outBytes[2];
-  outBytes[2] = outBytes[3];
-  outBytes[3] = tmp;
+  if( outBytes[0] == 0x78 ) {
+    /* Flip around the address bytes*/
+    byte tmp = outBytes[2];
+    outBytes[2] = outBytes[3];
+    outBytes[3] = tmp;
 
-  /* READ */
-  if( outBytes[0] == 0x78 && outBytes[1] == 0xA4) {
-    outBytes[0] = 0x24;
-    outBytes[1] = 0x28;
-    __sendRequest( lenz, outBytes );
+    /* READ */
+    if( outBytes[1] == 0xA4) {
+      outBytes[0] = 0x24;
+      outBytes[1] = 0x28;
+      __sendRequest( lenz, outBytes );
+    }
+
+    /* WRITE */
+    else if( outBytes[1] == 0xA3) {
+      outBytes[0] = 0x24;
+      outBytes[1] = 0x29;
+      __sendRequest( lenz, outBytes );
+    }
   }
-
-  /* WRITE */
-  else if( outBytes[0] == 0x78 && outBytes[1] == 0xA3) {
-    outBytes[0] = 0x24;
-    outBytes[1] = 0x29;
+  else {
     __sendRequest( lenz, outBytes );
   }
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out II" );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
+
+  freeMem(outBytes);
 
   int datalen;
   byte in[256];
@@ -473,7 +480,7 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
         MutexOp.post( data->mux );
 
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command in %d", datalen );
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen );
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen + 2 );
 
         /* SO Answer */
         if( in[0] == 0x24 && in[1] == 0x28) {

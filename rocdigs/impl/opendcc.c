@@ -170,7 +170,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* byteStr = NULL;
-        byte outBytes[5];
+        byte outBytes[6];
         outBytes[0] = (byte)'x';
         outBytes[1] = 0xA3;
         outBytes[2] = wProgram.getcv(cmd) % 256;
@@ -182,6 +182,34 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         wBinCmd.setinlen( ptcmd, 1 );
         wBinCmd.setout( ptcmd, byteStr );
         StrOp.free( byteStr );
+      }
+      else {
+        /* lenz sublib
+           0x24 0x29 AddrH AddrL DAT [XOR]
+           SO write request. The answer is 0x24 0x28 AddrH AddrL DATA [XOR]
+        */
+        ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        char* byteStr = NULL;
+        byte outBytes[6];
+        outBytes[0] = 0x24;
+        outBytes[1] = 0x29;
+        outBytes[2] = wProgram.getcv(cmd) / 256;
+        outBytes[3] = wProgram.getcv(cmd) % 256;
+        outBytes[4] = wProgram.getvalue(cmd);
+
+        byte bXor = 0;
+        int i = 0;
+        for( i = 0; i < 5; i++ ) {
+          bXor ^= outBytes[ i ];
+        }
+        outBytes[5] = bXor;
+
+        byteStr = StrOp.byteToStr( outBytes, 6 );
+        wBinCmd.setoutlen( ptcmd, 6 );
+        wBinCmd.setinlen( ptcmd, 6 );
+        wBinCmd.setout( ptcmd, byteStr );
+        StrOp.free( byteStr );
+
       }
     }
     else if(  wProgram.getcmd( cmd ) == wProgram.get ) {
@@ -202,6 +230,36 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
         getCV = True;
       }
+      else {
+        /* lenz sublib
+           0x23 0x28 AddrH AddrL [XOR]
+           SO (special option) read request; this allows to read the internal configuration values.
+           AddrH AddrL denotes the address of the CV.
+           The answer is 0x24 0x28 AddrH AddrL DATA [XOR]
+         */
+        ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        char* byteStr = NULL;
+        byte outBytes[5];
+        outBytes[0] = 0x23;
+        outBytes[1] = 0x28;
+        outBytes[2] = wProgram.getcv(cmd) / 256;
+        outBytes[3] = wProgram.getcv(cmd) % 256;
+
+        byte bXor = 0;
+        int i = 0;
+        for( i = 0; i < 4; i++ ) {
+          bXor ^= outBytes[ i ];
+        }
+        outBytes[4] = bXor;
+
+        byteStr = StrOp.byteToStr( outBytes, 5 );
+        wBinCmd.setoutlen( ptcmd, 5 );
+        wBinCmd.setinlen( ptcmd, 6 );
+        wBinCmd.setout( ptcmd, byteStr );
+        StrOp.free( byteStr );
+
+        getCV = True;
+      }
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -217,6 +275,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       response = (iONode)NodeOp.base.clone(cmd);
       if( getCV && inData[0] == 0 ) {
         wProgram.setvalue( response, inData[1] );
+        wOpenDCC.setlib( response, wOpenDCC.getlib(data->opendccini) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Successfully XSO%s [%d][%d]", (getCV?"Get":"Set"), wProgram.getcv(cmd), inData[1] );
       }
@@ -225,6 +284,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "Error [%s] XSO%d [%d]", (getCV?"Get":"Set"), inData[0], wProgram.getcv(response) );
       }
+      freeMem(inData);
     }
 
     /* Cleanup command node */
@@ -265,6 +325,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
       }
+      else {
+        /* lenz sublib */
+      }
     }
     else {
       response = data->sublib->cmd((obj)data->sublib, cmd);
@@ -283,6 +346,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
+      }
+      else {
+        /* lenz sublib */
       }
     }
     else {

@@ -103,6 +103,8 @@ class OpenDCCCtrlDlg: public wxDialog
     int m_soValue[256];
     int m_soNewValue[256];
 
+    bool m_bLenz;
+
     int m_TimerCount;
     bool m_bStartUpProgress;
     bool m_bCleanUpProgress;
