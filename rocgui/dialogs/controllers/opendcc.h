@@ -105,6 +105,7 @@ class OpenDCCCtrlDlg: public wxDialog
     void sendSet( int so, int value );
     void evaluateGet( int so, int value );
     void evaluateSet( int so, int value );
+    int getBPSval();
 
     int m_soValue[256];
     int m_soNewValue[256];

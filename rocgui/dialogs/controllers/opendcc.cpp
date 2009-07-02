@@ -354,45 +354,51 @@ void OpenDCCCtrlDlg::sendSet( int so, int value ) {
 }
 
 
+int OpenDCCCtrlDlg::getBPSval() {
+  int value = m_Baudrate->GetSelection();
+  if( m_bLenz ) {
+    /*
+    lenz
+      0:   9600 Baud
+      1:   19200 Baud (default)
+      2:   38400 Baud
+      3:   57600 Baud
+      4:   115200 Baud
+      5:   2400 Baud
+      6:   4800 Baud
+
+    p50x
+      0:   2400 Baud
+      1:   4800 Baud
+      2:   9600 Baud
+      3:   19200 Baud
+      4:   38400 Baud
+      5:   57600 Baud
+      6:   115200 Baud
+
+    */
+    switch( value ) {
+    case 0: value = 5; break;
+    case 1: value = 6; break;
+    case 2: value = 0; break;
+    case 3: value = 1; break;
+    case 4: value = 2; break;
+    case 5: value = 3; break;
+    case 6: value = 4; break;
+    }
+
+  }
+
+  return value;
+}
+
+
 void OpenDCCCtrlDlg::writeAll() {
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "write all" );
 
-  if( m_soValue[so_bps] != m_Baudrate->GetSelection() ) {
-    int value = m_Baudrate->GetSelection();
-    if( m_bLenz ) {
-      /*
-      lenz
-        0:   9600 Baud
-        1:   19200 Baud (default)
-        2:   38400 Baud
-        3:   57600 Baud
-        4:   115200 Baud
-        5:   2400 Baud
-        6:   4800 Baud
-
-      p50x
-        0:   2400 Baud
-        1:   4800 Baud
-        2:   9600 Baud
-        3:   19200 Baud
-        4:   38400 Baud
-        5:   57600 Baud
-        6:   115200 Baud
-
-      */
-      switch( value ) {
-      case 0: value = 5; break;
-      case 1: value = 6; break;
-      case 2: value = 0; break;
-      case 3: value = 1; break;
-      case 4: value = 2; break;
-      case 5: value = 3; break;
-      case 6: value = 4; break;
-      }
-
-    }
-
-    sendSet( so_bps, value );
+  TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "bps is=%d, new=%d", m_soValue[so_bps], getBPSval() );
+  if( m_soValue[so_bps] != getBPSval() ) {
+    sendSet( so_bps, getBPSval() );
   }
   if( m_soValue[so_dcc_format] != m_DecSpeedSteps->GetSelection() ) {
     sendSet( so_dcc_format, m_DecSpeedSteps->GetSelection() );
