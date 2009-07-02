@@ -258,7 +258,14 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_RouteID = NULL;
   m_locidStr = NULL;
   m_Timer = new wxTimer( this, ME_Timer );
-  m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap() );
+
+  int itemidps = 7;
+  iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
+  if( planpanelIni != NULL ) {
+    itemidps = wPlanPanel.getitemidps(planpanelIni);
+  }
+
+  m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap(), itemidps );
 
   const char* tip = wItem.getid( m_Props );
   if( StrOp.len( wItem.getdesc( m_Props ) ) > 0 )

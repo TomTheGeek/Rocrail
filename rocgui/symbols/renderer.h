@@ -58,6 +58,7 @@ class SymbolRenderer {
   char* m_Label;
   double m_fText;
   double m_Scale;
+  int m_iItemIDps;
   svgSymbol* m_SvgSym1; // straight, red
   svgSymbol* m_SvgSym2; // occupied, thrown, thrownleft, yellow
   svgSymbol* m_SvgSym3; // thrownright, green
@@ -77,7 +78,7 @@ class SymbolRenderer {
 
 public:
   void initSym();
-  SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap );
+  SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps );
   void drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy );
   void setLabel( const char* label, int occupied );

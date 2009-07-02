@@ -8490,4 +8490,7 @@
   <Msg id="multiport">
     <en txt="Multiport"/>
   </Msg>
+  <Msg id="itemidps">
+    <en txt="Item ID pointsize"/>
+  </Msg>
 </Messages>

@@ -53,7 +53,7 @@
 static double PI25DT = 3.141592653589793238462643;
 
 
-SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap ) {
+SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps ) {
   m_Props = props;
   m_Parent = parent;
   m_SymMap = symmap;
@@ -64,6 +64,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap ) {
   m_Scale = 1.0;
   initSym();
   m_Label = StrOp.dup("...");
+  m_iItemIDps = itemidps;
 }
 
 
@@ -883,7 +884,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, cons
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     if( m_iSymSubType == switchtype::i_crossingright ) {
@@ -1076,7 +1077,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, con
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     if( m_iSymSubType == switchtype::i_dcrossingright ) {
@@ -1170,7 +1171,7 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, cons
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     wxSize wxfontsize = dc.GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8) );
@@ -1271,7 +1272,7 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     if( m_iSymSubType == switchtype::i_turnoutleft ) {
@@ -1473,7 +1474,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     if( StrOp.equals( ori, wItem.north ) )
@@ -1813,7 +1814,7 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( 7 );
+    font->SetPointSize( m_iItemIDps );
     dc.SetFont(*font);
 
     if( StrOp.equals( ori, wItem.south ) )

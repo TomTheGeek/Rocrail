@@ -107,6 +107,7 @@
       <var name="svgpath3" vt="string" defval="." remark="scan this path for svg symbols"/>
       <var name="svgpath4" vt="string" defval="." remark="scan this path for svg symbols"/>
       <var name="svgpath5" vt="string" defval="." remark="scan this path for svg symbols"/>
+      <var name="itemidps" vt="int" defval="7"/>
       <var name="red" vt="int" defval="255"/>
       <var name="green" vt="int" defval="255"/>
       <var name="blue" vt="int" defval="255"/>
