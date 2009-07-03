@@ -551,7 +551,7 @@ static iONode __translate( iOLenz lenz, iONode node ) {
 
     When no Parameters are given, it is a query and the answer will be sent only to the requesting slave.
      */
-    if( data->fastclock ) {
+    if( data->fastclock && StrOp.equals( wClock.set, wClock.getcmd( node ) ) ) {
       long l_time = wClock.gettime(node);
       struct tm* lTime = localtime( &l_time );
 

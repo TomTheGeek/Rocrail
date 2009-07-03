@@ -918,6 +918,7 @@ static void __clockticker( void* threadinst ) {
   iONode    clockini = wRocRail.getclock( ini );
   int        seconds = 0;
   Boolean    timeset = False;
+  Boolean    firstsync = True;
 
   data->time = time(NULL);
   data->devider = 1;
@@ -969,11 +970,14 @@ static void __clockticker( void* threadinst ) {
       iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
-      wClock.setcmd( tick, wClock.sync );
+      wClock.setcmd( tick, firstsync ? wClock.set:wClock.sync );
       ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */
       ControlOp.cmd( control, tick, NULL );
     }
+
+    if( firstsync )
+      firstsync = False;
 
     __checkActions( control );
 
