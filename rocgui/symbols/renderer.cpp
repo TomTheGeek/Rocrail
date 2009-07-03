@@ -1878,7 +1878,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   dc.DrawCircle( 79, 79, 36 );
   dc.DrawCircle( 79, 79, 32 );
   dc.DrawPolygon( 5, rotateBridge( *bridgepos ) );
-  //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
+  dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
   const wxBrush& b = dc.GetBrush();
   Boolean sensor1 = wTurntable.isstate1( m_Props );
@@ -2034,26 +2034,71 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori ) {
   return p;
 }
 
-wxPoint* SymbolRenderer::rotateBridgeNose( double ori ) {
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge nose ori=%f", ori );
-  static wxPoint p[5];
-  double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
 
-  for( int i = 0; i < 4; i++ ) {
-    double angle = ori+bp[i];
-    if( angle > 360.0 )
-      angle = angle -360.0;
-    double a = (angle*2*PI25DT)/360;
-    double xa = cos(a) * 10.0;
-    double ya = sin(a) * 10.0;
-    p[i].x = 79 + (int)xa;
-    p[i].y = 79 - (int)ya;
-    if( i == 0 ) {
-      // end point to close the polygon
-      p[4].x = p[i].x;
-      p[4].y = p[i].y;
-    }
-  }
+wxPoint* SymbolRenderer::rotateBridgeNose( double hoek ) {
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge nose ori=%f", hoek );
+  static wxPoint p[5];
+
+  double xa;
+  double ya;
+  double xb;
+  double yb;
+  double xc;
+  double yc;
+  double yd;
+  double xd;
+  double xe;
+  double ye;
+  double xf;
+  double yf;
+  double rad;
+  double pi= 3.14159265358979;;
+  double alfa;
+  double sinalfa;
+  double cosalfa;
+
+  hoek = 360 - hoek;
+
+  double center = (32 * 5) / 2.0;
+  double straal1 = 22 ;  //binnencirkel van vierkantje
+  double straal2 = straal1 + 6;  //buitencirkel van vierkantje
+  double rib = (straal2 - straal1) / 2.0;
+
+  alfa = hoek * pi / 180.0;
+  sinalfa = sin(alfa);
+  cosalfa = cos(alfa);
+
+  xa = straal1 * cosalfa;
+  ya = straal1 * sinalfa;
+  xb = straal2 * cosalfa;
+  yb = straal2 * sinalfa;
+
+  xd = xa - rib * sinalfa;
+  yd = ya + rib * cosalfa;
+  xc = xa + rib * sinalfa;
+  yc = ya - rib * cosalfa;
+
+  xe = xb - rib * sinalfa;
+  ye = yb + rib * cosalfa;
+  xf = xb + rib * sinalfa;
+  yf = yb - rib * cosalfa;
+
+  p[0].x = xd + center;
+  p[0].y = yd + center;  //rib 1
+
+  p[1].x = xe + center;
+  p[1].y = ye + center;  //rib 2
+
+  p[2].x = xf + center;
+  p[2].y = yf + center;  //rib 3
+
+  p[3].x = xc + center;
+  p[3].y = yc + center;  //rib 4
+
+  // end point to close the polygon
+  p[4].x = p[0].x;
+  p[4].y = p[0].y;
+
   return p;
 }
 
