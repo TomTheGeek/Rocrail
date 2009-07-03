@@ -122,6 +122,16 @@ static void __handleAIU( iONCEData data, int aiu, byte* rsp ) {
 }
 
 
+static void __evaluateRsp( iONCEData data, byte* out, int outsize, byte* in, int insize ) {
+  switch( out[0] ) {
+  case 0xA2:
+    if( in[0] != '!' )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Locomotive control command returned [%c]", in[0]);
+    break;
+  }
+}
+
+
 static Boolean __transact( iONCEData data, byte* out, int outsize, byte* in, int insize ) {
   Boolean rc = False;
   if( MutexOp.wait( data->mux ) ) {
@@ -130,8 +140,10 @@ static Boolean __transact( iONCEData data, byte* out, int outsize, byte* in, int
       if( insize > 0 ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
         rc = SerialOp.read( data->serial, in, insize );
-        if( rc )
+        if( rc ) {
           TraceOp.dump( NULL, TRCLEVEL_BYTE, in, insize );
+          __evaluateRsp(data, out, outsize, in, insize);
+        }
       }
     }
     MutexOp.post( data->mux );
@@ -206,7 +218,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
 
     *insize = 1; /* Return code from NCE. */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %s", addr, wSwitch.getcmd( node ) );
-    return 4;
+    return 5;
   }
 
   /* Loc command.
@@ -250,7 +262,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     out[4] = speed;
 
     *insize = 1; /* Return code from NCE. */
-    return 6;
+    return 5;
   }
 
   /* Function command. */
