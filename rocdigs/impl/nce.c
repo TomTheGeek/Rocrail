@@ -230,10 +230,10 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d lights=%s dir=%s",
-        addr, speed, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d steps=%d lights=%s dir=%s",
+        addr, speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
-    if( spcnt == 28 ) {
+    if( spcnt < 128 ) {
       cmd = dir ? 2 : 1;
     }
     else {
