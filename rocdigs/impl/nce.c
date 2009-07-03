@@ -128,6 +128,52 @@ static void __evaluateRsp( iONCEData data, byte* out, int outsize, byte* in, int
     if( in[0] != '!' )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Locomotive control command returned [%c]", in[0]);
     break;
+  case 0xA9:
+  case 0xA1:
+    {
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      int cv  = out[1] * 156 + out[2];
+      int val = in[1];
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "%s reading cv%d [%d]", in[0]=='!' ? "successful":"error", cv, val);
+
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, wProgram.datarsp );
+      wProgram.setcv( node, cv );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+    break;
+  case 0xA8:
+  case 0xA0:
+  case 0xAE:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int cv  = out[1] * 256 + out[2];
+    int val = out[3];
+    if(out[0] == 0xAE) {
+      /* POM */
+      cv  = out[3] * 256 + out[4];
+      val = out[5];
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "%s writing cv%d [%d]", in[0]=='!' ? "successful":"error", cv, val);
+
+    wProgram.setvalue( node, val );
+    wProgram.setcmd( node, wProgram.datarsp );
+    wProgram.setcv( node, cv );
+    if( data->iid != NULL )
+      wProgram.setiid( node, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+    break;
   }
 }
 
@@ -330,6 +376,60 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       *insize = 1; /* Return code from NCE. */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       return 1;
+    }
+  }
+
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if(  wProgram.getcmd( node ) == wProgram.pton ) {
+      out[0] = 0x9E;
+      *insize = 1; /* Return code from NCE. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
+      return 2;
+    }
+    else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+      out[0] = 0x9F;
+      *insize = 1; /* Return code from NCE. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
+      return 2;
+    }
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
+      Boolean direct = wProgram.isdirect( node );
+      int cv = wProgram.getcv( node );
+      out[0] = direct ? 0xA9:0xA1;
+      out[1] = cv / 256;
+      out[2] = cv & 0xFF;
+      *insize = 2; /* Return code and data from NCE. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d", cv );
+      return 3;
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      Boolean direct = wProgram.isdirect( node );
+      int cv = wProgram.getcv( node );
+      int val = wProgram.getvalue( node );
+      int decaddr = wProgram.getdecaddr( node );
+      int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
+      int nrbytes = 0;
+
+      if(wProgram.ispom( node )) {
+        out[0] = 0xAE;        // NCE ops mode loco command
+        out[1] = addr / 256;  // loco high address
+        out[2] = addr & 0xFF; // loco low address
+        out[3] = cv / 256;    // CV high address
+        out[4] = cv & 0xFF;   // CV low address
+        out[5] = val;         // CV data
+        nrbytes = 6;
+      }
+      else {
+        out[0] = direct ? 0xA8:0xA0;
+        out[1] = cv / 256;
+        out[2] = cv & 0xFF;
+        out[3] = val;
+        nrbytes = 4;
+      }
+      *insize = 1; /* Return code from NCE. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set %d CV%d to %d", addr, cv, val );
+      return nrbytes;
     }
   }
 
