@@ -124,6 +124,9 @@ public:
     wxTextCtrl* m_Lib;
     wxRadioBox* m_Baudrate;
     wxRadioBox* m_HardwareFlow;
+    wxStaticText* m_labTimeout;
+    wxTextCtrl* m_Timeout;
+    wxStaticText* m_labMS;
     wxStaticBox* m_labFeedbackBox;
     wxStaticText* m_labFbMod;
     wxTextCtrl* m_FbMod;

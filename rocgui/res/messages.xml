@@ -8493,4 +8493,10 @@
   <Msg id="itemidps">
     <en txt="Item ID pointsize"/>
   </Msg>
+  <Msg id="timeout">
+    <en txt="Timeout"/>
+  </Msg>
+  <Msg id="virtual">
+    <en txt="Virtual"/>
+  </Msg>
 </Messages>

@@ -92,6 +92,7 @@ void GenericCtrlDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labLib->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_labTimeout->SetLabel( wxGetApp().getMsg( "timeout" ) );
   m_Baudrate->SetLabel( wxGetApp().getMsg( "bps" ) );
   m_labFeedbackBox->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labFbMod->SetLabel( wxGetApp().getMsg( "number" ) );
@@ -103,6 +104,10 @@ void GenericCtrlDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
   m_Lib->SetValue( wxString( wDigInt.getlib( m_Props ), wxConvUTF8 ) );
+
+  char* val = StrOp.fmt( "%d", wDigInt.gettimeout( m_Props ) );
+  m_Timeout->SetValue( wxString( val, wxConvUTF8 ) );
+  StrOp.free( val );
 
   char* str = StrOp.fmt("%d",wDigInt.getfbmod( m_Props ));
   m_FbMod->SetValue( wxString( str, wxConvUTF8 ) ); StrOp.free(str);
@@ -147,6 +152,9 @@ void GenericCtrlDlg::evaluate() {
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   //wDigInt.setswtime( m_Props, atoi( m_SwTime->GetValue().mb_str(wxConvUTF8) ) );
+
+  wDigInt.settimeout( m_Props, atoi( m_Timeout->GetValue().mb_str(wxConvUTF8) ) );
+
 
   wDigInt.setfbmod( m_Props, atoi(m_FbMod->GetValue().mb_str(wxConvUTF8)) );
   wDigInt.setfbpoll( m_Props, m_FbPoll->IsChecked()?True:False );
@@ -195,6 +203,9 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Lib = NULL;
     m_Baudrate = NULL;
     m_HardwareFlow = NULL;
+    m_labTimeout = NULL;
+    m_Timeout = NULL;
+    m_labMS = NULL;
     m_labFeedbackBox = NULL;
     m_labFbMod = NULL;
     m_FbMod = NULL;
@@ -260,7 +271,7 @@ void GenericCtrlDlg::CreateControls()
     itemFlexGridSizer5->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer4->Add(itemBoxSizer12, 0, wxGROW|wxALL, 5);
+    itemBoxSizer4->Add(itemBoxSizer12, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_BaudrateStrings;
     m_BaudrateStrings.Add(_("&2400"));
@@ -280,40 +291,52 @@ void GenericCtrlDlg::CreateControls()
     m_HardwareFlowStrings.Add(_("&xon"));
     m_HardwareFlow = new wxRadioBox( itemPanel3, ID_RADIOBOX1, _("Hardware Flow"), wxDefaultPosition, wxDefaultSize, m_HardwareFlowStrings, 1, wxRA_SPECIFY_COLS );
     m_HardwareFlow->SetSelection(0);
-    itemBoxSizer12->Add(m_HardwareFlow, 0, wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer12->Add(m_HardwareFlow, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer15 = new wxFlexGridSizer(2, 3, 0, 0);
+    itemBoxSizer4->Add(itemFlexGridSizer15, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_labTimeout = new wxStaticText( itemPanel3, wxID_ANY, _("Timeout"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer15->Add(m_labTimeout, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Timeout = new wxTextCtrl( itemPanel3, wxID_ANY, _("1000"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    itemFlexGridSizer15->Add(m_Timeout, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labMS = new wxStaticText( itemPanel3, wxID_ANY, _("mS"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer15->Add(m_labMS, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labFeedbackBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Feedback"));
-    wxStaticBoxSizer* itemStaticBoxSizer15 = new wxStaticBoxSizer(m_labFeedbackBox, wxVERTICAL);
-    itemBoxSizer4->Add(itemStaticBoxSizer15, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_labFeedbackBox, wxVERTICAL);
+    itemBoxSizer4->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer15->Add(itemBoxSizer16, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    wxBoxSizer* itemBoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
+    itemStaticBoxSizer19->Add(itemBoxSizer20, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     m_labFbMod = new wxStaticText( itemPanel3, wxID_STATIC, _("Number"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer16->Add(m_labFbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer20->Add(m_labFbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_FbMod = new wxTextCtrl( itemPanel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemBoxSizer16->Add(m_FbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer20->Add(m_FbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_FbPoll = new wxCheckBox( itemPanel3, wxID_ANY, _("Poll"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FbPoll->SetValue(false);
-    itemStaticBoxSizer15->Add(m_FbPoll, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer19->Add(m_FbPoll, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_PTSupport = new wxCheckBox( itemPanel3, wxID_ANY, _("PT Support"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PTSupport->SetValue(false);
     itemBoxSizer4->Add(m_PTSupport, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer21 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer21, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer21->AddButton(m_OK);
+    itemStdDialogButtonSizer25->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer21->AddButton(m_Cancel);
+    itemStdDialogButtonSizer25->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer21->Realize();
+    itemStdDialogButtonSizer25->Realize();
 
 ////@end GenericCtrlDlg content construction
 }
