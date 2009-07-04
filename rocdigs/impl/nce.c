@@ -385,13 +385,13 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       out[0] = 0x9E;
       *insize = 1; /* Return code from NCE. */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
-      return 2;
+      return 1;
     }
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       out[0] = 0x9F;
       *insize = 1; /* Return code from NCE. */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
-      return 2;
+      return 1;
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       Boolean direct = wProgram.isdirect( node );
