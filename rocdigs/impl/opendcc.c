@@ -135,7 +135,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     int wday    = lTime->tm_wday;
     int divider = wClock.getdivider(cmd);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "%s clock to %02d:%02d divider=%d", wClock.getcmd( cmd ), hours, mins, divider );
 
     if( StrOp.equals( wDigInt.p50x, data->sublibname )  && StrOp.equals( wClock.set, wClock.getcmd( cmd ) ) ) {
       outBytes[0] = (byte)'x';

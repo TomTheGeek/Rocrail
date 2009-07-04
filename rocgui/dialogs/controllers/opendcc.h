@@ -185,6 +185,8 @@ public:
     wxTextCtrl* m_Mode;
     wxRadioBox* m_SubLib;
     wxRadioBox* m_Baudrate;
+    wxStaticBox* m_labSpecials;
+    wxCheckBox* m_Clock;
     wxButton* m_ReadCVs;
     wxButton* m_WriteCVs;
     wxPanel* m_DecoderPanel;
