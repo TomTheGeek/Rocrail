@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#if defined __linux__ || defined _AIX || defined __unix__
+#if defined __linux__ || defined _AIX || defined __unix__ || defined __APPLE__
 
 #include "rocs/impl/system_impl.h"
 #include "rocs/public/trace.h"
@@ -26,7 +26,11 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <sys/io.h>
+#if defined __APPLE__
+  /*#include </Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/architecture/i386/io.h>*/
+#else
+  #include <sys/io.h>
+#endif
 #include <unistd.h>
 
 #ifndef __ROCS_SYSTEM__
@@ -60,11 +64,11 @@ Boolean rocs_system_uBusyWait( int us) {
 //   struct   timeval start_tv, stop_tv;
 //   struct   timezone start_tz, stop_tz;
 //   int   slept;
-  
+
 //   gettimeofday(&start_tv, &start_tz);
 //   do {
 //     gettimeofday(&stop_tv, &stop_tz);
-//     slept = ((stop_tv.tv_sec - start_tv.tv_sec) * 1000000 + 
+//     slept = ((stop_tv.tv_sec - start_tv.tv_sec) * 1000000 +
 //			  (stop_tv.tv_usec - start_tv.tv_usec));
 //   } while (slept < us);
 struct timespec rqtp = { 0, us * 1000 };
@@ -101,19 +105,35 @@ Boolean rocs_system_setadmin() {
 }
 
 Boolean rocs_system_accessPort( int from, int num ) {
-  return ioperm(from, num, 1) == 0 ? True:False;
+#if defined __APPLE__
+  return False;
+#else
+	return ioperm(from, num, 1) == 0 ? True:False;
+#endif
 }
 
 Boolean rocs_system_releasePort( int from, int num ) {
+#if defined __APPLE__
+  return False;
+#else
   return ioperm(from, num, 0) == 0 ? True:False;
+#endif
 }
 
 void rocs_system_writePort( int port, byte val ) {
+#if defined __APPLE__
+  return;
+#else
   outb(val,port);
+#endif
 }
 
 byte rocs_system_readPort( int port ) {
+#if defined __APPLE__
+  return 0;
+#else
   return inb(port);
+#endif
 }
 
 Boolean rocs_system_accessDev( const char* device, Boolean readonly ) {

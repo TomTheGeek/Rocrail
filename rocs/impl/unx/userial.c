@@ -677,5 +677,6 @@ void rocs_serial_waitMM( iOSerial inst, int usperiod, int uspause  ) {
       SystemOp.uBusyWait(usperiod);
   }
 }
+#elif defined __APPLE__
 
 #endif

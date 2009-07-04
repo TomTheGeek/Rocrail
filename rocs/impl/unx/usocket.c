@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#if defined __linux__ || defined _AIX || defined __unix__
+#if defined __linux__ || defined _AIX || defined __unix__ || defined __APPLE__
 
 #ifdef __OPENSSL__
   #include <openssl/crypto.h>
@@ -130,10 +130,16 @@ char* rocs_socket_mac( const char* device ) {
     const char *ifname = device==NULL?"eth0":device;
   #endif
 
+  #if defined __APPLE__
+
+  #else
+
   fd = socket( AF_INET, SOCK_DGRAM, 0 );
   strncpy (ifrq.ifr_name, ifname, IFNAMSIZ);
   rc = ioctl (fd, SIOCGIFHWADDR, &ifrq);
   close( fd );
+
+#endif
   /*IFHWADDRLEN*/
   if( rc == 0 ) {
     mac = StrOp.fmt( "%02X%02X%02X%02X%02X%02X%02X%02X",

@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#if defined __linux__ || defined _AIX || defined __unix__
+#if defined __linux__ || defined _AIX || defined __unix__ || defined __APPLE__
 
 #include "rocs/impl/mutex_impl.h"
 #include "rocs/public/trace.h"

@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#if defined __linux__ || defined _AIX || defined __unix__
+#if defined __linux__ || defined _AIX || defined __unix__ || defined __APPLE__
 
 #include "rocs/impl/thread_impl.h"
 #include "rocs/public/trace.h"
@@ -117,6 +117,9 @@ void rocs_thread_high( iOThread inst ) {
 
     /* Set to RoundRobbin: the process needs superuser privileges */
     policy = SCHED_RR;
+#if defined __APPLE__
+    /* TODO: apple thread prio */
+#else
     param.__sched_priority = 10; /* valid range = 1...99*/
 
     rc = pthread_setschedparam( o->handle, policy, &param );
@@ -130,7 +133,7 @@ void rocs_thread_high( iOThread inst ) {
     else if( policy == SCHED_RR ) szPolicy = "SCHED_RR";
     else szPolicy = "SCHED_OTHER";
     TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, rc, "Current thread priority is %d policy=%s", param.__sched_priority, szPolicy );
-
+#endif
   }
 #endif
 #endif
