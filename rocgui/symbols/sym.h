@@ -308,6 +308,12 @@ namespace outputtype {
   static const char* button_on  = "button-%d-on.svg";
   static const char* button_off = "button-%d-off.svg";
   static const char* button_active = "button-%d-active.svg";
+  static const char* button_on_occ  = "button-%d-on-occ.svg";
+  static const char* button_off_occ = "button-%d-off-occ.svg";
+  static const char* button_active_occ = "button-%d-active-occ.svg";
+  static const char* button_on_route  = "button-%d-on-route.svg";
+  static const char* button_off_route = "button-%d-off-route.svg";
+  static const char* button_active_route = "button-%d-active-route.svg";
 
   static const int i_button = 1;
 }

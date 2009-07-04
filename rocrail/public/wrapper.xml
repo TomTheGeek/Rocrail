@@ -984,6 +984,7 @@
         <var name="grpid" vt="string" defval="" range="*" required="false" remark="Group ID; All buttons of this group must be true to trigger actions."/>
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="blockid" vt="string" defval="NULL" range="*"/>
 
         <!-- Addressing -->
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>

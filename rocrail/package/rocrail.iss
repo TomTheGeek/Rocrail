@@ -2,7 +2,7 @@
 
 [Setup]
 AppName=Rocrail
-AppVerName=Rocrail 1.3.0 snapshot-revxxxx-unicode
+AppVerName=Rocrail 1.3.999 snapshot-rev622-unicode
 DefaultDirName={pf}\Rocrail
 DefaultGroupName=Rocrail
 UninstallDisplayIcon={app}\rocview.exe
@@ -13,7 +13,7 @@ OutputDir=..\..\package
 AppCopyright=GNU
 AppPublisher=rocrail.net
 AppPublisherURL=http://www.rocrail.net/
-OutputBaseFilename=rocrail-setup-1.3.0-revxxxx-snapshot-unicode
+OutputBaseFilename=rocrail-setup-1.3.999-rev622-snapshot-unicode
 
 [Tasks]
 Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked

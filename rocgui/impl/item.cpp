@@ -412,6 +412,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     if( StrOp.equals( wTrack.name()   , NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSignal.name()  , NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ||
+        StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSwitch.name()  , NodeOp.getName( m_Props ) ) )
       {
       if( wTrack.getblockid( m_Props ) != NULL && StrOp.len( wItem.getblockid( m_Props )) > 0 ) {

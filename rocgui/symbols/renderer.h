@@ -98,7 +98,7 @@ public:
   void drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawThreeway( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawOutput( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
+  void drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const char* ori );

@@ -152,7 +152,7 @@ void FeedbackDialog::initLabels() {
   m_Road->SetLabel( wxGetApp().getMsg( "road" ) );
   m_Curved->SetLabel( wxGetApp().getMsg( "curve" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" ) + _T("...") );
-  m_RouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
+  m_labRouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
 
   m_BlockID->Append( _T("") );
   iONode model = wxGetApp().getModel();

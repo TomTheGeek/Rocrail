@@ -181,6 +181,10 @@ public:
     wxTextCtrl* m_Description;
     wxStaticText* m_labSVG;
     wxSpinCtrl* m_SVG;
+    wxStaticText* m_labBlockID;
+    wxComboBox* m_BlockID;
+    wxStaticText* m_labRouteIDs;
+    wxTextCtrl* m_RouteIDs;
     wxCheckBox* m_Show;
     wxButton* m_Actions;
     wxPanel* m_InterfacePanel;

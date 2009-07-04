@@ -460,6 +460,20 @@ void SymbolRenderer::initSym() {
       m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
       StrOp.fmtb( key, outputtype::button_active, wOutput.getsvgtype( m_Props ) );
       m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
+
+      StrOp.fmtb( key, outputtype::button_off_occ, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, outputtype::button_on_occ, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, outputtype::button_active_occ, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, key );
+
+      StrOp.fmtb( key, outputtype::button_off_route, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, outputtype::button_on_route, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, outputtype::button_active_route, wOutput.getsvgtype( m_Props ) );
+      m_SvgSym9 = (svgSymbol*)MapOp.get( m_SymMap, key );
     }
   }
   else if( StrOp.equals( wBlock.name(), nodeName ) ) {
@@ -1494,21 +1508,36 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
 /**
  * Output object
  */
-void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
   const char* state = wOutput.getstate( m_Props );
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s", wSignal.getid( m_Props ), state );
 
   // SVG Symbol:
   if( m_SvgSym3!=NULL && StrOp.equals( state, wOutput.active ) ) {
-    drawSvgSym(dc, m_SvgSym3, ori);
+    if(occupied && m_SvgSym6!= NULL)
+      drawSvgSym(dc, m_SvgSym6, ori);
+    else if(actroute && m_SvgSym9!= NULL)
+      drawSvgSym(dc, m_SvgSym9, ori);
+    else
+      drawSvgSym(dc, m_SvgSym3, ori);
     return;
   }
   else if( m_SvgSym2!=NULL && StrOp.equals( state, wOutput.on ) ) {
-    drawSvgSym(dc, m_SvgSym2, ori);
+    if(occupied && m_SvgSym5!= NULL)
+      drawSvgSym(dc, m_SvgSym5, ori);
+    else if(actroute && m_SvgSym8!= NULL)
+      drawSvgSym(dc, m_SvgSym8, ori);
+    else
+      drawSvgSym(dc, m_SvgSym2, ori);
     return;
   }
   else if( m_SvgSym1!=NULL ) {
-    drawSvgSym(dc, m_SvgSym1, ori);
+    if(occupied && m_SvgSym4!= NULL)
+      drawSvgSym(dc, m_SvgSym4, ori);
+    else if(actroute && m_SvgSym7!= NULL)
+      drawSvgSym(dc, m_SvgSym7, ori);
+    else
+      drawSvgSym(dc, m_SvgSym1, ori);
     return;
   }
 
@@ -1925,7 +1954,7 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
       drawSignal( dc, fill, occupied, actroute, ori );
       break;
     case symtype::i_output:
-      drawOutput( dc, fill, occupied, ori );
+      drawOutput( dc, fill, occupied, actroute, ori );
       break;
     case symtype::i_block:
       drawBlock( dc, fill, occupied, ori );
