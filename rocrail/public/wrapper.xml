@@ -309,6 +309,7 @@
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">
         <var name="lib" vt="string" defval="p50x"/>
         <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>
+        <var name="fastclock" vt="bool" defval="false" remark="Fast clock flag read from SO 2."/>
       </opendcc>
 
       <srcp remark="SRCP init" wrappername="SRCP">

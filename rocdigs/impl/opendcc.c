@@ -107,7 +107,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
    *  */
 
   /* Clock command. */
-  if( StrOp.equals( NodeOp.getName( cmd ), wClock.name() ) ) {
+  if( StrOp.equals( NodeOp.getName( cmd ), wClock.name() ) && wOpenDCC.isfastclock( data->opendccini ) ) {
     /*
     # XClkSet (0xC0) - Length = 5 Bytes
 

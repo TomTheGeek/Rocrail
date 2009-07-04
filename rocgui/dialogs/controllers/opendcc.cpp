@@ -328,6 +328,8 @@ void OpenDCCCtrlDlg::initValues() {
 
   iONode opendccini = wDigInt.getopendcc(m_Props);
   m_SubLib->SetSelection( StrOp.equals(wDigInt.p50x, wOpenDCC.getlib(opendccini) ) ? 0:1);
+  m_Clock->SetValue(wOpenDCC.isfastclock(opendccini) ? true:false);
+
 }
 
 
@@ -513,6 +515,10 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
     TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "opendcc mode = %d", value );
     m_Mode->SetValue( value & 0x01 ? _T("Xpressnet"):_T("Standard") );
     m_Clock->SetValue(value & 0x10 ? true:false);
+
+    iONode opendccini = wDigInt.getopendcc(m_Props);
+    wOpenDCC.setfastclock(opendccini, value & 0x10 ? True:False);
+
     m_OpenDCCmode = value;
     sendGet( so_dcc_format );
   }
