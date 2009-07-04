@@ -1518,6 +1518,8 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym6, ori);
     else if(actroute && m_SvgSym9!= NULL)
       drawSvgSym(dc, m_SvgSym9, ori);
+    else if(actroute && m_SvgSym6!= NULL)
+      drawSvgSym(dc, m_SvgSym6, ori);
     else
       drawSvgSym(dc, m_SvgSym3, ori);
     return;
@@ -1527,6 +1529,8 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym5, ori);
     else if(actroute && m_SvgSym8!= NULL)
       drawSvgSym(dc, m_SvgSym8, ori);
+    else if(actroute && m_SvgSym5!= NULL)
+      drawSvgSym(dc, m_SvgSym5, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
     return;
@@ -1536,6 +1540,8 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym4, ori);
     else if(actroute && m_SvgSym7!= NULL)
       drawSvgSym(dc, m_SvgSym7, ori);
+    else if(actroute && m_SvgSym4!= NULL)
+      drawSvgSym(dc, m_SvgSym4, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
     return;
