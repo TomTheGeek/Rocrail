@@ -323,6 +323,7 @@ void Symbol::blockEvent( const char* id ) {
   if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
+      StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( StrOp.equals( wTrack.getblockid( m_Props ), id ) ) {
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block[%s] occ id=[%s]", id, wItem.getid(m_Props) );
@@ -334,6 +335,7 @@ void Symbol::blockEvent( const char* id ) {
 void Symbol::routeEvent( const char* id ) {
   if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
+      StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( wItem.getrouteids( m_Props ) != NULL && StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
       StrOp.free(m_RouteID);
