@@ -47,6 +47,8 @@
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/PermInclude.h"
+#include "rocrail/wrapper/public/PermExclude.h"
 
 static int instCnt = 0;
 
@@ -625,6 +627,57 @@ static Boolean __checkSensors( iORoute inst ) {
 
   return True;
 }
+
+
+static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
+  iORouteData data = Data(inst);
+
+  const char* id = LocOp.getId( loc );
+
+  /* Permissions */
+  iONode incl = wRoute.getincl( data->props );
+  iONode excl = wRoute.getexcl( data->props );
+
+  /* test if the id is included: */
+  if( incl != NULL ) {
+    Boolean included = False;
+    while( incl != NULL ) {
+      if( StrOp.equals( id, wPermInclude.getid(incl) )) {
+        included = True;
+        break;
+      }
+      incl = wRoute.nextincl( data->props, incl );
+    };
+    if( !included ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+  }
+
+  /* test if the id is excluded: */
+  if( excl != NULL ) {
+    Boolean excluded = False;
+    while( excl != NULL ) {
+      if( StrOp.equals( id, wPermExclude.getid(excl) )) {
+        excluded = True;
+        break;
+      }
+      excl = wRoute.nextexcl( data->props, excl );
+    };
+    if( excluded ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+  }
+
+  return True;
+
+}
+
 
 
 static Boolean _isFree( iORoute inst, const char* id ) {

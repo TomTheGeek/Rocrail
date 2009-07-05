@@ -44,8 +44,8 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
-#include "rocrail/wrapper/public/BlockInclude.h"
-#include "rocrail/wrapper/public/BlockExclude.h"
+#include "rocrail/wrapper/public/PermInclude.h"
+#include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/RocRail.h"
 
@@ -744,7 +744,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   if( incl != NULL ) {
     Boolean included = False;
     while( incl != NULL ) {
-      if( StrOp.equals( id, wBlockInclude.getid(incl) )) {
+      if( StrOp.equals( id, wPermInclude.getid(incl) )) {
         included = True;
         break;
       }
@@ -762,7 +762,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   if( excl != NULL ) {
     Boolean excluded = False;
     while( excl != NULL ) {
-      if( StrOp.equals( id, wBlockInclude.getid(excl) )) {
+      if( StrOp.equals( id, wPermExclude.getid(excl) )) {
         excluded = True;
         break;
       }

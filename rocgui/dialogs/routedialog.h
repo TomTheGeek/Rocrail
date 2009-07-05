@@ -116,6 +116,7 @@ class RouteDialog: public wxDialog, public BaseDialog
   void initBlockCombos();
   void initSwitchCombo();
   void initOutputCombo();
+  void initLocPermissionList();
 
 public:
     /// Constructors
@@ -247,6 +248,11 @@ public:
     wxComboBox* m_SensorCombo;
     wxButton* m_AddSensor;
     wxButton* m_DelSensor;
+    wxPanel* m_PermissionsPanel;
+    wxStaticText* m_labInclude;
+    wxListBox* m_IncludeList;
+    wxStaticText* m_labExclude;
+    wxListBox* m_ExcludeList;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

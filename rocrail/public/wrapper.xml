@@ -1160,10 +1160,10 @@
         <const name="loc" vt="string" val="loc"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="ttid" vt="string" defval="NULL" range="*" remark="Turntable ID."/>
-        <incl cardinality="n" wrappername="BlockInclude">
+        <incl cardinality="n" wrappername="PermInclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
         </incl>
-        <excl cardinality="n" wrappername="BlockExclude">
+        <excl cardinality="n" wrappername="PermExclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
         </excl>
         <!-- New feedback handling: -->
@@ -1246,6 +1246,8 @@
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Route speed in percent."/>
         <fbevent cardinality="n"/>
         <actionctrl cardinality="n"/>
+        <incl cardinality="n" />
+        <excl cardinality="n" />
       </st>
     </stlist>
     <tklist cardinality="1" remark="Track table" wrappername="TrackList">

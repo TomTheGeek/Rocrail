@@ -2673,6 +2673,9 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
               }
 
               suits = block->isSuited( block, loc );
+              if( !route->hasPermission( route, loc ) ) {
+                suits = suits_not;
+              }
 
               /*
                * check if it realy suits well:

@@ -58,8 +58,8 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Switch.h"
-#include "rocrail/wrapper/public/BlockInclude.h"
-#include "rocrail/wrapper/public/BlockExclude.h"
+#include "rocrail/wrapper/public/PermInclude.h"
+#include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Turntable.h"
 
@@ -719,7 +719,7 @@ void BlockDialog::initValues() {
   // set selections:
   iONode excl = wBlock.getexcl( m_Props );
   while( excl != NULL ) {
-    int nr = m_ExcludeList->FindString( wxString(wBlockExclude.getid(excl),wxConvUTF8) );
+    int nr = m_ExcludeList->FindString( wxString(wPermExclude.getid(excl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
       m_ExcludeList->Select(nr);
     }
@@ -728,7 +728,7 @@ void BlockDialog::initValues() {
 
   iONode incl = wBlock.getincl( m_Props );
   while( incl != NULL ) {
-    int nr = m_IncludeList->FindString( wxString(wBlockInclude.getid(incl),wxConvUTF8) );
+    int nr = m_IncludeList->FindString( wxString(wPermInclude.getid(incl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
       m_IncludeList->Select(nr);
     }
@@ -910,15 +910,15 @@ bool BlockDialog::evaluate() {
   cnt = m_ExcludeList->GetSelections(ai);
   for( int i = 0; i < cnt; i++ ) {
     int idx = ai.Item(i);
-    excl = NodeOp.inst( wBlockExclude.name(), m_Props, ELEMENT_NODE );
-    wBlockExclude.setid( excl, m_ExcludeList->GetString(idx).mb_str(wxConvUTF8) );
+    excl = NodeOp.inst( wPermExclude.name(), m_Props, ELEMENT_NODE );
+    wPermExclude.setid( excl, m_ExcludeList->GetString(idx).mb_str(wxConvUTF8) );
     NodeOp.addChild( m_Props, excl );
   }
   cnt = m_IncludeList->GetSelections(ai);
   for( int i = 0; i < cnt; i++ ) {
     int idx = ai.Item(i);
-    incl = NodeOp.inst( wBlockInclude.name(), m_Props, ELEMENT_NODE );
-    wBlockInclude.setid( incl, m_IncludeList->GetString(idx).mb_str(wxConvUTF8) );
+    incl = NodeOp.inst( wPermInclude.name(), m_Props, ELEMENT_NODE );
+    wPermInclude.setid( incl, m_IncludeList->GetString(idx).mb_str(wxConvUTF8) );
     NodeOp.addChild( m_Props, incl );
   }
 

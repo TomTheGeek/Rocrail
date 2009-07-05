@@ -843,7 +843,7 @@
   </object>
 
 
-  <object name="Route" interface="HtmlInt" use="node" include="htmlint" remark="Route object">
+  <object name="Route" interface="HtmlInt" use="node" include="loc,htmlint" remark="Route object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Route node"/>
     </fun>
@@ -907,6 +907,10 @@
     <fun name="isFree" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
+    </fun>
+    <fun name="hasPermission" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+      <param name="lc" vt="iOLoc" remark="Loco to check for permission."/>
     </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
