@@ -582,10 +582,10 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
       // vertical
       *cx = 1;
-      *cy = 4;
+      *cy = wBlock.issmallsymbol(m_Props) ? 2:4;
     }
     else { // horizontal
-      *cx = 4;
+      *cx = wBlock.issmallsymbol(m_Props) ? 2:4;
       *cy = 1;
     }
     /*
@@ -638,7 +638,18 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
   }
 
   // use svg size
-  if( m_SvgSym1 != NULL ) {
+
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) && wBlock.issmallsymbol(m_Props) && m_SvgSym7 != NULL ) {
+    if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+      *cy = m_SvgSym7->width  / 32;
+      *cx = m_SvgSym7->height / 32;
+    }
+    else {
+      *cx = m_SvgSym7->width  / 32;
+      *cy = m_SvgSym7->height / 32;
+    }
+  }
+  else if( m_SvgSym1 != NULL ) {
     if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
       *cy = m_SvgSym1->width  / 32;
       *cx = m_SvgSym1->height / 32;
