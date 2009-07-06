@@ -174,6 +174,7 @@ void RouteDialog::initLabels() {
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "turnouttable" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "sensors" ) );
+  m_Notebook->SetPageText( 4, wxGetApp().getMsg( "permissions" ) );
 
   // Index
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
