@@ -133,10 +133,10 @@ static void __evaluateRsp( iONCEData data, byte* out, int outsize, byte* in, int
     {
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int cv  = out[1] * 156 + out[2];
-      int val = in[1];
+      int val = in[0];
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "%s reading cv%d [%d]", in[0]=='!' ? "successful":"error", cv, val);
+          "%s reading cv%d [%d]", in[1]=='!' ? "successful":"error", cv, val);
 
       wProgram.setvalue( node, val );
       wProgram.setcmd( node, wProgram.datarsp );
