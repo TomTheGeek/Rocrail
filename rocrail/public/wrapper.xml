@@ -1101,6 +1101,7 @@
         <var name="terminalstation" vt="bool" defval="false" remark="swap placing of an incomming loc to get another default direction.(terminal station)"/>
         <var name="turnouts" vt="string" defval="" range="*" remark="list of turnouts which are overlapped by this block in case of occupation. (csv list)"/>
         <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>
+        <var name="smallsymbol" vt="bool" defval="false" remark="Show this block with the small representation."/>
 
         <!-- Track Driver support (Dinamo)-->
         <var name="iid" vt="string" defval="NULL" range="*" remark="TD interface id"/>

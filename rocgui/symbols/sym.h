@@ -325,6 +325,12 @@ namespace blocktype {
   static const char* block_ent    = "block-ent.svg";
   static const char* block_closed = "block-closed.svg";
   static const char* block_ghost  = "block-ghost.svg";
+  static const char* block_s        = "block-s.svg";
+  static const char* block_occ_s    = "block-occ-s.svg";
+  static const char* block_res_s    = "block-res-s.svg";
+  static const char* block_ent_s    = "block-ent-s.svg";
+  static const char* block_closed_s = "block-closed-s.svg";
+  static const char* block_ghost_s  = "block-ghost-s.svg";
 
   static const char* road_block     = "road-block.svg";
   static const char* road_block_occ = "road-block-occ.svg";

@@ -305,6 +305,7 @@ public:
     wxCheckBox* m_Station;
     wxCheckBox* m_Closed;
     wxCheckBox* m_WaitFlag;
+    wxCheckBox* m_SmallSymbol;
     wxCheckBox* m_GoManual;
     wxCheckBox* m_AcceptGhost;
     wxCheckBox* m_Swapplacing;

@@ -8499,4 +8499,7 @@
   <Msg id="virtual">
     <en txt="Virtual"/>
   </Msg>
+  <Msg id="smallsymbol">
+    <en txt="Small symbol"/>
+  </Msg>
 </Messages>

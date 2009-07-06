@@ -493,6 +493,13 @@ void SymbolRenderer::initSym() {
         m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ent );
         m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed );
         m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost );
+
+        m_SvgSym7  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_s );
+        m_SvgSym8  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_occ_s );
+        m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_res_s );
+        m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ent_s );
+        m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed_s );
+        m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost_s );
       }
     }
   }
@@ -1569,35 +1576,45 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
  */
 void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
   m_bRotateable = true;
+  Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
+
+  svgSymbol* svgSym[7];
+
+  svgSym[1] = (m_bSmall && m_SvgSym7  != NULL)?m_SvgSym7:m_SvgSym1;
+  svgSym[2] = (m_bSmall && m_SvgSym8  != NULL)?m_SvgSym8:m_SvgSym2;
+  svgSym[3] = (m_bSmall && m_SvgSym9  != NULL)?m_SvgSym9:m_SvgSym3;
+  svgSym[4] = (m_bSmall && m_SvgSym10 != NULL)?m_SvgSym10:m_SvgSym4;
+  svgSym[5] = (m_bSmall && m_SvgSym11 != NULL)?m_SvgSym11:m_SvgSym5;
+  svgSym[6] = (m_bSmall && m_SvgSym12 != NULL)?m_SvgSym12:m_SvgSym6;
 
   if( StrOp.equals( ori, wItem.east ) )
     ori = wItem.west;
 
   // SVG Symbol:
-  if( m_SvgSym1!=NULL && m_iOccupied == 0 ||
-      m_SvgSym1!=NULL && m_SvgSym5==NULL && m_iOccupied == 4 ||
-      m_SvgSym1!=NULL && m_SvgSym6==NULL && m_iOccupied == 5  )
+  if( svgSym[1]!=NULL && m_iOccupied == 0 ||
+      svgSym[1]!=NULL && svgSym[5]==NULL && m_iOccupied == 4 ||
+      svgSym[1]!=NULL && svgSym[6]==NULL && m_iOccupied == 5  )
   {
-    drawSvgSym(dc, m_SvgSym1, ori);
+    drawSvgSym(dc, svgSym[1], ori);
   }
-  else if( m_SvgSym2!=NULL && m_iOccupied == 1 ) {
-    drawSvgSym(dc, m_SvgSym2, ori);
+  else if( svgSym[2]!=NULL && m_iOccupied == 1 ) {
+    drawSvgSym(dc, svgSym[2], ori);
   }
-  else if( m_SvgSym3!=NULL && m_iOccupied == 2 || m_SvgSym3!=NULL && m_SvgSym4==NULL && m_iOccupied == 3 ) {
+  else if( svgSym[3]!=NULL && m_iOccupied == 2 || svgSym[3]!=NULL && svgSym[4]==NULL && m_iOccupied == 3 ) {
     /* reserved state */
-    drawSvgSym(dc, m_SvgSym3, ori);
+    drawSvgSym(dc, svgSym[3], ori);
   }
-  else if( m_SvgSym4!=NULL && m_iOccupied == 3 ) {
+  else if( svgSym[4]!=NULL && m_iOccupied == 3 ) {
     /* reserved state */
-    drawSvgSym(dc, m_SvgSym4, ori);
+    drawSvgSym(dc, svgSym[4], ori);
   }
-  else if( m_SvgSym5!=NULL && m_iOccupied == 4 ) {
+  else if( svgSym[5]!=NULL && m_iOccupied == 4 ) {
     /* reserved state */
-    drawSvgSym(dc, m_SvgSym5, ori);
+    drawSvgSym(dc, svgSym[5], ori);
   }
-  else if( m_SvgSym6!=NULL && m_iOccupied == 5 ) {
+  else if( svgSym[6]!=NULL && m_iOccupied == 5 ) {
     /* reserved state */
-    drawSvgSym(dc, m_SvgSym6, ori);
+    drawSvgSym(dc, svgSym[6], ori);
   }
   else {
     dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );
