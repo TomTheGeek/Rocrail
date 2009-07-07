@@ -1675,8 +1675,12 @@ void Symbol::modelEvent( iONode node ) {
       wBlock.setreserved( m_Props, isReserved );
       wBlock.setlocid( m_Props, locid );
 
-      if(showID)
-        l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
+      if(showID) {
+        if( wBlock.issmallsymbol(m_Props) && locid!=NULL && StrOp.len(locid)>0)
+          l_locidStr = StrOp.fmt( "%s", locid );
+        else
+          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
+      }
       else
         l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
 
