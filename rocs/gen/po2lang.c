@@ -242,35 +242,34 @@ msgstr "Ne"
 
 static void __po2lang( char* po, iONode xml, const char* lang ) {
   int cnt = 0;
-  int idoffset = 6;
-  Boolean msgidMode = False;
-  char* sid = StrOp.find( po, "# id=\"" );
+  char* msgid = StrOp.find( po, "msgid \"" );
 
-  if( sid == NULL ) {
-    /* no id given; switch to msgid mode */
-    TraceOp.println( "no id given; switch to msgid mode..." );
-    msgidMode = True;
-    sid = StrOp.find( po, "msgid \"" );
-    idoffset = 7;
-  }
 
-  while( sid != NULL ) {
-    char* msgstr = StrOp.find( sid, "msgstr \"" );
+  while( msgid != NULL ) {
+    char* msgstr = StrOp.find( msgid, "msgstr \"" );
     char* endline = NULL;
     char* tmp = NULL;
     char* str = NULL;
-
-    TraceOp.println( "sid=%10.10s", sid );
+    char* id  = NULL;
 
     if( msgstr != NULL ) {
-      char aid[10];
-      int idx = idoffset;
       TraceOp.println( "try to find end of id..." );
-      while( sid[idx] != '\"' && (idx-idoffset) < 10 ) {
-        aid[idx-idoffset  ] = sid[idx];
-        aid[idx-idoffset+1] = '\0';
-        idx++;
+
+      /* looking for all lines */
+      endline = msgid + 5;
+      while( endline[1] == '\"' ) {
+        msgid = endline + 2;
+        endline = StrOp.find( endline+1, "\n");
+        tmp = endline;
+
+        while( tmp[0] != '\"' && msgid != tmp ) {
+          tmp--;
+        }
+        tmp[0] = '\0';
+
+        id = StrOp.cat( id, msgid );
       }
+      TraceOp.println( "id=%s", id );
 
 
       TraceOp.println( "try to find end of msgstr..." );
@@ -287,18 +286,17 @@ static void __po2lang( char* po, iONode xml, const char* lang ) {
         tmp[0] = '\0';
 
         str = StrOp.cat( str, msgstr );
-        TraceOp.println( "id[%s] msgstr[%s]", aid, str );
+        TraceOp.println( "id[%s] msgstr[%s]", id, str );
       }
 
-      __merge( aid, str, lang, xml );
+      __merge( id, str, lang, xml );
+      StrOp.free(id);
       StrOp.free(str);
 
       cnt++;
     }
-    if( msgidMode )
-      sid = StrOp.find( endline + 1, "msgid \"" );
-    else
-      sid = StrOp.find( endline + 1, "# id=\"" );
+    msgid = StrOp.find( endline + 1, "msgid \"" );
+
   };
   TraceOp.println( "Merged [%d] msgid's", cnt );
 
