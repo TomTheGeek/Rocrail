@@ -31,7 +31,7 @@
 
 static iOMap nodeMap = NULL;
 static iOMap enMap = NULL;
-static iOMap descMap = NULL;
+static iOMap tipMap = NULL;
 
 static const char* package   = "PACKAGE";
 static const char* language  = "LANGUAGE";
@@ -46,6 +46,7 @@ static void __createMap(iONode root) {
 
   nodeMap = MapOp.inst();
   enMap = MapOp.inst();
+  tipMap = MapOp.inst();
   while( msg != NULL ) {
     const char* id = NodeOp.getStr(msg, "id", NULL);
     iONode enlang = NodeOp.findNode( msg, "en" );
@@ -60,6 +61,11 @@ static void __createMap(iONode root) {
       if( id != NULL ) {
         TraceOp.println( "added [%s] to ENmap", id );
         MapOp.put( enMap, id, (obj)msg );
+      }
+      id = NodeOp.getStr(enlang, "tip", NULL);
+      if( id != NULL ) {
+        TraceOp.println( "added [%s] to TIPmap", id );
+        MapOp.put( tipMap, id, (obj)msg );
       }
     }
 
@@ -181,9 +187,14 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
     iONode polang = NodeOp.findNode( msg, lang );
     msg = NodeOp.findNextNode( xml, msg );
   */
+  Boolean tip = False;
   iONode msg = (iONode)MapOp.get( nodeMap, aid);
   if( msg == NULL ) {
     msg = (iONode)MapOp.get( enMap, aid);
+  }
+  else if( msg == NULL ) {
+    msg = (iONode)MapOp.get( tipMap, aid);
+    tip = True;
   }
 
   if( StrOp.len(msgstr) == 0 ) {
@@ -191,7 +202,7 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
     return;
   }
 
-  TraceOp.println( "aid=[%s]", aid );
+  TraceOp.println( "id=[%s]", aid );
 
   if( msg != NULL ) {
     iONode polang = NodeOp.findNode( msg, lang );
@@ -200,8 +211,14 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
       TraceOp.println( "adding [%s]", lang );
       NodeOp.addChild(msg, polang);
     }
-    NodeOp.setStr( polang, "txt", msgstr );
-    TraceOp.println( "replace [%s] with [%s]", NodeOp.getStr( polang, "txt", "" ), msgstr );
+    if( tip ) {
+      NodeOp.setStr( polang, "tip", msgstr );
+      TraceOp.println( "replace tip [%s] with [%s]", NodeOp.getStr( polang, "tip", "" ), msgstr );
+    }
+    else {
+      NodeOp.setStr( polang, "txt", msgstr );
+      TraceOp.println( "replace [%s] with [%s]", NodeOp.getStr( polang, "txt", "" ), msgstr );
+    }
   }
   else {
     TraceOp.println( "undef id[%s]", aid );
@@ -301,4 +318,3 @@ static void __po2lang( char* po, iONode xml, const char* lang ) {
   TraceOp.println( "Merged [%d] msgid's", cnt );
 
 }
-

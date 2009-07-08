@@ -201,6 +201,30 @@ static char* __lang2pot( iONode xml ) {
       StrOp.free(msgid);
 
       cnt++;
+
+      if( NodeOp.getStr(en, "tip", NULL) != NULL && StrOp.len(NodeOp.getStr(en, "tip", NULL)) > 0 ) {
+        TraceOp.println( "Adding tip [%s]", NodeOp.getStr(en, "tip", "?") );
+        msgid = StrOp.fmt( "#. %s\n# id=\"%s\"\n#, c-format\n",
+            NodeOp.getStr(msg, "remark", ""), NodeOp.getStr(msg, "id", "") );
+        template = StrOp.cat( template, msgid );
+        StrOp.free(msgid);
+
+        if( NodeOp.getStr(msg, "context", NULL) != NULL ) {
+          msgid = StrOp.fmt( "msgctx \"%s\"\n", NodeOp.getStr(msg, "context", "tip") );
+          template = StrOp.cat( template, msgid );
+          StrOp.free(msgid);
+        }
+
+        msgid = StrOp.fmt( "msgid \"%s\"\nmsgstr \"\"\n\n", NodeOp.getStr(en, "tip", "?") );
+        template = StrOp.cat( template, msgid );
+        StrOp.free(msgid);
+
+        cnt++;
+
+
+      }
+
+
     }
 
     msg = NodeOp.findNextNode( xml, msg );
