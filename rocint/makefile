@@ -41,7 +41,7 @@ OUTDIR=../$(COREDIR)bin
 GENDIR=../$(COREDIR)gen
 TMPOUTDIR=$(GENDIR)/rocint/bin
 DEBUG=-g
-BINDIR=../rocs/bin
+BINDIR=../$(COREDIR)bin
 
 CPP=gcc
 LNK=gcc
