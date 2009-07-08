@@ -20,49 +20,49 @@
 -->
 <Messages>
   <Msg id="lang_nl">
-    <en txt="Nederlands" tip="Dutch"/>
+    <all txt="Nederlands" tip="Dutch"/>
   </Msg>
   <Msg id="lang_de">
-    <en txt="Deutsch" tip="German"/>
+    <all txt="Deutsch" tip="German"/>
   </Msg>
   <Msg id="lang_en">
-    <en txt="English" tip="English"/>
+    <all txt="English" tip="English"/>
   </Msg>
   <Msg id="lang_sv">
-    <en txt="Svenska" tip="Swedisch"/>
+    <all txt="Svenska" tip="Swedisch"/>
   </Msg>
   <Msg id="lang_fr">
-    <en txt="Français" tip="French"/>
+    <all txt="Français" tip="French"/>
   </Msg>
   <Msg id="lang_tr">
-    <en txt="Türkçe" tip="Turkish"/>
+    <all txt="Türkçe" tip="Turkish"/>
   </Msg>
   <Msg id="lang_es">
-    <en txt="Español" tip="Spanish"/>
+    <all txt="Español" tip="Spanish"/>
   </Msg>
   <Msg id="lang_it">
-    <en txt="Italiano" tip="Italien"/>
+    <all txt="Italiano" tip="Italien"/>
   </Msg>
   <Msg id="lang_da">
-    <en txt="Dansk" tip="Danish"/>
+    <all txt="Dansk" tip="Danish"/>
   </Msg>
   <Msg id="lang_cs">
-    <en txt="Česká" tip="Czech"/>
+    <all txt="Česká" tip="Czech"/>
   </Msg>
   <Msg id="lang_bs">
-    <en txt="Bosanski" tip="Bosnian"/>
+    <all txt="Bosanski" tip="Bosnian"/>
   </Msg>
   <Msg id="lang_bg">
-    <en txt="България" tip="Bulgarian"/>
+    <all txt="България" tip="Bulgarian"/>
   </Msg>
   <Msg id="lang_ca">
-    <en txt="Català" tip="Catalan"/>
+    <all txt="Català" tip="Catalan"/>
   </Msg>
   <Msg id="lang_el">
-    <en txt="ελληνικά" tip="Greek"/>
+    <all txt="ελληνικά" tip="Greek"/>
   </Msg>
   <Msg id="lang_ru">
-    <en txt="русский язык" tip="Russian"/>
+    <all txt="русский язык" tip="Russian"/>
   </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
