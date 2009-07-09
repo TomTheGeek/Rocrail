@@ -19,6 +19,10 @@
 #   make clean
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
 #
+# commandline for osx compiling:
+#   make PLATFORM=MACOSX
+#
+
 PLATFORM=LINUX
 
 offlineall: version
