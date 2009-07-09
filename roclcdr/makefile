@@ -24,6 +24,9 @@
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
 #
+# commandline for osx compiling:
+#   make PLATFORM=MACOSX clean all
+#
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32
@@ -38,7 +41,7 @@ else ifeq ($(PLATFORM),MACOSX)
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
 	LNK=gcc
-	SHAREDSUFFIX=.so
+	SHAREDSUFFIX=.dylib
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx

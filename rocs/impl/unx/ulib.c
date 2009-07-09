@@ -45,8 +45,13 @@ Boolean rocs_lib_load( iOLibData o ) {
 #ifdef __ROCS_LIB__
   char* error = NULL;
 
+#if defined __APPLE__
+  if( !StrOp.endsWith( o->name, ".dylib" ) )
+    o->name = StrOp.catID( o->name, ".dylib", RocsLibID );
+#else
   if( !StrOp.endsWith( o->name, ".so" ) )
     o->name = StrOp.catID( o->name, ".so", RocsLibID );
+#endif
 
   dlerror();
   o->lh = dlopen( o->name, RTLD_LAZY);

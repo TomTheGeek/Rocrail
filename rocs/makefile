@@ -23,6 +23,9 @@
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
 #
+# commandline for osx compiling:
+#   make PLATFORM=MACOSX clean all
+#
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lwinmm
@@ -35,6 +38,9 @@ else
 	CC_EXTRA_FLAGS=-fPIC
 endif
 ifeq ($(PLATFORM),LINUX)
+	LIBS=-lpthread -ldl
+endif
+ifeq ($(PLATFORM),MACOSX)
 	LIBS=-lpthread -ldl
 endif
 ifeq ($(PLATFORM),HP)

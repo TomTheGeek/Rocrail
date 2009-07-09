@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#if defined __linux__ || defined _AIX || defined __unix__
+#if defined __linux__ || defined _AIX || defined __unix__ || defined __APPLE__
 
 #include "rocs/impl/serial_impl.h"
 #include "rocs/public/trace.h"
@@ -37,10 +37,22 @@
 #include <string.h>
 
 /*#define __USE_MISC*/
+
+#if defined __APPLE__
+#include <sys/ioctl.h>
+#include <paths.h>
+#include <termios.h>
+#include <sysexits.h>
+#include <sys/param.h>
+#include <sys/select.h>
+#include <sys/time.h>
+#include <time.h>
+#else
 #include <termio.h>
 #include <termios.h>
 #include "linux/serial.h"
 #include <sys/io.h>
+#endif
 
 #ifndef __ROCS_SERIAL__
 	#pragma message("*** Unix OSerial is disabled. (define __ROCS_SERIAL__ in rocs.h) ***")
@@ -136,6 +148,9 @@ Boolean rocs_serial_open( iOSerial inst ) {
       o->portbase = 0x2E8;
   }
 
+#if defined __APPLE__
+    o->directIO=False;
+#else
   if( o->portbase > 0 && ioperm(o->portbase, 8, 1) == 0 ) {
     /* Simple test for 16550 compatible Uart by writing to and read back from scratch register */
     SystemOp.writePort( o->portbase + 7, 0x55 );
@@ -146,6 +161,8 @@ Boolean rocs_serial_open( iOSerial inst ) {
   } else {
     o->directIO=False;
   }
+#endif
+
   //    o->directIO=False; //Test, remove
   errno = 0;
   o->sh = open( device, O_RDWR | O_TRUNC | O_NONBLOCK | O_NOCTTY  );
@@ -159,6 +176,8 @@ Boolean rocs_serial_open( iOSerial inst ) {
     struct termios tio;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "blocking[%d] directIO[%d]", o->blocking, o->directIO);
+#if defined __APPLE__
+#else
     if( o->divisor > 0 ) {
       struct serial_struct serial;
       ioctl(o->sh, TIOCGSERIAL, &serial);
@@ -173,6 +192,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
       serial.flags = 0;
       ioctl(o->sh, TIOCSSERIAL, &serial);
     }
+#endif
 
     tcgetattr( o->sh, &tio );
 
@@ -273,6 +293,9 @@ static void __printmsr(int msr) {
 static int __last_val = 0;
 static Boolean __printport(iOSerial inst, int* richg) {
   iOSerialData o = Data(inst);
+#if defined __APPLE__
+    return True;
+#else
   if( ioperm(o->portbase, 7, 1) == 0 ) {
     int lsr = inb(o->portbase+5);
     int msr = inb(o->portbase+6);
@@ -291,6 +314,7 @@ static Boolean __printport(iOSerial inst, int* richg) {
       return False;
   }
   return True;
+#endif
 }
 
 void rocs_serial_setRTS( iOSerial inst, Boolean rts ) {
@@ -484,6 +508,9 @@ int rocs_serial_getWaiting( iOSerial inst ) {
 Boolean rocs_serial_isUartEmpty( iOSerial inst, Boolean soft ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
+#if defined __APPLE__
+    return True;
+#else
 
   if( soft || !o->directIO) {
     int rc = 0;
@@ -516,6 +543,7 @@ Boolean rocs_serial_isUartEmpty( iOSerial inst, Boolean soft ) {
       return False;
   } else
     return True;
+#endif
 #endif
 }
 
@@ -593,6 +621,8 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
 void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
   iOSerialData o = Data(inst);
   int errno;
+#if defined __APPLE__
+#else
   struct termios tio;
   if (!o->directIO) {
     tcgetattr( o->sh, &tio );
@@ -657,9 +687,12 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "tcsetattr failed!" );
   //        tcgetattr( o->sh, &tio );
   //    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Current output baud rate is %d\n", (int) cfgetospeed(&tio) );
+#endif
 }
 
 void rocs_serial_waitMM( iOSerial inst, int usperiod, int uspause  ) {
+#if defined __APPLE__
+#else
   iOSerialData o = Data(inst);
   int rc;
   int result;
@@ -676,7 +709,7 @@ void rocs_serial_waitMM( iOSerial inst, int usperiod, int uspause  ) {
     else
       SystemOp.uBusyWait(usperiod);
   }
+#endif
 }
-#elif defined __APPLE__
 
 #endif
