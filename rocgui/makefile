@@ -34,6 +34,7 @@ MINGWINSTALL=/usr/i586-mingw32msvc
 ANSIINSTALL=$(MINGWINSTALL)
 ANSILIBS=
 
+
 ifeq ($(PLATFORM),WIN32)
 	ifeq ($(LIBRARY),ansi)
 		LIBEXT=
@@ -96,7 +97,9 @@ $(TARGET): $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(RR
 	$(LNK) -o $(TARGET) $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS)
 
 $(WINRESOURCE): rocgui.rc
+
 	$(TOOLPREFIX)windres -irocgui.rc -o$(WINRESOURCE)
+
 
 $(TMPOUTDIR)/%.o: impl/%.cpp
 	$(CPP) $(CC_WXFLAGS) $< -o $@
@@ -143,4 +146,20 @@ messages:
 
 install:
 	-cp -p $(OUTDIR)/rocview $(DESTDIR)
+	
+macapp:
+	rm -rf Rocview.app
+	-mkdir Rocview.app
+	-mkdir Rocview.app/Contents
+	-mkdir Rocview.app/Contents/MacOS
+	-mkdir Rocview.app/Contents/Resources
+	-mkdir Rocview.app/Contents/Resources/icons
+	cp xpm/rocrail.icns Rocview.app/Contents/Resources
+	cp Info.plist Rocview.app/Contents/	
+	echo -n 'APPL????' > Rocview.app/Contents/PkgInfo
+	cp ../unxbin/rocview Rocview.app/Contents/MacOS/Rocview
+	cp icons/*.png Rocview.app/Contents/Resources/icons/
+	rm -rf ../unxbin/Rocview.app
+	mv -f Rocview.app ../unxbin
+	
 	
