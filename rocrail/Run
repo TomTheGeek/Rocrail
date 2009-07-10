@@ -1,0 +1,5 @@
+#!/bin/sh
+#File:  MyBundle.app/Contents/MacOS/MyBundle
+mypath=`dirname "$0"`
+#open $mypath/Rocrail -console
+open $mypath/run.command

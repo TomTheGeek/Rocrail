@@ -151,4 +151,22 @@ install_all:
 
 install:
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
+	
+macapp:
+	rm -rf Rocrail.app
+	-mkdir Rocrail.app
+	-mkdir Rocrail.app/Contents
+	-mkdir Rocrail.app/Contents/MacOS
+	-mkdir Rocrail.app/Contents/Resources
+	-mkdir Rocrail.app/Contents/Resources/icons
+	cp rocrail.icns Rocrail.app/Contents/Resources
+	cp rocrail.icns Rocrail.app/Contents/Resources
+	cp Info.plist Rocrail.app/Contents/	
+	echo -n 'APPL????' > Rocrail.app/Contents/PkgInfo
+	cp ../unxbin/rocrail Rocrail.app/Contents/MacOS/Rocrail
+	cp run.command Rocrail.app/Contents/MacOS/
+	cp Run Rocrail.app/Contents/MacOS/
+	cp ../unxbin/*.dylib Rocrail.app/Contents/MacOS
+	rm -rf ../unxbin/Rocrail.app
+	mv -f Rocrail.app ../unxbin
 
