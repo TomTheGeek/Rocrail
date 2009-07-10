@@ -666,43 +666,43 @@ void LC::CreateControls() {
   m_ButtonSizer->Add(l_sizer0, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
   m_FG = new wxButton( m_Parent, -1, _("FG"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  l_sizer0->Add(m_FG, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 0);
+  l_sizer0->Add(m_FG, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1);
 
-  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_READONLY|wxTE_CENTRE );
-  l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 0);
+  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(80, -1), wxTE_READONLY|wxTE_CENTRE );
+  l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 1);
 
   m_Button1Sizer = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(m_Button1Sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
   m_F1 = new wxButton( m_Parent, -1, _("F1"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button1Sizer->Add(m_F1, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button1Sizer->Add(m_F1, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_F2 = new wxButton( m_Parent, -1, _("F2"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button1Sizer->Add(m_F2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button1Sizer->Add(m_F2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_F0 = new wxButton( m_Parent, -1, _("F0"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button1Sizer->Add(m_F0, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button1Sizer->Add(m_F0, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_Button2Sizer = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(m_Button2Sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
   m_F3 = new wxButton( m_Parent, -1, _("F3"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button2Sizer->Add(m_F3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button2Sizer->Add(m_F3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_F4 = new wxButton( m_Parent, -1, _("F4"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button2Sizer->Add(m_F4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button2Sizer->Add(m_F4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_Dir = new wxButton( m_Parent, -1, _(">>"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
-  m_Button2Sizer->Add(m_Dir, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
+  m_Button2Sizer->Add(m_Dir, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_SliderSizer = new wxBoxSizer(wxHORIZONTAL);
   m_MainSizer->Add(m_SliderSizer, 0, wxGROW|wxALL, 0);
 
-  m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE );
+  m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxSize(-1, 80), wxSL_VERTICAL|wxSL_INVERSE );
   m_SliderSizer->Add(m_Vslider, 1, wxGROW|wxALL, 4);
 
-  m_Stop = new wxButton( m_Parent, -1, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_ButtonSizer->Add(m_Stop, 0, wxGROW|wxALL, 0);
+  m_Stop = new wxButton( m_Parent, -1, _("Stop"), wxDefaultPosition, wxSize(120, -1), 0 );
+  m_ButtonSizer->Add(m_Stop, 0, wxGROW|wxALL, 1);
 
   const char* clocktype = wGui.getclocktype( wxGetApp().getIni() );
   int type = 0;
