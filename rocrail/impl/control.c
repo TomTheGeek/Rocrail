@@ -1056,9 +1056,11 @@ static iOControl _inst( Boolean nocom ) {
 
     if( 1 ) {
       iOModel model = AppOp.getModel();
-      iONode plan = ModelOp.getModel( model );
-
-      ControlOp.setBoosters(control, wPlan.getboosterlist(plan));
+      if( model != NULL) {
+        iONode plan = ModelOp.getModel( model );
+        if( plan != NULL && wPlan.getboosterlist(plan) != NULL)
+          ControlOp.setBoosters(control, wPlan.getboosterlist(plan));
+      }
     }
 
 
