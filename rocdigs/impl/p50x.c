@@ -833,8 +833,8 @@ static void __evaluatePTevent( iOP50x p50, byte* in, int size ) {
       cmd = wProgram.statusrsp;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV value=%d", val );
       val = in[1]; /* cv value or status */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV value=%d", val );
       cmd = wProgram.datarsp;
     }
 
