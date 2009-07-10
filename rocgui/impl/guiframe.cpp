@@ -2739,7 +2739,7 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     dlg->Close();
   }
 
-
+  m_LC->stopTimer();
   wxGetApp().OnExit();
   event.Skip();
 }

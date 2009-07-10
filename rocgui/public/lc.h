@@ -43,6 +43,7 @@ public:
     void setLocProps( iONode props );
     void updateLoc( iONode node );
     void SyncClock( iONode node );
+    void stopTimer();
     iONode getLocProps();
 
 private:

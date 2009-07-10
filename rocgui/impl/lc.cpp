@@ -72,6 +72,11 @@ void LC::SyncClock( iONode node ) {
 }
 
 
+void LC::stopTimer() {
+  m_Clock->stopTimer();
+}
+
+
 iONode LC::getLocProps() {
   return m_LocProps;
 }

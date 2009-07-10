@@ -224,6 +224,10 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
   }
 }
 
+void Clock::stopTimer() {
+  WxTimer->Stop();
+}
+
 void Clock::SyncClock(iONode node) {
   if( StrOp.equals( wClock.getcmd(node), wClock.freeze )) {
     run = false;
