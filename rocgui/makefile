@@ -158,7 +158,6 @@ macapp:
 	cp Info.plist Rocview.app/Contents/	
 	echo -n 'APPL????' > Rocview.app/Contents/PkgInfo
 	cp ../unxbin/rocview Rocview.app/Contents/MacOS/Rocview
-	cp run.command Rocview.app/Contents/MacOS/
 	cp Run Rocview.app/Contents/MacOS/
 	cp icons/*.png Rocview.app/Contents/Resources/icons/
 	cp /usr/lib/libwx* Rocview.app/Contents/MacOS/
