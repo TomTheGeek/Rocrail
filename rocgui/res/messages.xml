@@ -9731,4 +9731,7 @@
   <Msg id="smallsymbol">
     <en txt="Small symbol"/>
   </Msg>
+  <Msg id="modview">
+    <en txt="Module view"/>
+  </Msg>
 </Messages>
