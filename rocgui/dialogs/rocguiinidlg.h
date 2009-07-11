@@ -172,6 +172,7 @@ public:
     wxCheckBox* m_RestrictEdit4Auto;
     wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
+    wxCheckBox* m_Modview;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;
