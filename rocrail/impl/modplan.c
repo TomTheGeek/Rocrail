@@ -474,7 +474,7 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
       iOList blockids = NULL;
 
       StrOp.fmtb( key, "%s-%s", modid, from );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get list for [%s]..." );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get list for [%s]...", key );
       blockids = (iOList)MapOp.get(data->fbeventMap, key);
 
       if( blockids != NULL && ListOp.size(blockids) > 0 ) {
