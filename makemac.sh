@@ -72,12 +72,14 @@ cp rocrail/package/plan.xml $DEST/Rocrail/rocdata
 cp -r rocgui/svg $DEST/Rocrail/rocdata/
 
 # pimp the dmg
-cp doc/rocrail-logo-r.png $DEST/background.png
+cp doc/rocrail-logo-dmg.png $DEST/background.png
 setFile -a V $DEST/background.png
 cp rocrail/rocrail.icns $DEST/VolumeIcon.icns
 setFile -a V $DEST/VolumeIcon.icns
 cp rocgui/_DS_Store $DEST/.DS_Store
 setFile -a V $DEST/.DS_Store
+cp rocgui/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
+setFile -a V $DEST/Rocrail/.DS_Store
 
 # Unmount the disk image
 hdiutil detach $DEV
