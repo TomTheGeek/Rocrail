@@ -154,7 +154,7 @@ macapp:
 	-mkdir Rocview.app/Contents/MacOS
 	-mkdir Rocview.app/Contents/Resources
 	-mkdir Rocview.app/Contents/Resources/icons
-	cp xpm/rocrail.icns Rocview.app/Contents/Resources
+	cp rv.icns Rocview.app/Contents/Resources/rocrail.icns
 	cp Info.plist Rocview.app/Contents/	
 	echo -n 'APPL????' > Rocview.app/Contents/PkgInfo
 	cp ../unxbin/rocview Rocview.app/Contents/MacOS/Rocview
@@ -164,4 +164,15 @@ macapp:
 	rm -rf ../unxbin/Rocview.app
 	mv -f Rocview.app ../unxbin
 	
-	
+	rm -rf Modview.app
+	-mkdir Modview.app
+	-mkdir Modview.app/Contents
+	-mkdir Modview.app/Contents/MacOS
+	-mkdir Modview.app/Contents/Resources
+	-mkdir Modview.app/Contents/Resources/icons
+	cp rm.icns Modview.app/Contents/Resources/rocrail.icns
+	cp Info.plist Modview.app/Contents/	
+	echo -n 'APPL????' > Modview.app/Contents/PkgInfo
+	cp RunModview Modview.app/Contents/MacOS/Run
+	rm -rf ../unxbin/Modview.app
+	mv -f Modview.app ../unxbin

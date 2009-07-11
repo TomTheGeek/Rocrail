@@ -67,6 +67,7 @@ mkdir -p $DEST/Rocrail/rocdata/
 
 cp -r unxbin/Rocrail.app $DEST/Rocrail
 cp -r unxbin/Rocview.app $DEST/Rocrail
+cp -r unxbin/Modview.app $DEST/Rocrail
 
 cp rocrail/package/plan.xml $DEST/Rocrail/rocdata
 cp -r rocgui/svg $DEST/Rocrail/rocdata/
