@@ -196,8 +196,15 @@ int RocGui::OnExit() {
     wWindow.sety( wGui.getwindow( m_Ini ), point.y );
 
     wxSize size = this->getFrame()->GetSize();
+    wxSize menubarsize = this->getFrame()->GetMenuBar()->GetSize();
     wWindow.setcx( wGui.getwindow( m_Ini ), size.GetWidth() );
+#ifdef __APPLE__
+    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() - menubarsize.GetHeight() );
+#else
     wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() );
+#endif
+
+
 
     if( wGui.getrrcon( m_Ini ) == NULL ) {
       iONode node = NodeOp.inst( wRRCon.name(), m_Ini, ELEMENT_NODE );
