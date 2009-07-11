@@ -142,6 +142,7 @@ static iIBlockBase __getActiveTrackBlock(iIBlockBase inst, const char* msg ) {
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no active block found for track %d.", data->tablepos );
+  return NULL;
 }
 
 
