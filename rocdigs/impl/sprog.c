@@ -657,6 +657,11 @@ static int __parseCVValue(const char* in) {
   int val = 0;
   int idx = 0;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "string to parse: \"%s\"", in );
+
+  if( StrOp.findi(in, "No Ack") ) {
+	  return -1;
+  }
+
   /* parse the value string */
   while( in[idx] != 0 ) {
     if( in[idx] == 'h' ) {
