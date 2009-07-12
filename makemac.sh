@@ -64,13 +64,19 @@ DEST=$(hdiutil attach myimg.dmg | cut -f 3 )
 
 # copy the files
 mkdir -p $DEST/Rocrail/rocdata/
+mkdir -p $DEST/Rocrail/rocdata/trace/
+
+cp -r rocrail/package/images $DEST/Rocrail/rocdata/
 
 cp -r unxbin/Rocrail.app $DEST/Rocrail
 cp -r unxbin/Rocview.app $DEST/Rocrail
 cp -r unxbin/Modview.app $DEST/Rocrail
 
-cp rocrail/package/plan.xml $DEST/Rocrail/rocdata
-cp -r rocgui/svg $DEST/Rocrail/rocdata/
+cp rocrail/package/plan.xml $DEST/Rocrail/rocdata/
+cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
+cp rocrail/package/rocview.ini_dmg $DEST/Rocrail/rocdata/rocview.ini
+
+cp -r rocgui/svg/themes $DEST/Rocrail/rocdata/
 
 # pimp the dmg
 cp doc/rocrail-logo-dmg.png $DEST/background.png

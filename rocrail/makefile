@@ -159,8 +159,7 @@ macapp:
 	-mkdir Rocrail.app/Contents/MacOS
 	-mkdir Rocrail.app/Contents/Resources
 	-mkdir Rocrail.app/Contents/Resources/icons
-	cp rocrail.icns Rocrail.app/Contents/Resources
-	cp rocrail.icns Rocrail.app/Contents/Resources
+	cp rr.icns Rocrail.app/Contents/Resources/rocrail.icns
 	cp Info.plist Rocrail.app/Contents/	
 	echo -n 'APPL????' > Rocrail.app/Contents/PkgInfo
 	cp ../unxbin/rocrail Rocrail.app/Contents/MacOS/Rocrail
