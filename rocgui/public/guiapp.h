@@ -73,6 +73,7 @@ public:
   bool isModView() { return m_bModView; }
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
+  wxString getIconPath(const char* iconfile, const char* IconPath);
 
   iORCon        m_RCon;
   const char*   m_Host;

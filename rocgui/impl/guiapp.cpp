@@ -117,8 +117,6 @@
 // ----------------------------------------------------------------------------
 // resources
 // ----------------------------------------------------------------------------
-// the application icon
-#include "rocgui/xpm/rocrail-logo-net.xpm"
 
 
 IMPLEMENT_APP(RocGui)
@@ -337,6 +335,26 @@ iONode RocGui::popUndoItem() {
 }
 
 
+wxString RocGui::getIconPath(const char* iconfile, const char* IconPath) {
+  if( wxGetApp().getIni() != NULL ) {
+    const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
+    char* path = NULL;
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "IconPath=0x%08X", IconPath );
+    if( IconPath != NULL ) {
+      path = StrOp.fmt( "%s%c%s.png", IconPath, SystemOp.getFileSeparator(), iconfile );
+    }
+    else
+      path = StrOp.fmt( "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
+
+    return wxString(path,wxConvUTF8);
+  }
+  else
+    return wxString("",wxConvUTF8);
+}
+
+
+
+
 bool RocGui::OnInit() {
 
 #ifdef __linux__
@@ -361,14 +379,6 @@ bool RocGui::OnInit() {
 
   // Required for advanced HTML help
   wxFileSystem::AddHandler(new wxZipFSHandler);
-
-  // show the splash screen:
-  wxBitmap bitmap;
-  wxSplashScreen* splash = NULL;
-  splash = new wxSplashScreen(wxIcon(rocrail_logo_net_xpm),
-      wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
-      3000, NULL, -1, wxDefaultPosition, wxDefaultSize,
-      wxSUNKEN_BORDER|wxSTAY_ON_TOP);
 
   // convert command line arguments to UTF8 strings:
   char** argv_c = (char**)allocMem( argc * sizeof( char* ) );
@@ -425,6 +435,16 @@ bool RocGui::OnInit() {
 
   if( m_Ini == NULL )
     m_Ini = NodeOp.inst( wGui.name(), NULL, ELEMENT_NODE );
+
+  // show the splash screen:
+  wxBitmap bitmap;
+  if (bitmap.LoadFile(getIconPath("rocrail-logo", icons), wxBITMAP_TYPE_PNG)) {
+    wxSplashScreen* splash = NULL;
+    splash = new wxSplashScreen(bitmap,
+        wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
+        3000, NULL, -1, wxDefaultPosition, wxDefaultSize,
+        wxSUNKEN_BORDER|wxSTAY_ON_TOP);
+  }
 
   m_bModView = wGui.ismodview( m_Ini ) || modview;
 
@@ -570,12 +590,6 @@ bool RocGui::OnInit() {
   }
 
   m_Frame->setOffline(m_bOffline);
-
-  // stop the splash screen:
-  if( splash != NULL ) {
-    //splash->Show(false);
-    //splash->Destroy();
-  }
 
   TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False );
 
