@@ -42,7 +42,7 @@
 
 ////@begin XPM images
 ////@end XPM images
-#include "rocgui/xpm/rocrail-logo-net.xpm"
+//#include "rocgui/xpm/rocrail-logo-net.xpm"
 #include "rocgui/public/guiapp.h"
 
 /*!
@@ -76,7 +76,12 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
 {
   Create(parent, id, caption, pos, size, style);
 
-  m_Splash->SetBitmapLabel( wxIcon(rocrail_logo_net_xpm) );
+
+  wxBitmap bitmap;
+  if (bitmap.LoadFile(wxGetApp().getFrame()->getIconPath("rocrail-logo"), wxBITMAP_TYPE_PNG)) {
+    m_Splash->SetBitmapLabel( bitmap );
+  }
+
 
   char* str = StrOp.fmt("%d.%d.%d",
               wGui.vmajor, wGui.vminor, wGui.patch );
