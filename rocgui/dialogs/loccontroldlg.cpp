@@ -83,10 +83,9 @@ BEGIN_EVENT_TABLE( LocControlDialog, wxDialog )
 
     EVT_BUTTON( ID_BITMAPBUTTON_LOCCTRL_IMAGE, LocControlDialog::OnBitmapbuttonLocctrlImageClick )
 
-    //EVT_SLIDER( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedUpdated )
-    EVT_COMMAND_SCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedUpdated )
-    //EVT_COMMAND_SCROLL_ENDSCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedEndScroll )
-    EVT_COMMAND_SCROLL_THUMBRELEASE( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedEndScroll )
+    EVT_SLIDER( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedUpdated )
+    EVT_COMMAND_SCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedScroll )
+    EVT_COMMAND_SCROLL_ENDSCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedEndScroll )
 
     EVT_BUTTON( ID_BUTTON_LOCCTRL_F1, LocControlDialog::OnButtonLocctrlF1Click )
 
@@ -209,13 +208,13 @@ void LocControlDialog::modelEvent( iONode evt ) {
     value.Printf( _T("%d"), wLoc.getV( evt ) );
     m_Speed->SetValue( value );
     m_SpeedCtrl->SetValue( wLoc.getV( evt ) );
-    
+
     /* update direction */
     m_bDir = wLoc.isdir( evt)?true:false;
     m_Dir->SetBitmapLabel( m_bDir?wxBitmap(rocrail_forwards_xpm):wxBitmap(rocrail_reverse_xpm) );
     m_Dir->SetToolTip( m_bDir? wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
     m_Dir->Refresh();
-      
+
     /* update function "n" */
     m_bFn = wLoc.isfn( evt)?true:false;
     setButtonColor( m_Fn, !m_bFn);
@@ -227,7 +226,7 @@ void LocControlDialog::modelEvent( iONode evt ) {
       /* update function "n" */
       m_bFn = wFunCmd.isf0( evt)?true:false;
       setButtonColor( m_Fn, !m_bFn);
-      
+
       /* update further functions */
       wLoc.setfx(lc,
           (wFunCmd.isf1 (evt)?0x0001:0x00) |
@@ -474,65 +473,65 @@ void LocControlDialog::CreateControls()
     itemBoxSizer2->Add(itemFlexGridSizer4, 0, wxGROW|wxALL, 0);
 
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW|wxALL|wxADJUST_MINSIZE, 0);
+    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW|wxADJUST_MINSIZE, 0);
 
     m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 30), wxTE_CENTRE );
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
-    m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE );
-    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+    m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxSize(-1, 100), wxSL_VERTICAL|wxSL_INVERSE );
+    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxADJUST_MINSIZE, 2);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW|wxALL, 0);
+    itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW, 0);
 
     wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(2, 3, 0, 0);
-    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxALIGN_CENTER_HORIZONTAL, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW, 5);
 
     m_F1 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F1, _("F1"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F1, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 2);
+    itemFlexGridSizer9->Add(m_F1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_F2 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F2, _("F2"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F2, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 2);
+    itemFlexGridSizer9->Add(m_F2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F3 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F3, _("F3"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+    itemFlexGridSizer9->Add(m_F3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F4 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F4, _("F4"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+    itemFlexGridSizer9->Add(m_F4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_F5 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F5, _("F5"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F6 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F6, _("F6"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F7 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F7, _("F7"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F7, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F7, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_F8 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F8, _("F8"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F9 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_9, _("F9"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F10 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F10, _("F10"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F10, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F10, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_F11 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F11, _("F11"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F11, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F11, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_F12 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F12, _("F12"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer9->Add(m_F12, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer9->Add(m_F12, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(2, 2, 0, 0);
     itemFlexGridSizer22->AddGrowableCol(1);
-    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW, 5);
 
     m_Fn = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_FN, _("Fn"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_TOP, 2);
+    itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_TOP|wxBOTTOM, 2);
 
     m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    itemFlexGridSizer22->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL, 2);
+    itemFlexGridSizer22->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, _T(""), wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
@@ -575,7 +574,7 @@ void LocControlDialog::OnBitmapbuttonLocctrlImageClick( wxCommandEvent& event )
  * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER_LOCCTRL_SPEED
  */
 
-void LocControlDialog::OnSliderLocctrlSpeedUpdated( wxScrollEvent& event )
+void LocControlDialog::OnSliderLocctrlSpeedUpdated( wxCommandEvent& event )
 {
   int val = m_SpeedCtrl->GetValue();
   m_iSpeed = val;
@@ -596,10 +595,16 @@ void LocControlDialog::OnSliderLocctrlSpeedEndScroll( wxScrollEvent& event )
 bool LocControlDialog::setButtonColor( wxButton* button, bool state ) {
   if( state ) {
     button->SetBackgroundColour( Base::getGreen() );
+    wxFont f = button->GetFont();
+    f.SetUnderlined(false);
+    button->SetFont(f);
     return false;
   }
   else {
     button->SetBackgroundColour( Base::getRed() );
+    wxFont f = button->GetFont();
+    f.SetUnderlined(true);
+    button->SetFont(f);
     return true;
   }
 }

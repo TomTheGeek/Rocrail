@@ -130,7 +130,7 @@ public:
     void OnBitmapbuttonLocctrlImageClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER_LOCCTRL_SPEED
-    void OnSliderLocctrlSpeedUpdated( wxScrollEvent& event );
+    void OnSliderLocctrlSpeedUpdated( wxCommandEvent& event );
 
     /// wxEVT_SCROLL_* event handler for ID_SLIDER_LOCCTRL_SPEED
     void OnSliderLocctrlSpeedScroll( wxScrollEvent& event );
