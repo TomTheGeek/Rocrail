@@ -300,7 +300,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     response = data->sublib->cmd((obj)data->sublib, cmd);
 
     if( swtime > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting [%s] to switch delay thread" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting to switch delay thread" );
       wSwitch.setdelay( cmdoff, swtime );
       wSwitch.setdelaytime( cmdoff, SystemOp.getMillis() );
       ThreadOp.post( data->swdelay, (obj)cmdoff );
