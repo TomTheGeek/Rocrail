@@ -190,10 +190,16 @@ void LC::funCmd()
 bool LC::setButtonColor( wxButton* button, bool state ) {
   if( state ) {
     button->SetBackgroundColour( Base::getGreen() );
+    wxFont f = button->GetFont();
+    f.SetUnderlined(false);
+    button->SetFont(f);
     return false;
   }
   else {
     button->SetBackgroundColour( Base::getRed() );
+    wxFont f = button->GetFont();
+    f.SetUnderlined(true);
+    button->SetFont(f);
     return true;
   }
 }
