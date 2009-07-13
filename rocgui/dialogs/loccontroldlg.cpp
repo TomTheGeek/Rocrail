@@ -85,7 +85,6 @@ BEGIN_EVENT_TABLE( LocControlDialog, wxDialog )
 
     EVT_SLIDER( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedUpdated )
     EVT_COMMAND_SCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedScroll )
-    EVT_COMMAND_SCROLL_ENDSCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedEndScroll )
 
     EVT_BUTTON( ID_BUTTON_LOCCTRL_F1, LocControlDialog::OnButtonLocctrlF1Click )
 
@@ -475,7 +474,7 @@ void LocControlDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW|wxADJUST_MINSIZE, 0);
 
-    m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 30), wxTE_CENTRE );
+    m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 40), wxTE_READONLY|wxTE_CENTRE );
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
     m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxSize(-1, 100), wxSL_VERTICAL|wxSL_INVERSE );
@@ -534,7 +533,7 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer22->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
-    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, _T(""), wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
+    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
     itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
@@ -583,7 +582,6 @@ void LocControlDialog::OnSliderLocctrlSpeedUpdated( wxCommandEvent& event )
 
 /*!
  * wxEVT_SCROLL_ENDSCROLL event handler for ID_SLIDER_LOCCTRL_SPEED
- */
 
 void LocControlDialog::OnSliderLocctrlSpeedEndScroll( wxScrollEvent& event )
 {
@@ -591,6 +589,7 @@ void LocControlDialog::OnSliderLocctrlSpeedEndScroll( wxScrollEvent& event )
   m_iSpeed = val;
   speedCmd(true);
 }
+*/
 
 bool LocControlDialog::setButtonColor( wxButton* button, bool state ) {
   if( state ) {

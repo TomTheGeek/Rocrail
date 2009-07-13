@@ -135,9 +135,6 @@ public:
     /// wxEVT_SCROLL_* event handler for ID_SLIDER_LOCCTRL_SPEED
     void OnSliderLocctrlSpeedScroll( wxScrollEvent& event );
 
-    /// wxEVT_SCROLL_ENDSCROLL event handler for ID_SLIDER_LOCCTRL_SPEED
-    void OnSliderLocctrlSpeedEndScroll( wxScrollEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_F1
     void OnButtonLocctrlF1Click( wxCommandEvent& event );
 
