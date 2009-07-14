@@ -799,11 +799,17 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   iOLocData data = Data(loc);
   iONode fncmd = cmd==NULL?NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE ):cmd;
   int timedfn = data->timedfn;
+  int newtimedfn = wFunCmd.gettimedfn( cmd );
 
   if( function >= 0 ) {
     timedfn = function;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", timedfn );
     wFunCmd.settimedfn( cmd, -1 );
+  }
+  
+  if( timedfn == newtimedfn ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "keep state of function [%d]; is same as new", timedfn );
+    timedfn = -1;
   }
 
   wFunCmd.setid ( fncmd, wLoc.getid(data->props) );
