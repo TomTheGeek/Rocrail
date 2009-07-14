@@ -630,7 +630,7 @@
   </Msg>
   <Msg id="stoploc">
     <de txt="Zug stoppen" tip="Versetzt Zug in Manualbetrieb."/>
-    <en txt="Stop locomotive" tip="Put locomotive in manual mode."/>
+    <en txt="Stop locomotive automat" tip="Put locomotive in manual mode."/>
     <nl txt="Stop lokomotief" tip="Zet locomotief in hand mode."/>
     <sv txt="Stoppa lok" tip="Kör lok manuellt."/>
     <fr txt="Arrêt : Cette machine" tip="Retirer cette machine du mode automatique."/>

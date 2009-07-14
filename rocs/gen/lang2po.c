@@ -202,7 +202,7 @@ static char* __lang2pot( iONode xml ) {
 
       cnt++;
 
-      if( NodeOp.getStr(en, "tip", NULL) != NULL && StrOp.len(NodeOp.getStr(en, "tip", NULL)) > 0 ) {
+      if( NodeOp.getStr(en, "tip", NULL) != NULL && StrOp.len(NodeOp.getStr(en, "tip", NULL)) > 0 && !StrOp.equals(NodeOp.getStr(en, "txt", "?"), NodeOp.getStr(en, "tip", "?")) ) {
         TraceOp.println( "Adding tip [%s]", NodeOp.getStr(en, "tip", "?") );
         msgid = StrOp.fmt( "#. %s\n# id=\"%s\"\n#, c-format\n",
             NodeOp.getStr(msg, "remark", ""), NodeOp.getStr(msg, "id", "") );
