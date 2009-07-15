@@ -412,7 +412,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
   int         V_new  = -1;
   iONode      cmdTD  = NULL;
   iONode      cmdFn  = NULL;
-  static Boolean f0changed = False;
+  Boolean  f0changed = False;
 
   if( cmd != NULL )
   {
@@ -449,6 +449,11 @@ static void __engine( iOLoc inst, iONode cmd ) {
         data->fxtimer[0] = __getFnTimer( inst, 0);
       if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
+        cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+				wLoc.setid( cmd, wLoc.getid(data->props) );
+				wLoc.setV( cmd, wLoc.getV(data->props) );
+				wLoc.setfn( cmd, wFunCmd.isf0( cmd ) );
+				wLoc.setdir( cmd, wLoc.isdir(data->props) );
         f0changed = False;
       }
 
