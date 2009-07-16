@@ -569,6 +569,121 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 }
 
 
+static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  iONode cmd = NULL;
+  int tracknr = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
+
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    tracknr = __getNextTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    tracknr = __getPrevTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    tracknr = __getOppositeTrack( inst, data->tablepos );
+
+    if( tracknr == -1 ) {
+      if( data->tablepos <= 24 )
+        data->gotopos = data->tablepos + 24;
+      else
+        data->gotopos = data->tablepos - 24;
+      tracknr = data->gotopos;
+    }
+    else {
+      data->gotopos = tracknr;
+    }
+    data->skippos = -1;
+  }
+  else {
+    /* Tracknumber */
+    tracknr = atoi( cmdStr );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+
+    if( move ) {
+      data->gotopos = tracknr;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    }
+
+  }
+
+  if( cmd != NULL && control != NULL )
+  {
+    int rrtracknr = tracknr;
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wTurntable.setiid( cmd, iid );
+
+    tracknr = __getMappedTrack( inst, tracknr );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
+
+    /* pending move operation */
+    data->pending = True;
+
+    /* Broadcast to clients. */
+    {
+      iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+      wTurntable.setid( event, wTurntable.getid( data->props ) );
+      wTurntable.setbridgepos( event, rrtracknr );
+      if( wTurntable.getiid( data->props ) != NULL )
+        wTurntable.setiid( event, wTurntable.getiid( data->props ) );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+    }
+
+
+    /* set the protocol */
+    wSwitch.setprot( cmd, wTurntable.getprot(data->props) );
+    wSwitch.setport1( cmd, tracknr );
+    wOutput.setcmd( cmd, wSwitch.turnout ); /* the 'red' command moves the hut side to this position */
+    ControlOp.cmd( control, cmd, NULL );
+
+    /* no feedback for 'position reached' so set it as reached */    
+    data->tablepos = data->gotopos;
+
+    /* bridge is in position */
+    data->pending = False;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "bridge at position pos=%d ", data->tablepos );
+    wTurntable.setbridgepos( data->props, data->tablepos );
+
+    if( wTurntable.getdelay( data->props) > 0 ) {
+      data->delaytick = SystemOp.getTick();
+    }
+    else {
+      data->delaytick = 0;
+    }
+  }
+
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+
+
+  return ok;
+}
+
+
 static void __setLocDecFn( iONode cmd, int fn, Boolean state ) {
   char fStr[32];
   StrOp.fmtb( fStr, "f%d", fn );
@@ -692,6 +807,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_digitalbahn( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.multiport ) )
     return __cmd_multiport( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.f6915 ) )
+    return __cmd_f6915( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",

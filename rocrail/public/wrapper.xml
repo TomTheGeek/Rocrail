@@ -1324,6 +1324,7 @@
         <const name="locdec" vt="string" val="locdec" remark="Modified analog turntable."/>
         <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>
         <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
+        <const name="f6915" vt="string" val="f6915" remark="Fleischmann turn controller."/>
         <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
         <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
