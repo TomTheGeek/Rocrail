@@ -450,21 +450,21 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-		wLoc.setV( cmd, wLoc.getV(data->props) );
-	    wLoc.setmass( cmd, wLoc.getmass( data->props ) );
-	    wLoc.setV_step( cmd, wLoc.getV_step( data->props ) );
-	    wLoc.setV_min( cmd, wLoc.getV_min( data->props ) );
-	    wLoc.setV_max( cmd, wLoc.getV_max( data->props ) );
-	    wLoc.setV_mode( cmd, wLoc.getV_mode( data->props ) );
-	    wLoc.setprot( cmd, wLoc.getprot( data->props ) );
-	    wLoc.setprotver( cmd, wLoc.getprotver( data->props ) );
-	    wLoc.setspcnt( cmd, wLoc.getspcnt( data->props ) );
-	    wLoc.setfncnt( cmd, wLoc.getfncnt( data->props ) );
-	    wLoc.setdir( cmd, wLoc.isdir( data->props ) );
-	    wLoc.setfn( cmd, wLoc.isfn( data->props ) );
-	    wLoc.setoid( cmd, wLoc.getoid(data->props) );
-	    wLoc.setid( cmd, wLoc.getid(data->props) );
-	    wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
+        wLoc.setV( cmdFn, wLoc.getV(data->props) );
+        wLoc.setmass( cmdFn, wLoc.getmass( data->props ) );
+        wLoc.setV_step( cmdFn, wLoc.getV_step( data->props ) );
+        wLoc.setV_min( cmdFn, wLoc.getV_min( data->props ) );
+        wLoc.setV_max( cmdFn, wLoc.getV_max( data->props ) );
+        wLoc.setV_mode( cmdFn, wLoc.getV_mode( data->props ) );
+        wLoc.setprot( cmdFn, wLoc.getprot( data->props ) );
+        wLoc.setprotver( cmdFn, wLoc.getprotver( data->props ) );
+        wLoc.setspcnt( cmdFn, wLoc.getspcnt( data->props ) );
+        wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
+        wLoc.setdir( cmdFn, wLoc.isdir( data->props ) );
+        wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
+        wLoc.setoid( cmdFn, wLoc.getoid(data->props) );
+        wLoc.setid( cmdFn, wLoc.getid(data->props) );
+        wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
         f0changed = False;
       }
 
@@ -822,7 +822,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", timedfn );
     wFunCmd.settimedfn( cmd, -1 );
   }
-  
+
   if( timedfn == newtimedfn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "keep state of function [%d]; is same as new", timedfn );
     timedfn = -1;
