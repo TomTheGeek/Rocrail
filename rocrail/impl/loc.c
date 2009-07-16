@@ -450,21 +450,11 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setV( cmdFn, wLoc.getV(data->props) );
-        wLoc.setmass( cmdFn, wLoc.getmass( data->props ) );
-        wLoc.setV_step( cmdFn, wLoc.getV_step( data->props ) );
-        wLoc.setV_min( cmdFn, wLoc.getV_min( data->props ) );
-        wLoc.setV_max( cmdFn, wLoc.getV_max( data->props ) );
-        wLoc.setV_mode( cmdFn, wLoc.getV_mode( data->props ) );
-        wLoc.setprot( cmdFn, wLoc.getprot( data->props ) );
-        wLoc.setprotver( cmdFn, wLoc.getprotver( data->props ) );
-        wLoc.setspcnt( cmdFn, wLoc.getspcnt( data->props ) );
-        wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
         wLoc.setdir( cmdFn, wLoc.isdir( data->props ) );
         wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
-        wLoc.setoid( cmdFn, wLoc.getoid(data->props) );
         wLoc.setid( cmdFn, wLoc.getid(data->props) );
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
+        wLoc.setiid( cmdFn, wLoc.getiid(data->props) );
         f0changed = False;
       }
 
