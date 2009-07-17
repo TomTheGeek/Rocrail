@@ -720,7 +720,7 @@ void LC::CreateControls() {
   if( StrOp.equals( wGui.clock_ampm, clocktype ) ) type = 1;
   else if( StrOp.equals( wGui.clock_24h, clocktype ) ) type = 2;
   m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type);
-  m_SliderSizer->Add(m_Clock, 0, wxGROW|wxALL, 2);
+  m_SliderSizer->Add(m_Clock, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
 }
 
