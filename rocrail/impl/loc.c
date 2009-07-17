@@ -455,6 +455,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
         wLoc.setid( cmdFn, wLoc.getid(data->props) );
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
         wLoc.setiid( cmdFn, wLoc.getiid(data->props) );
+        wLoc.setV( cmdFn, wLoc.getV(data->props) );
         f0changed = False;
       }
 
