@@ -1,0 +1,12 @@
+<svg width="32" height="32">
+  <g>
+   <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+   <!-- Button  -->
+    <circle cx="15" cy="15" r="10" fill="none" stroke="rgb(0,0,0)"/>
+    <circle cx="15" cy="15" r="9" fill="rgb(192,192,192)" stroke="rgb(192,192,192)"/>
+    <circle cx="15" cy="15" r="4" fill="rgb(0,254,0)" stroke="rgb(0,254,0)"/>
+  </g>
+</svg>
+
+
