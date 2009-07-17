@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/PermInclude.h"
 #include "rocrail/wrapper/public/PermExclude.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 static int instCnt = 0;
 
@@ -673,6 +674,23 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
       return False;
     }
   }
+
+  /* test if the cargo type is permitted */
+  {
+    const char* permtype = wRoute.gettypeperm(data->props);
+    if( permtype != NULL && StrOp.len(permtype) > 0 && !StrOp.equals( permtype, wLoc.cargo_all) ) {
+      iONode lc = LocOp.base.properties(loc);
+      const char* cargo    = wLoc.getcargo(lc);
+      if( !StrOp.equals( permtype, cargo)) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Loc [%s] has no permission to use route [%s]; cargo does not fit. (%s!=%s)",
+                       id, wRoute.getid(data->props), permtype, cargo );
+        return suits_not;
+      }
+    }
+  }
+
+
 
   return True;
 

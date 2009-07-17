@@ -9734,4 +9734,7 @@
   <Msg id="modview">
     <en txt="Module view"/>
   </Msg>
+  <Msg id="post">
+    <en txt="Post"/>
+  </Msg>
 </Messages>

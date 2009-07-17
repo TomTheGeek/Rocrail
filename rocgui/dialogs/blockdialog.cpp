@@ -461,6 +461,15 @@ void BlockDialog::initLabels() {
   m_labInclude->SetLabel( wxGetApp().getMsg( "include" ) );
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
 
+  m_PermType->SetString( 0, wxGetApp().getMsg( "all" ) );
+  m_PermType->SetString( 1, wxGetApp().getMsg( "none" ) );
+  m_PermType->SetString( 2, wxGetApp().getMsg( "goods" ) );
+  m_PermType->SetString( 3, wxGetApp().getMsg( "local" ) );
+  m_PermType->SetString( 4, wxGetApp().getMsg( "mixed" ) );
+  m_PermType->SetString( 5, wxGetApp().getMsg( "cleaning" ) );
+  m_PermType->SetString( 6, wxGetApp().getMsg( "ice" ) );
+  m_PermType->SetString( 7, wxGetApp().getMsg( "post" ) );
+
   // Initialize sorted Loco Permission List
   initLocPermissionList();
 
@@ -737,6 +746,26 @@ void BlockDialog::initValues() {
     incl = wBlock.nextincl( m_Props, incl );
   };
 
+  int cargo = 0;
+  if( StrOp.equals( wLoc.cargo_all, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 0;
+  else if( StrOp.equals( wLoc.cargo_none, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 1;
+  else if( StrOp.equals( wLoc.cargo_goods, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 2;
+  else if( StrOp.equals( wLoc.cargo_person, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 3;
+  else if( StrOp.equals( wLoc.cargo_mixed, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 4;
+  else if( StrOp.equals( wLoc.cargo_cleaning, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 5;
+  else if( StrOp.equals( wLoc.cargo_ice, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 6;
+  else if( StrOp.equals( wLoc.cargo_post, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 7;
+  m_PermType->SetSelection( cargo );
+
+
 }
 
 bool BlockDialog::evaluate() {
@@ -924,6 +953,25 @@ bool BlockDialog::evaluate() {
     wPermInclude.setid( incl, m_IncludeList->GetString(idx).mb_str(wxConvUTF8) );
     NodeOp.addChild( m_Props, incl );
   }
+
+  int cargo = m_PermType->GetSelection();
+  if( cargo == 0 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_all );
+  else if( cargo == 1 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_none );
+  else if( cargo == 2 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_goods );
+  else if( cargo == 3 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_person );
+  else if( cargo == 4 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_mixed );
+  else if( cargo == 5 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_cleaning );
+  else if( cargo == 6 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_ice );
+  else if( cargo == 7 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_post );
+
 
 
   // remove un used events
@@ -1116,6 +1164,7 @@ bool BlockDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_IncludeList = NULL;
     m_labExclude = NULL;
     m_ExcludeList = NULL;
+    m_PermType = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
     m_OK = NULL;
@@ -1666,24 +1715,37 @@ void BlockDialog::CreateControls()
     m_ExcludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_EXCLUDE, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_MULTIPLE );
     itemBoxSizer151->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
+    wxArrayString m_PermTypeStrings;
+    m_PermTypeStrings.Add(_("&All"));
+    m_PermTypeStrings.Add(_("&None"));
+    m_PermTypeStrings.Add(_("&Goods"));
+    m_PermTypeStrings.Add(_("&Local"));
+    m_PermTypeStrings.Add(_("&Mixed"));
+    m_PermTypeStrings.Add(_("&Cleaning"));
+    m_PermTypeStrings.Add(_("&ICE"));
+    m_PermTypeStrings.Add(_("&Post"));
+    m_PermType = new wxRadioBox( m_PermissionsPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_PermTypeStrings, 2, wxRA_SPECIFY_ROWS );
+    m_PermType->SetSelection(0);
+    itemBoxSizer151->Add(m_PermType, 0, wxGROW|wxALL, 5);
+
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
     itemBoxSizer2->Add(m_Notebook, 0, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer156 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer157 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer156, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer157, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer156->AddButton(m_Cancel);
+    itemStdDialogButtonSizer157->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer156->AddButton(m_Apply);
+    itemStdDialogButtonSizer157->AddButton(m_Apply);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer156->AddButton(m_OK);
+    itemStdDialogButtonSizer157->AddButton(m_OK);
 
-    itemStdDialogButtonSizer156->Realize();
+    itemStdDialogButtonSizer157->Realize();
 
 ////@end BlockDialog content construction
 }

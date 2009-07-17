@@ -721,6 +721,9 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( StrOp.equals( wBlock.type_shunting, blocktype ) && StrOp.equals( wLoc.cargo_none, traintype ) )
     return suits_well;
 
+  if( StrOp.equals( wBlock.type_post, blocktype ) && StrOp.equals( wLoc.cargo_post, traintype ) )
+    return suits_well;
+
   if( wait != NULL )
     *wait = False;
 
@@ -773,6 +776,21 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
                      "Loc [%s] has no permission to enter block [%s]",
                      id, data->id );
       return suits_not;
+    }
+  }
+
+  /* test if the cargo type is permitted */
+  {
+    const char* permtype = wBlock.gettypeperm(data->props);
+    if( permtype != NULL && StrOp.len(permtype) > 0 && !StrOp.equals( permtype, wLoc.cargo_all) ) {
+      iONode lc = LocOp.base.properties(loc);
+      const char* cargo    = wLoc.getcargo(lc);
+      if( !StrOp.equals( permtype, cargo)) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Loc [%s] has no permission to enter block [%s]; cargo does not fit. (%s!=%s)",
+                       id, data->id, permtype, cargo);
+        return suits_not;
+      }
     }
   }
 

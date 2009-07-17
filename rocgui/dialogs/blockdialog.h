@@ -406,6 +406,7 @@ public:
     wxListBox* m_IncludeList;
     wxStaticText* m_labExclude;
     wxListBox* m_ExcludeList;
+    wxRadioBox* m_PermType;
     wxButton* m_Cancel;
     wxButton* m_Apply;
     wxButton* m_OK;

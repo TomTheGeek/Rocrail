@@ -289,6 +289,7 @@ void LocDialog::initLabels() {
   m_CargoBox->SetString( 3, wxGetApp().getMsg( "mixed" ) );
   m_CargoBox->SetString( 4, wxGetApp().getMsg( "cleaning" ) );
   m_CargoBox->SetString( 5, wxGetApp().getMsg( "ice" ) );
+  m_CargoBox->SetString( 6, wxGetApp().getMsg( "post" ) );
   m_secondNextBlock->SetLabel( wxGetApp().getMsg( "secondnextblock" ) );
   m_ShortIn->SetLabel( wxGetApp().getMsg( "useshortinevent" ) );
   m_InAtPre2In->SetLabel( wxGetApp().getMsg( "inatpre2in" ) );
@@ -602,6 +603,8 @@ void LocDialog::InitValues() {
     cargo = 4;
   else if( StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( m_Props ) ) )
     cargo = 5;
+  else if( StrOp.equals( wLoc.cargo_post, wLoc.getcargo( m_Props ) ) )
+    cargo = 6;
   m_CargoBox->SetSelection( cargo );
   m_secondNextBlock->SetValue( wLoc.issecondnextblock( m_Props ) );
 
@@ -846,6 +849,8 @@ bool LocDialog::Evaluate() {
     wLoc.setcargo( m_Props, wLoc.cargo_cleaning );
   else if( cargo == 5 )
     wLoc.setcargo( m_Props, wLoc.cargo_ice );
+  else if( cargo == 6 )
+    wLoc.setcargo( m_Props, wLoc.cargo_post );
 
   wLoc.setsecondnextblock( m_Props, m_secondNextBlock->IsChecked() ? True:False );
 
@@ -1390,6 +1395,7 @@ void LocDialog::CreateControls()
     m_CargoBoxStrings.Add(_("&Mixed"));
     m_CargoBoxStrings.Add(_("&Cleaning"));
     m_CargoBoxStrings.Add(_("&ICE"));
+    m_CargoBoxStrings.Add(_("&Post"));
     m_CargoBox = new wxRadioBox( m_DetailsPanel, ID_RADIOBOX_CARGO, _("Cargo"), wxDefaultPosition, wxDefaultSize, m_CargoBoxStrings, 2, wxRA_SPECIFY_COLS );
     m_CargoBox->SetSelection(0);
     itemBoxSizer95->Add(m_CargoBox, 0, wxGROW|wxALL, 5);

@@ -1152,6 +1152,7 @@
         <const name="type_shunting" vt="string" val="shunting"/>
         <const name="type_goods" vt="string" val="goods"/>
         <const name="type_none" vt="string" val="none"/>
+        <const name="type_post" vt="string" val="none"/>
         <var name="type" vt="string" defval="none" range="none,local,ice,shunting,goods"/>
         <const name="incline_up" vt="int" val="1"/>
         <const name="incline_none" vt="int" val="0"/>
@@ -1167,6 +1168,7 @@
         <excl cardinality="n" wrappername="PermExclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
         </excl>
+        <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
         <!-- New feedback handling: -->
         <fbevent cardinality="n" wrappername="FeedbackEvent">
           <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
@@ -1249,6 +1251,7 @@
         <actionctrl cardinality="n"/>
         <incl cardinality="n" />
         <excl cardinality="n" />
+        <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
       </st>
     </stlist>
     <tklist cardinality="1" remark="Track table" wrappername="TrackList">
@@ -1448,11 +1451,13 @@
           <const name="exit_block" vt="string" val="exit_block"/>
         </fundef>
 
+        <const name="cargo_all" vt="string" val="all"/>
         <const name="cargo_person" vt="string" val="person"/>
         <const name="cargo_goods" vt="string" val="goods"/>
         <const name="cargo_mixed" vt="string" val="mixed"/>
         <const name="cargo_none" vt="string" val="none"/>
         <const name="cargo_ice" vt="string" val="ice"/>
+        <const name="cargo_post" vt="string" val="post"/>
         <const name="cargo_cleaning" vt="string" val="cleaning" remark="should not wait in blocks"/>
         <var name="cargo" vt="string" defval="none" range="none,ice,persons,goods,mixed,cleaning"/>
         <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>

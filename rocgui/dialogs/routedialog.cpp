@@ -256,6 +256,15 @@ void RouteDialog::initLabels() {
   m_labInclude->SetLabel( wxGetApp().getMsg( "include" ) );
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
 
+  m_PermType->SetString( 0, wxGetApp().getMsg( "all" ) );
+  m_PermType->SetString( 1, wxGetApp().getMsg( "none" ) );
+  m_PermType->SetString( 2, wxGetApp().getMsg( "goods" ) );
+  m_PermType->SetString( 3, wxGetApp().getMsg( "local" ) );
+  m_PermType->SetString( 4, wxGetApp().getMsg( "mixed" ) );
+  m_PermType->SetString( 5, wxGetApp().getMsg( "cleaning" ) );
+  m_PermType->SetString( 6, wxGetApp().getMsg( "ice" ) );
+  m_PermType->SetString( 7, wxGetApp().getMsg( "post" ) );
+
   // Initialize sorted Loco Permission List
   initLocPermissionList();
 
@@ -560,6 +569,26 @@ void RouteDialog::initValues() {
     incl = wRoute.nextincl( m_Props, incl );
   };
 
+  int cargo = 0;
+  if( StrOp.equals( wLoc.cargo_all, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 0;
+  else if( StrOp.equals( wLoc.cargo_none, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 1;
+  else if( StrOp.equals( wLoc.cargo_goods, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 2;
+  else if( StrOp.equals( wLoc.cargo_person, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 3;
+  else if( StrOp.equals( wLoc.cargo_mixed, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 4;
+  else if( StrOp.equals( wLoc.cargo_cleaning, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 5;
+  else if( StrOp.equals( wLoc.cargo_ice, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 6;
+  else if( StrOp.equals( wLoc.cargo_post, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 7;
+  m_PermType->SetSelection( cargo );
+
+
 
 }
 
@@ -660,6 +689,26 @@ bool RouteDialog::evaluate() {
     NodeOp.addChild( m_Props, incl );
   }
 
+  int cargo = m_PermType->GetSelection();
+  if( cargo == 0 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_all );
+  else if( cargo == 1 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_none );
+  else if( cargo == 2 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_goods );
+  else if( cargo == 3 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_person );
+  else if( cargo == 4 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_mixed );
+  else if( cargo == 5 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_cleaning );
+  else if( cargo == 6 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_ice );
+  else if( cargo == 7 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_post );
+
+
+
 
   return true;
 }
@@ -719,6 +768,7 @@ bool RouteDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_IncludeList = NULL;
     m_labExclude = NULL;
     m_ExcludeList = NULL;
+    m_PermType = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -964,24 +1014,37 @@ void RouteDialog::CreateControls()
     m_ExcludeList = new wxListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_MULTIPLE );
     itemBoxSizer61->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
+    wxArrayString m_PermTypeStrings;
+    m_PermTypeStrings.Add(_("&All"));
+    m_PermTypeStrings.Add(_("&None"));
+    m_PermTypeStrings.Add(_("&Goods"));
+    m_PermTypeStrings.Add(_("&Local"));
+    m_PermTypeStrings.Add(_("&Mixed"));
+    m_PermTypeStrings.Add(_("&Cleaning"));
+    m_PermTypeStrings.Add(_("&ICE"));
+    m_PermTypeStrings.Add(_("&Post"));
+    m_PermType = new wxRadioBox( m_PermissionsPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_PermTypeStrings, 2, wxRA_SPECIFY_ROWS );
+    m_PermType->SetSelection(0);
+    itemBoxSizer61->Add(m_PermType, 0, wxGROW|wxALL, 5);
+
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer66 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer67 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer66, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer67, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer66->AddButton(m_Cancel);
+    itemStdDialogButtonSizer67->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer66->AddButton(m_OK);
+    itemStdDialogButtonSizer67->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer66->AddButton(m_Apply);
+    itemStdDialogButtonSizer67->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer66->Realize();
+    itemStdDialogButtonSizer67->Realize();
 
 ////@end RouteDialog content construction
 }
