@@ -412,7 +412,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
   int         V_new  = -1;
   iONode      cmdTD  = NULL;
   iONode      cmdFn  = NULL;
-  Boolean  f0changed = False;
+  static Boolean  f0changed = False;
 
   if( cmd != NULL )
   {
