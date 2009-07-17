@@ -49,7 +49,7 @@ INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
 
 all:
-	cd $(GENDIR)/rocint; ../$(BINDIR)/ogen ../../rocint/rocint.xml
+	cd $(GENDIR)/rocint; ../../unxbin/ogen ../../rocint/rocint.xml
 
 clean:
 	-mkdir -p $(OUTDIR)
