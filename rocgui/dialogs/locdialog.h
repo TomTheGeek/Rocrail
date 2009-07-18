@@ -63,6 +63,7 @@ class wxGrid;
 #define ID_BUTTON_LOC_NEW 10121
 #define ID_BUTTON_DELETE 10122
 #define ID_BUTTON_LOCO_DOC 10353
+#define ID_LOC_COPY 10280
 #define ID_BUTTON_IMPORTLOCOS 10253
 #define ID_PANEL_GENERAL 10004
 #define wxID_STATIC_ID 10017
@@ -208,6 +209,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCO_DOC
     void OnButtonLocoDocClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_COPY
+    void OnLocCopyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORTLOCOS
     void OnButtonImportlocosClick( wxCommandEvent& event );
 
@@ -290,6 +294,7 @@ public:
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;
+    wxButton* m_Copy;
     wxButton* m_ImportLocos;
     wxPanel* m_General_Panel;
     wxBoxSizer* m_GeneralSizer;
