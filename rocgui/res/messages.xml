@@ -9737,4 +9737,7 @@
   <Msg id="post">
     <en txt="Post"/>
   </Msg>
+  <Msg id="all">
+    <en txt="All"/>
+  </Msg>
 </Messages>
