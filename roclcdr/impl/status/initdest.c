@@ -68,7 +68,7 @@ void statusInitDest( iILcDriverInt inst ) {
 				data->next1Block,
 				data->next1Route,
 				data->curBlock,
-                data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo ) &&
+        data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo ) &&
         initializeSwap( (iOLcDriver)inst, data->next1Route ) )
     {
 

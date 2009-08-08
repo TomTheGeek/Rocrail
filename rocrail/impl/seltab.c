@@ -875,7 +875,7 @@ static int _getOccTime( iIBlockBase inst ) {
 }
 
 /**  */
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = NULL;
   int           pos = 0;
@@ -890,7 +890,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
   if( !StrOp.startsWith(blockid, wRoute.routelock) && wSelTab.ismanager(data->props) ) {
     manager = True;
     block = __getFreeTrackBlock( inst, id, &pos );
-    if( block == NULL || !block->lock(block, id, blockid, crossing, reset, reverse ) ) {
+    if( block == NULL || !block->lock(block, id, blockid, NULL, crossing, reset, reverse ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "could not lock block [%s] for [%s]", block->base.id(block), id);
       ok = False;
     }

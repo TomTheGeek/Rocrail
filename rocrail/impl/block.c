@@ -306,6 +306,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOModel model = AppOp.getModel(  );
     loc = ModelOp.getLoc( model, data->locId );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s found", data->locId, loc==NULL?"NOT ":"" );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locId not set in block %s", data->id );
   }
 
   /* handle a dedicated ident event */
@@ -565,37 +569,47 @@ static Boolean __isElectricallyFree(iOBlock inst) {
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
-  const char* state = wBlock.getstate( data->props );
-
-  if( StrOp.equals( state, wBlock.closed ) ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Block \"%s\" is closed!.",
-                   data->id );
-    return False;
-  }
-
-  if( locId != NULL && StrOp.equals( locId, data->locId ) )
-    return True;
-
-/* check all sensors... */
-
-  if( !__isElectricallyFree((iOBlock)inst) ) {
-    if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                     "Block \"%s\" is electrically occupied without locId set!",
-                     data->id );
+  if( wBlock.isremote(data->props) ) {
+    iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
+    if( r2rnet != NULL ) {
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId );
+      return R2RnetOp.reserveBlock(r2rnet, wBlock.getrrid(data->props), wBlock.getid(data->props), NULL, lc->base.properties(lc), NULL, True );
     }
+  }
+  else {
+
+    const char* state = wBlock.getstate( data->props );
+
+    if( StrOp.equals( state, wBlock.closed ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block \"%s\" is closed!.",
+                     data->id );
+      return False;
+    }
+
+    if( locId != NULL && StrOp.equals( locId, data->locId ) )
+      return True;
+
+  /* check all sensors... */
+
+    if( !__isElectricallyFree((iOBlock)inst) ) {
+      if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                       "Block \"%s\" is electrically occupied without locId set!",
+                       data->id );
+      }
+      return False;
+    }
+
+    if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId ) )
+      return True;
+    else if( data->locId != NULL )
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block [%s] is reserved by [%s]",
+                     data->id, data->locId );
+
     return False;
   }
-
-  if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId ) )
-    return True;
-  else if( data->locId != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Block [%s] is reserved by [%s]",
-                   data->id, data->locId );
-
-  return False;
 }
 
 
@@ -947,7 +961,7 @@ static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
 /**
  * Ignore all events wenn the crossing flag is set.
  */
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse ) {
   iOBlockData data = NULL;
   Boolean ok = False;
 
@@ -958,76 +972,89 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boo
 
   data = Data(inst);
 
-  /* wait only 10ms for getting the mutex: */
-  if( !MutexOp.trywait( data->muxLock, 10 ) ) {
-    return False;
-  }
-
-  if( !BlockOp.isFree( inst, id ) ) {
-    MutexOp.post( data->muxLock );
-    return False;
-  }
-
-  /* check group lock */
-  if( data->locIdGroup != NULL && !StrOp.equals( data->locIdGroup, id ) ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block already has a group lock by [%s]", data->locIdGroup );
-    MutexOp.post( data->muxLock );
-    return False;
-  }
-
-  if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId) ) {
-    data->locId = id;
-    data->crossing = crossing;
-    ok = True;
-    ModelOp.setBlockOccupation( AppOp.getModel(), data->id, data->locId, False, 0 );
-  }
-  else if( StrOp.equals( id, data->locId ) ) {
-    data->crossing = crossing;
-    ok = True;
-  }
-
-  if( ok ) {
-    if( data->prevLocId != NULL && StrOp.equals( id, data->prevLocId ) ) {
-      data->prevLocIdCnt++;
+  if( wBlock.isremote(data->props) ) {
+    iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
+    if( r2rnet != NULL ) {
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), id );
+      iIBlockBase curblock = ModelOp.getBlock( AppOp.getModel(), blockid );
+      return R2RnetOp.reserveBlock(r2rnet, wBlock.getrrid(data->props),
+              wBlock.getid(data->props), routeid, lc->base.properties(lc), curblock->base.properties(curblock), False );
     }
-    else {
-      data->prevLocId = id;
-      data->prevLocIdCnt = 1;
-    }
-  }
-
-  /* Broadcast to clients. */
-  if( ok ) {
-    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    wBlock.setid( nodeD, data->id );
-    wBlock.setreserved( nodeD, True );
-    wBlock.setlocid( nodeD, id );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                 "Block \"%s\" already locked by \"%s\".",
-                 data->id, data->locId );
+
+    /* wait only 10ms for getting the mutex: */
+    if( !MutexOp.trywait( data->muxLock, 10 ) ) {
+      return False;
+    }
+
+    if( !BlockOp.isFree( inst, id ) ) {
+      MutexOp.post( data->muxLock );
+      return False;
+    }
+
+    /* check group lock */
+    if( data->locIdGroup != NULL && !StrOp.equals( data->locIdGroup, id ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block already has a group lock by [%s]", data->locIdGroup );
+      MutexOp.post( data->muxLock );
+      return False;
+    }
+
+    if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId) ) {
+      data->locId = id;
+      data->crossing = crossing;
+      ok = True;
+      ModelOp.setBlockOccupation( AppOp.getModel(), data->id, data->locId, False, 0 );
+    }
+    else if( StrOp.equals( id, data->locId ) ) {
+      data->locId = id;
+      data->crossing = crossing;
+      ok = True;
+    }
+
+    if( ok ) {
+      if( data->prevLocId != NULL && StrOp.equals( id, data->prevLocId ) ) {
+        data->prevLocIdCnt++;
+      }
+      else {
+        data->prevLocId = id;
+        data->prevLocIdCnt = 1;
+      }
+    }
+
+    /* Broadcast to clients. */
+    if( ok ) {
+      iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( nodeD, data->id );
+      wBlock.setreserved( nodeD, True );
+      wBlock.setlocid( nodeD, id );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                   "Block \"%s\" already locked by \"%s\".",
+                   data->id, data->locId );
+    }
+
+    if( ok ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
+      data->reverse = reverse;
+      data->fromBlockId = blockid;
+      if( reset )
+        BlockOp.resetTrigs( inst );
+    }
+
+    if( ok ) {
+      /* reset occupation ticker */
+      data->occtime = SystemOp.getTick();
+    }
+
+    /* Unlock the semaphore: */
+    MutexOp.post( data->muxLock );
+
+    return ok;
   }
-
-  if( ok ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
-    data->reverse = reverse;
-    data->fromBlockId = blockid;
-    if( reset )
-      BlockOp.resetTrigs( inst );
-  }
-
-  if( ok ) {
-    /* reset occupation ticker */
-    data->occtime = SystemOp.getTick();
-  }
-
-  /* Unlock the semaphore: */
-  MutexOp.post( data->muxLock );
-
-  return ok;
 }
 
 
@@ -1184,63 +1211,73 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
     iOBlockData data = Data(inst);
     Boolean ok = False;
 
-    /* wait only 10ms for getting the mutex: */
-    if( !MutexOp.trywait( data->muxLock, 10 ) ) {
-      return False;
-    }
-
-    if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
-      data->locId = NULL;
-      BlockOp.resetTrigs( inst );
-      wBlock.setlocid(data->props, "");
-      data->crossing = False;
-
-      if( data->closereq ) {
-        wBlock.setstate( data->props, wBlock.closed );
-        data->closereq = False;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set block to close: requested" );
+    if( wBlock.isremote(data->props) ) {
+      iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
+      if( r2rnet != NULL ) {
+        return R2RnetOp.unlockBlock(r2rnet, wBlock.getrrid(data->props), wBlock.getid(data->props), id );
       }
-
-      ModelOp.setBlockOccupation( AppOp.getModel(), data->id, "", False, 0 );
-
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                 "Block \"%s\" unlock %s, group lock=[%s]",
-                 data->id, id, data->locIdGroup!=NULL?data->locIdGroup:"" );
-
-      /* Broadcast to clients. */
-      {
-        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-        wBlock.setid( nodeD, data->id );
-        wBlock.setstate( nodeD, wBlock.getstate(data->props) );
-
-        if( data->locIdGroup == NULL ) {
-          wBlock.setlocid( nodeD, "" );
-        }
-        else {
-          wBlock.setlocid( nodeD, data->locIdGroup );
-          wBlock.setreserved( nodeD, True );
-        }
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-      }
-      /* Set signal. */
-
-      _setDefaultAspect(inst);
-
-      ok = True;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                     "\"%s\" tried to unlock block \"%s\" but \"%s\" owns it!",
-                     id, data->id, data->locId==NULL?"?":data->locId );
+
+
+      /* wait only 10ms for getting the mutex: */
+      if( !MutexOp.trywait( data->muxLock, 10 ) ) {
+        return False;
+      }
+
+      if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
+        data->locId = NULL;
+        BlockOp.resetTrigs( inst );
+        wBlock.setlocid(data->props, "");
+        data->crossing = False;
+
+        if( data->closereq ) {
+          wBlock.setstate( data->props, wBlock.closed );
+          data->closereq = False;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set block to close: requested" );
+        }
+
+        ModelOp.setBlockOccupation( AppOp.getModel(), data->id, "", False, 0 );
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Block \"%s\" unlock %s, group lock=[%s]",
+                   data->id, id, data->locIdGroup!=NULL?data->locIdGroup:"" );
+
+        /* Broadcast to clients. */
+        {
+          iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+          wBlock.setid( nodeD, data->id );
+          wBlock.setstate( nodeD, wBlock.getstate(data->props) );
+
+          if( data->locIdGroup == NULL ) {
+            wBlock.setlocid( nodeD, "" );
+          }
+          else {
+            wBlock.setlocid( nodeD, data->locIdGroup );
+            wBlock.setreserved( nodeD, True );
+          }
+          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        }
+        /* Set signal. */
+
+        _setDefaultAspect(inst);
+
+        ok = True;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                       "\"%s\" tried to unlock block \"%s\" but \"%s\" owns it!",
+                       id, data->id, data->locId==NULL?"?":data->locId );
+      }
+
+      data->occtime = 0;
+
+      /* Unlock the semaphore: */
+      MutexOp.post( data->muxLock );
     }
 
-    data->occtime = 0;
-
-    /* Unlock the semaphore: */
-    MutexOp.post( data->muxLock );
+    return ok;
   }
-
-  return False;
 }
 
 
@@ -1635,7 +1672,8 @@ static iOBlock _inst( iONode props ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", data->id );
 
-  __initFeedbackEvents(block);
+  if( !wBlock.isremote(props) )
+    __initFeedbackEvents(block);
 
   instCnt++;
 

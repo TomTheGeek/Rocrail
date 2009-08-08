@@ -37,6 +37,7 @@
 #include "rocrail/public/clntcon.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/analyse.h"
+#include "rocrail/public/r2rnet.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -1711,6 +1712,36 @@ static void _saveAs( iOModel inst, const char* fileName ) {
   _save( inst );
 }
 
+
+static iOLoc _addNetLoc(iOModel inst, iONode lcprops) {
+  iOModelData data = Data(inst);
+  iOLoc loc = (iOLoc)MapOp.get( data->locMap, wLoc.getid(lcprops) );
+  if( loc == NULL ) {
+    iONode cmd = NULL;
+    loc = LocOp.inst( (iONode)NodeOp.base.clone(lcprops) );
+    MapOp.put( data->locMap, wLoc.getid(lcprops), (obj)loc );
+
+    cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.add );
+    NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( lcprops ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "r2rnet loco added %s", wItem.getid(lcprops) );
+    /* Broadcast to clients. */
+    ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+  }
+  return loc;
+}
+
+static iIBlockBase _addNetBlock(iOModel inst, iONode bkprops) {
+  iOModelData data = Data(inst);
+  iIBlockBase block = (iIBlockBase)MapOp.get( data->blockMap, wBlock.getid(bkprops) );
+  if( block == NULL ) {
+    block = (iIBlockBase)BlockOp.inst((iONode)NodeOp.base.clone(bkprops));
+    MapOp.put( data->blockMap, wBlock.getid(bkprops), (obj)block);
+  }
+  return block;
+}
+
+
 static iOLoc _getLoc( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOLoc)MapOp.get( o->locMap, id );
@@ -1910,6 +1941,13 @@ static iORoute _getRoute( iOModel inst, const char* id ) {
     }
   }
   return route;
+}
+
+static void _addNetRoute(iOModel inst, iONode netroute) {
+  iOModelData data = Data(inst);
+  iORoute route = RouteOp.inst(netroute);
+  ListOp.add( data->routeList, (obj)route );
+  MapOp.put( data->routeMap, RouteOp.getId(route), (obj)route );
 }
 
 
@@ -2640,10 +2678,23 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
         samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
 
         /* Must match the fromBlock: */
-        if( StrOp.equals( fromBlockId, stFrom ) )
+        if( R2RnetOp.compare( fromBlockId, stFrom ) )
         {
           iIBlockBase block = (iIBlockBase)MapOp.get( o->blockMap, stTo );
-          /* TODO: regards selection tables too
+
+          /* check if it is a net block */
+          if( block == NULL && StrOp.find( stTo, "::" ) != NULL ) {
+            iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
+            if( r2rnet != NULL ) {
+              iONode bk = R2RnetOp.getBlock( r2rnet, stTo );
+              if( bk != NULL ) {
+                block = (iIBlockBase)BlockOp.inst(bk);
+                MapOp.put( o->blockMap, stTo, (obj)block);
+              }
+            }
+          }
+
+          /* regards selection tables too
            * use iIBlockBase for block and seltab objects
            */
           if( block == NULL ) {

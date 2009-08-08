@@ -32,6 +32,10 @@
 #include "rocrail/wrapper/public/Waybill.h"
 #include "rocrail/wrapper/public/WaybillList.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
+#include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Car.h"
 
 #include "rocgui/wrapper/public/Gui.h"
 
@@ -78,6 +82,62 @@ void WaybillDlg::onSetPage(wxCommandEvent& event) {
   m_WaybillBook->SetSelection( m_SetPage );
 }
 
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
+void WaybillDlg::initLocationCombo() {
+  m_Origin->Clear();
+  m_Origin->Append( _T(""), (void*)NULL );
+  m_Destination->Clear();
+  m_Destination->Append( _T(""), (void*)NULL );
+
+  iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
+
+  if( model != NULL ) {
+    iONode locationlist = wPlan.getlocationlist( model );
+    if( locationlist != NULL ) {
+      int cnt = NodeOp.getChildCnt( locationlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode location = NodeOp.getChild( locationlist, i );
+        const char* id = wLocation.getid( location );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    iONode bklist = wPlan.getbklist( model );
+    if( bklist != NULL ) {
+      int cnt = NodeOp.getChildCnt( bklist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        const char* id = wBlock.getid( bk );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    if( ListOp.size(list) > 0 ) {
+      ListOp.sort(list, &__sortStr);
+      int cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+        m_Origin->Append( wxString(id,wxConvUTF8) );
+        m_Destination->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+}
+
+
 void WaybillDlg::initLabels() {
   TraceOp.trc( "waybilldlg", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
   SetTitle(wxGetApp().getMsg( "waybilltable" ));
@@ -100,6 +160,22 @@ void WaybillDlg::initLabels() {
   m_Status->SetString( 0, wxGetApp().getMsg( "waiting" ) );
   m_Status->SetString( 1, wxGetApp().getMsg( "shipping" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "delivered" ) );
+  initLocationCombo();
+
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_boxcar ), (void*)wCar.freight_boxcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_gondola ), (void*)wCar.freight_gondola );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_flatcar ), (void*)wCar.freight_flatcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_reefer ), (void*)wCar.freight_reefer );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_stockcar ), (void*)wCar.freight_stockcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_tankcar ), (void*)wCar.freight_tankcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_wellcar ), (void*)wCar.freight_wellcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_hopper ), (void*)wCar.freight_hopper );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_caboose ), (void*)wCar.freight_caboose );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_autorack ), (void*)wCar.freight_autorack );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_autocarrier ), (void*)wCar.freight_autocarrier );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_logdumpcar ), (void*)wCar.freight_logdumpcar );
+  m_Cartype->Append( wxGetApp().getMsg( wCar.freight_coilcar ), (void*)wCar.freight_coilcar );
+
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -185,10 +261,13 @@ void WaybillDlg::initValues() {
   // init General
   m_ID->SetValue( wxString(wWaybill.getid( m_Props ),wxConvUTF8) );
   m_Shipper->SetValue( wxString(wWaybill.getshipper( m_Props ),wxConvUTF8) );
-  m_Origin->SetValue( wxString(wWaybill.getorigin( m_Props ),wxConvUTF8) );
+  m_Origin->SetStringSelection( wxString(wWaybill.getorigin( m_Props ),wxConvUTF8) );
   m_Consignee->SetValue( wxString(wWaybill.getconsignee( m_Props ),wxConvUTF8) );
-  m_Destination->SetValue( wxString(wWaybill.getdestination( m_Props ),wxConvUTF8) );
+  m_Destination->SetStringSelection( wxString(wWaybill.getdestination( m_Props ),wxConvUTF8) );
   m_Commodity->SetValue( wxString(wWaybill.getcommodity( m_Props ),wxConvUTF8) );
+
+  if( StrOp.len( wWaybill.getcartype( m_Props ) ) > 0 )
+    m_Cartype->SetStringSelection( wxGetApp().getMsg( wWaybill.getcartype( m_Props ) ) );
 
   // init Status
   if( StrOp.equals( wWaybill.status_waiting, wWaybill.getstatus( m_Props) ) )
@@ -219,10 +298,12 @@ bool WaybillDlg::evaluate(){
   wWaybill.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
 
   wWaybill.setshipper( m_Props, m_Shipper->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setorigin( m_Props, m_Origin->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setorigin( m_Props, m_Origin->GetStringSelection().mb_str(wxConvUTF8) );
   wWaybill.setconsignee( m_Props, m_Consignee->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setdestination( m_Props, m_Destination->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setdestination( m_Props, m_Destination->GetStringSelection().mb_str(wxConvUTF8) );
   wWaybill.setcommodity( m_Props, m_Commodity->GetValue().mb_str(wxConvUTF8) );
+  wWaybill.setcartype( m_Props, (char*)m_Cartype->GetClientData( m_Cartype->GetSelection()) );
+
 
   if( m_Status->GetSelection() == 0 )
     wWaybill.setstatus( m_Props, wWaybill.status_waiting );
@@ -244,6 +325,12 @@ void WaybillDlg::onWaybillList( wxCommandEvent& event ){
       TraceOp.trc( "waybilldlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
 }
+
+
+iONode WaybillDlg::getSelectedWaybill() {
+  return m_Props;
+}
+
 
 
 void WaybillDlg::onNewWaybill( wxCommandEvent& event ){

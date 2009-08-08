@@ -42,6 +42,7 @@ class WaybillDlg : public waybillgen
   bool evaluate();
   void initIndex();
   void initValues();
+  void initLocationCombo();
 
 public:
   /** Constructor */
@@ -54,6 +55,8 @@ public:
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
+
+  iONode getSelectedWaybill();
 
 };
 

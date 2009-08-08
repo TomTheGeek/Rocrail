@@ -60,6 +60,7 @@
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/R2RnetIni.h"
 
 #include "rocgui/public/guiapp.h"
 
@@ -88,6 +89,8 @@ BEGIN_EVENT_TABLE( RocrailIniDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_RR_PROPS, RocrailIniDialog::OnButtonRrPropsClick )
 
     EVT_BUTTON( ID_BUTTON_RR_ADD, RocrailIniDialog::OnButtonRrAddClick )
+
+    EVT_BUTTON( ID_BUTTON_R2RNET_ROUTES, RocrailIniDialog::OnButtonR2rnetRoutesClick )
 
     EVT_BUTTON( wxID_OK, RocrailIniDialog::OnOkClick )
 
@@ -249,6 +252,12 @@ void RocrailIniDialog::initLabels() {
   m_AddControllerBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "new" ) );
 
 
+  // R2Rnet
+  m_labR2RnetID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labR2RnetAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labR2RnetPort->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labR2RnetRoutes->SetLabel( wxGetApp().getMsg( "netroutes" ) );
+  m_R2RnetEnable->SetLabel( wxGetApp().getMsg( "enable" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -425,6 +434,17 @@ void RocrailIniDialog::initValues() {
   m_Lib->SetSelection( 0 );
   m_Controller = NULL;
 
+  // R2Rnet
+  iONode r2rnet = wRocRail.getr2rnet( m_Props );
+  if( r2rnet == NULL ) {
+    r2rnet = NodeOp.inst( wR2RnetIni.name(), m_Props, ELEMENT_NODE );
+    NodeOp.addChild( m_Props, r2rnet );
+  }
+  m_R2RnetID->SetValue( wxString( wR2RnetIni.getid(r2rnet),wxConvUTF8) );
+  m_R2RnetAddr->SetValue( wxString( wR2RnetIni.getaddr(r2rnet),wxConvUTF8) );
+  m_R2RnetPort->SetValue( wR2RnetIni.getport(r2rnet) );
+  m_R2RnetRoutes->SetValue( wxString( wR2RnetIni.getroutes(r2rnet),wxConvUTF8) );
+  m_R2RnetEnable->SetValue( wR2RnetIni.isenable(r2rnet) ? true:false );
 }
 
 void RocrailIniDialog::initControllerList() {
@@ -547,6 +567,13 @@ void RocrailIniDialog::evaluate() {
   wCtrl.setpoweroffonidentmismatch( ctrl, m_StopAtIdentMisMatch->IsChecked() ? True:False );
 
 
+  // R2Rnet
+  iONode r2rnet = wRocRail.getr2rnet(m_Props);
+  wR2RnetIni.setid( r2rnet, m_R2RnetID->GetValue().mb_str(wxConvUTF8) );
+  wR2RnetIni.setaddr( r2rnet, m_R2RnetAddr->GetValue().mb_str(wxConvUTF8) );
+  wR2RnetIni.setport( r2rnet, m_R2RnetPort->GetValue() );
+  wR2RnetIni.setroutes( r2rnet, m_R2RnetRoutes->GetValue().mb_str(wxConvUTF8) );
+  wR2RnetIni.setenable( r2rnet, m_R2RnetEnable->IsChecked() ? True:False );
 }
 
 
@@ -654,6 +681,17 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_AddControllerBox = NULL;
     m_Lib = NULL;
     m_ControllerAdd = NULL;
+    m_R2RnetPanel = NULL;
+    m_labR2RnetID = NULL;
+    m_R2RnetID = NULL;
+    m_labR2RnetAddr = NULL;
+    m_R2RnetAddr = NULL;
+    m_labR2RnetPort = NULL;
+    m_R2RnetPort = NULL;
+    m_labR2RnetRoutes = NULL;
+    m_R2RnetRoutes = NULL;
+    m_R2RnetRoutesDlg = NULL;
+    m_R2RnetEnable = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
@@ -939,7 +977,7 @@ void RocrailIniDialog::CreateControls()
     m_labSavePosTime = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Save position time"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer68->Add(m_labSavePosTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_SavePosTime = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_SavePosTime = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 10 );
     itemFlexGridSizer68->Add(m_SavePosTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labEventTimeout = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Event timeout"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1039,24 +1077,67 @@ void RocrailIniDialog::CreateControls()
 
     m_RRNotebook->AddPage(m_ControllersPanel, _("Controllers"));
 
+    m_R2RnetPanel = new wxPanel( m_RRNotebook, ID_PANEL_R2RNET, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer111 = new wxBoxSizer(wxVERTICAL);
+    m_R2RnetPanel->SetSizer(itemBoxSizer111);
+
+    wxFlexGridSizer* itemFlexGridSizer112 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer112->AddGrowableCol(1);
+    itemBoxSizer111->Add(itemFlexGridSizer112, 0, wxGROW|wxALL, 5);
+    m_labR2RnetID = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer112->Add(m_labR2RnetID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetID = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer112->Add(m_R2RnetID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labR2RnetAddr = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer112->Add(m_labR2RnetAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetAddr = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer112->Add(m_R2RnetAddr, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labR2RnetPort = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer112->Add(m_labR2RnetPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetPort = new wxSpinCtrl( m_R2RnetPanel, wxID_ANY, _T("1234"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 65535, 1234 );
+    itemFlexGridSizer112->Add(m_R2RnetPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer119 = new wxFlexGridSizer(2, 3, 0, 0);
+    itemFlexGridSizer119->AddGrowableCol(1);
+    itemBoxSizer111->Add(itemFlexGridSizer119, 0, wxGROW|wxALL, 5);
+    m_labR2RnetRoutes = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Routes file"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer119->Add(m_labR2RnetRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetRoutes = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer119->Add(m_R2RnetRoutes, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetRoutesDlg = new wxButton( m_R2RnetPanel, ID_BUTTON_R2RNET_ROUTES, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
+    itemFlexGridSizer119->Add(m_R2RnetRoutesDlg, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_R2RnetEnable = new wxCheckBox( m_R2RnetPanel, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_R2RnetEnable->SetValue(false);
+    itemBoxSizer111->Add(m_R2RnetEnable, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_RRNotebook->AddPage(m_R2RnetPanel, _("R2Rnet"));
+
     itemBoxSizer2->Add(m_RRNotebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer110 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer124 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer110, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer124, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer110->AddButton(m_OK);
+    itemStdDialogButtonSizer124->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer110->AddButton(m_Cancel);
+    itemStdDialogButtonSizer124->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     if (RocrailIniDialog::ShowToolTips())
         m_Apply->SetToolTip(_("Apply Controller settings locally."));
-    itemStdDialogButtonSizer110->AddButton(m_Apply);
+    itemStdDialogButtonSizer124->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer110->Realize();
+    itemStdDialogButtonSizer124->Realize();
 
 ////@end RocrailIniDialog content construction
 }
@@ -1230,4 +1311,21 @@ void RocrailIniDialog::OnNotebookRrPageChanged( wxNotebookEvent& event )
 {
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_R2RNET_ROUTES
+ */
+
+void RocrailIniDialog::OnButtonR2rnetRoutesClick( wxCommandEvent& event )
+{
+  wxString ms_FileExt = _T("NetRoutes (*.xml)|*.xml");
+  const char* l_openpath = ".";
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("opennetroutesfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode r2rnet = wRocRail.getr2rnet( m_Props );
+    wR2RnetIni.setroutes( r2rnet, fdlg->GetPath().mb_str(wxConvUTF8) );
+    m_R2RnetRoutes->SetValue( wxString( wR2RnetIni.getroutes(r2rnet),wxConvUTF8) );
+  }
+}
 

@@ -59,7 +59,7 @@ class waybillgen : public wxDialog
 		wxStaticText* m_labCommodity;
 		wxTextCtrl* m_Commodity;
 		wxStaticText* m_labCartype;
-		wxTextCtrl* m_Cartype;
+		wxComboBox* m_Cartype;
 		wxRadioBox* m_Status;
 		wxPanel* m_RoutingPanel;
 		wxStdDialogButtonSizer* m_stdButton;

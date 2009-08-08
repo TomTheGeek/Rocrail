@@ -42,6 +42,9 @@
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/OperatorList.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
+#include "rocrail/wrapper/public/Waybill.h"
 
 #include "rocgui/wrapper/public/Gui.h"
 
@@ -135,6 +138,16 @@ void OperatorDlg::initLocos() {
 
       if( m_Props != NULL ) {
         m_LocoID->SetStringSelection( wxString(wOperator.getlcid( m_Props ),wxConvUTF8) );
+        iONode lc = wxGetApp().getFrame()->findLoc(wOperator.getlcid( m_Props ));
+        if( lc != NULL ) {
+          iONode bk = wxGetApp().getFrame()->findBlock4Loc(wOperator.getlcid( m_Props ));
+          if( bk != NULL ) {
+            m_Location->SetStringSelection( wxString(wBlock.getid( bk ),wxConvUTF8) );
+          }
+          else {
+            m_Location->SetStringSelection( wxString(wLoc.getblockid( lc ),wxConvUTF8) );
+          }
+        }
       }
       else
         TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
@@ -148,18 +161,37 @@ void OperatorDlg::initLocos() {
 }
 
 
-void OperatorDlg::initLabels() {
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
 
-
-  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "init block combos" );
+void OperatorDlg::initLocationCombo() {
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "init location combos" );
   m_Location->Clear();
+  m_Location->Append( _T(""), (void*)NULL );
   m_Goto->Clear();
-
-  m_Location->Append( _T("") );
-  m_Goto->Append( _T("") );
+  m_Goto->Append( _T(""), (void*)NULL );
 
   iONode model = wxGetApp().getModel();
+  iOList locations = ListOp.inst();
+  iOList gotos     = ListOp.inst();
+
   if( model != NULL ) {
+    iONode locationlist = wPlan.getlocationlist( model );
+    if( locationlist != NULL ) {
+      int cnt = NodeOp.getChildCnt( locationlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode location = NodeOp.getChild( locationlist, i );
+        const char* id = wLocation.getid( location );
+        if( id != NULL ) {
+          ListOp.add(gotos, (obj)id);
+        }
+      }
+    }
+
     iONode bklist = wPlan.getbklist( model );
     if( bklist != NULL ) {
       int cnt = NodeOp.getChildCnt( bklist );
@@ -167,12 +199,39 @@ void OperatorDlg::initLabels() {
         iONode bk = NodeOp.getChild( bklist, i );
         const char* id = wBlock.getid( bk );
         if( id != NULL ) {
-          m_Location->Append( wxString(id,wxConvUTF8) );
-          m_Goto->Append( wxString(id,wxConvUTF8) );
+          ListOp.add(gotos, (obj)id);
+          ListOp.add(locations, (obj)id);
         }
       }
     }
+
+    if( ListOp.size(gotos) > 0 ) {
+      ListOp.sort(gotos, &__sortStr);
+      int cnt = ListOp.size( gotos );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( gotos, i );
+        m_Goto->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+    if( ListOp.size(locations) > 0 ) {
+      ListOp.sort(locations, &__sortStr);
+      int cnt = ListOp.size( locations );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( locations, i );
+        m_Location->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+
   }
+  /* clean up the temp. list */
+  ListOp.base.del(gotos);
+  ListOp.base.del(locations);
+}
+
+
+void OperatorDlg::initLabels() {
+
+  initLocationCombo();
 }
 
 
@@ -337,7 +396,8 @@ void OperatorDlg::initConsist() {
     const char* carid  = StrTokOp.nextToken( strtok );
     iONode car = wxGetApp().getFrame()->findCar( carid );
     if( car != NULL ) {
-      m_CarList->Append( wxString(carid,wxConvUTF8) + wxString(_T(" (waybill)")), car );
+      const char* id = wCar.getid( car );
+      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
     }
   }
 }
@@ -506,7 +566,7 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     iONode car = dlg->getSelectedCar();
     if( car != NULL ) {
       const char* id = wCar.getid( car );
-      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(" (waybill)")), car );
+      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
     }
   }
   dlg->Destroy();
@@ -562,6 +622,11 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
       WaybillDlg* dlg = new WaybillDlg(this, waybill, false );
       if( wxID_OK == dlg->ShowModal() ) {
         /* Notify Notebook. */
+        iONode waybill = dlg->getSelectedWaybill();
+        if( waybill != NULL ) {
+          wCar.setwaybills( car, wWaybill.getid(waybill) );
+          initConsist();
+        }
       }
       dlg->Destroy();
     }
@@ -588,13 +653,15 @@ void OperatorDlg::onApply( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onCancel( wxCommandEvent& event ) {
-  EndModal( 0 );
+  //EndModal( 0 );
+  Destroy();
 }
 
 
 void OperatorDlg::onOK( wxCommandEvent& event ) {
   if( m_bSave )
     onApply(event);
-  EndModal( wxID_OK );
+  //EndModal( wxID_OK );
+  Destroy();
 }
 

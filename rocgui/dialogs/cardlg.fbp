@@ -77,7 +77,7 @@
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
+                    <property name="flag">wxTOP|wxRIGHT|wxLEFT|wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxBitmapButton" expanded="1">
                         <property name="bg"></property>

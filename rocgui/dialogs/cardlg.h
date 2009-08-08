@@ -43,6 +43,7 @@ class CarDlg : public cardlggen
   void initIndex();
   void initValues();
   void initSubType();
+  void initLocationCombo();
 
 public:
 	/** Constructor */

@@ -76,17 +76,31 @@
   </Global>
 
   <netreq wrappername="NetReq">
-    <var name="id" vt="string" defval="" remark="Local server name."/>
-    <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
-    <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+    <var name="localid" vt="string" defval="" remark="Local server name."/>
+    <var name="remoteid" vt="string" defval="*" remark="Remote server name."/>
+    <const name="req_netroutes" vt="string" val="netroutes"/>
+    <const name="req_isfree" vt="string" val="isfree"/>
+    <const name="req_reserve" vt="string" val="reserve"/>
+    <const name="req_unlock" vt="string" val="unlock"/>
+    <const name="req_locoisin" vt="string" val="locoisin"/>
+    <const name="req_getblock" vt="string" val="getblock"/>
+    <var name="req" vt="string" defval="" remark="Request type."/>
+    <var name="localbk" vt="string" defval="NULL" range="*" required="true" remark="Local block ID; rrid::bkid"/>
+    <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
     <var name="lcid" vt="string" defval="" remark="Loc ID."/>
-    <var name="req" vt="string" defval="fit" range="lock,fit" remark=""/>
+    <var name="routeid" vt="string" defval="" remark="Route ID."/>
   </netreq>
   <netrsp wrappername="NetRsp">
-    <var name="id" vt="string" defval="" remark="Local server name."/>
-    <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
-    <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
-    <var name="rsp" vt="string" defval="occupied" range="occupied,locked,fits,unknownlc" remark=""/>
+    <var name="localid" vt="string" defval="" remark="Local server name."/>
+    <var name="remoteid" vt="string" defval="*" remark="Remote server name."/>
+    <var name="localbk" vt="string" defval="NULL" range="*" required="true" remark="Local block ID; rrid::bkid"/>
+    <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
+    <const name="rsp_occupied" vt="string" val="occupied"/>
+    <const name="rsp_reserved" vt="string" val="reserved"/>
+    <const name="rsp_block" vt="string" val="block"/>
+    <const name="rsp_unlocked" vt="string" val="unlocked"/>
+    <const name="rsp_isfree" vt="string" val="isfree"/>
+    <var name="rsp" vt="string" defval="" range="occupied,reserved,block,isfree,unlocked" remark=""/>
   </netrsp>
 
   <jsevent wrappername="JsEvent">
@@ -116,6 +130,15 @@
     <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
     <var name="scsensor" vt="string" defval="" range="0-*" remark="Shortcut sensor ID."/>
     <var name="sciid" vt="string" defval="" range="0-*" remark="Shortcut command station IID"/>
+  
+    <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
+      <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>
+      <var name="id" vt="string" defval="" remark="R2Rnet ID."/>
+      <var name="routes" vt="string" defval="netroutes.xml" remark="R2Rnet routes file."/>
+      <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
+      <var name="port" vt="int" defval="1234" range="0-*" remark="multicast port"/>
+    </r2rnet>
+  
     <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
@@ -188,10 +211,6 @@
       <var name="sname" vt="string" defval="" range="*" remark="Servicer name to use in NetReq and NetRsp."/>
       <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
     </service>
-    <netrocrail wrappername="NetRocrail" cardinality="n" remark="Remote Rocrail to negotiate about a loc destination.">
-      <var name="id" vt="string" defval="" remark="ID to use in block destinations."/>
-      <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
-    </netrocrail>
     <trace wrappername="Trace">
       <var name="rfile" vt="string" defval="rocrail.trace"/>
       <var name="gfile" vt="string" defval="rocgui.trace"/>
@@ -1102,6 +1121,8 @@
         <var name="turnouts" vt="string" defval="" range="*" remark="list of turnouts which are overlapped by this block in case of occupation. (csv list)"/>
         <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>
         <var name="smallsymbol" vt="bool" defval="false" remark="Show this block with the small representation."/>
+        <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
+        <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
 
         <!-- Track Driver support (Dinamo)-->
         <var name="iid" vt="string" defval="NULL" range="*" remark="TD interface id"/>
@@ -1533,6 +1554,7 @@
         <var name="roadname" vt="string" defval="" range="*"/>
         <var name="owner" vt="string" defval="" range="*"/>
         <var name="color" vt="string" defval="" range="*"/>
+        <var name="location" vt="string" defval="" range="*"/>
         <const name="cartype_freight" vt="string" val="freight"/>
         <const name="cartype_passenger" vt="string" val="passenger"/>
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
@@ -1575,6 +1597,7 @@
         <var name="destination" vt="string" defval="" range="*" required="true" remark="Consignee (local) block."/>
         <var name="routing" vt="string" defval="" range="*" required="true"/>
         <var name="commodity" vt="string" defval="" range="*"/>
+        <var name="cartype" vt="string" defval="" range="*"/>
         <const name="status_waiting" vt="string" val="waiting"/>
         <const name="status_shipping" vt="string" val="shipping"/>
         <const name="status_delivered" vt="string" val="delivered"/>

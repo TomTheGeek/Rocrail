@@ -186,7 +186,7 @@
   </object>
 
 
-  <object name="Control" use="node,map,thread" include="throttle,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
+  <object name="Control" use="node,map,thread" include="r2rnet,throttle,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
     <typedef def="enum {CMD_OK=0,CMD_RETRY,CMD_ERROR} cmd_state"/>
     <typedef def="void(*control_callback)(obj,iONode)"/>
     <fun name="inst" vt="this">
@@ -219,6 +219,9 @@
       <param name="inst" vt="this" remark="Control instance"/>
       <param name="boosterlist" vt="iONode" remark="Booster list"/>
     </fun>
+    <fun name="getR2Rnet" vt="iOR2Rnet">
+      <param name="inst" vt="this" remark="Control instance"/>
+    </fun>
     <data>
       <var name="pDi" vt="iIDigInt" remark="Interface"/>
       <var name="iid" vt="const char*" remark="Interface Id"/>
@@ -236,6 +239,7 @@
       <var name="checker" vt="iOThread"/>
       <var name="throttle" vt="iOThrottle"/>
       <var name="powerman" vt="iOPowerMan"/>
+      <var name="r2rnet" vt="iOR2Rnet"/>
     </data>
   </object>
 
@@ -324,9 +328,18 @@
     <fun name="go" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="goNet" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="curblock" vt="const char*" remark="Current block"/>
+      <param name="nextblock" vt="const char*" remark="Next block"/>
+      <param name="nextroute" vt="const char*" remark="Next route"/>
+    </fun>
     <fun name="stop" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="resume" vt="Boolean" remark="Resume automode."/>
+    </fun>
+    <fun name="stopNet" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="dispatch" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
@@ -419,6 +432,7 @@
       <var name="run" vt="Boolean"/>
       <var name="running" vt="Boolean"/>
       <var name="go" vt="Boolean"/>
+      <var name="goNet" vt="Boolean"/>
       <var name="brake" vt="Boolean"/>
       <var name="curGroup" vt="const char*"/>
       <var name="curBlock" vt="const char*"/>
@@ -608,6 +622,18 @@
     </fun>
     <fun name="analyse" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
+    </fun>
+    <fun name="addNetRoute" vt="void">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="route" vt="iONode" remark="Route node"/>
+    </fun>
+    <fun name="addNetLoc" vt="iOLoc">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="lcprops" vt="iONode" remark="Loco node"/>
+    </fun>
+    <fun name="addNetBlock" vt="iIBlockBase">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="bkprops" vt="iONode" remark="Block node"/>
     </fun>
     <fun name="findDest" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -1622,6 +1648,65 @@
       <var name="boostermap" vt="iOMap"/>
       <var name="scmap" vt="iOMap"/>
       <var name="pwmap" vt="iOMap"/>
+    </data>
+  </object>
+
+
+  <object name="R2Rnet" use="node,map,event,mutex,list,thread,socket" remark="Rocrail to Rocrail Network object.">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="The setup node."/>
+    </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+      <param name="cmd" vt="iONode" remark="R2RCmd node"/>
+    </fun>
+    <fun name="quit" vt="void">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+    </fun>
+    <fun name="getBlock" vt="iONode">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+      <param name="bkid" vt="const char*" remark="Block ID with Rocrail ID as prefix."/>
+    </fun>
+    <fun name="reserveBlock" vt="Boolean">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+      <param name="rrid" vt="const char*" remark="Rocrail ID."/>
+      <param name="bkid" vt="const char*" remark="Block ID."/>
+      <param name="stid" vt="const char*" remark="Net Route ID."/>
+      <param name="lc" vt="iONode" remark="Loco properties"/>
+      <param name="bk" vt="iONode" remark="Current block properties"/>
+      <param name="check" vt="Boolean" remark="Check if the block is free"/>
+    </fun>
+    <fun name="unlockBlock" vt="Boolean">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+      <param name="rrid" vt="const char*" remark="Rocrail ID."/>
+      <param name="bkid" vt="const char*" remark="Block ID."/>
+      <param name="lcid" vt="const char*" remark="Loco ID."/>
+    </fun>
+    <fun name="locoIsIn" vt="void">
+      <param name="inst" vt="this" remark="R2Rnet instance"/>
+      <param name="rrid" vt="const char*" remark="Rocrail ID of remote server."/>
+      <param name="lcid" vt="const char*" remark="Loco ID"/>
+      <param name="bkid" vt="const char*" remark="Block ID"/>
+    </fun>
+    <fun name="compare" vt="Boolean">
+      <param name="id1" vt="const char*" remark="Object ID"/>
+      <param name="id2" vt="const char*" remark="Object ID"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
+      <var name="netroutes" vt="iONode"/>
+      <var name="routelist" vt="iOList"/>
+      <var name="readUDP" vt="iOSocket"/>
+      <var name="writeUDP" vt="iOSocket"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
+      <var name="gotnetroutes" vt="Boolean"/>
+      <var name="netroutesprovider" vt="Boolean"/>
+      <var name="reqMux" vt="iOMutex"/>
+      <var name="rspEvt" vt="iOEvent"/>
+      <var name="openreq" vt="iONode"/>
+      <var name="response" vt="iONode"/>
     </data>
   </object>
 

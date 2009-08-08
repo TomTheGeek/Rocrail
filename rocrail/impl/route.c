@@ -28,6 +28,7 @@
 #include "rocrail/public/output.h"
 #include "rocrail/public/tt.h"
 #include "rocrail/public/seltab.h"
+#include "rocrail/public/r2rnet.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -57,7 +58,8 @@ static int instCnt = 0;
  ***** OBase functions.
  */
 static const char* __id( void* inst ) {
-  return NULL;
+  iORouteData o = Data(inst);
+  return wRoute.getid( o->props );
 }
 
 static void* __event( void* inst, const void* evt ) {
@@ -289,12 +291,12 @@ static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto
   /* in case of a managed block of a fiddle yard the manager ID is needed */
   blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
 
-  if( StrOp.equals( blockid, wRoute.getbka( o->props ) ) ) {
+  if( R2RnetOp.compare( blockid, wRoute.getbka( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --from--", blockid, RouteOp.getId(inst) );
     *fromto = True;
     return lcdir;
   }
-  else if( StrOp.equals( blockid, wRoute.getbkb( o->props ) ) ) {
+  else if( R2RnetOp.compare( blockid, wRoute.getbkb( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --to--", blockid, RouteOp.getId(inst) );
     *fromto = False;
     return !lcdir;
@@ -435,7 +437,7 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
       const char* bk = StrTokOp.nextToken( tok );
       iIBlockBase block = ModelOp.getBlock( model, bk );
       if( block != NULL ) {
-        if( !block->lock( block, id, "", True, False, False ) ) {
+        if( !block->lock( block, id, "", "", True, False, False ) ) {
           StrTokOp.base.del(tok);
           return False;
         }
@@ -521,6 +523,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         if( !TTOp.lock( (iIBlockBase)itt,
 			locId,
 			NULL,
+      NULL,
 			False,
 			False,
 			wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
@@ -536,6 +539,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         if( !SelTabOp.lock( (iIBlockBase)iseltab,
 			    locId,
 			    SelTabOp.isManager( iseltab)?o->routeLockId:locId,
+	        NULL,
 			    False,
 			    False,
 			    wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {

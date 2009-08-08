@@ -97,6 +97,8 @@ class wxSpinCtrl;
 #define ID_BUTTON_RR_PROPS 10156
 #define ID_COMBOBOX_RR_LIB 10001
 #define ID_BUTTON_RR_ADD 10000
+#define ID_PANEL_R2RNET 10281
+#define ID_BUTTON_R2RNET_ROUTES 10327
 #define SYMBOL_ROCRAILINIDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ROCRAILINIDIALOG_TITLE _("Rocrail Properties")
 #define SYMBOL_ROCRAILINIDIALOG_IDNAME ID_DIALOG_RR_INI
@@ -158,6 +160,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RR_ADD
     void OnButtonRrAddClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_R2RNET_ROUTES
+    void OnButtonR2rnetRoutesClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -284,6 +289,17 @@ public:
     wxStaticBoxSizer* m_AddControllerBox;
     wxComboBox* m_Lib;
     wxButton* m_ControllerAdd;
+    wxPanel* m_R2RnetPanel;
+    wxStaticText* m_labR2RnetID;
+    wxTextCtrl* m_R2RnetID;
+    wxStaticText* m_labR2RnetAddr;
+    wxTextCtrl* m_R2RnetAddr;
+    wxStaticText* m_labR2RnetPort;
+    wxSpinCtrl* m_R2RnetPort;
+    wxStaticText* m_labR2RnetRoutes;
+    wxTextCtrl* m_R2RnetRoutes;
+    wxButton* m_R2RnetRoutesDlg;
+    wxCheckBox* m_R2RnetEnable;
     wxButton* m_OK;
     wxButton* m_Cancel;
     wxButton* m_Apply;

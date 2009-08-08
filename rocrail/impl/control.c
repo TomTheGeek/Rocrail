@@ -27,6 +27,7 @@
 #include "rocrail/public/model.h"
 #include "rocrail/public/block.h"
 #include "rocrail/public/throttle.h"
+#include "rocrail/public/r2rnet.h"
 
 #include "rocint/public/digint.h"
 
@@ -71,6 +72,7 @@
 #include "rocrail/wrapper/public/PwrCmd.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Booster.h"
+#include "rocrail/wrapper/public/R2RnetIni.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -1025,6 +1027,11 @@ static iOThrottle _getThrottle(iOControl control) {
   return data->throttle;
 }
 
+static iOR2Rnet _getR2Rnet(iOControl control) {
+  iOControlData data = Data(control);
+  return data->r2rnet;
+}
+
 static void _setBoosters(iOControl control, iONode ini) {
   iOControlData data = Data(control);
   if( ini != NULL ) {
@@ -1074,6 +1081,11 @@ static iOControl _inst( Boolean nocom ) {
     ThreadOp.start( data->checker );
 
     __initSensors(control);
+
+    if( wRocRail.getr2rnet(ini) != NULL && wR2RnetIni.isenable(wRocRail.getr2rnet(ini))) {
+      data->r2rnet = R2RnetOp.inst(wRocRail.getr2rnet(ini));
+    }
+
 
     instCnt++;
 

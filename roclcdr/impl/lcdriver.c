@@ -307,6 +307,19 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
   }
 }
 
+static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, const char* nextblock, const char* nextroute ) {
+  iOLcDriverData data = Data(inst);
+  data->gomanual = gomanual;
+  data->brake = False;
+  data->run = True;
+  data->state = LC_INITDEST;
+  data->scheduletime = data->model->getTime( data->model );
+  data->curBlock   = data->model->getBlock( data->model, curblock );
+  data->next1Block = data->model->getBlock( data->model, nextblock );
+  data->next1Route = data->model->getRoute( data->model, nextroute );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goNet: curblock=%s nextblock=%s nextroute=%s", curblock, nextblock, nextroute );
+}
+
 static void _go( iILcDriverInt inst, Boolean gomanual ) {
   iOLcDriverData data = Data(inst);
   data->gomanual = gomanual;
@@ -332,6 +345,21 @@ static void _stop( iILcDriverInt inst ) {
                    "stop event for \"%s\"...",
                    data->loc->getId( data->loc ) );
   }
+}
+
+/**
+ * The locomotive did caused an **in** event on the remote system.
+ * Put the locomotive into the IDLE state.
+ */
+static void _stopNet( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  data->state = LC_IDLE;
+  data->run = False;
+  wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   "stopNet event for [%s]; **IDLE**",
+                   data->loc->getId( data->loc ) );
 }
 
 static Boolean _isRun( iILcDriverInt inst ) {

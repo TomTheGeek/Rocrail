@@ -70,6 +70,7 @@ void statusIdle( iILcDriverInt inst ) {
       data->reqstop = False;
       data->run = False;
       data->warningnodestfound = False;
+      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
     }
 
   }

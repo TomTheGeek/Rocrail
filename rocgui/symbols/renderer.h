@@ -71,6 +71,8 @@ class SymbolRenderer {
   svgSymbol* m_SvgSym10; // route yellow (4 aspects)
   svgSymbol* m_SvgSym11; // route green (4 aspects)
   svgSymbol* m_SvgSym12; // route white (4 aspects)
+  svgSymbol* m_SvgSym13;
+  svgSymbol* m_SvgSym14;
   int m_iSymType;
   int m_iSymSubType;
   iOMap m_SymMap;

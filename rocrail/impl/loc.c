@@ -1211,6 +1211,17 @@ static const char* _getSchedule( iOLoc inst ) {
   return "";
 }
 
+static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, const char* nextroute ) {
+  iOLocData data = Data(inst);
+  wLoc.setresumeauto( data->props, False);
+  data->curBlock = StrOp.dup(curblock); /* make a copy before it is freed up */
+  data->goNet = True; /* signal that the current block is from the net */
+  data->go = True;
+  data->gomanual = False;
+  if( data->driver != NULL )
+    data->driver->goNet( data->driver, data->gomanual, curblock, nextblock, nextroute );
+}
+
 static void _go( iOLoc inst ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
@@ -1235,6 +1246,21 @@ static void _stop( iOLoc inst, Boolean resume ) {
   data->go = False;
   if( data->driver != NULL )
     data->driver->stop( data->driver );
+}
+
+static void _stopNet( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  data->go = False;
+  if( data->driver != NULL ) {
+    iONode broadcast = NULL;
+    data->driver->stopNet( data->driver );
+    data->driver->brake( data->driver );
+
+    /* Broadcast to clients. */
+    broadcast = (iONode)NodeOp.base.clone(data->props);
+    wLoc.setV( broadcast, data->drvSpeed );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+  }
 }
 
 static void _dispatch( iOLoc inst ) {

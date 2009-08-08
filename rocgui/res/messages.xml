@@ -9740,4 +9740,7 @@
   <Msg id="all">
     <en txt="All"/>
   </Msg>
+  <Msg id="netroutes">
+    <en txt="NetRoutes"/>
+  </Msg>
 </Messages>

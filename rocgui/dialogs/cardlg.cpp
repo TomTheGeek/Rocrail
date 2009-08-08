@@ -32,6 +32,9 @@
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/CarList.h"
+#include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
+#include "rocrail/wrapper/public/Block.h"
 
 #include "rocgui/wrapper/public/Gui.h"
 
@@ -79,6 +82,58 @@ void CarDlg::onSetPage(wxCommandEvent& event) {
 }
 
 
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
+void CarDlg::initLocationCombo() {
+  m_Location->Clear();
+  m_Location->Append( _T(""), (void*)NULL );
+
+  iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
+
+  if( model != NULL ) {
+    iONode locationlist = wPlan.getlocationlist( model );
+    if( locationlist != NULL ) {
+      int cnt = NodeOp.getChildCnt( locationlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode location = NodeOp.getChild( locationlist, i );
+        const char* id = wLocation.getid( location );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    iONode bklist = wPlan.getbklist( model );
+    if( bklist != NULL ) {
+      int cnt = NodeOp.getChildCnt( bklist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        const char* id = wBlock.getid( bk );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    if( ListOp.size(list) > 0 ) {
+      ListOp.sort(list, &__sortStr);
+      int cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+        m_Location->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+}
+
 void CarDlg::initLabels() {
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
   SetTitle(wxGetApp().getMsg( "cartable" ));
@@ -101,6 +156,8 @@ void CarDlg::initLabels() {
   m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
   m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
+
+  initLocationCombo();
 
 
   // Details
@@ -228,6 +285,8 @@ void CarDlg::initValues() {
   m_Roadname->SetValue( wxString(wCar.getroadname( m_Props ),wxConvUTF8) );
   m_ImageName->SetValue( wxString(wCar.getimage( m_Props ),wxConvUTF8) );
   m_Era->SetSelection( wCar.getera( m_Props ) );
+  m_Location->SetStringSelection(wxString(wCar.getlocation(m_Props),wxConvUTF8));
+  m_Owner->SetValue( wxString(wCar.getowner( m_Props ),wxConvUTF8) );
 
   // init Status
   if( StrOp.equals( wCar.status_empty, wCar.getstatus( m_Props) ) )
@@ -271,6 +330,9 @@ bool CarDlg::evaluate(){
   wCar.setroadname( m_Props, m_Roadname->GetValue().mb_str(wxConvUTF8) );
   wCar.setimage( m_Props, m_ImageName->GetValue().mb_str(wxConvUTF8) );
   wCar.setera( m_Props, m_Era->GetSelection() );
+  wCar.setlocation(m_Props, m_Location->GetStringSelection().mb_str(wxConvUTF8));
+  wCar.setowner( m_Props, m_Owner->GetValue().mb_str(wxConvUTF8) );
+
 
   if( m_Status->GetSelection() == 0 )
     wCar.setstatus( m_Props, wCar.status_empty );

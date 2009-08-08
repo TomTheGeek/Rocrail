@@ -84,6 +84,8 @@ void SymbolRenderer::initSym() {
   m_SvgSym10 = NULL;
   m_SvgSym11 = NULL;
   m_SvgSym12 = NULL;
+  m_SvgSym13 = NULL;
+  m_SvgSym14 = NULL;
 
   const char* nodeName = NodeOp.getName( m_Props );
 
@@ -493,6 +495,7 @@ void SymbolRenderer::initSym() {
         m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ent );
         m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed );
         m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost );
+        m_SvgSym13 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_sc );
 
         m_SvgSym7  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_s );
         m_SvgSym8  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_occ_s );
@@ -500,6 +503,7 @@ void SymbolRenderer::initSym() {
         m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ent_s );
         m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed_s );
         m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost_s );
+        m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_sc_s );
       }
     }
   }
@@ -1589,7 +1593,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   m_bRotateable = true;
   Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
 
-  svgSymbol* svgSym[7];
+  svgSymbol* svgSym[8];
 
   svgSym[1] = (m_bSmall && m_SvgSym7  != NULL)?m_SvgSym7:m_SvgSym1;
   svgSym[2] = (m_bSmall && m_SvgSym8  != NULL)?m_SvgSym8:m_SvgSym2;
@@ -1597,6 +1601,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   svgSym[4] = (m_bSmall && m_SvgSym10 != NULL)?m_SvgSym10:m_SvgSym4;
   svgSym[5] = (m_bSmall && m_SvgSym11 != NULL)?m_SvgSym11:m_SvgSym5;
   svgSym[6] = (m_bSmall && m_SvgSym12 != NULL)?m_SvgSym12:m_SvgSym6;
+  svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
 
   if( StrOp.equals( ori, wItem.east ) )
     ori = wItem.west;
@@ -1624,8 +1629,12 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     drawSvgSym(dc, svgSym[5], ori);
   }
   else if( svgSym[6]!=NULL && m_iOccupied == 5 ) {
-    /* reserved state */
+    /* ghost */
     drawSvgSym(dc, svgSym[6], ori);
+  }
+  else if( svgSym[7]!=NULL && m_iOccupied == 6 ) {
+    /* shortcut */
+    drawSvgSym(dc, svgSym[7], ori);
   }
   else {
     dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );
@@ -1917,7 +1926,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
     int y = 79 - (int)ya;
 
     if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
-      pen = (wxPen*)wxBLACK_PEN;
+      pen = (wxPen*)wxRED_PEN;
       pen->SetWidth(5);
       dc.SetPen(*pen);
       *bridgepos = degr;
@@ -1941,7 +1950,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   dc.DrawCircle( 79, 79, 36 );
   dc.DrawCircle( 79, 79, 32 );
   dc.DrawPolygon( 5, rotateBridge( *bridgepos ) );
-  dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
+  //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
   const wxBrush& b = dc.GetBrush();
   Boolean sensor1 = wTurntable.isstate1( m_Props );

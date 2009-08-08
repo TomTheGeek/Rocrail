@@ -55,11 +55,21 @@
       <param name="emitter" vt="obj" remark="Sender of event"/>
       <param name="event" vt="int" remark="Event code"/>
     </fun>
+    <fun name="goNet" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+      <param name="gomanual" vt="Boolean" remark="half-automatic mode"/>
+      <param name="curblock" vt="const char*" remark="current block"/>
+      <param name="nextblock" vt="const char*" remark="next block"/>
+      <param name="nextroute" vt="const char*" remark="next route"/>
+    </fun>
     <fun name="go" vt="void">
       <param name="inst" vt="this" remark="LcDriver instance"/>
       <param name="gomanual" vt="Boolean" remark="half-automatic mode"/>
     </fun>
     <fun name="stop" vt="void">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
+    <fun name="stopNet" vt="void">
       <param name="inst" vt="this" remark="LcDriver instance"/>
     </fun>
     <fun name="brake" vt="void">
@@ -125,6 +135,7 @@
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*" remark="Locking loc"/>
       <param name="blockid" vt="const char*" remark="Comming from block"/>
+      <param name="routeid" vt="const char*" remark="Route ID"/>
       <param name="crossing" vt="Boolean" remark="if this block overlaps turnouts used by other routes, this flag does ignore all events!"/>
       <param name="reset" vt="Boolean" remark="reset all triggers"/>
       <param name="reverse" vt="Boolean" remark="reverse enter"/>

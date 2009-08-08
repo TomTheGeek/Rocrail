@@ -44,6 +44,7 @@ class OperatorDlg : public operatordlggen
   void initValues();
   void initConsist();
   void initLocos();
+  void initLocationCombo();
 
 public:
 	/** Constructor */

@@ -111,6 +111,10 @@
       <var name="red" vt="int" defval="255"/>
       <var name="green" vt="int" defval="255"/>
       <var name="blue" vt="int" defval="255"/>
+      <var name="scred" vt="int" defval="255"/>
+      <var name="scgreen" vt="int" defval="255"/>
+      <var name="scblue" vt="int" defval="0"/>
+      <var name="showsc" vt="bool" defval="true"/>
       <var name="locobook" vt="bool" defval="true"/>
     </planpanel>
     <splitpanel wrappername="SplitPanel">
@@ -168,6 +172,12 @@
       <var name="green" vt="int" defval="0" remark="text color RGB green value"/>
       <var name="blue" vt="int" defval="0" remark="text color RGB blue value"/>
     </block>
+    <shortcut cardinality="1" wrappername="Shortcut">
+      <var name="show" vt="bool" defval="true" remark="show shortcut background"/>
+      <var name="red" vt="int" defval="255" remark="sc module background color RGB red value"/>
+      <var name="green" vt="int" defval="255" remark="sc module background color RGB green value"/>
+      <var name="blue" vt="int" defval="0" remark="sc module background color RGB blue value"/>
+    </shortcut>
   </theme>
   
 </Wrappers>

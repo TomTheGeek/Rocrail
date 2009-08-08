@@ -92,6 +92,7 @@ public:
   iONode getZLevel() { return m_zLevel; }
   bool isModView(){ return m_bModView;}
   bool SetBackgroundColor(int red, int green, int blue, bool savecolor);
+  void SetScBackgroundColor(int red, int green, int blue, bool showSc);
   void refresh(bool eraseBackground = true);
   void setPosition();
   iONode m_zLevel;
@@ -124,6 +125,10 @@ private:
   int m_Red;
   int m_Green;
   int m_Blue;
+  int m_ScRed;
+  int m_ScGreen;
+  int m_ScBlue;
+  bool m_ShowSc;
 
   DECLARE_EVENT_TABLE()
 };

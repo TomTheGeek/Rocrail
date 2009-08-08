@@ -59,6 +59,7 @@ class wxSpinCtrl;
 #define ID_EASYSETALL 10005
 #define ID_BUTTON_EASY_SAVE 10009
 #define ID_BUTTON_EASY_READ 10010
+#define ID_LOCOIO_BOOSTER 10002
 #define ID_LN_ADDRESSLIST 10007
 #define ID_QUEURY_ADDRESSES 10008
 #define ID_BUTTON_MP_READ 10011
@@ -168,6 +169,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_EASY_READ
     void OnButtonEasyReadClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOCOIO_BOOSTER
+    void OnBoosterClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LN_ADDRESSLIST
     void OnLnAddresslistDoubleClicked( wxCommandEvent& event );
@@ -382,6 +386,7 @@ public:
     wxButton* m_EasySetAll;
     wxButton* m_EasySaveAll;
     wxButton* m_EasyReadAll;
+    wxCheckBox* m_Booster;
     wxPanel* m_AddressesPanel;
     wxListBox* m_AddressList;
     wxButton* m_QueryAddresses;

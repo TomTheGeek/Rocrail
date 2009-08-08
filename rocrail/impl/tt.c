@@ -658,7 +658,7 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
     wOutput.setcmd( cmd, wSwitch.turnout ); /* the 'red' command moves the hut side to this position */
     ControlOp.cmd( control, cmd, NULL );
 
-    /* no feedback for 'position reached' so set it as reached */    
+    /* no feedback for 'position reached' so set it as reached */
     data->tablepos = data->gotopos;
 
     /* bridge is in position */
@@ -909,7 +909,7 @@ static int __getNextTrack( iOTT inst, int tracknr ) {
 
 static int __getPrevTrack( iOTT inst, int tracknr ) {
   iOTTData data = Data(inst);
-  
+
   Boolean useLast = False;
   iONode prevtrack = NULL;
   iONode track = wTurntable.gettrack( data->props );
@@ -925,7 +925,7 @@ static int __getPrevTrack( iOTT inst, int tracknr ) {
     prevtrack = track;
     track = wTurntable.nexttrack( data->props, track );
   }
-  
+
   if( useLast && prevtrack != NULL ) {
     return wTTTrack.getnr( prevtrack );
   }
@@ -1317,7 +1317,7 @@ static void __initCallback( iOTT inst ) {
 }
 
 
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse ) {
   iOTTData data = Data(inst);
   Boolean ok = False;
 

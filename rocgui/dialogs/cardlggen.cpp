@@ -19,7 +19,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
 	m_CarImage = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 280,80 ), wxBU_AUTODRAW );
-	bSizer1->Add( m_CarImage, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer1->Add( m_CarImage, 0, wxTOP|wxRIGHT|wxLEFT|wxEXPAND, 5 );
 	
 	m_CarBook = new basenotebook( this, ID_CARBOOK, wxDefaultPosition, wxDefaultSize, 0 );
 	m_IndexPanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );

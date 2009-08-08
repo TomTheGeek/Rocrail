@@ -679,7 +679,7 @@ void LC::CreateControls() {
   m_FG = new wxButton( m_Parent, -1, _("FG"), wxDefaultPosition, wxSize(40, -1), wxBU_EXACTFIT );
   l_sizer0->Add(m_FG, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1);
 
-  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(80, -1), wxTE_READONLY|wxTE_CENTRE );
+  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(82, -1), wxTE_READONLY|wxTE_CENTRE );
   l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 1);
 
   m_Button1Sizer = new wxBoxSizer(wxHORIZONTAL);

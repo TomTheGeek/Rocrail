@@ -799,6 +799,10 @@ static void rocrailCallback( obj me, iONode node ) {
 
       if( StrOp.equals( childName, wLoc.name() ) ) {
         iONode lclist = wPlan.getlclist( model );
+        if( lclist == NULL ) {
+          lclist = NodeOp.inst( wLocList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild( model, lclist );
+        }
         if( lclist != NULL ) {
           /* check if a loco already exist with this ID */
           iONode lc = wxGetApp().getFrame()->findLoc(wLoc.getid(child));

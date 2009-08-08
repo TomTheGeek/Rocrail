@@ -97,8 +97,8 @@ waybillgen::waybillgen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_labCartype->Wrap( -1 );
 	fgSizer1->Add( m_labCartype, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
 	
-	m_Cartype = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Cartype, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxALL, 5 );
+	m_Cartype = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer1->Add( m_Cartype, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer4->Add( fgSizer1, 1, wxEXPAND, 5 );
 	

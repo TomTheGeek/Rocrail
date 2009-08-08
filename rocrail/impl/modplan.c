@@ -38,6 +38,7 @@
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/WaybillList.h"
 #include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/OperatorList.h"
 
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Track.h"
@@ -715,6 +716,7 @@ static Boolean __mergeLocs( iONode model, const char* fname ) {
 
     __mergeList(wLocList.name()  , model, root, -1, 0,0,0, False);
     __mergeList(wCarList.name()  , model, root, -1, 0,0,0, False);
+    __mergeList(wOperatorList.name()  , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
@@ -1082,6 +1084,8 @@ static void __saveLocs( iOModPlan inst, const char* filename ) {
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlclist(data->model) ) );
   if( wPlan.getcarlist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getcarlist(data->model) ) );
+  if( wPlan.getoperatorlist(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getoperatorlist(data->model) ) );
 
   /* Serialize plan. */
   xml = model->base.toString( model );

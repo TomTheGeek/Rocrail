@@ -81,7 +81,8 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
 
 
   if( street->isFree(street, data->loc->getId( data->loc )) ) {
-    if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), False, True, reverse ) ) {
+    /* TODO: curBlock can be NULL in case of R2Rnet */
+    if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), street->base.id(street), False, True, reverse ) ) {
       if( street->lock( street, data->loc->getId( data->loc ), reverse ) ) {
         if( street->go( street ) ) {
 

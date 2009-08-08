@@ -248,8 +248,8 @@ void PlanPanel::OnModProps(wxCommandEvent& event) {
   iONode zlevel = (ini!=NULL ? NodeOp.findNode(ini, wZLevel.name() ) : NULL);
 
   if( StrOp.equals( wModule.cmd_state, wModule.getcmd(ini) ) ) {
-    if( StrOp.equals( wModule.state_shortcut, wModule.getstate(ini) ) ) {
-      SetBackgroundColor( 255, 0, 0, false);
+    if( StrOp.equals( wModule.state_shortcut, wModule.getstate(ini) ) && m_ShowSc ) {
+      SetBackgroundColor( m_ScRed, m_ScGreen, m_ScBlue, false);
     }
     else {
       /* normal state */
@@ -1594,6 +1594,13 @@ bool PlanPanel::SetBackgroundColor(int red, int green, int blue, bool savecolor)
   }
   wxColor color((byte)red, (byte)green, (byte)blue);
   return SetBackgroundColour(color);
+}
+
+void PlanPanel::SetScBackgroundColor(int red, int green, int blue, bool showSc) {
+  m_ScRed   = red;
+  m_ScGreen = green;
+  m_ScBlue  = blue;
+  m_ShowSc  = showSc;
 }
 
 void PlanPanel::refresh(bool eraseBackground ) {

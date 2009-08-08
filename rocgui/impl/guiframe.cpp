@@ -107,6 +107,7 @@
 #include "rocgui/wrapper/public/ThemePanel.h"
 #include "rocgui/wrapper/public/ThemeBlock.h"
 #include "rocgui/wrapper/public/LcCtrl.h"
+#include "rocgui/wrapper/public/Shortcut.h"
 
 #include "rocrail/wrapper/public/JsEvent.h"
 #include "rocrail/wrapper/public/JsMap.h"
@@ -448,6 +449,7 @@ BasePanel* RocGuiFrame::initModPanel( iONode zlevel  ) {
   p->SetPosition( wxPoint( xpos, ypos) );
 
   p->SetBackgroundColor((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini), true);
+  p->SetScBackgroundColor((byte)wPlanPanel.getscred( ini), (byte)wPlanPanel.getscgreen( ini), (byte)wPlanPanel.getscblue( ini), wPlanPanel.isshowsc( ini)?true:false);
   p->clean();
   p->init(true);
   return p;
@@ -1476,6 +1478,7 @@ void RocGuiFrame::initFrame() {
       iONode themeProps = DocOp.getRootNode( doc );
       iONode themePanelProps = wTheme.getpanel(themeProps);
       iONode themeBlockProps = wTheme.getblock(themeProps);
+      iONode themeScProps    = wTheme.getshortcut(themeProps);
       if( themePanelProps != NULL ) {
         wPlanPanel.setshowborder( wGui.getplanpanel(m_Ini), wThemePanel.isborder(themePanelProps) );
         wPlanPanel.setred  ( wGui.getplanpanel(m_Ini), wThemePanel.getred  (themePanelProps) );
@@ -1492,6 +1495,12 @@ void RocGuiFrame::initFrame() {
         wPlanPanel.setbktext_red  ( wGui.getplanpanel(m_Ini), wThemeBlock.getred  (themeBlockProps) );
         wPlanPanel.setbktext_green( wGui.getplanpanel(m_Ini), wThemeBlock.getgreen(themeBlockProps) );
         wPlanPanel.setbktext_blue ( wGui.getplanpanel(m_Ini), wThemeBlock.getblue (themeBlockProps) );
+      }
+      if( themeScProps != NULL ) {
+        wPlanPanel.setscred  ( wGui.getplanpanel(m_Ini), wShortcut.getred  (themeScProps) );
+        wPlanPanel.setscgreen( wGui.getplanpanel(m_Ini), wShortcut.getgreen(themeScProps) );
+        wPlanPanel.setscblue ( wGui.getplanpanel(m_Ini), wShortcut.getblue (themeScProps) );
+        wPlanPanel.setshowsc ( wGui.getplanpanel(m_Ini), wShortcut.isshow  (themeScProps) );
       }
     }
 
@@ -2795,7 +2804,8 @@ void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
   OperatorDlg* dlg = new OperatorDlg(this, NULL);
-  dlg->ShowModal();
+  //dlg->ShowModal();
+  dlg->Show(TRUE);
 }
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
