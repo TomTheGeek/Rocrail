@@ -2392,12 +2392,15 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
 static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleIdx, const char* blockid ) {
   int idx = 0;
   iONode entry = wSchedule.getscentry( schedule );
+  iONode preventry = NULL;
 
   /* check if the schedule index is correct: */
   while( entry != NULL ) {
     if( idx == *scheduleIdx ) {
       const char* entryBlock = wScheduleEntry.getblock( entry );
       const char* entryLocation = wScheduleEntry.getlocation( entry );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "checking schedule index[%d] prev=0x%08X...", *scheduleIdx, preventry );
       if( entryBlock != NULL && StrOp.len(entryBlock) > 0 ) {
         if( StrOp.equals( blockid, entryBlock ) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -2405,13 +2408,37 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
           return entry;
         }
       }
-      else if( __isInLocation( inst, entryLocation, blockid ) ) {
+
+      if( __isInLocation( inst, entryLocation, blockid ) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "schedule index[%d] matches location %s for block %s", *scheduleIdx, entryLocation, blockid );
         return entry;
       }
+
+      if(preventry != NULL ) {
+        /* does the previous entry match? */
+        const char* entryBlock = wScheduleEntry.getblock( preventry );
+        const char* entryLocation = wScheduleEntry.getlocation( preventry );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "checking (prev)schedule index[%d]...", *scheduleIdx );
+        if( entryBlock != NULL && StrOp.len(entryBlock) > 0 ) {
+          if( StrOp.equals( blockid, entryBlock ) ) {
+            *scheduleIdx -= 1;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "(prev)schedule index[%d] matches block %s", *scheduleIdx, blockid );
+            return preventry;
+          }
+        }
+        else if( __isInLocation( inst, entryLocation, blockid ) ) {
+          *scheduleIdx -= 1;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "(prev)schedule index[%d] matches location %s for block %s", *scheduleIdx, entryLocation, blockid );
+          return preventry;
+        }
+      }
     }
     idx++;
+    preventry = entry;
     entry = wSchedule.nextscentry( schedule, entry );
   };
 
