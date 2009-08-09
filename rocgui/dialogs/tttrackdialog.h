@@ -86,7 +86,7 @@ class TTTrackDialog: public wxDialog
 
 public:
     /// Constructors
-    TTTrackDialog( wxWindow* parent, iONode p_Props);
+    TTTrackDialog( wxWindow* parent, iONode p_Props, int min = 0, int max = 47);
     TTTrackDialog( );
     TTTrackDialog( wxWindow* parent, wxWindowID id = SYMBOL_TTTRACKDIALOG_IDNAME, const wxString& caption = SYMBOL_TTTRACKDIALOG_TITLE, const wxPoint& pos = SYMBOL_TTTRACKDIALOG_POSITION, const wxSize& size = SYMBOL_TTTRACKDIALOG_SIZE, long style = SYMBOL_TTTRACKDIALOG_STYLE );
 

@@ -149,7 +149,13 @@ void TurntableDialog::OnProps(wxCommandEvent& event) {
   }
 
   if( track != NULL ) {
-    TTTrackDialog* dlg = new TTTrackDialog( this, track );
+    int min = 0;
+    int max = 47;
+    if( StrOp.equals( wTurntable.f6915, m_Type->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+      min = 201;
+      max = 299;
+    }
+    TTTrackDialog* dlg = new TTTrackDialog( this, track, min, max );
     if( wxID_OK == dlg->ShowModal() ) {
       initValues();
     }
@@ -162,7 +168,13 @@ void TurntableDialog::OnTTTrackAdd(wxCommandEvent& event) {
 
   iONode track = NodeOp.inst( wTTTrack.name(), NULL, ELEMENT_NODE );
 
-  TTTrackDialog* dlg = new TTTrackDialog( this, track );
+  int min = 0;
+  int max = 47;
+  if( StrOp.equals( wTurntable.f6915, m_Type->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+    min = 201;
+    max = 299;
+  }
+  TTTrackDialog* dlg = new TTTrackDialog( this, track, min, max );
   if( wxID_OK == dlg->ShowModal() ) {
     NodeOp.addChild( m_Props, track );
     initValues();
