@@ -1211,6 +1211,7 @@
           <const name="from_all" vt="string" val="all"/>
           <const name="from_all_reverse" vt="string" val="all-reverse"/>
           <var name="from" vt="string" defval="" range="*" remark="from block id (csv list for more blocks)"/>
+          <var name="byroute" vt="string" defval="" range="*" remark="Comming from block x by route y. (optional)"/>
         </fbevent>
       </bk>
     </bklist>

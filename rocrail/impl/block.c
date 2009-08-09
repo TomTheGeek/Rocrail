@@ -262,11 +262,19 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
   char    key[256] = {'\0'};
 
-  StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
+  if( fbevt == NULL && data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
+    StrOp.fmtb( key, "%s-%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"", data->byRouteId );
+    fbevt = (iONode)MapOp.get( data->fbEvents, key );
+    if( fbevt != NULL )
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbevent found by key %s", key);
+  }
 
   if( fbevt == NULL ) {
+    StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
     /* event without description; look up in map */
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
+    if( fbevt != NULL )
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbevent found by key %s", key);
   }
 
 
@@ -293,9 +301,9 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: fbid=%s state=%s ident=%d fbfrom=%s from=%s",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: fbid=%s state=%s ident=%d fbfrom=%s from=%s byroute=%s",
       data->id, key, puls?"true":"false", ident,
-                 wFeedbackEvent.getfrom(fbevt), data->fromBlockId?data->fromBlockId:"?" );
+                 wFeedbackEvent.getfrom(fbevt), data->fromBlockId?data->fromBlockId:"?", data->byRouteId?data->byRouteId:"?" );
 
   if( data->crossing ) {
     /* ignore all events */
@@ -443,6 +451,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
 
   while( fbevt != NULL ) {
     const char* fbid = wFeedbackEvent.getid( fbevt );
+    const char* byroute = wFeedbackEvent.getbyroute( fbevt );
     iOFBack fb = ModelOp.getFBack( model, fbid );
 
     if( StrOp.len( fbid ) > 0 && fb != NULL ) {
@@ -451,7 +460,10 @@ static void __initFeedbackEvents( iOBlock inst ) {
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
-        StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
+        if( byroute != NULL && StrOp.len( byroute ) > 0 )
+          StrOp.fmtb( key, "%s-%s-%s", fbid, fromblockid, byroute );
+        else
+          StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
         MapOp.put( data->fbEvents, key, (obj)fbevt );
       };
       StrTokOp.base.del(tok);
@@ -1039,8 +1051,9 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     if( ok ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
-      data->reverse = reverse;
+      data->reverse     = reverse;
       data->fromBlockId = blockid;
+      data->byRouteId   = routeid;
       if( reset )
         BlockOp.resetTrigs( inst );
     }

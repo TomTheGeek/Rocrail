@@ -414,6 +414,7 @@ public:
 ////@end BlockDialog member variables
     iONode m_fbEvents[5];
     const char* m_FromBlockID;
+    const char* m_ByRouteID;
 };
 
 #endif

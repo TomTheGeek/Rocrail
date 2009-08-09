@@ -2182,12 +2182,15 @@ void BlockDialog::initSensors() {
   if( st == NULL ) {
     /* all */
     m_FromBlockID = routeID;
+    m_ByRouteID   = routeID;
   }
   else if( StrOp.equals( wBlock.getid( m_Props ), wRoute.getbkb( st ) ) ) {
     m_FromBlockID = wRoute.getbka( st );
+    m_ByRouteID   = wRoute.getid(st);
   }
   else if( !wRoute.isdir(st) ) {
     m_FromBlockID = wRoute.getbkb( st );
+    m_ByRouteID   = wRoute.getid(st);
   }
   else {
     m_LabelSensorsFromBlock->SetLabel( _T("") );
@@ -2253,6 +2256,7 @@ void BlockDialog::evaluateSensors() {
 
       wFeedbackEvent.setaction( m_fbEvents[i], acts[i]->GetValue().mb_str(wxConvUTF8) );
       wFeedbackEvent.setfrom( m_fbEvents[i], m_FromBlockID );
+      wFeedbackEvent.setbyroute( m_fbEvents[i], m_ByRouteID );
       wFeedbackEvent.setendpuls( m_fbEvents[i], end[i]->GetValue()?True:False );
     }
 
