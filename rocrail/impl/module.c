@@ -228,8 +228,10 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
       }
     }
     else if( StrOp.equals( wBlock.name(), NodeOp.getName(item) ) ) {
-      *iCX = defOri ? 4:1;
-      *iCY = defOri ? 1:4;
+      Boolean m_bSmall = wBlock.issmallsymbol(item);
+      int blocklen = m_bSmall ? 2:4;
+      *iCX = defOri ? blocklen:1;
+      *iCY = defOri ? 1:blocklen;
     }
     else if( StrOp.equals( wSelTab.name(), NodeOp.getName(item) ) ) {
       *iCX = defOri ? wSelTab.getnrtracks(item):1;
