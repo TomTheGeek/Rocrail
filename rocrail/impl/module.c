@@ -219,6 +219,10 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
         *iCX = defOri ? 2:1;
         *iCY = defOri ? 1:2;
       }
+      else if( StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(item) ) ) {
+        *iCX = defOri ? 2:1;
+        *iCY = defOri ? 1:2;
+      }
       else if( StrOp.equals( wSwitch.accessory, wSwitch.gettype(item) ) ) {
         if( wSwitch.getaccnr(item) == 1 ) {
           /* double track road crossing */
