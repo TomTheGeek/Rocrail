@@ -137,6 +137,40 @@ static void __cpFn2Node(iOLoc inst, iONode cmd) {
 }
 
 
+static void __saveFxState(iOLoc inst) {
+  iOLocData data = Data(inst);
+  int fx = 0;
+  fx |= data->fn1  ? 0x0000001:0;
+  fx |= data->fn2  ? 0x0000002:0;
+  fx |= data->fn3  ? 0x0000004:0;
+  fx |= data->fn4  ? 0x0000008:0;
+  fx |= data->fn5  ? 0x0000010:0;
+  fx |= data->fn6  ? 0x0000020:0;
+  fx |= data->fn7  ? 0x0000040:0;
+  fx |= data->fn8  ? 0x0000080:0;
+  fx |= data->fn9  ? 0x0000100:0;
+  fx |= data->fn10 ? 0x0000200:0;
+  fx |= data->fn11 ? 0x0000400:0;
+  fx |= data->fn12 ? 0x0000800:0;
+  fx |= data->fn13 ? 0x0001000:0;
+  fx |= data->fn14 ? 0x0002000:0;
+  fx |= data->fn15 ? 0x0004000:0;
+  fx |= data->fn16 ? 0x0008000:0;
+  fx |= data->fn17 ? 0x0010000:0;
+  fx |= data->fn18 ? 0x0020000:0;
+  fx |= data->fn19 ? 0x0040000:0;
+  fx |= data->fn20 ? 0x0080000:0;
+  fx |= data->fn21 ? 0x0100000:0;
+  fx |= data->fn22 ? 0x0200000:0;
+  fx |= data->fn23 ? 0x0400000:0;
+  fx |= data->fn24 ? 0x0800000:0;
+  fx |= data->fn25 ? 0x1000000:0;
+  fx |= data->fn26 ? 0x2000000:0;
+  fx |= data->fn27 ? 0x4000000:0;
+  fx |= data->fn28 ? 0x8000000:0;
+  wLoc.setfx( data->props, fx );
+}
+
 static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
   data->fn0  = wFunCmd.isf0 ( cmd );
@@ -169,6 +203,67 @@ static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   data->fn27 = wFunCmd.isf27( cmd );
   data->fn28 = wFunCmd.isf28( cmd );
 }
+
+
+static void __restoreFx(obj inst) {
+  iOLocData data = Data(inst);
+  int fx = wLoc.getfx(data->props);
+  int i = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring functions" );
+
+  for( i = 0; i < 28; i++ ) {
+    int f = 1 << i;
+    if( fx & f ) {
+      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setfnchanged( fcmd, i + 1);
+      switch( i ) {
+        case 0 : wFunCmd.setf1 ( fcmd, True); break;
+        case 1 : wFunCmd.setf2 ( fcmd, True); break;
+        case 2 : wFunCmd.setf3 ( fcmd, True); break;
+        case 3 : wFunCmd.setf4 ( fcmd, True); break;
+        case 4 : wFunCmd.setf5 ( fcmd, True); break;
+        case 5 : wFunCmd.setf6 ( fcmd, True); break;
+        case 6 : wFunCmd.setf7 ( fcmd, True); break;
+        case 7 : wFunCmd.setf8 ( fcmd, True); break;
+        case 8 : wFunCmd.setf9 ( fcmd, True); break;
+        case 9 : wFunCmd.setf10( fcmd, True); break;
+        case 10: wFunCmd.setf11( fcmd, True); break;
+        case 11: wFunCmd.setf12( fcmd, True); break;
+        case 12: wFunCmd.setf13( fcmd, True); break;
+        case 13: wFunCmd.setf14( fcmd, True); break;
+        case 14: wFunCmd.setf15( fcmd, True); break;
+        case 15: wFunCmd.setf16( fcmd, True); break;
+        case 16: wFunCmd.setf17( fcmd, True); break;
+        case 17: wFunCmd.setf18( fcmd, True); break;
+        case 18: wFunCmd.setf19( fcmd, True); break;
+        case 19: wFunCmd.setf20( fcmd, True); break;
+        case 20: wFunCmd.setf21( fcmd, True); break;
+        case 21: wFunCmd.setf22( fcmd, True); break;
+        case 22: wFunCmd.setf23( fcmd, True); break;
+        case 23: wFunCmd.setf24( fcmd, True); break;
+        case 24: wFunCmd.setf25( fcmd, True); break;
+        case 25: wFunCmd.setf26( fcmd, True); break;
+        case 26: wFunCmd.setf27( fcmd, True); break;
+        case 27: wFunCmd.setf28( fcmd, True); break;
+      }
+      LocOp.cmd((iOLoc)inst, fcmd);
+      ThreadOp.sleep(10);
+    }
+  }
+}
+
+
+static void __sysEvent( obj inst, const char* cmd ) {
+  iOLocData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s]...", cmd );
+
+  if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
+    /* TODO: restore fx */
+    __restoreFx(inst);
+    data->fxrestored = True;
+  }
+}
+
 
 
 
@@ -274,6 +369,9 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setfn( node, wLoc.isfn(data->props) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
     }
+  }
+  else if( StrOp.equals( wSysCmd.name(), NodeOp.getName(evtNode) ) ) {
+    __sysEvent( inst ,wSysCmd.getcmd(evtNode) );
   }
 
   return NULL;
@@ -625,6 +723,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       /* save the function status: */
       __cpNode2Fn(inst, cmd);
+      __saveFxState(inst);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
           wLoc.getid( data->props ),
@@ -1889,10 +1988,14 @@ static iOLoc _inst( iONode props ) {
 
   /* reset velocity to zero */
   wLoc.setV( data->props, 0 );
+  /*
   wLoc.setfx( data->props, 0 );
+  */
   wLoc.setthrottleid( data->props, 0 );
 
   __initCVmap( loc );
+
+  ModelOp.addSysEventListener( AppOp.getModel(), (obj)loc );
 
   /*data->driver = (iILcDriverInt)LcDriverOp.inst( loc );*/
   if( __loadDriver( loc ) ) {

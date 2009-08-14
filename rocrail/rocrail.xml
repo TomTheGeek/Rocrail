@@ -479,7 +479,7 @@
       <var name="fnevent" vt="int"/>
       <var name="fneventblock" vt="char*"/>
       <var name="ignevt" vt="int"/>
-
+      <var name="fxrestored" vt="Boolean"/>
       <var name="enter" vt="Boolean"/>
       <var name="enterId" vt="const char*"/>
       <var name="enterTick" vt="int"/>
