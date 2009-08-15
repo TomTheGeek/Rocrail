@@ -254,6 +254,8 @@ public:
     wxStaticText* m_labExclude;
     wxListBox* m_ExcludeList;
     wxRadioBox* m_PermType;
+    wxStaticText* m_labMaxLen;
+    wxSpinCtrl* m_MaxLen;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

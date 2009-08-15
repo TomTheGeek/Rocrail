@@ -258,8 +258,9 @@ static void __sysEvent( obj inst, const char* cmd ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s]...", cmd );
 
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
-    /* TODO: restore fx */
-    __restoreFx(inst);
+    /* restore fx */
+	if( wLoc.isrestorefx(data->props))
+      __restoreFx(inst);
     data->fxrestored = True;
   }
 }
@@ -1988,9 +1989,9 @@ static iOLoc _inst( iONode props ) {
 
   /* reset velocity to zero */
   wLoc.setV( data->props, 0 );
-  /*
-  wLoc.setfx( data->props, 0 );
-  */
+  if( !wLoc.isrestorefx(data->props))
+    wLoc.setfx( data->props, 0 );
+
   wLoc.setthrottleid( data->props, 0 );
 
   __initCVmap( loc );

@@ -1274,6 +1274,7 @@
         <incl cardinality="n" />
         <excl cardinality="n" />
         <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
+        <var name="maxlen" vt="int" defval="0" range="0-*" remark="Maximal train length allowed for this route."/>
       </st>
     </stlist>
     <tklist cardinality="1" remark="Track table" wrappername="TrackList">
@@ -1457,6 +1458,7 @@
         <var name="regulated" vt="bool" defval="true" remark="Decoder regulates the motor."/>
         <var name="fn" vt="bool" defval="true" remark="Function switch. (Lights)"/>
         <var name="fx" vt="int" defval="0" remark="Function status bits for display only."/>
+        <var name="restorefx" vt="bool" defval="True" remark="Restore functions from previouse session."/>
 
         <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
         <fundef cardinality="n" wrappername="FunDef">

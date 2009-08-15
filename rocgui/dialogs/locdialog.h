@@ -364,6 +364,7 @@ public:
     wxCheckBox* m_Regulated;
     wxStaticText* m_LabelPlacing;
     wxCheckBox* m_Placing;
+    wxCheckBox* m_RestoreFx;
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
     wxPanel* m_DetailsPanel;
