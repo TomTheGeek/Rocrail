@@ -649,6 +649,8 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   iODCC232Data data = allocMem( sizeof( struct ODCC232Data ) );
   MemOp.basecpy( __DCC232, &DCC232Op, 0, sizeof( struct ODCC232 ), data );
 
+  TraceOp.set( trc );
+
   /* Initialize data->xxx members... */
   data->mux     = MutexOp.inst( NULL, True );
   data->slotmux = MutexOp.inst( NULL, True );

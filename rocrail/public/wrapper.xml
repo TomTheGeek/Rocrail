@@ -259,6 +259,7 @@
       <const name="sprog" vt="string" val="sprog"/>
       <const name="dcc232" vt="string" val="dcc232"/>
       <const name="nce" vt="string" val="nce"/>
+      <const name="io8255" vt="string" val="io8255"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

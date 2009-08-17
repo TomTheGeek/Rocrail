@@ -1,8 +1,8 @@
-# ------------------------------------------------------------
 # Rocrail - Model Railroad Software
 #
 # Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
 #
+# ------------------------------------------------------------
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -80,7 +80,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)/opendcc$(SHAREDSUFFIX) $(OUTDIR
 	$(OUTDIR)/ddx$(SHAREDSUFFIX) $(OUTDIR)/slx$(SHAREDSUFFIX) $(OUTDIR)/ecos$(SHAREDSUFFIX) \
 	$(OUTDIR)/inter10$(SHAREDSUFFIX) $(OUTDIR)/barjut$(SHAREDSUFFIX) $(OUTDIR)/loconet$(SHAREDSUFFIX) \
 	$(OUTDIR)/virtual$(SHAREDSUFFIX) $(OUTDIR)/rocnet$(SHAREDSUFFIX) $(OUTDIR)/mcs2$(SHAREDSUFFIX) $(OUTDIR)/nce$(SHAREDSUFFIX) \
-	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/railcom$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX) $(OUTDIR)/dcc232$(SHAREDSUFFIX)
+	$(OUTDIR)/clock$(SHAREDSUFFIX) $(OUTDIR)/railcom$(SHAREDSUFFIX) $(OUTDIR)/sprog$(SHAREDSUFFIX) $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(OUTDIR)/io8255$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -134,6 +134,8 @@ $(OUTDIR)/dcc232$(SHAREDSUFFIX): $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(TMPOUTDIR)/dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)/nce$(SHAREDSUFFIX): $(TMPOUTDIR)/nce.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/nce$(SHAREDSUFFIX) $(TMPOUTDIR)/nce.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)/io8255$(SHAREDSUFFIX): $(TMPOUTDIR)/io8255.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/io8255$(SHAREDSUFFIX) $(TMPOUTDIR)/io8255.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -202,6 +204,7 @@ clean:
 	-rm -f $(OUTDIR)/sprog$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/dcc232$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/nce$(SHAREDSUFFIX)
+	-rm -f $(OUTDIR)/io8255$(SHAREDSUFFIX)
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/ogen ../../rocdigs/rocdigs.xml ../
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
 
@@ -229,5 +232,6 @@ install:
 	-cp -p $(OUTDIR)/sprog$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/nce$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)/io8255$(SHAREDSUFFIX) $(DESTDIR)
 	
 	
