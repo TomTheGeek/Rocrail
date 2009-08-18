@@ -59,6 +59,7 @@
     <const name="lang_catalan" vt="string" val="ca"/>
     <const name="lang_greek" vt="string" val="el"/>
     <const name="lang_russian" vt="string" val="ru"/>
+    <const name="lang_portuguese" vt="string" val="pt"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>

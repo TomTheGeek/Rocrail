@@ -64,6 +64,9 @@
   <Msg id="lang_ru">
     <all txt="русский язык" tip="Russian"/>
   </Msg>
+  <Msg id="lang_pt">
+    <all txt="Português" tip="Portoguese"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Neustart zum Ändern der Sprache"/>
@@ -76,6 +79,7 @@
     <da txt="Luk programmet for at skifte sprog"/>
     <hu txt="Nyelv váltásához újra kell indítani a programot"/>
     <ru txt="Перезагрузить, чтобы изменить язык"/>
+    <pt txt="Reiniciar para mudar a linguagem"/>
   </Msg>
   <Msg id="cancel">
     <de txt="Abbrechen" tip="Dialog beenden."/>
@@ -94,6 +98,7 @@
     <el txt="Ακύρωση"/>
     <hu txt="Mégsem"/>
     <ru txt="Отменить"/>
+    <pt txt="Cancelar"/>
   </Msg>
   <Msg id="on">
     <de txt="an"/>
@@ -112,6 +117,7 @@
     <el txt="σε λειτουργία"/>
     <hu txt="be"/>
     <ru txt="вкл"/>
+    <pt txt="ligado"/>
   </Msg>
   <Msg id="off">
     <de txt="aus"/>
@@ -130,6 +136,7 @@
     <el txt="εκτός χρήσης"/>
     <hu txt="ki"/>
     <ru txt="Выкл."/>
+    <pt txt="desligado"/>
   </Msg>
   <Msg id="ok">
     <de txt="OK"/>
@@ -148,6 +155,7 @@
     <el txt="ΟΚ"/>
     <hu txt="OK"/>
     <ru txt="ОК"/>
+    <pt txt="OK"/>
   </Msg>
   <Msg id="no">
     <de txt="nein"/>
@@ -166,6 +174,7 @@
     <el txt="δεν"/>
     <hu txt="nem"/>
     <ru txt="нет"/>
+    <pt txt="Não"/>
   </Msg>
   <Msg id="yes">
     <de txt="ja"/>
@@ -184,6 +193,7 @@
     <el txt="ναι"/>
     <hu txt="igen"/>
     <ru txt="Да"/>
+    <pt txt="sim"/>
   </Msg>
   <Msg id="only">
     <de txt="nur"/>
@@ -201,6 +211,7 @@
     <el txt="μόνο"/>
     <hu txt="csak"/>
     <ru txt="Только"/>
+    <pt txt="apenas"/>
   </Msg>
   <Msg id="stop">
     <de txt="Stopp" tip="Stopp Lokomotive"/>
@@ -219,6 +230,7 @@
     <ru txt="Стоп"/>
     <bg txt="Спирам"/>
     <el txt="Σταματάω"/>
+    <pt txt="Parar"/>
   </Msg>
   <Msg id="station">
     <de txt="Bahnhof"/>
@@ -236,6 +248,7 @@
     <el txt="Σταθμός"/>
     <hu txt="Állomás"/>
     <ru txt="Станция"/>
+    <pt txt="Estação"/>
   </Msg>
   <Msg id="break">
     <de txt="B R E M S E N" tip="Nothalt aller Triebfahrzeuge!"/>
@@ -252,6 +265,7 @@
     <ru txt="Прервать"/>
     <bg txt="BREAK"/>
     <el txt="BREAK"/>
+    <pt txt="I N T E R V A L O"/>
   </Msg>
   <Msg id="connect" dialog="true">
     <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
@@ -270,6 +284,7 @@
     <el txt="Σύνδεση με"/>
     <hu txt="Kapcsolódás"/>
     <ru txt="Подключиться к"/>
+    <pt txt="Ligar a"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
     <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
@@ -288,6 +303,7 @@
     <el txt="Ανοικτός"/>
     <hu txt="Megnyit"/>
     <ru txt="Открыть"/>
+    <pt txt="Abrir"/>
   </Msg>
   <Msg id="upload" dialog="true">
     <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
@@ -306,6 +322,7 @@
     <el txt="Ανέβασμα"/>
     <hu txt="Feltölt"/>
     <ru txt="Загрузить"/>
+    <pt txt="Envio (upload)"/>
   </Msg>
   <Msg id="server">
     <de txt="Server"/>
@@ -324,6 +341,7 @@
     <el txt="Server"/>
     <hu txt="Szerver"/>
     <ru txt="Сервер"/>
+    <pt txt="Servidor"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
     <de txt="Speichern" tip="Gleisbild speichern."/>
@@ -342,6 +360,7 @@
     <el txt="Αποθηκεύω"/>
     <hu txt="Mentés"/>
     <ru txt="Сохранить"/>
+    <pt txt="Guardar"/>
   </Msg>
   <Msg id="saveas" dialog="true">
     <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
@@ -360,6 +379,7 @@
     <el txt="Αποθήκευση ως"/>
     <hu txt="Mentés másként"/>
     <ru txt="Сохранить как"/>
+    <pt txt="Gardar como"/>
   </Msg>
   <Msg id="shutdown">
     <de txt="Rocrail Server und Rocview beenden" tip="Rocrail Server beenden."/>
@@ -376,6 +396,7 @@
     <el txt="Shutdown Rocrail και εξόδου"/>
     <hu txt="Rocrail leállítása és kilépés"/>
     <ru txt="Закрыть RockRai и выйтиl"/>
+    <pt txt="Fechar Rocrail e sair"/>
   </Msg>
   <Msg id="exit">
     <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
@@ -394,6 +415,7 @@
     <el txt="Έξοδος"/>
     <hu txt="Kilépés"/>
     <ru txt="Выход"/>
+    <pt txt="Saír"/>
   </Msg>
   <Msg id="editmode">
     <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
@@ -411,6 +433,7 @@
     <ru txt="Редактировать план"/>
     <bg txt="Промяна на плана"/>
     <el txt="Επεξεργασία σχεδίου"/>
+    <pt txt="Editar plano"/>
   </Msg>
   <Msg id="undo" key="Ctrl-Z">
     <de txt="Rückgängig" tip="Rückgängig"/>
@@ -429,6 +452,7 @@
     <el txt="Αναίρεση"/>
     <hu txt="Visszavonás"/>
     <ru txt="Отменить действие"/>
+    <pt txt="Anular"/>
   </Msg>
   <Msg id="editlocs" dialog="true">
     <de txt="Lok Eigenschaften"/>
@@ -445,6 +469,7 @@
     <ca txt="Propietats de la locomotora"/>
     <hu txt="Mozdony tulajdonságok"/>
     <ru txt="Свойства локомотива"/>
+    <pt txt="Propriedades da Loc"/>
   </Msg>
   <Msg id="about" dialog="true">
     <de txt="Info" accel="0" tip="Information über Rocrail."/>
@@ -463,6 +488,7 @@
     <el txt="Πληροφορίες"/>
     <hu txt="Információ"/>
     <ru txt="Информация"/>
+    <pt txt="Informação"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
     <de txt="Fahrstrom ein" accel="5" tip="Fahrstrom einschalten."/>
@@ -480,6 +506,7 @@
     <el txt="Power On"/>
     <hu txt="Pálya bekapcsolása"/>
     <ru txt="Питание вкл."/>
+    <pt txt="Ligado"/>
   </Msg>
   <Msg id="poweroff">
     <de txt="Fahrstrom aus" accel="5" tip="Fahrstrom ausschalten."/>
@@ -498,6 +525,7 @@
     <el txt="Power Off"/>
     <hu txt="Pálya kikapcsolása"/>
     <ru txt="Питание выкл."/>
+    <pt txt="Desligar"/>
   </Msg>
   <Msg id="initfield">
     <de txt="Weichen initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
@@ -515,6 +543,7 @@
     <el txt="Init τομέα"/>
     <hu txt="Inicializálás"/>
     <ru txt="Инициализировать области"/>
+    <pt txt="Inicializar campo"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -531,6 +560,7 @@
     <ca txt="Control de Locomotora"/>
     <hu txt="Mozdony irányítás"/>
     <ru txt="Управление локомотивом"/>
+    <pt txt="Controlo da Loc"/>
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichenbedienung" accel="0" tip="Dialog um Weichen zu testen."/>
@@ -547,6 +577,7 @@
     <ca txt="Control agulles"/>
     <hu txt="Váltó vezérlés"/>
     <ru txt="Управление стрелками"/>
+    <pt txt="Controlo dos desvios/agulhas"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
     <de txt="Fahrstraßenbedienung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
@@ -563,6 +594,7 @@
     <ca txt="Control de rutes"/>
     <hu txt="Útvonal vezérlés"/>
     <ru txt="Управление маршрутами"/>
+    <pt txt="Controlo de rotas"/>
   </Msg>
   <Msg id="planprops" dialog="true">
     <de txt="Gleisbild Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
@@ -579,6 +611,7 @@
     <ca txt="Propietas de l'entremat de vies"/>
     <hu txt="Pálya tulajdonságok"/>
     <ru txt="Свойства плана пути"/>
+    <pt txt="Propriedades do plano de circuito"/>
   </Msg>
   <Msg id="startall">
     <de txt="Alle Züge starten" tip="Versetzt alle Züge in den Automatikbetrieb."/>
@@ -595,6 +628,7 @@
     <ca txt="Engegar totes les locomotores"/>
     <hu txt="Összes mozdony indítása"/>
     <ru txt="Запустить все локомотивы"/>
+    <pt txt="Iniciar todas as locs"/>
   </Msg>
   <Msg id="stopall">
     <de txt="Alle Züge stoppen" tip="Versetzt alle Züge in Manualbetrieb."/>
@@ -611,6 +645,7 @@
     <ca txt="Aturar totes les locomotores"/>
     <hu txt="Összes mozdony leállítása"/>
     <ru txt="Остановить все локомотивы"/>
+    <pt txt="Parar todas as locs"/>
   </Msg>
   <Msg id="startloc">
     <de txt="Zug starten" tip="Versetzt Zug in den Automatikbetrieb."/>
@@ -627,6 +662,7 @@
     <ca txt="Engegar locomotora"/>
     <hu txt="Mozdony indítása"/>
     <ru txt="Запустить локомотив"/>
+    <pt txt="Iniciar locomotiva"/>
   </Msg>
   <Msg id="stoploc">
     <de txt="Zug stoppen" tip="Versetzt Zug in Manualbetrieb."/>
@@ -643,6 +679,7 @@
     <ca txt="Aturar locomotora"/>
     <hu txt="Mozdony leállítása"/>
     <ru txt="Остановить локомотив"/>
+    <pt txt="Parar locomotiva automaticamente"/>
   </Msg>
   <Msg id="resetall">
     <de txt="Alles zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand."/>
@@ -660,6 +697,7 @@
     <el txt="Επαναφορά όλων"/>
     <hu txt="Minden alaphelyzetbe"/>
     <ru txt="Общий сброс"/>
+    <pt txt="Reiniciar tudo"/>
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
@@ -678,6 +716,7 @@
     <ru txt="Сброс"/>
     <bg txt="Нулиране"/>
     <el txt="Επαναφορά"/>
+    <pt txt="Reiniciar"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -696,6 +735,7 @@
     <el txt="Επίπεδο"/>
     <hu txt="Szint"/>
     <ru txt="Уровень"/>
+    <pt txt="Nível"/>
   </Msg>
   <Msg id="levelup">
     <de txt="Nächste Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
@@ -713,6 +753,7 @@
     <el txt="Επίπεδο μέχρι"/>
     <hu txt="Egy szinttel feljebb"/>
     <ru txt="Уровень вверх"/>
+    <pt txt="Nível acima"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="Vorherige Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -730,6 +771,7 @@
     <el txt="Επίπεδο προβλέπεται"/>
     <hu txt="Egy szinttel lejjebb"/>
     <ru txt="Уровень вниз"/>
+    <pt txt="Nível abaixo"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -748,6 +790,7 @@
     <el txt="Ακίνητα"/>
     <hu txt="Tulajdonságok"/>
     <ru txt="Свойства"/>
+    <pt txt="Propriedades"/>
   </Msg>
   <Msg id="clearmsg">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
@@ -764,6 +807,7 @@
     <ca txt="Netejar missatges"/>
     <hu txt="Üzenetek törlése"/>
     <ru txt="Очистить сообщения"/>
+    <pt txt="Limpar mensagens"/>
   </Msg>
   <Msg id="file">
     <de txt="Datei" accel="0"/>
@@ -782,6 +826,7 @@
     <el txt="Αρχείο"/>
     <hu txt="Fájl"/>
     <ru txt="Файл"/>
+    <pt txt="Ficheiro"/>
   </Msg>
   <Msg id="edit">
     <de txt="Bearbeiten" accel="0"/>
@@ -800,6 +845,7 @@
     <el txt="Επεξεργασία"/>
     <hu txt="Szerkesztés"/>
     <ru txt="Редактирование"/>
+    <pt txt="Editar"/>
   </Msg>
   <Msg id="control">
     <de txt="Steuerung" accel="0"/>
@@ -818,6 +864,7 @@
     <el txt="Ελέγχου"/>
     <hu txt="Irányítás"/>
     <ru txt="Управление"/>
+    <pt txt="Controlo"/>
   </Msg>
   <Msg id="test">
     <de txt="Test" accel="0"/>
@@ -836,6 +883,7 @@
     <el txt="Δοκιμή"/>
     <hu txt="Teszt"/>
     <ru txt="Проверка"/>
+    <pt txt="Testar"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -853,6 +901,7 @@
     <el txt="Αυτόματη λειτουργία"/>
     <hu txt="Automatikus üzem"/>
     <ru txt="Автоматический режим"/>
+    <pt txt="Modo automático"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Herunterfahren und beenden?"/>
@@ -869,6 +918,7 @@
     <el txt="Αυτό θα το shutdown Rocrail server! Shutdown και εξόδου;"/>
     <hu txt="A Rocrail szerver le fog állni! Leállítja és kilép?"/>
     <ru txt="Это завершит работу  Rocrail сервера! Завершить и выйти?"/>
+    <pt txt="Será fechado o servidor Rocrail! Fechar e Sair?"/>
   </Msg>
   <Msg id="resetallwarning">
     <de txt="Diese Aktion setzt auch alle Blockbelegungen zurück. Durchführen?"/>
@@ -885,6 +935,7 @@
     <el txt="Η δράση αυτή επαναφέρει επίσης όλα τα μπλοκ επιφυλάξεις. Προχωρήστε;"/>
     <hu txt="A művelet törli az összes térköz foglaltsági információt. Folytatja?"/>
     <ru txt="Это действие также сбрасывает все резервирования блока. Продолжить?"/>
+    <pt txt="Esta acção vai também reiniciar todos os blocos reservados. Proceder?"/>
   </Msg>
   <Msg id="startallwarning">
     <de txt="Alle Züge jetzt starten?"/>
@@ -901,6 +952,7 @@
     <el txt="Ξεκινήστε locs όλα τώρα;"/>
     <hu txt="Elindítsam az összes mozdonyt?"/>
     <ru txt="Запустить все локомотивы сейчас?"/>
+    <pt txt="Iniciar todas as Locs agora?"/>
   </Msg>
   <Msg id="stopallwarning">
     <de txt="Alle Züge jetzt anhalten?"/>
@@ -917,6 +969,7 @@
     <el txt="Διακόψτε όλες locs τώρα;"/>
     <hu txt="Megállítsam az összes mozdonyt?"/>
     <ru txt="Остановить все локомотивы сейчас?"/>
+    <pt txt="Parar todas as Locs agora?"/>
   </Msg>
   <Msg id="automodewarning">
     <de txt="Stellen Sie sicher dass keine Züge mehr fahren! Auto Modus ausschalten?"/>
@@ -933,6 +986,7 @@
     <el txt="Θα μπορούσαν να υπάρχουν Locs τρέχει! Απενεργοποιήστε AutoMode;"/>
     <hu txt="Lehetnek közlekedő mozdonyok! Kikapcsoljam az automatikus üzemet?"/>
     <ru txt="Локомотивы могут быть  запущены! Отключить автоматический режим?"/>
+    <pt txt="Poderá haver locs a andar! Mudar para modo automático?"/>
   </Msg>
   <Msg id="fileexistwarning">
     <de txt="Datei existiert bereits! Wirklich überschreiben?"/>
@@ -949,6 +1003,7 @@
     <el txt="Φάκελος υπάρχει ήδη! Αλήθεια αντικαταστήσετε;"/>
     <hu txt="Az állomány már létezik! Felülírjam?"/>
     <ru txt="Файл уже существует! Вы действительно хотите его переписать?"/>
+    <pt txt="O ficheiro já existe! Escrever por cima?"/>
   </Msg>
   <Msg id="removewarning">
     <de txt="Möchten Sie wirklich löschen?"/>
@@ -965,6 +1020,7 @@
     <el txt="Είστε σίγουροι ότι θέλετε να διαγράψετε;"/>
     <hu txt="Biztosan törölni akarja?"/>
     <ru txt="Вы действително хотите удалить?"/>
+    <pt txt="Quer mesmo apagar?"/>
   </Msg>
   <Msg id="connectionwarning">
     <de txt="Es konnte keine Verbindung zum Rocrail Server hergestellt werden. Bitte Host und Port überprüfen."/>
@@ -981,6 +1037,7 @@
     <el txt="Η Rocrail διακομιστής δεν μπορεί να συνδεθεί? Έλεγχο της χώρας υποδοχής και των Λιμενικών ρυθμίσεις."/>
     <hu txt="A Rocrail szerverhez nem lehet kapcsolódni; ellenőrizze a Gépnevet és a Port beállítokat."/>
     <ru txt="Нет соединения с сервером Rocrail; проверьте Host и Port настройки"/>
+    <pt txt="O servidor Rorrail não consegue se conectar; verificar o anfitrião (Host) e os atributos da porta."/>
   </Msg>
   <Msg id="auto">
     <de txt="Automatik" accel="0"/>
@@ -999,6 +1056,7 @@
     <el txt="Αυτόματη"/>
     <hu txt="Automatikus"/>
     <ru txt="Автоматический"/>
+    <pt txt="Automático"/>
   </Msg>
   <Msg id="view">
     <de txt="Ansicht" accel="1"/>
@@ -1017,6 +1075,7 @@
     <el txt="Προβολή"/>
     <hu txt="Nézet"/>
     <ru txt="Вид"/>
+    <pt txt="Ver"/>
   </Msg>
   <Msg id="extra">
     <de txt="Extra" accel="0"/>
@@ -1034,6 +1093,7 @@
     <el txt="Έξτρα"/>
     <hu txt="Extra"/>
     <ru txt="Дополнительно"/>
+    <pt txt="Extra"/>
   </Msg>
   <Msg id="help">
     <de txt="Hilfe" accel="0"/>
@@ -1052,6 +1112,7 @@
     <el txt="Βοήθεια"/>
     <hu txt="Súgó"/>
     <ru txt="Помощь"/>
+    <pt txt="Ajuda"/>
   </Msg>
   <Msg id="function">
     <de txt="Funktion"/>
@@ -1070,6 +1131,7 @@
     <el txt="Καθήκοντα"/>
     <hu txt="Funkció"/>
     <ru txt="Функция"/>
+    <pt txt="Função"/>
   </Msg>
   <Msg id="functioncount">
     <de txt="Anzahl Funktionen"/>
@@ -1086,6 +1148,7 @@
     <el txt="Αριθμός Function"/>
     <hu txt="Funkciók száma"/>
     <ru txt="Номер функции"/>
+    <pt txt="Numero da função"/>
   </Msg>
   <Msg id="functions">
     <de txt="Funktionen"/>
@@ -1104,6 +1167,7 @@
     <el txt="Λειτουργίες"/>
     <hu txt="Funkciók"/>
     <ru txt="Функции"/>
+    <pt txt="Funções"/>
   </Msg>
   <Msg id="changedirection">
     <de txt="Fahrtrichtung wechseln" tip="Fahrtrichtung ändern."/>
@@ -1121,6 +1185,7 @@
     <fr txt="changement de direction"/>
     <hu txt="Irányváltás"/>
     <ru txt="Изменить направление"/>
+    <pt txt="Mudar direcção"/>
   </Msg>
   <Msg id="add">
     <de txt="Hinzufügen"/>
@@ -1139,6 +1204,7 @@
     <el txt="Προσθέτω"/>
     <hu txt="Hozzáadás"/>
     <ru txt="Добавить"/>
+    <pt txt="Adicionar"/>
   </Msg>
   <Msg id="delete">
     <de txt="Entfernen"/>
@@ -1157,6 +1223,7 @@
     <el txt="Διαγράφω"/>
     <hu txt="Törlés"/>
     <ru txt="Удалить"/>
+    <pt txt="Apagar"/>
   </Msg>
   <Msg id="name">
     <de txt="Name"/>
@@ -1175,6 +1242,7 @@
     <el txt="Όνομα"/>
     <hu txt="Név"/>
     <ru txt="Имя"/>
+    <pt txt="Nome"/>
   </Msg>
   <Msg id="value">
     <de txt="Wert"/>
@@ -1193,6 +1261,7 @@
     <el txt="Αξία"/>
     <hu txt="Érték"/>
     <ru txt="Значение"/>
+    <pt txt="Valor"/>
   </Msg>
   <Msg id="streetid">
     <de txt="Fahrstraßen Nummer"/>
@@ -1210,6 +1279,7 @@
     <el txt="Route ID"/>
     <hu txt="Útvonal ID"/>
     <ru txt="Идентификатор марщрута"/>
+    <pt txt="ID da Rota"/>
   </Msg>
   <Msg id="swcmds">
     <de txt="Weichenkommandos"/>
@@ -1226,6 +1296,7 @@
     <ca txt="Instruccions de agulles"/>
     <hu txt="Váltó parancsok"/>
     <ru txt="Стрелочные команды"/>
+    <pt txt="Comandos do desvio/agulha"/>
   </Msg>
   <Msg id="decoder">
     <de txt="Dekoder" tip="Decoder Nummer."/>
@@ -1244,6 +1315,7 @@
     <ru txt="Декодер"/>
     <bg txt="Декодер"/>
     <el txt="Αποκωδικοποιητή"/>
+    <pt txt="Descodificador"/>
   </Msg>
   <Msg id="decoders">
     <de txt="Dekoder" tip=""/>
@@ -1262,6 +1334,7 @@
     <ru txt="Декодеры"/>
     <bg txt="Декодери"/>
     <el txt="Αποκωδικοποιητές"/>
+    <pt txt="Descodificadores"/>
   </Msg>
   <Msg id="clickblock">
     <de txt="Linke Maustaste zum Starten/Stoppen %s."/>
@@ -1278,6 +1351,7 @@
     <ca txt="Premer esquerra per Engegar/Parar %s"/>
     <hu txt="Bal klikk a(z) %s Indításához/Leállításához"/>
     <ru txt="Кликните левой кнопкой мыши для Старт/Стоп %s"/>
+    <pt txt="Clicar no esquerdo para iniciar/parar %s"/>
   </Msg>
   <Msg id="blockdlg">
     <de txt="Block Eigenschaften"/>
@@ -1294,6 +1368,7 @@
     <ca txt="Propietats de blocs"/>
     <hu txt="Térköz tulajdonságok"/>
     <ru txt="Свойства Блока"/>
+    <pt txt="Propriedades do bloco"/>
   </Msg>
   <Msg id="commuter">
     <de txt="Pendelzug"/>
@@ -1309,6 +1384,7 @@
     <el txt="Commuter αμαξοστοιχίας"/>
     <hu txt="Ingavonat"/>
     <ru txt="Расписание поездов"/>
+    <pt txt="Comboio suburbano para ligar cidade a suburbio"/>
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
@@ -1325,6 +1401,7 @@
     <ca txt="Taula de locomotores"/>
     <hu txt="Mozdony lista"/>
     <ru txt="Таблица локомотивов"/>
+    <pt txt="Tabela de locomotivas"/>
   </Msg>
   <Msg id="programming">
     <de txt="Programmieren"/>
@@ -1341,6 +1418,7 @@
     <el txt="Προγραμματισμός"/>
     <hu txt="Programozás"/>
     <ru txt="Программирование"/>
+    <pt txt="Programação"/>
   </Msg>
   <Msg id="pt">
     <de txt="Programmiergleis"/>
@@ -1357,6 +1435,7 @@
     <ca txt="Via de programació"/>
     <hu txt="Programozó pálya"/>
     <ru txt="Путь для программирования"/>
+    <pt txt="Linha programável"/>
   </Msg>
   <Msg id="lncvprogramming">
     <de txt="LN CV/SV"/>
@@ -1374,6 +1453,7 @@
     <ru txt="LN CV/SV"/>
     <bg txt="LN CV / SV"/>
     <el txt="LN Βιογραφικό / SV"/>
+    <pt txt="LN CV/SV"/>
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
@@ -1390,6 +1470,7 @@
     <ca txt="Taula de rutes"/>
     <hu txt="Útvonal lista"/>
     <ru txt="Таблица маршрутов"/>
+    <pt txt="Tabela de rotas"/>
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
@@ -1406,6 +1487,7 @@
     <el txt="Αποκλεισμός πίνακα της ομάδας"/>
     <hu txt="Térköz csoport lista"/>
     <ru txt="Таблица группы блока"/>
+    <pt txt="Tabela grupo de blocos"/>
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
@@ -1422,6 +1504,7 @@
     <ca txt="Taula de blocs"/>
     <hu txt="Térköz lista"/>
     <ru txt="Таблица блока"/>
+    <pt txt="Tabela de blocos"/>
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
@@ -1437,6 +1520,7 @@
     <el txt="Προσέλευση πίνακα"/>
     <hu txt="Váltó lista"/>
     <ru txt="Таблица стрелки"/>
+    <pt txt="Tabela de agulhas/desvios"/>
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
     <de txt="Ausgänge" tip="Ausgänge"/>
@@ -1452,6 +1536,7 @@
     <el txt="Εκροών"/>
     <hu txt="Kimenet lista"/>
     <ru txt="Таблица вывода"/>
+    <pt txt="Tabela output"/>
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
     <de txt="Signale" tip="Signale"/>
@@ -1467,6 +1552,7 @@
     <el txt="Signal τραπέζι"/>
     <hu txt="Jelző lista"/>
     <ru txt="Таблица сигналов"/>
+    <pt txt="Tabela de sinais"/>
   </Msg>
   <Msg id="turntable" dialog="true">
     <de txt="Drehscheibe" tip="Drehscheibe"/>
@@ -1483,6 +1569,7 @@
     <el txt="Περιστροφική πλάκα"/>
     <hu txt="Fordítókorong"/>
     <ru txt="Поворотный круг"/>
+    <pt txt="Placa giratória"/>
   </Msg>
   <Msg id="sensortable" dialog="true" key="Alt-1">
     <de txt="Rückmelder" tip="Rückmelder"/>
@@ -1498,6 +1585,7 @@
     <el txt="Sensor πίνακα"/>
     <hu txt="Szenzor lista"/>
     <ru txt="Таблица датчиков"/>
+    <pt txt="Tabela de sensores"/>
   </Msg>
   <Msg id="sensorfromblock">
     <de txt="Rückmelder von Block %s aus:"/>
@@ -1512,6 +1600,7 @@
     <bg txt="Сензори, идващи от блок% S:"/>
     <el txt="Αισθητήρες που προέρχονται από μπλοκ% s:"/>
     <hu txt="Szenzorok a(z) %s térköz irányából"/>
+    <pt txt="Sensores vindos do bloco %s:"/>
   </Msg>
   <Msg id="addpanel" dialog="true">
     <de txt="Gleisplan hinzufügen" tip="Gleisplan hinzufügen"/>
@@ -1527,6 +1616,7 @@
     <el txt="Προσθήκη κομματιών σχέδιο"/>
     <hu txt="Alaprajz hozzáadása"/>
     <ru txt="Добавить план пути"/>
+    <pt txt="Adicionar plano de circuito"/>
   </Msg>
   <Msg id="removepanel">
     <de txt="Gleisplan löschen"/>
@@ -1542,6 +1632,7 @@
     <el txt="Διαγραφή γραμμής σχέδιο"/>
     <hu txt="Alaprajz törlése"/>
     <ru txt="Удалит план пути"/>
+    <pt txt="Apagar plano de circuito"/>
   </Msg>
   <Msg id="panelprops" dialog="true">
     <de txt="Gleisplan Eigenschaften" tip="Gleisplan Eigenschaften"/>
@@ -1557,6 +1648,7 @@
     <el txt="Πάνελ ιδιότητες"/>
     <hu txt="Alaprajz panel tulajdonságai"/>
     <ru txt="Свойства панели управления"/>
+    <pt txt="Propriedades do painel"/>
   </Msg>
   <Msg id="panel">
     <de txt="Gleisplan" accel="0"/>
@@ -1574,6 +1666,7 @@
     <el txt="Μετατρόχιο σχέδιο"/>
     <hu txt="Pálya alaprajz"/>
     <ru txt="План пути"/>
+    <pt txt="Plano de circuito"/>
   </Msg>
   <Msg id="tables">
     <de txt="Tabellen" accel="0"/>
@@ -1591,6 +1684,7 @@
     <el txt="Πίνακες"/>
     <hu txt="Táblák"/>
     <ru txt="Таблицы"/>
+    <pt txt="Tabelas"/>
   </Msg>
   <Msg id="language">
     <de txt="Sprache" accel="0"/>
@@ -1608,6 +1702,7 @@
     <el txt="Γλώσσα"/>
     <hu txt="Nyelv"/>
     <ru txt="Язык"/>
+    <pt txt="Idioma"/>
   </Msg>
   <Msg id="activelocs">
     <de txt="Lokomotiven"/>
@@ -1623,6 +1718,7 @@
     <el txt="Active Locos"/>
     <hu txt="Aktív mozdonyok"/>
     <ru txt="Активные локомотивы"/>
+    <pt txt="Locomotivas activas"/>
   </Msg>
   <Msg id="id">
     <de txt="Kennung"/>
@@ -1640,6 +1736,7 @@
     <el txt="ID"/>
     <hu txt="ID"/>
     <ru txt="Идентификатор"/>
+    <pt txt="ID"/>
   </Msg>
   <Msg id="address">
     <de txt="Adresse"/>
@@ -1657,6 +1754,7 @@
     <el txt="Διεύθυνση"/>
     <hu txt="Cím"/>
     <ru txt="Адрес"/>
+    <pt txt="Endereço"/>
   </Msg>
   <Msg id="block">
     <de txt="Block"/>
@@ -1674,6 +1772,7 @@
     <el txt="Αποκλεισμός"/>
     <hu txt="Térköz"/>
     <ru txt="Блок"/>
+    <pt txt="Bloco"/>
   </Msg>
   <Msg id="blocks">
     <de txt="Blöcke"/>
@@ -1690,6 +1789,7 @@
     <el txt="Κυβοειδές"/>
     <hu txt="Térközök"/>
     <ru txt="Блоки"/>
+    <pt txt="Blocos"/>
   </Msg>
   <Msg id="exceptions">
     <de txt="Ausnahmen:"/>
@@ -1705,6 +1805,7 @@
     <el txt="Εξαιρέσεις:"/>
     <hu txt="Kivételek:"/>
     <ru txt="Исключения:"/>
+    <pt txt="Excepções:"/>
   </Msg>
   <Msg id="warnings">
     <de txt="Warnungen:"/>
@@ -1721,6 +1822,7 @@
     <el txt="Προειδοποιήσεις:"/>
     <hu txt="Figyelmeztetések:"/>
     <ru txt="Предупреждения:"/>
+    <pt txt="Avisos"/>
   </Msg>
   <Msg id="offline">
     <de txt="Nicht verbunden"/>
@@ -1738,6 +1840,7 @@
     <el txt="Offline"/>
     <hu txt="Nem aktív (offline)"/>
     <ru txt="Не в сети"/>
+    <pt txt="Desligado"/>
   </Msg>
   <Msg id="plantitle" dialog="true">
     <de txt="Gleisplan Name" accel="0" tip="Gleisplan Name ändern."/>
@@ -1753,6 +1856,7 @@
     <el txt="Μετατρόχιο σχέδιο τίτλο"/>
     <hu txt="Pálya alaprajz címe"/>
     <ru txt="Заголовок плана пути"/>
+    <pt txt="Titulo do plano de circuito"/>
   </Msg>
   <Msg id="planfile">
     <de txt="Gleisplandatei"/>
@@ -1768,6 +1872,7 @@
     <el txt="Μετατρόχιο σχέδιο αρχείου"/>
     <hu txt="Pálya alaprajz állomány"/>
     <ru txt="Файл плана пути"/>
+    <pt txt="Ficheiro de plano de circuito"/>
   </Msg>
   <Msg id="planfiles">
     <de txt="Gleisplandateien (*.xml)|*.xml"/>
@@ -1783,6 +1888,7 @@
     <el txt="Μετατρόχιο σχέδιο αρχεία (*. xml) | *. xml"/>
     <hu txt="Pálya alaprajz állományok (*.xml)|*.xml"/>
     <ru txt="Файлы плана пути (*.xml)|*.xml"/>
+    <pt txt="Ficheiros de plano de circuito (*.xml)|*.xml"/>
   </Msg>
   <Msg id="saveplanfileas" dialog="true">
     <de txt="Gleisplandatei speichern unter"/>
@@ -1798,6 +1904,7 @@
     <el txt="Εκτός γραμμής σχέδιο ως"/>
     <hu txt="Pálya alaprajz mentése mint"/>
     <ru txt="Сохранить план пути как..."/>
+    <pt txt="Gravar  plano de circuito como"/>
   </Msg>
   <Msg id="openplanfile" dialog="true">
     <de txt="Gleisplandatei öffnen"/>
@@ -1813,6 +1920,7 @@
     <el txt="Ανοίξτε δρόμο σχέδιο"/>
     <hu txt="Pálya alaprajz megnyitása"/>
     <ru txt="Открыть план пути"/>
+    <pt txt="Abrir plano de circuito"/>
   </Msg>
   <Msg id="rocrailini" dialog="true">
     <de txt="Rocrail Eigenschaften" accel="0" tip="Rocrail Eigenschaften ändern."/>
@@ -1828,6 +1936,7 @@
     <el txt="Rocrail Ακίνητα"/>
     <hu txt="Rocrail tulajdonságai"/>
     <ru txt="Свойства RockRail"/>
+    <pt txt="Propriedades do Rocrail"/>
   </Msg>
   <Msg id="change_language_msg">
     <de txt="Die Spracheinstellung der Benutzeroberfläche wurde geändert und wird erst beim nächsten Start wirksam."/>
@@ -1843,6 +1952,7 @@
     <el txt="Η ρύθμιση γλώσσας του περιβάλλοντος εργασίας χρήστη έχει ενημερωθεί και θα τεθεί σε ισχύ την επόμενη φορά που θα ξεκινήσετε."/>
     <hu txt="A felhasználói felület nyelvi beállításait módosítottam, de azok csak a következő indítás után lesznek érvényesek."/>
     <ru txt="Настройка языка интерфейса пользователя, была обновлена и вступит в силу при следующем запуске"/>
+    <pt txt="As alterações de idioma do interface do usuário foram alteradas e só terão efeito da próxima vez que inicar."/>
   </Msg>
   <Msg id="straight">
     <de txt="Gerade"/>
@@ -1860,6 +1970,7 @@
     <el txt="Ευθύς"/>
     <hu txt="Egyenes"/>
     <ru txt="прямая;"/>
+    <pt txt="Recta"/>
   </Msg>
   <Msg id="curve">
     <de txt="Kurve"/>
@@ -1877,6 +1988,7 @@
     <el txt="Καμπύλη"/>
     <hu txt="Kanyar"/>
     <ru txt="Кривая"/>
+    <pt txt="Curva"/>
   </Msg>
   <Msg id="right">
     <de txt="Rechts"/>
@@ -1894,6 +2006,7 @@
     <el txt="Δεξιά"/>
     <hu txt="Jobb"/>
     <ru txt="Вправо"/>
+    <pt txt="Direita"/>
   </Msg>
   <Msg id="left">
     <de txt="Links"/>
@@ -1911,6 +2024,7 @@
     <el txt="Αριστερά"/>
     <hu txt="Bal"/>
     <ru txt="Влево"/>
+    <pt txt="Esquerda"/>
   </Msg>
   <Msg id="rightturnout">
     <de txt="Weiche rechts"/>
@@ -1926,6 +2040,7 @@
     <el txt="Δικαίωμα συμμετοχής"/>
     <hu txt="Jobbos kitérő"/>
     <ru txt="Правая стрелка"/>
+    <pt txt="Desvio/agulha direita"/>
   </Msg>
   <Msg id="leftturnout">
     <de txt="Weiche links"/>
@@ -1941,6 +2056,7 @@
     <el txt="Αριστερά προσέλευση"/>
     <hu txt="Balos kitérő"/>
     <ru txt="Левая стрелка"/>
+    <pt txt="Desvio/agulha esquerda"/>
   </Msg>
   <Msg id="crossing">
     <de txt="Kreuzung"/>
@@ -1957,6 +2073,7 @@
     <el txt="Διέλευση"/>
     <hu txt="Keresztezés"/>
     <ru txt="Пересечение"/>
+    <pt txt="Cruzamento"/>
   </Msg>
   <Msg id="dcrossing">
     <de txt="Doppelte Kreuzung"/>
@@ -1972,6 +2089,7 @@
     <el txt="Διπλή Διέλευση"/>
     <hu txt="Átszelési váltó"/>
     <ru txt="Англиская стрелка"/>
+    <pt txt="Duplo cruzamento"/>
   </Msg>
   <Msg id="ccrossing">
     <de txt="Zentrierte Kreuzung"/>
@@ -1987,6 +2105,7 @@
     <el txt="Κέντρο Διέλευση"/>
     <hu txt="Átterelő keresztezés"/>
     <ru txt="Симметричная стрелка"/>
+    <pt txt="Cruzamento central"/>
   </Msg>
   <Msg id="threeway">
     <de txt="Dreiweg"/>
@@ -2003,6 +2122,7 @@
     <el txt="Threeway"/>
     <hu txt="Háromirányú kitérő"/>
     <ru txt="Тройная стрелка"/>
+    <pt txt="Via tripla"/>
   </Msg>
   <Msg id="additem">
     <de txt="Symbol hinzufügen"/>
@@ -2020,6 +2140,7 @@
     <hu txt="Elem hozzáadása"/>
     <ru txt="Добавить элемент"/>
     <fr txt="Ajouter un élément"/>
+    <pt txt="Adicionar item"/>
   </Msg>
   <Msg id="track">
     <de txt="Gleis"/>
@@ -2037,6 +2158,7 @@
     <el txt="Παρακολούθηση"/>
     <hu txt="Pálya"/>
     <ru txt="Путь"/>
+    <pt txt="Faixa"/>
   </Msg>
   <Msg id="tracks">
     <de txt="Gleise"/>
@@ -2054,6 +2176,7 @@
     <el txt="Τραγούδια"/>
     <hu txt="Pályák"/>
     <ru txt="Пути"/>
+    <pt txt="Faixas"/>
   </Msg>
   <Msg id="turnout">
     <de txt="Abzweig"/>
@@ -2070,6 +2193,7 @@
     <ru txt="Стрелка"/>
     <bg txt="Активност"/>
     <el txt="Προσέλευση"/>
+    <pt txt="desvio/agulha"/>
   </Msg>
   <Msg id="switches">
     <de txt="Weichen"/>
@@ -2087,6 +2211,7 @@
     <el txt="Διακόπτες"/>
     <hu txt="Kitérők"/>
     <ru txt="Переключатели"/>
+    <pt txt="Interruptores"/>
   </Msg>
   <Msg id="signal">
     <de txt="Signal"/>
@@ -2104,6 +2229,7 @@
     <el txt="Signal"/>
     <hu txt="Jelző"/>
     <ru txt="Сигнал"/>
+    <pt txt="Sinal"/>
   </Msg>
   <Msg id="signals">
     <de txt="Signale"/>
@@ -2120,6 +2246,7 @@
     <el txt="Σήματα"/>
     <hu txt="Jelzők"/>
     <ru txt="Сигналы"/>
+    <pt txt="Sinais"/>
   </Msg>
   <Msg id="sensor">
     <de txt="Rückmeldung"/>
@@ -2137,6 +2264,7 @@
     <el txt="Sensor"/>
     <hu txt="Szenzor"/>
     <ru txt="Датчик"/>
+    <pt txt="Sensor"/>
   </Msg>
   <Msg id="setlocid" dialog="true">
     <de txt="Lokbelegung setzen"/>
@@ -2152,6 +2280,7 @@
     <el txt="Σετ μηχανής εκχώρηση"/>
     <hu txt="Mozdony hozzárendelés"/>
     <ru txt="Установка локомотивных назначений"/>
+    <pt txt="Assignar atributos na locomotiva"/>
   </Msg>
   <Msg id="resetlocid">
     <de txt="Lokbelegung zurücknehmen"/>
@@ -2167,6 +2296,7 @@
     <el txt="Καθαρισμός μηχανής εκχώρηση"/>
     <hu txt="Mozdony hozzárendelés törlése"/>
     <ru txt="Сброс локомотивных назначений"/>
+    <pt txt="Reiniciar o que foi assignado na locomotiva"/>
   </Msg>
   <Msg id="close">
     <de txt="Schliessen"/>
@@ -2184,6 +2314,7 @@
     <el txt="Κλείνω"/>
     <hu txt="Bezárás"/>
     <ru txt="Закрыть"/>
+    <pt txt="Fechar"/>
   </Msg>
   <Msg id="rotate">
     <de txt="Drehen"/>
@@ -2201,6 +2332,7 @@
     <el txt="Περιστροφή"/>
     <hu txt="Forgat"/>
     <ru txt="Повернуть"/>
+    <pt txt="Rodar"/>
   </Msg>
   <Msg id="type">
     <de txt="Typ"/>
@@ -2218,6 +2350,7 @@
     <el txt="Τύπος"/>
     <hu txt="Típus"/>
     <ru txt="Тип"/>
+    <pt txt="Tipo"/>
   </Msg>
   <Msg id="nexttrack">
     <de txt="Folgendes Gleis"/>
@@ -2234,6 +2367,7 @@
     <el txt="Επόμενο κομμάτι"/>
     <hu txt="Következő pályaszakasz"/>
     <ru txt="Следующий путь"/>
+    <pt txt="Próximo circuito"/>
   </Msg>
   <Msg id="prevtrack">
     <de txt="Vorheriges Gleis"/>
@@ -2249,6 +2383,7 @@
     <el txt="Προηγούμενο κομμάτι"/>
     <hu txt="Előző páyaszakasz"/>
     <ru txt="Предыдущий путь"/>
+    <pt txt="Circuito anterior"/>
   </Msg>
   <Msg id="turn180">
     <de txt="180 Gr. drehen"/>
@@ -2265,6 +2400,7 @@
     <el txt="Turn 180"/>
     <hu txt="Forgatás 180 fokkal"/>
     <ru txt="Повернуть на 180"/>
+    <pt txt="Curva 180"/>
   </Msg>
   <Msg id="gototrack">
     <de txt="Gehe zum Gleis"/>
@@ -2281,6 +2417,7 @@
     <el txt="Goto τροχιάς"/>
     <hu txt="Ugrás pályaszakaszra"/>
     <ru txt="Перейти к пути"/>
+    <pt txt="Ir para circuito"/>
   </Msg>
   <Msg id="rotationvelocity">
     <de txt="Drehgeschwindigkeit"/>
@@ -2296,6 +2433,7 @@
     <el txt="Ταχύτητα περιστροφής"/>
     <hu txt="Forgás sebessége"/>
     <ru txt="Скорость вращения"/>
+    <pt txt="Velocidade de rotação"/>
   </Msg>
   <Msg id="info">
     <de txt="Informationen"/>
@@ -2311,6 +2449,7 @@
     <el txt="Πληροφορίες"/>
     <hu txt="Információk"/>
     <ru txt="Информация"/>
+    <pt txt="Informação"/>
   </Msg>
   <Msg id="start">
     <de txt="Start"/>
@@ -2328,6 +2467,7 @@
     <el txt="Εκκίνηση"/>
     <hu txt="Indítás"/>
     <ru txt="Старт"/>
+    <pt txt="Iniciar"/>
   </Msg>
   <Msg id="index">
     <de txt="Übersicht"/>
@@ -2345,6 +2485,7 @@
     <el txt="Ευρετήριο"/>
     <hu txt="Index"/>
     <ru txt="Индекс"/>
+    <pt txt="Índice"/>
   </Msg>
   <Msg id="general">
     <de txt="Allgemein"/>
@@ -2362,6 +2503,7 @@
     <el txt="Γενικά"/>
     <hu txt="Általános"/>
     <ru txt="Общие"/>
+    <pt txt="Geral"/>
   </Msg>
   <Msg id="location">
     <de txt="Position"/>
@@ -2380,6 +2522,7 @@
     <el txt="Τοποθεσία"/>
     <hu txt="Hely"/>
     <ru txt="Расположение"/>
+    <pt txt="Localização"/>
   </Msg>
   <Msg id="wirering">
     <de txt="Verkabelung"/>
@@ -2396,6 +2539,7 @@
     <el txt="Καλωδίωση"/>
     <hu txt="Bekötés"/>
     <ru txt="Проводка"/>
+    <pt txt="Ligação por cabo"/>
   </Msg>
   <Msg id="details">
     <de txt="Details"/>
@@ -2413,6 +2557,7 @@
     <el txt="Λεπτομέρειες"/>
     <hu txt="Részletek"/>
     <ru txt="Подробности"/>
+    <pt txt="Detalhes"/>
   </Msg>
   <Msg id="routes">
     <de txt="Fahrstraßen"/>
@@ -2429,6 +2574,7 @@
     <el txt="Διαδρομές"/>
     <hu txt="Útvonalak"/>
     <ru txt="Маршруты"/>
+    <pt txt="Rotas"/>
   </Msg>
   <Msg id="route">
     <de txt="Fahrstraße"/>
@@ -2445,6 +2591,7 @@
     <el txt="Διαδρομή"/>
     <hu txt="Útvonal"/>
     <ru txt="Маршрут"/>
+    <pt txt="Rota"/>
   </Msg>
   <Msg id="new" key="Ctrl-N">
     <de txt="Neu" tip="Neues Gleisbild"/>
@@ -2462,6 +2609,7 @@
     <el txt="Νέος"/>
     <hu txt="Új"/>
     <ru txt="Новый"/>
+    <pt txt="Novo"/>
   </Msg>
   <Msg id="description">
     <de txt="Beschreibung"/>
@@ -2477,6 +2625,7 @@
     <el txt="Περιγραφή"/>
     <hu txt="Leírás"/>
     <ru txt="Описание"/>
+    <pt txt="Descrição"/>
   </Msg>
   <Msg id="length">
     <de txt="Länge"/>
@@ -2494,6 +2643,7 @@
     <el txt="Μήκος"/>
     <hu txt="Hossz"/>
     <ru txt="Длина"/>
+    <pt txt="Comprimento"/>
   </Msg>
   <Msg id="locid">
     <de txt="Lokkennung"/>
@@ -2510,6 +2660,7 @@
     <el txt="Loc ID"/>
     <hu txt="Mozdony ID"/>
     <ru txt="ID Локомотива"/>
+    <pt txt="Loc ID"/>
   </Msg>
   <Msg id="turntableid">
     <de txt="Drehscheibenkennung"/>
@@ -2525,6 +2676,7 @@
     <el txt="Στρεφόμενη ID"/>
     <hu txt="Fordítókorong ID"/>
     <ru txt="ID Поворотного круга"/>
+    <pt txt="Id da placa giratória"/>
   </Msg>
   <Msg id="configuration">
     <de txt="Konfiguration"/>
@@ -2540,6 +2692,7 @@
     <el txt="Διαμόρφωση"/>
     <hu txt="Konfiguráció"/>
     <ru txt="Кофигурация"/>
+    <pt txt="Configuração"/>
   </Msg>
   <Msg id="electrified">
     <de txt="Elektrifiziert"/>
@@ -2555,6 +2708,7 @@
     <el txt="Ηλεκτροκίνησης"/>
     <hu txt="Villamosított"/>
     <ru txt="Электрофицированный"/>
+    <pt txt="Electrificado"/>
   </Msg>
   <Msg id="closed">
     <de txt="gesperrt"/>
@@ -2571,6 +2725,7 @@
     <el txt="Κλειστή"/>
     <hu txt="Lezárt"/>
     <ru txt="Закрытый"/>
+    <pt txt="Fechado"/>
   </Msg>
   <Msg id="x">
     <de txt="X"/>
@@ -2588,6 +2743,7 @@
     <el txt="X"/>
     <hu txt="X"/>
     <ru txt="Х"/>
+    <pt txt="X"/>
   </Msg>
   <Msg id="y">
     <de txt="Y"/>
@@ -2605,6 +2761,7 @@
     <el txt="Y"/>
     <hu txt="Y"/>
     <ru txt="Y"/>
+    <pt txt="Y"/>
   </Msg>
   <Msg id="z">
     <de txt="Z"/>
@@ -2622,6 +2779,7 @@
     <el txt="Z"/>
     <hu txt="Z"/>
     <ru txt="Z"/>
+    <pt txt="Z"/>
   </Msg>
   <Msg id="orientation">
     <de txt="Lage"/>
@@ -2637,6 +2795,7 @@
     <el txt="Προσανατολισμός"/>
     <hu txt="Irány"/>
     <ru txt="Ориентация"/>
+    <pt txt="Orientação"/>
   </Msg>
   <Msg id="north">
     <de txt="Nord"/>
@@ -2654,6 +2813,7 @@
     <el txt="Βόρεια"/>
     <hu txt="Észak"/>
     <ru txt="Север"/>
+    <pt txt="Norte"/>
   </Msg>
   <Msg id="east">
     <de txt="Ost"/>
@@ -2671,6 +2831,7 @@
     <el txt="Ανατολή"/>
     <hu txt="Kelet"/>
     <ru txt="Восток"/>
+    <pt txt="Este"/>
   </Msg>
   <Msg id="south">
     <de txt="Süd"/>
@@ -2688,6 +2849,7 @@
     <el txt="Νότια"/>
     <hu txt="Dél"/>
     <ru txt="Юг"/>
+    <pt txt="Sul"/>
   </Msg>
   <Msg id="west">
     <de txt="West"/>
@@ -2705,6 +2867,7 @@
     <el txt="Δύση"/>
     <hu txt="Nyugat"/>
     <ru txt="Запад"/>
+    <pt txt="Oeste"/>
   </Msg>
   <Msg id="speed">
     <de txt="Geschwindigkeit"/>
@@ -2722,6 +2885,7 @@
     <el txt="Ταχύτητα"/>
     <hu txt="Sebesség"/>
     <ru txt="Скорость"/>
+    <pt txt="Velocidade"/>
   </Msg>
   <Msg id="speedsteps">
     <de txt="Dekoderstufen"/>
@@ -2737,6 +2901,7 @@
     <el txt="Αποκωδικοποιητή βήματα"/>
     <hu txt="Dekóder sebességfokozat"/>
     <ru txt="Шаги декодера"/>
+    <pt txt="Etapas do descodificador"/>
   </Msg>
   <Msg id="min">
     <de txt="Min."/>
@@ -2753,6 +2918,7 @@
     <el txt="Ελάχ."/>
     <hu txt="Min."/>
     <ru txt="Мин."/>
+    <pt txt="Mín."/>
   </Msg>
   <Msg id="mid">
     <de txt="Mid."/>
@@ -2769,6 +2935,7 @@
     <el txt="Mid."/>
     <hu txt="Köz."/>
     <ru txt="средний"/>
+    <pt txt="Mid."/>
   </Msg>
   <Msg id="cruise">
     <de txt="Mittel"/>
@@ -2785,6 +2952,7 @@
     <el txt="Κρουαζιέρα"/>
     <hu txt="Menet"/>
     <ru txt="Рейс"/>
+    <pt txt="Curso"/>
   </Msg>
   <Msg id="max">
     <de txt="Max."/>
@@ -2801,6 +2969,7 @@
     <el txt="Μέγ."/>
     <hu txt="Max."/>
     <ru txt="Макс."/>
+    <pt txt="Máx."/>
   </Msg>
   <Msg id="local">
     <de txt="Lokal"/>
@@ -2818,6 +2987,7 @@
     <el txt="Τοπικά"/>
     <hu txt="Személy"/>
     <ru txt="Местный"/>
+    <pt txt="Local"/>
   </Msg>
   <Msg id="ice">
     <de txt="ICE"/>
@@ -2834,6 +3004,7 @@
     <el txt="Intercity"/>
     <hu txt="Intercity"/>
     <ru txt="Междугородние"/>
+    <pt txt="Intercidades"/>
   </Msg>
   <Msg id="goods">
     <de txt="Güter"/>
@@ -2850,6 +3021,7 @@
     <el txt="Ναύλος"/>
     <hu txt="Teher"/>
     <ru txt="Грузовые"/>
+    <pt txt="Carga"/>
   </Msg>
   <Msg id="shunting">
     <de txt="Rangieren"/>
@@ -2866,6 +3038,7 @@
     <el txt="Ελιγμοί"/>
     <hu txt="Tolató"/>
     <ru txt="Маневровое передвижение"/>
+    <pt txt="Shunting"/>
   </Msg>
   <Msg id="incline">
     <de txt="Steigung"/>
@@ -2882,6 +3055,7 @@
     <el txt="Κλίση"/>
     <hu txt="Lejtés"/>
     <ru txt="Наклонная плоскость"/>
+    <pt txt="Inclinado"/>
   </Msg>
   <Msg id="none">
     <de txt="Keine"/>
@@ -2899,6 +3073,7 @@
     <el txt="Δεν υφίσταται"/>
     <hu txt="Nincs"/>
     <ru txt="Отсутствует"/>
+    <pt txt="Nenhum"/>
   </Msg>
   <Msg id="up">
     <de txt="Aufwärts"/>
@@ -2916,6 +3091,7 @@
     <el txt="Πάνω"/>
     <hu txt="Emelkedő"/>
     <ru txt="Вверх"/>
+    <pt txt="Cima"/>
   </Msg>
   <Msg id="down">
     <de txt="Herunter"/>
@@ -2933,6 +3109,7 @@
     <el txt="Κάτω"/>
     <hu txt="Lejtő"/>
     <ru txt="Вниз"/>
+    <pt txt="Baixo"/>
   </Msg>
   <Msg id="wait">
     <de txt="Warten"/>
@@ -2950,6 +3127,7 @@
     <el txt="Περιμένω"/>
     <hu txt="Várakozás"/>
     <ru txt="Ожидание"/>
+    <pt txt="Esperar"/>
   </Msg>
   <Msg id="random">
     <de txt="Zufall"/>
@@ -2967,6 +3145,7 @@
     <el txt="Τυχαία"/>
     <hu txt="Véletlen"/>
     <ru txt="Случайно"/>
+    <pt txt="Aleatório"/>
   </Msg>
   <Msg id="fixed">
     <de txt="Fest"/>
@@ -2984,6 +3163,7 @@
     <el txt="Σταθερές"/>
     <hu txt="Fix"/>
     <ru txt="Зафиксировано"/>
+    <pt txt="Fixo"/>
   </Msg>
   <Msg id="loc">
     <de txt="Lok"/>
@@ -3000,6 +3180,7 @@
     <el txt="Loc"/>
     <hu txt="Mozdony"/>
     <ru txt="Локомотив"/>
+    <pt txt="Loc"/>
   </Msg>
   <Msg id="waitdetails">
     <de txt="Wartedetails"/>
@@ -3015,6 +3196,7 @@
     <el txt="Περιμένετε λεπτομέρειες"/>
     <hu txt="Várakozás beállítások"/>
     <ru txt="Ждите детали"/>
+    <pt txt="Esperar por detalhes"/>
   </Msg>
   <Msg id="randommin">
     <de txt="Zufall Min."/>
@@ -3030,6 +3212,7 @@
     <el txt="Τυχαία Ελάχ."/>
     <hu txt="Véletlen Min."/>
     <ru txt="Случайно мин."/>
+    <pt txt="Min aleatório"/>
   </Msg>
   <Msg id="randommax">
     <de txt="Zufall Max."/>
@@ -3045,6 +3228,7 @@
     <el txt="Τυχαία Max."/>
     <hu txt="Véletlen Max."/>
     <ru txt="Случайно макс."/>
+    <pt txt="Max. aleatório"/>
   </Msg>
   <Msg id="apply">
     <de txt="Übernehmen"/>
@@ -3062,6 +3246,7 @@
     <el txt="Εφαρμόζω"/>
     <hu txt="Alkalmaz"/>
     <ru txt="Применить"/>
+    <pt txt="Aplicar"/>
   </Msg>
   <Msg id="title">
     <de txt="Überschrift"/>
@@ -3079,6 +3264,7 @@
     <el txt="Τίτλος"/>
     <hu txt="Cím"/>
     <ru txt="Заголовок"/>
+    <pt txt="Título"/>
   </Msg>
   <Msg id="host">
     <de txt="Rechnername"/>
@@ -3096,6 +3282,7 @@
     <el txt="Hostname"/>
     <hu txt="Host neve"/>
     <ru txt="Имя сервера"/>
+    <pt txt="Nome Anfitrião (Host)"/>
   </Msg>
   <Msg id="port">
     <de txt="Port"/>
@@ -3113,6 +3300,7 @@
     <el txt="Λιμάνι"/>
     <hu txt="Port"/>
     <ru txt="Порт"/>
+    <pt txt="Porta"/>
   </Msg>
   <Msg id="interface">
     <de txt="Schnittstelle"/>
@@ -3130,6 +3318,7 @@
     <el txt="Interface"/>
     <hu txt="Interfész"/>
     <ru txt="Интерфейс"/>
+    <pt txt="Interface"/>
   </Msg>
   <Msg id="state">
     <de txt="Status"/>
@@ -3146,6 +3335,7 @@
     <el txt="Κατάσταση"/>
     <hu txt="Állapot"/>
     <ru txt="Состояние"/>
+    <pt txt="Estado"/>
   </Msg>
   <Msg id="show">
     <de txt="Anzeigen"/>
@@ -3163,6 +3353,7 @@
     <el txt="Θέαμα"/>
     <hu txt="Megjelenít"/>
     <ru txt="Показать"/>
+    <pt txt="Mostrar"/>
   </Msg>
   <Msg id="iid">
     <de txt="Schnittstellenkennung"/>
@@ -3178,6 +3369,7 @@
     <el txt="Interface ID"/>
     <hu txt="Interfész ID"/>
     <ru txt="Идентификатор интерфейса"/>
+    <pt txt="Interface ID"/>
   </Msg>
   <Msg id="event">
     <de txt="Ereignis"/>
@@ -3195,6 +3387,7 @@
     <el txt="Εκδήλωση"/>
     <hu txt="Esemény"/>
     <ru txt="Событие"/>
+    <pt txt="Evento"/>
   </Msg>
   <Msg id="on_event">
     <de txt="Einschaltereignis"/>
@@ -3211,6 +3404,7 @@
     <el txt="Σε περίπτωση"/>
     <hu txt="Be esemény"/>
     <ru txt="Вкл. событие"/>
+    <pt txt="Evento ligado"/>
   </Msg>
   <Msg id="off_event">
     <de txt="Ausschaltereignis"/>
@@ -3227,6 +3421,7 @@
     <el txt="Off περίπτωση"/>
     <hu txt="Ki esemény"/>
     <ru txt="Выкл. событие"/>
+    <pt txt="Evento desligado"/>
   </Msg>
   <Msg id="catnr">
     <de txt="Katalognummer"/>
@@ -3242,6 +3437,7 @@
     <el txt="Κατάλογος αριθμό"/>
     <hu txt="Cikkszám"/>
     <ru txt="Каталожный номер"/>
+    <pt txt="Number de catálogo"/>
   </Msg>
   <Msg id="purchased">
     <de txt="Kaufdatum"/>
@@ -3257,6 +3453,7 @@
     <el txt="Ημερομηνία αγοράς"/>
     <hu txt="Beszerzés dátuma"/>
     <ru txt="Дата приобретения"/>
+    <pt txt="Data de compra"/>
   </Msg>
   <Msg id="runtime">
     <de txt="Laufzeit"/>
@@ -3273,6 +3470,7 @@
     <el txt="Εκτελέστε το χρόνο"/>
     <hu txt="Üzemidő"/>
     <ru txt="Время выполнения"/>
+    <pt txt="Tempo decorrido"/>
   </Msg>
   <Msg id="protocol">
     <de txt="Protokoll"/>
@@ -3290,6 +3488,7 @@
     <el txt="Πρωτόκολλο"/>
     <hu txt="Protokoll"/>
     <ru txt="Протокол"/>
+    <pt txt="Protocolo"/>
   </Msg>
   <Msg id="protocol_version">
     <de txt="Protokollversion"/>
@@ -3305,6 +3504,7 @@
     <el txt="Protocol έκδοση"/>
     <hu txt="Protokoll verzió"/>
     <ru txt="Версия протокола"/>
+    <pt txt="Versão do protocolo"/>
   </Msg>
   <Msg id="v_min">
     <de txt="V_Min" tip="Minimale Geschwindigkeit vorwärts"/>
@@ -3322,6 +3522,7 @@
     <el txt="V_Min"/>
     <hu txt="V_Min"/>
     <ru txt="V_Min"/>
+    <pt txt="V_Min"/>
   </Msg>
   <Msg id="v_mid">
     <de txt="V_Mid" tip="Mittlere Geschwindigkeit vorwärts"/>
@@ -3339,6 +3540,7 @@
     <el txt="V_Mid"/>
     <hu txt="V_Köz"/>
     <ru txt="V_Mid"/>
+    <pt txt="V_Mid"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -3356,6 +3558,7 @@
     <el txt="V_Max"/>
     <hu txt="V_Max"/>
     <ru txt="V_Max"/>
+    <pt txt="V_Max"/>
   </Msg>
   <Msg id="v_rmin">
     <de txt="V_RMin" tip="Minimale Geschwindigkeit rückwärts"/>
@@ -3373,6 +3576,7 @@
     <el txt="V_RMin"/>
     <hu txt="V_RMin"/>
     <ru txt="V_RMin"/>
+    <pt txt="V_RMin"/>
   </Msg>
   <Msg id="v_rmid">
     <de txt="V_RMid" tip="Mittlere Geschwindigkeit rückwärts"/>
@@ -3390,6 +3594,7 @@
     <el txt="V_RMid"/>
     <hu txt="V_RKöz"/>
     <ru txt="V_RMid"/>
+    <pt txt="V_RMid"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -3407,6 +3612,7 @@
     <el txt="V_RMax"/>
     <hu txt="V_RMax"/>
     <ru txt="V_RMax"/>
+    <pt txt="V_RMax"/>
   </Msg>
   <Msg id="v_step">
     <de txt="V_Step"/>
@@ -3423,6 +3629,7 @@
     <el txt="V_Step"/>
     <hu txt="V_Lépés"/>
     <ru txt="V_Step"/>
+    <pt txt="V_Step"/>
   </Msg>
   <Msg id="v_mode">
     <de txt="V_Modus"/>
@@ -3439,6 +3646,7 @@
     <el txt="V_Mode"/>
     <hu txt="V_Mód"/>
     <ru txt="V_Mode"/>
+    <pt txt="V_Mode"/>
   </Msg>
   <Msg id="percent">
     <de txt="Prozent"/>
@@ -3456,6 +3664,7 @@
     <el txt="Ποσοστό"/>
     <hu txt="Százalék"/>
     <ru txt="Процент"/>
+    <pt txt="Percentagem"/>
   </Msg>
   <Msg id="driverlib">
     <de txt="Lokführerbibliothek"/>
@@ -3471,6 +3680,7 @@
     <el txt="Οδηγός βιβλιοθήκη"/>
     <hu txt="Mozdonyvezető könyvtár"/>
     <ru txt="Библиотека драйверов"/>
+    <pt txt="Biblioteca do driver"/>
   </Msg>
   <Msg id="placing">
     <de txt="Platzierung"/>
@@ -3487,6 +3697,7 @@
     <el txt="Διάθεση"/>
     <hu txt="Elhelyezés"/>
     <ru txt="Размещение"/>
+    <pt txt="Colocar"/>
   </Msg>
   <Msg id="default">
     <de txt="Normal"/>
@@ -3504,6 +3715,7 @@
     <el txt="Προεπιλογή"/>
     <hu txt="Alapértelmezett"/>
     <ru txt="По умолчанию"/>
+    <pt txt="Predefinição"/>
   </Msg>
   <Msg id="fromto">
     <de txt="Von - Nach"/>
@@ -3520,6 +3732,7 @@
     <el txt="Από - Μέχρι"/>
     <ru txt="Из-к"/>
     <hu txt="Egy irányban"/>
+    <pt txt="De - Para"/>
   </Msg>
   <Msg id="blockwait">
     <de txt="Blockwartezeit"/>
@@ -3535,6 +3748,7 @@
     <el txt="Αποκλεισμός περιμένετε χρόνο"/>
     <hu txt="Térköz várakozási idő"/>
     <ru txt="Время ожидания блока"/>
+    <pt txt="Tempo de espera do bloco"/>
   </Msg>
   <Msg id="engine">
     <de txt="Antriebsart"/>
@@ -3552,6 +3766,7 @@
     <el txt="Κινητήρας"/>
     <hu txt="Mozdony típus"/>
     <ru txt="Локомотив"/>
+    <pt txt="Motor"/>
   </Msg>
   <Msg id="diesel">
     <de txt="Diesel"/>
@@ -3568,6 +3783,7 @@
     <el txt="Ντίζελ"/>
     <hu txt="Dízel"/>
     <ru txt="Дизель"/>
+    <pt txt="Diesel"/>
   </Msg>
   <Msg id="steam">
     <de txt="Dampf"/>
@@ -3584,6 +3800,7 @@
     <el txt="Ατμοστρόβιλος"/>
     <hu txt="Gőz"/>
     <ru txt="Паровоз"/>
+    <pt txt="Vapor"/>
   </Msg>
   <Msg id="electric">
     <de txt="Elektrisch"/>
@@ -3600,6 +3817,7 @@
     <el txt="Ηλεκτρικοί"/>
     <hu txt="Villamos"/>
     <ru txt="Электровоз"/>
+    <pt txt="Eléctrico"/>
   </Msg>
   <Msg id="cargo">
     <de txt="Zugart"/>
@@ -3616,6 +3834,7 @@
     <el txt="Αμαξοστοιχία τύπου"/>
     <hu txt="Vonat típus"/>
     <ru txt="Тип поезда"/>
+    <pt txt="Tipo de combóio"/>
   </Msg>
   <Msg id="passengers">
     <de txt="Personen"/>
@@ -3632,6 +3851,7 @@
     <el txt="Επιβατικά"/>
     <hu txt="Személy"/>
     <ru txt="Пассажирский"/>
+    <pt txt="Passageiro"/>
   </Msg>
   <Msg id="mixed">
     <de txt="Personen und Güter"/>
@@ -3649,6 +3869,7 @@
     <el txt="Μικτή"/>
     <hu txt="Vegyes"/>
     <ru txt="Смешанный"/>
+    <pt txt="Misto"/>
   </Msg>
   <Msg id="cleaning">
     <de txt="Reinigungswagen"/>
@@ -3665,6 +3886,7 @@
     <el txt="Καθαριστικά"/>
     <hu txt="Tisztító"/>
     <ru txt="Очистка"/>
+    <pt txt="Limpando"/>
   </Msg>
   <Msg id="ctrlmode">
     <de txt="Bedienung" tip="Gleisbild bedienen."/>
@@ -3681,6 +3903,7 @@
     <el txt="Operate"/>
     <hu txt="Irányít"/>
     <ru txt="Управлять"/>
+    <pt txt="Executar"/>
   </Msg>
   <Msg id="zoom">
     <de txt="Zoom" tip="Gleisbildgröße."/>
@@ -3698,6 +3921,7 @@
     <el txt="Ζουμ"/>
     <hu txt="Nagyít"/>
     <ru txt="Масштаб"/>
+    <pt txt="Ampliação"/>
   </Msg>
   <Msg id="trace">
     <de txt="Fehlerprotokoll"/>
@@ -3715,6 +3939,7 @@
     <el txt="Trace"/>
     <hu txt="Nyomkövetés"/>
     <ru txt="Трассировка"/>
+    <pt txt="Rasto (Trace)"/>
   </Msg>
   <Msg id="tracefile">
     <de txt="Fehlerprotokolldatei"/>
@@ -3731,6 +3956,7 @@
     <el txt="Trace αρχείου"/>
     <hu txt="Nyomkövetési állomány"/>
     <ru txt="Файл трассировки"/>
+    <pt txt="Ficheiro rasto (Trace)"/>
   </Msg>
   <Msg id="tracelevel">
     <de txt="Fehlerprotokollstufe"/>
@@ -3746,6 +3972,7 @@
     <el txt="Trace επίπεδο"/>
     <hu txt="Nyomkövetési szint"/>
     <ru txt="Уровень трассировки"/>
+    <pt txt="Nivel de Rasto (Trace)"/>
   </Msg>
   <Msg id="debug">
     <de txt="Debug"/>
@@ -3763,6 +3990,7 @@
     <el txt="Debug"/>
     <hu txt="Hibakeresés"/>
     <ru txt="Отладка"/>
+    <pt txt="Debug"/>
   </Msg>
   <Msg id="byte">
     <de txt="Byte"/>
@@ -3780,6 +4008,7 @@
     <el txt="Byte"/>
     <hu txt="Bájt szint"/>
     <ru txt="Байт"/>
+    <pt txt="Byte"/>
   </Msg>
   <Msg id="parse">
     <de txt="Analysieren"/>
@@ -3796,6 +4025,7 @@
     <el txt="Parse"/>
     <hu txt="Elemzés"/>
     <ru txt="Анализировать"/>
+    <pt txt="Processar"/>
   </Msg>
   <Msg id="service">
     <de txt="Dienste"/>
@@ -3812,6 +4042,7 @@
     <el txt="Υπηρεσία"/>
     <hu txt="Szolgáltatások"/>
     <ru txt="Служба"/>
+    <pt txt="Serviço"/>
   </Msg>
   <Msg id="controller">
     <de txt="Zentrale"/>
@@ -3828,6 +4059,7 @@
     <el txt="Ελεγκτή"/>
     <hu txt="Vezérlők"/>
     <ru txt="Контроллер"/>
+    <pt txt="Controlador"/>
   </Msg>
   <Msg id="libpath">
     <de txt="Bibliotheksverzeichnis"/>
@@ -3843,6 +4075,7 @@
     <el txt="Βιβλιοθήκη διαδρομή"/>
     <hu txt="Könyvtár elérési út"/>
     <ru txt="Путь к библиотеке"/>
+    <pt txt="localização da Biblioteca"/>
   </Msg>
   <Msg id="http">
     <de txt="HTTP-Dienste"/>
@@ -3858,6 +4091,7 @@
     <el txt="HTTP υπηρεσία"/>
     <hu txt="HTTP szerver"/>
     <ru txt="HTTP службы"/>
+    <pt txt="Serviço HTTP"/>
   </Msg>
   <Msg id="enable">
     <de txt="Freigeben"/>
@@ -3875,6 +4109,7 @@
     <el txt="Ενεργοποιώ"/>
     <hu txt="Engedélyezve"/>
     <ru txt="Разрешить"/>
+    <pt txt="Activar"/>
   </Msg>
   <Msg id="clientport">
     <de txt="Clientport"/>
@@ -3890,6 +4125,7 @@
     <el txt="Πελάτης λιμάνι"/>
     <hu txt="Kliens port"/>
     <ru txt="Порт клиента"/>
+    <pt txt="Porta cliente"/>
   </Msg>
   <Msg id="maxclientcon">
     <de txt="Max. Anzahl Clients"/>
@@ -3905,6 +4141,7 @@
     <el txt="Μέγ. αριθμός των πελατών"/>
     <hu txt="Kliensek max. száma"/>
     <ru txt="Макс. кол-во клиентов"/>
+    <pt txt="Numero maximo de clientes"/>
   </Msg>
   <Msg id="switchtime">
     <de txt="Weichenschaltzeit (ms)"/>
@@ -3920,6 +4157,7 @@
     <el txt="Προσέλευση διακόπτη χρόνου (ms)"/>
     <hu txt="Váltóállítási idő (ms)"/>
     <ru txt="Время переключения стрелки"/>
+    <pt txt="Tempo para mudar desvio/agulha (ms)"/>
   </Msg>
   <Msg id="minblocklen">
     <de txt="Min. Block - Zuglänge (cm)"/>
@@ -3935,6 +4173,7 @@
     <el txt="Ελάχ. μπλοκ - μήκος αμαξοστοιχίας (cm)"/>
     <hu txt="Min.térköz - vonat hossza (cm)"/>
     <ru txt="Мин. блок-длинна пути(см)"/>
+    <pt txt="Bloqueio minimo - comprimento comboio (cm)"/>
   </Msg>
   <Msg id="ignevent">
     <de txt="Ereignisse ignorieren innerhalb (10ms ticks)"/>
@@ -3950,6 +4189,7 @@
     <el txt="Παράβλεψη εκδηλώσεις εντός (10ms κροτώνων)"/>
     <hu txt="Gyors események szűrése (10ms egység)"/>
     <ru txt="Игнорируйте события в пределах (10ms импульсы )"/>
+    <pt txt="Ignar eventos dentro de (10ms ticks)"/>
   </Msg>
   <Msg id="bps">
     <de txt="Baudrate"/>
@@ -3966,6 +4206,7 @@
     <el txt="Baudrate"/>
     <hu txt="Baud sebesség"/>
     <ru txt="Скорость передачи данных"/>
+    <pt txt="Taxa de modulação (Baudrate)"/>
   </Msg>
   <Msg id="sensormodules">
     <de txt="Sensor Module (links, mitte, rechts, größe)"/>
@@ -3981,6 +4222,7 @@
     <el txt="Sensor Modules (αριστερά, μέση, δεξιά, μέγεθος)"/>
     <hu txt="Szenzor modulok (bal,közép,jobb,méret)"/>
     <ru txt="Модули датчика"/>
+    <pt txt="Modulos sensor (esquerda,centro,direita,tamanho)"/>
   </Msg>
   <Msg id="erddcdports">
     <de txt="Erddcd Ports (cmd,sensor,info)"/>
@@ -3995,6 +4237,7 @@
     <bg txt="Erddcd Пристанища (CMD, датчик, информация)"/>
     <el txt="Erddcd Λιμένων (cmd, αισθητήρα, info)"/>
     <hu txt="Erddcd Portok (cmd,sensor,info)"/>
+    <pt txt="Erddcd Ports (cmd,sensor,info)"/>
   </Msg>
   <Msg id="commands">
     <de txt="Befehle"/>
@@ -4012,6 +4255,7 @@
     <el txt="Commands"/>
     <hu txt="Parancsok"/>
     <ru txt="Команды"/>
+    <pt txt="Comandos"/>
   </Msg>
   <Msg id="command">
     <de txt="Befehl"/>
@@ -4029,6 +4273,7 @@
     <el txt="Command"/>
     <hu txt="Parancs"/>
     <ru txt="Команда"/>
+    <pt txt="Comando"/>
   </Msg>
   <Msg id="fromblock">
     <de txt="Von Block"/>
@@ -4045,6 +4290,7 @@
     <el txt="Από το μπλοκ"/>
     <hu txt="Kiinduló térköz"/>
     <ru txt="Из блока"/>
+    <pt txt="De bloco"/>
   </Msg>
   <Msg id="toblock">
     <de txt="Nach Block"/>
@@ -4061,6 +4307,7 @@
     <el txt="Για να αποκλείσετε"/>
     <hu txt="Cél térköz"/>
     <ru txt="К блоку"/>
+    <pt txt="Para bloco"/>
   </Msg>
   <Msg id="outputid">
     <de txt="Ausgangskennung"/>
@@ -4077,6 +4324,7 @@
     <el txt="Υλοποίηση ID"/>
     <hu txt="Kimenet ID"/>
     <ru txt="Идентификатор вывода"/>
+    <pt txt="ID saida"/>
   </Msg>
   <Msg id="output">
     <de txt="Ausgang"/>
@@ -4093,6 +4341,7 @@
     <el txt="Υλοποίηση"/>
     <hu txt="Kimenet"/>
     <ru txt="Вывод"/>
+    <pt txt="Saída (output)"/>
   </Msg>
   <Msg id="turnoutid">
     <de txt="Weichenkennung"/>
@@ -4109,6 +4358,7 @@
     <el txt="Προσέλευση ID"/>
     <hu txt="Kitérő ID"/>
     <ru txt="Идентификатор стрелки"/>
+    <pt txt="Desvio/agulha ID"/>
   </Msg>
   <Msg id="turnout_left">
     <de txt="Abbiegen (links)"/>
@@ -4124,6 +4374,7 @@
     <el txt="Προσέλευση (αριστερά)"/>
     <hu txt="Kitérő (bal)"/>
     <ru txt="Стрелка левая"/>
+    <pt txt="Desvio/agulha (esquerda)"/>
   </Msg>
   <Msg id="right_3way">
     <de txt="Rechts (Dreiweg)"/>
@@ -4139,6 +4390,7 @@
     <el txt="Δικαίωμα (3-way)"/>
     <hu txt="Kitérő (3 irányú)"/>
     <ru txt="Вправо(3-пути)"/>
+    <pt txt="Direita (3-vias)"/>
   </Msg>
   <Msg id="locked">
     <de txt="Belegt durch"/>
@@ -4155,6 +4407,7 @@
     <el txt="Κλειδωθεί από"/>
     <ru txt="Блокированный"/>
     <hu txt="Lezárva"/>
+    <pt txt="Bloqueado por"/>
   </Msg>
   <Msg id="invert">
     <de txt="Invertiert"/>
@@ -4171,6 +4424,7 @@
     <el txt="Αντιστροφή"/>
     <hu txt="Megfordít"/>
     <ru txt="Инвертировать"/>
+    <pt txt="Inverter"/>
   </Msg>
   <Msg id="sensor_green">
     <de txt="Rückmeldung Gerade"/>
@@ -4186,6 +4440,7 @@
     <el txt="Sensor ευθεία"/>
     <hu txt="Egyenes állás érzékelője"/>
     <ru txt="Датчик прямого пути"/>
+    <pt txt="Sensor recta"/>
   </Msg>
   <Msg id="sensor_red">
     <de txt="Rückmeldung Abbiegen"/>
@@ -4201,6 +4456,7 @@
     <el txt="Sensor προσέλευση"/>
     <hu txt="Kitérő állás érzékelője"/>
     <ru txt="Датчик стрелки"/>
+    <pt txt="Sensor desvio/agulha"/>
   </Msg>
   <Msg id="opposite">
     <de txt="Entgegengestellt"/>
@@ -4217,6 +4473,7 @@
     <el txt="Απέναντι"/>
     <hu txt="Ellenkező"/>
     <ru txt="Напротив"/>
+    <pt txt="Oposto"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -4232,6 +4489,7 @@
     <el txt="Αριθμός κομματιού"/>
     <hu txt="Vágány száma"/>
     <ru txt="Номер пути"/>
+    <pt txt="Numero de pista"/>
   </Msg>
   <Msg id="posfb">
     <de txt="Positionsrückmeldung"/>
@@ -4247,6 +4505,7 @@
     <el txt="Θέση αισθητήρα"/>
     <hu txt="Helyzet érzékelő"/>
     <ru txt="Позиционный датчик"/>
+    <pt txt="Sensor posição"/>
   </Msg>
   <Msg id="locfb">
     <de txt="Lokrückmeldung"/>
@@ -4263,6 +4522,7 @@
     <el txt="Loc αισθητήρα"/>
     <hu txt="Mozdony érzékelő"/>
     <ru txt="Датчик локомотива"/>
+    <pt txt="Sensor locomotiva"/>
   </Msg>
   <Msg id="turntabletrack">
     <de txt="Drehscheibengleis"/>
@@ -4278,6 +4538,7 @@
     <el txt="Στρεφόμενη τροχιάς"/>
     <hu txt="Fordítókorong vágány"/>
     <ru txt="Путь поворотног круга"/>
+    <pt txt="Pista de placa giratória"/>
   </Msg>
   <Msg id="add_track">
     <de txt="Gleis hinzufügen"/>
@@ -4294,6 +4555,7 @@
     <el txt="Προσθήκη γραμμής"/>
     <hu txt="Pálya hozzáadása"/>
     <ru txt="Добавить путь"/>
+    <pt txt="Adicionar pista"/>
   </Msg>
   <Msg id="del_track">
     <de txt="Gleis entfernen"/>
@@ -4309,6 +4571,7 @@
     <el txt="Διαγραφή γραμμής"/>
     <hu txt="Pálya törlése"/>
     <ru txt="Удалить путь"/>
+    <pt txt="Apagar pista"/>
   </Msg>
   <Msg id="blockid">
     <de txt="Blockkennung"/>
@@ -4325,6 +4588,7 @@
     <el txt="Αποκλεισμός ID"/>
     <hu txt="Térköz ID"/>
     <ru txt="Идентификатор блока"/>
+    <pt txt="Id do bloco"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
     <de txt="Ziel setzen" tip="Lok stoppt nach erreichen des Ziels."/>
@@ -4340,6 +4604,7 @@
     <el txt="Ορισμός προορισμού"/>
     <hu txt="Cél megadása"/>
     <ru txt="Установить пункт назначения"/>
+    <pt txt="Atribuir destino"/>
   </Msg>
   <Msg id="enterid">
     <de txt="Kennung eingeben"/>
@@ -4356,6 +4621,7 @@
     <el txt="Εισάγετε ID"/>
     <hu txt="ID megadása"/>
     <ru txt="Введите идентификатор"/>
+    <pt txt="Inserir ID"/>
   </Msg>
   <Msg id="entertext">
     <de txt="Text eingeben"/>
@@ -4372,6 +4638,7 @@
     <el txt="Εισαγάγετε κείμενο"/>
     <hu txt="Szöveg megadása"/>
     <ru txt="Введите текст"/>
+    <pt txt="Inserir texto"/>
   </Msg>
   <Msg id="fill">
     <de txt="Gleis auffüllen" tip="Füllt Gleise grau auf."/>
@@ -4387,6 +4654,7 @@
     <el txt="Συμπληρώστε κομμάτια"/>
     <hu txt="Pálya kiegészítése"/>
     <ru txt="Закрашивать пути"/>
+    <pt txt="Encher pistas"/>
   </Msg>
   <Msg id="outoforder">
     <de txt="Außer Betrieb setzen"/>
@@ -4402,6 +4670,7 @@
     <el txt="Τίθενται εκτός λειτουργίας"/>
     <hu txt="Forgalomból kizár"/>
     <ru txt="Вывести из эксплуатации"/>
+    <pt txt="Tirar fora de operação"/>
   </Msg>
   <Msg id="operational">
     <de txt="In Betrieb nehmen"/>
@@ -4417,6 +4686,7 @@
     <el txt="Τίθεται σε λειτουργία"/>
     <hu txt="Forgalomba állít"/>
     <ru txt="Ввести в эксплуатацию"/>
+    <pt txt="Meter dentro de operação"/>
   </Msg>
   <Msg id="raster">
     <de txt="Raster einblenden"/>
@@ -4433,6 +4703,7 @@
     <el txt="Δείτε το δίκτυο"/>
     <hu txt="Rács megjelenítése"/>
     <ru txt="Показать сетку"/>
+    <pt txt="Mostrar grelha"/>
   </Msg>
   <Msg id="locseldlg">
     <de txt="Lok Auswahl"/>
@@ -4448,6 +4719,7 @@
     <el txt="Loc Επιλογής"/>
     <hu txt="Mozdony kiválasztás"/>
     <ru txt="Выбор локомотива"/>
+    <pt txt="Selecção de locomotiva"/>
   </Msg>
   <Msg id="dir">
     <de txt="Richtung"/>
@@ -4464,6 +4736,7 @@
     <el txt="Σκηνοθεσία"/>
     <hu txt="Irány"/>
     <ru txt="Направление"/>
+    <pt txt="Direcção"/>
   </Msg>
   <Msg id="dirall">
     <de txt="Beide Richtungen"/>
@@ -4479,6 +4752,7 @@
     <el txt="Και οι δύο κατευθύνσεις"/>
     <hu txt="Mindkét irányban"/>
     <ru txt="Оба направления"/>
+    <pt txt="Ambas direções"/>
   </Msg>
   <Msg id="unused">
     <de txt="nicht belegt"/>
@@ -4495,6 +4769,7 @@
     <el txt="αχρησιμοποίητα"/>
     <hu txt="nem használt"/>
     <ru txt="неиспользованный"/>
+    <pt txt="Não usado"/>
   </Msg>
   <Msg id="lights">
     <de txt="Beleuchtung"/>
@@ -4511,6 +4786,7 @@
     <el txt="Φωτισμός"/>
     <hu txt="Fények"/>
     <ru txt="Огни"/>
+    <pt txt="uzes"/>
   </Msg>
   <Msg id="speedcontroller">
     <de txt="Geschwindigkeitsregler"/>
@@ -4526,6 +4802,7 @@
     <el txt="Διάταξη ελέγχου ταχύτητας"/>
     <hu txt="Sebesség szabályzó"/>
     <ru txt="Контроллер скорости"/>
+    <pt txt="Controldor de velocidade"/>
   </Msg>
   <Msg id="rocrail_help">
     <de txt="http://wiki.rocrail.net/doku.php?id=german"/>
@@ -4540,6 +4817,7 @@
     <bg txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <el txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <ru txt="http://wiki.rocrail.net/doku.php?id=english"/>
+    <pt txt="http://wiki.rocrail.net/doku.php?id=english"/>
   </Msg>
   <Msg id="Vstart">
     <de txt="Anfangsgeschwindigkeit"/>
@@ -4555,6 +4833,7 @@
     <el txt="Ξεκινήστε ταχύτητα βήμα"/>
     <hu txt="Induló sebességfokozat"/>
     <ru txt="Шаг начальной скорости"/>
+    <pt txt="Iniciar velocidade da etapa"/>
   </Msg>
   <Msg id="acceleration_rate">
     <de txt="Beschleunigungstufe"/>
@@ -4570,6 +4849,7 @@
     <el txt="Επιτάχυνση ποσοστό"/>
     <hu txt="Gyorsulás mértéke"/>
     <ru txt="Коэффициент ускорения"/>
+    <pt txt="Valor de aceleração"/>
   </Msg>
   <Msg id="deceleration_rate">
     <de txt="Bremsstufe"/>
@@ -4585,6 +4865,7 @@
     <el txt="Επιβράδυνση ποσοστό"/>
     <hu txt="Lassulás mértéke"/>
     <ru txt="Коэффициент торможения"/>
+    <pt txt="Valor de desaceleração"/>
   </Msg>
   <Msg id="Vhigh">
     <de txt="Höchstgeschwindigkeit"/>
@@ -4600,6 +4881,7 @@
     <el txt="Μέγιστη ταχύτητα βήμα"/>
     <hu txt="Maximális sebességfokozat"/>
     <ru txt="Шаг максимальной скорости"/>
+    <pt txt="Velocidade máxima da etapa"/>
   </Msg>
   <Msg id="Vmid">
     <de txt="Mittlere Geschwindigkeit"/>
@@ -4615,6 +4897,7 @@
     <el txt="Μέση ταχύτητα βήμα"/>
     <hu txt="Közepes sebességfokozat"/>
     <ru txt="Шаг средней скорости"/>
+    <pt txt="Velocidade média da etapa"/>
   </Msg>
   <Msg id="version">
     <de txt="Version"/>
@@ -4631,6 +4914,7 @@
     <el txt="Έκδοση"/>
     <hu txt="Verzió"/>
     <ru txt="Версия"/>
+    <pt txt="Versão"/>
   </Msg>
   <Msg id="manufactured_ID">
     <de txt="Herstellerkennung"/>
@@ -4646,6 +4930,7 @@
     <el txt="Κατασκευαστής ID"/>
     <hu txt="Gyártó azonosító"/>
     <ru txt="Идентификатор производителя"/>
+    <pt txt="ID do Fabricante"/>
   </Msg>
   <Msg id="documentation" dialog="true">
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
@@ -4663,6 +4948,7 @@
     <ru txt="Вручную"/>
     <bg txt="Ръчна"/>
     <el txt="Εγχειρίδιο"/>
+    <pt txt="Manual"/>
   </Msg>
   <Msg id="fbmodsize">
     <de txt="FB ports"/>
@@ -4679,6 +4965,7 @@
     <el txt="FB λιμάνια"/>
     <hu txt="FB portok"/>
     <ru txt="FB порты"/>
+    <pt txt="Portas FB"/>
   </Msg>
   <Msg id="swmodsize">
     <de txt="SW ports"/>
@@ -4695,6 +4982,7 @@
     <el txt="SW λιμάνια"/>
     <ru txt="SW порты"/>
     <hu txt="SW portok"/>
+    <pt txt="Portas SW"/>
   </Msg>
   <Msg id="switchaction">
     <de txt="Weiche Aktion"/>
@@ -4710,6 +4998,7 @@
     <el txt="Προσέλευση δράσης"/>
     <hu txt="Kitérő állítás"/>
     <ru txt="Действие стрелки"/>
+    <pt txt="Acção desvio/agulha"/>
   </Msg>
   <Msg id="signalaction">
     <de txt="Signal Aktion"/>
@@ -4725,6 +5014,7 @@
     <el txt="Signal δράσης"/>
     <hu txt="Jelző állítás"/>
     <ru txt="Действие сигнала"/>
+    <pt txt="Acção do sinal"/>
   </Msg>
   <Msg id="streetaction">
     <de txt="Fahrstraße Aktion"/>
@@ -4740,6 +5030,7 @@
     <el txt="Διαδρομή δράσης"/>
     <hu txt="Útvonal beállítás"/>
     <ru txt="Действие маршрута"/>
+    <pt txt="Acção da rota"/>
   </Msg>
   <Msg id="systemaction">
     <de txt="System Aktion"/>
@@ -4755,6 +5046,7 @@
     <el txt="Σύστημα δράσης"/>
     <hu txt="Rendszer művelet"/>
     <ru txt="Действие системы"/>
+    <pt txt="Acção do sistema"/>
   </Msg>
   <Msg id="enableaction">
     <de txt="Freischalten"/>
@@ -4770,6 +5062,7 @@
     <el txt="Ενεργοποίηση της δράσης"/>
     <hu txt="Engedélyezés művelet"/>
     <ru txt="Разрешить действие"/>
+    <pt txt="Habilitar acção"/>
   </Msg>
   <Msg id="action">
     <de txt="Aktion"/>
@@ -4786,6 +5079,7 @@
     <el txt="Δράση"/>
     <hu txt="Művelet"/>
     <ru txt="Действие"/>
+    <pt txt="Acção"/>
   </Msg>
   <Msg id="mass">
     <de txt="Masse"/>
@@ -4801,6 +5095,7 @@
     <bg txt="Маса"/>
     <el txt="Μάζα"/>
     <hu txt="Tömeg"/>
+    <pt txt="Massa"/>
   </Msg>
   <Msg id="visible">
     <de txt="sichtbar"/>
@@ -4817,6 +5112,7 @@
     <el txt="ορατή"/>
     <hu txt="látható"/>
     <ru txt="видимый"/>
+    <pt txt="visível"/>
   </Msg>
   <Msg id="module">
     <de txt="Module"/>
@@ -4833,6 +5129,7 @@
     <el txt="ενότητα"/>
     <hu txt="modul"/>
     <ru txt="модуль"/>
+    <pt txt="módulo"/>
   </Msg>
   <Msg id="trackdriver">
     <de txt="TD" tip="Analoge Loksteuerung"/>
@@ -4849,6 +5146,7 @@
     <ru txt="TD"/>
     <bg txt="TD"/>
     <el txt="TD"/>
+    <pt txt="TD"/>
   </Msg>
   <Msg id="sourceblock">
     <de txt="Quellblock"/>
@@ -4864,6 +5162,7 @@
     <el txt="Πηγή μπλοκ"/>
     <hu txt="Kiindulási térköz"/>
     <ru txt="Исходный блок"/>
+    <pt txt="Fonte do bloco"/>
   </Msg>
   <Msg id="linkedblocks">
     <de txt="Verknüpfte Blöcke"/>
@@ -4879,6 +5178,7 @@
     <el txt="Συνδέεται μπλοκ"/>
     <hu txt="Kapcsolt térközök"/>
     <ru txt="Связанные блоки"/>
+    <pt txt="Blocos associados"/>
   </Msg>
   <Msg id="activate">
     <de txt="Aktivieren"/>
@@ -4895,6 +5195,7 @@
     <el txt="Ενεργοποίηση"/>
     <hu txt="Aktivál"/>
     <ru txt="Активировать"/>
+    <pt txt="Activar"/>
   </Msg>
   <Msg id="signal_type">
     <de txt="Signaltyp"/>
@@ -4910,6 +5211,7 @@
     <el txt="Signal τύπου"/>
     <hu txt="Jelző típusa"/>
     <ru txt="Тип сигнала"/>
+    <pt txt="Tipo de sinal"/>
   </Msg>
   <Msg id="distant_signal">
     <de txt="Vorsignal"/>
@@ -4925,6 +5227,7 @@
     <el txt="Απόμακρος μήνυμα"/>
     <hu txt="Előjelző"/>
     <ru txt="Отдалённый сигнал"/>
+    <pt txt="Sinal distante"/>
   </Msg>
   <Msg id="main_signal">
     <de txt="Hauptsignal"/>
@@ -4940,6 +5243,7 @@
     <el txt="Κύρια μήνυμα"/>
     <hu txt="Főjelző"/>
     <ru txt="Основной сигнал"/>
+    <pt txt="Sinal principal"/>
   </Msg>
   <Msg id="shunting_signal">
     <de txt="Sperrsignal"/>
@@ -4955,6 +5259,7 @@
     <el txt="Ελιγμοί μήνυμα"/>
     <hu txt="Tolatásjelző"/>
     <ru txt="Маневровый сигнал"/>
+    <pt txt="Sinal de desvio"/>
   </Msg>
   <Msg id="signification">
     <de txt="Bedeutung"/>
@@ -4970,6 +5275,7 @@
     <el txt="Σημασία"/>
     <hu txt="Jelentés"/>
     <ru txt="Обозначение"/>
+    <pt txt="Significado"/>
   </Msg>
   <Msg id="light_signal">
     <de txt="Lichtsignal"/>
@@ -4985,6 +5291,7 @@
     <el txt="Φωτεινό"/>
     <hu txt="Fényjelző"/>
     <ru txt="Световой сигнал"/>
+    <pt txt="Sinal de luz"/>
   </Msg>
   <Msg id="semaphore_signal">
     <de txt="Formsignal"/>
@@ -5000,6 +5307,7 @@
     <el txt="Σηματοφόρος μήνυμα"/>
     <hu txt="Alakjelző"/>
     <ru txt="Сигнал семафора"/>
+    <pt txt="Signal Semaphore"/>
   </Msg>
   <Msg id="bus">
     <de txt="Bus"/>
@@ -5016,6 +5324,7 @@
     <el txt="Λεωφορεία"/>
     <hu txt="Busz"/>
     <ru txt="Шина"/>
+    <pt txt="Barramento"/>
   </Msg>
   <Msg id="free">
     <de txt="frei"/>
@@ -5032,6 +5341,7 @@
     <el txt="ελεύθερος"/>
     <hu txt="szabad"/>
     <ru txt="свободный"/>
+    <pt txt="livre"/>
   </Msg>
   <Msg id="buffer">
     <de txt="Prellbock"/>
@@ -5048,6 +5358,7 @@
     <el txt="Buffer"/>
     <hu txt="Ütközőbak"/>
     <ru txt="Буфер"/>
+    <pt txt="Buffer"/>
   </Msg>
   <Msg id="decoupler">
     <de txt="Entkoppler"/>
@@ -5064,6 +5375,7 @@
     <el txt="Decoupler"/>
     <hu txt="Szétkapcsoló"/>
     <ru txt="Развязка"/>
+    <pt txt="Desengatador"/>
   </Msg>
   <Msg id="endpulse">
     <de txt="Endimpuls"/>
@@ -5079,6 +5391,7 @@
     <bg txt="endpulse"/>
     <el txt="endpulse"/>
     <hu txt="utolsó impulzus"/>
+    <pt txt="Pulso fim"/>
   </Msg>
   <Msg id="ghost">
     <de txt="Geist"/>
@@ -5095,6 +5408,7 @@
     <el txt="φάντασμα"/>
     <hu txt="szellem"/>
     <ru txt="Призрак"/>
+    <pt txt="Fantasma"/>
   </Msg>
   <Msg id="text">
     <de txt="Text"/>
@@ -5111,6 +5425,7 @@
     <el txt="Κείμενο"/>
     <hu txt="Szöveg"/>
     <ru txt="Текст"/>
+    <pt txt="Texto"/>
   </Msg>
   <Msg id="deprecatedwirering">
     <de txt="Die neuen Events unter dem Fahrstraßenreiter sind vorzuziehen."/>
@@ -5126,6 +5441,7 @@
     <el txt="Οι νέες εκδηλώσεις που βρέθηκαν κατά την καρτέλα Διαδρομές προτιμάται."/>
     <hu txt="Az útvonal fülön található esemény létrehozás opció támogatott"/>
     <ru txt="Новые события найденные на вкладке Маршруты являются предпочтительными."/>
+    <pt txt="Os novos eventos encontrados na tabela de rotas são preferênciais"/>
   </Msg>
   <Msg id="notsaved">
     <de txt="Änderungen speichern?"/>
@@ -5141,6 +5457,7 @@
     <el txt="Αποθηκεύστε τις αλλαγές πριν το κλείσιμο;"/>
     <hu txt="Kilépés előtt mentsem a módosításokat?"/>
     <ru txt="Сохранить изменения перед закрытием?"/>
+    <pt txt="Guardar alterações antes de fechar?"/>
   </Msg>
   <Msg id="scheduletable" dialog="true" key="Ctrl-4">
     <de txt="Fahrpläne" tip="Fahrpläne"/>
@@ -5156,6 +5473,7 @@
     <el txt="Πρόγραμμα πίνακα"/>
     <hu txt="Menetrend lista"/>
     <ru txt="Таблица расписания"/>
+    <pt txt="Tabela de horarios"/>
   </Msg>
   <Msg id="schedule">
     <de txt="Fahrplan"/>
@@ -5172,6 +5490,7 @@
     <el txt="Πρόγραμμα"/>
     <hu txt="Menetrend"/>
     <ru txt="Расписание"/>
+    <pt txt="Horario"/>
   </Msg>
   <Msg id="hour">
     <de txt="Stunde"/>
@@ -5188,6 +5507,7 @@
     <el txt="ώρες"/>
     <hu txt="óra"/>
     <ru txt="час."/>
+    <pt txt="hora"/>
   </Msg>
   <Msg id="minute">
     <de txt="Minute"/>
@@ -5204,6 +5524,7 @@
     <el txt="λεπτά"/>
     <hu txt="perc"/>
     <ru txt="мин."/>
+    <pt txt="minuto"/>
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaften" tip="Ortschaften"/>
@@ -5219,6 +5540,7 @@
     <el txt="Τοποθεσία πίνακα"/>
     <hu txt="Hely lista"/>
     <ru txt="Таблица местоположения"/>
+    <pt txt="Tabela de localização"/>
   </Msg>
   <Msg id="location">
     <de txt="Ortschaft"/>
@@ -5235,6 +5557,7 @@
     <ru txt="Местоположение"/>
     <bg txt="Местоположение"/>
     <el txt="Locality"/>
+    <pt txt="Localidade"/>
   </Msg>
   <Msg id="locations">
     <de txt="Ortschaften"/>
@@ -5251,6 +5574,7 @@
     <el txt="Τοποθεσιών"/>
     <hu txt="Helységek"/>
     <ru txt="Окрестности"/>
+    <pt txt="Localidades"/>
   </Msg>
   <Msg id="from">
     <de txt="von"/>
@@ -5267,6 +5591,7 @@
     <el txt="από"/>
     <hu txt="honnan"/>
     <ru txt="из"/>
+    <pt txt="de"/>
   </Msg>
   <Msg id="to">
     <de txt="nach"/>
@@ -5283,6 +5608,7 @@
     <el txt="κατά"/>
     <hu txt="hová"/>
     <ru txt="К"/>
+    <pt txt="para"/>
   </Msg>
   <Msg id="time">
     <de txt="Zeit"/>
@@ -5299,6 +5625,7 @@
     <el txt="χρόνος"/>
     <hu txt="idő"/>
     <ru txt="время"/>
+    <pt txt="hora"/>
   </Msg>
   <Msg id="selectschedule" dialog="true">
     <de txt="Fahrplan auswählen"/>
@@ -5314,6 +5641,7 @@
     <el txt="Επιλέξτε χρονοδιάγραμμα"/>
     <hu txt="Menetrend választás"/>
     <ru txt="Выбор расписания"/>
+    <pt txt="Seleccionar horario"/>
   </Msg>
   <Msg id="modify">
     <de txt="Ändern"/>
@@ -5330,6 +5658,7 @@
     <el txt="τροποποιήσει"/>
     <hu txt="módosítás"/>
     <ru txt="модифицировать"/>
+    <pt txt="modificar"/>
   </Msg>
   <Msg id="refresh">
     <de txt="refresh"/>
@@ -5346,6 +5675,7 @@
     <el txt="φρεσκάρω"/>
     <hu txt="frissítés"/>
     <ru txt="обновить"/>
+    <pt txt="actualizar"/>
   </Msg>
   <Msg id="webclient">
     <de txt="WebClient"/>
@@ -5362,6 +5692,7 @@
     <el txt="WebClient"/>
     <hu txt="WebClient"/>
     <ru txt="WebКлиент"/>
+    <pt txt="Cliente Web"/>
   </Msg>
   <Msg id="gomanual">
     <de txt="Halbautomatisch"/>
@@ -5377,6 +5708,7 @@
     <el txt="Μισό αυτόματο"/>
     <hu txt="Félautomata"/>
     <ru txt="Полуавтоматический"/>
+    <pt txt="Metade automatico"/>
   </Msg>
   <Msg id="mic" dialog="true" key="Ctrl-M">
     <de txt="MIC" tip="Mouse Integrated Controller"/>
@@ -5393,6 +5725,7 @@
     <el txt="MIC"/>
     <hu txt="MIC"/>
     <ru txt="MIC"/>
+    <pt txt="MIC"/>
   </Msg>
   <Msg id="mode">
     <de txt="Modus"/>
@@ -5409,6 +5742,7 @@
     <el txt="Mode"/>
     <hu txt="Mód"/>
     <ru txt="Режим"/>
+    <pt txt="Modo"/>
   </Msg>
   <Msg id="path">
     <de txt="Verzeichnis"/>
@@ -5425,6 +5759,7 @@
     <el txt="Μονοπάτη"/>
     <hu txt="Útvonal"/>
     <ru txt="Часть"/>
+    <pt txt="Localização"/>
   </Msg>
   <Msg id="power">
     <de txt="Fahrstrom"/>
@@ -5441,6 +5776,7 @@
     <el txt="Ισχύς"/>
     <hu txt="Feszültség"/>
     <ru txt="Мощность"/>
+    <pt txt="Potência"/>
   </Msg>
   <Msg id="repeat">
     <de txt="Wiederholrate"/>
@@ -5457,6 +5793,7 @@
     <el txt="Επαναλάβετε"/>
     <hu txt="Ismétlés"/>
     <ru txt="Повтор"/>
+    <pt txt="Repetir"/>
   </Msg>
   <Msg id="use">
     <de txt="Benutze"/>
@@ -5473,6 +5810,7 @@
     <el txt="Χρήσηχρήση:"/>
     <hu txt="Felhasználás"/>
     <ru txt="Использовать"/>
+    <pt txt="Usar"/>
   </Msg>
   <Msg id="ric">
     <de txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -5489,6 +5827,7 @@
     <el txt="RIC"/>
     <hu txt="RIC"/>
     <ru txt="RIC"/>
+    <pt txt="RIC"/>
   </Msg>
   <Msg id="stoponexit">
     <de txt="Halt nach beenden"/>
@@ -5504,6 +5843,7 @@
     <el txt="Σταματήστε την έξοδο"/>
     <hu txt="Kilépéskor megállít"/>
     <ru txt="Останавливаться на выезде"/>
+    <pt txt="Parar na saida"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
     <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
@@ -5519,6 +5859,7 @@
     <el txt="Rocview Ακίνητα"/>
     <hu txt="Rocview tulajdonságok"/>
     <ru txt="Свойства RockView"/>
+    <pt txt="Propriedades Rocview"/>
   </Msg>
   <Msg id="bktext">
     <de txt="Blocktext Skalierung"/>
@@ -5533,6 +5874,7 @@
     <bg txt="Blocktext лющене"/>
     <el txt="Blocktext κλιμάκωση"/>
     <hu txt="Szövegméret"/>
+    <pt txt="Bloco de texto escalonado"/>
   </Msg>
   <Msg id="gate">
     <de txt="Ausgang"/>
@@ -5549,6 +5891,7 @@
     <el txt="Πύλη"/>
     <hu txt="Kapu"/>
     <ru txt="Шлюз"/>
+    <pt txt="Portão"/>
   </Msg>
   <Msg id="identifier">
     <de txt="Identifier"/>
@@ -5565,6 +5908,7 @@
     <el txt="Identifier"/>
     <hu txt="Azonosító"/>
     <ru txt="Идентификатор"/>
+    <pt txt="Identificador"/>
   </Msg>
   <Msg id="dispatch">
     <de txt="Bereitstellen für Regler" tip="Bereitstellung der Lokadresse für Übernahme am Regler."/>
@@ -5580,6 +5924,7 @@
     <el txt="Η αποστολή για την πεταλούδα"/>
     <hu txt="Irányítóhoz rendel"/>
     <ru txt="Отправка на пульт управления"/>
+    <pt txt="Expedir para acelerador"/>
   </Msg>
   <Msg id="samedir">
     <de txt="Fahrziel in Fahrtrichtung" tip="Sucht neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
@@ -5594,6 +5939,7 @@
     <bg txt="същата дестинация посока"/>
     <el txt="ίδιο προορισμό κατεύθυνση"/>
     <hu txt="azonos menetirány"/>
+    <pt txt="Mesma direcção de destino"/>
   </Msg>
   <Msg id="oppositedir">
     <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Sucht neues Fahrziel in der entgegengesetzten Fahrtrichtung."/>
@@ -5608,6 +5954,7 @@
     <bg txt="противоположните дестинации"/>
     <el txt="αντίθετο προορισμούς"/>
     <hu txt="változó menetirány"/>
+    <pt txt="Destinos opostos"/>
   </Msg>
   <Msg id="forcesamedir">
     <de txt="Fahrtrichtungswechsel verhindern" tip="Sucht nur neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
@@ -5622,6 +5969,7 @@
     <bg txt="сила същата дестинация посока"/>
     <el txt="ισχύει ίδιο προορισμό κατεύθυνση"/>
     <hu txt="kötelező azonos menetirány"/>
+    <pt txt="Forçar a mesma direcção de destino"/>
   </Msg>
   <Msg id="deactivate">
     <de txt="Deaktivieren"/>
@@ -5638,6 +5986,7 @@
     <el txt="Απενεργοποίηση"/>
     <hu txt="Deaktivál"/>
     <ru txt="Деактивировать"/>
+    <pt txt="Desactivar"/>
   </Msg>
   <Msg id="criticalsection">
     <de txt="Kritischer Blockabschnitt"/>
@@ -5653,6 +6002,7 @@
     <el txt="Κρίσιμο σημείο"/>
     <hu txt="Kritikus szakasz"/>
     <ru txt="Критичная секция"/>
+    <pt txt="Secção critica"/>
   </Msg>
   <Msg id="eventtimer">
     <de txt="Ereignis-Zeitgeber"/>
@@ -5668,6 +6018,7 @@
     <el txt="Εκδήλωση με χρονοδιακόπτη"/>
     <hu txt="Esemény számláló"/>
     <ru txt="Таймер события"/>
+    <pt txt="Temporizador de eventos"/>
   </Msg>
   <Msg id="acceptghost">
     <de txt="Akzeptiere Geisterzug"/>
@@ -5683,6 +6034,7 @@
     <el txt="Αποδοχή φάντασμα τρένα"/>
     <hu txt="Szellemvonat megengedett"/>
     <ru txt="Принять призрак поезда"/>
+    <pt txt="Aceitar comboios fantasma"/>
   </Msg>
   <Msg id="cx">
     <de txt="cx"/>
@@ -5698,6 +6050,7 @@
     <bg txt="CX"/>
     <el txt="cx"/>
     <hu txt="cx"/>
+    <pt txt="cx"/>
   </Msg>
   <Msg id="cy">
     <de txt="cy"/>
@@ -5713,6 +6066,7 @@
     <bg txt="CY"/>
     <el txt="cy"/>
     <hu txt="cy"/>
+    <pt txt="cy"/>
   </Msg>
   <Msg id="pointsize">
     <de txt="Punktgröße"/>
@@ -5728,6 +6082,7 @@
     <bg txt="Точка размер"/>
     <el txt="Σημείο μέγεθος"/>
     <hu txt="Pont méret"/>
+    <pt txt="Tamanho do ponto"/>
   </Msg>
   <Msg id="tip">
     <de txt="Hinweis"/>
@@ -5743,6 +6098,7 @@
     <bg txt="Съвет"/>
     <el txt="Συμβουλή"/>
     <hu txt="Végződés"/>
+    <pt txt="Dica"/>
   </Msg>
   <Msg id="device">
     <de txt="Gerät"/>
@@ -5759,6 +6115,7 @@
     <el txt="Συσκευή"/>
     <hu txt="Eszköz"/>
     <ru txt="Устройство"/>
+    <pt txt="Dispositivo"/>
   </Msg>
   <Msg id="terminalstation">
     <de txt="Kopfbahnhof"/>
@@ -5774,6 +6131,7 @@
     <el txt="Ο τερματικός σταθμός"/>
     <hu txt="Fejállomás"/>
     <ru txt="Терминальная станция"/>
+    <pt txt="Estação terminal"/>
   </Msg>
   <Msg id="hsi88">
     <de txt="High Speed Interface-88"/>
@@ -5789,6 +6147,7 @@
     <el txt="High Speed Interface-88"/>
     <hu txt="High Speed Interface-88"/>
     <ru txt="High Speed Interface-88"/>
+    <pt txt="Interafce-88 de alta velocidade"/>
   </Msg>
   <Msg id="barjut">
     <de txt="Barcode Erkennung"/>
@@ -5804,6 +6163,7 @@
     <el txt="Ανίχνευση Barcode"/>
     <hu txt="Vonalkód Olvasó"/>
     <ru txt="Штрих-код детектирование"/>
+    <pt txt="Detecção de código de barras"/>
   </Msg>
   <Msg id="ddl">
     <de txt="DDL"/>
@@ -5820,6 +6180,7 @@
     <el txt="DDL"/>
     <hu txt="DDL"/>
     <ru txt="DDL"/>
+    <pt txt="DDL"/>
   </Msg>
   <Msg id="dda">
     <de txt="Digital Direct for AWL"/>
@@ -5835,6 +6196,7 @@
     <el txt="Digital Direct για AWL"/>
     <hu txt="Digital Direct for AWL"/>
     <ru txt="Digital Direct для AWL"/>
+    <pt txt="Directo digital para AWL"/>
   </Msg>
   <Msg id="dinamo">
     <de txt="Dinamo"/>
@@ -5851,6 +6213,7 @@
     <el txt="Dinamo"/>
     <hu txt="Dinamo"/>
     <ru txt="Dinamo"/>
+    <pt txt="Dinamo"/>
   </Msg>
   <Msg id="srcp">
     <de txt="SRCP"/>
@@ -5867,6 +6230,7 @@
     <el txt="SRCP"/>
     <hu txt="SRCP"/>
     <ru txt="SRCP"/>
+    <pt txt="SRCP"/>
   </Msg>
   <Msg id="om32">
     <de txt="Dinamo OM32 serial"/>
@@ -5882,6 +6246,7 @@
     <el txt="Dinamo OM32 αύξοντα"/>
     <hu txt="Dinamo OM32 serial"/>
     <ru txt="Dinamo OM32 serial"/>
+    <pt txt="Dinamo OM32 serial"/>
   </Msg>
   <Msg id="p50">
     <de txt="Märklin 6050/51"/>
@@ -5897,6 +6262,7 @@
     <el txt="Märklin 6050/51"/>
     <hu txt="Märklin 6050/51"/>
     <ru txt="Märklin 6050/51"/>
+    <pt txt="Märklin 6050/51"/>
   </Msg>
   <Msg id="p50x">
     <de txt="Intellibox (Erweitertes P50)"/>
@@ -5912,6 +6278,7 @@
     <el txt="Intellibox (Extended P50)"/>
     <hu txt="Intellibox (Extended P50)"/>
     <ru txt="Intellibox (Extended P50)"/>
+    <pt txt="Intellibox (Extended P50)"/>
   </Msg>
   <Msg id="slx">
     <de txt="SLX825"/>
@@ -5928,6 +6295,7 @@
     <el txt="SLX825"/>
     <hu txt="SLX825"/>
     <ru txt="SLX825"/>
+    <pt txt="SLX825"/>
   </Msg>
   <Msg id="inter10">
     <de txt="LDT"/>
@@ -5944,6 +6312,7 @@
     <el txt="LDT"/>
     <hu txt="LDT"/>
     <ru txt="LDT"/>
+    <pt txt="LDT"/>
   </Msg>
   <Msg id="zimo">
     <de txt="Zimo MX1"/>
@@ -5960,6 +6329,7 @@
     <el txt="Zimo ΜΧ1"/>
     <hu txt="Zimo MX1"/>
     <ru txt="Zimo MX1"/>
+    <pt txt="Zimo MX1"/>
   </Msg>
   <Msg id="lenz">
     <de txt="Lenz"/>
@@ -5976,6 +6346,7 @@
     <el txt="Lenz"/>
     <hu txt="Lenz"/>
     <ru txt="Lenz"/>
+    <pt txt="Lenz"/>
   </Msg>
   <Msg id="dirpause">
     <de txt="Wechsel Pause" tip="Pause xxxms nach dem Schalten der letzten Weiche."/>
@@ -5991,6 +6362,7 @@
     <el txt="DirChange διακόψετε"/>
     <hu txt="Irányváltási szünet"/>
     <ru txt="DirChange пауза"/>
+    <pt txt="DirChange pause"/>
   </Msg>
   <Msg id="dirchgspd">
     <de txt="V=0 bei wechsel" tip="Setze Geschwindigkeit auf 0 bei Richtungswechsel."/>
@@ -6006,6 +6378,7 @@
     <el txt="V = 0 στο dir αλλαγή"/>
     <hu txt="V=0 irányváltáskor"/>
     <ru txt="V=0 at dir change"/>
+    <pt txt="V=0 at dir change"/>
   </Msg>
   <Msg id="destinations">
     <de txt="Ziele"/>
@@ -6021,6 +6394,7 @@
     <el txt="Προορισμοι"/>
     <hu txt="Célállomások"/>
     <ru txt="Пункты назначения"/>
+    <pt txt="Destinos"/>
   </Msg>
   <Msg id="destination">
     <de txt="Ziel"/>
@@ -6036,6 +6410,7 @@
     <el txt="Προορισμός"/>
     <hu txt="Célállomás"/>
     <ru txt="Пункт назначения"/>
+    <pt txt="Destino"/>
   </Msg>
   <Msg id="crossingblock">
     <de txt="Kreuzender Block"/>
@@ -6051,6 +6426,7 @@
     <el txt="διέλευσης μπλοκ"/>
     <hu txt="keresztezett térköz"/>
     <ru txt="Блок перекрёстка"/>
+    <pt txt="Bloco de cruzamento"/>
   </Msg>
   <Msg id="crossingblocks">
     <de txt="Kreuzender Blöcke" tip="Comma separated list of crossing blocks."/>
@@ -6066,6 +6442,7 @@
     <el txt="Διέλευση μπλοκ"/>
     <hu txt="Keresztezett térközök"/>
     <ru txt="Блоки перекрёстка"/>
+    <pt txt="Blocos de cruzamentos"/>
   </Msg>
   <Msg id="overlappedturnouts">
     <de txt="Überlappende Weichen"/>
@@ -6080,6 +6457,7 @@
     <bg txt="Припокриват turnouts"/>
     <el txt="Επικαλύπτονταν προσελεύσεις"/>
     <hu txt="Átfedő kitérők"/>
+    <pt txt="agulha/desvios sobrepostos"/>
   </Msg>
   <Msg id="departure">
     <de txt="Abfahrt"/>
@@ -6096,6 +6474,7 @@
     <el txt="Αναχώρηση"/>
     <hu txt="Indulás"/>
     <ru txt="Отправление"/>
+    <pt txt="Partida"/>
   </Msg>
   <Msg id="usepatterns">
     <de txt="Muster benutzen"/>
@@ -6111,6 +6490,7 @@
     <el txt="τρόπων χρήσης"/>
     <hu txt="minták használata"/>
     <ru txt="Использование моделей"/>
+    <pt txt="Usar padrões"/>
   </Msg>
   <Msg id="purgetime">
     <de txt="Slot Freigabezeit (s)"/>
@@ -6125,6 +6505,7 @@
     <bg txt="Слот Purge време (а)"/>
     <el txt="Κουλοχέρηδες Εκκαθάριση ώρα (ες)"/>
     <hu txt="Rés kiürítési idő (s)"/>
+    <pt txt="Remoção de tempo do slot (s)"/>
   </Msg>
   <Msg id="useidle">
     <de txt="Benutze IDLE anstatt GPOFF" tip="Der LocoBuffer-USB braucht das RailSync."/>
@@ -6139,6 +6520,7 @@
     <bg txt="Използвайте работя вместо GPOFF"/>
     <el txt="Χρήση της αδράνειας αντί GPOFF"/>
     <hu txt="IDLE használata GPOFF helyett"/>
+    <pt txt="usar IDLE em viz de GPOFF"/>
   </Msg>
   <Msg id="ptiid">
     <de txt="PT IID" tip="Diesen Controller zum programmieren benutzen."/>
@@ -6154,6 +6536,7 @@
     <bg txt="PT IID"/>
     <el txt="PT IID"/>
     <hu txt="PT IID"/>
+    <pt txt="PT IID"/>
   </Msg>
   <Msg id="sviid">
     <de txt="SV IID" tip="Diesen Controller zum LN-SV programmieren benutzen."/>
@@ -6169,6 +6552,7 @@
     <bg txt="SV IID"/>
     <el txt="SV IID"/>
     <hu txt="SV IID"/>
+    <pt txt="SV IID"/>
   </Msg>
   <Msg id="lciid">
     <de txt="LC IID" tip="Diesen Controller zum fahren benutzen."/>
@@ -6184,6 +6568,7 @@
     <bg txt="LC IID"/>
     <el txt="LC IID"/>
     <hu txt="LC IID"/>
+    <pt txt="LC IID"/>
   </Msg>
   <Msg id="dpiid">
     <de txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
@@ -6199,6 +6584,7 @@
     <bg txt="DP IID"/>
     <el txt="ΑΣ IID"/>
     <hu txt="DP IID"/>
+    <pt txt="DP IID"/>
   </Msg>
   <Msg id="clocktype">
     <de txt="Uhranzeige"/>
@@ -6214,6 +6600,7 @@
     <bg txt="Clocktype"/>
     <el txt="Clocktype"/>
     <hu txt="Óra típusa"/>
+    <pt txt="Tipo de relógio"/>
   </Msg>
   <Msg id="opendecoder" dialog="true">
     <de txt="OpenDecoder"/>
@@ -6228,6 +6615,7 @@
     <bg txt="OpenDecoder"/>
     <el txt="OpenDecoder"/>
     <hu txt="OpenDecoder"/>
+    <pt txt="Abrir descodificador"/>
   </Msg>
   <Msg id="red">
     <de txt="rot"/>
@@ -6244,6 +6632,7 @@
     <el txt="κόκκινο"/>
     <hu txt="vörös"/>
     <ru txt="красный"/>
+    <pt txt="vermelho"/>
   </Msg>
   <Msg id="yellow">
     <de txt="gelb"/>
@@ -6260,6 +6649,7 @@
     <el txt="κίτρινο"/>
     <hu txt="sárga"/>
     <ru txt="жёлтый"/>
+    <pt txt="amarelo"/>
   </Msg>
   <Msg id="green">
     <de txt="grün"/>
@@ -6276,6 +6666,7 @@
     <el txt="πράσινο"/>
     <hu txt="zöld"/>
     <ru txt="зелёный"/>
+    <pt txt="verde"/>
   </Msg>
   <Msg id="white">
     <de txt="weiß"/>
@@ -6292,6 +6683,7 @@
     <el txt="λευκό"/>
     <hu txt="fehér"/>
     <ru txt="белый"/>
+    <pt txt="branco"/>
   </Msg>
   <Msg id="permissions">
     <de txt="Berechtigungen"/>
@@ -6307,6 +6699,7 @@
     <el txt="Permissions"/>
     <hu txt="Engedélyek"/>
     <ru txt="Разрешения"/>
+    <pt txt="Permissões"/>
   </Msg>
   <Msg id="exclude">
     <de txt="Lok ausschliessen"/>
@@ -6323,6 +6716,7 @@
     <el txt="Απαγορ. Loco"/>
     <hu txt="Kizárt mozdonyok"/>
     <ru txt="Запретить Loc"/>
+    <pt txt="Negar locomotiva"/>
   </Msg>
   <Msg id="include">
     <de txt="Lok zulassen"/>
@@ -6339,6 +6733,7 @@
     <el txt="Επιτρέψτε Loco"/>
     <hu txt="Megengedett mozdonyok"/>
     <ru txt="Разрешить Loc"/>
+    <pt txt="Permitir locomotiva"/>
   </Msg>
   <Msg id="iconpath">
     <de txt="Iconverzeichnis"/>
@@ -6355,6 +6750,7 @@
     <el txt="Εικονίδιο διαδρομή"/>
     <hu txt="Ikon elérési út"/>
     <ru txt="Иконка пути"/>
+    <pt txt="Localização de ícone"/>
   </Msg>
   <Msg id="imagepath">
     <de txt="Bilderverzeichnis"/>
@@ -6371,6 +6767,7 @@
     <el txt="Εικόνα διαδρομή"/>
     <hu txt="Kép elérési út"/>
     <ru txt="Картинка пути"/>
+    <pt txt="Localização de imagem"/>
   </Msg>
   <Msg id="regulated">
     <de txt="Lastreglung" tip="Decoder verfügt über eine Lastreglung."/>
@@ -6387,6 +6784,7 @@
     <el txt="Νομοθετικώς"/>
     <hu txt="Szabályozott"/>
     <ru txt="Регулируемый"/>
+    <pt txt="Regularizado"/>
   </Msg>
   <Msg id="arrive">
     <de txt="Ankunft"/>
@@ -6403,6 +6801,7 @@
     <el txt="Άφιξη"/>
     <hu txt="Érkezés"/>
     <ru txt="Прибытие"/>
+    <pt txt="Chegada"/>
   </Msg>
   <Msg id="tabalign">
     <de txt="Tab Ansicht"/>
@@ -6418,6 +6817,7 @@
     <bg txt="Tab изравни"/>
     <el txt="Καρτέλα ευθυγράμμιση"/>
     <hu txt="Tabulátor igazítás"/>
+    <pt txt="Tab alinhamento"/>
   </Msg>
   <Msg id="multiline">
     <de txt="Mehrzeilig"/>
@@ -6433,6 +6833,7 @@
     <bg txt="Multiline"/>
     <el txt="Multiline"/>
     <hu txt="Több soros"/>
+    <pt txt="Multilinha"/>
   </Msg>
   <Msg id="usage">
     <de txt="Benutzung"/>
@@ -6448,6 +6849,7 @@
     <bg txt="Използване"/>
     <el txt="Usage"/>
     <hu txt="Felhasználás"/>
+    <pt txt="Utilizacao"/>
   </Msg>
   <Msg id="rundirection">
     <de txt="Fahrrichtung"/>
@@ -6462,6 +6864,7 @@
     <bg txt="Пусни посока"/>
     <el txt="Εκτελέστε κατεύθυνση"/>
     <hu txt="Menetirány"/>
+    <pt txt="Direcção da corrida"/>
   </Msg>
   <Msg id="forwards">
     <de txt="Vorwärts"/>
@@ -6478,6 +6881,7 @@
     <el txt="Προς τα εμπρός"/>
     <hu txt="Előre"/>
     <ru txt="Вперёд"/>
+    <pt txt="Em frente"/>
   </Msg>
   <Msg id="reverse">
     <de txt="Rückwärts"/>
@@ -6494,6 +6898,7 @@
     <el txt="Αντίστροφη"/>
     <hu txt="Hátra"/>
     <ru txt="Назад"/>
+    <pt txt="Inverso"/>
   </Msg>
   <Msg id="forwardsignals">
     <de txt="Signale bei Vorwärtsfahrt"/>
@@ -6508,6 +6913,7 @@
     <bg txt="Сигнали най напред шофиране"/>
     <el txt="Σήματα μπροστά στο δίσκο"/>
     <hu txt="Jelzők előre irányban"/>
+    <pt txt="Sinais em frente"/>
   </Msg>
   <Msg id="reversesignals">
     <de txt="Signale bei Rückwärtsfahrt"/>
@@ -6522,6 +6928,7 @@
     <bg txt="Сигнали в обратната шофиране"/>
     <el txt="Σήματα σε αντίστροφη οδήγησης"/>
     <hu txt="Jelzők hátra irányban"/>
+    <pt txt="Sinais em marcha contrária"/>
   </Msg>
   <Msg id="multipleunit">
     <de txt="Mehrfachtraktion"/>
@@ -6536,6 +6943,7 @@
     <bg txt="Многократни Звено"/>
     <el txt="Πολλαπλές Μονάδα"/>
     <hu txt="Csatolt üzem"/>
+    <pt txt="Unidade multipla"/>
   </Msg>
   <Msg id="consist">
     <de txt="Mehrfachtraktion"/>
@@ -6552,6 +6960,7 @@
     <tr txt="Consist"/>
     <hu txt="Résztvevők"/>
     <ru txt="Состав"/>
+    <pt txt="Composição (consist)"/>
   </Msg>
   <Msg id="members">
     <de txt="Mitglieder"/>
@@ -6568,6 +6977,7 @@
     <el txt="Μέλη"/>
     <hu txt="Tagok"/>
     <ru txt="Члены"/>
+    <pt txt="Membros"/>
   </Msg>
   <Msg id="zconnector">
     <de txt="Ebenenverbinder"/>
@@ -6582,6 +6992,7 @@
     <bg txt="Ниво конектор"/>
     <el txt="Επίπεδο Σύνδεση"/>
     <hu txt="Szint illesztő"/>
+    <pt txt="Conector nivel"/>
   </Msg>
   <Msg id="actiontable" dialog="true" key="Alt-3">
     <de txt="Aktionen"/>
@@ -6597,6 +7008,7 @@
     <el txt="Δράση πίνακα"/>
     <hu txt="Művelet lists"/>
     <ru txt="Таблица действий"/>
+    <pt txt="Tabela de acções"/>
   </Msg>
   <Msg id="actions">
     <de txt="Aktionen"/>
@@ -6613,6 +7025,7 @@
     <el txt="Ενέργειες"/>
     <hu txt="Műveletek"/>
     <ru txt="Действия"/>
+    <pt txt="Acções"/>
   </Msg>
   <Msg id="number">
     <de txt="Nummer"/>
@@ -6629,6 +7042,7 @@
     <el txt="Αριθμός"/>
     <hu txt="Szám"/>
     <ru txt="Номер"/>
+    <pt txt="Número"/>
   </Msg>
   <Msg id="activationtime">
     <de txt="Aktivierungszeit"/>
@@ -6644,6 +7058,7 @@
     <el txt="Η ενεργοποίηση του χρόνου"/>
     <hu txt="Aktiválás ideje"/>
     <ru txt="Время активации"/>
+    <pt txt="Tempo de activação"/>
   </Msg>
   <Msg id="next_locomotive">
     <de txt="Nächste Lok"/>
@@ -6660,6 +7075,7 @@
     <ru txt="След. лок"/>
     <bg txt="Следваща сграбиче"/>
     <el txt="Επόμενη τρελλαίνω"/>
+    <pt txt="Próxima locomotiva"/>
   </Msg>
   <Msg id="swtype_raster">
     <de txt="Raster"/>
@@ -6675,6 +7091,7 @@
     <hu txt="Raszter"/>
     <bg txt="Растерните"/>
     <el txt="Raster"/>
+    <pt txt="Rasterizar (Raster)"/>
   </Msg>
   <Msg id="showall">
     <de txt="Zeige alle"/>
@@ -6691,6 +7108,7 @@
     <el txt="Εμφάνιση όλων"/>
     <hu txt="Mindet mutat"/>
     <ru txt="Показать всё"/>
+    <pt txt="Mostrar todos"/>
   </Msg>
   <Msg id="startblock">
     <de txt="Anfangsblock"/>
@@ -6706,6 +7124,7 @@
     <el txt="Ξεκινήστε το μπλοκ"/>
     <hu txt="Induló térköz"/>
     <ru txt="Начальный блок"/>
+    <pt txt="Iniciar bloco"/>
   </Msg>
   <Msg id="select">
     <de txt="Selektieren"/>
@@ -6722,6 +7141,7 @@
     <el txt="Επιλογή"/>
     <hu txt="Kiválasztás"/>
     <ru txt="Выбор"/>
+    <pt txt="Seleccionar"/>
   </Msg>
   <Msg id="range">
     <de txt="Auswahl"/>
@@ -6738,6 +7158,7 @@
     <el txt="Εύρος"/>
     <hu txt="Tartomány"/>
     <ru txt="Длина"/>
+    <pt txt="Intervalo"/>
   </Msg>
   <Msg id="target">
     <de txt="Ziel"/>
@@ -6754,6 +7175,7 @@
     <el txt="Στόχος"/>
     <hu txt="Cél"/>
     <ru txt="Цель"/>
+    <pt txt="Alvo"/>
   </Msg>
   <Msg id="move">
     <de txt="Verschieben"/>
@@ -6770,6 +7192,7 @@
     <el txt="Κίνηση"/>
     <hu txt="Mozgat"/>
     <ru txt="Двигать"/>
+    <pt txt="Mover"/>
   </Msg>
   <Msg id="copy">
     <de txt="Kopieren"/>
@@ -6786,6 +7209,7 @@
     <el txt="Αντιγραφή"/>
     <hu txt="Másol"/>
     <ru txt="Копировать"/>
+    <pt txt="Copiar"/>
   </Msg>
   <Msg id="width">
     <de txt="Breite"/>
@@ -6802,6 +7226,7 @@
     <el txt="Πλάτος"/>
     <hu txt="Szélesség"/>
     <ru txt="Ширина"/>
+    <pt txt="Largura:"/>
   </Msg>
   <Msg id="height">
     <de txt="Höhe"/>
@@ -6818,6 +7243,7 @@
     <el txt="Ύψος"/>
     <hu txt="Magasság"/>
     <ru txt="Высота"/>
+    <pt txt="Altura"/>
   </Msg>
   <Msg id="usescheduletime">
     <de txt="Fahrplan Abfahrtzeiten benutzen"/>
@@ -6833,6 +7259,7 @@
     <el txt="χρονοδιάγραμμα χρήσης ώρα αναχώρησης"/>
     <hu txt="használd a menetrendi indulási időt"/>
     <ru txt="использовать графиковое время отпраления"/>
+    <pt txt="Usar horarios de partida"/>
   </Msg>
   <Msg id="clock">
     <de txt="Uhr"/>
@@ -6849,6 +7276,7 @@
     <el txt="Ρολόι"/>
     <hu txt="Óra"/>
     <ru txt="Часы"/>
+    <pt txt="Relógio"/>
   </Msg>
   <Msg id="adjusttime">
     <de txt="Uhrzeit einstellen"/>
@@ -6864,6 +7292,7 @@
     <el txt="Ρύθμιση του χρόνου"/>
     <hu txt="Óra beállítása"/>
     <ru txt="Настройка времени"/>
+    <pt txt="Ajustar tempo"/>
   </Msg>
   <Msg id="remark">
     <de txt="Bemerkung"/>
@@ -6879,6 +7308,7 @@
     <bg txt="Забележка"/>
     <el txt="Παρατήρηση"/>
     <hu txt="Megjegyzés"/>
+    <pt txt="Nota"/>
   </Msg>
   <Msg id="option">
     <de txt="Option"/>
@@ -6895,6 +7325,7 @@
     <el txt="Επιλογή"/>
     <hu txt="Opció"/>
     <ru txt="Опция"/>
+    <pt txt="Opção"/>
   </Msg>
   <Msg id="swapplacing">
     <de txt="Ändern der Platzierung"/>
@@ -6909,6 +7340,7 @@
     <bg txt="Размени пускането"/>
     <el txt="Εναλλαγ διάθεση"/>
     <hu txt="Irány fordítása"/>
+    <pt txt="Alternar posicionamento"/>
   </Msg>
   <Msg id="swapplacingpost">
     <de txt="danach Plazierung ändern"/>
@@ -6923,6 +7355,7 @@
     <bg txt="Размени пускането пост"/>
     <el txt="Εναλλαγ διάθεση μετά"/>
     <hu txt="Irány fordítása utána"/>
+    <pt txt="Alternar posição de Post"/>
   </Msg>
   <Msg id="relativetime">
     <de txt="Relative Zeiten"/>
@@ -6938,6 +7371,7 @@
     <el txt="Σχετική χρονική"/>
     <hu txt="Relatív idő"/>
     <ru txt="Относительное время"/>
+    <pt txt="Tempo relativo"/>
   </Msg>
   <Msg id="cvget">
     <de txt="Auslesen von Register"/>
@@ -6954,6 +7388,7 @@
     <el txt="Λάβετε CV"/>
     <hu txt="CV olvasás"/>
     <ru txt="Получить CV"/>
+    <pt txt="Obter CV"/>
   </Msg>
   <Msg id="waitforpt">
     <de txt="Warten auf Programmiergleis"/>
@@ -6969,6 +7404,7 @@
     <el txt="Περιμένετε για την PT"/>
     <hu txt="Várakozás PT-re"/>
     <ru txt="Ожидание для РТ"/>
+    <pt txt="Esperar por PT"/>
   </Msg>
   <Msg id="soget">
     <de txt="Auslesen von Register"/>
@@ -6985,6 +7421,7 @@
     <el txt="Λάβετε SO"/>
     <hu txt="SO olvasás"/>
     <ru txt="Получить SО"/>
+    <pt txt="Obter SO"/>
   </Msg>
   <Msg id="waitforso">
     <de txt="Warten auf Command Station"/>
@@ -7000,6 +7437,7 @@
     <el txt="Περιμένετε CS"/>
     <hu txt="Várakozás CS-re"/>
     <ru txt="Ожидание для CS"/>
+    <pt txt="Esperar por CS"/>
   </Msg>
   <Msg id="softwareupdates" dialog="true">
     <de txt="Software Updates" tip="Überprüfung auf verfügbare Aktualisierungen für Rocrail."/>
@@ -7015,6 +7453,7 @@
     <el txt="Software Updates"/>
     <hu txt="Szoftver frissítés"/>
     <ru txt="Обновление софта"/>
+    <pt txt="Actualizações de Software"/>
   </Msg>
   <Msg id="availableupdates">
     <de txt="Verfügbare Aktualisierungen"/>
@@ -7030,6 +7469,7 @@
     <el txt="Διαθέσιμες Ανανεώσεις"/>
     <hu txt="Elérhető frissítések"/>
     <ru txt="Доступные обновления"/>
+    <pt txt="Actualizações disponiveis"/>
   </Msg>
   <Msg id="updateinfo">
     <de txt="Info Aktualisierungen"/>
@@ -7045,6 +7485,7 @@
     <el txt="Ενημέρωση Πληροφορίες"/>
     <hu txt="Frissítési információ"/>
     <ru txt="Информация обновления"/>
+    <pt txt="Informação de actualização"/>
   </Msg>
   <Msg id="searchingupdates">
     <de txt="Suche nach verfügbaren Aktualisierungen..."/>
@@ -7060,6 +7501,7 @@
     <el txt="Η αναζήτηση για διαθέσιμες ενημερώσεις ..."/>
     <hu txt="Elérhető frissítések keresése..."/>
     <ru txt="Поиск доступного обновления..."/>
+    <pt txt="Procurando por actualizações disponiveis"/>
   </Msg>
   <Msg id="downloadingupdates">
     <de txt="Aktualisierungen werden heruntergeladen..."/>
@@ -7075,6 +7517,7 @@
     <el txt="Λήψη ενημερώσεων ..."/>
     <hu txt="Frissítések letöltése..."/>
     <ru txt="Загрузка обновлений..."/>
+    <pt txt="Download de actualizações"/>
   </Msg>
   <Msg id="successfullydownloaded">
     <de txt="Aktualisierungen erfolgreich heruntergeladen."/>
@@ -7090,6 +7533,7 @@
     <el txt="Ανανεώσεις μεταφορτωθεί επιτυχώς."/>
     <hu txt="A frissítések letöltése sikerült."/>
     <ru txt="Загрузка обновлений закончена удачно"/>
+    <pt txt="Actualizações feitas com sucesso"/>
   </Msg>
   <Msg id="updatespath">
     <de txt="Aktualisierungszeichnis"/>
@@ -7105,6 +7549,7 @@
     <el txt="Ανανεώσεις διαδρομή"/>
     <hu txt="Frissítések elérési útja"/>
     <ru txt="Путь для обновлений"/>
+    <pt txt="Actulizações de localização"/>
   </Msg>
   <Msg id="errorondownloading">
     <de txt="Fehler beim Herunterladen! Details finden Sie im Logfile."/>
@@ -7119,6 +7564,7 @@
     <bg txt="Грешка за изтегляне! Check следи за подробности."/>
     <el txt="Σφάλμα σχετικά με τη λήψη! Ελέγξτε ίχνος για λεπτομέρειες."/>
     <hu txt="Hiba a letöltésnél! Ellenőrizze a nyomkövetési adatokat."/>
+    <pt txt="Erro na transferência! Verificar rasto para detalhes"/>
   </Msg>
   <Msg id="program">
     <de txt="Ext. Programm starten."/>
@@ -7133,6 +7579,7 @@
     <bg txt="Пусни вътр. програма."/>
     <el txt="ext τρέχει. πρόγραμμα."/>
     <hu txt="Külső program futtatása"/>
+    <pt txt="Correr programa ext."/>
   </Msg>
   <Msg id="s88">
     <de txt="S88"/>
@@ -7148,6 +7595,7 @@
     <bg txt="S88"/>
     <el txt="S88"/>
     <hu txt="S88"/>
+    <pt txt="S88"/>
   </Msg>
   <Msg id="busses">
     <de txt="Busse"/>
@@ -7163,6 +7611,7 @@
     <bg txt="Автобуси"/>
     <el txt="Λεωφορεία"/>
     <hu txt="Buszok"/>
+    <pt txt="Busses"/>
   </Msg>
   <Msg id="ecos">
     <de txt="Ecos"/>
@@ -7178,6 +7627,7 @@
     <bg txt="ECOS"/>
     <el txt="Ecos"/>
     <hu txt="Ecos"/>
+    <pt txt="Ecos"/>
   </Msg>
   <Msg id="sensors">
     <de txt="Sensoren"/>
@@ -7194,6 +7644,7 @@
     <el txt="Αισθητήρες"/>
     <hu txt="Szenzorok"/>
     <ru txt="Датчики"/>
+    <pt txt="Sensores"/>
   </Msg>
   <Msg id="poll">
     <de txt="Abfragen"/>
@@ -7210,6 +7661,7 @@
     <el txt="Δημοσκόπηση"/>
     <hu txt="Lekérdez"/>
     <ru txt="Опрос"/>
+    <pt txt="Votação"/>
   </Msg>
   <Msg id="options">
     <de txt="Optionen"/>
@@ -7226,6 +7678,7 @@
     <el txt="Επιλογές"/>
     <hu txt="Opciók"/>
     <ru txt="Опции"/>
+    <pt txt="Opções"/>
   </Msg>
   <Msg id="scentryactions">
     <de txt="Schedule Entry Actions"/>
@@ -7240,6 +7693,7 @@
     <bg txt="График Влизане Действия"/>
     <el txt="Πρόγραμμα Θέση Ενέργειες"/>
     <hu txt="Menetrendi bejegyzés műveletei"/>
+    <pt txt="Programação de acções de entrada"/>
   </Msg>
   <Msg id="unabletoconnect">
     <de txt="Keine Verbindung möglich mit "/>
@@ -7255,6 +7709,7 @@
     <el txt="Αδύνατη η σύνδεση στο "/>
     <hu txt="Kapcsolódás sikertelen "/>
     <ru txt="Не удается подключиться к "/>
+    <pt txt="Não consegue ligar a "/>
   </Msg>
   <Msg id="usergroup" dialog="true">
     <de txt="Benutzergruppe" tip="Share your experiences, meet other Rocrailers and have fun!"/>
@@ -7271,6 +7726,7 @@
     <el txt="Χρήστης ομάδα"/>
     <hu txt="Felhasználói csoport"/>
     <ru txt="Группа пользователей"/>
+    <pt txt="Grupo de utilizador"/>
   </Msg>
   <Msg id="rug">
     <all txt="http://forum.rocrail.net/portal.php"/>
@@ -7289,6 +7745,7 @@
     <el txt="Διαμόρφωση Υπηρεσίας"/>
     <hu txt="Konfigurációs szolgáltatás"/>
     <ru txt="Служба конфигурации"/>
+    <pt txt="Serviço de configuração"/>
   </Msg>
   <Msg id="rocrail_consrv">
     <all txt="https://launchpad.net/rocrail"/>
@@ -7306,6 +7763,7 @@
     <bg txt="Докладвайте за грешки"/>
     <el txt="Αναφορά Σφαλμάτων"/>
     <hu txt="Programhiba jelentése"/>
+    <pt txt="Reportar erro"/>
   </Msg>
   <Msg id="rocrail_bug">
     <all txt="https://bugs.launchpad.net/rocrail"/>
@@ -7324,6 +7782,7 @@
     <el txt="Μεγάλου αίτηση"/>
     <hu txt="Új funkció igénylése"/>
     <ru txt="Функция запроса"/>
+    <pt txt="Requisição de característica (feature)"/>
   </Msg>
   <Msg id="rocrail_feature">
     <all txt="https://bugs.launchpad.net/rocrail"/>
@@ -7343,6 +7802,7 @@
     <el txt="Χρησιμοποίησε PT"/>
     <hu txt="PT használata"/>
     <ru txt="Использовать PT"/>
+    <pt txt="Usar PT"/>
   </Msg>
   <Msg id="shortcutchecking">
     <de txt="Kurzschlussüberwachung"/>
@@ -7358,6 +7818,7 @@
     <el txt="Συντόμευση ελέγχου"/>
     <hu txt="Rövidzár ellenőrzés"/>
     <ru txt="Обнаружение К.З."/>
+    <pt txt="Verificar atalho"/>
   </Msg>
   <Msg id="inversedsr">
     <de txt="DSR invertieren"/>
@@ -7374,6 +7835,7 @@
     <el txt="Αντιστροφή DSR"/>
     <hu txt="DSR invertálása"/>
     <ru txt="Инвертировать DSR"/>
+    <pt txt="Inverter DSR"/>
   </Msg>
   <Msg id="delay">
     <de txt="Verzögerung"/>
@@ -7390,6 +7852,7 @@
     <el txt="Καθυστέρηση"/>
     <hu txt="Késleltetés"/>
     <ru txt="Задержка"/>
+    <pt txt="Atraso"/>
   </Msg>
   <Msg id="locorefresh">
     <de txt="Lokdekoder Aktualisierung"/>
@@ -7405,6 +7868,7 @@
     <el txt="Locdecoder ανανεώσετε"/>
     <hu txt="Mozdonydekóder frissítés"/>
     <ru txt="Обновить локдекодер"/>
+    <pt txt="Refrescar decodificador da locomotiva"/>
   </Msg>
   <Msg id="singlegate">
     <de txt="Ein Ausgang"/>
@@ -7419,6 +7883,7 @@
     <bg txt="Единична Gate"/>
     <el txt="Ενιαία Πύλη"/>
     <hu txt="Egy kapus"/>
+    <pt txt="Portal unico"/>
   </Msg>
   <Msg id="aspects">
     <de txt="Begriffe"/>
@@ -7435,6 +7900,7 @@
     <el txt="Πτυχές"/>
     <hu txt="Jelzésképek"/>
     <ru txt="Аспекты"/>
+    <pt txt="Cores do sinal luminoso"/>
   </Msg>
   <Msg id="aspect">
     <de txt="Begriff"/>
@@ -7451,6 +7917,7 @@
     <el txt="Όψη"/>
     <hu txt="Jelzéskép"/>
     <ru txt="Аспект"/>
+    <pt txt="Cor do sinal luminoso"/>
   </Msg>
   <Msg id="panelcolor">
     <de txt="Gleisplanfarbe"/>
@@ -7466,6 +7933,7 @@
     <el txt="Μετατρόχιο σχέδιο χρώμα"/>
     <hu txt="Alaprajz háttérszín"/>
     <ru txt="Цвет плана пути"/>
+    <pt txt="Cor do plano do circuito"/>
   </Msg>
   <Msg id="functiongroup">
     <de txt="Funktionsgrupe"/>
@@ -7481,6 +7949,7 @@
     <el txt="Η ομάδα καθηκόντων"/>
     <hu txt="Funkció csoport"/>
     <ru txt="Функциональная группа"/>
+    <pt txt="Grupo de funções"/>
   </Msg>
   <Msg id="iconnotfound">
     <de txt="Rocview Icon(s) wurden nicht gefunden ! Einstellungen überprüfen. [%s]"/>
@@ -7496,6 +7965,7 @@
     <el txt="Rocview Εικονίδιο (ες) θα μπορούσε δεν θα μπορούσε να βρεθεί! Ελέγξτε τις ρυθμίσεις σας. [% s]"/>
     <hu txt="A Rocview ikon(ok) nem található(k)! Ellenőrizze a beállításokat! [%s]"/>
     <ru txt="Rocview Иконка  не может быть найдена! Проверьте ваши настройки.[%s]"/>
+    <pt txt="Os icons do Rocview não foram encontrados! Verifique as configurações. (%s)"/>
   </Msg>
   <Msg id="dwarfsignal">
     <de txt="Zwergsignal"/>
@@ -7510,6 +7980,7 @@
     <bg txt="Джудже сигнал"/>
     <el txt="Νάνος μήνυμα"/>
     <hu txt="Törpe jelző"/>
+    <pt txt="Sinal anão"/>
   </Msg>
   <Msg id="accessorydecoder">
     <de txt="Accessory Decoder"/>
@@ -7525,6 +7996,7 @@
     <el txt="Αξεσουάρ Αποκωδικοποιητή"/>
     <hu txt="Eszköz dekóder"/>
     <ru txt="Аксессуарный декодер"/>
+    <pt txt="Decodificador acessório"/>
   </Msg>
   <Msg id="functiononleftturnout">
     <de txt="bei Linksweiche"/>
@@ -7540,6 +8012,7 @@
     <el txt="προσέλευση στο αριστερό"/>
     <hu txt="bal váltóállásnál"/>
     <ru txt="стрелка влево"/>
+    <pt txt="Desvio/agulha na esquerda"/>
   </Msg>
   <Msg id="functiononrightturnout">
     <de txt="bei Rechtsweiche"/>
@@ -7555,6 +8028,7 @@
     <el txt="σχετικά με το δικαίωμα συμμετοχής"/>
     <hu txt="jobb váltóállásnál"/>
     <ru txt="стрелка вправо"/>
+    <pt txt="Desvio/agulha na direita"/>
   </Msg>
   <Msg id="deactivationevent">
     <de txt="Deaktivierungsevent"/>
@@ -7570,6 +8044,7 @@
     <el txt="Απενεργοποίηση περίπτωση"/>
     <hu txt="Deaktivációs esemény"/>
     <ru txt="Деактивировать событие"/>
+    <pt txt="desactivação de evento"/>
   </Msg>
   <Msg id="pairgates">
     <de txt="Ausgänge paaren"/>
@@ -7585,6 +8060,7 @@
     <bg txt="Чифт порти"/>
     <el txt="Ζεύγος πύλες"/>
     <hu txt="Kapu pár"/>
+    <pt txt="Par de portais"/>
   </Msg>
   <Msg id="randomseed">
     <de txt="Zufallsgenerator"/>
@@ -7600,6 +8076,7 @@
     <el txt="Τυχαία γεννήτρια"/>
     <hu txt="Véletlenszám generátor"/>
     <ru txt="Случайный генератор"/>
+    <pt txt="Gerador aleatório"/>
   </Msg>
   <Msg id="road">
     <de txt="Straße"/>
@@ -7616,6 +8093,7 @@
     <el txt="Οδικές"/>
     <hu txt="Közút"/>
     <ru txt="Дорога"/>
+    <pt txt="Estrada"/>
   </Msg>
   <Msg id="turnoff">
     <de txt="Kreuzung"/>
@@ -7631,6 +8109,7 @@
     <bg txt="Turnoff"/>
     <el txt="Στροφή"/>
     <hu txt="Kikapcsol"/>
+    <pt txt="Desligar"/>
   </Msg>
   <Msg id="thrown">
     <de txt="Thrown"/>
@@ -7646,6 +8125,7 @@
     <bg txt="Хвърлена"/>
     <el txt="Ρίχνονται"/>
     <hu txt="Kitérő"/>
+    <pt txt="Atirar"/>
   </Msg>
   <Msg id="savepos">
     <de txt="Position speichern"/>
@@ -7661,6 +8141,7 @@
     <el txt="Αποθήκευση θέσης"/>
     <hu txt="Pozíció mentése"/>
     <ru txt="Сохранить позицию"/>
+    <pt txt="Gravar posição"/>
   </Msg>
   <Msg id="savepostime">
     <de txt="Zeit nach der Weichen in Vorzugslage zurückschalten"/>
@@ -7675,6 +8156,7 @@
     <bg txt="Запази позицията таймер"/>
     <el txt="Αποθήκευση θέσης χρονόμετρο"/>
     <hu txt="Pozíció mentés időzítése"/>
+    <pt txt="Gravar posição tempo"/>
   </Msg>
   <Msg id="theme">
     <de txt="Thema"/>
@@ -7691,6 +8173,7 @@
     <el txt="Θέμα"/>
     <hu txt="Téma"/>
     <ru txt="Тема"/>
+    <pt txt="Tema"/>
   </Msg>
   <Msg id="check2in">
     <de txt="Freies Fahrziel suchen bis zum IN-Rückmelder"/>
@@ -7705,6 +8188,7 @@
     <bg txt="Проверка за свободно дестинация до завръщане в"/>
     <el txt="Έλεγχος για δωρεάν προορισμού φθάνοντας μέχρι IN"/>
     <hu txt="Szabad irányok keresése IN eléréséig"/>
+    <pt txt="Verificar destino livre até chegar lá"/>
   </Msg>
   <Msg id="locobook">
     <de txt="Lok Bedienfeld"/>
@@ -7720,6 +8204,7 @@
     <bg txt="Loco панел"/>
     <el txt="Loco Panel"/>
     <hu txt="Mozdony panel"/>
+    <pt txt="Painel da locomotiva"/>
   </Msg>
   <Msg id="secondnextblock">
     <de txt="Zweiten Ziel-Block reservieren."/>
@@ -7734,6 +8219,7 @@
     <bg txt="Резерва следващата втори блок."/>
     <el txt="Αποθεματικό δεύτερη επόμενο μπλοκ."/>
     <hu txt="Két szabad egymást követő térköz lefoglalása"/>
+    <pt txt="Reservar segundo próximo bloco"/>
   </Msg>
   <Msg id="dccformat">
     <de txt="DCC Format" tip="Voreinstellung DCC Format"/>
@@ -7749,6 +8235,7 @@
     <bg txt="DCC Формат"/>
     <el txt="DCC Μορφοποίηση"/>
     <hu txt="DCC formátum"/>
+    <pt txt="Formato DCC"/>
   </Msg>
   <Msg id="timing">
     <de txt="Timing" tip="Timing Takt puls S88-Bus."/>
@@ -7764,6 +8251,7 @@
     <bg txt="Времето"/>
     <el txt="Χρονοδιάγραμμα"/>
     <hu txt="Időzítés"/>
+    <pt txt="Timing"/>
   </Msg>
   <Msg id="ptreset">
     <de txt="PT Resets" tip="Extended Reset Commands"/>
@@ -7779,6 +8267,7 @@
     <bg txt="PT нулира"/>
     <el txt="Επαναφέρει PT"/>
     <hu txt="PT Resets"/>
+    <pt txt="Reiniciação PT"/>
   </Msg>
   <Msg id="ptcommands">
     <de txt="PT Commands" tip="Extended Program Commands"/>
@@ -7793,6 +8282,7 @@
     <bg txt="PT Команди"/>
     <el txt="PT Commands"/>
     <hu txt="PT Parancsok"/>
+    <pt txt="Comandos PT"/>
   </Msg>
   <Msg id="ptpom">
     <de txt="PT POM" tip="Programmieren auf dem Hauptgleis Wiederholung."/>
@@ -7808,6 +8298,7 @@
     <bg txt="PT POM"/>
     <el txt="PT POM"/>
     <hu txt="PT POM"/>
+    <pt txt="PT POM"/>
   </Msg>
   <Msg id="scdmain">
     <de txt="SCD Main" tip="Abschaltzeit bei Kurzschluß Hauptgleis."/>
@@ -7823,6 +8314,7 @@
     <bg txt="SCD Главна"/>
     <el txt="Κύρια SCD"/>
     <hu txt="SCD Fő"/>
+    <pt txt="SCD principal"/>
   </Msg>
   <Msg id="scdpt">
     <de txt="SCD PT" tip="Abschaltzeit bei Kurzschluß Programmiergleis."/>
@@ -7838,6 +8330,7 @@
     <bg txt="SCD PT"/>
     <el txt="SCD PT"/>
     <hu txt="SCD PT"/>
+    <pt txt="SCD PT"/>
   </Msg>
   <Msg id="swsensors">
     <de txt="Weichenrückmeldung" tip=""/>
@@ -7852,6 +8345,7 @@
     <bg txt="Switch датчици"/>
     <el txt="Switch αισθητήρες"/>
     <hu txt="Kitérő szenzorok"/>
+    <pt txt="Interruptor de sensores"/>
   </Msg>
   <Msg id="swinvert">
     <de txt="Invertiere Weichenbefehl" tip=""/>
@@ -7866,6 +8360,7 @@
     <bg txt="Switch инвертен"/>
     <el txt="Switch αντιστρέψετε"/>
     <hu txt="Fordított kapcsolás"/>
+    <pt txt="Inverção de interruptor"/>
   </Msg>
   <Msg id="swcommands">
     <de txt="Weichenwiederholung" tip="Ein Weichenbefehl wird bei der Gleisausgabe sooft wiederholt."/>
@@ -7880,6 +8375,7 @@
     <bg txt="Switch команда повторение"/>
     <el txt="Switch εντολή επανάληψη"/>
     <hu txt="Kitérő állító parancs ismétlése"/>
+    <pt txt="Repetição de interrupção de comando"/>
   </Msg>
   <Msg id="swsensoroffset">
     <de txt="Offset für Weichenrückmeldung" tip=""/>
@@ -7894,6 +8390,7 @@
     <bg txt="Switch сензор офсет"/>
     <el txt="Switch αισθητήρα αντιστάθμιση"/>
     <hu txt="Kitérő szenzorok eltolása"/>
+    <pt txt="Distancia do interruptor de sensor"/>
   </Msg>
   <Msg id="swsensormode">
     <de txt="Modus Weichenrückmeldung" tip=""/>
@@ -7908,6 +8405,7 @@
     <bg txt="Switch сензор режим"/>
     <el txt="Switch λειτουργία αισθητήρα"/>
     <hu txt="Kitérő szenzor mód"/>
+    <pt txt="Modo de interruptor de sensor"/>
   </Msg>
   <Msg id="scale">
     <de txt="Maßstab"/>
@@ -7923,6 +8421,7 @@
     <bg txt="Gauge"/>
     <el txt="Περιτύπωμα"/>
     <hu txt="Nyomtáv"/>
+    <pt txt="Escala"/>
   </Msg>
   <Msg id="distance">
     <de txt="Abstand"/>
@@ -7938,6 +8437,7 @@
     <bg txt="Разстояние"/>
     <el txt="Απόσταση"/>
     <hu txt="Távolság"/>
+    <pt txt="Distância"/>
   </Msg>
   <Msg id="measurement">
     <de txt="Geschwindigkeitsmessung"/>
@@ -7952,6 +8452,7 @@
     <bg txt="Скоростта измерване"/>
     <el txt="Ταχύτητα μέτρησης"/>
     <hu txt="Sebességmérés"/>
+    <pt txt="Medidor de velocidade"/>
   </Msg>
   <Msg id="mvtrack" dialog="true" key="Alt-2">
     <de txt="MVTrack" tip="Strecke für Geschwindigkeitsmessung"/>
@@ -7967,6 +8468,7 @@
     <bg txt="MVTrack"/>
     <el txt="MVTrack"/>
     <hu txt="Seb.Mérés"/>
+    <pt txt="MVTrack"/>
   </Msg>
   <Msg id="convert2mph">
     <de txt="Nach MPH umrechnen"/>
@@ -7981,6 +8483,7 @@
     <bg txt="Конвертиране на MPH"/>
     <el txt="Μετατροπή σε MPH"/>
     <hu txt="Konvertálás mérföld/órába"/>
+    <pt txt="Converter para Mph"/>
   </Msg>
   <Msg id="seltab">
     <de txt="Fiddle Yard"/>
@@ -7995,6 +8498,7 @@
     <bg txt="Тинтири Двор"/>
     <el txt="Χασομερώ Yard"/>
     <hu txt="Tolópad"/>
+    <pt txt="Parque de locomotivas não visivel"/>
   </Msg>
   <Msg id="seltabpos">
     <de txt="Traverser Position"/>
@@ -8009,6 +8513,7 @@
     <bg txt="Traverser позиция"/>
     <el txt="Διαβαίνων θέση"/>
     <hu txt="Áthaladó pozíció"/>
+    <pt txt="Posição do tranverser (linha paralela amovivel para arrumação de locs)"/>
   </Msg>
   <Msg id="image">
     <de txt="Bild"/>
@@ -8024,6 +8529,7 @@
     <bg txt="Image"/>
     <el txt="Image"/>
     <hu txt="Kép"/>
+    <pt txt="Imagem"/>
   </Msg>
   <Msg id="activelow">
     <de txt="Aktiv niedrig"/>
@@ -8039,6 +8545,7 @@
     <bg txt="Активни ниска"/>
     <el txt="Ενεργά χαμηλό"/>
     <hu txt="Alacsony aktív"/>
+    <pt txt="Activar baixo/curto"/>
   </Msg>
   <Msg id="timedactions" dialog="true">
     <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einer bestimmten Zeit starten"/>
@@ -8053,6 +8560,7 @@
     <bg txt="Времето Действия"/>
     <el txt="Timed Ενέργειες"/>
     <hu txt="Időzített műveletek"/>
+    <pt txt="Acções programadas"/>
   </Msg>
   <Msg id="attributes">
     <de txt="Eigenschaften"/>
@@ -8069,6 +8577,7 @@
     <el txt="Χαρακτηριστικά"/>
     <hu txt="Jellemzők"/>
     <ru txt="Атрибуты"/>
+    <pt txt="Atributos"/>
   </Msg>
   <Msg id="color">
     <de txt="Farbe"/>
@@ -8085,6 +8594,7 @@
     <el txt="Χρώμα"/>
     <hu txt="Szín"/>
     <ru txt="Цвет"/>
+    <pt txt="Cor"/>
   </Msg>
   <Msg id="background">
     <de txt="Hintergrund"/>
@@ -8101,6 +8611,7 @@
     <el txt="Φόντο"/>
     <hu txt="Háttérszín"/>
     <ru txt="Фон"/>
+    <pt txt="Fundo"/>
   </Msg>
   <Msg id="bold">
     <de txt="fett"/>
@@ -8116,6 +8627,7 @@
     <bg txt="получер"/>
     <el txt="τολμηρές"/>
     <hu txt="félkövér"/>
+    <pt txt="negrito"/>
   </Msg>
   <Msg id="italic">
     <de txt="kursiv"/>
@@ -8131,6 +8643,7 @@
     <bg txt="курсивен"/>
     <el txt="πλάγια"/>
     <hu txt="dőlt"/>
+    <pt txt="itálico"/>
   </Msg>
   <Msg id="underlined">
     <de txt="unterstrichen"/>
@@ -8146,6 +8659,7 @@
     <bg txt="подчертан"/>
     <el txt="υπογράμμισε"/>
     <hu txt="aláhúzott"/>
+    <pt txt="Sublinhado"/>
   </Msg>
   <Msg id="transparent">
     <de txt="transparent"/>
@@ -8160,6 +8674,7 @@
     <bg txt="прозрачен"/>
     <el txt="διαφανής"/>
     <hu txt="átlátszó"/>
+    <pt txt="Transparente"/>
   </Msg>
   <Msg id="swcmd">
     <de txt="Weichenkommando"/>
@@ -8174,6 +8689,7 @@
     <bg txt="Switch команда"/>
     <el txt="Switch εντολή"/>
     <hu txt="Kitérő parancs"/>
+    <pt txt="Interruptor  comando"/>
   </Msg>
   <Msg id="doc_report">
     <de txt="Dokumentation"/>
@@ -8189,6 +8705,7 @@
     <el txt="Τεκμηρίωση"/>
     <hu txt="Dokumentáció"/>
     <ru txt="Документация"/>
+    <pt txt="Documentação"/>
   </Msg>
   <Msg id="xslpath">
     <de txt="XSL-Verzeichnis"/>
@@ -8205,6 +8722,7 @@
     <el txt="XSL διαδρομή"/>
     <hu txt="XSL elérési út"/>
     <ru txt="XLS путь"/>
+    <pt txt="Caminho XSL"/>
   </Msg>
   <Msg id="showid">
     <de txt="Show ID's" tip="Show object ID's."/>
@@ -8221,6 +8739,7 @@
     <el txt="Δείτε το ID της"/>
     <hu txt="ID-k megjelenítése"/>
     <ru txt="Показать ID`s"/>
+    <pt txt="Mostrar IDs"/>
   </Msg>
   <Msg id="modpanel">
     <de txt="Modulplan"/>
@@ -8236,6 +8755,7 @@
     <el txt="Ενότητα σχέδιο"/>
     <hu txt="Modul alaprajz"/>
     <ru txt="План модуля"/>
+    <pt txt="Modulo plano"/>
   </Msg>
   <Msg id="addmodule">
     <de txt="Module hinzufügen"/>
@@ -8252,6 +8772,7 @@
     <el txt="Προσθήκη ενότητας"/>
     <hu txt="Modul hozzáadása"/>
     <ru txt="Добавить модуль"/>
+    <pt txt="Adiccionar modulo"/>
   </Msg>
   <Msg id="blockoccupation">
     <de txt="Blockbelegung"/>
@@ -8266,6 +8787,7 @@
     <bg txt="Блокиране на професията"/>
     <el txt="Αποκλεισμός επάγγελμα"/>
     <hu txt="Térköz foglaltság"/>
+    <pt txt="Ocupação do bloco"/>
   </Msg>
   <Msg id="modproperties" dialog="true">
     <de txt="Moduleigenschaften"/>
@@ -8281,6 +8803,7 @@
     <el txt="Ενότητα Ακίνητα"/>
     <hu txt="Modul tulajdonságai"/>
     <ru txt="Свойства модуля"/>
+    <pt txt="Propriedades do modulo"/>
   </Msg>
   <Msg id="modid">
     <de txt="Modul-ID"/>
@@ -8296,6 +8819,7 @@
     <bg txt="Модул ID"/>
     <el txt="Ενότητα ID"/>
     <hu txt="Modul ID"/>
+    <pt txt="Id do modulo"/>
   </Msg>
   <Msg id="connections">
     <de txt="Verbindungen"/>
@@ -8311,6 +8835,7 @@
     <el txt="Συνδέσεις"/>
     <hu txt="Kapcsolatok"/>
     <ru txt="Соединения"/>
+    <pt txt="Ligações"/>
   </Msg>
   <Msg id="rotation">
     <de txt="Drehung"/>
@@ -8327,6 +8852,7 @@
     <el txt="Περιστροφή"/>
     <hu txt="Forgatás"/>
     <ru txt="Вращение"/>
+    <pt txt="Rotação"/>
   </Msg>
   <Msg id="side">
     <de txt="Seite"/>
@@ -8343,6 +8869,7 @@
     <el txt="Πλευρά"/>
     <hu txt="Oldal"/>
     <ru txt="Сторона"/>
+    <pt txt="Lado"/>
   </Msg>
   <Msg id="initfieldpause">
     <de txt="Init field pause"/>
@@ -8357,6 +8884,7 @@
     <bg txt="Init областта пауза"/>
     <el txt="Init τομέα διακόψετε"/>
     <hu txt="Alaphelyzetbe állítás várakozása"/>
+    <pt txt="Inicializar campo pausa"/>
   </Msg>
   <Msg id="initfieldpower">
     <de txt="Fahrstrom EIN während der Initalisierung der Weichen"/>
@@ -8371,6 +8899,7 @@
     <bg txt="Init областта мощност на"/>
     <el txt="Init τομέα για την εξουσία"/>
     <hu txt="Alaphelyzetbe állítás az áramot bekapcsolja"/>
+    <pt txt="Inicializar campo ligar"/>
   </Msg>
   <Msg id="enableswfb">
     <de txt="Benutze Weichenrückmeldungen"/>
@@ -8385,6 +8914,7 @@
     <bg txt="Разрешаване на преминаване обратна връзка"/>
     <el txt="Ενεργοποίηση διακόπτη ανατροφοδότηση"/>
     <hu txt="Kitérő visszajelzés engedélyezése"/>
+    <pt txt="Activar interruptor feedback"/>
   </Msg>
   <Msg id="unusedfbevent">
     <de txt="Event from block [%s] is not used. Remove it from the list?"/>
@@ -8399,6 +8929,7 @@
     <bg txt="Събитието е от блока [% S] не се използва. Махнете го от списъка?"/>
     <el txt="Εκδήλωση από το μπλοκ [% s] δεν χρησιμοποιείται. Διαγραφή από τη λίστα;"/>
     <hu txt="A(z) [%s] térközben található esemény nem használt. Töröljem?"/>
+    <pt txt="Evento do bloco (%s) não é usado. Remover da lista?"/>
   </Msg>
   <Msg id="allowchgdir">
     <de txt="Richtungswechsel erlaubt"/>
@@ -8413,6 +8944,7 @@
     <bg txt="Разреши промени посоката"/>
     <el txt="Επιτρέψτε αλλαγή κατεύθυνσης"/>
     <hu txt="Irányváltás engedélyezése"/>
+    <pt txt="Pemitir mudança de direcção"/>
   </Msg>
   <Msg id="eventtimeout">
     <de txt="Ereignis-Zeitüberschreitung"/>
@@ -8427,6 +8959,7 @@
     <bg txt="Събитието е време"/>
     <el txt="Εκδήλωση timeout"/>
     <hu txt="Esemény időtúllépés"/>
+    <pt txt="Evento fim de tempo"/>
   </Msg>
   <Msg id="accessory">
     <de txt="Accessory"/>
@@ -8443,6 +8976,7 @@
     <el txt="Αξεσουάρ"/>
     <hu txt="Eszköz"/>
     <ru txt="Аксессуар"/>
+    <pt txt="Acessório"/>
   </Msg>
   <Msg id="accnr">
     <de txt="Accessory#"/>
@@ -8459,6 +8993,7 @@
     <el txt="Accessory #"/>
     <hu txt="Eszköz#"/>
     <ru txt="Аксессуар#"/>
+    <pt txt="Acessório#"/>
   </Msg>
   <Msg id="portbase">
     <de txt="Portbasis"/>
@@ -8474,6 +9009,7 @@
     <bg txt="Порт база"/>
     <el txt="Λιμένας βάσης"/>
     <hu txt="Port alapcím"/>
+    <pt txt="Porta base"/>
   </Msg>
   <Msg id="ddx">
     <all txt="DDX"/>
@@ -8492,6 +9028,7 @@
     <bg txt="Check TX"/>
     <el txt="Ελέγξτε Tx"/>
     <hu txt="Tx ellenőrzés"/>
+    <pt txt="Verificar Tx"/>
   </Msg>
   <Msg id="signalreset">
     <de txt="Signal zurücksetzen"/>
@@ -8506,6 +9043,7 @@
     <bg txt="Нулиране на сигнала"/>
     <el txt="Επαναφορά μήνυμα"/>
     <hu txt="Jelzők alaphelyzetbe"/>
+    <pt txt="Reiniciar sinal"/>
   </Msg>
   <Msg id="routeswtime">
     <de txt="Schaltzeit für Fahrstraße"/>
@@ -8520,6 +9058,7 @@
     <bg txt="Път превключвате време"/>
     <el txt="Διαδρομή διακόπτη χρόνο"/>
     <hu txt="Útvonal beállíási idő"/>
+    <pt txt="Interruptor de tempo de rota"/>
   </Msg>
   <Msg id="reducespeed">
     <de txt="Reduziere Geschwindigkeit"/>
@@ -8534,6 +9073,7 @@
     <bg txt="Намалете скоростта"/>
     <el txt="Μείωση ταχύτητας"/>
     <hu txt="Sebességcsökkentés"/>
+    <pt txt="Reduzir velocidade"/>
   </Msg>
   <Msg id="conditions">
     <de txt="Bedingungen"/>
@@ -8549,6 +9089,7 @@
     <bg txt="Условия"/>
     <el txt="Προϋποθέσεις"/>
     <hu txt="Feltételek"/>
+    <pt txt="Condições"/>
   </Msg>
   <Msg id="resumeall">
     <de txt="Alle Züge wieder starten" tip="Versetzt alle Züge in den Automatikbetrieb aus der letzte Sitzung."/>
@@ -8563,6 +9104,7 @@
     <bg txt="Възстанови всички locs"/>
     <el txt="Resume όλα locs"/>
     <hu txt="Összes mozdony újraindítása"/>
+    <pt txt="Continuar com todas as locomotivas"/>
   </Msg>
   <Msg id="resumeallwarning">
     <de txt="Alle Züge jetzt starten aus der letzte Sitzung?"/>
@@ -8577,6 +9119,7 @@
     <bg txt="Започнете всички locs вече от предходната сесия?"/>
     <el txt="Ξεκινήστε τώρα locs όλα από την προηγούμενη συνεδρία;"/>
     <hu txt="Összes mozdony indítása az előző futásnál mentett állapotból?"/>
+    <pt txt="Iniciar todas as locomotivas da sessão anterior?"/>
   </Msg>
   <Msg id="disablerouteVreduce">
     <de txt="Keine Geschwindigkeitsänderung bei Weichen"/>
@@ -8591,6 +9134,7 @@
     <bg txt="Не промяна на скоростта за ключове"/>
     <el txt="Δεν αλλαγή ταχύτητας για διακόπτες"/>
     <hu txt="A kitérőkön nincs sebességcsökkentés"/>
+    <pt txt="Sem mudança de velocidade nos interruptores"/>
   </Msg>
   <Msg id="onlyfirstmaster">
     <de txt="Nur erster Client kann bedienen"/>
@@ -8605,6 +9149,7 @@
     <bg txt="Само първо да контролирате"/>
     <el txt="Μόνο η πρώτη μπορεί να ελέγξει"/>
     <hu txt="Csak az első irányíthat"/>
+    <pt txt="Apenas o primeiro pode controlar"/>
   </Msg>
   <Msg id="defaspect">
     <de txt="Standard Signal Begriff"/>
@@ -8619,6 +9164,7 @@
     <bg txt="Основен сигнал аспект"/>
     <el txt="Προκαθορισμένος όψη σήματος"/>
     <hu txt="Alapértelmezett jelzéskép"/>
+    <pt txt="Cor do sinal por defeito"/>
   </Msg>
   <Msg id="greenaspect">
     <de txt="Grün wenn nächstes Signal Rot"/>
@@ -8633,6 +9179,7 @@
     <bg txt="Зелени аспект, ако следващото е червено"/>
     <el txt="Πράσινη επόμενο θέμα αν είναι κόκκινο"/>
     <hu txt="Zöld jelzés, ha a következő vörös"/>
+    <pt txt="Cor do sinal é verde se a próxima for vermelha"/>
   </Msg>
   <Msg id="routeids">
     <de txt="Fahrstraßen Nummern"/>
@@ -8648,6 +9195,7 @@
     <bg txt="Път Идентификаторите"/>
     <el txt="Διαδρομή IDs"/>
     <hu txt="Útvonal ID-k"/>
+    <pt txt="IDs das rotas"/>
   </Msg>
   <Msg id="sharedfb">
     <de txt="Shared sensors"/>
@@ -8662,6 +9210,7 @@
     <bg txt="Общо датчици"/>
     <el txt="Επιμερισμένη αισθητήρες"/>
     <hu txt="Megosztott szenzorok"/>
+    <pt txt="Sensores partilhados"/>
   </Msg>
   <Msg id="managetrackblocks">
     <de txt="Manage track blocks"/>
@@ -8676,6 +9225,7 @@
     <bg txt="Управление на следите блокове"/>
     <el txt="Διαχείριση κομματιών μπλοκ"/>
     <hu txt="Térközök kezelése"/>
+    <pt txt="Controlar o circuito de blocos"/>
   </Msg>
   <Msg id="skipsetsw">
     <de txt="Keine Weichenstellung bei richtiger Weichenlage" tip="Skip switch commands in routes if already set"/>
@@ -8690,6 +9240,7 @@
     <bg txt="Прескачане превключвате команди"/>
     <el txt="Περάστε διακόπτη εντολές"/>
     <hu txt="Váltóállító parancsok kihagyása"/>
+    <pt txt="Saltar comandos de interruptores"/>
   </Msg>
   <Msg id="gamepad">
     <de txt="Gamepad"/>
@@ -8705,6 +9256,7 @@
     <bg txt="Gamepad"/>
     <el txt="Gamepad"/>
     <hu txt="Gamepad"/>
+    <pt txt="Gamepad"/>
   </Msg>
   <Msg id="restrictedit4auto">
     <de txt="Begrenze Editieren im Automatikmodus"/>
@@ -8719,6 +9271,7 @@
     <it txt="Restrict edit in automode"/>
     <sv txt="Restrict edit in automode"/>
     <tr txt="Restrict edit in automode"/>
+    <pt txt="Restringir edição em modo automático"/>
   </Msg>
   <Msg id="semaphorewait">
     <de txt="Formsignalzeit"/>
@@ -8733,6 +9286,7 @@
     <it txt="Semaphore time"/>
     <sv txt="Semaphore time"/>
     <tr txt="Semaphore time"/>
+    <pt txt="Tempo de Semaphore"/>
   </Msg>
   <Msg id="lightsoff">
     <de txt="Licht aus"/>
@@ -8748,6 +9302,7 @@
     <es txt="Lights off"/>
     <hu txt="Fények ki"/>
     <tr txt="Lights off"/>
+    <pt txt="Luzes desligadas"/>
   </Msg>
   <Msg id="svg">
     <en txt="SVG"/>
@@ -8763,6 +9318,7 @@
     <hu txt="SVG"/>
     <nl txt="SVG"/>
     <tr txt="SVG"/>
+    <pt txt="SVG"/>
   </Msg>
   <Msg id="followup">
     <de txt="Nachfolge"/>
@@ -8778,6 +9334,7 @@
     <hu txt="Követő"/>
     <tr txt="Follow-up"/>
     <it txt="seguito"/>
+    <pt txt="Seguir"/>
   </Msg>
   <Msg id="ctsflow">
     <en txt="CTS Flow"/>
@@ -8793,6 +9350,7 @@
     <nl txt="CTS Flow"/>
     <tr txt="CTS Flow"/>
     <hu txt="CTS folyam"/>
+    <pt txt="CTS Flow"/>
   </Msg>
   <Msg id="savelocoiofileas">
     <de txt="Speichern der LocoIO-Datei als"/>
@@ -8807,6 +9365,7 @@
     <it txt="Salva LocoIO file come"/>
     <sv txt="Save LocoIO file as"/>
     <tr txt="Save LocoIO file as"/>
+    <pt txt="Gravar LocoIO como"/>
   </Msg>
   <Msg id="openlocoiofile">
     <de txt="Öffnen einer LocoIO-Datei"/>
@@ -8821,6 +9380,7 @@
     <it txt="Apri LocoIO file"/>
     <sv txt="Open LocoIO file"/>
     <tr txt="Open LocoIO file"/>
+    <pt txt="Abrir ficheiro LocoIO"/>
   </Msg>
   <Msg id="roundhouse">
     <de txt="Ringlokschuppen"/>
@@ -8836,6 +9396,7 @@
     <es txt="Roundhouse"/>
     <tr txt="Roundhouse"/>
     <hu txt="Körfűtőház"/>
+    <pt txt="Placa giratória"/>
   </Msg>
   <Msg id="access">
     <de txt="Zufahrt"/>
@@ -8851,6 +9412,7 @@
     <hu txt="Elérés"/>
     <tr txt="Access"/>
     <it txt="accesso"/>
+    <pt txt="Acesso"/>
   </Msg>
   <Msg id="ttdirpause">
     <de txt="Wartezeit für Richtungswechsel"/>
@@ -8865,6 +9427,7 @@
     <el txt="Σκηνοθεσία αλλαγή διακόψετε"/>
     <hu txt="Irányváltási szünet"/>
     <it txt="pausa al cambio direzione"/>
+    <pt txt="Pausa na mudança de direcção"/>
   </Msg>
   <Msg id="swaprotationdirection">
     <de txt="Wechsel der Drehrichtung"/>
@@ -8879,6 +9442,7 @@
     <it txt="inverti la direzione di rotazione"/>
     <sv txt="swap rotation direction"/>
     <tr txt="swap rotation direction"/>
+    <pt txt="Alternar mudança de direcção"/>
   </Msg>
   <Msg id="shortid">
     <en txt="Short ID"/>
@@ -8894,6 +9458,7 @@
     <hu txt="Rövid ID"/>
     <nl txt="Short ID"/>
     <tr txt="Short ID"/>
+    <pt txt="ID curto"/>
   </Msg>
   <Msg id="setshortid">
     <en txt="Set short ID"/>
@@ -8908,6 +9473,7 @@
     <nl txt="Set short ID"/>
     <tr txt="Set short ID"/>
     <hu txt="Rövid ID beállítása"/>
+    <pt txt="Ajustar ID curto"/>
   </Msg>
   <Msg id="txshortids">
     <en txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
@@ -8922,6 +9488,7 @@
     <nl txt="Transmit short IDs"/>
     <tr txt="Transmit short IDs"/>
     <hu txt="Rövid ID küldése"/>
+    <pt txt="Transmitir IDs curtos"/>
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagenliste" tip="Wagontabelle"/>
@@ -8937,6 +9504,7 @@
     <bg txt="Кола таблица"/>
     <el txt="Car πίνακα"/>
     <it txt="tabella carri"/>
+    <pt txt="Tabela de vagões"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtzettel" tip="Frachtzetteltabelle"/>
@@ -8951,6 +9519,7 @@
     <it txt="Waybills"/>
     <sv txt="Waybills"/>
     <tr txt="Waybills"/>
+    <pt txt="Tabela de Waybill (recibo/factura)"/>
   </Msg>
   <Msg id="operatortable" dialog="true" key="Alt-6">
     <en txt="Operator table" alttxt="Operators" tip="Operator table"/>
@@ -8961,6 +9530,7 @@
     <hu txt="Kezelő lista"/>
     <it txt="Tabella dell' Operatore"/>
     <nl txt="Stuur tabel"/>
+    <pt txt="Tabela de operadores"/>
   </Msg>
   <Msg id="operator">
     <en txt="Operator"/>
@@ -8972,6 +9542,7 @@
     <fr txt="Opérateur"/>
     <it txt="Operatore"/>
     <nl txt="Bestuurder"/>
+    <pt txt="Operador"/>
   </Msg>
   <Msg id="waybill">
     <de txt="Frachtzettel"/>
@@ -8987,6 +9558,7 @@
     <hu txt="Fuvarlevél"/>
     <tr txt="Waybill"/>
     <fr txt="bulletin d'expédition"/>
+    <pt txt="Waybill (recibo/factura)"/>
   </Msg>
   <Msg id="freezetime">
     <de txt="Uhrzeit anhalten"/>
@@ -9001,6 +9573,7 @@
     <es txt="Freeze time"/>
     <tr txt="Freeze time"/>
     <hu txt="Felfüggesztési idő"/>
+    <pt txt="Parar tempo"/>
   </Msg>
   <Msg id="resumetime">
     <de txt="Uhrzeit fortsetzen"/>
@@ -9015,6 +9588,7 @@
     <es txt="Resume time"/>
     <tr txt="Resume time"/>
     <hu txt="Újraindítási idő"/>
+    <pt txt="Continuar tempo"/>
   </Msg>
   <Msg id="code">
     <de txt="Kode"/>
@@ -9030,6 +9604,7 @@
     <es txt="Code"/>
     <hu txt="Kód"/>
     <tr txt="Code"/>
+    <pt txt="Código"/>
   </Msg>
   <Msg id="roadname">
     <de txt="Gesellschaft"/>
@@ -9045,6 +9620,7 @@
     <hu txt="Vasúttársaság"/>
     <bg txt="Roadname"/>
     <el txt="Roadname"/>
+    <pt txt="Nome da via"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
@@ -9060,6 +9636,7 @@
     <es txt="Era"/>
     <hu txt="Korszak"/>
     <tr txt="Era"/>
+    <pt txt="Era"/>
   </Msg>
   <Msg id="subtype">
     <de txt="Untergruppe"/>
@@ -9075,6 +9652,7 @@
     <hu txt="Altípus"/>
     <nl txt="Subtype"/>
     <tr txt="Subtype"/>
+    <pt txt="Sub-tipo"/>
   </Msg>
   <Msg id="car">
     <de txt="Wagen"/>
@@ -9090,6 +9668,7 @@
     <bg txt="Кола"/>
     <el txt="Αυτοκίνητο"/>
     <it txt="carro"/>
+    <pt txt="Vagão"/>
   </Msg>
   <Msg id="poladdr">
     <en txt="Polarization addr."/>
@@ -9104,6 +9683,7 @@
     <tr txt="Polarization addr."/>
     <hu txt="Polarizációs cím"/>
     <nl txt="Polarisatie adres"/>
+    <pt txt="Morada de polarização"/>
   </Msg>
   <Msg id="ttbridgepolarization">
     <en txt="Bridge polarization"/>
@@ -9118,6 +9698,7 @@
     <nl txt="Brug polarisatie"/>
     <sv txt="Bridge polarization"/>
     <tr txt="Bridge polarization"/>
+    <pt txt="Polarização ponte"/>
   </Msg>
   <Msg id="readspeedcurve">
     <en txt="Read current speed curve from decoder?"/>
@@ -9128,6 +9709,7 @@
     <fr txt="Lire la courbe de vitesse actuelle du décodeur"/>
     <hu txt="Sebességgörbe kiolvasása a dekóderből?"/>
     <it txt="Leggi curva di velocita' dal decoder?"/>
+    <pt txt="Ler velocidade curva actual do decodificador?"/>
   </Msg>
   <Msg id="sync">
     <en txt="Synchronize"/>
@@ -9138,6 +9720,7 @@
     <hu txt="Szinkronizál"/>
     <it txt="Sincronizza"/>
     <nl txt="Synchroniseren"/>
+    <pt txt="Sincronizar"/>
   </Msg>
   <Msg id="onlymobiledec">
     <en txt="Mobile only"/>
@@ -9147,6 +9730,7 @@
     <fr txt="Uniquement décodeurs de locomotives"/>
     <hu txt="Csak mobil"/>
     <nl txt="Alleen locdecoders"/>
+    <pt txt="Apenas portatil"/>
   </Msg>
   <Msg id="purgeslots">
     <en txt="Purge slots"/>
@@ -9156,6 +9740,7 @@
     <fr txt="Arranger"/>
     <hu txt="Rések ürítése"/>
     <nl txt="Klaarzetten"/>
+    <pt txt="Remover slots"/>
   </Msg>
   <Msg id="stopatpurge">
     <en txt="Stop at purge"/>
@@ -9165,6 +9750,7 @@
     <fr txt="Arrêt après nettoyage"/>
     <hu txt="Ürítéskor leállít"/>
     <nl txt="Stop na verwijderen"/>
+    <pt txt="Parar na remoção"/>
   </Msg>
   <Msg id="useshortinevent">
     <en txt="Use shortin event"/>
@@ -9175,6 +9761,7 @@
     <hu txt="A \&quot;shortin\&quot; esemény alkalmazása"/>
     <it txt="Usa evento shortin"/>
     <nl txt="Gebruik de shortin melder"/>
+    <pt txt="Usar evento curto"/>
   </Msg>
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
@@ -9184,6 +9771,7 @@
     <fr txt="Arrêt à lévénement pre2in"/>
     <hu txt="Megállítás a \&quot;pre2in\&quot; eseménynél"/>
     <nl txt="Stop bij een pre2in melder"/>
+    <pt txt="Parar em evento pre2in"/>
   </Msg>
   <Msg id="routing">
     <en txt="Routing"/>
@@ -9194,6 +9782,7 @@
     <el txt="Routing"/>
     <fr txt="Calcul d'itinéraire"/>
     <nl txt="Traceren"/>
+    <pt txt="Atribuir rotas"/>
   </Msg>
   <Msg id="shipper">
     <en txt="Shipper"/>
@@ -9204,6 +9793,7 @@
     <el txt="Shipper"/>
     <fr txt="Affréteur"/>
     <nl txt="Vrachtvervoerder"/>
+    <pt txt="Pessoal de armazem"/>
   </Msg>
   <Msg id="origin">
     <en txt="Origin"/>
@@ -9215,6 +9805,7 @@
     <fr txt="Origine"/>
     <it txt="Origine"/>
     <nl txt="Basis"/>
+    <pt txt="Origem"/>
   </Msg>
   <Msg id="consignee">
     <en txt="Consignee"/>
@@ -9225,6 +9816,7 @@
     <el txt="Παραλήπτης"/>
     <fr txt="Consigné"/>
     <nl txt="Ontvanger"/>
+    <pt txt="Consignação"/>
   </Msg>
   <Msg id="commodity">
     <en txt="Commodity"/>
@@ -9235,6 +9827,7 @@
     <el txt="Εμπόρευμα"/>
     <fr txt="Commodité"/>
     <nl txt="Goederen"/>
+    <pt txt="Activo"/>
   </Msg>
   <Msg id="status">
     <en txt="Status"/>
@@ -9247,6 +9840,7 @@
     <fr txt="État"/>
     <it txt="Stato"/>
     <nl txt="Status"/>
+    <pt txt="Estado"/>
   </Msg>
   <Msg id="waiting">
     <en txt="Waiting"/>
@@ -9259,6 +9853,7 @@
     <fr txt="En attente"/>
     <it txt="In attesa"/>
     <nl txt="Wachten"/>
+    <pt txt="Em espera"/>
   </Msg>
   <Msg id="shipping">
     <en txt="Shipping"/>
@@ -9269,6 +9864,7 @@
     <el txt="Αποστολή"/>
     <fr txt="Expédition"/>
     <nl txt="Vervoeren"/>
+    <pt txt="Transporte"/>
   </Msg>
   <Msg id="delivered">
     <en txt="Delivered"/>
@@ -9280,6 +9876,7 @@
     <fr txt="Livré"/>
     <it txt="Consegnato"/>
     <nl txt="Geleverd"/>
+    <pt txt="Entregue"/>
   </Msg>
   <Msg id="empty">
     <en txt="Empty"/>
@@ -9291,6 +9888,7 @@
     <fr txt="Vide"/>
     <it txt="Vuoto"/>
     <nl txt="Leeg"/>
+    <pt txt="Vazio"/>
   </Msg>
   <Msg id="loaded">
     <en txt="Loaded"/>
@@ -9302,6 +9900,7 @@
     <fr txt="Chargé"/>
     <it txt="Caricato"/>
     <nl txt="Geladen"/>
+    <pt txt="Carregado"/>
   </Msg>
   <Msg id="maintenance">
     <en txt="Maintenance"/>
@@ -9312,6 +9911,7 @@
     <hu txt="Fenntartási"/>
     <it txt="Manutenzione"/>
     <nl txt="In onderhoud"/>
+    <pt txt="Manutenção"/>
   </Msg>
   <Msg id="boxcar">
     <en txt="Boxcar"/>
@@ -9323,6 +9923,7 @@
     <fr txt="Wagon couvert"/>
     <it txt="Carro chiuso"/>
     <nl txt="Gesloten goederenwagen"/>
+    <pt txt="Vagão de mercadorias"/>
   </Msg>
   <Msg id="gondola">
     <en txt="Gondola"/>
@@ -9333,6 +9934,7 @@
     <el txt="Gondola"/>
     <fr txt="Wagon tombereau"/>
     <nl txt="Open goederenwagen"/>
+    <pt txt="Gondola"/>
   </Msg>
   <Msg id="flatcar">
     <en txt="Flatcar"/>
@@ -9344,6 +9946,7 @@
     <fr txt="Wagon-plateforme"/>
     <it txt="Carro pianale"/>
     <nl txt="Plattewagen"/>
+    <pt txt="Vagão liso/rasteiro"/>
   </Msg>
   <Msg id="reefer">
     <en txt="Reefer"/>
@@ -9354,6 +9957,7 @@
     <el txt="Πατατούκα"/>
     <fr txt="Wagon frigorifique"/>
     <nl txt="Koelwagen"/>
+    <pt txt="Vagão frigorifico"/>
   </Msg>
   <Msg id="stockcar">
     <en txt="Stockcar"/>
@@ -9364,6 +9968,7 @@
     <el txt="Βαγόνι ζώων"/>
     <fr txt="Wagon à bestiaux"/>
     <nl txt="Veewagen"/>
+    <pt txt="Vagão de mercadorias"/>
   </Msg>
   <Msg id="tankcar">
     <en txt="Tankcar"/>
@@ -9375,6 +9980,7 @@
     <fr txt="Wagon citerne"/>
     <it txt="Carro cisterna"/>
     <nl txt="Tankwagon"/>
+    <pt txt="Vagão deposito"/>
   </Msg>
   <Msg id="wellcar">
     <en txt="Wellcar"/>
@@ -9385,6 +9991,7 @@
     <el txt="Wellcar"/>
     <fr txt="Wagon porte-conteneurs"/>
     <nl txt="Schuifwandwagen"/>
+    <pt txt="Wellcar (Carro)"/>
   </Msg>
   <Msg id="hopper">
     <en txt="Hopper"/>
@@ -9396,6 +10003,7 @@
     <fr txt="Wagon trémie"/>
     <it txt="Carro tramoggia"/>
     <nl txt="Onderlosser"/>
+    <pt txt="Tolva"/>
   </Msg>
   <Msg id="caboose">
     <en txt="Caboose"/>
@@ -9406,6 +10014,7 @@
     <el txt="Βαγόνι σιδηροδρομικών υπαλλήλων"/>
     <fr txt="Fourgon de queue"/>
     <nl txt="Dienstwagen"/>
+    <pt txt="Vagão de ultima posição"/>
   </Msg>
   <Msg id="autorack">
     <en txt="Autorack"/>
@@ -9416,6 +10025,7 @@
     <el txt="Autorack"/>
     <fr txt="Piste de voiture"/>
     <nl txt="Autotransportwagen"/>
+    <pt txt="Vagão de transporte de automóveis"/>
   </Msg>
   <Msg id="autocarrier">
     <en txt="Autocarrier"/>
@@ -9425,6 +10035,7 @@
     <fr txt="Wagon porte-autos"/>
     <hu txt="Zsebeskocsi"/>
     <nl txt="Autovervoer"/>
+    <pt txt="Transporte de automoveis"/>
   </Msg>
   <Msg id="logdumpcar">
     <en txt="Logdumpcar"/>
@@ -9436,6 +10047,7 @@
     <fr txt="Wagon transport de rondins de bois"/>
     <it txt="Carro trasporto tronchi"/>
     <nl txt="Rongenwagen"/>
+    <pt txt="Logdumpcar"/>
   </Msg>
   <Msg id="coilcar">
     <en txt="Coilcar"/>
@@ -9447,6 +10059,7 @@
     <fr txt="Transpot de Charbon"/>
     <it txt="Carro trasporto bobine"/>
     <nl txt="Staalrollentransportwagen"/>
+    <pt txt="Vagão de tranporte de metal (chapa)"/>
   </Msg>
   <Msg id="coach">
     <en txt="Coach"/>
@@ -9458,6 +10071,7 @@
     <fr txt="Voiture"/>
     <it txt="vettura"/>
     <nl txt="Wagon"/>
+    <pt txt="Vagão de passageiros"/>
   </Msg>
   <Msg id="lounge">
     <en txt="Lounge"/>
@@ -9469,6 +10083,7 @@
     <fr txt="Voiture salon"/>
     <it txt="vettura salone"/>
     <nl txt="Lounge"/>
+    <pt txt="Vagão restaurante"/>
   </Msg>
   <Msg id="dome">
     <en txt="Dome"/>
@@ -9479,6 +10094,7 @@
     <el txt="Dome"/>
     <fr txt="Voiture panoramique"/>
     <nl txt="Uitzichtwagen"/>
+    <pt txt="Cúpula"/>
   </Msg>
   <Msg id="express">
     <en txt="Express"/>
@@ -9490,6 +10106,7 @@
     <fr txt="Express"/>
     <it txt="Espresso"/>
     <nl txt="Express"/>
+    <pt txt="Expresso"/>
   </Msg>
   <Msg id="dinner">
     <en txt="Dinner"/>
@@ -9501,6 +10118,7 @@
     <fr txt="Voiture restaurant"/>
     <it txt="Carrozza Ristorante"/>
     <nl txt="Restauratiewagon"/>
+    <pt txt="Jantar"/>
   </Msg>
   <Msg id="sleeper">
     <en txt="Sleeper"/>
@@ -9512,6 +10130,7 @@
     <fr txt="Voiture lits"/>
     <it txt="Carrozza letti"/>
     <nl txt="Slaapwagon"/>
+    <pt txt="Dormir"/>
   </Msg>
   <Msg id="baggage">
     <en txt="Baggage"/>
@@ -9523,6 +10142,7 @@
     <fr txt="Fourgon à bagages"/>
     <it txt="Bagagliaio"/>
     <nl txt="Bagagewagon"/>
+    <pt txt="Bagagem"/>
   </Msg>
   <Msg id="postoffice">
     <en txt="Postoffice"/>
@@ -9534,6 +10154,7 @@
     <fr txt="Fourgon postal"/>
     <it txt="Ufficio Postale"/>
     <nl txt="Postkantoor"/>
+    <pt txt="Posto dos correios"/>
   </Msg>
   <Msg id="lock">
     <en txt="Lock"/>
@@ -9544,6 +10165,7 @@
     <fr txt="Verrouiller"/>
     <it txt="Bloccare"/>
     <nl txt="Vergrendeld"/>
+    <pt txt="Trancar"/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -9551,12 +10173,14 @@
     <fr txt="L' ID doit contenir au moins un caractère"/>
     <hu txt="Az ID legalább egy karakter"/>
     <nl txt="De ID moet minstens één letter of cijfer hebben!"/>
+    <pt txt="O ID tem de ser acertado para pelo menos um caracter!"/>
   </Msg>
   <Msg id="minocc">
     <en txt="Minimal occupied"/>
     <fr txt="Occupation minimum"/>
     <hu txt="Minimális foglaltság"/>
     <nl txt="Minimale bezetting"/>
+    <pt txt="Ocupação minima"/>
   </Msg>
   <Msg id="timeprocessing">
     <en txt="Time processing"/>
@@ -9564,6 +10188,7 @@
     <nl txt="Tijd verwerking"/>
     <fr txt="Temps de travail"/>
     <hu txt="Idő feldolgozás"/>
+    <pt txt="Tempo de processamento"/>
   </Msg>
   <Msg id="real">
     <en txt="Absolute"/>
@@ -9572,6 +10197,7 @@
     <cs txt="Absolutní"/>
     <hu txt="Abszolút"/>
     <fr txt="Absolu"/>
+    <pt txt="Absoluto"/>
   </Msg>
   <Msg id="relative">
     <en txt="Relative"/>
@@ -9580,6 +10206,7 @@
     <cs txt="Relativní"/>
     <hu txt="Relatív"/>
     <fr txt="Relatif"/>
+    <pt txt="Relativo"/>
   </Msg>
   <Msg id="hourly">
     <en txt="Hourly"/>
@@ -9588,6 +10215,7 @@
     <cs txt="Hodinové"/>
     <hu txt="Óránként"/>
     <fr txt="Toutes les heures"/>
+    <pt txt="De hora em hora"/>
   </Msg>
   <Msg id="fullscreen">
     <en txt="Full screen"/>
@@ -9596,6 +10224,7 @@
     <hu txt="Teljes képernyő"/>
     <nl txt="Volledig scherm"/>
     <ru txt="Полный экран"/>
+    <pt txt="Ecrã completo"/>
   </Msg>
   <Msg id="timeframe">
     <en txt="Time frame"/>
@@ -9604,6 +10233,7 @@
     <de txt="Zeitrahmen"/>
     <fr txt="Délai"/>
     <nl txt="Tijd venster"/>
+    <pt txt="Tempo de frame"/>
   </Msg>
   <Msg id="usebicom">
     <en txt="Use Bi-Directional Communication"/>
@@ -9611,6 +10241,7 @@
     <fr txt="Utiliser la communication Bi-Directionelle"/>
     <hu txt="Kétirányú kommunikáció használata"/>
     <nl txt="Gebruik BiDi communicatie"/>
+    <pt txt="Usar comunicação bi-direccional"/>
   </Msg>
   <Msg id="serviced">
     <en txt="Serviced" tip="Set locomotive to serviced."/>
@@ -9619,6 +10250,7 @@
     <de txt="Service durchgeführt"/>
     <fr txt="En service"/>
     <nl txt="Onderhouden"/>
+    <pt txt="Serviço efectuado"/>
   </Msg>
   <Msg id="mtime">
     <en txt="M-Time" tip="Last serviced run time."/>
@@ -9627,6 +10259,7 @@
     <de txt="letzter Service"/>
     <fr txt="Temps-M"/>
     <nl txt="O-Tijd"/>
+    <pt txt="M-Time"/>
   </Msg>
   <Msg id="mint">
     <en txt="M-Int" tip="Maintenance interval in hours."/>
@@ -9635,104 +10268,134 @@
     <de txt="Service Intervall"/>
     <fr txt="M-Int"/>
     <nl txt="O-Int"/>
+    <pt txt="M-int"/>
   </Msg>
   <Msg id="offpos">
     <en txt="Shutdown position"/>
     <fr txt="Position d'arrêt"/>
     <hu txt="Lekapcsolási pozíció"/>
     <nl txt="Shutdown positie"/>
+    <pt txt="Posição de encerramento"/>
   </Msg>
   <Msg id="position">
     <en txt="Position"/>
+    <pt txt="Posição"/>
   </Msg>
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
+    <pt txt="Atraso de motor desligado"/>
   </Msg>
   <Msg id="stopatidentmismatch">
     <en txt="Power off at ident mismatch"/>
+    <pt txt="Desligar quando erro identico"/>
   </Msg>
   <Msg id="manualoperated">
     <en txt="Manual operated"/>
+    <pt txt="Operação manual"/>
   </Msg>
   <Msg id="autooperated">
     <en txt="Automatically operated"/>
+    <pt txt="Operado manualmente"/>
   </Msg>
   <Msg id="import" dialog="true">
     <en txt="Import"/>
+    <pt txt="Importar"/>
   </Msg>
   <Msg id="chain">
     <en txt="Chain"/>
     <de txt="Strang"/>
     <nl txt="Lijn"/>
+    <pt txt="Cadeia"/>
   </Msg>
   <Msg id="chains">
     <en txt="Chains"/>
     <de txt="Strangen"/>
     <nl txt="Lijnen"/>
+    <pt txt="Correntes"/>
   </Msg>
   <Msg id="shortcutsensor">
     <de txt="Kurzschlussmelder"/>
     <en txt="Shortcut sensor"/>
     <nl txt="Kortsluiting sensor"/>
+    <pt txt="Atalho de sensor"/>
   </Msg>
   <Msg id="shortcut">
     <de txt="Kurzschluss"/>
     <en txt="Shortcut"/>
     <nl txt="Kortsluiting"/>
+    <pt txt="Atalho"/>
   </Msg>
   <Msg id="boostertable" dialog="true">
     <en txt="Boosters" tip="Booster setup for power manager."/>
+    <pt txt="Booster"/>
   </Msg>
   <Msg id="powerctrl" dialog="true">
     <en txt="Power control" tip="Power manager booster control."/>
+    <pt txt="Controlo de corrente"/>
   </Msg>
   <Msg id="boosterid">
     <en txt="Booster ID"/>
+    <pt txt="ID do Booster"/>
   </Msg>
   <Msg id="trackpower">
     <en txt="Track power"/>
+    <pt txt="Corrente da pista"/>
   </Msg>
   <Msg id="powerdistrict">
     <en txt="District"/>
+    <pt txt="Distrito"/>
   </Msg>
   <Msg id="fastclock">
     <en txt="Fastclock"/>
+    <pt txt="Relógio rápido"/>
   </Msg>
   <Msg id="poweronstartup">
     <en txt="Power on at startup"/>
+    <pt txt="Ligar no arranque"/>
   </Msg>
   <Msg id="offset">
     <en txt="Offset"/>
+    <pt txt="Offset"/>
   </Msg>
   <Msg id="debounce">
     <en txt="Debounce"/>
+    <pt txt="Debounce"/>
   </Msg>
   <Msg id="scopt_poweroffall">
     <en txt="Power off all boosters."/>
+    <pt txt="Desligar todos os boosters"/>
   </Msg>
   <Msg id="scopt_stoplocos">
     <en txt="Stop all locos in this district."/>
+    <pt txt="Parar todas as locomotivas neste distrito/sector"/>
   </Msg>
   <Msg id="scopt_repoweron">
     <en txt="Repower on after the shortcut is cleared."/>
+    <pt txt="Reiniciar corrente depois de curto circuito restablecido"/>
   </Msg>
   <Msg id="multiport">
     <en txt="Multiport"/>
+    <pt txt="Porta multipla"/>
   </Msg>
   <Msg id="itemidps">
     <en txt="Item ID pointsize"/>
+    <pt txt="Item ID pointsize"/>
   </Msg>
   <Msg id="timeout">
     <en txt="Timeout"/>
+    <pt txt="Tempo esgotado"/>
   </Msg>
   <Msg id="virtual">
     <en txt="Virtual"/>
+    <pt txt="Virtual"/>
   </Msg>
   <Msg id="smallsymbol">
     <en txt="Small symbol"/>
+    <pt txt="Pequeno simbolo"/>
   </Msg>
   <Msg id="modview">
     <en txt="Module view"/>
+    <pt txt="Vista modular"/>
   </Msg>
   <Msg id="post">
     <en txt="Post"/>
