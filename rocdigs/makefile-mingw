@@ -85,7 +85,7 @@ $(OUTDIR)\dcc232.dll: $(TMPOUTDIR)\dcc232.o $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\
 $(OUTDIR)\nce.dll: $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\nce.dll
 $(OUTDIR)\io8255.dll: $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
-  dllwrap --def rocdigs.def $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\io8255.dll
+	dllwrap --def rocdigs.def $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\io8255.dll
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -148,7 +148,6 @@ clean:
 	-del /Q $(OUTDIR)\sprog.dll
 	-del /Q $(OUTDIR)\dcc232.dll
 	-del /Q $(OUTDIR)\nce.dll
-  -del /Q $(OUTDIR)\io8255.dll
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\ogen.exe ..\..\rocdigs\rocdigs.xml ..\\
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml impl\version.c svnLog
 	
