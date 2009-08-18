@@ -572,7 +572,7 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
       data->slots[slot].fn[28] = wFunCmd.isf28( node );
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "lc=%d function group %d changed for loco %d", group, addr );
+          "slot=%d function group %d changed for loco %d", slot, group, addr );
     }
   }
 
