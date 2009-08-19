@@ -139,7 +139,7 @@ fromtar:
 	-rm -f $(TMPOUTDIR)/*.o
 	-rm -f $(OUTDIR)/librocs.a
 	cd $(GENMOUNTPOINT); \
-	cp ../rocs/rocs-gen.tar.gz .; gzip -d rocs-gen.tar.gz; tar -xf rocs-gen.tar
+	cp ../rocs/rocs-gen.tar.gz .; gzip -df rocs-gen.tar.gz; tar -xf rocs-gen.tar
 
 
 ssl: OPENSSL=-D__OPENSSL__
