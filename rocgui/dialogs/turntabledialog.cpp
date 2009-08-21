@@ -699,16 +699,16 @@ void TurntableDialog::CreateControls()
     itemFlexGridSizer21->Add(m_IID, 0, wxALIGN_LEFT|wxGROW|wxALL, 5);
 
     m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_TT_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer21->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer21->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Bus = new wxTextCtrl( m_Interface, ID_TEXTCTRL_TT_BUS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer21->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer21->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_TT_ADDRESS, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer21->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer21->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_TT_ADDRESS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer21->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer21->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labPolAddr = new wxStaticText( m_Interface, wxID_STATIC, _("pol. addr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer21->Add(m_labPolAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -736,11 +736,11 @@ void TurntableDialog::CreateControls()
     itemFlexGridSizer21->Add(m_Prot, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labBridgeSensor1 = new wxStaticText( m_Interface, wxID_ANY, _("Sensor 1"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer21->Add(m_labBridgeSensor1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer21->Add(m_labBridgeSensor1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_BridgeSensor1Strings;
     m_BridgeSensor1 = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BridgeSensor1Strings, wxCB_READONLY );
-    itemFlexGridSizer21->Add(m_BridgeSensor1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer21->Add(m_BridgeSensor1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBridgeSensor2 = new wxStaticText( m_Interface, wxID_ANY, _("Sensor 2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer21->Add(m_labBridgeSensor2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);

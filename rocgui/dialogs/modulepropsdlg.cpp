@@ -24,6 +24,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "modulepropsdlg.h"
@@ -375,19 +376,19 @@ void ModulePropsDlg::CreateControls()
     m_labTitle = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Title"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labTitle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Title = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxSize(160, -1), 0 );
+    m_Title = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
     itemFlexGridSizer6->Add(m_Title, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_ModuleID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1), 0 );
+    m_ModuleID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, -1), 0 );
     itemFlexGridSizer6->Add(m_ModuleID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labFile = new wxStaticText( m_GeneralPanel, wxID_ANY, _("File"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_File = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxSize(160, -1), 0 );
+    m_File = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
     itemFlexGridSizer6->Add(m_File, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(2, 4, 0, 0);
@@ -395,13 +396,13 @@ void ModulePropsDlg::CreateControls()
     m_labX = new wxStaticText( m_GeneralPanel, wxID_ANY, _("X"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_labX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_X = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_X = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer13->Add(m_X, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labY = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Y"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_labY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Y = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_Y = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer13->Add(m_Y, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer18 = new wxFlexGridSizer(2, 2, 0, 0);

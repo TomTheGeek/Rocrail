@@ -249,7 +249,7 @@ void MVTrackDlg::CreateControls()
     m_labGaugePrefix = new wxStaticText( itemDialog1, wxID_ANY, _("1:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labGaugePrefix, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Gauge = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("87"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 1, 300, 87 );
+    m_Gauge = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("87"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 300, 87 );
     itemFlexGridSizer3->Add(m_Gauge, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 3, 0, 0);
@@ -275,14 +275,14 @@ void MVTrackDlg::CreateControls()
     itemFlexGridSizer12->Add(m_labSensor1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_Sensor1Strings;
-    m_Sensor1 = new wxComboBox( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxSize(130, -1), m_Sensor1Strings, wxCB_DROPDOWN );
+    m_Sensor1 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor1Strings, wxCB_DROPDOWN );
     itemFlexGridSizer12->Add(m_Sensor1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSensor2 = new wxStaticText( itemDialog1, wxID_ANY, _("Sensor 2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_labSensor2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_Sensor2Strings;
-    m_Sensor2 = new wxComboBox( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxSize(130, -1), m_Sensor2Strings, wxCB_DROPDOWN );
+    m_Sensor2 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor2Strings, wxCB_DROPDOWN );
     itemFlexGridSizer12->Add(m_Sensor2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer17 = new wxStdDialogButtonSizer;

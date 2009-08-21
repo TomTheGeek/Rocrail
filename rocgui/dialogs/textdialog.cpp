@@ -33,6 +33,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 #include <wx/colordlg.h>
 
@@ -297,34 +298,34 @@ void TextDialog::CreateControls()
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, ID_STATICTEXT_TEXT_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_ID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_ID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelText = new wxStaticText( m_GeneralPanel, ID_STATICTEXT_TEXT_TEXT, _("Text"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_LabelText, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_LabelText, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    m_Text = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TEXT, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
-    itemFlexGridSizer6->Add(m_Text, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_Text = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TEXT, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer6->Add(m_Text, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labImage = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Image"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labImage, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_labImage, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_ImageButton = new wxButton( m_GeneralPanel, ID_BUTTON_TXT_IMAGE, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
-    itemFlexGridSizer6->Add(m_ImageButton, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_ImageButton, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_LabelTip = new wxStaticText( m_GeneralPanel, ID_STATICTEXT_TEXT_TIP, _("Tip"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_LabelTip, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_LabelTip, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
-    m_Tip = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TIP, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_Tip, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_Tip = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TIP, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_Tip, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labPointsize = new wxStaticText( m_GeneralPanel, wxID_STATIC_TX_POINT, _("pointsize"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labPointsize, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labPointsize, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     m_Pointsize = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TX_POINT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer6->Add(m_Pointsize, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_Pointsize, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(2, 4, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer17, 0, wxGROW|wxALL, 5);

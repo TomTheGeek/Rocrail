@@ -258,13 +258,13 @@ void SelectDialog::CreateControls()
     m_labRangCX = new wxStaticText( itemDialog1, wxID_ANY, _("width"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer4->Add(m_labRangCX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_RangeCX = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 1, 99, 1 );
+    m_RangeCX = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 99, 1 );
     itemFlexGridSizer4->Add(m_RangeCX, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labRangeCY = new wxStaticText( itemDialog1, wxID_ANY, _("height"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer4->Add(m_labRangeCY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_RangeCY = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 1, 99, 1 );
+    m_RangeCY = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 99, 1 );
     itemFlexGridSizer4->Add(m_RangeCY, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_TargetBox = new wxStaticBox(itemDialog1, wxID_ANY, _("Target"));
@@ -277,13 +277,13 @@ void SelectDialog::CreateControls()
     m_labTargetX = new wxStaticText( itemDialog1, wxID_ANY, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_labTargetX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TargetX = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TargetX = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer14->Add(m_TargetX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labTargetY = new wxStaticText( itemDialog1, wxID_ANY, _("y"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_labTargetY, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TargetY = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TargetY = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer14->Add(m_TargetY, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(1, 2, 0, 0);

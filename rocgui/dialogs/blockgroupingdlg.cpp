@@ -33,6 +33,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "blockgroupingdlg.h"
@@ -340,16 +341,16 @@ void BlockGroupingDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
     m_New = new wxButton( m_IndexPanel, ID_BUTTON_LINK_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer7->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer7->Add(m_New, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Delete = new wxButton( m_IndexPanel, ID_BUTTON_LINK_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer7->Add(m_Delete, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer7->Add(m_Delete, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Activate = new wxButton( m_IndexPanel, ID_BUTTON_LINK_ACTIVATE, _("Activate"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer7->Add(m_Activate, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer7->Add(m_Activate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DeActivate = new wxButton( m_IndexPanel, ID_BUTTON_LINK_DEACTIVATE, _("DeActivate"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer7->Add(m_DeActivate, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer7->Add(m_DeActivate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_IndexPanel, _("Index"));
 
@@ -363,13 +364,13 @@ void BlockGroupingDialog::CreateControls()
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_LINK_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDesc = new wxStaticText( m_GeneralPanel, wxID_STATIC_LINK_DESC, _("description"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer13->Add(m_LabelDesc, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Desc = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_DESC, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Desc = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer13->Add(m_Desc, 0, wxGROW|wxALL, 5);
 
     m_Notebook->AddPage(m_GeneralPanel, _("General"));
@@ -385,7 +386,7 @@ void BlockGroupingDialog::CreateControls()
     itemFlexGridSizer21->Add(m_LabelMainBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_MainBlockStrings;
-    m_MainBlock = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_MAIN, _T(""), wxDefaultPosition, wxDefaultSize, m_MainBlockStrings, wxCB_READONLY );
+    m_MainBlock = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_MAIN, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_MainBlockStrings, wxCB_READONLY );
     itemFlexGridSizer21->Add(m_MainBlock, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer24 = new wxBoxSizer(wxVERTICAL);
@@ -398,7 +399,7 @@ void BlockGroupingDialog::CreateControls()
     itemBoxSizer24->Add(m_BlockList, 1, wxGROW|wxALL, 5);
 
     wxArrayString m_AddBlockListStrings;
-    m_AddBlockList = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_ADD_BLOCK, _T(""), wxDefaultPosition, wxDefaultSize, m_AddBlockListStrings, wxCB_DROPDOWN );
+    m_AddBlockList = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_ADD_BLOCK, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_AddBlockListStrings, wxCB_DROPDOWN );
     itemBoxSizer24->Add(m_AddBlockList, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(2, 2, 0, 0);

@@ -214,32 +214,32 @@ void TTTrackDialog::CreateControls()
     m_LabelTrackNr = new wxStaticText( itemDialog1, wxID_STATIC_TTT_NR, _("Track Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelTrackNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_TrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 47, 0 );
+    m_TrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 47, 0 );
     itemFlexGridSizer3->Add(m_TrackNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDecoder = new wxStaticText( itemDialog1, wxID_STATIC, _("Decoder Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labDecoder, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_DecTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
+    m_DecTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
     itemFlexGridSizer3->Add(m_DecTrackNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labOppTrackNr = new wxStaticText( itemDialog1, wxID_ANY, _("Opposite track Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labOppTrackNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_OppTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
+    m_OppTrackNr = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("-1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, -1, 47, -1 );
     itemFlexGridSizer3->Add(m_OppTrackNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDesc = new wxStaticText( itemDialog1, wxID_STATIC_TTT_DESC, _("Description"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelDesc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Desc = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_TTT_DESC, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
+    m_Desc = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_TTT_DESC, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
     itemFlexGridSizer3->Add(m_Desc, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPosFB = new wxStaticText( itemDialog1, wxID_STATIC_TTT_POSFB, _("PosFB"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelPosFB, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_PosFBStrings;
-    m_PosFB = new wxComboBox( itemDialog1, ID_COMBOBOX_TTT_POSFB, _T(""), wxDefaultPosition, wxDefaultSize, m_PosFBStrings, wxCB_DROPDOWN );
+    m_PosFB = new wxComboBox( itemDialog1, ID_COMBOBOX_TTT_POSFB, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PosFBStrings, wxCB_DROPDOWN );
     itemFlexGridSizer3->Add(m_PosFB, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Polarization = new wxCheckBox( itemDialog1, wxID_ANY, _("Flip bridge polarization"), wxDefaultPosition, wxDefaultSize, 0 );

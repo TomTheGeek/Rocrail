@@ -33,6 +33,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "scheduledialog.h"
@@ -622,7 +623,7 @@ void ScheduleDialog::CreateControls()
     m_labStartBlock = new wxStaticText( m_Index, wxID_ANY, _("StartBlock"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labStartBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_StartBlockID = new wxTextCtrl( m_Index, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+    m_StartBlockID = new wxTextCtrl( m_Index, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_StartBlockID->Enable(false);
     itemFlexGridSizer7->Add(m_StartBlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -650,25 +651,25 @@ void ScheduleDialog::CreateControls()
     m_LabelID = new wxStaticText( m_Destinations, wxID_STATIC_SCHEDULE_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_ID = new wxTextCtrl( m_Destinations, ID_TEXTCTRL_SCHEDULE_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ID = new wxTextCtrl( m_Destinations, ID_TEXTCTRL_SCHEDULE_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labTimeFrame = new wxStaticText( m_Destinations, wxID_ANY, _("Delay time frame"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labTimeFrame, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TimeFrame = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 30, 0 );
+    m_TimeFrame = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 30, 0 );
     itemFlexGridSizer17->Add(m_TimeFrame, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labFromHour = new wxStaticText( m_Destinations, wxID_ANY, _("From hour"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labFromHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_FromHour = new wxSpinCtrl( m_Destinations, ID_SCHEDULE_FROMHOUR, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
+    m_FromHour = new wxSpinCtrl( m_Destinations, ID_SCHEDULE_FROMHOUR, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer17->Add(m_FromHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labToHour = new wxStaticText( m_Destinations, wxID_ANY, _("To hour"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labToHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ToHour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
+    m_ToHour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer17->Add(m_ToHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_TimeProcessingStrings;
@@ -696,18 +697,18 @@ void ScheduleDialog::CreateControls()
     itemFlexGridSizer28->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_LocationStrings;
-    m_Location = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_FROM_LOCATION, _T(""), wxDefaultPosition, wxDefaultSize, m_LocationStrings, wxCB_READONLY );
+    m_Location = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_FROM_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LocationStrings, wxCB_READONLY );
     itemFlexGridSizer28->Add(m_Location, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_BlockStrings;
-    m_Block = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_TO_LOCATION, _T(""), wxDefaultPosition, wxDefaultSize, m_BlockStrings, wxCB_READONLY );
+    m_Block = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_TO_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockStrings, wxCB_READONLY );
     itemFlexGridSizer28->Add(m_Block, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_AddLocation = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ADD_LOCATION, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer28->Add(m_AddLocation, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer28->Add(m_AddLocation, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_AddBlock = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ADD_BLOCK, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer28->Add(m_AddBlock, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer28->Add(m_AddBlock, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer35 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer16->Add(itemBoxSizer35, 0, wxGROW|wxALL, 5);
@@ -715,10 +716,10 @@ void ScheduleDialog::CreateControls()
     itemBoxSizer35->Add(itemBoxSizer36, 0, wxALIGN_CENTER_VERTICAL, 5);
     m_RemoveDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, _("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RemoveDestination->SetDefault();
-    itemBoxSizer36->Add(m_RemoveDestination, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer36->Add(m_RemoveDestination, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_ModifyDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer36->Add(m_ModifyDestination, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer36->Add(m_ModifyDestination, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_EntryActions = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer36->Add(m_EntryActions, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -736,10 +737,10 @@ void ScheduleDialog::CreateControls()
     m_labMinute = new wxStaticText( m_Destinations, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer42->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
+    m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer42->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Minute = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
+    m_Minute = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
     itemFlexGridSizer42->Add(m_Minute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_EntryDetails = new wxStaticBox(m_Destinations, wxID_ANY, _("Details"));
@@ -759,7 +760,7 @@ void ScheduleDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer51 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
     itemBoxSizer50->Add(itemStaticBoxSizer51, 0, wxGROW|wxALL, 5);
     wxArrayString m_ScheduleActionStrings;
-    m_ScheduleAction = new wxComboBox( m_ScheduleActions, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_ScheduleActionStrings, wxCB_DROPDOWN );
+    m_ScheduleAction = new wxComboBox( m_ScheduleActions, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_ScheduleActionStrings, wxCB_DROPDOWN );
     itemStaticBoxSizer51->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_ScheduleActions, ID_SCHEDULE_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );

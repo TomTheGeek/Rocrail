@@ -44,6 +44,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "seltabdlg.h"
@@ -785,37 +786,37 @@ void SelTabDialog::CreateControls()
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_ID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDesc = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Desc."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelDesc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Desc = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Desc = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Desc, 0, wxALIGN_LEFT|wxGROW|wxALL, 5);
 
     m_labNrTracks = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Tracks"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labNrTracks, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_NrTracks = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("8"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 2, 16, 8 );
+    m_NrTracks = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("8"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 2, 16, 8 );
     itemFlexGridSizer6->Add(m_NrTracks, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labMinOcc = new wxStaticText( m_GeneralPanel, wxID_ANY, _("MinOcc"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labMinOcc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_MinOcc = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 16, 0 );
+    m_MinOcc = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 16, 0 );
     itemFlexGridSizer6->Add(m_MinOcc, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labMoveDelay = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Move delay"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labMoveDelay, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_MoveDelay = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 5, 0 );
+    m_MoveDelay = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 5, 0 );
     itemFlexGridSizer6->Add(m_MoveDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labOffPos = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Power Off pos."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labOffPos, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_OffPos = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 16, 0 );
+    m_OffPos = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 16, 0 );
     itemFlexGridSizer6->Add(m_OffPos, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer19 = new wxBoxSizer(wxVERTICAL);
@@ -879,7 +880,7 @@ void SelTabDialog::CreateControls()
     m_Labeliid = new wxStaticText( m_Interface, wxID_ANY, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer35->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_IID = new wxTextCtrl( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer35->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer38 = new wxFlexGridSizer(2, 3, 0, 0);
@@ -888,7 +889,7 @@ void SelTabDialog::CreateControls()
     itemFlexGridSizer38->Add(m_LabelType, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_TypeStrings;
-    m_Type = new wxComboBox( m_Interface, ID_SELTAB_TYPE, _T(""), wxDefaultPosition, wxSize(100, -1), m_TypeStrings, wxCB_READONLY );
+    m_Type = new wxComboBox( m_Interface, ID_SELTAB_TYPE, wxEmptyString, wxDefaultPosition, wxSize(100, -1), m_TypeStrings, wxCB_READONLY );
     itemFlexGridSizer38->Add(m_Type, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Invert = new wxCheckBox( m_Interface, wxID_ANY, _("Invert commands "), wxDefaultPosition, wxDefaultSize, 0 );
@@ -952,35 +953,35 @@ void SelTabDialog::CreateControls()
     itemFlexGridSizer59->Add(m_labPosSen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_PosSenStrings;
-    m_PosSen = new wxComboBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_PosSenStrings, wxCB_READONLY );
+    m_PosSen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PosSenStrings, wxCB_READONLY );
     itemFlexGridSizer59->Add(m_PosSen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labb0Sen = new wxStaticText( m_Interface, wxID_ANY, _("b0 Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer59->Add(m_labb0Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer59->Add(m_labb0Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_b0SenStrings;
-    m_b0Sen = new wxComboBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_b0SenStrings, wxCB_READONLY );
-    itemFlexGridSizer59->Add(m_b0Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    m_b0Sen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_b0SenStrings, wxCB_READONLY );
+    itemFlexGridSizer59->Add(m_b0Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labb1Sen = new wxStaticText( m_Interface, wxID_ANY, _("b1 Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer59->Add(m_labb1Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer59->Add(m_labb1Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_b1SenStrings;
-    m_b1Sen = new wxComboBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_b1SenStrings, wxCB_READONLY );
-    itemFlexGridSizer59->Add(m_b1Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_b1Sen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_b1SenStrings, wxCB_READONLY );
+    itemFlexGridSizer59->Add(m_b1Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labb2Sen = new wxStaticText( m_Interface, wxID_ANY, _("b2 Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer59->Add(m_labb2Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_b2SenStrings;
-    m_b2Sen = new wxComboBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_b2SenStrings, wxCB_READONLY );
-    itemFlexGridSizer59->Add(m_b2Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_b2Sen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_b2SenStrings, wxCB_READONLY );
+    itemFlexGridSizer59->Add(m_b2Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labb3Sen = new wxStaticText( m_Interface, wxID_ANY, _("b3 Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer59->Add(m_labb3Sen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_b3SenStrings;
-    m_b3Sen = new wxComboBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_b3SenStrings, wxCB_READONLY );
+    m_b3Sen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_b3SenStrings, wxCB_READONLY );
     itemFlexGridSizer59->Add(m_b3Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_NewPosBox = new wxStaticBox(m_Interface, wxID_ANY, _("New position flag"));
@@ -1053,35 +1054,35 @@ void SelTabDialog::CreateControls()
     itemFlexGridSizer89->Add(m_LabelSensorActions, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
 
     wxArrayString m_SensorID1Strings;
-    m_SensorID1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_1, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID1Strings, wxCB_READONLY );
+    m_SensorID1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_1, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorID1Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorAction1Strings;
-    m_SensorAction1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_1, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction1Strings, wxCB_READONLY );
+    m_SensorAction1 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_1, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorAction1Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorID2Strings;
-    m_SensorID2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_2, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID2Strings, wxCB_READONLY );
+    m_SensorID2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_2, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorID2Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorAction2Strings;
-    m_SensorAction2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_2, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction2Strings, wxCB_READONLY );
+    m_SensorAction2 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_2, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorAction2Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorID3Strings;
-    m_SensorID3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_3, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID3Strings, wxCB_READONLY );
+    m_SensorID3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_3, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorID3Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorAction3Strings;
-    m_SensorAction3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_3, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction3Strings, wxCB_READONLY );
+    m_SensorAction3 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_3, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorAction3Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorID4Strings;
-    m_SensorID4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_4, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorID4Strings, wxCB_READONLY );
+    m_SensorID4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTESENSOR_4, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorID4Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorID4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxArrayString m_SensorAction4Strings;
-    m_SensorAction4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_4, _T(""), wxDefaultPosition, wxSize(120, -1), m_SensorAction4Strings, wxCB_READONLY );
+    m_SensorAction4 = new wxComboBox( m_RoutesPanel, wxID_SELTAB_ROUTEEVENT_4, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorAction4Strings, wxCB_READONLY );
     itemFlexGridSizer89->Add(m_SensorAction4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     m_Notebook->AddPage(m_RoutesPanel, _("Routes"));

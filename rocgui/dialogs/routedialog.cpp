@@ -885,7 +885,7 @@ void RouteDialog::CreateControls()
     m_Speed->SetSelection(0);
     itemFlexGridSizer25->Add(m_Speed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_SpeedPercent = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("80"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 100, 80 );
+    m_SpeedPercent = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("80"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 80 );
     itemFlexGridSizer25->Add(m_SpeedPercent, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM|wxALL, 5);
 
     m_ReduceV = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Reduce speed"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -957,7 +957,7 @@ void RouteDialog::CreateControls()
     m_labTrackNumber = new wxStaticText( m_CommandPanel, wxID_ANY, _("Track number"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer46->Add(m_labTrackNumber, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TrackNumber = new wxSpinCtrl( m_CommandPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 47, 0 );
+    m_TrackNumber = new wxSpinCtrl( m_CommandPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 47, 0 );
     itemFlexGridSizer46->Add(m_TrackNumber, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Add = new wxButton( m_CommandPanel, ID_BUTTON_ST_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
