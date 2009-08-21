@@ -100,6 +100,7 @@ bool ClockDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     {
         GetSizer()->SetSizeHints(this);
     }
+    Centre();
 ////@end ClockDialog creation
     return true;
 }

@@ -1034,6 +1034,7 @@ bool LocDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     {
         GetSizer()->SetSizeHints(this);
     }
+    Centre();
 ////@end LocDialog creation
     return true;
 }
