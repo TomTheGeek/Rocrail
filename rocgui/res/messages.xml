@@ -10412,4 +10412,10 @@
   <Msg id="maxtrainlen">
     <en txt="Max. train length"/>
   </Msg>
+  <Msg id="owner">
+    <en txt="Owner"/>
+  </Msg>
+  <Msg id="cartype">
+    <en txt="Car type"/>
+  </Msg>
 </Messages>

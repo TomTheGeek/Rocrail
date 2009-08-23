@@ -141,7 +141,7 @@ void SignalDialog::initLabels() {
   m_LabelDescription->SetLabel( wxGetApp().getMsg( "description" ) );
   m_LabelBlockID->SetLabel( wxGetApp().getMsg( "blockid" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
-  m_RouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
+  m_labRouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
   m_Manual->SetLabel( wxGetApp().getMsg( "manualoperated" ) );
 
   m_BlockID->Append( _T("") );

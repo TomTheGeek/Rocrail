@@ -160,6 +160,7 @@ void WaybillDlg::initLabels() {
   m_Status->SetString( 0, wxGetApp().getMsg( "waiting" ) );
   m_Status->SetString( 1, wxGetApp().getMsg( "shipping" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "delivered" ) );
+  m_labCartype->SetLabel( wxGetApp().getMsg( "cartype" ) );
   initLocationCombo();
 
   m_Cartype->Append( wxGetApp().getMsg( wCar.freight_boxcar ), (void*)wCar.freight_boxcar );

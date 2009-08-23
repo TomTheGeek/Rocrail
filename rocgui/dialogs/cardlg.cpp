@@ -151,6 +151,9 @@ void CarDlg::initLabels() {
   m_labRoadname->SetLabel( wxGetApp().getMsg( "roadname" ) );
   m_labColor->SetLabel( wxGetApp().getMsg( "color" ) );
   m_Era->SetLabel( wxGetApp().getMsg( "era" ) );
+  m_labLocation->SetLabel( wxGetApp().getMsg( "location" ) );
+  m_labImageName->SetLabel( wxGetApp().getMsg( "image" ) );
+  m_labOwner->SetLabel( wxGetApp().getMsg( "owner" ) );
 
   m_Status->SetLabel( wxGetApp().getMsg( "status" ) );
   m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
@@ -166,6 +169,7 @@ void CarDlg::initLabels() {
   m_Type->SetString( 1, wxGetApp().getMsg( "passengers" ) );
   m_labSubtype->SetLabel( wxGetApp().getMsg( "subtype" ) );
   m_labLength->SetLabel( wxGetApp().getMsg( "length" ) );
+  m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
