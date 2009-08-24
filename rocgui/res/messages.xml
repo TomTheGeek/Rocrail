@@ -67,6 +67,9 @@
   <Msg id="lang_pt">
     <all txt="Português" tip="Portoguese"/>
   </Msg>
+  <Msg id="lang_hu">
+    <all txt="Magyar nyelv" tip="Hungarian"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Neustart zum Ändern der Sprache"/>
@@ -677,7 +680,7 @@
     <bg txt="Спри локомотив"/>
     <el txt="Διακοπή μηχανής"/>
     <ca txt="Aturar locomotora"/>
-    <hu txt="Mozdony leállítása"/>
+    <hu txt="Auto mozdony megállítása"/>
     <ru txt="Остановить локомотив"/>
     <pt txt="Parar locomotiva automaticamente"/>
   </Msg>
