@@ -393,6 +393,7 @@ void LocDialog::initFunctions() {
 
   for( int i = 0; i < 5; i++ ) {
     l_fx[i]->SetValue( _T("") );
+    l_timer[i]->SetValue(0);
   }
   for( int i = 0; i < 4; i++ ) {
     l_labfx[i]->SetLabel( wxString::Format(_T("F%d"), i+1+m_iFunGroup*4 ) );
