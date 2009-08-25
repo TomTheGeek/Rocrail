@@ -364,10 +364,10 @@ void calc_function_group(char* byte1, char* byte2, int group, int* f) {
      byte1[1] = '0';
      byte1[2] = '1';
      byte1[3] = '0'; /* F9-F12*/
-     byte1[4] = f[ 9]==1 ? '1':'0';
-     byte1[5] = f[10]==1 ? '1':'0';
-     byte1[6] = f[11]==1 ? '1':'0';
-     byte1[7] = f[12]==1 ? '1':'0';
+     byte1[4] = f[12]==1 ? '1':'0';
+     byte1[5] = f[11]==1 ? '1':'0';
+     byte1[6] = f[10]==1 ? '1':'0';
+     byte1[7] = f[ 9]==1 ? '1':'0';
      byte1[8] = 0;
    }
    else if( group == 3 || group == 4 ) {
