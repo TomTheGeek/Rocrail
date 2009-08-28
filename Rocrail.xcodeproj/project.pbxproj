@@ -7,24 +7,6 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		D4320F0A1047A0F300B174C7 /* branch.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = branch.conf; sourceTree = "<group>"; };
-		D4320F0B1047A0F300B174C7 /* format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = format; sourceTree = "<group>"; };
-		D4320F0C1047A0F300B174C7 /* last-revision */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "last-revision"; sourceTree = "<group>"; };
-		D4320F0E1047A0F300B174C7 /* tags */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tags; sourceTree = "<group>"; };
-		D4320F0F1047A0F300B174C7 /* branch-format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "branch-format"; sourceTree = "<group>"; };
-		D4320F121047A0F300B174C7 /* conflicts */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = conflicts; sourceTree = "<group>"; };
-		D4320F131047A0F300B174C7 /* dirstate */ = {isa = PBXFileReference; lastKnownFileType = file; path = dirstate; sourceTree = "<group>"; };
-		D4320F141047A0F300B174C7 /* format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = format; sourceTree = "<group>"; };
-		D4320F161047A0F300B174C7 /* merge-hashes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "merge-hashes"; sourceTree = "<group>"; };
-		D4320F171047A0F300B174C7 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		D4320F191047A0F300B174C7 /* format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = format; sourceTree = "<group>"; };
-		D4320F7E1047A0F400B174C7 /* pack-names */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pack-names"; sourceTree = "<group>"; };
-		D4320F8E1047A0F400B174C7 /* .cdtproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cdtproject; sourceTree = "<group>"; };
-		D4320F8F1047A0F400B174C7 /* .cproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cproject; sourceTree = "<group>"; };
-		D4320F901047A0F400B174C7 /* .project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .project; sourceTree = "<group>"; };
-		D4320F921047A0F400B174C7 /* org.eclipse.cdt.core.prefs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = org.eclipse.cdt.core.prefs; sourceTree = "<group>"; };
-		D4320F931047A0F400B174C7 /* org.eclipse.wst.validation.prefs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = org.eclipse.wst.validation.prefs; sourceTree = "<group>"; };
-		D4320F941047A0F400B174C7 /* 1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1; sourceTree = "<group>"; };
 		D4320F9E1047A0F400B174C7 /* pbxindex.header */ = {isa = PBXFileReference; lastKnownFileType = file; path = pbxindex.header; sourceTree = "<group>"; };
 		D4320FA21047A0F400B174C7 /* control */ = {isa = PBXFileReference; lastKnownFileType = file; path = control; sourceTree = "<group>"; };
 		D4320FA31047A0F400B174C7 /* strings */ = {isa = PBXFileReference; lastKnownFileType = file; path = strings; sourceTree = "<group>"; };
@@ -2503,12 +2485,6 @@
 		D4320F071047A0F300B174C7 /* Rocrail */ = {
 			isa = PBXGroup;
 			children = (
-				D4320F081047A0F300B174C7 /* .bzr */,
-				D4320F8E1047A0F400B174C7 /* .cdtproject */,
-				D4320F8F1047A0F400B174C7 /* .cproject */,
-				D4320F901047A0F400B174C7 /* .project */,
-				D4320F911047A0F400B174C7 /* .settings */,
-				D4320F941047A0F400B174C7 /* 1 */,
 				D4320F961047A0F400B174C7 /* build */,
 				D4320FA61047A0F400B174C7 /* build.log */,
 				D4320FA71047A0F400B174C7 /* build.txt */,
@@ -2538,122 +2514,6 @@
 				D43217AD1047A0F900B174C7 /* unxgen */,
 			);
 			name = Rocrail;
-			sourceTree = "<group>";
-		};
-		D4320F081047A0F300B174C7 /* .bzr */ = {
-			isa = PBXGroup;
-			children = (
-				D4320F091047A0F300B174C7 /* branch */,
-				D4320F0F1047A0F300B174C7 /* branch-format */,
-				D4320F101047A0F300B174C7 /* branch-lock */,
-				D4320F111047A0F300B174C7 /* checkout */,
-				D4320F171047A0F300B174C7 /* README */,
-				D4320F181047A0F300B174C7 /* repository */,
-			);
-			path = .bzr;
-			sourceTree = "<group>";
-		};
-		D4320F091047A0F300B174C7 /* branch */ = {
-			isa = PBXGroup;
-			children = (
-				D4320F0A1047A0F300B174C7 /* branch.conf */,
-				D4320F0B1047A0F300B174C7 /* format */,
-				D4320F0C1047A0F300B174C7 /* last-revision */,
-				D4320F0D1047A0F300B174C7 /* lock */,
-				D4320F0E1047A0F300B174C7 /* tags */,
-			);
-			path = branch;
-			sourceTree = "<group>";
-		};
-		D4320F0D1047A0F300B174C7 /* lock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lock;
-			sourceTree = "<group>";
-		};
-		D4320F101047A0F300B174C7 /* branch-lock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "branch-lock";
-			sourceTree = "<group>";
-		};
-		D4320F111047A0F300B174C7 /* checkout */ = {
-			isa = PBXGroup;
-			children = (
-				D4320F121047A0F300B174C7 /* conflicts */,
-				D4320F131047A0F300B174C7 /* dirstate */,
-				D4320F141047A0F300B174C7 /* format */,
-				D4320F151047A0F300B174C7 /* lock */,
-				D4320F161047A0F300B174C7 /* merge-hashes */,
-			);
-			path = checkout;
-			sourceTree = "<group>";
-		};
-		D4320F151047A0F300B174C7 /* lock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lock;
-			sourceTree = "<group>";
-		};
-		D4320F181047A0F300B174C7 /* repository */ = {
-			isa = PBXGroup;
-			children = (
-				D4320F191047A0F300B174C7 /* format */,
-				D4320F1A1047A0F300B174C7 /* indices */,
-				D4320F4F1047A0F400B174C7 /* lock */,
-				D4320F501047A0F400B174C7 /* obsolete_packs */,
-				D4320F7E1047A0F400B174C7 /* pack-names */,
-				D4320F7F1047A0F400B174C7 /* packs */,
-				D4320F8D1047A0F400B174C7 /* upload */,
-			);
-			path = repository;
-			sourceTree = "<group>";
-		};
-		D4320F1A1047A0F300B174C7 /* indices */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = indices;
-			sourceTree = "<group>";
-		};
-		D4320F4F1047A0F400B174C7 /* lock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lock;
-			sourceTree = "<group>";
-		};
-		D4320F501047A0F400B174C7 /* obsolete_packs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = obsolete_packs;
-			sourceTree = "<group>";
-		};
-		D4320F7F1047A0F400B174C7 /* packs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = packs;
-			sourceTree = "<group>";
-		};
-		D4320F8D1047A0F400B174C7 /* upload */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = upload;
-			sourceTree = "<group>";
-		};
-		D4320F911047A0F400B174C7 /* .settings */ = {
-			isa = PBXGroup;
-			children = (
-				D4320F921047A0F400B174C7 /* org.eclipse.cdt.core.prefs */,
-				D4320F931047A0F400B174C7 /* org.eclipse.wst.validation.prefs */,
-			);
-			path = .settings;
 			sourceTree = "<group>";
 		};
 		D4320F961047A0F400B174C7 /* build */ = {
