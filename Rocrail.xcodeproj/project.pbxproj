@@ -7639,7 +7639,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail;
+			buildWorkingDirectory = .;
 			dependencies = (
 			);
 			name = "Rocrail main build";
@@ -7653,7 +7653,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/rocrail;
+			buildWorkingDirectory = ./rocrail;
 			dependencies = (
 			);
 			name = rocrail;
@@ -7667,7 +7667,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/rocgui;
+			buildWorkingDirectory = ./rocgui;
 			dependencies = (
 			);
 			name = rocview;
@@ -7681,7 +7681,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/rocs;
+			buildWorkingDirectory = ./rocs;
 			dependencies = (
 			);
 			name = rocs;
@@ -7695,7 +7695,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/rocint;
+			buildWorkingDirectory = ./rocint;
 			dependencies = (
 			);
 			name = rocint;
@@ -7709,7 +7709,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/rocdigs;
+			buildWorkingDirectory = ./rocdigs;
 			dependencies = (
 			);
 			name = rocdigs;
@@ -7723,7 +7723,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Users/rob/lp/Rocrail/roclcdr;
+			buildWorkingDirectory = ./roclcdr;
 			dependencies = (
 			);
 			name = roclcdr;
