@@ -18,136 +18,16 @@
 		D4320F161047A0F300B174C7 /* merge-hashes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "merge-hashes"; sourceTree = "<group>"; };
 		D4320F171047A0F300B174C7 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		D4320F191047A0F300B174C7 /* format */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = format; sourceTree = "<group>"; };
-		D4320F1B1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0cda4aebc4295ae9c79efcb00c093bda.iix; sourceTree = "<group>"; };
-		D4320F1C1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0cda4aebc4295ae9c79efcb00c093bda.rix; sourceTree = "<group>"; };
-		D4320F1D1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 0cda4aebc4295ae9c79efcb00c093bda.six; sourceTree = "<group>"; };
-		D4320F1E1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0cda4aebc4295ae9c79efcb00c093bda.tix; sourceTree = "<group>"; };
-		D4320F1F1047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 25b9d823b0c3daff3e53716580d56b52.iix; sourceTree = "<group>"; };
-		D4320F201047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 25b9d823b0c3daff3e53716580d56b52.rix; sourceTree = "<group>"; };
-		D4320F211047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 25b9d823b0c3daff3e53716580d56b52.six; sourceTree = "<group>"; };
-		D4320F221047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 25b9d823b0c3daff3e53716580d56b52.tix; sourceTree = "<group>"; };
-		D4320F231047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 26f351e1e996e6556cc7820c80025bec.iix; sourceTree = "<group>"; };
-		D4320F241047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 26f351e1e996e6556cc7820c80025bec.rix; sourceTree = "<group>"; };
-		D4320F251047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 26f351e1e996e6556cc7820c80025bec.six; sourceTree = "<group>"; };
-		D4320F261047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 26f351e1e996e6556cc7820c80025bec.tix; sourceTree = "<group>"; };
-		D4320F271047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3e9f14997ded5834b1f6df3345ecdb58.iix; sourceTree = "<group>"; };
-		D4320F281047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3e9f14997ded5834b1f6df3345ecdb58.rix; sourceTree = "<group>"; };
-		D4320F291047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3e9f14997ded5834b1f6df3345ecdb58.six; sourceTree = "<group>"; };
-		D4320F2A1047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3e9f14997ded5834b1f6df3345ecdb58.tix; sourceTree = "<group>"; };
-		D4320F2B1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3eb42ec573ba00227107593783c131a4.iix; sourceTree = "<group>"; };
-		D4320F2C1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3eb42ec573ba00227107593783c131a4.rix; sourceTree = "<group>"; };
-		D4320F2D1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3eb42ec573ba00227107593783c131a4.six; sourceTree = "<group>"; };
-		D4320F2E1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3eb42ec573ba00227107593783c131a4.tix; sourceTree = "<group>"; };
-		D4320F2F1047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 500114556996b91703f0239aa5f55474.iix; sourceTree = "<group>"; };
-		D4320F301047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 500114556996b91703f0239aa5f55474.rix; sourceTree = "<group>"; };
-		D4320F311047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 500114556996b91703f0239aa5f55474.six; sourceTree = "<group>"; };
-		D4320F321047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 500114556996b91703f0239aa5f55474.tix; sourceTree = "<group>"; };
-		D4320F331047A0F300B174C7 /* 50873529244746f63358e85be229f64e.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 50873529244746f63358e85be229f64e.iix; sourceTree = "<group>"; };
-		D4320F341047A0F300B174C7 /* 50873529244746f63358e85be229f64e.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 50873529244746f63358e85be229f64e.rix; sourceTree = "<group>"; };
-		D4320F351047A0F300B174C7 /* 50873529244746f63358e85be229f64e.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 50873529244746f63358e85be229f64e.six; sourceTree = "<group>"; };
-		D4320F361047A0F300B174C7 /* 50873529244746f63358e85be229f64e.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 50873529244746f63358e85be229f64e.tix; sourceTree = "<group>"; };
-		D4320F371047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 53d556293d786e0b5f2693024243c64a.iix; sourceTree = "<group>"; };
-		D4320F381047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 53d556293d786e0b5f2693024243c64a.rix; sourceTree = "<group>"; };
-		D4320F391047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 53d556293d786e0b5f2693024243c64a.six; sourceTree = "<group>"; };
-		D4320F3A1047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 53d556293d786e0b5f2693024243c64a.tix; sourceTree = "<group>"; };
-		D4320F3B1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 657166ab25ebdae2077f1706db019474.iix; sourceTree = "<group>"; };
-		D4320F3C1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 657166ab25ebdae2077f1706db019474.rix; sourceTree = "<group>"; };
-		D4320F3D1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 657166ab25ebdae2077f1706db019474.six; sourceTree = "<group>"; };
-		D4320F3E1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 657166ab25ebdae2077f1706db019474.tix; sourceTree = "<group>"; };
-		D4320F3F1047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 79d78cdc2a334b6eef5e30bb593b5ea5.iix; sourceTree = "<group>"; };
-		D4320F401047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 79d78cdc2a334b6eef5e30bb593b5ea5.rix; sourceTree = "<group>"; };
-		D4320F411047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 79d78cdc2a334b6eef5e30bb593b5ea5.six; sourceTree = "<group>"; };
-		D4320F421047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 79d78cdc2a334b6eef5e30bb593b5ea5.tix; sourceTree = "<group>"; };
-		D4320F431047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 89349c2ce72f061cf8823fab5d6c260c.iix; sourceTree = "<group>"; };
-		D4320F441047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 89349c2ce72f061cf8823fab5d6c260c.rix; sourceTree = "<group>"; };
-		D4320F451047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 89349c2ce72f061cf8823fab5d6c260c.six; sourceTree = "<group>"; };
-		D4320F461047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 89349c2ce72f061cf8823fab5d6c260c.tix; sourceTree = "<group>"; };
-		D4320F471047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 92df7cb98ee8d551fc5a57ad54578700.iix; sourceTree = "<group>"; };
-		D4320F481047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 92df7cb98ee8d551fc5a57ad54578700.rix; sourceTree = "<group>"; };
-		D4320F491047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 92df7cb98ee8d551fc5a57ad54578700.six; sourceTree = "<group>"; };
-		D4320F4A1047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 92df7cb98ee8d551fc5a57ad54578700.tix; sourceTree = "<group>"; };
-		D4320F4B1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = cc10273f5ff2d9c628ec72d1b2c9c603.iix; sourceTree = "<group>"; };
-		D4320F4C1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = cc10273f5ff2d9c628ec72d1b2c9c603.rix; sourceTree = "<group>"; };
-		D4320F4D1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cc10273f5ff2d9c628ec72d1b2c9c603.six; sourceTree = "<group>"; };
-		D4320F4E1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = cc10273f5ff2d9c628ec72d1b2c9c603.tix; sourceTree = "<group>"; };
-		D4320F511047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0f33de2b0f81bbf3582506501e55440d.iix; sourceTree = "<group>"; };
-		D4320F521047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0f33de2b0f81bbf3582506501e55440d.pack; sourceTree = "<group>"; };
-		D4320F531047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0f33de2b0f81bbf3582506501e55440d.rix; sourceTree = "<group>"; };
-		D4320F541047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 0f33de2b0f81bbf3582506501e55440d.six; sourceTree = "<group>"; };
-		D4320F551047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0f33de2b0f81bbf3582506501e55440d.tix; sourceTree = "<group>"; };
-		D4320F561047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1a1074c83ad9350b6cc443b2ceda1951.iix; sourceTree = "<group>"; };
-		D4320F571047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1a1074c83ad9350b6cc443b2ceda1951.pack; sourceTree = "<group>"; };
-		D4320F581047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1a1074c83ad9350b6cc443b2ceda1951.rix; sourceTree = "<group>"; };
-		D4320F591047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1a1074c83ad9350b6cc443b2ceda1951.six; sourceTree = "<group>"; };
-		D4320F5A1047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1a1074c83ad9350b6cc443b2ceda1951.tix; sourceTree = "<group>"; };
-		D4320F5B1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1bd1778774b81de551e1ba6e3ca2b8cb.iix; sourceTree = "<group>"; };
-		D4320F5C1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1bd1778774b81de551e1ba6e3ca2b8cb.pack; sourceTree = "<group>"; };
-		D4320F5D1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1bd1778774b81de551e1ba6e3ca2b8cb.rix; sourceTree = "<group>"; };
-		D4320F5E1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1bd1778774b81de551e1ba6e3ca2b8cb.six; sourceTree = "<group>"; };
-		D4320F5F1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1bd1778774b81de551e1ba6e3ca2b8cb.tix; sourceTree = "<group>"; };
-		D4320F601047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1ececc36c4016fc9a67b3abaf7b56ec2.iix; sourceTree = "<group>"; };
-		D4320F611047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1ececc36c4016fc9a67b3abaf7b56ec2.pack; sourceTree = "<group>"; };
-		D4320F621047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1ececc36c4016fc9a67b3abaf7b56ec2.rix; sourceTree = "<group>"; };
-		D4320F631047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1ececc36c4016fc9a67b3abaf7b56ec2.six; sourceTree = "<group>"; };
-		D4320F641047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1ececc36c4016fc9a67b3abaf7b56ec2.tix; sourceTree = "<group>"; };
-		D4320F651047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 47ef44a45cbf44620021575afb33bd02.iix; sourceTree = "<group>"; };
-		D4320F661047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 47ef44a45cbf44620021575afb33bd02.pack; sourceTree = "<group>"; };
-		D4320F671047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 47ef44a45cbf44620021575afb33bd02.rix; sourceTree = "<group>"; };
-		D4320F681047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 47ef44a45cbf44620021575afb33bd02.six; sourceTree = "<group>"; };
-		D4320F691047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 47ef44a45cbf44620021575afb33bd02.tix; sourceTree = "<group>"; };
-		D4320F6A1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4f6dc5c132d370c7c369e85391ebc553.iix; sourceTree = "<group>"; };
-		D4320F6B1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4f6dc5c132d370c7c369e85391ebc553.pack; sourceTree = "<group>"; };
-		D4320F6C1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4f6dc5c132d370c7c369e85391ebc553.rix; sourceTree = "<group>"; };
-		D4320F6D1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4f6dc5c132d370c7c369e85391ebc553.six; sourceTree = "<group>"; };
-		D4320F6E1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4f6dc5c132d370c7c369e85391ebc553.tix; sourceTree = "<group>"; };
-		D4320F6F1047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 681b59e61c77798e219b129d448bc6d8.iix; sourceTree = "<group>"; };
-		D4320F701047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 681b59e61c77798e219b129d448bc6d8.pack; sourceTree = "<group>"; };
-		D4320F711047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 681b59e61c77798e219b129d448bc6d8.rix; sourceTree = "<group>"; };
-		D4320F721047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 681b59e61c77798e219b129d448bc6d8.six; sourceTree = "<group>"; };
-		D4320F731047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = 681b59e61c77798e219b129d448bc6d8.tix; sourceTree = "<group>"; };
-		D4320F741047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = c1f6d13d2023bc15db4c087180e9c051.iix; sourceTree = "<group>"; };
-		D4320F751047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = c1f6d13d2023bc15db4c087180e9c051.pack; sourceTree = "<group>"; };
-		D4320F761047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = c1f6d13d2023bc15db4c087180e9c051.rix; sourceTree = "<group>"; };
-		D4320F771047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = c1f6d13d2023bc15db4c087180e9c051.six; sourceTree = "<group>"; };
-		D4320F781047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = c1f6d13d2023bc15db4c087180e9c051.tix; sourceTree = "<group>"; };
-		D4320F791047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.iix */ = {isa = PBXFileReference; lastKnownFileType = file; path = d34ab9d2f9031f0a87bf352c82b89c21.iix; sourceTree = "<group>"; };
-		D4320F7A1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = d34ab9d2f9031f0a87bf352c82b89c21.pack; sourceTree = "<group>"; };
-		D4320F7B1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.rix */ = {isa = PBXFileReference; lastKnownFileType = file; path = d34ab9d2f9031f0a87bf352c82b89c21.rix; sourceTree = "<group>"; };
-		D4320F7C1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.six */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = d34ab9d2f9031f0a87bf352c82b89c21.six; sourceTree = "<group>"; };
-		D4320F7D1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.tix */ = {isa = PBXFileReference; lastKnownFileType = file; path = d34ab9d2f9031f0a87bf352c82b89c21.tix; sourceTree = "<group>"; };
 		D4320F7E1047A0F400B174C7 /* pack-names */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pack-names"; sourceTree = "<group>"; };
-		D4320F801047A0F400B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0cda4aebc4295ae9c79efcb00c093bda.pack; sourceTree = "<group>"; };
-		D4320F811047A0F400B174C7 /* 25b9d823b0c3daff3e53716580d56b52.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 25b9d823b0c3daff3e53716580d56b52.pack; sourceTree = "<group>"; };
-		D4320F821047A0F400B174C7 /* 26f351e1e996e6556cc7820c80025bec.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 26f351e1e996e6556cc7820c80025bec.pack; sourceTree = "<group>"; };
-		D4320F831047A0F400B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3e9f14997ded5834b1f6df3345ecdb58.pack; sourceTree = "<group>"; };
-		D4320F841047A0F400B174C7 /* 3eb42ec573ba00227107593783c131a4.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3eb42ec573ba00227107593783c131a4.pack; sourceTree = "<group>"; };
-		D4320F851047A0F400B174C7 /* 500114556996b91703f0239aa5f55474.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 500114556996b91703f0239aa5f55474.pack; sourceTree = "<group>"; };
-		D4320F861047A0F400B174C7 /* 50873529244746f63358e85be229f64e.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 50873529244746f63358e85be229f64e.pack; sourceTree = "<group>"; };
-		D4320F871047A0F400B174C7 /* 53d556293d786e0b5f2693024243c64a.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 53d556293d786e0b5f2693024243c64a.pack; sourceTree = "<group>"; };
-		D4320F881047A0F400B174C7 /* 657166ab25ebdae2077f1706db019474.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 657166ab25ebdae2077f1706db019474.pack; sourceTree = "<group>"; };
-		D4320F891047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 79d78cdc2a334b6eef5e30bb593b5ea5.pack; sourceTree = "<group>"; };
-		D4320F8A1047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 89349c2ce72f061cf8823fab5d6c260c.pack; sourceTree = "<group>"; };
-		D4320F8B1047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = 92df7cb98ee8d551fc5a57ad54578700.pack; sourceTree = "<group>"; };
-		D4320F8C1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.pack */ = {isa = PBXFileReference; lastKnownFileType = file; path = cc10273f5ff2d9c628ec72d1b2c9c603.pack; sourceTree = "<group>"; };
 		D4320F8E1047A0F400B174C7 /* .cdtproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cdtproject; sourceTree = "<group>"; };
 		D4320F8F1047A0F400B174C7 /* .cproject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .cproject; sourceTree = "<group>"; };
 		D4320F901047A0F400B174C7 /* .project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .project; sourceTree = "<group>"; };
 		D4320F921047A0F400B174C7 /* org.eclipse.cdt.core.prefs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = org.eclipse.cdt.core.prefs; sourceTree = "<group>"; };
 		D4320F931047A0F400B174C7 /* org.eclipse.wst.validation.prefs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = org.eclipse.wst.validation.prefs; sourceTree = "<group>"; };
 		D4320F941047A0F400B174C7 /* 1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1; sourceTree = "<group>"; };
-		D4320F951047A0F400B174C7 /* adres.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = adres.rtf; sourceTree = "<group>"; };
-		D4320F991047A0F400B174C7 /* categories.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = categories.pbxbtree; sourceTree = "<group>"; };
-		D4320F9A1047A0F400B174C7 /* cdecls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = cdecls.pbxbtree; sourceTree = "<group>"; };
-		D4320F9B1047A0F400B174C7 /* decls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = decls.pbxbtree; sourceTree = "<group>"; };
-		D4320F9C1047A0F400B174C7 /* files.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = files.pbxbtree; sourceTree = "<group>"; };
-		D4320F9D1047A0F400B174C7 /* imports.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = imports.pbxbtree; sourceTree = "<group>"; };
 		D4320F9E1047A0F400B174C7 /* pbxindex.header */ = {isa = PBXFileReference; lastKnownFileType = file; path = pbxindex.header; sourceTree = "<group>"; };
-		D4320F9F1047A0F400B174C7 /* protocols.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = protocols.pbxbtree; sourceTree = "<group>"; };
-		D4320FA01047A0F400B174C7 /* refs.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = refs.pbxbtree; sourceTree = "<group>"; };
 		D4320FA21047A0F400B174C7 /* control */ = {isa = PBXFileReference; lastKnownFileType = file; path = control; sourceTree = "<group>"; };
 		D4320FA31047A0F400B174C7 /* strings */ = {isa = PBXFileReference; lastKnownFileType = file; path = strings; sourceTree = "<group>"; };
-		D4320FA41047A0F400B174C7 /* subclasses.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = subclasses.pbxbtree; sourceTree = "<group>"; };
-		D4320FA51047A0F400B174C7 /* symbols0.pbxsymbols */ = {isa = PBXFileReference; lastKnownFileType = file; path = symbols0.pbxsymbols; sourceTree = "<group>"; };
 		D4320FA61047A0F400B174C7 /* build.log */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.log; sourceTree = "<group>"; };
 		D4320FA71047A0F400B174C7 /* build.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.txt; sourceTree = "<group>"; };
 		D4320FA81047A0F400B174C7 /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changelog.txt; sourceTree = "<group>"; };
@@ -391,7 +271,6 @@
 		D43210B11047A0F400B174C7 /* powermandlggen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = powermandlggen.cpp; sourceTree = "<group>"; };
 		D43210B21047A0F400B174C7 /* powermandlggen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = powermandlggen.h; sourceTree = "<group>"; };
 		D43210B31047A0F400B174C7 /* rocgui-dialogs.pjd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "rocgui-dialogs.pjd"; sourceTree = "<group>"; };
-		D43210B41047A0F400B174C7 /* rocgui-dialogs.pjd.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "rocgui-dialogs.pjd.bak"; sourceTree = "<group>"; };
 		D43210B51047A0F400B174C7 /* rocguiinidlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rocguiinidlg.cpp; sourceTree = "<group>"; };
 		D43210B61047A0F400B174C7 /* rocguiinidlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocguiinidlg.h; sourceTree = "<group>"; };
 		D43210B71047A0F400B174C7 /* rocrailinidialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rocrailinidialog.cpp; sourceTree = "<group>"; };
@@ -1014,18 +893,9 @@
 		D43213391047A0F600B174C7 /* roclcdr.cbp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = roclcdr.cbp; sourceTree = "<group>"; };
 		D432133A1047A0F600B174C7 /* roclcdr.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = roclcdr.xml; sourceTree = "<group>"; };
 		D432133C1047A0F600B174C7 /* _rpmmacros */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = _rpmmacros; sourceTree = "<group>"; };
-		D43213401047A0F600B174C7 /* categories.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = categories.pbxbtree; sourceTree = "<group>"; };
-		D43213411047A0F600B174C7 /* cdecls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = cdecls.pbxbtree; sourceTree = "<group>"; };
-		D43213421047A0F600B174C7 /* decls.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = decls.pbxbtree; sourceTree = "<group>"; };
-		D43213431047A0F600B174C7 /* files.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = files.pbxbtree; sourceTree = "<group>"; };
-		D43213441047A0F600B174C7 /* imports.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = imports.pbxbtree; sourceTree = "<group>"; };
 		D43213451047A0F600B174C7 /* pbxindex.header */ = {isa = PBXFileReference; lastKnownFileType = file; path = pbxindex.header; sourceTree = "<group>"; };
-		D43213461047A0F600B174C7 /* protocols.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = protocols.pbxbtree; sourceTree = "<group>"; };
-		D43213471047A0F600B174C7 /* refs.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = refs.pbxbtree; sourceTree = "<group>"; };
 		D43213491047A0F600B174C7 /* control */ = {isa = PBXFileReference; lastKnownFileType = file; path = control; sourceTree = "<group>"; };
 		D432134A1047A0F600B174C7 /* strings */ = {isa = PBXFileReference; lastKnownFileType = file; path = strings; sourceTree = "<group>"; };
-		D432134B1047A0F600B174C7 /* subclasses.pbxbtree */ = {isa = PBXFileReference; lastKnownFileType = file; path = subclasses.pbxbtree; sourceTree = "<group>"; };
-		D432134C1047A0F600B174C7 /* symbols0.pbxsymbols */ = {isa = PBXFileReference; lastKnownFileType = file; path = symbols0.pbxsymbols; sourceTree = "<group>"; };
 		D432134D1047A0F600B174C7 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		D432134F1047A0F600B174C7 /* action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = action.c; sourceTree = "<group>"; };
 		D43213501047A0F600B174C7 /* analyse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = analyse.c; sourceTree = "<group>"; };
@@ -1086,7 +956,6 @@
 		D432138A1047A0F600B174C7 /* mkservice.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mkservice.cmd; sourceTree = "<group>"; };
 		D432138B1047A0F600B174C7 /* neustadt.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = neustadt.xml; sourceTree = "<group>"; };
 		D432138C1047A0F600B174C7 /* plan.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = plan.xml; sourceTree = "<group>"; };
-		D432138D1047A0F600B174C7 /* plan.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plan.xml.bak; sourceTree = "<group>"; };
 		D432138E1047A0F600B174C7 /* rocgui.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocgui.ini; sourceTree = "<group>"; };
 		D432138F1047A0F600B174C7 /* rocrail-rci.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "rocrail-rci.ini"; sourceTree = "<group>"; };
 		D43213901047A0F600B174C7 /* rocrail-template.iss */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "rocrail-template.iss"; sourceTree = "<group>"; };
@@ -1352,13 +1221,10 @@
 		D43214991047A0F600B174C7 /* RocrailAll.cbp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RocrailAll.cbp; sourceTree = "<group>"; };
 		D432149A1047A0F600B174C7 /* RocrailProject.workspace */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = RocrailProject.workspace; sourceTree = "<group>"; };
 		D432149D1047A0F700B174C7 /* ogen */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ogen; sourceTree = "<group>"; };
-		D432149E1047A0F700B174C7 /* ogen.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = ogen.exe; sourceTree = "<group>"; };
 		D432149F1047A0F700B174C7 /* ogen_mac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ogen_mac; sourceTree = "<group>"; };
 		D43214A01047A0F700B174C7 /* wgen */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = wgen; sourceTree = "<group>"; };
-		D43214A11047A0F700B174C7 /* wgen.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = wgen.exe; sourceTree = "<group>"; };
 		D43214A21047A0F700B174C7 /* wgen_mac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = wgen_mac; sourceTree = "<group>"; };
 		D43214A31047A0F700B174C7 /* xml2cstr */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = xml2cstr; sourceTree = "<group>"; };
-		D43214A41047A0F700B174C7 /* xml2cstr.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = xml2cstr.exe; sourceTree = "<group>"; };
 		D43214A51047A0F700B174C7 /* xml2cstr_mac */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = xml2cstr_mac; sourceTree = "<group>"; };
 		D43214A61047A0F700B174C7 /* changelog.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = changelog.html; sourceTree = "<group>"; };
 		D43214A71047A0F700B174C7 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -1454,22 +1320,6 @@
 		D43215081047A0F700B174C7 /* streets_en.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = streets_en.xsl; sourceTree = "<group>"; };
 		D43215091047A0F700B174C7 /* streets_nl.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = streets_nl.xsl; sourceTree = "<group>"; };
 		D432150B1047A0F700B174C7 /* addlang */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = addlang; sourceTree = "<group>"; };
-		D432150C1047A0F700B174C7 /* addlang.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = addlang.o; sourceTree = "<group>"; };
-		D432150D1047A0F700B174C7 /* attr.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = attr.o; sourceTree = "<group>"; };
-		D432150E1047A0F700B174C7 /* barjut.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = barjut.dylib; sourceTree = "<group>"; };
-		D432150F1047A0F700B174C7 /* clock.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = clock.dylib; sourceTree = "<group>"; };
-		D43215101047A0F700B174C7 /* cmdln.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = cmdln.o; sourceTree = "<group>"; };
-		D43215111047A0F700B174C7 /* dcc232.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = dcc232.dylib; sourceTree = "<group>"; };
-		D43215121047A0F700B174C7 /* ddx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = ddx.dylib; sourceTree = "<group>"; };
-		D43215131047A0F700B174C7 /* dinamo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = dinamo.dylib; sourceTree = "<group>"; };
-		D43215141047A0F700B174C7 /* dir.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dir.o; sourceTree = "<group>"; };
-		D43215151047A0F700B174C7 /* doc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = doc.o; sourceTree = "<group>"; };
-		D43215161047A0F700B174C7 /* ebcdic.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ebcdic.o; sourceTree = "<group>"; };
-		D43215171047A0F700B174C7 /* ecos.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = ecos.dylib; sourceTree = "<group>"; };
-		D43215181047A0F700B174C7 /* event.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = event.o; sourceTree = "<group>"; };
-		D43215191047A0F700B174C7 /* file.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = file.o; sourceTree = "<group>"; };
-		D432151A1047A0F700B174C7 /* gzip.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = gzip.o; sourceTree = "<group>"; };
-		D432151B1047A0F700B174C7 /* hsi88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = hsi88.dylib; sourceTree = "<group>"; };
 		D432151D1047A0F700B174C7 /* automode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = automode.png; sourceTree = "<group>"; };
 		D432151E1047A0F700B174C7 /* bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bug.png; sourceTree = "<group>"; };
 		D432151F1047A0F700B174C7 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear.png; sourceTree = "<group>"; };
@@ -1518,31 +1368,17 @@
 		D432154B1047A0F700B174C7 /* roco-63655-1110.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "roco-63655-1110.png"; sourceTree = "<group>"; };
 		D432154C1047A0F700B174C7 /* roco-63927-ns2225.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "roco-63927-ns2225.png"; sourceTree = "<group>"; };
 		D432154D1047A0F700B174C7 /* rocrail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rocrail.png; sourceTree = "<group>"; };
-		D432154E1047A0F700B174C7 /* inter10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = inter10.dylib; sourceTree = "<group>"; };
-		D432154F1047A0F700B174C7 /* io8255.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = io8255.dylib; sourceTree = "<group>"; };
 		D43215511047A0F700B174C7 /* dased.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = dased.xml; sourceTree = "<group>"; };
-		D43215521047A0F700B174C7 /* dased.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dased.xml.bak; sourceTree = "<group>"; };
 		D43215531047A0F700B174C7 /* dased_001.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = dased_001.xml; sourceTree = "<group>"; };
 		D43215541047A0F700B174C7 /* disentis.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = disentis.xml; sourceTree = "<group>"; };
-		D43215551047A0F700B174C7 /* disentis.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = disentis.xml.bak; sourceTree = "<group>"; };
 		D43215561047A0F700B174C7 /* disentis_001.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = disentis_001.xml; sourceTree = "<group>"; };
 		D43215571047A0F700B174C7 /* lc.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = lc.xml; sourceTree = "<group>"; };
 		D43215581047A0F700B174C7 /* locos.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = locos.xml; sourceTree = "<group>"; };
-		D43215591047A0F700B174C7 /* locos.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = locos.xml.bak; sourceTree = "<group>"; };
 		D432155A1047A0F700B174C7 /* modview.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = modview.cmd; sourceTree = "<group>"; };
 		D432155B1047A0F700B174C7 /* occ.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = occ.xml; sourceTree = "<group>"; };
 		D432155C1047A0F700B174C7 /* plan.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = plan.xml; sourceTree = "<group>"; };
-		D432155D1047A0F700B174C7 /* plan.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plan.xml.bak; sourceTree = "<group>"; };
 		D432155E1047A0F700B174C7 /* rocrail.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.cmd; sourceTree = "<group>"; };
 		D432155F1047A0F700B174C7 /* rocrail.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini; sourceTree = "<group>"; };
-		D43215601047A0F700B174C7 /* rocrail.ini.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini.bak; sourceTree = "<group>"; };
-		D43215611047A0F700B174C7 /* rocrail.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.000; sourceTree = "<group>"; };
-		D43215621047A0F700B174C7 /* rocrail.trace.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.001; sourceTree = "<group>"; };
-		D43215631047A0F700B174C7 /* rocrail.trace.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.002; sourceTree = "<group>"; };
-		D43215641047A0F700B174C7 /* rocrail.trace.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.003; sourceTree = "<group>"; };
-		D43215651047A0F700B174C7 /* rocrail.trace.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.004; sourceTree = "<group>"; };
-		D43215661047A0F700B174C7 /* rocrail.trace.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.005; sourceTree = "<group>"; };
-		D43215671047A0F700B174C7 /* rocrail.trace.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.006; sourceTree = "<group>"; };
 		D43215681047A0F700B174C7 /* rocrail_dased.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail_dased.cmd; sourceTree = "<group>"; };
 		D43215691047A0F700B174C7 /* rocrail_disentis.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail_disentis.cmd; sourceTree = "<group>"; };
 		D432156A1047A0F700B174C7 /* rocrail_str.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail_str.cmd; sourceTree = "<group>"; };
@@ -1550,56 +1386,20 @@
 		D432156C1047A0F700B174C7 /* rocview.cmd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.cmd; sourceTree = "<group>"; };
 		D432156D1047A0F700B174C7 /* rocview.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.ini; sourceTree = "<group>"; };
 		D432156E1047A0F700B174C7 /* rt.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = rt.xml; sourceTree = "<group>"; };
-		D432156F1047A0F700B174C7 /* rt.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rt.xml.bak; sourceTree = "<group>"; };
 		D43215701047A0F700B174C7 /* str.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = str.xml; sourceTree = "<group>"; };
-		D43215711047A0F700B174C7 /* str.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = str.xml.bak; sourceTree = "<group>"; };
 		D43215721047A0F700B174C7 /* str_001.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = str_001.xml; sourceTree = "<group>"; };
 		D43215731047A0F700B174C7 /* virtual.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = virtual.ini; sourceTree = "<group>"; };
-		D43215741047A0F700B174C7 /* virtual.ini.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = virtual.ini.bak; sourceTree = "<group>"; };
-		D43215751047A0F700B174C7 /* js.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = js.o; sourceTree = "<group>"; };
 		D43215761047A0F700B174C7 /* lang2po */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = lang2po; sourceTree = "<group>"; };
-		D43215771047A0F700B174C7 /* lang2po.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lang2po.o; sourceTree = "<group>"; };
-		D43215781047A0F700B174C7 /* lcdriver.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = lcdriver.dylib; sourceTree = "<group>"; };
-		D43215791047A0F700B174C7 /* lenz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = lenz.dylib; sourceTree = "<group>"; };
-		D432157A1047A0F700B174C7 /* lib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lib.o; sourceTree = "<group>"; };
-		D432157B1047A0F700B174C7 /* librocrail.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librocrail.a; sourceTree = "<group>"; };
-		D432157C1047A0F700B174C7 /* librocs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librocs.a; sourceTree = "<group>"; };
-		D432157D1047A0F700B174C7 /* libwrapper.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwrapper.a; sourceTree = "<group>"; };
-		D432157E1047A0F700B174C7 /* list.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = list.o; sourceTree = "<group>"; };
-		D432157F1047A0F700B174C7 /* loconet.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = loconet.dylib; sourceTree = "<group>"; };
-		D43215801047A0F700B174C7 /* map.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = map.o; sourceTree = "<group>"; };
-		D43215811047A0F700B174C7 /* mcs2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = mcs2.dylib; sourceTree = "<group>"; };
 		D43215821047A0F700B174C7 /* mdoc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = mdoc; sourceTree = "<group>"; };
-		D43215831047A0F700B174C7 /* mdoc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mdoc.o; sourceTree = "<group>"; };
-		D43215841047A0F700B174C7 /* mem.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mem.o; sourceTree = "<group>"; };
 		D43215851047A0F700B174C7 /* mergelang */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = mergelang; sourceTree = "<group>"; };
-		D43215861047A0F700B174C7 /* mergelang.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mergelang.o; sourceTree = "<group>"; };
-		D43215871047A0F700B174C7 /* mime64.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mime64.o; sourceTree = "<group>"; };
 		D43215881047A0F700B174C7 /* Modview.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = Modview.app; sourceTree = "<group>"; };
-		D43215891047A0F700B174C7 /* msg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = msg.o; sourceTree = "<group>"; };
-		D432158A1047A0F700B174C7 /* mutex.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mutex.o; sourceTree = "<group>"; };
-		D432158B1047A0F700B174C7 /* nce.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = nce.dylib; sourceTree = "<group>"; };
-		D432158C1047A0F700B174C7 /* node.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = node.o; sourceTree = "<group>"; };
 		D432158D1047A0F700B174C7 /* occ.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = occ.xml; sourceTree = "<group>"; };
 		D432158E1047A0F700B174C7 /* ogen */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ogen; sourceTree = "<group>"; };
-		D432158F1047A0F700B174C7 /* ogen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ogen.o; sourceTree = "<group>"; };
-		D43215901047A0F700B174C7 /* om32.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = om32.dylib; sourceTree = "<group>"; };
-		D43215911047A0F700B174C7 /* opendcc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = opendcc.dylib; sourceTree = "<group>"; };
-		D43215921047A0F700B174C7 /* p50.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = p50.dylib; sourceTree = "<group>"; };
-		D43215931047A0F700B174C7 /* p50x.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = p50x.dylib; sourceTree = "<group>"; };
 		D43215941047A0F700B174C7 /* plan.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = plan.xml; sourceTree = "<group>"; };
-		D43215951047A0F700B174C7 /* plan.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plan.xml.bak; sourceTree = "<group>"; };
 		D43215961047A0F700B174C7 /* po2lang */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = po2lang; sourceTree = "<group>"; };
-		D43215971047A0F700B174C7 /* po2lang.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = po2lang.o; sourceTree = "<group>"; };
-		D43215981047A0F700B174C7 /* queue.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = queue.o; sourceTree = "<group>"; };
-		D43215991047A0F700B174C7 /* railcom.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = railcom.dylib; sourceTree = "<group>"; };
-		D432159A1047A0F700B174C7 /* res.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = res.o; sourceTree = "<group>"; };
 		D432159C1047A0F700B174C7 /* occ.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = occ.xml; sourceTree = "<group>"; };
 		D432159D1047A0F700B174C7 /* plan.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = plan.xml; sourceTree = "<group>"; };
-		D432159E1047A0F700B174C7 /* plan.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plan.xml.bak; sourceTree = "<group>"; };
 		D432159F1047A0F700B174C7 /* rocrail.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini; sourceTree = "<group>"; };
-		D43215A01047A0F700B174C7 /* rocrail.ini.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini.bak; sourceTree = "<group>"; };
-		D43215A11047A0F700B174C7 /* rocrail.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.000; sourceTree = "<group>"; };
 		D43215A21047A0F700B174C7 /* rocview.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.ini; sourceTree = "<group>"; };
 		D43215A61047A0F700B174C7 /* accessory-1-off.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "accessory-1-off.svg"; sourceTree = "<group>"; };
 		D43215A71047A0F700B174C7 /* accessory-1-on.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "accessory-1-on.svg"; sourceTree = "<group>"; };
@@ -2037,128 +1837,18 @@
 		D43217601047A0F800B174C7 /* turnoutright-t-occ.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "turnoutright-t-occ.svg"; sourceTree = "<group>"; };
 		D43217611047A0F800B174C7 /* turnoutright-t.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "turnoutright-t.svg"; sourceTree = "<group>"; };
 		D43217621047A0F800B174C7 /* turnoutright.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = turnoutright.svg; sourceTree = "<group>"; };
-		D43217641047A0F800B174C7 /* rocrail.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.000; sourceTree = "<group>"; };
-		D43217651047A0F800B174C7 /* rocview.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.000; sourceTree = "<group>"; };
-		D43217661047A0F800B174C7 /* rocview.trace.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.001; sourceTree = "<group>"; };
-		D43217671047A0F800B174C7 /* rocview.trace.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.002; sourceTree = "<group>"; };
-		D43217681047A0F800B174C7 /* rocview.trace.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.003; sourceTree = "<group>"; };
-		D43217691047A0F800B174C7 /* rocview.trace.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.004; sourceTree = "<group>"; };
-		D432176A1047A0F800B174C7 /* rocview.trace.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.005; sourceTree = "<group>"; };
-		D432176B1047A0F800B174C7 /* rocview.trace.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.006; sourceTree = "<group>"; };
-		D432176C1047A0F800B174C7 /* rocview.trace.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.007; sourceTree = "<group>"; };
-		D432176D1047A0F800B174C7 /* rocview.trace.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.008; sourceTree = "<group>"; };
-		D432176E1047A0F800B174C7 /* rocview.trace.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.trace.009; sourceTree = "<group>"; };
-		D432176F1047A0F800B174C7 /* trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.000; sourceTree = "<group>"; };
-		D43217701047A0F800B174C7 /* trace.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.001; sourceTree = "<group>"; };
-		D43217711047A0F800B174C7 /* trace.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.002; sourceTree = "<group>"; };
-		D43217721047A0F800B174C7 /* trace.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.003; sourceTree = "<group>"; };
-		D43217731047A0F800B174C7 /* trace.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.004; sourceTree = "<group>"; };
-		D43217741047A0F800B174C7 /* trace.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.005; sourceTree = "<group>"; };
-		D43217751047A0F800B174C7 /* trace.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.006; sourceTree = "<group>"; };
-		D43217761047A0F800B174C7 /* trace.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.007; sourceTree = "<group>"; };
-		D43217771047A0F800B174C7 /* trace.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.008; sourceTree = "<group>"; };
-		D43217781047A0F800B174C7 /* trace.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trace.009; sourceTree = "<group>"; };
-		D43217791047A0F800B174C7 /* rocgui.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocgui.trace.000; sourceTree = "<group>"; };
-		D432177A1047A0F800B174C7 /* rocgui.trace.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocgui.trace.001; sourceTree = "<group>"; };
-		D432177B1047A0F800B174C7 /* rocgui.trace.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocgui.trace.002; sourceTree = "<group>"; };
-		D432177C1047A0F800B174C7 /* rocnet.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = rocnet.dylib; sourceTree = "<group>"; };
-		D432177D1047A0F800B174C7 /* roco.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = roco.dylib; sourceTree = "<group>"; };
 		D432177E1047A0F800B174C7 /* rocrail */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rocrail; sourceTree = "<group>"; };
 		D432177F1047A0F800B174C7 /* Rocrail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = Rocrail.app; sourceTree = "<group>"; };
 		D43217801047A0F800B174C7 /* rocrail.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini; sourceTree = "<group>"; };
-		D43217811047A0F800B174C7 /* rocrail.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.000; sourceTree = "<group>"; };
 		D43217821047A0F800B174C7 /* rocview */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rocview; sourceTree = "<group>"; };
 		D43217831047A0F800B174C7 /* Rocview.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = Rocview.app; sourceTree = "<group>"; };
 		D43217841047A0F900B174C7 /* rocview.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocview.ini; sourceTree = "<group>"; };
-		D43217851047A0F900B174C7 /* serial.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = serial.o; sourceTree = "<group>"; };
-		D43217861047A0F900B174C7 /* slx.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = slx.dylib; sourceTree = "<group>"; };
-		D43217871047A0F900B174C7 /* socket.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = socket.o; sourceTree = "<group>"; };
 		D43217891047A0F900B174C7 /* occ.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = occ.xml; sourceTree = "<group>"; };
 		D432178A1047A0F900B174C7 /* plan.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = plan.xml; sourceTree = "<group>"; };
-		D432178B1047A0F900B174C7 /* plan.xml.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plan.xml.bak; sourceTree = "<group>"; };
 		D432178C1047A0F900B174C7 /* rocrail.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini; sourceTree = "<group>"; };
-		D432178D1047A0F900B174C7 /* rocrail.ini.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.ini.bak; sourceTree = "<group>"; };
-		D432178E1047A0F900B174C7 /* rocrail.trace.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.000; sourceTree = "<group>"; };
-		D432178F1047A0F900B174C7 /* rocrail.trace.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rocrail.trace.001; sourceTree = "<group>"; };
-		D43217901047A0F900B174C7 /* sprog.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = sprog.dylib; sourceTree = "<group>"; };
-		D43217911047A0F900B174C7 /* srcp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = srcp.dylib; sourceTree = "<group>"; };
-		D43217921047A0F900B174C7 /* stats.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = stats.o; sourceTree = "<group>"; };
-		D43217931047A0F900B174C7 /* str.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = str.o; sourceTree = "<group>"; };
-		D43217941047A0F900B174C7 /* string.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = string.o; sourceTree = "<group>"; };
-		D43217951047A0F900B174C7 /* strtok.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = strtok.o; sourceTree = "<group>"; };
-		D43217961047A0F900B174C7 /* system.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = system.o; sourceTree = "<group>"; };
-		D43217971047A0F900B174C7 /* thread.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = thread.o; sourceTree = "<group>"; };
 		D43217991047A0F900B174C7 /* Rocview.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = Rocview.app; sourceTree = "<group>"; };
-		D432179A1047A0F900B174C7 /* trace.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = trace.o; sourceTree = "<group>"; };
-		D432179B1047A0F900B174C7 /* udir.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = udir.o; sourceTree = "<group>"; };
-		D432179C1047A0F900B174C7 /* uevent.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uevent.o; sourceTree = "<group>"; };
-		D432179D1047A0F900B174C7 /* ujs.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ujs.o; sourceTree = "<group>"; };
-		D432179E1047A0F900B174C7 /* ulib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ulib.o; sourceTree = "<group>"; };
-		D432179F1047A0F900B174C7 /* umutex.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = umutex.o; sourceTree = "<group>"; };
-		D43217A01047A0F900B174C7 /* userial.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = userial.o; sourceTree = "<group>"; };
-		D43217A11047A0F900B174C7 /* usocket.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = usocket.o; sourceTree = "<group>"; };
-		D43217A21047A0F900B174C7 /* usystem.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = usystem.o; sourceTree = "<group>"; };
-		D43217A31047A0F900B174C7 /* uthread.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uthread.o; sourceTree = "<group>"; };
-		D43217A41047A0F900B174C7 /* virtual.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = virtual.dylib; sourceTree = "<group>"; };
 		D43217A51047A0F900B174C7 /* wgen */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = wgen; sourceTree = "<group>"; };
-		D43217A61047A0F900B174C7 /* wgen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wgen.o; sourceTree = "<group>"; };
-		D43217A71047A0F900B174C7 /* wrpinf.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wrpinf.o; sourceTree = "<group>"; };
-		D43217A81047A0F900B174C7 /* wutils.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wutils.o; sourceTree = "<group>"; };
 		D43217A91047A0F900B174C7 /* xml2cstr */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = xml2cstr; sourceTree = "<group>"; };
-		D43217AA1047A0F900B174C7 /* xml2cstr.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = xml2cstr.o; sourceTree = "<group>"; };
-		D43217AB1047A0F900B174C7 /* xmlh.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = xmlh.o; sourceTree = "<group>"; };
-		D43217AC1047A0F900B174C7 /* zimo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = zimo.dylib; sourceTree = "<group>"; };
-		D43217B01047A0F900B174C7 /* barjut.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = barjut.o; sourceTree = "<group>"; };
-		D43217B11047A0F900B174C7 /* clock.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clock.o; sourceTree = "<group>"; };
-		D43217B31047A0F900B174C7 /* fada.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fada.o; sourceTree = "<group>"; };
-		D43217B41047A0F900B174C7 /* dcc232.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dcc232.o; sourceTree = "<group>"; };
-		D43217B61047A0F900B174C7 /* accpool.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = accpool.o; sourceTree = "<group>"; };
-		D43217B71047A0F900B174C7 /* init.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = init.o; sourceTree = "<group>"; };
-		D43217B81047A0F900B174C7 /* locpool.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locpool.o; sourceTree = "<group>"; };
-		D43217B91047A0F900B174C7 /* motorola.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = motorola.o; sourceTree = "<group>"; };
-		D43217BA1047A0F900B174C7 /* nmra.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = nmra.o; sourceTree = "<group>"; };
-		D43217BB1047A0F900B174C7 /* queue.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = queue.o; sourceTree = "<group>"; };
-		D43217BC1047A0F900B174C7 /* s88.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = s88.o; sourceTree = "<group>"; };
-		D43217BD1047A0F900B174C7 /* ddx.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ddx.o; sourceTree = "<group>"; };
-		D43217BE1047A0F900B174C7 /* dinamo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dinamo.o; sourceTree = "<group>"; };
-		D43217C01047A0F900B174C7 /* ecos-parser.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "ecos-parser.o"; sourceTree = "<group>"; };
-		D43217C11047A0F900B174C7 /* ecos.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ecos.o; sourceTree = "<group>"; };
-		D43217C21047A0F900B174C7 /* hsi88.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = hsi88.o; sourceTree = "<group>"; };
-		D43217C31047A0F900B174C7 /* inter10.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = inter10.o; sourceTree = "<group>"; };
-		D43217C41047A0F900B174C7 /* io8255.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = io8255.o; sourceTree = "<group>"; };
-		D43217C51047A0F900B174C7 /* lenz.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lenz.o; sourceTree = "<group>"; };
-		D43217C71047A0F900B174C7 /* lbserial.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lbserial.o; sourceTree = "<group>"; };
-		D43217C81047A0F900B174C7 /* lbserver.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lbserver.o; sourceTree = "<group>"; };
-		D43217C91047A0F900B174C7 /* lbudp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lbudp.o; sourceTree = "<group>"; };
-		D43217CA1047A0F900B174C7 /* lncv.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lncv.o; sourceTree = "<group>"; };
-		D43217CB1047A0F900B174C7 /* lnmaster.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lnmaster.o; sourceTree = "<group>"; };
-		D43217CC1047A0F900B174C7 /* lnmon.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lnmon.o; sourceTree = "<group>"; };
-		D43217CD1047A0F900B174C7 /* lnutils.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lnutils.o; sourceTree = "<group>"; };
-		D43217CE1047A0F900B174C7 /* locoio.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locoio.o; sourceTree = "<group>"; };
-		D43217CF1047A0F900B174C7 /* loconet.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = loconet.o; sourceTree = "<group>"; };
-		D43217D01047A0F900B174C7 /* mcs2.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mcs2.o; sourceTree = "<group>"; };
-		D43217D11047A0F900B174C7 /* nce.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = nce.o; sourceTree = "<group>"; };
-		D43217D31047A0F900B174C7 /* nmra.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = nmra.o; sourceTree = "<group>"; };
-		D43217D41047A0F900B174C7 /* nmrapacket.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = nmrapacket.o; sourceTree = "<group>"; };
-		D43217D51047A0F900B174C7 /* om32.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = om32.o; sourceTree = "<group>"; };
-		D43217D71047A0F900B174C7 /* openthrottle.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = openthrottle.o; sourceTree = "<group>"; };
-		D43217D81047A0F900B174C7 /* opendcc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = opendcc.o; sourceTree = "<group>"; };
-		D43217D91047A0F900B174C7 /* p50.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = p50.o; sourceTree = "<group>"; };
-		D43217DA1047A0F900B174C7 /* p50x.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = p50x.o; sourceTree = "<group>"; };
-		D43217DB1047A0F900B174C7 /* railcom.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = railcom.o; sourceTree = "<group>"; };
-		D43217DD1047A0F900B174C7 /* rn-serial.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "rn-serial.o"; sourceTree = "<group>"; };
-		D43217DE1047A0F900B174C7 /* rn-udp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "rn-udp.o"; sourceTree = "<group>"; };
-		D43217DF1047A0F900B174C7 /* rn-utils.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "rn-utils.o"; sourceTree = "<group>"; };
-		D43217E01047A0F900B174C7 /* rocnet-parser.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "rocnet-parser.o"; sourceTree = "<group>"; };
-		D43217E11047A0F900B174C7 /* rocnet.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = rocnet.o; sourceTree = "<group>"; };
-		D43217E21047A0F900B174C7 /* roco.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = roco.o; sourceTree = "<group>"; };
-		D43217E31047A0F900B174C7 /* slx.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = slx.o; sourceTree = "<group>"; };
-		D43217E41047A0F900B174C7 /* sprog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = sprog.o; sourceTree = "<group>"; };
-		D43217E51047A0F900B174C7 /* srcp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = srcp.o; sourceTree = "<group>"; };
-		D43217E61047A0F900B174C7 /* srcp07.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = srcp07.o; sourceTree = "<group>"; };
-		D43217E71047A0F900B174C7 /* srcp08.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = srcp08.o; sourceTree = "<group>"; };
-		D43217E81047A0F900B174C7 /* virtual.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = virtual.o; sourceTree = "<group>"; };
-		D43217E91047A0F900B174C7 /* zimo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = zimo.o; sourceTree = "<group>"; };
 		D43217EB1047A0F900B174C7 /* rocdigsapi-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "rocdigsapi-index.html"; sourceTree = "<group>"; };
 		D43217EC1047A0F900B174C7 /* rocdigsapi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rocdigsapi.html; sourceTree = "<group>"; };
 		D43217EE1047A0F900B174C7 /* 8255.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 8255.c; sourceTree = "<group>"; };
@@ -2249,16 +1939,6 @@
 		D43218431047A0F900B174C7 /* zimo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zimo.c; sourceTree = "<group>"; };
 		D43218441047A0F900B174C7 /* zimo.fm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zimo.fm; sourceTree = "<group>"; };
 		D43218451047A0F900B174C7 /* zimo_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zimo_impl.h; sourceTree = "<group>"; };
-		D43218461047A0F900B174C7 /* ogen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.000; sourceTree = "<group>"; };
-		D43218471047A0F900B174C7 /* ogen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.001; sourceTree = "<group>"; };
-		D43218481047A0F900B174C7 /* ogen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.002; sourceTree = "<group>"; };
-		D43218491047A0F900B174C7 /* ogen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.003; sourceTree = "<group>"; };
-		D432184A1047A0F900B174C7 /* ogen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.004; sourceTree = "<group>"; };
-		D432184B1047A0F900B174C7 /* ogen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.005; sourceTree = "<group>"; };
-		D432184C1047A0F900B174C7 /* ogen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.006; sourceTree = "<group>"; };
-		D432184D1047A0F900B174C7 /* ogen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.007; sourceTree = "<group>"; };
-		D432184E1047A0F900B174C7 /* ogen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.008; sourceTree = "<group>"; };
-		D432184F1047A0F900B174C7 /* ogen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.009; sourceTree = "<group>"; };
 		D43218511047A0F900B174C7 /* 8255.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 8255.h; sourceTree = "<group>"; };
 		D43218521047A0F900B174C7 /* barjut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = barjut.h; sourceTree = "<group>"; };
 		D43218531047A0F900B174C7 /* clock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clock.h; sourceTree = "<group>"; };
@@ -2288,131 +1968,7 @@
 		D432186B1047A0F900B174C7 /* srcp08.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = srcp08.h; sourceTree = "<group>"; };
 		D432186C1047A0F900B174C7 /* virtual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = virtual.h; sourceTree = "<group>"; };
 		D432186D1047A0F900B174C7 /* zimo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zimo.h; sourceTree = "<group>"; };
-		D432186E1047A0F900B174C7 /* xml2cstr.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.000; sourceTree = "<group>"; };
-		D432186F1047A0F900B174C7 /* xml2cstr.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.001; sourceTree = "<group>"; };
-		D43218701047A0F900B174C7 /* xml2cstr.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.002; sourceTree = "<group>"; };
-		D43218711047A0F900B174C7 /* xml2cstr.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.003; sourceTree = "<group>"; };
-		D43218721047A0F900B174C7 /* xml2cstr.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.004; sourceTree = "<group>"; };
-		D43218731047A0F900B174C7 /* xml2cstr.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.005; sourceTree = "<group>"; };
-		D43218741047A0F900B174C7 /* xml2cstr.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.006; sourceTree = "<group>"; };
-		D43218751047A0F900B174C7 /* xml2cstr.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.007; sourceTree = "<group>"; };
-		D43218761047A0F900B174C7 /* xml2cstr.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.008; sourceTree = "<group>"; };
-		D43218771047A0F900B174C7 /* xml2cstr.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.009; sourceTree = "<group>"; };
-		D432187A1047A0F900B174C7 /* actionsctrldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = actionsctrldlg.o; sourceTree = "<group>"; };
-		D432187B1047A0F900B174C7 /* barjutdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = barjutdlg.o; sourceTree = "<group>"; };
-		D432187C1047A0F900B174C7 /* basedlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = basedlg.o; sourceTree = "<group>"; };
-		D432187D1047A0F900B174C7 /* basenotebook.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = basenotebook.o; sourceTree = "<group>"; };
-		D432187E1047A0F900B174C7 /* basepanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = basepanel.o; sourceTree = "<group>"; };
-		D432187F1047A0F900B174C7 /* blockdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = blockdialog.o; sourceTree = "<group>"; };
-		D43218801047A0F900B174C7 /* blockgroupingdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = blockgroupingdlg.o; sourceTree = "<group>"; };
-		D43218811047A0F900B174C7 /* cardlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = cardlg.o; sourceTree = "<group>"; };
-		D43218821047A0F900B174C7 /* cardlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = cardlggen.o; sourceTree = "<group>"; };
-		D43218831047A0F900B174C7 /* clock.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clock.o; sourceTree = "<group>"; };
-		D43218841047A0F900B174C7 /* clockdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clockdialog.o; sourceTree = "<group>"; };
-		D43218851047A0F900B174C7 /* connectiondialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = connectiondialog.o; sourceTree = "<group>"; };
-		D43218861047A0F900B174C7 /* cv.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = cv.o; sourceTree = "<group>"; };
-		D43218871047A0F900B174C7 /* ddxdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ddxdlg.o; sourceTree = "<group>"; };
-		D43218881047A0F900B174C7 /* decconfigdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = decconfigdlg.o; sourceTree = "<group>"; };
-		D43218891047A0F900B174C7 /* decconfigdlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = decconfigdlggen.o; sourceTree = "<group>"; };
-		D432188A1047A0F900B174C7 /* dinamodlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dinamodlg.o; sourceTree = "<group>"; };
-		D432188B1047A0F900B174C7 /* dtopswdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dtopswdlg.o; sourceTree = "<group>"; };
-		D432188C1047A0F900B174C7 /* dtopswdlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = dtopswdlggen.o; sourceTree = "<group>"; };
-		D432188D1047A0F900B174C7 /* ecosdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ecosdlg.o; sourceTree = "<group>"; };
-		D432188E1047A0F900B174C7 /* feedbackdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = feedbackdialog.o; sourceTree = "<group>"; };
-		D432188F1047A0F900B174C7 /* fundialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fundialog.o; sourceTree = "<group>"; };
-		D43218901047A0F900B174C7 /* fxdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fxdlg.o; sourceTree = "<group>"; };
-		D43218911047A0F900B174C7 /* fxdlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fxdlggen.o; sourceTree = "<group>"; };
-		D43218921047A0F900B174C7 /* gendlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = gendlg.o; sourceTree = "<group>"; };
-		D43218931047A0F900B174C7 /* guiapp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = guiapp.o; sourceTree = "<group>"; };
-		D43218941047A0F900B174C7 /* guiframe.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = guiframe.o; sourceTree = "<group>"; };
-		D43218951047A0F900B174C7 /* hsi88dlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = hsi88dlg.o; sourceTree = "<group>"; };
-		D43218961047A0F900B174C7 /* infodialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = infodialog.o; sourceTree = "<group>"; };
-		D43218971047A0F900B174C7 /* item.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = item.o; sourceTree = "<group>"; };
-		D43218981047A0F900B174C7 /* jssupport.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = jssupport.o; sourceTree = "<group>"; };
-		D43218991047A0F900B174C7 /* lc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lc.o; sourceTree = "<group>"; };
-		D432189A1047A0F900B174C7 /* lenzdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lenzdlg.o; sourceTree = "<group>"; };
-		D432189B1047A0F900B174C7 /* lncv.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lncv.o; sourceTree = "<group>"; };
-		D432189C1047A0F900B174C7 /* locationsdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locationsdlg.o; sourceTree = "<group>"; };
-		D432189D1047A0F900B174C7 /* loccontroldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = loccontroldlg.o; sourceTree = "<group>"; };
-		D432189E1047A0F900B174C7 /* locdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locdialog.o; sourceTree = "<group>"; };
-		D432189F1047A0F900B174C7 /* locoio.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locoio.o; sourceTree = "<group>"; };
-		D43218A01047A0F900B174C7 /* loconetdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = loconetdlg.o; sourceTree = "<group>"; };
-		D43218A11047A0F900B174C7 /* locseldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = locseldlg.o; sourceTree = "<group>"; };
-		D43218A21047A0F900B174C7 /* messages.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = messages.o; sourceTree = "<group>"; };
-		D43218A31047A0F900B174C7 /* modpanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = modpanel.o; sourceTree = "<group>"; };
-		D43218A41047A0F900B174C7 /* modplandlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = modplandlg.o; sourceTree = "<group>"; };
-		D43218A51047A0F900B174C7 /* modulepropsdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = modulepropsdlg.o; sourceTree = "<group>"; };
-		D43218A61047A0F900B174C7 /* mvtrackdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mvtrackdlg.o; sourceTree = "<group>"; };
-		D43218A71047A0F900B174C7 /* opendcc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = opendcc.o; sourceTree = "<group>"; };
-		D43218A81047A0F900B174C7 /* operatordlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = operatordlg.o; sourceTree = "<group>"; };
-		D43218A91047A0F900B174C7 /* operatordlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = operatordlggen.o; sourceTree = "<group>"; };
-		D43218AA1047A0F900B174C7 /* outputdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = outputdialog.o; sourceTree = "<group>"; };
-		D43218AB1047A0F900B174C7 /* planpanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = planpanel.o; sourceTree = "<group>"; };
-		D43218AC1047A0F900B174C7 /* planpaneldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = planpaneldlg.o; sourceTree = "<group>"; };
-		D43218AD1047A0F900B174C7 /* powerctrldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = powerctrldlg.o; sourceTree = "<group>"; };
-		D43218AE1047A0F900B174C7 /* powerctrlgen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = powerctrlgen.o; sourceTree = "<group>"; };
-		D43218AF1047A0F900B174C7 /* powermandlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = powermandlg.o; sourceTree = "<group>"; };
-		D43218B01047A0F900B174C7 /* powermandlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = powermandlggen.o; sourceTree = "<group>"; };
-		D43218B11047A0F900B174C7 /* renderer.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = renderer.o; sourceTree = "<group>"; };
-		D43218B21047A0F900B174C7 /* rocguiinidlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = rocguiinidlg.o; sourceTree = "<group>"; };
-		D43218B31047A0F900B174C7 /* rocrailinidialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = rocrailinidialog.o; sourceTree = "<group>"; };
-		D43218B41047A0F900B174C7 /* routedialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = routedialog.o; sourceTree = "<group>"; };
-		D43218B51047A0F900B174C7 /* routedlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = routedlg.o; sourceTree = "<group>"; };
-		D43218B61047A0F900B174C7 /* scheduledialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = scheduledialog.o; sourceTree = "<group>"; };
-		D43218B71047A0F900B174C7 /* selectdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = selectdialog.o; sourceTree = "<group>"; };
-		D43218B81047A0F900B174C7 /* seltabdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = seltabdlg.o; sourceTree = "<group>"; };
-		D43218B91047A0F900B174C7 /* seltabtrackdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = seltabtrackdlg.o; sourceTree = "<group>"; };
-		D43218BA1047A0F900B174C7 /* signaldialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = signaldialog.o; sourceTree = "<group>"; };
-		D43218BB1047A0F900B174C7 /* softwareupdates.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = softwareupdates.o; sourceTree = "<group>"; };
-		D43218BC1047A0F900B174C7 /* speedcurvedlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = speedcurvedlg.o; sourceTree = "<group>"; };
-		D43218BD1047A0F900B174C7 /* speedcurvedlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = speedcurvedlggen.o; sourceTree = "<group>"; };
-		D43218BE1047A0F900B174C7 /* srcpdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = srcpdlg.o; sourceTree = "<group>"; };
-		D43218BF1047A0F900B174C7 /* statbar.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = statbar.o; sourceTree = "<group>"; };
-		D43218C01047A0F900B174C7 /* svg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = svg.o; sourceTree = "<group>"; };
-		D43218C11047A0F900B174C7 /* swdlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = swdlg.o; sourceTree = "<group>"; };
-		D43218C21047A0F900B174C7 /* switchdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = switchdialog.o; sourceTree = "<group>"; };
-		D43218C31047A0F900B174C7 /* textdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = textdialog.o; sourceTree = "<group>"; };
-		D43218C41047A0F900B174C7 /* timedactions.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = timedactions.o; sourceTree = "<group>"; };
-		D43218C51047A0F900B174C7 /* trackdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = trackdialog.o; sourceTree = "<group>"; };
-		D43218C61047A0F900B174C7 /* tttrackdialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = tttrackdialog.o; sourceTree = "<group>"; };
-		D43218C71047A0F900B174C7 /* turntabledialog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = turntabledialog.o; sourceTree = "<group>"; };
-		D43218C81047A0F900B174C7 /* uhl633x0dlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uhl633x0dlg.o; sourceTree = "<group>"; };
-		D43218C91047A0F900B174C7 /* uhl633x0gen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uhl633x0gen.o; sourceTree = "<group>"; };
-		D43218CA1047A0F900B174C7 /* uhl68610dlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uhl68610dlg.o; sourceTree = "<group>"; };
-		D43218CB1047A0F900B174C7 /* uhl68610gen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = uhl68610gen.o; sourceTree = "<group>"; };
-		D43218CC1047A0F900B174C7 /* undodlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = undodlg.o; sourceTree = "<group>"; };
-		D43218CD1047A0F900B174C7 /* waybilldlg.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = waybilldlg.o; sourceTree = "<group>"; };
-		D43218CE1047A0F900B174C7 /* waybilldlggen.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = waybilldlggen.o; sourceTree = "<group>"; };
 		D43218D01047A0F900B174C7 /* messages.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = messages.c; sourceTree = "<group>"; };
-		D43218D11047A0F900B174C7 /* wgen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.000; sourceTree = "<group>"; };
-		D43218D21047A0F900B174C7 /* wgen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.001; sourceTree = "<group>"; };
-		D43218D31047A0F900B174C7 /* wgen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.002; sourceTree = "<group>"; };
-		D43218D41047A0F900B174C7 /* wgen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.003; sourceTree = "<group>"; };
-		D43218D51047A0F900B174C7 /* wgen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.004; sourceTree = "<group>"; };
-		D43218D61047A0F900B174C7 /* wgen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.005; sourceTree = "<group>"; };
-		D43218D71047A0F900B174C7 /* wgen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.006; sourceTree = "<group>"; };
-		D43218D81047A0F900B174C7 /* wgen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.007; sourceTree = "<group>"; };
-		D43218D91047A0F900B174C7 /* wgen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.008; sourceTree = "<group>"; };
-		D43218DA1047A0F900B174C7 /* wgen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.009; sourceTree = "<group>"; };
-		D43218DD1047A0F900B174C7 /* Cmdline.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cmdline.o; sourceTree = "<group>"; };
-		D43218DE1047A0F900B174C7 /* CVconf.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = CVconf.o; sourceTree = "<group>"; };
-		D43218DF1047A0F900B174C7 /* Gui.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Gui.o; sourceTree = "<group>"; };
-		D43218E01047A0F900B174C7 /* guiwrapperinfo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = guiwrapperinfo.o; sourceTree = "<group>"; };
-		D43218E11047A0F900B174C7 /* LcCtrl.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LcCtrl.o; sourceTree = "<group>"; };
-		D43218E21047A0F900B174C7 /* MIC.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = MIC.o; sourceTree = "<group>"; };
-		D43218E31047A0F900B174C7 /* ModPanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ModPanel.o; sourceTree = "<group>"; };
-		D43218E41047A0F900B174C7 /* Patch.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Patch.o; sourceTree = "<group>"; };
-		D43218E51047A0F900B174C7 /* PlanPanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = PlanPanel.o; sourceTree = "<group>"; };
-		D43218E61047A0F900B174C7 /* Release.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Release.o; sourceTree = "<group>"; };
-		D43218E71047A0F900B174C7 /* RRCon.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RRCon.o; sourceTree = "<group>"; };
-		D43218E81047A0F900B174C7 /* Shortcut.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Shortcut.o; sourceTree = "<group>"; };
-		D43218E91047A0F900B174C7 /* SplitPanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SplitPanel.o; sourceTree = "<group>"; };
-		D43218EA1047A0F900B174C7 /* Theme.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Theme.o; sourceTree = "<group>"; };
-		D43218EB1047A0F900B174C7 /* ThemeBlock.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ThemeBlock.o; sourceTree = "<group>"; };
-		D43218EC1047A0F900B174C7 /* ThemePanel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ThemePanel.o; sourceTree = "<group>"; };
-		D43218ED1047A0F900B174C7 /* version.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = version.o; sourceTree = "<group>"; };
-		D43218EE1047A0F900B174C7 /* Window.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Window.o; sourceTree = "<group>"; };
-		D43218EF1047A0F900B174C7 /* wrapper.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wrapper.o; sourceTree = "<group>"; };
 		D43218F11047A0F900B174C7 /* wrapper-en-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "wrapper-en-index.html"; sourceTree = "<group>"; };
 		D43218F21047A0F900B174C7 /* wrapper-en.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "wrapper-en.html"; sourceTree = "<group>"; };
 		D43218F41047A0F900B174C7 /* Cmdline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Cmdline.c; sourceTree = "<group>"; };
@@ -2451,106 +2007,17 @@
 		D43219161047A0F900B174C7 /* ThemePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThemePanel.h; sourceTree = "<group>"; };
 		D43219171047A0F900B174C7 /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		D43219181047A0F900B174C7 /* wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
-		D43219191047A0F900B174C7 /* xml2cstr.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.000; sourceTree = "<group>"; };
-		D432191A1047A0F900B174C7 /* xml2cstr.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.001; sourceTree = "<group>"; };
-		D432191B1047A0F900B174C7 /* xml2cstr.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.002; sourceTree = "<group>"; };
-		D432191C1047A0F900B174C7 /* xml2cstr.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.003; sourceTree = "<group>"; };
-		D432191D1047A0F900B174C7 /* xml2cstr.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.004; sourceTree = "<group>"; };
-		D432191E1047A0F900B174C7 /* xml2cstr.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.005; sourceTree = "<group>"; };
-		D432191F1047A0F900B174C7 /* xml2cstr.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.006; sourceTree = "<group>"; };
-		D43219201047A0F900B174C7 /* xml2cstr.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.007; sourceTree = "<group>"; };
-		D43219211047A0F900B174C7 /* xml2cstr.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.008; sourceTree = "<group>"; };
-		D43219221047A0F900B174C7 /* xml2cstr.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.009; sourceTree = "<group>"; };
 		D43219251047A0F900B174C7 /* rocintapi-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "rocintapi-index.html"; sourceTree = "<group>"; };
 		D43219261047A0F900B174C7 /* rocintapi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rocintapi.html; sourceTree = "<group>"; };
-		D43219281047A0F900B174C7 /* ogen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.000; sourceTree = "<group>"; };
-		D43219291047A0F900B174C7 /* ogen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.001; sourceTree = "<group>"; };
-		D432192A1047A0F900B174C7 /* ogen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.002; sourceTree = "<group>"; };
-		D432192B1047A0F900B174C7 /* ogen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.003; sourceTree = "<group>"; };
-		D432192C1047A0F900B174C7 /* ogen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.004; sourceTree = "<group>"; };
-		D432192D1047A0F900B174C7 /* ogen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.005; sourceTree = "<group>"; };
-		D432192E1047A0F900B174C7 /* ogen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.006; sourceTree = "<group>"; };
-		D432192F1047A0F900B174C7 /* ogen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.007; sourceTree = "<group>"; };
-		D43219301047A0F900B174C7 /* ogen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.008; sourceTree = "<group>"; };
-		D43219311047A0F900B174C7 /* ogen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.009; sourceTree = "<group>"; };
 		D43219331047A0F900B174C7 /* blockbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blockbase.h; sourceTree = "<group>"; };
 		D43219341047A0F900B174C7 /* digint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = digint.h; sourceTree = "<group>"; };
 		D43219351047A0F900B174C7 /* lcdriverint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcdriverint.h; sourceTree = "<group>"; };
-		D43219391047A0F900B174C7 /* enter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = enter.o; sourceTree = "<group>"; };
-		D432193A1047A0F900B174C7 /* exit.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = exit.o; sourceTree = "<group>"; };
-		D432193B1047A0F900B174C7 /* in.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = in.o; sourceTree = "<group>"; };
-		D432193C1047A0F900B174C7 /* pre2in.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = pre2in.o; sourceTree = "<group>"; };
-		D432193D1047A0F900B174C7 /* lcdriver.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lcdriver.o; sourceTree = "<group>"; };
-		D432193F1047A0F900B174C7 /* checkroute.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = checkroute.o; sourceTree = "<group>"; };
-		D43219401047A0FA00B174C7 /* enter.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = enter.o; sourceTree = "<group>"; };
-		D43219411047A0FA00B174C7 /* exit.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = exit.o; sourceTree = "<group>"; };
-		D43219421047A0FA00B174C7 /* finddest.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = finddest.o; sourceTree = "<group>"; };
-		D43219431047A0FA00B174C7 /* go.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = go.o; sourceTree = "<group>"; };
-		D43219441047A0FA00B174C7 /* idle.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = idle.o; sourceTree = "<group>"; };
-		D43219451047A0FA00B174C7 /* in.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = in.o; sourceTree = "<group>"; };
-		D43219461047A0FA00B174C7 /* initdest.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = initdest.o; sourceTree = "<group>"; };
-		D43219471047A0FA00B174C7 /* out.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = out.o; sourceTree = "<group>"; };
-		D43219481047A0FA00B174C7 /* pause.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = pause.o; sourceTree = "<group>"; };
-		D43219491047A0FA00B174C7 /* pre2in.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = pre2in.o; sourceTree = "<group>"; };
-		D432194A1047A0FA00B174C7 /* prewait.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = prewait.o; sourceTree = "<group>"; };
-		D432194B1047A0FA00B174C7 /* timer.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = timer.o; sourceTree = "<group>"; };
-		D432194C1047A0FA00B174C7 /* wait.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wait.o; sourceTree = "<group>"; };
-		D432194D1047A0FA00B174C7 /* wait4event.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wait4event.o; sourceTree = "<group>"; };
-		D432194F1047A0FA00B174C7 /* actions.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = actions.o; sourceTree = "<group>"; };
-		D43219501047A0FA00B174C7 /* initialize.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = initialize.o; sourceTree = "<group>"; };
-		D43219511047A0FA00B174C7 /* reserve.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = reserve.o; sourceTree = "<group>"; };
-		D43219521047A0FA00B174C7 /* schedules.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = schedules.o; sourceTree = "<group>"; };
-		D43219531047A0FA00B174C7 /* signals.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = signals.o; sourceTree = "<group>"; };
 		D43219551047A0FA00B174C7 /* roclcdrapi-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "roclcdrapi-index.html"; sourceTree = "<group>"; };
 		D43219561047A0FA00B174C7 /* roclcdrapi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = roclcdrapi.html; sourceTree = "<group>"; };
 		D43219581047A0FA00B174C7 /* lcdriver.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lcdriver.c; sourceTree = "<group>"; };
 		D43219591047A0FA00B174C7 /* lcdriver.fm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lcdriver.fm; sourceTree = "<group>"; };
 		D432195A1047A0FA00B174C7 /* lcdriver_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcdriver_impl.h; sourceTree = "<group>"; };
-		D432195B1047A0FA00B174C7 /* ogen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.000; sourceTree = "<group>"; };
-		D432195C1047A0FA00B174C7 /* ogen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.001; sourceTree = "<group>"; };
-		D432195D1047A0FA00B174C7 /* ogen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.002; sourceTree = "<group>"; };
-		D432195E1047A0FA00B174C7 /* ogen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.003; sourceTree = "<group>"; };
-		D432195F1047A0FA00B174C7 /* ogen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.004; sourceTree = "<group>"; };
-		D43219601047A0FA00B174C7 /* ogen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.005; sourceTree = "<group>"; };
-		D43219611047A0FA00B174C7 /* ogen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.006; sourceTree = "<group>"; };
-		D43219621047A0FA00B174C7 /* ogen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.007; sourceTree = "<group>"; };
-		D43219631047A0FA00B174C7 /* ogen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.008; sourceTree = "<group>"; };
-		D43219641047A0FA00B174C7 /* ogen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.009; sourceTree = "<group>"; };
 		D43219661047A0FA00B174C7 /* lcdriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcdriver.h; sourceTree = "<group>"; };
-		D43219691047A0FA00B174C7 /* action.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = action.o; sourceTree = "<group>"; };
-		D432196A1047A0FA00B174C7 /* analyse.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = analyse.o; sourceTree = "<group>"; };
-		D432196B1047A0FA00B174C7 /* app.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = app.o; sourceTree = "<group>"; };
-		D432196C1047A0FA00B174C7 /* block.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = block.o; sourceTree = "<group>"; };
-		D432196D1047A0FA00B174C7 /* car.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = car.o; sourceTree = "<group>"; };
-		D432196E1047A0FA00B174C7 /* clntcon.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = clntcon.o; sourceTree = "<group>"; };
-		D432196F1047A0FA00B174C7 /* control.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = control.o; sourceTree = "<group>"; };
-		D43219701047A0FA00B174C7 /* display.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = display.o; sourceTree = "<group>"; };
-		D43219711047A0FA00B174C7 /* fback.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = fback.o; sourceTree = "<group>"; };
-		D43219721047A0FA00B174C7 /* hclient.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = hclient.o; sourceTree = "<group>"; };
-		D43219731047A0FA00B174C7 /* http.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = http.o; sourceTree = "<group>"; };
-		D43219741047A0FA00B174C7 /* loc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = loc.o; sourceTree = "<group>"; };
-		D43219751047A0FA00B174C7 /* main.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = main.o; sourceTree = "<group>"; };
-		D43219761047A0FA00B174C7 /* model.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = model.o; sourceTree = "<group>"; };
-		D43219771047A0FA00B174C7 /* modplan.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = modplan.o; sourceTree = "<group>"; };
-		D43219781047A0FA00B174C7 /* module.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = module.o; sourceTree = "<group>"; };
-		D43219791047A0FA00B174C7 /* mvtrack.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = mvtrack.o; sourceTree = "<group>"; };
-		D432197A1047A0FA00B174C7 /* operator.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = operator.o; sourceTree = "<group>"; };
-		D432197B1047A0FA00B174C7 /* output.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = output.o; sourceTree = "<group>"; };
-		D432197C1047A0FA00B174C7 /* pclient.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = pclient.o; sourceTree = "<group>"; };
-		D432197D1047A0FA00B174C7 /* powerman.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = powerman.o; sourceTree = "<group>"; };
-		D432197E1047A0FA00B174C7 /* r2rnet.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = r2rnet.o; sourceTree = "<group>"; };
-		D432197F1047A0FA00B174C7 /* rcon.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = rcon.o; sourceTree = "<group>"; };
-		D43219801047A0FA00B174C7 /* route.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = route.o; sourceTree = "<group>"; };
-		D43219811047A0FA00B174C7 /* seltab.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = seltab.o; sourceTree = "<group>"; };
-		D43219821047A0FA00B174C7 /* signal.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = signal.o; sourceTree = "<group>"; };
-		D43219831047A0FA00B174C7 /* switch.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = switch.o; sourceTree = "<group>"; };
-		D43219841047A0FA00B174C7 /* text.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = text.o; sourceTree = "<group>"; };
-		D43219851047A0FA00B174C7 /* throttle.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = throttle.o; sourceTree = "<group>"; };
-		D43219861047A0FA00B174C7 /* track.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = track.o; sourceTree = "<group>"; };
-		D43219871047A0FA00B174C7 /* traverser.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = traverser.o; sourceTree = "<group>"; };
-		D43219881047A0FA00B174C7 /* tt.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = tt.o; sourceTree = "<group>"; };
-		D43219891047A0FA00B174C7 /* web.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = web.o; sourceTree = "<group>"; };
-		D432198A1047A0FA00B174C7 /* webme.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = webme.o; sourceTree = "<group>"; };
 		D432198C1047A0FA00B174C7 /* rocrailapi-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "rocrailapi-index.html"; sourceTree = "<group>"; };
 		D432198D1047A0FA00B174C7 /* rocrailapi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rocrailapi.html; sourceTree = "<group>"; };
 		D432198F1047A0FA00B174C7 /* action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = action.c; sourceTree = "<group>"; };
@@ -2646,16 +2113,6 @@
 		D43219E91047A0FA00B174C7 /* tt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tt.c; sourceTree = "<group>"; };
 		D43219EA1047A0FA00B174C7 /* tt.fm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tt.fm; sourceTree = "<group>"; };
 		D43219EB1047A0FA00B174C7 /* tt_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tt_impl.h; sourceTree = "<group>"; };
-		D43219EC1047A0FA00B174C7 /* ogen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.000; sourceTree = "<group>"; };
-		D43219ED1047A0FA00B174C7 /* ogen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.001; sourceTree = "<group>"; };
-		D43219EE1047A0FA00B174C7 /* ogen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.002; sourceTree = "<group>"; };
-		D43219EF1047A0FA00B174C7 /* ogen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.003; sourceTree = "<group>"; };
-		D43219F01047A0FA00B174C7 /* ogen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.004; sourceTree = "<group>"; };
-		D43219F11047A0FA00B174C7 /* ogen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.005; sourceTree = "<group>"; };
-		D43219F21047A0FA00B174C7 /* ogen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.006; sourceTree = "<group>"; };
-		D43219F31047A0FA00B174C7 /* ogen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.007; sourceTree = "<group>"; };
-		D43219F41047A0FA00B174C7 /* ogen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.008; sourceTree = "<group>"; };
-		D43219F51047A0FA00B174C7 /* ogen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.009; sourceTree = "<group>"; };
 		D43219F71047A0FA00B174C7 /* action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = action.h; sourceTree = "<group>"; };
 		D43219F81047A0FA00B174C7 /* analyse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = analyse.h; sourceTree = "<group>"; };
 		D43219F91047A0FA00B174C7 /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = app.h; sourceTree = "<group>"; };
@@ -2688,130 +2145,6 @@
 		D4321A141047A0FA00B174C7 /* track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = track.h; sourceTree = "<group>"; };
 		D4321A151047A0FA00B174C7 /* traverser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = traverser.h; sourceTree = "<group>"; };
 		D4321A161047A0FA00B174C7 /* tt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tt.h; sourceTree = "<group>"; };
-		D4321A171047A0FA00B174C7 /* wgen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.000; sourceTree = "<group>"; };
-		D4321A181047A0FA00B174C7 /* wgen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.001; sourceTree = "<group>"; };
-		D4321A191047A0FA00B174C7 /* wgen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.002; sourceTree = "<group>"; };
-		D4321A1A1047A0FA00B174C7 /* wgen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.003; sourceTree = "<group>"; };
-		D4321A1B1047A0FA00B174C7 /* wgen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.004; sourceTree = "<group>"; };
-		D4321A1C1047A0FA00B174C7 /* wgen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.005; sourceTree = "<group>"; };
-		D4321A1D1047A0FA00B174C7 /* wgen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.006; sourceTree = "<group>"; };
-		D4321A1E1047A0FA00B174C7 /* wgen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.007; sourceTree = "<group>"; };
-		D4321A1F1047A0FA00B174C7 /* wgen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.008; sourceTree = "<group>"; };
-		D4321A201047A0FA00B174C7 /* wgen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wgen.009; sourceTree = "<group>"; };
-		D4321A231047A0FA00B174C7 /* Action.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Action.o; sourceTree = "<group>"; };
-		D4321A241047A0FA00B174C7 /* ActionCond.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ActionCond.o; sourceTree = "<group>"; };
-		D4321A251047A0FA00B174C7 /* ActionCtrl.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ActionCtrl.o; sourceTree = "<group>"; };
-		D4321A261047A0FA00B174C7 /* ActionList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ActionList.o; sourceTree = "<group>"; };
-		D4321A271047A0FA00B174C7 /* AutoCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = AutoCmd.o; sourceTree = "<group>"; };
-		D4321A281047A0FA00B174C7 /* BinCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = BinCmd.o; sourceTree = "<group>"; };
-		D4321A291047A0FA00B174C7 /* Block.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Block.o; sourceTree = "<group>"; };
-		D4321A2A1047A0FA00B174C7 /* BlockList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = BlockList.o; sourceTree = "<group>"; };
-		D4321A2B1047A0FA00B174C7 /* Booster.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Booster.o; sourceTree = "<group>"; };
-		D4321A2C1047A0FA00B174C7 /* BoosterList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = BoosterList.o; sourceTree = "<group>"; };
-		D4321A2D1047A0FA00B174C7 /* Car.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Car.o; sourceTree = "<group>"; };
-		D4321A2E1047A0FA00B174C7 /* CarList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = CarList.o; sourceTree = "<group>"; };
-		D4321A2F1047A0FA00B174C7 /* Clock.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Clock.o; sourceTree = "<group>"; };
-		D4321A301047A0FA00B174C7 /* Cmdline.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Cmdline.o; sourceTree = "<group>"; };
-		D4321A311047A0FA00B174C7 /* Command.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Command.o; sourceTree = "<group>"; };
-		D4321A321047A0FA00B174C7 /* ConCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ConCmd.o; sourceTree = "<group>"; };
-		D4321A331047A0FA00B174C7 /* CSOptions.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = CSOptions.o; sourceTree = "<group>"; };
-		D4321A341047A0FA00B174C7 /* Ctrl.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Ctrl.o; sourceTree = "<group>"; };
-		D4321A351047A0FA00B174C7 /* CustomCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = CustomCmd.o; sourceTree = "<group>"; };
-		D4321A361047A0FA00B174C7 /* CVByte.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = CVByte.o; sourceTree = "<group>"; };
-		D4321A371047A0FA00B174C7 /* DataReq.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = DataReq.o; sourceTree = "<group>"; };
-		D4321A381047A0FA00B174C7 /* DDX.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = DDX.o; sourceTree = "<group>"; };
-		D4321A391047A0FA00B174C7 /* DigInt.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = DigInt.o; sourceTree = "<group>"; };
-		D4321A3A1047A0FA00B174C7 /* Exception.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Exception.o; sourceTree = "<group>"; };
-		D4321A3B1047A0FA00B174C7 /* ExtCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ExtCmd.o; sourceTree = "<group>"; };
-		D4321A3C1047A0FA00B174C7 /* FbInfo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FbInfo.o; sourceTree = "<group>"; };
-		D4321A3D1047A0FA00B174C7 /* FbMods.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FbMods.o; sourceTree = "<group>"; };
-		D4321A3E1047A0FA00B174C7 /* Feedback.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Feedback.o; sourceTree = "<group>"; };
-		D4321A3F1047A0FA00B174C7 /* FeedbackEvent.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FeedbackEvent.o; sourceTree = "<group>"; };
-		D4321A401047A0FA00B174C7 /* FeedbackList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FeedbackList.o; sourceTree = "<group>"; };
-		D4321A411047A0FA00B174C7 /* FunCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FunCmd.o; sourceTree = "<group>"; };
-		D4321A421047A0FA00B174C7 /* FunDef.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = FunDef.o; sourceTree = "<group>"; };
-		D4321A431047A0FA00B174C7 /* Global.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Global.o; sourceTree = "<group>"; };
-		D4321A441047A0FA00B174C7 /* HSI88.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = HSI88.o; sourceTree = "<group>"; };
-		D4321A451047A0FA00B174C7 /* HttpService.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = HttpService.o; sourceTree = "<group>"; };
-		D4321A461047A0FA00B174C7 /* Item.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Item.o; sourceTree = "<group>"; };
-		D4321A471047A0FA00B174C7 /* JsEvent.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = JsEvent.o; sourceTree = "<group>"; };
-		D4321A481047A0FA00B174C7 /* JsMap.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = JsMap.o; sourceTree = "<group>"; };
-		D4321A491047A0FA00B174C7 /* LCD.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LCD.o; sourceTree = "<group>"; };
-		D4321A4A1047A0FA00B174C7 /* Link.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Link.o; sourceTree = "<group>"; };
-		D4321A4B1047A0FA00B174C7 /* LinkList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LinkList.o; sourceTree = "<group>"; };
-		D4321A4C1047A0FA00B174C7 /* LNSlotServer.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LNSlotServer.o; sourceTree = "<group>"; };
-		D4321A4D1047A0FA00B174C7 /* Loc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Loc.o; sourceTree = "<group>"; };
-		D4321A4E1047A0FA00B174C7 /* Location.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Location.o; sourceTree = "<group>"; };
-		D4321A4F1047A0FA00B174C7 /* LocationList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LocationList.o; sourceTree = "<group>"; };
-		D4321A501047A0FA00B174C7 /* LocList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LocList.o; sourceTree = "<group>"; };
-		D4321A511047A0FA00B174C7 /* LocoNet.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = LocoNet.o; sourceTree = "<group>"; };
-		D4321A521047A0FA00B174C7 /* ModelCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ModelCmd.o; sourceTree = "<group>"; };
-		D4321A531047A0FA00B174C7 /* ModOcc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ModOcc.o; sourceTree = "<group>"; };
-		D4321A541047A0FA00B174C7 /* ModPlan.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ModPlan.o; sourceTree = "<group>"; };
-		D4321A551047A0FA00B174C7 /* Module.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Module.o; sourceTree = "<group>"; };
-		D4321A561047A0FA00B174C7 /* ModuleConnection.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ModuleConnection.o; sourceTree = "<group>"; };
-		D4321A571047A0FA00B174C7 /* MVTrack.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = MVTrack.o; sourceTree = "<group>"; };
-		D4321A581047A0FA00B174C7 /* NetReq.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = NetReq.o; sourceTree = "<group>"; };
-		D4321A591047A0FA00B174C7 /* NetRsp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = NetRsp.o; sourceTree = "<group>"; };
-		D4321A5A1047A0FA00B174C7 /* Occupation.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Occupation.o; sourceTree = "<group>"; };
-		D4321A5B1047A0FA00B174C7 /* OpenDCC.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = OpenDCC.o; sourceTree = "<group>"; };
-		D4321A5C1047A0FA00B174C7 /* Operator.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Operator.o; sourceTree = "<group>"; };
-		D4321A5D1047A0FA00B174C7 /* OperatorList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = OperatorList.o; sourceTree = "<group>"; };
-		D4321A5E1047A0FA00B174C7 /* Output.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Output.o; sourceTree = "<group>"; };
-		D4321A5F1047A0FA00B174C7 /* OutputList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = OutputList.o; sourceTree = "<group>"; };
-		D4321A601047A0FA00B174C7 /* PermExclude.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = PermExclude.o; sourceTree = "<group>"; };
-		D4321A611047A0FA00B174C7 /* PermInclude.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = PermInclude.o; sourceTree = "<group>"; };
-		D4321A621047A0FA00B174C7 /* Plan.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Plan.o; sourceTree = "<group>"; };
-		D4321A631047A0FA00B174C7 /* Program.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Program.o; sourceTree = "<group>"; };
-		D4321A641047A0FA00B174C7 /* PwrCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = PwrCmd.o; sourceTree = "<group>"; };
-		D4321A651047A0FA00B174C7 /* PwrEvent.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = PwrEvent.o; sourceTree = "<group>"; };
-		D4321A661047A0FA00B174C7 /* R2RnetIni.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = R2RnetIni.o; sourceTree = "<group>"; };
-		D4321A671047A0FA00B174C7 /* Response.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Response.o; sourceTree = "<group>"; };
-		D4321A681047A0FA00B174C7 /* RocNet.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RocNet.o; sourceTree = "<group>"; };
-		D4321A691047A0FA00B174C7 /* RocNetSerial.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RocNetSerial.o; sourceTree = "<group>"; };
-		D4321A6A1047A0FA00B174C7 /* RocNetUDP.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RocNetUDP.o; sourceTree = "<group>"; };
-		D4321A6B1047A0FA00B174C7 /* RocRail.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RocRail.o; sourceTree = "<group>"; };
-		D4321A6C1047A0FA00B174C7 /* rocrail_doc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = rocrail_doc.o; sourceTree = "<group>"; };
-		D4321A6D1047A0FA00B174C7 /* Route.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Route.o; sourceTree = "<group>"; };
-		D4321A6E1047A0FA00B174C7 /* RouteList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = RouteList.o; sourceTree = "<group>"; };
-		D4321A6F1047A0FA00B174C7 /* Schedule.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Schedule.o; sourceTree = "<group>"; };
-		D4321A701047A0FA00B174C7 /* ScheduleEntry.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ScheduleEntry.o; sourceTree = "<group>"; };
-		D4321A711047A0FA00B174C7 /* ScheduleList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ScheduleList.o; sourceTree = "<group>"; };
-		D4321A721047A0FA00B174C7 /* SelTab.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SelTab.o; sourceTree = "<group>"; };
-		D4321A731047A0FA00B174C7 /* SelTabList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SelTabList.o; sourceTree = "<group>"; };
-		D4321A741047A0FA00B174C7 /* SelTabPos.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SelTabPos.o; sourceTree = "<group>"; };
-		D4321A751047A0FA00B174C7 /* Service.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Service.o; sourceTree = "<group>"; };
-		D4321A761047A0FA00B174C7 /* Signal.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Signal.o; sourceTree = "<group>"; };
-		D4321A771047A0FA00B174C7 /* SignalList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SignalList.o; sourceTree = "<group>"; };
-		D4321A781047A0FA00B174C7 /* SRCP.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SRCP.o; sourceTree = "<group>"; };
-		D4321A791047A0FA00B174C7 /* State.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = State.o; sourceTree = "<group>"; };
-		D4321A7A1047A0FA00B174C7 /* SvnLog.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SvnLog.o; sourceTree = "<group>"; };
-		D4321A7B1047A0FA00B174C7 /* SvnLogEntry.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SvnLogEntry.o; sourceTree = "<group>"; };
-		D4321A7C1047A0FA00B174C7 /* Switch.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Switch.o; sourceTree = "<group>"; };
-		D4321A7D1047A0FA00B174C7 /* SwitchCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SwitchCmd.o; sourceTree = "<group>"; };
-		D4321A7E1047A0FA00B174C7 /* SwitchList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SwitchList.o; sourceTree = "<group>"; };
-		D4321A7F1047A0FA00B174C7 /* SysCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = SysCmd.o; sourceTree = "<group>"; };
-		D4321A801047A0FA00B174C7 /* Tcp.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Tcp.o; sourceTree = "<group>"; };
-		D4321A811047A0FA00B174C7 /* Text.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Text.o; sourceTree = "<group>"; };
-		D4321A821047A0FA00B174C7 /* TextList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = TextList.o; sourceTree = "<group>"; };
-		D4321A831047A0FA00B174C7 /* Throttle.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Throttle.o; sourceTree = "<group>"; };
-		D4321A841047A0FA00B174C7 /* ThrottleCmd.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ThrottleCmd.o; sourceTree = "<group>"; };
-		D4321A851047A0FA00B174C7 /* Trace.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Trace.o; sourceTree = "<group>"; };
-		D4321A861047A0FA00B174C7 /* Track.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Track.o; sourceTree = "<group>"; };
-		D4321A871047A0FA00B174C7 /* TrackList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = TrackList.o; sourceTree = "<group>"; };
-		D4321A881047A0FA00B174C7 /* Traverser.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Traverser.o; sourceTree = "<group>"; };
-		D4321A891047A0FA00B174C7 /* TraverserList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = TraverserList.o; sourceTree = "<group>"; };
-		D4321A8A1047A0FA00B174C7 /* TTTrack.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = TTTrack.o; sourceTree = "<group>"; };
-		D4321A8B1047A0FA00B174C7 /* Turntable.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Turntable.o; sourceTree = "<group>"; };
-		D4321A8C1047A0FA00B174C7 /* TurntableList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = TurntableList.o; sourceTree = "<group>"; };
-		D4321A8D1047A0FA00B174C7 /* version.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = version.o; sourceTree = "<group>"; };
-		D4321A8E1047A0FA00B174C7 /* Waybill.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Waybill.o; sourceTree = "<group>"; };
-		D4321A8F1047A0FA00B174C7 /* WaybillList.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = WaybillList.o; sourceTree = "<group>"; };
-		D4321A901047A0FA00B174C7 /* WebCam.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = WebCam.o; sourceTree = "<group>"; };
-		D4321A911047A0FA00B174C7 /* WebClient.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = WebClient.o; sourceTree = "<group>"; };
-		D4321A921047A0FA00B174C7 /* wrapper.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wrapper.o; sourceTree = "<group>"; };
-		D4321A931047A0FA00B174C7 /* wrapperinfo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = wrapperinfo.o; sourceTree = "<group>"; };
-		D4321A941047A0FA00B174C7 /* ZLevel.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ZLevel.o; sourceTree = "<group>"; };
 		D4321A961047A0FA00B174C7 /* wrapper-en-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "wrapper-en-index.html"; sourceTree = "<group>"; };
 		D4321A971047A0FA00B174C7 /* wrapper-en.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "wrapper-en.html"; sourceTree = "<group>"; };
 		D4321A991047A0FA00B174C7 /* Action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Action.c; sourceTree = "<group>"; };
@@ -3039,16 +2372,6 @@
 		D4321B781047A0FB00B174C7 /* WebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebClient.h; sourceTree = "<group>"; };
 		D4321B791047A0FB00B174C7 /* wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		D4321B7A1047A0FB00B174C7 /* ZLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLevel.h; sourceTree = "<group>"; };
-		D4321B7B1047A0FB00B174C7 /* xml2cstr.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.000; sourceTree = "<group>"; };
-		D4321B7C1047A0FB00B174C7 /* xml2cstr.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.001; sourceTree = "<group>"; };
-		D4321B7D1047A0FB00B174C7 /* xml2cstr.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.002; sourceTree = "<group>"; };
-		D4321B7E1047A0FB00B174C7 /* xml2cstr.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.003; sourceTree = "<group>"; };
-		D4321B7F1047A0FB00B174C7 /* xml2cstr.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.004; sourceTree = "<group>"; };
-		D4321B801047A0FB00B174C7 /* xml2cstr.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.005; sourceTree = "<group>"; };
-		D4321B811047A0FB00B174C7 /* xml2cstr.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.006; sourceTree = "<group>"; };
-		D4321B821047A0FB00B174C7 /* xml2cstr.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.007; sourceTree = "<group>"; };
-		D4321B831047A0FB00B174C7 /* xml2cstr.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.008; sourceTree = "<group>"; };
-		D4321B841047A0FB00B174C7 /* xml2cstr.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xml2cstr.009; sourceTree = "<group>"; };
 		D4321B871047A0FB00B174C7 /* rocsapi-index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "rocsapi-index.html"; sourceTree = "<group>"; };
 		D4321B881047A0FB00B174C7 /* rocsapi.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rocsapi.html; sourceTree = "<group>"; };
 		D4321B8A1047A0FB00B174C7 /* attr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = attr.c; sourceTree = "<group>"; };
@@ -3138,16 +2461,6 @@
 		D4321BDE1047A0FB00B174C7 /* xmlh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlh.c; sourceTree = "<group>"; };
 		D4321BDF1047A0FB00B174C7 /* xmlh.fm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = xmlh.fm; sourceTree = "<group>"; };
 		D4321BE01047A0FB00B174C7 /* xmlh_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlh_impl.h; sourceTree = "<group>"; };
-		D4321BE11047A0FB00B174C7 /* ogen.000 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.000; sourceTree = "<group>"; };
-		D4321BE21047A0FB00B174C7 /* ogen.001 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.001; sourceTree = "<group>"; };
-		D4321BE31047A0FB00B174C7 /* ogen.002 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.002; sourceTree = "<group>"; };
-		D4321BE41047A0FB00B174C7 /* ogen.003 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.003; sourceTree = "<group>"; };
-		D4321BE51047A0FB00B174C7 /* ogen.004 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.004; sourceTree = "<group>"; };
-		D4321BE61047A0FB00B174C7 /* ogen.005 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.005; sourceTree = "<group>"; };
-		D4321BE71047A0FB00B174C7 /* ogen.006 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.006; sourceTree = "<group>"; };
-		D4321BE81047A0FB00B174C7 /* ogen.007 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.007; sourceTree = "<group>"; };
-		D4321BE91047A0FB00B174C7 /* ogen.008 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.008; sourceTree = "<group>"; };
-		D4321BEA1047A0FB00B174C7 /* ogen.009 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ogen.009; sourceTree = "<group>"; };
 		D4321BEC1047A0FB00B174C7 /* attr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attr.h; sourceTree = "<group>"; };
 		D4321BED1047A0FB00B174C7 /* cmdln.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmdln.h; sourceTree = "<group>"; };
 		D4321BEE1047A0FB00B174C7 /* dir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dir.h; sourceTree = "<group>"; };
@@ -3177,7 +2490,6 @@
 		D4321C061047A0FB00B174C7 /* trace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trace.h; sourceTree = "<group>"; };
 		D4321C071047A0FB00B174C7 /* wrpinf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wrpinf.h; sourceTree = "<group>"; };
 		D4321C081047A0FB00B174C7 /* xmlh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlh.h; sourceTree = "<group>"; };
-		D4321C091047A0FB00B174C7 /* rocs-gen.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = "rocs-gen.tar"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -3197,7 +2509,6 @@
 				D4320F901047A0F400B174C7 /* .project */,
 				D4320F911047A0F400B174C7 /* .settings */,
 				D4320F941047A0F400B174C7 /* 1 */,
-				D4320F951047A0F400B174C7 /* adres.rtf */,
 				D4320F961047A0F400B174C7 /* build */,
 				D4320FA61047A0F400B174C7 /* build.log */,
 				D4320FA71047A0F400B174C7 /* build.txt */,
@@ -3304,58 +2615,6 @@
 		D4320F1A1047A0F300B174C7 /* indices */ = {
 			isa = PBXGroup;
 			children = (
-				D4320F1B1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.iix */,
-				D4320F1C1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.rix */,
-				D4320F1D1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.six */,
-				D4320F1E1047A0F300B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.tix */,
-				D4320F1F1047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.iix */,
-				D4320F201047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.rix */,
-				D4320F211047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.six */,
-				D4320F221047A0F300B174C7 /* 25b9d823b0c3daff3e53716580d56b52.tix */,
-				D4320F231047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.iix */,
-				D4320F241047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.rix */,
-				D4320F251047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.six */,
-				D4320F261047A0F300B174C7 /* 26f351e1e996e6556cc7820c80025bec.tix */,
-				D4320F271047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.iix */,
-				D4320F281047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.rix */,
-				D4320F291047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.six */,
-				D4320F2A1047A0F300B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.tix */,
-				D4320F2B1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.iix */,
-				D4320F2C1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.rix */,
-				D4320F2D1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.six */,
-				D4320F2E1047A0F300B174C7 /* 3eb42ec573ba00227107593783c131a4.tix */,
-				D4320F2F1047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.iix */,
-				D4320F301047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.rix */,
-				D4320F311047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.six */,
-				D4320F321047A0F300B174C7 /* 500114556996b91703f0239aa5f55474.tix */,
-				D4320F331047A0F300B174C7 /* 50873529244746f63358e85be229f64e.iix */,
-				D4320F341047A0F300B174C7 /* 50873529244746f63358e85be229f64e.rix */,
-				D4320F351047A0F300B174C7 /* 50873529244746f63358e85be229f64e.six */,
-				D4320F361047A0F300B174C7 /* 50873529244746f63358e85be229f64e.tix */,
-				D4320F371047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.iix */,
-				D4320F381047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.rix */,
-				D4320F391047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.six */,
-				D4320F3A1047A0F300B174C7 /* 53d556293d786e0b5f2693024243c64a.tix */,
-				D4320F3B1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.iix */,
-				D4320F3C1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.rix */,
-				D4320F3D1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.six */,
-				D4320F3E1047A0F300B174C7 /* 657166ab25ebdae2077f1706db019474.tix */,
-				D4320F3F1047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.iix */,
-				D4320F401047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.rix */,
-				D4320F411047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.six */,
-				D4320F421047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.tix */,
-				D4320F431047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.iix */,
-				D4320F441047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.rix */,
-				D4320F451047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.six */,
-				D4320F461047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.tix */,
-				D4320F471047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.iix */,
-				D4320F481047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.rix */,
-				D4320F491047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.six */,
-				D4320F4A1047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.tix */,
-				D4320F4B1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.iix */,
-				D4320F4C1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.rix */,
-				D4320F4D1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.six */,
-				D4320F4E1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.tix */,
 			);
 			path = indices;
 			sourceTree = "<group>";
@@ -3370,51 +2629,6 @@
 		D4320F501047A0F400B174C7 /* obsolete_packs */ = {
 			isa = PBXGroup;
 			children = (
-				D4320F511047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.iix */,
-				D4320F521047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.pack */,
-				D4320F531047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.rix */,
-				D4320F541047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.six */,
-				D4320F551047A0F400B174C7 /* 0f33de2b0f81bbf3582506501e55440d.tix */,
-				D4320F561047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.iix */,
-				D4320F571047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.pack */,
-				D4320F581047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.rix */,
-				D4320F591047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.six */,
-				D4320F5A1047A0F400B174C7 /* 1a1074c83ad9350b6cc443b2ceda1951.tix */,
-				D4320F5B1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.iix */,
-				D4320F5C1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.pack */,
-				D4320F5D1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.rix */,
-				D4320F5E1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.six */,
-				D4320F5F1047A0F400B174C7 /* 1bd1778774b81de551e1ba6e3ca2b8cb.tix */,
-				D4320F601047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.iix */,
-				D4320F611047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.pack */,
-				D4320F621047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.rix */,
-				D4320F631047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.six */,
-				D4320F641047A0F400B174C7 /* 1ececc36c4016fc9a67b3abaf7b56ec2.tix */,
-				D4320F651047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.iix */,
-				D4320F661047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.pack */,
-				D4320F671047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.rix */,
-				D4320F681047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.six */,
-				D4320F691047A0F400B174C7 /* 47ef44a45cbf44620021575afb33bd02.tix */,
-				D4320F6A1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.iix */,
-				D4320F6B1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.pack */,
-				D4320F6C1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.rix */,
-				D4320F6D1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.six */,
-				D4320F6E1047A0F400B174C7 /* 4f6dc5c132d370c7c369e85391ebc553.tix */,
-				D4320F6F1047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.iix */,
-				D4320F701047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.pack */,
-				D4320F711047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.rix */,
-				D4320F721047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.six */,
-				D4320F731047A0F400B174C7 /* 681b59e61c77798e219b129d448bc6d8.tix */,
-				D4320F741047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.iix */,
-				D4320F751047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.pack */,
-				D4320F761047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.rix */,
-				D4320F771047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.six */,
-				D4320F781047A0F400B174C7 /* c1f6d13d2023bc15db4c087180e9c051.tix */,
-				D4320F791047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.iix */,
-				D4320F7A1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.pack */,
-				D4320F7B1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.rix */,
-				D4320F7C1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.six */,
-				D4320F7D1047A0F400B174C7 /* d34ab9d2f9031f0a87bf352c82b89c21.tix */,
 			);
 			path = obsolete_packs;
 			sourceTree = "<group>";
@@ -3422,19 +2636,6 @@
 		D4320F7F1047A0F400B174C7 /* packs */ = {
 			isa = PBXGroup;
 			children = (
-				D4320F801047A0F400B174C7 /* 0cda4aebc4295ae9c79efcb00c093bda.pack */,
-				D4320F811047A0F400B174C7 /* 25b9d823b0c3daff3e53716580d56b52.pack */,
-				D4320F821047A0F400B174C7 /* 26f351e1e996e6556cc7820c80025bec.pack */,
-				D4320F831047A0F400B174C7 /* 3e9f14997ded5834b1f6df3345ecdb58.pack */,
-				D4320F841047A0F400B174C7 /* 3eb42ec573ba00227107593783c131a4.pack */,
-				D4320F851047A0F400B174C7 /* 500114556996b91703f0239aa5f55474.pack */,
-				D4320F861047A0F400B174C7 /* 50873529244746f63358e85be229f64e.pack */,
-				D4320F871047A0F400B174C7 /* 53d556293d786e0b5f2693024243c64a.pack */,
-				D4320F881047A0F400B174C7 /* 657166ab25ebdae2077f1706db019474.pack */,
-				D4320F891047A0F400B174C7 /* 79d78cdc2a334b6eef5e30bb593b5ea5.pack */,
-				D4320F8A1047A0F400B174C7 /* 89349c2ce72f061cf8823fab5d6c260c.pack */,
-				D4320F8B1047A0F400B174C7 /* 92df7cb98ee8d551fc5a57ad54578700.pack */,
-				D4320F8C1047A0F400B174C7 /* cc10273f5ff2d9c628ec72d1b2c9c603.pack */,
 			);
 			path = packs;
 			sourceTree = "<group>";
@@ -3474,17 +2675,8 @@
 		D4320F981047A0F400B174C7 /* Rocrail.pbxindex */ = {
 			isa = PBXGroup;
 			children = (
-				D4320F991047A0F400B174C7 /* categories.pbxbtree */,
-				D4320F9A1047A0F400B174C7 /* cdecls.pbxbtree */,
-				D4320F9B1047A0F400B174C7 /* decls.pbxbtree */,
-				D4320F9C1047A0F400B174C7 /* files.pbxbtree */,
-				D4320F9D1047A0F400B174C7 /* imports.pbxbtree */,
 				D4320F9E1047A0F400B174C7 /* pbxindex.header */,
-				D4320F9F1047A0F400B174C7 /* protocols.pbxbtree */,
-				D4320FA01047A0F400B174C7 /* refs.pbxbtree */,
 				D4320FA11047A0F400B174C7 /* strings.pbxstrings */,
-				D4320FA41047A0F400B174C7 /* subclasses.pbxbtree */,
-				D4320FA51047A0F400B174C7 /* symbols0.pbxsymbols */,
 			);
 			path = Rocrail.pbxindex;
 			sourceTree = "<group>";
@@ -3901,7 +3093,6 @@
 				D43210B11047A0F400B174C7 /* powermandlggen.cpp */,
 				D43210B21047A0F400B174C7 /* powermandlggen.h */,
 				D43210B31047A0F400B174C7 /* rocgui-dialogs.pjd */,
-				D43210B41047A0F400B174C7 /* rocgui-dialogs.pjd.bak */,
 				D43210B51047A0F400B174C7 /* rocguiinidlg.cpp */,
 				D43210B61047A0F400B174C7 /* rocguiinidlg.h */,
 				D43210B71047A0F400B174C7 /* rocrailinidialog.cpp */,
@@ -4812,17 +4003,8 @@
 		D432133F1047A0F600B174C7 /* Rocrail.pbxindex */ = {
 			isa = PBXGroup;
 			children = (
-				D43213401047A0F600B174C7 /* categories.pbxbtree */,
-				D43213411047A0F600B174C7 /* cdecls.pbxbtree */,
-				D43213421047A0F600B174C7 /* decls.pbxbtree */,
-				D43213431047A0F600B174C7 /* files.pbxbtree */,
-				D43213441047A0F600B174C7 /* imports.pbxbtree */,
 				D43213451047A0F600B174C7 /* pbxindex.header */,
-				D43213461047A0F600B174C7 /* protocols.pbxbtree */,
-				D43213471047A0F600B174C7 /* refs.pbxbtree */,
 				D43213481047A0F600B174C7 /* strings.pbxstrings */,
-				D432134B1047A0F600B174C7 /* subclasses.pbxbtree */,
-				D432134C1047A0F600B174C7 /* symbols0.pbxsymbols */,
 			);
 			path = Rocrail.pbxindex;
 			sourceTree = "<group>";
@@ -4895,7 +4077,6 @@
 				D432138A1047A0F600B174C7 /* mkservice.cmd */,
 				D432138B1047A0F600B174C7 /* neustadt.xml */,
 				D432138C1047A0F600B174C7 /* plan.xml */,
-				D432138D1047A0F600B174C7 /* plan.xml.bak */,
 				D432138E1047A0F600B174C7 /* rocgui.ini */,
 				D432138F1047A0F600B174C7 /* rocrail-rci.ini */,
 				D43213901047A0F600B174C7 /* rocrail-template.iss */,
@@ -5220,13 +4401,10 @@
 			isa = PBXGroup;
 			children = (
 				D432149D1047A0F700B174C7 /* ogen */,
-				D432149E1047A0F700B174C7 /* ogen.exe */,
 				D432149F1047A0F700B174C7 /* ogen_mac */,
 				D43214A01047A0F700B174C7 /* wgen */,
-				D43214A11047A0F700B174C7 /* wgen.exe */,
 				D43214A21047A0F700B174C7 /* wgen_mac */,
 				D43214A31047A0F700B174C7 /* xml2cstr */,
-				D43214A41047A0F700B174C7 /* xml2cstr.exe */,
 				D43214A51047A0F700B174C7 /* xml2cstr_mac */,
 			);
 			path = bin;
@@ -5374,110 +4552,28 @@
 			isa = PBXGroup;
 			children = (
 				D432150B1047A0F700B174C7 /* addlang */,
-				D432150C1047A0F700B174C7 /* addlang.o */,
-				D432150D1047A0F700B174C7 /* attr.o */,
-				D432150E1047A0F700B174C7 /* barjut.dylib */,
-				D432150F1047A0F700B174C7 /* clock.dylib */,
-				D43215101047A0F700B174C7 /* cmdln.o */,
-				D43215111047A0F700B174C7 /* dcc232.dylib */,
-				D43215121047A0F700B174C7 /* ddx.dylib */,
-				D43215131047A0F700B174C7 /* dinamo.dylib */,
-				D43215141047A0F700B174C7 /* dir.o */,
-				D43215151047A0F700B174C7 /* doc.o */,
-				D43215161047A0F700B174C7 /* ebcdic.o */,
-				D43215171047A0F700B174C7 /* ecos.dylib */,
-				D43215181047A0F700B174C7 /* event.o */,
-				D43215191047A0F700B174C7 /* file.o */,
-				D432151A1047A0F700B174C7 /* gzip.o */,
-				D432151B1047A0F700B174C7 /* hsi88.dylib */,
 				D432151C1047A0F700B174C7 /* icons */,
 				D43215401047A0F700B174C7 /* images */,
-				D432154E1047A0F700B174C7 /* inter10.dylib */,
-				D432154F1047A0F700B174C7 /* io8255.dylib */,
 				D43215501047A0F700B174C7 /* jmf */,
-				D43215751047A0F700B174C7 /* js.o */,
 				D43215761047A0F700B174C7 /* lang2po */,
-				D43215771047A0F700B174C7 /* lang2po.o */,
-				D43215781047A0F700B174C7 /* lcdriver.dylib */,
-				D43215791047A0F700B174C7 /* lenz.dylib */,
-				D432157A1047A0F700B174C7 /* lib.o */,
-				D432157B1047A0F700B174C7 /* librocrail.a */,
-				D432157C1047A0F700B174C7 /* librocs.a */,
-				D432157D1047A0F700B174C7 /* libwrapper.a */,
-				D432157E1047A0F700B174C7 /* list.o */,
-				D432157F1047A0F700B174C7 /* loconet.dylib */,
-				D43215801047A0F700B174C7 /* map.o */,
-				D43215811047A0F700B174C7 /* mcs2.dylib */,
 				D43215821047A0F700B174C7 /* mdoc */,
-				D43215831047A0F700B174C7 /* mdoc.o */,
-				D43215841047A0F700B174C7 /* mem.o */,
 				D43215851047A0F700B174C7 /* mergelang */,
-				D43215861047A0F700B174C7 /* mergelang.o */,
-				D43215871047A0F700B174C7 /* mime64.o */,
 				D43215881047A0F700B174C7 /* Modview.app */,
-				D43215891047A0F700B174C7 /* msg.o */,
-				D432158A1047A0F700B174C7 /* mutex.o */,
-				D432158B1047A0F700B174C7 /* nce.dylib */,
-				D432158C1047A0F700B174C7 /* node.o */,
 				D432158D1047A0F700B174C7 /* occ.xml */,
 				D432158E1047A0F700B174C7 /* ogen */,
-				D432158F1047A0F700B174C7 /* ogen.o */,
-				D43215901047A0F700B174C7 /* om32.dylib */,
-				D43215911047A0F700B174C7 /* opendcc.dylib */,
-				D43215921047A0F700B174C7 /* p50.dylib */,
-				D43215931047A0F700B174C7 /* p50x.dylib */,
 				D43215941047A0F700B174C7 /* plan.xml */,
-				D43215951047A0F700B174C7 /* plan.xml.bak */,
 				D43215961047A0F700B174C7 /* po2lang */,
-				D43215971047A0F700B174C7 /* po2lang.o */,
-				D43215981047A0F700B174C7 /* queue.o */,
-				D43215991047A0F700B174C7 /* railcom.dylib */,
-				D432159A1047A0F700B174C7 /* res.o */,
 				D432159B1047A0F700B174C7 /* rocdata */,
-				D43217791047A0F800B174C7 /* rocgui.trace.000 */,
-				D432177A1047A0F800B174C7 /* rocgui.trace.001 */,
-				D432177B1047A0F800B174C7 /* rocgui.trace.002 */,
-				D432177C1047A0F800B174C7 /* rocnet.dylib */,
-				D432177D1047A0F800B174C7 /* roco.dylib */,
 				D432177E1047A0F800B174C7 /* rocrail */,
 				D432177F1047A0F800B174C7 /* Rocrail.app */,
 				D43217801047A0F800B174C7 /* rocrail.ini */,
-				D43217811047A0F800B174C7 /* rocrail.trace.000 */,
 				D43217821047A0F800B174C7 /* rocview */,
 				D43217831047A0F800B174C7 /* Rocview.app */,
 				D43217841047A0F900B174C7 /* rocview.ini */,
-				D43217851047A0F900B174C7 /* serial.o */,
-				D43217861047A0F900B174C7 /* slx.dylib */,
-				D43217871047A0F900B174C7 /* socket.o */,
 				D43217881047A0F900B174C7 /* sprog */,
-				D43217901047A0F900B174C7 /* sprog.dylib */,
-				D43217911047A0F900B174C7 /* srcp.dylib */,
-				D43217921047A0F900B174C7 /* stats.o */,
-				D43217931047A0F900B174C7 /* str.o */,
-				D43217941047A0F900B174C7 /* string.o */,
-				D43217951047A0F900B174C7 /* strtok.o */,
-				D43217961047A0F900B174C7 /* system.o */,
-				D43217971047A0F900B174C7 /* thread.o */,
 				D43217981047A0F900B174C7 /* tmp */,
-				D432179A1047A0F900B174C7 /* trace.o */,
-				D432179B1047A0F900B174C7 /* udir.o */,
-				D432179C1047A0F900B174C7 /* uevent.o */,
-				D432179D1047A0F900B174C7 /* ujs.o */,
-				D432179E1047A0F900B174C7 /* ulib.o */,
-				D432179F1047A0F900B174C7 /* umutex.o */,
-				D43217A01047A0F900B174C7 /* userial.o */,
-				D43217A11047A0F900B174C7 /* usocket.o */,
-				D43217A21047A0F900B174C7 /* usystem.o */,
-				D43217A31047A0F900B174C7 /* uthread.o */,
-				D43217A41047A0F900B174C7 /* virtual.dylib */,
 				D43217A51047A0F900B174C7 /* wgen */,
-				D43217A61047A0F900B174C7 /* wgen.o */,
-				D43217A71047A0F900B174C7 /* wrpinf.o */,
-				D43217A81047A0F900B174C7 /* wutils.o */,
 				D43217A91047A0F900B174C7 /* xml2cstr */,
-				D43217AA1047A0F900B174C7 /* xml2cstr.o */,
-				D43217AB1047A0F900B174C7 /* xmlh.o */,
-				D43217AC1047A0F900B174C7 /* zimo.dylib */,
 			);
 			path = unxbin;
 			sourceTree = "<group>";
@@ -5548,28 +4644,16 @@
 			isa = PBXGroup;
 			children = (
 				D43215511047A0F700B174C7 /* dased.xml */,
-				D43215521047A0F700B174C7 /* dased.xml.bak */,
 				D43215531047A0F700B174C7 /* dased_001.xml */,
 				D43215541047A0F700B174C7 /* disentis.xml */,
-				D43215551047A0F700B174C7 /* disentis.xml.bak */,
 				D43215561047A0F700B174C7 /* disentis_001.xml */,
 				D43215571047A0F700B174C7 /* lc.xml */,
 				D43215581047A0F700B174C7 /* locos.xml */,
-				D43215591047A0F700B174C7 /* locos.xml.bak */,
 				D432155A1047A0F700B174C7 /* modview.cmd */,
 				D432155B1047A0F700B174C7 /* occ.xml */,
 				D432155C1047A0F700B174C7 /* plan.xml */,
-				D432155D1047A0F700B174C7 /* plan.xml.bak */,
 				D432155E1047A0F700B174C7 /* rocrail.cmd */,
 				D432155F1047A0F700B174C7 /* rocrail.ini */,
-				D43215601047A0F700B174C7 /* rocrail.ini.bak */,
-				D43215611047A0F700B174C7 /* rocrail.trace.000 */,
-				D43215621047A0F700B174C7 /* rocrail.trace.001 */,
-				D43215631047A0F700B174C7 /* rocrail.trace.002 */,
-				D43215641047A0F700B174C7 /* rocrail.trace.003 */,
-				D43215651047A0F700B174C7 /* rocrail.trace.004 */,
-				D43215661047A0F700B174C7 /* rocrail.trace.005 */,
-				D43215671047A0F700B174C7 /* rocrail.trace.006 */,
 				D43215681047A0F700B174C7 /* rocrail_dased.cmd */,
 				D43215691047A0F700B174C7 /* rocrail_disentis.cmd */,
 				D432156A1047A0F700B174C7 /* rocrail_str.cmd */,
@@ -5577,12 +4661,9 @@
 				D432156C1047A0F700B174C7 /* rocview.cmd */,
 				D432156D1047A0F700B174C7 /* rocview.ini */,
 				D432156E1047A0F700B174C7 /* rt.xml */,
-				D432156F1047A0F700B174C7 /* rt.xml.bak */,
 				D43215701047A0F700B174C7 /* str.xml */,
-				D43215711047A0F700B174C7 /* str.xml.bak */,
 				D43215721047A0F700B174C7 /* str_001.xml */,
 				D43215731047A0F700B174C7 /* virtual.ini */,
-				D43215741047A0F700B174C7 /* virtual.ini.bak */,
 			);
 			path = jmf;
 			sourceTree = "<group>";
@@ -5592,23 +4673,10 @@
 			children = (
 				D432159C1047A0F700B174C7 /* occ.xml */,
 				D432159D1047A0F700B174C7 /* plan.xml */,
-				D432159E1047A0F700B174C7 /* plan.xml.bak */,
 				D432159F1047A0F700B174C7 /* rocrail.ini */,
-				D43215A01047A0F700B174C7 /* rocrail.ini.bak */,
-				D43215A11047A0F700B174C7 /* rocrail.trace.000 */,
 				D43215A21047A0F700B174C7 /* rocview.ini */,
 				D43215A31047A0F700B174C7 /* svg */,
 				D43217631047A0F800B174C7 /* trace */,
-				D432176F1047A0F800B174C7 /* trace.000 */,
-				D43217701047A0F800B174C7 /* trace.001 */,
-				D43217711047A0F800B174C7 /* trace.002 */,
-				D43217721047A0F800B174C7 /* trace.003 */,
-				D43217731047A0F800B174C7 /* trace.004 */,
-				D43217741047A0F800B174C7 /* trace.005 */,
-				D43217751047A0F800B174C7 /* trace.006 */,
-				D43217761047A0F800B174C7 /* trace.007 */,
-				D43217771047A0F800B174C7 /* trace.008 */,
-				D43217781047A0F800B174C7 /* trace.009 */,
 			);
 			path = rocdata;
 			sourceTree = "<group>";
@@ -6147,17 +5215,6 @@
 		D43217631047A0F800B174C7 /* trace */ = {
 			isa = PBXGroup;
 			children = (
-				D43217641047A0F800B174C7 /* rocrail.trace.000 */,
-				D43217651047A0F800B174C7 /* rocview.trace.000 */,
-				D43217661047A0F800B174C7 /* rocview.trace.001 */,
-				D43217671047A0F800B174C7 /* rocview.trace.002 */,
-				D43217681047A0F800B174C7 /* rocview.trace.003 */,
-				D43217691047A0F800B174C7 /* rocview.trace.004 */,
-				D432176A1047A0F800B174C7 /* rocview.trace.005 */,
-				D432176B1047A0F800B174C7 /* rocview.trace.006 */,
-				D432176C1047A0F800B174C7 /* rocview.trace.007 */,
-				D432176D1047A0F800B174C7 /* rocview.trace.008 */,
-				D432176E1047A0F800B174C7 /* rocview.trace.009 */,
 			);
 			path = trace;
 			sourceTree = "<group>";
@@ -6167,11 +5224,7 @@
 			children = (
 				D43217891047A0F900B174C7 /* occ.xml */,
 				D432178A1047A0F900B174C7 /* plan.xml */,
-				D432178B1047A0F900B174C7 /* plan.xml.bak */,
 				D432178C1047A0F900B174C7 /* rocrail.ini */,
-				D432178D1047A0F900B174C7 /* rocrail.ini.bak */,
-				D432178E1047A0F900B174C7 /* rocrail.trace.000 */,
-				D432178F1047A0F900B174C7 /* rocrail.trace.001 */,
 			);
 			path = sprog;
 			sourceTree = "<group>";
@@ -6193,7 +5246,6 @@
 				D43219361047A0F900B174C7 /* roclcdr */,
 				D43219671047A0FA00B174C7 /* rocrail */,
 				D4321B851047A0FB00B174C7 /* rocs */,
-				D4321C091047A0FB00B174C7 /* rocs-gen.tar */,
 			);
 			path = unxgen;
 			sourceTree = "<group>";
@@ -6204,27 +5256,7 @@
 				D43217AF1047A0F900B174C7 /* bin */,
 				D43217EA1047A0F900B174C7 /* doc */,
 				D43217ED1047A0F900B174C7 /* impl */,
-				D43218461047A0F900B174C7 /* ogen.000 */,
-				D43218471047A0F900B174C7 /* ogen.001 */,
-				D43218481047A0F900B174C7 /* ogen.002 */,
-				D43218491047A0F900B174C7 /* ogen.003 */,
-				D432184A1047A0F900B174C7 /* ogen.004 */,
-				D432184B1047A0F900B174C7 /* ogen.005 */,
-				D432184C1047A0F900B174C7 /* ogen.006 */,
-				D432184D1047A0F900B174C7 /* ogen.007 */,
-				D432184E1047A0F900B174C7 /* ogen.008 */,
-				D432184F1047A0F900B174C7 /* ogen.009 */,
 				D43218501047A0F900B174C7 /* public */,
-				D432186E1047A0F900B174C7 /* xml2cstr.000 */,
-				D432186F1047A0F900B174C7 /* xml2cstr.001 */,
-				D43218701047A0F900B174C7 /* xml2cstr.002 */,
-				D43218711047A0F900B174C7 /* xml2cstr.003 */,
-				D43218721047A0F900B174C7 /* xml2cstr.004 */,
-				D43218731047A0F900B174C7 /* xml2cstr.005 */,
-				D43218741047A0F900B174C7 /* xml2cstr.006 */,
-				D43218751047A0F900B174C7 /* xml2cstr.007 */,
-				D43218761047A0F900B174C7 /* xml2cstr.008 */,
-				D43218771047A0F900B174C7 /* xml2cstr.009 */,
 			);
 			path = rocdigs;
 			sourceTree = "<group>";
@@ -6232,40 +5264,13 @@
 		D43217AF1047A0F900B174C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				D43217B01047A0F900B174C7 /* barjut.o */,
-				D43217B11047A0F900B174C7 /* clock.o */,
 				D43217B21047A0F900B174C7 /* common */,
-				D43217B41047A0F900B174C7 /* dcc232.o */,
 				D43217B51047A0F900B174C7 /* ddx */,
-				D43217BD1047A0F900B174C7 /* ddx.o */,
-				D43217BE1047A0F900B174C7 /* dinamo.o */,
 				D43217BF1047A0F900B174C7 /* ecos */,
-				D43217C11047A0F900B174C7 /* ecos.o */,
-				D43217C21047A0F900B174C7 /* hsi88.o */,
-				D43217C31047A0F900B174C7 /* inter10.o */,
-				D43217C41047A0F900B174C7 /* io8255.o */,
-				D43217C51047A0F900B174C7 /* lenz.o */,
 				D43217C61047A0F900B174C7 /* loconet */,
-				D43217CF1047A0F900B174C7 /* loconet.o */,
-				D43217D01047A0F900B174C7 /* mcs2.o */,
-				D43217D11047A0F900B174C7 /* nce.o */,
 				D43217D21047A0F900B174C7 /* nmra */,
-				D43217D51047A0F900B174C7 /* om32.o */,
 				D43217D61047A0F900B174C7 /* opendcc */,
-				D43217D81047A0F900B174C7 /* opendcc.o */,
-				D43217D91047A0F900B174C7 /* p50.o */,
-				D43217DA1047A0F900B174C7 /* p50x.o */,
-				D43217DB1047A0F900B174C7 /* railcom.o */,
 				D43217DC1047A0F900B174C7 /* rocnet */,
-				D43217E11047A0F900B174C7 /* rocnet.o */,
-				D43217E21047A0F900B174C7 /* roco.o */,
-				D43217E31047A0F900B174C7 /* slx.o */,
-				D43217E41047A0F900B174C7 /* sprog.o */,
-				D43217E51047A0F900B174C7 /* srcp.o */,
-				D43217E61047A0F900B174C7 /* srcp07.o */,
-				D43217E71047A0F900B174C7 /* srcp08.o */,
-				D43217E81047A0F900B174C7 /* virtual.o */,
-				D43217E91047A0F900B174C7 /* zimo.o */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -6273,7 +5278,6 @@
 		D43217B21047A0F900B174C7 /* common */ = {
 			isa = PBXGroup;
 			children = (
-				D43217B31047A0F900B174C7 /* fada.o */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -6281,13 +5285,6 @@
 		D43217B51047A0F900B174C7 /* ddx */ = {
 			isa = PBXGroup;
 			children = (
-				D43217B61047A0F900B174C7 /* accpool.o */,
-				D43217B71047A0F900B174C7 /* init.o */,
-				D43217B81047A0F900B174C7 /* locpool.o */,
-				D43217B91047A0F900B174C7 /* motorola.o */,
-				D43217BA1047A0F900B174C7 /* nmra.o */,
-				D43217BB1047A0F900B174C7 /* queue.o */,
-				D43217BC1047A0F900B174C7 /* s88.o */,
 			);
 			path = ddx;
 			sourceTree = "<group>";
@@ -6295,7 +5292,6 @@
 		D43217BF1047A0F900B174C7 /* ecos */ = {
 			isa = PBXGroup;
 			children = (
-				D43217C01047A0F900B174C7 /* ecos-parser.o */,
 			);
 			path = ecos;
 			sourceTree = "<group>";
@@ -6303,14 +5299,6 @@
 		D43217C61047A0F900B174C7 /* loconet */ = {
 			isa = PBXGroup;
 			children = (
-				D43217C71047A0F900B174C7 /* lbserial.o */,
-				D43217C81047A0F900B174C7 /* lbserver.o */,
-				D43217C91047A0F900B174C7 /* lbudp.o */,
-				D43217CA1047A0F900B174C7 /* lncv.o */,
-				D43217CB1047A0F900B174C7 /* lnmaster.o */,
-				D43217CC1047A0F900B174C7 /* lnmon.o */,
-				D43217CD1047A0F900B174C7 /* lnutils.o */,
-				D43217CE1047A0F900B174C7 /* locoio.o */,
 			);
 			path = loconet;
 			sourceTree = "<group>";
@@ -6318,8 +5306,6 @@
 		D43217D21047A0F900B174C7 /* nmra */ = {
 			isa = PBXGroup;
 			children = (
-				D43217D31047A0F900B174C7 /* nmra.o */,
-				D43217D41047A0F900B174C7 /* nmrapacket.o */,
 			);
 			path = nmra;
 			sourceTree = "<group>";
@@ -6327,7 +5313,6 @@
 		D43217D61047A0F900B174C7 /* opendcc */ = {
 			isa = PBXGroup;
 			children = (
-				D43217D71047A0F900B174C7 /* openthrottle.o */,
 			);
 			path = opendcc;
 			sourceTree = "<group>";
@@ -6335,10 +5320,6 @@
 		D43217DC1047A0F900B174C7 /* rocnet */ = {
 			isa = PBXGroup;
 			children = (
-				D43217DD1047A0F900B174C7 /* rn-serial.o */,
-				D43217DE1047A0F900B174C7 /* rn-udp.o */,
-				D43217DF1047A0F900B174C7 /* rn-utils.o */,
-				D43217E01047A0F900B174C7 /* rocnet-parser.o */,
 			);
 			path = rocnet;
 			sourceTree = "<group>";
@@ -6488,27 +5469,7 @@
 			children = (
 				D43218791047A0F900B174C7 /* bin */,
 				D43218CF1047A0F900B174C7 /* res */,
-				D43218D11047A0F900B174C7 /* wgen.000 */,
-				D43218D21047A0F900B174C7 /* wgen.001 */,
-				D43218D31047A0F900B174C7 /* wgen.002 */,
-				D43218D41047A0F900B174C7 /* wgen.003 */,
-				D43218D51047A0F900B174C7 /* wgen.004 */,
-				D43218D61047A0F900B174C7 /* wgen.005 */,
-				D43218D71047A0F900B174C7 /* wgen.006 */,
-				D43218D81047A0F900B174C7 /* wgen.007 */,
-				D43218D91047A0F900B174C7 /* wgen.008 */,
-				D43218DA1047A0F900B174C7 /* wgen.009 */,
 				D43218DB1047A0F900B174C7 /* wrapper */,
-				D43219191047A0F900B174C7 /* xml2cstr.000 */,
-				D432191A1047A0F900B174C7 /* xml2cstr.001 */,
-				D432191B1047A0F900B174C7 /* xml2cstr.002 */,
-				D432191C1047A0F900B174C7 /* xml2cstr.003 */,
-				D432191D1047A0F900B174C7 /* xml2cstr.004 */,
-				D432191E1047A0F900B174C7 /* xml2cstr.005 */,
-				D432191F1047A0F900B174C7 /* xml2cstr.006 */,
-				D43219201047A0F900B174C7 /* xml2cstr.007 */,
-				D43219211047A0F900B174C7 /* xml2cstr.008 */,
-				D43219221047A0F900B174C7 /* xml2cstr.009 */,
 			);
 			path = rocgui;
 			sourceTree = "<group>";
@@ -6516,91 +5477,6 @@
 		D43218791047A0F900B174C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				D432187A1047A0F900B174C7 /* actionsctrldlg.o */,
-				D432187B1047A0F900B174C7 /* barjutdlg.o */,
-				D432187C1047A0F900B174C7 /* basedlg.o */,
-				D432187D1047A0F900B174C7 /* basenotebook.o */,
-				D432187E1047A0F900B174C7 /* basepanel.o */,
-				D432187F1047A0F900B174C7 /* blockdialog.o */,
-				D43218801047A0F900B174C7 /* blockgroupingdlg.o */,
-				D43218811047A0F900B174C7 /* cardlg.o */,
-				D43218821047A0F900B174C7 /* cardlggen.o */,
-				D43218831047A0F900B174C7 /* clock.o */,
-				D43218841047A0F900B174C7 /* clockdialog.o */,
-				D43218851047A0F900B174C7 /* connectiondialog.o */,
-				D43218861047A0F900B174C7 /* cv.o */,
-				D43218871047A0F900B174C7 /* ddxdlg.o */,
-				D43218881047A0F900B174C7 /* decconfigdlg.o */,
-				D43218891047A0F900B174C7 /* decconfigdlggen.o */,
-				D432188A1047A0F900B174C7 /* dinamodlg.o */,
-				D432188B1047A0F900B174C7 /* dtopswdlg.o */,
-				D432188C1047A0F900B174C7 /* dtopswdlggen.o */,
-				D432188D1047A0F900B174C7 /* ecosdlg.o */,
-				D432188E1047A0F900B174C7 /* feedbackdialog.o */,
-				D432188F1047A0F900B174C7 /* fundialog.o */,
-				D43218901047A0F900B174C7 /* fxdlg.o */,
-				D43218911047A0F900B174C7 /* fxdlggen.o */,
-				D43218921047A0F900B174C7 /* gendlg.o */,
-				D43218931047A0F900B174C7 /* guiapp.o */,
-				D43218941047A0F900B174C7 /* guiframe.o */,
-				D43218951047A0F900B174C7 /* hsi88dlg.o */,
-				D43218961047A0F900B174C7 /* infodialog.o */,
-				D43218971047A0F900B174C7 /* item.o */,
-				D43218981047A0F900B174C7 /* jssupport.o */,
-				D43218991047A0F900B174C7 /* lc.o */,
-				D432189A1047A0F900B174C7 /* lenzdlg.o */,
-				D432189B1047A0F900B174C7 /* lncv.o */,
-				D432189C1047A0F900B174C7 /* locationsdlg.o */,
-				D432189D1047A0F900B174C7 /* loccontroldlg.o */,
-				D432189E1047A0F900B174C7 /* locdialog.o */,
-				D432189F1047A0F900B174C7 /* locoio.o */,
-				D43218A01047A0F900B174C7 /* loconetdlg.o */,
-				D43218A11047A0F900B174C7 /* locseldlg.o */,
-				D43218A21047A0F900B174C7 /* messages.o */,
-				D43218A31047A0F900B174C7 /* modpanel.o */,
-				D43218A41047A0F900B174C7 /* modplandlg.o */,
-				D43218A51047A0F900B174C7 /* modulepropsdlg.o */,
-				D43218A61047A0F900B174C7 /* mvtrackdlg.o */,
-				D43218A71047A0F900B174C7 /* opendcc.o */,
-				D43218A81047A0F900B174C7 /* operatordlg.o */,
-				D43218A91047A0F900B174C7 /* operatordlggen.o */,
-				D43218AA1047A0F900B174C7 /* outputdialog.o */,
-				D43218AB1047A0F900B174C7 /* planpanel.o */,
-				D43218AC1047A0F900B174C7 /* planpaneldlg.o */,
-				D43218AD1047A0F900B174C7 /* powerctrldlg.o */,
-				D43218AE1047A0F900B174C7 /* powerctrlgen.o */,
-				D43218AF1047A0F900B174C7 /* powermandlg.o */,
-				D43218B01047A0F900B174C7 /* powermandlggen.o */,
-				D43218B11047A0F900B174C7 /* renderer.o */,
-				D43218B21047A0F900B174C7 /* rocguiinidlg.o */,
-				D43218B31047A0F900B174C7 /* rocrailinidialog.o */,
-				D43218B41047A0F900B174C7 /* routedialog.o */,
-				D43218B51047A0F900B174C7 /* routedlg.o */,
-				D43218B61047A0F900B174C7 /* scheduledialog.o */,
-				D43218B71047A0F900B174C7 /* selectdialog.o */,
-				D43218B81047A0F900B174C7 /* seltabdlg.o */,
-				D43218B91047A0F900B174C7 /* seltabtrackdlg.o */,
-				D43218BA1047A0F900B174C7 /* signaldialog.o */,
-				D43218BB1047A0F900B174C7 /* softwareupdates.o */,
-				D43218BC1047A0F900B174C7 /* speedcurvedlg.o */,
-				D43218BD1047A0F900B174C7 /* speedcurvedlggen.o */,
-				D43218BE1047A0F900B174C7 /* srcpdlg.o */,
-				D43218BF1047A0F900B174C7 /* statbar.o */,
-				D43218C01047A0F900B174C7 /* svg.o */,
-				D43218C11047A0F900B174C7 /* swdlg.o */,
-				D43218C21047A0F900B174C7 /* switchdialog.o */,
-				D43218C31047A0F900B174C7 /* textdialog.o */,
-				D43218C41047A0F900B174C7 /* timedactions.o */,
-				D43218C51047A0F900B174C7 /* trackdialog.o */,
-				D43218C61047A0F900B174C7 /* tttrackdialog.o */,
-				D43218C71047A0F900B174C7 /* turntabledialog.o */,
-				D43218C81047A0F900B174C7 /* uhl633x0dlg.o */,
-				D43218C91047A0F900B174C7 /* uhl633x0gen.o */,
-				D43218CA1047A0F900B174C7 /* uhl68610dlg.o */,
-				D43218CB1047A0F900B174C7 /* uhl68610gen.o */,
-				D43218CC1047A0F900B174C7 /* undodlg.o */,
-				D43218CD1047A0F900B174C7 /* waybilldlg.o */,
-				D43218CE1047A0F900B174C7 /* waybilldlggen.o */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -6627,25 +5503,6 @@
 		D43218DC1047A0F900B174C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				D43218DD1047A0F900B174C7 /* Cmdline.o */,
-				D43218DE1047A0F900B174C7 /* CVconf.o */,
-				D43218DF1047A0F900B174C7 /* Gui.o */,
-				D43218E01047A0F900B174C7 /* guiwrapperinfo.o */,
-				D43218E11047A0F900B174C7 /* LcCtrl.o */,
-				D43218E21047A0F900B174C7 /* MIC.o */,
-				D43218E31047A0F900B174C7 /* ModPanel.o */,
-				D43218E41047A0F900B174C7 /* Patch.o */,
-				D43218E51047A0F900B174C7 /* PlanPanel.o */,
-				D43218E61047A0F900B174C7 /* Release.o */,
-				D43218E71047A0F900B174C7 /* RRCon.o */,
-				D43218E81047A0F900B174C7 /* Shortcut.o */,
-				D43218E91047A0F900B174C7 /* SplitPanel.o */,
-				D43218EA1047A0F900B174C7 /* Theme.o */,
-				D43218EB1047A0F900B174C7 /* ThemeBlock.o */,
-				D43218EC1047A0F900B174C7 /* ThemePanel.o */,
-				D43218ED1047A0F900B174C7 /* version.o */,
-				D43218EE1047A0F900B174C7 /* Window.o */,
-				D43218EF1047A0F900B174C7 /* wrapper.o */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -6714,16 +5571,6 @@
 			children = (
 				D43219241047A0F900B174C7 /* doc */,
 				D43219271047A0F900B174C7 /* impl */,
-				D43219281047A0F900B174C7 /* ogen.000 */,
-				D43219291047A0F900B174C7 /* ogen.001 */,
-				D432192A1047A0F900B174C7 /* ogen.002 */,
-				D432192B1047A0F900B174C7 /* ogen.003 */,
-				D432192C1047A0F900B174C7 /* ogen.004 */,
-				D432192D1047A0F900B174C7 /* ogen.005 */,
-				D432192E1047A0F900B174C7 /* ogen.006 */,
-				D432192F1047A0F900B174C7 /* ogen.007 */,
-				D43219301047A0F900B174C7 /* ogen.008 */,
-				D43219311047A0F900B174C7 /* ogen.009 */,
 				D43219321047A0F900B174C7 /* public */,
 			);
 			path = rocint;
@@ -6761,16 +5608,6 @@
 				D43219371047A0F900B174C7 /* bin */,
 				D43219541047A0FA00B174C7 /* doc */,
 				D43219571047A0FA00B174C7 /* impl */,
-				D432195B1047A0FA00B174C7 /* ogen.000 */,
-				D432195C1047A0FA00B174C7 /* ogen.001 */,
-				D432195D1047A0FA00B174C7 /* ogen.002 */,
-				D432195E1047A0FA00B174C7 /* ogen.003 */,
-				D432195F1047A0FA00B174C7 /* ogen.004 */,
-				D43219601047A0FA00B174C7 /* ogen.005 */,
-				D43219611047A0FA00B174C7 /* ogen.006 */,
-				D43219621047A0FA00B174C7 /* ogen.007 */,
-				D43219631047A0FA00B174C7 /* ogen.008 */,
-				D43219641047A0FA00B174C7 /* ogen.009 */,
 				D43219651047A0FA00B174C7 /* public */,
 			);
 			path = roclcdr;
@@ -6780,7 +5617,6 @@
 			isa = PBXGroup;
 			children = (
 				D43219381047A0F900B174C7 /* events */,
-				D432193D1047A0F900B174C7 /* lcdriver.o */,
 				D432193E1047A0F900B174C7 /* status */,
 				D432194E1047A0FA00B174C7 /* tools */,
 			);
@@ -6790,10 +5626,6 @@
 		D43219381047A0F900B174C7 /* events */ = {
 			isa = PBXGroup;
 			children = (
-				D43219391047A0F900B174C7 /* enter.o */,
-				D432193A1047A0F900B174C7 /* exit.o */,
-				D432193B1047A0F900B174C7 /* in.o */,
-				D432193C1047A0F900B174C7 /* pre2in.o */,
 			);
 			path = events;
 			sourceTree = "<group>";
@@ -6801,21 +5633,6 @@
 		D432193E1047A0F900B174C7 /* status */ = {
 			isa = PBXGroup;
 			children = (
-				D432193F1047A0F900B174C7 /* checkroute.o */,
-				D43219401047A0FA00B174C7 /* enter.o */,
-				D43219411047A0FA00B174C7 /* exit.o */,
-				D43219421047A0FA00B174C7 /* finddest.o */,
-				D43219431047A0FA00B174C7 /* go.o */,
-				D43219441047A0FA00B174C7 /* idle.o */,
-				D43219451047A0FA00B174C7 /* in.o */,
-				D43219461047A0FA00B174C7 /* initdest.o */,
-				D43219471047A0FA00B174C7 /* out.o */,
-				D43219481047A0FA00B174C7 /* pause.o */,
-				D43219491047A0FA00B174C7 /* pre2in.o */,
-				D432194A1047A0FA00B174C7 /* prewait.o */,
-				D432194B1047A0FA00B174C7 /* timer.o */,
-				D432194C1047A0FA00B174C7 /* wait.o */,
-				D432194D1047A0FA00B174C7 /* wait4event.o */,
 			);
 			path = status;
 			sourceTree = "<group>";
@@ -6823,11 +5640,6 @@
 		D432194E1047A0FA00B174C7 /* tools */ = {
 			isa = PBXGroup;
 			children = (
-				D432194F1047A0FA00B174C7 /* actions.o */,
-				D43219501047A0FA00B174C7 /* initialize.o */,
-				D43219511047A0FA00B174C7 /* reserve.o */,
-				D43219521047A0FA00B174C7 /* schedules.o */,
-				D43219531047A0FA00B174C7 /* signals.o */,
 			);
 			path = tools;
 			sourceTree = "<group>";
@@ -6865,38 +5677,8 @@
 				D43219681047A0FA00B174C7 /* bin */,
 				D432198B1047A0FA00B174C7 /* doc */,
 				D432198E1047A0FA00B174C7 /* impl */,
-				D43219EC1047A0FA00B174C7 /* ogen.000 */,
-				D43219ED1047A0FA00B174C7 /* ogen.001 */,
-				D43219EE1047A0FA00B174C7 /* ogen.002 */,
-				D43219EF1047A0FA00B174C7 /* ogen.003 */,
-				D43219F01047A0FA00B174C7 /* ogen.004 */,
-				D43219F11047A0FA00B174C7 /* ogen.005 */,
-				D43219F21047A0FA00B174C7 /* ogen.006 */,
-				D43219F31047A0FA00B174C7 /* ogen.007 */,
-				D43219F41047A0FA00B174C7 /* ogen.008 */,
-				D43219F51047A0FA00B174C7 /* ogen.009 */,
 				D43219F61047A0FA00B174C7 /* public */,
-				D4321A171047A0FA00B174C7 /* wgen.000 */,
-				D4321A181047A0FA00B174C7 /* wgen.001 */,
-				D4321A191047A0FA00B174C7 /* wgen.002 */,
-				D4321A1A1047A0FA00B174C7 /* wgen.003 */,
-				D4321A1B1047A0FA00B174C7 /* wgen.004 */,
-				D4321A1C1047A0FA00B174C7 /* wgen.005 */,
-				D4321A1D1047A0FA00B174C7 /* wgen.006 */,
-				D4321A1E1047A0FA00B174C7 /* wgen.007 */,
-				D4321A1F1047A0FA00B174C7 /* wgen.008 */,
-				D4321A201047A0FA00B174C7 /* wgen.009 */,
 				D4321A211047A0FA00B174C7 /* wrapper */,
-				D4321B7B1047A0FB00B174C7 /* xml2cstr.000 */,
-				D4321B7C1047A0FB00B174C7 /* xml2cstr.001 */,
-				D4321B7D1047A0FB00B174C7 /* xml2cstr.002 */,
-				D4321B7E1047A0FB00B174C7 /* xml2cstr.003 */,
-				D4321B7F1047A0FB00B174C7 /* xml2cstr.004 */,
-				D4321B801047A0FB00B174C7 /* xml2cstr.005 */,
-				D4321B811047A0FB00B174C7 /* xml2cstr.006 */,
-				D4321B821047A0FB00B174C7 /* xml2cstr.007 */,
-				D4321B831047A0FB00B174C7 /* xml2cstr.008 */,
-				D4321B841047A0FB00B174C7 /* xml2cstr.009 */,
 			);
 			path = rocrail;
 			sourceTree = "<group>";
@@ -6904,40 +5686,6 @@
 		D43219681047A0FA00B174C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				D43219691047A0FA00B174C7 /* action.o */,
-				D432196A1047A0FA00B174C7 /* analyse.o */,
-				D432196B1047A0FA00B174C7 /* app.o */,
-				D432196C1047A0FA00B174C7 /* block.o */,
-				D432196D1047A0FA00B174C7 /* car.o */,
-				D432196E1047A0FA00B174C7 /* clntcon.o */,
-				D432196F1047A0FA00B174C7 /* control.o */,
-				D43219701047A0FA00B174C7 /* display.o */,
-				D43219711047A0FA00B174C7 /* fback.o */,
-				D43219721047A0FA00B174C7 /* hclient.o */,
-				D43219731047A0FA00B174C7 /* http.o */,
-				D43219741047A0FA00B174C7 /* loc.o */,
-				D43219751047A0FA00B174C7 /* main.o */,
-				D43219761047A0FA00B174C7 /* model.o */,
-				D43219771047A0FA00B174C7 /* modplan.o */,
-				D43219781047A0FA00B174C7 /* module.o */,
-				D43219791047A0FA00B174C7 /* mvtrack.o */,
-				D432197A1047A0FA00B174C7 /* operator.o */,
-				D432197B1047A0FA00B174C7 /* output.o */,
-				D432197C1047A0FA00B174C7 /* pclient.o */,
-				D432197D1047A0FA00B174C7 /* powerman.o */,
-				D432197E1047A0FA00B174C7 /* r2rnet.o */,
-				D432197F1047A0FA00B174C7 /* rcon.o */,
-				D43219801047A0FA00B174C7 /* route.o */,
-				D43219811047A0FA00B174C7 /* seltab.o */,
-				D43219821047A0FA00B174C7 /* signal.o */,
-				D43219831047A0FA00B174C7 /* switch.o */,
-				D43219841047A0FA00B174C7 /* text.o */,
-				D43219851047A0FA00B174C7 /* throttle.o */,
-				D43219861047A0FA00B174C7 /* track.o */,
-				D43219871047A0FA00B174C7 /* traverser.o */,
-				D43219881047A0FA00B174C7 /* tt.o */,
-				D43219891047A0FA00B174C7 /* web.o */,
-				D432198A1047A0FA00B174C7 /* webme.o */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -7104,120 +5852,6 @@
 		D4321A221047A0FA00B174C7 /* bin */ = {
 			isa = PBXGroup;
 			children = (
-				D4321A231047A0FA00B174C7 /* Action.o */,
-				D4321A241047A0FA00B174C7 /* ActionCond.o */,
-				D4321A251047A0FA00B174C7 /* ActionCtrl.o */,
-				D4321A261047A0FA00B174C7 /* ActionList.o */,
-				D4321A271047A0FA00B174C7 /* AutoCmd.o */,
-				D4321A281047A0FA00B174C7 /* BinCmd.o */,
-				D4321A291047A0FA00B174C7 /* Block.o */,
-				D4321A2A1047A0FA00B174C7 /* BlockList.o */,
-				D4321A2B1047A0FA00B174C7 /* Booster.o */,
-				D4321A2C1047A0FA00B174C7 /* BoosterList.o */,
-				D4321A2D1047A0FA00B174C7 /* Car.o */,
-				D4321A2E1047A0FA00B174C7 /* CarList.o */,
-				D4321A2F1047A0FA00B174C7 /* Clock.o */,
-				D4321A301047A0FA00B174C7 /* Cmdline.o */,
-				D4321A311047A0FA00B174C7 /* Command.o */,
-				D4321A321047A0FA00B174C7 /* ConCmd.o */,
-				D4321A331047A0FA00B174C7 /* CSOptions.o */,
-				D4321A341047A0FA00B174C7 /* Ctrl.o */,
-				D4321A351047A0FA00B174C7 /* CustomCmd.o */,
-				D4321A361047A0FA00B174C7 /* CVByte.o */,
-				D4321A371047A0FA00B174C7 /* DataReq.o */,
-				D4321A381047A0FA00B174C7 /* DDX.o */,
-				D4321A391047A0FA00B174C7 /* DigInt.o */,
-				D4321A3A1047A0FA00B174C7 /* Exception.o */,
-				D4321A3B1047A0FA00B174C7 /* ExtCmd.o */,
-				D4321A3C1047A0FA00B174C7 /* FbInfo.o */,
-				D4321A3D1047A0FA00B174C7 /* FbMods.o */,
-				D4321A3E1047A0FA00B174C7 /* Feedback.o */,
-				D4321A3F1047A0FA00B174C7 /* FeedbackEvent.o */,
-				D4321A401047A0FA00B174C7 /* FeedbackList.o */,
-				D4321A411047A0FA00B174C7 /* FunCmd.o */,
-				D4321A421047A0FA00B174C7 /* FunDef.o */,
-				D4321A431047A0FA00B174C7 /* Global.o */,
-				D4321A441047A0FA00B174C7 /* HSI88.o */,
-				D4321A451047A0FA00B174C7 /* HttpService.o */,
-				D4321A461047A0FA00B174C7 /* Item.o */,
-				D4321A471047A0FA00B174C7 /* JsEvent.o */,
-				D4321A481047A0FA00B174C7 /* JsMap.o */,
-				D4321A491047A0FA00B174C7 /* LCD.o */,
-				D4321A4A1047A0FA00B174C7 /* Link.o */,
-				D4321A4B1047A0FA00B174C7 /* LinkList.o */,
-				D4321A4C1047A0FA00B174C7 /* LNSlotServer.o */,
-				D4321A4D1047A0FA00B174C7 /* Loc.o */,
-				D4321A4E1047A0FA00B174C7 /* Location.o */,
-				D4321A4F1047A0FA00B174C7 /* LocationList.o */,
-				D4321A501047A0FA00B174C7 /* LocList.o */,
-				D4321A511047A0FA00B174C7 /* LocoNet.o */,
-				D4321A521047A0FA00B174C7 /* ModelCmd.o */,
-				D4321A531047A0FA00B174C7 /* ModOcc.o */,
-				D4321A541047A0FA00B174C7 /* ModPlan.o */,
-				D4321A551047A0FA00B174C7 /* Module.o */,
-				D4321A561047A0FA00B174C7 /* ModuleConnection.o */,
-				D4321A571047A0FA00B174C7 /* MVTrack.o */,
-				D4321A581047A0FA00B174C7 /* NetReq.o */,
-				D4321A591047A0FA00B174C7 /* NetRsp.o */,
-				D4321A5A1047A0FA00B174C7 /* Occupation.o */,
-				D4321A5B1047A0FA00B174C7 /* OpenDCC.o */,
-				D4321A5C1047A0FA00B174C7 /* Operator.o */,
-				D4321A5D1047A0FA00B174C7 /* OperatorList.o */,
-				D4321A5E1047A0FA00B174C7 /* Output.o */,
-				D4321A5F1047A0FA00B174C7 /* OutputList.o */,
-				D4321A601047A0FA00B174C7 /* PermExclude.o */,
-				D4321A611047A0FA00B174C7 /* PermInclude.o */,
-				D4321A621047A0FA00B174C7 /* Plan.o */,
-				D4321A631047A0FA00B174C7 /* Program.o */,
-				D4321A641047A0FA00B174C7 /* PwrCmd.o */,
-				D4321A651047A0FA00B174C7 /* PwrEvent.o */,
-				D4321A661047A0FA00B174C7 /* R2RnetIni.o */,
-				D4321A671047A0FA00B174C7 /* Response.o */,
-				D4321A681047A0FA00B174C7 /* RocNet.o */,
-				D4321A691047A0FA00B174C7 /* RocNetSerial.o */,
-				D4321A6A1047A0FA00B174C7 /* RocNetUDP.o */,
-				D4321A6B1047A0FA00B174C7 /* RocRail.o */,
-				D4321A6C1047A0FA00B174C7 /* rocrail_doc.o */,
-				D4321A6D1047A0FA00B174C7 /* Route.o */,
-				D4321A6E1047A0FA00B174C7 /* RouteList.o */,
-				D4321A6F1047A0FA00B174C7 /* Schedule.o */,
-				D4321A701047A0FA00B174C7 /* ScheduleEntry.o */,
-				D4321A711047A0FA00B174C7 /* ScheduleList.o */,
-				D4321A721047A0FA00B174C7 /* SelTab.o */,
-				D4321A731047A0FA00B174C7 /* SelTabList.o */,
-				D4321A741047A0FA00B174C7 /* SelTabPos.o */,
-				D4321A751047A0FA00B174C7 /* Service.o */,
-				D4321A761047A0FA00B174C7 /* Signal.o */,
-				D4321A771047A0FA00B174C7 /* SignalList.o */,
-				D4321A781047A0FA00B174C7 /* SRCP.o */,
-				D4321A791047A0FA00B174C7 /* State.o */,
-				D4321A7A1047A0FA00B174C7 /* SvnLog.o */,
-				D4321A7B1047A0FA00B174C7 /* SvnLogEntry.o */,
-				D4321A7C1047A0FA00B174C7 /* Switch.o */,
-				D4321A7D1047A0FA00B174C7 /* SwitchCmd.o */,
-				D4321A7E1047A0FA00B174C7 /* SwitchList.o */,
-				D4321A7F1047A0FA00B174C7 /* SysCmd.o */,
-				D4321A801047A0FA00B174C7 /* Tcp.o */,
-				D4321A811047A0FA00B174C7 /* Text.o */,
-				D4321A821047A0FA00B174C7 /* TextList.o */,
-				D4321A831047A0FA00B174C7 /* Throttle.o */,
-				D4321A841047A0FA00B174C7 /* ThrottleCmd.o */,
-				D4321A851047A0FA00B174C7 /* Trace.o */,
-				D4321A861047A0FA00B174C7 /* Track.o */,
-				D4321A871047A0FA00B174C7 /* TrackList.o */,
-				D4321A881047A0FA00B174C7 /* Traverser.o */,
-				D4321A891047A0FA00B174C7 /* TraverserList.o */,
-				D4321A8A1047A0FA00B174C7 /* TTTrack.o */,
-				D4321A8B1047A0FA00B174C7 /* Turntable.o */,
-				D4321A8C1047A0FA00B174C7 /* TurntableList.o */,
-				D4321A8D1047A0FA00B174C7 /* version.o */,
-				D4321A8E1047A0FA00B174C7 /* Waybill.o */,
-				D4321A8F1047A0FA00B174C7 /* WaybillList.o */,
-				D4321A901047A0FA00B174C7 /* WebCam.o */,
-				D4321A911047A0FA00B174C7 /* WebClient.o */,
-				D4321A921047A0FA00B174C7 /* wrapper.o */,
-				D4321A931047A0FA00B174C7 /* wrapperinfo.o */,
-				D4321A941047A0FA00B174C7 /* ZLevel.o */,
 			);
 			path = bin;
 			sourceTree = "<group>";
@@ -7475,16 +6109,6 @@
 			children = (
 				D4321B861047A0FB00B174C7 /* doc */,
 				D4321B891047A0FB00B174C7 /* impl */,
-				D4321BE11047A0FB00B174C7 /* ogen.000 */,
-				D4321BE21047A0FB00B174C7 /* ogen.001 */,
-				D4321BE31047A0FB00B174C7 /* ogen.002 */,
-				D4321BE41047A0FB00B174C7 /* ogen.003 */,
-				D4321BE51047A0FB00B174C7 /* ogen.004 */,
-				D4321BE61047A0FB00B174C7 /* ogen.005 */,
-				D4321BE71047A0FB00B174C7 /* ogen.006 */,
-				D4321BE81047A0FB00B174C7 /* ogen.007 */,
-				D4321BE91047A0FB00B174C7 /* ogen.008 */,
-				D4321BEA1047A0FB00B174C7 /* ogen.009 */,
 				D4321BEB1047A0FB00B174C7 /* public */,
 			);
 			path = rocs;
@@ -7743,6 +6367,34 @@
 			passBuildSettingsInEnvironment = 1;
 			productName = roclcdr;
 		};
+		D47352791047D36F00F4930F /* Rocview MacApp */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "all macapp  PLATFORM=MACOSX";
+			buildConfigurationList = D47352811047D41A00F4930F /* Build configuration list for PBXLegacyTarget "Rocview MacApp" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = ./rocgui;
+			dependencies = (
+			);
+			name = "Rocview MacApp";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Rocview MacApp";
+		};
+		D473527C1047D3DA00F4930F /* Rocrail MacApp */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "all macapp PLATFORM=MACOSX";
+			buildConfigurationList = D47352821047D41A00F4930F /* Build configuration list for PBXLegacyTarget "Rocrail MacApp" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = ./rocrail;
+			dependencies = (
+			);
+			name = "Rocrail MacApp";
+			passBuildSettingsInEnvironment = 1;
+			productName = "Rocrail MacApp";
+		};
 /* End PBXLegacyTarget section */
 
 /* Begin PBXProject section */
@@ -7769,6 +6421,8 @@
 				D4321C1C1047A24400B174C7 /* rocdigs */,
 				D4321C1F1047A26300B174C7 /* roclcdr */,
 				9CC29E361047BD68006054AA /* makedmg */,
+				D47352791047D36F00F4930F /* Rocview MacApp */,
+				D473527C1047D3DA00F4930F /* Rocrail MacApp */,
 			);
 		};
 /* End PBXProject section */
@@ -7956,6 +6610,48 @@
 			};
 			name = Release;
 		};
+		D473527A1047D36F00F4930F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Rocview MacApp";
+			};
+			name = Debug;
+		};
+		D473527B1047D36F00F4930F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Rocview MacApp";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D473527D1047D3DA00F4930F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Rocrail MacApp";
+			};
+			name = Debug;
+		};
+		D473527E1047D3DA00F4930F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Rocrail MacApp";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -8036,6 +6732,24 @@
 			buildConfigurations = (
 				D4321C201047A26300B174C7 /* Debug */,
 				D4321C211047A26300B174C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D47352811047D41A00F4930F /* Build configuration list for PBXLegacyTarget "Rocview MacApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D473527A1047D36F00F4930F /* Debug */,
+				D473527B1047D36F00F4930F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D47352821047D41A00F4930F /* Build configuration list for PBXLegacyTarget "Rocrail MacApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D473527D1047D3DA00F4930F /* Debug */,
+				D473527E1047D3DA00F4930F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
