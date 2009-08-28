@@ -460,7 +460,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
-        if( byroute != NULL && StrOp.len( byroute ) > 0 )
+        if( byroute != NULL && StrOp.len( byroute ) > 0 && !StrOp.equals( "all", byroute) )
           StrOp.fmtb( key, "%s-%s-%s", fbid, fromblockid, byroute );
         else
           StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
