@@ -1,0 +1,144 @@
+// !$*UTF8*$!
+{
+	D4320EFD1047A0DB00B174C7 /* Project object */ = {
+		activeArchitecture = ppc;
+		activeBuildConfigurationName = Debug;
+		activeTarget = D4321C0A1047A1AC00B174C7 /* Rocrail main build */;
+		addToTargets = (
+		);
+		codeSenseManager = D4320F021047A0DB00B174C7 /* Code sense */;
+		ignoreBreakpointsInProjectsDict = {
+		};
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					568,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					678,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					638,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 273129691;
+			PBXWorkspaceStateSaveDate = 273129691;
+		};
+		perUserProjectItems = {
+			D4321C2A1047A2DC00B174C7 /* PBXBookmark */ = D4321C2A1047A2DC00B174C7 /* PBXBookmark */;
+			D4321C361047A32900B174C7 /* PBXTextBookmark */ = D4321C361047A32900B174C7 /* PBXTextBookmark */;
+		};
+		sourceControlManager = D4320F011047A0DB00B174C7 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	D4320F011047A0DB00B174C7 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	D4320F021047A0DB00B174C7 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	D4320FCF1047A0F400B174C7 /* makefile */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1142, 742}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1702}";
+			sepNavWindowFrame = "{{222, 88}, {1201, 746}}";
+		};
+	};
+	D43210111047A0F400B174C7 /* mcs2.c */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1142, 7000}}";
+			sepNavSelRange = "{9080, 0}";
+			sepNavVisRange = "{7690, 2258}";
+			sepNavWindowFrame = "{{15, 277}, {1201, 746}}";
+		};
+	};
+	D4321C0A1047A1AC00B174C7 /* Rocrail main build */ = {
+		activeExec = 0;
+	};
+	D4321C0E1047A1CE00B174C7 /* rocrail */ = {
+		activeExec = 0;
+	};
+	D4321C131047A1FC00B174C7 /* rocview */ = {
+		activeExec = 0;
+	};
+	D4321C161047A21500B174C7 /* rocs */ = {
+		activeExec = 0;
+	};
+	D4321C191047A22D00B174C7 /* rocint */ = {
+		activeExec = 0;
+	};
+	D4321C1C1047A24400B174C7 /* rocdigs */ = {
+		activeExec = 0;
+	};
+	D4321C1F1047A26300B174C7 /* roclcdr */ = {
+		activeExec = 0;
+	};
+	D4321C2A1047A2DC00B174C7 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = D4320FCF1047A0F400B174C7 /* makefile */;
+	};
+	D4321C361047A32900B174C7 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D4320FCF1047A0F400B174C7 /* makefile */;
+		name = "makefile: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1702;
+		vrLoc = 0;
+	};
+}
