@@ -7632,6 +7632,19 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
+		9CC29E361047BD68006054AA /* makedmg */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "1.3 999 snapshot-intel leopard";
+			buildConfigurationList = 9CC29E391047BD86006054AA /* Build configuration list for PBXLegacyTarget "makedmg" */;
+			buildPhases = (
+			);
+			buildToolPath = ./makemac.sh;
+			dependencies = (
+			);
+			name = makedmg;
+			passBuildSettingsInEnvironment = 1;
+			productName = makedmg;
+		};
 		D4321C0A1047A1AC00B174C7 /* Rocrail main build */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION) PLATFORM=MACOSX";
@@ -7755,11 +7768,33 @@
 				D4321C191047A22D00B174C7 /* rocint */,
 				D4321C1C1047A24400B174C7 /* rocdigs */,
 				D4321C1F1047A26300B174C7 /* roclcdr */,
+				9CC29E361047BD68006054AA /* makedmg */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin XCBuildConfiguration section */
+		9CC29E371047BD68006054AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = makedmg;
+			};
+			name = Debug;
+		};
+		9CC29E381047BD68006054AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = makedmg;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		D4320EFE1047A0DB00B174C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7924,6 +7959,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9CC29E391047BD86006054AA /* Build configuration list for PBXLegacyTarget "makedmg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CC29E371047BD68006054AA /* Debug */,
+				9CC29E381047BD68006054AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D4320F001047A0DB00B174C7 /* Build configuration list for PBXProject "Rocrail" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
