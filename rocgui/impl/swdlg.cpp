@@ -127,6 +127,7 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
   m_Quit->SetDefault();
   setTooltips();
   
+	Centre();
 }
 
 void SwCtrlDlg::setTooltips(void) {

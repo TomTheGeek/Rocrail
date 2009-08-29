@@ -102,6 +102,7 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
   sizer2->Fit(this);
 
   m_Quit->SetDefault();
+	Centre();
 }
 
 void RouteCtrlDlg::OnButton(wxCommandEvent& event)
