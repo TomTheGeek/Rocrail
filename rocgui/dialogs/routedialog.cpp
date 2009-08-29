@@ -372,36 +372,6 @@ void RouteDialog::initBlockCombos() {
         }
       }
 
-      m_BlockA->Append( wxString( wRoute.point_en,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_es,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_ne,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_nw,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_se,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_sw,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_wn,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_ws,wxConvUTF8) );
-
-      // for single track modules
-      m_BlockA->Append( wxString( wRoute.point_e,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_n,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_s,wxConvUTF8) );
-      m_BlockA->Append( wxString( wRoute.point_w,wxConvUTF8) );
-
-      m_BlockB->Append( wxString( wRoute.point_en,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_es,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_ne,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_nw,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_se,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_sw,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_wn,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_ws,wxConvUTF8) );
-
-      // for single track modules
-      m_BlockB->Append( wxString( wRoute.point_e,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_n,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_s,wxConvUTF8) );
-      m_BlockB->Append( wxString( wRoute.point_w,wxConvUTF8) );
-
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -410,6 +380,36 @@ void RouteDialog::initBlockCombos() {
         m_BlockB->Append( wxString(id,wxConvUTF8) );
       }
     }
+		m_BlockA->Append( wxString( wRoute.point_en,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_es,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_ne,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_nw,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_se,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_sw,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_wn,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_ws,wxConvUTF8) );
+		
+		// for single track modules
+		m_BlockA->Append( wxString( wRoute.point_e,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_n,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_s,wxConvUTF8) );
+		m_BlockA->Append( wxString( wRoute.point_w,wxConvUTF8) );
+		
+		m_BlockB->Append( wxString( wRoute.point_en,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_es,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_ne,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_nw,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_se,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_sw,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_wn,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_ws,wxConvUTF8) );
+		
+		// for single track modules
+		m_BlockB->Append( wxString( wRoute.point_e,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_n,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_s,wxConvUTF8) );
+		m_BlockB->Append( wxString( wRoute.point_w,wxConvUTF8) );
+		
   }
   /* clean up the temp. list */
   ListOp.base.del(list);
