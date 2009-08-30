@@ -10421,4 +10421,13 @@
   <Msg id="cartype">
     <en txt="Car type"/>
   </Msg>
+  <Msg id="routestolock">
+    <en txt="Routes to lock"/>
+  </Msg>
+  <Msg id="seconds">
+    <en txt="sec."/>
+  </Msg>
+  <Msg id="interval">
+    <en txt="Interval"/>
+  </Msg>
 </Messages>

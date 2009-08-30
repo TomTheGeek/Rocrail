@@ -107,6 +107,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_SW_FB2R 10042
 #define wxID_STATIC_SW_FB2G 10043
 #define ID_COMBOBOX_SW_FB2G 10044
+#define ID_PANEL_SWITCH_CONTROL 10370
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SWITCHDIALOG_TITLE _("Turnouts")
 #define SYMBOL_SWITCHDIALOG_IDNAME ID_DIALOG_SW
@@ -272,6 +273,16 @@ public:
     wxStaticText* m_LabelFb2G;
     wxComboBox* m_Fb2G;
     wxCheckBox* m_Fb2Ginvert;
+    wxPanel* m_ControlPanel;
+    wxCheckBox* m_ActivateCtrl;
+    wxStaticText* m_labCtrlInterval;
+    wxSpinCtrl* m_CtrlInterval;
+    wxStaticText* m_labCtrlIntervalSec;
+    wxStaticText* m_labCtrlDelay;
+    wxSpinCtrl* m_CtrlDelay;
+    wxStaticText* m_labCtrlDelaySec;
+    wxStaticText* m_labCtrlRoutes;
+    wxTextCtrl* m_CtrlRoutes;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/AccessoryCtrl.h"
 #include "rocgui/public/guiapp.h"
 
 /*!
@@ -237,6 +238,14 @@ void SwitchDialog::initLabels() {
   m_Fb2Rinvert->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_Fb2Ginvert->SetLabel( wxGetApp().getMsg( "invert" ) );
 
+  // Control
+  m_ActivateCtrl->SetLabel( wxGetApp().getMsg( "activate" ) );
+  m_labCtrlInterval->SetLabel( wxGetApp().getMsg( "interval" ) );
+  m_labCtrlDelay->SetLabel( wxGetApp().getMsg( "delay" ) );
+  m_labCtrlIntervalSec->SetLabel( wxGetApp().getMsg( "seconds" ) );
+  m_labCtrlDelaySec->SetLabel( wxGetApp().getMsg( "seconds" ) );
+  m_labCtrlRoutes->SetLabel( wxGetApp().getMsg( "routestolock" ) );
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -420,6 +429,19 @@ void SwitchDialog::initValues() {
   m_Fb1Ginvert->SetValue( wSwitch.isfbGinv(m_Props) );
   m_Fb2Rinvert->SetValue( wSwitch.isfb2Rinv(m_Props) );
   m_Fb2Ginvert->SetValue( wSwitch.isfb2Ginv(m_Props) );
+  
+  
+  // Accessory Control
+  iONode accctrl = wSwitch.getaccessoryctrl(m_Props);
+  if( accctrl == NULL ) {
+    accctrl = NodeOp.inst( wAccessoryCtrl.name(), m_Props, ELEMENT_NODE);
+    NodeOp.addChild( m_Props, accctrl );
+  }
+  m_ActivateCtrl->SetValue( wAccessoryCtrl.isactive(accctrl) ? true:false );
+  m_CtrlInterval->SetValue( wAccessoryCtrl.getinterval(accctrl) );
+  m_CtrlDelay->SetValue( wAccessoryCtrl.getdelay(accctrl) );
+  m_CtrlRoutes->SetValue(wxString(wAccessoryCtrl.getlockroutes(accctrl),wxConvUTF8)  );
+  
 
 }
 
@@ -566,6 +588,13 @@ bool SwitchDialog::evaluate() {
   wSwitch.setfb2Rinv(m_Props, m_Fb2Rinvert->GetValue()?True:False );
   wSwitch.setfb2Ginv(m_Props, m_Fb2Ginvert->GetValue()?True:False );
 
+  // Accessory Control
+  iONode accctrl = wSwitch.getaccessoryctrl(m_Props);
+  wAccessoryCtrl.setactive(accctrl, m_ActivateCtrl->IsChecked() ? True:False );
+  wAccessoryCtrl.setinterval(accctrl, m_CtrlInterval->GetValue() );
+  wAccessoryCtrl.setdelay(accctrl, m_CtrlDelay->GetValue() );
+  wAccessoryCtrl.setlockroutes(accctrl, m_CtrlRoutes->GetValue().mb_str(wxConvUTF8) );
+  
   return true;
 }
 
@@ -646,6 +675,16 @@ bool SwitchDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_LabelFb2G = NULL;
     m_Fb2G = NULL;
     m_Fb2Ginvert = NULL;
+    m_ControlPanel = NULL;
+    m_ActivateCtrl = NULL;
+    m_labCtrlInterval = NULL;
+    m_CtrlInterval = NULL;
+    m_labCtrlIntervalSec = NULL;
+    m_labCtrlDelay = NULL;
+    m_CtrlDelay = NULL;
+    m_labCtrlDelaySec = NULL;
+    m_labCtrlRoutes = NULL;
+    m_CtrlRoutes = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -957,22 +996,62 @@ void SwitchDialog::CreateControls()
 
     m_Notebook->AddPage(m_WireringPanel, _("Wirering"));
 
+    m_ControlPanel = new wxPanel( m_Notebook, ID_PANEL_SWITCH_CONTROL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer83 = new wxBoxSizer(wxVERTICAL);
+    m_ControlPanel->SetSizer(itemBoxSizer83);
+
+    m_ActivateCtrl = new wxCheckBox( m_ControlPanel, wxID_ANY, _("Active"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ActivateCtrl->SetValue(false);
+    itemBoxSizer83->Add(m_ActivateCtrl, 0, wxGROW|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer85 = new wxFlexGridSizer(0, 3, 0, 0);
+    itemFlexGridSizer85->AddGrowableCol(1);
+    itemBoxSizer83->Add(itemFlexGridSizer85, 0, wxALIGN_LEFT|wxALL, 5);
+    m_labCtrlInterval = new wxStaticText( m_ControlPanel, wxID_ANY, _("Interval"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer85->Add(m_labCtrlInterval, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_CtrlInterval = new wxSpinCtrl( m_ControlPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 3600, 0 );
+    itemFlexGridSizer85->Add(m_CtrlInterval, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labCtrlIntervalSec = new wxStaticText( m_ControlPanel, wxID_ANY, _("sec."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer85->Add(m_labCtrlIntervalSec, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labCtrlDelay = new wxStaticText( m_ControlPanel, wxID_ANY, _("Delay"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer85->Add(m_labCtrlDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_CtrlDelay = new wxSpinCtrl( m_ControlPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 3600, 0 );
+    itemFlexGridSizer85->Add(m_CtrlDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labCtrlDelaySec = new wxStaticText( m_ControlPanel, wxID_ANY, _("sec."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer85->Add(m_labCtrlDelaySec, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer92 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer92->AddGrowableCol(1);
+    itemBoxSizer83->Add(itemFlexGridSizer92, 0, wxGROW|wxALL, 5);
+    m_labCtrlRoutes = new wxStaticText( m_ControlPanel, wxID_ANY, _("Routes to lock"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer92->Add(m_labCtrlRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_CtrlRoutes = new wxTextCtrl( m_ControlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer92->Add(m_CtrlRoutes, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Notebook->AddPage(m_ControlPanel, _("Control"));
+
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer82 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer95 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer82, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer95, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer82->AddButton(m_Cancel);
+    itemStdDialogButtonSizer95->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer82->AddButton(m_OK);
+    itemStdDialogButtonSizer95->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer82->AddButton(m_Apply);
+    itemStdDialogButtonSizer95->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer82->Realize();
+    itemStdDialogButtonSizer95->Realize();
 
 ////@end SwitchDialog content construction
 }
