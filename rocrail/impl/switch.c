@@ -24,6 +24,7 @@
 #include "rocrail/impl/switch_impl.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/action.h"
+#include "rocrail/public/route.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Ctrl.h"
@@ -34,6 +35,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 #include "rocs/public/thread.h"
+#include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
@@ -46,6 +48,7 @@
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/AccessoryCtrl.h"
 
 static int instCnt = 0;
 
@@ -764,21 +767,43 @@ static void _modify( iOSwitch inst, iONode props ) {
         ModelOp.addSwKey( model, o->addrKey2, inst );
     }
 
-    /* delete all childs to make 'room' for the new ones: */
-    cnt = NodeOp.getChildCnt( o->props );
-    while( cnt > 0 ) {
-      iONode child = NodeOp.getChild( o->props, 0 );
-      NodeOp.removeChild( o->props, child );
+    {
+      /* delete all childs to make 'room' for the new ones: */
+      iONode accctrl = NULL;
       cnt = NodeOp.getChildCnt( o->props );
-    }
+      while( cnt > 0 ) {
+        iONode child = NodeOp.getChild( o->props, 0 );
+        if( StrOp.equals( wAccessoryCtrl.name(), NodeOp.getName(child) ) ) {
+          /* keep this node because it is referenced by the accessory thread */
+          accctrl = child;
+        }
+        NodeOp.removeChild( o->props, child );
+        /* TODO: NodeOp.base.del(child) ?! */
+        cnt = NodeOp.getChildCnt( o->props );
+      }
 
-    /* add the new or modified childs: */
-    cnt = NodeOp.getChildCnt( props );
-    for( i = 0; i < cnt; i++ ) {
-      iONode child = NodeOp.getChild( props, i );
-      NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
-    }
+      if( accctrl != NULL )
+        NodeOp.addChild( o->props, accctrl );
 
+
+      /* add the new or modified childs: */
+      cnt = NodeOp.getChildCnt( props );
+      for( i = 0; i < cnt; i++ ) {
+        iONode child = NodeOp.getChild( props, i );
+        if( StrOp.equals( wAccessoryCtrl.name(), NodeOp.getName(child) ) && accctrl != NULL) {
+          int cnt = NodeOp.getAttrCnt( child );
+          int n = 0;
+          for( n = 0; n < cnt; n++ ) {
+            iOAttr attr = NodeOp.getAttr( child, n );
+            const char* name  = AttrOp.getName( attr );
+            const char* value = AttrOp.getVal( attr );
+            NodeOp.setStr( accctrl, name, value );
+          }
+        }
+        else
+          NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
+      }
+    }
   }
 
   /* Broadcast to clients. */
@@ -974,6 +999,95 @@ static void _checkSenPos( iOSwitch inst ) {
 }
 
 
+static void __accThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSwitch sw = (iOSwitch)ThreadOp.getParm( th );
+  iOSwitchData data = Data(sw);
+  int elapsedinterval = 0;
+  int elapseddelay = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory control thread for \"%s\" started.", data->id );
+
+  do {
+    ThreadOp.sleep(1000);
+
+    if( wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
+      if( elapsedinterval >= wAccessoryCtrl.getinterval(data->accctrl) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "activating accessory \"%s\"...", data->id );
+
+        /* try to lock the routes */
+        const char* routeid = NULL;
+        if( StrOp.len( wAccessoryCtrl.getlockroutes(data->accctrl) ) ) {
+          iOStrTok tok = StrTokOp.inst( wAccessoryCtrl.getlockroutes(data->accctrl) , ',' );
+          Boolean allRouteesLocked = True;
+          /* iterate all routes to lock */
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            const char* routeid = StrTokOp.nextToken( tok );
+            iORoute route = ModelOp.getRoute(AppOp.getModel(), routeid);
+            if( route != NULL ) {
+              if( !RouteOp.lock(route, data->id, False) ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "could not lock route %s for accessory \"%s\"", routeid, data->id );
+                allRouteesLocked = False;
+              }
+              else {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route %s locked for accessory \"%s\"", routeid, data->id );
+              }
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route %s does not exist for accessory \"%s\"", routeid, data->id );
+            }
+          };
+          StrTokOp.base.del(tok);
+
+          if( allRouteesLocked ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "all routes are locked; activating accessory \"%s\"...", data->id );
+
+            /* activate */
+            SwitchOp.red(sw);
+            /* sleep delay */
+            ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
+            /* deactivate */
+            SwitchOp.green(sw);
+
+
+            /* unlock routes */
+            iOStrTok tok = StrTokOp.inst( wAccessoryCtrl.getlockroutes(data->accctrl) , ',' );
+            /* iterate all routes to lock */
+            while( StrTokOp.hasMoreTokens(tok) ) {
+              const char* routeid = StrTokOp.nextToken( tok );
+              iORoute route = ModelOp.getRoute(AppOp.getModel(), routeid);
+              if( route != NULL ) {
+                if( !RouteOp.unLock(route, data->id, NULL) ) {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not unlock route %s for accessory \"%s\"", routeid, data->id );
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route %s unlocked for accessory \"%s\"", routeid, data->id );
+                }
+              }
+              else {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route %s does not exist for accessory \"%s\"", routeid, data->id );
+              }
+            };
+            StrTokOp.base.del(tok);
+
+
+            /* reset interval */
+            elapsedinterval = 0;
+          }
+        }
+
+
+      }
+      else {
+        elapsedinterval++;
+      }
+    }
+
+
+  } while( data->run );
+}
+
+
 static iOSwitch _inst( iONode props ) {
   iOSwitch     sw   = allocMem( sizeof( struct OSwitch ) );
   iOSwitchData data = allocMem( sizeof( struct OSwitchData ) );
@@ -985,6 +1099,7 @@ static iOSwitch _inst( iONode props ) {
   data->muxLock = MutexOp.inst( NULL, True );
   data->muxCmd  = MutexOp.inst( NULL, True );
   data->id      = wSwitch.getid( props );
+  data->accctrl = wSwitch.getaccessoryctrl(props);
 
   if( __initCallback( sw ) ) {
     data->fbstate = SW_UNKNOWN;
@@ -1004,6 +1119,12 @@ static iOSwitch _inst( iONode props ) {
     wSwitch.getport2( props ),
     wSwitch.getiid( props )
     );
+
+  if( data->accctrl != NULL && wAccessoryCtrl.isactive(data->accctrl) ) {
+    data->accThread = ThreadOp.inst( data->id, &__accThread, sw );
+    data->run = True;
+    ThreadOp.start( data->accThread );
+  }
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s, %s",
         instCnt,

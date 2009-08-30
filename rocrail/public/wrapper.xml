@@ -930,6 +930,13 @@
         <const name="prot_DO" vt="string" val="do" remark="Dinamo DO"/>
         <const name="prot_VO" vt="string" val="vo" remark="Dinamo VO"/>
         <actionctrl cardinality="n"/>
+        <accessoryctrl wrappername="AccessoryCtrl">
+          <var name="active" vt="bool" defval="false" remark="Activate accessory control."/>
+          <var name="interval" vt="int" defval="0" remark="Interval in seconds."/>
+          <var name="delay" vt="int" defval="0" remark="Seconds to elaps to go back to the closed position."/>
+          <var name="lockroutes" vt="string" defval="" range="Routes to lock at open, and unlock at close."/>
+        </accessoryctrl>
+				
       </sw>
     </swlist>
     <sglist cardinality="1" remark="Signal table" wrappername="SignalList">

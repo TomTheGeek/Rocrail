@@ -948,7 +948,7 @@
   </object>
 
 
-  <object name="Switch" interface="HtmlInt" use="node,mutex" include="htmlint,route" remark="Switch object">
+  <object name="Switch" interface="HtmlInt" use="node,mutex,thread" include="htmlint,route" remark="Switch object">
     <typedef def="enum {SW_STRAIGHT=0,SW_TURNOUT,SW_LEFT,SW_RIGHT,SW_UNKNOWN} sw_state"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Switch node"/>
@@ -1027,6 +1027,7 @@
       <var name="route" vt="iORoute"/>
       <var name="savepostimer" vt="int"/>
       <var name="props" vt="iONode"/>
+      <var name="accctrl" vt="iONode"/>
       <var name="isStateInverted" vt="Boolean"/>
       <var name="fbstate" vt="sw_state"/>
       <var name="fb2state" vt="sw_state"/>
@@ -1046,6 +1047,8 @@
       <var name="activated" vt="Boolean"/>
       <var name="fieldState1" vt="int"/>
       <var name="fieldState2" vt="int"/>
+      <var name="accThread" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
     </data>
   </object>
 
