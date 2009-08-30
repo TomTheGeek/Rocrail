@@ -107,8 +107,8 @@ static void _convertPath2OSType( const char* path ) {
     char  sepOK = SystemOp.getFileSeparator();
     char sepBad = sepOK;
     char*  pSep = NULL;
-    int     len = StrOp.len( path );
-    int       i = 0;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "before convert: [%s]", path );
 
     /* Get the bad seperator. */
     if( SystemOp.getOSType() == OSTYPE_DOS )
@@ -118,10 +118,12 @@ static void _convertPath2OSType( const char* path ) {
 
     /* Find and replace the bad seperators. */
     pSep = strchr( path, sepBad );
-    for( i = 0; i < len && pSep != NULL; i++ ) {
+    while( pSep != NULL ) {
       *pSep = sepOK;
       pSep = strchr( pSep, sepBad );
-    }
+    };
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "after convert: [%s]", path );
 
   }
 }
@@ -473,6 +475,8 @@ static Boolean _isDirectory( const char* filename ) {
 static Boolean _isAbsolute( const char* path ) {
 #if defined _WIN32 || defined __OS2__
   if( path[1] == ':' )
+    return True;
+  if( StrOp.startsWith( path, "\\" ) )
     return True;
 #else
   if( path[0] == '/'  )
