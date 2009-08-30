@@ -567,7 +567,7 @@
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichenbedienung" accel="0" tip="Dialog um Weichen zu testen."/>
-    <en txt="Turnout Control" accel="0" tip="Dialog to test turnouts."/>
+    <en txt="Switch Control" accel="0" tip="Dialog to test switches."/>
     <nl txt="Wissel Bediening" accel="0" tip="Window om wissels te testen."/>
     <sv txt="Växelkontroll" accel="0" tip="Öppna ställverk för växlar."/>
     <fr txt="Commande d'aiguillage" accel="0" tip="Commande des moteurs d'aiguillages."/>
@@ -1286,7 +1286,7 @@
   </Msg>
   <Msg id="swcmds">
     <de txt="Weichenkommandos"/>
-    <en txt="Turnout commands"/>
+    <en txt="Switch commands"/>
     <nl txt="Wissel kommando's"/>
     <sv txt="Växelkommandon"/>
     <fr txt="Commandes d'aiguillage"/>
@@ -1511,7 +1511,7 @@
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
-    <en txt="Turnout table" alttxt="Turnouts" tip="Turnout table"/>
+    <en txt="Switch table" alttxt="Switches" tip="Switch table"/>
     <nl txt="Wissels" tip="Wissels"/>
     <sv txt="Växlar" tip="Växeltabell"/>
     <fr txt="Aiguillages" tip="Tableau d'aiguillages"/>
@@ -2031,7 +2031,7 @@
   </Msg>
   <Msg id="rightturnout">
     <de txt="Weiche rechts"/>
-    <en txt="Right turnout"/>
+    <en txt="Right switch"/>
     <nl txt="Rechtswissel"/>
     <sv txt="Högerväxel"/>
     <fr txt="Aiguillage droit"/>
@@ -2047,7 +2047,7 @@
   </Msg>
   <Msg id="leftturnout">
     <de txt="Weiche links"/>
-    <en txt="Left turnout"/>
+    <en txt="Left switch"/>
     <nl txt="Linkswissel"/>
     <sv txt="Vänsterväxel"/>
     <fr txt="Aiguillage gauche"/>
@@ -2183,7 +2183,7 @@
   </Msg>
   <Msg id="turnout">
     <de txt="Abzweig"/>
-    <en txt="Turnout"/>
+    <en txt="Switch"/>
     <nl txt="Wissel"/>
     <sv txt="Växel"/>
     <fr txt="Aiguillage"/>
@@ -4148,7 +4148,7 @@
   </Msg>
   <Msg id="switchtime">
     <de txt="Weichenschaltzeit (ms)"/>
-    <en txt="Turnout switch time (ms)"/>
+    <en txt="Switch time (ms)"/>
     <nl txt="Schakel tijd (ms)"/>
     <sv txt="Växelaktiveringstid (ms)"/>
     <fr txt="Temps de commutation(aig.) en ms"/>
@@ -4348,7 +4348,7 @@
   </Msg>
   <Msg id="turnoutid">
     <de txt="Weichenkennung"/>
-    <en txt="Turnout ID"/>
+    <en txt="Switch ID"/>
     <nl txt="Wissel ID"/>
     <sv txt="Växel-ID"/>
     <fr txt="ID Aiguillage"/>
@@ -4365,7 +4365,7 @@
   </Msg>
   <Msg id="turnout_left">
     <de txt="Abbiegen (links)"/>
-    <en txt="Turnout (left)"/>
+    <en txt="Switch (left)"/>
     <nl txt="Wissel (links)"/>
     <sv txt="Växel (vänster)"/>
     <fr txt="Tourner (gauche)"/>
@@ -4989,7 +4989,7 @@
   </Msg>
   <Msg id="switchaction">
     <de txt="Weiche Aktion"/>
-    <en txt="Turnout action"/>
+    <en txt="Switch action"/>
     <nl txt="Wissel actie"/>
     <sv txt="Växelåtgärd"/>
     <fr txt="Activer Aiguillage"/>
@@ -6353,11 +6353,11 @@
   </Msg>
   <Msg id="dirpause">
     <de txt="Wechsel Pause" tip="Pause xxxms nach dem Schalten der letzten Weiche."/>
-    <en txt="DirChange pause" tip="Pause xxxms after last turnout command."/>
+    <en txt="DirChange pause" tip="Pause xxxms after last switch command."/>
     <nl txt="Wissel wachttijd" tip="Wachttijd in  xxxms na laatste wisselcommando."/>
     <sv txt="Riktningsväxlingspaus" tip="Vänta x ms från senaste växelkommand."/>
     <fr txt="Pause changement direction" tip="Pause en xxxms après la dernière commande d'aiguillage."/>
-    <tr txt="DirChange pause" tip="Pause xxxms after last turnout command."/>
+    <tr txt="DirChange pause" tip="Pause xxxms after last switch command."/>
     <es txt="Pausa de descarga" tip="Pausa de xxxms tras la última orden de cambio de agujas."/>
     <it txt="DirChange pause" tip="Aspetta xxxms dopo l' ultimo comando scambi"/>
     <da txt="Skiftespor pause" tip="Pause xxxms efter sidste skiftesporskommando."/>
@@ -6449,15 +6449,15 @@
   </Msg>
   <Msg id="overlappedturnouts">
     <de txt="Überlappende Weichen"/>
-    <en txt="Overlapped turnouts"/>
+    <en txt="Overlapped switches"/>
     <nl txt="overlappende wissels"/>
     <sv txt="Överlappande växlar"/>
     <fr txt="Aiguillages imbriqués"/>
-    <tr txt="Overlapped turnouts"/>
+    <tr txt="Overlapped switches"/>
     <es txt="Cambio solapado"/>
-    <it txt="Overlapped turnouts"/>
+    <it txt="Overlapped switches"/>
     <da txt="Overlappende sporskifter"/>
-    <bg txt="Припокриват turnouts"/>
+    <bg txt="Припокриват switches"/>
     <el txt="Επικαλύπτονταν προσελεύσεις"/>
     <hu txt="Átfedő kitérők"/>
     <pt txt="agulha/desvios sobrepostos"/>
@@ -8003,7 +8003,7 @@
   </Msg>
   <Msg id="functiononleftturnout">
     <de txt="bei Linksweiche"/>
-    <en txt="on left turnout"/>
+    <en txt="on left switch"/>
     <nl txt="bij linkswissel"/>
     <sv txt="vid vänsterväxel"/>
     <fr txt="sur aiguillage gauche"/>
@@ -8019,7 +8019,7 @@
   </Msg>
   <Msg id="functiononrightturnout">
     <de txt="bei Rechtsweiche"/>
-    <en txt="on right turnout"/>
+    <en txt="on right switch"/>
     <nl txt="bij rechtswissel"/>
     <sv txt="vid högerväxel"/>
     <fr txt="sur aiguillage droit"/>
