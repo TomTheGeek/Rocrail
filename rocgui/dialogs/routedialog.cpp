@@ -219,7 +219,7 @@ void RouteDialog::initLabels() {
   m_labTrackNumber->SetLabel( wxGetApp().getMsg( "tracknr" ) );
   m_SwitchCmd->SetLabel( wxGetApp().getMsg( "command" ) );
   m_SwitchCmd->SetString( 0, wxGetApp().getMsg( "straight" ) );
-  m_SwitchCmd->SetString( 1, wxGetApp().getMsg( "turnout" ) );
+  m_SwitchCmd->SetString( 1, wxGetApp().getMsg( "thrown" ) );
   m_SwitchCmd->SetString( 2, wxGetApp().getMsg( "left" ) );
   m_SwitchCmd->SetString( 3, wxGetApp().getMsg( "right" ) );
   m_SwitchCmd->SetString( 4, wxGetApp().getMsg( "track" ) );

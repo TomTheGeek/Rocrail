@@ -1040,13 +1040,18 @@ static void __accThread( void* threadinst ) {
           StrTokOp.base.del(tok);
 
           if( allRouteesLocked ) {
+            int retry = 0;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "all routes are locked; activating accessory \"%s\"...", data->id );
 
             /* activate */
             SwitchOp.red(sw);
             /* sleep delay */
             ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
-            /* deactivate */
+            /* deactivate: TODO: check if sensors are used for on/off position to wait with the off command until the sensor has reported. */
+            while( !SwitchOp.isSet(sw) && retry > 10) {
+              ThreadOp.sleep(1000);
+              retry++;
+            }
             SwitchOp.green(sw);
 
 
