@@ -325,7 +325,7 @@ private:
 enum
 {
     // menu items
-    ME_Quit = 1,
+    ME_Quit = 10000,
     ME_Save,
     ME_SaveAs,
     ME_Upload,
@@ -480,4 +480,5 @@ enum {
   LOC_COL_DESTBLOCK = 5,
 
 };
+
 #endif
