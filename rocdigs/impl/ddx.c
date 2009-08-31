@@ -327,8 +327,8 @@ static iONode __translate( obj inst, const iONode node ) {
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) && data->dcc ) {
       int rc = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
+          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 ) {
         if( addr > 127 )
           rc = comp_nmra_f4b14s128( addr, dir, speed, f);
@@ -347,8 +347,8 @@ static iONode __translate( obj inst, const iONode node ) {
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) && data->dcc ) {
       int rc = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
+          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
       if( spcnt >= 127 )
         rc = comp_nmra_f4b14s128( addr, dir, speed, f);
       else
