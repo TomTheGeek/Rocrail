@@ -79,6 +79,7 @@ public:
   void OnUpdate(wxCommandEvent& event);
   void OnHelp(wxCommandEvent& event);
   void OnRUG(wxCommandEvent& event);
+  void OnTranslations(wxCommandEvent& event);
   void OnBug(wxCommandEvent& event);
   void OnFeature(wxCommandEvent& event);
   void OnService(wxCommandEvent& event);
@@ -427,6 +428,7 @@ enum
     ME_Raster,
     NEWUPDATES_EVENT,
     ME_RUG,
+    ME_Translations,
     ME_Bug,
     ME_Feature,
     ME_Survey,

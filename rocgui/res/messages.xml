@@ -7734,6 +7734,14 @@
   <Msg id="rug">
     <all txt="http://forum.rocrail.net/portal.php"/>
   </Msg>
+  <Msg id="translationslink">
+    <all txt="https://translations.launchpad.net/rocrail/rocrail-dev/+pots/rocrail"/>
+  </Msg>
+  <Msg id="translations" dialog="true">
+    <en txt="Translations" tip="Translations in Launchpad.net"/>
+    <nl txt="Vertalingen" tip="Vertalingen bij Launchpad.net"/>
+    <de txt="Übersetzungen" tip="Übersetzungen bei Launchpad.net"/>
+  </Msg>
   <Msg id="consrv" dialog="true">
     <de txt="Configuration Service" tip="Interactive rocrail.ini configuration."/>
     <en txt="Configuration Service" tip="Interactive rocrail.ini configuration."/>

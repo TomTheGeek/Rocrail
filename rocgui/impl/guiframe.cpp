@@ -214,6 +214,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
     EVT_MENU( ME_Help           , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
+    EVT_MENU( ME_Translations   , RocGuiFrame::OnTranslations)
     EVT_MENU( ME_Bug            , RocGuiFrame::OnBug)
     EVT_MENU( ME_Feature        , RocGuiFrame::OnFeature)
     EVT_MENU( ME_Survey         , RocGuiFrame::OnService)
@@ -1332,12 +1333,18 @@ void RocGuiFrame::initFrame() {
   rug_menuHelp->SetBitmap(wxBitmap(getIconPath("rug"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(rug_menuHelp);
 
+  wxMenuItem *translations_menuHelp = new wxMenuItem(menuHelp, ME_Translations, wxGetApp().getMenu("translations"), wxGetApp().getTip("translations") );
+  translations_menuHelp->SetBitmap(wxBitmap(getIconPath("lp"), wxBITMAP_TYPE_PNG));
+  menuHelp->Append(translations_menuHelp);
+
+  menuHelp->AppendSeparator();
+
   wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug, wxGetApp().getMenu("bug"), wxGetApp().getTip("bug") );
   bug_menuHelp->SetBitmap(wxBitmap(getIconPath("bug"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(bug_menuHelp);
 
   wxMenuItem *feature_menuHelp = new wxMenuItem(menuHelp, ME_Feature, wxGetApp().getMenu("feature"), wxGetApp().getTip("feature") );
-  //bug_menuHelp->SetBitmap(wxBitmap(getIconPath("feature"), wxBITMAP_TYPE_PNG));
+  feature_menuHelp->SetBitmap(wxBitmap(getIconPath("lp"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(feature_menuHelp);
 
   menuHelp->AppendSeparator();
@@ -2798,6 +2805,10 @@ void RocGuiFrame::OnHelp(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnRUG(wxCommandEvent& WXUNUSED(event)) {
   wxLaunchDefaultBrowser(wxGetApp().getMsg("rug"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocGuiFrame::OnTranslations(wxCommandEvent& WXUNUSED(event)) {
+  wxLaunchDefaultBrowser(wxGetApp().getMsg("translationslink"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnService(wxCommandEvent& WXUNUSED(event)) {
