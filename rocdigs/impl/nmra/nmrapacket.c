@@ -468,7 +468,7 @@ int speedStep128Packet(byte* retVal, int address, Boolean longAddr, int speed, B
   }
 
   if (speed<0 || speed>127) {
-    printf("invalid speed "+speed);
+    printf("invalid speed %d\n",speed);
     return 0;
   }
 
@@ -534,13 +534,13 @@ int speedStep28Packet(byte* retVal, int address, Boolean longAddr, int speed, Bo
     retVal[0] = (byte) (192+((address/256)&0x3F));
     retVal[1] = (byte) (address&0xFF);
     retVal[2] = (byte) arg1;
-    retVal[3] = (byte) (retVal[0]^retVal[1]^retVal[2]^retVal[3]);
+    retVal[3] = (byte) (retVal[0]^retVal[1]^retVal[2]);
     return 4;
   } else {
     // short address form
     retVal[0] = (byte) (address&0xFF);
     retVal[1] = (byte) arg1;
-    retVal[2] = (byte) (retVal[0]^retVal[1]^retVal[2]);
+    retVal[2] = (byte) (retVal[0]^retVal[1]);
     return 3;
   }
 }
@@ -549,7 +549,7 @@ int speedStep28Packet(byte* retVal, int address, Boolean longAddr, int speed, Bo
 int speedStep14Packet(byte* retVal, int address, Boolean longAddr, int speed, Boolean fwd, Boolean F0) {
 
   if (speed < 0 || speed > 15) {
-    printf("invalid speed %d\n" + speed);
+    printf("invalid speed %d\n", speed);
     return 0;
   }
 
@@ -566,13 +566,13 @@ int speedStep14Packet(byte* retVal, int address, Boolean longAddr, int speed, Bo
     retVal[0] = (byte) (192+((address/256)&0x3F));
     retVal[1] = (byte) (address&0xFF);
     retVal[2] = (byte) arg1;
-    retVal[3] = (byte) (retVal[0]^retVal[1]^retVal[2]^retVal[3]);
+    retVal[3] = (byte) (retVal[0]^retVal[1]^retVal[2]);
     return 4;
   } else {
     // short address form
     retVal[0] = (byte) (address&0xFF);
     retVal[1] = (byte) arg1;
-    retVal[2] = (byte) (retVal[0]^retVal[1]^retVal[2]);
+    retVal[2] = (byte) (retVal[0]^retVal[1]);
     return 3;
   }
 }
