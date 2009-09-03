@@ -203,6 +203,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           // poweroff
           iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( cmd, wSysCmd.stop );
+          wSysCmd.setinformall( cmd, True );
           wxGetApp().sendToRocrail( cmd );
           cmd->base.del(cmd);
         }
@@ -213,6 +214,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
           // poweron
           iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( cmd, wSysCmd.go );
+          wSysCmd.setinformall( cmd, True );
           wxGetApp().sendToRocrail( cmd );
           cmd->base.del(cmd);
         }
