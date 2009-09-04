@@ -498,6 +498,9 @@ void PlanPanel::OnSelect(wxCommandEvent& event) {
 }
 
 void PlanPanel::OnMotion(wxMouseEvent& event) {
+  if( !wxGetApp().getFrame()->isEditMode() )
+    return;
+
   m_mouseX = event.GetX();
   m_mouseY = event.GetY();
 
