@@ -109,8 +109,6 @@ public:
     wxTextCtrl* m_LocoFile;
     wxStaticText* m_labRoutesFile;
     wxTextCtrl* m_RoutesFile;
-    wxStaticText* m_labOccFile;
-    wxTextCtrl* m_OccFile;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_InitField;
     wxCheckBox* m_Save;

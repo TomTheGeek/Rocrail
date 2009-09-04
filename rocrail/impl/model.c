@@ -3090,11 +3090,7 @@ static void _saveBlockOccupation( iOModel inst ) {
     iOFile f = NULL;
 
     /* file name */
-    const char* occFileName = "occ.xml";
-    if( data->moduleplan != NULL ) {
-      occFileName = wModPlan.getoccupation( ModPlanOp.getModPlan(data->moduleplan));
-    }
-
+    const char* occFileName =  wRocRail.getoccupation( AppOp.getIni() );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing occupation file [%s]", occFileName );
 
     f = FileOp.inst( occFileName, OPEN_WRITE );
@@ -3122,10 +3118,7 @@ static void _loadBlockOccupation( iOModel inst ) {
     iOFile f = NULL;
 
     /* file name */
-    const char* occFileName = "occ.xml";
-    if( data->moduleplan != NULL ) {
-      occFileName = wModPlan.getoccupation( ModPlanOp.getModPlan(data->moduleplan));
-    }
+    const char* occFileName =  wRocRail.getoccupation( AppOp.getIni() );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loading occupation file [%s]", occFileName );
 

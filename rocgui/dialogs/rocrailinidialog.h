@@ -198,6 +198,8 @@ public:
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelPlanfile;
     wxTextCtrl* m_PlanFile;
+    wxStaticText* m_labOccFile;
+    wxTextCtrl* m_OccFile;
     wxStaticText* m_labPlanType;
     wxRadioBox* m_PlanType;
     wxStaticText* m_LabelLibPath;

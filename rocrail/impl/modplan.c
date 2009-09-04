@@ -1217,7 +1217,6 @@ static void _setModPlan( iOModPlan inst, iONode modplan ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "merging modplan attributes..." );
   wModPlan.settitle( data->modplan, wModPlan.gettitle(modplan) );
   wModPlan.setlocs( data->modplan, wModPlan.getlocs(modplan) );
-  wModPlan.setoccupation( data->modplan, wModPlan.getoccupation(modplan) );
   wModPlan.setroutes( data->modplan, wModPlan.getroutes(modplan) );
   wModPlan.setsavemodplan( data->modplan, wModPlan.issavemodplan(modplan) );
   wModPlan.setsavemodules( data->modplan, wModPlan.issavemodules(modplan) );

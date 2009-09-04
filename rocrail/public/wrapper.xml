@@ -120,6 +120,7 @@
   <rocrail structname="RRI" wrappername="RocRail">
     <var name="file" vt="string" defval="rocrail.ini" remark="RocRail ini-file."/>
     <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>
+    <var name="occupation" vt="string" defval="occ.xml" range="*" remark="File name of block occupations."/>
     <var name="createmodplan" vt="bool" defval="false" remark="Create a modplan if the planfile does not jet exist."/>
     <var name="libpath" vt="string" defval="." range="*" remark="Location of the rocrail libraries."/>
     <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
@@ -754,7 +755,6 @@
     <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of plan."/>
     <var name="locs" vt="string" defval="lc.xml" range="*" remark="File name of locomotive definitions."/>
     <var name="routes" vt="string" defval="rt.xml" range="*" remark="File name of route and schedule definitions."/>
-    <var name="occupation" vt="string" defval="occ.xml" range="*" remark="File name of block occupations."/>
     <var name="initfield" vt="bool" defval="false"/>
     <var name="modified" vt="bool" defval="false" remark="Flags module as modified by the GUI. (Internal use only)"/>
     <var name="savemodplan" vt="bool" defval="true" remark="Make sure locs and routes are in separate files and not part of a module!"/>
