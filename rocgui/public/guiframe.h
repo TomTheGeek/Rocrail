@@ -115,6 +115,7 @@ public:
   void setDigintText( const char* text );
   void OnInitField(wxCommandEvent& event);
   void OnEditMode(wxCommandEvent& event);
+  void OnEditModPlan(wxCommandEvent& event);
   void OnCtrlMode(wxCommandEvent& event);
   void OnNewUpdates(wxCommandEvent& event);
 
@@ -218,6 +219,8 @@ public:
 
   bool isEditMode() { return m_bEditMode; }
   void setEditMode( bool editmode ) { m_bEditMode = editmode; }
+  bool isEditModPlan() { return m_bEditModPlan; }
+  void setEditModPlan( bool editmodplan ) { m_bEditModPlan = editmodplan; }
   bool isAutoMode() { return m_bAutoMode; }
   bool isLocoBook() { return m_bLocoBook; }
   bool isFill() { return m_bFill; }
@@ -303,6 +306,7 @@ private:
 
   bool  showlogo;
   bool  m_bEditMode;
+  bool  m_bEditModPlan;
   bool  m_bAutoMode;
   wxMenuBar *menuBar;
   char* m_LocID;
@@ -363,6 +367,7 @@ enum
     ZLEVEL_EVENT_ADD,
     ZLEVEL_EVENT_REMOVE,
     ME_EditMode,
+    ME_EditModPlan,
     ME_CtrlMode,
     ME_EditLocs,
     ME_EditCars,

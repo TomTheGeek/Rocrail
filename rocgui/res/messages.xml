@@ -10441,4 +10441,7 @@
   <Msg id="crossingblocksignals">
     <en txt="Crossing block signals"/>
   </Msg>
+  <Msg id="editmodplan">
+    <en txt="Edit module plan" tip="Enable editting the module plan."/>
+  </Msg>
 </Messages>

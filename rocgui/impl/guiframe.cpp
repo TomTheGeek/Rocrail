@@ -241,6 +241,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_InitField      , RocGuiFrame::OnInitField)
     EVT_MENU( ME_TxShortIDs     , RocGuiFrame::OnTxShortIDs)
     EVT_MENU( ME_EditMode       , RocGuiFrame::OnEditMode)
+    EVT_MENU( ME_EditModPlan    , RocGuiFrame::OnEditModPlan)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
     EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
@@ -1185,6 +1186,7 @@ void RocGuiFrame::initFrame() {
   wxMenu *menuPanel = new wxMenu();
   menuPanel->AppendCheckItem(ME_CtrlMode, wxGetApp().getMenu("ctrlmode"), wxGetApp().getTip("ctrlmode") );
   menuPanel->AppendCheckItem(ME_EditMode, wxGetApp().getMenu("editmode"), wxGetApp().getTip("editmode") );
+  menuPanel->AppendCheckItem(ME_EditModPlan, wxGetApp().getMenu("editmodplan"), wxGetApp().getTip("editmodplan") );
   menuPanel->AppendSeparator();
   menuPanel->Append(ME_AddPanel, wxGetApp().getMenu("addpanel"), wxGetApp().getTip("addpanel") );
   menuPanel->Append(ME_PanelProps, wxGetApp().getMenu("panelprops"), wxGetApp().getTip("panelprops") );
@@ -2070,6 +2072,15 @@ void RocGuiFrame::OnEditMode( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EditMode is %s", m_bEditMode?"true":"false" );
 }
 
+void RocGuiFrame::OnEditModPlan( wxCommandEvent& event ) {
+  wxMenuItem* mi_editmodplan = menuBar->FindItem(ME_EditModPlan);
+  if( mi_editmodplan == NULL )
+    return;
+
+  m_bEditModPlan = mi_editmodplan->IsChecked();
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EditModPlan is %s", m_bEditModPlan?"true":"false" );
+}
+
 void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
   wxMenuItem* mi_ctrlmode = menuBar->FindItem(ME_CtrlMode);
   if( mi_ctrlmode == NULL )
@@ -2534,6 +2545,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( wxGetApp().isModView() ) {
     mi = menuBar->FindItem(ME_EditMode);
     if( mi != NULL ) mi->Enable( false );
+    mi = menuBar->FindItem(ME_EditModPlan);
+    if( mi != NULL ) mi->Enable( true );
     mi = menuBar->FindItem(ME_CtrlMode);
     if( mi != NULL ) mi->Enable( false );
     mi = menuBar->FindItem(ME_AddPanel);
@@ -2544,6 +2557,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   else {
     mi = menuBar->FindItem(ME_EditMode);
     if( mi != NULL ) mi->Enable( !m_bAutoMode );
+    mi = menuBar->FindItem(ME_EditModPlan);
+    if( mi != NULL ) mi->Enable( false );
     mi = menuBar->FindItem(ME_CtrlMode);
     if( mi != NULL ) mi->Enable( !m_bAutoMode );
     mi = menuBar->FindItem(ME_AddPanel);
