@@ -949,6 +949,11 @@ static Boolean _isSet( iORoute inst ) {
 }
 
 
+static Boolean _isSetCrossingblockSignals( iORoute inst, iOLoc loc ) {
+  iORouteData data = Data(inst);
+  return wRoute.iscrossingblocksignals( data->props );
+}
+
 
 static iORoute _inst( iONode props ) {
   iORoute     route = allocMem( sizeof( struct ORoute ) );

@@ -10438,4 +10438,7 @@
   <Msg id="interval">
     <en txt="Interval"/>
   </Msg>
+  <Msg id="crossingblocksignals">
+    <en txt="Crossing block signals"/>
+  </Msg>
 </Messages>

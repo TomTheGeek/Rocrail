@@ -50,6 +50,43 @@ void resetSignals(iOLcDriver inst ) {
 }
 
 
+void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean routefromto) {
+  iOLcDriverData data = Data(inst);
+  /* iterate all crossing blocks */
+  const char* bkc = wRoute.getbkc( route->base.properties(route) );
+  if( bkc != NULL && StrOp.len( bkc ) > 0 ) {
+    iOStrTok tok = StrTokOp.inst( bkc, ',' );
+
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* bk = StrTokOp.nextToken( tok );
+      iIBlockBase cblock = data->model->getBlock( data->model, bk );
+      if( cblock != NULL ) {
+
+        switch( aspect ) {
+        case WHITE_ASPECT:
+          cblock->white( cblock, True, !routefromto );
+          cblock->white( cblock, False, !routefromto );
+          break;
+        case GREEN_ASPECT:
+          cblock->green( cblock, True, !routefromto );
+          cblock->green( cblock, False, !routefromto );
+          break;
+        case YELLOW_ASPECT:
+          cblock->yellow( cblock, True, !routefromto );
+          cblock->yellow( cblock, False, !routefromto );
+          break;
+        case RED_ASPECT:
+          cblock->red( cblock, True, !routefromto );
+          cblock->red( cblock, False, !routefromto );
+          break;
+        }
+      }
+    }
+    StrTokOp.base.del(tok);
+
+  }
+}
+
 
 Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   iOLcDriverData data = Data(inst);
@@ -76,12 +113,22 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
           data->next1Route->getId(data->next1Route), data->next1RouteFromTo?"false":"true" );
       semaphore |= data->curBlock->white( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->white( data->curBlock, False, !data->next1RouteFromTo );
+
+      if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next1Route, WHITE_ASPECT, !data->next1RouteFromTo );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "setting signals for curBlock to green, reverse[%s]", data->next1RouteFromTo?"false":"true");
       semaphore |= data->curBlock->green( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->green( data->curBlock, False, !data->next1RouteFromTo );
+
+      if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next1Route, GREEN_ASPECT, !data->next1RouteFromTo );
+      }
     }
   }
 
@@ -99,14 +146,26 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
           data->next1Route->getId(data->next1Route), data->next1RouteFromTo?"false":"true" );
       semaphore |= data->curBlock->white( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->white( data->curBlock, False, !data->next1RouteFromTo );
+      if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next1Route, WHITE_ASPECT, !data->next1RouteFromTo );
+      }
     }
     else if( data->greenaspect ) {
       semaphore |= data->curBlock->green( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->green( data->curBlock, False, !data->next1RouteFromTo );
+      if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next1Route, GREEN_ASPECT, !data->next1RouteFromTo );
+      }
     }
     else {
       semaphore |= data->curBlock->yellow( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->yellow( data->curBlock, False, !data->next1RouteFromTo );
+      if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next1Route, YELLOW_ASPECT, !data->next1RouteFromTo );
+      }
     }
   }
 
@@ -131,10 +190,18 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
                    data->next2Route->getId(data->next2Route) );
       data->next1Block->white( data->next1Block, True, !data->next2RouteFromTo );
       data->next1Block->white( data->next1Block, False, !data->next2RouteFromTo );
+      if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next2Route, WHITE_ASPECT, !data->next2RouteFromTo );
+      }
     }
     else {
       data->next1Block->green( data->next1Block, True, !data->next2RouteFromTo );
       data->next1Block->green( data->next1Block, False, !data->next2RouteFromTo );
+      if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next2Route, GREEN_ASPECT, !data->next2RouteFromTo );
+      }
     }
   }
   else if( data->next1Block != NULL && data->next2Block != NULL &&
@@ -143,10 +210,18 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
     if( data->greenaspect ) {
       data->next1Block->green( data->next1Block, True, !data->next2RouteFromTo );
       data->next1Block->green( data->next1Block, False, !data->next2RouteFromTo );
+      if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next2Route, GREEN_ASPECT, !data->next2RouteFromTo );
+      }
     }
     else {
       data->next1Block->yellow( data->next1Block, True, !data->next2RouteFromTo );
       data->next1Block->yellow( data->next1Block, False, !data->next2RouteFromTo );
+      if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next1Route) ) {
+        /* Set the crossing block signals */
+        setCrossingblockSignals( inst, data->next2Route, YELLOW_ASPECT, !data->next2RouteFromTo );
+      }
     }
   }
   else if( data->next1Block != NULL )

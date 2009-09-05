@@ -939,6 +939,9 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="lc" vt="iOLoc" remark="Loco to check for permission."/>
     </fun>
+    <fun name="isSetCrossingblockSignals" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
       <var name="props" vt="iONode"/>

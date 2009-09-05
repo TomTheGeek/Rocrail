@@ -18,6 +18,13 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#define GREEN_ASPECT  0
+#define YELLOW_ASPECT 1
+#define RED_ASPECT    2
+#define WHITE_ASPECT  3
+
+void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean routefromto);
+
 void unlockBlockGroup( iOLcDriver inst, iONode group);
 void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute );
 void listBlocks(iOLcDriver inst);
