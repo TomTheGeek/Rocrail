@@ -863,7 +863,12 @@ static void __transactor( void* threadinst ) {
     dsize = 0;
     ok = False;
     if( !data->dummyio && SerialOp.available(data->serial) ) {
-      ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
+
+      do {
+        /* check if it is the start of the datagram */
+        ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
+      } while( ok && (rbuffer[0] & 0x80 != 0) && SerialOp.available(data->serial) );
+
 
       if( ok ) {
         dsize = rbuffer[0] & CNT_MASK;
