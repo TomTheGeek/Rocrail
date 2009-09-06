@@ -1326,14 +1326,14 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
 static void _go( iOLoc inst ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
-  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 ) {
+  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
     data->go = True;
     data->gomanual = False;
     if( data->driver != NULL )
       data->driver->go( data->driver, data->gomanual );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "current block not set for [%s]", LocOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no chance to start [%s]", LocOp.getId(inst) );
   }
 }
 
