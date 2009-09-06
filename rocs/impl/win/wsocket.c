@@ -499,7 +499,7 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       o->rc = errno;
       o->broken = True;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Other side has closed connection." );
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "errno=%d, readed=%d", errno, readed );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "errno=%d, read=%d", errno, readed );
       return False;
     }
 
@@ -507,7 +507,7 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       o->rc = WSAGetLastError();
       o->peeked = readed;
       if( readed == -1 && o->rc != 0 && o->rc != WSAETIMEDOUT && o->rc != WSAEINTR && o->rc != WSAEWOULDBLOCK ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*broken* errno=%d, rc=%d, readed=%d", errno, o->rc, readed );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*broken* errno=%d, rc=%d, read=%d", errno, o->rc, readed );
         o->broken = True;
       }
         /* WinSock problems: http://sources.redhat.com/ml/cygwin/2001-08/msg00628.html
@@ -528,14 +528,14 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       if( o->rc == WSAEWOULDBLOCK || o->rc == WSAESHUTDOWN || o->rc == WSAENOTSOCK || o->rc == WSAETIMEDOUT )
         rocs_socket_close(o);
 
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recv() failed [%d] size=%d readed=%d", o->rc, size, treaded );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recv() failed [%d] size=%d read=%d", o->rc, size, treaded );
       return False;
     }
     treaded += readed;
   }
   o->readed = treaded;
   if( treaded > 1 )
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes readed from socket.", treaded );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes read from socket.", treaded );
 #endif
   return True;
 }

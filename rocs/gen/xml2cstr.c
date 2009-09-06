@@ -102,7 +102,7 @@ int main( int argc, const char* argv[] ) {
             }
           }
           else {
-            TraceOp.println( "Error reading [%]! readed=%ld infileLen=%ld", argv[1], readed, infileLen );
+            TraceOp.println( "Error reading [%]! read=%ld infileLen=%ld", argv[1], readed, infileLen );
             break;
           }
         }

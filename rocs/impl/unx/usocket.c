@@ -644,8 +644,8 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
     if( readed == 0 ) {
       o->rc = errno;
       o->broken = True;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Other side has closed connection.", errno, readed );
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "errno=%d, readed=%d", errno, readed );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Other side has closed connection." );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "errno=%d, read=%d", errno, readed );
       return False;
     }
 
@@ -686,7 +686,7 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
   }
   o->readed = treaded;
   if( treaded > 1 )
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes readed from socket.", treaded );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d bytes read from socket.", treaded );
   return True;
 #else
   return False;

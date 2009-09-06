@@ -601,7 +601,7 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
   if( size > readed && rc == 0 && o->rc == 0 ) {
     timeout = True;
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-                 "***READ TIMEOUT*** size=%d rc=%d readed=%d errno=%d tries=%d",
+                 "***READ TIMEOUT*** size=%d rc=%d read=%d errno=%d tries=%d",
                  size, rc, readed, o->rc, tries );
   }
 
@@ -609,7 +609,7 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
     level = TRCLEVEL_EXCEPTION;
 
   TraceOp.trc( name, level, __LINE__, 9999,
-               "%s size=%d rc=%d readed=%d errno=%d",
+               "%s size=%d rc=%d read=%d errno=%d",
                (timeout?"***READ TIMEOUT***":"read"), size, rc, readed, o->rc );
   return readed == size ? True:False;
 #else

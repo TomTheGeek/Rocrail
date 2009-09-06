@@ -884,7 +884,7 @@ static void __sprogReader( void* threadinst ) {
             idx = 0;
             StrOp.replaceAll( in, '\n', ' ' );
             StrOp.replaceAll( in, '\r', ' ' );
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG readed: [%s]", in );
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG read: [%s]", in );
             __handleResponse(sprog, in);
             in[idx] = '\0';
           }
