@@ -53,9 +53,11 @@
 <ope date="733588" amount="15" account="0" dst_account="0" paymode="4" flags="2" payee="0" category="5" wording="Donation" info="VOLKER HANCHEN"/>
 <ope date="733589" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Vincent Stallbaum"/>
 <ope date="733592" amount="-243" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="Apple Mini" info="Development for Mac OSX"/>
+<ope date="733596" amount="-13.99" account="0" dst_account="0" paymode="3" flags="1" payee="5" category="4" wording="DVD-R" info="Mac support"/>
 <ope date="733599" amount="-44.990000000000002" account="0" dst_account="0" paymode="4" flags="1" payee="5" category="4" wording="Extra Memory for Mac Mini" info="Mac Support"/>
+<ope date="733602" amount="-22.949999999999999" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="AppleScripting" info="Mac support"/>
 <ope date="733629" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Meiko van Lessen"/>
 <ope date="733633" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="2" wording="ManagedHosting S" info="6 Months"/>
-<ope date="733596" amount="-13.99" account="0" dst_account="0" paymode="3" flags="1" payee="5" category="4" wording="DVD-R" info="Mac support"/>
-<ope date="733602" amount="-22.949999999999999" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="AppleScripting" info="Mac support"/>
+<ope date="733655" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Onno Rietveld"/>
+<ope date="733648" amount="-12.31" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="Domain rocrail.net" info="One year registration fee"/>
 </homebank>
