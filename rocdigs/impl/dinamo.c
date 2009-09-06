@@ -870,7 +870,7 @@ static void __transactor( void* threadinst ) {
       } while( ok && (rbuffer[0] & 0x80 != 0) && SerialOp.available(data->serial) );
 
 
-      if( ok  && (rbuffer[0] & 0x80 != 0 ) ) {
+      if( ok  && (rbuffer[0] & 0x80 == 0 ) ) {
         dsize = rbuffer[0] & CNT_MASK;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "number of waiting data bytes = %d", dsize );
         if( dsize <= 7 ) {
