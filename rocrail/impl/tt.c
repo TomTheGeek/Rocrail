@@ -386,7 +386,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no command sended" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no command sent" );
   }
 
   /* Cleanup Node1 */

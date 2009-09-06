@@ -886,6 +886,9 @@ static void __transactor( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "number of data bytes exceeds allowed quantity! %d", dsize );
         }
       }
+      else {
+        ok = False;
+      }
     }
 
 
@@ -1028,7 +1031,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
 
     SerialOp.setFlow( data->serial, -1 );
     SerialOp.setLine( data->serial, 19200, 8, 1, odd );
-    SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
+    SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), 200 );
   }
 
 

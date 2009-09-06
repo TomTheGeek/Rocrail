@@ -331,9 +331,9 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
   }
 
   if( o->blocking && sended != size )
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] %d of %d sended.[rc=%d]", o->device, sended, size, rc );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] %d of %d sent.[rc=%d]", o->device, sended, size, rc );
   else
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] %d sended.[rc=%d]", o->device, sended, rc );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] %d sent.[rc=%d]", o->device, sended, rc );
   if (rc != ERROR_IO_PENDING) {
     o->ioState = ok;
     o->rc = rc;
