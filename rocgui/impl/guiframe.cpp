@@ -2993,12 +2993,10 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnCellLeftClick %s", (const char*)str.mb_str(wxConvUTF8) );
     iONode lc = findLoc(str.mb_str(wxConvUTF8));
 
-
-    /* TODO: make this optional */
-    if( event.GetCol() == LOC_COL_MODE)
+    // Dispatching Throttle in the mode column if dispatchmode is on
+    if( event.GetCol() == LOC_COL_MODE && wGui.isdispatchmode( m_Ini )) {
       OnLocDispatch( event);
-
-
+    }
 
     m_LC->setLocProps( lc );
 
