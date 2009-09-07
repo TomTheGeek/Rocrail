@@ -173,6 +173,7 @@ public:
     wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_Modview;
+    wxCheckBox* m_DispatchMode;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

@@ -81,6 +81,7 @@
     <var name="id" vt="string" defval="rocgui" range="*" remark="Rocgui ID"/>
     <var name="lncvtab" vt="bool" defval="false"/>
     <var name="jssupport" vt="bool" defval="true"/>
+    <var name="dispathmode" vt="bool" defval="false"/>
     <trace extern="true"/>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>
