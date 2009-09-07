@@ -814,6 +814,7 @@ static void __transactor( void* threadinst ) {
   iODINAMOData data = Data(dinamo);
   Boolean        ok = True;
 
+  byte dummydata[] = {0xFF, 2 | VER3_FLAG, SYS_CMD, SYS_RESET_FAULT, 0};
   byte wbuffer[32];
   byte rbuffer[32];
   int wsize = 0; /* request size  */
@@ -821,6 +822,8 @@ static void __transactor( void* threadinst ) {
 
   ThreadOp.setDescription( th, "Transactor for Dinamo 3.x" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started: the datagram pump." );
+  
+  dummydata[4] = __generateChecksum(dummydata+1);
 
   __flush( dinamo );
 
@@ -862,31 +865,45 @@ static void __transactor( void* threadinst ) {
     /* check if there is a response waiting: */
     dsize = 0;
     ok = False;
-    if( !data->dummyio && SerialOp.available(data->serial) ) {
+    if( (!data->dummyio && SerialOp.available(data->serial)) || data->dummyio ) {
 
-      do {
-        /* check if it is the start of the datagram */
-        ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
-      } while( ok && (rbuffer[0] & 0x80 != 0) && SerialOp.available(data->serial) );
+      if( data->dummyio ) {
+        MemOp.copy( rbuffer, dummydata, 4 );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "**dummyio**" );
+        ok = True;
+        while( (rbuffer[0] & 0x80) != 0  ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no start byte: 0x%02X", rbuffer[0]);
+          MemOp.copy( rbuffer, dummydata + 1, 4 );
+        };
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "start byte: 0x%02X", rbuffer[0]);
+      }
+      else {
+        do {
+          /* check if it is the start of the datagram */
+          ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
+        } while( ok && (rbuffer[0] & 0x80) != 0 && SerialOp.available(data->serial) );
+      }
 
-
-      if( ok  && (rbuffer[0] & 0x80 == 0 ) ) {
+      if( ok  && (rbuffer[0] & 0x80) == 0 ) {
         dsize = rbuffer[0] & CNT_MASK;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "number of waiting data bytes = %d", dsize );
         if( dsize <= 7 ) {
           int ismore = 0;
-          ok = SerialOp.read( data->serial, (char*)rbuffer+1, dsize+1 );
-          if( dsize > 0 )
-            TraceOp.dump( "cmdrsp", TRCLEVEL_BYTE, (char*)rbuffer, dsize + 2 );
-          ismore = SerialOp.available(data->serial);
-          if( ismore > 0 )
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "more bytes in read buffer! %d", ismore );
+          if( !data->dummyio ) {
+            ok = SerialOp.read( data->serial, (char*)rbuffer+1, dsize+1 );
+            if( dsize > 0 )
+              TraceOp.dump( "cmdrsp", TRCLEVEL_BYTE, (char*)rbuffer, dsize + 2 );
+            ismore = SerialOp.available(data->serial);
+            if( ismore > 0 )
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "more bytes in read buffer! %d", ismore );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "number of data bytes exceeds allowed quantity! %d", dsize );
         }
       }
       else {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no startbyte = 0x%02X  rbuffer[0] & 0x80 = 0x%02X (ok=%d)", rbuffer[0], (rbuffer[0] & 0x80), ok );
         ok = False;
       }
     }
@@ -929,7 +946,7 @@ static void __transactor( void* threadinst ) {
 
 
     /* Give up timeslize: */
-    ThreadOp.sleep( 1 );
+    ThreadOp.sleep( data->dummyio?1000:1 );
   } while( data->run );
 
 
