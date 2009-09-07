@@ -485,7 +485,6 @@ enum {
   LOC_COL_V = 3,
   LOC_COL_MODE = 4,
   LOC_COL_DESTBLOCK = 5,
-  LOC_COL_DISPATCH = 6,
 
 };
 

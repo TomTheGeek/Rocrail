@@ -734,12 +734,6 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxALIGN_LEFT, wxALIGN_CENTRE );
 
-        /* jmf */
-        m_ActiveLocs->SetCellBackgroundColour(m_ActiveLocs->GetNumberRows()-1, LOC_COL_DISPATCH, wxColour(100,200,100) );
-
-        //wxBitmap bitmap = wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG);
-        //m_ActiveLocs->SetCellBitmap( &bitmap, m_ActiveLocs->GetNumberRows()-1, LOC_COL_DISPATCH);
-
         char* val = StrOp.fmt( "%d", wLoc.getaddr( lc ) );
         m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, wxString(val,wxConvUTF8) );
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, true );
@@ -1586,10 +1580,7 @@ void RocGuiFrame::create() {
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-  /* jmf */
-  m_ActiveLocs->CreateGrid(0, 7, wxGrid::wxGridSelectRows);
-  /* jmf */
-  //m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
+m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
   //wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
   //font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
@@ -1602,9 +1593,6 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_V, _("V__") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
-  /* jmf */
-  m_ActiveLocs->SetColLabelValue(LOC_COL_DISPATCH, _("D") );
-  /* jmf */
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
@@ -3006,10 +2994,10 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     iONode lc = findLoc(str.mb_str(wxConvUTF8));
 
 
-    /* jmf */
-    if( event.GetCol() == LOC_COL_DISPATCH)
+    /* TODO: make this optional */
+    if( event.GetCol() == LOC_COL_MODE)
       OnLocDispatch( event);
-    /* jmf */
+
 
 
     m_LC->setLocProps( lc );
