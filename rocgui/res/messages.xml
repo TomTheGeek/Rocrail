@@ -10635,4 +10635,7 @@
   <Msg id="editmodplan">
     <en txt="Edit module plan" tip="Enable editting the module plan."/>
   </Msg>
+  <Msg id="dispatchmode">
+    <en txt="Use mode column to dispatch"/>
+  </Msg>
 </Messages>
