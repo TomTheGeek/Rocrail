@@ -819,6 +819,8 @@ static void __transactor( void* threadinst ) {
   byte rbuffer[32];
   int wsize = 0; /* request size  */
   int dsize = 0; /* data size     */
+  int timer = 0;
+  Boolean startup = True;
 
   ThreadOp.setDescription( th, "Transactor for Dinamo 3.x" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started: the datagram pump." );
@@ -828,6 +830,8 @@ static void __transactor( void* threadinst ) {
   __flush( dinamo );
 
   ThreadOp.setHigh( th );
+  
+  timer = SystemOp.getTick();
 
   do {
     obj post = NULL;
@@ -855,11 +859,15 @@ static void __transactor( void* threadinst ) {
     }
 
     else if( !data->dummyio && !SerialOp.available(data->serial) ) {
-      byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
-      /* Send NULL datagram to signal Rocrail is still a live: */
-      wsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
-      TraceOp.dump( "nullreq", TRCLEVEL_DEBUG, (char*)lbuffer, wsize );
-      SerialOp.write( data->serial, (char*)lbuffer, wsize );
+      if( startup || SystemOp.getTick() - timer >= 20 ) {
+        byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
+        /* Send NULL datagram to signal Rocrail is still a live: */
+        wsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
+        TraceOp.dump( "nullreq", TRCLEVEL_DEBUG, (char*)lbuffer, wsize );
+        SerialOp.write( data->serial, (char*)lbuffer, wsize );
+        timer = SystemOp.getTick();
+        startup = False;
+      }
     }
 
     /* check if there is a response waiting: */
@@ -942,6 +950,7 @@ static void __transactor( void* threadinst ) {
         __checkResponse( dinamo, rbuffer );
       }
 
+      timer = SystemOp.getTick();
     }
 
 
