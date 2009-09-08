@@ -377,20 +377,23 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( !__acceptGhost((obj)inst) ) {
         int tl = TRCLEVEL_USER1;
-        tl = TRCLEVEL_EXCEPTION;
-        /* power off */
-        AppOp.stop();
-        /* broadcast ghost state */
+
+        if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          /* power off */
+          AppOp.stop();
+          /* broadcast ghost state */
+          data->ghost = True;
+          {
+            iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+            wBlock.setid( nodeD, data->id );
+            wBlock.setstate( nodeD, wBlock.ghost );
+            wBlock.setlocid( nodeD, data->locId );
+            ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          }
+          tl = TRCLEVEL_EXCEPTION;
+        }
         TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%d",
             data->id, key, ident );
-        data->ghost = True;
-        {
-          iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-          wBlock.setid( nodeD, data->id );
-          wBlock.setstate( nodeD, wBlock.ghost );
-          wBlock.setlocid( nodeD, data->locId );
-          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-        }
 
       }
     }

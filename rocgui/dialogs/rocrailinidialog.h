@@ -283,6 +283,7 @@ public:
     wxCheckBox* m_SkipSetSw;
     wxCheckBox* m_UseBiCom;
     wxCheckBox* m_StopAtIdentMisMatch;
+    wxCheckBox* m_PowerOffAtGhost;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

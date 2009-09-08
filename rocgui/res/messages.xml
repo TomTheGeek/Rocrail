@@ -10638,4 +10638,7 @@
   <Msg id="dispatchmode">
     <en txt="Use mode column to dispatch"/>
   </Msg>
+  <Msg id="poweroffatghost">
+    <en txt="Power off at ghost train"/>
+  </Msg>
 </Messages>
