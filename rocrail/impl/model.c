@@ -2803,10 +2803,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                    "found an ALT block [%s] for [%s] in the wanted direction",
                                    blockId, LocOp.getId( loc ) );
-                    blockBest = block;
-                    routeBest = route;
-                    ListOp.add( fitBlocks, (obj)block );
-                    ListOp.add( fitRoutes, (obj)route );
+                    blockAlt = block;
+                    routeAlt = route;
+                    ListOp.add( altBlocks, (obj)block );
+                    ListOp.add( altRoutes, (obj)route );
                   }
                   else if( dirOK && !forceSameDir ) {
                     /* wrong direction alternative */
