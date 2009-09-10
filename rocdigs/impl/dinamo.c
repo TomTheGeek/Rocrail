@@ -720,6 +720,9 @@ static Boolean __checkResponse( iODINAMO dinamo, byte* rbuffer ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%c] response 0x%02X received", fault, commandoR );
       }
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "null datagram received" );
+    }
   }
   return True;
 }
@@ -890,7 +893,7 @@ static void __transactor( void* threadinst ) {
           int ismore = 0;
           if( !data->dummyio ) {
             ok = SerialOp.read( data->serial, (char*)rbuffer+1, dsize+1 );
-            if( dsize > 0 ) {
+            if( ok ) {
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read in buffer:", dsize + 2 );
               TraceOp.dump( "cmdrsp", TRCLEVEL_BYTE, (char*)rbuffer, dsize + 2 );
             }
@@ -920,7 +923,7 @@ static void __transactor( void* threadinst ) {
     }
 
 
-    if( ok && dsize > 0 ) {
+    if( ok ) {
 
       /* check for events: */
 
