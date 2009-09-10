@@ -18,7 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 /** ------------------------------------------------------------
-  * Dinamo: http://home.hccnet.nl/leon.van.perlo/
+  * Dinamo: http://dinamo.vanperlo.net
   *   Supports version 3.x of the Dinamo protocol.
   * ------------------------------------------------------------
   */
@@ -129,7 +129,7 @@ static int __generateChecksum( byte* datagram ) {
   int i = 0;
 
   /* trace the datagram */
-  TraceOp.dump( "datagram", TRCLEVEL_BYTE, (char*)datagram, cnt+1 );
+  TraceOp.dump( "datagram", TRCLEVEL_DEBUG, (char*)datagram, cnt+1 );
 
   toggle ^= TOGGLE_FLAG;
   toggle &= TOGGLE_FLAG;
@@ -680,9 +680,7 @@ static int __translateNode2Datagram( iODINAMO dinamo, iONode node, byte* datagra
 static Boolean __checkResponse( iODINAMO dinamo, byte* rbuffer ) {
   iODINAMOData data = Data(dinamo);
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Checking response..." );
-
-  if( __controlChecksum( rbuffer ) ) {
-    /* TODO: */
+  {
     int cnt = rbuffer[0] & CNT_MASK;
     char fault = (rbuffer[0]& FAULT_FLAG)?'F':'-';
     if( cnt > 0 ) {
@@ -720,14 +718,8 @@ static Boolean __checkResponse( iODINAMO dinamo, byte* rbuffer ) {
       else {
         /* none system command */
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%c] response 0x%02X received", fault, commandoR );
-        return True;
       }
     }
-
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "invalid checksum!" );
-    return False;
   }
   return True;
 }
@@ -814,19 +806,18 @@ static void __transactor( void* threadinst ) {
   iODINAMOData data = Data(dinamo);
   Boolean        ok = True;
 
-  byte dummydata[] = {0xFF, 2 | VER3_FLAG, SYS_CMD, SYS_RESET_FAULT, 0};
+  byte lastdatagram[32];
+  int lastdatagramsize = 0;
+  
   byte wbuffer[32];
   byte rbuffer[32];
   int wsize = 0; /* request size  */
   int dsize = 0; /* data size     */
   int timer = 0;
-  Boolean startup = True;
 
   ThreadOp.setDescription( th, "Transactor for Dinamo 3.x" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started: the datagram pump." );
   
-  dummydata[4] = __generateChecksum(dummydata+1);
-
   __flush( dinamo );
 
   ThreadOp.setHigh( th );
@@ -837,60 +828,60 @@ static void __transactor( void* threadinst ) {
     obj post = NULL;
 
     /* get next node */
-    post = ThreadOp.getPost( th );
-    if( post != NULL ) {
-      iONode node = (iONode)post;
-      Boolean responseExpected = False;
+    if( lastdatagramsize == 0 ) {
+      post = ThreadOp.getPost( th );
+      if( post != NULL ) {
+        iONode node = (iONode)post;
+        Boolean responseExpected = False;
 
-      /* create datagram from node and send to Dinamo: */
-      wsize = __translateNode2Datagram( dinamo, node, wbuffer, &responseExpected );
+        /* create datagram from node and send to Dinamo: */
+        wsize = __translateNode2Datagram( dinamo, node, wbuffer, &responseExpected );
 
-      if( responseExpected ) {
-        /* TODO: put the request in al list to be wached for a matching response. */
+        if( responseExpected ) {
+          /* TODO: put the request in al list to be wached for a matching response. */
+        }
+        if( wsize > 0 ) {
+          TraceOp.dump( "cmdreq", TRCLEVEL_BYTE, (char*)wbuffer, wsize );
+          MemOp.copy(lastdatagram, wbuffer, wsize);
+          lastdatagramsize = wsize;
+          if( !data->dummyio )
+            SerialOp.write( data->serial, (char*)wbuffer, wsize );
+        }
+
+        /* Cleanup: endstation for all nodes. */
+        node->base.del( node );
       }
-      if( wsize > 0 ) {
-        TraceOp.dump( "cmdreq", TRCLEVEL_BYTE, (char*)wbuffer, wsize );
-        if( !data->dummyio )
-          SerialOp.write( data->serial, (char*)wbuffer, wsize );
-      }
-
-      /* Cleanup: endstation for all nodes. */
-      node->base.del( node );
     }
 
-    else if( !data->dummyio && !SerialOp.available(data->serial) ) {
-      if( startup || SystemOp.getTick() - timer >= 20 ) {
-        byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
-        /* Send NULL datagram to signal Rocrail is still a live: */
-        wsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
-        TraceOp.dump( "nullreq", TRCLEVEL_DEBUG, (char*)lbuffer, wsize );
-        SerialOp.write( data->serial, (char*)lbuffer, wsize );
+    if( !data->dummyio && !SerialOp.available(data->serial) ) {
+      if( SystemOp.getTick() - timer >= 20 ) {
+        if( lastdatagramsize > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d", lastdatagramsize );
+          TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
+          SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
+        }
+        else {
+          int  lsize = 0;
+          byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
+          /* Send NULL datagram to signal Rocrail is still a live: */
+          lsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
+          TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
+          SerialOp.write( data->serial, (char*)lbuffer, lsize );
+        }
         timer = SystemOp.getTick();
-        startup = False;
       }
     }
 
     /* check if there is a response waiting: */
     dsize = 0;
     ok = False;
-    if( (!data->dummyio && SerialOp.available(data->serial)) || data->dummyio ) {
+    if( (!data->dummyio && SerialOp.available(data->serial)) ) {
 
-      if( data->dummyio ) {
-        MemOp.copy( rbuffer, dummydata, 4 );
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "**dummyio**" );
-        ok = True;
-        while( (rbuffer[0] & 0x80) != 0  ) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no start byte: 0x%02X", rbuffer[0]);
-          MemOp.copy( rbuffer, dummydata + 1, 4 );
-        };
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "start byte: 0x%02X", rbuffer[0]);
-      }
-      else {
-        do {
-          /* check if it is the start of the datagram */
-          ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
-        } while( ok && (rbuffer[0] & 0x80) != 0 && SerialOp.available(data->serial) );
-      }
+      do {
+        /* check if it is the start of the datagram */
+        ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
+      } while( ok && (rbuffer[0] & 0x80) != 0 && SerialOp.available(data->serial) );
 
       if( ok  && (rbuffer[0] & 0x80) == 0 ) {
         dsize = rbuffer[0] & CNT_MASK;
@@ -899,8 +890,10 @@ static void __transactor( void* threadinst ) {
           int ismore = 0;
           if( !data->dummyio ) {
             ok = SerialOp.read( data->serial, (char*)rbuffer+1, dsize+1 );
-            if( dsize > 0 )
+            if( dsize > 0 ) {
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read in buffer:", dsize + 2 );
               TraceOp.dump( "cmdrsp", TRCLEVEL_BYTE, (char*)rbuffer, dsize + 2 );
+            }
             ismore = SerialOp.available(data->serial);
             if( ismore > 0 )
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "more bytes in read buffer! %d", ismore );
@@ -917,13 +910,17 @@ static void __transactor( void* threadinst ) {
     }
 
 
+    /* verify checksum: */
+    if( ok ) {
+      ok = __controlChecksum( rbuffer );
+    }
     /* check flags of header byte: */
     if( ok ) {
       __checkFlags( dinamo, rbuffer );
     }
 
 
-    if( dsize > 0 && ok ) {
+    if( ok && dsize > 0 ) {
 
       /* check for events: */
 
@@ -948,6 +945,7 @@ static void __transactor( void* threadinst ) {
         /* if no response will come within 2 seconds: Panic!
            Maybe switched off or lost connection? */
         __checkResponse( dinamo, rbuffer );
+        lastdatagramsize = 0;
       }
 
       timer = SystemOp.getTick();
@@ -1066,7 +1064,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
     data->run = True;
     data->transactor = ThreadOp.inst( "transactor", &__transactor, __DINAMO );
     ThreadOp.start( data->transactor );
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( 100 );
 
     { /* request dinamo version: */
       iONode cmd = NULL;
