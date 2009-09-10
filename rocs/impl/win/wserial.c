@@ -143,7 +143,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
       dcb.fInX              = o->line.flow == xon ? True:False;
       dcb.fErrorChar        = False;
       dcb.fNull             = False;
-      dcb.fRtsControl       = RTS_CONTROL_HANDSHAKE;
+      dcb.fRtsControl       = o->line.flow == cts ? RTS_CONTROL_HANDSHAKE:RTS_CONTROL_DISABLE;
       dcb.fAbortOnError     = False;
       dcb.wReserved         = 0;
       dcb.ByteSize          = o->line.bits;
