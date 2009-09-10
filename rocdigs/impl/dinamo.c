@@ -948,7 +948,8 @@ static void __transactor( void* threadinst ) {
         /* if no response will come within 2 seconds: Panic!
            Maybe switched off or lost connection? */
         __checkResponse( dinamo, rbuffer );
-        lastdatagramsize = 0;
+        if( dsize > 0 )
+          lastdatagramsize = 0;
       }
 
       timer = SystemOp.getTick();
