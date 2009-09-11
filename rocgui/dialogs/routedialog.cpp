@@ -148,6 +148,14 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
   m_Props = p_Props;
 
   initLabels();
+
+  m_IndexPanel->GetSizer()->Layout();
+  m_GeneralPanel->GetSizer()->Layout();
+  m_CommandPanel->GetSizer()->Layout();
+  m_Notebook->Fit();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
   initIndex();
 
   if( m_Props != NULL ) {
@@ -157,12 +165,6 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
     wxPostEvent( this, event );
   }
 
-  m_IndexPanel->GetSizer()->Layout();
-  m_GeneralPanel->GetSizer()->Layout();
-  m_CommandPanel->GetSizer()->Layout();
-  m_Notebook->Fit();
-  GetSizer()->Fit(this);
-  GetSizer()->SetSizeHints(this);
 }
 
 void RouteDialog::OnSelectPage(wxCommandEvent& event) {

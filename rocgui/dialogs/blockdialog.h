@@ -90,7 +90,6 @@ class wxSpinCtrl;
 #define ID_BUTTON_BK_SIGNAL_R 10012
 #define ID_BUTTON_BK_WSIGNAL_R 10015
 #define ID_PANEL_BK_DETAILS 10065
-#define ID_RADIOBOX_BK_TYPE 10073
 #define ID_RADIOBOX_BK_INCLINE 10074
 #define ID_RADIOBOX_BK_WAIT 10075
 #define wxID_STATIC_BK_RANDOM_MIN 10076
@@ -101,6 +100,7 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_BK_FIXED 10028
 #define ID_RADIOBOX_BK_SPEED 10072
 #define ID_SPINCTRL1 10317
+#define ID_RADIOBOX_BK_TYPE 10073
 #define ID_PANEL_BK_ROUTES 10080
 #define ID_LISTBOX_BK_ROUTES 10034
 #define wxID_STATIC_SENSORS_TITLE 10261
@@ -341,7 +341,6 @@ public:
     wxComboBox* m_WSignalR;
     wxButton* m_WSignalPropsR;
     wxPanel* m_PanelDetails;
-    wxRadioBox* m_Type;
     wxRadioBox* m_Incline;
     wxRadioBox* m_Wait;
     wxStaticBoxSizer* m_WaitDetails;
@@ -361,6 +360,7 @@ public:
     wxRadioBox* m_Speed;
     wxSpinCtrl* m_SpeedPercent;
     wxRadioBox* m_ExitSpeed;
+    wxRadioBox* m_Type;
     wxPanel* m_RoutesPanel;
     wxListBox* m_Routes;
     wxStaticText* m_LabelSensorsFromBlock;

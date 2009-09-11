@@ -106,6 +106,14 @@ SwitchDialog::SwitchDialog( wxWindow* parent, iONode p_Props )
   m_Props = p_Props;
 
   initLabels();
+  m_IndexPanel->GetSizer()->Layout();
+  m_GeneralPanel->GetSizer()->Layout();
+  m_LocationPanel->GetSizer()->Layout();
+  m_InterfacePanel->GetSizer()->Layout();
+  m_WireringPanel->GetSizer()->Layout();
+  m_Notebook->Fit();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
   initIndex();
 
   if( m_Props != NULL ) {
@@ -115,14 +123,6 @@ SwitchDialog::SwitchDialog( wxWindow* parent, iONode p_Props )
     wxPostEvent( this, event );
   }
 
-  m_IndexPanel->GetSizer()->Layout();
-  m_GeneralPanel->GetSizer()->Layout();
-  m_LocationPanel->GetSizer()->Layout();
-  m_InterfacePanel->GetSizer()->Layout();
-  m_WireringPanel->GetSizer()->Layout();
-  m_Notebook->Fit();
-  GetSizer()->Fit(this);
-  GetSizer()->SetSizeHints(this);
 }
 
 void SwitchDialog::OnSelectPage(wxCommandEvent& event) {

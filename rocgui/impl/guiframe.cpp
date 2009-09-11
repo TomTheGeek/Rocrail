@@ -2271,10 +2271,8 @@ void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditOperators( wxCommandEvent& event ) {
   OperatorDlg* dlg = new OperatorDlg(this, NULL);
-  if( wxID_OK == dlg->ShowModal() ) {
-    /* Notify Notebook. */
-  }
-  dlg->Destroy();
+  dlg->Show(TRUE);
+
 }
 
 void RocGuiFrame::OnEditWaybills( wxCommandEvent& event ) {

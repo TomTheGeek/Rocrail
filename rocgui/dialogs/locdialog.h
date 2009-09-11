@@ -322,12 +322,12 @@ public:
     wxTextCtrl* m_RunTime;
     wxStaticText* m_labMTime;
     wxTextCtrl* m_MTime;
+    wxCheckBox* m_Show;
     wxButton* m_Serviced;
     wxStaticText* m_labMInt;
     wxSpinCtrl* m_MInt;
     wxStaticText* m_labRemark;
     wxTextCtrl* m_Remark;
-    wxCheckBox* m_Show;
     wxPanel* m_Interface_Panel;
     wxStaticText* m_Label_Address;
     wxTextCtrl* m_Address;

@@ -140,6 +140,11 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
   m_EntryPropsList = ListOp.inst();
 
   initLabels();
+  m_Index->GetSizer()->Layout();
+  m_Destinations->GetSizer()->Layout();
+  m_NoteBook->Fit();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
   initIndex();
 
   if( m_Props != NULL ) {
@@ -148,11 +153,6 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
     wxPostEvent( this, event );
   }
 
-  m_Index->GetSizer()->Layout();
-  m_Destinations->GetSizer()->Layout();
-  m_NoteBook->Fit();
-  GetSizer()->Fit(this);
-  GetSizer()->SetSizeHints(this);
 }
 /* comparator for sorting by id: */
 static int __sortStr(obj* _a, obj* _b)

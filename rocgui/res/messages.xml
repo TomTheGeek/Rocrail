@@ -10641,4 +10641,22 @@
   <Msg id="poweroffatghost">
     <en txt="Power off at ghost train"/>
   </Msg>
+  <Msg id="timer">
+    <en txt="Timer"/>
+  </Msg>
+  <Msg id="switch">
+    <en txt="Switch"/>
+  </Msg>
+  <Msg id="system">
+    <en txt="System"/>
+  </Msg>
+  <Msg id="locomotive">
+    <en txt="Locomotive"/>
+  </Msg>
+  <Msg id="modules">
+    <en txt="Modules"/>
+  </Msg>
+  <Msg id="district">
+    <en txt="District"/>
+  </Msg>
 </Messages>

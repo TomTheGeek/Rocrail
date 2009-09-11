@@ -108,14 +108,7 @@ FeedbackDialog::FeedbackDialog( wxWindow* parent, iONode p_Props )
   m_Props = p_Props;
 
   initLabels();
-  initIndex();
-  m_Delete->Enable( false ); // ToDo
-  if( m_Props != NULL ) {
-    initValues();
-    //m_Notebook->SetSelection( 1 );
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_FB_GENERAL );
-    wxPostEvent( this, event );
-  }
+
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
@@ -126,6 +119,15 @@ FeedbackDialog::FeedbackDialog( wxWindow* parent, iONode p_Props )
   m_Notebook->Fit();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
+
+  initIndex();
+  m_Delete->Enable( false ); // ToDo
+  if( m_Props != NULL ) {
+    initValues();
+    //m_Notebook->SetSelection( 1 );
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_FB_GENERAL );
+    wxPostEvent( this, event );
+  }
 }
 
 void FeedbackDialog::OnSelectPage(wxCommandEvent& event) {
