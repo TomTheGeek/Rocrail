@@ -967,6 +967,7 @@
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="locid" vt="const char*" remark="Unlocking locid"/>
+      <param name="route" vt="iORoute" remark="Route instance"/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Switch instance"/>

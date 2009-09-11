@@ -600,7 +600,7 @@ static Boolean __unlockSwitches( iORoute inst, const char* locId ) {
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
       if( isw != NULL ) {
-        if( !SwitchOp.unLock( isw, locId ) )
+        if( !SwitchOp.unLock( isw, locId, inst ) )
           ok = False;
       }
     }
