@@ -246,11 +246,11 @@ void LocSelDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_LocImageIndex = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_SEL_LOC, wxNullBitmap, wxDefaultPosition, wxSize(240, 80), wxBU_AUTODRAW );
+    m_LocImageIndex = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_SEL_LOC, wxNullBitmap, wxDefaultPosition, wxSize(300, 80), wxBU_AUTODRAW );
     itemBoxSizer2->Add(m_LocImageIndex, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( itemDialog1, ID_LISTBOX_SEL_LOC, wxDefaultPosition, wxSize(-1, 100), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( itemDialog1, ID_LISTBOX_SEL_LOC, wxDefaultPosition, wxSize(-1, 300), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemBoxSizer2->Add(m_List, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 5);
 
 ////@end LocSelDlg content construction
