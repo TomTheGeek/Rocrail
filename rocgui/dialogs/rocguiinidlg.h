@@ -157,6 +157,11 @@ public:
     wxPanel* m_GeneralTab;
     wxRadioBox* m_ClockType;
     wxRadioBox* m_TabAlignType;
+    wxCheckBox* m_RestrictEdit4Auto;
+    wxCheckBox* m_Check4Updates;
+    wxCheckBox* m_JsSupport;
+    wxCheckBox* m_Modview;
+    wxCheckBox* m_DispatchMode;
     wxStaticBox* m_labIconPath;
     wxTextCtrl* m_IconPath;
     wxButton* m_IconPathDlg;
@@ -169,11 +174,6 @@ public:
     wxStaticBox* m_labXSLPath;
     wxTextCtrl* m_XSLPath;
     wxButton* m_XSLPathDlg;
-    wxCheckBox* m_RestrictEdit4Auto;
-    wxCheckBox* m_Check4Updates;
-    wxCheckBox* m_JsSupport;
-    wxCheckBox* m_Modview;
-    wxCheckBox* m_DispatchMode;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;
