@@ -1011,7 +1011,7 @@ static void __accThread( void* threadinst ) {
   do {
     ThreadOp.sleep(1000);
 
-    if( wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
+    if( wAccessoryCtrl.isactive(data->accctrl) && wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
       if( elapsedinterval >= wAccessoryCtrl.getinterval(data->accctrl) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "activating accessory \"%s\"...", data->id );
 
