@@ -774,7 +774,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
     return True;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Street already locked by %s", o->lockedId );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Route already locked by %s", o->lockedId );
     return False;
   }
 }

@@ -1011,7 +1011,7 @@ static void __accThread( void* threadinst ) {
   do {
     ThreadOp.sleep(1000);
 
-    if( wAccessoryCtrl.isactive(data->accctrl) && wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
+    if( (data->lockedId == NULL || StrOp.len(data->lockedId) == 0) && wAccessoryCtrl.isactive(data->accctrl) && wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
       if( elapsedinterval >= wAccessoryCtrl.getinterval(data->accctrl) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "activating accessory \"%s\"...", data->id );
 
@@ -1125,7 +1125,7 @@ static iOSwitch _inst( iONode props ) {
     wSwitch.getiid( props )
     );
 
-  if( data->accctrl != NULL && wAccessoryCtrl.isactive(data->accctrl) ) {
+  if( data->accctrl != NULL ) {
     data->accThread = ThreadOp.inst( data->id, &__accThread, sw );
     data->run = True;
     ThreadOp.start( data->accThread );
