@@ -972,7 +972,9 @@ void Symbol::OnLoc(wxCommandEvent& event) {
   if( model == NULL )
     return;
 
-  LocDialog*  dlg = new LocDialog(this, NULL, false );
+  //LocDialog*  dlg = new LocDialog(this, NULL, false );
+  LocSelDlg*  dlg = new LocSelDlg(this, NULL, false );
+
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
     iONode sel = dlg->getProperties();

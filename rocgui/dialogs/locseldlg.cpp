@@ -100,7 +100,13 @@ LocSelDlg::LocSelDlg( wxWindow* parent, iONode props, bool mic, const char* loci
       m_MICini = NodeOp.inst( wMIC.name(), wxGetApp().getIni(), ELEMENT_NODE );
       NodeOp.addChild( wxGetApp().getIni(), m_MICini );
     }
+  } else {
+
+
+
   }
+
+
   Create( parent, -1, wxGetApp().getMsg("locseldlg") );
   InitIndex();
   GetSizer()->Layout();
@@ -256,10 +262,12 @@ void LocSelDlg::CreateControls()
 
 void LocSelDlg::OnListboxSelLocSelected( wxCommandEvent& event )
 {
+  /* jmf: whats this?
   if(!m_MICmode) {
     event.Skip();
     return;
   }
+  */
 
   int sel = m_List->GetSelection();
   if( sel == wxNOT_FOUND )
@@ -310,7 +318,8 @@ wxIcon LocSelDlg::GetIconResource( const wxString& name )
 void LocSelDlg::OnBitmapbuttonSelLocClick( wxCommandEvent& event )
 {
   if(!m_MICmode) {
-    event.Skip();
+    m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+    EndModal( wxID_OK );
     return;
   }
 
