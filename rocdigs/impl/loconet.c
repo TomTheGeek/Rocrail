@@ -1930,7 +1930,14 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
       /* if cs == ibcom */
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) ) {
-        return startIBComPT(cmd);
+        byte* bcmd = allocMem( 64 );
+        int outsize = startIBComPT(cmd+1);
+        cmd[0] = outsize;
+        MemOp.copy( bcmd, cmd, 64 );
+        ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, normal );
+        cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
+        cmd[1] = LocoNetOp.checksum( cmd, 1 );
+        return 2;
       }
       return 0;
     }
