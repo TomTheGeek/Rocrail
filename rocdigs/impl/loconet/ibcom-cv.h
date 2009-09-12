@@ -7,6 +7,7 @@
 
 #ifndef IBCOMCV_H_
 #define IBCOMCV_H_
+#include "rocs/public/rocs.h"
 
 int makeIBComCVPacket(int cv, byte* buffer);
 int evaluateIBComCVPacket(byte* buffer);

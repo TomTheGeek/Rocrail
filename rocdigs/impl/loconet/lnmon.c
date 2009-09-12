@@ -1239,7 +1239,7 @@ void traceLocoNet(byte* msg) {
                            == SRVC_TRK_RESERVED) {
                     progMode = "SERVICE TRACK RESERVED MODE DETECTED!";
                 } else {
-                    progMode = "Unknown mode";
+                    progMode = "Unknown mode; Could be IB-Com";
                 }
 
                 /* are we sending or receiving? */
@@ -1418,6 +1418,11 @@ void traceLocoNet(byte* msg) {
         // there are several different formats for 0xE5 messages, with
         // the length apparently the distinquishing item.
         switch (msg[1]) {
+        case 0x07: {
+            /* IB-Com */
+            TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "IB-Com PT command; ON/OFF" );
+            break;
+        }
         case 0x10: {
             __peerToPeerMessage(msg);
             break;
@@ -1518,6 +1523,7 @@ void traceLocoNet(byte* msg) {
         break;
     }
     break;
+
         /**************************************************************************
          * OPC_IMM_PACKET   0xED   ;SEND n-byte packet immediate LACK              *
          *                         ; Follow on message: LACK                       *
@@ -1545,6 +1551,11 @@ void traceLocoNet(byte* msg) {
         int im3   = msg[7];
         int im4   = msg[8];
         int im5   = msg[9];
+
+        if( msg[1] == 0x1F ) {
+          TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "IB-Com PT command" );
+          break;
+        }
 
         /* see if it really is a 'Send Packet' as defined in Loconet PE */
         if (val7f == 0x7f) {

@@ -52,6 +52,9 @@ E7 0E 7C 00 00 00 71 06 02 00 7E 00 00 61
 
 */
 
+#include "rocdigs/impl/loconet/ibcom-cv.h"
+
+
 int makeIBComCVPacket(int cv, byte* buffer) {
   return 0;
 }
