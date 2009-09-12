@@ -88,7 +88,7 @@ int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write) {
 
 int startIBComPT(byte* buffer) {
   buffer[0] = OPC_IMM_PACKET;
-  buffer[1] = 0x1F;
+  buffer[1] = 0x07;
   buffer[2] = 0x01;
   buffer[3] = 0x49;
   buffer[4] = 0x42;

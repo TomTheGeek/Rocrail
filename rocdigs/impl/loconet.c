@@ -1929,10 +1929,16 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
       /* if cs == ibcom */
+      if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) ) {
+        return startIBComPT(cmd);
+      }
       return 0;
     }
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       /* if cs == ibcom */
+      if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) ) {
+        return stopIBComPT(cmd);
+      }
       return 0;
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
@@ -1941,7 +1947,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
       Boolean direct = wProgram.isdirect( node );
-      int size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, direct, addr);
+      int size = 0;
+      if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
+        size = makeIBComCVPacket( cv, 0, cmd, False);
+      else
+        size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, direct, addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d of %d (ops=%d)...", cv, addr, pom );
       return size;
     }
@@ -1952,7 +1962,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
       Boolean direct = wProgram.isdirect( node );
-      int size = __rwCV(loconet_inst, cv, value, cmd, True, pom, direct, addr);
+      int size = 0;
+      if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
+        size = makeIBComCVPacket( cv, value, cmd, True);
+      else
+        size = __rwCV(loconet_inst, cv, value, cmd, True, pom, direct, addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d of %d (ops=%d)...", cv, value, addr, pom );
       return size;
     }
