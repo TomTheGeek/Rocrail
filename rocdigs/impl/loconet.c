@@ -69,6 +69,7 @@
 #include "rocdigs/impl/loconet/lnmaster.h"
 #include "rocdigs/impl/loconet/lncv.h"
 #include "rocdigs/impl/loconet/locoio.h"
+#include "rocdigs/impl/loconet/ibcom-cv.h"
 
 #include "rocdigs/impl/common/fada.h"
 
@@ -1191,6 +1192,8 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       int cvl  = rsp[9];  // lo 7 bits of CV#
       int cvdata = rsp[10]; // 7 bits of data to program, msb is in cvh above
 
+      /* IB-Com: E7 0E 7C 00 00 00 71 06 00 00 03 00 00 1E */
+
       if( slot == 0x7C ) {
         /* PT read */
         int cv = (cvl & 0x7F) + ((cvh & 0x01) << 7);
@@ -1925,9 +1928,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       return 0;
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
+      /* if cs == ibcom */
       return 0;
     }
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+      /* if cs == ibcom */
       return 0;
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {

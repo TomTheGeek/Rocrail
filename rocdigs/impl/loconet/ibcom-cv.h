@@ -9,7 +9,8 @@
 #define IBCOMCV_H_
 #include "rocs/public/rocs.h"
 
-int makeIBComCVPacket(int cv, byte* buffer);
-int evaluateIBComCVPacket(byte* buffer);
+int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write);
+int startIBComPT(byte* buffer);
+int stopIBComPT(byte* buffer);
 
 #endif /* IBCOMCV_H_ */

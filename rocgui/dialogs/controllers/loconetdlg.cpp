@@ -122,6 +122,7 @@ void LocoNetCtrlDlg::initLabels() {
   m_CmdStn->Append( wxString( wLocoNet.cs_dcs50, wxConvUTF8 ) );
   m_CmdStn->Append( wxString( wLocoNet.cs_db150, wxConvUTF8 ) );
   m_CmdStn->Append( wxString( wLocoNet.cs_intellibox, wxConvUTF8 ) );
+  m_CmdStn->Append( wxString( wLocoNet.cs_ibcom, wxConvUTF8 ) );
 }
 
 void LocoNetCtrlDlg::initValues() {

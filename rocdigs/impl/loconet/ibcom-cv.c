@@ -53,14 +53,58 @@ E7 0E 7C 00 00 00 71 06 02 00 7E 00 00 61
 */
 
 #include "rocdigs/impl/loconet/ibcom-cv.h"
+#include "rocdigs/public/loconet.h"
+#include "rocdigs/impl/loconet/lnconst.h"
 
 
-int makeIBComCVPacket(int cv, byte* buffer) {
-  return 0;
+int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write) {
+  MemOp.set( buffer, 0, 0x1F );
+  buffer[ 0] = OPC_PEER_XFER;
+  buffer[ 1] = 0x1F;
+  buffer[ 2] = 0x01;
+  buffer[ 3] = 0x49;
+  buffer[ 4] = 0x42;
+  buffer[ 5] = 0x71;
+  buffer[ 6] = write ? 0x71:0x72;
+  buffer[ 7] = cv % 256; /*CV*/
+  buffer[ 8] = cv / 256; /*CV*/
+  if( buffer[ 7] & 0x80 ) {
+    /* TODO: which bit is to set? */
+    buffer[ 5] |= 0x04;
+    buffer[ 7] &= 0x7F;
+  }
+  buffer[ 9] = value; /*value*/
+  if( buffer[ 9] & 0x80 ) {
+    buffer[ 5] |= 0x08;
+    buffer[ 9] &= 0x7F;
+  }
+  buffer[10] = 0x70;
+  buffer[15] = 0x10;
+  buffer[0x1F-1] = LocoNetOp.checksum( buffer, 0x1F-1 );
+; /*checksum*/
+  return 0x1F;
 }
 
 
-int evaluateIBComCVPacket(byte* buffer) {
-  return 0;
+int startIBComPT(byte* buffer) {
+  buffer[0] = OPC_IMM_PACKET;
+  buffer[1] = 0x1F;
+  buffer[2] = 0x01;
+  buffer[3] = 0x49;
+  buffer[4] = 0x42;
+  buffer[5] = 0x41;
+  buffer[6] = 0x56; /* checksum */
+  return 7;
+}
+
+int stopIBComPT(byte* buffer) {
+  buffer[0] = OPC_PEER_XFER;
+  buffer[1] = 0x07;
+  buffer[2] = 0x01;
+  buffer[3] = 0x49;
+  buffer[4] = 0x42;
+  buffer[5] = 0x40;
+  buffer[6] = 0x57; /* checksum */
+  return 7;
 }
 

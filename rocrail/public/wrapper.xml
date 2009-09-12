@@ -395,7 +395,8 @@
         <const name="cs_db150" vt="string" val="db150"/>
         <const name="cs_intellibox" vt="string" val="intellibox"/>
         <const name="cs_rocrail" vt="string" val="rocrail"/>
-        <var name="cmdstn" vt="string" defval="dcs100" range="dcs100,db150,dcs50,intellibox,rocrail"/>
+        <const name="cs_ibcom" vt="string" val="ibcom"/>
+        <var name="cmdstn" vt="string" defval="dcs100" range="dcs100,db150,dcs50,intellibox,rocrail,ibcom"/>
         <var name="useidle" vt="bool" defval="false" remark="use OPC_IDLE instead of OPC_GPOFF"/>
         <var name="sensorquery" vt="bool" defval="true" remark="do sensor query at OPC_GPON"/>
         <var name="usefc" vt="bool" defval="true" remark="enable fast clock"/>
