@@ -101,7 +101,7 @@ void PowerManDlg::initLabels() {
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
-  m_labDistrict->SetLabel( wxGetApp().getMsg( "district" ) );
+  m_labDistrict->SetLabel( wxGetApp().getMsg( "powerdistrict" ) );
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {

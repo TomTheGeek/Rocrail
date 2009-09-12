@@ -135,7 +135,7 @@ void TimedActions::initLabels() {
     // "co,ext,sw,st,sys,sg,bk,lc,fn"
     m_Type->Append( wxGetApp().getMsg( "output" ) );
     m_Type->Append( wxGetApp().getMsg( "program" ) );
-    m_Type->Append( wxGetApp().getMsg( "switch" ) );
+    m_Type->Append( wxGetApp().getMsg( "turnout" ) );
     m_Type->Append( wxGetApp().getMsg( "route" ) );
     m_Type->Append( wxGetApp().getMsg( "system" ) );
     m_Type->Append( wxGetApp().getMsg( "signal" ) );
