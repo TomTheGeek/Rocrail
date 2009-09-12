@@ -50,6 +50,19 @@ ED 1F 01 49 42 79 71 1B 00 7E 70 00 00 00 00 10
                         HB    VV
 E7 0E 7C 00 00 00 71 06 02 00 7E 00 00 61
 
+
+
+# write 255 in cv 545
+               HB  W CV CV VV
+ED 1F 01 49 42 79 71 21 02 7F 70 00 00 00 00 10
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 33
+
+# read cv 393
+               HB  R CV CV VV
+ED 1F 01 49 42 73 72 09 02 00 70 00 00 00 00 10
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 6D
+
+
 */
 
 #include "rocdigs/impl/loconet/ibcom-cv.h"
@@ -69,8 +82,7 @@ int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write) {
   buffer[ 7] = cv % 256; /*CV*/
   buffer[ 8] = cv / 256; /*CV*/
   if( buffer[ 7] & 0x80 ) {
-    /* TODO: which bit is to set? */
-    buffer[ 5] |= 0x04;
+    buffer[ 5] |= 0x02;
     buffer[ 7] &= 0x7F;
   }
   buffer[ 9] = value; /*value*/
