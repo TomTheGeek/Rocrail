@@ -72,7 +72,7 @@ ED 1F 01 49 42 73 72 09 02 00 70 00 00 00 00 10
 
 int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write) {
   MemOp.set( buffer, 0, 0x1F );
-  buffer[ 0] = OPC_PEER_XFER;
+  buffer[ 0] = OPC_IMM_PACKET;
   buffer[ 1] = 0x1F;
   buffer[ 2] = 0x01;
   buffer[ 3] = 0x49;
@@ -99,7 +99,7 @@ int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write) {
 
 
 int startIBComPT(byte* buffer) {
-  buffer[0] = OPC_IMM_PACKET;
+  buffer[0] = OPC_PEER_XFER;
   buffer[1] = 0x07;
   buffer[2] = 0x01;
   buffer[3] = 0x49;
