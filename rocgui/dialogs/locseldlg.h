@@ -104,6 +104,9 @@ public:
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_SEL_LOC
     void OnListboxSelLocSelected( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LISTBOX_SEL_LOC
+    void OnListboxSelLocDoubleClicked( wxCommandEvent& event );
+
 ////@end LocSelDlg event handler declarations
 
 ////@begin LocSelDlg member function declarations

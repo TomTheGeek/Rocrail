@@ -71,6 +71,7 @@ BEGIN_EVENT_TABLE( LocSelDlg, wxDialog )
     EVT_BUTTON( ID_BITMAPBUTTON_SEL_LOC, LocSelDlg::OnBitmapbuttonSelLocClick )
 
     EVT_LISTBOX( ID_LISTBOX_SEL_LOC, LocSelDlg::OnListboxSelLocSelected )
+    EVT_LISTBOX_DCLICK( ID_LISTBOX_SEL_LOC, LocSelDlg::OnListboxSelLocDoubleClicked )
 
 ////@end LocSelDlg event table entries
   EVT_LEFT_DOWN   (LocSelDlg::OnStop   )
@@ -279,6 +280,7 @@ void LocSelDlg::OnListboxSelLocSelected( wxCommandEvent& event )
 
   m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
   InitValues();
+
 }
 
 /*!
@@ -407,4 +409,15 @@ void LocSelDlg::OnSpeed(wxMouseEvent& event) {
   cmd->base.del(cmd);
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LISTBOX_SEL_LOC
+ */
+
+void LocSelDlg::OnListboxSelLocDoubleClicked( wxCommandEvent& event )
+{
+  OnListboxSelLocSelected(event);
+  EndModal(wxID_OK);
+}
 
