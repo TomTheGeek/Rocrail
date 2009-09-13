@@ -202,7 +202,7 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* 
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no block found for [%s].", locid );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no block found for [%s].", locid );
   return NULL;
 }
 
