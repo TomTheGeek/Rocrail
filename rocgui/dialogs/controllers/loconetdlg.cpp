@@ -282,6 +282,7 @@ void LocoNetCtrlDlg::evaluate() {
 
 
     wCSOptions.setstore( options, m_SetOptions->IsChecked()?True:False );
+    wLocoNet.setcmdstn( loconet, m_CmdStn->GetStringSelection().mb_str(wxConvUTF8) );
 
     char opsw[65] = {'\0'};
     MemOp.set( opsw, '0', 64 );
