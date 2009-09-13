@@ -1,12 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="64">
   <g>
+    <!-- Canal -->
+    <!--path stroke="rgb(200,200,255)" fill="200,200,255" d="M 0,0 L 127,0 L 127,63 L 0,63 z " /-->
     <!-- Track 1 -->
-    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 127,12 L 127,19 L 0,19 z " />
-    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 118,14 L 118,17 L 8,17 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 16,12 L 16,19 L 0,19 z " />
     <!-- Track 2 -->
-    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,44 L 127,44 L 127,51 L 0,51 z " />
-    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,46 L 118,46 L 118,49 L 8,49 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,44 L 16,44 L 16,51 L 0,51 z " />
     <!-- Bridge deck -->
-    <path stroke="rgb(0,0,0)" fill="none" d="M 0,6 L 127,6 L 127,57 L 0,57 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,6 L 16,6 L 16,57 L 0,57 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 127,6 L 127,57 L 126,57 L 126,6 z " />
   </g>
 </svg>

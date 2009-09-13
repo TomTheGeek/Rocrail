@@ -856,7 +856,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       if( !StrOp.equals( wSwitch.decoupler, type ) ) {
 
         if( !StrOp.equals( wSwitch.threeway, type ) )
-          menuSwCmd->Append( ME_CmdTurnout, wxGetApp().getMenu("turnout") );
+          menuSwCmd->Append( ME_CmdTurnout, wxGetApp().getMenu("thrown") );
 
         if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) ) {
           menuSwCmd->Append( ME_CmdLeft, wxGetApp().getMenu("left") );

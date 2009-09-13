@@ -30,6 +30,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/statline.h"
 #include "wx/spinctrl.h"
 ////@end includes
 

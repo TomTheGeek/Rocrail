@@ -10653,4 +10653,7 @@
   <Msg id="modules">
     <en txt="Modules"/>
   </Msg>
+  <Msg id="thrown">
+    <en txt="Thrown"/>
+  </Msg>
 </Messages>
