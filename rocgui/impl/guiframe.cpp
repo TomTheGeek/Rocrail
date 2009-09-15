@@ -1979,6 +1979,8 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     char* rrcall = StrOp.fmt( ".%crocrail%s -l %s -w %s", SystemOp.getFileSeparator(), SystemOp.getPrgExt(), FileOp.pwd(), (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
     SystemOp.system( rrcall, True );
     StrOp.free(rrcall);
+    ThreadOp.sleep(1000);
+    Connect( "localhost", 62842); // TODO: add const to the wrapper.xml for the defaults.
     /* Start Rocrail async:
      * SystemOp.exec( "./rocrail -l libpath -w workingdir", true );
      * signal the Rocview to try to connect.
