@@ -1794,24 +1794,27 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
   ConnectionDialog* dlg = new ConnectionDialog( this, ini );
 
   if( wxID_OK == dlg->ShowModal() ) {
-    //wRRCon.sethost( wGui.getrrcon( ini ), dlg->GetValue().mb_str(wxConvUTF8) );
-    wxGetApp().setHost( StrOp.dup( dlg->getHostname().mb_str(wxConvUTF8) ), dlg->getPort() );
-
-    wxGetApp().setStayOffline( false );
-
-    wxGetApp().sendToRocrail( (char*)NULL );
-
-    // Initial connection.
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.plan );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del( cmd );
-
-	// error handling missing
-	this->setOnline( true );
-
+    Connect(StrOp.dup( dlg->getHostname().mb_str(wxConvUTF8) ), dlg->getPort());
 	}
   dlg->Destroy();
+}
+
+
+void RocGuiFrame::Connect( const char* host, int port ) {
+  wxGetApp().setHost( host, port );
+
+  wxGetApp().setStayOffline( false );
+
+  wxGetApp().sendToRocrail( (char*)NULL );
+
+  // Initial connection.
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.plan );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del( cmd );
+
+  // error handling missing
+  this->setOnline( true );
 }
 
 
@@ -1973,6 +1976,13 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
   //dlg->SetPath(m_SVGPath->GetValue());
   if( dlg->ShowModal() == wxID_OK ) {
     // TODO: Open Workspace
+    char* rrcall = StrOp.fmt( ".%crocrail%s -l %s -w %s", SystemOp.getFileSeparator(), SystemOp.getPrgExt(), FileOp.pwd(), (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+    SystemOp.system( rrcall, True );
+    StrOp.free(rrcall);
+    /* Start Rocrail async:
+     * SystemOp.exec( "./rocrail -l libpath -w workingdir", true );
+     * signal the Rocview to try to connect.
+     */
   }
 }
 

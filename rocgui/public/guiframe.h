@@ -254,6 +254,7 @@ public:
   wxString getIconPath(const char* iconfile);
   void setOffline( bool p_bOffline );
   void initFrame();
+  void Connect( const char* host, int port );
 
 
 private:

@@ -1461,6 +1461,7 @@
     <fun name="getOSType" vt="ostype" static="true" remark=""/>
     <fun name="isWindows" vt="Boolean" static="true" remark=""/>
     <fun name="isUnix" vt="Boolean" static="true" remark=""/>
+    <fun name="getPrgExt" vt="const char*" static="true" remark=""/>
     <fun name="getPathSeparator4OS" vt="char" remark="Path separator for a specific OS type.">
       <param name="type" vt="ostype" remark=""/>
     </fun>

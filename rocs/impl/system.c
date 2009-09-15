@@ -222,6 +222,16 @@ static const char* _getProperty(const char* name) {
   return getenv( name );
 }
 
+static const char* _getPrgExt(void) {
+#ifdef _WIN32
+  return ".exe";
+#elif defined __OS2__
+  return ".exe";
+#elif defined __unix__ || defined __linux__ || defined _AIX
+  return "";
+#endif
+}
+
 static char _getFileSeparator(void) {
 #ifdef _WIN32
   return '\\';
