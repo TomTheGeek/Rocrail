@@ -4,8 +4,8 @@
  Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
 
  This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
+ modify it under the terms of the GNU General Public License
  of the License, or (at your option) any later version.
 
  This program is distributed in the hope that it will be useful,
@@ -65,6 +65,7 @@ public:
   void setOnline( bool online );
   void SyncClock( iONode node );
 
+  void OnOpenWorkspace(wxCommandEvent& event);
   void OnQuit(wxCommandEvent& event);
   void OnSize(wxSizeEvent& event);
   void OnMenu(wxMenuEvent& event);
@@ -335,6 +336,7 @@ enum
     ME_SaveAs,
     ME_Upload,
     ME_Open,
+    ME_OpenWorkspace,
     ME_New,
     ME_About,
     ME_Update,

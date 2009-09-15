@@ -10656,4 +10656,7 @@
   <Msg id="thrown">
     <en txt="Thrown"/>
   </Msg>
+  <Msg id="openworkspace" dialog="true">
+    <en txt="Open Workspace" tip="Open a Workspace to play."/>
+  </Msg>
 </Messages>

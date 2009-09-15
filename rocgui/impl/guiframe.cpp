@@ -208,6 +208,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
+    EVT_MENU( ME_OpenWorkspace  , RocGuiFrame::OnOpenWorkspace)
     EVT_MENU( ME_New            , RocGuiFrame::OnNew)
     EVT_MENU( ME_Upload         , RocGuiFrame::OnUpload)
     EVT_MENU( ME_About          , RocGuiFrame::OnAbout)
@@ -1153,6 +1154,10 @@ void RocGuiFrame::initFrame() {
   open_menuFile->SetBitmap(wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG));
   menuFile->Append(open_menuFile);
 
+  wxMenuItem *openworkspace_menuFile = new wxMenuItem(menuFile, ME_OpenWorkspace, wxGetApp().getMenu("openworkspace"), wxGetApp().getTip("openworkspace") );
+  openworkspace_menuFile->SetBitmap(wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG));
+  menuFile->Append(openworkspace_menuFile);
+
   wxMenuItem *save_menuFile = new wxMenuItem(menuFile, ME_Save, wxGetApp().getMenu("save"), wxGetApp().getTip("save") );
   save_menuFile->SetBitmap(wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG));
   menuFile->Append(save_menuFile);
@@ -1402,6 +1407,7 @@ void RocGuiFrame::initFrame() {
 
   m_ToolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
   m_ToolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_OpenWorkspace, wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("openworkspace") );
   m_ToolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
 // Dirk 18.4.2007 added Undo to toolbar
   m_ToolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
@@ -1960,6 +1966,14 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
     wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
   }
   fdlg->Destroy();
+}
+
+void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
+  wxDirDialog* dlg = new wxDirDialog( this );
+  //dlg->SetPath(m_SVGPath->GetValue());
+  if( dlg->ShowModal() == wxID_OK ) {
+    // TODO: Open Workspace
+  }
 }
 
 void RocGuiFrame::OnNew( wxCommandEvent& event ) {
