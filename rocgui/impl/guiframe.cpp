@@ -1051,7 +1051,7 @@ void RocGuiFrame::setDigintText( const char* text ) {
 // ----------------------------------------------------------------------------
 
 // frame constructor
-RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme)
+RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
   m_Ini                = ini;
@@ -1074,6 +1074,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bAutoMode          = false;
   m_IconPath           = icons;
   m_ThemePath          = theme;
+  m_ServerPath         = sp;
   m_bInitialized       = false;
   m_PowerCtrl          = NULL;
 
@@ -1082,6 +1083,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 void RocGuiFrame::initFrame() {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ThemePath=0x%08X", m_ThemePath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ServerPath=0x%08X", m_ServerPath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "init Frame..." );
   SetIcon(wxIcon(rocrail_xpm));
 
@@ -1976,7 +1978,9 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
   //dlg->SetPath(m_SVGPath->GetValue());
   if( dlg->ShowModal() == wxID_OK ) {
     // TODO: Open Workspace
-    char* rrcall = StrOp.fmt( ".%crocrail%s -l %s -w %s", SystemOp.getFileSeparator(), SystemOp.getPrgExt(), FileOp.pwd(), (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+    if(m_ServerPath == NULL)
+      m_ServerPath = ".";
+    char* rrcall = StrOp.fmt( "%s%crocrail%s -l %s -w %s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), FileOp.pwd(), (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
     SystemOp.system( rrcall, True );
     StrOp.free(rrcall);
     ThreadOp.sleep(1000);

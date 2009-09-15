@@ -396,6 +396,7 @@ bool RocGui::OnInit() {
   const char* tf      = CmdLnOp.getStr( m_CmdLn, wCmdline.trcfile );
   const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
+  const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
 
   bool modview = CmdLnOp.hasKey( m_CmdLn, wCmdline.modview );
 
@@ -534,7 +535,7 @@ bool RocGui::OnInit() {
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini, icons, theme );
+        wxSize(iWidth, iHeight), m_Ini, icons, theme, sp );
   m_Frame->initFrame();
 
 
