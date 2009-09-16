@@ -963,12 +963,24 @@ void RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
 
   if( m_RCon == NULL ) {
     int waitloops = wait4rr?300:1;
+
+    if( m_Frame != NULL ) {
+      wxCursor cursor = wxCursor(wxCURSOR_WAIT);
+      m_Frame->SetCursor( cursor );
+    }
+
     while( m_RCon == NULL && waitloops > 0 ) {  
       m_RCon = RConOp.inst( m_Host, m_Port );
       waitloops--;
       if( waitloops > 0 )
         ThreadOp.sleep(100);
     }
+
+    if( m_Frame != NULL ) {
+      wxCursor cursor = wxCursor(wxCURSOR_ARROW);
+      m_Frame->SetCursor( cursor );
+    }
+
     if( m_RCon != NULL ) {
       m_bOffline = false;
       RConOp.setCallback( m_RCon, &rocrailCallback, (obj)this );
