@@ -235,6 +235,7 @@ public:
   void OnTimer(wxTimerEvent& event);
   void OnScaleCombo(wxCommandEvent& event);
   void OnScaleComboCheck(wxCommandEvent& event);
+  void resetActiveWorkspace() { m_bActiveWorkspace = false; }
 
   wxNotebook* getNotebook() { return m_PlanNotebook; }
   BasePanel* getPlanPanel() { return m_PlanPanel; }
@@ -254,7 +255,7 @@ public:
   wxString getIconPath(const char* iconfile);
   void setOffline( bool p_bOffline );
   void initFrame();
-  void Connect( const char* host, int port );
+  void Connect( const char* host, int port, bool wait4rr=false );
 
 
 private:
@@ -306,6 +307,7 @@ private:
   bool  m_bRaster;
   bool  m_bServerConsoleMode;
   bool  m_bInitialized;
+  bool  m_bActiveWorkspace;
 
   bool  showlogo;
   bool  m_bEditMode;

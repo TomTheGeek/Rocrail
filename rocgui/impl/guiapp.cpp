@@ -925,7 +925,7 @@ void RocGui::cleanupOldModel() {
 
 void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   char* strCmd = NodeOp.base.toString( cmd );
-  sendToRocrail( strCmd, disconnect );
+  sendToRocrail( strCmd, false, disconnect );
   StrOp.free( strCmd );
 
   if( m_bOffline ) {
@@ -949,7 +949,7 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   }
 }
 
-void RocGui::sendToRocrail( char* szCmd, bool disconnect ) {
+void RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
   if( m_bStayOffline )
     return;
 
@@ -960,8 +960,15 @@ void RocGui::sendToRocrail( char* szCmd, bool disconnect ) {
     m_RCon = NULL;
   }
 
+
   if( m_RCon == NULL ) {
-    m_RCon = RConOp.inst( m_Host, m_Port );
+    int waitloops = wait4rr?300:1;
+    while( m_RCon == NULL && waitloops > 0 ) {  
+      m_RCon = RConOp.inst( m_Host, m_Port );
+      waitloops--;
+      if( waitloops > 0 )
+        ThreadOp.sleep(100);
+    }
     if( m_RCon != NULL ) {
       m_bOffline = false;
       RConOp.setCallback( m_RCon, &rocrailCallback, (obj)this );
@@ -978,6 +985,10 @@ void RocGui::sendToRocrail( char* szCmd, bool disconnect ) {
             wxString(val,wxConvUTF8),
             _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
         StrOp.free(val);
+        if( wait4rr ) {
+          m_Frame->resetActiveWorkspace();
+        }
+
       }
     }
   }

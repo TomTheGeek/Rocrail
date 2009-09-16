@@ -1077,7 +1077,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ServerPath         = sp;
   m_bInitialized       = false;
   m_PowerCtrl          = NULL;
-
+  m_bActiveWorkspace   = false;
 }
 
 void RocGuiFrame::initFrame() {
@@ -1409,7 +1409,7 @@ void RocGuiFrame::initFrame() {
 
   m_ToolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
   m_ToolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
-  m_ToolBar->AddTool(ME_OpenWorkspace, wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("openworkspace") );
+  //m_ToolBar->AddTool(ME_OpenWorkspace, wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("openworkspace") );
   m_ToolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
 // Dirk 18.4.2007 added Undo to toolbar
   m_ToolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
@@ -1802,12 +1802,12 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
 }
 
 
-void RocGuiFrame::Connect( const char* host, int port ) {
+void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
   wxGetApp().setHost( host, port );
 
   wxGetApp().setStayOffline( false );
 
-  wxGetApp().sendToRocrail( (char*)NULL );
+  wxGetApp().sendToRocrail( (char*)NULL, wait4rr, false );
 
   // Initial connection.
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -1979,16 +1979,24 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
   if( dlg->ShowModal() == wxID_OK ) {
     // TODO: Open Workspace
     if(m_ServerPath == NULL)
-      m_ServerPath = ".";
-    char* rrcall = StrOp.fmt( "%s%crocrail%s -l %s -w %s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), FileOp.pwd(), (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
-    SystemOp.system( rrcall, True );
-    StrOp.free(rrcall);
-    ThreadOp.sleep(1000);
-    Connect( "localhost", 62842); // TODO: add const to the wrapper.xml for the defaults.
-    /* Start Rocrail async:
-     * SystemOp.exec( "./rocrail -l libpath -w workingdir", true );
-     * signal the Rocview to try to connect.
-     */
+      m_ServerPath = FileOp.pwd();
+
+    char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
+    if( FileOp.exist( rr ) ) {
+      char* rrcall = StrOp.fmt( "%s%crocrail%s -l %s -w %s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+      SystemOp.system( rrcall, True );
+      StrOp.free(rrcall);
+      m_bActiveWorkspace = true;
+      Connect( "localhost", 62842, true); // TODO: add const to the wrapper.xml for the defaults.
+    }
+    else {
+      wxMessageDialog( this,
+          wxGetApp().getMsg("rocrailservernotfound") + _T(" ") +
+          wxString(rr,wxConvUTF8),
+          _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
+    }
+
+    StrOp.free(rr);
   }
 }
 
@@ -2496,6 +2504,7 @@ void RocGuiFrame::setOnline( bool online ) {
   GetToolBar()->EnableTool(ME_New, !online);
   GetToolBar()->EnableTool(ME_Open, !online);
   GetToolBar()->EnableTool(ME_Upload, online);
+  GetToolBar()->EnableTool(ME_Connect, (!m_bActiveWorkspace) );
 }
 
 
@@ -2516,6 +2525,10 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
   if( mi != NULL ) mi->Enable( (!l_bOffline && !m_bServerConsoleMode) );
+  mi = menuBar->FindItem(ME_Quit);
+  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
+  mi = menuBar->FindItem(ME_OpenWorkspace);
+  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
 
   mi = menuBar->FindItem(ME_Go);
   if( mi != NULL ) mi->Enable( !l_bOffline );
@@ -2679,7 +2692,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Connect);
   if( mi != NULL )
-    mi->Enable( !wxGetApp().isStayOffline() );
+    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace);
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);
   wxMenuItem* mi_zoom50  = menuBar->FindItem(ME_Zoom50);
