@@ -565,6 +565,9 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
     wZLevel.setactive( firstlevel, True );
   }
 
+  // the plan flags if it is a modular layout:
+  wxGetApp().setModView(wPlan.ismodplan(wxGetApp().getModel()) ? true:false);
+
   if( wxGetApp().isModView() && !wxGetApp().isOffline() ) {
     initModPanel( NULL );
   }
@@ -1962,7 +1965,7 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
 void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     setLocalPlan( fdlg->GetPath() );
@@ -1984,6 +1987,7 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
     if( FileOp.exist( rr ) ) {
       char* rrcall = StrOp.fmt( "%s%crocrail%s -l %s -w %s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+      TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=%s", rrcall );
       SystemOp.system( rrcall, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;

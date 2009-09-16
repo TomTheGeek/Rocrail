@@ -71,6 +71,7 @@ public:
   int getSvn() { return m_Svn; }
   int getTabSel() { return m_TabSel; }
   bool isModView() { return m_bModView; }
+  void setModView(bool modview) { m_bModView = modview; }
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
   wxString getIconPath(const char* iconfile, const char* IconPath);

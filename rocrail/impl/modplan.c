@@ -736,6 +736,7 @@ static iONode __parseModPlan( iOModPlan inst ) {
   const char* locs   = wModPlan.getlocs  ( data->modplan );
   const char* routes = wModPlan.getroutes( data->modplan );
   iONode model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
+  wPlan.setmodplan( model, True );
   iONode mod = wModPlan.getmodule( data->modplan );
 
   wPlan.settitle( model, wModPlan.gettitle( data->modplan ) );
