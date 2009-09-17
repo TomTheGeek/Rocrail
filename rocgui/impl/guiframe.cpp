@@ -1986,8 +1986,8 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
 
     char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
     if( FileOp.exist( rr ) ) {
-      char* rrcall = StrOp.fmt( "%s%crocrail%s -l %s -w %s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
-      TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=%s", rrcall );
+      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+      TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
       SystemOp.system( rrcall, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;

@@ -75,20 +75,19 @@ echo ""
 
 echo "Copying mingwm10.dll"
 
-if [ -f /usr/share/doc/mingw32-runtime/mingwm10.dll.gz ] 
+
+if [ -f /usr/share/doc/mingw32-runtime/mingwm10.dll ] 
+then
+  echo "    Copying existing /usr/share/doc/mingw32-runtime/mingwm10.dll"
+
+  cp /usr/share/doc/mingw32-runtime/mingwm10.dll .
+elif [ -f /usr/share/doc/mingw32-runtime/mingwm10.dll.gz ] 
 then
   echo "    Using /usr/share/doc/mingw32-runtime/mingwm10.dll.gz"
 
   sudo gunzip /usr/share/doc/mingw32-runtime/mingwm10.dll.gz
   cp /usr/share/doc/mingw32-runtime/mingwm10.dll .
   sudo gzip /usr/share/doc/mingw32-runtime/mingwm10.dll
-
-elif [ -f /usr/share/doc/mingw32-runtime/mingwm10.dll ] 
-then
-  echo "    Copying existing /usr/share/doc/mingw32-runtime/mingwm10.dll"
-
-  cp /usr/share/doc/mingw32-runtime/mingwm10.dll .
-
 else
   echo "Error: mingwm10.dll not found!"
   echo ""
