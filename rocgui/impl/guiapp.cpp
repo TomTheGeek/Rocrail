@@ -758,6 +758,12 @@ static void rocrailCallback( obj me, iONode node ) {
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );
   }
+
+  else if( StrOp.equals( wModelCmd.name(), NodeOp.getName( node ) ) &&
+           StrOp.equals( wModelCmd.getcmd( node ), wModelCmd.themes ) ) {
+    // TODO: Themes reload.
+  }
+
   /* Model remove: */
   else if( StrOp.equals( wModelCmd.name(), NodeOp.getName( node ) ) &&
            StrOp.equals( wModelCmd.getcmd( node ), wModelCmd.remove ) ) {
@@ -949,9 +955,9 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   }
 }
 
-void RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
+bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
   if( m_bStayOffline )
-    return;
+    return true;
 
   if( szCmd == NULL && m_RCon != NULL ) {
     // force disconnect:
@@ -1002,15 +1008,20 @@ void RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
         }
 
       }
+      return false;
     }
   }
   if( szCmd != NULL ) {
     TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "sendToRocrail( %.1024s )", szCmd );
     if( m_RCon != NULL ) {
       RConOp.write( m_RCon, szCmd );
-      if( disconnect )
+      if( disconnect ) {
+        ThreadOp.sleep(100); // sleep some ms to make sure the last command is send
         RConOp.close( m_RCon );
+      }
     }
   }
+
+  return true;
 
 }

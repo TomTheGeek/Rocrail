@@ -1810,16 +1810,21 @@ void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
 
   wxGetApp().setStayOffline( false );
 
-  wxGetApp().sendToRocrail( (char*)NULL, wait4rr, false );
+  if( wxGetApp().sendToRocrail( (char*)NULL, wait4rr, false ) ) {
 
-  // Initial connection.
-  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-  wModelCmd.setcmd( cmd, wModelCmd.plan );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del( cmd );
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.themes );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del( cmd );
 
-  // error handling missing
-  this->setOnline( true );
+    // Initial connection.
+    cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.plan );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del( cmd );
+
+    this->setOnline( true );
+  }
 }
 
 
@@ -1986,9 +1991,9 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
 
     char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
     if( FileOp.exist( rr ) ) {
-      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+      char* rrcall = StrOp.fmt( "\"%s%crocrail%s\" -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
       TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
-      SystemOp.system( rrcall, True );
+      SystemOp.system( rrcall, True, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;
       Connect( "localhost", 62842, true); // TODO: add const to the wrapper.xml for the defaults.

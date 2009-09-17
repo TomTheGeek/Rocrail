@@ -309,16 +309,39 @@ static const char* _getSigStr( int sig ) {
 static void _sysbeep( void ) {
 }
 
+
+typedef struct __execParam {
+  const char* cmdStr;
+  Boolean minimized;
+} *execParam;
+
 static void __execRunner( void* inst ) {
   iOThread th = (iOThread)inst;
-  const char* cmdStr = (const char*)ThreadOp.getParm(th);
-  system( cmdStr );
+  execParam param = (void*)ThreadOp.getParm(th);
+
+  #if defined _WIN32
+    if( param->minimized ) {
+      char* cmdStr = StrOp.fmt("start /MIN %s", param->cmdStr);
+      system( cmdStr );
+      StrOp.free(cmdStr);
+    }
+    else {
+      system( param->cmdStr );
+    }
+  #else
+    system( param->cmdStr );
+  #endif
+
+  freeMem(param);
   th->base.del( th );
 }
 
-static int _systemExec( const char* cmdStr, Boolean async ) {
+static int _systemExec( const char* cmdStr, Boolean async, Boolean minimized ) {
   if( async ) {
-    iOThread th = ThreadOp.inst( name, __execRunner, (obj)cmdStr );
+    execParam param = allocMem( sizeof( struct __execParam) );
+    param->cmdStr = cmdStr;
+    param->minimized = minimized;
+    iOThread th = ThreadOp.inst( name, __execRunner, (obj)param );
     ThreadOp.start( th );
     return 0;
   }

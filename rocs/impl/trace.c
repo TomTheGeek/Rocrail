@@ -230,7 +230,7 @@ static void __writeExceptionFile( iOTraceData t, char* msg ) {
       }
       MutexOp.post( t->mux );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Invoking: [%s]...", t->invoke );
-      SystemOp.system( t->invoke, t->invokeasync );
+      SystemOp.system( t->invoke, t->invokeasync, False );
     }
     StrOp.free( filename );
   }

@@ -719,7 +719,7 @@ static Boolean _isAccessed( const char* filename ) {
 
   if( StrOp.equals( "R", ms_fuserusage ) ){
     char* cmd = StrOp.fmtID( RocsFileID, "%s %s", ms_fuser, filename );
-    int rc = SystemOp.system( cmd, False );
+    int rc = SystemOp.system( cmd, False, False );
     StrOp.freeID( cmd, RocsFileID );
     return rc == 0 ? True:False;
   }
@@ -731,7 +731,7 @@ static Boolean _isAccessed( const char* filename ) {
     f   = StrOp.fmtID( RocsFileID, "%s_fuser.out", FileOp.ripPath( filename ) );
     cmd = StrOp.fmtID( RocsFileID, "%s %s > %s", ms_fuser, filename, f );
 
-    SystemOp.system( cmd, False );
+    SystemOp.system( cmd, False, False );
 
     inuse = FileOp.fileSize( f ) > 1 ? True:False;
 

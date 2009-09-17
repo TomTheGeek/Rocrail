@@ -1492,6 +1492,9 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   else if( StrOp.equals( wModelCmd.plantitle, cmdVal ) ) {
     wPlan.settitle(data->model, wModelCmd.getval(cmd) );
   }
+  else if( StrOp.equals( wModelCmd.themes, cmdVal ) ) {
+    /* TODO: Send the preferred themes to the Rocview.*/
+  }
   else if( StrOp.equals( wModelCmd.save, cmdVal ) ) {
     ModelOp.save( inst );
   }

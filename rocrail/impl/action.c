@@ -206,7 +206,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     const char* extaction = wAction.getcmd( data->action );
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", extaction );
-      SystemOp.system( extaction, True );
+      SystemOp.system( extaction, True, False );
     }
   }
 

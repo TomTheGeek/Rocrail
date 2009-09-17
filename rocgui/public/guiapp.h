@@ -45,7 +45,7 @@ public:
   virtual int OnExit();
   int getItemSize();
   void sendToRocrail( iONode cmd, bool close=false );
-  void sendToRocrail( char* szCmd, bool wait4rr=false, bool close=false );
+  bool sendToRocrail( char* szCmd, bool wait4rr=false, bool close=false );
   RocGuiFrame* getFrame() { return m_Frame; }
   void setHost( const char* hostname, int port) { m_Host = hostname; m_Port = port; }
   void setModel( iONode node );

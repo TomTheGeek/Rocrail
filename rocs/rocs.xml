@@ -1468,6 +1468,7 @@
     <fun name="system" implname="_systemExec" vt="int" remark="Starts a system command.">
       <param name="cmd" vt="const char*" remark="Command."/>
       <param name="async" vt="Boolean" remark="Start command async in a separate thread."/>
+      <param name="minimized" vt="Boolean" remark="For windows: start MIN"/>
     </fun>
     <fun name="getpid" implname="_systemgetpid" vt="int" static="true" remark="Process ID."/>
     <fun name="getSigStr" vt="const char*" remark="Translates an signal number into a string.">
