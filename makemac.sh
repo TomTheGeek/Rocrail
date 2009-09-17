@@ -70,7 +70,6 @@ cp -r rocrail/package/images $DEST/Rocrail/rocdata/
 
 cp -r unxbin/Rocrail.app $DEST/Rocrail
 cp -r unxbin/Rocview.app $DEST/Rocrail
-cp -r unxbin/Modview.app $DEST/Rocrail
 
 cp rocrail/package/plan.xml $DEST/Rocrail/rocdata/
 cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
