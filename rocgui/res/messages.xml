@@ -10659,4 +10659,7 @@
   <Msg id="openworkspace" dialog="true">
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
   </Msg>
+  <Msg id="rocrailservernotfound">
+    <en txt="The Rocrail server is not found in the following location:"/>
+  </Msg>
 </Messages>
