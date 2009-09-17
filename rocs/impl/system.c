@@ -322,6 +322,7 @@ static void __execRunner( void* inst ) {
   #if defined _WIN32
     if( param->minimized ) {
       char* cmdStr = StrOp.fmt("start /MIN %s", param->cmdStr);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system = %s", cmdStr );
       system( cmdStr );
       StrOp.free(cmdStr);
     }
