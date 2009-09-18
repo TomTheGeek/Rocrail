@@ -194,11 +194,14 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "get block for locid %s...", locid );
   while( pos != NULL ) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
-    if( StrOp.equals( locid, block->getLoc(block) ) ) {
+    if( block != NULL && StrOp.equals( locid, block->getLoc(block) ) ) {
       if( inBlock != NULL && block->getInLoc(block) != NULL) {
         *inBlock = StrOp.equals( locid, block->getInLoc(block) );
       }
       return block;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", locid );
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
