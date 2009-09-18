@@ -311,7 +311,7 @@ static void _sysbeep( void ) {
 
 
 typedef struct __execParam {
-  const char* cmdStr;
+  char* cmdStr;
   Boolean minimized;
 } *execParam;
 
@@ -327,12 +327,15 @@ static void __execRunner( void* inst ) {
       StrOp.free(cmdStr);
     }
     else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system = %s", param->cmdStr );
       system( param->cmdStr );
     }
   #else
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system = %s", param->cmdStr );
     system( param->cmdStr );
   #endif
 
+  StrOp.free(param->cmdStr);
   freeMem(param);
   th->base.del( th );
 }
@@ -340,7 +343,7 @@ static void __execRunner( void* inst ) {
 static int _systemExec( const char* cmdStr, Boolean async, Boolean minimized ) {
   if( async ) {
     execParam param = allocMem( sizeof( struct __execParam) );
-    param->cmdStr = cmdStr;
+    param->cmdStr = StrOp.dup(cmdStr);
     param->minimized = minimized;
     iOThread th = ThreadOp.inst( name, __execRunner, (obj)param );
     ThreadOp.start( th );
