@@ -164,7 +164,7 @@ static void __initSensors( iOControl inst ) {
     FBackOp.addListener( s, (obj)inst );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Shortcut sensor could not be initialized." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Shortcut sensor not set." );
   }
 
 }
