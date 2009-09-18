@@ -1647,9 +1647,31 @@
         <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
       </tx>
     </txlist>
-
+    
+        
     <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
       <ac cardinality="n" wrappername="Action" remark="">
+        <const name="output_on" vt="string" val="on"/>
+        <const name="output_off" vt="string" val="off"/>
+        <const name="output_active" vt="string" val="active"/>
+        <const name="switch_straight" vt="string" val="straight"/>
+        <const name="switch_turnout" vt="string" val="turnout"/>
+        <const name="switch_left" vt="string" val="left"/>
+        <const name="switch_right" vt="string" val="right"/>
+        <const name="system_stoplocs" vt="string" val="stoplocs"/>
+        <const name="system_stop" vt="string" val="stop"/>
+        <const name="system_go" vt="string" val="go"/>
+        <const name="system_shutdown" vt="string" val="shutdown"/>
+        <const name="signal_red" vt="string" val="red"/>
+        <const name="signal_yellow" vt="string" val="yellow"/>
+        <const name="signal_green" vt="string" val="green"/>
+        <const name="signal_white" vt="string" val="white"/>
+        <const name="block_unlock" vt="string" val="unlock"/>
+        <const name="loco_go" vt="string" val="go"/>
+        <const name="loco_stop" vt="string" val="stop"/>
+        <const name="loco_velocity" vt="string" val="velocity"/>
+        <const name="fun_on" vt="string" val="on"/>
+        <const name="fun_off" vt="string" val="off"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>

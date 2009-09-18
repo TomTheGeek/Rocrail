@@ -258,7 +258,6 @@ bool TimedActions::evaluate() {
   }
 
   wAction.setid( m_Props, m_ActionID->GetValue().mb_str(wxConvUTF8) );
-  wAction.settype( m_Props, m_Type->GetSelection() == 0 ? "co":"ext");
   wAction.settimed( m_Props, m_Timed->IsChecked() ? True:False );
   wAction.sethour( m_Props, m_Hour->GetValue() );
   wAction.setmin( m_Props, m_Min->GetValue() );
@@ -460,8 +459,9 @@ void TimedActions::CreateControls()
     itemFlexGridSizer12->AddGrowableCol(0);
     itemFlexGridSizer6->Add(itemFlexGridSizer12, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
 
-    m_Command = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_Command, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    wxArrayString m_CommandStrings;
+    m_Command = new wxComboBox( itemDialog1, ID_COMBOBOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CommandStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer12->Add(m_Command, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_ExecCmd = new wxButton( itemDialog1, ID_ACTIONS_EXEC_CMD, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemFlexGridSizer12->Add(m_ExecCmd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM, 5);
@@ -727,6 +727,57 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
 {
   // TODO: init ID's
   initOutputList();
+
+  m_Command->Clear();
+  m_Command->SetValue(_T(""));
+  // "co,ext,sw,st,sys,sg,bk,lc,fn"
+  int typenr = m_Type->GetSelection();
+  switch( typenr ) {
+    case 0: // output
+      m_Command->Append(wxString( wAction.output_on, wxConvUTF8));
+      m_Command->Append(wxString( wAction.output_off, wxConvUTF8));
+      m_Command->Append(wxString( wAction.output_active, wxConvUTF8));
+      break;
+    case 1: // external command
+      break;
+    case 2: // switch
+      m_Command->Append(wxString( wAction.switch_straight, wxConvUTF8));
+      m_Command->Append(wxString( wAction.switch_turnout, wxConvUTF8));
+      m_Command->Append(wxString( wAction.switch_left, wxConvUTF8));
+      m_Command->Append(wxString( wAction.switch_right, wxConvUTF8));
+      break;
+    case 3: // route
+      break;
+    case 4: // system
+      m_Command->Append(wxString( wAction.system_stoplocs, wxConvUTF8));
+      m_Command->Append(wxString( wAction.system_go, wxConvUTF8));
+      m_Command->Append(wxString( wAction.system_stop, wxConvUTF8));
+      m_Command->Append(wxString( wAction.system_shutdown, wxConvUTF8));
+      break;
+    case 5: // signal
+      m_Command->Append(wxString( wAction.signal_red, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_yellow, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
+      break;
+    case 6: // block
+      m_Command->Append(wxString( wAction.block_unlock, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_red, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_yellow, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
+      break;
+    case 7: // loco
+      m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));
+      m_Command->Append(wxString( wAction.loco_stop, wxConvUTF8));
+      m_Command->Append(wxString( wAction.loco_velocity, wxConvUTF8));
+      break;
+    case 8: // function
+      m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));
+      m_Command->Append(wxString( wAction.fun_off, wxConvUTF8));
+      break;
+  }
+
 }
 
 

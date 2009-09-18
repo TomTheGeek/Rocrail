@@ -42,6 +42,7 @@ class wxSpinCtrl;
 #define ID_TIMEDACTIONS 10139
 #define ID_LB_TimedActions 10143
 #define ID_ACTIONS_TYPE 10195
+#define ID_COMBOBOX 10371
 #define ID_ACTIONS_EXEC_CMD 10245
 #define ID_BT_ADD 10217
 #define ID_BT_DEL 10218
@@ -139,7 +140,7 @@ public:
     wxStaticText* m_labID;
     wxChoice* m_ID;
     wxStaticText* m_labCommand;
-    wxTextCtrl* m_Command;
+    wxComboBox* m_Command;
     wxButton* m_ExecCmd;
     wxStaticText* m_labParam;
     wxTextCtrl* m_Parameter;
