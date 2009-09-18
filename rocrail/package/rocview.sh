@@ -22,5 +22,5 @@ if [ ! -e ~/rocrail/images ] ; then
 	cp -r /opt/rocrail/images ~/rocrail/images
 fi
 
-/opt/rocrail/rocview $1 $2 $3
+/opt/rocrail/rocview -sp /opt/rocrail $1 $2 $3
 
