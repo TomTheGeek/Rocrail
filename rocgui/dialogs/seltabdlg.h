@@ -22,6 +22,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 #include "wx/grid.h"
 ////@end includes
 
