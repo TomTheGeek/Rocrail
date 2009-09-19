@@ -10665,4 +10665,7 @@
   <Msg id="defaultworkspace">
     <en txt="Default Workspace" tip="Default Workspace to open at startup."/>
   </Msg>
+  <Msg id="startdefaultworkspace">
+    <en txt="Use Workspace at startup"/>
+  </Msg>
 </Messages>

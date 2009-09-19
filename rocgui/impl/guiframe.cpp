@@ -1992,12 +1992,13 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
   char* workspace = NULL;
-  if( StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
+  if( wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
     workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
   }
   else if( event.GetExtraLong() != 4711 ) {
     wxDirDialog* dlg = new wxDirDialog( this );
-    //dlg->SetPath(m_SVGPath->GetValue());
+    if( StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 )
+      dlg->SetPath(wxString(wGui.getdefaultworkspace(wxGetApp().getIni()),wxConvUTF8));
     if( dlg->ShowModal() == wxID_OK ) {
       workspace = StrOp.dup((const char*)dlg->GetPath().mb_str(wxConvUTF8));
     }

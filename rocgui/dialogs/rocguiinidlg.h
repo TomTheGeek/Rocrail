@@ -169,6 +169,7 @@ public:
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
+    wxCheckBox* m_StartDefaultWorkspace;
     wxStaticBox* m_labIconPath;
     wxTextCtrl* m_IconPath;
     wxButton* m_IconPathDlg;
