@@ -1785,16 +1785,22 @@ void RocGuiFrame::OnClearMsg( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnShutdownRocRail( wxCommandEvent& event ) {
+  ShutdownRocRail();
+  wxGetApp().OnExit();
+  Close(TRUE);
+}
+
+bool RocGuiFrame::ShutdownRocRail() {
   int action = wxMessageDialog( this, wxGetApp().getMsg("shutdownwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
   if( action == wxID_NO ) {
-    return;
+    return false;
   }
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.shutdown );
   wxGetApp().sendToRocrail( cmd, true );
   cmd->base.del(cmd);
-  wxGetApp().OnExit();
-  Close(TRUE);
+  m_bActiveWorkspace = false;
+  return true;
 }
 
 void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
@@ -2836,6 +2842,11 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
       }
     }
 
+  }
+
+  if( m_bActiveWorkspace ) {
+    if( !ShutdownRocRail() )
+      return;
   }
 
   MapOp.clear(m_LocDlgMap);
