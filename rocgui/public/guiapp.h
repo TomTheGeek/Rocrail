@@ -71,10 +71,11 @@ public:
   int getSvn() { return m_Svn; }
   int getTabSel() { return m_TabSel; }
   bool isModView() { return m_bModView; }
-  void setModView(bool modview) { m_bModView = modview; }
+  void setModView(bool modview) { m_bForceTabView ?  m_bModView = false:m_bModView = modview; }
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
   wxString getIconPath(const char* iconfile, const char* IconPath);
+  bool isForceTabView() { return m_bForceTabView; }
 
   iORCon        m_RCon;
   const char*   m_Host;
@@ -100,6 +101,7 @@ private:
   bool          m_bStayOffline;
   bool          m_LocalModelModified;
   bool          m_bModView;
+  bool          m_bForceTabView;
   iORes         m_Res;
   iOWrpInf      m_WrpInf;
   bool          m_bInit;

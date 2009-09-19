@@ -28,7 +28,7 @@
     <const name="host" vt="string" val="-h" defval="*" range="*" remark="Specifies target daemon: -h [hostname]"/>
     <const name="port" vt="string" val="-p" defval="*" range="*" remark="Specifies target port: -p [port]"/>
     <const name="tabsel" vt="string" val="-s" defval="-1" range="*" remark="Tab index for selection."/>
-    <const name="modview" vt="string" val="-modview" defval="false" remark="Activates model overview panel."/>
+    <const name="tabview" vt="string" val="-tabview" defval="false" remark="Force tab view in case of a modular layout."/>
     <const name="icons" vt="string" val="-icons" defval="" range="*" remark="Alternative icon path"/>
     <const name="theme" vt="string" val="-theme" defval="" range="*" remark="Theme to use at startup"/>
     <const name="serverpath" vt="string" val="-sp" defval="" range="*" remark="Server path to start Rocrail in a workspace."/>

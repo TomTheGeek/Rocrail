@@ -397,7 +397,7 @@ bool RocGui::OnInit() {
   const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
-
+  m_bForceTabView     = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabview);
 
   // create a trace object:
   m_Trace = TraceOp.inst( (tracelevel)(debug | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING), tf, True );
