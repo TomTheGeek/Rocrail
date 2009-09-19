@@ -31,6 +31,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 #include "wx/grid.h"
 ////@end includes
 
@@ -201,14 +202,6 @@ public:
     wxSpinCtrl* m_ActFn;
     wxStaticText* m_labMotorOffDelay;
     wxSpinCtrl* m_MotorOffDelay;
-    wxStaticText* m_labProt;
-    wxComboBox* m_Prot;
-    wxStaticText* m_labBridgeSensor1;
-    wxComboBox* m_BridgeSensor1;
-    wxStaticText* m_labBridgeSensor2;
-    wxComboBox* m_BridgeSensor2;
-    wxStaticText* m_labPSen;
-    wxComboBox* m_PSen;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
     wxStaticText* m_labV;
@@ -217,6 +210,14 @@ public:
     wxSpinCtrl* m_Delay;
     wxStaticText* m_labPause;
     wxSpinCtrl* m_Pause;
+    wxStaticText* m_labProt;
+    wxComboBox* m_Prot;
+    wxStaticText* m_labBridgeSensor1;
+    wxComboBox* m_BridgeSensor1;
+    wxStaticText* m_labBridgeSensor2;
+    wxComboBox* m_BridgeSensor2;
+    wxStaticText* m_labPSen;
+    wxComboBox* m_PSen;
     wxCheckBox* m_SwapRotation;
     wxPanel* m_MultiPortPanel;
     wxStaticBox* m_PositionBox;

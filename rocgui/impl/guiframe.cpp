@@ -1133,7 +1133,10 @@ void RocGuiFrame::initFrame() {
   acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
   acc_entries[36].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
 
-  wxAcceleratorTable m_accel(37, acc_entries);
+  acc_entries[37].Set(wxACCEL_CTRL, (int) 'W', ME_OpenWorkspace);
+  acc_entries[38].Set(wxACCEL_CTRL, (int) 'D', ME_ShutdownRocRail);
+
+  wxAcceleratorTable m_accel(39, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 

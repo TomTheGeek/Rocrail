@@ -31,6 +31,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -226,10 +227,10 @@ public:
     wxSpinCtrl* m_AccNr;
     wxStaticText* m_LabelDir;
     wxRadioBox* m_Dir;
+    wxRadioBox* m_SavePosBox;
     wxCheckBox* m_Raster;
     wxCheckBox* m_Road;
     wxButton* m_Actions;
-    wxRadioBox* m_SavePosBox;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;

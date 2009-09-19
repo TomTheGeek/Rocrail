@@ -384,9 +384,9 @@
     <ru txt="Сохранить как"/>
     <pt txt="Gardar como"/>
   </Msg>
-  <Msg id="shutdown">
+  <Msg id="shutdown" key="Ctrl-D">
     <de txt="Rocrail Server und Rocview beenden" tip="Rocrail Server beenden."/>
-    <en txt="Shutdown Rocrail and exit" tip="Shutdown Rocrail server and exit gui."/>
+    <en txt="Shutdown Rocrail and Rocview" tip="Shutdown Rocrail server and exit Rocview."/>
     <nl txt="Rocrail stoppen en afsluiten" tip="Stop Rocrail server."/>
     <sv txt="Avsluta och stäng ner Rocrail" tip="Avsluta Rocrail server och GUI."/>
     <fr txt="Quitter Rocrail et Rocview" tip="Quitter Rocrail daemon et Gui."/>
@@ -10656,7 +10656,7 @@
   <Msg id="thrown">
     <en txt="Thrown"/>
   </Msg>
-  <Msg id="openworkspace" dialog="true">
+  <Msg id="openworkspace" dialog="true" key="Ctrl-W">
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
   </Msg>
   <Msg id="rocrailservernotfound">
