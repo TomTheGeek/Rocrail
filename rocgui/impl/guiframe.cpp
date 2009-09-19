@@ -2549,8 +2549,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Open);
   if( mi != NULL ) mi->Enable( l_bOffline );
-  //mi = menuBar->FindItem(ME_SaveAs);
-  //if( mi != NULL ) mi->Enable( l_bOffline );
+  mi = menuBar->FindItem(ME_SaveAs);
+  if( mi != NULL ) mi->Enable( l_bOffline );
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
