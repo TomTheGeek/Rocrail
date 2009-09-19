@@ -1891,7 +1891,7 @@ void RocGuiFrame::Save() {
 
   StrOp.free( localplan );
 
-  wxGetApp().setStayOffline( true );
+  // TODO: why this? wxGetApp().setStayOffline( true );
   wxGetApp().setLocalModelModified(false);
 }
 
@@ -2549,8 +2549,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Open);
   if( mi != NULL ) mi->Enable( l_bOffline );
-  mi = menuBar->FindItem(ME_SaveAs);
-  if( mi != NULL ) mi->Enable( l_bOffline );
+  //mi = menuBar->FindItem(ME_SaveAs);
+    //if( mi != NULL ) mi->Enable( l_bOffline );
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
