@@ -398,7 +398,6 @@ bool RocGui::OnInit() {
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
 
-  bool modview = CmdLnOp.hasKey( m_CmdLn, wCmdline.modview );
 
   // create a trace object:
   m_Trace = TraceOp.inst( (tracelevel)(debug | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING), tf, True );
@@ -448,7 +447,6 @@ bool RocGui::OnInit() {
         wxSUNKEN_BORDER|wxSTAY_ON_TOP);
   }
 
-  m_bModView = wGui.ismodview( m_Ini ) || modview;
 
   // prepare the rocrail connection:
   m_Host = wRRCon.gethost( wGui.getrrcon( m_Ini ) );

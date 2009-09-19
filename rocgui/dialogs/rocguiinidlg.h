@@ -164,7 +164,6 @@ public:
     wxCheckBox* m_RestrictEdit4Auto;
     wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
-    wxCheckBox* m_Modview;
     wxCheckBox* m_DispatchMode;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;

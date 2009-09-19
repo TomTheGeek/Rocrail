@@ -77,7 +77,6 @@
     <var name="updatestimestamp" vt="long" defval="0" remark="timestamp of last viewed updates xml for the update notifier; this number increases after adding items on the server"/>
     <var name="checkupdates" vt="bool" defval="true"/>
     <var name="tabalign" vt="int" defval="0" range="0-2" remark="0 default, 1 left, 2 multiline"/>
-    <var name="modview" vt="bool" defval="false"/>
     <var name="restrictedit4auto" vt="bool" defval="true"/>
     <var name="id" vt="string" defval="rocgui" range="*" remark="Rocgui ID"/>
     <var name="lncvtab" vt="bool" defval="false"/>
