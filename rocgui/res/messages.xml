@@ -10662,4 +10662,7 @@
   <Msg id="rocrailservernotfound">
     <en txt="The Rocrail server is not found in the following location:"/>
   </Msg>
+  <Msg id="defaultworkspace">
+    <en txt="Default Workspace" tip="Default Workspace to open at startup."/>
+  </Msg>
 </Messages>

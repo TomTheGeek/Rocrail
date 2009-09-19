@@ -52,6 +52,7 @@ class wxSpinCtrl;
 ////@begin control identifiers
 #define ID_DIALOG1 10166
 #define ID_NOTEBOOK1 10167
+#define ID_WORKSPACE 10005
 #define ID_ICONPATH_BUTTON 10340
 #define ID_IMAGEPATH_BUTTON 10341
 #define ID_UPDATESPATH_BUTTON 10000
@@ -104,6 +105,9 @@ public:
     void CreateControls();
 
 ////@begin RocguiIniDialog event handler declarations
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_WORKSPACE
+    void OnWorkspaceClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ICONPATH_BUTTON
     void OnIconpathButtonClick( wxCommandEvent& event );
@@ -162,6 +166,9 @@ public:
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_Modview;
     wxCheckBox* m_DispatchMode;
+    wxStaticBox* m_labWorkspace;
+    wxTextCtrl* m_Workspace;
+    wxButton* m_WorkspaceDlg;
     wxStaticBox* m_labIconPath;
     wxTextCtrl* m_IconPath;
     wxButton* m_IconPathDlg;

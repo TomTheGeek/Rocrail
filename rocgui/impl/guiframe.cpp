@@ -1985,16 +1985,26 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
-  wxDirDialog* dlg = new wxDirDialog( this );
-  //dlg->SetPath(m_SVGPath->GetValue());
-  if( dlg->ShowModal() == wxID_OK ) {
-    // TODO: Open Workspace
+  char* workspace = NULL;
+  if( StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
+    workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
+  }
+  else if( event.GetExtraLong() != 4711 ) {
+    wxDirDialog* dlg = new wxDirDialog( this );
+    //dlg->SetPath(m_SVGPath->GetValue());
+    if( dlg->ShowModal() == wxID_OK ) {
+      workspace = StrOp.dup((const char*)dlg->GetPath().mb_str(wxConvUTF8));
+    }
+  }
+
+  if( workspace != NULL ) {
+    // Open Workspace
     if(m_ServerPath == NULL)
       m_ServerPath = FileOp.pwd();
 
     char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
     if( FileOp.exist( rr ) ) {
-      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, (const char*)dlg->GetPath().mb_str(wxConvUTF8) );
+      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
       TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
       SystemOp.system( rrcall, True, True );
       StrOp.free(rrcall);
@@ -2008,6 +2018,7 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
           _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
     }
 
+    StrOp.free(workspace);
     StrOp.free(rr);
   }
 }

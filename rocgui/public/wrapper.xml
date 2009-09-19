@@ -83,6 +83,7 @@
     <var name="lncvtab" vt="bool" defval="false"/>
     <var name="jssupport" vt="bool" defval="true"/>
     <var name="dispatchmode" vt="bool" defval="false"/>
+    <var name="defaultworkspace" vt="string" defval="" remark="Open workspace at startup."/>
     <trace extern="true"/>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>

@@ -596,6 +596,14 @@ bool RocGui::OnInit() {
   TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False );
 
   m_Frame->Raise();
+
+
+  if( m_bOffline ) {
+    wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_OpenWorkspace );
+    evt.SetExtraLong(4711);
+    wxPostEvent( m_Frame, evt );
+  }
+
   return TRUE;
 }
 
