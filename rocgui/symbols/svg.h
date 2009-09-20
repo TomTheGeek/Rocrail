@@ -72,7 +72,7 @@ class svgReader {
 
   public:
   svgReader();
-  iOMap readSvgSymbols( const char* path, iOMap map );
+  iOMap readSvgSymbols( const char* path, iOMap map, const char* themespath );
   svgSymbol* parseSvgSymbol( const char* svgStr );
 };
 

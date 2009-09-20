@@ -31,6 +31,7 @@
     <const name="tabview" vt="string" val="-tabview" defval="false" remark="Force tab view in case of a modular layout."/>
     <const name="icons" vt="string" val="-icons" defval="" range="*" remark="Alternative icon path"/>
     <const name="theme" vt="string" val="-theme" defval="" range="*" remark="Theme to use at startup"/>
+    <const name="themespath" vt="string" val="-themespath" defval="." range="*" remark="Themes path offset"/>
     <const name="serverpath" vt="string" val="-sp" defval="" range="*" remark="Server path to start Rocrail in a workspace."/>
   </Cmdline>
 

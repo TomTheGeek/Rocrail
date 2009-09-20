@@ -1054,7 +1054,7 @@ void RocGuiFrame::setDigintText( const char* text ) {
 // ----------------------------------------------------------------------------
 
 // frame constructor
-RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp)
+RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp, const char* tp)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
   m_Ini                = ini;
@@ -1078,6 +1078,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_IconPath           = icons;
   m_ThemePath          = theme;
   m_ServerPath         = sp;
+  m_ThemesPath         = tp;
   m_bInitialized       = false;
   m_PowerCtrl          = NULL;
   m_bActiveWorkspace   = false;
@@ -1483,18 +1484,24 @@ void RocGuiFrame::initFrame() {
   // read the svg symbols:
   svgReader* svg = new svgReader();
   if( m_ThemePath != NULL )
-    m_SymbolMap = svg->readSvgSymbols( m_ThemePath, NULL );
+    m_SymbolMap = svg->readSvgSymbols( m_ThemePath, NULL, m_ThemesPath );
   else
-    m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL );
+    m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), NULL, m_ThemesPath );
 
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath2( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath3( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath4( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
-  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath5( wGui.getplanpanel(m_Ini) ), m_SymbolMap );
+  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath2( wGui.getplanpanel(m_Ini) ), m_SymbolMap, m_ThemesPath );
+  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath3( wGui.getplanpanel(m_Ini) ), m_SymbolMap, m_ThemesPath );
+  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath4( wGui.getplanpanel(m_Ini) ), m_SymbolMap, m_ThemesPath );
+  m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath5( wGui.getplanpanel(m_Ini) ), m_SymbolMap, m_ThemesPath );
   delete svg;
 
   // check for theme properties:
-  char* propPath = StrOp.fmt( "%s%cproperties.xml", wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), SystemOp.getFileSeparator() );
+  char* propPath = NULL;
+
+  if( FileOp.isAbsolute( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ) ) )
+    propPath = StrOp.fmt( "%s%cproperties.xml", wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), SystemOp.getFileSeparator() );
+  else
+    propPath = StrOp.fmt( "%s%c%s%cproperties.xml", m_ThemesPath, SystemOp.getFileSeparator(), wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), SystemOp.getFileSeparator() );
+
   iOFile f = FileOp.inst( propPath, OPEN_READONLY );
   if( f != NULL && FileOp.size(f) > 0 ) {
     char* propsXml = (char*)allocMem( FileOp.size( f ) + 1 );

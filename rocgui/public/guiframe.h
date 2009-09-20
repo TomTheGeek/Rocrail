@@ -59,7 +59,7 @@ class RocGuiFrame : public wxFrame
 {
 public:
   iONode m_Ini;
-  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp);
+  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp, const char* tp);
   void create();
 
   void setOnline( bool online );
@@ -301,6 +301,7 @@ private:
   const char* m_IconPath;
   const char* m_ThemePath;
   const char* m_ServerPath;
+  const char* m_ThemesPath;
 
   bool  m_bLocoBook;
   bool  m_bFill;

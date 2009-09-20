@@ -62,6 +62,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_iOccupied = 0;
   m_Bitmap = NULL;
   m_Scale = 1.0;
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "symbol map size = %d", symmap == NULL ? 0:MapOp.size(symmap) );
   initSym();
   m_Label = StrOp.dup("...");
   m_iItemIDps = itemidps;

@@ -397,6 +397,7 @@ bool RocGui::OnInit() {
   const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
+  const char* tp      = CmdLnOp.getStr( m_CmdLn, wCmdline.themespath );
   m_bForceTabView     = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabview);
 
   // create a trace object:
@@ -533,7 +534,7 @@ bool RocGui::OnInit() {
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini, icons, theme, sp );
+        wxSize(iWidth, iHeight), m_Ini, icons, theme, sp, tp );
   m_Frame->initFrame();
 
 

@@ -243,21 +243,34 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
   return sym;
 }
 
+static char* makeThemePath(const char* path, const char* themespath) {
+  if( !FileOp.isAbsolute(path) ) {
+    char* newpath = StrOp.fmt( "%s%c%s", themespath, SystemOp.getFileSeparator(), path );
+    return newpath;
+  }
+  return StrOp.dup(path);
+}
 
-iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
+iOMap svgReader::readSvgSymbols( const char* path, iOMap map, const char* themespath ) {
 
-  iODir            dir = DirOp.inst( path );
+  char*        newpath = makeThemePath(path, themespath);
+  iODir            dir = DirOp.inst( newpath );
   const char* fileName = NULL;
   iOMap symbolMap = NULL;
 
+
   if( dir == NULL ) {
     /* Invalid path. */
-    return NULL;
+    TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "svg path [%s] not found", newpath );
+    StrOp.free(newpath);
+    return map;
   }
- TraceOp.trc( "svg", TRCLEVEL_INFO, __LINE__, 9999, "scanning %s", path );
+  TraceOp.trc( "svg", TRCLEVEL_INFO, __LINE__, 9999, "scanning %s", newpath );
 
-  if( map == NULL )
+  if( map == NULL ) {
     symbolMap = MapOp.inst();
+    TraceOp.trc( "svg", TRCLEVEL_INFO, __LINE__, 9999, "symbol map created" );
+  }
   else
     symbolMap = map;
 
@@ -272,7 +285,7 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
       const char* key = StrOp.strlwr( fileName );
       obj o = MapOp.get( symbolMap, key );
       if( o == NULL ) {
-        char* pathfileName = StrOp.fmt( "%s%c%s", path, SystemOp.getFileSeparator(), fileName );
+        char* pathfileName = StrOp.fmt( "%s%c%s", newpath, SystemOp.getFileSeparator(), fileName );
         long size = FileOp.fileSize( pathfileName );
         char* svgStr = (char*)allocMem( size+1 );
         iOFile f = FileOp.inst( pathfileName, OPEN_READONLY );
@@ -281,7 +294,7 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
         FileOp.base.del( f );
         svgSymbol* sym = parseSvgSymbol( svgStr );
         if(sym != NULL) {
-          TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "add [%s] to symbolMap", key );
+          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "add [%s] to symbolMap", key );
           MapOp.put( symbolMap, key, (obj)sym );
         }
         else {
@@ -298,6 +311,7 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map ) {
     fileName = DirOp.read( dir );
   };
 
+  StrOp.free(newpath);
   return symbolMap;
 }
 
