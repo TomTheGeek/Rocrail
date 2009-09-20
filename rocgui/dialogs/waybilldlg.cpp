@@ -359,6 +359,30 @@ void WaybillDlg::onNewWaybill( wxCommandEvent& event ){
 }
 
 
+void WaybillDlg::onCopy( wxCommandEvent& event ){
+  if( m_Props != NULL ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode waybilllist = wPlan.getwaybilllist( model );
+      if( waybilllist == NULL ) {
+        waybilllist = NodeOp.inst( wWaybillList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, waybilllist );
+      }
+
+      if( waybilllist != NULL ) {
+        iONode lccopy = (iONode)NodeOp.base.clone( m_Props );
+        char* id = StrOp.fmt( "%s (copy)", wWaybill.getid(lccopy));
+        wWaybill.setid(lccopy, id);
+        StrOp.free(id);
+        NodeOp.addChild( waybilllist, lccopy );
+        initIndex();
+      }
+
+    }
+  }
+}
+
+
 void WaybillDlg::onDeleteWaybill( wxCommandEvent& event ){
   if( m_Props == NULL )
     return;

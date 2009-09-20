@@ -53,6 +53,7 @@ public:
   void onDeleteWaybill( wxCommandEvent& event );
   void onApply( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
+  void onCopy( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
 
