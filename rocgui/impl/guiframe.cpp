@@ -2011,12 +2011,17 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
 
     char* rr = StrOp.fmt( "%s%crocrail%s", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt() );
     if( FileOp.exist( rr ) ) {
+#if defined _WIN32
+      char* rrcall = StrOp.fmt( "\"\" \"%s%crocrail%s\" -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
+#else
       char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
+#endif
       TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
       SystemOp.system( rrcall, True, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;
       Connect( "localhost", 62842, true); // TODO: add const to the wrapper.xml for the defaults.
+
     }
     else {
       wxMessageDialog( this,
