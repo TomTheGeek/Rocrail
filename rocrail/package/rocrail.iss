@@ -92,6 +92,6 @@ Source: "..\..\rocrail\symbols\*.*"; DestDir: "{userdocs}\Rocrail\symbols"; Task
 Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\Rocview"; Parameters: "-sp ""{app}"" -icons ""{app}\icons"""; WorkingDir: "{app}"; Filename: "{app}\rocview.exe"
+Name: "{group}\Rocview"; Parameters: "-sp ""{app}"" -icons ""{app}\icons"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
 Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userdocs}\Rocrail\images"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocrail.exe"
 
