@@ -156,7 +156,7 @@ static int __generateChecksum( byte* datagram ) {
 static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* response ) {
   iODINAMOData data = Data(dinamo);
   int size = 0;
-  *response = True;
+  *response = False;
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "translating: %s", NodeOp.getName( node ) );
 
@@ -170,7 +170,6 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[0] = 0x00 | data->header;
       datagram[1] = (byte)__generateChecksum( datagram );
       size = 2;
-      *response = False;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ||
              StrOp.equals( cmdstr, wSysCmd.reset ) ) {
@@ -180,7 +179,6 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[2] = SYS_RESET_FAULT;
       datagram[3] = (byte)__generateChecksum( datagram );
       size = 4;
-      *response = False;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.hfi ) ) {
       datagram[0] = 3 | VER3_FLAG | data->header;
@@ -189,7 +187,6 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[3] = (byte)wSysCmd.getval( node );
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
-      *response = False;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.version ) ) {
       datagram[0] = 2 | VER3_FLAG | data->header;
@@ -197,6 +194,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[2] = SYS_GET_VER;
       datagram[3] = (byte)__generateChecksum( datagram );
       size = 4;
+      *response = True;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.info ) ) {
       int type = wSysCmd.getval( node );
@@ -206,6 +204,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[3] = (byte)type;
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
+      *response = True;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.link ) ) {
       /* TODO: */
