@@ -457,6 +457,30 @@ void OperatorDlg::onDelOperator( wxCommandEvent& event ) {
 }
 
 
+void OperatorDlg::OnCopy( wxCommandEvent& event ){
+  if( m_Props != NULL ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode operatorlist = wPlan.getoperatorlist( model );
+      if( operatorlist == NULL ) {
+        operatorlist = NodeOp.inst( wOperatorList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, operatorlist );
+      }
+
+      if( operatorlist != NULL ) {
+        iONode lccopy = (iONode)NodeOp.base.clone( m_Props );
+        char* id = StrOp.fmt( "%s (copy)", wOperator.getid(lccopy));
+        wOperator.setid(lccopy, id);
+        StrOp.free(id);
+        NodeOp.addChild( operatorlist, lccopy );
+        initIndex();
+      }
+
+    }
+  }
+}
+
+
 void OperatorDlg::onLocoImage( wxCommandEvent& event ) {
   if( m_LocoID->GetSelection() != wxNOT_FOUND ) {
     iONode lc = (iONode)m_LocoID->GetClientData(m_LocoID->GetSelection());

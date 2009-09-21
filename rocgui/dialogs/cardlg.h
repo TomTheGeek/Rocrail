@@ -60,6 +60,7 @@ public:
   void onSetPage( wxCommandEvent& event );
   void onImport( wxCommandEvent& event );
   iONode getSelectedCar();
+  void OnCopy( wxCommandEvent& event );
 
 };
 

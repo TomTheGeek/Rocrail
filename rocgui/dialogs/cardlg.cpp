@@ -144,6 +144,7 @@ void CarDlg::initLabels() {
   // Index
   m_NewCar->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DeleteCar->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -445,6 +446,30 @@ void CarDlg::onDeleteCar( wxCommandEvent& event ){
   }
 
   initIndex();
+}
+
+
+void CarDlg::OnCopy( wxCommandEvent& event ){
+  if( m_Props != NULL ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode carlist = wPlan.getcarlist( model );
+      if( carlist == NULL ) {
+        carlist = NodeOp.inst( wCarList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, carlist );
+      }
+
+      if( carlist != NULL ) {
+        iONode lccopy = (iONode)NodeOp.base.clone( m_Props );
+        char* id = StrOp.fmt( "%s (copy)", wCar.getid(lccopy));
+        wCar.setid(lccopy, id);
+        StrOp.free(id);
+        NodeOp.addChild( carlist, lccopy );
+        initIndex();
+      }
+
+    }
+  }
 }
 
 

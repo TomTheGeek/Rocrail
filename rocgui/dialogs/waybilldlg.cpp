@@ -148,6 +148,7 @@ void WaybillDlg::initLabels() {
   // Index
   m_NewWaybill->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DeleteWaybill->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );

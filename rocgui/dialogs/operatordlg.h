@@ -68,6 +68,7 @@ public:
     void onSetPage( wxCommandEvent& event );
     void onOperatorList( wxCommandEvent& event );
     void onCarList( wxCommandEvent& event );
+    void OnCopy( wxCommandEvent& event );
 
 };
 
