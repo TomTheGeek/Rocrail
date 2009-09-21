@@ -189,6 +189,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[3] = (byte)wSysCmd.getval( node );
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
+      *response = False;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.version ) ) {
       datagram[0] = 2 | VER3_FLAG | data->header;
@@ -846,7 +847,7 @@ static void __transactor( void* threadinst ) {
         if( wsize > 0 ) {
           TraceOp.dump( "cmdreq", TRCLEVEL_BYTE, (char*)wbuffer, wsize );
           MemOp.copy(lastdatagram, wbuffer, wsize);
-          lastdatagramsize = wsize;
+          lastdatagramsize = responseExpected ? wsize:0;
           if( !data->dummyio )
             SerialOp.write( data->serial, (char*)wbuffer, wsize );
         }
@@ -859,7 +860,7 @@ static void __transactor( void* threadinst ) {
     if( !data->dummyio && !SerialOp.available(data->serial) ) {
       if( SystemOp.getTick() - timer >= 20 ) {
         if( lastdatagramsize > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d", lastdatagramsize );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
           TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
           SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
         }
@@ -927,17 +928,17 @@ static void __transactor( void* threadinst ) {
 
       /* check for events: */
 
-      if( (rbuffer[1] & 0x60) == 0x40 ) {
+      if( dsize > 0 && (rbuffer[1] & 0x60) == 0x40 ) {
         /* Switch event. (Feedback) */
         __fbEvent( dinamo, rbuffer );
       }
 
-      else if( (rbuffer[1] & 0x60) == 0x60 ) {
+      else if( dsize > 0 && (rbuffer[1] & 0x60) == 0x60 ) {
         /* Switch response. (Feedback) */
         __fbEvent( dinamo, rbuffer );
       }
 
-      else if( (rbuffer[1] & 0x7C) == 0x30 ) {
+      else if( dsize > 0 && (rbuffer[1] & 0x7C) == 0x30 ) {
         /* Alarm event. */
         __alEvent( dinamo, rbuffer );
       }
