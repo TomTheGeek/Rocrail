@@ -33,7 +33,7 @@ fi
 
 # create the .apps
 cd rocrail; make macapp; cd ..;
-cd rocgui; make macapp; cd ..;
+cd rocview; make macapp; cd ..;
 
 echo "Getting Bazaar revision number..."
 if which bzr > /dev/null
@@ -75,16 +75,16 @@ cp rocrail/package/plan.xml $DEST/Rocrail/rocdata/
 cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
 cp rocrail/package/rocview.ini_dmg $DEST/Rocrail/rocdata/rocview.ini
 
-cp -r rocgui/svg/themes $DEST/Rocrail/rocdata/
+cp -r rocview/svg/themes $DEST/Rocrail/rocdata/
 
 # pimp the dmg
 cp doc/rocrail-logo-dmg.png $DEST/background.png
 setFile -a V $DEST/background.png
 cp rocrail/rocrail.icns $DEST/VolumeIcon.icns
 setFile -a V $DEST/VolumeIcon.icns
-cp rocgui/_DS_Store $DEST/.DS_Store
+cp rocview/_DS_Store $DEST/.DS_Store
 setFile -a V $DEST/.DS_Store
-cp rocgui/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
+cp rocview/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
 setFile -a V $DEST/Rocrail/.DS_Store
 
 # Unmount the disk image

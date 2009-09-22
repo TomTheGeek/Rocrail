@@ -48,7 +48,7 @@ install -s -m 755 Rocrail/unxbin/ddx.so $RPM_BUILD_ROOT/opt/rocrail/ddx.so
 install -s -m 755 Rocrail/unxbin/slx.so $RPM_BUILD_ROOT/opt/rocrail/slx.so
 install -s -m 755 Rocrail/unxbin/loconet.so $RPM_BUILD_ROOT/opt/rocrail/loconet.so
 install -s -m 755 Rocrail/unxbin/opendcc.so $RPM_BUILD_ROOT/opt/rocrail/opendcc.so
-install -s -m 755 Rocrail/unxbin/rocgui $RPM_BUILD_ROOT/opt/rocrail/rocgui
+install -s -m 755 Rocrail/unxbin/rocview $RPM_BUILD_ROOT/opt/rocrail/rocview
 install -s -m 755 Rocrail/unxbin/virtual.so $RPM_BUILD_ROOT/opt/rocrail/virtual.so
 
 install -g users -m 666 Rocrail/rocrail/package/Rocrail.directory $RPM_BUILD_ROOT/usr/share/desktop-directories
@@ -62,9 +62,9 @@ install -g users -m 666 Rocrail/rocrail/package/roc*.ini $RPM_BUILD_ROOT/opt/roc
 install -g users -m 666 Rocrail/rocrail/package/plan.xml $RPM_BUILD_ROOT/opt/rocrail/default
 install -g users -m 666 Rocrail/rocrail/package/neustadt.xml $RPM_BUILD_ROOT/opt/rocrail/default
 
-install -g users -m 666 Rocrail/rocgui/icons/*.* $RPM_BUILD_ROOT/opt/rocrail/icons
+install -g users -m 666 Rocrail/rocview/icons/*.* $RPM_BUILD_ROOT/opt/rocrail/icons
 install -g users -m 666 Rocrail/stylesheets/*.* $RPM_BUILD_ROOT/opt/rocrail/stylesheets
-install -d -g users -m 666 Rocrail/rocgui/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
+install -d -g users -m 666 Rocrail/rocview/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
 install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/symbols
 
 %clean
@@ -91,13 +91,16 @@ install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/
 /opt/rocrail/barjut.so
 /opt/rocrail/loconet.so
 /opt/rocrail/opendcc.so
-/opt/rocrail/rocgui
+/opt/rocrail/ecos.so
+/opt/rocrail/cs2.so
+/opt/rocrail/nec.so
+/opt/rocrail/rocview
 /opt/rocrail/default/plan.xml
 /opt/rocrail/default/neustadt.xml
 /opt/rocrail/default/rocrail.ini
-/opt/rocrail/default/rocgui.ini
+/opt/rocrail/default/rocview.ini
 /opt/rocrail/rocrail.sh
-/opt/rocrail/rocgui.sh
+/opt/rocrail/rocview.sh
 /opt/rocrail/rocraild.png
 /etc/init.d/rocraild
 /opt/rocrail/rocrail.xpm

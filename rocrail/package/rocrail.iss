@@ -19,7 +19,7 @@ OutputBaseFilename=rocrail-setup-1.3.999-revxxx-snapshot-unicode
 Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
 Name: rocrailini; Description: "Demo rocrail.ini"
-Name: rocguiini; Description: "Demo rocgui.ini"
+Name: rocviewini; Description: "Demo rocview.ini"
 Name: icons; Description: "Rocview icons"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
@@ -75,19 +75,19 @@ Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist unin
 Source: "neustadt.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
 Source: "rocrail.ini"; DestDir: "{userdocs}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "rocgui.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocguiini; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "rocview.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocviewini; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "..\..\rocgui\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
+Source: "..\..\rocview\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
-Source: "..\..\rocgui\svg\themes\Accessories\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Accessories"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\Basic\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Basic"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\DB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\DB"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\SpDrS60\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\SpDrS60"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\SBB-RHB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\SBB-RHB"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\NMBS-SNCB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\NMBS-SNCB"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\NL\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\NL"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\Roads\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Roads"; Tasks: themes;
-Source: "..\..\rocgui\svg\themes\ILTIS\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\ILTIS"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\Accessories\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Accessories"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\Basic\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Basic"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\DB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\DB"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\SpDrS60\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\SpDrS60"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\SBB-RHB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\SBB-RHB"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\NMBS-SNCB\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\NMBS-SNCB"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\NL\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\NL"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\Roads\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\Roads"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\ILTIS\*.*"; DestDir: "{userdocs}\Rocrail\svg\themes\ILTIS"; Tasks: themes;
 Source: "..\..\rocrail\symbols\*.*"; DestDir: "{userdocs}\Rocrail\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
 Source: "..\..\COPYING"; DestDir: "{app}"
 

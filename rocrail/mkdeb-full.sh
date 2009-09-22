@@ -242,9 +242,9 @@ cp -u ../rocrail/package/neustadt.xml debian/usr/share/rocrail/default
 
 cp ../rocrail/package/rocraild.png debian/usr/share/pixmaps
 cp ../rocrail/package/rocrail.xpm debian/usr/share/pixmaps
-cp -R ../rocgui/icons/*.* debian/usr/share/rocrail/icons
+cp -R ../rocview/icons/*.* debian/usr/share/rocrail/icons
 cp -R ../stylesheets/*.* debian/usr/share/rocrail/stylesheets
-cp -R ../rocgui/svg/* debian/usr/share/rocrail/svg
+cp -R ../rocview/svg/* debian/usr/share/rocrail/svg
 cp -R ../rocrail/symbols/*.* debian/usr/share/rocrail/symbols
 cp -R ../rocrail/package/images/*.* debian/usr/share/rocrail/images
 

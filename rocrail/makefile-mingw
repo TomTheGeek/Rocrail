@@ -74,7 +74,7 @@ rocrail:
 	make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\rocdigs & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\roclcdr & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
-	cd ..\rocgui & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
+	cd ..\rocview & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 
 unicode:
 	cd ..\rocs & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
@@ -82,7 +82,7 @@ unicode:
 	make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\rocdigs & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\roclcdr & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
-	cd ..\rocgui & make -f makefile-mingw clean & make -f makefile-mingw unicode DEBUG=$(DEBUG)
+	cd ..\rocview & make -f makefile-mingw clean & make -f makefile-mingw unicode DEBUG=$(DEBUG)
 
 ansi:
 	cd ..\rocs & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
@@ -90,4 +90,4 @@ ansi:
 	make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\rocdigs & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
 	cd ..\roclcdr & make -f makefile-mingw clean & make -f makefile-mingw all DEBUG=$(DEBUG)
-	cd ..\rocgui & make -f makefile-mingw clean & make -f makefile-mingw ansi DEBUG=$(DEBUG)
+	cd ..\rocview & make -f makefile-mingw clean & make -f makefile-mingw ansi DEBUG=$(DEBUG)

@@ -50,9 +50,9 @@ cp -u ../rocrail/package/plan.xml debian/opt/rocrail/default
 cp -u ../rocrail/package/neustadt.xml debian/opt/rocrail/default
 
 cp -R ../rocrail/package/images/*.* debian/opt/rocrail/images
-cp -R ../rocgui/icons/*.* debian/opt/rocrail/icons
+cp -R ../rocview/icons/*.* debian/opt/rocrail/icons
 cp -R ../stylesheets/*.* debian/opt/rocrail/stylesheets
-cp -R ../rocgui/svg/* debian/opt/rocrail/svg
+cp -R ../rocview/svg/* debian/opt/rocrail/svg
 cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
