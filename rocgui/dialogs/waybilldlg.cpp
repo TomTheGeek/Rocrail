@@ -360,7 +360,7 @@ void WaybillDlg::onNewWaybill( wxCommandEvent& event ){
 }
 
 
-void WaybillDlg::onCopy( wxCommandEvent& event ){
+void WaybillDlg::OnCopy( wxCommandEvent& event ){
   if( m_Props != NULL ) {
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {

@@ -124,15 +124,15 @@
       <var name="locobook" vt="bool" defval="true"/>
     </planpanel>
     <splitpanel wrappername="SplitPanel">
-      <var name="main" vt="int" defval="250" remark="vertical plan/message split position"/>
-      <var name="msg" vt="int" defval="300" remark="horizontal message/exception split position"/>
+      <var name="main" vt="int" defval="420" remark="vertical plan/message split position"/>
+      <var name="msg" vt="int" defval="400" remark="horizontal message/exception split position"/>
       <var name="plan" vt="int" defval="300" remark="horizontal plan/plan split position"/>
     </splitpanel>
     <window wrappername="Window">
       <var name="x" vt="int" defval="50"/>
       <var name="y" vt="int" defval="50"/>
-      <var name="cx" vt="int" defval="600"/>
-      <var name="cy" vt="int" defval="400"/>
+      <var name="cx" vt="int" defval="900"/>
+      <var name="cy" vt="int" defval="600"/>
     </window>
     <jsmap extern="true"/>
     <mic wrappername="MIC" remark="Mouse Integrated Controller">
