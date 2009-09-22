@@ -194,7 +194,7 @@
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
     <typedef def="enum {DATA_FLAG=0x80, TOGGLE_FLAG=0x40, FAULT_FLAG=0x20, HOLD_FLAG=0x10, VER3_FLAG=0x08, CNT_MASK=0x07} __dinamoheader"/>
-    <typedef def="enum {SYS_CMD=0x01, SYS_RESET_FAULT=0x00, SYS_SET_HFI=0x01, SYS_GET_VER=0x02, SYS_GET_INFO=0x03, SYS_SET_FLASH=0x04,
+    <typedef def="enum {SYS_CMD=0x01, SYS_RESET_FAULT=0x00, SYS_SET_HFI=0x01, SYS_GET_VER=0x02, SYS_GET_FIRMVER=0x0A, SYS_GET_INFO=0x03, SYS_SET_FLASH=0x04,
                         SYS_SET_EVENT=0x20} __dinamosyscmds"/>
     <data>
       <var name="ini" vt="iONode"/>

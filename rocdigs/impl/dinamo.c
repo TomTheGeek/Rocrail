@@ -163,6 +163,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
   /* System command. */
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
+    int cmdval = wSysCmd.getval( node );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "translating: cmd=%s", cmdstr );
 
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
@@ -188,13 +189,21 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
     }
-    else if( StrOp.equals( cmdstr, wSysCmd.version ) ) {
+    else if( StrOp.equals( cmdstr, wSysCmd.version ) && cmdval == 0 ) {
       datagram[0] = 2 | VER3_FLAG | data->header;
       datagram[1] = SYS_CMD;
       datagram[2] = SYS_GET_VER;
       datagram[3] = (byte)__generateChecksum( datagram );
       size = 4;
       *response = True;
+    }
+    else if( StrOp.equals( cmdstr, wSysCmd.version ) && cmdval == 1) {
+      datagram[0] = 2 | VER3_FLAG | data->header;
+      datagram[1] = SYS_CMD;
+      datagram[2] = SYS_GET_FIRMVER;
+      datagram[3] = (byte)__generateChecksum( datagram );
+      size = 4;
+      *response = False; /* only 3.1 responds */
     }
     else if( StrOp.equals( cmdstr, wSysCmd.info ) ) {
       int type = wSysCmd.getval( node );
@@ -691,12 +700,61 @@ static Boolean __checkResponse( iODINAMO dinamo, byte* rbuffer ) {
 
         if( (rbuffer[2] & 0x60) == 0 ) {
 
-          if( (rbuffer[2] & 0x07) == SYS_GET_VER ) {
+          /*
+              >> System Version Request (0000001) (0001010)
+
+              Geeft als antwoord de versie van Dinamo:
+
+              << (0000001) (0001010) (YYYYYYY) (0MMMmmm) (0sssbbb)
+
+              YYYYYYY  = System Type (bv RM-H, RM-U, UCCI)
+              MMM = Major Release
+              mmm  = Minor Release
+              sss  = subrelease
+              bbb  = bugfix
+
+              Als System Type zijn op dit moment gedefinieerd:
+               1 = RM-H
+               2 = RM-U
+               10  = UCCI
+
+           */
+          if( (rbuffer[2] & 0x7F) == SYS_GET_FIRMVER ) {
+            int majorRelease = (rbuffer[4] & 0x38) >> 3;
+            int minorRelease = rbuffer[4] & 0x07;
+            int subRelease = (rbuffer[5] & 0x38) >> 3;
+            int bugfix = rbuffer[5] & 0x07;
+            const char* type = "?";
+            if( (rbuffer[3] & 0x7F) == 1 )
+              type = "RM-H";
+            else if( (rbuffer[3] & 0x7F)  == 2 )
+              type = "RM-U";
+            else if( (rbuffer[3] & 0x7F)  == 10 )
+              type = "UCCI";
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%c] %s firmware version %d.%d%d-%d",
+              fault, type, majorRelease, minorRelease, subRelease, bugfix );
+          }
+
+          /*
+              >> Version Info Request (0000001) (0000010)
+
+              Geeft als antwoord de versie van Dinamo:
+
+              << (0000001) (0000010) (0MMMmmm) (0sssbbb)
+
+              MMM = Major Release
+              mmm = Minor Release
+              sss = subrelease
+              bbb = bugfix
+
+           */
+
+          else if( (rbuffer[2] & 0x07) == SYS_GET_VER ) {
             int majorRelease = (rbuffer[3] & 0x38) >> 3;
             int minorRelease = rbuffer[3] & 0x07;
             int subRelease = (rbuffer[4] & 0x38) >> 3;
             int bugfix = rbuffer[4] & 0x07;
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%c] version %d.%d%d-%d",
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%c] protocol version %d.%d%d-%d",
               fault, majorRelease, minorRelease, subRelease, bugfix );
           }
           else if( (rbuffer[2] & 0x07) == SYS_GET_INFO ) {
@@ -1079,6 +1137,11 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
 
       cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
       wSysCmd.setcmd( cmd, wSysCmd.version );
+      ThreadOp.post( data->transactor, (obj)cmd );
+
+      cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+      wSysCmd.setcmd( cmd, wSysCmd.version );
+      wSysCmd.setval( cmd, 1 );
       ThreadOp.post( data->transactor, (obj)cmd );
 
       cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
