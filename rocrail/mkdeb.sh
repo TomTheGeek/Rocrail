@@ -45,9 +45,7 @@ cp ../rocrail/package/rocraild debian/etc/init.d
 chmod +x debian/opt/rocrail/*.sh
 cp ../rocrail/package/rocraild.png debian/opt/rocrail
 cp ../rocrail/package/rocrail.xpm debian/opt/rocrail
-cp -u ../rocrail/package/roc*.ini debian/opt/rocrail/default
 cp -u ../rocrail/package/plan.xml debian/opt/rocrail/default
-cp -u ../rocrail/package/neustadt.xml debian/opt/rocrail/default
 
 cp -R ../rocrail/package/images/*.* debian/opt/rocrail/images
 cp -R ../rocview/icons/*.* debian/opt/rocrail/icons

@@ -50,6 +50,9 @@ install -s -m 755 Rocrail/unxbin/loconet.so $RPM_BUILD_ROOT/opt/rocrail/loconet.
 install -s -m 755 Rocrail/unxbin/opendcc.so $RPM_BUILD_ROOT/opt/rocrail/opendcc.so
 install -s -m 755 Rocrail/unxbin/rocview $RPM_BUILD_ROOT/opt/rocrail/rocview
 install -s -m 755 Rocrail/unxbin/virtual.so $RPM_BUILD_ROOT/opt/rocrail/virtual.so
+install -s -m 755 Rocrail/unxbin/cs2.so $RPM_BUILD_ROOT/opt/rocrail/cs2.so
+install -s -m 755 Rocrail/unxbin/nec.so $RPM_BUILD_ROOT/opt/rocrail/nec.so
+install -s -m 755 Rocrail/unxbin/ecos.so $RPM_BUILD_ROOT/opt/rocrail/nec.so
 
 install -g users -m 666 Rocrail/rocrail/package/Rocrail.directory $RPM_BUILD_ROOT/usr/share/desktop-directories
 install -g users -m 666 Rocrail/rocrail/package/Roc*.desktop $RPM_BUILD_ROOT/usr/share/applications
@@ -58,9 +61,7 @@ install -m 755 Rocrail/rocrail/package/roc*.sh $RPM_BUILD_ROOT/opt/rocrail
 install -g users -m 666 Rocrail/rocrail/package/rocraild.png $RPM_BUILD_ROOT/opt/rocrail
 install -g users -m 666 Rocrail/rocrail/package/rocraild $RPM_BUILD_ROOT/etc/init.d
 install -g users -m 666 Rocrail/rocrail/package/rocrail.xpm $RPM_BUILD_ROOT/opt/rocrail
-install -g users -m 666 Rocrail/rocrail/package/roc*.ini $RPM_BUILD_ROOT/opt/rocrail/default
 install -g users -m 666 Rocrail/rocrail/package/plan.xml $RPM_BUILD_ROOT/opt/rocrail/default
-install -g users -m 666 Rocrail/rocrail/package/neustadt.xml $RPM_BUILD_ROOT/opt/rocrail/default
 
 install -g users -m 666 Rocrail/rocview/icons/*.* $RPM_BUILD_ROOT/opt/rocrail/icons
 install -g users -m 666 Rocrail/stylesheets/*.* $RPM_BUILD_ROOT/opt/rocrail/stylesheets
@@ -96,9 +97,6 @@ install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/
 /opt/rocrail/nec.so
 /opt/rocrail/rocview
 /opt/rocrail/default/plan.xml
-/opt/rocrail/default/neustadt.xml
-/opt/rocrail/default/rocrail.ini
-/opt/rocrail/default/rocview.ini
 /opt/rocrail/rocrail.sh
 /opt/rocrail/rocview.sh
 /opt/rocrail/rocraild.png

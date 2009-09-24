@@ -213,8 +213,8 @@
       <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
     </service>
     <trace wrappername="Trace">
-      <var name="rfile" vt="string" defval="rocrail.trace"/>
-      <var name="gfile" vt="string" defval="rocgui.trace"/>
+      <var name="rfile" vt="string" defval="rocrail"/>
+      <var name="gfile" vt="string" defval="rocview"/>
       <var name="debug" vt="bool" defval="false" remark="Trace level debug."/>
       <var name="automatic" vt="bool" defval="false" remark="Trace level for extra info in automatic mode."/>
       <var name="byte" vt="bool" defval="false" remark="Activates dump tracelevel."/>

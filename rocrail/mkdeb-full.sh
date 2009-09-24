@@ -234,9 +234,7 @@ cp ../rocrail/package/rocraild debian/etc/init.d
 
 #    Ini files and default plans
 
-cp -u ../rocrail/package/roc*.ini debian/usr/share/rocrail/default
 cp -u ../rocrail/package/plan.xml debian/usr/share/rocrail/default
-cp -u ../rocrail/package/neustadt.xml debian/usr/share/rocrail/default
 
 #    Artwork
 

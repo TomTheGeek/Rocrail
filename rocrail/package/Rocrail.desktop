@@ -4,6 +4,6 @@ Encoding=UTF-8
 Type=Application
 Terminal=true
 Exec=/opt/rocrail/rocrail.sh
-Icon=rocraild.png
+Icon=/opt/rocrail/rocraild.png
 Name=Rocrail
 Categories=Rocrail;Game;

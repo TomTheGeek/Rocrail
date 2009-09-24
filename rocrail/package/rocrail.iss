@@ -18,8 +18,6 @@ OutputBaseFilename=rocrail-setup-1.3.999-revxxx-snapshot-unicode
 [Tasks]
 Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
-Name: rocrailini; Description: "Demo rocrail.ini"
-Name: rocviewini; Description: "Demo rocview.ini"
 Name: icons; Description: "Rocview icons"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
@@ -72,10 +70,7 @@ Source: "..\..\winbin\nce.dll"; DestDir: "{app}"
 Source: "..\..\winbin\dcc232.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "neustadt.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
-Source: "rocrail.ini"; DestDir: "{userdocs}\Rocrail"; Tasks:rocrailini; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "rocview.ini"; DestDir: "{userdocs}\Rocrail"; Tasks: rocviewini; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "..\..\rocview\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
