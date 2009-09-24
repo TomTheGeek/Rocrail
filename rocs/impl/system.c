@@ -319,6 +319,8 @@ static void __execRunner( void* inst ) {
   iOThread th = (iOThread)inst;
   execParam param = (void*)ThreadOp.getParm(th);
 
+  ThreadOp.sleep(10);
+  
   #if defined _WIN32
     if( param->minimized ) {
       char* cmdStr = StrOp.fmt("start /MIN %s", param->cmdStr);
