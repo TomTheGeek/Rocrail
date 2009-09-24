@@ -915,22 +915,20 @@ static void __transactor( void* threadinst ) {
     }
 
     if( !data->dummyio && !SerialOp.available(data->serial) ) {
-      if( SystemOp.getTick() - timer >= 20 ) {
-        if( lastdatagramsize > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
-          TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
-          SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
-        }
-        else {
-          int  lsize = 0;
-          byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
-          /* Send NULL datagram to signal Rocrail is still a live: */
-          lsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
-          TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
-          SerialOp.write( data->serial, (char*)lbuffer, lsize );
-        }
+      if( lastdatagramsize > 0 && SystemOp.getTick() - timer >= 20 ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
+        TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
+        SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
         timer = SystemOp.getTick();
+      }
+      else {
+        int  lsize = 0;
+        byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
+        /* Send NULL datagram to signal Rocrail is still a live: */
+        lsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
+        TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
+        SerialOp.write( data->serial, (char*)lbuffer, lsize );
       }
     }
 
@@ -1015,7 +1013,7 @@ static void __transactor( void* threadinst ) {
 
 
     /* Give up timeslize: */
-    ThreadOp.sleep( data->dummyio?1000:1 );
+    ThreadOp.sleep( data->dummyio?1000:10 );
   } while( data->run );
 
 
