@@ -96,7 +96,7 @@ static Boolean __equals( void* inst1, void* inst2 ) {
  ***** __Private member functions.
  */
 static char* __createNumberedFileName( int nr, const char* filename ) {
-  return StrOp.fmt( "%s.%03d", filename, nr );
+  return StrOp.fmt( "%s.%03d.trc", filename, nr );
 }
 
 
