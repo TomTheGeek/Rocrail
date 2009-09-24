@@ -1046,12 +1046,14 @@ static void __accThread( void* threadinst ) {
             /* activate */
             SwitchOp.red(sw);
             /* sleep delay */
-            ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
-            /* deactivate: TODO: check if sensors are used for on/off position to wait with the off command until the sensor has reported. */
+            ThreadOp.sleep(1000);
+            /* deactivate: check if sensors are used for on/off position to wait with the off command until the sensor has reported. */
             while( !SwitchOp.isSet(sw) && retry < 60) {
               ThreadOp.sleep(1000);
               retry++;
             }
+            /* sleep delay */
+            ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
             SwitchOp.green(sw);
 
 
