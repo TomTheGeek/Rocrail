@@ -125,7 +125,7 @@ fromtar:
 
 install_all:
 	-rm -Rf $(DESTDIR)
-	-mkdir -p ~/rocrail/locxpm
+#	-mkdir -p ~/rocrail/locxpm
 	-mkdir -p $(DESTDIR)
 	-mkdir -p $(DESTDIR)
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)
@@ -134,18 +134,18 @@ install_all:
 	cd ../rocview; make install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM);
 	-cp -p rocraild.png $(DESTDIR)
 	-cp -p ../rocview/xpm/rocrail.xpm $(DESTDIR)
-	-cp -Rp ../rocview/icons ~/rocrail
+	-cp -Rp ../rocview/icons $(DESTDIR)
 	-cp -Rp ../rocview/svg $(DESTDIR)
 	-cp -Rpu symbols $(DESTDIR)
 	-cp -Rpu package/images $(DESTDIR)
-	-cp -pu package/*.xml ~/rocrail
+	-cp -pu package/plan.xml $(DESTDIR)
 	-cp -p package/rocrail.sh $(DESTDIR)
 	-cp -p package/rocview.sh $(DESTDIR)
 	-chmod +x $(DESTDIR)/rocrail.sh
 	-chmod +x $(DESTDIR)/rocview.sh
-	-cp -p package/Rocrail.desktop ~/Desktop
-	-cp -p package/Rocview.desktop ~/Desktop
-	-chmod -R go+rw ~/rocrail
+	-cp -p package/Rocrail.desktop /usr/local/share/applications
+	-cp -p package/Rocview.desktop /usr/local/share/applications
+#	-chmod -R go+rw ~/rocrail
 
 install:
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)

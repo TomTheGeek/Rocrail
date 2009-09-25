@@ -3,12 +3,9 @@ if [ ! -e ~/rocrail ] ; then
 	mkdir ~/rocrail
 fi
 
-if [ ! -e ~/rocrail/rocgui.ini ] ; then
-	cp /opt/rocrail/default/rocview.ini ~/rocrail
-	cp /opt/rocrail/default/plan.xml ~/rocrail
+if [ ! -e ~/rocrail/rocview.ini ] ; then
+	cp /opt/rocrail/plan.xml ~/rocrail
 fi
-
-cd ~/rocrail
 
 if [ ! -e ~/rocrail/icons ] ; then
 	ln -s /opt/rocrail/icons ~/rocrail/icons
@@ -22,5 +19,7 @@ if [ ! -e ~/rocrail/images ] ; then
 	cp -r /opt/rocrail/images ~/rocrail/images
 fi
 
-/opt/rocrail/rocview -sp /opt/rocrail $1 $2 $3
+cd ~/rocrail
+
+/opt/rocrail/rocview -sp /opt/rocrail -themespath . $1 $2 $3
 
