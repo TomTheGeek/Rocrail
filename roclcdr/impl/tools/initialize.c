@@ -83,7 +83,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   if( street->isFree(street, data->loc->getId( data->loc )) ) {
     /* TODO: curBlock can be NULL in case of R2Rnet */
     if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), street->base.id(street), False, True, reverse ) ) {
-      if( street->lock( street, data->loc->getId( data->loc ), reverse ) ) {
+      if( street->lock( street, data->loc->getId( data->loc ), reverse, True ) ) {
         if( street->go( street ) ) {
 
           if( data->gotoBlock != NULL && StrOp.equals( data->gotoBlock, block->base.id( block ) ) ) {
@@ -107,7 +107,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
         }
         else {
           block->unLock( block, data->loc->getId( data->loc ) );
-          street->unLock( street, data->loc->getId( data->loc ), NULL );
+          street->unLock( street, data->loc->getId( data->loc ), NULL, True );
           if(grouplocked) {
             unlockBlockGroup(inst, group);
           }
