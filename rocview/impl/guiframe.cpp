@@ -1998,6 +1998,10 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
+  if( !wxGetApp().isOffline() ) {
+    return;
+  }
+
   char* workspace = NULL;
   if( wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
     workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
@@ -2570,7 +2574,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Quit);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
   mi = menuBar->FindItem(ME_OpenWorkspace);
-  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
+  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
 
   mi = menuBar->FindItem(ME_Go);
   if( mi != NULL ) mi->Enable( !l_bOffline );
