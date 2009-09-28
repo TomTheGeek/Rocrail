@@ -2581,7 +2581,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Stop);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_InitField);
-  if( mi != NULL ) mi->Enable( !l_bOffline );
+  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
 
   mi = menuBar->FindItem(ME_AutoMode);
   if( mi != NULL ) mi->Enable( !l_bOffline );
