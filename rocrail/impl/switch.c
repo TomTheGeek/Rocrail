@@ -1025,7 +1025,7 @@ static void __accThread( void* threadinst ) {
             const char* routeid = StrTokOp.nextToken( tok );
             iORoute route = ModelOp.getRoute(AppOp.getModel(), routeid);
             if( route != NULL ) {
-              if( !RouteOp.lock(route, data->id, False) ) {
+              if( !RouteOp.lock(route, data->id, False, False) ) {
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "could not lock route %s for accessory \"%s\"", routeid, data->id );
                 allRouteesLocked = False;
               }
@@ -1064,7 +1064,7 @@ static void __accThread( void* threadinst ) {
               const char* routeid = StrTokOp.nextToken( tok );
               iORoute route = ModelOp.getRoute(AppOp.getModel(), routeid);
               if( route != NULL ) {
-                if( !RouteOp.unLock(route, data->id, NULL) ) {
+                if( !RouteOp.unLock(route, data->id, NULL, False) ) {
                   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not unlock route %s for accessory \"%s\"", routeid, data->id );
                 }
                 else {

@@ -890,11 +890,13 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
       <param name="reverse" vt="Boolean" remark="running direction"/>
+      <param name="lockswitches" vt="Boolean" remark="lock all switches for this route"/>
     </fun>
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Unlocking locid"/>
       <param name="resblocks" vt="const char**" remark="Reserved blocks; not to unlock as crossing blocks."/>
+      <param name="unlockswitches" vt="Boolean" remark="unlock all switches for this route"/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>

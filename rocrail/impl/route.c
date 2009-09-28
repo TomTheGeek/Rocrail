@@ -744,7 +744,7 @@ static Boolean _isFree( iORoute inst, const char* id ) {
 }
 
 
-static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
+static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean lockswitches ) {
   iORouteData o = Data(inst);
   o->reverse = reverse;
 
@@ -753,17 +753,18 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
     if( !__checkSensors( inst ) )
       return False;
 
-    if( !__checkSwitches( inst, id ) )
+    if( lockswitches && !__checkSwitches( inst, id ) )
       return False;
 
     if( !__checkCrossingBlocks( inst, id ) )
       return False;
 
-    if( !__lockSwitches( inst, id ) )
+    if( lockswitches && !__lockSwitches( inst, id ) )
       return False;
 
     if( !__lockCrossingBlocks( inst, id ) ) {
-      __unlockSwitches( inst, id );
+      if( lockswitches )
+        __unlockSwitches( inst, id );
       return False;
     }
 
@@ -779,10 +780,11 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse ) {
   }
 }
 
-static Boolean _unLock( iORoute inst, const char* id, const char** resblocks ) {
+static Boolean _unLock( iORoute inst, const char* id, const char** resblocks, Boolean unlockswitches ) {
   iORouteData o = Data(inst);
   if( StrOp.equals( id, o->lockedId ) ) {
-    __unlockSwitches( inst, id );
+    if( unlockswitches )
+      __unlockSwitches( inst, id );
     __unlockCrossingBlocks( inst, id, resblocks );
     o->lockedId = NULL;
     return True;
@@ -877,7 +879,7 @@ static void _reset( iORoute inst ) {
   iORouteData o = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset route [%s]", RouteOp.getId( inst ) );
-  RouteOp.unLock( inst, o->lockedId, NULL );
+  RouteOp.unLock( inst, o->lockedId, NULL, True );
 }
 
 
@@ -949,7 +951,7 @@ static Boolean _isSet( iORoute inst ) {
 }
 
 
-static Boolean _isSetCrossingblockSignals( iORoute inst, iOLoc loc ) {
+static Boolean _isSetCrossingblockSignals( iORoute inst ) {
   iORouteData data = Data(inst);
   return wRoute.iscrossingblocksignals( data->props );
 }

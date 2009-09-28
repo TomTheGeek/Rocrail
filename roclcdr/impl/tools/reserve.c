@@ -107,7 +107,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       nextRoute->getDirection( nextRoute, fromBlock->base.id(fromBlock), &fromto );
       /* lock second next destination */
       if( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto ) ) {
-        if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto ) ) {
+        if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, True ) ) {
           *toBlock = nextBlock;
           *toRoute = nextRoute;
           /* TODO: test if this will not hold other actions... */
@@ -187,7 +187,7 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
     data->next2Block = NULL;
     if( data->next2Route != NULL ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Route [%s]", data->next2Route->getId(data->next2Route) );
-      data->next2Route->unLock(data->next2Route, data->loc->getId(data->loc), NULL);
+      data->next2Route->unLock(data->next2Route, data->loc->getId(data->loc), NULL, True);
       data->next2Route = NULL;
     }
   }
@@ -204,7 +204,7 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
     data->next3Block = NULL;
     if( data->next3Route != NULL ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next3Route [%s]", data->next3Route->getId(data->next3Route) );
-      data->next3Route->unLock(data->next3Route, data->loc->getId(data->loc), NULL);
+      data->next3Route->unLock(data->next3Route, data->loc->getId(data->loc), NULL, True);
       data->next3Route = NULL;
     }
   }
