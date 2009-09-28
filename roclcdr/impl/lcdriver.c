@@ -392,11 +392,11 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
   /* unlock routes */
   unlockBlockGroup( (iOLcDriver)inst, data->blockgroup );
   if( data->next1Route != NULL )
-    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL );
+    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL, True );
   if( data->next2Route != NULL )
-    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL );
+    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL, True );
   if( data->next3Route != NULL )
-    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL );
+    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL, True );
 
   if( data->curBlock == NULL ) {
     data->curBlock  = data->model->getBlock( data->model, data->loc->getCurBlock( data->loc ) );
