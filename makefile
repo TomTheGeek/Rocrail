@@ -41,6 +41,9 @@ install:
 	cd rocrail; make install_all
 #	cp doc/rocrail*.htb ~/rocrail
 
+uninstall:
+	cd rocrail; make uninstall_all
+
 
 version:
 	echo "const int bzr = " >  common/version.h
