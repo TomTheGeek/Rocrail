@@ -145,12 +145,14 @@ install_all:
 	-chmod +x $(DESTDIR)/rocview.sh
 	-cp -p package/Rocrail.desktop /usr/local/share/applications
 	-cp -p package/Rocview.desktop /usr/local/share/applications
+	-cp -p package/Rocrail.directory /usr/local/share/desktop-directories
 #	-chmod -R go+rw ~/rocrail
 
 uninstall_all:
 	-rm -Rf $(DESTDIR)
 	-rm /usr/local/share/applications/Rocrail.desktop
 	-rm /usr/local/share/applications/Rocview.desktop
+	-rm /usr/local/share/desktop-directories/Rocrail.directory
 
 install:
 	-cp -p $(OUTDIR)/rocrail$(BINSUFFIX) $(DESTDIR)

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Rocrail
 Comment=Model Railroad Control Software
-Icon=rocrail.xpm
+Icon=/opt/rocrail/rocrail.xpm
 Type=Directory
 Encoding=UTF-8
 

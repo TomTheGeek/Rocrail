@@ -6,4 +6,4 @@ Terminal=true
 Exec=/opt/rocrail/rocrail.sh
 Icon=/opt/rocrail/rocraild.png
 Name=Rocrail
-Categories=Rocrail;Game;
+Categories=Rocrail;
