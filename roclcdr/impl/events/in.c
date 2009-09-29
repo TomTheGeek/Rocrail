@@ -146,6 +146,16 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" to LC_INBLOCK.",
                    data->loc->getId( data->loc ) );
+
+    /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
+    if( data->curBlock->isTerminalStation( data->curBlock ) ) {
+      /* BUG: 367452 only swap after the IN block event! */
+      if( data->swapBlock != data->curBlock ) {
+        data->loc->swapPlacing( data->loc );
+        data->swapBlock = data->curBlock;
+      }
+    }
+
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,

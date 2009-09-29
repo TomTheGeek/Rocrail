@@ -53,11 +53,13 @@ void statusTimer( iILcDriverInt inst ) {
 
     /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
     if( data->curBlock->isTerminalStation( data->curBlock ) ) {
-      /* TODO: only swap after the IN block event! */
+      /* only swap after the IN block event! */
+      /* BUG: 367452
       if( data->swapBlock != data->curBlock ) {
         data->loc->swapPlacing( data->loc );
         data->swapBlock = data->curBlock;
       }
+      */
     }
 
     if( data->reqstop ) {
