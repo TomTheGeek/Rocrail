@@ -1404,6 +1404,19 @@ static void __stopAllLocs( iOModel inst ) {
   }
 }
 
+static Boolean __anyRunningLoco( iOModel inst ) {
+  iOModelData data = Data(inst);
+  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Checking all Loco's for V=0..." );
+  while( loc != NULL ) {
+    if( LocOp.getV( loc ) > 0 )
+      return True;
+    ThreadOp.sleep( 10 );
+    loc = (iOLoc)MapOp.next( data->locMap );
+  }
+  return False;
+}
+
 static void __startAllLocs( iOModel inst ) {
   iOModelData data = Data(inst);
   iOLoc loc = (iOLoc)MapOp.first( data->locMap );
@@ -2082,8 +2095,13 @@ static void __initFieldRunner( void* threadinst ) {
 }
 
 static void _initField( iOModel inst ) {
-  iOThread t = ThreadOp.inst( "initField", &__initFieldRunner, inst );
-  ThreadOp.start( t );
+  if( __anyRunningLoco(inst) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Init field canceled: one or more loco's are running." );
+  }
+  else {
+    iOThread t = ThreadOp.inst( "initField", &__initFieldRunner, inst );
+    ThreadOp.start( t );
+  }
 }
 
 static void _init( iOModel inst ) {
