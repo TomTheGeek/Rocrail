@@ -23,6 +23,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 #include "wx/timer.h"
 
@@ -230,11 +231,11 @@ public:
     wxSpinCtrl* m_Port;
     wxButton* m_PortGet;
     wxButton* m_PortSet;
-    wxStaticBox* m_PortSetupBox;
     wxStaticText* m_labPortAddr;
     wxSpinCtrl* m_PortAddr;
     wxRadioBox* m_SensorContact;
     wxRadioBox* m_PortType;
+    wxStaticBox* m_PortSetupBox;
     wxStaticBox* m_OutputSetupBox;
     wxCheckBox* m_LowAtStartup;
     wxCheckBox* m_HardwareReset;
@@ -285,7 +286,9 @@ public:
     wxStaticText* m_labEasyPort;
     wxStaticText* m_labEasyAddress;
     wxStaticText* m_labEasyInput;
+    wxStaticText* m_labEasyBlock;
     wxStaticText* m_labEasyOutput;
+    wxStaticText* m_labEasyPulse;
     wxSpinCtrl* m_EasyAddr1;
     wxRadioButton* m_EasyInput1;
     wxRadioButton* m_EasyBlock1;
@@ -333,13 +336,19 @@ public:
     wxRadioButton* m_EasyBlock8;
     wxRadioButton* m_EasyOutput8;
     wxRadioButton* m_EasyPulse8;
-    wxCheckBox* m_EasyContact8;
+    wxCheckBox* m_EasyContact9;
+    wxStaticText* m_labEasyPort2;
+    wxStaticText* m_labEasyAddress2;
+    wxStaticText* m_labEasyInput2;
+    wxStaticText* m_labEasyBlock2;
+    wxStaticText* m_labEasyOutput2;
+    wxStaticText* m_labEasyPulse2;
     wxSpinCtrl* m_EasyAddr9;
     wxRadioButton* m_EasyInput9;
     wxRadioButton* m_EasyBlock9;
     wxRadioButton* m_EasyOutput9;
     wxRadioButton* m_EasyPulse9;
-    wxCheckBox* m_EasyContact9;
+    wxCheckBox* m_EasyContact8;
     wxSpinCtrl* m_EasyAddr10;
     wxRadioButton* m_EasyInput10;
     wxRadioButton* m_EasyBlock10;
