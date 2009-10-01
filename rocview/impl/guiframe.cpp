@@ -1185,12 +1185,15 @@ void RocGuiFrame::initFrame() {
   shutdown_menuFile->SetBitmap(wxBitmap(getIconPath("server"), wxBITMAP_TYPE_PNG));
   menuFile->Append(shutdown_menuFile);
   //menuFile->Append(ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
+
+#ifndef __APPLE__
+
   menuFile->AppendSeparator();
 
   wxMenuItem *exit_menuFile = new wxMenuItem(menuFile, ME_Quit, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
   exit_menuFile->SetBitmap(wxBitmap(getIconPath("exit"), wxBITMAP_TYPE_PNG));
   menuFile->Append(exit_menuFile);
-
+#endif
 
   wxMenu *menuEdit = new wxMenu();
   wxMenuItem *undo_menuEdit = new wxMenuItem(menuEdit, ME_Undo, wxGetApp().getMenu("undo"), wxGetApp().getTip("undo") );
