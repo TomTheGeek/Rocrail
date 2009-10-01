@@ -377,21 +377,22 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( !__acceptGhost((obj)inst) ) {
         int tl = TRCLEVEL_USER1;
+        data->ghost = True;
 
         if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
           /* power off */
           AppOp.stop();
-          /* broadcast ghost state */
-          data->ghost = True;
-          {
-            iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-            wBlock.setid( nodeD, data->id );
-            wBlock.setstate( nodeD, wBlock.ghost );
-            wBlock.setlocid( nodeD, data->locId );
-            ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-          }
-          tl = TRCLEVEL_EXCEPTION;
         }
+        /* broadcast ghost state */
+        {
+          iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+          wBlock.setid( nodeD, data->id );
+          wBlock.setstate( nodeD, wBlock.ghost );
+          wBlock.setlocid( nodeD, data->locId );
+          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        }
+        tl = TRCLEVEL_EXCEPTION;
+
         TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%d",
             data->id, key, ident );
 
@@ -407,21 +408,29 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     /* ghost train! */
     /* broadcast ghost state */
     if( __isElectricallyFree((iOBlock)inst) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
           data->id, key, ident );
-      data->ghost = False;
 
-      if(StrOp.equals( data->locId, "GHOST")) {
-        data->locId = NULL;
-      }
+      if( !wCtrl.iskeepghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
 
-      {
-        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-        wBlock.setid( nodeD, data->id );
-        wBlock.setstate( nodeD, wBlock.getstate(data->props) );
-        wBlock.setlocid( nodeD, data->locId );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        data->ghost = False;
+
+        if(StrOp.equals( data->locId, "GHOST")) {
+          data->locId = NULL;
+        }
+
+        {
+          iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+          wBlock.setid( nodeD, data->id );
+          wBlock.setstate( nodeD, wBlock.getstate(data->props) );
+          wBlock.setlocid( nodeD, data->locId );
+          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        }
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train still remains in block %s, fbid=%s, ident=%d",
+          data->id, key, ident );
     }
   }
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
@@ -431,8 +440,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else {
     /* unhandled event! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! ident=[%d]",
-                   key, data->id, ident );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! puls=[%d], ident=[%d], ghost=[%d], loc=[%s], fromBlockId=[%s]",
+                   key, data->id, puls, ident, data->ghost,
+                   (loc == NULL ? "NULL":LocOp.getId(loc)),
+                   (data->fromBlockId == NULL ? "NULL":data->fromBlockId) );
   }
 }
 
@@ -1387,6 +1398,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       }
     }
     wBlock.setlocid( data->props, locid );
+    /* reset ghost flag */
+    data->ghost = False;
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, False, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );

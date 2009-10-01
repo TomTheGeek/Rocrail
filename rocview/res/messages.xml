@@ -10668,4 +10668,7 @@
   <Msg id="startdefaultworkspace">
     <en txt="Use Workspace at startup"/>
   </Msg>
+  <Msg id="keepghost">
+    <en txt="Keep ghost state"/>
+  </Msg>
 </Messages>

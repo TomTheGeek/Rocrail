@@ -832,10 +832,15 @@ void Symbol::OnPopup(wxMouseEvent& event)
           mi->Enable( false );
         menu.AppendSeparator();
       }
-      else if( !hasLoc && StrOp.equals( wBlock.open, state ) ) {
+      else if( StrOp.equals( wBlock.open, state ) ) {
         menu.Append( ME_Loc, wxGetApp().getMenu("setlocid") );
         menu.AppendSeparator();
       }
+      else if( StrOp.equals( wBlock.ghost, state ) ) {
+        menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
+        menu.AppendSeparator();
+      }
+
       if( StrOp.equals( wBlock.open, state ) ) {
         menu.Append( ME_CloseBlock, wxGetApp().getMenu("outoforder") );
         wxMenuItem *mi_Close = menu.FindItem( ME_CloseBlock );
