@@ -2090,16 +2090,23 @@ static void __initFieldRunner( void* threadinst ) {
     ThreadOp.sleep( pause );
   }
 
+  o->pendinginitfield = False;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init field ready" );
   ThreadOp.base.del( threadinst );
 }
 
 static void _initField( iOModel inst ) {
+  iOModelData data = Data(inst);
   if( __anyRunningLoco(inst) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Init field canceled: one or more loco's are running." );
   }
+  else if( data->pendinginitfield ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Init field canceled: pending operation." );
+  }
   else {
     iOThread t = ThreadOp.inst( "initField", &__initFieldRunner, inst );
+    data->pendinginitfield = True;
     ThreadOp.start( t );
   }
 }

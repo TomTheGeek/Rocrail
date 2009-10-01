@@ -830,6 +830,7 @@
       <var name="enableswfb" vt="Boolean"/>
       <var name="moduleplan" vt="iOModPlan"/>
       <var name="sysEventListeners" vt="iOList"/>
+      <var name="pendinginitfield" vt="Boolean"/>
     </data>
     <struct name="LevelList" typedef="*iOLevelList">
       <var name="list" vt="iOList"/>
