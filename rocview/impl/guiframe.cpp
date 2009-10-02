@@ -204,7 +204,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( CV_EVENT, RocGuiFrame::CVevent)
     EVT_MENU( ME_PowerEvent, RocGuiFrame::OnPowerEvent)
 
-    EVT_MENU( ME_Quit           , RocGuiFrame::OnQuit)
+    EVT_MENU( wxID_EXIT         , RocGuiFrame::OnQuit)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
@@ -213,7 +213,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Upload         , RocGuiFrame::OnUpload)
     EVT_MENU( wxID_ABOUT        , RocGuiFrame::OnAbout)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
-    EVT_MENU( ME_Help           , RocGuiFrame::OnHelp)
+    EVT_MENU( wxID_HELP         , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
     EVT_MENU( ME_Translations   , RocGuiFrame::OnTranslations)
     EVT_MENU( ME_Bug            , RocGuiFrame::OnBug)
@@ -1190,7 +1190,7 @@ void RocGuiFrame::initFrame() {
 
   menuFile->AppendSeparator();
 
-  wxMenuItem *exit_menuFile = new wxMenuItem(menuFile, ME_Quit, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
+  wxMenuItem *exit_menuFile = new wxMenuItem(menuFile, wxID_EXIT, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
   exit_menuFile->SetBitmap(wxBitmap(getIconPath("exit"), wxBITMAP_TYPE_PNG));
   menuFile->Append(exit_menuFile);
 #endif
@@ -1344,7 +1344,7 @@ void RocGuiFrame::initFrame() {
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
-  wxMenuItem *help_menuHelp = new wxMenuItem(menuHelp, ME_Help, wxGetApp().getMenu("documentation"), wxGetApp().getTip("documentation") );
+  wxMenuItem *help_menuHelp = new wxMenuItem(menuHelp, wxID_HELP, wxGetApp().getMenu("documentation"), wxGetApp().getTip("documentation") );
   help_menuHelp->SetBitmap(wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(help_menuHelp);
 
@@ -1378,12 +1378,13 @@ void RocGuiFrame::initFrame() {
   update_menuHelp->SetBitmap(wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(update_menuHelp);
 
+#ifndef __APPLE__
   menuHelp->AppendSeparator();
+#endif
 
   wxMenuItem *info_menuHelp = new wxMenuItem(menuHelp, wxID_ABOUT, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
   info_menuHelp->SetBitmap(wxBitmap(getIconPath("info"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(info_menuHelp);
-
 
   // now append the freshly created menu to the menu bar...
   menuBar = new wxMenuBar();
