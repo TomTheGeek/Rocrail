@@ -866,6 +866,7 @@ static void __transactor( void* threadinst ) {
   iODINAMO   dinamo = (iODINAMO)ThreadOp.getParm(th);
   iODINAMOData data = Data(dinamo);
   Boolean        ok = True;
+  Boolean    gotrsp = False;
 
   byte lastdatagram[32];
   int lastdatagramsize = 0;
@@ -899,14 +900,17 @@ static void __transactor( void* threadinst ) {
         wsize = __translateNode2Datagram( dinamo, node, wbuffer, &responseExpected );
 
         if( responseExpected ) {
-          /* TODO: put the request in al list to be wached for a matching response. */
+          /* TODO: put the request in a list to be wached for a matching response. */
         }
         if( wsize > 0 ) {
           TraceOp.dump( "cmdreq", TRCLEVEL_BYTE, (char*)wbuffer, wsize );
           MemOp.copy(lastdatagram, wbuffer, wsize);
           lastdatagramsize = responseExpected ? wsize:0;
-          if( !data->dummyio )
+          if( !data->dummyio ) {
             SerialOp.write( data->serial, (char*)wbuffer, wsize );
+            timer = SystemOp.getTick();
+            gotrsp = False;
+          }
         }
 
         /* Cleanup: endstation for all nodes. */
@@ -914,12 +918,13 @@ static void __transactor( void* threadinst ) {
       }
     }
 
-    if( !data->dummyio && !SerialOp.available(data->serial) ) {
-      if( lastdatagramsize > 0 && SystemOp.getTick() - timer >= 20 ) {
+    if( !data->dummyio ) {
+      if( !gotrsp && lastdatagramsize > 0 && (SystemOp.getTick() - timer) > 20 ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
         TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
         SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
         timer = SystemOp.getTick();
+        gotrsp = False;
       }
       else {
         int  lsize = 0;
@@ -929,14 +934,14 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
         TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
         SerialOp.write( data->serial, (char*)lbuffer, lsize );
+        gotrsp = False;
       }
     }
 
     /* check if there is a response waiting: */
     dsize = 0;
     ok = False;
-    if( (!data->dummyio && SerialOp.available(data->serial)) ) {
-
+    if( !data->dummyio ) {
       do {
         /* check if it is the start of the datagram */
         ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
@@ -980,7 +985,7 @@ static void __transactor( void* threadinst ) {
 
 
     if( ok ) {
-
+      gotrsp = True;
       /* check for events: */
 
       if( dsize > 0 && (rbuffer[1] & 0x60) == 0x40 ) {
