@@ -192,6 +192,10 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
+  if( wxGetApp().isModView() ) {
+    m_RoutesPanel->Enable(False);
+  }
+
   initIndex();
   if( m_Props != NULL ) {
     initValues();
