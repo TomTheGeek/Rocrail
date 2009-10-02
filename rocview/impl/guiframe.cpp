@@ -211,7 +211,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_OpenWorkspace  , RocGuiFrame::OnOpenWorkspace)
     EVT_MENU( ME_New            , RocGuiFrame::OnNew)
     EVT_MENU( ME_Upload         , RocGuiFrame::OnUpload)
-    EVT_MENU( ME_About          , RocGuiFrame::OnAbout)
+    EVT_MENU( wxID_ABOUT        , RocGuiFrame::OnAbout)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
     EVT_MENU( ME_Help           , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
@@ -226,7 +226,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_RouteDlg       , RocGuiFrame::OnRouteDlg)
     EVT_MENU( ME_Connect        , RocGuiFrame::OnConnect)
     EVT_MENU( ME_RocrailIni     , RocGuiFrame::OnRocrailIni)
-    EVT_MENU( ME_RocguiIni      , RocGuiFrame::OnRocguiIni)
+    EVT_MENU( wxID_PREFERENCES  , RocGuiFrame::OnRocguiIni)
     EVT_MENU( ME_PlanTitle      , RocGuiFrame::OnPlanTitle)
     EVT_MENU( ME_Go             , RocGuiFrame::OnGo)
     EVT_MENU( ME_Stop           , RocGuiFrame::OnStop)
@@ -1148,7 +1148,7 @@ void RocGuiFrame::initFrame() {
   connect_menuFile->SetBitmap(wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG));
   menuFile->Append(connect_menuFile);
 
-  menuFile->Append(ME_RocguiIni, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
+  menuFile->Append(wxID_PREFERENCES, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
   menuFile->Append(ME_RocrailIni, wxGetApp().getMenu("rocrailini"), wxGetApp().getTip("rocrailini") );
   menuFile->AppendSeparator();
   menuFile->Append(ME_PlanTitle, wxGetApp().getMenu("plantitle"), wxGetApp().getTip("plantitle") );
@@ -1380,7 +1380,7 @@ void RocGuiFrame::initFrame() {
 
   menuHelp->AppendSeparator();
 
-  wxMenuItem *info_menuHelp = new wxMenuItem(menuHelp, ME_About, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
+  wxMenuItem *info_menuHelp = new wxMenuItem(menuHelp, wxID_ABOUT, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
   info_menuHelp->SetBitmap(wxBitmap(getIconPath("info"), wxBITMAP_TYPE_PNG));
   menuHelp->Append(info_menuHelp);
 
