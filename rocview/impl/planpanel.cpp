@@ -515,6 +515,7 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
   StrOp.free( text );
 
   wxGetMousePosition( &x, &y );
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag move x=%d(%d), y=%d(%d)", x, m_dragX, y, m_dragY );
 
   bool dragging = event.Dragging();
 
@@ -606,6 +607,8 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     wZLevel.setmodviewy( m_zLevel, p.y + y_off );
 
     setPosition();
+
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag end x=%d(%d), y=%d(%d)", p.x, m_dragX, p.y, m_dragY );
 
     /* Notify RocRail. */
     TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999,
@@ -1620,6 +1623,7 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
 
   m_dragX = x;
   m_dragY = y;
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d", x, y );
 
 }
 
