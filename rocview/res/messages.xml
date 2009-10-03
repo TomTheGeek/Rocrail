@@ -10671,4 +10671,7 @@
   <Msg id="keepghost">
     <en txt="Keep ghost state"/>
   </Msg>
+  <Msg id="priority">
+    <en txt="Priority" tip="The wait time will be multiplied with this value in case no destination is found."/>
+  </Msg>
 </Messages>

@@ -1456,6 +1456,7 @@
         <var name="tryoppositedir" vt="bool" defval="false" remark="Try find new destinations in the opposite direction. (to-from)"/>
         <var name="forcesamedir" vt="bool" defval="false" remark="Force find new destinations in the same direction as the loc is running now."/>
         <var name="dirpause" vt="int" defval="0" range="0-999" unit="ms" remark="pause after sending last turnout command and before sending the direction to the loc decoder"/>
+        <var name="priority" vt="int" defval="10" range="1-100" remark="train priority used for multiplying the wait time if no destination is found"/>
 
         <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>

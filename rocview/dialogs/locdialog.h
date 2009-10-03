@@ -372,6 +372,8 @@ public:
     wxTextCtrl* m_Blockwait;
     wxStaticText* m_labEventTimer;
     wxTextCtrl* m_EventTimer;
+    wxStaticText* m_labPriority;
+    wxSpinCtrl* m_Priority;
     wxCheckBox* m_Commuter;
     wxCheckBox* m_SameDir;
     wxCheckBox* m_OppositeDir;
