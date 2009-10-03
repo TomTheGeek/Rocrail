@@ -505,6 +505,7 @@ static iOLcDriver _inst( const iOLoc loc, const iOModel model, const iOTrace tra
   data->signalResetTime  = wCtrl.getsignalreset(ctrl) * 10;
   data->greenaspect      = wCtrl.isgreenaspect(ctrl);
   data->semaphoreWait    = wCtrl.getsemaphorewait(ctrl) * 1000;
+  data->signalWait       = wCtrl.getsignalwait(ctrl) * 1000;
 
   instCnt++;
 

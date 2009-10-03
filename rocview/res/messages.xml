@@ -10674,4 +10674,7 @@
   <Msg id="priority">
     <en txt="Priority" tip="The wait time will be multiplied with this value in case no destination is found."/>
   </Msg>
+  <Msg id="signalwait">
+    <en txt="Signal time"/>
+  </Msg>
 </Messages>

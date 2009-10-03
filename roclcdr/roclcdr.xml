@@ -84,6 +84,7 @@
       <var name="signalResetTime" vt="int"/>
       <var name="greenaspect" vt="Boolean"/>
       <var name="semaphoreWait" vt="int"/>
+      <var name="signalWait" vt="int"/>
     </data>
   </object>
 

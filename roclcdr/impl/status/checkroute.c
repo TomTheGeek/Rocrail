@@ -61,8 +61,10 @@ void statusCheckRoute( iILcDriverInt inst ) {
       /* give the semaphore some time to get in position... */
       ThreadOp.sleep(data->semaphoreWait);
     }
-    else
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "light signal; go" );
+    else if(data->signalWait > 0){
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the signal some time to set another aspect..." );
+      ThreadOp.sleep(data->signalWait);
+    }
 
     if( !data->gomanual ) {
       /* Send the second command to the loc: */

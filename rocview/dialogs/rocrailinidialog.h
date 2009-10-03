@@ -276,6 +276,8 @@ public:
     wxSpinCtrl* m_RouteSwTime;
     wxStaticText* m_labSemaphoreWait;
     wxSpinCtrl* m_SemaphoreWait;
+    wxStaticText* m_labSignalWait;
+    wxSpinCtrl* m_SignalWait;
     wxCheckBox* m_Check2In;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;
