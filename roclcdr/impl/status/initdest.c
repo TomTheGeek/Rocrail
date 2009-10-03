@@ -50,8 +50,8 @@ void statusInitDest( iILcDriverInt inst ) {
      * The route direction flag is True if the train will travel "from" -> "to".
      */
     Boolean dir = data->next1Route->getDirection( data->next1Route,
-		    				  data->loc->getCurBlock( data->loc ),
-		    				  &data->next1RouteFromTo );
+                              data->loc->getCurBlock( data->loc ),
+                              &data->next1RouteFromTo );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "loco direction for [%s] is [%s], route direction [%s], swappost[%s]",
@@ -65,9 +65,9 @@ void statusInitDest( iILcDriverInt inst ) {
      */
     if( initializeGroup( (iOLcDriver)inst, data->next1Block ) &&
         initializeDestination( (iOLcDriver)inst,
-				data->next1Block,
-				data->next1Route,
-				data->curBlock,
+                data->next1Block,
+                data->next1Route,
+                data->curBlock,
         data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo ) &&
         initializeSwap( (iOLcDriver)inst, data->next1Route ) )
     {
@@ -119,9 +119,12 @@ void statusInitDest( iILcDriverInt inst ) {
     else {
       /* Error! */
       /* if running a schedule the schedule index should be decreased by one to match the current block */
-      data->pause = data->curBlock->getWait(data->curBlock, data->loc );
-      if( data->pause != -1 )
-        data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
+      if( data->curBlock->wait(data->curBlock, data->loc ) ) {
+        data->pause = data->curBlock->getWait(data->curBlock, data->loc );
+        if( data->pause != -1 )
+          data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
+      } else
+        data->pause = wLoc.getpriority( data->loc->base.properties( data->loc ) );
 
       if( data->schedule != NULL ) {
         data->scheduleIdx--;
