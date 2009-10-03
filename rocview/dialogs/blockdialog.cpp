@@ -1566,7 +1566,7 @@ void BlockDialog::CreateControls()
     m_RoutesPanel->SetSizer(itemBoxSizer110);
 
     wxArrayString m_RoutesStrings;
-    m_Routes = new wxListBox( m_RoutesPanel, ID_LISTBOX_BK_ROUTES, wxDefaultPosition, wxSize(-1, 100), m_RoutesStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
+    m_Routes = new wxListBox( m_RoutesPanel, ID_LISTBOX_BK_ROUTES, wxDefaultPosition, wxSize(-1, 80), m_RoutesStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer110->Add(m_Routes, 1, wxGROW|wxALL, 5);
 
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_STATIC_SENSORS_TITLE, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1721,14 +1721,14 @@ void BlockDialog::CreateControls()
     itemBoxSizer155->Add(m_labInclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_IncludeListStrings;
-    m_IncludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_INCLUDE, wxDefaultPosition, wxDefaultSize, m_IncludeListStrings, wxLB_MULTIPLE );
+    m_IncludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_INCLUDE, wxDefaultPosition, wxSize(-1, 100), m_IncludeListStrings, wxLB_MULTIPLE );
     itemBoxSizer155->Add(m_IncludeList, 1, wxGROW|wxALL, 5);
 
     m_labExclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Exclude"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer155->Add(m_labExclude, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_ExcludeListStrings;
-    m_ExcludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_EXCLUDE, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_MULTIPLE );
+    m_ExcludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_EXCLUDE, wxDefaultPosition, wxSize(-1, 100), m_ExcludeListStrings, wxLB_MULTIPLE );
     itemBoxSizer155->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
     wxArrayString m_PermTypeStrings;
