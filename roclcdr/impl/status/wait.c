@@ -73,7 +73,7 @@ void statusWait( iILcDriverInt inst ) {
       if( ice && data->prevState == LC_FINDDEST )
         data->timer = 1; /* just wait 100ms */
       else
-        data->timer = 10; /* just wait 1 second, 10 x 100ms */
+        data->timer = wLoc.getpriority( data->loc->base.properties( data->loc ) ); /* just wait 1 second, 10 x 100ms */
     }
 
 
