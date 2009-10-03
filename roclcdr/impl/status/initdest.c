@@ -121,7 +121,7 @@ void statusInitDest( iILcDriverInt inst ) {
       /* if running a schedule the schedule index should be decreased by one to match the current block */
       data->pause = data->curBlock->getWait(data->curBlock, data->loc );
       if( data->pause != -1 )
-        data->pause = data->pause * 10;
+        data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
 
       if( data->schedule != NULL ) {
         data->scheduleIdx--;
