@@ -7,7 +7,7 @@
 <pay key="1" name="Amazon"/>
 <pay key="2" name="Domain Factory"/>
 <pay key="3" name="MAB"/>
-<pay key="4" name="MayNet"/>
+<pay key="4" name="MaxNet"/>
 <pay key="5" name="MediaMarkt"/>
 <pay key="6" name="RD-Hobby"/>
 <pay key="7" name="SPROG DCC"/>
@@ -58,6 +58,10 @@
 <ope date="733602" amount="-22.949999999999999" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="AppleScripting" info="Mac support"/>
 <ope date="733629" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Meiko van Lessen"/>
 <ope date="733633" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="2" wording="ManagedHosting S" info="6 Months"/>
-<ope date="733655" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Onno Rietveld"/>
 <ope date="733648" amount="-12.31" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="Domain rocrail.net" info="One year registration fee"/>
+<ope date="733655" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Onno Rietveld"/>
+<ope date="733680" amount="-15" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="1" wording="rocrail.nl" info="27-10-2009 27-10-2010"/>
+<ope date="733648" amount="-12.31" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net" info="29-08-2009 29-08-2010"/>
+<ope date="733668" amount="-60" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail Caps" info="Black caps for Venlo event"/>
+<ope date="733675" amount="-132" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail T-Shirts" info="Venlo event"/>
 </homebank>
