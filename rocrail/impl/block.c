@@ -435,8 +435,8 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   }
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
     /* undefined event! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d",
-                   key, data->id, ident );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d fromBlockId=%s",
+                   key, data->id, ident, data->fromBlockId );
   }
   else {
     /* unhandled event! */
@@ -1254,6 +1254,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
       if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
         data->locId = NULL;
+        data->fromBlockId = NULL;
         BlockOp.resetTrigs( inst );
         wBlock.setlocid(data->props, "");
         data->crossing = False;
