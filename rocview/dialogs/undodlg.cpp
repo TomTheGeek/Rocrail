@@ -252,6 +252,16 @@ void UndoDlg::OnButtonUndoUndoClick( wxCommandEvent& event )
         wxGetApp().sendToRocrail( item );
         NodeOp.base.del(item);
       }
+      else if( StrOp.equals( "movemod", wItem.getid(item) ) ) {
+        int cnt = NodeOp.getChildCnt(item);
+        for( int i = 0; i < cnt; i++ ) {
+          iONode child = NodeOp.getChild(item, i);
+          wItem.setx( child, NodeOp.getInt( child, "pre_move_x", 0 ) );
+          wItem.sety( child, NodeOp.getInt( child, "pre_move_y", 0 ) );
+        }
+        wxGetApp().sendToRocrail( item );
+        NodeOp.base.del(item);
+      }
     
     }
     else {

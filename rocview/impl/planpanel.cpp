@@ -603,6 +603,8 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     int x = p.x - x_off;
     int y = p.y - y_off;
 
+    int pre_move_x = wZLevel.getmodviewx( m_zLevel );
+    int pre_move_y = wZLevel.getmodviewy( m_zLevel );
     wZLevel.setmodviewx( m_zLevel, p.x + x_off );
     wZLevel.setmodviewy( m_zLevel, p.y + y_off );
 
@@ -615,13 +617,20 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
         "Change position to %d,%d", p.x + x_off, p.y + y_off );
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.setStr( cmd, "id", "movemod" );
+
     iONode module = NodeOp.inst( wModule.name(), cmd, ELEMENT_NODE );
     wModule.setid( module, wZLevel.getmodid(m_zLevel) );
     wModule.setcmd( module, wModule.cmd_move );
+
+    NodeOp.setInt( module, "pre_move_x", pre_move_x );
+    NodeOp.setInt( module, "pre_move_y", pre_move_y );
     wModule.setx( module, p.x + x_off );
     wModule.sety( module, p.y + y_off );
+
     NodeOp.addChild( cmd, module );
     wxGetApp().sendToRocrail( cmd );
+    wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( cmd ) );
     cmd->base.del(cmd);
   }
   else {
