@@ -322,6 +322,9 @@ static void _modify( iOFBack inst, iONode props ) {
     /* inform model with new addrkey to add to map. */
     ModelOp.addFbKey( model, data->addrKey, inst );
   }
+  else {
+    NodeOp.removeAttrByName(data->props, "cmd");
+  }
 
   /* Broadcast to clients. */
   {
@@ -377,6 +380,8 @@ static iOFBack _inst( iONode props ) {
     wFeedback.getaddr( props ),
     wFeedback.getiid( props )
     );
+
+  NodeOp.removeAttrByName(data->props, "cmd");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s, %s",
         instCnt,

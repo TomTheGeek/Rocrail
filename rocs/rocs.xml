@@ -771,6 +771,10 @@
       <param name="inst" vt="this" remark="Node instance."/>
       <param name="attr" vt="iOAttr" remark="Attribute object."/>
     </fun>
+    <fun name="removeAttrByName" vt="void" remark="Removes an attribute.">
+      <param name="inst" vt="this" remark="Node instance."/>
+      <param name="name" vt="const char*" remark="Attribute name."/>
+    </fun>
     <fun name="removeAttr" vt="void" remark="Removes an attribute.">
       <param name="inst" vt="this" remark="Node instance."/>
       <param name="attr" vt="iOAttr" remark="Attribute object."/>

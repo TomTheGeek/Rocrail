@@ -233,6 +233,13 @@ static iOAttr _findAttr( iONode inst, const char* aname ) {
   return NULL;
 }
 
+static void _removeAttrByName( iONode inst, const char* name ) {
+  iONodeData data = Data(inst);
+  iOAttr attr = NodeOp.findAttr( inst, name );
+  if( attr != NULL )
+    NodeOp.removeAttr(inst, attr);
+}
+
 static iONode _findNode( iONode inst, const char* nname ) {
   iONodeData data = Data(inst);
   int i;

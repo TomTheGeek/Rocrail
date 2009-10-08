@@ -119,6 +119,7 @@ static iOTrack _inst( iONode props ) {
   MemOp.basecpy( track, &TrackOp, 0, sizeof( struct OTrack ), data );
 
   data->props = props;
+  NodeOp.removeAttrByName(data->props, "cmd");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", _getId(track) );
 

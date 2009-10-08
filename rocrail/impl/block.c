@@ -1581,6 +1581,9 @@ static void _modify( iOBlock inst, iONode props ) {
     /* re-init timer */
     data->timer = wBlock.getevttimer( data->props );
   }
+  else {
+    NodeOp.removeAttrByName(data->props, "cmd");
+  }
 
 
   /* Broadcast to clients. */
@@ -1699,6 +1702,8 @@ static iOBlock _inst( iONode props ) {
   wBlock.setentering( data->props, False );
 
   data->muxLock = MutexOp.inst( NULL, True );
+
+  NodeOp.removeAttrByName(data->props, "cmd");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", data->id );
 

@@ -133,6 +133,9 @@ static void _modify( iOTT inst, iONode props ) {
       NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
     }
   }
+  else {
+    NodeOp.removeAttrByName(o->props, "cmd");
+  }
 
   /* Broadcast to clients. */
   {
@@ -1443,6 +1446,9 @@ static iOTT _inst( iONode props ) {
   data->tablepos = wTurntable.getbridgepos(data->props);
   data->gotopos = -1;
   data->lcdir = True;
+
+  NodeOp.removeAttrByName(data->props, "cmd");
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "turntable [%s] initialized at position [%d]", tt->base.id(tt), data->tablepos );
 

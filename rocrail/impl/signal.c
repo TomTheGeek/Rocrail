@@ -792,6 +792,9 @@ static void _modify( iOSignal inst, iONode props ) {
       NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
     }
   }
+  else {
+    NodeOp.removeAttrByName(o->props, "cmd");
+  }
 
   /* Broadcast to clients. */
   {
@@ -841,6 +844,8 @@ static iOSignal _inst( iONode props ) {
   if( wSignal.getstate( data->props ) == NULL || StrOp.len(wSignal.getstate( data->props )) == 0) {
     wSignal.setstate( data->props, wSignal.red );
   }
+
+  NodeOp.removeAttrByName(data->props, "cmd");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s", instCnt, _getId(sg) );
 

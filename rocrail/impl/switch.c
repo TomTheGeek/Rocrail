@@ -805,6 +805,9 @@ static void _modify( iOSwitch inst, iONode props ) {
       }
     }
   }
+  else {
+    NodeOp.removeAttrByName(o->props, "cmd");
+  }
 
   /* Broadcast to clients. */
   {
@@ -1132,6 +1135,8 @@ static iOSwitch _inst( iONode props ) {
     data->run = True;
     ThreadOp.start( data->accThread );
   }
+
+  NodeOp.removeAttrByName(data->props, "cmd");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s, %s",
         instCnt,

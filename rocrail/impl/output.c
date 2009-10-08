@@ -263,6 +263,8 @@ static struct OOutput* _inst( iONode props ) {
     wOutput.getiid( props )
     );
 
+  NodeOp.removeAttrByName(data->props, "cmd");
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s", instCnt, _getId(__Output) );
 
 
@@ -311,6 +313,9 @@ static void _modify( struct OOutput* inst ,iONode props ) {
       iONode child = NodeOp.getChild( props, i );
       NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
     }
+  }
+  else {
+    NodeOp.removeAttrByName(o->props, "cmd");
   }
 
   /* Broadcast to clients. */

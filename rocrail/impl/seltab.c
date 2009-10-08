@@ -696,6 +696,8 @@ static struct OSelTab* _inst( iONode ini ) {
   data->fbEvents = MapOp.inst();
   data->lockedId = wSelTab.getlocid(ini);
 
+  NodeOp.removeAttrByName(data->props, "cmd");
+
   __initSensors( __SelTab );
   __initFeedbackEvents( __SelTab );
   data->tablepos = -1;
@@ -980,6 +982,9 @@ static void _modify( struct OSelTab* inst ,iONode props ) {
     __initSensors( inst );
     /* re-init callback for all feedbacks: */
     __initFeedbackEvents( inst );
+  }
+  else {
+    NodeOp.removeAttrByName(data->props, "cmd");
   }
 
   /* Broadcast to clients. */
