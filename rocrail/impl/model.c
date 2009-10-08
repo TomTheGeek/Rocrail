@@ -1417,16 +1417,39 @@ static Boolean __anyRunningLoco( iOModel inst ) {
   return False;
 }
 
-static void __startAllLocs( iOModel inst ) {
-  iOModelData data = Data(inst);
+
+
+
+static void __startAllLocosRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOModel model = (iOModel)ThreadOp.getParm( th );
+  iOModelData data = Data(model);
+  int gap = wCtrl.getlocostartgap( wRocRail.getctrl( AppOp.getIni(  ) ) );
+
   iOLoc loc = (iOLoc)MapOp.first( data->locMap );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting all Locs..." );
   while( loc != NULL ) {
     LocOp.go( loc );
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( 10 + gap * 1000 );
     loc = (iOLoc)MapOp.next( data->locMap );
   }
+  data->pendingstartall = False;
 }
+
+static void __startAllLocs( iOModel inst ) {
+  /* Start a thread for starting all loco's with bigger intervals then 10ms. */
+  /* The auto section of the rocrail.ini must be extended with a start delay parameter in seconds. */
+
+  iOModelData data = Data(inst);
+  if( data->pendingstartall ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Start all loco's canceled: pending operation." );
+  }
+  else {
+    iOThread t = ThreadOp.inst( "startall", &__startAllLocosRunner, inst );
+    data->pendingstartall = True;
+    ThreadOp.start( t );
+  }
+ }
 
 static void __resumeAllLocs( iOModel inst ) {
   iOModelData data = Data(inst);

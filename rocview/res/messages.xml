@@ -10677,4 +10677,7 @@
   <Msg id="signalwait">
     <en txt="Signal time"/>
   </Msg>
+  <Msg id="locostartgap">
+    <en txt="Loco start gap"/>
+  </Msg>
 </Messages>

@@ -278,6 +278,8 @@ public:
     wxSpinCtrl* m_SemaphoreWait;
     wxStaticText* m_labSignalWait;
     wxSpinCtrl* m_SignalWait;
+    wxStaticText* m_labLocoStartGap;
+    wxSpinCtrl* m_LocoStartGap;
     wxCheckBox* m_Check2In;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;
