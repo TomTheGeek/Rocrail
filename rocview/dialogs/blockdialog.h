@@ -75,9 +75,6 @@ class wxSpinCtrl;
 #define ID_CHECKBOX_BK_GOMANUAL 10325
 #define ID_CHECKBOX_BK_ACCGHOST 10165
 #define ID_PANEL_BK_LOCATION 10002
-#define ID_LISTBOX_BLOCK_TURNOUTS 10331
-#define ID_BUTTON_BLOCK_ADD_TURNOUT 10333
-#define ID_BUTTON_BLOCK_REMOVE_TURNOUT 10334
 #define ID_TEXTCTRL 10036
 #define ID_TEXTCTRL1 10051
 #define ID_TEXTCTRL2 10057
@@ -182,7 +179,6 @@ class BlockDialog: public wxDialog
   void evaluateSensors();
   int m_TabAlign;
   void initSignalCombos();
-  void initSwitchCombo();
   void initTurntableCombo();
   void initLocPermissionList();
 
@@ -216,15 +212,6 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_BLOCK_WAIT
     void OnBlockWaitClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_BLOCK_TURNOUTS
-    void OnListboxBlockTurnoutsSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_ADD_TURNOUT
-    void OnButtonBlockAddTurnoutClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_REMOVE_TURNOUT
-    void OnButtonBlockRemoveTurnoutClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BK_SIGNAL
     void OnButtonBkSignalClick( wxCommandEvent& event );
@@ -313,11 +300,6 @@ public:
     wxCheckBox* m_Road;
     wxCheckBox* m_AllowChgDir;
     wxPanel* m_LocationPanel;
-    wxStaticBox* m_labOverlappedTurnouts;
-    wxListBox* m_TurnoutList;
-    wxChoice* m_ChoiceTurnouts;
-    wxButton* m_AddTurnout;
-    wxButton* m_RemoveTurnout;
     wxStaticBox* m_Location;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
