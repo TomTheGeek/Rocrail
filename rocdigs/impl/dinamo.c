@@ -890,7 +890,7 @@ static void __transactor( void* threadinst ) {
     obj post = NULL;
 
     /* get next node */
-    if( lastdatagramsize == 0 ) {
+    if( gotrsp && lastdatagramsize == 0 ) {
       post = ThreadOp.getPost( th );
       if( post != NULL ) {
         iONode node = (iONode)post;
