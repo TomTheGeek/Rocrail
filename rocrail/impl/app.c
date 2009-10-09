@@ -543,8 +543,9 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
     /* Parse the Inifile: */
     iniDoc = DocOp.parse( iniXml );
-    if( iniDoc != NULL )
+    if( iniDoc != NULL ) {
       data->ini = DocOp.getRootNode( iniDoc );
+    }
     else {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Invalid ini file! [%s]", nf?nf:wRocRail.getfile(NULL) );
       return -1;
@@ -680,6 +681,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
   /* Logo. */
   data->revno = __logo();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dpIID = [%s]", wRocRail.getdpiid(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ptIID = [%s]", wRocRail.getptiid(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "svIID = [%s]", wRocRail.getsviid(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lcIID = [%s]", wRocRail.getlciid(data->ini) );
 
   /* planDoc */
   pf = pf?pf:wRocRail.getplanfile(data->ini);
