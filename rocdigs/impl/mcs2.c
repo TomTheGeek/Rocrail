@@ -172,8 +172,9 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 
 static iONode __translate( iOMCS2 inst, iONode node ) {
   iOMCS2Data data = Data(inst);
-  byte*  out = allocMem(32);
-  iONode rsp = NULL;
+  byte*  out  = allocMem(32);
+  byte*  out2 = allocMem(32);
+  iONode rsp  = NULL;
 
   /* System command. */
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
@@ -230,7 +231,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     long address = (( module - 1 ) * 4 ) + port -1 + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders
 
     if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Ouput %d %s on", (address - 0x2FFF), gate?"b":"a" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s on", (address - 0x2FFF), gate?"b":"a" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1);
     }
     else {
@@ -260,7 +261,9 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
           speed = wLoc.getV( node ) * 10;
         else if( wLoc.getV_max( node ) > 0 )
           speed = (wLoc.getV( node ) * 1000) / wLoc.getV_max( node );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s speedstep=%d", addr, mfx?"mfx":"mm", (speed * wLoc.getspcnt( node ) / 1000));
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s speedstep=%d %s", addr, mfx?"mfx":"mm", (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
+        __setSysMsg(out2, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0); //also send direction to prevent going wrong way when user has changed direction on the cs2
+        ThreadOp.post( data->writer, (obj)out2 );
         speed1 = (speed & 0xFF00) >>8;
         speed2 = speed & 0x00FF;
         __setSysMsg(out, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
@@ -288,6 +291,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
   }
 
   freeMem(out);
+  freeMem(out2);
   return NULL;
 }
 
