@@ -113,7 +113,7 @@ static void __checkAction( iOSwitch inst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch action: %s", wActionCtrl.getid( swaction ));
 
           if( wAction.getoid( swaction) == NULL || StrOp.len(wAction.getoid( swaction)) == 0 )
-            wAction.setoid( swaction, data->lockedId );
+            wActionCtrl.setlcid( swaction, data->lockedId );
           ActionOp.exec(action, swaction);
         }
       }
