@@ -1,17 +1,17 @@
 /*
  Rocs - OS independent C library
- 
+
  Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
- 
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public License
  as published by the Free Software Foundation.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -29,7 +29,7 @@
 #include "rocs/public/system.h"
 
 #ifndef __ROCS_SERIAL__
-	#pragma message("*** Win32 OSerial is disabled. (define __ROCS_SERIAL__ in rocs.h) ***")
+    #pragma message("*** Win32 OSerial is disabled. (define __ROCS_SERIAL__ in rocs.h) ***")
 #endif
 /*
  ***** __Private functions.
@@ -87,7 +87,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
                         );
 
   rc = GetLastError();
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serial[%s] opened.[rc=%d]", o->device, rc );
+  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, rc, "Opening serial[%s]  [return code=%d]", o->device, rc );
 
   if( o->handle != INVALID_HANDLE_VALUE ) {
     if (!o->blocking) {
@@ -110,7 +110,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
       o->directIO= False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "blocking[%d] directIO[%d]", o->blocking, o->directIO);
 
-    COMMTIMEOUTS		cto;
+    COMMTIMEOUTS        cto;
     GetCommTimeouts( o->handle, &cto );
 
     /* CommTimeout */
