@@ -1,17 +1,17 @@
 /*
  Rocs - OS independent C library
- 
+
  Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
- 
+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public License
  as published by the Free Software Foundation.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -55,7 +55,7 @@
 #endif
 
 #ifndef __ROCS_SERIAL__
-	#pragma message("*** Unix OSerial is disabled. (define __ROCS_SERIAL__ in rocs.h) ***")
+    #pragma message("*** Unix OSerial is disabled. (define __ROCS_SERIAL__ in rocs.h) ***")
 #endif
 /*
  ***** __Private functions.
@@ -135,7 +135,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   ttyS0 3F8
   ttyS1 2F8
   ttyS2 3E8
-  ttyS3 2E8 
+  ttyS3 2E8
   */
   if( o->portbase == 0 ) {
     if( StrOp.equals( "/dev/ttyS0", device ) )
@@ -170,7 +170,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   r = access( device, R_OK );
   w = access( device, W_OK );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocs_serial_open:open rc=%d read=%d write=%d", errno, r, w );
+  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, "rocs_serial_open:open rc=%d read=%d write=%d", errno, r, w );
 
   if( o->sh > 0 ) {
     struct termios tio;
@@ -495,7 +495,7 @@ int rocs_serial_getWaiting( iOSerial inst ) {
   int rc = 0;
   int nbytes = 0;
   /*For USB serial devices TIOCOUTQ may return much earlier
-   * (report empty earlier) than ordinary UART. 
+   * (report empty earlier) than ordinary UART.
    * It may not even support TIOCOUTQ... */
   rc = ioctl(o->sh,TIOCOUTQ, &nbytes);
   if( rc<0 ) {
@@ -524,7 +524,7 @@ Boolean rocs_serial_isUartEmpty( iOSerial inst, Boolean soft ) {
       /* If TIOCSERGETLSR fails, the serial port probably does not support this ioctl query
        * (TIOCSERGETLSR is not POSIX compliant, it's Linux specific),
        * last resort is to wait for port to drain. For USB serial devices both TIOCOUTQ and tcdrain
-       * may return much earlier (report empty earlier) than ordinary UART, because of buffering 
+       * may return much earlier (report empty earlier) than ordinary UART, because of buffering
        * in the USB device, which driver sometimes doesn't know about. */
       rc = tcdrain(o->sh);
       if( rc<0 ) {
