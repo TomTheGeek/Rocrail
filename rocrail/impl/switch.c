@@ -37,6 +37,7 @@
 #include "rocs/public/thread.h"
 #include "rocs/public/strtok.h"
 
+#include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Switch.h"
@@ -110,6 +111,9 @@ static void __checkAction( iOSwitch inst ) {
         iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( swaction ));
         if( action != NULL ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch action: %s", wActionCtrl.getid( swaction ));
+
+          if( wAction.getoid( swaction) == NULL || StrOp.len(wAction.getoid( swaction)) == 0 )
+            wAction.setoid( swaction, data->lockedId );
           ActionOp.exec(action, swaction);
         }
       }

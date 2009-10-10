@@ -39,6 +39,7 @@
 #include "rocs/public/thread.h"
 
 
+#include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
@@ -115,6 +116,8 @@ static Boolean _go( iORoute inst ) {
   while( ac != NULL ) {
     iOAction action = ModelOp.getAction( model, wActionCtrl.getid(ac) );
     if( action != NULL ) {
+      if( wAction.getoid( ac) == NULL || StrOp.len(wAction.getoid( ac)) == 0 )
+        wAction.setoid( ac, o->lockedId );
       ActionOp.exec(action, ac);
     }
     ac = wRoute.nextactionctrl( o->props, ac );
