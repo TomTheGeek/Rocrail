@@ -117,7 +117,7 @@ static Boolean _go( iORoute inst ) {
     iOAction action = ModelOp.getAction( model, wActionCtrl.getid(ac) );
     if( action != NULL ) {
       if( wAction.getoid( ac) == NULL || StrOp.len(wAction.getoid( ac)) == 0 )
-        wAction.setoid( ac, o->lockedId );
+        wActionCtrl.setlcid( ac, o->lockedId );
       ActionOp.exec(action, ac);
     }
     ac = wRoute.nextactionctrl( o->props, ac );
@@ -524,12 +524,12 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
         if( !TTOp.lock( (iIBlockBase)itt,
-			locId,
-			NULL,
+            locId,
+            NULL,
       NULL,
-			False,
-			False,
-			wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+            False,
+            False,
+            wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;
@@ -540,12 +540,12 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
         if( !SelTabOp.lock( (iIBlockBase)iseltab,
-			    locId,
-			    SelTabOp.isManager( iseltab)?o->routeLockId:locId,
-	        NULL,
-			    False,
-			    False,
-			    wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
+                locId,
+                SelTabOp.isManager( iseltab)?o->routeLockId:locId,
+            NULL,
+                False,
+                False,
+                wRoute.isswappost( o->props ) ? !o->reverse : o->reverse ) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId );
           return False;
@@ -708,7 +708,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
                        id, wRoute.getid(data->props), wLoc.getlen(lc), maxlen );
         return suits_not;
       }
-	  }
+      }
 
   }
 
