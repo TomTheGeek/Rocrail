@@ -158,6 +158,7 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
         while( actionctrl != NULL ) {
           iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
           if( action != NULL ) {
+            wActionCtrl.setlcid( actionctrl, data->loc->getId( data->loc ) );
             action->exec(action, actionctrl);
           }
           actionctrl = wSchedule.nextactionctrl(entry, actionctrl);
