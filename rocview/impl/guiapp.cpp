@@ -193,15 +193,13 @@ int RocGui::OnExit() {
     wWindow.setx( wGui.getwindow( m_Ini ), point.x );
     wWindow.sety( wGui.getwindow( m_Ini ), point.y );
 
-    wxSize size = this->getFrame()->GetSize();
+    wxSize size = this->getFrame()->GetClientSize();
     wWindow.setcx( wGui.getwindow( m_Ini ), size.GetWidth() );
-#ifdef __APPLE__
-    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() - 36 );
-#else
     wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() );
+
+#ifdef __APPLE__
+    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() + 18 ); // hard coded work around for shrinking height.
 #endif
-
-
 
     if( wGui.getrrcon( m_Ini ) == NULL ) {
       iONode node = NodeOp.inst( wRRCon.name(), m_Ini, ELEMENT_NODE );
@@ -534,7 +532,8 @@ bool RocGui::OnInit() {
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
-        wxSize(iWidth, iHeight), m_Ini, icons, theme, sp, tp );
+      wxDefaultSize, m_Ini, icons, theme, sp, tp );
+  m_Frame->SetClientSize(wxSize(iWidth, iHeight));
   m_Frame->initFrame();
 
 
