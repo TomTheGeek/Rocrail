@@ -170,7 +170,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   r = access( device, R_OK );
   w = access( device, W_OK );
 
-  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, "rocs_serial_open:open rc=%d read=%d write=%d", errno, r, w );
+  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, errno, "rocs_serial_open:open rc=%d read=%d write=%d", errno, r, w );
 
   if( o->sh > 0 ) {
     struct termios tio;
