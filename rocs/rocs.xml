@@ -1442,7 +1442,7 @@
   <object name="System" remark="System utilities.">
     <typedef def="enum {OSTYPE_UNIX, OSTYPE_DOS} ostype" remark="OS type."/>
     <const name="vmajor" vt="int" val="1"/>
-    <const name="vminor" vt="int" val="2"/>
+    <const name="vminor" vt="int" val="4"/>
     <const name="patch" vt="int" val="0"/>
     <const name="builddate" vt="const char*" val="$__DATE__"/>
     <const name="buildtime" vt="const char*" val="$__TIME__"/>
