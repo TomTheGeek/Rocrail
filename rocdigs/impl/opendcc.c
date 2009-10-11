@@ -434,7 +434,7 @@ static void __swdelayThread( void* threadinst ) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 3;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOOpenDCCData data = Data(inst);

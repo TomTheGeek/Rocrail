@@ -480,7 +480,7 @@ static const char* _getschedule( iILcDriverInt inst ) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 3;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOLcDriverData data = Data(inst);

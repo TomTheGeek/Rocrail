@@ -2204,7 +2204,7 @@ static void _shortcut(obj inst) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 3;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOLocoNetData data = Data(inst);

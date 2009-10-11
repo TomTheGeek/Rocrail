@@ -448,7 +448,7 @@ static void __writer( void* threadinst ) {
 
 /* VERSION: */
 static int vmajor = 1;
-static int vminor = 3;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOMCS2Data data = Data(inst);

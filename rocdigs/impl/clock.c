@@ -178,7 +178,7 @@ static void __driverThread( void* threadinst ) {
 
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 1;
-static int vminor = 3;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOClockData data = Data(inst);

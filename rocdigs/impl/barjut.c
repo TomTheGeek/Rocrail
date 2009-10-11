@@ -65,7 +65,7 @@ static void _shortcut(obj inst) {
 /* VERSION: */
 /** vmajor*1000 + vminor*100 + patch */
 static int      vmajor = 1;
-static int      vminor = 3;
+static int      vminor = 4;
 static int      patch = 0;
 static int
 _version(
