@@ -66,11 +66,11 @@
 
   <Global structname="GC" remark="For internal use only.">
     <const name="productname" vt="string" val="Rocrail"/>
-    <const name="releasename" vt="string" val="snapshot"/>
+    <const name="releasename" vt="string" val="Air-rc1"/>
     <const name="releasesuffix" vt="string" val=""/>
     <const name="vmajor" vt="int" val="1"/>
     <const name="vminor" vt="int" val="3"/>
-    <const name="patch" vt="int" val="999"/>
+    <const name="patch" vt="int" val="0"/>
     <const name="buildDate" vt="string" val="$__DATE__"/>
     <const name="buildTime" vt="string" val="$__TIME__"/>
   </Global>
