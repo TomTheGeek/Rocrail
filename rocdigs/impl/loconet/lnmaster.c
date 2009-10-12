@@ -245,6 +245,14 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, Boo
   wLoc.setV( nodeSpd, (int)speed );
   wLoc.setV_mode( nodeSpd, wLoc.V_mode_percent );
   wLoc.setfn( nodeSpd, slot[slotnr].f0 );
+  wFunCmd.setf1( nodeSpd, slot[slotnr].f1 );
+  wFunCmd.setf2( nodeSpd, slot[slotnr].f2 );
+  wFunCmd.setf3( nodeSpd, slot[slotnr].f3 );
+  wFunCmd.setf4( nodeSpd, slot[slotnr].f4 );
+  wFunCmd.setf5( nodeSpd, slot[slotnr].f5 );
+  wFunCmd.setf6( nodeSpd, slot[slotnr].f6 );
+  wFunCmd.setf7( nodeSpd, slot[slotnr].f7 );
+  wFunCmd.setf8( nodeSpd, slot[slotnr].f8 );
 
   wLoc.setprot( nodeSpd, slot[slotnr].format == 0 ? wLoc.prot_N:wLoc.prot_M );
   wLoc.setspcnt( nodeSpd, slot[slotnr].steps == 0 ? 128:slot[slotnr].steps );

@@ -229,11 +229,6 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
 
-    Boolean fn1 = wFunCmd.isf1(node);
-    Boolean fn2 = wFunCmd.isf2(node);
-    Boolean fn3 = wFunCmd.isf3(node);
-    Boolean fn4 = wFunCmd.isf4(node);
-
     if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d spcnt=%d shortID=[%s]", addr, spcnt, wLoc.getshortid(node) );
     }
@@ -245,8 +240,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
           speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
       }
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d V=%d(%d) dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d V=%d(%d) dir=%s lights=%s",
+          addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off" );
     }
 
 

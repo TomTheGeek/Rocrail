@@ -268,15 +268,15 @@ static iONode __translate( obj inst, const iONode node ) {
     int  speed = 0;
     int   info = 0;
     Boolean sw = wLoc.issw( node );
+    Boolean fn0 = wLoc.isfn( node );
 
-    Boolean fn0 = wFunCmd.isf0(node);
     Boolean fn1 = wFunCmd.isf1(node);
     Boolean fn2 = wFunCmd.isf2(node);
     Boolean fn3 = wFunCmd.isf3(node);
     Boolean fn4 = wFunCmd.isf4(node);
 
-    int f[28];
-    MemOp.set(f, 0, 28);
+    int f[29];
+    MemOp.set(f, 0, 29);
 
     f[0] = fn0;
     f[1] = fn1;
@@ -370,7 +370,7 @@ static iONode __translate( obj inst, const iONode node ) {
     int   info = 0;
     Boolean sw = wLoc.issw( node );
     int fgroup = wFunCmd.getgroup(node);
-    int f[28];
+    int f[29];
 
     f[ 0] = wFunCmd.isf0(node);
     f[ 1] = wFunCmd.isf1(node);
