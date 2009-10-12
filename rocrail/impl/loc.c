@@ -255,7 +255,7 @@ static void __restoreFx(obj inst) {
 
 static void __sysEvent( obj inst, const char* cmd ) {
   iOLocData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s]...", cmd );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sysEvent [%s] for [%s]...", cmd, LocOp.getId((iOLoc)inst) );
 
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
