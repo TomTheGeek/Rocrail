@@ -361,6 +361,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
   while( sw != NULL ) {
     const char* swId  = wSwitchCmd.getid( sw );
     Boolean tt = StrOp.equals( wSwitchCmd.cmd_track, wSwitchCmd.getcmd(sw) );
+    Boolean lock = wSwitchCmd.islock(sw);
 
     if( tt ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
@@ -381,7 +382,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
       if( isw != NULL ) {
-        if( SwitchOp.isLocked( isw, id ) )
+        if( lock && SwitchOp.isLocked( isw, id ) )
           return False;
       }
       else {
@@ -562,7 +563,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
           }
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
               "***** no locking wanted for switch [%s] for route [%s]", SwitchOp.getId(isw) , o->routeLockId );
         }
       }
