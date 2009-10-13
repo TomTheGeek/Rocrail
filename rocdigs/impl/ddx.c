@@ -274,6 +274,10 @@ static iONode __translate( obj inst, const iONode node ) {
     Boolean fn2 = wFunCmd.isf2(node);
     Boolean fn3 = wFunCmd.isf3(node);
     Boolean fn4 = wFunCmd.isf4(node);
+    Boolean fn5 = wFunCmd.isf5(node);
+    Boolean fn6 = wFunCmd.isf6(node);
+    Boolean fn7 = wFunCmd.isf7(node);
+    Boolean fn8 = wFunCmd.isf8(node);
 
     int f[29];
     MemOp.set(f, 0, 29);
@@ -283,6 +287,10 @@ static iONode __translate( obj inst, const iONode node ) {
     f[2] = fn2;
     f[3] = fn3;
     f[4] = fn4;
+    f[5] = fn5;
+    f[6] = fn6;
+    f[7] = fn7;
+    f[8] = fn8;
 
     if( spcnt > 127 ) spcnt = 127;
 
@@ -327,8 +335,9 @@ static iONode __translate( obj inst, const iONode node ) {
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) && data->dcc ) {
       int rc = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCS/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
+          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off",
+              fn5?"on":"off", fn6?"on":"off", fn7?"on":"off", fn8?"on":"off" );
       if( spcnt >= 127 ) {
         if( addr > 127 )
           rc = comp_nmra_f4b14s128( addr, dir, speed, f);
@@ -347,8 +356,9 @@ static iONode __translate( obj inst, const iONode node ) {
     }
     else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_L ) && data->dcc ) {
       int rc = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s",
-          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d prot=DCCL/%d spd=%d dir=%s lights=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
+          addr, spcnt, speed, dir?"forward":"reverse", fn0?"on":"off", fn1?"on":"off", fn2?"on":"off", fn3?"on":"off", fn4?"on":"off",
+              fn5?"on":"off", fn6?"on":"off", fn7?"on":"off", fn8?"on":"off" );
       if( spcnt >= 127 )
         rc = comp_nmra_f4b14s128( addr, dir, speed, f);
       else
