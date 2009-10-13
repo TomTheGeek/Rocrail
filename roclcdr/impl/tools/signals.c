@@ -59,28 +59,39 @@ void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean
 
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* bk = StrTokOp.nextToken( tok );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "crossing block signals for [%s]...", bk );
       iIBlockBase cblock = data->model->getBlock( data->model, bk );
       if( cblock != NULL ) {
 
         switch( aspect ) {
         case WHITE_ASPECT:
-          cblock->white( cblock, True, !routefromto );
-          cblock->white( cblock, False, !routefromto );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "white aspect for %s", bk );
+          cblock->white( cblock, True, routefromto );
+          cblock->white( cblock, False, routefromto );
           break;
         case GREEN_ASPECT:
-          cblock->green( cblock, True, !routefromto );
-          cblock->green( cblock, False, !routefromto );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "green aspect for %s", bk );
+          cblock->green( cblock, True, routefromto );
+          cblock->green( cblock, False, routefromto );
           break;
         case YELLOW_ASPECT:
-          cblock->yellow( cblock, True, !routefromto );
-          cblock->yellow( cblock, False, !routefromto );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "yellow aspect for %s", bk );
+          cblock->yellow( cblock, True, routefromto );
+          cblock->yellow( cblock, False, routefromto );
           break;
         case RED_ASPECT:
-          cblock->red( cblock, True, !routefromto );
-          cblock->red( cblock, False, !routefromto );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "red aspect for %s", bk );
+          cblock->red( cblock, True, routefromto );
+          cblock->red( cblock, False, routefromto );
+          break;
+        default:
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown aspect: %d", aspect );
           break;
         }
       }
+      else
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "crossing block [%s] does not exist!", bk );
+
     }
     StrTokOp.base.del(tok);
 
@@ -152,6 +163,8 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       }
     }
     else if( data->greenaspect ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "setting signals for curBlock to green: Use green aspect instead of yellow if next block has red." );
       semaphore |= data->curBlock->green( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->green( data->curBlock, False, !data->next1RouteFromTo );
       if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
@@ -160,11 +173,16 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       }
     }
     else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock to yellow." );
       semaphore |= data->curBlock->yellow( data->curBlock, True, !data->next1RouteFromTo );
       semaphore |= data->curBlock->yellow( data->curBlock, False, !data->next1RouteFromTo );
       if( data->next1Route != NULL && data->next1Route->isSetCrossingblockSignals(data->next1Route) ) {
         /* Set the crossing block signals */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for crossing to yellow." );
         setCrossingblockSignals( inst, data->next1Route, YELLOW_ASPECT, !data->next1RouteFromTo );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "**not** [%d] setting signals for crossing to yellow.", data->next1Route->isSetCrossingblockSignals(data->next1Route) );
       }
     }
   }
