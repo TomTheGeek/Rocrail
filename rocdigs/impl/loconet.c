@@ -626,6 +626,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   int slot = rsp[1];
   int spd  = rsp[2];
   int dirf = rsp[2];
+  int snd  = rsp[2];
   int addr = data->locoslot[slot];
   int throttleid = data->locothrottle[slot];
 
@@ -645,6 +646,22 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   else if( rsp[0] == OPC_LOCO_DIRF ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d dirf=0x%02X", slot, addr, dirf );
     /* inform listener: Node3 */
+    iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeD, data->iid );
+    wFunCmd.setaddr( nodeD, addr );
+    wFunCmd.setf0( nodeD, (dirf & DIRF_F0) ? True:False );
+    wFunCmd.setf1( nodeD, (dirf & DIRF_F1) ? True:False );
+    wFunCmd.setf2( nodeD, (dirf & DIRF_F2) ? True:False );
+    wFunCmd.setf3( nodeD, (dirf & DIRF_F3) ? True:False );
+    wFunCmd.setf4( nodeD, (dirf & DIRF_F4) ? True:False );
+    wFunCmd.setgroup( nodeD, 1 );
+    data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+
+  }
+  else if( rsp[0] == OPC_LOCO_SND ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d snd=0x%02X", slot, addr, snd );
+    /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
       wLoc.setiid( nodeC, data->iid );
@@ -657,16 +674,14 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     if( data->iid != NULL )
       wLoc.setiid( nodeD, data->iid );
     wFunCmd.setaddr( nodeD, addr );
-    wFunCmd.setf0( nodeD, (dirf & DIRF_F0) ? True:False );
-    wFunCmd.setf1( nodeD, (dirf & DIRF_F1) ? True:False );
-    wFunCmd.setf2( nodeD, (dirf & DIRF_F2) ? True:False );
-    wFunCmd.setf3( nodeD, (dirf & DIRF_F3) ? True:False );
-    wFunCmd.setf4( nodeD, (dirf & DIRF_F4) ? True:False );
+    wFunCmd.setf5( nodeD, (snd & SND_F5) ? True:False );
+    wFunCmd.setf6( nodeD, (snd & SND_F6) ? True:False );
+    wFunCmd.setf7( nodeD, (snd & SND_F7) ? True:False );
+    wFunCmd.setf8( nodeD, (snd & SND_F8) ? True:False );
+    wFunCmd.setgroup( nodeD, 2 );
     data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
-
   }
 }
-
 
 static void __slotPing( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
