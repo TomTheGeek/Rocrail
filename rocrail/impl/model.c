@@ -282,6 +282,41 @@ static void __backupSave( const char* fileName, const char* xml ) {
   }
 }
 
+static Boolean _createEmptyPlan( iOModelData o ) {
+  if( o->planFile != NULL ) {
+    FileOp.close( o->planFile );
+    o->planFile->base.del(o->planFile);
+    o->planFile = NULL;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Creating Plan file: %s", o->fileName );
+  o->planFile = FileOp.inst( o->fileName, OPEN_WRITE );
+  if( o->planFile != NULL ) {
+    Boolean createmodplan = AppOp.isCreateModplan();
+    char* planXml = NULL;
+
+    if( createmodplan ) {
+      iONode root = NodeOp.inst( wModPlan.name(), NULL, ELEMENT_NODE );
+      o->moduleplan = ModPlanOp.inst( root );
+      o->model = ModPlanOp.parse( o->moduleplan );
+      o->title = wModPlan.gettitle( o->model );
+      planXml = NodeOp.base.toString( root );
+    }
+    else {
+      o->model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
+      o->title = wPlan.gettitle( o->model );
+      planXml = NodeOp.base.toString( o->model );
+    }
+
+    FileOp.write( o->planFile, planXml, StrOp.len( planXml ) );
+    FileOp.flush( o->planFile );
+    FileOp.close( o->planFile );
+    FileOp.base.del( o->planFile );
+    StrOp.free( planXml );
+
+  }
+
+}
 
 static Boolean _parsePlan( iOModelData o ) {
   if( o->planFile != NULL ) {
@@ -298,6 +333,7 @@ static Boolean _parsePlan( iOModelData o ) {
       FileOp.read( o->planFile, planXml, FileOp.size( o->planFile ) );
       FileOp.close( o->planFile );
       FileOp.base.del( o->planFile );
+      o->planFile = NULL;
       o->planDoc = DocOp.parse( planXml );
       freeMem( planXml );
       if( o->planDoc != NULL ) {
@@ -330,34 +366,6 @@ static Boolean _parsePlan( iOModelData o ) {
     }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsePlan title: %s", o->title );
     return True;
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Creting Plan file: %s", o->fileName );
-    o->planFile = FileOp.inst( o->fileName, OPEN_WRITE );
-    if( o->planFile != NULL ) {
-      Boolean createmodplan = AppOp.isCreateModplan();
-      char* planXml = NULL;
-
-      if( createmodplan ) {
-        iONode root = NodeOp.inst( wModPlan.name(), NULL, ELEMENT_NODE );
-        o->moduleplan = ModPlanOp.inst( root );
-        o->model = ModPlanOp.parse( o->moduleplan );
-        o->title = wModPlan.gettitle( o->model );
-        planXml = NodeOp.base.toString( root );
-      }
-      else {
-        o->model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
-        o->title = wPlan.gettitle( o->model );
-        planXml = NodeOp.base.toString( o->model );
-      }
-
-      FileOp.write( o->planFile, planXml, StrOp.len( planXml ) );
-      FileOp.flush( o->planFile );
-      FileOp.close( o->planFile );
-      FileOp.base.del( o->planFile );
-      StrOp.free( planXml );
-
-    }
   }
 
   return False;
@@ -2138,7 +2146,7 @@ static void _init( iOModel inst ) {
   iOModelData o = Data(inst);
 
   if( !_parsePlan( o ) )
-    return;
+    _createEmptyPlan(o);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init clearingMaps..." );
   __clearMap( o->blockMap );
