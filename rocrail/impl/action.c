@@ -112,63 +112,72 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
 
   if( actionctrl != NULL ) {
     iONode actionCond = wActionCtrl.getactioncond(actionctrl);
-    while( actionCond != NULL && rc ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action condition: [%s-%s:%s] ",
-          wActionCond.gettype(actionCond),
-          wActionCond.getid(actionCond),
-          wActionCond.getstate(actionCond) );
+    if( ModelOp.isAuto(model) != wActionCtrl.isauto(actionctrl) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s mode action, but running in %s mode, skip action %s",
+          wActionCtrl.isauto(actionctrl)?"Auto":"Manual",
+          ModelOp.isAuto(model)?"auto":"manual",
+          wActionCtrl.getid(actionctrl) );
+      rc = False;
+    }
+    else {
+      while( actionCond != NULL && rc ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action condition: [%s-%s:%s] ",
+            wActionCond.gettype(actionCond),
+            wActionCond.getid(actionCond),
+            wActionCond.getstate(actionCond) );
 
-      if( StrOp.equals( wOutput.name(), wActionCond.gettype(actionCond) ) ) {
-        const char* id = wActionCond.getid( actionCond );
-        iOOutput co = ModelOp.getOutput( model, id );
-        if( co != NULL ) {
-          rc = OutputOp.isState(co, wActionCond.getstate(actionCond) );
+        if( StrOp.equals( wOutput.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOOutput co = ModelOp.getOutput( model, id );
+          if( co != NULL ) {
+            rc = OutputOp.isState(co, wActionCond.getstate(actionCond) );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
-        else
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
-      }
-      else if( StrOp.equals( wSwitch.name(), wActionCond.gettype(actionCond) ) ) {
-        const char* id = wActionCond.getid( actionCond );
-        iOSwitch sw = ModelOp.getSwitch( model, id );
-        if( sw != NULL ) {
-          rc = SwitchOp.isState(sw, wActionCond.getstate(actionCond) );
+        else if( StrOp.equals( wSwitch.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOSwitch sw = ModelOp.getSwitch( model, id );
+          if( sw != NULL ) {
+            rc = SwitchOp.isState(sw, wActionCond.getstate(actionCond) );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
-        else
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
-      }
-      else if( StrOp.equals( wSignal.name(), wActionCond.gettype(actionCond) ) ) {
-        const char* id = wActionCond.getid( actionCond );
-        iOSignal sg = ModelOp.getSignal( model, id );
-        if( sg != NULL ) {
-          rc = SignalOp.isState(sg, wActionCond.getstate(actionCond) );
+        else if( StrOp.equals( wSignal.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOSignal sg = ModelOp.getSignal( model, id );
+          if( sg != NULL ) {
+            rc = SignalOp.isState(sg, wActionCond.getstate(actionCond) );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
-        else
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
-      }
-      else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
-        const char* id = wActionCond.getid( actionCond );
-        iOFBack fb = ModelOp.getFBack( model, id );
-        const char* state = wActionCond.getstate(actionCond);
-        int ident = atoi(state);
-        if( fb != NULL ) {
-          if( ident > 0 && ident == FBackOp.getIdentifier(fb) )
-            rc = True;
-          else if( ident == 0 )
-            rc = FBackOp.isState(fb, state );
+        else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOFBack fb = ModelOp.getFBack( model, id );
+          const char* state = wActionCond.getstate(actionCond);
+          int ident = atoi(state);
+          if( fb != NULL ) {
+            if( ident > 0 && ident == FBackOp.getIdentifier(fb) )
+              rc = True;
+            else if( ident == 0 )
+              rc = FBackOp.isState(fb, state );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
-        else
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
+        else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
+        }
+
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, rc?"Condition is true.":"Condition is not true; skip action." );
+
+
+        actionCond = wActionCtrl.nextactioncond(actionctrl, actionCond);
       }
-      else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
-        const char* id = wActionCond.getid( actionCond );
-        rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
-      }
-
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, rc?"Condition is true.":"Condition is not true; skip action." );
-
-
-      actionCond = wActionCtrl.nextactioncond(actionctrl, actionCond);
     }
   }
 
