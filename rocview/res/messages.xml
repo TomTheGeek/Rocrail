@@ -10653,9 +10653,6 @@
   <Msg id="modules">
     <en txt="Modules"/>
   </Msg>
-  <Msg id="thrown">
-    <en txt="Thrown"/>
-  </Msg>
   <Msg id="openworkspace" dialog="true" key="Ctrl-W">
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
   </Msg>
