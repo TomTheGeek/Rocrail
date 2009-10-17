@@ -10677,4 +10677,7 @@
   <Msg id="locostartgap">
     <en txt="Loco start gap"/>
   </Msg>
+  <Msg id="sendalltraces">
+    <en txt="Send all server traces to Rocview"/>
+  </Msg>
 </Messages>

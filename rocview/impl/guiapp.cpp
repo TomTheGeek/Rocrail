@@ -181,7 +181,7 @@ bool RocGui::isModelSet() {
 
 int RocGui::OnExit() {
   if( !m_bOnExit ) {
-    TraceOp.setExceptionListener( m_Trace, NULL, False );
+    TraceOp.setExceptionListener( m_Trace, NULL, False, False );
 
     RConOp.close( m_RCon );
 
@@ -591,7 +591,7 @@ bool RocGui::OnInit() {
 
   m_Frame->setOffline(m_bOffline);
 
-  TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False );
+  TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False, False );
 
   m_Frame->Raise();
 

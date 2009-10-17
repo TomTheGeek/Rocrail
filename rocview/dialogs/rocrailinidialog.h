@@ -30,8 +30,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/spinctrl.h"
 #include "wx/statline.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -229,6 +229,7 @@ public:
     wxStaticBox* m_DevTraceLevel;
     wxCheckBox* m_Byte;
     wxCheckBox* m_Debug;
+    wxCheckBox* m_SendAllTraces;
     wxPanel* m_ServicePanel;
     wxStaticBoxSizer* m_HttpBox;
     wxStaticText* m_LabelHttpPort;

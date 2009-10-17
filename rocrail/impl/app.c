@@ -672,7 +672,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     }
 
     TraceOp.setFilename( trc, tracefilename );
-    TraceOp.setExceptionListener( trc, __exception, False );
+    TraceOp.setExceptionListener( trc, __exception, False, wTrace.islisten2all(tini) );
 
     StrOp.free( tracefilename );
   }

@@ -1679,6 +1679,7 @@
       <param name="inst" vt="this" remark="Trace instance or NULL."/>
       <param name="listener" vt="ExceptionListener" remark=""/>
       <param name="timestamp" vt="Boolean" remark="Send exceptions with timestamp prefix."/>
+      <param name="all" vt="Boolean" remark="Send all traces to the listener."/>
     </fun>
     <fun name="setMainThreadId" vt="void" remark="Set the thread id for main.">
       <param name="id" vt="unsigned long" remark=""/>
@@ -1760,6 +1761,7 @@
       <var name="ebcdicDump" vt="Boolean" remark=""/>
       <var name="excListener" vt="ExceptionListener" remark=""/>
       <var name="excTimestamp" vt="Boolean" remark=""/>
+      <var name="excAll" vt="Boolean" remark=""/>
       <var name="mux" vt="iOMutex" remark=""/>
       <var name="ebcdic" vt="iOEbcdic" remark=""/>
       <var name="exceptionfile" vt="Boolean" remark=""/>

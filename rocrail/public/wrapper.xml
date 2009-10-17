@@ -230,6 +230,7 @@
       <var name="invoke" vt="string" defval="./xmail.pl" range="*" remark="External program or script to invoke on exception file creation."/>
       <var name="invokeasync" vt="bool" defval="false" range="*" remark="The invokation will take place in a separate thread."/>
       <var name="dumpsize" vt="int" defval="128" range="16-*" unit="byte" remark="Max. byte dump size."/>
+      <var name="listen2all" vt="bool" defval="false" remark="The trace listener will get all traces."/>
     </trace>
     <digint cardinality="n" wrappername="DigInt" remark="Digital Interface definition.">
       <var name="iid" vt="string" defval="NULL" remark="Interface ID." required="true"/>

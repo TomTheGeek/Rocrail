@@ -440,12 +440,13 @@ static void _setAppID( iOTrace inst, const char* appID ) {
   }
 }
 
-static void _setExceptionListener( iOTrace inst, ExceptionListener listener, Boolean timestamp ) {
+static void _setExceptionListener( iOTrace inst, ExceptionListener listener, Boolean timestamp, Boolean all ) {
   iOTrace l_trc = inst != NULL ? inst:traceInst;
   if( l_trc != NULL ) {
     iOTraceData data = Data(l_trc);
     data->excListener = listener;
     data->excTimestamp = timestamp;
+    data->excAll = all;
   }
 }
 
@@ -534,7 +535,7 @@ static void _trc( const char* objectname, tracelevel level, int line, int id, co
     }
 
     if( t->excListener != NULL ) {
-      if( level == TRCLEVEL_EXCEPTION || level == TRCLEVEL_WARNING || level == TRCLEVEL_MONITOR || level == TRCLEVEL_CALC )
+      if( t->excAll || level == TRCLEVEL_EXCEPTION || level == TRCLEVEL_WARNING || level == TRCLEVEL_MONITOR || level == TRCLEVEL_CALC )
         t->excListener(level, t->excTimestamp?fmtMsg:msg);
     }
     StrOp.freeID( tname, RocsTraceID );
