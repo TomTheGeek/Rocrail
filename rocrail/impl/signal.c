@@ -594,8 +594,6 @@ static void __checkAction( iOSignal inst ) {
   iONode       sgaction = wSignal.getactionctrl( data->props );
 
   while( sgaction != NULL) {
-    if( ModelOp.isAuto(model) == wActionCtrl.isauto(sgaction) ) {
-
       if( StrOp.len( wActionCtrl.getstate(sgaction) ) == 0 ||
           StrOp.equals(wActionCtrl.getstate(sgaction), wSignal.getstate(data->props) ) )
       {
@@ -610,10 +608,8 @@ static void __checkAction( iOSignal inst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
             wActionCtrl.getstate( sgaction ), wSignal.getstate(data->props) );
       }
-
-    }
     sgaction = wSignal.nextactionctrl( data->props, sgaction );
-  } /* end loop */
+  }
 
 }
 

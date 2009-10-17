@@ -103,24 +103,21 @@ static void __checkAction( iOSwitch inst ) {
   iONode       swaction = wSwitch.getactionctrl( data->props );
 
   while( swaction != NULL) {
-    if( ModelOp.isAuto(model) == wActionCtrl.isauto(swaction) ) {
+    if( StrOp.len( wActionCtrl.getstate(swaction) ) == 0 ||
+        StrOp.equals(wActionCtrl.getstate(swaction), wSwitch.getstate(data->props) ) )
+    {
+      iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( swaction ));
+      if( action != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch action: %s", wActionCtrl.getid( swaction ));
 
-      if( StrOp.len( wActionCtrl.getstate(swaction) ) == 0 ||
-          StrOp.equals(wActionCtrl.getstate(swaction), wSwitch.getstate(data->props) ) )
-      {
-        iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( swaction ));
-        if( action != NULL ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch action: %s", wActionCtrl.getid( swaction ));
-
-          if( wAction.getoid( swaction) == NULL || StrOp.len(wAction.getoid( swaction)) == 0 )
-            wActionCtrl.setlcid( swaction, data->lockedId );
-          ActionOp.exec(action, swaction);
-        }
+        if( wAction.getoid( swaction) == NULL || StrOp.len(wAction.getoid( swaction)) == 0 )
+          wActionCtrl.setlcid( swaction, data->lockedId );
+        ActionOp.exec(action, swaction);
       }
-      else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-            wActionCtrl.getstate( swaction ), wSwitch.getstate(data->props) );
-      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( swaction ), wSwitch.getstate(data->props) );
     }
     swaction = wSwitch.nextactionctrl( data->props, swaction );
   } /* end loop */
