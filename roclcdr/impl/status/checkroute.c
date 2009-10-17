@@ -56,15 +56,6 @@ void statusCheckRoute( iILcDriverInt inst ) {
 
     semaphore = setSignals((iOLcDriver)inst, False);
 
-    if(semaphore) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the semaphore some time to get in position..." );
-      /* give the semaphore some time to get in position... */
-      ThreadOp.sleep(data->semaphoreWait);
-    }
-    else if(data->signalWait > 0){
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the signal some time to set another aspect..." );
-      ThreadOp.sleep(data->signalWait);
-    }
 
     if( !data->gomanual ) {
       /* Send the second command to the loc: */
@@ -78,6 +69,17 @@ void statusCheckRoute( iILcDriverInt inst ) {
         if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 )
           wLoc.setV_hint( cmd, wLoc.mid );
       }
+
+      if(semaphore) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the semaphore some time to get in position..." );
+        /* give the semaphore some time to get in position... */
+        ThreadOp.sleep(data->semaphoreWait);
+      }
+      else if(data->signalWait > 0){
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the signal some time to set another aspect..." );
+        ThreadOp.sleep(data->signalWait);
+      }
+
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting direction for [%s] to [%s] at velocity [%s].",
                      data->loc->getId( data->loc ), dir?"forwards":"reverse",
