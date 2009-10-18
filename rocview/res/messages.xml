@@ -10680,4 +10680,10 @@
   <Msg id="sendalltraces">
     <en txt="Send all server traces to Rocview"/>
   </Msg>
+  <Msg id="manual">
+    <en txt="Manual"/>
+  </Msg>
+  <Msg id="both">
+    <en txt="Both"/>
+  </Msg>
 </Messages>

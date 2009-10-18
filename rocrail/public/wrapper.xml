@@ -815,7 +815,8 @@
 	<actionctrl wrappername="ActionCtrl">
 	  <var name="id" vt="string" defval="" range="*" required="true"/>
 	  <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
-	  <var name="auto" vt="bool" defval="true" remark="Activate in auto mode only."/>
+	  <var name="auto" vt="bool" defval="true" remark="Activate in auto mode."/>
+    <var name="manual" vt="bool" defval="true" remark="Activate in manual mode."/>
     <var name="deact" vt="string" defval="none" range="none,enter,in" remark="Deactivation event."/>
     <var name="lcid" vt="string" defval="" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">

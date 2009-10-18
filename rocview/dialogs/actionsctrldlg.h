@@ -40,6 +40,7 @@ class wxNotebook;
 ////@begin control identifiers
 #define ID_ACTIONSCTRLDLG 10191
 #define ID_ACTIONCTRL_LIST 10235
+#define ID_RADIOBOX 10331
 #define ID_ACTIONCTRL_ADD 10192
 #define ID_ACTIONCTRL_DELETE 10193
 #define ID_ACTIONCTRL_MODIFY 10194
@@ -164,7 +165,7 @@ public:
     wxTextCtrl* m_State;
     wxStaticText* m_labDeact;
     wxChoice* m_Deact;
-    wxCheckBox* m_Auto;
+    wxRadioBox* m_Auto;
     wxButton* m_Add;
     wxButton* m_Delete;
     wxButton* m_Modify;

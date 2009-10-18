@@ -24,6 +24,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "actionsctrldlg.h"
@@ -142,7 +143,10 @@ void ActionsCtrlDlg::initLabels() {
   m_Deact->Append(_T("**enter** ") + wxGetApp().getMsg( "event" ));
   m_Deact->Append(_T("**in** ") + wxGetApp().getMsg( "event" ));
 
-  m_Auto->SetLabel( wxGetApp().getMsg( "automode" ) );
+  m_Auto->SetLabel( wxGetApp().getMsg( "mode" ) );
+  m_Auto->SetString( 0, wxGetApp().getMsg( "auto" ) );
+  m_Auto->SetString( 1, wxGetApp().getMsg( "manual" ) );
+  m_Auto->SetString( 2, wxGetApp().getMsg( "both" ) );
 
   m_Add->SetLabel( wxGetApp().getMsg( "add" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
@@ -236,7 +240,14 @@ void ActionsCtrlDlg::initValues() {
   if( cursel != wxNOT_FOUND ) {
     iONode actionctrl = (iONode)m_CtrlList->GetClientData(cursel);
     m_ID->SetStringSelection( m_CtrlList->GetStringSelection() );
-    m_Auto->SetValue( wActionCtrl.isauto(actionctrl) ? true:false );
+
+    if(wActionCtrl.isauto(actionctrl) && wActionCtrl.ismanual(actionctrl) )
+      m_Auto->SetSelection(2);
+    else if(wActionCtrl.isauto(actionctrl) )
+      m_Auto->SetSelection(0);
+    else if(wActionCtrl.ismanual(actionctrl) )
+      m_Auto->SetSelection(1);
+
     m_State->SetValue( wxString(wActionCtrl.getstate(actionctrl),wxConvUTF8) );
 
 
@@ -355,7 +366,20 @@ void ActionsCtrlDlg::evaluate() {
   if( cursel != wxNOT_FOUND ) {
     iONode node = (iONode)m_CtrlList->GetClientData(cursel);
     wActionCtrl.setid(node, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
-    wActionCtrl.setauto(node, m_Auto->IsChecked() ? True:False );
+
+    if( m_Auto->GetSelection() == 2 ) {
+      wActionCtrl.setauto(node, True );
+      wActionCtrl.setmanual(node, True );
+    }
+    else if( m_Auto->GetSelection() == 0 ) {
+      wActionCtrl.setauto(node, True );
+      wActionCtrl.setmanual(node, False );
+    }
+    else if( m_Auto->GetSelection() == 1 ) {
+      wActionCtrl.setauto(node, False );
+      wActionCtrl.setmanual(node, True );
+    }
+
     wActionCtrl.setstate(node, m_State->GetValue().mb_str(wxConvUTF8) );
 
     switch( m_Deact->GetSelection() ) {
@@ -627,7 +651,7 @@ void ActionsCtrlDlg::CreateControls()
     m_labState = new wxStaticText( m_IndexPanel, wxID_ANY, _("State"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labState, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_State = new wxTextCtrl( m_IndexPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_State = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_State, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDeact = new wxStaticText( m_IndexPanel, wxID_ANY, _("Deactivate"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -638,9 +662,13 @@ void ActionsCtrlDlg::CreateControls()
     itemFlexGridSizer7->Add(m_Deact, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer14 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemBoxSizer5->Add(itemFlexGridSizer14, 0, wxGROW|wxALL, 5);
-    m_Auto = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Auto mode"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Auto->SetValue(false);
+    itemBoxSizer5->Add(itemFlexGridSizer14, 0, wxGROW, 5);
+    wxArrayString m_AutoStrings;
+    m_AutoStrings.Add(_("&Auto"));
+    m_AutoStrings.Add(_("&Manual"));
+    m_AutoStrings.Add(_("&Both"));
+    m_Auto = new wxRadioBox( m_IndexPanel, ID_RADIOBOX, _("Mode"), wxDefaultPosition, wxDefaultSize, m_AutoStrings, 1, wxRA_SPECIFY_ROWS );
+    m_Auto->SetSelection(0);
     itemFlexGridSizer14->Add(m_Auto, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(1, 3, 0, 0);
@@ -684,7 +712,7 @@ void ActionsCtrlDlg::CreateControls()
     m_labCondState = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("State"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_labCondState, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_CondState = new wxTextCtrl( m_ConditionsPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CondState = new wxTextCtrl( m_ConditionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_CondState, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer30 = new wxBoxSizer(wxHORIZONTAL);

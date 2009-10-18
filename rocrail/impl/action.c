@@ -108,18 +108,12 @@ static void* __event( void* inst, const void* evt ) {
 static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
   iOActionData data = Data(inst);
   iOModel model = AppOp.getModel();
+  Boolean automode = ModelOp.isAuto(model);
   Boolean rc = True;
 
   if( actionctrl != NULL ) {
     iONode actionCond = wActionCtrl.getactioncond(actionctrl);
-    if( ModelOp.isAuto(model) != wActionCtrl.isauto(actionctrl) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s mode action, but running in %s mode, skip action %s",
-          wActionCtrl.isauto(actionctrl)?"Auto":"Manual",
-          ModelOp.isAuto(model)?"auto":"manual",
-          wActionCtrl.getid(actionctrl) );
-      rc = False;
-    }
-    else {
+    if( automode && wActionCtrl.isauto(actionctrl) || !automode && wActionCtrl.ismanual(actionctrl)) {
       while( actionCond != NULL && rc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action condition: [%s-%s:%s] ",
             wActionCond.gettype(actionCond),
@@ -178,6 +172,15 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
 
         actionCond = wActionCtrl.nextactioncond(actionctrl, actionCond);
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s%s%s mode action, running in %s mode, skip action %s",
+          wActionCtrl.isauto(actionctrl)?"Auto":"",
+          wActionCtrl.isauto(actionctrl)&&wActionCtrl.ismanual(actionctrl)?"/":"",
+          wActionCtrl.ismanual(actionctrl)?"Manual":"",
+          ModelOp.isAuto(model)?"auto":"manual",
+          wActionCtrl.getid(actionctrl) );
+      rc = False;
     }
   }
 
