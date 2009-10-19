@@ -1323,7 +1323,7 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
     data->driver->goNet( data->driver, data->gomanual, curblock, nextblock, nextroute );
 }
 
-static void _go( iOLoc inst ) {
+static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
   if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
@@ -1333,8 +1333,10 @@ static void _go( iOLoc inst ) {
       data->driver->go( data->driver, data->gomanual );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no chance to start [%s]", LocOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because is not in a block.", LocOp.getId(inst) );
+    return False;
   }
+  return True;
 }
 
 static void _stop( iOLoc inst, Boolean resume ) {

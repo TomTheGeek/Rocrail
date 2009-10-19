@@ -326,7 +326,7 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="blockid" vt="const char*" remark="Block ID"/>
     </fun>
-    <fun name="go" vt="void">
+    <fun name="go" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="goNet" vt="void">

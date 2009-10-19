@@ -1437,8 +1437,11 @@ static void __startAllLocosRunner( void* threadinst ) {
   iOLoc loc = (iOLoc)MapOp.first( data->locMap );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting all Locs..." );
   while( loc != NULL ) {
-    LocOp.go( loc );
-    ThreadOp.sleep( 10 + gap * 1000 );
+    if( LocOp.go( loc ) ) {
+      ThreadOp.sleep( 10 + gap * 1000 );
+    }
+    else
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco %s could not be started; skipping start gap.", LocOp.getId(loc) );
     loc = (iOLoc)MapOp.next( data->locMap );
   }
   data->pendingstartall = False;
