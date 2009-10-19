@@ -165,6 +165,8 @@ public:
   void OnLocSchedule(wxCommandEvent& event);
   void OnLocShortID(wxCommandEvent& event);
   void OnTxShortIDs(wxCommandEvent& event);
+  void OnLocActivate(wxCommandEvent& event);
+  void OnLocDeActivate(wxCommandEvent& event);
 
   void OnPanelProps(wxCommandEvent& event);
   void OnAddPanel(wxCommandEvent& event);
@@ -403,6 +405,8 @@ enum
     ME_GridLocGoTo,
     ME_GridLocSchedule,
     ME_GridLocShortID,
+    ME_GridLocActivate,
+    ME_GridLocDeActivate,
     UPDATE_ACTIVELOCS_EVENT,
     UPDATE_LOC_IMAGE_EVENT,
     CV_EVENT,

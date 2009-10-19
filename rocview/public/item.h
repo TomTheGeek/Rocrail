@@ -54,6 +54,8 @@ public:
   void OnOpenBlock(wxCommandEvent& event);
   void OnInfo(wxCommandEvent& event);
   void OnLocMIC(wxCommandEvent& event);
+  void OnLocActivate(wxCommandEvent& event);
+  void OnLocDeActivate(wxCommandEvent& event);
 
   void OnCmdStraight(wxCommandEvent& event);
   void OnCmdTurnout(wxCommandEvent& event);

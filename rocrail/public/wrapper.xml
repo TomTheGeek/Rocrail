@@ -1478,6 +1478,7 @@
         <var name="fn" vt="bool" defval="true" remark="Function switch. (Lights)"/>
         <var name="fx" vt="int" defval="0" remark="Function status bits for display only."/>
         <var name="restorefx" vt="bool" defval="True" remark="Restore functions from previouse session."/>
+        <var name="active" vt="bool" defval="true" remark="Active for running in auto mode."/>
 
         <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
         <fundef cardinality="n" wrappername="FunDef">
@@ -1514,6 +1515,8 @@
         <const name="stop" vt="string" val="stop" remark="Stop loc in next or current block."/>
         <const name="stopgo" vt="string" val="stopgo" remark="Stop loc, reset and go."/>
         <const name="brake" vt="string" val="brake" remark="Stop immidiately"/>
+        <const name="deactivate" vt="string" val="deactivate" remark="Prevent loco from being started in auto mode."/>
+        <const name="activate" vt="string" val="activate" remark="Allow loco being started in auto mode."/>
         <const name="block" vt="string" val="block" remark="Set loc in the supplied block."/>
         <const name="gotoblock" vt="string" val="gotoblock" remark="Set wanted block."/>
         <const name="useschedule" vt="string" val="useschedule" remark="Set schedule to use."/>

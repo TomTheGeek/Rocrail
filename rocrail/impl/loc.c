@@ -335,6 +335,7 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setmtime( node, wLoc.getmtime(data->props) );
       wLoc.setmint( node, wLoc.getmint(data->props) );
       wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
+      wLoc.setactive( node, wLoc.isactive(data->props) );
       if( data->driver != NULL ) {
         wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
       }
@@ -1074,6 +1075,7 @@ static void __runner( void* threadinst ) {
       wLoc.setmtime( broadcast, wLoc.getmtime(data->props) );
       wLoc.setmint( broadcast, wLoc.getmint(data->props) );
       wLoc.setthrottleid( broadcast, wLoc.getthrottleid(data->props) );
+      wLoc.setactive( broadcast, wLoc.isactive(data->props) );
       if( data->driver != NULL ) {
         wLoc.setscidx( broadcast, data->driver->getScheduleIdx( data->driver ) );
       }
@@ -1250,6 +1252,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setmtime( node, wLoc.getmtime(data->props) );
     wLoc.setmint( node, wLoc.getmint(data->props) );
     wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
+    wLoc.setactive( node, wLoc.isactive(data->props) );
     if( data->driver != NULL ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     }
@@ -1278,6 +1281,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setmint( node, wLoc.getmint(data->props) );
   wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
   wLoc.setblockid( node, curid );
+  wLoc.setactive( node, wLoc.isactive(data->props) );
   if( data->driver != NULL ) {
     wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
   }
@@ -1326,14 +1330,20 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
 static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
-  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
-    data->go = True;
-    data->gomanual = False;
-    if( data->driver != NULL )
-      data->driver->go( data->driver, data->gomanual );
+  if( wLoc.isactive(data->props)) {
+    if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
+      data->go = True;
+      data->gomanual = False;
+      if( data->driver != NULL )
+        data->driver->go( data->driver, data->gomanual );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
+      return False;
+    }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because is not in a block.", LocOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is deactivated.", LocOp.getId(inst) );
     return False;
   }
   return True;
@@ -1489,6 +1499,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   }
 
   if( cmd != NULL ) {
+    Boolean broadcast = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd \"%s\" for %s.",
                    cmd, LocOp.getId( inst ) );
 
@@ -1520,23 +1531,17 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     else if( StrOp.equals( wLoc.reset, cmd ) ) {
       _reset( inst, False );
     }
+    else if( StrOp.equals( wLoc.activate, cmd ) ) {
+      wLoc.setactive(data->props, True);
+      broadcast = True;
+    }
+    else if( StrOp.equals( wLoc.deactivate, cmd ) ) {
+      wLoc.setactive(data->props, False);
+      broadcast = True;
+    }
     else if( StrOp.equals( wLoc.swap, cmd ) ) {
       LocOp.swapPlacing(inst);
-      nodeF = (iONode)NodeOp.base.clone( nodeA );
-      /* Broadcast to clients. */
-      wLoc.setid( nodeF, wLoc.getid( data->props ) );
-      wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
-      wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
-      wLoc.setV( nodeF, data->drvSpeed );
-      wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
-      wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
-      wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
-      wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
-      wLoc.setruntime( nodeF, wLoc.getruntime(data->props) );
-      wLoc.setmtime( nodeF, wLoc.getmtime(data->props) );
-      wLoc.setmint( nodeF, wLoc.getmint(data->props) );
-      wLoc.setthrottleid( nodeF, wLoc.getthrottleid(data->props) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      broadcast = True;
     }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
       _dispatch( inst );
@@ -1591,6 +1596,25 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       nodeA->base.del(nodeA);
     }
 
+    if(broadcast) {
+      nodeF = (iONode)NodeOp.base.clone( nodeA );
+      /* Broadcast to clients. */
+      wLoc.setid( nodeF, wLoc.getid( data->props ) );
+      wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
+      wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
+      wLoc.setV( nodeF, data->drvSpeed );
+      wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
+      wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
+      wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
+      wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
+      wLoc.setruntime( nodeF, wLoc.getruntime(data->props) );
+      wLoc.setmtime( nodeF, wLoc.getmtime(data->props) );
+      wLoc.setmint( nodeF, wLoc.getmint(data->props) );
+      wLoc.setthrottleid( nodeF, wLoc.getthrottleid(data->props) );
+      wLoc.setactive( nodeF, wLoc.isactive(data->props) );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+    }
+
     return True;
   }
 
@@ -1616,6 +1640,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setmtime( nodeF, wLoc.getmtime(data->props) );
   wLoc.setmint( nodeF, wLoc.getmint(data->props) );
   wLoc.setthrottleid( nodeF, wLoc.getthrottleid(data->props) );
+  wLoc.setactive( nodeF, wLoc.isactive(data->props) );
   if( data->driver != NULL ) {
     wLoc.setscidx( nodeF, data->driver->getScheduleIdx( data->driver ) );
   }
@@ -1909,6 +1934,7 @@ static void _swapPlacing( iOLoc loc ) {
     wLoc.setmtime( node, wLoc.getmtime(data->props) );
     wLoc.setmint( node, wLoc.getmint(data->props) );
     wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
+    wLoc.setactive( node, wLoc.isactive(data->props) );
     if( data->driver != NULL ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     }

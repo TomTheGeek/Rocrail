@@ -312,6 +312,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU     (ME_GridLocGoTo    , RocGuiFrame::OnLocGoTo)
     EVT_MENU     (ME_GridLocSchedule, RocGuiFrame::OnLocSchedule)
     EVT_MENU     (ME_GridLocShortID , RocGuiFrame::OnLocShortID)
+    EVT_MENU     (ME_GridLocActivate, RocGuiFrame::OnLocActivate)
+    EVT_MENU     (ME_GridLocDeActivate, RocGuiFrame::OnLocDeActivate)
 
     EVT_MENU( ME_F1 , RocGuiFrame::OnButton)
     EVT_MENU( ME_F2 , RocGuiFrame::OnButton)
@@ -776,10 +778,18 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
         else if( throttleid > 0 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
+        else if(!wLoc.isactive(lc))
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
           m_ActiveLocs->SetCellValue( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxString(wLoc.isresumeauto( lc ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( lc ),wxConvUTF8) );
 
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, true );
+        m_ActiveLocs->SetCellBackgroundColour( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE,
+            wLoc.isactive(lc)?
+                m_ActiveLocs->GetCellBackgroundColour(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK):wxColour(240,200,200));
+
+
+
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxALIGN_LEFT, wxALIGN_CENTRE );
 
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
@@ -960,8 +970,13 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
         else if( throttleid > 0 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
+        else if(!wLoc.isactive(node))
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.isresumeauto( node ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( node ),wxConvUTF8) );
+
+        m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE,
+            wLoc.isactive(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));
 
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wxString(wLoc.getblockid( node ),wxConvUTF8) );
@@ -3179,6 +3194,9 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     menu.Append( ME_GridLocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
     menu.Append( ME_GridLocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
     menu.Append( ME_GridLocShortID, wxGetApp().getMenu("setshortid"), wxGetApp().getTip("selectschedule") );
+    menu.AppendSeparator();
+    mi = menu.Append( ME_GridLocActivate, wxGetApp().getMsg("activate") );
+    mi = menu.Append( ME_GridLocDeActivate, wxGetApp().getMsg("deactivate") );
     //PopupMenu(&menu, event.GetPosition().x, event.GetPosition().y );
     PopupMenu(&menu );
   }
@@ -3212,6 +3230,25 @@ void RocGuiFrame::OnLocGo(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
+
+void RocGuiFrame::OnLocActivate(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.activate );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnLocDeActivate(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.deactivate );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 
 void RocGuiFrame::OnLocStop(wxCommandEvent& event) {
   /* Inform RocRail... */
