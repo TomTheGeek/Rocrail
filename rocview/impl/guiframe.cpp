@@ -2084,27 +2084,38 @@ void RocGuiFrame::OnUpload( wxCommandEvent& event ) {
     if( fdlg->GetPath().Len() > 0 ) {
       char* fname = StrOp.dup( fdlg->GetPath().mb_str(wxConvUTF8) );
       iOFile f = FileOp.inst( fname, OPEN_READONLY );
-      char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
-      FileOp.read( f, buffer, FileOp.size( f ) );
-      FileOp.base.del( f );
-      // save file name in the name attribute:
-      iODoc plan = DocOp.parse( buffer );
-      if( plan != NULL ) {
-        iONode root = DocOp.getRootNode( plan );
-        wPlan.setname( root, FileOp.ripPath(fname) );
+      if( f != NULL ) {
+        char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
+        FileOp.read( f, buffer, FileOp.size( f ) );
+        FileOp.base.del( f );
+        // save file name in the name attribute:
+        iODoc plan = DocOp.parse( buffer );
+        if( plan != NULL ) {
+          iONode root = DocOp.getRootNode( plan );
+          if( root != NULL ) {
+            wPlan.setname( root, FileOp.ripPath(fname) );
 
-        wxGetApp().sendToRocrail( root );
-        char* msg = StrOp.fmt("Plan [%s] uploaded as [%s].", wPlan.gettitle(root),  FileOp.ripPath(fname));
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, msg );
-        DocOp.base.del( plan );
-        NodeOp.base.del( root );
-        wxMessageDialog( this, wxString(msg,wxConvUTF8), _T("Rocrail"), wxOK ).ShowModal();
-        StrOp.free( msg );
+            wxGetApp().sendToRocrail( root );
+            char* msg = StrOp.fmt("Plan [%s] uploaded as [%s].", wPlan.gettitle(root),  FileOp.ripPath(fname));
+            TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, msg );
+            DocOp.base.del( plan );
+            NodeOp.base.del( root );
+            wxMessageDialog( this, wxString(msg,wxConvUTF8), _T("Rocrail"), wxOK ).ShowModal();
+            StrOp.free( msg );
+          }
+          else {
+            DocOp.base.del( plan );
+            TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "Plan [%s] is not well formed.", FileOp.ripPath(fname) );
+          }
+        }
+        else {
+          TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "Plan [%s] does not exist.", FileOp.ripPath(fname) );
+        }
+        freeMem( buffer );
       }
       else {
         TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "Plan [%s] not valid.", FileOp.ripPath(fname) );
       }
-      freeMem( buffer );
       StrOp.free(fname);
     }
   }
