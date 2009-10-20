@@ -157,10 +157,11 @@ void LocSelDlg::InitValues() {
       bmptype = wxBITMAP_TYPE_PNG;
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    const char* imagename = FileOp.ripPath( wLoc.getimage( m_Props ) );
     static char pixpath[256];
-    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( m_Props ) ) );
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), imagename );
 
-    if( FileOp.exist(pixpath)) {
+    if( imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
       TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
