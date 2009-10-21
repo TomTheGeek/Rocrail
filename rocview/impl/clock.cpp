@@ -40,6 +40,7 @@
 #include "rocview/dialogs/clockdialog.h"
 #include "rocview/public/guiapp.h"
 #include "rocview/public/guiframe.h"
+#include "rocview/res/icons.hpp"
 
 BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_PAINT(Clock::OnPaint)
@@ -56,23 +57,8 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   start = true;
   run   = true;
   deviderchanged = false;
-  wxString platepath = wxGetApp().getFrame()->getIconPath("plate");
-  TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "platepath=[%s]", (const char*)platepath.mb_str(wxConvUTF8));
-  wxString logopath = wxGetApp().getFrame()->getIconPath("logo");
-  m_Plate = NULL;
-  m_Logo  = NULL;
-
-  if( FileOp.exist((const char*)platepath.mb_str(wxConvUTF8) ) ) {
-    TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "clock plate found: [%s]", (const char*)platepath.mb_str(wxConvUTF8) );
-    m_Plate = new wxBitmap(platepath, wxBITMAP_TYPE_PNG);
-  }
-  else {
-    TraceOp.trc( __FILE__, TRCLEVEL_WARNING, __LINE__, 9999, "clock plate not found: [%s]", (const char*)platepath.mb_str(wxConvUTF8) );
-    return;
-  }
-
-  if( FileOp.exist((const char*)logopath.mb_str(wxConvUTF8)) )
-    m_Logo = new wxBitmap(logopath , wxBITMAP_TYPE_PNG);
+  m_Plate = _img_plate;
+  m_Logo  = _img_logo;
 
 	clockpicwidth = m_Plate->GetWidth();
   SetSize(wxSize(clockpicwidth, clockpicwidth));

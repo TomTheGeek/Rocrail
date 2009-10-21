@@ -142,6 +142,7 @@
 #include "rocrail/wrapper/public/PwrEvent.h"
 
 #include "rocview/symbols/svg.h"
+#include "rocview/res/icons.hpp"
 // ----------------------------------------------------------------------------
 // resources
 // ----------------------------------------------------------------------------
@@ -890,31 +891,6 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   }
 }
 
-
-wxString RocGuiFrame::getIconPath(const char* iconfile) {
-  if( wxGetApp().getIni() != NULL ) {
-    const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
-    char* path = NULL;
-    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
-    if( m_IconPath != NULL ) {
-      path = StrOp.fmt( "%s%c%s.png", m_IconPath, SystemOp.getFileSeparator(), iconfile );
-    }
-    else
-      path = StrOp.fmt( "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
-    if( !FileOp.exist(path) ) {
-      char* str = StrOp.fmt( wxGetApp().getMsg("iconnotfound").mb_str(wxConvUTF8), path );
-      int action = wxMessageDialog( this, wxString(str,wxConvUTF8), _T("Rocrail"), wxCANCEL | wxICON_ERROR ).ShowModal();
-      StrOp.free(str);
-      //exit(-1);
-    }
-    return wxString(path,wxConvUTF8);
-    StrOp.free(path);
-  }
-  else
-    return wxString("",wxConvUTF8);
-}
-
-
 void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   // Get copied node:
   iONode node = (iONode)event.GetClientData();
@@ -1069,7 +1045,7 @@ void RocGuiFrame::setDigintText( const char* text ) {
 // ----------------------------------------------------------------------------
 
 // frame constructor
-RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp, const char* tp)
+RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* theme, const char* sp, const char* tp)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
   m_Ini                = ini;
@@ -1090,7 +1066,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocCtrlList        = ListOp.inst();
   m_LocDlgMap          = MapOp.inst();
   m_bAutoMode          = false;
-  m_IconPath           = icons;
   m_ThemePath          = theme;
   m_ServerPath         = sp;
   m_ThemesPath         = tp;
@@ -1100,7 +1075,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
 }
 
 void RocGuiFrame::initFrame() {
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "IconPath=0x%08X", m_IconPath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ThemePath=0x%08X", m_ThemePath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ServerPath=0x%08X", m_ServerPath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "init Frame..." );
@@ -1160,7 +1134,7 @@ void RocGuiFrame::initFrame() {
   // create a menu bar
   wxMenu *menuFile = new wxMenu();
   wxMenuItem *connect_menuFile = new wxMenuItem(menuFile, ME_Connect, wxGetApp().getMenu("connect"), wxGetApp().getTip("connect") );
-  connect_menuFile->SetBitmap(wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG));
+  connect_menuFile->SetBitmap(*_img_connect);
   menuFile->Append(connect_menuFile);
 
   menuFile->Append(wxID_PREFERENCES, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
@@ -1170,20 +1144,19 @@ void RocGuiFrame::initFrame() {
   menuFile->AppendSeparator();
 
   wxMenuItem *new_menuFile = new wxMenuItem(menuFile, ME_New, wxGetApp().getMenu("new"), wxGetApp().getTip("new") );
-  //new_menuFile->SetBitmap(wxBitmap(new16_xpm));
-  new_menuFile->SetBitmap(wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG));
+  new_menuFile->SetBitmap(*_img_new);
   menuFile->Append(new_menuFile);
 
   wxMenuItem *open_menuFile = new wxMenuItem(menuFile, ME_Open, wxGetApp().getMenu("open"), wxGetApp().getTip("open") );
-  open_menuFile->SetBitmap(wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG));
+  open_menuFile->SetBitmap(*_img_open);
   menuFile->Append(open_menuFile);
 
   wxMenuItem *openworkspace_menuFile = new wxMenuItem(menuFile, ME_OpenWorkspace, wxGetApp().getMenu("openworkspace"), wxGetApp().getTip("openworkspace") );
-  openworkspace_menuFile->SetBitmap(wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG));
+  openworkspace_menuFile->SetBitmap(*_img_system);
   menuFile->Append(openworkspace_menuFile);
 
   wxMenuItem *save_menuFile = new wxMenuItem(menuFile, ME_Save, wxGetApp().getMenu("save"), wxGetApp().getTip("save") );
-  save_menuFile->SetBitmap(wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG));
+  save_menuFile->SetBitmap(*_img_save);
   menuFile->Append(save_menuFile);
 
   menuFile->Append(ME_SaveAs, wxGetApp().getMenu("saveas"), wxGetApp().getTip("saveas") );
@@ -1191,13 +1164,13 @@ void RocGuiFrame::initFrame() {
   menuFile->AppendSeparator();
 
   wxMenuItem *upload_menuFile = new wxMenuItem(menuFile, ME_Upload, wxGetApp().getMenu("upload"), wxGetApp().getTip("upload") );
-  upload_menuFile->SetBitmap(wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG));
+  upload_menuFile->SetBitmap(*_img_upload);
   menuFile->Append(upload_menuFile);
 
   menuFile->AppendSeparator();
 
   wxMenuItem *shutdown_menuFile = new wxMenuItem(menuFile, ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
-  shutdown_menuFile->SetBitmap(wxBitmap(getIconPath("server"), wxBITMAP_TYPE_PNG));
+  shutdown_menuFile->SetBitmap(*_img_server);
   menuFile->Append(shutdown_menuFile);
   //menuFile->Append(ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
 
@@ -1206,13 +1179,13 @@ void RocGuiFrame::initFrame() {
   menuFile->AppendSeparator();
 
   wxMenuItem *exit_menuFile = new wxMenuItem(menuFile, wxID_EXIT, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
-  exit_menuFile->SetBitmap(wxBitmap(getIconPath("exit"), wxBITMAP_TYPE_PNG));
+  exit_menuFile->SetBitmap(*_img_exit);
   menuFile->Append(exit_menuFile);
 #endif
 
   wxMenu *menuEdit = new wxMenu();
   wxMenuItem *undo_menuEdit = new wxMenuItem(menuEdit, ME_Undo, wxGetApp().getMenu("undo"), wxGetApp().getTip("undo") );
-  undo_menuEdit->SetBitmap(wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG));
+  undo_menuEdit->SetBitmap(*_img_undo);
   menuEdit->Append(undo_menuEdit);
 
   wxMenu *menuPanel = new wxMenu();
@@ -1255,41 +1228,35 @@ void RocGuiFrame::initFrame() {
   menuControl->AppendSeparator();
 
   wxMenuItem *opctrl_menuControl = new wxMenuItem(menuControl, ME_OperatorDlg, wxGetApp().getMenu("operator"), wxGetApp().getTip("operator") );
-  opctrl_menuControl->SetBitmap(wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG));
+  opctrl_menuControl->SetBitmap(*_img_operator);
   menuControl->Append(opctrl_menuControl);
 
   menuControl->AppendSeparator();
 
   wxMenuItem *mic_menuControl = new wxMenuItem(menuControl, ME_MIC, wxGetApp().getMenu("mic"), wxGetApp().getTip("mic") );
-  mic_menuControl->SetBitmap(wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG));
+  mic_menuControl->SetBitmap(*_img_mic);
   menuControl->Append(mic_menuControl);
 
   wxMenuItem *locctrl_menuControl = new wxMenuItem(menuControl, ME_LcDlg, wxGetApp().getMenu("locctrl"), wxGetApp().getTip("locctrl") );
-  locctrl_menuControl->SetBitmap(wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG));
+  locctrl_menuControl->SetBitmap(*_img_locctrl);
   menuControl->Append(locctrl_menuControl);
 
   wxMenuItem *swctrl_menuControl = new wxMenuItem(menuControl, ME_SwDlg, wxGetApp().getMenu("swctrl"), wxGetApp().getTip("swctrl") );
-  swctrl_menuControl->SetBitmap(wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG));
+  swctrl_menuControl->SetBitmap(*_img_swctrl);
   menuControl->Append(swctrl_menuControl);
 
   wxMenuItem *stctrl_menuControl = new wxMenuItem(menuControl, ME_RouteDlg, wxGetApp().getMenu("stctrl"), wxGetApp().getTip("stctrl") );
-  stctrl_menuControl->SetBitmap(wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG));
+  stctrl_menuControl->SetBitmap(*_img_routes);
   menuControl->Append(stctrl_menuControl);
 
   wxMenu *menuAuto = new wxMenu();
-/*
- * seems that check items with bitmaps does not function...
-  wxMenuItem *auto_menuAuto = new wxMenuItem(menuAuto, ME_AutoMode, wxGetApp().getMenu("automode"), wxGetApp().getTip("automode"), wxITEM_CHECK );
-  auto_menuAuto->SetBitmap(wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG));
-  menuAuto->Append(auto_menuAuto);
-*/
   menuAuto->AppendCheckItem(ME_AutoMode, wxGetApp().getMenu("automode"), wxGetApp().getTip("automode") );
   menuAuto->AppendSeparator();
   menuAuto->Append(ME_AutoGo  , wxGetApp().getMenu("startall"), wxGetApp().getTip("startall") );
   menuAuto->Append(ME_AutoResume, wxGetApp().getMenu("resumeall"), wxGetApp().getTip("resumeall") );
 
   wxMenuItem *stop_menuAuto = new wxMenuItem(menuAuto, ME_AutoStop, wxGetApp().getMenu("stopall"), wxGetApp().getTip("stopall") );
-  stop_menuAuto->SetBitmap(wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG));
+  stop_menuAuto->SetBitmap(*_img_stopall);
   menuAuto->Append(stop_menuAuto);
 
   menuAuto->AppendSeparator();
@@ -1325,7 +1292,7 @@ void RocGuiFrame::initFrame() {
   wxMenu *menuView = new wxMenu();
 
   wxMenuItem *clear_menuView = new wxMenuItem(menuView, ME_ClearMsg, wxGetApp().getMenu("clearmsg"), wxGetApp().getTip("clearmsg") );
-  clear_menuView->SetBitmap(wxBitmap(getIconPath("clear"), wxBITMAP_TYPE_PNG));
+  clear_menuView->SetBitmap(*_img_clear);
   menuView->Append(clear_menuView);
 
   menuView->AppendSeparator();
@@ -1360,37 +1327,30 @@ void RocGuiFrame::initFrame() {
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
   wxMenuItem *help_menuHelp = new wxMenuItem(menuHelp, wxID_HELP, wxGetApp().getMenu("documentation"), wxGetApp().getTip("documentation") );
-  help_menuHelp->SetBitmap(wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG));
+  help_menuHelp->SetBitmap(*_img_manual);
   menuHelp->Append(help_menuHelp);
 
   wxMenuItem *rug_menuHelp = new wxMenuItem(menuHelp, ME_RUG, wxGetApp().getMenu("usergroup"), wxGetApp().getTip("usergroup") );
-  rug_menuHelp->SetBitmap(wxBitmap(getIconPath("rug"), wxBITMAP_TYPE_PNG));
+  rug_menuHelp->SetBitmap(*_img_rug);
   menuHelp->Append(rug_menuHelp);
 
   wxMenuItem *translations_menuHelp = new wxMenuItem(menuHelp, ME_Translations, wxGetApp().getMenu("translations"), wxGetApp().getTip("translations") );
-  translations_menuHelp->SetBitmap(wxBitmap(getIconPath("lp"), wxBITMAP_TYPE_PNG));
+  translations_menuHelp->SetBitmap(*_img_lp);
   menuHelp->Append(translations_menuHelp);
 
   menuHelp->AppendSeparator();
 
   wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug, wxGetApp().getMenu("bug"), wxGetApp().getTip("bug") );
-  bug_menuHelp->SetBitmap(wxBitmap(getIconPath("bug"), wxBITMAP_TYPE_PNG));
+  bug_menuHelp->SetBitmap(*_img_bug);
   menuHelp->Append(bug_menuHelp);
 
   wxMenuItem *feature_menuHelp = new wxMenuItem(menuHelp, ME_Feature, wxGetApp().getMenu("feature"), wxGetApp().getTip("feature") );
-  feature_menuHelp->SetBitmap(wxBitmap(getIconPath("lp"), wxBITMAP_TYPE_PNG));
+  feature_menuHelp->SetBitmap(*_img_lp);
   menuHelp->Append(feature_menuHelp);
 
   menuHelp->AppendSeparator();
-  /*
-  wxMenuItem *survey_menuHelp = new wxMenuItem(menuHelp, ME_Survey, wxGetApp().getMenu("consrv"), wxGetApp().getTip("consrv") );
-  survey_menuHelp->SetBitmap(wxBitmap(getIconPath("consrv"), wxBITMAP_TYPE_PNG));
-  menuHelp->Append(survey_menuHelp);
-
-  menuHelp->AppendSeparator();
-  */
   wxMenuItem *update_menuHelp = new wxMenuItem(menuHelp, ME_Update, wxGetApp().getMenu("softwareupdates"), wxGetApp().getTip("softwareupdates") );
-  update_menuHelp->SetBitmap(wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG));
+  update_menuHelp->SetBitmap(*_img_updates);
   menuHelp->Append(update_menuHelp);
 
 #ifndef __APPLE__
@@ -1398,7 +1358,7 @@ void RocGuiFrame::initFrame() {
 #endif
 
   wxMenuItem *info_menuHelp = new wxMenuItem(menuHelp, wxID_ABOUT, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
-  info_menuHelp->SetBitmap(wxBitmap(getIconPath("info"), wxBITMAP_TYPE_PNG));
+  info_menuHelp->SetBitmap(*_img_info);
   menuHelp->Append(info_menuHelp);
 
   // now append the freshly created menu to the menu bar...
@@ -1428,34 +1388,32 @@ void RocGuiFrame::initFrame() {
   m_ToolBar = CreateToolBar();
   m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
 
-  m_ToolBar->AddTool(ME_Connect, wxBitmap(getIconPath("connect"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("connect") );
-  m_ToolBar->AddTool(ME_Upload, wxBitmap(getIconPath("upload"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("upload") );
+  m_ToolBar->AddTool(ME_Connect, *_img_connect, wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_Upload, *_img_upload, wxGetApp().getTip("upload") );
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_New, wxBitmap(getIconPath("new"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("new") );
-  m_ToolBar->AddTool(ME_Open, wxBitmap(getIconPath("open"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("open") );
-  //m_ToolBar->AddTool(ME_OpenWorkspace, wxBitmap(getIconPath("system"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("openworkspace") );
-  m_ToolBar->AddTool(ME_Save, wxBitmap(getIconPath("save"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("save") );
-// Dirk 18.4.2007 added Undo to toolbar
-  m_ToolBar->AddTool(ME_Undo, wxBitmap(getIconPath("undo"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("undo") );
+  m_ToolBar->AddTool(ME_New, *_img_new, wxGetApp().getTip("new") );
+  m_ToolBar->AddTool(ME_Open, *_img_open, wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_Save, *_img_save, wxGetApp().getTip("save") );
+  m_ToolBar->AddTool(ME_Undo, *_img_undo, wxGetApp().getTip("undo") );
   m_ToolBar->EnableTool(ME_Undo, false );
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), wxBitmap(getIconPath("poweron"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron,
                         wxNullBitmap, wxGetApp().getTip("poweron") );
-  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), wxBitmap(getIconPath("automode"), wxBITMAP_TYPE_PNG),
+  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode,
                         wxNullBitmap, wxGetApp().getTip("automode") );
-  m_ToolBar->AddTool(ME_AutoStop, wxBitmap(getIconPath("stopall"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_AutoStop, *_img_stopall, wxGetApp().getTip("stopall") );
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_OperatorDlg, wxBitmap(getIconPath("operator"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("operator") );
-  m_ToolBar->AddTool(ME_MIC, wxBitmap(getIconPath("mic"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("mic") );
-  m_ToolBar->AddTool(ME_LcDlg, wxBitmap(getIconPath("locctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("locctrl") );
-  m_ToolBar->AddTool(ME_SwDlg, wxBitmap(getIconPath("swctrl"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("swctrl") );
-  m_ToolBar->AddTool(ME_RouteDlg, wxBitmap(getIconPath("routes"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("stctrl") );
+  m_ToolBar->AddTool(ME_OperatorDlg, *_img_operator, wxGetApp().getTip("operator") );
+  m_ToolBar->AddTool(ME_MIC, *_img_mic, wxGetApp().getTip("mic") );
+  m_ToolBar->AddTool(ME_LcDlg, *_img_locctrl, wxGetApp().getTip("locctrl") );
+  m_ToolBar->AddTool(ME_SwDlg, *_img_swctrl, wxGetApp().getTip("swctrl") );
+  m_ToolBar->AddTool(ME_RouteDlg, *_img_routes, wxGetApp().getTip("stctrl") );
 
   m_ToolBar->AddSeparator();
 
@@ -1485,8 +1443,8 @@ void RocGuiFrame::initFrame() {
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_Update, wxBitmap(getIconPath("updates"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("softwareupdates") );
-  m_ToolBar->AddTool(ME_Help, wxBitmap(getIconPath("manual"), wxBITMAP_TYPE_PNG), wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(ME_Update, *_img_updates, wxGetApp().getTip("softwareupdates") );
+  m_ToolBar->AddTool(ME_Help, *_img_manual, wxGetApp().getTip("documentation") );
 
   m_ToolBar->Realize();
 
