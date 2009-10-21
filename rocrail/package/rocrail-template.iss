@@ -18,7 +18,6 @@ OutputBaseFilename=rocrail-setup-<VER>.<PATCH>-rev<BZR>-<TYPE>-<DIST>
 [Tasks]
 Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
-Name: icons; Description: "Rocview icons"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
 Name: symbols; Description: "WebClient Symbols"
@@ -69,7 +68,6 @@ Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
 Source: "images\*.*"; DestDir: "{userappdata}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "..\..\rocgui\icons\*.*"; DestDir: "{app}\icons"; Tasks: icons;
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
 Source: "..\..\rocgui\svg\themes\Accessories\*.*"; DestDir: "{app}\svg\themes\Accessories"; Tasks: themes;
 Source: "..\..\rocgui\svg\themes\Basic\*.*"; DestDir: "{app}\svg\themes\Basic"; Tasks: themes;
@@ -83,6 +81,6 @@ Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; F
 Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\Rocview"; Parameters: "-icons ""{app}\icons"" -sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
+Name: "{group}\Rocview"; Parameters: -sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
 Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userappdata}\Rocrail\images"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocrail.exe"
 

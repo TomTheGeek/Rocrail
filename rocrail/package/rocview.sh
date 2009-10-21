@@ -7,10 +7,6 @@ if [ ! -e ~/rocrail/rocview.ini ] ; then
 	cp /opt/rocrail/plan.xml ~/rocrail
 fi
 
-if [ ! -e ~/rocrail/icons ] ; then
-	ln -s /opt/rocrail/icons ~/rocrail/icons
-fi
-
 if [ ! -e ~/rocrail/svg ] ; then
 	ln -s /opt/rocrail/svg ~/rocrail/svg
 fi

@@ -24,7 +24,6 @@ cd ..
 #rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/default
-mkdir -p $RPM_BUILD_ROOT/opt/rocrail/icons
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/svg
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/stylesheets
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/symbols
@@ -63,7 +62,6 @@ install -g users -m 666 Rocrail/rocrail/package/rocraild $RPM_BUILD_ROOT/etc/ini
 install -g users -m 666 Rocrail/rocrail/package/rocrail.xpm $RPM_BUILD_ROOT/opt/rocrail
 install -g users -m 666 Rocrail/rocrail/package/plan.xml $RPM_BUILD_ROOT/opt/rocrail/default
 
-install -g users -m 666 Rocrail/rocview/icons/*.* $RPM_BUILD_ROOT/opt/rocrail/icons
 install -g users -m 666 Rocrail/stylesheets/*.* $RPM_BUILD_ROOT/opt/rocrail/stylesheets
 install -d -g users -m 666 Rocrail/rocview/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
 install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/symbols
@@ -102,7 +100,6 @@ install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/
 /opt/rocrail/rocraild.png
 /etc/init.d/rocraild
 /opt/rocrail/rocrail.xpm
-/opt/rocrail/icons/*.*
 /opt/rocrail/stylesheets/*.*
 /opt/rocrail/svg
 /opt/rocrail/symbols/*.*

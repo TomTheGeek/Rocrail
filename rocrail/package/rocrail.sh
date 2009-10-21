@@ -3,12 +3,6 @@ if [ ! -e ~/rocrail ] ; then
 	mkdir ~/rocrail
 fi
 
-if [ ! -e ~/rocrail/rocrail.ini ] ; then
-	cp /opt/rocrail/default/rocrail.ini ~/rocrail
-	cp /opt/rocrail/default/plan.xml ~/rocrail
-	cp /opt/rocrail/default/neustadt.xml ~/rocrail
-fi
-
 cd ~/rocrail
 
 if ps --no-heading -C rocrail
