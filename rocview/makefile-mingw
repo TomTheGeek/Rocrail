@@ -38,14 +38,15 @@ DECOBJS=$(patsubst dialogs/decoders/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/de
 SOBJS=$(patsubst symbols/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard symbols/*.cpp))
 WOBJS=$(patsubst $(GENDIR)/rocview/wrapper/impl/%.c,$(GENDIR)/rocview/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocview/wrapper/impl/*.c))
 ROBJS=$(patsubst $(GENDIR)/rocview/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.c))
+IOBJS=$(patsubst $(GENDIR)/rocview/res/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.cpp))
 
 TARGET=$(OUTDIR)\rocview.exe
 
 all: $(TARGET)
 #	-del /Q $(TMPOUTDIR)\*.o
 
-$(TARGET): $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(LIBS) $(TMPOUTDIR)\rocview_rc.o
-	$(LNK) -o $(TARGET) $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(TMPOUTDIR)\rocview_rc.o $(LIBS) $(LNK_FLAGS) $(WXLIBS) $(WINLIBS)
+$(TARGET): $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(LIBS) $(TMPOUTDIR)\rocview_rc.o
+	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(TMPOUTDIR)\rocview_rc.o $(LIBS) $(LNK_FLAGS) $(WXLIBS) $(WINLIBS)
 
 $(TMPOUTDIR)\rocview_rc.o: rocview.rc
 	windres -irocview.rc -o$(TMPOUTDIR)\rocview_rc.o --define __WXMSW__ --include-dir %wxroot%\lib-$(LIBRARY)\wx\include\msw-$(LIBRARY)-release-static-$(wxversion) --include-dir %wxroot%\include
@@ -71,6 +72,9 @@ $(GENDIR)/rocview/wrapper/bin/%.o: $(GENDIR)/rocview/wrapper/impl/%.c
 $(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.c
 	$(CC) $(CC_FLAGS) $< -o $@
 
+$(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.cpp
+	$(CPP) $(CC_WXFLAGS) $< -o $@
+
 clean:
 	-mkdir $(OUTDIR)
 	-mkdir $(GENDIR)\rocview
@@ -85,6 +89,7 @@ clean:
 	-del /Q $(GENDIR)\rocview\wrapper\doc\*.*
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\wgen.exe ..\..\rocview\public\wrapper.xml
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocview\res\messages.xml res\messages.c messages
+	cd $(GENDIR)\rocview & perl ..\..\rocview\png2wx.pl -C res\icons.cpp -H res\icons.hpp -M IMAGES_HPP ..\..\rocview\icons\*
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocview\public\wrapper.xml wrapper\impl\guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml wrapper\impl\version.c svnLog
 

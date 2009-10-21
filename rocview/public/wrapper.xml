@@ -29,7 +29,6 @@
     <const name="port" vt="string" val="-p" defval="*" range="*" remark="Specifies target port: -p [port]"/>
     <const name="tabsel" vt="string" val="-s" defval="-1" range="*" remark="Tab index for selection."/>
     <const name="tabview" vt="string" val="-tabview" defval="false" remark="Force tab view in case of a modular layout."/>
-    <const name="icons" vt="string" val="-icons" defval="" range="*" remark="Alternative icon path"/>
     <const name="theme" vt="string" val="-theme" defval="" range="*" remark="Theme to use at startup"/>
     <const name="themespath" vt="string" val="-themespath" defval="." range="*" remark="Themes path offset"/>
     <const name="serverpath" vt="string" val="-sp" defval="" range="*" remark="Server path to start Rocrail in a workspace."/>
@@ -71,7 +70,6 @@
     <var name="host" vt="string" defval="localhost" remark="last used rrcon"/>
     <var name="openpath" vt="string" defval="." remark="use this path for init the file open dialog"/>
     <var name="xslpath" vt="string" defval="stylesheets" remark="reference stylsheets to this path"/>
-    <var name="iconpath" vt="string" defval="icons" remark="load GUI icons from this path"/>
     <var name="imagepath" vt="string" defval="images" remark="load loco pictures from this path"/>
     <var name="updatespath" vt="string" defval="updates" remark="download updates in this path"/>
     <var name="updatesserver" vt="string" defval="rocrail.net" remark="location of updates"/>

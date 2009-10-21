@@ -88,13 +88,14 @@ DECOBJS=$(patsubst dialogs/decoders/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/de
 SOBJS=$(patsubst symbols/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard symbols/*.cpp))
 WOBJS=$(patsubst $(GENDIR)/rocview/wrapper/impl/%.c,$(GENDIR)/rocview/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocview/wrapper/impl/*.c))
 ROBJS=$(patsubst $(GENDIR)/rocview/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.c))
+IOBJS=$(patsubst $(GENDIR)/rocview/res/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.cpp))
 
 TARGET=$(OUTDIR)/rocview$(BINSUFFIX)
 
 all: $(TARGET)
 
-$(TARGET): $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(RRLIBS) $(WINRESOURCE)
-	$(LNK) -o $(TARGET) $(ROBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS)
+$(TARGET): $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(RRLIBS) $(WINRESOURCE)
+	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS)
 
 $(WINRESOURCE): rocview.rc
 
@@ -122,6 +123,9 @@ $(GENDIR)/rocview/wrapper/bin/%.o: $(GENDIR)/rocview/wrapper/impl/%.c
 $(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.c
 	$(CC) $(CC_FLAGS) $< -o $@
 
+$(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.cpp
+	$(CPP) $(CC_WXFLAGS) $< -o $@
+
 clean:
 	-mkdir -p $(OUTDIR)
 	-mkdir -p $(GENDIR)/rocview
@@ -136,6 +140,7 @@ clean:
 	-rm -f $(GENDIR)/rocview/wrapper/doc/*
 	cd $(GENDIR)/rocview; ../$(BINDIR)/wgen ../../rocview/public/wrapper.xml
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
+	cd $(GENDIR)/rocview; perl ../../rocview/png2wx.pl -C res/icons.cpp -H res/icons.hpp -M IMAGES_HPP ../../rocview/icons/*
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
@@ -143,6 +148,7 @@ messages:
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
+	cd $(GENDIR)/rocview; perl ../../rocview/png2wx.pl -C res/icons.cpp -H res/icons.hpp -M IMAGES_HPP ../../rocview/icons/*
 
 install:
 	-cp -p $(OUTDIR)/rocview $(DESTDIR)
@@ -159,7 +165,6 @@ macapp:
 	echo -n 'APPL????' > Rocview.app/Contents/PkgInfo
 	cp ../unxbin/rocview Rocview.app/Contents/MacOS/Rocview
 	cp Run Rocview.app/Contents/MacOS/
-	cp icons/*.png Rocview.app/Contents/Resources/icons/
 	cp /usr/lib/libwx* Rocview.app/Contents/MacOS/
 	rm -rf ../unxbin/Rocview.app
 	mv -f Rocview.app ../unxbin

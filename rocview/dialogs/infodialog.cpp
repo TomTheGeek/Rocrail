@@ -37,6 +37,7 @@
 #include "rocs/public/str.h"
 #include "rocs/public/trace.h"
 #include "rocview/wrapper/public/Gui.h"
+#include "rocview/res/icons.hpp"
 
 #include "infodialog.h"
 
@@ -77,11 +78,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   Create(parent, id, caption, pos, size, style);
 
 
-  wxBitmap bitmap;
-  if (bitmap.LoadFile(wxGetApp().getFrame()->getIconPath("rocrail-logo"), wxBITMAP_TYPE_PNG)) {
-    m_Splash->SetBitmapLabel( bitmap );
-  }
-
+  m_Splash->SetBitmapLabel( *_img_rocrail_logo );
 
   char* str = StrOp.fmt("%d.%d.%d",
               wGui.vmajor, wGui.vminor, wGui.patch );

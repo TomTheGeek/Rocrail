@@ -53,7 +53,6 @@ class wxSpinCtrl;
 #define ID_DIALOG1 10166
 #define ID_NOTEBOOK1 10167
 #define ID_WORKSPACE 10005
-#define ID_ICONPATH_BUTTON 10340
 #define ID_IMAGEPATH_BUTTON 10341
 #define ID_UPDATESPATH_BUTTON 10000
 #define ID_XSLPATH_BUTTON 10354
@@ -108,9 +107,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_WORKSPACE
     void OnWorkspaceClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ICONPATH_BUTTON
-    void OnIconpathButtonClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_IMAGEPATH_BUTTON
     void OnImagepathButtonClick( wxCommandEvent& event );
@@ -169,9 +165,6 @@ public:
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
     wxCheckBox* m_StartDefaultWorkspace;
-    wxStaticBox* m_labIconPath;
-    wxTextCtrl* m_IconPath;
-    wxButton* m_IconPathDlg;
     wxStaticBox* m_labImagePath;
     wxTextCtrl* m_ImagePath;
     wxButton* m_ImagePathDlg;

@@ -59,7 +59,7 @@ class RocGuiFrame : public wxFrame
 {
 public:
   iONode m_Ini;
-  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* icons, const char* theme, const char* sp, const char* tp);
+  RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* theme, const char* sp, const char* tp);
   void create();
 
   void setOnline( bool online );
@@ -255,7 +255,6 @@ public:
 
   void InitActiveLocs(wxCommandEvent& event);
   void initLocCtrlDialogs();
-  wxString getIconPath(const char* iconfile);
   void setOffline( bool p_bOffline );
   void initFrame();
   void Connect( const char* host, int port, bool wait4rr=false );
@@ -300,7 +299,6 @@ private:
 
   iOMutex m_muxInitActiveLocs;
 
-  const char* m_IconPath;
   const char* m_ThemePath;
   const char* m_ServerPath;
   const char* m_ThemesPath;

@@ -74,7 +74,6 @@ public:
   void setModView(bool modview) { m_bForceTabView ?  m_bModView = false:m_bModView = modview; }
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
-  wxString getIconPath(const char* iconfile, const char* IconPath);
   bool isForceTabView() { return m_bForceTabView; }
 
   iORCon        m_RCon;

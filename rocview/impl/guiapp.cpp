@@ -112,6 +112,8 @@
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
 
+#include "rocview/res/icons.hpp"
+
 #include "common/version.h"
 
 // ----------------------------------------------------------------------------
@@ -333,26 +335,6 @@ iONode RocGui::popUndoItem() {
 }
 
 
-wxString RocGui::getIconPath(const char* iconfile, const char* IconPath) {
-  if( wxGetApp().getIni() != NULL ) {
-    const char* iconpath = wGui.geticonpath(wxGetApp().getIni());
-    char* path = NULL;
-    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "IconPath=0x%08X", IconPath );
-    if( IconPath != NULL ) {
-      path = StrOp.fmt( "%s%c%s.png", IconPath, SystemOp.getFileSeparator(), iconfile );
-    }
-    else
-      path = StrOp.fmt( "%s%c%s.png", iconpath, SystemOp.getFileSeparator(), iconfile );
-
-    return wxString(path,wxConvUTF8);
-  }
-  else
-    return wxString("",wxConvUTF8);
-}
-
-
-
-
 bool RocGui::OnInit() {
 
 #ifdef __linux__
@@ -392,7 +374,6 @@ bool RocGui::OnInit() {
   tracelevel  debug   = CmdLnOp.hasKey( m_CmdLn, wCmdline.debug ) ? TRCLEVEL_DEBUG:(tracelevel)0;
   tracelevel  parse   = CmdLnOp.hasKey( m_CmdLn, wCmdline.parse ) ? TRCLEVEL_PARSE:(tracelevel)0;
   const char* tf      = CmdLnOp.getStr( m_CmdLn, wCmdline.trcfile );
-  const char* icons   = CmdLnOp.getStr( m_CmdLn, wCmdline.icons );
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
   const char* tp      = CmdLnOp.getStr( m_CmdLn, wCmdline.themespath );
@@ -436,15 +417,14 @@ bool RocGui::OnInit() {
   if( m_Ini == NULL )
     m_Ini = NodeOp.inst( wGui.name(), NULL, ELEMENT_NODE );
 
+  initialize_images();
+
   // show the splash screen:
-  wxBitmap bitmap;
-  if (bitmap.LoadFile(getIconPath("rocrail-logo", icons), wxBITMAP_TYPE_PNG)) {
-    wxSplashScreen* splash = NULL;
-    splash = new wxSplashScreen(bitmap,
+  wxSplashScreen* splash = NULL;
+  splash = new wxSplashScreen(*_img_rocrail_logo,
         wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
         3000, NULL, -1, wxDefaultPosition, wxDefaultSize,
         wxSUNKEN_BORDER|wxSTAY_ON_TOP);
-  }
 
 
   // prepare the rocrail connection:
@@ -532,7 +512,7 @@ bool RocGui::OnInit() {
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
-      wxDefaultSize, m_Ini, icons, theme, sp, tp );
+      wxDefaultSize, m_Ini, theme, sp, tp );
   m_Frame->SetSize(wxSize(iWidth, iHeight));
   m_Frame->initFrame();
 
