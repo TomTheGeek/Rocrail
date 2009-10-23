@@ -35,7 +35,7 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 W_OBJS=$(patsubst impl/win/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/win/*.c))
 G_OBJS=$(patsubst gen/%.c,$(TMPOUTDIR)/%.o,$(wildcard gen/*.c))
 
-all: $(OUTDIR)\librocs.a $(OUTDIR)\wgen.exe $(OUTDIR)\ogen.exe $(OUTDIR)\xml2cstr.exe
+all: $(OUTDIR)\librocs.a $(OUTDIR)\wgen.exe $(OUTDIR)\ogen.exe $(OUTDIR)\xml2cstr.exe $(OUTDIR)\png2wx.exe
 #	-del /Q $(TMPOUTDIR)\*.o
 
 gen:
@@ -54,6 +54,9 @@ $(OUTDIR)\ogen.exe: $(TMPOUTDIR)\ogen.o $(OUTDIR)\librocs.a
 
 $(OUTDIR)\xml2cstr.exe: $(TMPOUTDIR)\xml2cstr.o $(OUTDIR)\librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)\xml2cstr.exe $(TMPOUTDIR)\xml2cstr.o $(OUTDIR)\librocs.a $(LIBS)
+
+$(OUTDIR)\png2wx.exe: $(TMPOUTDIR)\png2wx.o $(OUTDIR)\librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)\png2wx.exe $(TMPOUTDIR)\png2wx.o $(OUTDIR)\librocs.a $(LIBS)
 
 $(TMPOUTDIR)/%.o: impl/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@

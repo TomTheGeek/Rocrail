@@ -73,7 +73,7 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 
 COREOBJS=$(patsubst impl/$(COREDIR)/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/$(COREDIR)/*.c))
 
-all: $(OUTDIR)/librocs.a $(OUTDIR)/wgen$(BINSUFFIX) $(OUTDIR)/ogen$(BINSUFFIX) $(OUTDIR)/xml2cstr$(BINSUFFIX) \
+all: $(OUTDIR)/librocs.a $(OUTDIR)/wgen$(BINSUFFIX) $(OUTDIR)/ogen$(BINSUFFIX) $(OUTDIR)/xml2cstr$(BINSUFFIX) $(OUTDIR)/png2wx$(BINSUFFIX) \
 $(OUTDIR)/addlang$(BINSUFFIX) $(OUTDIR)/mergelang$(BINSUFFIX) $(OUTDIR)/mdoc$(BINSUFFIX) $(OUTDIR)/lang2po$(BINSUFFIX) $(OUTDIR)/po2lang$(BINSUFFIX)
 
 gen:
@@ -95,6 +95,10 @@ $(OUTDIR)/ogen$(BINSUFFIX): $(TMPOUTDIR)/ogen.o $(OUTDIR)/librocs.a
 $(OUTDIR)/xml2cstr$(BINSUFFIX): $(TMPOUTDIR)/xml2cstr.o $(OUTDIR)/librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/xml2cstr$(BINSUFFIX) $(TMPOUTDIR)/xml2cstr.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
 	cp $(OUTDIR)/xml2cstr$(BINSUFFIX) bin
+
+$(OUTDIR)/png2wx$(BINSUFFIX): $(TMPOUTDIR)/png2wx.o $(OUTDIR)/librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/png2wx$(BINSUFFIX) $(TMPOUTDIR)/png2wx.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+	cp $(OUTDIR)/png2wx$(BINSUFFIX) bin
 
 $(OUTDIR)/addlang$(BINSUFFIX): $(TMPOUTDIR)/addlang.o $(OUTDIR)/librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/addlang$(BINSUFFIX) $(TMPOUTDIR)/addlang.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
