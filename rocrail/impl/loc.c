@@ -210,7 +210,7 @@ static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   data->fn23 = wFunCmd.isf23( cmd );
   data->fn24 = wFunCmd.isf24( cmd );
   }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 7 ) {
   data->fn25 = wFunCmd.isf25( cmd );
   data->fn26 = wFunCmd.isf26( cmd );
   data->fn27 = wFunCmd.isf27( cmd );
