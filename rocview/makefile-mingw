@@ -89,7 +89,7 @@ clean:
 	-del /Q $(GENDIR)\rocview\wrapper\doc\*.*
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\wgen.exe ..\..\rocview\public\wrapper.xml
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocview\res\messages.xml res\messages.c messages
-	cd $(GENDIR)\rocview & perl -MWild ..\..\rocview\png2wx.pl -C res\icons.cpp -H res\icons.hpp -M IMAGES_HPP ..\..\rocview\icons\*
+	cd $(GENDIR)\rocview & ..\$(OUTDIR)\png2wx.exe ..\..\rocview\icons icons
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\rocview\public\wrapper.xml wrapper\impl\guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)\rocview & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml wrapper\impl\version.c svnLog
 
