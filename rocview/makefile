@@ -140,7 +140,7 @@ clean:
 	-rm -f $(GENDIR)/rocview/wrapper/doc/*
 	cd $(GENDIR)/rocview; ../$(BINDIR)/wgen ../../rocview/public/wrapper.xml
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
-	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons icons
+	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons res/icons
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
 
@@ -148,7 +148,7 @@ messages:
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
 	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
-	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons icons
+	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons res/icons
 
 install:
 	-cp -p $(OUTDIR)/rocview $(DESTDIR)
