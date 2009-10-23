@@ -174,34 +174,48 @@ static void __saveFxState(iOLoc inst) {
 static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
   data->fn0  = wFunCmd.isf0 ( cmd );
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
   data->fn1  = wFunCmd.isf1 ( cmd );
   data->fn2  = wFunCmd.isf2 ( cmd );
   data->fn3  = wFunCmd.isf3 ( cmd );
   data->fn4  = wFunCmd.isf4 ( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 2 ) {
   data->fn5  = wFunCmd.isf5 ( cmd );
   data->fn6  = wFunCmd.isf6 ( cmd );
   data->fn7  = wFunCmd.isf7 ( cmd );
   data->fn8  = wFunCmd.isf8 ( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 3 ) {
   data->fn9  = wFunCmd.isf9 ( cmd );
   data->fn10 = wFunCmd.isf10( cmd );
   data->fn11 = wFunCmd.isf11( cmd );
   data->fn12 = wFunCmd.isf12( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 4 ) {
   data->fn13 = wFunCmd.isf13( cmd );
   data->fn14 = wFunCmd.isf14( cmd );
   data->fn15 = wFunCmd.isf15( cmd );
   data->fn16 = wFunCmd.isf16( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 5 ) {
   data->fn17 = wFunCmd.isf17( cmd );
   data->fn18 = wFunCmd.isf18( cmd );
   data->fn19 = wFunCmd.isf19( cmd );
   data->fn20 = wFunCmd.isf20( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 6 ) {
   data->fn21 = wFunCmd.isf21( cmd );
   data->fn22 = wFunCmd.isf22( cmd );
   data->fn23 = wFunCmd.isf23( cmd );
   data->fn24 = wFunCmd.isf24( cmd );
+  }
+  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
   data->fn25 = wFunCmd.isf25( cmd );
   data->fn26 = wFunCmd.isf26( cmd );
   data->fn27 = wFunCmd.isf27( cmd );
   data->fn28 = wFunCmd.isf28( cmd );
+  }
 }
 
 
