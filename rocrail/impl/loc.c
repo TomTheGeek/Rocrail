@@ -303,10 +303,14 @@ static void* __event( void* inst, const void* evt ) {
     int V_rawMax = wLoc.getV_rawMax(evtNode);
 
     if( V_raw != -1 ) {
+      float fV = wLoc.getV_max( evtNode ) * V_raw;
+      float div = (V_rawMax == -1 ? spcnt:V_rawMax);
       if( StrOp.equals( wLoc.getV_mode( data->props ), wLoc.V_mode_percent ) )
-        V =  (100 * V_raw) / (V_rawMax == -1 ? spcnt:V_rawMax);
-      else
-        V =  (wLoc.getV_max( evtNode ) * V_raw) / (V_rawMax == -1 ? spcnt:V_rawMax);
+        fV = 100 * V_raw;
+      fV = fV / div;
+      V = (int)fV;
+      if( fV - V >= 0.5 )
+        V++;
     }
     else {
       V = wLoc.getV( data->props );
