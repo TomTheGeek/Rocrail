@@ -363,7 +363,7 @@ static void* __event( void* inst, const void* evt ) {
 
     /* TODO: the digint library should provide the function group to prevent overwriting not reported functions */
     __cpNode2Fn(inst, evtNode);
-      wLoc.setfn( data->props, wFunCmd.isf0( evtNode));
+    wLoc.setfn( data->props, data->fn0);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
         wLoc.getid( data->props ),

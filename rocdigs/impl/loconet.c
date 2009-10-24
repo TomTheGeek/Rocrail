@@ -1206,6 +1206,8 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       int cvh  = rsp[8];  // hi 3 bits of CV# and msb of data7
       int cvl  = rsp[9];  // lo 7 bits of CV#
       int cvdata = rsp[10]; // 7 bits of data to program, msb is in cvh above
+      int idl    = rsp[11];
+      int idh    = rsp[12];
 
       /* IB-Com: E7 0E 7C 00 00 00 71 06 00 00 03 00 00 1E */
 
@@ -1232,6 +1234,8 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         int addrH = rsp[9];     // loco address high
         int addr = lnLocoAddr(addrH, addrL);
         data->locoslot[slot] = addr;
+        data->locothrottle[slot] = idl + idh * 127;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "slot=%d addr=%d throttleid=%d", slot, addr, data->locothrottle[slot] );
       }
       else if( slot == CONFIG_SLOT ) {
         /* system slot */
