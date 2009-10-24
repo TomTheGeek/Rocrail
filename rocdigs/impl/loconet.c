@@ -646,6 +646,15 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   else if( rsp[0] == OPC_LOCO_DIRF ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d dirf=0x%02X", slot, addr, dirf );
     /* inform listener: Node3 */
+    iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    wLoc.setaddr( nodeC, addr );
+    wLoc.setdir( nodeC, (dirf & DIRF_DIR)? False:True );
+    wLoc.setfn( nodeC, (dirf & DIRF_F0) ? True:False );
+    wLoc.setcmd( nodeC, wLoc.direction );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
     iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
       wLoc.setiid( nodeD, data->iid );

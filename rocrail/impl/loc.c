@@ -173,7 +173,8 @@ static void __saveFxState(iOLoc inst) {
 
 static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
-  data->fn0  = wFunCmd.isf0 ( cmd );
+  if( wFunCmd.getgroup(cmd) == 0)
+    data->fn0  = wFunCmd.isf0 ( cmd );
   if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
   data->fn1  = wFunCmd.isf1 ( cmd );
   data->fn2  = wFunCmd.isf2 ( cmd );
@@ -330,8 +331,8 @@ static void* __event( void* inst, const void* evt ) {
     wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
 
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d dir=%s throttleID=%d",
-        wLoc.getid(data->props), V_raw, V, wLoc.isdir(data->props)?"Forwards":"Reverse", wLoc.getthrottleid(data->props) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d fn=%d dir=%s throttleID=%d",
+        wLoc.getid(data->props), V_raw, V, wLoc.isfn(data->props), wLoc.isdir(data->props)?"Forwards":"Reverse", wLoc.getthrottleid(data->props) );
     /* Broadcast to clients. */
     {
       iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
