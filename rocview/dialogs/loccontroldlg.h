@@ -129,9 +129,6 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_LOCCTRL_IMAGE
     void OnBitmapbuttonLocctrlImageClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER_LOCCTRL_SPEED
-    void OnSliderLocctrlSpeedUpdated( wxCommandEvent& event );
-
     /// wxEVT_SCROLL_* event handler for ID_SLIDER_LOCCTRL_SPEED
     void OnSliderLocctrlSpeedScroll( wxScrollEvent& event );
 

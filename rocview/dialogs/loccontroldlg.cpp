@@ -83,8 +83,8 @@ BEGIN_EVENT_TABLE( LocControlDialog, wxDialog )
 
     EVT_BUTTON( ID_BITMAPBUTTON_LOCCTRL_IMAGE, LocControlDialog::OnBitmapbuttonLocctrlImageClick )
 
-    EVT_SLIDER( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedUpdated )
     EVT_COMMAND_SCROLL( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedScroll )
+    EVT_COMMAND_SCROLL_THUMBTRACK( ID_SLIDER_LOCCTRL_SPEED, LocControlDialog::OnSliderLocctrlSpeedScroll )
 
     EVT_BUTTON( ID_BUTTON_LOCCTRL_F1, LocControlDialog::OnButtonLocctrlF1Click )
 
@@ -570,15 +570,18 @@ void LocControlDialog::OnBitmapbuttonLocctrlImageClick( wxCommandEvent& event )
 }
 
 /*!
- * wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER_LOCCTRL_SPEED
+ * wxEVT_SCROLL_* event handler for ID_SLIDER_LOCCTRL_SPEED
  */
 
-void LocControlDialog::OnSliderLocctrlSpeedUpdated( wxCommandEvent& event )
+void LocControlDialog::OnSliderLocctrlSpeedScroll( wxScrollEvent& event )
 {
-  int val = m_SpeedCtrl->GetValue();
-  m_iSpeed = val;
-  speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+  if ( event.GetEventObject() == m_SpeedCtrl ) {
+    m_iSpeed = m_SpeedCtrl->GetValue();
+    speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+  }
 }
+
+
 
 /*!
  * wxEVT_SCROLL_ENDSCROLL event handler for ID_SLIDER_LOCCTRL_SPEED
@@ -839,21 +842,6 @@ wxIcon LocControlDialog::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end LocControlDialog icon retrieval
 }
-/*!
- * wxEVT_SCROLL_* event handler for ID_SLIDER_LOCCTRL_SPEED
- */
-
-void LocControlDialog::OnSliderLocctrlSpeedScroll( wxScrollEvent& event )
-{
-  int val = m_SpeedCtrl->GetValue();
-  if( val == m_iSpeed )
-    return;
-  m_iSpeed = val;
-  //m_Dir->Enable( m_iSpeed==0?true:false);
-
-  speedCmd(true);
-}
-
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_F5
