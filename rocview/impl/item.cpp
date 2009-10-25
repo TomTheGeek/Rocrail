@@ -812,6 +812,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
       const char* state = wBlock.getstate( m_Props );
       Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
       if( hasLoc ) {
+        iONode lc = wxGetApp().getFrame()->findLoc(locId);
+        Boolean active = wLoc.isactive(lc);
         menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
         menu.AppendSeparator();
         menu.Append( ME_LocGo, wxGetApp().getMenu("startloc") );
@@ -835,8 +837,10 @@ void Symbol::OnPopup(wxMouseEvent& event)
         if( wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         menu.AppendSeparator();
-        menu.Append( ME_LocActivate, wxGetApp().getMenu("activate") );
-        menu.Append( ME_LocDeActivate, wxGetApp().getMenu("deactivate") );
+        if( !active )
+          menu.Append( ME_LocActivate, wxGetApp().getMenu("activate") );
+        else
+          menu.Append( ME_LocDeActivate, wxGetApp().getMenu("deactivate") );
         menu.AppendSeparator();
       }
       else if( StrOp.equals( wBlock.open, state ) ) {

@@ -3145,6 +3145,9 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     OnCellLeftClick(event);
     wxString str = m_ActiveLocs->GetCellValue( event.GetRow(), 0 );
 
+    iONode lc = m_LC->getLocProps();
+    Boolean active = wLoc.isactive(lc);
+
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnCellRightClick %s", m_LocID );
     wxMenu menu( str );
     menu.Append( ME_GridLocGo, wxGetApp().getMenu("start"), wxGetApp().getTip("start"));
@@ -3164,8 +3167,10 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     menu.Append( ME_GridLocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
     menu.Append( ME_GridLocShortID, wxGetApp().getMenu("setshortid"), wxGetApp().getTip("selectschedule") );
     menu.AppendSeparator();
-    mi = menu.Append( ME_GridLocActivate, wxGetApp().getMsg("activate") );
-    mi = menu.Append( ME_GridLocDeActivate, wxGetApp().getMsg("deactivate") );
+    if( !active )
+      mi = menu.Append( ME_GridLocActivate, wxGetApp().getMsg("activate") );
+    else
+      mi = menu.Append( ME_GridLocDeActivate, wxGetApp().getMsg("deactivate") );
     //PopupMenu(&menu, event.GetPosition().x, event.GetPosition().y );
     PopupMenu(&menu );
   }
