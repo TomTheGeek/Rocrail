@@ -258,8 +258,12 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   if( StrOp.equals( wRoute.go, cmdStr ) ) {
     ok = _go( inst );
   }
-  else if( StrOp.equals( wRoute.test, cmdStr ) )
-    ok = _go( inst );
+  else if( StrOp.equals( wRoute.test, cmdStr ) ) {
+    if( RouteOp.isFree(inst, "__manualcommand__") )
+      ok = _go( inst );
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is locked and cannot be switched by hand.", RouteOp.getId(inst) );
+  }
 
   /* Cleanup Node1 */
   nodeA->base.del(nodeA);
