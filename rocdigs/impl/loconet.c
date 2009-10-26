@@ -638,7 +638,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
       wLoc.setiid( nodeC, data->iid );
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, spd );
-    wLoc.setV_rawMax( nodeC, 127 );
+    wLoc.setV_rawMax( nodeC, 128 );
     wLoc.setthrottleid( nodeC, throttleid );
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
