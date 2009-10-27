@@ -1876,10 +1876,14 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         snd  |= (fn8 << 3);
 
         if( wLoc.getV( node ) != -1 ) {
-          if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-            V = (wLoc.getV( node ) * step) / 100;
-          else if( wLoc.getV_max( node ) > 0 )
-            V = (wLoc.getV( node ) * step) / wLoc.getV_max( node );
+          float fV = wLoc.getV( node ) * step;
+          float div = 100;
+          if( !StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) && wLoc.getV_max( node ) > 0 )
+            div = wLoc.getV_max( node );
+          fV = fV / div;
+          V = (int)fV;
+          if( fV - V >= 0.5 )
+            V++;
         }
 
         /* keep this value for the ping thread */
