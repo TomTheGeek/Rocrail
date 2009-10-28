@@ -638,7 +638,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
       wLoc.setiid( nodeC, data->iid );
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, spd );
-    wLoc.setV_rawMax( nodeC, 128 );
+    wLoc.setV_rawMax( nodeC, 127 );
     wLoc.setthrottleid( nodeC, throttleid );
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
@@ -1876,7 +1876,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         snd  |= (fn8 << 3);
 
         if( wLoc.getV( node ) != -1 ) {
-          float fV = wLoc.getV( node ) * step;
+          float fV = wLoc.getV( node ) * 127;
           float div = 100;
           if( !StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) && wLoc.getV_max( node ) > 0 )
             div = wLoc.getV_max( node );
