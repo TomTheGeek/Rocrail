@@ -273,6 +273,7 @@ void ScheduleDialog::initLabels() {
   m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("location"), 0);
   m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("block"), 1);
   m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("time"), 2);
+  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("actions"), 3);
   m_Entries->SetEditable(FALSE);
   m_Entries->AutoSizeColumns();
   m_Entries->AutoSizeRows();
@@ -439,10 +440,13 @@ void ScheduleDialog::initSchedule() {
     m_Entries->SetCellValue(m_Entries->GetNumberRows()-1, 2, wxString(hour,wxConvUTF8 ) );
     StrOp.free( hour );
 
+    bool hasActions = wScheduleEntry.getactionctrl(scentry) != NULL ? true:false;
+    m_Entries->SetCellValue(m_Entries->GetNumberRows()-1, 3, hasActions ? _T("X"):_T("") );
 
     m_Entries->SetReadOnly(m_Entries->GetNumberRows()-1, 0, true );
     m_Entries->SetReadOnly(m_Entries->GetNumberRows()-1, 1, true );
     m_Entries->SetReadOnly(m_Entries->GetNumberRows()-1, 2, true );
+    m_Entries->SetReadOnly(m_Entries->GetNumberRows()-1, 3, true );
 
     scentry = wSchedule.nextscentry( m_Props, scentry );
   };
@@ -685,7 +689,7 @@ void ScheduleDialog::CreateControls()
     m_Entries->SetDefaultRowSize(25);
     m_Entries->SetColLabelSize(25);
     m_Entries->SetRowLabelSize(50);
-    m_Entries->CreateGrid(1, 3, wxGrid::wxGridSelectRows);
+    m_Entries->CreateGrid(1, 4, wxGrid::wxGridSelectRows);
     itemBoxSizer16->Add(m_Entries, 2, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -1109,6 +1113,7 @@ void ScheduleDialog::OnButtonScheduleEntryActionsClick( wxCommandEvent& event )
     ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, entry );
     dlg->ShowModal();
     dlg->Destroy();
+    initSchedule();
   }
 }
 
@@ -1140,6 +1145,8 @@ void ScheduleDialog::OnScheduleActionsClick( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+
+  initSchedule();
 }
 
 
