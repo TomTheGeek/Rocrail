@@ -130,7 +130,7 @@ static void _yellow( iOSignal inst ) {
 }
 
 static void _red( iOSignal inst ) {
-  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
+  if( inst != NULL ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setcmd( node, wSignal.red );
