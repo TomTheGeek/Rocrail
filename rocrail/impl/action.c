@@ -267,14 +267,17 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->setLocSchedule(bl, wAction.getparam( data->action ));
       }
       else if( StrOp.equals( wAction.block_setloc, wAction.getcmd( data->action ) ) ) {
-        iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-        wBlock.setlocid(cmd, wAction.getparam( data->action ));
-        bl->cmd(bl, cmd);
-        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid( cmd, wAction.getparam( data->action ) );
-        wLoc.setcmd( cmd, wLoc.block );
-        wLoc.setblockid( cmd, wAction.getoid( data->action ) );
-
+        iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ));
+        if( lc != NULL ) {
+          iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+          wBlock.setlocid(cmd, "");
+          bl->cmd(bl, cmd);
+          cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setid( cmd, wAction.getparam( data->action ) );
+          wLoc.setcmd( cmd, wLoc.block );
+          wLoc.setblockid( cmd, wAction.getoid( data->action ) );
+          LocOp.cmd(lc, cmd);
+        }
       }
     }
   }
