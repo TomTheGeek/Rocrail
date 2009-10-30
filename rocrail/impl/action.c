@@ -270,6 +270,11 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setlocid(cmd, wAction.getparam( data->action ));
         bl->cmd(bl, cmd);
+        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, wAction.getparam( data->action ) );
+        wLoc.setcmd( cmd, wLoc.block );
+        wLoc.setblockid( cmd, wAction.getoid( data->action ) );
+
       }
     }
   }
