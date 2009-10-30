@@ -330,23 +330,27 @@ static void __feedbackReader( void * threadinst )
           if ( StrTokOp.hasMoreTokens( tok ) )
           {
             const char* valStr = NULL;
-            iONode nodeC = NULL;
+            iONode nodeC  = NULL;
             iONode nodeFn = NULL;
-            int addr = atoi( addrStr );
-            int port = 0;
-            int val  = 0;
-            int V        = 0;
-            int steps    = 0;
-            int dir      = 0;
-            int f0       = 0;
-            int f1       = 0;
-            int f2       = 0;
-            int f3       = 0;
-            int f4       = 0;
-            int fun      = 0;
+            int addr  = atoi( addrStr );
+            int port  = 0;
+            int val   = 0;
+            int V     = 0;
+            int steps = 0;
+            int dir   = 0;
+            int f0    = 0;
+            int f1    = 0;
+            int f2    = 0;
+            int f3    = 0;
+            int f4    = 0;
+            int fun   = 0;
 
             if( infotype == 1 ) {
               /* GA */
+              if( msgnr != 100 ) {
+                ignoreRest = True;
+                break;
+              }
               valStr = StrTokOp.nextToken( tok );
               port = atoi( valStr );
               if( StrTokOp.hasMoreTokens( tok ) ) {
@@ -429,6 +433,7 @@ static void __feedbackReader( void * threadinst )
               wLoc.setaddr( nodeC, addr );
               wLoc.setspcnt( nodeC, steps );
               wLoc.setV( nodeC, V );
+              wLoc.setV_raw( nodeC, V );
               wLoc.setfn( nodeC, f0 );
               wLoc.setdir( nodeC, dir );
               if ( o->iid != NULL )
