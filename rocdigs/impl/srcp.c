@@ -428,7 +428,7 @@ static void __feedbackReader( void * threadinst )
               if ( o->iid != NULL )
                 wSwitch.setiid( nodeC, o->iid );
             }
-            if( infotype == 2 ) {
+            else if( infotype == 2 ) {
               nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
               wLoc.setaddr( nodeC, addr );
               wLoc.setspcnt( nodeC, steps );
