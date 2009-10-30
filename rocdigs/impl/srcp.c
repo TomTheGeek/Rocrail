@@ -187,7 +187,7 @@ static void __feedbackReader( void * threadinst )
     if ( SocketOp.readln( o->fbackSocket, inbuf ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
       if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
-        const char* protStr = "SET PROTOCOL SRCP 0.8.2\n";
+        const char* protStr = "SET PROTOCOL SRCP 0.8\n";
         const char* connStr = "SET CONNECTIONMODE SRCP INFO\n";
         const char* goStr = "GO\n";
         srcp08 = True;
@@ -254,22 +254,51 @@ static void __feedbackReader( void * threadinst )
       if ( readok ) {
         char* fbAddrStr       = NULL;
         iOStrTok tok            = NULL;
-        int infotype            = 0; /* 0=FB, 1=GA */
+        int infotype            = 0; /* 0=FB, 1=GA , 2=GL*/
+        Boolean ignoreRest     = False;
         char  tracestr[ 1024 ]  = { 0 };
+        char* infotypeStr = "";
+        int msgnr = 0;
 
         strncpy( tracestr, inbuf, ( strlen( inbuf ) - 1 ));
         tracestr[ strlen( inbuf ) ] = '0';
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbAddrStr = [%s]", tracestr );
 
         if( StrOp.find( inbuf, "INFO ") ) {
-          if( StrOp.find( inbuf, "FB ") )
+          if( StrOp.find( inbuf, "FB ") ) {
             infotype = 0;
-          if( StrOp.find( inbuf, "GA ") )
+            infotypeStr = "sensor";
+          }
+          else if( StrOp.find( inbuf, "GA ") ) {
             infotype = 1;
+            infotypeStr = "accessory";
+          }
+          else if( StrOp.find( inbuf, "GL ") ) {
+            infotype = 2;
+            infotypeStr = "locomotive";
+          }
 
           if( srcp08 ) {
-            if( !StrOp.find( inbuf, "FB POWER") )
-              fbAddrStr = StrOp.find( inbuf, infotype==0?"FB ":"GA ");
+            tok = StrTokOp.inst( inbuf, ' ' );
+            if( StrTokOp.hasMoreTokens( tok ) ) {
+              /* timestamp */
+              const char* nr = StrTokOp.nextToken( tok );
+              if( StrTokOp.hasMoreTokens( tok ) ) {
+                nr = StrTokOp.nextToken( tok );
+                msgnr = atoi(nr);
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info number = %d(%s)", msgnr, nr);
+              }
+            }
+            tok->base.del(tok);
+
+            if( !StrOp.find( inbuf, "FB POWER") ) {
+              if( infotype == 0 )
+                fbAddrStr = StrOp.find( inbuf, "FB ");
+              else if( infotype == 1 )
+                fbAddrStr = StrOp.find( inbuf, "GA ");
+              else if( infotype == 2 )
+                fbAddrStr = StrOp.find( inbuf, "GL ");
+            }
           }
           else {
             /* srcp 0.7 */
@@ -280,14 +309,14 @@ static void __feedbackReader( void * threadinst )
         }
 
         if( !fbAddrStr ) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no FB/GA info..." );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no FB/GA/GL info..." );
           ThreadOp.sleep( 10 );
           continue;
         }
 
         tok = StrTokOp.inst( fbAddrStr, ' ' );
 
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s addresses: [%s]", (infotype==0)?"sensor":"turnout", fbAddrStr );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s addresses: [%s]", infotypeStr, fbAddrStr );
 
         TraceOp.dump( NULL, TRCLEVEL_BYTE, inbuf, StrOp.len( inbuf ) );
 
@@ -295,16 +324,26 @@ static void __feedbackReader( void * threadinst )
           const char* leadinStr = StrTokOp.nextToken( tok );
         }
 
-        while ( StrTokOp.hasMoreTokens( tok ) )
+        while ( !ignoreRest && StrTokOp.hasMoreTokens( tok ) )
         {
           const char* addrStr = StrTokOp.nextToken( tok );
           if ( StrTokOp.hasMoreTokens( tok ) )
           {
             const char* valStr = NULL;
             iONode nodeC = NULL;
+            iONode nodeFn = NULL;
             int addr = atoi( addrStr );
             int port = 0;
             int val  = 0;
+            int V        = 0;
+            int steps    = 0;
+            int dir      = 0;
+            int f0       = 0;
+            int f1       = 0;
+            int f2       = 0;
+            int f3       = 0;
+            int f4       = 0;
+            int fun      = 0;
 
             if( infotype == 1 ) {
               /* GA */
@@ -325,6 +364,51 @@ static void __feedbackReader( void * threadinst )
               }
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d port %d = %d", addr, port, val );
             }
+            else if( infotype == 2 ) {
+              /* 100 INFO 2 GL 56 1 44 128 0 0 0 0 0 */
+              /* 101 INFO 2 GL 56 N 1 128 5] */
+              if( msgnr != 100 ) {
+                ignoreRest = True;
+                break;
+              }
+
+              valStr = StrTokOp.nextToken( tok );
+              dir = atoi( valStr );
+              if( StrTokOp.hasMoreTokens( tok ) ) {
+                valStr = StrTokOp.nextToken( tok );
+                V = atoi( valStr );
+                if( StrTokOp.hasMoreTokens( tok ) ) {
+                  valStr = StrTokOp.nextToken( tok );
+                  steps = atoi( valStr );
+                  if( StrTokOp.hasMoreTokens( tok ) ) {
+                    valStr = StrTokOp.nextToken( tok );
+                    f0 = atoi( valStr );
+                    if( StrTokOp.hasMoreTokens( tok ) ) {
+                      valStr = StrTokOp.nextToken( tok );
+                      f1 = atoi( valStr );
+                      if( StrTokOp.hasMoreTokens( tok ) ) {
+                        valStr = StrTokOp.nextToken( tok );
+                        f2 = atoi( valStr );
+                        if( StrTokOp.hasMoreTokens( tok ) ) {
+                          valStr = StrTokOp.nextToken( tok );
+                          f3 = atoi( valStr );
+                          if( StrTokOp.hasMoreTokens( tok ) ) {
+                            valStr = StrTokOp.nextToken( tok );
+                            f4 = atoi( valStr );
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              else {
+                TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected end of GL %d info", addr );
+                break;
+              }
+              ignoreRest = True;
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d fn=%d f1=%d f2=%d f3=%d f4=%d", addr, V, dir, steps, f0, f1, f2, f3, f4 );
+            }
             else {
               /* FB */
               valStr = StrTokOp.nextToken( tok );
@@ -340,6 +424,23 @@ static void __feedbackReader( void * threadinst )
               if ( o->iid != NULL )
                 wSwitch.setiid( nodeC, o->iid );
             }
+            if( infotype == 2 ) {
+              nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+              wLoc.setaddr( nodeC, addr );
+              wLoc.setspcnt( nodeC, steps );
+              wLoc.setV( nodeC, V );
+              wLoc.setfn( nodeC, f0 );
+              wLoc.setdir( nodeC, dir );
+              if ( o->iid != NULL )
+                wLoc.setiid( nodeC, o->iid );
+              nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+              wFunCmd.setaddr( nodeFn, addr );
+              wFunCmd.setf0( nodeFn, f0 );
+              wFunCmd.setf1( nodeFn, f1 );
+              wFunCmd.setf2( nodeFn, f2 );
+              wFunCmd.setf3( nodeFn, f3 );
+              wFunCmd.setf4( nodeFn, f4 );
+            }
             else {
               nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
               wFeedback.setaddr( nodeC, addr );
@@ -348,8 +449,10 @@ static void __feedbackReader( void * threadinst )
                 wFeedback.setiid( nodeC, o->iid );
             }
 
-            if ( o->listenerFun != NULL && o->listenerObj != NULL )
+            if ( nodeC != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
               o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
+            if ( nodeFn != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
+              o->listenerFun( o->listenerObj, nodeFn, TRCLEVEL_INFO );
           }
           else {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not an INFO line:" );

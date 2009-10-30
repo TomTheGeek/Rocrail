@@ -464,7 +464,7 @@ static Boolean __srcpConnect ( iOSRCP08Data o )
   /*Boolean found = False;*/
 
 
-  if (SRCP_ERROR( __srcpSendCommand(o,False,"SET PROTOCOL SRCP 0.8.2\n",data)))
+  if (SRCP_ERROR( __srcpSendCommand(o,False,"SET PROTOCOL SRCP 0.8\n",data)))
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: %s",data);
     SocketOp.disConnect(o->cmdSocket);
