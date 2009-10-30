@@ -462,6 +462,8 @@ static void __feedbackReader( void * threadinst )
         };
         /* end while */
 
+        tok->base.del(tok);
+
       }
       /* end if */
       else {
