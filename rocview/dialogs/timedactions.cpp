@@ -766,11 +766,13 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
       m_Command->Append(wxString( wAction.signal_yellow, wxConvUTF8));
       m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
       m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
+      m_Command->Append(wxString( wAction.block_setloc, wxConvUTF8));
       break;
     case 7: // loco
       m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_stop, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_velocity, wxConvUTF8));
+      m_Command->Append(wxString( wAction.loco_dispatch, wxConvUTF8));
       break;
     case 8: // function
       m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));

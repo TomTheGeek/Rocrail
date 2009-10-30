@@ -1675,9 +1675,11 @@
         <const name="signal_green" vt="string" val="green"/>
         <const name="signal_white" vt="string" val="white"/>
         <const name="block_unlock" vt="string" val="unlock"/>
+        <const name="block_setloc" vt="string" val="setloco"/>
         <const name="loco_go" vt="string" val="go"/>
         <const name="loco_stop" vt="string" val="stop"/>
         <const name="loco_velocity" vt="string" val="velocity"/>
+        <const name="loco_dispatch" vt="string" val="dispatch"/>
         <const name="fun_on" vt="string" val="on"/>
         <const name="fun_off" vt="string" val="off"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
