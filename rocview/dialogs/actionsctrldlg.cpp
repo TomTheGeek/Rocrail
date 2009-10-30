@@ -147,6 +147,7 @@ void ActionsCtrlDlg::initLabels() {
   m_Auto->SetString( 0, wxGetApp().getMsg( "auto" ) );
   m_Auto->SetString( 1, wxGetApp().getMsg( "manual" ) );
   m_Auto->SetString( 2, wxGetApp().getMsg( "both" ) );
+  m_Auto->SetSelection(2);
 
   m_Add->SetLabel( wxGetApp().getMsg( "add" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
