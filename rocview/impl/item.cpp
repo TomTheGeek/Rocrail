@@ -313,6 +313,24 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     cmd->base.del(cmd);
     return true;
 
+    /* jmf: my Suggestion: */
+    /*
+    iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, data.ToAscii() );
+    wLoc.setcmd( cmd, wLoc.gotoblock );
+    wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+
+    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, data.ToAscii() );
+    wLoc.setcmd( cmd, wLoc.go );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+    return true;
+    */
+
   }
   return false;
 }
