@@ -3079,7 +3079,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
       OnLocDispatch( event);
     }
     else if( event.GetCol() == LOC_COL_ID ) {
-      wxTextDataObject my_data(str);
+      wxTextDataObject my_data(_T("moveto:")+str);
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
