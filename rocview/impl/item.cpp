@@ -297,6 +297,10 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 }
 
 bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
+  if( wxGetApp().isOffline() ) {
+    return false;
+  }
+
   /* Inform RocRail... */
   iOStrTok tok = StrTokOp.inst(data.ToAscii(), ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
