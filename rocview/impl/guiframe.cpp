@@ -45,6 +45,7 @@
 #include <wx/help.h>
 #include <wx/cshelp.h>
 #include <wx/colordlg.h>
+#include <wx/dnd.h>
 
 #include "rocs/public/str.h"
 #include "rocs/public/file.h"
@@ -3076,6 +3077,12 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     // Dispatching Throttle in the mode column if dispatchmode is on
     if( event.GetCol() == LOC_COL_MODE && wGui.isdispatchmode( m_Ini )) {
       OnLocDispatch( event);
+    }
+    else if( event.GetCol() == LOC_COL_ID ) {
+      wxTextDataObject my_data(str);
+      wxDropSource dragSource( this );
+      dragSource.SetData( my_data );
+      wxDragResult result = dragSource.DoDragDrop( TRUE );
     }
 
     m_LC->setLocProps( lc );

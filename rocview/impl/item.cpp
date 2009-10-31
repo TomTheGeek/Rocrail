@@ -290,9 +290,22 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   //if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
     //Lower();
 
-
+  SetDropTarget(this);
 
   sizeToScale();
+}
+
+bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, data.ToAscii() );
+  wLoc.setcmd( cmd, wLoc.block );
+  wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+
+  return true;
 }
 
 void Symbol::sizeToScale() {

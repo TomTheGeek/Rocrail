@@ -23,12 +23,15 @@
 #include "rocview/public/planpanel.h"
 #include "rocview/symbols/renderer.h"
 
+#include <wx/dnd.h>
+
 // A custom modal dialog
-class Symbol : public wxWindow
+class Symbol : public wxWindow, public wxTextDropTarget
 {
 public:
   Symbol(PlanPanel *parent, iONode props, int itemsize, int z, double scale, double bktext );
 
+  bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
   void OnPaint(wxPaintEvent& event);
   void OnLeftUp(wxMouseEvent& event);
   void OnLeftDClick(wxMouseEvent& event);
