@@ -302,7 +302,7 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   const char* dropcmd = StrTokOp.nextToken(tok);
   const char* dropid  = StrTokOp.nextToken(tok);
 
-  tok->base.del(tok);
+  bool ok = false;
 
   if( StrOp.equals( "moveto", dropcmd ) ) {
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
@@ -319,7 +319,7 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
-      return true;
+      ok = true;
     }
   }
   else {
@@ -337,10 +337,12 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       wLoc.setcmd( cmd, wLoc.go );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
-      return true;
+      ok = true;
     }
   }
-  return false;
+
+  tok->base.del(tok);
+  return ok;
 }
 
 void Symbol::sizeToScale() {
