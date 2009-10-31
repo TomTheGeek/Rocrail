@@ -298,6 +298,8 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   /* Inform RocRail... */
   if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+
+    /* TODO: this should be executed if ALT is pressed ...
     iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( cmd, wBlock.getid( m_Props ) );
     wBlock.setlocid( cmd, "" );
@@ -312,9 +314,8 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
     return true;
+    */
 
-    /* jmf: my Suggestion: */
-    /*
     iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setid( cmd, data.ToAscii() );
@@ -329,7 +330,6 @@ bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
     return true;
-    */
 
   }
   return false;
