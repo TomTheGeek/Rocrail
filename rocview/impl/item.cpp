@@ -298,6 +298,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 
 bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( wxGetApp().isOffline() ) {
+    /**/
     return false;
   }
 
@@ -711,13 +712,6 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
 }
 
 void Symbol::OnRightDown(wxMouseEvent& event) {
-  if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
-    wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
-    wxDropSource dragSource( this );
-    dragSource.SetData( my_data );
-    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
-  }
-
 }
 
 void Symbol::OnLeftDown(wxMouseEvent& event) {
@@ -737,10 +731,18 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   StrOp.free( text );
 
   if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
-    wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
-    wxDropSource dragSource( this );
-    dragSource.SetData( my_data );
-    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    if( event.ControlDown() ) {
+      wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+      wxDropSource dragSource( this );
+      dragSource.SetData( my_data );
+      wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    }
+    else {
+      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+      wxDropSource dragSource( this );
+      dragSource.SetData( my_data );
+      wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    }
   }
 
   /*

@@ -30,7 +30,7 @@ class Symbol : public wxWindow, public wxTextDropTarget
 {
 public:
   Symbol(PlanPanel *parent, iONode props, int itemsize, int z, double scale, double bktext );
-
+  ~Symbol() {;}
   bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
   void OnPaint(wxPaintEvent& event);
   void OnLeftUp(wxMouseEvent& event);
