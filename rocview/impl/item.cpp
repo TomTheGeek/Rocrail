@@ -297,15 +297,24 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 
 bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   /* Inform RocRail... */
-  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  wLoc.setid( cmd, data.ToAscii() );
-  wLoc.setcmd( cmd, wLoc.block );
-  wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del(cmd);
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+    iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    wBlock.setid( cmd, wBlock.getid( m_Props ) );
+    wBlock.setlocid( cmd, "" );
+    wBlock.setcmd( cmd, wBlock.loc );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
 
+    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, data.ToAscii() );
+    wLoc.setcmd( cmd, wLoc.block );
+    wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+    return true;
 
-  return true;
+  }
+  return false;
 }
 
 void Symbol::sizeToScale() {
