@@ -3082,7 +3082,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
       wxTextDataObject my_data(str);
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
-      wxDragResult result = dragSource.DoDragDrop( TRUE );
+      wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
     }
 
     m_LC->setLocProps( lc );

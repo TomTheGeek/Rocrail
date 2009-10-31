@@ -693,6 +693,14 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   char* text = StrOp.fmt( "(%d,%d)", x, y );
   wxGetApp().getFrame()->setInfoText( text );
   StrOp.free( text );
+
+  if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
+    wxTextDataObject my_data(wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+    wxDropSource dragSource( this );
+    dragSource.SetData( my_data );
+    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  }
+
   /*
   m_X = (int)(m_mouseX / (itemSize*m_Scale));
   m_Y = (int)(m_mouseY / (itemSize*m_Scale));
