@@ -244,7 +244,6 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_TTTrack+47, Symbol::OnTTTrack)
 END_EVENT_TABLE()
 
-
 // ----------------------------------------------------------------------------
 // Item
 // ----------------------------------------------------------------------------
@@ -287,9 +286,6 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
       track = wTurntable.nexttrack( m_Props, track );
     }
   }
-
-  //if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
-    //Lower();
 
   SetDropTarget(this);
 
