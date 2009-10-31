@@ -139,6 +139,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_LEFT_DOWN    (Symbol::OnLeftDown  )
   EVT_MOTION       (Symbol::OnMotion    )
   EVT_RIGHT_UP     (Symbol::OnPopup     )
+  EVT_RIGHT_DOWN   (Symbol::OnRightDown )
   EVT_ENTER_WINDOW (Symbol::OnMouseEnter)
   EVT_LEAVE_WINDOW (Symbol::OnMouseLeave)
 
@@ -297,40 +298,47 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 
 bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   /* Inform RocRail... */
-  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+  iOStrTok tok = StrTokOp.inst(data.ToAscii(), ':');
+  const char* dropcmd = StrTokOp.nextToken(tok);
+  const char* dropid  = StrTokOp.nextToken(tok);
 
-    /* TODO: this should be executed if ALT is pressed ...
-    iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    wBlock.setid( cmd, wBlock.getid( m_Props ) );
-    wBlock.setlocid( cmd, "" );
-    wBlock.setcmd( cmd, wBlock.loc );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+  tok->base.del(tok);
 
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setid( cmd, data.ToAscii() );
-    wLoc.setcmd( cmd, wLoc.block );
-    wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
-    return true;
-    */
+  if( StrOp.equals( "moveto", dropcmd ) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+      iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( cmd, wBlock.getid( m_Props ) );
+      wBlock.setlocid( cmd, "" );
+      wBlock.setcmd( cmd, wBlock.loc );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
 
-    iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setid( cmd, data.ToAscii() );
-    wLoc.setcmd( cmd, wLoc.gotoblock );
-    wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.block );
+      wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+      return true;
+    }
+  }
+  else {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+      iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.gotoblock );
+      wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
 
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setid( cmd, data.ToAscii() );
-    wLoc.setcmd( cmd, wLoc.go );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
-    return true;
-
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.go );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+      return true;
+    }
   }
   return false;
 }
@@ -696,6 +704,16 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
   }
 }
 
+void Symbol::OnRightDown(wxMouseEvent& event) {
+  if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
+    wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+    wxDropSource dragSource( this );
+    dragSource.SetData( my_data );
+    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  }
+
+}
+
 void Symbol::OnLeftDown(wxMouseEvent& event) {
   int x;
   int y;
@@ -713,7 +731,7 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   StrOp.free( text );
 
   if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
-    wxTextDataObject my_data(wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+    wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
     wxDropSource dragSource( this );
     dragSource.SetData( my_data );
     wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);

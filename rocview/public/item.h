@@ -36,6 +36,7 @@ public:
   void OnLeftUp(wxMouseEvent& event);
   void OnLeftDClick(wxMouseEvent& event);
   void OnLeftDown(wxMouseEvent& event);
+  void OnRightDown(wxMouseEvent& event);
   void OnMotion(wxMouseEvent& event);
   void OnMouseEnter(wxMouseEvent& event);
   void OnMouseLeave(wxMouseEvent& event);
