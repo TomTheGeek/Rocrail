@@ -60,9 +60,11 @@ public:
   BitmapButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
       long style = wxBU_AUTODRAW, const wxValidator& validator = wxDefaultValidator, const wxString& name = _T("button"));
   void OnLeftDown(wxMouseEvent& event);
+  void OnLeftUp(wxMouseEvent& event);
   void setLC(LC* lc) {m_LC = lc;};
 private:
   LC*  m_LC;
+  wxWindow* m_Parent;
 
 };
 

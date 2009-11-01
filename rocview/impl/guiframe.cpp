@@ -3107,11 +3107,24 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
 BitmapButton::BitmapButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name) :
   wxBitmapButton(parent, id, bitmap, pos, size, style, validator, name)
 {
+  m_Parent = parent;
   this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BitmapButton::OnLeftDown ), NULL, this );
-
+  this->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BitmapButton::OnLeftUp ), NULL, this );
 }
 
 
+void BitmapButton::OnLeftUp(wxMouseEvent& event) {
+  if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
+    iONode lc = m_LC->getLocProps();
+    LocDialog*  dlg = new LocDialog(this, lc );
+    if( wxID_OK == dlg->ShowModal() ) {
+      /* Notify Notebook. */
+      wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
+      wxPostEvent( m_Parent, evt );
+    }
+    dlg->Destroy();
+  }
+}
 void BitmapButton::OnLeftDown(wxMouseEvent& event) {
   if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
     wxTextDataObject my_data(_T("moveto:") + wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8));
