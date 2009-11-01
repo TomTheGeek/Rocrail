@@ -730,7 +730,7 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   StrOp.free( text );
 
   if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
-    if( event.ControlDown() ) {
+    if( event.ControlDown() || event.CmdDown() ) {
       wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
