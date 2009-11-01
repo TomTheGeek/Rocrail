@@ -329,7 +329,20 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   }
   else {
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
-      iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      iONode cmd = NULL;
+
+      /* flash the block */
+      cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( cmd, wBlock.getid( m_Props ) );
+      wBlock.setstate( cmd, wBlock.shortcut);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+      ThreadOp.sleep(500);
+      cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( cmd, wBlock.getid( m_Props ) );
+      wBlock.setstate( cmd, wBlock.shortcutcleared);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
 
       /* go to block */
       cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -346,14 +359,6 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
 
-      /* flash the block */
-      cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setid( cmd, wBlock.getid( m_Props ) );
-      wBlock.setstate( cmd, wBlock.ghost);
-      wxGetApp().sendToRocrail( cmd );
-      wBlock.setstate( cmd, wBlock.open);
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
       ok = true;
 
     }
