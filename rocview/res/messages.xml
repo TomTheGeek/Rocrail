@@ -1341,7 +1341,7 @@
   </Msg>
   <Msg id="clickblock">
     <de txt="Linke Maustaste zum Starten/Stoppen %s."/>
-    <en txt="Click left to Start/Stop %s."/>
+    <en txt="Double click to Start/Stop %s."/>
     <nl txt="Linker muisknop om %s te starten/stoppen."/>
     <sv txt="Vänsterklicka för att starta/stoppa %s."/>
     <fr txt="Cliquez sur le bouton gauche pour Démarrer/Arrêter %s."/>
