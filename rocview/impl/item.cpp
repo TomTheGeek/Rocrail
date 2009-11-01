@@ -305,6 +305,10 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   iOStrTok tok = StrTokOp.inst(data.ToAscii(), ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
   const char* dropid  = StrTokOp.nextToken(tok);
+  const char* fromid  = "";
+
+  if( StrTokOp.hasMoreTokens(tok) )
+    fromid  = StrTokOp.nextToken(tok);
 
   bool ok = false;
 
@@ -328,7 +332,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     }
   }
   else {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) && !StrOp.equals( wBlock.getid(m_Props), fromid) ) {
       iONode cmd = NULL;
 
       /* flash the block */
@@ -750,13 +754,13 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
 
   if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
     if( event.ControlDown() || event.CmdDown() ) {
-      wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+      wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
     }
     else {
-      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8));
+      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) + _T(":") + wxString(wBlock.getid(m_Props),wxConvUTF8) );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
