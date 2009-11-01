@@ -274,7 +274,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     /* if a second next block was found show the right signal aspect */
   }
 
-  if( !re_enter )
+  if( !re_enter || data->next2Block != NULL )
     setSignals((iOLcDriver)inst, True);
 
 }
