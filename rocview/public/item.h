@@ -28,10 +28,11 @@
 class BlockDrop : public wxTextDropTarget
 {
 public:
-  BlockDrop( iONode props ){m_Props = props;};
+  BlockDrop( iONode props, Symbol* parent ){m_Props = props; m_Parent = parent;};
   virtual bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
 private:
   iONode m_Props;
+  Symbol* m_Parent;
 };
 
 
@@ -96,6 +97,7 @@ public:
   void blockEvent( const char* id );
   void routeEvent( const char* id );
   void disable();
+  void locoDropped() {m_locoIsDropped = true;};
 
 private:
   SymbolRenderer* m_Renderer;
@@ -105,6 +107,7 @@ private:
   int m_dragY;
   bool m_hasMouse;
   bool m_isDragged;
+  bool m_locoIsDropped;
   char* m_locidStr;
   char* m_RouteID;
   void sizeToScale();

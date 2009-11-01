@@ -258,6 +258,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_PlanPanel = parent;
   m_Props = props;
   m_isDragged = false;
+  m_locoIsDropped = false;
   m_locidStr = NULL;
   m_RouteID = NULL;
   m_locidStr = NULL;
@@ -288,7 +289,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   }
 
   if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
-    m_BlockDrop = new BlockDrop(m_Props);
+    m_BlockDrop = new BlockDrop(m_Props, this);
     SetDropTarget(m_BlockDrop);
   }
 
@@ -307,8 +308,12 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   const char* dropid  = StrTokOp.nextToken(tok);
   const char* fromid  = "";
 
-  if( StrTokOp.hasMoreTokens(tok) )
+  if( StrTokOp.hasMoreTokens(tok) ) {
     fromid  = StrTokOp.nextToken(tok);
+
+    if( StrOp.equals( wBlock.getid(m_Props), fromid) )
+      return false;
+  }
 
   bool ok = false;
 
@@ -332,7 +337,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     }
   }
   else {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) && !StrOp.equals( wBlock.getid(m_Props), fromid) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
       iONode cmd = NULL;
 
       /* flash the block */
@@ -367,6 +372,8 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
     }
   }
+
+  m_Parent->locoDropped();
 
   tok->base.del(tok);
   return ok;
@@ -640,6 +647,11 @@ void Symbol::OnLeftDClick(wxMouseEvent& event) {
 }
 
 void Symbol::OnLeftUp(wxMouseEvent& event) {
+  if( m_locoIsDropped ) {
+    m_locoIsDropped = false;
+    return;
+  }
+
   if( m_isDragged ) {
     m_isDragged = false;
     ReleaseMouse();
