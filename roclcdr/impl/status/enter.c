@@ -182,7 +182,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
                        data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
-        if( !data->gomanual ) {
+        if( !data->gomanual && !re_enter ) {
           if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
               data->direction == LC_DIR_FORWARDS &&
               !wLoc.isregulated( data->loc->base.properties( data->loc ) ) ) {
@@ -244,7 +244,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                    data->loc->getId( data->loc ) );
 
     wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    if( !data->gomanual ) {
+    if( !data->gomanual && !re_enter ) {
       data->loc->cmd( data->loc, cmd );
     }
     else {
