@@ -287,12 +287,15 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     }
   }
 
-  SetDropTarget(this);
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+    m_BlockDrop = new BlockDrop(m_Props);
+    SetDropTarget(m_BlockDrop);
+  }
 
   sizeToScale();
 }
 
-bool Symbol::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
+bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( wxGetApp().isOffline() ) {
     /**/
     return false;

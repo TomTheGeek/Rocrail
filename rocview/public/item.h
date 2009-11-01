@@ -25,12 +25,21 @@
 
 #include <wx/dnd.h>
 
+class BlockDrop : public wxTextDropTarget
+{
+public:
+  BlockDrop( iONode props ){m_Props = props;};
+  virtual bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
+private:
+  iONode m_Props;
+};
+
+
 // A custom modal dialog
-class Symbol : public wxWindow, public wxTextDropTarget
+class Symbol : public wxWindow
 {
 public:
   Symbol(PlanPanel *parent, iONode props, int itemsize, int z, double scale, double bktext );
-  virtual bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
   void OnPaint(wxPaintEvent& event);
   void OnLeftUp(wxMouseEvent& event);
   void OnLeftDClick(wxMouseEvent& event);
@@ -91,6 +100,7 @@ public:
 private:
   SymbolRenderer* m_Renderer;
   PlanPanel* m_PlanPanel;
+  BlockDrop* m_BlockDrop;
   int m_dragX;
   int m_dragY;
   bool m_hasMouse;
