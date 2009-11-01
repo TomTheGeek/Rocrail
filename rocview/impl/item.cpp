@@ -642,7 +642,20 @@ void Symbol::OnLeftDClick(wxMouseEvent& event) {
     OnProps(cmd);
   }
   else {
-    OnLeftUp(event);
+    const char* nodeName = NodeOp.getName( m_Props );
+    if( StrOp.equals( wBlock.name(), nodeName ) ) {
+      const char* locId = wBlock.getlocid( m_Props );
+      Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
+      if( hasLoc  && wxGetApp().getFrame()->isAutoMode() ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+        wLoc.setcmd( cmd, wLoc.stopgo );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+    }
+    else
+      OnLeftUp(event);
   }
 }
 
@@ -721,17 +734,6 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       wSelTab.setcmd( cmd, dir );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
-    }
-    else if( StrOp.equals( wBlock.name(), nodeName ) ) {
-      const char* locId = wBlock.getlocid( m_Props );
-      Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
-      if( hasLoc  && wxGetApp().getFrame()->isAutoMode() ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
-        wLoc.setcmd( cmd, wLoc.stopgo );
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-      }
     }
     else if( StrOp.equals( wFeedback.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
