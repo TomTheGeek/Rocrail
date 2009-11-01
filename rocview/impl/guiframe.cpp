@@ -1574,12 +1574,12 @@ void RocGuiFrame::create() {
   m_ActiveLocsPanel->SetSizer(activeLocsSizer);
 
   wxBitmap m_LocImageBitmap(wxNullBitmap);
-  m_LocImage = new wxBitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,88), wxBU_AUTODRAW|wxBU_EXACTFIT );
+  m_LocImage = new BitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,88), wxBU_AUTODRAW|wxBU_EXACTFIT );
   activeLocsSizer->Add(m_LocImage, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
   //wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
   //font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
@@ -1602,6 +1602,8 @@ m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
   m_LC = NULL;
   m_LC = new LC( m_LCPanel );
   activeLocsSizer->Add(m_LCPanel, 0, wxADJUST_MINSIZE, 2);
+
+  m_LocImage->setLC(m_LC);
 
 
   m_StatNotebook->AddPage(m_ActiveLocsPanel, wxGetApp().getMsg("activelocs") );
@@ -3102,6 +3104,22 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
   event.Skip(true);
 }
 
+BitmapButton::BitmapButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap, const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name) :
+  wxBitmapButton(parent, id, bitmap, pos, size, style, validator, name)
+{
+  this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BitmapButton::OnLeftDown ), NULL, this );
+
+}
+
+
+void BitmapButton::OnLeftDown(wxMouseEvent& event) {
+  if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
+    wxTextDataObject my_data(_T("moveto:") + wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8));
+    wxDropSource dragSource( this );
+    dragSource.SetData( my_data );
+    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  }
+}
 
 void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
   // Get copied node:

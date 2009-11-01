@@ -54,6 +54,17 @@
 #include <wx/grid.h>
 #include <wx/notebook.h>
 
+class BitmapButton : public wxBitmapButton
+{
+public:
+  BitmapButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+      long style = wxBU_AUTODRAW, const wxValidator& validator = wxDefaultValidator, const wxString& name = _T("button"));
+  void OnLeftDown(wxMouseEvent& event);
+  void setLC(LC* lc) {m_LC = lc;};
+private:
+  LC*  m_LC;
+
+};
 
 class RocGuiFrame : public wxFrame
 {
@@ -266,7 +277,7 @@ private:
   void modifyLoc( iONode props );
 
   wxToolBar *       m_ToolBar;
-  wxBitmapButton*   m_LocImage;
+  BitmapButton*     m_LocImage;
   wxNotebook*       m_StatNotebook;
   wxNotebook*       m_PlanNotebook;
   wxPanel*          m_ActiveLocsPanel;
