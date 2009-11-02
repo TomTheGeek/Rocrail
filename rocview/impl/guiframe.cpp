@@ -1073,6 +1073,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bInitialized       = false;
   m_PowerCtrl          = NULL;
   m_bActiveWorkspace   = false;
+  m_bCheckedDonKey     = false;
 }
 
 void RocGuiFrame::initFrame() {
@@ -2546,6 +2547,14 @@ void RocGuiFrame::setOnline( bool online ) {
 
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
+
+  if( !m_bCheckedDonKey ) {
+    m_bCheckedDonKey = true;
+    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) )
+      wxMessageDialog( this, wxGetApp().getMsg("donatekey"), _T("Rocrail"), wxOK ).ShowModal();
+  }
+
+
   bool l_bOffline = wxGetApp().isOffline();
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);

@@ -83,6 +83,8 @@
     <var name="dispatchmode" vt="bool" defval="false"/>
     <var name="defaultworkspace" vt="string" defval="" remark="Open workspace at startup."/>
     <var name="startdefaultworkspace" vt="bool" defval="true"/>
+    <var name="donkey" vt="string" defval=""/>
+    <var name="doneml" vt="string" defval=""/>
     <trace extern="true"/>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>

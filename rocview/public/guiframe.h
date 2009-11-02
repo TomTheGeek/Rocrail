@@ -337,7 +337,7 @@ private:
   iOList m_LocCtrlList;
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
-
+  bool m_bCheckedDonKey;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };

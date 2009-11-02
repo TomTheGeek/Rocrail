@@ -10686,4 +10686,7 @@
   <Msg id="both">
     <en txt="Both"/>
   </Msg>
+  <Msg id="donatekey">
+    <en txt="Donate to the Rocrail project to keep up the development. If you already did donate you can ask a key to disable this dialog: donate@rocrail.net"/>
+  </Msg>
 </Messages>
