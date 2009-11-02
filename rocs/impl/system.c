@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #if defined _WIN32 || defined __OS2__
 #include <process.h>
@@ -492,6 +493,72 @@ static char* _utf2latin( const char* utfstr ) {
   return latinstr;
 }
 
+
+static const char* eyecatcher = "_rocs_";
+
+static const char* _getEyecatcher(void) {
+  return eyecatcher;
+}
+
+static Boolean _isExpired(const char* s) {
+  Boolean expired = False;
+  char licdate[11] = {0,0,0,0,0,0,0,0,0,0,0};
+  time_t     tt = time(NULL);
+  struct tm* t  = localtime( &tt );
+  char day[3] = {0,0,0};
+  char mon[3] = {0,0,0};
+  char year[5] = {0,0,0,0,0};
+
+  if( !StrOp.startsWith( s, SystemOp.getEyecatcher() ) ) {
+    TraceOp.println( "invalid key" );
+    return True;
+  }
+
+
+  MemOp.copy( licdate, s + StrOp.len(eyecatcher), 10 );
+  TraceOp.println( "expdate = %s", licdate );
+
+  MemOp.copy( day, licdate, 2 );
+  MemOp.copy( mon, licdate+3, 2 );
+  MemOp.copy( year, licdate+6, 4 );
+
+  if( atoi(year) < t->tm_year+1900 ) {
+    TraceOp.println( "%d < %d", atoi(year), t->tm_year+1900 );
+    expired = True;
+  }
+  if( atoi(year) == t->tm_year+1900 ) {
+    if( atoi(mon) < t->tm_mon+1 ) {
+      expired = True;
+      TraceOp.println( "%d == %d and %d < %d", atoi(year), t->tm_year+1900, atoi(mon), t->tm_mon+1 );
+    }
+    if( atoi(mon) == t->tm_mon+1 && atoi(day) < t->tm_mday ) {
+      expired = True;
+      TraceOp.println( "%d == %d and %d == %d and %d < %d", atoi(year), t->tm_year+1900, atoi(mon), t->tm_mon+1, atoi(day), t->tm_mday );
+    }
+  }
+  return expired;
+}
+
+
+static char* _decode(byte* b, int len, const char* key) {
+  int keyLength = StrOp.len(key);
+  char* result = allocMem(len+1);
+
+  int x = 0;
+  int i = 0;
+  int newChar = 0;
+  for(i = 0; i < len; i++){
+    newChar = b[i] - key[x];
+    if(newChar<0)
+      newChar+=256;
+    result[i] = (char)newChar;
+    x++;
+    if(x == keyLength)
+      x=0;
+  }
+  result[i] = '\0';
+  return result;
+}
 
 
 

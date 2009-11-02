@@ -1520,6 +1520,16 @@
       <param name="device" vt="const char*" remark="device name"/>
       <param name="readonly" vt="Boolean"/>
     </fun>
+    <fun name="isExpired" vt="Boolean">
+      <param name="s" vt="const char*"/>
+    </fun>
+    <fun name="decode" vt="char*">
+      <param name="b" vt="const byte*"/>
+      <param name="len" vt="int"/>
+      <param name="k" vt="const char*"/>
+    </fun>
+    <fun name="getEyecatcher" vt="const char*">
+    </fun>
     <data include="thread">
       <var name="WSName[64]" vt="char" remark=""/>
       <var name="UserName[64]" vt="char" remark=""/>

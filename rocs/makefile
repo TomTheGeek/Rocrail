@@ -74,7 +74,8 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 COREOBJS=$(patsubst impl/$(COREDIR)/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/$(COREDIR)/*.c))
 
 all: $(OUTDIR)/librocs.a $(OUTDIR)/wgen$(BINSUFFIX) $(OUTDIR)/ogen$(BINSUFFIX) $(OUTDIR)/xml2cstr$(BINSUFFIX) $(OUTDIR)/png2wx$(BINSUFFIX) \
-$(OUTDIR)/addlang$(BINSUFFIX) $(OUTDIR)/mergelang$(BINSUFFIX) $(OUTDIR)/mdoc$(BINSUFFIX) $(OUTDIR)/lang2po$(BINSUFFIX) $(OUTDIR)/po2lang$(BINSUFFIX)
+$(OUTDIR)/addlang$(BINSUFFIX) $(OUTDIR)/mergelang$(BINSUFFIX) $(OUTDIR)/mdoc$(BINSUFFIX) $(OUTDIR)/lang2po$(BINSUFFIX) $(OUTDIR)/po2lang$(BINSUFFIX) \
+ $(OUTDIR)/keygen$(BINSUFFIX)
 
 gen:
 	bin/ogen rocs.xml
@@ -114,6 +115,9 @@ $(OUTDIR)/lang2po$(BINSUFFIX): $(TMPOUTDIR)/lang2po.o $(OUTDIR)/librocs.a
 
 $(OUTDIR)/po2lang$(BINSUFFIX): $(TMPOUTDIR)/po2lang.o $(OUTDIR)/librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/po2lang$(BINSUFFIX) $(TMPOUTDIR)/po2lang.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+
+$(OUTDIR)/keygen$(BINSUFFIX): $(TMPOUTDIR)/keygen.o $(OUTDIR)/librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/keygen$(BINSUFFIX) $(TMPOUTDIR)/keygen.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
 
 $(TMPOUTDIR)/%.o: impl/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
