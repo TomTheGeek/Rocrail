@@ -277,4 +277,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   if( !re_enter || data->next2Block != NULL )
     setSignals((iOLcDriver)inst, True);
 
+  if( re_enter && data->next2Block != NULL ) {
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route ) );
+    data->loc->cmd( data->loc, cmd );
+  }
+
+
 }
