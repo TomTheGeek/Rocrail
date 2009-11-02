@@ -64,10 +64,15 @@
 <ope date="733668" amount="-60" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail Caps" info="Black caps for Venlo event"/>
 <ope date="733675" amount="-132" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail T-Shirts" info="Venlo event"/>
 <ope date="733680" amount="-15" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="1" wording="rocrail.nl" info="27-10-2009 27-10-2010"/>
-<ope date="733707" amount="-19.199999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net/com" info=""/>
 <ope date="733684" amount="5" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugene Olkov"/>
 <ope date="733684" amount="35" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Nicholas Martin"/>
-<ope date="733694" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Banu Mihai Aurelian"/>
-<ope date="733709" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Zabelt"/>
 <ope date="733688" amount="20" account="0" dst_account="0" paymode="0" flags="2" payee="0" category="0" wording="Donation" info="Jochen Becker "/>
+<ope date="733694" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Banu Mihai Aurelian"/>
+<ope date="733707" amount="-19.199999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net/com" info=""/>
+<ope date="733709" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Zabelt"/>
+<ope date="733710" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jean-Michel"/>
+<ope date="733713" amount="5" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Giling"/>
+<ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
+<ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="van Rutger Koppelaar"/>
+<ope date="733713" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Stefan Fiedler"/>
 </homebank>
