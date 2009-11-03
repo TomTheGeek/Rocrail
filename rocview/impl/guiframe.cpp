@@ -85,6 +85,7 @@
 #include "rocview/dialogs/timedactions.h"
 #include "rocview/dialogs/powermandlg.h"
 #include "rocview/dialogs/powerctrldlg.h"
+#include "rocview/dialogs/donkey.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
@@ -217,6 +218,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
     EVT_MENU( wxID_HELP         , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
+    EVT_MENU( ME_DonKey         , RocGuiFrame::OnDonKey)
+    EVT_MENU( ME_DonKeyInfo     , RocGuiFrame::OnDonKeyInfo)
     EVT_MENU( ME_Translations   , RocGuiFrame::OnTranslations)
     EVT_MENU( ME_Bug            , RocGuiFrame::OnBug)
     EVT_MENU( ME_Feature        , RocGuiFrame::OnFeature)
@@ -1355,6 +1358,10 @@ void RocGuiFrame::initFrame() {
   update_menuHelp->SetBitmap(*_img_updates);
   menuHelp->Append(update_menuHelp);
 
+  menuHelp->AppendSeparator();
+  wxMenuItem *donkey_menuHelp = new wxMenuItem(menuHelp, ME_DonKeyInfo, wxGetApp().getMenu("donkey"), wxGetApp().getTip("donkey") );
+  menuHelp->Append(donkey_menuHelp);
+
 #ifndef __APPLE__
   menuHelp->AppendSeparator();
 #endif
@@ -1525,6 +1532,7 @@ void RocGuiFrame::initFrame() {
   m_JsSupport = NULL;
   if( wGui.isjssupport(m_Ini) )
     initJS();
+    
 }
 
 
@@ -2546,15 +2554,23 @@ void RocGuiFrame::setOnline( bool online ) {
 }
 
 
-void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
-
-  if( !m_bCheckedDonKey ) {
-    m_bCheckedDonKey = true;
-    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) )
-      wxMessageDialog( this, wxGetApp().getMsg("donatekey"), _T("Rocrail"), wxOK ).ShowModal();
+void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) ) {
+    DonKey* dlg = new DonKey(this, m_Ini );
+    if( wxID_OK == dlg->ShowModal() ) {
+    }
+    dlg->Destroy();
   }
-
-
+}
+  
+void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
+  DonKey* dlg = new DonKey(this, m_Ini );
+  if( wxID_OK == dlg->ShowModal() ) {
+  }
+  dlg->Destroy();
+}
+  
+void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
@@ -2757,6 +2773,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_showid->Check( m_bShowID );
   wxMenuItem* mi_raster  = menuBar->FindItem(ME_Raster);
   mi_raster->Check( m_bRaster );
+
 }
 
 void RocGuiFrame::OnAutoMode( wxCommandEvent& event ) {

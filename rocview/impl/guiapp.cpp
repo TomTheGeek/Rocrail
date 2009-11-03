@@ -581,6 +581,8 @@ bool RocGui::OnInit() {
     evt.SetExtraLong(4711);
     wxPostEvent( m_Frame, evt );
   }
+  wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
+  wxPostEvent( m_Frame, evt );
 
   return TRUE;
 }

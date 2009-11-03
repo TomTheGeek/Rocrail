@@ -110,6 +110,8 @@ int main( int argc, const char* argv[] ) {
     byte*  b = encode(s, email);
     iOFile f = FileOp.inst( keyfile, OPEN_WRITE );
     char* bs = StrOp.byteToStr(b, StrOp.len(s));
+    FileOp.write( f, email, StrOp.len(email) );
+    FileOp.write( f, ";", 1 );
     FileOp.write( f, bs, StrOp.len(bs) );
     FileOp.base.del(f);
     StrOp.free(s);

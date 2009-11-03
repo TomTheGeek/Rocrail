@@ -153,6 +153,8 @@ public:
   void OnEditBoosters(wxCommandEvent& event);
 
   void OnCtrlBoosters(wxCommandEvent& event);
+  void OnDonKey(wxCommandEvent& event);
+  void OnDonKeyInfo(wxCommandEvent& event);
 
   void setLocalPlan( wxString plan );
   void OnInitNotebook(wxCommandEvent& event);
@@ -469,6 +471,8 @@ enum
     ME_Uhlenbrock,
     ME_EditBoosters,
     ME_CtrlBoosters,
+    ME_DonKey,
+    ME_DonKeyInfo,
     ME_F1,
     ME_F2,
     ME_F3,

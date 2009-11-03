@@ -10686,7 +10686,38 @@
   <Msg id="both">
     <en txt="Both"/>
   </Msg>
+  <Msg id="email">
+    <en txt="Email"/>
+  </Msg>
+  <Msg id="donatenow">
+    <en txt="Donate now"/>
+    <de txt="Jetzt spenden"/>
+    <nl txt="Nu doneren"/>
+  </Msg>
+  <Msg id="donkey" dialog="true">
+    <en txt="Donate"/>
+    <de txt="Spenden"/>
+    <nl txt="Doneren"/>
+  </Msg>
+  <Msg id="loadkey" dialog="true">
+    <en txt="Load key"/>
+    <de txt="Schlüssel laden"/>
+    <nl txt="Sleutel laden"/>
+  </Msg>
   <Msg id="donatekey">
-    <en txt="Donate to the Rocrail project to keep up the development. If you already did donate you can ask a key to disable this dialog: donate@rocrail.net"/>
+    <en txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did donate you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
+    <de txt="Rocrail entsteht ausschliesslich durch freiwillige Mitarbeit. Trotzdem benötigt Rocrail finanzielle Hilfe. Ihre Unterstützung ist wichtig für die Weiterführung des Rocrail Projekts. Wenn sie schon gespendet haben können sie ein Spendeschlüssel hier beantragen: donate@rocrail.net"/>
+    <nl txt="Rocrail wordt uitsluitend door vrijwilligers ontwikkeld. Om Rocrail -in de lucht te houden- en steeds weer aan te kunnen passen aan nieuwe modelspoor hardware is er jaarlijks een bescheiden financieel budget nodig. Vrijwillige bijdragen zijn daarvoor noodzakelijk. Als je al een bijdrage hebt gegeven kun je hier een Donatie sleutel aanvragen: donate@rocrail.net"/>
+  </Msg>
+  <Msg id="donatethanks">
+    <en txt="Thanks for donating! Enjoy using Rocrail."/>
+    <de txt="Danke für die Spende! Viel spaß beim benutzen von Rocrail."/>
+    <nl txt="Bedankt voor de donatie! Veel plezier bij het gebruiken van Rocrail."/>
+  </Msg>
+  <Msg id="donatelink">
+    <de txt="http://wiki.rocrail.net/doku.php?id=donate-de"/>
+    <en txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
+    <nl txt="http://wiki.rocrail.net/doku.php?id=donate-nl"/>
+    <fr txt="http://wiki.rocrail.net/doku.php?id=donate-fr"/>
   </Msg>
 </Messages>

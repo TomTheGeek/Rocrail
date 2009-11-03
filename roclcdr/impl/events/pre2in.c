@@ -71,6 +71,23 @@ void eventPre2In( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, B
                    "Setting state for \"%s\" to LC_PRE2INBLOCK.",
                    data->loc->getId( data->loc ) );
   }
+  else if( newPre2InEvent && dstBlockEvent && data->state == LC_RE_ENTERBLOCK ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "PRE2IN event in state LC_RE_ENTERBLOCK for %s",
+                   data->loc->getId( data->loc ) );
+                   
+    if( data->next2Block == NULL ) {
+      if( !data->gomanual ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setV_hint( cmd, wLoc.min );
+        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+        data->loc->cmd( data->loc, cmd );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Setting velocity for \"%s\" to V_Min",
+                     data->loc->getId( data->loc ) );
+      }
+    }
+  }
   
 }
 
