@@ -38,7 +38,7 @@ protected:
 	void OnSplash( wxCommandEvent& event );
 	void OnLoadKey( wxCommandEvent& event );
 	void OnDonateNow( wxCommandEvent& event );
-	void OnCancel( wxCommandEvent& event );
+  void OnOK( wxCommandEvent& event );
 	
 public:
 	/** Constructor */

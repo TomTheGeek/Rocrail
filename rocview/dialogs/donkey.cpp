@@ -83,7 +83,7 @@ void DonKey::OnDonateNow( wxCommandEvent& event )
   wxLaunchDefaultBrowser(wxGetApp().getMsg("donatelink"), wxBROWSER_NEW_WINDOW );
 }
 
-void DonKey::OnCancel( wxCommandEvent& event )
+void DonKey::OnOK( wxCommandEvent& event )
 {
   EndModal( 0 );
 }
@@ -94,7 +94,7 @@ void DonKey::initLabels() {
   m_labEmail->SetLabel( wxGetApp().getMsg( "email" ) );
   m_LoadKey->SetLabel( wxGetApp().getMenu( "loadkey" ) );
   m_Donate->SetLabel( wxGetApp().getMsg( "donatenow" ) );
-  m_stdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
+  m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
 }
 
 void DonKey::initValues() {
@@ -104,6 +104,7 @@ void DonKey::initValues() {
     m_LoadKey->Enable(false);
     m_Donate->Enable(false);
     m_DonateText->SetValue( wxGetApp().getMsg( "donatethanks" ) );
+    m_stdButtonOK->SetDefault();
   }
   m_Email->SetValue( wxString( wGui.getdoneml( m_Ini ),wxConvUTF8) );
 }
