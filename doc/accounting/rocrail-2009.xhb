@@ -75,4 +75,7 @@
 <ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
 <ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="van Rutger Koppelaar"/>
 <ope date="733713" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Stefan Fiedler"/>
+<ope date="733714" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Markus Schimke"/>
+<ope date="733714" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Buck"/>
+<ope date="733714" amount="15" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
 </homebank>
