@@ -524,17 +524,19 @@ bool RocGui::OnInit() {
     int retry = wRRCon.getretry( wGui.getrrcon( m_Ini ) );
     int retryinterval = wRRCon.getretryinterval( wGui.getrrcon( m_Ini ) );
 
-    while( m_RCon == NULL && tries < retry ) {
+    do {
       TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
         "Try[%d] connecting to rocrail at %s:%d...",tries+1, m_Host, m_Port );
       m_RCon = RConOp.inst( m_Host, m_Port );
-      if( m_RCon == NULL )
+      tries++;
+
+      if( m_RCon == NULL && tries < retry )
         ThreadOp.sleep( retryinterval );
-      else {
+      else if( m_RCon != NULL ) {
         RConOp.setCallback( m_RCon, &rocrailCallback, (obj)this );
       }
-      tries++;
-    }
+
+    } while( m_RCon == NULL && tries < retry );
   }
 
   if( m_RCon != NULL ) {
@@ -576,13 +578,14 @@ bool RocGui::OnInit() {
   m_Frame->Raise();
 
 
+  wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
+  wxPostEvent( m_Frame, evt );
+
   if( m_bOffline ) {
     wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_OpenWorkspace );
     evt.SetExtraLong(4711);
     wxPostEvent( m_Frame, evt );
   }
-  wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
-  wxPostEvent( m_Frame, evt );
 
   return TRUE;
 }

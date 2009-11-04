@@ -89,7 +89,7 @@
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>
       <var name="port" vt="int" defval="62842"/>
-      <var name="retry" vt="int" defval="2"/>
+      <var name="retry" vt="int" defval="1"/>
       <var name="retryinterval" vt="int" defval="500" remark="In mS"/>
     </rrcon>
     <modpanel wrappername="ModPanel">
