@@ -1666,6 +1666,7 @@
         <const name="switch_turnout" vt="string" val="turnout"/>
         <const name="switch_left" vt="string" val="left"/>
         <const name="switch_right" vt="string" val="right"/>
+        <const name="switch_flip" vt="string" val="flip"/>
         <const name="system_stoplocs" vt="string" val="stoplocs"/>
         <const name="system_stop" vt="string" val="stop"/>
         <const name="system_go" vt="string" val="go"/>

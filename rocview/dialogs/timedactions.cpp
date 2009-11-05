@@ -745,6 +745,7 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
       m_Command->Append(wxString( wAction.switch_turnout, wxConvUTF8));
       m_Command->Append(wxString( wAction.switch_left, wxConvUTF8));
       m_Command->Append(wxString( wAction.switch_right, wxConvUTF8));
+      m_Command->Append(wxString( wAction.switch_flip, wxConvUTF8));
       break;
     case 3: // route
       break;
