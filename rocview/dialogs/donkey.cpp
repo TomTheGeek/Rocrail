@@ -71,7 +71,7 @@ void DonKey::OnLoadKey( wxCommandEvent& event )
         wGui.setdonkey( m_Ini, StrTokOp.nextToken(tok) );
       StrTokOp.base.del( tok );
 
-    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) )
+    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL) )
       wxMessageDialog( this, wxGetApp().getMsg("expireddonkey"), _T("Rocrail"), wxOK ).ShowModal();
     }
     initValues();
@@ -92,14 +92,17 @@ void DonKey::initLabels() {
   m_Splash->SetBitmapLabel( *_img_rocrail_logo );
 
   m_labEmail->SetLabel( wxGetApp().getMsg( "email" ) );
+  m_labExpDate->SetLabel( wxGetApp().getMsg( "expdate" ) );
   m_LoadKey->SetLabel( wxGetApp().getMenu( "loadkey" ) );
   m_Donate->SetLabel( wxGetApp().getMsg( "donatenow" ) );
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
 }
 
 void DonKey::initValues() {
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) )
+  char* expdate = NULL;
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), &expdate) ) {
     m_DonateText->SetValue( wxGetApp().getMsg( "donatekey" ) );
+  }
   else {
     m_LoadKey->Enable(false);
     m_Donate->Enable(false);
@@ -107,5 +110,9 @@ void DonKey::initValues() {
     m_stdButtonOK->SetDefault();
   }
   m_Email->SetValue( wxString( wGui.getdoneml( m_Ini ),wxConvUTF8) );
+  if( expdate != NULL ) {
+    m_ExpDate->SetValue(wxString( expdate,wxConvUTF8));
+    StrOp.free(expdate);
+  }
 }
 

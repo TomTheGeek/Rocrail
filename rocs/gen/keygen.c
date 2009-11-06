@@ -135,7 +135,7 @@ int main( int argc, const char* argv[] ) {
     }
 
     if( rc == 0 ) {
-      Boolean expired = SystemOp.isExpired(s);
+      Boolean expired = SystemOp.isExpired(s, NULL);
       TraceOp.println( "license is %s", expired ? "expired":"valid" );
     }
 

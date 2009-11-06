@@ -10689,6 +10689,11 @@
   <Msg id="email">
     <en txt="Email"/>
   </Msg>
+  <Msg id="expdate">
+    <en txt="Expiration date"/>
+    <de txt="Ablaufdatum"/>
+    <nl txt="Afloopdatum"/>
+  </Msg>
   <Msg id="donatenow">
     <en txt="Donate now"/>
     <de txt="Jetzt spenden"/>

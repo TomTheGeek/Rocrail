@@ -500,7 +500,7 @@ static const char* _getEyecatcher(void) {
   return eyecatcher;
 }
 
-static Boolean _isExpired(const char* s) {
+static Boolean _isExpired(const char* s, char** expdate) {
   Boolean expired = False;
   char licdate[11] = {0,0,0,0,0,0,0,0,0,0,0};
   time_t     tt = time(NULL);
@@ -510,13 +510,17 @@ static Boolean _isExpired(const char* s) {
   char year[5] = {0,0,0,0,0};
 
   if( !StrOp.startsWith( s, SystemOp.getEyecatcher() ) ) {
-    TraceOp.println( "invalid key" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid key" );
     return True;
   }
 
 
   MemOp.copy( licdate, s + StrOp.len(eyecatcher), 10 );
-  TraceOp.println( "expdate = %s", licdate );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "expdate = %s", licdate );
+  if( expdate != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "copy expdate" );
+    *expdate = StrOp.dup(licdate);
+  }
 
   MemOp.copy( day, licdate, 2 );
   MemOp.copy( mon, licdate+3, 2 );

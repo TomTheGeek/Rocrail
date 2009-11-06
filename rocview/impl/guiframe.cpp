@@ -2555,7 +2555,7 @@ void RocGuiFrame::setOnline( bool online ) {
 
 
 void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini))) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL) ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     if( wxID_OK == dlg->ShowModal() ) {
     }
