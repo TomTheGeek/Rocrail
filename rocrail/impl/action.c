@@ -226,17 +226,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   else if( StrOp.equals( wSwitch.name(), wAction.gettype( data->action ) ) ) {
     iOSwitch sw = ModelOp.getSwitch( model, wAction.getoid( data->action ) );
     int error = 0;
-    if( StrOp.equals( wAction.getcmd( data->action ), wAction.switch_flip )) {
+    if( sw != NULL ) {
       iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      if( SwitchOp.isState(sw, wSwitch.turnout )) {
-        wSwitch.setcmd( cmd, wSwitch.straight );
+      if( StrOp.equals( wAction.getcmd( data->action ), wAction.switch_flip )) {
+        if( SwitchOp.isState(sw, wSwitch.turnout )) {
+          wSwitch.setcmd( cmd, wSwitch.straight );
+        } else {
+          wSwitch.setcmd( cmd, wSwitch.turnout );
+        }
+        SwitchOp.cmd( sw, cmd, True, 0, &error );
       } else {
-        wSwitch.setcmd( cmd, wSwitch.turnout );
-      }
-      SwitchOp.cmd( sw, cmd, True, 0, &error );
-    } else {
-      if( sw != NULL ) {
-        iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
         SwitchOp.cmd( sw, cmd, True, 0, &error );
       }
