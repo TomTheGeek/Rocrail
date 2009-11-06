@@ -341,15 +341,18 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       iONode cmd = NULL;
 
       /* flash the block */
+      const char* blockstate = wBlock.getstate(m_Props);
+
       cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
       wBlock.setstate( cmd, wBlock.shortcut);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
       ThreadOp.sleep(500);
+
       cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
-      wBlock.setstate( cmd, wBlock.shortcutcleared);
+      wBlock.setstate( cmd, blockstate);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
 
