@@ -78,4 +78,10 @@
 <ope date="733714" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Markus Schimke"/>
 <ope date="733714" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Buck"/>
 <ope date="733714" amount="15" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
+<ope date="733715" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jörn Rother"/>
+<ope date="733716" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Thorsten Weiss"/>
+<ope date="733716" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugenio Roncelli"/>
+<ope date="733715" amount="15" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Joachim Matzke"/>
+<ope date="733715" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hermann Meyer"/>
+<ope date="733716" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Kai-Uwe Poenisch"/>
 </homebank>
