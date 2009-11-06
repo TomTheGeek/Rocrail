@@ -130,18 +130,21 @@ static Boolean __initGL( iOSRCP08Data o, iONode node, int* bus ) {
   if (! o->locInited[wLoc.getaddr(node)] )
   {
 
-    /* 14 Speedsteps and 4 Funs hardcoded for now. DDW ignores this values */
-    sprintf(tmpCommand,"INIT %d GL %d %s %d %d %d\n", gl_bus,
-            wLoc.getaddr(node), prot, wLoc.getprotver( node ),
-            wLoc.getspcnt( node ), wLoc.getfncnt( node ) + 1 );
+    sprintf(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
+    if( __srcpSendCommand(o, True, tmpCommand,NULL) != 100 ) {
 
-    o->locInited[wLoc.getaddr(node)] = True;
+      /* 14 Speedsteps and 4 Funs hardcoded for now. DDW ignores this values */
+      sprintf(tmpCommand,"INIT %d GL %d %s %d %d %d\n", gl_bus,
+              wLoc.getaddr(node), prot, wLoc.getprotver( node ),
+              wLoc.getspcnt( node ), wLoc.getfncnt( node ) + 1 );
 
-    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
-    {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GL %d", wLoc.getaddr(node));
-      return False;
+      if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+      {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GL %d", wLoc.getaddr(node));
+        return False;
+      }
     }
+    o->locInited[wLoc.getaddr(node)] = True;
 
     sprintf(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
 
@@ -493,8 +496,11 @@ static int __srcpInitServer( iOSRCP08Data o)
 {
   int i;
   char tmpCommand[1024];
-  sprintf(tmpCommand,"INIT 1 POWER\n");
-  __srcpSendCommand(o,False,tmpCommand,NULL);
+  sprintf(tmpCommand,"GET 1 POWER\n");
+  if( __srcpSendCommand(o,False,tmpCommand,NULL) != 100 ) {
+    sprintf(tmpCommand,"INIT 1 POWER\n");
+    __srcpSendCommand(o,False,tmpCommand,NULL);
+  }
   return 0;
 }
 
