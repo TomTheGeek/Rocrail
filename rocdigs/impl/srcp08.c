@@ -109,6 +109,28 @@ static Boolean _setListener( obj inst, obj listenerObj,
 }
 
 
+
+static Boolean __initGA( iOSRCP08Data o, iONode node, int ga_bus, int addr ) {
+  char tmpCommand[1024];
+  sprintf(tmpCommand,"GET %d GA %d 0\n", ga_bus, addr );
+  if (__srcpSendCommand(o, True, tmpCommand,NULL) != 100 ) {
+    sprintf(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, wSwitch.getprot( node ) );
+    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+    {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr );
+      return False;
+    }
+    sprintf(tmpCommand,"GET %d GA %d 0\n", ga_bus, addr );
+    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+    {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr);
+      return False;
+    }
+  }
+  return True;
+}
+
+
 static Boolean __initGL( iOSRCP08Data o, iONode node, int* bus ) {
   char tmpCommand[1024];
 
@@ -211,22 +233,11 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
 
     if (! o->knownSwitches[ addr ] )
     {
-      sprintf(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, wSwitch.getprot( node ) );
-      o->knownSwitches[ addr ] = True;
-      if (!__srcpSendCommand(o, True, tmpCommand,NULL))
-      {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr );
-        return NULL;
-      }
-      sprintf(tmpCommand,"GET %d GA %d 0\n", ga_bus, addr );
-      if (!__srcpSendCommand(o, True, tmpCommand,NULL))
-      {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr);
-        return NULL;
-      }
+      o->knownSwitches[ addr ] = __initGA(o, node, ga_bus, addr);
     }
 
-    sprintf( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
+    if ( o->knownSwitches[ addr ] )
+      sprintf( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
     return NULL;
   }
 
@@ -249,17 +260,12 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
 
     if (! o->knownSwitches[ addr ] )
     {
-      sprintf(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, wOutput.getprot( node ) );
-      o->knownSwitches[addr] = True;
-      if (!__srcpSendCommand(o, True, tmpCommand,NULL))
-      {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr);
-        return NULL;
-      }
+      o->knownSwitches[ addr ] = __initGA(o, node, ga_bus, addr);
     }
 
     /* send the output command... */
-    sprintf( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
+    if ( o->knownSwitches[ addr ] )
+      sprintf( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
 
     return NULL;
   }
