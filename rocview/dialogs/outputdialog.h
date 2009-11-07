@@ -59,7 +59,6 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_CO_ID 10011
 #define wxID_STATIC_CO_DESC 10221
 #define ID_TEXTCTRL_CO_DESC 10222
-#define wxID_STATIC_CO_SHOW 10016
 #define ID_CHECKBOX_CO_SHOW 10017
 #define ID_OUTPUT_ACTIONS 10199
 #define ID_PANEL_CO_INTERFACE 10021
@@ -186,6 +185,8 @@ public:
     wxStaticText* m_labRouteIDs;
     wxTextCtrl* m_RouteIDs;
     wxCheckBox* m_Show;
+    wxCheckBox* m_TriState;
+    wxRadioBox* m_Type;
     wxButton* m_Actions;
     wxPanel* m_InterfacePanel;
     wxStaticText* m_Labeliid;

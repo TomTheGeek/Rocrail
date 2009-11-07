@@ -711,10 +711,14 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     else if( StrOp.equals( wOutput.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
       wOutput.setid( cmd, wOutput.getid( m_Props ) );
-      if( StrOp.equals( wOutput.on, wOutput.getstate( m_Props ) ) )
-        wOutput.setcmd( cmd, wOutput.off );
+      if( wOutput.istoggleswitch(m_Props) ) {
+        if( StrOp.equals( wOutput.on, wOutput.getstate( m_Props ) ) )
+          wOutput.setcmd( cmd, wOutput.off );
+        else
+          wOutput.setcmd( cmd, wOutput.on );
+      }
       else
-        wOutput.setcmd( cmd, wOutput.on );
+        wOutput.setcmd( cmd, wOutput.off );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
@@ -769,7 +773,7 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   wxGetApp().getFrame()->setInfoText( text );
   StrOp.free( text );
 
-  if( !wxGetApp().getFrame()->isEditMode() && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
+  if( !wxGetApp().getFrame()->isEditMode() && StrOp.equals( wBlock.name(), NodeOp.getName(m_Props)) && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
     if( event.ControlDown() || event.CmdDown() ) {
       wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) );
       wxDropSource dragSource( this );
@@ -781,6 +785,15 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    }
+  }
+  else if( !wxGetApp().getFrame()->isEditMode() && StrOp.equals( wOutput.name(), NodeOp.getName(m_Props)) ) {
+    if( !wOutput.istoggleswitch(m_Props) ) {
+      iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+      wOutput.setid( cmd, wOutput.getid( m_Props ) );
+      wOutput.setcmd( cmd, wOutput.on );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
     }
   }
 

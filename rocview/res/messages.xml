@@ -11456,4 +11456,15 @@
     <nl txt="http://wiki.rocrail.net/doku.php?id=donate-nl"/>
     <fr txt="http://wiki.rocrail.net/doku.php?id=donate-fr"/>
   </Msg>
+  <Msg id="tristate">
+    <en txt="Tri-State"/>
+  </Msg>
+  <Msg id="toggleswitch">
+    <en txt="Toggle switch"/>
+    <de txt="Kippschalter"/>
+  </Msg>
+  <Msg id="pushbutton">
+    <en txt="Push button"/>
+    <de txt="Drucktaste"/>
+  </Msg>
 </Messages>

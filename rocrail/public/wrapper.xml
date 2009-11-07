@@ -1033,6 +1033,7 @@
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
+        <var name="toggleswitch" vt="bool" defval="true" remark="Toggle switch or push button."/>
         <const name="on" vt="string" val="on"/>
         <const name="active" vt="string" val="active"/>
         <const name="off" vt="string" val="off"/>
