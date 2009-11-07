@@ -80,6 +80,9 @@ public:
   const char*   m_Host;
   int           m_Port;
   int           m_Svn;
+  iONode        m_Ini;
+  RocGuiFrame*  m_Frame;
+  bool          m_bOffline;
 
 private:
   void saveSizePos();
@@ -87,8 +90,6 @@ private:
   wxString      m_LocalPlan;
 
   const char*   m_IniFileName;
-  iONode        m_Ini;
-  RocGuiFrame*  m_Frame;
   iOCmdLn       m_CmdLn;
   iOTrace       m_Trace;
   iONode        m_Model;
@@ -96,7 +97,6 @@ private:
   iONode        m_OldModel;
   int           m_TabSel;
   bool          m_bOnExit;
-  bool          m_bOffline;
   bool          m_bStayOffline;
   bool          m_LocalModelModified;
   bool          m_bModView;

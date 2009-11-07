@@ -335,6 +335,69 @@ iONode RocGui::popUndoItem() {
 }
 
 
+
+static void conThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  RocGui* o = (RocGui*)ThreadOp.getParm( th );
+
+  TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "conThread started" );
+  ThreadOp.sleep(100);
+
+  // connect to the rocrail daemon:
+  int tries = 0;
+  int retry = wRRCon.getretry( wGui.getrrcon( o->m_Ini ) );
+  int retryinterval = wRRCon.getretryinterval( wGui.getrrcon( o->m_Ini ) );
+
+  do {
+    TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999,
+      "Try[%d] connecting to rocrail at %s:%d...",tries+1, o->m_Host, o->m_Port );
+    TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "1");
+    o->m_RCon = RConOp.inst( o->m_Host, o->m_Port );
+    tries++;
+
+    TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "2");
+
+    if( o->m_RCon == NULL && tries < retry )
+      ThreadOp.sleep( retryinterval );
+    else if( o->m_RCon != NULL ) {
+      TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "3");
+      RConOp.setCallback( o->m_RCon, &rocrailCallback, (obj)o );
+      TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "4");
+    }
+
+  } while( o->m_RCon == NULL && tries < retry );
+
+  TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "5");
+
+  if( o->m_RCon != NULL ) {
+    o->m_bOffline = false;
+    char* val = StrOp.fmt( "%s:%d", o->m_Host, o->m_Port );
+    //o->m_Frame->SetStatusText( wxString(val,wxConvUTF8), status_rcon );
+    o->m_Frame->setOnline(true);
+
+    // Initial connection.
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.plan );
+    char* guiid = StrOp.fmt( "%s,%d,%d", wGui.getid(o->m_Ini),
+        SocketOp.getMAC(NULL)!=NULL?SocketOp.getMAC(NULL):0, SystemOp.getpid() );
+    wModelCmd.setcmdfrom( cmd, guiid );
+    o->sendToRocrail( cmd );
+    StrOp.free(guiid);
+    cmd->base.del( cmd );
+  }
+
+
+  if( o->m_bOffline ) {
+    wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_OpenWorkspace );
+    evt->SetExtraLong(4711);
+    wxPostEvent( o->m_Frame, *evt );
+  }
+
+  TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "conThread ended" );
+}
+
+
+
 bool RocGui::OnInit() {
 
 #ifdef __linux__
@@ -347,7 +410,7 @@ bool RocGui::OnInit() {
 #endif
   m_bInit = false;
   m_bOnExit = false;
-  m_bOffline = true;
+  m_bOffline = false;
   m_bStayOffline = false;
   m_LocalModelModified = false;
   m_LocalPlan = _T("");
@@ -517,59 +580,14 @@ bool RocGui::OnInit() {
   m_Frame->initFrame();
 
 
-  // check for offline mode:
-  if( !CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) && m_LocalPlan.Len() == 0 ) {
-    // connect to the rocrail daemon:
-    int tries = 0;
-    int retry = wRRCon.getretry( wGui.getrrcon( m_Ini ) );
-    int retryinterval = wRRCon.getretryinterval( wGui.getrrcon( m_Ini ) );
-
-    do {
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
-        "Try[%d] connecting to rocrail at %s:%d...",tries+1, m_Host, m_Port );
-      m_RCon = RConOp.inst( m_Host, m_Port );
-      tries++;
-
-      if( m_RCon == NULL && tries < retry )
-        ThreadOp.sleep( retryinterval );
-      else if( m_RCon != NULL ) {
-        RConOp.setCallback( m_RCon, &rocrailCallback, (obj)this );
-      }
-
-    } while( m_RCon == NULL && tries < retry );
-  }
-
-  if( m_RCon != NULL ) {
-    m_bOffline = false;
-  }
-
   m_bInit = true;
 
   if( CmdLnOp.hasKey( m_CmdLn, wCmdline.offline ) || m_LocalPlan.Len() > 0 ) {
     m_Frame->setLocalPlan( m_LocalPlan );
-    m_bOffline = true;
-  }
-
-  if( m_RCon != NULL ) {
-    m_bOffline = false;
-    char* val = StrOp.fmt( "%s:%d", m_Host, m_Port );
-    m_Frame->SetStatusText( wxString(val,wxConvUTF8), status_rcon );
-    m_Frame->setOnline(true);
-
-    // Initial connection.
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.plan );
-    char* guiid = StrOp.fmt( "%s,%d,%d", wGui.getid(m_Ini),
-        SocketOp.getMAC(NULL)!=NULL?SocketOp.getMAC(NULL):0, SystemOp.getpid() );
-    wModelCmd.setcmdfrom( cmd, guiid );
-    sendToRocrail( cmd );
-    StrOp.free(guiid);
-    cmd->base.del( cmd );
-  }
-  else {
     m_Frame->SetStatusText( getMsg("offline"), status_rcon );
     m_bOffline = true;
   }
+
 
   m_Frame->setOffline(m_bOffline);
 
@@ -581,10 +599,9 @@ bool RocGui::OnInit() {
   wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
   wxPostEvent( m_Frame, evt );
 
-  if( m_bOffline ) {
-    wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_OpenWorkspace );
-    evt.SetExtraLong(4711);
-    wxPostEvent( m_Frame, evt );
+  if( !m_bOffline ) {
+    iOThread th = ThreadOp.inst( "conthread", &conThread, this );
+    ThreadOp.start( th );
   }
 
   return TRUE;

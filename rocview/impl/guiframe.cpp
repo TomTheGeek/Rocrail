@@ -1622,7 +1622,7 @@ void RocGuiFrame::create() {
   m_CVPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
   m_CVPanel->SetScrollbars(1, 1, 0, 0);
   m_CV = NULL;
-  m_CV = new CV( m_CVPanel, wGui.getcvconf( wxGetApp().getIni() ), this );
+  m_CV = new CV( m_CVPanel, wGui.getcvconf( m_Ini ), this );
 
   m_StatNotebook->AddPage(m_CVPanel, wxGetApp().getMsg("programming") );
 
