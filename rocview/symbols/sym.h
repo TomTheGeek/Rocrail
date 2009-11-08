@@ -31,6 +31,7 @@ namespace symtype {
   static const int i_feedback   = 7;
   static const int i_turntable  = 8;
   static const int i_selecttable= 9;
+  static const int i_route      = 10;
 }
 
 namespace tracktype {
@@ -316,6 +317,14 @@ namespace outputtype {
   static const char* button_active_route = "button-%d-active-route.svg";
 
   static const int i_button = 1;
+}
+
+namespace routetype {
+  static const char* route_open     = "route-open.svg";
+  static const char* route_closed   = "route-closed.svg";
+  static const char* route_selected = "route-selected.svg";
+
+  static const int i_route = 1;
 }
 
 namespace blocktype {

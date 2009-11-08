@@ -1249,9 +1249,13 @@
       <st cardinality="n" wrappername="Route" remark="A street defines a destination fromone block to another including switch positions.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="x" vt="int" defval="0" range="0-*"/>
+        <var name="y" vt="int" defval="0" range="0-*"/>
+        <var name="z" vt="int" defval="-1" range="*" remark="level for internal use only"/>
+        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
+        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
         <const name="modid_auto_gen" vt="string" val="auto-generated"/>
         <var name="modid" vt="string" defval="" range="*" remark="module ID for internal use only"/>
-        <var name="z" vt="int" defval="-1" range="*" remark="level for internal use only"/>
         <const name="routelock" vt="string" val="--routelock--" remark="id to signal FY and TT a route lock/unlock"/>
         <const name="point_nw" vt="string" val="point-nw"/>
         <const name="point_ne" vt="string" val="point-ne"/>
@@ -1275,6 +1279,11 @@
         <var name="swappost" vt="bool" defval="false" remark="swap loco placing at terminating this route"/>
         <var name="reduceV" vt="bool" defval="true" remark="reduce speed by thrown switches"/>
         <var name="crossingblocksignals" vt="bool" defval="false" remark="Set the signals in the crossing blocks according to the from block."/>
+        <var name="manual" vt="bool" defval="false" remark="manual controlled route"/>
+        <var name="status" vt="int" defval="0" remark="route status"/>
+        <const name="status_open" vt="int" val="0"/>
+        <const name="status_closed" vt="int" val="1"/>
+        <const name="status_selected" vt="int" val="2"/>
         <swcmd cardinality="n" wrappername="SwitchCmd">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Switch ID."/>
           <var name="cmd" vt="string" defval="straight" range="straight,turnout,left,right,green,red,track"/>

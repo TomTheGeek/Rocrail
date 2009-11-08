@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Track.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/TTTrack.h"
@@ -549,6 +550,15 @@ void SymbolRenderer::initSym() {
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_on_route );
         }
       }
+    }
+  }
+  else if( StrOp.equals( wRoute.name(), nodeName ) ) {
+    m_iSymType = symtype::i_route;
+    m_iSymSubType = routetype::i_route;
+    if( m_SymMap != NULL ) {
+      m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_open );
+      m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_closed );
+      m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_selected );
     }
   }
   else if( StrOp.equals( wTurntable.name(), nodeName ) ) {
@@ -1904,6 +1914,31 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 }
 
 
+void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+
+  // SVG Symbol:
+  if( m_SvgSym1!=NULL ) {
+    drawSvgSym(dc, m_SvgSym1, ori);
+  }
+
+  if( m_bShowID ) {
+    wxFont* font = new wxFont( dc.GetFont() );
+    font->SetPointSize( m_iItemIDps );
+    dc.SetFont(*font);
+
+    if( StrOp.equals( ori, wItem.south ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+    else if( StrOp.equals( ori, wItem.north ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+    else
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+
+    delete font;
+  }
+
+}
+
+
 /**
  * Turntable object
  */
@@ -2015,6 +2050,9 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
       break;
     case symtype::i_selecttable:
       drawSelTab( dc, fill, occupied, ori );
+      break;
+    case symtype::i_route:
+      drawRoute( dc, fill, occupied, ori );
       break;
   }
 }

@@ -232,6 +232,8 @@ public:
     wxCheckBox* m_Swap;
     wxCheckBox* m_SwapPost;
     wxCheckBox* m_CrossingblockSignals;
+    wxCheckBox* m_Show;
+    wxCheckBox* m_Manual;
     wxButton* m_Actions;
     wxPanel* m_CommandPanel;
     wxListBox* m_Commands;
