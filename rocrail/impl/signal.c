@@ -669,6 +669,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
 
   /* save the new state of the signal */
   if( chgState ) {
+    Boolean hasAddr =  (wSignal.getaddr(o->props) == 0 && wSignal.getport1(o->props) == 0 ) ? False:True;
     wSignal.setstate( o->props, state );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s",
                  wSignal.getid( o->props ), wSignal.getstate( o->props ) );
@@ -684,7 +685,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     }
 
     /* check using patterns */
-    if( wSignal.isusepatterns( o->props ) ) {
+    if( hasAddr && wSignal.isusepatterns( o->props ) ) {
       if( !__processPatternCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
@@ -692,14 +693,14 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       }
     }
     /* pair processing */
-    else if( wSignal.ispair( o->props ) ) {
+    else if( hasAddr && wSignal.ispair( o->props ) ) {
       if( !__processPairCmd( inst, state, inv ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
         ok = False;
       }
     }
-    else if( wSignal.getaspects(o->props) == 4 ){
+    else if( hasAddr && wSignal.getaspects(o->props) == 4 ){
       /* invoke the command by calling the control */
       if( !__process4AspectsCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
@@ -707,7 +708,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
         ok = False;
       }
     }
-    else if( wSignal.getaspects(o->props) == 3 ){
+    else if( hasAddr && wSignal.getaspects(o->props) == 3 ){
       /* invoke the command by calling the control */
       if( !__process3AspectsCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
@@ -715,7 +716,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
         ok = False;
       }
     }
-    else if( wSignal.isasswitch(o->props) ) {
+    else if( hasAddr && wSignal.isasswitch(o->props) ) {
       /* invoke the command by calling the control */
       if( !__process2AspectsAsSwitchCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
@@ -723,7 +724,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
         ok = False;
       }
     }
-    else {
+    else if(hasAddr){
       /* invoke the command by calling the control */
       if( !__process2AspectsCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
