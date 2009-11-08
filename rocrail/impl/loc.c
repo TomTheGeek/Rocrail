@@ -569,7 +569,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setdir( cmdFn, wLoc.isdir( data->props ) );
+        wLoc.setdir( cmdFn, wLoc.isplacing(data->props) ? wLoc.isdir(data->props):!wLoc.isdir(data->props) );
         wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
         wLoc.setid( cmdFn, wLoc.getid(data->props) );
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
