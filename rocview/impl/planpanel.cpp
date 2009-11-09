@@ -1465,6 +1465,7 @@ static void initPlan( PlanPanel* o ) {
   o->addItems( wPlan.getsglist( model ) );
   o->addItems( wPlan.getttlist( model ) );
   o->addItems( wPlan.getseltablist( model ) );
+  o->addItems( wPlan.getstlist( model ) );
 
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.fstat );

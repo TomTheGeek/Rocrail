@@ -80,6 +80,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/ZLevel.h"
+#include "rocrail/wrapper/public/Route.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
@@ -395,7 +396,7 @@ void Symbol::sizeToScale() {
 
   if( m_Z != z )
     Show( false );
-  else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ) {
+  else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wRoute.name(), name ) ) {
     Show(wOutput.isshow(m_Props));
   }
 
