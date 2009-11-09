@@ -434,7 +434,7 @@ static void __callback( obj inst, iONode nodeA ) {
   else if( StrOp.equals( wSwitch.name(), nodeName ) ) {
     iOSwitch sw = ModelOp.getSwitch( model, wSwitch.getid( nodeA ) );
     if( sw != NULL ) {
-      SwitchOp.cmd( sw, nodeA, True, 0, &error );
+      SwitchOp.cmd( sw, nodeA, True, 0, &error, NULL );
       return;
     }
   }

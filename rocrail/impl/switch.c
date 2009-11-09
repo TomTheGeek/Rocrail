@@ -409,7 +409,7 @@ static void _green( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.straight );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, 0, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error, NULL );
 }
 
 static void _red( iOSwitch inst ) {
@@ -418,7 +418,7 @@ static void _red( iOSwitch inst ) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setcmd( node, wSwitch.turnout );
   wSwitch.setid( node, SwitchOp.getId( inst ) );
-  SwitchOp.cmd( inst, node, True, 0, &error );
+  SwitchOp.cmd( inst, node, True, 0, &error, NULL );
 }
 
 
@@ -447,7 +447,7 @@ static Boolean _isSet( iOSwitch inst ) {
 }
 
 
-static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error ) {
+static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -456,6 +456,14 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   Boolean inv1 = wSwitch.isinv( o->props );
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
+
+  if( SwitchOp.isLocked(inst, NULL) ) {
+    if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
+                   SwitchOp.getId( inst ), o->lockedId );
+      return False;
+    }
+  }
 
   o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
 
@@ -995,7 +1003,7 @@ static void _checkSenPos( iOSwitch inst ) {
         int error = 0;
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, wSwitch.getsavepos(data->props) );
-        SwitchOp.cmd( inst, cmd, True, 0, &error );
+        SwitchOp.cmd( inst, cmd, True, 0, &error, NULL );
       }
     }
   }

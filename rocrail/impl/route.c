@@ -179,7 +179,7 @@ static Boolean _go( iORoute inst ) {
         wSwitch.setcmd( cmd, swCmd );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
 
-        if( !SwitchOp.cmd( isw, cmd, True, 0, &error ) ) {
+        if( !SwitchOp.cmd( isw, cmd, True, 0, &error, o->lockedId ) ) {
           if( error == CMD_ERROR ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to switch %s:%s", swId, swCmd );
             return False;

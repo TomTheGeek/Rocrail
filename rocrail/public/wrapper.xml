@@ -1251,9 +1251,9 @@
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="x" vt="int" defval="0" range="0-*"/>
         <var name="y" vt="int" defval="0" range="0-*"/>
-        <var name="z" vt="int" defval="-1" range="*" remark="level for internal use only"/>
+        <var name="z" vt="int" defval="0" range="0-*" remark="level for internal use only"/>
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
-        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
+        <var name="show" vt="bool" defval="false" remark="Visibility flag."/>
         <const name="modid_auto_gen" vt="string" val="auto-generated"/>
         <var name="modid" vt="string" defval="" range="*" remark="module ID for internal use only"/>
         <const name="routelock" vt="string" val="--routelock--" remark="id to signal FY and TT a route lock/unlock"/>

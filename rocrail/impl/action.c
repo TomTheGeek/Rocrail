@@ -234,10 +234,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         } else {
           wSwitch.setcmd( cmd, wSwitch.turnout );
         }
-        SwitchOp.cmd( sw, cmd, True, 0, &error );
+        SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
       } else {
         wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
-        SwitchOp.cmd( sw, cmd, True, 0, &error );
+        SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
       }
     }
   }

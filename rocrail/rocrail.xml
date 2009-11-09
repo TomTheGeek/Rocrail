@@ -982,6 +982,7 @@
       <param name="update" vt="Boolean" remark="Send update events"/>
       <param name="extra" vt="int" remark="extra parameter for special cases"/>
       <param name="error" vt="int*" remark="error code"/>
+      <param name="lcid" vt="const char*" remark="loco id"/>
     </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Switch instance"/>
