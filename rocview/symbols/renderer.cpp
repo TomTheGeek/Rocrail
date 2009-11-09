@@ -1914,7 +1914,7 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 }
 
 
-void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
 
   // SVG Symbol:
   if( m_SvgSym1!=NULL ) {

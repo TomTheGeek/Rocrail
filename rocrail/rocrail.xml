@@ -415,6 +415,9 @@
     <fun name="isResumeAutomode" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="isShortin" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="getV" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>

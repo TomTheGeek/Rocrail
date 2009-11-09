@@ -265,16 +265,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
   if( fbevt == NULL && data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
     StrOp.fmtb( key, "%s-%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"", data->byRouteId );
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
-    if( fbevt != NULL )
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbevent found by key %s", key);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%sfbevent found by key %s", fbevt != NULL ? "":"no ", key);
   }
 
   if( fbevt == NULL ) {
     StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
     /* event without description; look up in map */
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
-    if( fbevt != NULL )
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbevent found by key %s", key);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%sfbevent found by key %s", fbevt != NULL ? "":"no ", key);
   }
 
 
@@ -366,10 +364,15 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     else
       LocOp.event( loc, manager, evt, 0 );
 
-    if( evt == enter2in_event || evt == in_event || evt == shortin_event ) {
+    if( evt == enter2in_event || evt == in_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
     }
+
+    if( evt == shortin_event && LocOp.isShortin(loc) ) {
+      data->fromBlockId = data->id;
+    }
+
   }
   else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
