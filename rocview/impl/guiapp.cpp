@@ -410,7 +410,7 @@ bool RocGui::OnInit() {
 #endif
   m_bInit = false;
   m_bOnExit = false;
-  m_bOffline = false;
+  m_bOffline = true;
   m_bStayOffline = false;
   m_LocalModelModified = false;
   m_LocalPlan = _T("");
