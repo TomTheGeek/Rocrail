@@ -394,9 +394,12 @@ void Symbol::sizeToScale() {
 
   const char* name = NodeOp.getName( m_Props );
 
-  if( m_Z != z )
+  if( m_Z != z ) {
     Show( false );
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "item %s: z level does not match %d!=%d", name, m_Z, z );
+  }
   else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wRoute.name(), name ) ) {
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
     Show(wOutput.isshow(m_Props));
   }
 
@@ -475,7 +478,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
   if( m_Z == z ) {
     //Show( true );
 
-    if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ) {
+    if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wRoute.name(), name ) ) {
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
       Show(wOutput.isshow(m_Props));
     }
 

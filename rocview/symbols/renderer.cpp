@@ -91,6 +91,8 @@ void SymbolRenderer::initSym() {
 
   const char* nodeName = NodeOp.getName( m_Props );
 
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
+
   // TRACKS
   if( StrOp.equals( wTrack.name(), nodeName ) ) {
     m_iSymType = symtype::i_track;
@@ -2022,6 +2024,8 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
 
   if( ori == NULL || StrOp.len( ori ) == 0 )
     ori = wItem.west;
+
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
 
   switch( m_iSymType ) {
     case symtype::i_track:
