@@ -1435,9 +1435,14 @@ static void __startAllLocosRunner( void* threadinst ) {
   int gap = wCtrl.getlocostartgap( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
   iOLoc loc = (iOLoc)MapOp.first( data->locMap );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting all Locs..." );
+  Boolean resume = StrOp.equals("resumeall", ThreadOp.getName(th));
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s locos...", ThreadOp.getName(th) );
   while( loc != NULL ) {
-    if( LocOp.go( loc ) ) {
+    Boolean lcgo = True;
+    if( resume && !LocOp.isResumeAutomode(loc) )
+      lcgo = False;
+
+    if( lcgo && LocOp.go( loc ) ) {
       ThreadOp.sleep( 10 + gap * 1000 );
     }
     else
@@ -1453,7 +1458,7 @@ static void __startAllLocs( iOModel inst ) {
 
   iOModelData data = Data(inst);
   if( data->pendingstartall ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Start all loco's canceled: pending operation." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Start all locos canceled: pending operation." );
   }
   else {
     iOThread t = ThreadOp.inst( "startall", &__startAllLocosRunner, inst );
@@ -1464,16 +1469,16 @@ static void __startAllLocs( iOModel inst ) {
 
 static void __resumeAllLocs( iOModel inst ) {
   iOModelData data = Data(inst);
-  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Resume all Locs..." );
-  while( loc != NULL ) {
-    if( LocOp.isResumeAutomode(loc) ) {
-      LocOp.go( loc );
-      ThreadOp.sleep( 10 );
-    }
-    loc = (iOLoc)MapOp.next( data->locMap );
+  if( data->pendingstartall ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Start all locos canceled: pending operation." );
+  }
+  else {
+    iOThread t = ThreadOp.inst( "resumeall", &__startAllLocosRunner, inst );
+    data->pendingstartall = True;
+    ThreadOp.start( t );
   }
 }
+
 
 static Boolean _cmd( iOModel inst, iONode cmd ) {
   iOModelData data = Data(inst);
