@@ -377,6 +377,7 @@ void LocSelDlg::OnEscape(wxMouseEvent& event) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
+  m_Props = NULL;
 }
 
 void LocSelDlg::OnSpeed(wxMouseEvent& event) {
