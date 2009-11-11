@@ -1056,6 +1056,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_WarningPanel       = NULL;
   m_MonitorPanel       = NULL;
   m_bEditMode          = false;
+  m_bEditModPlan       = false;
   m_bServerConsoleMode = false;
   m_LocID              = NULL;
   m_iLcRowSelection    = 0;
@@ -2889,15 +2890,6 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "inform loc control dialog to save position..." );
     dlg->Close();
   }
-
-  wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
-  m_bLocoBook = mi->IsChecked();
-  if(!m_bLocoBook) {
-    int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
-    m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
-    m_bLocoBook = true;
-  }
-
 
   m_LC->stopTimer();
   wxGetApp().OnExit();
