@@ -343,6 +343,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
       /* flash the block */
       const char* blockstate = wBlock.getstate(m_Props);
+      const char* blockloc = wBlock.getlocid(m_Props);
 
       cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
@@ -354,6 +355,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
       wBlock.setstate( cmd, blockstate);
+      wBlock.setlocid( cmd, blockloc);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
 
