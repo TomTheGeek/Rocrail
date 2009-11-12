@@ -558,9 +558,10 @@ void SymbolRenderer::initSym() {
     m_iSymType = symtype::i_route;
     m_iSymSubType = routetype::i_route;
     if( m_SymMap != NULL ) {
-      m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_open );
-      m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_closed );
+      m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_free );
+      m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_locked );
       m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_selected );
+      m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_deselected );
     }
   }
   else if( StrOp.equals( wTurntable.name(), nodeName ) ) {
@@ -1916,11 +1917,20 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 }
 
 
-void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status ) {
 
   // SVG Symbol:
-  if( m_SvgSym1!=NULL ) {
+  if( status == 0 && m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
+  }
+  else if( status == 1 && m_SvgSym2!=NULL ) {
+    drawSvgSym(dc, m_SvgSym2, ori);
+  }
+  else if( status == 2 && m_SvgSym3!=NULL ) {
+    drawSvgSym(dc, m_SvgSym3, ori);
+  }
+  else if( status == 3 && m_SvgSym4!=NULL ) {
+    drawSvgSym(dc, m_SvgSym4, ori);
   }
 
   if( m_bShowID ) {
@@ -2017,7 +2027,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
 /**
  * Draw dispatcher
  */
-void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID ) {
+void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, int status ) {
   m_bShowID = showID;
   const char* nodeName = NodeOp.getName( m_Props );
   const char* ori      = wItem.getori( m_Props );
@@ -2056,7 +2066,7 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
       drawSelTab( dc, fill, occupied, ori );
       break;
     case symtype::i_route:
-      drawRoute( dc, fill, occupied, ori );
+      drawRoute( dc, fill, occupied, ori, status );
       break;
   }
 }

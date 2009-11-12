@@ -491,6 +491,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     int cy = m_Renderer->getcy();
     bool occupied = false;
     bool actroute = false;
+    int status = 0;
 
     if( m_RouteID != NULL ) {
       iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
@@ -525,6 +526,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
     else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
       occupied = wSelTab.ispending(m_Props);
     }
+    else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
+      status = wRoute.getstatus(m_Props);
+    }
 
     if( wxGetApp().getFrame()->isRaster() ) {
       dc.DrawLine( 0, 0, (int)(c*cx), 0 );
@@ -538,7 +542,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     wxPen pen = dc.GetPen();
     pen.SetWidth(1);
     dc.SetPen(pen);
-    m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID() );
+    m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), status );
 
     /*
     if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
@@ -1709,6 +1713,15 @@ void Symbol::modelEvent( iONode node ) {
       wFeedback.setstate( m_Props, state );
       refresh = true;
     }
+  }
+  else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
+    int status = wRoute.getstatus( node );
+    const char* locid = wRoute.getlocid( node );
+
+    char* str = StrOp.fmt( "%s locked=%s",
+                           wRoute.getid( node ), locid == NULL ? "-":locid );
+    SetToolTip( wxString(str,wxConvUTF8) );
+    wRoute.setstatus( m_Props, status );
   }
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ) {
     const char* state = wSwitch.getstate( node );

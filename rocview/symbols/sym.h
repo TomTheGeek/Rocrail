@@ -320,9 +320,10 @@ namespace outputtype {
 }
 
 namespace routetype {
-  static const char* route_open     = "route-open.svg";
-  static const char* route_closed   = "route-closed.svg";
-  static const char* route_selected = "route-selected.svg";
+  static const char* route_free       = "route-free.svg";
+  static const char* route_locked     = "route-locked.svg";
+  static const char* route_selected   = "route-selected.svg";
+  static const char* route_deselected = "route-deselected.svg";
 
   static const int i_route = 1;
 }

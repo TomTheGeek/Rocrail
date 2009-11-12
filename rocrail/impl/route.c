@@ -230,6 +230,14 @@ static Boolean _go( iORoute inst ) {
     const char* routeId = wRoute.getid(o->props);
     iOList aliases = ModelOp.getRouteAliases( model, routeId );
 
+    wRoute.setlocid(nodeD, o->lockedId );
+
+    if( RouteOp.isFree(inst, o->lockedId) )
+      wRoute.setstatus( nodeD, wRoute.status_free);
+    else if( !RouteOp.isFree(inst, o->lockedId) )
+      wRoute.setstatus( nodeD, wRoute.status_locked);
+    /* TODO: other status reports */
+
     if( aliases == NULL ) {
       wRoute.setid( nodeD, routeId );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );

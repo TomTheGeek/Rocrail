@@ -81,7 +81,7 @@ class SymbolRenderer {
 public:
   void initSym();
   SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps );
-  void drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID );
+  void drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, int status=0 );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy );
   void setLabel( const char* label, int occupied );
   int getcx() {return m_cx;}
@@ -102,7 +102,7 @@ public:
   void drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
+  void drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status );
   void drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawText( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
