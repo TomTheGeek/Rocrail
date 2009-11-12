@@ -150,6 +150,7 @@ void TrackDialog::initLabels() {
   m_Type->Append( wxString(wTrack.dir,wxConvUTF8) );
   m_Type->Append( wxString(wTrack.dirall,wxConvUTF8) );
   m_Type->Append( wxString(wTrack.buffer,wxConvUTF8) );
+  m_Type->Append( wxString(wTrack.connector,wxConvUTF8) );
 
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
