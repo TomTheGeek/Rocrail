@@ -343,6 +343,14 @@ static void conThread( void* threadinst ) {
   TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "conThread started" );
   ThreadOp.sleep(100);
 
+  char* val = StrOp.fmt( "connecting %s:%d...", o->m_Host, o->m_Port );
+  wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_SetStatusText );
+  evt->SetString(wxString(val,wxConvUTF8));
+  evt->SetExtraLong(status_rcon);
+  wxPostEvent( o->m_Frame, *evt );
+  StrOp.free(val);
+  ThreadOp.sleep(10);
+
   // connect to the rocrail daemon:
   int tries = 0;
   int retry = wRRCon.getretry( wGui.getrrcon( o->m_Ini ) );
@@ -371,9 +379,17 @@ static void conThread( void* threadinst ) {
 
   if( o->m_RCon != NULL ) {
     o->m_bOffline = false;
-    char* val = StrOp.fmt( "%s:%d", o->m_Host, o->m_Port );
-    //o->m_Frame->SetStatusText( wxString(val,wxConvUTF8), status_rcon );
+    val = StrOp.fmt( "%s:%d", o->m_Host, o->m_Port );
+    wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_SetStatusText );
+    evt->SetString(wxString(val,wxConvUTF8));
+    evt->SetExtraLong(status_rcon);
+    wxPostEvent( o->m_Frame, *evt );
+    StrOp.free(val);
+
+
     o->m_Frame->setOnline(true);
+    o->m_Frame->setOffline(false);
+    o->m_bOffline = false;
 
     // Initial connection.
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -384,6 +400,16 @@ static void conThread( void* threadinst ) {
     o->sendToRocrail( cmd );
     StrOp.free(guiid);
     cmd->base.del( cmd );
+  }
+  else {
+    wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_SetStatusText );
+    evt->SetString(_T("Offline"));
+    evt->SetExtraLong(status_rcon);
+    wxPostEvent( o->m_Frame, *evt );
+    StrOp.free(val);
+    o->m_Frame->setOnline(false);
+    o->m_Frame->setOffline(true);
+    o->m_bOffline = true;
   }
 
 
@@ -410,7 +436,7 @@ bool RocGui::OnInit() {
 #endif
   m_bInit = false;
   m_bOnExit = false;
-  m_bOffline = true;
+  m_bOffline = false;
   m_bStayOffline = false;
   m_LocalModelModified = false;
   m_LocalPlan = _T("");
@@ -589,7 +615,7 @@ bool RocGui::OnInit() {
   }
 
 
-  m_Frame->setOffline(m_bOffline);
+  m_Frame->setOffline(true);
 
   TraceOp.setExceptionListener( m_Trace, ExceptionCallback, False, False );
 
@@ -702,6 +728,10 @@ static void rocrailCallback( obj me, iONode node ) {
     char* msg = StrOp.fmt( "%s:%s", wResponse.getsender( node ), wResponse.getmsg( node ) );
     // TODO: send an event to update a status field
     //wxGetApp().getFrame()->SetStatusText( wxString(msg,wxConvUTF8), status_digint );
+    wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_SetStatusText );
+    evt->SetString(wxString(msg,wxConvUTF8));
+    evt->SetExtraLong(status_digint);
+    wxPostEvent( wxGetApp().getFrame(), *evt );
     StrOp.free( msg );
   }
   /* Clock */

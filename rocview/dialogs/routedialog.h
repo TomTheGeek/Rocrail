@@ -259,6 +259,14 @@ public:
     wxRadioBox* m_PermType;
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
+    wxPanel* m_LocationPanel;
+    wxStaticText* m_LabelX;
+    wxTextCtrl* m_x;
+    wxStaticText* m_LabelY;
+    wxTextCtrl* m_y;
+    wxStaticText* m_LabelZ;
+    wxTextCtrl* m_z;
+    wxRadioBox* m_ori;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

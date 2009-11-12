@@ -79,6 +79,7 @@ public:
   void SyncClock( iONode node );
 
   void OnOpenWorkspace(wxCommandEvent& event);
+  void OnSetStatusText(wxCommandEvent& event);
   void OnQuit(wxCommandEvent& event);
   void OnSize(wxSizeEvent& event);
   void OnMenu(wxMenuEvent& event);
@@ -503,6 +504,7 @@ enum
     ME_F28,
     ID_SCALE_COMBO,
     ME_INITACTIVELOCS,
+    ME_SetStatusText,
 };
 
 enum {

@@ -178,6 +178,7 @@ void RouteDialog::initLabels() {
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "turnouttable" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "sensors" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "permissions" ) );
+  m_Notebook->SetPageText( 5, wxGetApp().getMsg( "location" ) );
 
   // Index
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
@@ -275,6 +276,17 @@ void RouteDialog::initLabels() {
   initLocPermissionList();
 
   m_labMaxLen->SetLabel( wxGetApp().getMsg( "maxtrainlen" ) );
+
+  // Location
+  m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
+  m_LabelY->SetLabel( wxGetApp().getMsg( "y" ) );
+  m_LabelZ->SetLabel( wxGetApp().getMsg( "z" ) );
+  m_ori->SetLabel( wxGetApp().getMsg( "orientation" ) );
+  m_ori->SetString( 0, wxGetApp().getMsg( "north" ) );
+  m_ori->SetString( 1, wxGetApp().getMsg( "east" ) );
+  m_ori->SetString( 2, wxGetApp().getMsg( "south" ) );
+  m_ori->SetString( 3, wxGetApp().getMsg( "west" ) );
+
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -599,6 +611,23 @@ void RouteDialog::initValues() {
   m_PermType->SetSelection( cargo );
 
   m_MaxLen->SetValue(wRoute.getmaxlen(m_Props));
+  
+  // Location
+  char* val = StrOp.fmt( "%d", wRoute.getx( m_Props ) );
+  m_x->SetValue( wxString(val,wxConvUTF8) ); StrOp.free( val );
+  val = StrOp.fmt( "%d", wRoute.gety( m_Props ) );
+  m_y->SetValue( wxString(val,wxConvUTF8) ); StrOp.free( val );
+  val = StrOp.fmt( "%d", wRoute.getz( m_Props ) );
+  m_z->SetValue( wxString(val,wxConvUTF8) ); StrOp.free( val );
+  if( StrOp.equals( wItem.north, wRoute.getori( m_Props ) ) )
+    m_ori->SetSelection( 0 );
+  else if( StrOp.equals( wItem.east, wRoute.getori( m_Props ) ) )
+    m_ori->SetSelection( 1 );
+  else if( StrOp.equals( wItem.south, wRoute.getori( m_Props ) ) )
+    m_ori->SetSelection( 2 );
+  else
+    m_ori->SetSelection( 3 );
+  
 
 
 
@@ -725,6 +754,19 @@ bool RouteDialog::evaluate() {
 
   wRoute.setmaxlen(m_Props,m_MaxLen->GetValue());
 
+  // Location
+  wRoute.setx( m_Props, atoi( m_x->GetValue().mb_str(wxConvUTF8) ) );
+  wRoute.sety( m_Props, atoi( m_y->GetValue().mb_str(wxConvUTF8) ) );
+  wRoute.setz( m_Props, atoi( m_z->GetValue().mb_str(wxConvUTF8) ) );
+  int ori = m_ori->GetSelection();
+  if( ori == 0 )
+    wRoute.setori( m_Props, wItem.north );
+  else if( ori == 1 )
+    wRoute.setori( m_Props, wItem.east );
+  else if( ori == 2 )
+    wRoute.setori( m_Props, wItem.south );
+  else if( ori == 3 )
+    wRoute.setori( m_Props, wItem.west );
 
 
   return true;
@@ -791,6 +833,14 @@ bool RouteDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_PermType = NULL;
     m_labMaxLen = NULL;
     m_MaxLen = NULL;
+    m_LocationPanel = NULL;
+    m_LabelX = NULL;
+    m_x = NULL;
+    m_LabelY = NULL;
+    m_y = NULL;
+    m_LabelZ = NULL;
+    m_z = NULL;
+    m_ori = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -1074,22 +1124,57 @@ void RouteDialog::CreateControls()
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
+    m_LocationPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer75 = new wxBoxSizer(wxHORIZONTAL);
+    m_LocationPanel->SetSizer(itemBoxSizer75);
+
+    wxFlexGridSizer* itemFlexGridSizer76 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemBoxSizer75->Add(itemFlexGridSizer76, 0, wxALIGN_TOP|wxALL, 5);
+    m_LabelX = new wxStaticText( m_LocationPanel, wxID_ANY, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer76->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+    m_x = new wxTextCtrl( m_LocationPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    itemFlexGridSizer76->Add(m_x, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_LabelY = new wxStaticText( m_LocationPanel, wxID_ANY, _("y"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer76->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+    m_y = new wxTextCtrl( m_LocationPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    itemFlexGridSizer76->Add(m_y, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_LabelZ = new wxStaticText( m_LocationPanel, wxID_ANY, _("z"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer76->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+    m_z = new wxTextCtrl( m_LocationPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    itemFlexGridSizer76->Add(m_z, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxArrayString m_oriStrings;
+    m_oriStrings.Add(_("&north"));
+    m_oriStrings.Add(_("&east"));
+    m_oriStrings.Add(_("&south"));
+    m_oriStrings.Add(_("&west"));
+    m_ori = new wxRadioBox( m_LocationPanel, wxID_ANY, _("Orientation"), wxDefaultPosition, wxDefaultSize, m_oriStrings, 1, wxRA_SPECIFY_COLS );
+    m_ori->SetSelection(0);
+    itemBoxSizer75->Add(m_ori, 0, wxALIGN_TOP|wxALL, 5);
+
+    m_Notebook->AddPage(m_LocationPanel, _("Location"));
+
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer74 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer84 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer74, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer84, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer74->AddButton(m_Cancel);
+    itemStdDialogButtonSizer84->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer74->AddButton(m_OK);
+    itemStdDialogButtonSizer84->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer74->AddButton(m_Apply);
+    itemStdDialogButtonSizer84->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer74->Realize();
+    itemStdDialogButtonSizer84->Realize();
 
 ////@end RouteDialog content construction
 }

@@ -350,6 +350,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_F28, RocGuiFrame::OnButton)
 
     EVT_MENU( ME_INITACTIVELOCS, RocGuiFrame::InitActiveLocs)
+    EVT_MENU( ME_SetStatusText  , RocGuiFrame::OnSetStatusText)
 
 END_EVENT_TABLE()
 
@@ -1986,6 +1987,11 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
   }
   fdlg->Destroy();
 }
+
+void RocGuiFrame::OnSetStatusText( wxCommandEvent& event ) {
+  SetStatusText(event.GetString(), event.GetExtraLong());
+}
+
 
 void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
   if( !wxGetApp().isOffline() ) {
