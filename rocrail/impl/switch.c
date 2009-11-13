@@ -60,7 +60,39 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+
+static void __ctcAction( void* inst, iONode evt ) {
+  iOSwitchData data = Data(inst);
+  Boolean state = wFeedback.isstate(evt);
+  const char* type = wSwitch.gettype( data->props );
+  Boolean twoMotors = False;
+  if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) )
+    twoMotors = True;
+
+  if( wFeedback.getaddr(evt) == wSwitch.getctcaddr1(data->props) ) {
+    state = wSwitch.isctccmdon1(data->props) ? state:!state;
+    data->ctc1 = state;
+    if( twoMotors) {
+    }
+    else {
+      int error = 0;
+      iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setcmd( node, state ? wSwitch.straight:wSwitch.turnout );
+      wSwitch.setid( node, SwitchOp.getId( inst ) );
+      SwitchOp.cmd( inst, node, True, 0, &error, NULL );
+    }
+  }
+  else if( wFeedback.getaddr(evt) == wSwitch.getctcaddr2(data->props) ) {
+    state = wSwitch.isctccmdon1(data->props) ? state:!state;
+    data->ctc2 = state;
+  }
+}
+
+
 static void* __event( void* inst, const void* evt ) {
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    __ctcAction(inst, (iONode)evt);
+  }
   return NULL;
 }
 
@@ -1107,6 +1139,24 @@ static void __accThread( void* threadinst ) {
 }
 
 
+static void __initCTC(iOSwitch inst) {
+  iOSwitchData data  = Data(inst);
+  iOModel      model = AppOp.getModel();
+
+  if( wSwitch.getctcaddr1(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wSwitch.getctcbus1(data->props), wSwitch.getctcaddr1(data->props), wSwitch.getctciid1(data->props));
+    ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
+
+  if( wSwitch.getctcaddr2(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wSwitch.getctcbus2(data->props), wSwitch.getctcaddr2(data->props), wSwitch.getctciid2(data->props));
+    ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
+}
+
+
 static iOSwitch _inst( iONode props ) {
   iOSwitch     sw   = allocMem( sizeof( struct OSwitch ) );
   iOSwitchData data = allocMem( sizeof( struct OSwitchData ) );
@@ -1124,6 +1174,7 @@ static iOSwitch _inst( iONode props ) {
     data->fbstate = SW_UNKNOWN;
   }
 
+  __initCTC(sw);
 
   data->addrKey = _createAddrKey(
     wSwitch.getbus( props ),

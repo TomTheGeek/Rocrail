@@ -11467,4 +11467,12 @@
     <en txt="Push button"/>
     <de txt="Drucktaste"/>
   </Msg>
+  <Msg id="ctc">
+    <en txt="CTC" tip="Centralized Traffic Control"/>
+    <de txt="GBS" tip="Gleisbildstelltisch"/>
+    <nl txt="CVL" tip="Centrale verkeersleiding"/>
+  </Msg>
+  <Msg id="motor">
+    <en txt="Motor"/>
+  </Msg>
 </Messages>

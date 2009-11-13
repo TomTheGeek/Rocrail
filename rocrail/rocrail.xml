@@ -759,7 +759,7 @@
     <fun name="addFbKey" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="key" vt="const char*" remark="feedback key"/>
-      <param name="fb" vt="iOFBack" remark="feedback object"/>
+      <param name="fb" vt="obj" remark="object"/>
     </fun>
     <fun name="removeSwKey" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -1061,6 +1061,8 @@
       <var name="fieldState2" vt="int"/>
       <var name="accThread" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
+      <var name="ctc1" vt="Boolean"/>
+      <var name="ctc2" vt="Boolean"/>
     </data>
   </object>
 

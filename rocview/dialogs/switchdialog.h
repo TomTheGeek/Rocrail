@@ -108,6 +108,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_SW_FB2R 10042
 #define wxID_STATIC_SW_FB2G 10043
 #define ID_COMBOBOX_SW_FB2G 10044
+#define ID_SPINCTRL 10333
 #define ID_PANEL_SWITCH_CONTROL 10370
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SWITCHDIALOG_TITLE _("Turnouts")
@@ -262,6 +263,7 @@ public:
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
     wxPanel* m_WireringPanel;
+    wxStaticBox* m_WiringBox;
     wxStaticText* m_LabelFb1R;
     wxComboBox* m_Fb1R;
     wxCheckBox* m_Fb1Rinvert;
@@ -274,6 +276,19 @@ public:
     wxStaticText* m_LabelFb2G;
     wxComboBox* m_Fb2G;
     wxCheckBox* m_Fb2Ginvert;
+    wxStaticBox* m_CTCBox;
+    wxStaticText* m_labCTCMotor;
+    wxStaticText* m_labCTCIID;
+    wxStaticText* m_labCTCAddress;
+    wxStaticText* m_labCTCCmdAtOn;
+    wxStaticText* m_labCTCAddr1;
+    wxTextCtrl* m_CTCIID1;
+    wxSpinCtrl* m_CTCAddr1;
+    wxRadioBox* m_CTCOn1;
+    wxStaticText* m_labCTCAddr2;
+    wxTextCtrl* m_CTCIID2;
+    wxSpinCtrl* m_CTCAddr2;
+    wxRadioBox* m_CTCOn2;
     wxPanel* m_ControlPanel;
     wxCheckBox* m_ActivateCtrl;
     wxStaticText* m_labCtrlInterval;

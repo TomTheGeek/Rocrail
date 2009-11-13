@@ -939,6 +939,18 @@
         <const name="prot_OM32" vt="string" val="om32" remark="Dinamo OM32"/>
         <const name="prot_DO" vt="string" val="do" remark="Dinamo DO"/>
         <const name="prot_VO" vt="string" val="vo" remark="Dinamo VO"/>
+
+        <!-- CTC Address -->        
+        <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctccmdon1" vt="bool" defval="true" remark="Straight command at ON."/>
+        <var name="ctciid2" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus2" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr2" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctccmdon2" vt="bool" defval="true" remark="Straight command at ON."/>
+        
+        
         <actionctrl cardinality="n"/>
         <accessoryctrl wrappername="AccessoryCtrl">
           <var name="active" vt="bool" defval="false" remark="Activate accessory control."/>
@@ -1068,6 +1080,12 @@
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="address"/>
         <var name="activelow" vt="bool" defval="false" remark=""/>
+
+        <var name="ctciid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctcport" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
+        <var name="ctcgate" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
 
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>

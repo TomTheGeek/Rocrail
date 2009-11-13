@@ -1680,7 +1680,7 @@ static void _removeFbKey(iOModel inst, const char* key) {
   MapOp.remove( data->fbAddrMap, key );
 }
 
-static void _addFbKey(iOModel inst, const char* key, iOFBack fb) {
+static void _addFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
   MapOp.put( data->fbAddrMap, key, (obj)fb );
 }
@@ -2244,9 +2244,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wFeedback.getaddr( nodeC );
     const char* iid = wFeedback.getiid( nodeC );
     char* key = FBackOp.createAddrKey( bus, addr, iid );
-    iOFBack fb = (iOFBack)MapOp.get( o->fbAddrMap, key );
+    obj fb = MapOp.get( o->fbAddrMap, key );
     if( fb != NULL ) {
-      FBackOp.event( fb, nodeC );
+      fb->event(fb, nodeC);
+      /*FBackOp.event( fb, nodeC );*/
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN FB: %s %s",

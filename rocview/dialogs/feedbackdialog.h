@@ -30,6 +30,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "basedlg.h"
@@ -43,6 +44,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -80,6 +82,7 @@ class wxNotebook;
 #define wxID_STATIC_FB_BUS 10254
 #define wxID_STATIC_FB_ADDRESS1 10002
 #define ID_TEXTCTRL_FB_ADDRESS1 10003
+#define ID_PANEL_FB_WIRING 10334
 #define SYMBOL_FEEDBACKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_FEEDBACKDIALOG_TITLE _("Sensors")
 #define SYMBOL_FEEDBACKDIALOG_IDNAME ID_DIALOG_FEEDBACK
@@ -206,6 +209,16 @@ public:
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
     wxCheckBox* m_ActiveLow;
+    wxPanel* m_Wiring;
+    wxStaticBox* m_CTCBox;
+    wxStaticText* m_labCTCIID;
+    wxTextCtrl* m_CTCIID;
+    wxStaticText* m_labCTCAddr;
+    wxSpinCtrl* m_CTCAddr;
+    wxStaticText* m_labCTCPort;
+    wxSpinCtrl* m_CTCPort;
+    wxStaticText* m_labCTCGate;
+    wxRadioBox* m_CTCGate;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

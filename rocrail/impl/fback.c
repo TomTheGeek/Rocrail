@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Output.h"
 
 
 static int instCnt = 0;
@@ -63,6 +64,9 @@ static const char* __id( void* inst ) {
 }
 
 static void* __event( void* inst, const void* evt ) {
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    FBackOp.event(inst, (iONode)evt);
+  }
   return NULL;
 }
 
@@ -96,6 +100,27 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 static int __count(void) {
   return instCnt;
 }
+
+static void __ctcAction( iOFBack inst ) {
+  iOFBackData data  = Data(inst);
+  iOModel     model = AppOp.getModel();
+  iOControl control = AppOp.getControl(  );
+
+  if( control == NULL )
+    return;
+
+  if( wFeedback.getctcaddr( data->props ) > 0 || wFeedback.getctcport( data->props ) ) {
+    iONode node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
+    if( wFeedback.getctciid( data->props ) != NULL )
+      wOutput.setiid( node, wFeedback.getctciid( data->props ) );
+    wOutput.setaddr( node, wFeedback.getctcaddr( data->props ) );
+    wOutput.setport( node, wFeedback.getctcport( data->props ) );
+    wOutput.setgate( node, wFeedback.getctcgate( data->props ) );
+    wOutput.setcmd( node, data->state ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, node, NULL );
+  }
+}
+
 
 static void __checkAction( iOFBack inst ) {
   iOFBackData data     = Data(inst);
@@ -253,6 +278,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       listener = ListOp.next( data->listeners );
     };
   }
+  __ctcAction( inst );
   __checkAction( inst );
 
   if(!hasListener) {
@@ -320,7 +346,7 @@ static void _modify( iOFBack inst, iONode props ) {
                                            wFeedback.getaddr(data->props),
                                            wFeedback.getiid(data->props) );
     /* inform model with new addrkey to add to map. */
-    ModelOp.addFbKey( model, data->addrKey, inst );
+    ModelOp.addFbKey( model, data->addrKey, (obj)inst );
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
