@@ -128,6 +128,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddOutput , PlanPanel::addOutput)
   EVT_MENU( ME_AddBlock  , PlanPanel::addBlock )
   EVT_MENU( ME_AddFBack  , PlanPanel::addFBack )
+  EVT_MENU( ME_AddRoute  , PlanPanel::addRoute )
   EVT_MENU( ME_AddTT     , PlanPanel::addTT    )
   EVT_MENU( ME_AddSelTab , PlanPanel::addSelTab)
   EVT_MENU( ME_AddText   , PlanPanel::addText  )
@@ -708,6 +709,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( ME_AddOutput, wxGetApp().getMenu("output")  );
       menu.Append( ME_AddBlock , wxGetApp().getMenu("block") );
       menu.Append( ME_AddFBack , wxGetApp().getMenu("sensor") );
+      menu.Append( ME_AddRoute , wxGetApp().getMenu("route") );
       menu.Append( ME_AddTT    , wxGetApp().getMenu("turntable") );
       menu.Append( ME_AddSelTab, wxGetApp().getMenu("seltab") );
       menu.Append( ME_AddText  , wxGetApp().getMenu("text") );
@@ -1083,6 +1085,11 @@ void PlanPanel::addFBack(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   if( event.GetId() == ME_AddRoadFBack )
     wItem.setroad(node, True);
+  addItemAttr( node );
+}
+
+void PlanPanel::addRoute(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
   addItemAttr( node );
 }
 

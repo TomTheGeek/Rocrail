@@ -58,6 +58,7 @@ public:
   void addOutput(wxCommandEvent& event);
   void addBlock(wxCommandEvent& event);
   void addFBack(wxCommandEvent& event);
+  void addRoute(wxCommandEvent& event);
   void addTT(wxCommandEvent& event);
   void addSelTab(wxCommandEvent& event);
   void addText(wxCommandEvent& event);
@@ -157,6 +158,7 @@ enum {
   ME_AddOutput,
   ME_AddBlock,
   ME_AddFBack,
+  ME_AddRoute,
   ME_AddTT,
   ME_AddSelTab,
   ME_AddText,

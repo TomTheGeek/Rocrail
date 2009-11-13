@@ -1918,6 +1918,7 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 
 
 void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status ) {
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "set route %s to %d", wRoute.getid( m_Props ), status );
 
   // SVG Symbol:
   if( status == 0 && m_SvgSym1!=NULL ) {

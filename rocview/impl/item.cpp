@@ -60,6 +60,7 @@
 #include "rocview/dialogs/textdialog.h"
 #include "rocview/dialogs/locseldlg.h"
 #include "rocview/dialogs/seltabdlg.h"
+#include "rocview/dialogs/routedialog.h"
 
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -712,6 +713,13 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
+    else if( StrOp.equals( wRoute.name(), nodeName ) ) {
+      iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+      wRoute.setcmd( cmd, wRoute.test );
+      wRoute.setid( cmd, wRoute.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
     else if( StrOp.equals( wSignal.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
       wSignal.setid( cmd, wSignal.getid( m_Props ) );
@@ -839,6 +847,7 @@ void Symbol::OnMouseEnter(wxMouseEvent& event) {
   m_hasMouse = true;
   if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
+      StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) )
@@ -869,6 +878,7 @@ void Symbol::OnMouseLeave(wxMouseEvent& event) {
   m_hasMouse = false;
   if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
+      StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) )
@@ -1396,6 +1406,20 @@ void Symbol::OnProps(wxCommandEvent& event) {
     Refresh();
     fbDlg->Destroy();
   }
+  else if( StrOp.equals( wRoute.name(), name ) ) {
+    RouteDialog* dlg = new RouteDialog( this, m_Props );
+    if( wxID_OK == dlg->ShowModal() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+    Show(wRoute.isshow(m_Props));
+    Refresh();
+    dlg->Destroy();
+  }
   else if( StrOp.equals( wTrack.name(), name ) ) {
     TrackDialog* tkDlg = new TrackDialog( this, m_Props );
     if( wxID_OK == tkDlg->ShowModal() ) {
@@ -1718,8 +1742,8 @@ void Symbol::modelEvent( iONode node ) {
     int status = wRoute.getstatus( node );
     const char* locid = wRoute.getlocid( node );
 
-    char* str = StrOp.fmt( "%s locked=%s",
-                           wRoute.getid( node ), locid == NULL ? "-":locid );
+    char* str = StrOp.fmt( "%s lock=%s",
+                           wRoute.getid( node ), locid == NULL ? "unlocked":locid );
     SetToolTip( wxString(str,wxConvUTF8) );
     wRoute.setstatus( m_Props, status );
   }

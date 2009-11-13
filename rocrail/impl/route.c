@@ -100,6 +100,42 @@ static int __count(void) {
 }
 
 
+static void __broadcast(iORoute inst) {
+  iORouteData o = Data(inst);
+  /* Broadcast to clients. */
+  iOModel model = AppOp.getModel(  );
+  iONode nodeD = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+  const char* routeId = wRoute.getid(o->props);
+  iOList aliases = ModelOp.getRouteAliases( model, routeId );
+
+  wRoute.setlocid(nodeD, o->lockedId );
+
+  if( o->lockedId == NULL || StrOp.len(o->lockedId) == 0 )
+    wRoute.setstatus( nodeD, wRoute.status_free);
+  else if( o->lockedId != NULL && StrOp.len(o->lockedId) > 0 )
+    wRoute.setstatus( nodeD, wRoute.status_locked);
+  /* TODO: other status reports */
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "status of route %s is %d, locked by %s",
+      wRoute.getid(o->props), wRoute.getstatus( nodeD), o->lockedId == NULL ? "-":o->lockedId );
+
+  if( aliases == NULL ) {
+    wRoute.setid( nodeD, routeId );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+  }
+  else {
+    int i = 0;
+    for( i = 0; i < ListOp.size(aliases); i++ ) {
+      iONode routeseg = (iONode)ListOp.get( aliases, i );
+      wRoute.setid( nodeD, wRoute.getid(routeseg) );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(nodeD) );
+    }
+    NodeOp.base.del(nodeD);
+  }
+
+}
+
+
 /*
  ***** _Public functions.
  */
@@ -223,37 +259,7 @@ static Boolean _go( iORoute inst ) {
     iIBlockBase bkb = ModelOp.getBlock( model, RouteOp.getToBlock( inst ) );
   }
 
-  /* Broadcast to clients. */
-  {
-    iOModel model = AppOp.getModel(  );
-    iONode nodeD = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
-    const char* routeId = wRoute.getid(o->props);
-    iOList aliases = ModelOp.getRouteAliases( model, routeId );
-
-    wRoute.setlocid(nodeD, o->lockedId );
-
-    if( RouteOp.isFree(inst, o->lockedId) )
-      wRoute.setstatus( nodeD, wRoute.status_free);
-    else if( !RouteOp.isFree(inst, o->lockedId) )
-      wRoute.setstatus( nodeD, wRoute.status_locked);
-    /* TODO: other status reports */
-
-    if( aliases == NULL ) {
-      wRoute.setid( nodeD, routeId );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-    }
-    else {
-      int i = 0;
-      for( i = 0; i < ListOp.size(aliases); i++ ) {
-        iONode routeseg = (iONode)ListOp.get( aliases, i );
-        wRoute.setid( nodeD, wRoute.getid(routeseg) );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(nodeD) );
-      }
-      NodeOp.base.del(nodeD);
-    }
-
-  }
-
+  __broadcast(inst);
 
   return True;
 }
@@ -784,6 +790,9 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     }
 
     o->lockedId = id;
+
+    __broadcast(inst);
+
     return True;
   }
   else if( StrOp.equals( id, o->lockedId ) ) {
@@ -802,6 +811,7 @@ static Boolean _unLock( iORoute inst, const char* id, const char** resblocks, Bo
       __unlockSwitches( inst, id );
     __unlockCrossingBlocks( inst, id, resblocks );
     o->lockedId = NULL;
+    __broadcast(inst);
     return True;
   }
   return False;
