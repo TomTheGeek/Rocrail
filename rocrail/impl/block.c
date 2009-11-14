@@ -578,15 +578,18 @@ static Boolean __isElectricallyFree(iOBlock inst) {
   /* check all sensors... */
 
   iONode fbevt = wBlock.getfbevent( data->props );
+  Boolean shunting = StrOp.equals( wBlock.type_shunting, wBlock.gettype(data->props) );
+
 
   while( fbevt != NULL ) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
     if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block \"%s\" is electrically occupied.",
-                     data->id );
+                     "Block \"%s\" is electrically occupied. %s",
+                     data->id, shunting ? "(ignored for shunting)":"" );
 
-      return False;
+      if( !shunting )
+        return False;
     }
     fbevt = wBlock.nextfbevent( data->props, fbevt );
   };
