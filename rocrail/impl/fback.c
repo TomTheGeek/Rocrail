@@ -118,7 +118,7 @@ static void __ctcAction( iOFBack inst ) {
       wSwitch.setaddr1( node, wFeedback.getctcaddr( data->props ) );
       wSwitch.setport1( node, wFeedback.getctcport( data->props ) );
       wSwitch.setgate1( node, wFeedback.getctcgate( data->props ) );
-      wSwitch.setcmd( node, data->state ? wSwitch.turnout:wSwitch.straight );
+      wSwitch.setcmd( node, data->state ? wSwitch.straight:wSwitch.turnout );
     }
     else {
       node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
