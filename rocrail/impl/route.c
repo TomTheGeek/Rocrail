@@ -230,6 +230,7 @@ static Boolean _go( iORoute inst ) {
   while( sw != NULL ) {
     const char* swId  = wSwitchCmd.getid( sw );
     const char* swCmd = wSwitchCmd.getcmd( sw );
+    Boolean     lock  = wSwitchCmd.islock(sw);
     Boolean   isState = False;
 
     if( StrOp.equals( wSwitchCmd.cmd_track, swCmd ) ) {
@@ -281,7 +282,7 @@ static Boolean _go( iORoute inst ) {
         wSwitch.setcmd( cmd, swCmd );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
 
-        if( !SwitchOp.cmd( isw, cmd, True, 0, &error, o->lockedId ) ) {
+        if( !SwitchOp.cmd( isw, cmd, True, 0, &error, o->lockedId ) && lock ) {
           if( error == CMD_ERROR ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to switch %s:%s", swId, swCmd );
             return False;
