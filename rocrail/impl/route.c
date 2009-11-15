@@ -152,6 +152,15 @@ static void __initCTC(iORoute inst, Boolean remove) {
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);
   }
+
+  if( wRoute.getctcaddr3(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wRoute.getctcbus3(data->props), wRoute.getctcaddr3(data->props), wRoute.getctciid3(data->props));
+    if( remove )
+      ModelOp.removeFbKey( model, key );
+    else
+      ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
 }
 
 
