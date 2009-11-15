@@ -2177,7 +2177,11 @@ static void _init( iOModel inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingMaps..." );
   _createMap( o, o->trackMap   , wTrackList.name(), wTrack.name(), (item_inst)TrackOp.inst, NULL  );
+
   _createMap( o, o->feedbackMap, wFeedbackList.name(), wFeedback.name(), (item_inst)FBackOp.inst, NULL  );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingFbAddrMap..." );
+  _createFbAddrMap( o );
+
   _createMap( o, o->switchMap  , wSwitchList.name(), wSwitch.name(), (item_inst)SwitchOp.inst, NULL );
   _createMap( o, o->signalMap  , wSignalList.name(), wSignal.name(), (item_inst)SignalOp.inst, NULL );
   _createMap( o, o->outputMap  , wOutputList.name(), wOutput.name(), (item_inst)OutputOp.inst, NULL );
@@ -2196,7 +2200,6 @@ static void _init( iOModel inst ) {
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingFbAddrMap..." );
-  _createFbAddrMap( o );
   _createSwAddrMap( o );
   _createCoAddrMap( o );
 

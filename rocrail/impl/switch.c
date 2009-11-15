@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/AccessoryCtrl.h"
 
@@ -90,29 +91,131 @@ static void __ctcAction( void* inst, iONode evt ) {
   Boolean state = wFeedback.isstate(evt);
   const char* type = wSwitch.gettype( data->props );
   Boolean twoMotors = False;
+
   if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) )
     twoMotors = True;
 
   if( wFeedback.getaddr(evt) == wSwitch.getctcaddr1(data->props) ) {
+    Boolean flip = wSwitch.isctcflip1(data->props);
     data->ctc1 = state;
-    if( !state )
+    if( flip && !state )
       return;
-
-    if( twoMotors) {
-    }
     else {
       int error = 0;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
       iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setcmd( node, wSwitch.flip );
-      wSwitch.setid( node, SwitchOp.getId( inst ) );
+      if( flip ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
+        wSwitch.setcmd( node, wSwitch.flip );
+        wSwitch.setid( node, SwitchOp.getId( inst ) );
+      }
+      else {
+        state = wSwitch.isctccmdon1(data->props) ? state:!state;
+        wSwitch.setcmd( node, state ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setid( node, SwitchOp.getId( inst ) );
+      }
       SwitchOp.cmd( inst, node, True, 0, &error, NULL );
     }
   }
   else if( wFeedback.getaddr(evt) == wSwitch.getctcaddr2(data->props) ) {
-    state = wSwitch.isctccmdon1(data->props) ? state:!state;
+    Boolean flip = wSwitch.isctcflip2(data->props);
     data->ctc2 = state;
+    if( flip && !state )
+      return;
+    else {
+      int error = 0;
+      iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      if( flip ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
+        wSwitch.setcmd( node, wSwitch.flip );
+        wSwitch.setid( node, SwitchOp.getId( inst ) );
+      }
+      else {
+        state = wSwitch.isctccmdon2(data->props) ? state:!state;
+        wSwitch.setcmd( node, state ? wSwitch.straight:wSwitch.turnout );
+        wSwitch.setid( node, SwitchOp.getId( inst ) );
+      }
+      SwitchOp.cmd( inst, node, True, 0, &error, NULL );
+    }
   }
+
+}
+
+
+static void __ctcActionLED( void* inst ) {
+  iOSwitchData data = Data(inst);
+  iOModel     model = AppOp.getModel();
+  iOControl control = AppOp.getControl(  );
+  const char* type = wSwitch.gettype( data->props );
+
+  Boolean m1 = False;
+  Boolean m2 = False;
+  Boolean twoMotors = False;
+
+  if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) )
+    twoMotors = True;
+
+
+
+  if( control == NULL )
+    return;
+
+  if( twoMotors ) {
+    m1 = StrOp.equals( wSwitch.getstate(data->props), wSwitch.turnout );
+    m2 = StrOp.equals( wSwitch.getstate(data->props), wSwitch.left );
+  }
+  else {
+    m1 = StrOp.equals( wSwitch.getstate(data->props), wSwitch.turnout );
+  }
+
+
+  if( wSwitch.getctcaddrled1( data->props ) > 0 || wSwitch.getctcportled1( data->props ) ) {
+    iONode node = NULL;
+    if( wSwitch.isctcasswitchled1(data->props) ) {
+      node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+      if( wSwitch.getctciidled1( data->props ) != NULL )
+        wSwitch.setiid( node, wSwitch.getctciidled1( data->props ) );
+      wSwitch.setaddr1( node, wSwitch.getctcaddrled1( data->props ) );
+      wSwitch.setport1( node, wSwitch.getctcportled1( data->props ) );
+      wSwitch.setgate1( node, wSwitch.getctcgateled1( data->props ) );
+      wSwitch.setcmd( node, m1 ? wSwitch.straight:wSwitch.turnout );
+    }
+    else {
+      node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
+      if( wSwitch.getctciidled1( data->props ) != NULL )
+        wOutput.setiid( node, wSwitch.getctciidled1( data->props ) );
+      wOutput.setaddr( node, wSwitch.getctcaddrled1( data->props ) );
+      wOutput.setport( node, wSwitch.getctcportled1( data->props ) );
+      wOutput.setgate( node, wSwitch.getctcgateled1( data->props ) );
+      wOutput.setcmd( node, m1 ? wOutput.on:wOutput.off );
+    }
+    ControlOp.cmd( control, node, NULL );
+  }
+
+
+  if( wSwitch.getctcaddrled2( data->props ) > 0 || wSwitch.getctcportled2( data->props ) ) {
+    iONode node = NULL;
+    if( wSwitch.isctcasswitchled2(data->props) ) {
+      node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+      if( wSwitch.getctciidled2( data->props ) != NULL )
+        wSwitch.setiid( node, wSwitch.getctciidled2( data->props ) );
+      wSwitch.setaddr1( node, wSwitch.getctcaddrled2( data->props ) );
+      wSwitch.setport1( node, wSwitch.getctcportled2( data->props ) );
+      wSwitch.setgate1( node, wSwitch.getctcgateled2( data->props ) );
+      wSwitch.setcmd( node, m2 ? wSwitch.straight:wSwitch.turnout );
+    }
+    else {
+      node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
+      if( wSwitch.getctciidled2( data->props ) != NULL )
+        wOutput.setiid( node, wSwitch.getctciidled2( data->props ) );
+      wOutput.setaddr( node, wSwitch.getctcaddrled2( data->props ) );
+      wOutput.setport( node, wSwitch.getctcportled2( data->props ) );
+      wOutput.setgate( node, wSwitch.getctcgateled2( data->props ) );
+      wOutput.setcmd( node, m2 ? wOutput.on:wOutput.off );
+    }
+    ControlOp.cmd( control, node, NULL );
+  }
+
+
 }
 
 
@@ -776,6 +879,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setlocid( nodeF, o->lockedId );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "broadcasting switch state [%s]", wSwitch.getstate( o->props ) );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+
+    __ctcActionLED(inst);
   }
 
   o->activated = True;

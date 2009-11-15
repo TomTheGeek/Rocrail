@@ -946,10 +946,24 @@
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
         <var name="ctccmdon1" vt="bool" defval="true" remark="Straight command at ON."/>
+        <var name="ctcflip1" vt="bool" defval="true" remark="Straight command at ON."/>
         <var name="ctciid2" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus2" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr2" vt="int" defval="0" range="0-*" required="true" remark="address"/>
         <var name="ctccmdon2" vt="bool" defval="true" remark="Straight command at ON."/>
+        <var name="ctcflip2" vt="bool" defval="true" remark="Straight command at ON."/>
+        <var name="ctciidled1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbusled1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddrled1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctcportled1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
+        <var name="ctcgateled1" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="ctcasswitchled1" vt="bool" defval="false" remark="send a switch command"/>
+        <var name="ctciidled2" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbusled2" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddrled2" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctcportled2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
+        <var name="ctcgateled2" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="ctcasswitchled2" vt="bool" defval="false" remark="send a switch command"/>
         
         
         <actionctrl cardinality="n"/>
