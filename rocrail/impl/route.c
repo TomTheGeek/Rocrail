@@ -68,6 +68,8 @@ static void __ctcAction( void* inst, iONode evt ) {
   iORouteData data = Data(inst);
   Boolean state = wFeedback.isstate(evt);
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctc action %d", wFeedback.getaddr(evt));
+
   if( wFeedback.getaddr(evt) == wRoute.getctcaddr1(data->props) ) {
     data->ctc1 = state;
   }
