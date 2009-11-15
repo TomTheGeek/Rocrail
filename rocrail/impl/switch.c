@@ -94,14 +94,17 @@ static void __ctcAction( void* inst, iONode evt ) {
     twoMotors = True;
 
   if( wFeedback.getaddr(evt) == wSwitch.getctcaddr1(data->props) ) {
-    state = wSwitch.isctccmdon1(data->props) ? state:!state;
     data->ctc1 = state;
+    if( !state )
+      return;
+
     if( twoMotors) {
     }
     else {
       int error = 0;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
       iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setcmd( node, state ? wSwitch.straight:wSwitch.turnout );
+      wSwitch.setcmd( node, wSwitch.flip );
       wSwitch.setid( node, SwitchOp.getId( inst ) );
       SwitchOp.cmd( inst, node, True, 0, &error, NULL );
     }
