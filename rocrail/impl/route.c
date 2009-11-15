@@ -80,7 +80,7 @@ static void __ctcAction( void* inst, iONode evt ) {
     data->ctc3 = state;
   }
 
-  if( !data->ctc1 && data->ctc2 && data->ctc3 ) {
+  if( data->ctc2 && data->ctc3 ) {
     /* clear */
     RouteOp.unLock( (iORoute)inst, wRoute.getid( data->props ), NULL, True );
   }

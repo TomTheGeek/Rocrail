@@ -1678,11 +1678,13 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
 static void _removeFbKey(iOModel inst, const char* key) {
   iOModelData data = Data(inst);
   MapOp.remove( data->fbAddrMap, key );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removeFbKey: size=%d.", MapOp.size(data->fbAddrMap) );
 }
 
 static void _addFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
   MapOp.put( data->fbAddrMap, key, (obj)fb );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey: size=%d.", MapOp.size(data->fbAddrMap) );
 }
 
 static void _createFbAddrMap( iOModelData o ) {
