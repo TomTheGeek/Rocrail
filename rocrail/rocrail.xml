@@ -954,6 +954,9 @@
       <var name="props" vt="iONode"/>
       <var name="reverse" vt="Boolean"/>
       <var name="routeLockId" vt="char*"/>
+      <var name="ctc1" vt="Boolean"/>
+      <var name="ctc2" vt="Boolean"/>
+      <var name="ctc3" vt="Boolean"/>
     </data>
   </object>
 

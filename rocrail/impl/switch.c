@@ -60,6 +60,30 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+static void __initCTC(iOSwitch inst, Boolean remove) {
+  iOSwitchData data  = Data(inst);
+  iOModel      model = AppOp.getModel();
+
+  if( wSwitch.getctcaddr1(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wSwitch.getctcbus1(data->props), wSwitch.getctcaddr1(data->props), wSwitch.getctciid1(data->props));
+    if( remove )
+      ModelOp.removeFbKey( model, key );
+    else
+      ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
+
+  if( wSwitch.getctcaddr2(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wSwitch.getctcbus2(data->props), wSwitch.getctcaddr2(data->props), wSwitch.getctciid2(data->props));
+    if( remove )
+      ModelOp.removeFbKey( model, key );
+    else
+      ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
+}
+
+
 
 static void __ctcAction( void* inst, iONode evt ) {
   iOSwitchData data = Data(inst);
@@ -768,6 +792,9 @@ static void _modify( iOSwitch inst, iONode props ) {
 
   int cnt = NodeOp.getAttrCnt( props );
   int i = 0;
+
+  __initCTC(inst, True);
+
   for( i = 0; i < cnt; i++ ) {
     iOAttr attr = NodeOp.getAttr( props, i );
     const char* name  = AttrOp.getName( attr );
@@ -849,6 +876,8 @@ static void _modify( iOSwitch inst, iONode props ) {
   else {
     NodeOp.removeAttrByName(o->props, "cmd");
   }
+
+  __initCTC(inst, False);
 
   /* Broadcast to clients. */
   {
@@ -1139,24 +1168,6 @@ static void __accThread( void* threadinst ) {
 }
 
 
-static void __initCTC(iOSwitch inst) {
-  iOSwitchData data  = Data(inst);
-  iOModel      model = AppOp.getModel();
-
-  if( wSwitch.getctcaddr1(data->props) > 0 ) {
-    char* key = FBackOp.createAddrKey(wSwitch.getctcbus1(data->props), wSwitch.getctcaddr1(data->props), wSwitch.getctciid1(data->props));
-    ModelOp.addFbKey( model, key, (obj)inst );
-    StrOp.free(key);
-  }
-
-  if( wSwitch.getctcaddr2(data->props) > 0 ) {
-    char* key = FBackOp.createAddrKey(wSwitch.getctcbus2(data->props), wSwitch.getctcaddr2(data->props), wSwitch.getctciid2(data->props));
-    ModelOp.addFbKey( model, key, (obj)inst );
-    StrOp.free(key);
-  }
-}
-
-
 static iOSwitch _inst( iONode props ) {
   iOSwitch     sw   = allocMem( sizeof( struct OSwitch ) );
   iOSwitchData data = allocMem( sizeof( struct OSwitchData ) );
@@ -1174,7 +1185,7 @@ static iOSwitch _inst( iONode props ) {
     data->fbstate = SW_UNKNOWN;
   }
 
-  __initCTC(sw);
+  __initCTC(sw, False);
 
   data->addrKey = _createAddrKey(
     wSwitch.getbus( props ),

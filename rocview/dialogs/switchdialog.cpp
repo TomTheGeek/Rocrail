@@ -579,7 +579,7 @@ bool SwitchDialog::evaluate() {
   else if( m_Prot->GetSelection() == 6 )
     wSwitch.setprot( m_Props, wSwitch.prot_VO );
 
-  // Wirerings
+  // Wiring
   if( StrOp.equals( "-", m_Fb1R->GetStringSelection().mb_str(wxConvUTF8) ) )
     wSwitch.setfbR( m_Props, NULL );
   else

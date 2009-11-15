@@ -139,6 +139,7 @@ public:
     wxTextCtrl* m_SensPort;
     wxStaticText* m_labInfPort;
     wxTextCtrl* m_InfPort;
+    wxCheckBox* m_UDP;
     wxPanel* m_BussesPanel;
     wxStaticText* m_labBusServer;
     wxSpinCtrl* m_BusServer;

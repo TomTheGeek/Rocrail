@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/PermInclude.h"
 #include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 static int instCnt = 0;
 
@@ -63,7 +64,37 @@ static const char* __id( void* inst ) {
   return wRoute.getid( o->props );
 }
 
+static void __ctcAction( void* inst, iONode evt ) {
+  iORouteData data = Data(inst);
+  Boolean state = wFeedback.isstate(evt);
+
+  if( wFeedback.getaddr(evt) == wRoute.getctcaddr1(data->props) ) {
+    data->ctc1 = state;
+  }
+  else if( wFeedback.getaddr(evt) == wRoute.getctcaddr2(data->props) ) {
+    data->ctc2 = state;
+  }
+  else if( wFeedback.getaddr(evt) == wRoute.getctcaddr3(data->props) ) {
+    data->ctc3 = state;
+  }
+
+  if( !data->ctc1 && data->ctc2 && data->ctc3 ) {
+    /* clear */
+    RouteOp.unLock( (iORoute)inst, wRoute.getid( data->props ), NULL, True );
+  }
+
+  if( data->ctc1 && data->ctc2 && !data->ctc3 ) {
+    if( RouteOp.lock( (iORoute)inst, wRoute.getid( data->props ), False, True ) ) {
+      RouteOp.go((iORoute)inst);
+    }
+  }
+}
+
+
 static void* __event( void* inst, const void* evt ) {
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    __ctcAction(inst, (iONode)evt);
+  }
   return NULL;
 }
 
@@ -97,6 +128,30 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 }
 static int __count(void) {
   return instCnt;
+}
+
+
+static void __initCTC(iORoute inst, Boolean remove) {
+  iORouteData data  = Data(inst);
+  iOModel      model = AppOp.getModel();
+
+  if( wRoute.getctcaddr1(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wRoute.getctcbus1(data->props), wRoute.getctcaddr1(data->props), wRoute.getctciid1(data->props));
+    if( remove )
+      ModelOp.removeFbKey( model, key );
+    else
+      ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
+
+  if( wRoute.getctcaddr2(data->props) > 0 ) {
+    char* key = FBackOp.createAddrKey(wRoute.getctcbus2(data->props), wRoute.getctcaddr2(data->props), wRoute.getctciid2(data->props));
+    if( remove )
+      ModelOp.removeFbKey( model, key );
+    else
+      ModelOp.addFbKey( model, key, (obj)inst );
+    StrOp.free(key);
+  }
 }
 
 
@@ -823,9 +878,11 @@ static Boolean _unLock( iORoute inst, const char* id, const char** resblocks, Bo
  */
 static void _modify( iORoute inst, iONode props ) {
   iORouteData data = Data(inst);
-
   int cnt = NodeOp.getAttrCnt( props );
   int i = 0;
+
+  __initCTC(inst, True);
+
   for( i = 0; i < cnt; i++ ) {
     iOAttr attr = NodeOp.getAttr( props, i );
     const char* name  = AttrOp.getName( attr );
@@ -848,6 +905,7 @@ static void _modify( iORoute inst, iONode props ) {
   StrOp.free(data->routeLockId);
   data->routeLockId = StrOp.fmt( "%s%s", wRoute.routelock, wRoute.getid(props) );
 
+  __initCTC(inst, False);
 
   /* Broadcast to clients. */
   {
@@ -991,6 +1049,8 @@ static iORoute _inst( iONode props ) {
 
   data->props = props;
   data->routeLockId = StrOp.fmt( "%s%s", wRoute.routelock, wRoute.getid(props) );
+
+  __initCTC(route, False);
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", _getId(route) );
 

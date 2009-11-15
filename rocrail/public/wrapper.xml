@@ -1326,6 +1326,16 @@
         <excl cardinality="n" />
         <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
         <var name="maxlen" vt="int" defval="0" range="0-*" remark="Maximal train length allowed for this route."/>
+        <!-- CTC Address -->        
+        <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctciid2" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus2" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr2" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="ctciid3" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="ctcbus3" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
+        <var name="ctcaddr3" vt="int" defval="0" range="0-*" required="true" remark="address"/>
       </st>
     </stlist>
     <tklist cardinality="1" remark="Track table" wrappername="TrackList">

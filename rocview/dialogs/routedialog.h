@@ -80,6 +80,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_ROUTES_SENSORS 10335
 #define ID_BUTTON_ROUTES_ADD_SENSOR 10355
 #define ID_BUTTON_ROUTES_DEL_SENSOR 10356
+#define ID_ROUTE_WIRING 10340
 #define SYMBOL_ROUTEDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ROUTEDIALOG_TITLE _("Routes")
 #define SYMBOL_ROUTEDIALOG_IDNAME ID_DIALOG_STREET
@@ -267,6 +268,20 @@ public:
     wxStaticText* m_LabelZ;
     wxTextCtrl* m_z;
     wxRadioBox* m_ori;
+    wxPanel* m_WiringPanel;
+    wxStaticBox* m_CTCBox;
+    wxStaticText* m_labCTCbutton;
+    wxStaticText* m_labCTCIID;
+    wxStaticText* m_labCTCAddr;
+    wxStaticText* m_labCTCButton1;
+    wxTextCtrl* m_CTCIID1;
+    wxSpinCtrl* m_CTCAddr1;
+    wxStaticText* m_labCTCButton2;
+    wxTextCtrl* m_CTCIID2;
+    wxSpinCtrl* m_CTCAddr2;
+    wxStaticText* m_labCTCButton3;
+    wxTextCtrl* m_CTCIID3;
+    wxSpinCtrl* m_CTCAddr3;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

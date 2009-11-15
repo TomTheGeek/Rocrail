@@ -34,6 +34,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "srcpdlg.h"
@@ -191,6 +192,7 @@ bool SRCPCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_SensPort = NULL;
     m_labInfPort = NULL;
     m_InfPort = NULL;
+    m_UDP = NULL;
     m_BussesPanel = NULL;
     m_labBusServer = NULL;
     m_BusServer = NULL;
@@ -256,13 +258,13 @@ void SRCPCtrlDlg::CreateControls()
     m_labIID = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_SRCP_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labHost = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_SRCP_HOST, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Host = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_HOST, _T(""), wxDefaultPosition, wxSize(120, -1), 0 );
+    m_Host = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_HOST, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer6->Add(m_Host, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCmdPort = new wxStaticText( m_GenerelPanel, wxID_STATIC_SRCP_CMDPORT, _("command port"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -286,94 +288,98 @@ void SRCPCtrlDlg::CreateControls()
     m_InfPort->SetMaxLength(5);
     itemFlexGridSizer6->Add(m_InfPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_UDP = new wxCheckBox( m_GenerelPanel, wxID_ANY, _("UDP"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_UDP->SetValue(false);
+    itemBoxSizer5->Add(m_UDP, 0, wxALIGN_LEFT|wxALL, 5);
+
     m_Notebook->AddPage(m_GenerelPanel, _("Generel"));
 
     m_BussesPanel = new wxPanel( m_Notebook, ID_PANEL_SRCP_BUSSES, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxFlexGridSizer* itemFlexGridSizer18 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer18->AddGrowableCol(1);
-    m_BussesPanel->SetSizer(itemFlexGridSizer18);
+    wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer19->AddGrowableCol(1);
+    m_BussesPanel->SetSizer(itemFlexGridSizer19);
 
     m_labBusServer = new wxStaticText( m_BussesPanel, wxID_ANY, _("server"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labBusServer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer19->Add(m_labBusServer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_BusServer = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
-    itemFlexGridSizer18->Add(m_BusServer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer19->Add(m_BusServer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labGLm = new wxStaticText( m_BussesPanel, wxID_ANY, _("GL Motorola"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGLm, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGLm, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GLm = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 1 );
-    itemFlexGridSizer18->Add(m_GLm, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GLm, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGLDCCs = new wxStaticText( m_BussesPanel, wxID_ANY, _("GL DCC short"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGLDCCs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGLDCCs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GLDCCs = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("2"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 2 );
-    itemFlexGridSizer18->Add(m_GLDCCs, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GLDCCs, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGLDCCl = new wxStaticText( m_BussesPanel, wxID_ANY, _("GL DCC long"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGLDCCl, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGLDCCl, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GLDCCl = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("3"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 3 );
-    itemFlexGridSizer18->Add(m_GLDCCl, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GLDCCl, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGLPS = new wxStaticText( m_BussesPanel, wxID_ANY, _("GL Protocol by server"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGLPS, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGLPS, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GLPS = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("4"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 4 );
-    itemFlexGridSizer18->Add(m_GLPS, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GLPS, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGAm = new wxStaticText( m_BussesPanel, wxID_ANY, _("GA Motorola"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGAm, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGAm, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GAm = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("5"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 5 );
-    itemFlexGridSizer18->Add(m_GAm, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GAm, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGAd = new wxStaticText( m_BussesPanel, wxID_ANY, _("GA DCC"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGAd, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGAd, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GAd = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("6"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 6 );
-    itemFlexGridSizer18->Add(m_GAd, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GAd, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labGAPS = new wxStaticText( m_BussesPanel, wxID_ANY, _("GA Protocol by server"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labGAPS, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labGAPS, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_GAPS = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("7"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 7 );
-    itemFlexGridSizer18->Add(m_GAPS, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_GAPS, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labFBs88 = new wxStaticText( m_BussesPanel, wxID_ANY, _("FB s88"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labFBs88, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labFBs88, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_FBs88 = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("8"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 8 );
-    itemFlexGridSizer18->Add(m_FBs88, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_FBs88, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labFBm6051 = new wxStaticText( m_BussesPanel, wxID_ANY, _("FB m6051"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labFBm6051, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labFBm6051, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_FBm6051 = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("9"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 9 );
-    itemFlexGridSizer18->Add(m_FBm6051, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_FBm6051, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labFBi8255 = new wxStaticText( m_BussesPanel, wxID_ANY, _("FB i8255"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labFBi8255, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labFBi8255, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_FBi8255 = new wxSpinCtrl( m_BussesPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 10, 10 );
-    itemFlexGridSizer18->Add(m_FBi8255, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_FBi8255, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Notebook->AddPage(m_BussesPanel, _("Busses"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer41 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer42 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer41, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer42, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer41->AddButton(m_OK);
+    itemStdDialogButtonSizer42->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer41->AddButton(m_Cancel);
+    itemStdDialogButtonSizer42->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer41->Realize();
+    itemStdDialogButtonSizer42->Realize();
 
 ////@end SRCPCtrlDlg content construction
 }
