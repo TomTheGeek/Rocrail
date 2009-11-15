@@ -335,6 +335,7 @@
       </opendcc>
 
       <srcp remark="SRCP init" wrappername="SRCP">
+        <var name="udp" vt="bool" defval="false" remark="Use UDP"/>
         <var name="cmdport" vt="int" defval="4303" remark="SRCP command port."/>
         <var name="infoport" vt="int" defval="0" remark="SRCP infoport."/>
         <var name="fbackport" vt="int" defval="4303" remark="SRCP feedbackport."/>
@@ -1043,6 +1044,7 @@
         <var name="port" deprecated="true" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
+        <var name="asswitch" vt="bool" defval="false" remark="send a switch command"/>
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <var name="toggleswitch" vt="bool" defval="true" remark="Toggle switch or push button."/>
@@ -1086,6 +1088,7 @@
         <var name="ctcaddr" vt="int" defval="0" range="0-*" required="true" remark="address"/>
         <var name="ctcport" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="ctcgate" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="ctcasswitch" vt="bool" defval="false" remark="send a switch command"/>
 
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>

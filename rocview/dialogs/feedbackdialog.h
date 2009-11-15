@@ -219,6 +219,7 @@ public:
     wxSpinCtrl* m_CTCPort;
     wxStaticText* m_labCTCGate;
     wxRadioBox* m_CTCGate;
+    wxCheckBox* m_AsSwitch;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

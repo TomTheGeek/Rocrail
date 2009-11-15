@@ -204,6 +204,7 @@ void FeedbackDialog::initLabels() {
   m_labCTCGate->SetLabel( wxGetApp().getMsg( "gate" ) );
   m_CTCGate->SetString( 0, wxGetApp().getMsg( "red" ) );
   m_CTCGate->SetString( 1, wxGetApp().getMsg( "green" ) );
+  m_AsSwitch->SetLabel( wxGetApp().getMsg( "turnout" ) );
 
 
   // Buttons
@@ -287,6 +288,7 @@ void FeedbackDialog::initValues() {
   m_CTCAddr->SetValue( wFeedback.getctcaddr(m_Props) );
   m_CTCPort->SetValue( wFeedback.getctcport(m_Props) );
   m_CTCGate->SetSelection( wFeedback.getctcgate(m_Props) );
+  m_AsSwitch->SetValue( wFeedback.isctcasswitch( m_Props )?true:false );
 
 
   // Action
@@ -340,6 +342,7 @@ bool FeedbackDialog::evaluate() {
   wFeedback.setctcport( m_Props, m_CTCPort->GetValue() );
   wFeedback.setctcgate( m_Props, m_CTCGate->GetSelection() );
 
+  wFeedback.setctcasswitch( m_Props, m_AsSwitch->GetValue()?True:False);
 
   // Action
   return true;
@@ -398,6 +401,7 @@ bool FeedbackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_CTCPort = NULL;
     m_labCTCGate = NULL;
     m_CTCGate = NULL;
+    m_AsSwitch = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -617,24 +621,28 @@ void FeedbackDialog::CreateControls()
     m_CTCGate->SetSelection(0);
     itemFlexGridSizer50->Add(m_CTCGate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    m_AsSwitch = new wxCheckBox( m_Wiring, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_AsSwitch->SetValue(false);
+    itemStaticBoxSizer49->Add(m_AsSwitch, 0, wxALIGN_LEFT|wxALL, 5);
+
     m_Notebook->AddPage(m_Wiring, _("Wiring"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer59 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer60 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer59, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer60, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer59->AddButton(m_Cancel);
+    itemStdDialogButtonSizer60->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer59->AddButton(m_OK);
+    itemStdDialogButtonSizer60->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer59->AddButton(m_Apply);
+    itemStdDialogButtonSizer60->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer59->Realize();
+    itemStdDialogButtonSizer60->Realize();
 
 ////@end FeedbackDialog content construction
 }

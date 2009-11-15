@@ -110,13 +110,25 @@ static void __ctcAction( iOFBack inst ) {
     return;
 
   if( wFeedback.getctcaddr( data->props ) > 0 || wFeedback.getctcport( data->props ) ) {
-    iONode node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
-    if( wFeedback.getctciid( data->props ) != NULL )
-      wOutput.setiid( node, wFeedback.getctciid( data->props ) );
-    wOutput.setaddr( node, wFeedback.getctcaddr( data->props ) );
-    wOutput.setport( node, wFeedback.getctcport( data->props ) );
-    wOutput.setgate( node, wFeedback.getctcgate( data->props ) );
-    wOutput.setcmd( node, data->state ? wOutput.on:wOutput.off );
+    iONode node = NULL;
+    if( wFeedback.isctcasswitch(data->props) ) {
+      node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+      if( wFeedback.getctciid( data->props ) != NULL )
+        wSwitch.setiid( node, wFeedback.getctciid( data->props ) );
+      wSwitch.setaddr1( node, wFeedback.getctcaddr( data->props ) );
+      wSwitch.setport1( node, wFeedback.getctcport( data->props ) );
+      wSwitch.setgate1( node, wFeedback.getctcgate( data->props ) );
+      wSwitch.setcmd( node, data->state ? wSwitch.turnout:wSwitch.straight );
+    }
+    else {
+      node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
+      if( wFeedback.getctciid( data->props ) != NULL )
+        wOutput.setiid( node, wFeedback.getctciid( data->props ) );
+      wOutput.setaddr( node, wFeedback.getctcaddr( data->props ) );
+      wOutput.setport( node, wFeedback.getctcport( data->props ) );
+      wOutput.setgate( node, wFeedback.getctcgate( data->props ) );
+      wOutput.setcmd( node, data->state ? wOutput.on:wOutput.off );
+    }
     ControlOp.cmd( control, node, NULL );
   }
 }
