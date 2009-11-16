@@ -35,6 +35,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/FbInfo.h"
@@ -208,6 +209,33 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
         "Signal commands are no longer supported at this level." );
     return 0;
   }
+
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    byte pin = 0x01 << ( port - 1 );
+    byte mask = ~pin;
+
+    *bus = wOutput.getbus(node);
+
+    cmd[0] = addr;
+    cmd[0] |= WRITE_FLAG;
+
+    /* reset pin to 0: */
+    cmd[1] = data->swstate[*bus][cmd[0]] & mask;
+
+    if( action )
+      cmd[1] |= pin;
+    /* save new state: */
+    data->swstate[*bus][cmd[0]] = cmd[1];
+
+
+    return 2;
+  }
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
