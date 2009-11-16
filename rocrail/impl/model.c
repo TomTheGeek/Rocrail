@@ -1675,23 +1675,32 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "createMap: %s NOT found.", dbKey );
 }
 
-static void _removeFbKey(iOModel inst, const char* key) {
+static void _removeFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
-  MapOp.remove( data->fbAddrMap, key );
+  iOList list = (iOList)MapOp.get( data->fbAddrMap, key );
+  if( list != NULL ) {
+    ListOp.removeObj(list, fb);
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removeFbKey: size=%d.", MapOp.size(data->fbAddrMap) );
 }
 
 static void _addFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
-  MapOp.put( data->fbAddrMap, key, (obj)fb );
+  iOList list = (iOList)MapOp.get( data->fbAddrMap, key );
+  if( list == NULL ) {
+    list = ListOp.inst();
+    MapOp.put( data->fbAddrMap, key, (obj)list );
+  }
+  ListOp.add( list, fb );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey: size=%d.", MapOp.size(data->fbAddrMap) );
 }
 
-static void _createFbAddrMap( iOModelData o ) {
+static void _createFbAddrMap( iOModel inst ) {
+  iOModelData o = Data(inst);
   iOFBack fb = (iOFBack)MapOp.first( o->feedbackMap );
-  MapOp.clear(o->fbAddrMap);
+  /*MapOp.clear(o->fbAddrMap);*/
   while( fb != NULL ) {
-    MapOp.put( o->fbAddrMap, FBackOp.getAddrKey(fb), (obj)fb );
+    ModelOp.addFbKey(inst, FBackOp.getAddrKey(fb), (obj)fb );
     fb = (iOFBack)MapOp.next( o->feedbackMap );
   };
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "createFbAddrMap: size=%d.", MapOp.size(o->fbAddrMap) );
@@ -2182,7 +2191,7 @@ static void _init( iOModel inst ) {
 
   _createMap( o, o->feedbackMap, wFeedbackList.name(), wFeedback.name(), (item_inst)FBackOp.inst, NULL  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingFbAddrMap..." );
-  _createFbAddrMap( o );
+  _createFbAddrMap( inst );
 
   _createMap( o, o->switchMap  , wSwitchList.name(), wSwitch.name(), (item_inst)SwitchOp.inst, NULL );
   _createMap( o, o->signalMap  , wSignalList.name(), wSignal.name(), (item_inst)SignalOp.inst, NULL );
@@ -2249,13 +2258,18 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wFeedback.getaddr( nodeC );
     const char* iid = wFeedback.getiid( nodeC );
     char* key = FBackOp.createAddrKey( bus, addr, iid );
-    obj fb = MapOp.get( o->fbAddrMap, key );
-    if( fb != NULL ) {
-      fb->event(fb, nodeC);
-      /*FBackOp.event( fb, nodeC );*/
+    iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
+    if( list != NULL ) {
+      obj fb = ListOp.first( list );
+      while( fb != NULL ) {
+        fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
+        /*FBackOp.event( fb, nodeC );*/
+        fb = ListOp.next(list);
+      }
+      NodeOp.base.del(nodeC);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN FB: %s %s",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unregistered sensor event: %s %s",
                    key, wFeedback.isstate( nodeC )?"ON":"OFF" );
       /* Cleanup Node3 */
       nodeC->base.del(nodeC);

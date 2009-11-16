@@ -68,7 +68,7 @@ static void __initCTC(iOSwitch inst, Boolean remove) {
   if( wSwitch.getctcaddr1(data->props) > 0 ) {
     char* key = FBackOp.createAddrKey(wSwitch.getctcbus1(data->props), wSwitch.getctcaddr1(data->props), wSwitch.getctciid1(data->props));
     if( remove )
-      ModelOp.removeFbKey( model, key );
+      ModelOp.removeFbKey( model, key, (obj)inst );
     else
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);
@@ -77,7 +77,7 @@ static void __initCTC(iOSwitch inst, Boolean remove) {
   if( wSwitch.getctcaddr2(data->props) > 0 ) {
     char* key = FBackOp.createAddrKey(wSwitch.getctcbus2(data->props), wSwitch.getctcaddr2(data->props), wSwitch.getctciid2(data->props));
     if( remove )
-      ModelOp.removeFbKey( model, key );
+      ModelOp.removeFbKey( model, key, (obj)inst );
     else
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);

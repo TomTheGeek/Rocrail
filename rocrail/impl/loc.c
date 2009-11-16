@@ -797,7 +797,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
   /* Check for simple decoders like "Maerklin Delta": */
   if( StrOp.equals( wLoc.V_mode_percent, wLoc.getV_mode( data->props ) ) &&
-      wLoc.getV_step( data->props ) > 0 && wLoc.getspcnt( data->props ) <= 14 && !wLoc.isregulated( data->props ) )
+      wLoc.getV_step( data->props ) > 0 && !wLoc.isregulated( data->props ) )
   {
     if( data->step >= wLoc.getV_step( data->props ) ) {
       data->step = 0;

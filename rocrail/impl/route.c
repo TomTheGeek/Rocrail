@@ -140,7 +140,7 @@ static void __initCTC(iORoute inst, Boolean remove) {
   if( wRoute.getctcaddr1(data->props) > 0 ) {
     char* key = FBackOp.createAddrKey(wRoute.getctcbus1(data->props), wRoute.getctcaddr1(data->props), wRoute.getctciid1(data->props));
     if( remove )
-      ModelOp.removeFbKey( model, key );
+      ModelOp.removeFbKey( model, key, (obj)inst );
     else
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);
@@ -149,7 +149,7 @@ static void __initCTC(iORoute inst, Boolean remove) {
   if( wRoute.getctcaddr2(data->props) > 0 ) {
     char* key = FBackOp.createAddrKey(wRoute.getctcbus2(data->props), wRoute.getctcaddr2(data->props), wRoute.getctciid2(data->props));
     if( remove )
-      ModelOp.removeFbKey( model, key );
+      ModelOp.removeFbKey( model, key, (obj)inst );
     else
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);
@@ -158,7 +158,7 @@ static void __initCTC(iORoute inst, Boolean remove) {
   if( wRoute.getctcaddr3(data->props) > 0 ) {
     char* key = FBackOp.createAddrKey(wRoute.getctcbus3(data->props), wRoute.getctcaddr3(data->props), wRoute.getctciid3(data->props));
     if( remove )
-      ModelOp.removeFbKey( model, key );
+      ModelOp.removeFbKey( model, key, (obj)inst );
     else
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);

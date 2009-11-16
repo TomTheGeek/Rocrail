@@ -352,7 +352,7 @@ static void _modify( iOFBack inst, iONode props ) {
     }
 
     /* TODO: addrkey changed!!! */
-    ModelOp.removeFbKey( model, data->addrKey );
+    ModelOp.removeFbKey( model, data->addrKey, (obj)inst );
     StrOp.free( data->addrKey );
     data->addrKey = FBackOp.createAddrKey( wFeedback.getbus(data->props),
                                            wFeedback.getaddr(data->props),

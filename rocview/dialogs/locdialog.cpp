@@ -2009,7 +2009,7 @@ void LocDialog::OnLocRegulatedClick( wxCommandEvent& event )
 {
   int val = atoi( m_SpeedSteps->GetValue().mb_str(wxConvUTF8) );
 
-  if( m_Regulated->IsChecked() || val > 14 ) {
+  if( m_Regulated->IsChecked() ) {
     m_Accel->Enable( false );
   }
   else {
