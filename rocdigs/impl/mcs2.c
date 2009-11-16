@@ -411,9 +411,12 @@ static void __reader( void* threadinst ) {
   do {
 
     SocketOp.recvfrom( data->readUDP, in, 13 );
-    TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
-    if( in[1] == 0x21 )   //unoffcial answer to unofficial 0x10 command with response bit set
+    if( in[1] == 0x21 ) {    //unoffcial answer to unofficial 0x10 command with response bit set
+      TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
       __evaluateMCS2S88( data, in, store );
+    } else {
+      TraceOp.dump( NULL, TRCLEVEL_DEBUG, in, 13 );
+    }
     ThreadOp.sleep(10);
 
   } while( data->run );
