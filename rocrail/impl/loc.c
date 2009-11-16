@@ -845,7 +845,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     wLoc.setspcnt( cmd, wLoc.getspcnt( data->props ) );
     wLoc.setfncnt( cmd, wLoc.getfncnt( data->props ) );
     wLoc.setdir( cmd, wLoc.isdir( data->props ) );
-    wLoc.setfn( cmd, wLoc.isfn( data->props ) );
+    wLoc.setfn( cmd, data->fn0 );
     wLoc.setoid( cmd, wLoc.getoid(data->props) );
     wLoc.setid( cmd, wLoc.getid(data->props) );
 
