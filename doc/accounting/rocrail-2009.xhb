@@ -1,87 +1,113 @@
 <?xml version="1.0"?>
-<homebank v="0.1">
+<homebank v="0.29999999999999999">
 <properties title="Rocrail 2009" car_category="0" auto_nbdays="0"/>
-<account key="0" flags="0" name="Rocrail"
- number="3974310" bankname="Postbank" initial="-352.51999999999998" minimum="0"
- cheque1="0" cheque2="0"/>
-<pay key="1" name="Amazon"/>
+<account key="1" flags="0" pos="1" name="Rocrail" number="3974310" bankname="Postbank" initial="-352.51999999999998" minimum="0" cheque1="0" cheque2="0"/>
+<pay key="9" name="Apple"/>
+<pay key="4" name="MaxNet"/>
+<pay key="8" name="VonEinsBisZett"/>
+<pay key="5" name="MediaMarkt"/>
+<pay key="7" name="SPROG DCC"/>
+<pay key="6" name="RD-Hobby"/>
 <pay key="2" name="Domain Factory"/>
 <pay key="3" name="MAB"/>
-<pay key="4" name="MaxNet"/>
-<pay key="5" name="MediaMarkt"/>
-<pay key="6" name="RD-Hobby"/>
-<pay key="7" name="SPROG DCC"/>
-<pay key="8" name="VonEinsBisZett"/>
-<cat key="1" parent="0" flags="0" name="Domain Registration"/>
-<cat key="2" parent="0" flags="0" name="Hosting"/>
-<cat key="3" parent="0" flags="0" name="Promotion"/>
+<pay key="1" name="Amazon"/>
 <cat key="4" parent="0" flags="0" name="Research"/>
 <cat key="5" parent="0" flags="2" name="Donation"/>
-<ope date="733409" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="R Berkel en E Berkel-Beentjes"/>
-<ope date="733410" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hannes Hoerting"/>
-<ope date="733412" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="FIEDLER, STEFAN"/>
-<ope date="733412" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
-<ope date="733413" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="DIRK ADOLPHS"/>
-<ope date="733414" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Heiner Schacht"/>
-<ope date="733414" amount="-180.40000000000001" account="0" dst_account="0" paymode="4" flags="1" payee="6" category="4" wording="Digitrax Zephyr" info="Command Station Test"/>
-<ope date="733416" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MAGNIDOFF, JOERN"/>
-<ope date="733423" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hartmut Neu"/>
-<ope date="733429" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann"/>
-<ope date="733440" amount="-74.900000000000006" account="0" dst_account="0" paymode="4" flags="1" payee="3" category="4" wording="LodicRail FC" info="Fast Clock"/>
-<ope date="733442" amount="-181.90000000000001" account="0" dst_account="0" paymode="1" flags="1" payee="6" category="4" wording="BDL168, RX4" info="Transponding"/>
-<ope date="733448" amount="-26.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="3" category="4" wording="DH163P" info="Transponding"/>
-<ope date="733448" amount="-46.899999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="3" category="4" wording="DS64" info="Digitrax OptionSwitches"/>
-<ope date="733450" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="2" wording="6 Months Hosting" info="ManagedHosting S"/>
-<ope date="733454" amount="40" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MATTHIAS VENNEKOTTER"/>
-<ope date="733455" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="HASELSTEINER, MARIO"/>
-<ope date="733458" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO"/>
-<ope date="733458" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST"/>
-<ope date="733463" amount="-145" account="0" dst_account="0" paymode="4" flags="1" payee="8" category="4" wording="Uhlenbrock 63120, 63340" info="LNCV Development"/>
-<ope date="733472" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
-<ope date="733473" amount="-120.95" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Sweat shirts for Kaarst" info="Project Team"/>
-<ope date="733473" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Dirk Adolphs"/>
-<ope date="733473" amount="30" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Peter Giling"/>
-<ope date="733481" amount="60" account="0" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="2 Sweat Shirts" info="Christian Wichmann"/>
-<ope date="733489" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG"/>
-<ope date="733491" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto"/>
-<ope date="733524" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET"/>
-<ope date="733532" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Volker Hanchen"/>
-<ope date="733534" amount="100" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Kuempel"/>
-<ope date="733539" amount="-31.5" account="0" dst_account="0" paymode="4" flags="1" payee="0" category="5" wording="Tax for goods USA donation" info="NL Customs"/>
-<ope date="733549" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Klaus Peter Glitz"/>
-<ope date="733556" amount="-63" account="0" dst_account="0" paymode="1" flags="1" payee="7" category="4" wording="DCC Programmer" info="SPROG II"/>
-<ope date="733588" amount="15" account="0" dst_account="0" paymode="4" flags="2" payee="0" category="5" wording="Donation" info="VOLKER HANCHEN"/>
-<ope date="733589" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Vincent Stallbaum"/>
-<ope date="733592" amount="-243" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="Apple Mini" info="Development for Mac OSX"/>
-<ope date="733596" amount="-13.99" account="0" dst_account="0" paymode="3" flags="1" payee="5" category="4" wording="DVD-R" info="Mac support"/>
-<ope date="733599" amount="-44.990000000000002" account="0" dst_account="0" paymode="4" flags="1" payee="5" category="4" wording="Extra Memory for Mac Mini" info="Mac Support"/>
-<ope date="733602" amount="-22.949999999999999" account="0" dst_account="0" paymode="1" flags="1" payee="1" category="4" wording="AppleScripting" info="Mac support"/>
-<ope date="733629" amount="25" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Meiko van Lessen"/>
-<ope date="733633" amount="-59.700000000000003" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="2" wording="ManagedHosting S" info="6 Months"/>
-<ope date="733648" amount="-12.31" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="Domain rocrail.net" info="One year registration fee"/>
-<ope date="733648" amount="-12.31" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net" info="29-08-2009 29-08-2010"/>
-<ope date="733655" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Onno Rietveld"/>
-<ope date="733668" amount="-60" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail Caps" info="Black caps for Venlo event"/>
-<ope date="733675" amount="-132" account="0" dst_account="0" paymode="3" flags="1" payee="0" category="3" wording="Rocrail T-Shirts" info="Venlo event"/>
-<ope date="733680" amount="-15" account="0" dst_account="0" paymode="4" flags="1" payee="4" category="1" wording="rocrail.nl" info="27-10-2009 27-10-2010"/>
-<ope date="733684" amount="5" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugene Olkov"/>
-<ope date="733684" amount="35" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Nicholas Martin"/>
-<ope date="733688" amount="20" account="0" dst_account="0" paymode="0" flags="2" payee="0" category="0" wording="Donation" info="Jochen Becker "/>
-<ope date="733694" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Banu Mihai Aurelian"/>
-<ope date="733707" amount="-19.199999999999999" account="0" dst_account="0" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net/com" info=""/>
-<ope date="733709" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Zabelt"/>
-<ope date="733710" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jean-Michel"/>
-<ope date="733713" amount="5" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Giling"/>
-<ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym"/>
-<ope date="733713" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="van Rutger Koppelaar"/>
-<ope date="733713" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Stefan Fiedler"/>
-<ope date="733714" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Markus Schimke"/>
-<ope date="733714" amount="20" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Buck"/>
-<ope date="733714" amount="15" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio"/>
-<ope date="733715" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jörn Rother"/>
-<ope date="733716" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Thorsten Weiss"/>
-<ope date="733716" amount="50" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugenio Roncelli"/>
-<ope date="733715" amount="15" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Joachim Matzke"/>
-<ope date="733715" amount="30" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hermann Meyer"/>
-<ope date="733716" amount="10" account="0" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Kai-Uwe Poenisch"/>
+<cat key="2" parent="0" flags="0" name="Hosting"/>
+<cat key="3" parent="0" flags="0" name="Promotion"/>
+<cat key="1" parent="0" flags="0" name="Domain Registration"/>
+<ope date="733409" amount="25" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="R Berkel en E Berkel-Beentjes" tags=""/>
+<ope date="733410" amount="40" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hannes Hoerting" tags=""/>
+<ope date="733412" amount="30" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="FIEDLER, STEFAN" tags=""/>
+<ope date="733412" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio" tags=""/>
+<ope date="733413" amount="25" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="DIRK ADOLPHS" tags=""/>
+<ope date="733414" amount="100" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Heiner Schacht" tags=""/>
+<ope date="733414" amount="-180.40000000000001" account="1" dst_account="1" paymode="4" flags="1" payee="6" category="4" wording="Digitrax Zephyr" info="Command Station Test" tags=""/>
+<ope date="733416" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MAGNIDOFF, JOERN" tags=""/>
+<ope date="733423" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hartmut Neu" tags=""/>
+<ope date="733429" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Christian Wichmann" tags=""/>
+<ope date="733440" amount="-74.900000000000006" account="1" dst_account="1" paymode="4" flags="1" payee="3" category="4" wording="LodicRail FC" info="Fast Clock" tags=""/>
+<ope date="733442" amount="-181.90000000000001" account="1" dst_account="1" paymode="1" flags="1" payee="6" category="4" wording="BDL168, RX4" info="Transponding" tags=""/>
+<ope date="733448" amount="-26.899999999999999" account="1" dst_account="1" paymode="4" flags="1" payee="3" category="4" wording="DH163P" info="Transponding" tags=""/>
+<ope date="733448" amount="-46.899999999999999" account="1" dst_account="1" paymode="4" flags="1" payee="3" category="4" wording="DS64" info="Digitrax OptionSwitches" tags=""/>
+<ope date="733450" amount="-59.700000000000003" account="1" dst_account="1" paymode="4" flags="1" payee="2" category="2" wording="6 Months Hosting" info="ManagedHosting S" tags=""/>
+<ope date="733454" amount="40" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MATTHIAS VENNEKOTTER" tags=""/>
+<ope date="733455" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="HASELSTEINER, MARIO" tags=""/>
+<ope date="733458" amount="25" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="EDELMANN, MARIO" tags=""/>
+<ope date="733458" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="BERNHARD BAPTIST" tags=""/>
+<ope date="733463" amount="-145" account="1" dst_account="1" paymode="4" flags="1" payee="8" category="4" wording="Uhlenbrock 63120, 63340" info="LNCV Development" tags=""/>
+<ope date="733472" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym" tags=""/>
+<ope date="733473" amount="-120.95" account="1" dst_account="1" paymode="3" flags="1" payee="0" category="3" wording="Sweat shirts for Kaarst" info="Project Team" tags=""/>
+<ope date="733473" amount="30" account="1" dst_account="1" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Dirk Adolphs" tags=""/>
+<ope date="733473" amount="30" account="1" dst_account="1" paymode="3" flags="3" payee="0" category="3" wording="Sweat Shirt" info="Peter Giling" tags=""/>
+<ope date="733481" amount="60" account="1" dst_account="1" paymode="3" flags="3" payee="0" category="5" wording="2 Sweat Shirts" info="Christian Wichmann" tags=""/>
+<ope date="733489" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="MARTIN STIEWIG" tags=""/>
+<ope date="733491" amount="25" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Otto" tags=""/>
+<ope date="733524" amount="30" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="M. MARC GEONET" tags=""/>
+<ope date="733532" amount="30" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Volker Hanchen" tags=""/>
+<ope date="733534" amount="100" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Kuempel" tags=""/>
+<ope date="733539" amount="-31.5" account="1" dst_account="1" paymode="4" flags="1" payee="0" category="5" wording="Tax for goods USA donation" info="NL Customs" tags=""/>
+<ope date="733549" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Klaus Peter Glitz" tags=""/>
+<ope date="733556" amount="-63" account="1" dst_account="1" paymode="1" flags="1" payee="7" category="4" wording="DCC Programmer" info="SPROG II" tags=""/>
+<ope date="733588" amount="15" account="1" dst_account="1" paymode="4" flags="2" payee="0" category="5" wording="Donation" info="VOLKER HANCHEN" tags=""/>
+<ope date="733589" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Vincent Stallbaum" tags=""/>
+<ope date="733592" amount="-243" account="1" dst_account="1" paymode="1" flags="1" payee="1" category="4" wording="Apple Mini" info="Development for Mac OSX" tags=""/>
+<ope date="733596" amount="-13.99" account="1" dst_account="1" paymode="3" flags="1" payee="5" category="4" wording="DVD-R" info="Mac support" tags=""/>
+<ope date="733599" amount="-44.990000000000002" account="1" dst_account="1" paymode="4" flags="1" payee="5" category="4" wording="Extra Memory for Mac Mini" info="Mac Support" tags=""/>
+<ope date="733602" amount="-22.949999999999999" account="1" dst_account="1" paymode="1" flags="1" payee="1" category="4" wording="AppleScripting" info="Mac support" tags=""/>
+<ope date="733629" amount="25" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Meiko van Lessen" tags=""/>
+<ope date="733633" amount="-59.700000000000003" account="1" dst_account="1" paymode="4" flags="1" payee="2" category="2" wording="ManagedHosting S" info="6 Months" tags=""/>
+<ope date="733648" amount="-12.31" account="1" dst_account="1" paymode="4" flags="1" payee="2" category="1" wording="Domain rocrail.net" info="One year registration fee" tags=""/>
+<ope date="733648" amount="-12.31" account="1" dst_account="1" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net" info="29-08-2009 29-08-2010" tags=""/>
+<ope date="733655" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Onno Rietveld" tags=""/>
+<ope date="733668" amount="-60" account="1" dst_account="1" paymode="3" flags="1" payee="0" category="3" wording="Rocrail Caps" info="Black caps for Venlo event" tags=""/>
+<ope date="733675" amount="-132" account="1" dst_account="1" paymode="3" flags="1" payee="0" category="3" wording="Rocrail T-Shirts" info="Venlo event" tags=""/>
+<ope date="733680" amount="-15" account="1" dst_account="1" paymode="4" flags="1" payee="4" category="1" wording="rocrail.nl" info="27-10-2009 27-10-2010" tags=""/>
+<ope date="733684" amount="5" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugene Olkov" tags=""/>
+<ope date="733684" amount="35" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Nicholas Martin" tags=""/>
+<ope date="733688" amount="20" account="1" dst_account="1" paymode="0" flags="2" payee="0" category="0" wording="Donation" info="Jochen Becker " tags=""/>
+<ope date="733694" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Banu Mihai Aurelian" tags=""/>
+<ope date="733707" amount="-19.199999999999999" account="1" dst_account="1" paymode="4" flags="1" payee="2" category="1" wording="rocrail.net/com" info="" tags=""/>
+<ope date="733709" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Zabelt" tags=""/>
+<ope date="733710" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jean-Michel" tags=""/>
+<ope date="733713" amount="5" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Peter Giling" tags=""/>
+<ope date="733713" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym" tags=""/>
+<ope date="733713" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="van Rutger Koppelaar" tags=""/>
+<ope date="733713" amount="30" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Stefan Fiedler" tags=""/>
+<ope date="733714" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Markus Schimke" tags=""/>
+<ope date="733714" amount="20" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Buck" tags=""/>
+<ope date="733714" amount="15" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sbaffi Sergio" tags=""/>
+<ope date="733715" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jörn Rother" tags=""/>
+<ope date="733715" amount="15" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Joachim Matzke" tags=""/>
+<ope date="733715" amount="30" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hermann Meyer" tags=""/>
+<ope date="733716" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Thorsten Weiss" tags=""/>
+<ope date="733716" amount="50" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Eugenio Roncelli" tags=""/>
+<ope date="733716" amount="10" account="1" dst_account="1" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Kai-Uwe Poenisch" tags=""/>
+<ope date="733720" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Frank Goebel" tags=""/>
+<ope date="733720" amount="20" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jenifer Noske" tags=""/>
+<ope date="733721" amount="50" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donati" info="Rainer Kuempel" tags=""/>
+<ope date="733721" amount="50" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Alwin Schauer" tags=""/>
+<ope date="733721" amount="50" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Anonym" tags=""/>
+<ope date="733721" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Syllwasschy Kersten" tags=""/>
+<ope date="733722" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Gerard Piep" tags=""/>
+<ope date="733723" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Kay Wilinski" tags=""/>
+<ope date="733723" amount="50" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Werner Nitzschke" tags=""/>
+<ope date="733724" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Nick Schreurs" tags=""/>
+<ope date="733725" amount="100" account="1" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="Donation" info="Heiner" tags=""/>
+<ope date="733725" amount="10" account="1" dst_account="0" paymode="3" flags="3" payee="0" category="5" wording="Donation" info="Joe" tags=""/>
+<ope date="733727" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="G. Helweg" tags=""/>
+<ope date="733728" amount="20" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Olaf Reis" tags=""/>
+<ope date="733728" amount="-190" account="1" dst_account="0" paymode="3" flags="1" payee="5" category="4" wording="iRoc" info="iRoc Development" tags=""/>
+<ope date="733728" amount="-79" account="1" dst_account="0" paymode="1" flags="1" payee="9" category="4" wording="iPhone Development" info="Apple iPhone Developer Program" tags=""/>
+<ope date="733729" amount="20" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Axel Pieke" tags=""/>
+<ope date="733717" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Christian Brauner" tags=""/>
+<ope date="733718" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Hans-Peter Grade" tags=""/>
+<ope date="733720" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Rainer Becker-Siemens" tags=""/>
+<ope date="733721" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Andreas Kriesi" tags=""/>
+<ope date="733721" amount="20" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Marc Geonet" tags=""/>
+<ope date="733722" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sven Gorgos" tags=""/>
+<ope date="733722" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Meiko van Lessen" tags=""/>
+<ope date="733726" amount="5" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Sebastian Stuckenbrock" tags=""/>
+<ope date="733728" amount="10" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Jürgen Müller" tags=""/>
+<ope date="733728" amount="50" account="1" dst_account="0" paymode="4" flags="3" payee="0" category="5" wording="Donation" info="Roland Baerlocher" tags=""/>
 </homebank>
