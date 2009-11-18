@@ -721,7 +721,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       wFunCmd.setfnchanged(cmd, fnchanged);
 
-      if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 ) {
+      if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0) {
         /* reset previous timed function */
         __resetTimedFunction(inst, cmd, -1);
       }
