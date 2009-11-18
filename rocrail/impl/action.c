@@ -319,6 +319,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
     iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ));
+    if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
+      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl) );
+    }
     if( lc != NULL ) {
       if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
         if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 )
@@ -331,6 +334,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals(wLoc.velocity, wAction.getcmd(data->action) ) ) {
         int v = atoi(wAction.getparam(data->action));
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        if( v<0 ) {
+            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+            v = abs( v );
+        }
         wLoc.setV( cmd, v );
         LocOp.cmd(lc, cmd);
       }
