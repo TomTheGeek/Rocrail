@@ -62,7 +62,7 @@ END_EVENT_TABLE()
 SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
              : wxDialog(parent, -1, wxString( wxGetApp().getMsg("swctrl") ),
              wxDefaultPosition, wxDefaultSize,
-             wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODELESS )
+             wxDEFAULT_DIALOG_STYLE )
 {
 
   wxBoxSizer  *sizer1 = new wxBoxSizer(wxVERTICAL);

@@ -365,7 +365,7 @@ void CarDlg::onCarImage( wxCommandEvent& event ){
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "imagepath = [%s]", imagepath );
   wxFileDialog* fdlg = new wxFileDialog(this, _T("Search car image"),
       wxString(imagepath,wxConvUTF8), _T(""),
-      _T("PNG files (*.png)|*.png|GIF files (*.gif)|*.gif|XPM files (*.xpm)|*.xpm"), wxOPEN);
+      _T("PNG files (*.png)|*.png|GIF files (*.gif)|*.gif|XPM files (*.xpm)|*.xpm"), wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "Loading %s...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
@@ -476,7 +476,7 @@ void CarDlg::OnCopy( wxCommandEvent& event ){
 void CarDlg::onImport( wxCommandEvent& event ){
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
 
     wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );

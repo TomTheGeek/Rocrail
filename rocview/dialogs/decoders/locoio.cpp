@@ -2238,7 +2238,7 @@ void LocoIO::OnButtonEasyReadClick( wxCommandEvent& event )
 {
   wxString ms_FileExt = _T("LocoIO (*.SV)|*.SV");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openlocoiofile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openlocoiofile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     //fdlg->GetPath();
     wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
@@ -2301,7 +2301,7 @@ void LocoIO::OnButtonEasySaveClick( wxCommandEvent& event )
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   wxString ms_FileExt = _T("LocoIO (*.SV)|*.SV");
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("savelocoiofileas"), wxString(l_openpath,wxConvUTF8),
-                       wxString::Format( _T("Lio%03d%03d.SV"), m_LowAddr->GetValue(), m_SubAddr->GetValue()), ms_FileExt, wxSAVE);
+                       wxString::Format( _T("Lio%03d%03d.SV"), m_LowAddr->GetValue(), m_SubAddr->GetValue()), ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     iONode model = wxGetApp().getModel();
     // Check for existence.

@@ -489,7 +489,7 @@ void TextDialog::OnButtonTxtImageClick( wxCommandEvent& event )
   TraceOp.trc( "textdialog", TRCLEVEL_INFO, __LINE__, 9999, "imagepath = [%s]", imagepath );
   wxFileDialog* fdlg = new wxFileDialog(this, _T("Search image"),
       wxString(imagepath,wxConvUTF8), _T(""),
-      _T("PNG files (*.png)|*.png"), wxOPEN);
+      _T("PNG files (*.png)|*.png"), wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     TraceOp.trc( "textdialog", TRCLEVEL_INFO, __LINE__, 9999, "Loading %s...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;

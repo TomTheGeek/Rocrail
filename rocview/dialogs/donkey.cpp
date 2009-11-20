@@ -55,7 +55,7 @@ void DonKey::OnSplash( wxCommandEvent& event ) {
 void DonKey::OnLoadKey( wxCommandEvent& event )
 {
   wxFileDialog* fdlg = new wxFileDialog(this, _T("Donation Key"),
-      _T("."), _T(""), _T("DonKey files (*.dat)|*.dat"), wxOPEN);
+      _T("."), _T(""), _T("DonKey files (*.dat)|*.dat"), wxFD_OPEN);
       
   if( fdlg->ShowModal() == wxID_OK ) {
     TraceOp.trc( "donkey", TRCLEVEL_INFO, __LINE__, 9999, "Loading %s...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );

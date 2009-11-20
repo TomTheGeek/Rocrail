@@ -1399,6 +1399,7 @@ void RocGuiFrame::initFrame() {
   m_ToolBar = CreateToolBar();
   m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
 
+
   m_ToolBar->AddTool(ME_Connect, *_img_connect, wxGetApp().getTip("connect") );
   m_ToolBar->AddTool(ME_Upload, *_img_upload, wxGetApp().getTip("upload") );
 
@@ -1499,7 +1500,7 @@ void RocGuiFrame::initFrame() {
     if( doc != NULL ) {
       iONode themeProps = DocOp.getRootNode( doc );
       iONode themePanelProps = wTheme.getpanel(themeProps);
-      iONode themeBlockProps = wTheme.getblock(themeProps);
+      iONode themeBlockProps = wTheme.getthemeblock(themeProps);
       iONode themeScProps    = wTheme.getshortcut(themeProps);
       if( themePanelProps != NULL ) {
         wPlanPanel.setshowborder( wGui.getplanpanel(m_Ini), wThemePanel.isborder(themePanelProps) );
@@ -1590,7 +1591,7 @@ void RocGuiFrame::create() {
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-  m_ActiveLocs->CreateGrid(0, 6, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(1, 6, wxGrid::wxGridSelectRows);
   //wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
   //font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
@@ -1915,7 +1916,7 @@ void RocGuiFrame::OnSaveAs( wxCommandEvent& event ) {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveplanfileas"), wxString(l_openpath,wxConvUTF8), m_LocalPlan, ms_FileExt, wxSAVE);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveplanfileas"), wxString(l_openpath,wxConvUTF8), m_LocalPlan, ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     iONode model = wxGetApp().getModel();
     // Check for existence.
@@ -1978,7 +1979,7 @@ void RocGuiFrame::OnOpen( wxCommandEvent& event ) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     setLocalPlan( fdlg->GetPath() );
     wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
@@ -2055,7 +2056,7 @@ void RocGuiFrame::OnNew( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnUpload( wxCommandEvent& event ) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), _T("."), _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openplanfile"), _T("."), _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     // Read and send to Rocrail:
     if( fdlg->GetPath().Len() > 0 ) {
@@ -2209,7 +2210,7 @@ void RocGuiFrame::OnScaleComboCheck(wxCommandEvent& event)
 
 void RocGuiFrame::OnScaleCombo(wxCommandEvent& event)
 {
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Combobox string '%s' selected", event.GetString().c_str() );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Combobox string '%s' selected", (const char*)event.GetString().c_str() );
   int zoom = 100;
 
   if( !event.GetString().IsNumber() ) {

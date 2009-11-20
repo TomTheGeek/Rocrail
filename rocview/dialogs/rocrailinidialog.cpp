@@ -1386,7 +1386,7 @@ void RocrailIniDialog::OnButtonR2rnetRoutesClick( wxCommandEvent& event )
 {
   wxString ms_FileExt = _T("NetRoutes (*.xml)|*.xml");
   const char* l_openpath = ".";
-  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("opennetroutesfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("opennetroutesfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     iONode r2rnet = wRocRail.getr2rnet( m_Props );
     wR2RnetIni.setroutes( r2rnet, fdlg->GetPath().mb_str(wxConvUTF8) );

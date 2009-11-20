@@ -511,7 +511,7 @@ void CV::loadCVfromFile() {
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxString ms_FileExt = _T("LocoIO (*.csv)|*.csv");
   wxFileDialog* fdlg = new wxFileDialog(wxGetApp().getFrame(), wxGetApp().getMenu("opencvfile"),
-      wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+      wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     reset();
 
@@ -586,7 +586,7 @@ void CV::saveCVtoFile() {
   wxString ms_FileExt = _T("LocoIO (*.csv)|*.csv");
   wxFileDialog* fdlg = new wxFileDialog(wxGetApp().getFrame(), wxGetApp().getMenu("savelocoiofileas"),
       wxString(l_openpath,wxConvUTF8),
-                       wxString::Format( _T("decoder.csv")), ms_FileExt, wxSAVE);
+                       wxString::Format( _T("decoder.csv")), ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     // Check for existence.
     wxString path = fdlg->GetPath();

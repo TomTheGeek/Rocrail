@@ -172,12 +172,12 @@
       <var name="green" vt="int" defval="190" remark="background color RGB green value"/>
       <var name="blue" vt="int" defval="190" remark="background color RGB blue value"/>
     </panel>
-    <block cardinality="1" wrappername="ThemeBlock">
+    <themeblock cardinality="1" wrappername="ThemeBlock">
       <var name="showid" vt="bool" defval="true" remark="show block ID"/>
       <var name="red" vt="int" defval="0" remark="text color RGB red value"/>
       <var name="green" vt="int" defval="0" remark="text color RGB green value"/>
       <var name="blue" vt="int" defval="0" remark="text color RGB blue value"/>
-    </block>
+    </themeblock>
     <shortcut cardinality="1" wrappername="Shortcut">
       <var name="show" vt="bool" defval="true" remark="show shortcut background"/>
       <var name="red" vt="int" defval="255" remark="sc module background color RGB red value"/>

@@ -120,7 +120,7 @@ void ModPanel::OnProperties(wxCommandEvent& event) {
 void ModPanel::OnAddModule(wxCommandEvent& event) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  wxFileDialog* fdlg = new wxFileDialog(m_Parent, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxOPEN);
+  wxFileDialog* fdlg = new wxFileDialog(m_Parent, wxGetApp().getMenu("openplanfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
 

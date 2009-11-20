@@ -62,7 +62,7 @@ END_EVENT_TABLE()
 RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
              : wxDialog(parent, -1, wxString( wxGetApp().getMsg("stctrl") ),
              wxDefaultPosition, wxDefaultSize,
-             wxDEFAULT_DIALOG_STYLE|wxDIALOG_MODELESS )
+             wxDEFAULT_DIALOG_STYLE )
 {
 
   wxBoxSizer *sizer2 = new wxBoxSizer(wxVERTICAL);
@@ -71,8 +71,8 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
   m_Test = new wxButton( this, -1, wxGetApp().getMsg("test") );
   m_Quit = new wxButton( this, -1, wxGetApp().getMsg("cancel") );
 
-  m_Grid = new wxGrid( this, -1, wxDefaultPosition, wxSize(-1,400), wxSUNKEN_BORDER ) ;
-  m_Grid->CreateGrid( 0, 4 );
+  m_Grid = new wxGrid( this, -1, wxDefaultPosition, wxSize(-1,400) ) ;
+  m_Grid->CreateGrid( 1, 4 );
   m_Grid->SetCellBackgroundColour( m_Grid->GetLabelBackgroundColour() );
   m_Grid->SetLabelSize(wxVERTICAL, 0);
   m_Grid->SetLabelSize(wxHORIZONTAL, m_Grid->GetRowHeight(0));
