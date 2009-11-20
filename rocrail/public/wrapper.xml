@@ -1587,6 +1587,7 @@
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
         <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>
         <var name="usescheduletime" vt="bool" defval="False" remark="Use departure time in schedules."/>
+        <var name="usemanualroutes" vt="bool" defval="False" remark="Use manual set routes only."/>
         <var name="scidx" vt="int" defval="-1" range="*" remark="Schedule index"/>
         <var name="blockid" vt="string" defval="NULL" range="*" remark="Current block ID."/>
         <var name="destblockid" vt="string" defval="NULL" range="*" remark="Destination block ID. (info only)"/>

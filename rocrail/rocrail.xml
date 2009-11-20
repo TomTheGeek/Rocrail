@@ -429,6 +429,9 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="V_hint" vt="const char*"/>
     </fun>
+    <fun name="isUseManualRoutes" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
@@ -500,6 +503,7 @@
       <var name="gomanual" vt="Boolean"/>
       <var name="runtime" vt="long"/>
       <var name="secondnextblock" vt="Boolean"/>
+      <var name="usemanualroutes" vt="Boolean"/>
     </data>
   </object>
 
@@ -942,6 +946,9 @@
     <fun name="isFree" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
+    </fun>
+    <fun name="isManual" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="hasPermission" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>

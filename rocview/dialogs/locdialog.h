@@ -382,6 +382,7 @@ public:
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_ShortIn;
     wxCheckBox* m_InAtPre2In;
+    wxCheckBox* m_UseManualRoutes;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;

@@ -672,6 +672,10 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace )
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcp %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID       : %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  host      : %s", data->ddlHost );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  port      : %s", data->cmdPort );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  connection: %s", wSRCP.isudp( data->srcpini )?"UDP":"TCP/IP" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   if( __srcpConnect( data ) ) {

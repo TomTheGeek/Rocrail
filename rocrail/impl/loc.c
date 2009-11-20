@@ -2013,6 +2013,12 @@ static Boolean _isShortin( iOLoc loc ) {
 }
 
 
+static Boolean _isUseManualRoutes( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.isusemanualroutes( data->props );
+}
+
+
 static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
   /* save the function status: */

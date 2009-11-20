@@ -804,6 +804,11 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
 
 
 
+static Boolean _isManual( iORoute inst ) {
+  iORouteData data = Data(inst);
+  return wRoute.ismanual(data->props);
+}
+
 static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
 
