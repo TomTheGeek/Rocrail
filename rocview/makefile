@@ -56,7 +56,7 @@ ifeq ($(PLATFORM),WIN32)
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
-	CC_EXTRA_FLAGS=-fPIC -DwxDIALOG_MODAL
+	CC_EXTRA_FLAGS=-fPIC
 	BINSUFFIX=
 	LNK_FLAGS=`wx-config --libs`
 	WX_FLAGS=`wx-config --cflags`

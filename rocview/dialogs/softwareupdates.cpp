@@ -448,7 +448,7 @@ void Softwareupdates::CreateControls()
     m_labInfo = new wxStaticText( itemDialog1, wxID_ANY, _("Update info"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(m_labInfo, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_Info = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+    m_Info = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
     m_Info->Enable(false);
     itemBoxSizer2->Add(m_Info, 0, wxGROW|wxALL, 5);
 

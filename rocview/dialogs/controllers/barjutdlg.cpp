@@ -171,21 +171,21 @@ void BarJuTCntrlDlg::CreateControls()
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_DEVICE, _T(""), wxDefaultPosition, wxSize(120, -1), 0 );
+    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_DEVICE, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPolling = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_POLLING, _("Pollingrate"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labPolling, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labPolling, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Polling = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_POLLING, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Polling = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_POLLING, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Polling, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer12 = new wxStdDialogButtonSizer;

@@ -154,19 +154,19 @@ void ClockDialog::CreateControls()
     itemBoxSizer2->Add(m_ClockBox, 0, wxGROW|wxALL, 5);
 
     m_labDevider = new wxStaticText( itemDialog1, wxID_ANY, _("divider"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ClockBox->Add(m_labDevider, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_ClockBox->Add(m_labDevider, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Divider = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 10, 1 );
     m_ClockBox->Add(m_Divider, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labHour = new wxStaticText( itemDialog1, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ClockBox->Add(m_labHour, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_ClockBox->Add(m_labHour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Hour = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     m_ClockBox->Add(m_Hour, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labMinute = new wxStaticText( itemDialog1, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ClockBox->Add(m_labMinute, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_ClockBox->Add(m_labMinute, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Minute = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
     m_ClockBox->Add(m_Minute, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);

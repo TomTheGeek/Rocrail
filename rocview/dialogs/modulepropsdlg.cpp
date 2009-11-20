@@ -365,7 +365,7 @@ void ModulePropsDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_NoteBook = new wxNotebook( itemDialog1, ID_NOTEBOOK_MODPROPS, wxDefaultPosition, wxDefaultSize, wxNB_DEFAULT|m_TabAlign );
+    m_NoteBook = new wxNotebook( itemDialog1, ID_NOTEBOOK_MODPROPS, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT|m_TabAlign );
 
     m_GeneralPanel = new wxPanel( m_NoteBook, ID_PANEL_MODPROPS_GEN, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
