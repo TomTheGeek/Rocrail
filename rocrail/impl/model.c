@@ -1810,7 +1810,17 @@ static iIBlockBase _addNetBlock(iOModel inst, iONode bkprops) {
 
 static iOLoc _getLoc( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
-  return (iOLoc)MapOp.get( o->locMap, id );
+  iOLoc loc = (iOLoc)MapOp.get( o->locMap, id );
+  if( loc == NULL ) {
+    int addr = atoi(id);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
+    if( addr > 0 ) {
+      loc = ModelOp.getLocByAddress(inst, addr);
+      if( loc != NULL )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
+    }
+  }
+  return loc;
 }
 
 static iOCar _getCar( iOModel inst, const char* id ) {
