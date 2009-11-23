@@ -242,15 +242,16 @@ static void __cmdReader( void* threadinst ) {
       long size = XmlhOp.getSizeByTagName( xmlh, XmlhOp.xml_tagname, 0 );
       int len = 0;
       freeMem( cmd );
-      cmd = allocMem( size );
+      cmd = allocMem( size + 1 );
       SocketOp.read( o->clntSocket, cmd, size );
+      cmd[size] = '\0';
       len = StrOp.len( cmd );
       if( len > 0 ) {
         iODoc doc = DocOp.parse( cmd );
         if( doc != NULL ) {
           iONode nodeA = DocOp.getRootNode( doc );
           if( cmd[len-1] == '\n' ) cmd[len-1] = '\0';
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmdReader() %.256s", cmd );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmdReader[%d,%d] %.256s", size, len, cmd );
           if( nodeA != NULL ) {
             const char* thName = ThreadOp.getName( infoWriter );
             wCommand.setserver( nodeA, thName );
