@@ -207,11 +207,7 @@ static iONode _cmd( obj inst ,const iONode cmd )
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
-  if (StrOp.equals( cmdVal, "help" ))
-  {
-    /* TODO: return supported commands */
-  }
-  else if (StrOp.equals( cmdVal, "fb" )) /* simulate feedback */
+  if (StrOp.equals( cmdVal, "fb" )) /* simulate feedback */
   {
       int unit = 0, pin = 0;
       Boolean newstate = False;
@@ -231,13 +227,9 @@ static iONode _cmd( obj inst ,const iONode cmd )
         o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback %d.%d simulated",unit,pin);
     }
-    else {
-      /* unsupported command */
-      iONode nodeC = (iONode)NodeOp.base.clone( cmd );
-      wResponse.setmsg( nodeC, "NOT SUPPORTED!" );
-      if( o->listenerFun != NULL )
-        o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
-    }
+   else {
+     /* unsupported command */
+   }
 
     /* Cleanup cmd node to avoid memory leak. */
     cmd->base.del(cmd);
@@ -488,7 +480,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
   while( o->run ) {
 
-    if( !o->initOK ) {
+    if( !o->dummyio && !o->initOK ) {
       /*__preinitHSI88(pHSI88);*/
       __getVersion(pHSI88);
       o->initOK = __initHSI88(pHSI88);
@@ -503,7 +495,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
     __fbstatetrigger( pHSI88, NULL );
 
-    if( SerialOp.available(o->serial) )
+    if( !o->dummyio && SerialOp.available(o->serial) )
       ok = SerialOp.read( o->serial, (char*)buffer, 1 );
     else
       continue;
@@ -650,6 +642,7 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   data->parity   = none;
   data->flow     = cts;
   data->ctsretry = wDigInt.getctsretry( ini );
+  data->dummyio  = wDigInt.isdummyio( ini );
 
   hsi88ini = wDigInt.gethsi88(ini);
   if( hsi88ini == NULL ) {
@@ -673,6 +666,7 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle=%d", data->fbmiddle );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright =%d", data->fbright );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout =%d", data->timeout );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummyio =%s", data->dummyio?"true":"false" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );

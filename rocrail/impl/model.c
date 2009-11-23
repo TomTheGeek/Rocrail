@@ -2348,6 +2348,11 @@ static void _event( iOModel inst, iONode nodeC ) {
     StrOp.free( key );
 
   }
+  else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported event" );
+    /* Cleanup Node3 */
+    nodeC->base.del(nodeC);
+  }
 
 
 }

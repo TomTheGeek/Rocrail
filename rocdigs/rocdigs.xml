@@ -411,6 +411,7 @@
       <var name="fbstate" vt="iOFBState"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
+      <var name="dummyio" vt="Boolean"/>
     </data>
   </object>
 
