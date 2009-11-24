@@ -534,9 +534,8 @@ static void __HSI88feedbackReader( void* threadinst ) {
             if( o->iid != NULL )
               wFeedback.setiid( nodeC, o->iid );
 
-            __fbstatetrigger( pHSI88, nodeC );
-            /*o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );*/
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d %s",addr, wFeedback.isstate( nodeC )?"high":"low" );
+            __fbstatetrigger( pHSI88, nodeC );
           }
           if ( ( lowbyte & (0x01 << j)) != (fb[modnr*2 +1]&(0x01 << j)))
           {
@@ -547,9 +546,8 @@ static void __HSI88feedbackReader( void* threadinst ) {
             if( o->iid != NULL )
               wFeedback.setiid( nodeC, o->iid );
 
-            __fbstatetrigger( pHSI88, nodeC );
-            /*o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );*/
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d %s",addr, wFeedback.isstate( nodeC )?"high":"low" );
+            __fbstatetrigger( pHSI88, nodeC );
           }
 
         }
