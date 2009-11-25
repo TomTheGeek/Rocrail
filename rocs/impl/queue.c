@@ -22,6 +22,7 @@
 
 #include "rocs/impl/queue_impl.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/trace.h"
 
 
 static int instCnt = 0;
@@ -140,7 +141,9 @@ static Boolean _post( iOQueue inst, obj po, q_prio prio ) {
     EventOp.set( data->evt );
   }
   else {
-    printf( "##### QueueOp.post: count(%d) is getting bigger than size(%d)!\n", data->count, data->size );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        "QueueOp.post: count(%d) is getting bigger than size(%d)! Post rejected.\n",
+        data->count, data->size );
   }
   return rc;
 }
