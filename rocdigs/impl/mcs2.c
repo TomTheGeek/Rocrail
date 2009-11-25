@@ -202,17 +202,18 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
+    Boolean dccswitch = StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N );
     if( port == 0 )    //fada used, convert to address, port
       fromFADA( module, &module, &port, &gate );
 
-    long address = (( module - 1 ) * 4 ) + port - 1 + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders address 00 is called 1 by cs2
+    long address = (( module - 1 ) * 4 ) + port - 1 + (dccswitch?0x3800:0x3000);  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC, address 00 is called 1 by cs2
 
     if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d to turnout", (address - 0x2FFF) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d to turnout", (address - (dccswitch?0x37FF:0x2FFF) ) );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 0, 1);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Turnout %d to straight", (address - 0x2FFF) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d to straight", (address - (dccswitch?0x37FF:0x2FFF) ) );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 1, 1);
     }
     ThreadOp.post( data->writer, (obj)out );
@@ -226,16 +227,17 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       module = 1;
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
+    Boolean dccoutput = StrOp.equals( wOutput.getprot( node ), wOutput.prot_N );
     if( port == 0 )    //fada used convert to address, port
       fromFADA( module, &module, &port, &gate );
-    long address = (( module - 1 ) * 4 ) + port -1 + 0x3000;  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders
+    long address = (( module - 1 ) * 4 ) + port -1 + (dccoutput?0x3800:0x3000);  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC
 
     if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s on", (address - 0x2FFF), gate?"b":"a" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s on", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s off", (address - 0x2FFF), gate?"b":"a" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s off", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0);
     }
     ThreadOp.post( data->writer, (obj)out );
@@ -415,7 +417,7 @@ static void __reader( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
       __evaluateMCS2S88( data, in, store );
     } else {
-      TraceOp.dump( NULL, TRCLEVEL_DEBUG, in, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     }
     ThreadOp.sleep(10);
 
@@ -436,7 +438,7 @@ static void __writer( void* threadinst ) {
   do {
     cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.dump( NULL, TRCLEVEL_DEBUG, cmd, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       SocketOp.sendto( data->writeUDP, cmd, 13 );
       freeMem( cmd );
     }
