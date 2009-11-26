@@ -1099,9 +1099,8 @@ static void __transactor( void* threadinst ) {
 
   obj post = NULL;
 
-  Boolean responceRecieved = True,
-  waitForAnswer = False,
-  expectEliteAnswer = True;
+  Boolean responceRecieved = True;
+  Boolean expectAnswer = True;
 
 
   int timeoutval = 100;
@@ -1116,7 +1115,7 @@ static void __transactor( void* threadinst ) {
   do {
     /* get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
-    if (responceRecieved) {
+    if (responceRecieved || data->dummyio) {
       post = ThreadOp.getPost( th );
       numtries = 5;
       if (post != NULL) {
@@ -1127,17 +1126,16 @@ static void __transactor( void* threadinst ) {
       }
       if (post != NULL) {
         responceRecieved = !__sendRequest( lenz, out );
-        waitForAnswer = True;
 
         timeout = timeoutval;
 
-        expectEliteAnswer = True;
+        expectAnswer = data->dummyio ? False:True;
 
         /* special treatment for the elite and LI-USB*/
         /* TODO: this is not state of art ... we have to do something here !!!*/
         if (data->elite || data->usb) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
-            expectEliteAnswer = False;
+            expectAnswer = False;
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
             if(data->elite)
               ThreadOp.sleep(9000);
@@ -1145,7 +1143,7 @@ static void __transactor( void* threadinst ) {
               ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
-            expectEliteAnswer = False;
+            expectAnswer = False;
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
             if(data->elite)
               ThreadOp.sleep(9000);
@@ -1153,7 +1151,7 @@ static void __transactor( void* threadinst ) {
               ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
-            expectEliteAnswer = False;
+            expectAnswer = False;
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
           }
         }
@@ -1161,16 +1159,14 @@ static void __transactor( void* threadinst ) {
 
       }
     } else {
-      if( post != NULL && numtries > 0 && expectEliteAnswer) {
+      if( post != NULL && numtries > 0 && expectAnswer) {
         /* send again */
         __sendRequest( lenz, out );
 
-        waitForAnswer = True;
         numtries--;
 
       } else {
         responceRecieved = True;
-        waitForAnswer = False;
 
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
@@ -1189,6 +1185,7 @@ static void __transactor( void* threadinst ) {
       if( timeout > 0)
         timeout --;
       ThreadOp.sleep( 25 );
+      dataAvailable = SerialOp.available(data->serial);
     }
 
     if ( !data->bincmd && !data->dummyio && dataAvailable) {
@@ -1235,8 +1232,6 @@ static void __transactor( void* threadinst ) {
 
         if( !ok )
           continue;
-
-        waitForAnswer = False;
 
         bXor = 0;
         for( i = 0; i < datalen; i++ ) {
@@ -1389,6 +1384,7 @@ static void __transactor( void* threadinst ) {
         /* SO */
         else if (in[0] == 0x78){
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SO xx %d = %d",in[2], in[3]);
+          responceRecieved = True;
         }
         /* clock */
         else if (in[0] == 0x05){
@@ -1400,6 +1396,7 @@ static void __transactor( void* threadinst ) {
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
+          responceRecieved = True;
         }
 
         /* anything will go to rocgui ...*/
