@@ -274,7 +274,7 @@ static void __sysEvent( obj inst, const char* cmd ) {
 
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
-	if( wLoc.isrestorefx(data->props))
+    if( wLoc.isrestorefx(data->props))
       __restoreFx(inst);
     data->fxrestored = True;
   }
@@ -571,11 +571,21 @@ static void __engine( iOLoc inst, iONode cmd ) {
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setdir( cmdFn, wLoc.isplacing(data->props) ? wLoc.isdir(data->props):!wLoc.isdir(data->props) );
         wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
+        wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
         wLoc.setid( cmdFn, wLoc.getid(data->props) );
+        wLoc.setoid( cmdFn, wLoc.getoid(data->props) );
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
         wLoc.setiid( cmdFn, wLoc.getiid(data->props) );
         wLoc.setV( cmdFn, wLoc.getV(data->props) );
         wLoc.setspcnt( cmdFn, wLoc.getspcnt( data->props ) );
+        wLoc.setmass( cmdFn, wLoc.getmass( data->props ) );
+        wLoc.setV_step( cmdFn, wLoc.getV_step( data->props ) );
+        wLoc.setV_min( cmdFn, wLoc.getV_min( data->props ) );
+        wLoc.setV_max( cmdFn, wLoc.getV_max( data->props ) );
+        wLoc.setV_mode( cmdFn, wLoc.getV_mode( data->props ) );
+        wLoc.setprot( cmdFn, wLoc.getprot( data->props ) );
+        wLoc.setprotver( cmdFn, wLoc.getprotver( data->props ) );
+        wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
         f0changed = False;
       }
 
