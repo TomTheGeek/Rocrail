@@ -206,16 +206,18 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     if( port == 0 )    //fada used, convert to address, port
       fromFADA( module, &module, &port, &gate );
 
-    long address = (( module - 1 ) * 4 ) + port - 1 + (dccswitch?0x3800:0x3000);  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC, address 00 is called 1 by cs2
+    long address = (( module - 1 ) * 4 ) + port - 1 + (dccswitch?0x3800:0x3000);
+    /* cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC, address 00 is called 1 by cs2 */
 
     if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d to turnout", (address - (dccswitch?0x37FF:0x2FFF) ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to turnout", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 0, 1);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d to straight", (address - (dccswitch?0x37FF:0x2FFF) ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to straight", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 1, 1);
     }
+
     ThreadOp.post( data->writer, (obj)out );
     return rsp;
   }
@@ -225,47 +227,68 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int module = wOutput.getaddr( node );
     if ( module == 0 ) //pada used, port will be actual cs2 lineair address
       module = 1;
+
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
     Boolean dccoutput = StrOp.equals( wOutput.getprot( node ), wOutput.prot_N );
     if( port == 0 )    //fada used convert to address, port
       fromFADA( module, &module, &port, &gate );
-    long address = (( module - 1 ) * 4 ) + port -1 + (dccoutput?0x3800:0x3000);  //cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC
+
+    long address = (( module - 1 ) * 4 ) + port -1 + (dccoutput?0x3800:0x3000);
+    /* cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC */
 
     if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s on", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) on", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s off", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) off", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
       __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0);
     }
+
     ThreadOp.post( data->writer, (obj)out );
     return rsp;
   }
 
   /* Loco command */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    int addr   = wLoc.getaddr( node );
-    int dir    = 2 - wLoc.isdir( node );  // for cs2 1 is forwards, 2 is backwards, from server 1 = forwards, 0 is backwards
-    Boolean mfx = StrOp.equals( wLoc.getprot( node ), wLoc.prot_P );
-    int speed  = 0;
-    int speed1 = 0;
-    int speed2 = 0;
-    long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
-    Boolean sw = wLoc.issw( node );
+    Boolean sw     = wLoc.issw( node );
+    int addr       = wLoc.getaddr( node );
+    int addroffset = 0;
+    int dir        = 2 - wLoc.isdir( node );  // for cs2 1 is forwards, 2 is backwards, from server 1 = forwards, 0 is backwards
+    int speed      = 0;
+    int speed1     = 0;
+    int speed2     = 0;
+    char prot[4];
+
+    if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
+      addroffset = 0xC000;    //DCC loc adress range start
+      strcpy(prot,"dcc");
+    } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
+      addroffset = 0x4000;    //MFX loc address range start
+      strcpy(prot,"mfx");
+    } else {
+      addroffset = 0x0000;    //MM loc address range start
+      strcpy(prot,"mm");
+    }
+    long address = addr + addroffset;
+
     if (sw) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s %s", addr, mfx?"mfx":"mm", (dir==1)?"forwards":"backwards" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) %s", addr, prot, (dir==1)?"forwards":"backwards" );
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);  //cs2 reverses direction and sets speed to 0
+
     } else {
       if( wLoc.getV( node ) != -1 ) {
         if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )   //cs2 ranges all speeds from 0 - 1000 regardless of number of steps
           speed = wLoc.getV( node ) * 10;
         else if( wLoc.getV_max( node ) > 0 )
           speed = (wLoc.getV( node ) * 1000) / wLoc.getV_max( node );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d %s speedstep=%d %s", addr, mfx?"mfx":"mm", (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
-        __setSysMsg(out2, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0); //also send direction to prevent going wrong way when user has changed direction on the cs2
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) speedstep=%d %s", addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
+
+        /* also send direction to prevent going wrong way when user has changed direction on the cs2 */
+        __setSysMsg(out2, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
         ThreadOp.post( data->writer, (obj)out2 );
+
         speed1 = (speed & 0xFF00) >>8;
         speed2 = speed & 0x00FF;
         __setSysMsg(out, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
@@ -277,13 +300,25 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
  /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    int   addr = wFunCmd.getaddr( node );
-    Boolean mfx = StrOp.equals( wLoc.getprot( node ), wLoc.prot_P );
-    long address = (mfx?0x4000:0x0000) + addr;  //cs2 address range 0x0000-0x03ff is for MM1/2 loc/function decoders, 0x4000-0x7FFF for mfx
-    int fnchanged = wFunCmd.getfnchanged(node);
+    int fnchanged  = wFunCmd.getfnchanged(node);
+    int addr       = wFunCmd.getaddr( node );
+    int addroffset = 0;
+    char prot[4];
+
+    if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
+      addroffset = 0xC000;    //DCC loc adress range start
+      strcpy(prot,"dcc");
+    } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
+      addroffset = 0x4000;    //MFX loc address range start
+      strcpy(prot,"mfx");
+    } else {
+      addroffset = 0x0000;    //MM loc address range start
+      strcpy(prot,"mm");
+    }
+    long address = addr + addroffset;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "Loc %d %s function f%d to %s", addr, mfx?"mfx":"mm", fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
+        "Loc %d (%s) function f%d to %s", addr, prot, fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
 
     if( fnchanged != -1 ) {
       __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged));
@@ -411,10 +446,9 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-
     SocketOp.recvfrom( data->readUDP, in, 13 );
     if( in[1] == 0x21 ) {    //unoffcial answer to unofficial 0x10 command with response bit set
-      TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2S88( data, in, store );
     } else {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
