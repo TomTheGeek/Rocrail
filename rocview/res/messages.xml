@@ -11475,4 +11475,10 @@
   <Msg id="motor">
     <en txt="Motor"/>
   </Msg>
+  <Msg id="usemanualroutes">
+    <en txt="Use manual routes"/>
+    <de txt="Benutz manuelle Fahrstraßen"/>
+    <nl txt="Gebruik hand bediende wisselstraten"/>
+  </Msg>
+
 </Messages>

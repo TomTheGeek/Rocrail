@@ -149,8 +149,6 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
 
   initLabels();
 
-  m_Manual->Enable(false);
-
   m_IndexPanel->GetSizer()->Layout();
   m_GeneralPanel->GetSizer()->Layout();
   m_CommandPanel->GetSizer()->Layout();
