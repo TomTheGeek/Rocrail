@@ -806,9 +806,9 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
 
 static Boolean _isManual( iORoute inst, Boolean* isset ) {
   iORouteData data = Data(inst);
-  if( wRoute.ismanual(data->props) && StrOp.equals( data->lockedId, wRoute.getid(data->props) ) )
+  if( isset != NULL && wRoute.ismanual(data->props) && StrOp.equals( data->lockedId, wRoute.getid(data->props) ) )
     *isset = True;
-  else
+  else if( isset != NULL )
     *isset = False;
 
   return wRoute.ismanual(data->props);
@@ -816,10 +816,16 @@ static Boolean _isManual( iORoute inst, Boolean* isset ) {
 
 static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
+  Boolean isset = False;
 
   if( data->lockedId != NULL && StrOp.equals(data->lockedId, id ) ) {
     /* it is free for itself */
     return True;
+  }
+
+  if( data->lockedId != NULL && StrOp.equals(data->lockedId, RouteOp.getId(inst) ) && RouteOp.isManual(inst, &isset) ) {
+    /* it is free for itself */
+    return isset ? True:False;
   }
 
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
@@ -844,7 +850,15 @@ static Boolean _isFree( iORoute inst, const char* id ) {
 
 static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean lockswitches ) {
   iORouteData o = Data(inst);
+  Boolean isset = False;
   o->reverse = reverse;
+
+  if( o->lockedId != NULL && StrOp.equals(o->lockedId, RouteOp.getId(inst) ) && RouteOp.isManual(inst, &isset) ) {
+    if( isset ) {
+      o->lockedId = NULL;
+    }
+  }
+
 
   if( o->lockedId == NULL || StrOp.len( o->lockedId ) == 0 ) {
     /* Check all switches: */
