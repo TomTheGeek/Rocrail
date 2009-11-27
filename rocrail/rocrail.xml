@@ -949,6 +949,7 @@
     </fun>
     <fun name="isManual" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
+      <param name="isset" vt="Boolean*" remark="Is manually set by CTC."/>
     </fun>
     <fun name="hasPermission" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>

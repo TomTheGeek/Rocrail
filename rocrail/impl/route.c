@@ -804,8 +804,13 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
 
 
 
-static Boolean _isManual( iORoute inst ) {
+static Boolean _isManual( iORoute inst, Boolean* isset ) {
   iORouteData data = Data(inst);
+  if( wRoute.ismanual(data->props) && StrOp.equals( data->lockedId, wRoute.getid(data->props) ) )
+    *isset = True;
+  else
+    *isset = False;
+
   return wRoute.ismanual(data->props);
 }
 

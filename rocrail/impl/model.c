@@ -2752,6 +2752,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
 
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
+  Boolean usemanualroutes  = wLoc.isusemanualroutes(LocOp.base.properties( loc ));
   Boolean destdir = False;
   Boolean samedir = False;
 
@@ -2790,8 +2791,22 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
 
       if( route != NULL ) {
         Boolean fromTo = True;
+        Boolean isset = False;
+        Boolean ismanual = RouteOp.isManual( route, &isset );
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
+
+        if( usemanualroutes ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
+          if( !ismanual ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip none manual route [%s].", RouteOp.getId(route));
+            continue;
+          }
+          else if( ismanual && !isset ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip manual route [%s] because it is not set free to use.", RouteOp.getId(route));
+            continue;
+          }
+        }
 
         if( !RouteOp.getDir( route ) ) {
           /* route is useable for both directions */
