@@ -652,7 +652,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setaddr( nodeC, addr );
     wLoc.setdir( nodeC, (dirf & DIRF_DIR)? False:True );
     wLoc.setfn( nodeC, (dirf & DIRF_F0) ? True:False );
-    wLoc.setcmd( nodeC, wLoc.direction );
+    wLoc.setcmd( nodeC, wLoc.dirfun );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
     iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );

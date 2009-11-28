@@ -318,13 +318,15 @@ static void* __event( void* inst, const void* evt ) {
         V = data->curSpeed;
     }
 
-    if( !StrOp.equals( wLoc.velocity, wLoc.getcmd(evtNode) ) ) {
+    if( StrOp.equals( wLoc.direction, wLoc.getcmd(evtNode) ) || StrOp.equals( wLoc.dirfun, wLoc.getcmd(evtNode) ) ) {
       /* function and dir update */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s dir=%d fn=%d",
           wLoc.getid(data->props), wLoc.isdir(evtNode), wLoc.isfn(evtNode) );
       if( !data->go ) {
         wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
-        wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+        if( StrOp.equals( wLoc.dirfun, wLoc.getcmd(evtNode) ) ) {
+          wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+        }
       }
     }
 

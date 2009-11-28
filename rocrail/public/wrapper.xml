@@ -1582,6 +1582,7 @@
         <const name="swap" vt="string" val="swap" remark="Swap placing."/>
         <const name="velocity" vt="string" val="velocity" remark="Set direct velocity."/>
         <const name="direction" vt="string" val="direction" remark="Set direct direction."/>
+        <const name="dirfun" vt="string" val="dirfun" remark="Set direct direction and function."/>
         <const name="function" vt="string" val="function" remark="Set direct function."/>
         <const name="shortid" vt="string" val="shortid" remark="Send the short ID to the command station."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
