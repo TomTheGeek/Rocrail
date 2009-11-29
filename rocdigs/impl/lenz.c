@@ -1117,11 +1117,10 @@ static void __transactor( void* threadinst ) {
        otherwise work on the current node until the cs will answer, or give up after numtries */
     if (responceRecieved || data->dummyio) {
       post = ThreadOp.getPost( th );
-      numtries = 5;
+      numtries = 1;
       if (post != NULL) {
         outy = (byte*) post;
-        for (i = 0; i < 256; i++)
-          out[i] = (unsigned char) outy[i];
+        MemOp.copy( out, outy, 256);
         freeMem( post);
       }
       if (post != NULL) {
@@ -1161,13 +1160,12 @@ static void __transactor( void* threadinst ) {
     } else {
       if( post != NULL && numtries > 0 && expectAnswer) {
         /* send again */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Resend last command..." );
         __sendRequest( lenz, out );
-
         numtries--;
 
       } else {
         responceRecieved = True;
-
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
 
@@ -1488,11 +1486,9 @@ static void _halt( obj inst ) {
   iOLenz lenz = (iOLenz) inst;
 
   /* ALL OFF */
-  byte* outc = allocMem(256);
-  outc[0] = 0x21;
-  outc[1] = 0x80;
-  outc[2] = 0xA1;
-  __sendRequest( lenz, outc );
+  iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+  wSysCmd.setcmd( cmd, wSysCmd.stop );
+  LenzOp.cmd( inst, cmd );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", "Lenz" );
 
   data->run = False;
@@ -1553,7 +1549,10 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.set( data->swTime1, -1, sizeof( data->swTime1 ) );
   MemOp.set( data->fbState, 0, sizeof( data->fbState ) );
 
-  SerialOp.setFlow( data->serial, cts );
+  if( StrOp.equals( wDigInt.cts, wDigInt.getflow(ini) ) )
+    SerialOp.setFlow( data->serial, cts );
+  else
+    SerialOp.setFlow( data->serial, none );
 
   if( data->usb) /* force to 57600 ignoring the ini.*/
     SerialOp.setLine( data->serial, 57600, 8, 1, 0 );
@@ -1571,6 +1570,7 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow            = %s", wDigInt.getflow( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor debounce = %s", data->sensordebounce ? "yes":"no" );

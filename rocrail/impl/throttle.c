@@ -779,7 +779,7 @@ static void* __event(void* inst, const void* evt) {
   iOThrottleData data = Data(inst);
   iONode event = (iONode) evt;
 
-  TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "**** EVENT %s %s",
+  TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "event %s %s",
       NodeOp.getName( event ), wState.name());
 
   /* TODO: processing the node and feed the throttle with bits when needed... */
