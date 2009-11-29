@@ -291,7 +291,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) %s", addr, prot, (dir==1)?"forwards":"backwards" );
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
-      /* when changing direction cs2 set speed to o internally, so after direction change also send speed
+      /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed
          the cs2 confirms any message, a direction confirmation message sets the speed to 0 in Rocrail
          because it is unknown if the direction change was initiated by Rocrail or by a cs2 command.
          When it is initiated by Rocrail this will restore original speed, when not, speed will remain 0 */
@@ -303,7 +303,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     }
     /* send direction first, speed as second */
     ThreadOp.post( data->writer, (obj)out );
-    ThreadOp.sleep(20);
+    /* ThreadOp.sleep(20); */
     ThreadOp.post( data->writer, (obj)out2 );
     return rsp;
   }
@@ -447,6 +447,55 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
   }
 }
 
+static void __evaluateMCS2Function( iOMCS2Data mcs2, byte* in ) {
+  int addr     = 0;
+  int function = in[9];
+  int state    = in[10];
+  addr = ( ( in[7] & 0x0F ) << 8 ) + in[8];
+  /* mask left nibble of high byte because this is protocol dependent 0x0 for MM, 0x4 for MFX, 0xC for DCC */
+  if( function <= 28 ) {
+    /* cs2 supports 32 functions, Rocrail 28 */
+    iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( mcs2->iid != NULL )
+      wLoc.setiid( nodeC, mcs2->iid );
+    wFunCmd.setaddr( nodeC, addr);
+    wFunCmd.setfnchanged( nodeC, function);
+    wLoc.setcmd( nodeC, wLoc.function );
+    switch ( function ) {
+      case 0 : wFunCmd.setf0( nodeC, ( state ? True : False)); break;
+      case 1 : wFunCmd.setf1( nodeC, ( state ? True : False)); break;
+      case 2 : wFunCmd.setf2( nodeC, ( state ? True : False)); break;
+      case 3 : wFunCmd.setf3( nodeC, ( state ? True : False)); break;
+      case 4 : wFunCmd.setf4( nodeC, ( state ? True : False)); break;
+      case 5 : wFunCmd.setf5( nodeC, ( state ? True : False)); break;
+      case 6 : wFunCmd.setf6( nodeC, ( state ? True : False)); break;
+      case 7 : wFunCmd.setf7( nodeC, ( state ? True : False)); break;
+      case 8 : wFunCmd.setf8( nodeC, ( state ? True : False)); break;
+      case 9 : wFunCmd.setf9( nodeC, ( state ? True : False)); break;
+      case 10 : wFunCmd.setf10( nodeC, ( state ? True : False)); break;
+      case 11 : wFunCmd.setf11( nodeC, ( state ? True : False)); break;
+      case 12 : wFunCmd.setf12( nodeC, ( state ? True : False)); break;
+      case 13 : wFunCmd.setf13( nodeC, ( state ? True : False)); break;
+      case 14 : wFunCmd.setf14( nodeC, ( state ? True : False)); break;
+      case 15 : wFunCmd.setf15( nodeC, ( state ? True : False)); break;
+      case 16 : wFunCmd.setf16( nodeC, ( state ? True : False)); break;
+      case 17 : wFunCmd.setf17( nodeC, ( state ? True : False)); break;
+      case 18 : wFunCmd.setf18( nodeC, ( state ? True : False)); break;
+      case 19 : wFunCmd.setf19( nodeC, ( state ? True : False)); break;
+      case 20 : wFunCmd.setf20( nodeC, ( state ? True : False)); break;
+      case 21 : wFunCmd.setf21( nodeC, ( state ? True : False)); break;
+      case 22 : wFunCmd.setf22( nodeC, ( state ? True : False)); break;
+      case 23 : wFunCmd.setf23( nodeC, ( state ? True : False)); break;
+      case 24 : wFunCmd.setf24( nodeC, ( state ? True : False)); break;
+      case 25 : wFunCmd.setf25( nodeC, ( state ? True : False)); break;
+      case 26 : wFunCmd.setf26( nodeC, ( state ? True : False)); break;
+      case 27 : wFunCmd.setf27( nodeC, ( state ? True : False)); break;
+      case 28 : wFunCmd.setf28( nodeC, ( state ? True : False)); break;
+    }
+    mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
 static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
   int addr1 = in[7] & 0x0F;
   /* mask left nibble of high byte, this is not part of the actual address (always 0x3 for accessory) */
@@ -490,6 +539,10 @@ static void __reader( void* threadinst ) {
       /* unoffcial answer to unofficial 0x10 command with response bit set */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2S88( data, in, store );
+    } else if( in[1] == 0x0D ) {
+      /* locfunction message */
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+      __evaluateMCS2Function( data, in );
     } else if( in[1] == 0x17 && in[10] == 0x01 ) {
       /* switch message gate activated second message with gate deactivated again is ignored */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
