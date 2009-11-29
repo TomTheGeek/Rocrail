@@ -206,6 +206,7 @@ static iOThread _find( const char* name ) {
 static Boolean _post( iOThread inst, obj msg ) {
   if( inst != NULL ) {
     iOThreadData data = Data(inst);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "queue[%s][%s] items %d", data->tname, data->tdesc, QueueOp.count(data->queue) );
     return QueueOp.post( data->queue, msg, normal );
   }
   return False;
@@ -301,6 +302,7 @@ static void _setDescription( iOThread inst, const char* desc ) {
   if( inst != NULL ) {
     iOThreadData data = Data(inst);
     data->tdesc = StrOp.dupID( desc, RocsThreadID );
+    QueueOp.setDesc(data->queue, desc);
   }
 }
 

@@ -100,7 +100,7 @@ static void __infoWriter( void* threadinst ) {
   __iOClntService o = (__iOClntService)ThreadOp.getParm(th);
   Boolean        ok = True;
 
-  ThreadOp.setDescription( th, "ClientCon info writer" );
+  ThreadOp.setDescription( th, SocketOp.getPeername(o->clntSocket) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "infoWriter started for:%s.", SocketOp.getPeername(o->clntSocket) );
 
   do {
@@ -211,6 +211,8 @@ static void __cmdReader( void* threadinst ) {
   /* InfoWriter. TODO: sync Map access. */
   sname = StrOp.fmt( "infw%08X", o->clntSocket );
   infoWriter = ThreadOp.inst( sname, __infoWriter, o );
+  ThreadOp.setDescription( infoWriter, SocketOp.getPeername(o->clntSocket) );
+
   ThreadOp.start( infoWriter );
 
   /* Lock the semaphore: */
@@ -335,6 +337,7 @@ static void __manager( void* threadinst ) {
 
       servername        = StrOp.fmt( "cmdr%08X", client );
       cmdReader         = ThreadOp.inst( servername, __cmdReader, cargo );
+      ThreadOp.setDescription( cmdReader, SocketOp.getPeername(client) );
 
       ThreadOp.start( cmdReader );
       StrOp.free( servername );

@@ -54,6 +54,8 @@ static void __del(void* inst) {
   iOQueueData data = Data(inst);
   data->evt->base.del( data->evt );
   data->mux->base.del( data->mux );
+  if( data->desc != NULL )
+    StrOp.free(data->desc);
   freeIDMem( data, RocsQueueID );
   freeIDMem( inst, RocsQueueID );
   instCnt--;
@@ -142,8 +144,8 @@ static Boolean _post( iOQueue inst, obj po, q_prio prio ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-        "QueueOp.post: count(%d) is getting bigger than size(%d)! Post rejected.\n",
-        data->count, data->size );
+        "QueueOp.post: count(%d) is getting bigger than size(%d)! Post rejected for [%s].",
+        data->count, data->size, data->desc==NULL?"":data->desc );
   }
   return rc;
 }
@@ -197,6 +199,11 @@ static Boolean _isEmpty( iOQueue inst ) {
 static int _msgCount( iOQueue inst ) {
   iOQueueData data = Data(inst);
   return data->count;
+}
+
+static void _setDesc( iOQueue inst, const char* desc ) {
+  iOQueueData data = Data(inst);
+  return data->desc = StrOp.dup(desc);
 }
 
 static iOQueue _inst( int size ) {
