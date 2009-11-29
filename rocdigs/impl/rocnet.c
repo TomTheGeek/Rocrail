@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/RocNetUDP.h"
 #include "rocrail/wrapper/public/RocNetSerial.h"
 #include "rocrail/wrapper/public/BinCmd.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 #include "rocdigs/impl/common/fada.h"
 
@@ -142,6 +143,34 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* BinCmd command. */
   if( StrOp.equals( NodeOp.getName( node ), wBinCmd.name() ) ) {
+  }
+
+  /* Clock command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+    const char* cmd = wClock.getcmd( node );
+
+    rn[RN_PACKET_GROUP] |= RN_GROUP_CLOCK;
+
+    if( StrOp.equals( cmd, wClock.set ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Clock set" );
+      rn[RN_PACKET_ACTION] = RN_CLOCK_SET;
+      rn[RN_PACKET_LEN] = 8;
+      rn[RN_PACKET_DATA + 4] = wClock.gethour(node);
+      rn[RN_PACKET_DATA + 5] = wClock.getminute(node);
+      rn[RN_PACKET_DATA + 7] = wClock.getdivider(node);
+      ThreadOp.post( data->writer, (obj)rn );
+      return rsp;
+    }
+    else if( StrOp.equals( cmd, wClock.sync ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Clock sync" );
+      rn[RN_PACKET_ACTION] = RN_CLOCK_SYNC;
+      rn[RN_PACKET_LEN] = 8;
+      rn[RN_PACKET_DATA + 4] = wClock.gethour(node);
+      rn[RN_PACKET_DATA + 5] = wClock.getminute(node);
+      rn[RN_PACKET_DATA + 7] = wClock.getdivider(node);
+      ThreadOp.post( data->writer, (obj)rn );
+      return rsp;
+    }
   }
 
   /* System command. */
@@ -461,6 +490,11 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
 }
 
 
+static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
+  iOrocNetData data       = Data(rocnet);
+}
+
+
 static void __evaluateInput( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
   int          addr       = 0;
@@ -518,6 +552,10 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
 
     case RN_GROUP_PT_STATIONARY:
       __evaluatePTStationary( rocnet, rn );
+      break;
+
+    case RN_GROUP_CLOCK:
+      __evaluateClock( rocnet, rn );
       break;
 
     default:
@@ -595,8 +633,8 @@ static void __writer( void* threadinst ) {
 
 
 /* VERSION: */
-static int vmajor = 0;
-static int vminor = 0;
+static int vmajor = 1;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOrocNetData data = Data(inst);

@@ -35,6 +35,8 @@
 #define RN_GROUP_STATIONARY    5
 #define RN_GROUP_PT_MOBILE     6
 #define RN_GROUP_PT_STATIONARY 7
+#define RN_GROUP_GP_TRANSFER   8
+#define RN_GROUP_CLOCK         9
 
 /* general group actions */
 #define RN_GENERAL_NOP            0
@@ -95,6 +97,9 @@
 #define RN_PROGRAMMING_READ   2
 #define RN_PROGRAMMING_COPY   3
 
+/* clock group actions */
+#define RN_CLOCK_SET    1
+#define RN_CLOCK_SYNC   2
 
 /* extended packet offsets */
 #define RN_PACKET_EXT_NETID  0
