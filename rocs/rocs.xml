@@ -918,12 +918,17 @@
     <fun name="waitPost" vt="obj" remark="Wait for a messages.">
       <param name="inst" vt="this" remark="Queue instance."/>
     </fun>
+    <fun name="setDesc" vt="void" remark="Set the Queues description.">
+      <param name="inst" vt="this" remark="Queue instance."/>
+      <param name="desc" vt="const char*" remark="Description."/>
+    </fun>
     <struct name="SqMsg" typedef="*qMsg">
       <var name="o" vt="obj" remark=""/>
       <var name="prio" vt="q_prio" remark=""/>
       <var name="next" vt="struct SqMsg*" remark=""/>
     </struct>
     <data>
+      <var name="desc" vt="char*" remark=""/>
       <var name="size" vt="int" remark="Queue size."/>
       <var name="count" vt="int" remark="Number of messages in queue."/>
       <var name="mux" vt="iOMutex" remark=""/>
