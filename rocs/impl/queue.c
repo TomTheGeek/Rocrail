@@ -203,7 +203,7 @@ static int _msgCount( iOQueue inst ) {
 
 static void _setDesc( iOQueue inst, const char* desc ) {
   iOQueueData data = Data(inst);
-  return data->desc = StrOp.dup(desc);
+  data->desc = StrOp.dup(desc);
 }
 
 static iOQueue _inst( int size ) {
