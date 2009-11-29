@@ -173,49 +173,84 @@ static void __saveFxState(iOLoc inst) {
 
 static void __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
-  if( wFunCmd.getgroup(cmd) == 0)
-    data->fn0  = wFunCmd.isf0 ( cmd );
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
-  data->fn1  = wFunCmd.isf1 ( cmd );
-  data->fn2  = wFunCmd.isf2 ( cmd );
-  data->fn3  = wFunCmd.isf3 ( cmd );
-  data->fn4  = wFunCmd.isf4 ( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 2 ) {
-  data->fn5  = wFunCmd.isf5 ( cmd );
-  data->fn6  = wFunCmd.isf6 ( cmd );
-  data->fn7  = wFunCmd.isf7 ( cmd );
-  data->fn8  = wFunCmd.isf8 ( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 3 ) {
-  data->fn9  = wFunCmd.isf9 ( cmd );
-  data->fn10 = wFunCmd.isf10( cmd );
-  data->fn11 = wFunCmd.isf11( cmd );
-  data->fn12 = wFunCmd.isf12( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 4 ) {
-  data->fn13 = wFunCmd.isf13( cmd );
-  data->fn14 = wFunCmd.isf14( cmd );
-  data->fn15 = wFunCmd.isf15( cmd );
-  data->fn16 = wFunCmd.isf16( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 5 ) {
-  data->fn17 = wFunCmd.isf17( cmd );
-  data->fn18 = wFunCmd.isf18( cmd );
-  data->fn19 = wFunCmd.isf19( cmd );
-  data->fn20 = wFunCmd.isf20( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 6 ) {
-  data->fn21 = wFunCmd.isf21( cmd );
-  data->fn22 = wFunCmd.isf22( cmd );
-  data->fn23 = wFunCmd.isf23( cmd );
-  data->fn24 = wFunCmd.isf24( cmd );
-  }
-  if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 7 ) {
-  data->fn25 = wFunCmd.isf25( cmd );
-  data->fn26 = wFunCmd.isf26( cmd );
-  data->fn27 = wFunCmd.isf27( cmd );
-  data->fn28 = wFunCmd.isf28( cmd );
+  if( StrOp.equals( wLoc.function, wLoc.getcmd(cmd) ) ) {
+    int function = wFunCmd.getfnchanged(cmd);
+    switch ( function ) {
+      case 0 : data->fn0 = wFunCmd.isf0(cmd); break;
+      case 1 : data->fn1 = wFunCmd.isf1(cmd); break;
+      case 2 : data->fn2 = wFunCmd.isf2(cmd); break;
+      case 3 : data->fn3 = wFunCmd.isf3(cmd); break;
+      case 4 : data->fn4 = wFunCmd.isf4(cmd); break;
+      case 5 : data->fn5 = wFunCmd.isf5(cmd); break;
+      case 6 : data->fn6 = wFunCmd.isf6(cmd); break;
+      case 7 : data->fn7 = wFunCmd.isf7(cmd); break;
+      case 8 : data->fn8 = wFunCmd.isf8(cmd); break;
+      case 9 : data->fn9 = wFunCmd.isf9(cmd); break;
+      case 10 : data->fn10 = wFunCmd.isf10(cmd); break;
+      case 11 : data->fn11 = wFunCmd.isf11(cmd); break;
+      case 12 : data->fn12 = wFunCmd.isf12(cmd); break;
+      case 13 : data->fn13 = wFunCmd.isf13(cmd); break;
+      case 14 : data->fn14 = wFunCmd.isf14(cmd); break;
+      case 15 : data->fn15 = wFunCmd.isf15(cmd); break;
+      case 16 : data->fn16 = wFunCmd.isf16(cmd); break;
+      case 17 : data->fn17 = wFunCmd.isf17(cmd); break;
+      case 18 : data->fn18 = wFunCmd.isf18(cmd); break;
+      case 19 : data->fn19 = wFunCmd.isf19(cmd); break;
+      case 20 : data->fn20 = wFunCmd.isf20(cmd); break;
+      case 21 : data->fn21 = wFunCmd.isf21(cmd); break;
+      case 22 : data->fn22 = wFunCmd.isf22(cmd); break;
+      case 23 : data->fn23 = wFunCmd.isf23(cmd); break;
+      case 24 : data->fn24 = wFunCmd.isf24(cmd); break;
+      case 25 : data->fn25 = wFunCmd.isf25(cmd); break;
+      case 26 : data->fn26 = wFunCmd.isf26(cmd); break;
+      case 27 : data->fn27 = wFunCmd.isf27(cmd); break;
+      case 28 : data->fn28 = wFunCmd.isf28(cmd); break;
+    }
+  } else {
+    if( wFunCmd.getgroup(cmd) == 0)
+      data->fn0  = wFunCmd.isf0 ( cmd );
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
+    data->fn1  = wFunCmd.isf1 ( cmd );
+    data->fn2  = wFunCmd.isf2 ( cmd );
+    data->fn3  = wFunCmd.isf3 ( cmd );
+    data->fn4  = wFunCmd.isf4 ( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 2 ) {
+    data->fn5  = wFunCmd.isf5 ( cmd );
+    data->fn6  = wFunCmd.isf6 ( cmd );
+    data->fn7  = wFunCmd.isf7 ( cmd );
+    data->fn8  = wFunCmd.isf8 ( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 3 ) {
+    data->fn9  = wFunCmd.isf9 ( cmd );
+    data->fn10 = wFunCmd.isf10( cmd );
+    data->fn11 = wFunCmd.isf11( cmd );
+    data->fn12 = wFunCmd.isf12( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 4 ) {
+    data->fn13 = wFunCmd.isf13( cmd );
+    data->fn14 = wFunCmd.isf14( cmd );
+    data->fn15 = wFunCmd.isf15( cmd );
+    data->fn16 = wFunCmd.isf16( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 5 ) {
+    data->fn17 = wFunCmd.isf17( cmd );
+    data->fn18 = wFunCmd.isf18( cmd );
+    data->fn19 = wFunCmd.isf19( cmd );
+    data->fn20 = wFunCmd.isf20( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 6 ) {
+    data->fn21 = wFunCmd.isf21( cmd );
+    data->fn22 = wFunCmd.isf22( cmd );
+    data->fn23 = wFunCmd.isf23( cmd );
+    data->fn24 = wFunCmd.isf24( cmd );
+    }
+    if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 7 ) {
+    data->fn25 = wFunCmd.isf25( cmd );
+    data->fn26 = wFunCmd.isf26( cmd );
+    data->fn27 = wFunCmd.isf27( cmd );
+    data->fn28 = wFunCmd.isf28( cmd );
+    }
   }
 }
 
