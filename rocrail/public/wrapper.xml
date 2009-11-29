@@ -381,7 +381,7 @@
         <var name="type" vt="string" defval="udp" range="udp,serial"/>
         <rnudp wrappername="RocNetUDP">
           <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
-          <var name="port" vt="int" defval="1234" range="0-*" remark="multicast port"/>
+          <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         </rnudp>
         <rnserial wrappername="RocNetSerial">
           <var name="device" vt="string" defval="com1" remark="The roc lib will map this to /dev/ttyS0 when running linux."/>
