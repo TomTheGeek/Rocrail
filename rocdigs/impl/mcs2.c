@@ -291,19 +291,15 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) %s", addr, prot, (dir==1)?"forwards":"backwards" );
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
-      /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed
-         the cs2 confirms any message, a direction confirmation message sets the speed to 0 in Rocrail
-         because it is unknown if the direction change was initiated by Rocrail or by a cs2 command.
-         When it is initiated by Rocrail this will restore original speed, when not, speed will remain 0 */
+      /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed */
     } else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) speedstep=%d %s", addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
       /* also send direction to prevent going wrong way when user has changed direction on the cs2 */
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
     }
-    /* send direction first, speed as second */
+    /* send direction first, speed as second, because of CS2 setting speed to 0 on dir change */
     ThreadOp.post( data->writer, (obj)out );
-    /* ThreadOp.sleep(20); */
     ThreadOp.post( data->writer, (obj)out2 );
     return rsp;
   }
@@ -447,6 +443,33 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
   }
 }
 
+static void __evaluateMCS2Loc( iOMCS2Data mcs2, byte* in ) {
+  int addr  = ( ( in[7] & 0x0F ) << 8 ) + in[8];
+  /* mask left nibble of high byte because this is protocol dependent 0x0 for MM, 0x4 for MFX, 0xC for DCC */
+  int speed = (in[9] << 8) + in[10];
+  int dir   = in[9];
+  iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  if( mcs2->iid != NULL )
+    wLoc.setiid( nodeC, mcs2->iid );
+  wLoc.setaddr( nodeC, addr );
+  if( in[1] == 0x0B ) {
+    /* loc message was a direction message
+       The cs2 sets loc speed to 0 internally on dir change and does not broadcast this. When the direction change was Rocrail initiated,
+       the loco command routine therefore always sends a speed message after a direction message to restore the speed. However when the
+       dir change command was not from Rocrail but external the loc will stop and Rocrail will still show the last speed. */
+    wLoc.setdir( nodeC, dir==1 );
+    /* 1 means forwards, 2 means reverse in cs2 message, in Rocrail true=forward, false=reverse */
+    wLoc.setcmd( nodeC, wLoc.direction );
+  } else {
+    /* loc message was speed message */
+    wLoc.setV_raw( nodeC, speed );
+    wLoc.setV_rawMax( nodeC, 1000 );
+    /* all cs2 speeds are on a scale of 0-1000, regardless of actual locdecoder speedsteps */
+    wLoc.setcmd( nodeC, wLoc.velocity );
+  }
+  mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
 static void __evaluateMCS2Function( iOMCS2Data mcs2, byte* in ) {
   int addr     = 0;
   int function = in[9];
@@ -539,6 +562,10 @@ static void __reader( void* threadinst ) {
       /* unoffcial answer to unofficial 0x10 command with response bit set */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2S88( data, in, store );
+    } else if( in[1] == 0x0B | in[1] == 0x09 ) {
+      /* loc speed or direction message */
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+      __evaluateMCS2Loc( data, in );
     } else if( in[1] == 0x0D ) {
       /* locfunction message */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
