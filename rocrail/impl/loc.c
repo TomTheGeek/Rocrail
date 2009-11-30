@@ -372,7 +372,7 @@ static void* __event( void* inst, const void* evt ) {
     wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
 
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d fn=%d dir=%s throttleID=%d",
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d fn=%d dir=%s throttleID=%s",
         wLoc.getid(data->props), V_raw, V, wLoc.isfn(data->props), wLoc.isdir(data->props)?"Forwards":"Reverse", wLoc.getthrottleid(data->props) );
     /* Broadcast to clients. */
     {
@@ -1558,6 +1558,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
+  wLoc.setthrottleid( data->props, wLoc.getthrottleid(nodeA) );
+
   if( TraceOp.getLevel(NULL) & TRCLEVEL_USER1 ) {
     char* cmdstr = NodeOp.base.toString( nodeA );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, cmdstr );
@@ -2099,7 +2101,7 @@ static iOLoc _inst( iONode props ) {
   if( !wLoc.isrestorefx(data->props))
     wLoc.setfx( data->props, 0 );
 
-  wLoc.setthrottleid( data->props, 0 );
+  wLoc.setthrottleid( data->props, "" );
 
   __initCVmap( loc );
 

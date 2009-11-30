@@ -631,6 +631,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   int throttleid = data->locothrottle[slot];
 
   if( rsp[0] == OPC_LOCO_SPD ) {
+    char* s = StrOp.fmt("%d", throttleid);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d spd=%d", slot, addr, spd );
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -639,7 +640,8 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, spd );
     wLoc.setV_rawMax( nodeC, 127 );
-    wLoc.setthrottleid( nodeC, throttleid );
+    wLoc.setthrottleid( nodeC, s );
+    StrOp.free(s);
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }

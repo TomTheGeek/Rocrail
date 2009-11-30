@@ -257,9 +257,12 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, Boo
   wLoc.setprot( nodeSpd, slot[slotnr].format == 0 ? wLoc.prot_N:wLoc.prot_M );
   wLoc.setspcnt( nodeSpd, slot[slotnr].steps == 0 ? 128:slot[slotnr].steps );
 
-  wLoc.setthrottleid( nodeSpd, slot[slotnr].idl + slot[slotnr].idh * 127 );
-
-  data->locothrottle[slotnr] = wLoc.getthrottleid( nodeSpd );
+  {
+    char* throttleid = StrOp.fmt("%d", slot[slotnr].idl + slot[slotnr].idh * 127 );
+    data->locothrottle[slotnr] = slot[slotnr].idl + slot[slotnr].idh * 127;
+    wLoc.setthrottleid( nodeSpd, throttleid );
+    StrOp.free(throttleid);
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "slot# %d format=%d steps=%d speed=%d(%d) dir=%s inuse=%d throttleID=%d",
@@ -300,8 +303,12 @@ static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
   wLoc.setprot( nodeFun, slot[slotnr].format == 0 ? wLoc.prot_N:wLoc.prot_M );
   wLoc.setspcnt( nodeFun, slot[slotnr].steps == 0 ? 128:slot[slotnr].steps );
 
-  wLoc.setthrottleid( nodeFun, slot[slotnr].idl + slot[slotnr].idh * 127 );
-
+  {
+    char* throttleid = StrOp.fmt("%d", slot[slotnr].idl + slot[slotnr].idh * 127 );
+    data->locothrottle[slotnr] = slot[slotnr].idl + slot[slotnr].idh * 127;
+    wLoc.setthrottleid( nodeFun, throttleid );
+    StrOp.free(throttleid);
+  }
 
   wCommand.setiid( nodeCmd, wLNSlotServer.getiid( data->slotserver ) );
   wCommand.setiid( nodeFun, wLNSlotServer.getiid( data->slotserver ) );

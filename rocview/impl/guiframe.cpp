@@ -779,11 +779,11 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         }
 
         int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(wLoc.getid( lc )) : -1;
-        int throttleid = wLoc.getthrottleid(lc);
+        const char* throttleid = wLoc.getthrottleid(lc);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
-        else if( throttleid > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
+        else if( throttleid != NULL && StrOp.len(throttleid) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%s"), throttleid) );
         else if(!wLoc.isactive(lc))
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
@@ -946,11 +946,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
 
         int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(locid) : -1;
-        int throttleid = wLoc.getthrottleid(node);
+        const char* throttleid = wLoc.getthrottleid(node);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
-        else if( throttleid > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%d"), throttleid) );
+        else if( throttleid != NULL && StrOp.len(throttleid) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%s"), throttleid) );
         else if(!wLoc.isactive(node))
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
@@ -1400,15 +1400,15 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
 
 
-  m_ToolBar->AddTool(ME_Connect, *_img_connect, wxGetApp().getTip("connect") );
-  m_ToolBar->AddTool(ME_Upload, *_img_upload, wxGetApp().getTip("upload") );
+  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_Upload, wxGetApp().getMsg("upload"), *_img_upload, wxGetApp().getTip("upload") );
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_New, *_img_new, wxGetApp().getTip("new") );
-  m_ToolBar->AddTool(ME_Open, *_img_open, wxGetApp().getTip("open") );
-  m_ToolBar->AddTool(ME_Save, *_img_save, wxGetApp().getTip("save") );
-  m_ToolBar->AddTool(ME_Undo, *_img_undo, wxGetApp().getTip("undo") );
+  m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, wxGetApp().getTip("new") );
+  m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save, wxGetApp().getTip("save") );
+  m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, wxGetApp().getTip("undo") );
   m_ToolBar->EnableTool(ME_Undo, false );
 
   m_ToolBar->AddSeparator();
@@ -1417,15 +1417,15 @@ void RocGuiFrame::initFrame() {
                         wxNullBitmap, wxGetApp().getTip("poweron") );
   m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode,
                         wxNullBitmap, wxGetApp().getTip("automode") );
-  m_ToolBar->AddTool(ME_AutoStop, *_img_stopall, wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stopall, wxGetApp().getTip("stopall") );
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_OperatorDlg, *_img_operator, wxGetApp().getTip("operator") );
-  m_ToolBar->AddTool(ME_MIC, *_img_mic, wxGetApp().getTip("mic") );
-  m_ToolBar->AddTool(ME_LcDlg, *_img_locctrl, wxGetApp().getTip("locctrl") );
-  m_ToolBar->AddTool(ME_SwDlg, *_img_swctrl, wxGetApp().getTip("swctrl") );
-  m_ToolBar->AddTool(ME_RouteDlg, *_img_routes, wxGetApp().getTip("stctrl") );
+  m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator, wxGetApp().getTip("operator") );
+  m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic, wxGetApp().getTip("mic") );
+  m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl, wxGetApp().getTip("locctrl") );
+  m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl, wxGetApp().getTip("swctrl") );
+  m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes, wxGetApp().getTip("stctrl") );
 
   m_ToolBar->AddSeparator();
 
@@ -1455,8 +1455,8 @@ void RocGuiFrame::initFrame() {
 
   m_ToolBar->AddSeparator();
 
-  m_ToolBar->AddTool(ME_Update, *_img_updates, wxGetApp().getTip("softwareupdates") );
-  m_ToolBar->AddTool(ME_Help, *_img_manual, wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, wxGetApp().getTip("softwareupdates") );
+  m_ToolBar->AddTool(ME_Help, wxGetApp().getMsg("documentation"), *_img_manual, wxGetApp().getTip("documentation") );
 
   m_ToolBar->Realize();
 
