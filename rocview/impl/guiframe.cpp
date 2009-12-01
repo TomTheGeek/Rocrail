@@ -1397,7 +1397,7 @@ void RocGuiFrame::initFrame() {
 
   // Create tool bar
   m_ToolBar = CreateToolBar();
-  m_ToolBar->SetToolBitmapSize(wxSize(16, 16));
+  m_ToolBar->SetToolBitmapSize(wxSize(24, 24));
 
 
   m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, wxGetApp().getTip("connect") );
