@@ -452,13 +452,15 @@ static void __evaluateMCS2Loc( iOMCS2Data mcs2, byte* in ) {
   if( mcs2->iid != NULL )
     wLoc.setiid( nodeC, mcs2->iid );
   wLoc.setaddr( nodeC, addr );
-  if( in[1] == 0x0B ) {
-    /* loc message was a direction message
-       The cs2 sets loc speed to 0 internally on dir change and does not broadcast this. When the direction change was Rocrail initiated,
-       the loco command routine therefore always sends a speed message after a direction message to restore the speed. However when the
-       dir change command was not from Rocrail but external the loc will stop and Rocrail will still show the last speed. */
+  if( in[1] == 0x0A ) {
+    /* loc command was a direction command.
+       The cs2 sets loc speed to 0 internally on dir change and does not broadcast this. Since the command was not
+       send by Rocrail, we have to assume that speed of loc is now set to zero. */
+    wLoc.setV_raw( nodeC, 0 );
+    wLoc.setV_rawMax( nodeC, 1000 );
     wLoc.setdir( nodeC, dir==1 );
     /* 1 means forwards, 2 means reverse in cs2 message, in Rocrail true=forward, false=reverse */
+//    wLoc.setcmd( nodeC, wLoc.velocity );
     wLoc.setcmd( nodeC, wLoc.direction );
   } else {
     /* loc message was speed message */
@@ -558,20 +560,24 @@ static void __reader( void* threadinst ) {
 
   do {
     SocketOp.recvfrom( data->readUDP, in, 13 );
+    /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
+       response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
+       is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
+       This means that when a command (even) is received, Rocrail did not send that command. */
     if( in[1] == 0x21 ) {
-      /* unoffcial answer to unofficial 0x10 command with response bit set */
+      /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2S88( data, in, store );
-    } else if( in[1] == 0x0B | in[1] == 0x09 ) {
-      /* loc speed or direction message */
+    } else if( in[1] == 0x0A | in[1] == 0x08 ) {
+      /* loc speed or direction comamnd, not from Rocrail. */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Loc( data, in );
-    } else if( in[1] == 0x0D ) {
-      /* locfunction message */
+    } else if( in[1] == 0x0C ) {
+      /* locfunction command, not from Rocrail. */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Function( data, in );
-    } else if( in[1] == 0x17 && in[10] == 0x01 ) {
-      /* switch message gate activated second message with gate deactivated again is ignored */
+    } else if( in[1] == 0x16 && in[10] == 0x01 ) {
+      /* switch command gate activated, second command with gate deactivated again is ignored, not from Rocrail. */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Switch( data, in );
     } else {
