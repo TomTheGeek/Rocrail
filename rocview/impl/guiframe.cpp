@@ -779,11 +779,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         }
 
         int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(wLoc.getid( lc )) : -1;
-        const char* throttleid = wLoc.getthrottleid(lc);
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
-        else if( throttleid != NULL && StrOp.len(throttleid) > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%s"), throttleid) );
+        else if( StrOp.len(wLoc.getthrottleid( lc )) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.getthrottleid( lc ), wxConvUTF8) );
         else if(!wLoc.isactive(lc))
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
@@ -912,7 +911,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) )
   {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] destblock=[%s] throttleID=%d",
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] destblock=[%s] throttleID=%s",
         wLoc.getid( node ), (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-"), wLoc.getthrottleid(node) );
 
     for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
@@ -946,11 +945,14 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
 
         int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(locid) : -1;
-        const char* throttleid = wLoc.getthrottleid(node);
+
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "jsdev=%d throttleid.len=%d", jsdev, StrOp.len(wLoc.getthrottleid( node )));
+
+
         if( jsdev != -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("ctrl") + wxString::Format(_T("%d"), jsdev) );
-        else if( throttleid != NULL && StrOp.len(throttleid) > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString::Format(_T("%s"), throttleid) );
+        else if( StrOp.len(wLoc.getthrottleid( node )) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.getthrottleid( node ), wxConvUTF8) );
         else if(!wLoc.isactive(node))
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
         else
