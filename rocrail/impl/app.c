@@ -817,6 +817,14 @@ static Boolean _shutdown( void ) {
     if( data->control != NULL )
       ControlOp.cmd( data->control, cmd, NULL );
 
+    /* inform clients */
+    if( AppOp.getClntCon() != NULL ) {
+      iONode broadcast = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
+      wSysCmd.setcmd( broadcast, wSysCmd.shutdown );
+      wSysCmd.setinformall( broadcast, True );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), broadcast );
+      ThreadOp.sleep(100);
+    }
 
     /* Inform Model. */
     if( data->model != NULL )

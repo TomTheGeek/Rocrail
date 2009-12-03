@@ -784,10 +784,17 @@ static void rocrailCallback( obj me, iONode node ) {
   }
   /* System on/off */
   else if( StrOp.equals( wSysCmd.name(), NodeOp.getName( node ) ) ) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, SYSTEM_EVENT );
-    // Make a copy of the node for using it out of this scope:
-    event.SetClientData( node->base.clone( node ) );
-    wxPostEvent( guiApp->getFrame(), event );
+    if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd(node) ) ) {
+      TraceOp.trc( "app", TRCLEVEL_EXCEPTION, __LINE__, 9999, "SHUTDOWN");
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, wxID_EXIT );
+      wxPostEvent( guiApp->getFrame(), event );
+    }
+    else {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, SYSTEM_EVENT );
+      // Make a copy of the node for using it out of this scope:
+      event.SetClientData( node->base.clone( node ) );
+      wxPostEvent( guiApp->getFrame(), event );
+    }
   }
   /* ZLevel */
   else if( StrOp.equals( wZLevel.name(), NodeOp.getName( node ) ) ) {
