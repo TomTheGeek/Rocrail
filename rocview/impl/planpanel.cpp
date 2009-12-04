@@ -84,6 +84,8 @@
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/ScheduleList.h"
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionList.h"
 
 BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
 
@@ -860,6 +862,9 @@ iONode PlanPanel::addItemInList( iONode item ) {
   }
   else if( StrOp.equals( wLocation.name(), name ) ) {
     dbkey = wLocationList.name();
+  }
+  else if( StrOp.equals( wAction.name(), name ) ) {
+    dbkey = wActionList.name();
   }
 
   const char* id = wItem.getid(item);
