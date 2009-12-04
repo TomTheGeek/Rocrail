@@ -139,6 +139,10 @@ void GenericCtrlDlg::initValues() {
     m_Baudrate->SetSelection(4);
   else if( wDigInt.getbps( m_Props ) == 57600 )
     m_Baudrate->SetSelection(5);
+  else if( wDigInt.getbps( m_Props ) == 115200 )
+    m_Baudrate->SetSelection(6);
+  else if( wDigInt.getbps( m_Props ) == 230400 )
+    m_Baudrate->SetSelection(7);
   else
     m_Baudrate->SetSelection(2);
 
@@ -185,6 +189,10 @@ void GenericCtrlDlg::evaluate() {
     wDigInt.setbps( m_Props, 38400 );
   else if( m_Baudrate->GetSelection() == 5 )
     wDigInt.setbps( m_Props, 57600 );
+  else if( m_Baudrate->GetSelection() == 6 )
+    wDigInt.setbps( m_Props, 115200 );
+  else if( m_Baudrate->GetSelection() == 7 )
+    wDigInt.setbps( m_Props, 230400 );
 }
 
 
@@ -252,21 +260,21 @@ void GenericCtrlDlg::CreateControls()
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT1, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labLib = new wxStaticText( itemPanel3, wxID_ANY, _("Library"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labLib, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Lib = new wxTextCtrl( itemPanel3, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+    m_Lib = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_Lib->Enable(false);
     itemFlexGridSizer5->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -280,6 +288,8 @@ void GenericCtrlDlg::CreateControls()
     m_BaudrateStrings.Add(_("&19200"));
     m_BaudrateStrings.Add(_("&38400"));
     m_BaudrateStrings.Add(_("&57600"));
+    m_BaudrateStrings.Add(_("&115200"));
+    m_BaudrateStrings.Add(_("&230400"));
     m_Baudrate = new wxRadioBox( itemPanel3, ID_RADIOBOX, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_COLS );
     m_Baudrate->SetSelection(0);
     itemBoxSizer12->Add(m_Baudrate, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);

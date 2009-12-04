@@ -10202,7 +10202,6 @@
         <long name="proxy-Height">300</long>
         <bool name="proxy-AUI manager">0</bool>
         <string name="proxy-Event sources">""</string>
-        <bool name="proxy-wxTHICK_FRAME">0</bool>
         <document>
           <string name="title">"wxBoxSizer V"</string>
           <string name="type">"dialog-control-document"</string>
@@ -10216,14 +10215,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -10870,7 +10861,7 @@
                   <string name="proxy-Member variable name">"m_Baudrate"</string>
                   <string name="proxy-Label">"Baudrate"</string>
                   <long name="proxy-Major dimension count">1</long>
-                  <string name="proxy-Items">"&amp;2400|&amp;4800|&amp;9600|&amp;19200|&amp;38400|&amp;57600"</string>
+                  <string name="proxy-Items">"&amp;2400|&amp;4800|&amp;9600|&amp;19200|&amp;38400|&amp;57600|&amp;115200|&amp;230400"</string>
                   <long name="proxy-Initial value">0</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
