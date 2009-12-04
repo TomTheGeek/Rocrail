@@ -75,6 +75,14 @@ Boolean rocs_serial_close( iOSerial inst ) {
 /* Conversions */
 static speed_t __symbolicSpeed( int bps ) {
   /* AIX does not support speeds above 38k. */
+
+
+#ifdef B230400
+  if( bps >= 230400 )
+    return B230400;
+#endif
+
+
 #ifdef B115200
   if( bps >= 115200 )
     return B115200;
