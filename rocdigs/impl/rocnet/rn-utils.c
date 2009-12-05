@@ -27,26 +27,12 @@
 static const char* name = "rnutils";
 
 int rnCheckPacket(unsigned char* rn, int* extended, int* event) {
-  int len = 8 + rn[RN_PACKET_LEN];
-  int i;
-  if( ! (rn[0] & RN_PACKET_START ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "No start bit at begin of rocNet packet!" );
-    return False;
-  }
-  for( i = 1; i < len; i++ ) {
-    if( rn[i] & RN_PACKET_START ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "High bit 7 detected in data of rocNet packet!" );
-      return False;
-    }
-  }
-  *extended = rn[0] & RN_PACKET_EXTENDED;
-  *event    = rn[0] & RN_PACKET_EVENT;
   return True;
 }
 
 
 int rnActionFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_ACTION] & RN_ACTION_MASK;
+  return rn[RN_PACKET_ACTION] & RN_ACTION_CODE_MASK;
 }
 int rnActionTypeFromPacket(unsigned char* rn) {
   return (rn[RN_PACKET_ACTION] >> 5 ) & 3;
@@ -54,30 +40,21 @@ int rnActionTypeFromPacket(unsigned char* rn) {
 
 
 int rnSenderAddrFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_EXT_SNDRL] + rn[RN_PACKET_EXT_SNDRH] * 128;
+  return rn[RN_PACKET_SNDRL] + rn[RN_PACKET_SNDRH] * 128;
 }
 
 int rnReceipientAddrFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_EXT_RCPTL] + rn[RN_PACKET_EXT_RCPTH] * 128;
-}
-
-int rnAddrFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_ADDRL] + rn[RN_PACKET_ADDRH] * 128;
+  return rn[RN_PACKET_RCPTL] + rn[RN_PACKET_RCPTH] * 128;
 }
 
 void rnSenderAddresToPacket( int addr, unsigned char* rn ) {
-  rn[RN_PACKET_EXT_SNDRL] = addr % 128;
-  rn[RN_PACKET_EXT_SNDRH] = addr / 128;
+  rn[RN_PACKET_SNDRL] = addr % 128;
+  rn[RN_PACKET_SNDRH] = addr / 128;
 }
 
 void rnReceipientAddresToPacket( int addr, unsigned char* rn ) {
-  rn[RN_PACKET_EXT_RCPTL] = addr % 128;
-  rn[RN_PACKET_EXT_RCPTH] = addr / 128;
-}
-
-void rnAddresToPacket( int addr, unsigned char* rn ) {
-  rn[RN_PACKET_ADDRL] = addr % 128;
-  rn[RN_PACKET_ADDRH] = addr / 128;
+  rn[RN_PACKET_RCPTL] = addr % 128;
+  rn[RN_PACKET_RCPTH] = addr / 128;
 }
 
 const char* rnActionTypeString(unsigned char* rn) {

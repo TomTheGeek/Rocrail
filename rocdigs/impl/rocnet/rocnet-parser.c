@@ -29,14 +29,10 @@ const char* rocnetGetProtocolStr(byte prot) {
   const char* protStr = "?";
 
   switch( prot & 0x0F ) {
+    case RN_MOBILE_PROT_256   : protStr = "256" ; break;
     case RN_MOBILE_PROT_DCC28 : protStr = "DCC 28" ; break;
     case RN_MOBILE_PROT_DCC128: protStr = "DCC 128"; break;
     case RN_MOBILE_PROT_DCC14 : protStr = "DCC 14" ; break;
-    case RN_MOBILE_PROT_MM1   : protStr = "MM 1"   ; break;
-    case RN_MOBILE_PROT_MM2   : protStr = "MM 1"   ; break;
-    case RN_MOBILE_PROT_MM3   : protStr = "MM 1"   ; break;
-    case RN_MOBILE_PROT_MM4   : protStr = "MM 1"   ; break;
-    case RN_MOBILE_PROT_MM5   : protStr = "MM 1"   ; break;
   }
 
   return protStr;
@@ -126,7 +122,7 @@ byte* rocnetParseGeneral( iOrocNet rocnet, byte* rn ) {
   }
 
   switch( action ) {
-    case RN_GENERAL_NOP:
+    case RN_CS_NOP:
       TraceOp.trc( myname, TRCLEVEL_INFO, __LINE__, 9999,
           "general NOP(%s) action for %d from %d%s, %d data bytes",
           rnActionTypeString(rn), rcpt, sndr, isThis?"(this)":"", rn[RN_PACKET_LEN] );
@@ -142,7 +138,7 @@ byte* rocnetParseGeneral( iOrocNet rocnet, byte* rn ) {
       }
       break;
 
-    case RN_GENERAL_TRACKPOWER:
+    case RN_CS_TRACKPOWER:
       TraceOp.trc( myname, TRCLEVEL_INFO, __LINE__, 9999,
           "general TRACKPOWER(%s) action for %d from %d%s, %d data bytes",
           rnActionTypeString(rn), rcpt, sndr, isThis?"(this)":"", rn[RN_PACKET_LEN] );

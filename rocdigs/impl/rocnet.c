@@ -38,8 +38,6 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/RocNet.h"
-#include "rocrail/wrapper/public/RocNetUDP.h"
-#include "rocrail/wrapper/public/RocNetSerial.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
 
@@ -114,16 +112,7 @@ static byte __getProtocol(iONode loc) {
       prot = RN_MOBILE_PROT_DCC28;
   }
   else if( StrOp.equals( wLoc.getprot(loc), wLoc.prot_M ) ) {
-    prot = RN_MOBILE_PROT_MM1;
-
-    if( wLoc.getprotver(loc) == 2 )
-      prot = RN_MOBILE_PROT_MM2;
-    else if( wLoc.getprotver(loc) == 3 )
-      prot = RN_MOBILE_PROT_MM3;
-    else if( wLoc.getprotver(loc) == 4 )
-      prot = RN_MOBILE_PROT_MM4;
-    else if( wLoc.getprotver(loc) == 5 )
-      prot = RN_MOBILE_PROT_MM5;
+    prot = RN_MOBILE_PROT_MM;
   }
 
   return prot;
@@ -135,10 +124,9 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   byte*  rn  = allocMem(32);;
   iONode rsp = NULL;
 
-  rn[0] = RN_PACKET_START;
+  rn[0] = 0; /* network ID 0=ALL */
 
-  if( data->extended )
-    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn );
+  rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn );
 
 
   /* BinCmd command. */
@@ -177,21 +165,21 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    rn[RN_PACKET_GROUP] |= RN_GROUP_GENERAL;
+    rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      rn[RN_PACKET_ACTION] = RN_GENERAL_TRACKPOWER;
+      rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
       rn[RN_PACKET_LEN] = 1;
-      rn[RN_PACKET_DATA + 0] = RN_GENERAL_TRACKPOWER_OFF;
+      rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      rn[RN_PACKET_ACTION] = RN_GENERAL_TRACKPOWER;
+      rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
       rn[RN_PACKET_LEN] = 1;
-      rn[RN_PACKET_DATA + 0] = RN_GENERAL_TRACKPOWER_ON;
+      rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_ON;
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
     }
@@ -367,20 +355,12 @@ static void _halt( obj inst ) {
   iOrocNetData data = Data(inst);
   byte* rn;
   rn = allocMem(32);
-  rn[0] = RN_PACKET_START;
-  if( data->extended ) {
-    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn );
-    rn[RN_PACKET_EXT_GROUP] = RN_GROUP_GENERAL;
-    rn[RN_PACKET_EXT_ACTION] = RN_GENERAL_TRACKPOWER;
-    rn[RN_PACKET_EXT_LEN] = 1;
-    rn[RN_PACKET_EXT_DATA + 0] = RN_GENERAL_TRACKPOWER_OFF;
-  }
-  else {
-    rn[RN_PACKET_GROUP] |= RN_GROUP_GENERAL;
-    rn[RN_PACKET_ACTION] = RN_GENERAL_TRACKPOWER;
-    rn[RN_PACKET_LEN] = 1;
-    rn[RN_PACKET_DATA + 0] = RN_GENERAL_TRACKPOWER_OFF;
-  }
+  rn[0] = 0;
+  rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+  rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
+  rn[RN_PACKET_LEN] = 1;
+  rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
   ThreadOp.post( data->writer, (obj)rn );
   /* grab some time to process the request */
@@ -522,11 +502,11 @@ static void __evaluateInput( iOrocNet rocnet, byte* rn ) {
 
 static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data = Data(rocnet);
-  int group = rn[RN_PACKET_GROUP] & RN_GROUP_MASK;
+  int group = rn[RN_PACKET_GROUP];
   byte* rnReply = NULL;
 
   switch( group ) {
-    case RN_GROUP_GENERAL:
+    case RN_GROUP_CS:
       rnReply = rocnetParseGeneral( rocnet, rn );
       break;
 
@@ -608,12 +588,7 @@ static void __writer( void* threadinst ) {
       int event    = False;
       int plen     = 0;
 
-      if( data->extended ) {
-        plen = 8 + rnRequest[RN_PACKET_EXT_LEN];
-      }
-      else {
-        plen = 5 + rnRequest[RN_PACKET_LEN];
-      }
+      plen = 8 + rnRequest[RN_PACKET_LEN];
 
       if( rnCheckPacket(rnRequest, &extended, &event) ) {
         char* str = StrOp.byteToStr(rnRequest, plen);
@@ -662,32 +637,12 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNET %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  type [%s]", wRocNet.gettype(data->rnini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  if( StrOp.equals( wRocNet.rn_type_udp, wRocNet.gettype(data->rnini) ) ) {
-    iONode rnudp = wRocNet.getrnudp(data->rnini);
-    if( rnudp == NULL ) {
-      rnudp = NodeOp.inst( wRocNetUDP.name(), data->rnini, ELEMENT_NODE );
-      NodeOp.addChild( data->rnini, rnudp );
-    }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wRocNetUDP.getaddr(rnudp) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", wRocNetUDP.getport(rnudp) );
-    data->readUDP = SocketOp.inst( wRocNetUDP.getaddr(rnudp), wRocNetUDP.getport(rnudp), False, True );
-    SocketOp.bind(data->readUDP);
-    data->writeUDP = SocketOp.inst( wRocNetUDP.getaddr(rnudp), wRocNetUDP.getport(rnudp), False, True );
-  }
-  if( StrOp.equals( wRocNet.rn_type_serial, wRocNet.gettype(data->rnini) ) ) {
-    iONode rnserial = wRocNet.getrnserial(data->rnini);
-    if( rnserial == NULL ) {
-      rnserial = NodeOp.inst( wRocNetSerial.name(), data->rnini, ELEMENT_NODE );
-      NodeOp.addChild( data->rnini, rnserial );
-    }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  serial device [%s]", wRocNetSerial.getdevice(rnserial) );
-    data->serialCon = SerialOp.inst( wRocNetSerial.getdevice(rnserial) );
-    SerialOp.setFlow( data->serialCon, cts );
-    SerialOp.setLine( data->serialCon, 57600, 8, 2, none );
-    SerialOp.open( data->serialCon );
-  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wRocNet.getaddr(data->rnini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", wRocNet.getport(data->rnini) );
+  data->readUDP = SocketOp.inst( wRocNet.getaddr(data->rnini), wRocNet.getport(data->rnini), False, True );
+  SocketOp.bind(data->readUDP);
+  data->writeUDP = SocketOp.inst( wRocNet.getaddr(data->rnini), wRocNet.getport(data->rnini), False, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->run = True;

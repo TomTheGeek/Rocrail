@@ -22,56 +22,43 @@
 #define ROCNETCONST_H_
 
 
-#define RN_PACKET_START    0x80
-#define RN_PACKET_EXTENDED 0x40
-#define RN_PACKET_EVENT    0x20
-
 /* groups */
-#define RN_GROUP_MASK          0x1F
-#define RN_GROUP_GENERAL       1
-#define RN_GROUP_OUTPUT        2
-#define RN_GROUP_INPUT         3
-#define RN_GROUP_MOBILE        4
-#define RN_GROUP_STATIONARY    5
-#define RN_GROUP_PT_MOBILE     6
-#define RN_GROUP_PT_STATIONARY 7
-#define RN_GROUP_GP_TRANSFER   8
-#define RN_GROUP_CLOCK         9
+#define RN_GROUP_CS            1
+#define RN_GROUP_MOBILE        2
+#define RN_GROUP_STATIONARY    3
+#define RN_GROUP_PT_MOBILE     4
+#define RN_GROUP_PT_STATIONARY 5
+#define RN_GROUP_GP_DATA       6
+#define RN_GROUP_CLOCK         7
+#define RN_GROUP_OUTPUT        8
+#define RN_GROUP_INPUT         9
 
-/* general group actions */
-#define RN_GENERAL_NOP            0
-#define RN_GENERAL_QUERY          1
-#define RN_GENERAL_TRACKPOWER     2
-#define RN_GENERAL_TRACKPOWER_ON  1 /* data byte */
-#define RN_GENERAL_TRACKPOWER_OFF 0 /* data byte */
-#define RN_GENERAL_HALT           3
-#define RN_GENERAL_VERSION        4
-#define RN_GENERAL_PT             5
-#define RN_GENERAL_PT_ON          1 /* data byte */
-#define RN_GENERAL_PT_OFF         0 /* data byte */
+/* command station group actions */
+#define RN_CS_NOP            0
+#define RN_CS_QUERY          1
+#define RN_CS_TRACKPOWER     2
+#define RN_CS_TRACKPOWER_ON  1 /* data byte */
+#define RN_CS_TRACKPOWER_OFF 0 /* data byte */
+#define RN_CS_HALT           3
+#define RN_CS_VERSION        4
+#define RN_CS_PT             5
+#define RN_CS_PT_ON          1 /* data byte */
+#define RN_CS_PT_OFF         0 /* data byte */
 
 /* mobile group actions */
 #define RN_MOBILE_SETUP          1
 #define RN_MOBILE_VELOCITY       2
 #define RN_MOBILE_FUNCTIONS      3
 #define RN_MOBILE_QUERY          4
-#define RN_MOBILE_DISPATCH_PUT   5
-#define RN_MOBILE_DISPATCH_GET   6
-#define RN_MOBILE_DISPATCH_FREE  7
-#define RN_MOBILE_LINK           8
-#define RN_MOBILE_UNLINK         9
 
-#define RN_MOBILE_DIR_FORWARDS  0x40
-#define RN_MOBILE_LIGHTS_ON     0x20
+#define RN_MOBILE_DIR_FORWARDS  0x01
+#define RN_MOBILE_LIGHTS_ON     0x01
 
-#define RN_MOBILE_PROT_DCC28    0
-#define RN_MOBILE_PROT_DCC128   1
-#define RN_MOBILE_PROT_DCC14    2
-#define RN_MOBILE_PROT_MM1      3
-#define RN_MOBILE_PROT_MM2      4
-#define RN_MOBILE_PROT_MM3      5
-#define RN_MOBILE_PROT_MM4      6
-#define RN_MOBILE_PROT_MM5      7
+#define RN_MOBILE_PROT_256      0
+#define RN_MOBILE_PROT_DCC28    1
+#define RN_MOBILE_PROT_DCC128   2
+#define RN_MOBILE_PROT_DCC14    3
+#define RN_MOBILE_PROT_MM       4
 
 
 
@@ -97,36 +84,31 @@
 #define RN_PROGRAMMING_READ   2
 #define RN_PROGRAMMING_COPY   3
 
-/* clock group actions */
-#define RN_CLOCK_SET    1
-#define RN_CLOCK_SYNC   2
 
 /* extended packet offsets */
-#define RN_PACKET_EXT_NETID  0
-#define RN_PACKET_EXT_RCPTH  1
-#define RN_PACKET_EXT_RCPTL  2
-#define RN_PACKET_EXT_SNDRH  3
-#define RN_PACKET_EXT_SNDRL  4
-#define RN_PACKET_EXT_GROUP  5
-#define RN_PACKET_EXT_ACTION 6
-#define RN_PACKET_EXT_LEN    7
-#define RN_PACKET_EXT_DATA   8
+#define RN_PACKET_NETID  0
+#define RN_PACKET_RCPTH  1
+#define RN_PACKET_RCPTL  2
+#define RN_PACKET_SNDRH  3
+#define RN_PACKET_SNDRL  4
+#define RN_PACKET_GROUP  5
+#define RN_PACKET_ACTION 6
+#define RN_PACKET_LEN    7
+#define RN_PACKET_DATA   8
 
-/* small packet offsets */
-#define RN_PACKET_GROUP  0
-#define RN_PACKET_ADDRH  1
-#define RN_PACKET_ADDRL  2
-#define RN_PACKET_ACTION 3
-#define RN_PACKET_LEN    4
-#define RN_PACKET_DATA   5
-
-#define RN_ACTION_MASK  0x1F
+#define RN_ACTION_CODE_MASK  0x1F
+#define RN_ACTION_TYPE_MASK  0xE0
 
 /* action types */
 #define RN_ACTIONTYPE_REQUEST  0
 #define RN_ACTIONTYPE_EVENT    1
 #define RN_ACTIONTYPE_REPLY    2
 #define RN_ACTIONTYPE_REPLYEXP 3
+
+/* clock group actions */
+#define RN_CLOCK_SET    1
+#define RN_CLOCK_SYNC   2
+
 
 
 #endif /*ROCNETCONST_H_*/
