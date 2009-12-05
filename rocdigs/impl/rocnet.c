@@ -211,7 +211,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn );
     rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH_MULTI;
     rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = 0;
@@ -256,7 +256,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn );
     rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
     rn[RN_PACKET_LEN] = 1;
     rn[RN_PACKET_DATA + 0] = cmd;
@@ -282,7 +282,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         addr, V, fn?"on":"off", dir?"forwards":"reverse" );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn );
     rn[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
     rn[RN_PACKET_LEN] = 2;
     rn[RN_PACKET_DATA + 0] = V;
@@ -318,7 +318,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         fn9?"on":"off", fn10?"on":"off", fn11?"on":"off", fn12?"on":"off" );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn );
     rn[RN_PACKET_ACTION] = RN_MOBILE_FUNCTIONS;
     rn[RN_PACKET_LEN] = 3;
     rn[RN_PACKET_DATA + 0] = (fn1?0x01:0x00) | (fn2?0x02:0x00) | (fn3?0x04:0x00) | (fn4?0x08:0x00) | (fn5?0x10:0x00) | (fn6?0x20:0x00) | (fn?0x40:0x00) ;
