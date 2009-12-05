@@ -32,8 +32,5 @@ int rnActionFromPacket(unsigned char* rn);
 int rnActionTypeFromPacket(unsigned char* rn);
 
 
-void rnAddresToPacket( int addr, unsigned char* rn );
-int rnAddrFromPacket(unsigned char* rn);
-
 
 #endif /*RNUTILS_H_*/

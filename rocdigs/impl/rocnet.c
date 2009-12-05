@@ -404,13 +404,8 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  if( data->extended ) {
-    rcpt = rnReceipientAddrFromPacket(rn);
-    sndr = rnSenderAddrFromPacket(rn);
-  }
-  else {
-    addr = rnAddrFromPacket(rn);
-  }
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
 
   switch( action ) {
   default:
@@ -429,13 +424,8 @@ static void __evaluatePTMobile( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  if( data->extended ) {
-    rcpt = rnReceipientAddrFromPacket(rn);
-    sndr = rnSenderAddrFromPacket(rn);
-  }
-  else {
-    addr = rnAddrFromPacket(rn);
-  }
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
 
   switch( action ) {
   default:
@@ -454,13 +444,8 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  if( data->extended ) {
-    rcpt = rnReceipientAddrFromPacket(rn);
-    sndr = rnSenderAddrFromPacket(rn);
-  }
-  else {
-    addr = rnAddrFromPacket(rn);
-  }
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
 
   switch( action ) {
   default:
@@ -484,13 +469,8 @@ static void __evaluateInput( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  if( data->extended ) {
-    rcpt = rnReceipientAddrFromPacket(rn);
-    sndr = rnSenderAddrFromPacket(rn);
-  }
-  else {
-    addr = rnAddrFromPacket(rn);
-  }
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
 
   switch( action ) {
   default:
