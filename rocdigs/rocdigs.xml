@@ -679,7 +679,6 @@
       <var name="serialCon" vt="iOSerial"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
-      <var name="extended" vt="Boolean"/>
     </data>
   </object>
 
