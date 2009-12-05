@@ -1103,7 +1103,7 @@ static void __transactor( void* threadinst ) {
   Boolean expectAnswer = True;
 
 
-  int timeoutval = 100;
+  int timeoutval = 25;
   int timeout = timeoutval;
 
   unsigned char* outc = NULL;
@@ -1172,24 +1172,19 @@ static void __transactor( void* threadinst ) {
     }
 
 
-    /* Give up timeslice:*/
-    ThreadOp.sleep( 50 );
-
-
-    Boolean dataAvailable = SerialOp.available(data->serial);
+    int dataAvailable = SerialOp.available(data->serial);
 
     // Wait or timeout
-    while(  !(timeout != 0 || !dataAvailable) ) {
-      if( timeout > 0)
-        timeout --;
-      ThreadOp.sleep( 25 );
+    while(  timeout > 0 && dataAvailable >= 2 ) {
+      timeout --;
+      ThreadOp.sleep( 10 );
       dataAvailable = SerialOp.available(data->serial);
     }
 
-    if ( !data->bincmd && !data->dummyio && dataAvailable) {
+    if ( !data->bincmd && !data->dummyio && dataAvailable > 0 ) {
+      Boolean unsupportedCmd = False;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timeout=%d dataAvailable=%d", timeout, dataAvailable );
       if( MutexOp.wait( data->mux ) ) {
-
-        dataAvailable = False;
 
         if ( data->usb) {
 
@@ -1392,15 +1387,20 @@ static void __transactor( void* threadinst ) {
 
         else {
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported command: 0x%02X", in[0]);
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
           responceRecieved = True;
+          unsupportedCmd = True;
         }
 
         /* anything will go to rocgui ...*/
-        __evaluateResponse( lenz, in, datalen );
+        if(!unsupportedCmd)
+          __evaluateResponse( lenz, in, datalen );
 
       }
+    }
+    else if ( !responceRecieved && !data->bincmd && !data->dummyio ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout=%d dataAvailable=%d", timeout, dataAvailable );
     }
 
     /* Sensor Debounce */
@@ -1427,7 +1427,7 @@ static void __transactor( void* threadinst ) {
     }
 
     /* Give up timeslice:*/
-    ThreadOp.sleep( 1 );
+    ThreadOp.sleep( 10 );
   } while( data->run );
 
 }
