@@ -83,8 +83,8 @@ cp rocview/xpm/rocrail.icns $DEST/VolumeIcon.icns
 setFile -a V $DEST/VolumeIcon.icns
 cp rocview/_DS_Store $DEST/.DS_Store
 setFile -a V $DEST/.DS_Store
-cp rocview/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
-setFile -a V $DEST/Rocrail/.DS_Store
+#cp rocview/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
+#setFile -a V $DEST/Rocrail/.DS_Store
 
 # Unmount the disk image
 hdiutil detach $DEV
