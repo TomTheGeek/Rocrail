@@ -32,7 +32,7 @@ else
 fi
 
 # create the .apps
-cd rocrail; make macapp; cd ..;
+#cd rocrail; make macapp; cd ..;
 cd rocview; make macapp; cd ..;
 
 echo "Getting Bazaar revision number..."
@@ -69,18 +69,17 @@ mkdir -p $DEST/Rocrail/rocdata/trace/
 cp -r rocrail/package/images $DEST/Rocrail/rocdata/
 
 cp -r unxbin/Rocrail.app $DEST/Rocrail
-cp -r unxbin/Rocview.app $DEST/Rocrail
 
 cp rocrail/package/plan.xml $DEST/Rocrail/rocdata/
-cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
-cp rocrail/package/rocview.ini_dmg $DEST/Rocrail/rocdata/rocview.ini
+#cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
+#cp rocrail/package/rocview.ini_dmg $DEST/Rocrail/rocdata/rocview.ini
 
 cp -r rocview/svg/themes $DEST/Rocrail/rocdata/
 
 # pimp the dmg
 cp doc/rocrail-logo-dmg.png $DEST/background.png
 setFile -a V $DEST/background.png
-cp rocrail/rocrail.icns $DEST/VolumeIcon.icns
+cp rocview/xpm/rocrail.icns $DEST/VolumeIcon.icns
 setFile -a V $DEST/VolumeIcon.icns
 cp rocview/_DS_Store $DEST/.DS_Store
 setFile -a V $DEST/.DS_Store

@@ -154,18 +154,21 @@ install:
 	-cp -p $(OUTDIR)/rocview $(DESTDIR)
 	
 macapp:
-	rm -rf Rocview.app
-	-mkdir Rocview.app
-	-mkdir Rocview.app/Contents
-	-mkdir Rocview.app/Contents/MacOS
-	-mkdir Rocview.app/Contents/Resources
-	-mkdir Rocview.app/Contents/Resources/icons
-	cp rocrail.icns Rocview.app/Contents/Resources/rocrail.icns
-	cp Info.plist Rocview.app/Contents/	
-	echo -n 'APPL????' > Rocview.app/Contents/PkgInfo
-	cp ../unxbin/rocview Rocview.app/Contents/MacOS/Rocview
-	cp Run Rocview.app/Contents/MacOS/
-	cp /usr/lib/libwx* Rocview.app/Contents/MacOS/
-	rm -rf ../unxbin/Rocview.app
-	mv -f Rocview.app ../unxbin
+	rm -rf Rocrail.app
+	-mkdir Rocrail.app
+	-mkdir Rocrail.app/Contents
+	-mkdir Rocrail.app/Contents/MacOS
+	-mkdir Rocrail.app/Contents/Resources
+	-mkdir Rocrail.app/Contents/Resources/icons
+	cp xpm/rocrail.icns Rocrail.app/Contents/Resources/rocrail.icns
+	cp Info.plist Rocrail.app/Contents/	
+	echo -n 'APPL????' > Rocrail.app/Contents/PkgInfo
+	cp ../unxbin/rocview Rocrail.app/Contents/MacOS/rocview
+	cp ../unxbin/rocrail Rocrail.app/Contents/MacOS/rocrail
+	cp ../unxbin/*.dylib Rocrail.app/Contents/MacOS
+	cp Run Rocrail.app/Contents/MacOS/
+	cp /usr/lib/libwx* Rocrail.app/Contents/MacOS/
+	rm -rf ../unxbin/Rocrail.app
+	mv -f Rocrail.app ../unxbin
+	
 	
