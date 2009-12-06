@@ -1403,7 +1403,8 @@ void RocGuiFrame::initFrame() {
 
 
   m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, wxGetApp().getTip("connect") );
-  m_ToolBar->AddTool(ME_Upload, wxGetApp().getMsg("upload"), *_img_upload, wxGetApp().getTip("upload") );
+  //m_ToolBar->AddTool(ME_Upload, wxGetApp().getMsg("upload"), *_img_upload, wxGetApp().getTip("upload") );
+  m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, wxGetApp().getTip("openworkspace") );
 
   m_ToolBar->AddSeparator();
 
