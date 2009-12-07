@@ -64,6 +64,7 @@ Source: "..\..\winbin\opendcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\clock.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mcs2.dll"; DestDir: "{app}"
 Source: "..\..\winbin\barjut.dll"; DestDir: "{app}"
+Source: "..\..\winbin\rocnet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
