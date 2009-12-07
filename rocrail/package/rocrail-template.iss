@@ -64,6 +64,9 @@ Source: "..\..\winbin\opendcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\clock.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mcs2.dll"; DestDir: "{app}"
 Source: "..\..\winbin\barjut.dll"; DestDir: "{app}"
+Source: "..\..\winbin\sprog.dll"; DestDir: "{app}"
+Source: "..\..\winbin\nce.dll"; DestDir: "{app}"
+Source: "..\..\winbin\dcc232.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rocnet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
@@ -82,6 +85,6 @@ Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; F
 Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\Rocview"; Parameters: "-sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
-Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userappdata}\Rocrail\images"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocrail.exe"
+Name: "{group}\Rocrail"; Parameters: "-sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
+;Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userappdata}\Rocrail\images"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocrail.exe"
 
