@@ -1159,6 +1159,7 @@
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
         <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Distance between enter and in event to check with train length."/>
         <var name="gomanual" vt="bool" defval="true" remark="allow half-automatic mode"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>

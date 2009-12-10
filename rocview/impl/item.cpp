@@ -401,7 +401,8 @@ void Symbol::sizeToScale() {
     Show( false );
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "item %s: z level does not match %d!=%d", name, m_Z, z );
   }
-  else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wRoute.name(), name ) ) {
+  else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
+           StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
     Show(wOutput.isshow(m_Props));
   }
@@ -481,7 +482,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
   if( m_Z == z ) {
     //Show( true );
 
-    if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wRoute.name(), name ) ) {
+    if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
+        StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) ) {
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
       Show(wOutput.isshow(m_Props));
     }
@@ -1347,7 +1349,7 @@ void Symbol::OnProps(wxCommandEvent& event) {
     updateLabel();
     Show(FALSE);
     Refresh();
-    Show(TRUE);
+    Show(wBlock.isshow(m_Props));
     blockDlg->Destroy();
   }
   else if( StrOp.equals( wSwitch.name(), name ) ) {
