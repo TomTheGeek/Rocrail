@@ -457,6 +457,50 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
 
 static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
+  int          addr       = 0;
+  int          rcpt       = 0;
+  int          sndr       = 0;
+  Boolean      isThis     = rocnetIsThis( rocnet, rn);
+  int          action     = rnActionFromPacket(rn);
+  int          actionType = rnActionTypeFromPacket(rn);
+
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
+
+  switch( action ) {
+  case RN_CLOCK_SET:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock set" );
+    break;
+  case RN_CLOCK_SYNC:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock sync" );
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
+    break;
+  }
+}
+
+
+static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
+  iOrocNetData data       = Data(rocnet);
+  int          addr       = 0;
+  int          rcpt       = 0;
+  int          sndr       = 0;
+  Boolean      isThis     = rocnetIsThis( rocnet, rn);
+  int          action     = rnActionFromPacket(rn);
+  int          actionType = rnActionTypeFromPacket(rn);
+
+  rcpt = rnReceipientAddrFromPacket(rn);
+  sndr = rnSenderAddrFromPacket(rn);
+
+  switch( action ) {
+  case RN_SENSOR_REPORT:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report" );
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
+    break;
+  }
 }
 
 
@@ -516,6 +560,10 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
 
     case RN_GROUP_CLOCK:
       __evaluateClock( rocnet, rn );
+      break;
+
+    case RN_GROUP_SENSOR:
+      __evaluateSensor( rocnet, rn );
       break;
 
     default:

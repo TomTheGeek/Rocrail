@@ -30,8 +30,9 @@
 #define RN_GROUP_PT_STATIONARY 5
 #define RN_GROUP_GP_DATA       6
 #define RN_GROUP_CLOCK         7
-#define RN_GROUP_OUTPUT        8
-#define RN_GROUP_INPUT         9
+#define RN_GROUP_SENSOR        8
+#define RN_GROUP_OUTPUT        9
+#define RN_GROUP_INPUT        10
 
 /* command station group actions */
 #define RN_CS_NOP            0
@@ -109,6 +110,8 @@
 #define RN_CLOCK_SET    1
 #define RN_CLOCK_SYNC   2
 
+/* sensor group actions */
+#define RN_SENSOR_REPORT    1
 
 
 #endif /*ROCNETCONST_H_*/
