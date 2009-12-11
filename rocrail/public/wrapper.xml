@@ -749,6 +749,7 @@
     <var name="show" vt="bool" defval="true"/>
     <var name="road" vt="bool" defval="false"/>
     <var name="state" vt="string" defval="-"/>
+    <var name="generated" vt="bool" defval="false" remark="On the fly generated for an unknown address. Triggered by a client."/>
   </item>
 
   <modplan wrappername="ModPlan" remark="Root node of the module master plan.">

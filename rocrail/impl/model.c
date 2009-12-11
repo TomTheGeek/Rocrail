@@ -1548,7 +1548,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     /* TODO: Send the preferred themes to the Rocview.*/
   }
   else if( StrOp.equals( wModelCmd.save, cmdVal ) ) {
-    ModelOp.save( inst );
+    ModelOp.save( inst, False );
   }
   else if( StrOp.equals( wModelCmd.initfield, cmdVal ) ) {
     ModelOp.initField( inst );
@@ -1675,6 +1675,23 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "createMap: %s NOT found.", dbKey );
 }
 
+static void _removeGenerated( iOModelData o, const char* dbKey, const char* itemKey ) {
+  iONode db = NodeOp.findNode( o->model, dbKey );
+  if( db != NULL ) {
+    iONode item   = NodeOp.findNode( db, itemKey );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "removeGenerated: %s found.", dbKey );
+    while( item != NULL ) {
+      iONode nextitem = NodeOp.findNextNode( db, item );
+      if( wItem.isgenerated(item) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing: %s", wItem.getid(item) );
+        NodeOp.removeChild( db, item );
+        NodeOp.base.del( item );
+      }
+      item = nextitem;
+    }
+  }
+}
+
 static void _removeFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
   iOList list = (iOList)MapOp.get( data->fbAddrMap, key );
@@ -1749,9 +1766,13 @@ static void _createCoAddrMap( iOModelData o ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "createCoAddrMap: size=%d.", MapOp.size(o->coAddrMap) );
 }
 
-static void _save( iOModel inst ) {
+static void _save( iOModel inst, Boolean removeGen ) {
   iOModelData o = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Saving plan [%s]...", o->fileName );
+
+  if( o->model != NULL )
+    _removeGenerated(o, wLocList.name(), wLoc.name());
+
   if( o->model != NULL && o->moduleplan != NULL ) {
     ModPlanOp.save( o->moduleplan, o->fileName );
   }
@@ -1775,7 +1796,7 @@ static void _save( iOModel inst ) {
 static void _saveAs( iOModel inst, const char* fileName ) {
   iOModelData o = Data(inst);
   o->fileName = fileName;
-  _save( inst );
+  _save( inst, False );
 }
 
 
@@ -1818,6 +1839,17 @@ static iOLoc _getLoc( iOModel inst, const char* id ) {
       loc = ModelOp.getLocByAddress(inst, addr);
       if( loc != NULL )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
+      else {
+        iONode lc = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "generating a loco for addres [%d]", addr );
+        wLoc.setid( lc, id );
+        wLoc.setaddr( lc, addr );
+        wLoc.setspcnt( lc, 128 );
+        wLoc.setprot( lc, addr > 127 ? wLoc.prot_L:wLoc.prot_N );
+        wItem.setgenerated( lc, True );
+        _addItem(inst, lc);
+        loc = (iOLoc)MapOp.get( o->locMap, id );
+      }
     }
   }
   return loc;

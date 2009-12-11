@@ -828,7 +828,7 @@ static Boolean _shutdown( void ) {
 
     /* Inform Model. */
     if( data->model != NULL )
-      ModelOp.save(data->model);
+      ModelOp.save(data->model, True); /* Remove generated objects. */
 
     if( data->consoleMode ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "For shutdown in console mode use q<enter>" );

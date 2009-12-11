@@ -553,6 +553,7 @@
     </fun>
     <fun name="save" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
+      <param name="removeGen" vt="Boolean" remark="Remove generated objects."/>
     </fun>
     <fun name="saveAs" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
