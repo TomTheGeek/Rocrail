@@ -502,7 +502,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
   const char* itemName = NodeOp.getName( item );
   Boolean added = False;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding %s %s...", name, wItem.getid(item) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding %s %s...", itemName, wItem.getid(item) );
 
   if( StrOp.equals( wBlock.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
