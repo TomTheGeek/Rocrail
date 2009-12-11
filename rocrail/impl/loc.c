@@ -1567,15 +1567,17 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
-  if( wLoc.getthrottleid( data->props ) != NULL && StrOp.len(wLoc.getthrottleid( data->props)) > 0 ) {
-    if( !StrOp.equals(wLoc.getthrottleid( data->props ), wLoc.getthrottleid( nodeA)) ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-          "cmd from %s rejected because this loco is already controlled by %s",
-          wLoc.getthrottleid( nodeA),
-          wLoc.getthrottleid( data->props )
-          );
-      NodeOp.base.del(nodeA);
-      return False;
+  if( wLoc.getthrottleid( nodeA ) != NULL && StrOp.len(wLoc.getthrottleid( nodeA)) > 0 ) {
+    if( wLoc.getthrottleid( data->props ) != NULL && StrOp.len(wLoc.getthrottleid( data->props)) > 0 ) {
+      if( !StrOp.equals(wLoc.getthrottleid( data->props ), wLoc.getthrottleid( nodeA)) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "cmd from %s rejected because this loco is already controlled by %s",
+            wLoc.getthrottleid( nodeA),
+            wLoc.getthrottleid( data->props )
+            );
+        NodeOp.base.del(nodeA);
+        return False;
+      }
     }
   }
 
