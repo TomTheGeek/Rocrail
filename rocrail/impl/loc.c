@@ -1453,6 +1453,14 @@ static void _dispatch( iOLoc inst ) {
 
 }
 
+static void _release( iOLoc inst, iONode cmd ) {
+  iOLocData data = Data(inst);
+  if( StrOp.equals(wLoc.getthrottleid( data->props ), wLoc.getthrottleid( cmd ) ) ) {
+    wLoc.setthrottleid( data->props, "" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s is released from throttle %s", wLoc.getid(data->props), wLoc.getthrottleid( cmd ) );
+  }
+}
+
 static void _reset( iOLoc inst, Boolean saveCurBlock ) {
   iOLocData data = Data(inst);
   data->go    = False;
@@ -1559,6 +1567,18 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
+  if( wLoc.getthrottleid( data->props ) != NULL && StrOp.len(wLoc.getthrottleid( data->props)) > 0 ) {
+    if( !StrOp.equals(wLoc.getthrottleid( data->props ), wLoc.getthrottleid( nodeA)) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "cmd from %s rejected because this loco is already controlled by %s",
+          wLoc.getthrottleid( nodeA),
+          wLoc.getthrottleid( data->props )
+          );
+      NodeOp.base.del(nodeA);
+      return False;
+    }
+  }
+
   wLoc.setthrottleid( data->props, wLoc.getthrottleid(nodeA) );
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_USER1 ) {
@@ -1614,6 +1634,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
       _dispatch( inst );
+    }
+    else if( StrOp.equals( wLoc.release, cmd ) ) {
+      _release(inst, cmd);
     }
     else if( StrOp.equals( wLoc.brake, cmd ) ) {
       _brake( inst );
