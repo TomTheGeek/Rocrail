@@ -161,26 +161,60 @@ static byte __checkSum(byte* packet, int len) {
 #define EOT 0x17
 #define DLE 0x10
 
-static int __escapePacketz(obj inst, byte* packet, int inlen) {
-  iOZimoBinData data = Data(inst);
+static int __escapePacket(byte* packet, int inlen) {
   byte buf[64];
   int len = inlen;
+  int i = 0;
+  int idx = 0;
+
+  for( i = 0; i < inlen; i++ ) {
+    if(  packet[i] == SOH || packet[i] == SOH || packet[i] == SOH ) {
+      buf[idx] = DLE;
+      idx++;
+      buf[idx] = packet[i] ^ 0x20;
+      idx++;
+    }
+    else {
+      buf[idx] = packet[i];
+      idx++;
+    }
+  }
+
+  len = idx;
+  MemOp.copy( packet, buf, len );
+
   return len;
 
 }
 
 
-static int __unescapePacket(obj inst, byte* packet, int inlen) {
-  iOZimoBinData data = Data(inst);
+static int __unescapePacket(byte* packet, int inlen) {
   byte buf[64];
   int len = inlen;
+  int i = 0;
+  int idx = 0;
+
+  for( i = 0; i < inlen; i++ ) {
+    if(  packet[i] == DLE ) {
+      i++;
+      buf[idx] = packet[i] ^ 0xDF;
+      idx++;
+    }
+    else {
+      buf[idx] = packet[i];
+      idx++;
+    }
+  }
+
+  len = idx;
+  MemOp.copy( packet, buf, len );
+
   return len;
 
 }
 
 
-static int __controlPacketz(obj inst, byte* packet, int inlen) {
-  iOZimoBinData data = Data(inst);
+static int __controlPacket(byte* packet, int inlen) {
   byte buf[256];
   int len = inlen + 3;
 
