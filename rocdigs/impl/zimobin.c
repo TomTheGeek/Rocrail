@@ -107,9 +107,22 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OZimoBin ----- */
 
-static byte __checkSum(obj inst, byte* packet) {
-  iOZimoBinData data = Data(inst);
-  byte checksum = 0;
+/*
+CRC-8-Dallas/Maxim
+x8 + x5 + x4 + 1 (1-Wire bus)
+
+Representations: normal / **reversed** / reverse of reciprocal
+0x31 / 0x8C / 0x98
+
+Initialized with 0xFF
+
+ */
+static byte __checkSum(byte* packet, int len) {
+  byte checksum = 0xFF;
+  int i = 0;
+  for( i = 0; i < len; i++ ) {
+    checksum = (packet[i] + checksum) % 0x8C;
+  }
 
   return checksum;
 }
@@ -125,19 +138,35 @@ static byte __checkSum(obj inst, byte* packet) {
 #define EOT 0x17
 #define DLE 0x10
 
-static int __escapeCtrl(obj inst, byte* packet, int inlen) {
+static int __escapePacketz(obj inst, byte* packet, int inlen) {
   iOZimoBinData data = Data(inst);
   byte buf[64];
-  int len = 0;
+  int len = inlen;
   return len;
 
 }
 
 
-static int __unescapeCtrl(obj inst, byte* packet, int inlen) {
+static int __unescapePacket(obj inst, byte* packet, int inlen) {
   iOZimoBinData data = Data(inst);
   byte buf[64];
-  int len = 0;
+  int len = inlen;
+  return len;
+
+}
+
+
+static int __controlPacketz(obj inst, byte* packet, int inlen) {
+  iOZimoBinData data = Data(inst);
+  byte buf[256];
+  int len = inlen + 3;
+
+  buf[0] = SOH;
+  buf[1] = SOH;
+  MemOp.copy(buf+2, packet, inlen);
+  buf[inlen+2] = EOT;
+
+  MemOp.copy(packet, buf, len);
   return len;
 
 }
@@ -266,13 +295,23 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
+    byte* outa = allocMem(256);
+
+    outa[0] = 4; /* packet length */
+    outa[1] = 0;
+    outa[2] = 0x0A;
+    outa[3] = 0x00;
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      outa[4] = 0x01;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      outa[4] = 0x02;
     }
+    ThreadOp.post( data->transactor, (obj)outa );
+
   }
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
@@ -365,8 +404,18 @@ static void __transactor( void* threadinst ) {
     if (True) {
       post = ThreadOp.getPost( th );
       if (post != NULL) {
-        MemOp.copy( out, (byte*) post, 256);
+        int packetlen = ((byte*) post)[0] & 0xFF;
+        MemOp.copy( out, (byte*) post+1, packetlen);
         freeMem( post);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+        out[packetlen] = __checkSum(out, packetlen);
+        packetlen++;
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+        packetlen = __escapePacket(out, packetlen);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+        packetlen = __controlPacket(out, packetlen);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+
       }
     }
 

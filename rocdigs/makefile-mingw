@@ -33,7 +33,7 @@ NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c
 
 all: $(OBJS) $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\opendcc.dll $(OUTDIR)\p50.dll $(OUTDIR)\p50x.dll $(OUTDIR)\hsi88.dll $(OUTDIR)\barjut.dll $(OUTDIR)\srcp.dll \
 	$(OUTDIR)\lenz.dll $(OUTDIR)\roco.dll $(OUTDIR)\zimo.dll $(OUTDIR)\dinamo.dll $(OUTDIR)\om32.dll \
-	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll \
+	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll $(OUTDIR)\zimobin.dll.dll \
 	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll $(OUTDIR)\sprog.dll $(OUTDIR)\nce.dll $(OUTDIR)\dcc232.dll $(OUTDIR)\io8255.dll
 #	-del /Q $(TMPOUTDIR)\*.o
 
@@ -86,6 +86,8 @@ $(OUTDIR)\nce.dll: $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\nce.dll
 $(OUTDIR)\io8255.dll: $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\io8255.dll
+$(OUTDIR)\zimobin.dll: $(TMPOUTDIR)\zimobin.o $(COMMONOBJS) $(OUTDIR)\zimobin.a $(OUTDIR)\libwrapper.a
+	dllwrap --def rocdigs.def $(TMPOUTDIR)\zimobin.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\zimobin.dll
 
 # ------------------------------------------------------------
 # The RocDigs objects.
