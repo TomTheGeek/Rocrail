@@ -246,6 +246,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
   iOZimoBinData data = Data(zimobin);
   iONode rsp = NULL;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translate %s", NodeOp.getName( node ) );
+
   /* Clock command. */
   if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
   }
@@ -414,15 +416,20 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
 
 /**  */
-static iONode _cmd( obj inst ,const iONode cmd ) {
+static iONode _cmd( obj inst ,const iONode nodeA ) {
   iOZimoBinData data = Data(inst);
-  return 0;
+  iONode rsp = NULL;
+
+  rsp = __translate( (iOZimoBin)inst, nodeA );
+
+  return rsp;
 }
 
 
 /**  */
 static void _halt( obj inst ) {
   iOZimoBinData data = Data(inst);
+  data->run = False;
   return;
 }
 
@@ -499,6 +506,7 @@ static void __transactor( void* threadinst ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         packetlen = __controlPacket(out, packetlen);
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+        SerialOp.write( data->serial, (char*) out, packetlen );
 
       }
 
@@ -509,13 +517,15 @@ static void __transactor( void* threadinst ) {
       while( dataAvailable > 0 && inIdx < 256) {
         Boolean ok = SerialOp.read( data->serial, (char*) &inbuf[inIdx], 1 );
         if( !ok ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Read from port failed." );
           break;
         }
 
-        dataAvailable = SerialOp.available(data->serial);
-        if( (inIdx == 0 || inIdx == 1)  && inbuf[inIdx] != SOH ) {
+        if( inIdx == 1  && inbuf[inIdx] != SOH  && inbuf[inIdx-1] != SOH  ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "No valid start sequence: idx=%d in=%02X", inIdx, inbuf[inIdx] );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx+1 );
           inIdx = 0;
-          continue;
+          break;
         }
 
         if( inIdx > 1 ) {
@@ -523,8 +533,17 @@ static void __transactor( void* threadinst ) {
             /* end of packet */
             packetReceived = True;
             inIdx++;
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "End of packet detected." );
             break;
           }
+        }
+
+        dataAvailable = SerialOp.available(data->serial);
+        int waitformore = 10;
+        while( dataAvailable == 0 && waitformore > 0) {
+          ThreadOp.sleep(10);
+          dataAvailable = SerialOp.available(data->serial);
+          waitformore--;
         }
 
         inIdx++;
@@ -541,6 +560,7 @@ static void __transactor( void* threadinst ) {
       }
       else if(inIdx > 0) {
         /* Invalid packet? */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Invalid packet." );
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
       }
 
@@ -555,8 +575,8 @@ static void __transactor( void* threadinst ) {
 
 
 /* VERSION: */
-static int vmajor = 0;
-static int vminor = 0;
+static int vmajor = 1;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOZimoBinData data = Data(inst);
@@ -586,7 +606,8 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-  SerialOp.setFlow( data->serial, cts );
+  /**SerialOp.setFlow( data->serial, cts );*/
+  SerialOp.setFlow( data->serial, none );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
