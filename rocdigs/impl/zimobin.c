@@ -107,6 +107,26 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OZimoBin ----- */
 
+
+
+
+/* Update 8-bit CRC value
+  using polynomial  X^8 + X^5 + X^4 + 1 */
+#define POLYVAL 0x8C
+static void __updateCRC(byte new, byte* crc)
+{
+  int i;
+  byte c = *crc;
+  for (i = 0; i < 8; i++) {
+    if ((c ^ new) & 1)
+      c = (c >> 1 ) ^ POLYVAL;
+    else
+      c >>= 1;
+    new >>= 1;
+  }
+  *crc = c;
+}
+
 /*
 CRC-8-Dallas/Maxim
 x8 + x5 + x4 + 1 (1-Wire bus)
@@ -121,11 +141,14 @@ static byte __checkSum(byte* packet, int len) {
   byte checksum = 0xFF;
   int i = 0;
   for( i = 0; i < len; i++ ) {
-    checksum = (packet[i] + checksum) % 0x8C;
+    __updateCRC(packet[i], &checksum);
   }
 
   return checksum;
 }
+
+
+
 
 
 /*
