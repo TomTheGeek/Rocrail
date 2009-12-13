@@ -255,6 +255,28 @@
   </object>
 
 
+  <object name="ZimoBin" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="ctsretry" vt="int"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="dummyio" vt="Boolean"/>
+      <var name="fbmod" vt="int"/>
+      <var name="readfb" vt="Boolean"/>
+      <var name="transactor" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+    </data>
+  </object>
+
+
   <object name="Lenz" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
