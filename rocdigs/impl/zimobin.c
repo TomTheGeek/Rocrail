@@ -229,6 +229,18 @@ static int __controlPacket(byte* packet, int inlen) {
 }
 
 
+static int __uncontrolPacket(byte* packet, int inlen) {
+  byte buf[256];
+  int len = inlen - 3;
+
+  MemOp.copy(buf, packet+2, len);
+  MemOp.copy(packet, buf, len);
+
+  return len;
+}
+
+
+
 
 static iONode __translate( iOZimoBin zimobin, iONode node ) {
   iOZimoBinData data = Data(zimobin);
@@ -445,6 +457,21 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
+  iOZimoBinData data    = Data(zimobin);
+  Boolean ok = True;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sequenceID=%d message=0x%02X", packet[0], packet[1] );
+
+  switch( packet[1] ) {
+  case 0x0A: /* command station instruction */
+    break;
+  }
+
+  return ok;
+}
+
+
 static void __transactor( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOZimoBin     zimobin = (iOZimoBin)ThreadOp.getParm(th);
@@ -474,6 +501,50 @@ static void __transactor( void* threadinst ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
 
       }
+
+      int dataAvailable = SerialOp.available(data->serial);
+      byte inbuf[256];
+      int inIdx = 0;
+      Boolean packetReceived = False;
+      while( dataAvailable > 0 && inIdx < 256) {
+        Boolean ok = SerialOp.read( data->serial, (char*) &inbuf[inIdx], 1 );
+        if( !ok ) {
+          break;
+        }
+
+        dataAvailable = SerialOp.available(data->serial);
+        if( (inIdx == 0 || inIdx == 1)  && inbuf[inIdx] != SOH ) {
+          inIdx = 0;
+          continue;
+        }
+
+        if( inIdx > 1 ) {
+          if( inbuf[inIdx] == EOT && inbuf[inIdx-1] != DLE ) {
+            /* end of packet */
+            packetReceived = True;
+            inIdx++;
+            break;
+          }
+        }
+
+        inIdx++;
+      };
+
+      if( packetReceived ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
+        inIdx = __unescapePacket(inbuf, inIdx);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
+        inIdx = __uncontrolPacket(inbuf, inIdx);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
+
+        __evaluatePacket(zimobin, inbuf, inIdx);
+      }
+      else if(inIdx > 0) {
+        /* Invalid packet? */
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
+      }
+
+
     }
 
     /* Give up timeslice:*/
