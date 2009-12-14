@@ -45,6 +45,8 @@
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/SelTab.h"
 
 static int instCnt = 0;
 
@@ -296,6 +298,26 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     iORoute st = ModelOp.getRoute( model, wAction.getoid( data->action ) );
     if( st != NULL ) {
       RouteOp.go( st );
+    }
+  }
+
+  /* turntable action */
+  else if( StrOp.equals( wTurntable.name(), wAction.gettype( data->action ) ) ) {
+    iOTT tt = ModelOp.getTurntable( model, wAction.getoid( data->action ) );
+    if( tt != NULL ) {
+      iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+      wTurntable.setcmd( cmd, wAction.getparam(data->action) );
+      TTOp.cmd( (iIBlockBase)tt, cmd );
+    }
+  }
+
+  /* turntable action */
+  else if( StrOp.equals( wSelTab.name(), wAction.gettype( data->action ) ) ) {
+    iOSelTab fy = ModelOp.getSelectiontable( model, wAction.getoid( data->action ) );
+    if( fy != NULL ) {
+      iONode cmd = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
+      wSelTab.setcmd( cmd, wAction.getparam(data->action) );
+      SelTabOp.cmd( (iIBlockBase)fy, cmd );
     }
   }
 

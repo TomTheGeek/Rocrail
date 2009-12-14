@@ -45,6 +45,8 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/SelTab.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -132,7 +134,7 @@ void TimedActions::initLabels() {
 
     m_ExecCmd->Enable(false);
 
-    // "co,ext,sw,st,sys,sg,bk,lc,fn"
+    // "co,ext,sw,st,sys,sg,bk,lc,fn,tt,seltab"
     m_Type->Append( wxGetApp().getMsg( "output" ) );
     m_Type->Append( wxGetApp().getMsg( "program" ) );
     m_Type->Append( wxGetApp().getMsg( "turnout" ) );
@@ -142,6 +144,8 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "block" ) );
     m_Type->Append( wxGetApp().getMsg( "locomotive" ) );
     m_Type->Append( wxGetApp().getMsg( "function" ) );
+    m_Type->Append( wxGetApp().getMsg( "turntable" ) );
+    m_Type->Append( wxGetApp().getMsg( "seltab" ) );
 }
 
 
@@ -177,6 +181,10 @@ void TimedActions::initValues() {
     m_Type->SetSelection(7);
   else if( StrOp.equals( wFunCmd.name(), type ) )
     m_Type->SetSelection(8);
+  else if( StrOp.equals( wTurntable.name(), type ) )
+    m_Type->SetSelection(9);
+  else if( StrOp.equals( wSelTab.name(), type ) )
+    m_Type->SetSelection(10);
 
   initOutputList();
 
@@ -279,6 +287,8 @@ bool TimedActions::evaluate() {
     case 6: wAction.settype(m_Props, wBlock.name()); break;
     case 7: wAction.settype(m_Props, wLoc.name()); break;
     case 8: wAction.settype(m_Props, wFunCmd.name()); break;
+    case 9: wAction.settype(m_Props, wTurntable.name()); break;
+    case 10: wAction.settype(m_Props, wSelTab.name()); break;
   }
 
   return true;
@@ -316,6 +326,8 @@ void TimedActions::initOutputList() {
       case 6: colist = wPlan.getbklist( model ); break;
       case 7: colist = wPlan.getlclist( model ); break;
       case 8: colist = wPlan.getlclist( model ); break;
+      case 9: colist = wPlan.getttlist( model ); break;
+      case 10: colist = wPlan.getseltablist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -778,6 +790,12 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
     case 8: // function
       m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));
       m_Command->Append(wxString( wAction.fun_off, wxConvUTF8));
+      break;
+    case 9: // turntable
+      m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
+      break;
+    case 10: // fiddle yard
+      m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
       break;
   }
 

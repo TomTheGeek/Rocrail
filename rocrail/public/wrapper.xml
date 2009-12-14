@@ -1738,10 +1738,11 @@
         <const name="loco_dispatch" vt="string" val="dispatch"/>
         <const name="fun_on" vt="string" val="on"/>
         <const name="fun_off" vt="string" val="off"/>
+        <const name="tt_goto" vt="string" val="goto"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
-        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn" required="true" remark="type [ext] is an external program or script to be executed"/>
+        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab" required="true" remark="type [ext] is an external program or script to be executed"/>
         <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
         <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
