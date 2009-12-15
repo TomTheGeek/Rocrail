@@ -86,7 +86,7 @@ $(OUTDIR)\nce.dll: $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\nce.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\nce.dll
 $(OUTDIR)\io8255.dll: $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\io8255.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\io8255.dll
-$(OUTDIR)\zimobin.dll: $(TMPOUTDIR)\zimobin.o $(COMMONOBJS) $(OUTDIR)\zimobin.a $(OUTDIR)\libwrapper.a
+$(OUTDIR)\zimobin.dll: $(TMPOUTDIR)\zimobin.o $(COMMONOBJS) $(OUTDIR)\librocs.a $(OUTDIR)\libwrapper.a
 	dllwrap --def rocdigs.def $(TMPOUTDIR)\zimobin.o $(COMMONOBJS) $(LIBS) -o $(OUTDIR)\zimobin.dll
 
 # ------------------------------------------------------------
