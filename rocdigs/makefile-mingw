@@ -33,7 +33,7 @@ NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c
 
 all: $(OBJS) $(COMMONOBJS) $(NMRAOBJS) $(OUTDIR)\opendcc.dll $(OUTDIR)\p50.dll $(OUTDIR)\p50x.dll $(OUTDIR)\hsi88.dll $(OUTDIR)\barjut.dll $(OUTDIR)\srcp.dll \
 	$(OUTDIR)\lenz.dll $(OUTDIR)\roco.dll $(OUTDIR)\zimo.dll $(OUTDIR)\dinamo.dll $(OUTDIR)\om32.dll \
-	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll $(OUTDIR)\zimobin.dll.dll \
+	$(OUTDIR)\slx.dll $(OUTDIR)\ecos.dll $(OUTDIR)\ddx.dll $(OUTDIR)\loconet.dll $(OUTDIR)\rocnet.dll $(OUTDIR)\zimobin.dll \
 	$(OUTDIR)\virtual.dll $(OUTDIR)\mcs2.dll $(OUTDIR)\clock.dll $(OUTDIR)\sprog.dll $(OUTDIR)\nce.dll $(OUTDIR)\dcc232.dll $(OUTDIR)\io8255.dll
 #	-del /Q $(TMPOUTDIR)\*.o
 
@@ -150,6 +150,7 @@ clean:
 	-del /Q $(OUTDIR)\sprog.dll
 	-del /Q $(OUTDIR)\dcc232.dll
 	-del /Q $(OUTDIR)\nce.dll
+	-del /Q $(OUTDIR)\zimobin.dll
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\ogen.exe ..\..\rocdigs\rocdigs.xml ..\\
 	cd $(GENDIR)\rocdigs & ..\$(OUTDIR)\xml2cstr.exe ..\..\common\version.xml impl\version.c svnLog
 	
