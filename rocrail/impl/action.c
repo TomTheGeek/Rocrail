@@ -307,9 +307,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     if( tt != NULL ) {
       iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       if( StrOp.equals( wAction.tt_goto, wAction.getcmd( data->action ) ) )
-        wTurntable.setcmd( cmd, wAction.getcmd( data->action ) );
-      else
         wTurntable.setcmd( cmd, wAction.getparam(data->action) );
+      else
+        wTurntable.setcmd( cmd, wAction.getcmd( data->action ) );
       TTOp.cmd( (iIBlockBase)tt, cmd );
     }
   }
