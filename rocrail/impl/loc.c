@@ -1455,6 +1455,11 @@ static void _dispatch( iOLoc inst ) {
 
 static void _release( iOLoc inst, iONode cmd ) {
   iOLocData data = Data(inst);
+  if( wLoc.getthrottleid( data->props ) == NULL || StrOp.len(wLoc.getthrottleid( data->props )) == 0 )
+    return;
+  if( wLoc.getthrottleid( cmd ) == NULL || StrOp.len(wLoc.getthrottleid( cmd )) == 0 )
+    return;
+
   if( StrOp.equals(wLoc.getthrottleid( data->props ), wLoc.getthrottleid( cmd ) ) ) {
     wLoc.setthrottleid( data->props, "" );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s is released from throttle %s", wLoc.getid(data->props), wLoc.getthrottleid( cmd ) );
@@ -1638,7 +1643,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       _dispatch( inst );
     }
     else if( StrOp.equals( wLoc.release, cmd ) ) {
-      _release(inst, cmd);
+      _release(inst, nodeA);
+      broadcast = True;
     }
     else if( StrOp.equals( wLoc.brake, cmd ) ) {
       _brake( inst );
