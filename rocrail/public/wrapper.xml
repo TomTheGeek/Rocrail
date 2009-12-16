@@ -1739,6 +1739,7 @@
         <const name="fun_on" vt="string" val="on"/>
         <const name="fun_off" vt="string" val="off"/>
         <const name="tt_goto" vt="string" val="goto"/>
+        <const name="tt_turn180" vt="string" val="180"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>

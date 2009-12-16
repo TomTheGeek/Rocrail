@@ -306,12 +306,15 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     iOTT tt = ModelOp.getTurntable( model, wAction.getoid( data->action ) );
     if( tt != NULL ) {
       iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
-      wTurntable.setcmd( cmd, wAction.getparam(data->action) );
+      if( StrOp.equals( wAction.tt_goto, wAction.getcmd( data->action ) ) )
+        wTurntable.setcmd( cmd, wAction.getcmd( data->action ) );
+      else
+        wTurntable.setcmd( cmd, wAction.getparam(data->action) );
       TTOp.cmd( (iIBlockBase)tt, cmd );
     }
   }
 
-  /* turntable action */
+  /* fiddle yard action */
   else if( StrOp.equals( wSelTab.name(), wAction.gettype( data->action ) ) ) {
     iOSelTab fy = ModelOp.getSelectiontable( model, wAction.getoid( data->action ) );
     if( fy != NULL ) {
