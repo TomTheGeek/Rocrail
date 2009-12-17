@@ -276,6 +276,9 @@ static void __cmdReader( void* threadinst ) {
           }
           doc->base.del( doc );
         }
+        else {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not parse:\n%.256s", cmd );
+        }
       }
     }
     else {
