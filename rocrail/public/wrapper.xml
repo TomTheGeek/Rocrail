@@ -881,8 +881,8 @@
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
 
         <var name="singlegate" vt="bool" defval="false" remark="Switch works with only one gate."/>
-        <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
-        <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wirering correction)"/>
+        <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
+        <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
         <var name="delay" vt="int" defval="0" range="0-*" required="false" remark="overwrites control.swtimeout if greater then 0"/>
         <var name="delaytime" vt="long" defval="0" range="0-*" required="false" remark="Delay timer for internal use only."/>
         <var name="actdelay" vt="bool" defval="false" remark="if false: delay is programmed in central unit or module"/>
@@ -993,7 +993,7 @@
         <var name="gate2" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 2."/>
         <var name="gate3" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 3."/>
         <var name="gate4" vt="int" defval="0" range="0-1" required="true" remark="Output gate of port 4, white."/>
-        <var name="inv" vt="bool" defval="false" remark="Signal inverted. (Software wirering correction)"/>
+        <var name="inv" vt="bool" defval="false" remark="Signal inverted. (Software wiring correction)"/>
         <var name="pair" vt="bool" defval="false" remark="both gates are used for on-off"/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command incase of 2 aspects"/>
 
@@ -1052,6 +1052,7 @@
         <var name="port" deprecated="true" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
+        <var name="inv" vt="bool" defval="false" remark="Output as switch inverted. (Software wiring correction)"/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command"/>
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>

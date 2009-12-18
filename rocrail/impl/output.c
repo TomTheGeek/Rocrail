@@ -33,6 +33,7 @@
 #include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
@@ -185,10 +186,23 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
-    wOutput.setaddr( nodeA, wOutput.getaddr( o->props ) );
-    wOutput.setport( nodeA, wOutput.getport( o->props ) );
-    wOutput.setgate( nodeA, wOutput.getgate( o->props ) );
-    wOutput.setcmd( nodeA, state );
+    if( wOutput.isasswitch(o->props) ) {
+      Boolean inv = wOutput.isinv(o->props);
+      NodeOp.setName( nodeA, wSwitch.name() );
+
+      wSwitch.setaddr1( nodeA, wOutput.getaddr( o->props ) );
+      wSwitch.setport1( nodeA, wOutput.getport( o->props ) );
+
+      wSwitch.setcmd( nodeA, StrOp.equals( state, wOutput.on ) ? (inv?wSwitch.straight:wSwitch.turnout):(inv?wSwitch.turnout:wSwitch.straight) );
+
+    }
+    else {
+      wOutput.setaddr( nodeA, wOutput.getaddr( o->props ) );
+      wOutput.setport( nodeA, wOutput.getport( o->props ) );
+      wOutput.setgate( nodeA, wOutput.getgate( o->props ) );
+      wOutput.setcmd( nodeA, state );
+    }
+
     if( !ControlOp.cmd( control, nodeA, NULL ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Output \"%s\" could not be set!",
                      wOutput.getid( o->props ) );

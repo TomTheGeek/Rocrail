@@ -73,6 +73,7 @@ class wxSpinCtrl;
 #define wxID_STATIC_CO_PORT 10026
 #define ID_TEXTCTRL_CO_PORT 10027
 #define wxID_STATIC_CO_GATE 10326
+#define ID_OUTPUT_SWITCH 10199
 #define ID_PANEL_CO_LOCATION 10013
 #define wxID_STATIC_CO_X 10014
 #define ID_TEXTCTRL_CO_X 10000
@@ -141,6 +142,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_OUTPUT_ACTIONS
     void OnOutputActionsClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_OUTPUT_SWITCH
+    void OnOutputSwitchClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
@@ -201,6 +205,9 @@ public:
     wxTextCtrl* m_Port;
     wxStaticText* m_labGate;
     wxRadioBox* m_Gate;
+    wxStaticBox* m_OptionsBox;
+    wxCheckBox* m_AsSwitch;
+    wxCheckBox* m_Invert;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
