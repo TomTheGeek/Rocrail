@@ -303,6 +303,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LangRussian    , RocGuiFrame::OnLangRussian)
     EVT_MENU( ME_LangPortuguese  , RocGuiFrame::OnLangPortuguese)
     EVT_MENU( ME_LangHungarian   , RocGuiFrame::OnLangHungarian)
+    EVT_MENU( ME_LangPolish      , RocGuiFrame::OnLangPolish)
+    EVT_MENU( ME_LangNorwegian   , RocGuiFrame::OnLangNorwegian)
     EVT_GRID_CELL_LEFT_CLICK( RocGuiFrame::OnCellLeftClick )
     EVT_GRID_CELL_LEFT_DCLICK( RocGuiFrame::OnCellLeftDClick )
     EVT_GRID_CELL_RIGHT_CLICK( RocGuiFrame::OnCellRightClick )
@@ -1285,6 +1287,8 @@ void RocGuiFrame::initFrame() {
   menuLang->AppendCheckItem( ME_LangGreek    , wxGetApp().getMenu("lang_el"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangHungarian, wxGetApp().getMenu("lang_hu"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangItalien  , wxGetApp().getMenu("lang_it"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangNorwegian, wxGetApp().getMenu("lang_nb"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangPolish   , wxGetApp().getMenu("lang_pl"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangPortuguese, wxGetApp().getMenu("lang_pt"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangRussian  , wxGetApp().getMenu("lang_ru"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangSpanish  , wxGetApp().getMenu("lang_es"), wxGetApp().getMsg("changelang") );
@@ -2736,6 +2740,12 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LangHungarian);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_hungarian, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangPolish);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_polish, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangNorwegian);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_norwegian, wGui.getlang( wxGetApp().getIni() ) ) );
 
   mi = menuBar->FindItem(ME_RocrailIni);
   if( mi != NULL )
@@ -3602,6 +3612,16 @@ void RocGuiFrame::OnLangPortuguese(wxCommandEvent& event) {
 
 void RocGuiFrame::OnLangHungarian(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_hungarian );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangPolish(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_polish );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangNorwegian(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_norwegian );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 

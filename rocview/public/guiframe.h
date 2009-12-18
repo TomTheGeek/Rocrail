@@ -205,6 +205,8 @@ public:
   void OnLangRussian(wxCommandEvent& event);
   void OnLangPortuguese(wxCommandEvent& event);
   void OnLangHungarian(wxCommandEvent& event);
+  void OnLangPolish(wxCommandEvent& event);
+  void OnLangNorwegian(wxCommandEvent& event);
 
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
@@ -445,6 +447,8 @@ enum
     ME_LangRussian,
     ME_LangPortuguese,
     ME_LangHungarian,
+    ME_LangPolish,
+    ME_LangNorwegian,
     ME_RocrailIni,
     ME_PowerEvent,
     ME_RocguiIni,

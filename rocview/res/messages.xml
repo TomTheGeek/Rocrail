@@ -70,6 +70,12 @@
   <Msg id="lang_hu">
     <all txt="Magyar nyelv" tip="Hungarian"/>
   </Msg>
+  <Msg id="lang_pl">
+    <all txt="Polszczyzna" tip="Polish"/>
+  </Msg>
+  <Msg id="lang_nb">
+    <all txt="Bokmål" tip="Norwegian"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Neustart zum Ändern der Sprache"/>
