@@ -490,6 +490,7 @@ static void __callback( obj inst, iONode nodeA ) {
 
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes...", size );
             FileOp.read( f, buffer, size );
+            FileOp.base.del(f);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convert %d bytes to string...", size );
             byteStr = StrOp.byteToStr( buffer, size );
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "free buffer..." );
