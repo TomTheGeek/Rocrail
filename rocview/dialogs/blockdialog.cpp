@@ -2144,15 +2144,22 @@ void BlockDialog::initSensors() {
 
 
 
-  char* s = StrOp.fmt( wxGetApp().getMsg("sensorfromblock").mb_str(wxConvUTF8), m_FromBlockID );
+  char* br = StrOp.fmt( "%s (%s)", m_FromBlockID, m_ByRouteID );
+  char* s = StrOp.fmt( wxGetApp().getMsg("sensorfromblock").mb_str(wxConvUTF8), br );
   m_LabelSensorsFromBlock->SetLabel( wxString( s ,wxConvUTF8) );
   StrOp.free(s);
+  StrOp.free(br);
 
   iONode fb = wBlock.getfbevent( m_Props );
   idx = 0;
   while( fb != NULL && idx < 5 ) {
     TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "fbIndex %d", idx );
-    if( StrOp.equals( m_FromBlockID, wFeedbackEvent.getfrom( fb ) ) ) {
+    const char* byroute = wFeedbackEvent.getbyroute(fb);
+    const char* fromblock = wFeedbackEvent.getfrom(fb);
+    if( byroute == NULL || StrOp.len(byroute) == 0 )
+      byroute = fromblock;
+
+    if( StrOp.equals( m_FromBlockID, fromblock ) && StrOp.equals( m_ByRouteID, byroute ) ) {
       ids[idx]->SetStringSelection( wxString(wFeedbackEvent.getid( fb ),wxConvUTF8) );
       acts[idx]->SetStringSelection( wxString(wFeedbackEvent.getaction( fb ),wxConvUTF8) );
       end[idx]->SetValue( wFeedbackEvent.isendpuls( fb ) );
