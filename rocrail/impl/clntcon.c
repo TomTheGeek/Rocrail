@@ -287,7 +287,7 @@ static void __cmdReader( void* threadinst ) {
     }
     freeMem( cmd );
     ThreadOp.sleep( 10 );
-  } while( ok && !o->quit );
+  } while( !o->quit );
 
   /* Cleanup. */
   /* Lock the semaphore: */
