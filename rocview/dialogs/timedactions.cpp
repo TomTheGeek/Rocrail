@@ -780,6 +780,7 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
       m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
       m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_setloc, wxConvUTF8));
+      m_Command->Append(wxString( wAction.block_schedule, wxConvUTF8));
       break;
     case 7: // loco
       m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));
