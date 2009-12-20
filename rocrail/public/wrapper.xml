@@ -475,6 +475,7 @@
     <const name="get" vt="int" val="0"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="image" vt="int" val="0"/>
+    <const name="smallimage" vt="int" val="1"/>
     <var name="type" vt="int" defval="0" range="0-*"/>
     <var name="filename" vt="string" defval="NULL" range="*"/>
     <var name="data" vt="string" defval="NULL" range="*" remark="one byte represented by 2 ascii chars; StrOp.byteToStr()"/>

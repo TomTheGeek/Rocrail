@@ -476,12 +476,21 @@ static void __callback( obj inst, iONode nodeA ) {
   else if( StrOp.equals( wDataReq.name(), nodeName ) ) {
     if( wDataReq.getcmd(nodeA) == wDataReq.get ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DataReq filename=[%s]", wDataReq.getfilename(nodeA) );
-      if( wDataReq.gettype(nodeA) == wDataReq.image ) {
+      if( wDataReq.gettype(nodeA) == wDataReq.image || wDataReq.gettype(nodeA) == wDataReq.smallimage ) {
         iOFile f = NULL;
+        Boolean smallimage = (wDataReq.gettype(nodeA) == wDataReq.smallimage) ? True:False;
         char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
             SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", filename );
-        f = FileOp.inst( filename, OPEN_READONLY);
+        char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
+            SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
+
+        if( smallimage && FileOp.exist( sfilename ) )
+          f = FileOp.inst( sfilename, OPEN_READONLY);
+        else
+          f = FileOp.inst( filename, OPEN_READONLY);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", FileOp.getFilename(f) );
+
         if( f != NULL ) {
           int   size    = FileOp.size(f);
           if( size > 0 && size < (50*1024) ) {
