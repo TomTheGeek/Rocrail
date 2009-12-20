@@ -5549,7 +5549,7 @@
   </Msg>
   <Msg id="documentation" dialog="true">
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
-    <en txt="Manual" accel="0" tip="The online Manual."/>
+    <en txt="Guide" accel="0" tip="The online Manual."/>
     <nl txt="Handboek" accel="0" tip="Het online handboek."/>
     <sv txt="Hjälp" accel="0" tip="Manual"/>
     <fr txt="Manuel utilisateur" accel="0" tip="Mode d'emploi en ligne."/>
