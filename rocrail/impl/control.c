@@ -489,10 +489,9 @@ static void __callback( obj inst, iONode nodeA ) {
         else
           f = FileOp.inst( filename, OPEN_READONLY);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", FileOp.getFilename(f) );
-
         if( f != NULL ) {
           int   size    = FileOp.size(f);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", FileOp.getFilename(f) );
           if( size > 0 && size < (50*1024) ) {
             byte* buffer  = allocMem( size );
             char* byteStr = NULL;
