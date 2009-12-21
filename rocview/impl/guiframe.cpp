@@ -1637,14 +1637,14 @@ void RocGuiFrame::create() {
   m_StatNotebook->AddPage(m_CVPanel, wxGetApp().getMsg("programming") );
 
 
-  if( wGui.islncvtab(m_Ini) ) {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LNCV Panel..." );
-    m_LNCVPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
-    m_LNCVPanel->SetScrollbars(1, 1, 0, 0);
-    m_LNCV = NULL;
-    m_LNCV = new LNCV( m_LNCVPanel, this );
-    m_LNCVPanel->Show(wGui.islncvtab(m_Ini));
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LNCV Panel..." );
+  m_LNCVPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
+  m_LNCVPanel->SetScrollbars(1, 1, 0, 0);
+  m_LNCV = NULL;
+  m_LNCV = new LNCV( m_LNCVPanel, this );
+  m_LNCVPanel->Show(wGui.islncvtab(m_Ini));
 
+  if( wGui.islncvtab(m_Ini) ) {
     m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
   }
 
