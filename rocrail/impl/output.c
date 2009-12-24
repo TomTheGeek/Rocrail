@@ -173,6 +173,13 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   const char* state = wOutput.getcmd( nodeA );
   const char* iid = wOutput.getiid( o->props );
 
+  if( StrOp.equals( wOutput.flip, state ) ) {
+    if( StrOp.equals( wOutput.on, wOutput.getstate( o->props ) ) )
+      state = wOutput.off;
+    else
+      state = wOutput.on;
+  }
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s",
                wOutput.getid( o->props ), state );

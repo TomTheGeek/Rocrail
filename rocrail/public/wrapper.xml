@@ -1061,6 +1061,7 @@
         <const name="on" vt="string" val="on"/>
         <const name="active" vt="string" val="active"/>
         <const name="off" vt="string" val="off"/>
+        <const name="flip" vt="string" val="flip"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
              remark="Protocol to use for this output."/>
