@@ -1846,6 +1846,7 @@ static iOLoc _getLoc( iOModel inst, const char* id ) {
         wLoc.setaddr( lc, addr );
         wLoc.setspcnt( lc, 128 );
         wLoc.setprot( lc, addr > 127 ? wLoc.prot_L:wLoc.prot_N );
+        wLoc.setshow( lc, False );
         wItem.setgenerated( lc, True );
         _addItem(inst, lc);
         loc = (iOLoc)MapOp.get( o->locMap, id );
