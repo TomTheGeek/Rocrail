@@ -1450,6 +1450,7 @@ static void __startAllLocosRunner( void* threadinst ) {
     loc = (iOLoc)MapOp.next( data->locMap );
   }
   data->pendingstartall = False;
+  ThreadOp.base.del(threadinst);
 }
 
 static void __startAllLocs( iOModel inst ) {
