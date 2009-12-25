@@ -55,10 +55,10 @@ Boolean lbserialConnect( obj inst ) {
     /* MS100 bps=16457 */
     SerialOp.setFlow( data->serial, none );
     if( SystemOp.isWindows() ) {
-      SerialOp.setLine( data->serial, 16457, 8, 1, none );
+      SerialOp.setLine( data->serial, 16457, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
     }
     else {
-      SerialOp.setLine( data->serial, 57600, 8, 1, none );
+      SerialOp.setLine( data->serial, 57600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
       SerialOp.setDivisor( data->serial, 7 );
     }
     // set RTS high, DTR low to power the MS100
@@ -67,7 +67,7 @@ Boolean lbserialConnect( obj inst ) {
   }
   else {
     SerialOp.setFlow( data->serial, data->cts? cts:none );
-    SerialOp.setLine( data->serial, data->bps, 8, 1, none );
+    SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   }
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 

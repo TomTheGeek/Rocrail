@@ -1037,7 +1037,7 @@ static struct ORoco* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.set( data->fbState, 0, sizeof( data->fbState ) );
 
   SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none );
+  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
 

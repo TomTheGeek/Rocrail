@@ -287,7 +287,7 @@ _inst(
 
 	data->serial = SerialOp.inst( data->device );
 	SerialOp.setFlow( data->serial, -1 );
-	SerialOp.setLine( data->serial, data->bps, 8, 1, none );
+	SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
 	SerialOp.setTimeout( data->serial, timeout, timeout );
 	data->serialOK = SerialOp.open( data->serial );
 

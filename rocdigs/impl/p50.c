@@ -509,7 +509,7 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, data->flow );
-  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity );
+  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity, wDigInt.isrtsdisabled( settings ) );
   SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
   data->serialOK = SerialOp.open( data->serial );
 

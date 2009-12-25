@@ -242,7 +242,7 @@ static struct OOM32* _inst( const iONode ini ,const iOTrace trc ) {
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
 
   SerialOp.setFlow( data->serial, -1 );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, odd );
+  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, odd , wDigInt.isrtsdisabled( ini ));
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), 200 );
 
 

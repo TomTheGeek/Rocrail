@@ -938,7 +938,7 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, cts );
-  SerialOp.setLine( data->serial, 9600, 8, 1, 0 );
+  SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );
 

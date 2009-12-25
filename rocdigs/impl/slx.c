@@ -475,7 +475,7 @@ static struct OSLX* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, -1 );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 2, none );
+  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 2, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
   data->serialOK = SerialOp.open( data->serial );

@@ -1119,7 +1119,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
 
     SerialOp.setFlow( data->serial, -1 );
-    SerialOp.setLine( data->serial, 19200, 8, 1, odd );
+    SerialOp.setLine( data->serial, 19200, 8, 1, odd, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), 200 );
   }
 

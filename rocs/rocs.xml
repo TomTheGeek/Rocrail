@@ -959,6 +959,7 @@
       <param name="databits" vt="serial_databits" remark=""/>
       <param name="stopbits" vt="serial_stopbits" remark=""/>
       <param name="parity" vt="serial_parity" remark=""/>
+      <param name="rtsdisabled" vt="Boolean" remark=""/>
     </fun>
     <fun name="setPortBase" vt="void" remark="Set data flow control.">
       <param name="inst" vt="this" remark="Serial instance."/>
@@ -1049,6 +1050,7 @@
       <var name="stopbits" vt="serial_stopbits"/>
       <var name="parity" vt="serial_parity"/>
       <var name="flow" vt="serial_flow"/>
+      <var name="rtsdisabled" vt="Boolean"/>
     </struct>
     <struct name="_timeout">
       <var name="write" vt="int"/>

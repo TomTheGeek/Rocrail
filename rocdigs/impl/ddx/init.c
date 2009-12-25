@@ -61,7 +61,7 @@ Boolean init_serialport(obj inst) {
   SerialOp.setPortBase( data->serial, data->portbase );
   SerialOp.setFlow( data->serial, 0 );
   SerialOp.setBlocking( data->serial, False );
-  SerialOp.setLine( data->serial, 19200, 8, 0, 0 );
+  SerialOp.setLine( data->serial, 19200, 8, 0, 0, True );
   //  SerialOp.setLine( data->serial, 38400, 6, 0, 0 );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
 

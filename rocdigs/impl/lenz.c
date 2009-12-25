@@ -1555,9 +1555,9 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
     SerialOp.setFlow( data->serial, none );
 
   if( data->usb) /* force to 57600 ignoring the ini.*/
-    SerialOp.setLine( data->serial, 57600, 8, 1, 0 );
+    SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   else
-    SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0 );
+    SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
 
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 

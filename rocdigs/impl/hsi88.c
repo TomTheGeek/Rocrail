@@ -669,7 +669,7 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, data->flow );
-  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity );
+  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
   data->serialOK = SerialOp.open( data->serial );
   SerialOp.setDTR(data->serial, True);

@@ -298,6 +298,7 @@
       <var name="flow" vt="string" defval="cts" range="cts,dsr,xon,no"/>
       <var name="ctsretry" vt="int" defval="1000" range="*" unit="ms" remark="wait for CTS line to come up."/>
       <var name="timeout" vt="int" defval="1000" range="*" unit="ms"/>
+      <var name="rtsdisabled" vt="bool" defval="false" remark="Disables RTS line for USB converters. (Depends on type if this is needed.)"/>
 
       <!-- all -->
       <var name="fbmod" vt="int" defval="0" range="*" remark="Number of connected feedback modules of 8 inputs."/>

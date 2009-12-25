@@ -577,7 +577,7 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0 );
+  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );
 

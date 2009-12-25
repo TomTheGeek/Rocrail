@@ -213,7 +213,7 @@ static struct OClock* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, 9600, 8, 1, 0 );
+  SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.open( data->serial );
 
   data->driver = ThreadOp.inst( "clckdrv", &__driverThread, __Clock );

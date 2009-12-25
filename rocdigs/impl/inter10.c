@@ -301,7 +301,7 @@ static struct OInter10* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, -1 );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none );
+  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   /*SerialOp.setTimeout( data->serial, data->timeout, 0 );*/
   data->serialOK = SerialOp.open( data->serial );
 

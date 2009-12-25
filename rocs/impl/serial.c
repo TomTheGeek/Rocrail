@@ -102,12 +102,13 @@ static void _setBlocking( iOSerial inst, Boolean blocking ) {
 }
 
 static void _setLine( iOSerial inst, int bps,serial_databits bits,
-                      serial_stopbits stopbits, serial_parity parity ) {
+                      serial_stopbits stopbits, serial_parity parity, Boolean rtsdisabled ) {
   iOSerialData data = Data(inst);
   data->line.bps      = bps;
   data->line.bits     = bits;
   data->line.stopbits = stopbits;
   data->line.parity   = parity;
+  data->line.rtsdisabled = rtsdisabled;
 }
 
 static void _setFlow( iOSerial inst, serial_flow flow ) {
