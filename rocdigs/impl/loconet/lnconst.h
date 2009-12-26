@@ -299,3 +299,10 @@
 #define BOARD_TYPE_DS64   0x73
 
 
+
+
+
+
+const char* CONSIST_STAT(int s);
+const char* LOCO_STAT(int s);
+const char* DEC_MODE(int s);

@@ -941,10 +941,10 @@ void traceLocoNet(byte* msg) {
     case OPC_WR_SL_DATA:            /* page 10 of Loconet PE */
     case OPC_SL_RD_DATA:            /* page 10 of Loconet PE */
         {
-            char* mode;
-            char* locoAdrStr;
-            const char* mixedAdrStr;
-            char* logString;
+            char* mode = NULL;
+            char* locoAdrStr = NULL;
+            const char* mixedAdrStr = NULL;
+            char* logString = NULL;
 
             // rwSlotData = (rwSlotDataMsg *) msgBuf;
             int command   = msg[0];
