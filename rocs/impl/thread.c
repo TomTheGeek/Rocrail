@@ -312,7 +312,7 @@ static iOThread _inst( const char* tname, thread_run run, void* parm ) {
 
   MemOp.basecpy( thread, &ThreadOp, 0, sizeof( struct OThread ), data );
 
-  data->queue = QueueOp.inst( 100 );
+  data->queue = QueueOp.inst( 1000 );
   data->parm  = parm;
 
   if( tname == NULL )

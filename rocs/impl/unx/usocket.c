@@ -552,10 +552,11 @@ Boolean rocs_socket_write( iOSocket inst, char* buf, int size ) {
   int written  = 0;
   int twritten = 0;
   int flags    = 0;
+  int blockretry = 0;
 
   o->written = 0;
 
-  while( size > 0 && twritten < size && !o->broken ) {
+  while( size > 0 && twritten < size && !o->broken && blockretry < 100 ) {
 
     /*if( o->ssl && o->openssl_support ) {*/
     if( o->ssl ) {
@@ -581,7 +582,10 @@ Boolean rocs_socket_write( iOSocket inst, char* buf, int size ) {
     }
     else if( written < 0 ) {
       if( errno == EWOULDBLOCK ) {
+        blockretry++;
         ThreadOp.sleep(10);
+        if( blockretry >= 100 )
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "socket blocks sh=%d errno=%d...", o->sh, errno );
         continue;
       }
       o->rc = errno;
