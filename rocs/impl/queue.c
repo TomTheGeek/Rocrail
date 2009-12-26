@@ -143,7 +143,7 @@ static Boolean _post( iOQueue inst, obj po, q_prio prio ) {
     EventOp.set( data->evt );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "QueueOp.post: count(%d) is getting bigger than size(%d)! Post rejected for [%s].",
         data->count, data->size, data->desc==NULL?"":data->desc );
   }

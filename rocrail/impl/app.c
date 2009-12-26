@@ -822,23 +822,29 @@ static Boolean _shutdown( void ) {
       iONode broadcast = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
       wSysCmd.setcmd( broadcast, wSysCmd.shutdown );
       wSysCmd.setinformall( broadcast, True );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing clients..." );
       ClntConOp.broadcastEvent( AppOp.getClntCon(), broadcast );
       ThreadOp.sleep(100);
     }
 
     /* Inform Model. */
-    if( data->model != NULL )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing model..." );
+    if( data->model != NULL ) {
       ModelOp.save(data->model, True); /* Remove generated objects. */
+    }
 
     if( data->consoleMode ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "For shutdown in console mode use q<enter>" );
       return False;
     }
 
-    if( bShutdown )
+    if( bShutdown ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown already pending..." );
       return True;
+    }
 
     /* signal all threads to stop */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing all threads..." );
     ThreadOp.requestQuitAll();
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down..." );
@@ -858,6 +864,7 @@ static Boolean _shutdown( void ) {
     if( data->http != NULL )
       HttpOp.shutdown( data->http );
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing controller..." );
     ControlOp.halt( data->control );
 
     /* signal main loop */
@@ -867,6 +874,7 @@ static Boolean _shutdown( void ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Exit." );
     exit(0);
     */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Exit." );
     return True;
   }
   return False;

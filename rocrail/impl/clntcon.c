@@ -154,7 +154,7 @@ static void __infoWriter( void* threadinst ) {
   } while( !o->quit );
 
   /* Lock the semaphore: */
-  MutexOp.wait( Data(o->ClntCon)->muxMap );
+  MutexOp.trywait( Data(o->ClntCon)->muxMap, 1000 );
   {
     obj me = MapOp.remove( Data(o->ClntCon)->infoWriters, ThreadOp.getName( th ) );
     if( me != NULL )
@@ -216,7 +216,7 @@ static void __cmdReader( void* threadinst ) {
   ThreadOp.start( infoWriter );
 
   /* Lock the semaphore: */
-  MutexOp.wait( Data(clntcon)->muxMap );
+  MutexOp.trywait( Data(clntcon)->muxMap, 1000 );
   MapOp.put( Data(clntcon)->infoWriters, sname, (obj)infoWriter );
   /* Unlock the semaphore: */
   MutexOp.post( Data(clntcon)->muxMap );
@@ -245,7 +245,9 @@ static void __cmdReader( void* threadinst ) {
       int len = 0;
       freeMem( cmd );
       cmd = allocMem( size + 1 );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmdReader: reading %d bytes...", size );
       SocketOp.read( o->clntSocket, cmd, size );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmdReader: %d bytes read", SocketOp.getReceived(o->clntSocket));
       cmd[size] = '\0';
       len = StrOp.len( cmd );
       if( len > 0 ) {
@@ -291,7 +293,7 @@ static void __cmdReader( void* threadinst ) {
 
   /* Cleanup. */
   /* Lock the semaphore: */
-  MutexOp.wait( Data(clntcon)->muxMap );
+  MutexOp.trywait( Data(clntcon)->muxMap, 1000 );
   {
     iOThread iw = (iOThread)MapOp.get( Data(clntcon)->infoWriters, sname );
     if( iw != NULL ) {
@@ -393,14 +395,20 @@ static void __stress( void* threadinst ) {
 /*
  ***** _Public functions.
  */
-static void _broadcastEvent( iOClntCon inst, iONode nodeDF ) {
-  if( inst != NULL && MutexOp.wait( Data(inst)->muxMap ) ) {
+static void __doBroadcast( iOClntCon inst, iONode nodeDF ) {
+  if( inst != NULL && MutexOp.trywait( Data(inst)->muxMap, 1000 ) ) {
     iOClntConData data = Data(inst);
     iOThread iw = (iOThread)MapOp.first( data->infoWriters );
     while( iw != NULL ) {
       iONode clone = (iONode)nodeDF->base.clone( nodeDF );
-      ThreadOp.post( iw, (obj)clone );
-      iw = (iOThread)MapOp.next( data->infoWriters );
+      if( !ThreadOp.post( iw, (obj)clone ) ) {
+        NodeOp.base.del(clone);
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event to %s; removing from list.", ThreadOp.getName(iw) );
+        MapOp.remove( data->infoWriters, ThreadOp.getName(iw) );
+        iw = (iOThread)MapOp.first( data->infoWriters );
+      }
+      if( iw != NULL )
+        iw = (iOThread)MapOp.next( data->infoWriters );
       ThreadOp.sleep( 0 );
     }
     /* Unlock the semaphore: */
@@ -417,6 +425,37 @@ static void _broadcastEvent( iOClntCon inst, iONode nodeDF ) {
 }
 
 
+static void __broadcaster( void* threadinst ) {
+  iOThread       th = (iOThread)threadinst;
+  iOClntCon clntcon = (iOClntCon)ThreadOp.getParm(th);
+  iOClntConData data = Data(clntcon);
+
+  ThreadOp.setDescription( th, "ClientCon Broadcaster" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Broadcaster started." );
+
+  do {
+    obj post = ThreadOp.waitPost( th );
+    if( post != NULL ) {
+      iONode node = (iONode)post;
+      __doBroadcast(clntcon, (iONode)post);
+    }
+    else
+      ThreadOp.sleep( 10 );
+
+    ThreadOp.sleep( 0 );
+  } while(True);
+}
+
+static void _broadcastEvent( iOClntCon inst, iONode nodeDF ) {
+  if( inst != NULL ) {
+    iOClntConData data = Data(inst);
+    if( !ThreadOp.post( data->broadcaster, (obj)nodeDF ) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event!" );
+    }
+  }
+}
+
+
 /* nodeDF is already cloned! */
 static void _postEvent( iOClntCon inst, iONode nodeDF, const char* iwname )
 {
@@ -428,7 +467,7 @@ static void _postEvent( iOClntCon inst, iONode nodeDF, const char* iwname )
   }
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ClntCon post %s to %s...",
                 NodeOp.getName(nodeDF), iwname );
-  if( inst != NULL && MutexOp.wait( data->muxMap ) ) {
+  if( inst != NULL && MutexOp.trywait( data->muxMap, 1000 ) ) {
     iOThread iw = (iOThread)MapOp.get( data->infoWriters, iwname );
     if( iw != NULL ) {
       ThreadOp.post( iw, (obj)nodeDF );
@@ -475,7 +514,9 @@ static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbac
   instCnt++;
 
   data->manager = ThreadOp.inst( "cconmngr", __manager, clntcon );
+  data->broadcaster = ThreadOp.inst( "broadcast", __broadcaster, clntcon );
   ThreadOp.start( data->manager );
+  ThreadOp.start( data->broadcaster );
 
   /* TEST THREAD
   data->stress = ThreadOp.inst( "cconstress", __stress, clntcon );

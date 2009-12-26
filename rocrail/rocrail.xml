@@ -183,6 +183,7 @@
       <var name="stress" vt="iOThread"/>
       <var name="infoWriters" vt="iOMap"/>
       <var name="muxMap" vt="iOMutex"/>
+      <var name="broadcaster" vt="iOThread"/>
     </data>
   </object>
 
