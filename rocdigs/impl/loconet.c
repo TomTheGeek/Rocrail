@@ -1888,6 +1888,13 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
             V++;
         }
 
+        /* Remove e-stop in 128 speed step mode */
+        if ( wLoc.getspcnt( node ) == 128 ){
+          if ( V == 1 )
+            V = 0;
+        }
+
+
         /* keep this value for the ping thread */
         data->slotV[slot] = V;
 

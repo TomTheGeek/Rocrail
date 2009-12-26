@@ -12129,4 +12129,7 @@
     <de txt="Benutz manuelle Fahrstraßen"/>
     <nl txt="Gebruik hand bediende wisselstraten"/>
   </Msg>
+  <Msg id="disablesteal">
+    <en txt="Disable steal loco control"/>
+  </Msg>
 </Messages>

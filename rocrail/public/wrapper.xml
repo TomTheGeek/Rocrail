@@ -444,6 +444,7 @@
       <var name="poweroffatghost" vt="bool" defval="true" remark="Power off a ghost is detected when no ghost is accepted."/>
       <var name="keepghost" vt="bool" defval="false" remark="Keep ghost state until manual reset."/>
       <var name="locostartgap" vt="int" defval="0" range="0-*" unit="s" remark="Time between signalling loco's to start in auto mode."/>
+      <var name="disablesteal" vt="bool" defval="false" remark="Disable throttle to steal loco control."/>
     </ctrl>
   </rocrail>
 
