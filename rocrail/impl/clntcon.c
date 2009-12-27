@@ -91,6 +91,7 @@ struct __OClntService {
   iOSocket      clntSocket;
   Boolean       readonly;
   Boolean       quit;
+  Boolean       disablemonitor;
 };
 typedef struct __OClntService* __iOClntService;
 
@@ -261,14 +262,17 @@ static void __cmdReader( void* threadinst ) {
             const char* thName = ThreadOp.getName( infoWriter );
             wCommand.setserver( nodeA, thName );
 
+            if(StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) && StrOp.equals( wModelCmd.plan, wCommand.getcmd( nodeA ) ) ) {
+              /* inform broadcaster */
+              o->disablemonitor = wModelCmd.isdisablemonitor(nodeA);
+            }
+
             if( !o->readonly ||
                 StrOp.equals( wDataReq.name(), NodeOp.getName(nodeA) ) ||
-                (StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) &&
-                    StrOp.equals( wModelCmd.plan, wCommand.getcmd( nodeA ) ) ) ||
-                (StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) &&
-                     StrOp.equals( wModelCmd.fstat, wCommand.getcmd( nodeA ) ) )
-
-            ) {
+                (StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) && StrOp.equals( wModelCmd.plan, wCommand.getcmd( nodeA ) ) ) ||
+                (StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) && StrOp.equals( wModelCmd.fstat, wCommand.getcmd( nodeA ) ) )
+            )
+            {
               Data(o->ClntCon)->callback( Data(o->ClntCon)->callbackObj, nodeA );
             }
             else {
@@ -401,12 +405,19 @@ static void __doBroadcast( iOClntCon inst, iONode nodeDF ) {
     iOClntConData data = Data(inst);
     iOThread iw = (iOThread)MapOp.first( data->infoWriters );
     while( iw != NULL ) {
-      iONode clone = (iONode)nodeDF->base.clone( nodeDF );
-      if( !ThreadOp.post( iw, (obj)clone ) ) {
-        NodeOp.base.del(clone);
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event to %s; removing from list.", ThreadOp.getName(iw) );
-        MapOp.remove( data->infoWriters, ThreadOp.getName(iw) );
-        iw = (iOThread)MapOp.first( data->infoWriters );
+      __iOClntService param = (__iOClntService)ThreadOp.getParm(iw);
+      if( param->disablemonitor && StrOp.equals( NodeOp.getName(nodeDF), wException.name() ) ) {
+        /* skipping this broadcast for the client */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Skipping exception broadcast for %s.", ThreadOp.getName(iw) );
+      }
+      else {
+        iONode clone = (iONode)nodeDF->base.clone( nodeDF );
+        if( !ThreadOp.post( iw, (obj)clone ) ) {
+          NodeOp.base.del(clone);
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event to %s; removing from list.", ThreadOp.getName(iw) );
+          MapOp.remove( data->infoWriters, ThreadOp.getName(iw) );
+          iw = (iOThread)MapOp.first( data->infoWriters );
+        }
       }
       if( iw != NULL )
         iw = (iOThread)MapOp.next( data->infoWriters );

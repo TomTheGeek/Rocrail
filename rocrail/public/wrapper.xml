@@ -632,6 +632,7 @@
     <const name="themes" vt="string" val="themes" remark="Request the themes to use with the plan."/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <var name="val" vt="string" defval="" range="*"/>
+    <var name="disablemonitor" vt="bool" defval="false" remark="Client do not want to receive monitor messages embeded in exception wrappers.(iRoc)"/>
     <var name="cmdfrom" vt="string" defval="NULL" range="*"/>
   </model>
 

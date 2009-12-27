@@ -321,6 +321,7 @@ static void __sysEvent( obj inst, const char* cmd ) {
 static void* __event( void* inst, const void* evt ) {
   iOLocData data = Data(inst);
   iONode evtNode = (iONode)evt;
+  Boolean broadcast = False;
 
   if( evtNode == NULL )
     return NULL;
@@ -369,14 +370,19 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setV( data->props, V);
     }
 
-    if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) )
-    wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
-
+    if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
+      wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
+      broadcast = True;
+    }
+    else {
+      /* this is an echo comming from the loconet reader; do not broadcast it */
+      broadcast = False;
+    }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V_raw=%d V=%d fn=%d dir=%s throttleID=%s",
         wLoc.getid(data->props), V_raw, V, wLoc.isfn(data->props), wLoc.isdir(data->props)?"Forwards":"Reverse", wLoc.getthrottleid(data->props) );
     /* Broadcast to clients. */
-    {
+    if( broadcast ) {
       iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( node, wLoc.getid( data->props ) );
       wLoc.setdir( node, wLoc.isdir( data->props ) );
@@ -407,8 +413,18 @@ static void* __event( void* inst, const void* evt ) {
     __cpNode2Fn(inst, evtNode);
     wLoc.setfn( data->props, data->fn0);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+    if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
+      wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
+      broadcast = True;
+    }
+    else {
+      /* this is an echo comming from the loconet reader; do not broadcast it */
+      broadcast = False;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s throttleid=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
         wLoc.getid( data->props ),
+        wLoc.getthrottleid( data->props),
         wLoc.isfn(data->props) ? "on":"off",
         data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
         data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
@@ -419,7 +435,7 @@ static void* __event( void* inst, const void* evt ) {
         data->fn25 ? "25":"--", data->fn26 ? "26":"--", data->fn27 ? "27":"--", data->fn28 ? "28":"--"
     );
     /* Broadcast to clients. */
-    {
+    if( broadcast ) {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       wFunCmd.setid( node, wLoc.getid( data->props ) );
       wFunCmd.setaddr( node, wLoc.getaddr( data->props ) );
