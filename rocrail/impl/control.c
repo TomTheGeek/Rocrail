@@ -513,7 +513,15 @@ static void __callback( obj inst, iONode nodeA ) {
           }
           else {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "image file size out of range! [%d]", size );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post empty datareq..." );
+            ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
+            return;
           }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post empty datareq..." );
+          ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
+          return;
         }
       }
     }
