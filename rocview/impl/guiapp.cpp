@@ -38,6 +38,8 @@
     #include "wx/wx.h"
 #endif
 
+#include <signal.h>
+
 #ifdef __linux__
 #include <sys/resource.h>
 #endif
@@ -422,11 +424,76 @@ static void conThread( void* threadinst ) {
   TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "conThread ended" );
 }
 
+static void __signalHandler( int sig ) {
+  const char* sigName = "";
+
+  switch( sig ) {
+  case SIGSEGV:
+    sigName = "Segment violation.";
+    break;
+  case SIGTERM:
+    sigName = "Software termination signal from kill.";
+    break;
+#ifdef SIGKILL
+  case SIGKILL:
+    sigName = "Software termination.";
+    break;
+#endif
+  case SIGINT:
+    sigName = "Interrupt.";
+    break;
+  case SIGABRT:
+    sigName = "Abnormal termination triggered by abort call.";
+    break;
+  case SIGFPE:
+    sigName = "Floating point exception.";
+    break;
+  case SIGILL:
+    sigName = "Illegal instruction - invalid function image.";
+    break;
+#ifdef SIGPIPE
+  case SIGPIPE:
+    sigName = "Broken pipe.";
+    return;
+#endif
+  }
+
+  printf( "__signalHandler: %d %s\n", sig, sigName );
+
+  printf( "__signalHandler: shutdown...\n" );
+  /* Reactivate default handling. */
+  printf( "__signalHandler: Reactivate default handling...\n" );
+  signal( sig, SIG_DFL );
+  printf( "__signalHandler: Raise signal...\n" );
+  raise( sig );
+
+  printf( "__signalHandler: exit...\n" );
+}
+
+
 
 
 bool RocGui::OnInit() {
 
-#ifdef __linux__
+  /* Initialize the signal handler. */
+  /* Not all OS's support this signal. */
+#ifdef SIGBREAK
+  signal( SIGBREAK, &__signalHandler );   /* Ctrl-Break sequence */
+#endif
+  signal( SIGTERM , &__signalHandler );   /* Software termination signal from kill */
+  signal( SIGINT  , &__signalHandler );   /* interrupt */
+  signal( SIGABRT , &__signalHandler );   /* abnormal termination triggered by abort call */
+  signal( SIGFPE  , &__signalHandler );   /* floating point exception */
+  signal( SIGILL  , &__signalHandler );   /* illegal instruction - invalid function image */
+  signal( SIGSEGV , &__signalHandler );   /* segment violation */
+#ifdef SIGKILL
+  signal( SIGKILL , &__signalHandler );   /* kill */
+#endif
+#ifdef SIGPIPE
+  signal (SIGPIPE, &__signalHandler);
+#endif
+
+  #ifdef __linux__
   {
     struct rlimit rl;
     getrlimit( RLIMIT_CORE, &rl );
@@ -1020,7 +1087,7 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
       m_Frame->SetCursor( cursor );
     }
 
-    while( m_RCon == NULL && waitloops > 0 ) {  
+    while( m_RCon == NULL && waitloops > 0 ) {
       m_RCon = RConOp.inst( m_Host, m_Port );
       waitloops--;
       if( waitloops > 0 )
