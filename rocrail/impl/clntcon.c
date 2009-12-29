@@ -101,7 +101,6 @@ static void __infoWriter( void* threadinst ) {
   __iOClntService o = (__iOClntService)ThreadOp.getParm(th);
   Boolean        ok = True;
 
-  SocketOp.setBlocking( o->clntSocket, False );
   ThreadOp.setDescription( th, SocketOp.getPeername(o->clntSocket) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "infoWriter started for:%s.", SocketOp.getPeername(o->clntSocket) );
 
