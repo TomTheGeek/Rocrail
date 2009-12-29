@@ -207,6 +207,7 @@ clean:
 	-rm -f $(OUTDIR)/dcc232$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/nce$(SHAREDSUFFIX)
 	-rm -f $(OUTDIR)/io8255$(SHAREDSUFFIX)
+	-rm -f $(OUTDIR)/zimobin$(SHAREDSUFFIX)
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/ogen ../../rocdigs/rocdigs.xml ../
 	cd $(GENDIR)/rocdigs; ../$(BINDIR)/xml2cstr ../../common/version.xml impl/version.c svnLog
 
@@ -235,5 +236,6 @@ install:
 	-cp -p $(OUTDIR)/dcc232$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/nce$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)/io8255$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)/zimobin$(SHAREDSUFFIX) $(DESTDIR)
 	
 	
