@@ -429,6 +429,7 @@ static void __callback( obj inst, iONode nodeA ) {
         ControlOp.cmd( (iOControl)inst, tick, NULL );
       }
     }
+    NodeOp.base.del( nodeA );
     return;
   }
   else if( StrOp.equals( wSwitch.name(), nodeName ) ) {
