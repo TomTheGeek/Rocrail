@@ -696,8 +696,8 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuTrack->Append( ME_AddTrackConnector, wxGetApp().getMenu("zconnector") );
 
       wxMenu* menuTurnout = new wxMenu();
-      menuTurnout->Append( ME_AddSwitchRight    , wxGetApp().getMenu("right") );
-      menuTurnout->Append( ME_AddSwitchLeft     , wxGetApp().getMenu("left") );
+      menuTurnout->Append( ME_AddSwitchRight    , wxGetApp().getMenu("rightturnout") );
+      menuTurnout->Append( ME_AddSwitchLeft     , wxGetApp().getMenu("leftturnout") );
       menuTurnout->Append( ME_AddSwitchCrossing , wxGetApp().getMenu("crossing") );
       menuTurnout->Append( ME_AddSwitchDCrossing, wxGetApp().getMenu("dcrossing") );
       menuTurnout->Append( ME_AddSwitchThreeway , wxGetApp().getMenu("threeway") );
