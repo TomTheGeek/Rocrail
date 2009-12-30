@@ -647,6 +647,7 @@ static struct ODDX* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx mm=%d", data->mm );
   data->mma = wDDX.ismotorola( ddx_ini );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx mma=%d", data->mma );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx mmlp=%d", wDDX.ismmlongpause(ddx_ini) );
   data->queuecheck = wDDX.isqueuecheck( ddx_ini );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx queuecheck=%d", data->queuecheck );
   data->fastcvget = wDDX.isfastcvget( ddx_ini );

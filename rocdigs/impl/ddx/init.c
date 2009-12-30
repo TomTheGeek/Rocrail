@@ -137,7 +137,7 @@ void quit(obj inst) {
 int ddx_entry(obj inst, iONode ddx_ini) {
   iODDXData data = Data((iODDX)inst);
   if (init_serialport(inst)) {
-    init_MaerklinPacketPool(inst);
+    init_MaerklinPacketPool(inst, ddx_ini);
     initMaerklinGaPacketPool();
     TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "marklin packet pool initialized." );
     init_NMRAPacketPool(inst);

@@ -77,7 +77,7 @@ typedef struct _tNMRAPacketPool {
 }
 tNMRAPacketPool;
 
-int init_MaerklinPacketPool(obj inst);
+int init_MaerklinPacketPool(obj inst, iONode ddx_ini);
 char *get_maerklin_packet(int adr, int fx);
 int get_maerklin_direction(int addr);
 void update_MaerklinPacketPool(int adr, char *sd_packet, char *f1, char *f2,

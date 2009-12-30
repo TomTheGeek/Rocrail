@@ -34,6 +34,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "ddxdlg.h"
@@ -169,6 +170,7 @@ void DDXCtrlDlg::initValues() {
   m_GenMMA->SetValue( wDDX.ismotorola( m_SubProps) ? true:false );
   m_QueueCheck->SetValue( wDDX.isqueuecheck( m_SubProps) ? true:false );
   m_FastCVGet->SetValue( wDDX.isfastcvget( m_SubProps)?true:false );
+  m_MMLongPause->SetValue( wDDX.ismmlongpause( m_SubProps) ? true:false );
 
 }
 
@@ -197,6 +199,7 @@ void DDXCtrlDlg::evaluate() {
   wDDX.setmotorola( m_SubProps, m_GenMMA->IsChecked() ? True:False );
   wDDX.setqueuecheck( m_SubProps, m_QueueCheck->IsChecked() ? True:False );
   wDDX.setfastcvget( m_SubProps, m_FastCVGet->IsChecked()?True:False );
+  wDDX.setmmlongpause( m_SubProps, m_MMLongPause->IsChecked() ? True:False );
 }
 
 /*!
@@ -241,6 +244,7 @@ bool DDXCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& captio
     m_GenDCC = NULL;
     m_GenMM = NULL;
     m_GenMMA = NULL;
+    m_MMLongPause = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end DDXCtrlDlg member initialisation
@@ -281,15 +285,15 @@ void DDXCtrlDlg::CreateControls()
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_DDL_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_DDL_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_DDL_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_DDL_DEVICE, _("device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_DDL_DEVICE, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_DDL_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPortBase = new wxStaticText( m_GenerelPanel, wxID_ANY, _("portbase"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -308,38 +312,38 @@ void DDXCtrlDlg::CreateControls()
     itemFlexGridSizer15->AddGrowableCol(1);
     itemBoxSizer14->Add(itemFlexGridSizer15, 0, wxGROW, 5);
     m_labPort = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_PORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_PortStrings;
     m_Port = new wxChoice( m_S88Panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_PortStrings, 0 );
     itemFlexGridSizer15->Add(m_Port, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBusses = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUSSES, _("busses"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labBusses, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labBusses, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Busses = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 4, 0 );
     itemFlexGridSizer15->Add(m_Busses, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBus0 = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUS0, _("bus0 modules"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labBus0, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labBus0, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Bus0 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 62, 0 );
     itemFlexGridSizer15->Add(m_Bus0, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBus1 = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUS1, _("bus1 modules"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labBus1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labBus1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Bus1 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 62, 0 );
     itemFlexGridSizer15->Add(m_Bus1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBus2 = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUS2, _("bus2 modules"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labBus2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labBus2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Bus2 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 62, 0 );
     itemFlexGridSizer15->Add(m_Bus2, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBus3 = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUS3, _("bus3 modules"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer15->Add(m_labBus3, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer15->Add(m_labBus3, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Bus3 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 62, 0 );
     itemFlexGridSizer15->Add(m_Bus3, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -365,7 +369,7 @@ void DDXCtrlDlg::CreateControls()
     m_SCDbox->Add(m_InvDSR, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDelay = new wxStaticText( m_DetailsPanel, ID_STATICTEXT_DDL_DELAY, _("delay"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_SCDbox->Add(m_labDelay, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_SCDbox->Add(m_labDelay, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Delay = new wxTextCtrl( m_DetailsPanel, ID_TEXTCTRL_DDL_DELAY, _("1000"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_SCDbox->Add(m_Delay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -396,21 +400,25 @@ void DDXCtrlDlg::CreateControls()
     m_GenMMA->SetValue(false);
     itemStaticBoxSizer39->Add(m_GenMMA, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
+    m_MMLongPause = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("MMLP"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_MMLongPause->SetValue(false);
+    itemStaticBoxSizer39->Add(m_MMLongPause, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_Notebook->AddPage(m_DetailsPanel, _("Details"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer43 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer44 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer43, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer44, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer43->AddButton(m_OK);
+    itemStdDialogButtonSizer44->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer43->AddButton(m_Cancel);
+    itemStdDialogButtonSizer44->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer43->Realize();
+    itemStdDialogButtonSizer44->Realize();
 
 ////@end DDXCtrlDlg content construction
 }

@@ -169,6 +169,7 @@ public:
     wxCheckBox* m_GenDCC;
     wxCheckBox* m_GenMM;
     wxCheckBox* m_GenMMA;
+    wxCheckBox* m_MMLongPause;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end DDXCtrlDlg member variables

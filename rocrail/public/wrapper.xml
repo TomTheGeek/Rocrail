@@ -370,6 +370,7 @@
         <var name="inversedsr" vt="bool" defval="false"/>
         <var name="dcc" vt="bool" defval="true" remark="generate the NMRA DCC protocol"/>
         <var name="motorola" vt="bool" defval="true" remark="generate the motorola protocol"/>
+        <var name="mmlongpause" vt="bool" defval="false" remark="Use long packet pause."/>
         <var name="motorolarefresh" vt="bool" defval="true" remark="set to false if no MM locdecoders are used and accessory are MM"/>
         <var name="queuecheck" vt="bool" defval="true" remark="Check if there are bytes left in the send queue and sleep."/>
         <var name="fastcvget" vt="bool" defval="true" remark="Fast cv get for real rs232."/>

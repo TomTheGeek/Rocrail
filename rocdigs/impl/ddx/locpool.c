@@ -40,6 +40,8 @@
 #include "motorola.h"
 #include "nmra.h"
 
+#include "rocrail/wrapper/public/DDX.h"
+
 #include "rocs/public/trace.h"
 #include "rocs/public/thread.h"
 #include "rocs/public/system.h"
@@ -52,6 +54,19 @@
 #include <errno.h>
 
 #define MAXDATA      52
+
+/* arguments for marklin loco decoders (19200baud) */
+static int bfr19K = 1025;
+static int btw19K = 1250;
+static int end19K = 1700;
+
+/* arguments for marklin solenoids/func decoders (38400baud) */
+static int bfr38K = 600;
+static int btw38K = 600;
+static int end38K = 800;
+
+
+
 char idle_data[MAXDATA];
 char NMRA_idle_data[PKTSIZE];
 
@@ -77,10 +92,14 @@ int monitor_NrOfMLocos() {
   return MaerklinPacketPool.NrOfKnownAdresses;
 }
 
-int init_MaerklinPacketPool(obj inst) {
+int init_MaerklinPacketPool(obj inst, iONode ddx_ini) {
   iODDXData data = Data((iODDX)inst);
   int i,j;
   int error;
+
+  if( wDDX.ismmlongpause(ddx_ini) ) {
+    end19K = 6000;
+  }
 
   maerklin_pktpool_mutex = MutexOp.inst( NULL, True );
 
@@ -332,17 +351,6 @@ Boolean isShortcut(iOSerial serial, int shortcutchecking, int shortcutdelay, int
 
   return False;
 }
-
-/* arguments for marklin loco decoders (19200baud) */
-static int bfr19K = 1025;
-static int btw19K = 1250;
-static int end19K = 1700;
-
-/* arguments for marklin solenoids/func decoders (38400baud) */
-static int bfr38K = 600;
-static int btw38K = 600;
-static int end38K = 800;
-
 
 Boolean send_packet(iOSerial serial, int addr, char *packet, int packet_size, int packet_type, int refresh) {
 
