@@ -804,6 +804,7 @@ void LocControlDialog::OnButtonLocctrlBreakClick( wxCommandEvent& event )
 {
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wLoc.setcmd( cmd, wSysCmd.stop );
+  wSysCmd.setinformall(cmd, True);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
