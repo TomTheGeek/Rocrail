@@ -25,6 +25,7 @@
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/switch.h"
+#include "rocrail/public/signal.h"
 #include "rocrail/public/output.h"
 #include "rocrail/public/tt.h"
 #include "rocrail/public/seltab.h"
@@ -43,6 +44,8 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/SignalCmd.h"
+#include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
@@ -209,6 +212,7 @@ static Boolean _go( iORoute inst ) {
   iORouteData o = Data(inst);
   iOModel model = AppOp.getModel(  );
   iONode sw = wRoute.getswcmd( o->props );
+  iONode sg = wRoute.getsgcmd( o->props );
   iONode ac = wRoute.getactionctrl( o->props );
   int error = 0;
   int retry = 0;
@@ -225,6 +229,25 @@ static Boolean _go( iORoute inst ) {
     ac = wRoute.nextactionctrl( o->props, ac );
     ThreadOp.sleep( 10 );
   }
+
+  while( sg != NULL ) {
+    const char* sgId  = wSignalCmd.getid( sg );
+    const char* sgCmd = wSignalCmd.getcmd( sg );
+    iOSignal isg = ModelOp.getSignal( model, sgId );
+
+    if( isg != NULL ) {
+      if( StrOp.equals( wSignal.red, sgCmd ) )
+        SignalOp.red(isg);
+      else if( StrOp.equals( wSignal.green, sgCmd ) )
+        SignalOp.green(isg);
+      else if( StrOp.equals( wSignal.yellow, sgCmd ) )
+        SignalOp.yellow(isg);
+      else if( StrOp.equals( wSignal.white, sgCmd ) )
+        SignalOp.white(isg);
+    }
+
+    sg = wRoute.nextsgcmd( o->props, sg );
+  };
 
 
   while( sw != NULL ) {
