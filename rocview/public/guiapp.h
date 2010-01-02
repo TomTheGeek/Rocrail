@@ -57,6 +57,8 @@ public:
   void pushUndoItem( iONode item );
   iONode popUndoItem();
   bool isOffline() { return m_bOffline; }
+  bool isConsoleMode() { return m_bConsoleMode; }
+  void setConsoleMode(bool consolemode) { m_bConsoleMode = consolemode; }
   bool isStayOffline() { return m_bStayOffline; }
   void setStayOffline( bool stay ) { m_bStayOffline = stay; }
   wxString getMsg( const char* key );
@@ -83,6 +85,7 @@ public:
   iONode        m_Ini;
   RocGuiFrame*  m_Frame;
   bool          m_bOffline;
+  bool          m_bConsoleMode;
 
 private:
   void saveSizePos();

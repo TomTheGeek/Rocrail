@@ -753,6 +753,26 @@ static void rocrailCallback( obj me, iONode node ) {
   }
 
 
+  /* State */
+  if( StrOp.equals( wState.name(), NodeOp.getName( node ) ) ) {
+    wxGetApp().setConsoleMode( wState.isconsolemode( node )?true:false );
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "conole mode is %s", wxGetApp().isConsoleMode()?"on":"off" );
+    if(guiApp->isInit()) {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, STATE_EVENT );
+      // Make a copy of the node for using it out of this scope:
+      event.SetClientData( node->base.clone( node ) );
+      wxPostEvent( guiApp->getFrame(), event );
+    }
+  }
+  /* Auto */
+  else if( StrOp.equals( wAutoCmd.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, AUTO_EVENT );
+    // Make a copy of the node for using it out of this scope:
+    event.SetClientData( node->base.clone( node ) );
+    wxPostEvent( guiApp->getFrame(), event );
+  }
+
+
   /* do not process server messages before the plan panels are initialized */
   if( !wxGetApp().getFrame()->isInitialized() ) {
     return;
@@ -805,13 +825,6 @@ static void rocrailCallback( obj me, iONode node ) {
   else if( StrOp.equals( wClock.name(), NodeOp.getName( node ) ) && wxGetApp().getFrame() != NULL && guiApp->isInit()) {
     wxGetApp().getFrame()->SyncClock( node );
   }
-  /* State */
-  else if( StrOp.equals( wState.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, STATE_EVENT );
-    // Make a copy of the node for using it out of this scope:
-    event.SetClientData( node->base.clone( node ) );
-    wxPostEvent( guiApp->getFrame(), event );
-  }
   /* PT */
   else if( StrOp.equals( wProgram.name(), NodeOp.getName( node ) ) ) {
     char* msg = StrOp.fmt( "CV value=%d", wProgram.getvalue( node ) );
@@ -838,13 +851,6 @@ static void rocrailCallback( obj me, iONode node ) {
   /* DataReq (loco image?) */
   else if( StrOp.equals( wDataReq.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
-    // Make a copy of the node for using it out of this scope:
-    event.SetClientData( node->base.clone( node ) );
-    wxPostEvent( guiApp->getFrame(), event );
-  }
-  /* Auto */
-  else if( StrOp.equals( wAutoCmd.name(), NodeOp.getName( node ) ) ) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, AUTO_EVENT );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );

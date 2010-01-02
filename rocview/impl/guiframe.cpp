@@ -803,7 +803,6 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       }
       ListOp.base.del( list );
     }
-    m_ActiveLocs->AutoSize();
     m_ActiveLocs->SetCellBackgroundColour( hiddenlocos ? wxColour(255,255,200):wxColour(255,255,255));
 
   }
@@ -819,7 +818,9 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
     wxPostEvent( this, event );
   }
 
+  m_ActiveLocs->AutoSize();
   m_ActiveLocs->FitInside();
+  m_ActiveLocs->UpdateDimensions();
   m_ActiveLocsPanel->GetSizer()->Layout();
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
 
@@ -1614,13 +1615,13 @@ void RocGuiFrame::create() {
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
-  activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+  activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL, 2);
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LocPanel..." );
   m_LCPanel = new wxPanel( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
   m_LC = NULL;
   m_LC = new LC( m_LCPanel );
-  activeLocsSizer->Add(m_LCPanel, 0, wxADJUST_MINSIZE, 2);
+  activeLocsSizer->Add(m_LCPanel, 0, wxALL, 2);
 
   m_LocImage->setLC(m_LC);
 
@@ -1688,6 +1689,12 @@ void RocGuiFrame::create() {
 
   pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
   m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
+
+  m_ActiveLocsPanel->GetSizer()->Layout();
+  m_StatNotebook->Fit();
+  //GetSizer()->Fit(this);
+  //GetSizer()->SetSizeHints(this);
+
 
   if( !m_bLocoBook ) {
     m_StatNotebook->Show(m_bLocoBook);
@@ -2566,7 +2573,8 @@ void RocGuiFrame::setOnline( bool online ) {
   GetToolBar()->EnableTool(ME_New, !online);
   GetToolBar()->EnableTool(ME_Open, !online);
   GetToolBar()->EnableTool(ME_Upload, online);
-  GetToolBar()->EnableTool(ME_Connect, (!m_bActiveWorkspace) );
+  //GetToolBar()->EnableTool(ME_Connect, (!m_bActiveWorkspace) );
+  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace && !online) );
 }
 
 
@@ -2602,7 +2610,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
-  if( mi != NULL ) mi->Enable( (!l_bOffline && !m_bServerConsoleMode) );
+  if( mi != NULL ) mi->Enable( (!l_bOffline && !wxGetApp().isConsoleMode()) );
   mi = menuBar->FindItem(ME_Quit);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
   mi = menuBar->FindItem(ME_OpenWorkspace);
@@ -2776,7 +2784,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Connect);
   if( mi != NULL )
-    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace);
+    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace && l_bOffline);
+
+  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace && l_bOffline) );
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);
   wxMenuItem* mi_zoom50  = menuBar->FindItem(ME_Zoom50);
