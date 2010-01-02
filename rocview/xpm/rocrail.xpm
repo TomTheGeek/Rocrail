@@ -1,5 +1,5 @@
 /* XPM */
-static char * rocrail_xpm[] = {
+static const char * rocrail_xpm[] = {
 "411 411 3854 2",
 "  	c None",
 ". 	c #EBEFFA",
