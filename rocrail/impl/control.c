@@ -564,7 +564,13 @@ static void __callback( obj inst, iONode nodeA ) {
   else if( StrOp.equals( wSysCmd.name(), nodeName ) ) {
     if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd( nodeA ) ) ) {
       /* TODO: Cleanup... */
-      AppOp.shutdown(  );
+      if( AppOp.isConsoleMode() ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Ignoring shutdown in console mode." );
+        NodeOp.base.del( nodeA );
+      }
+      else {
+        AppOp.shutdown(  );
+      }
       return;
     }
     else if( StrOp.equals( wSysCmd.getini, wSysCmd.getcmd( nodeA ) ) ) {
