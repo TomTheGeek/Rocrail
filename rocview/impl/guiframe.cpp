@@ -547,7 +547,8 @@ void RocGuiFrame::OnPageChange(wxNotebookEvent& event) {
   }
 }
 
-void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
+
+void RocGuiFrame::CleanNotebook() {
 
   wxCursor cursor = wxCursor(wxCURSOR_WAIT);
   SetCursor(cursor);
@@ -559,6 +560,20 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   }
 
   m_PlanNotebook->DeleteAllPages();
+  m_ActiveLocs->DeleteRows( 0, m_ActiveLocs->GetNumberRows() );
+
+  wxGetApp().cleanupOldModel();
+  m_bInitialized = false;
+
+  cursor = wxCursor(wxCURSOR_ARROW);
+
+}
+
+
+void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
+  CleanNotebook();
+  wxCursor cursor = wxCursor(wxCURSOR_WAIT);
+
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
 
   int idx = 0;
@@ -617,7 +632,7 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_INITACTIVELOCS );
   wxPostEvent( this, evt );
 
-   wxGetApp().cleanupOldModel();
+  wxGetApp().cleanupOldModel();
 
   cursor = wxCursor(wxCURSOR_ARROW);
   SetCursor(cursor);
@@ -1822,6 +1837,9 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
   ConnectionDialog* dlg = new ConnectionDialog( this, ini );
 
   if( wxID_OK == dlg->ShowModal() ) {
+    CleanNotebook();
+    wxGetApp().setModel(NULL);
+
     Connect(StrOp.dup( dlg->getHostname().mb_str(wxConvUTF8) ), dlg->getPort());
 	}
   dlg->Destroy();
@@ -2573,7 +2591,7 @@ void RocGuiFrame::setOnline( bool online ) {
   GetToolBar()->EnableTool(ME_New, !online);
   GetToolBar()->EnableTool(ME_Open, !online);
   GetToolBar()->EnableTool(ME_Upload, online);
-  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace && !online) );
+  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace) );
   GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
 }
 
@@ -2784,9 +2802,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Connect);
   if( mi != NULL )
-    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace && l_bOffline);
+    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace);
 
-  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace && l_bOffline) );
+  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace) );
   GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);

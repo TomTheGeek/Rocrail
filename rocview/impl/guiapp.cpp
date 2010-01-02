@@ -1034,8 +1034,10 @@ void RocGui::setModel( iONode node ) {
   else if( m_Model != NULL && isOffline() ) {
     m_OldModel = m_Model;
   }
+  m_Model = NULL;
   // Save a copy of the node:
-  m_Model = (iONode)node->base.clone( node );
+  if( node != NULL )
+    m_Model = (iONode)node->base.clone( node );
 }
 
 

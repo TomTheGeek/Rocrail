@@ -158,6 +158,7 @@ public:
   void OnDonKeyInfo(wxCommandEvent& event);
 
   void setLocalPlan( wxString plan );
+  void CleanNotebook();
   void OnInitNotebook(wxCommandEvent& event);
   void OnPageChange(wxNotebookEvent& event);
   BasePanel* InitNotebookPage( iONode zlevel );
