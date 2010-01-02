@@ -1773,29 +1773,56 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
  */
 static void _modify( iOLoc inst, iONode props ) {
   iOLocData data = Data(inst);
-  int cnt = NodeOp.getAttrCnt( props );
-  int i = 0;
 
-  for( i = 0; i < cnt; i++ ) {
-    iOAttr attr = NodeOp.getAttr( props, i );
-    const char* name  = AttrOp.getName( attr );
-    const char* value = AttrOp.getVal( attr );
-    if( !StrOp.equals( "runtime", name ) )
-      NodeOp.setStr( data->props, name, value );
+  /* Do not replace all attributes and child nodes in auto mode! */
+
+  if( LocOp.isAutomode( inst ) ) {
+    /* only replace none destructive attributes */
+    wLoc.setsecondnextblock( data->props, wLoc.issecondnextblock(props) );
+    wLoc.setlen( data->props, wLoc.getlen(props) );
+    wLoc.setshortin( data->props, wLoc.isshortin(props) );
+    wLoc.setinatpre2in( data->props, wLoc.isinatpre2in(props) );
+    wLoc.setV_max( data->props, wLoc.getV_max(props) );
+    wLoc.setV_mid( data->props, wLoc.getV_mid(props) );
+    wLoc.setV_min( data->props, wLoc.getV_min(props) );
+    wLoc.setV_Rmax( data->props, wLoc.getV_Rmax(props) );
+    wLoc.setV_Rmid( data->props, wLoc.getV_Rmid(props) );
+    wLoc.setV_Rmin( data->props, wLoc.getV_Rmin(props) );
+    wLoc.settrysamedir( data->props, wLoc.istrysamedir(props) );
+    wLoc.settryoppositedir( data->props, wLoc.istryoppositedir(props) );
+    wLoc.setforcesamedir( data->props, wLoc.isforcesamedir(props) );
+    wLoc.setdesc( data->props, wLoc.getdesc(props) );
+    wLoc.setremark( data->props, wLoc.getremark(props) );
+    wLoc.setcatnr( data->props, wLoc.getcatnr(props) );
+    wLoc.setfncnt( data->props, wLoc.getfncnt(props) );
+    wLoc.setcargo( data->props, wLoc.getcargo(props) );
+    wLoc.setengine( data->props, wLoc.getengine(props) );
   }
+  else {
+    int cnt = NodeOp.getAttrCnt( props );
+    int i = 0;
 
-  /* Leave the childs if no new are comming */
-  if( NodeOp.getChildCnt( props ) > 0 ) {
-    cnt = NodeOp.getChildCnt( data->props );
-    while( cnt > 0 ) {
-      iONode child = NodeOp.getChild( data->props, 0 );
-      NodeOp.removeChild( data->props, child );
-      cnt = NodeOp.getChildCnt( data->props );
-    }
-    cnt = NodeOp.getChildCnt( props );
     for( i = 0; i < cnt; i++ ) {
-      iONode child = NodeOp.getChild( props, i );
-      NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+      iOAttr attr = NodeOp.getAttr( props, i );
+      const char* name  = AttrOp.getName( attr );
+      const char* value = AttrOp.getVal( attr );
+      if( !StrOp.equals( "runtime", name ) )
+        NodeOp.setStr( data->props, name, value );
+    }
+
+    /* Leave the childs if no new are comming */
+    if( NodeOp.getChildCnt( props ) > 0 ) {
+      cnt = NodeOp.getChildCnt( data->props );
+      while( cnt > 0 ) {
+        iONode child = NodeOp.getChild( data->props, 0 );
+        NodeOp.removeChild( data->props, child );
+        cnt = NodeOp.getChildCnt( data->props );
+      }
+      cnt = NodeOp.getChildCnt( props );
+      for( i = 0; i < cnt; i++ ) {
+        iONode child = NodeOp.getChild( props, i );
+        NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+      }
     }
   }
 
