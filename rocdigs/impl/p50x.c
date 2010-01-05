@@ -980,6 +980,8 @@ static void __handleLoco(iOP50x p50x, byte* status) {
   wLoc.setV_rawMax( nodeC, 127 );
   wLoc.setfn( nodeC, (status[3] & 0x40) ? True:False);
   wLoc.setdir( nodeC, (status[3] & 0x80) ? True:False );
+  wLoc.setthrottleid( nodeC, "p50x" );
+  wLoc.setcmd( nodeC, wLoc.direction );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
   nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -995,6 +997,7 @@ static void __handleLoco(iOP50x p50x, byte* status) {
   wFunCmd.setf6( nodeC, (status[1] & 0x20) ? True:False );
   wFunCmd.setf7( nodeC, (status[1] & 0x40) ? True:False );
   wFunCmd.setf8( nodeC, (status[1] & 0x80) ? True:False );
+  wLoc.setthrottleid( nodeC, "p50x" );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
 
