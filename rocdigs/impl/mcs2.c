@@ -459,6 +459,7 @@ static void __evaluateMCS2Loc( iOMCS2Data mcs2, byte* in ) {
     wLoc.setV_raw( nodeC, 0 );
     wLoc.setV_rawMax( nodeC, 1000 );
     wLoc.setdir( nodeC, dir==1 );
+    wLoc.setthrottleid( nodeC, "CS2" );
     /* 1 means forwards, 2 means reverse in cs2 message, in Rocrail true=forward, false=reverse */
 //    wLoc.setcmd( nodeC, wLoc.velocity );
     wLoc.setcmd( nodeC, wLoc.direction );
@@ -468,6 +469,7 @@ static void __evaluateMCS2Loc( iOMCS2Data mcs2, byte* in ) {
     wLoc.setV_rawMax( nodeC, 1000 );
     /* all cs2 speeds are on a scale of 0-1000, regardless of actual locdecoder speedsteps */
     wLoc.setcmd( nodeC, wLoc.velocity );
+    wLoc.setthrottleid( nodeC, "CS2" );
   }
   mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
 }
