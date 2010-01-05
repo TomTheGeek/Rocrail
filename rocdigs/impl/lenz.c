@@ -1099,11 +1099,12 @@ static void __transactor( void* threadinst ) {
 
   obj post = NULL;
 
-  Boolean responceRecieved = True;
-  Boolean expectAnswer = True;
+  Boolean responceRecieved = True,
+  waitForAnswer = False,
+  expectEliteAnswer = True;
 
 
-  int timeoutval = 25;
+  int timeoutval = 100;
   int timeout = timeoutval;
 
   unsigned char* outc = NULL;
@@ -1115,26 +1116,28 @@ static void __transactor( void* threadinst ) {
   do {
     /* get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
-    if (responceRecieved || data->dummyio) {
+    if (responceRecieved) {
       post = ThreadOp.getPost( th );
-      numtries = 1;
+      numtries = 5;
       if (post != NULL) {
         outy = (byte*) post;
-        MemOp.copy( out, outy, 256);
+        for (i = 0; i < 256; i++)
+          out[i] = (unsigned char) outy[i];
         freeMem( post);
       }
       if (post != NULL) {
         responceRecieved = !__sendRequest( lenz, out );
+        waitForAnswer = True;
 
         timeout = timeoutval;
 
-        expectAnswer = data->dummyio ? False:True;
+        expectEliteAnswer = True;
 
         /* special treatment for the elite and LI-USB*/
         /* TODO: this is not state of art ... we have to do something here !!!*/
         if (data->elite || data->usb) {
           if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
-            expectAnswer = False;
+            expectEliteAnswer = False;
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... reading cv %d", out[2] );
             if(data->elite)
               ThreadOp.sleep(9000);
@@ -1142,7 +1145,7 @@ static void __transactor( void* threadinst ) {
               ThreadOp.sleep(1000);
           }
           if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
-            expectAnswer = False;
+            expectEliteAnswer = False;
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "... writing cv %d with value %d", out[2], out[3]);
             if(data->elite)
               ThreadOp.sleep(9000);
@@ -1150,7 +1153,7 @@ static void __transactor( void* threadinst ) {
               ThreadOp.sleep(1000);
           }
           if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
-            expectAnswer = False;
+            expectEliteAnswer = False;
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "No response expected" );
           }
         }
@@ -1158,33 +1161,40 @@ static void __transactor( void* threadinst ) {
 
       }
     } else {
-      if( post != NULL && numtries > 0 && expectAnswer) {
+      if( post != NULL && numtries > 0 && expectEliteAnswer) {
         /* send again */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Resend last command..." );
         __sendRequest( lenz, out );
+
+        waitForAnswer = True;
         numtries--;
 
       } else {
         responceRecieved = True;
+        waitForAnswer = False;
+
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
 
     }
 
 
-    int dataAvailable = SerialOp.available(data->serial);
+    /* Give up timeslice:*/
+    ThreadOp.sleep( 50 );
+
+
+    Boolean dataAvailable = SerialOp.available(data->serial);
 
     // Wait or timeout
-    while(  timeout > 0 && dataAvailable >= 2 ) {
-      timeout --;
-      ThreadOp.sleep( 10 );
-      dataAvailable = SerialOp.available(data->serial);
+    while(  !(timeout != 0 || !dataAvailable) ) {
+      if( timeout > 0)
+        timeout --;
+      ThreadOp.sleep( 25 );
     }
 
-    if ( !data->bincmd && !data->dummyio && dataAvailable > 0 ) {
-      Boolean unsupportedCmd = False;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timeout=%d dataAvailable=%d", timeout, dataAvailable );
+    if ( !data->bincmd && !data->dummyio && dataAvailable) {
       if( MutexOp.wait( data->mux ) ) {
+
+        dataAvailable = False;
 
         if ( data->usb) {
 
@@ -1225,6 +1235,8 @@ static void __transactor( void* threadinst ) {
 
         if( !ok )
           continue;
+
+        waitForAnswer = False;
 
         bXor = 0;
         for( i = 0; i < datalen; i++ ) {
@@ -1377,7 +1389,6 @@ static void __transactor( void* threadinst ) {
         /* SO */
         else if (in[0] == 0x78){
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SO xx %d = %d",in[2], in[3]);
-          responceRecieved = True;
         }
         /* clock */
         else if (in[0] == 0x05){
@@ -1387,20 +1398,14 @@ static void __transactor( void* threadinst ) {
 
         else {
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported command: 0x%02X", in[0]);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
-          responceRecieved = True;
-          unsupportedCmd = True;
         }
 
         /* anything will go to rocgui ...*/
-        if(!unsupportedCmd)
-          __evaluateResponse( lenz, in, datalen );
+        __evaluateResponse( lenz, in, datalen );
 
       }
-    }
-    else if ( !responceRecieved && !data->bincmd && !data->dummyio ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout=%d dataAvailable=%d", timeout, dataAvailable );
     }
 
     /* Sensor Debounce */
@@ -1427,7 +1432,7 @@ static void __transactor( void* threadinst ) {
     }
 
     /* Give up timeslice:*/
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( 1 );
   } while( data->run );
 
 }
@@ -1486,9 +1491,11 @@ static void _halt( obj inst ) {
   iOLenz lenz = (iOLenz) inst;
 
   /* ALL OFF */
-  iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
-  wSysCmd.setcmd( cmd, wSysCmd.stop );
-  LenzOp.cmd( inst, cmd );
+  byte* outc = allocMem(256);
+  outc[0] = 0x21;
+  outc[1] = 0x80;
+  outc[2] = 0xA1;
+  __sendRequest( lenz, outc );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", "Lenz" );
 
   data->run = False;
@@ -1549,10 +1556,7 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.set( data->swTime1, -1, sizeof( data->swTime1 ) );
   MemOp.set( data->fbState, 0, sizeof( data->fbState ) );
 
-  if( StrOp.equals( wDigInt.cts, wDigInt.getflow(ini) ) )
-    SerialOp.setFlow( data->serial, cts );
-  else
-    SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, cts );
 
   if( data->usb) /* force to 57600 ignoring the ini.*/
     SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
@@ -1570,7 +1574,6 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow            = %s", wDigInt.getflow( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor debounce = %s", data->sensordebounce ? "yes":"no" );
