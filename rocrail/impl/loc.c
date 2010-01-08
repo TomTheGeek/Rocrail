@@ -1559,7 +1559,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA ) {
 
 }
 
-static void __swapConsist( iOLoc inst ) {
+static void __swapConsist( iOLoc inst, iONode cmd ) {
   iOLocData data = Data(inst);
 
   /* swap consist */
@@ -1572,7 +1572,7 @@ static void __swapConsist( iOLoc inst ) {
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok );
       if( consistloc != NULL ) {
-        LocOp.swapPlacing( consistloc );
+        LocOp.swapPlacing( consistloc, cmd );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
@@ -1659,7 +1659,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.swap, cmd ) ) {
-      LocOp.swapPlacing(inst);
+      LocOp.swapPlacing(inst, nodeA);
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
@@ -2078,14 +2078,18 @@ static void _setCV( iOLoc loc, int nr, int value ) {
 /**
  * swap placing to run in defaults routes after reaching an terminal station
  */
-static void _swapPlacing( iOLoc loc ) {
+static void _swapPlacing( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
-  wLoc.setplacing( data->props, !wLoc.isplacing( data->props ) );
+  if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
+    wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
+  }
+  else
+    wLoc.setplacing( data->props, !wLoc.isplacing( data->props ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
   /* inform model to keep this setting in the occupation file */
   ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2 );
 
-  __swapConsist(loc);
+  __swapConsist(loc, cmd);
 
   /* Broadcast to clients. */
   {

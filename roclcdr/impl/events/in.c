@@ -100,7 +100,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
       /* swap post route */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
-      data->loc->swapPlacing( data->loc );
+      data->loc->swapPlacing( data->loc, NULL );
 
       wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
       data->loc->cmd( data->loc, cmd);
@@ -151,7 +151,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     if( data->curBlock->isTerminalStation( data->curBlock ) ) {
       /* BUG: 367452 only swap after the IN block event! */
       if( data->swapBlock != data->curBlock ) {
-        data->loc->swapPlacing( data->loc );
+        data->loc->swapPlacing( data->loc, NULL );
         data->swapBlock = data->curBlock;
       }
     }

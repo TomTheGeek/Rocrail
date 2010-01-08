@@ -401,6 +401,7 @@
     </fun>
     <fun name="swapPlacing" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
     </fun>
     <fun name="informBlock" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>

@@ -82,7 +82,7 @@ void statusFindDest( iILcDriverInt inst ) {
       if( checkScheduleEntryActions(inst) ) {
         /* wait in block if we have to swap placing... */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-        data->loc->swapPlacing( data->loc );
+        data->loc->swapPlacing( data->loc, NULL );
       }
     }
     else if( wait ) {
@@ -93,7 +93,7 @@ void statusFindDest( iILcDriverInt inst ) {
       if( checkScheduleEntryActions(inst) ) {
         /* wait in block if we have to swap placing... */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-        data->loc->swapPlacing( data->loc );
+        data->loc->swapPlacing( data->loc, NULL );
       }
       checkScheduleActions(inst, LC_FINDDEST);
     }
