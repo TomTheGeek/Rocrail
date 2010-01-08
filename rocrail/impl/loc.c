@@ -1783,25 +1783,44 @@ static void _modify( iOLoc inst, iONode props ) {
 
   if( LocOp.isAutomode( inst ) ) {
     /* only replace none destructive attributes */
-    wLoc.setsecondnextblock( data->props, wLoc.issecondnextblock(props) );
-    wLoc.setlen( data->props, wLoc.getlen(props) );
-    wLoc.setshortin( data->props, wLoc.isshortin(props) );
-    wLoc.setinatpre2in( data->props, wLoc.isinatpre2in(props) );
-    wLoc.setV_max( data->props, wLoc.getV_max(props) );
-    wLoc.setV_mid( data->props, wLoc.getV_mid(props) );
-    wLoc.setV_min( data->props, wLoc.getV_min(props) );
-    wLoc.setV_Rmax( data->props, wLoc.getV_Rmax(props) );
-    wLoc.setV_Rmid( data->props, wLoc.getV_Rmid(props) );
-    wLoc.setV_Rmin( data->props, wLoc.getV_Rmin(props) );
-    wLoc.settrysamedir( data->props, wLoc.istrysamedir(props) );
-    wLoc.settryoppositedir( data->props, wLoc.istryoppositedir(props) );
-    wLoc.setforcesamedir( data->props, wLoc.isforcesamedir(props) );
-    wLoc.setdesc( data->props, wLoc.getdesc(props) );
-    wLoc.setremark( data->props, wLoc.getremark(props) );
-    wLoc.setcatnr( data->props, wLoc.getcatnr(props) );
-    wLoc.setfncnt( data->props, wLoc.getfncnt(props) );
-    wLoc.setcargo( data->props, wLoc.getcargo(props) );
-    wLoc.setengine( data->props, wLoc.getengine(props) );
+    if(NodeOp.findAttr(props, "secondnextblock"))
+      wLoc.setsecondnextblock( data->props, wLoc.issecondnextblock(props) );
+    if(NodeOp.findAttr(props, "len"))
+      wLoc.setlen( data->props, wLoc.getlen(props) );
+    if(NodeOp.findAttr(props, "shortin"))
+      wLoc.setshortin( data->props, wLoc.isshortin(props) );
+    if(NodeOp.findAttr(props, "inatpre2in"))
+      wLoc.setinatpre2in( data->props, wLoc.isinatpre2in(props) );
+    if(NodeOp.findAttr(props, "V_max"))
+      wLoc.setV_max( data->props, wLoc.getV_max(props) );
+    if(NodeOp.findAttr(props, "V_mid"))
+      wLoc.setV_mid( data->props, wLoc.getV_mid(props) );
+    if(NodeOp.findAttr(props, "V_min"))
+      wLoc.setV_min( data->props, wLoc.getV_min(props) );
+    if(NodeOp.findAttr(props, "V_Rmax"))
+      wLoc.setV_Rmax( data->props, wLoc.getV_Rmax(props) );
+    if(NodeOp.findAttr(props, "V_Rmid"))
+      wLoc.setV_Rmid( data->props, wLoc.getV_Rmid(props) );
+    if(NodeOp.findAttr(props, "V_Rmin"))
+      wLoc.setV_Rmin( data->props, wLoc.getV_Rmin(props) );
+    if(NodeOp.findAttr(props, "trysamedir"))
+      wLoc.settrysamedir( data->props, wLoc.istrysamedir(props) );
+    if(NodeOp.findAttr(props, "tryoppositedir"))
+      wLoc.settryoppositedir( data->props, wLoc.istryoppositedir(props) );
+    if(NodeOp.findAttr(props, "forcesamedir"))
+      wLoc.setforcesamedir( data->props, wLoc.isforcesamedir(props) );
+    if(NodeOp.findAttr(props, "desc"))
+      wLoc.setdesc( data->props, wLoc.getdesc(props) );
+    if(NodeOp.findAttr(props, "rmark"))
+      wLoc.setremark( data->props, wLoc.getremark(props) );
+    if(NodeOp.findAttr(props, "catnr"))
+      wLoc.setcatnr( data->props, wLoc.getcatnr(props) );
+    if(NodeOp.findAttr(props, "fncnt"))
+      wLoc.setfncnt( data->props, wLoc.getfncnt(props) );
+    if(NodeOp.findAttr(props, "cargo"))
+      wLoc.setcargo( data->props, wLoc.getcargo(props) );
+    if(NodeOp.findAttr(props, "engine"))
+      wLoc.setengine( data->props, wLoc.getengine(props) );
   }
   else {
     int cnt = NodeOp.getAttrCnt( props );
