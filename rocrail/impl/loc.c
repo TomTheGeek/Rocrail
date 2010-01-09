@@ -309,9 +309,9 @@ static void __sysEvent( obj inst, const char* cmd ) {
 
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
+    data->fxrestored = True;
     if( wLoc.isrestorefx(data->props))
       __restoreFx(inst);
-    data->fxrestored = True;
   }
 }
 
