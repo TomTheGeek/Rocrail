@@ -1488,15 +1488,21 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
-  if( StrOp.equals( wSysCmd.name(), cmdName ) ) {
+  if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) ) {
     /* inform objects of a power on/off */
-    obj listener = ListOp.first( data->sysEventListeners );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
-    while( listener != NULL ) {
-      listener->event(listener, cmd);
-      listener = ListOp.next( data->sysEventListeners );
-    };
+    if( MutexOp.trywait(data->muxSysEvent, 0) ) {
+      obj listener = ListOp.first( data->sysEventListeners );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
+      while( listener != NULL ) {
+        listener->event(listener, cmd);
+        listener = ListOp.next( data->sysEventListeners );
+      };
+      MutexOp.post( data->muxSysEvent );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pending system event cycle; %s:%s rejected", cmdName, cmdVal );
+    }
   }
   else if( StrOp.equals( wAutoCmd.name(), cmdName ) ) {
     if( StrOp.equals( wAutoCmd.on, cmdVal ) || StrOp.equals( wAutoCmd.off, cmdVal ) ) {
@@ -3408,6 +3414,8 @@ static iOModel _inst( const char* fileName ) {
   data->sysEventListeners = ListOp.inst();
 
   data->muxFindDest = MutexOp.inst( "muxFindDest", True );
+
+  data->muxSysEvent = MutexOp.inst( "muxSysEvent", True );
 
   /* occupation map */
   data->occMap      = MapOp.inst();
