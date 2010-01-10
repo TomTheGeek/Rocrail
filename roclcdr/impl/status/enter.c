@@ -76,8 +76,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                                               data->loc, &data->next2Route, data->gotoBlock,
                                               wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                               wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
-					      wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
-		       			      data->next1Route->isSwapPost( data->next1Route ) );
+                wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
+                      data->next1Route->isSwapPost( data->next1Route ) );
       }
       else {
         /* next2Block already locked */
@@ -142,8 +142,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     if( data->next2Block != NULL ) {
       /* fix: if a loc is running, and the new destination is opposite, the loc should reject the new destination and stop. */
       Boolean dir = data->next2Route->getDirection( data->next2Route,
-          					    data->next1Block->base.id(data->next1Block),
-						    &data->next2RouteFromTo );
+                        data->next1Block->base.id(data->next1Block),
+                &data->next2RouteFromTo );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "loco direction for [%s] is [%s], route direction [%s]",
                      data->loc->getId( data->loc ), dir?"forwards":"reverse", data->next1RouteFromTo?"fromTo":"toFrom" );
@@ -172,6 +172,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Found destination for \"%s\": \"%s\" (from %s)",
             data->loc->getId( data->loc ), data->next2Block->base.id( data->next2Block ),
+            data->next1Block->base.id( data->next1Block ) );
+        data->loc->informBlock( data->loc, data->next2Block->base.id( data->next2Block ),
             data->next1Block->base.id( data->next1Block ) );
         data->state = LC_WAIT4EVENT;
         data->eventTimeout = 0;
