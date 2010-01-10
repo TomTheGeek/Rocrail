@@ -1336,6 +1336,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setblockid( node, data->curBlock );
+    wLoc.setdestblockid( node, data->destBlock );
     wLoc.setruntime( node, wLoc.getruntime(data->props) );
     wLoc.setmtime( node, wLoc.getmtime(data->props) );
     wLoc.setmint( node, wLoc.getmint(data->props) );
@@ -1408,7 +1409,7 @@ static const char* _getSchedule( iOLoc inst ) {
 static void _setMode( iOLoc inst, const char* mode ) {
   iOLocData data = Data(inst);
 
-  /* Broadcast to clients. */
+  /* Only take over the new mode if it is different; Broadcast to clients. */
   if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setmode(data->props, mode);
