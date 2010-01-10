@@ -327,13 +327,13 @@ static void _go( iILcDriverInt inst, Boolean gomanual ) {
     data->brake = False;
   if( !data->run && !data->pending ) {
     data->state = LC_IDLE;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+    data->loc->setMode(data->loc, wLoc.mode_idle);
     data->run = True;
     data->scheduletime = data->model->getTime( data->model );
   }
   else if( data->run && !data->pending && !data->reqstop ) {
     data->state = LC_IDLE;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+    data->loc->setMode(data->loc, wLoc.mode_idle);
   }
 }
 
@@ -355,7 +355,7 @@ static void _stopNet( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   data->state = LC_IDLE;
   data->run = False;
-  wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+  data->loc->setMode(data->loc, wLoc.mode_idle);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                    "stopNet event for [%s]; **IDLE**",
@@ -384,7 +384,7 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
   data->pending = False;
   data->reqstop = False;
   data->state = LC_IDLE;
-  wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+  data->loc->setMode(data->loc, wLoc.mode_idle);
   LcDriverOp.brake( inst );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                  "reset event for [%s], unlocking groups and routes...",

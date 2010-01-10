@@ -93,7 +93,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" to LC_INBLOCK.",
                    data->loc->getId( data->loc ) );
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+    data->loc->setMode(data->loc, wLoc.mode_auto);
 
     if ( data->next1Route->isSwapPost( data->next1Route ) ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );

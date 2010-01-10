@@ -47,7 +47,7 @@ void statusPause( iILcDriverInt inst ) {
     if( !data->curBlock->wait(data->curBlock, data->loc ) ) {
       data->pause = 0;
       data->state = LC_IDLE;
-      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+      data->loc->setMode(data->loc, wLoc.mode_idle);
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting state for \"%s\" from LC_PAUSE to LC_IDLE for manual signal.",
                      data->loc->getId( data->loc ) );
@@ -55,7 +55,7 @@ void statusPause( iILcDriverInt inst ) {
   }
   else if( data->pause == 0 ) {
     data->state = LC_IDLE;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+    data->loc->setMode(data->loc, wLoc.mode_idle);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_PAUSE to LC_IDLE.",
                    data->loc->getId( data->loc ) );

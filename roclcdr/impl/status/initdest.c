@@ -110,7 +110,7 @@ void statusInitDest( iILcDriverInt inst ) {
       }
 
       data->state = LC_CHECKROUTE;
-      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+      data->loc->setMode(data->loc, wLoc.mode_auto);
       /*data->run = False;*/
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting state for \"%s\" from LC_INITDEST to LC_CHECKROUTE.",
@@ -132,7 +132,7 @@ void statusInitDest( iILcDriverInt inst ) {
       }
 
       data->state = data->run ? LC_PAUSE:LC_IDLE;
-      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+      data->loc->setMode(data->loc, wLoc.mode_wait);
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting state for [%s] pause=%d from LC_INITDEST to %s.",
                      data->loc->getId( data->loc ), data->pause, data->run ? "LC_PAUSE":"LC_IDLE" );

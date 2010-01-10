@@ -434,6 +434,10 @@
     <fun name="isUseManualRoutes" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="setMode" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="mode" vt="const char*" remark="Automatic mode phase."/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>

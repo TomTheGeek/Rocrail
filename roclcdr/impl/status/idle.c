@@ -48,7 +48,7 @@ void statusIdle( iILcDriverInt inst ) {
   {
 
     data->state = LC_FINDDEST;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+    data->loc->setMode(data->loc, wLoc.mode_auto);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_IDLE to LC_FINDDEST.",
                    data->loc->getId( data->loc ) );
@@ -70,7 +70,7 @@ void statusIdle( iILcDriverInt inst ) {
       data->reqstop = False;
       data->run = False;
       data->warningnodestfound = False;
-      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+      data->loc->setMode(data->loc, wLoc.mode_idle);
     }
 
   }

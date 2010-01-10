@@ -1404,6 +1404,37 @@ static const char* _getSchedule( iOLoc inst ) {
   return "";
 }
 
+
+static void _setMode( iOLoc inst, const char* mode ) {
+  iOLocData data = Data(inst);
+
+  /* Broadcast to clients. */
+  if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {
+    iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setmode(data->props, mode);
+
+    wLoc.setid( node, wLoc.getid( data->props ) );
+    wLoc.setaddr( node, wLoc.getaddr( data->props ) );
+    wLoc.setdir( node, wLoc.isdir( data->props ) );
+    wLoc.setfn( node, wLoc.isfn( data->props ) );
+    wLoc.setV( node, data->drvSpeed );
+    wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+    wLoc.setmode( node, wLoc.getmode( data->props ) );
+    wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
+    wLoc.setblockid( node, data->curBlock );
+    wLoc.setruntime( node, wLoc.getruntime(data->props) );
+    wLoc.setmtime( node, wLoc.getmtime(data->props) );
+    wLoc.setmint( node, wLoc.getmint(data->props) );
+    wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
+    wLoc.setactive( node, wLoc.isactive(data->props) );
+    if( data->driver != NULL ) {
+      wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+    }
+
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+  }
+}
+
 static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, const char* nextroute ) {
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);

@@ -51,7 +51,7 @@ void statusWait( iILcDriverInt inst ) {
   {
 
     data->state = LC_TIMER;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+    data->loc->setMode(data->loc, wLoc.mode_wait);
 
     if( data->curBlock->wait(data->curBlock, data->loc ) ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );

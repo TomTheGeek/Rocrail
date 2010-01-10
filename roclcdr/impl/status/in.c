@@ -54,7 +54,7 @@ void statusIn( iILcDriverInt inst ) {
     data->state = LC_WAITBLOCK;
     data->prevState = LC_INBLOCK;
 
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+    data->loc->setMode(data->loc, wLoc.mode_wait);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_INBLOCK to LC_WAITBLOCK.",
                    data->loc->getId( data->loc ) );
@@ -77,7 +77,7 @@ void statusIn( iILcDriverInt inst ) {
 
     data->state = LC_CHECKROUTE;
 
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+    data->loc->setMode(data->loc, wLoc.mode_auto);
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "Setting state for [%s] from LC_INBLOCK to LC_CHECKROUTE.",
                    data->loc->getId( data->loc ) );
@@ -100,7 +100,7 @@ void statusIn( iILcDriverInt inst ) {
 
     data->state = LC_PRE2GO;
 
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+    data->loc->setMode(data->loc, wLoc.mode_auto);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_INBLOCK to LC_PRE2GO.",
                    data->loc->getId( data->loc ) );

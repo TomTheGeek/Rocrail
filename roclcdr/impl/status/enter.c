@@ -50,7 +50,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "Unexpected enter event for \"%s\" state=%d run=%d", data->loc->getId( data->loc ), data->state, data->run );
     data->state = LC_IDLE;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_idle );
+    data->loc->setMode(data->loc, wLoc.mode_idle);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from %s to LC_IDLE.",
                    data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
@@ -177,7 +177,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->eventTimeout = 0;
         data->signalReset  = 0;
 
-        wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+        data->loc->setMode(data->loc, wLoc.mode_wait);
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
                        data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
@@ -254,7 +254,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->state = LC_WAIT4EVENT;
     data->eventTimeout = 0;
     data->signalReset  = 0;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+    data->loc->setMode(data->loc, wLoc.mode_wait);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
                    data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );

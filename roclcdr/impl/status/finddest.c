@@ -121,7 +121,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->curBlock->base.id(data->curBlock) );
 
     data->state = LC_INITDEST;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+    data->loc->setMode(data->loc, wLoc.mode_auto);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_FINDDEST to LC_INITDEST.",
                    data->loc->getId( data->loc ) );
@@ -130,7 +130,7 @@ void statusFindDest( iILcDriverInt inst ) {
   else {
     data->state = LC_WAITBLOCK;
     data->prevState = LC_FINDDEST;
-    wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_wait );
+    data->loc->setMode(data->loc, wLoc.mode_wait);
     if( !data->warningnodestfound ) {
       data->warningnodestfound = True;
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,

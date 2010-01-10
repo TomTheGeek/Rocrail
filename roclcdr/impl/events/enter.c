@@ -73,7 +73,7 @@ void eventEnter( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Bo
         dstBlockEvent && dontcare )
     {
       data->state = LC_ENTERBLOCK;
-      wLoc.setmode( data->loc->base.properties( data->loc ), wLoc.mode_auto );
+      data->loc->setMode(data->loc, wLoc.mode_auto);
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting state for \"%s\" to LC_ENTERBLOCK.",
                      data->loc->getId( data->loc ) );
