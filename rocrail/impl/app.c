@@ -224,6 +224,9 @@ static void _setIni( iONode ini ) {
       wTrace.setdebug( curtrace, wTrace.isdebug( trace ) );
     }
 
+    /* free up newini from previous setIni */
+    if( data->newini != NULL )
+      NodeOp.base.del(data->newini);
     data->newini = (iONode)NodeOp.base.clone( ini );
 
     AppOp.saveIni();
