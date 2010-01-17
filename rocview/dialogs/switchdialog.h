@@ -68,6 +68,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_SW_TYPE 10017
 #define wxID_STATIC_SW_DIR 10174
 #define ID_RADIOBOX_SW_DIR 10173
+#define ID_CHECKBOX_SW_SHOW 10023
 #define ID_SWITCH_ACTIONS 10144
 #define ID_PANEL_SW_LOCATION 10018
 #define wxID_STATIC_SW_X 10019
@@ -231,6 +232,7 @@ public:
     wxRadioBox* m_SavePosBox;
     wxCheckBox* m_Raster;
     wxCheckBox* m_Road;
+    wxCheckBox* m_Show;
     wxButton* m_Actions;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
