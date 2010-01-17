@@ -440,6 +440,7 @@ static void __timerThread( void* threadinst ) {
   ThreadOp.sleep(wAction.gettimer(data->action));
   __executeAction( action, data->actionctrl );
   data->timerthread = NULL;
+  ThreadOp.base.del(th);
 }
 
 
