@@ -1172,7 +1172,7 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   char* xml = NULL;
   iONode model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
   iONode zlevel = NodeOp.inst( wZLevel.name(), model, ELEMENT_NODE );
-  char* version = StrOp.fmt( "%d.%d.%d revision %d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
+  char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Saving module [%s][%d]...", filename, level );
 
   wZLevel.settitle( zlevel, wModule.gettitle(module) );
