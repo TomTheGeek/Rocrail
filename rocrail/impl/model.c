@@ -2142,6 +2142,7 @@ static void __initFieldRunner( void* threadinst ) {
   if( gpON ) {
     cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.go );
+    wSysCmd.setinformall(cmd, True);
     ControlOp.cmd( cntrl, cmd, NULL );
   }
 
