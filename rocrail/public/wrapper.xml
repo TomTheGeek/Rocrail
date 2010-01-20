@@ -446,6 +446,7 @@
       <var name="keepghost" vt="bool" defval="false" remark="Keep ghost state until manual reset."/>
       <var name="locostartgap" vt="int" defval="0" range="0-*" unit="s" remark="Time between signalling loco's to start in auto mode."/>
       <var name="disablesteal" vt="bool" defval="false" remark="Disable throttle to steal loco control."/>
+      <var name="blockinitpause" vt="int" defval="0" range="0-5000" unit="ms" remark="Pause between the block init commands."/>
     </ctrl>
   </rocrail>
 

@@ -12132,4 +12132,7 @@
   <Msg id="disablesteal">
     <en txt="Disable steal loco control"/>
   </Msg>
+  <Msg id="blockinitpause">
+    <en txt="Block init pause"/>
+  </Msg>
 </Messages>

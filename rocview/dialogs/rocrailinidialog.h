@@ -281,6 +281,8 @@ public:
     wxSpinCtrl* m_SignalWait;
     wxStaticText* m_labLocoStartGap;
     wxSpinCtrl* m_LocoStartGap;
+    wxStaticText* m_labBlockInitPause;
+    wxSpinCtrl* m_BlockInitPause;
     wxCheckBox* m_Check2In;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;

@@ -1515,6 +1515,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
         iIBlockBase block = (iIBlockBase)MapOp.first( data->blockMap );
         while( block != NULL ) {
           block->init( block );
+          ThreadOp.sleep( wCtrl.getblockinitpause( wRocRail.getctrl( AppOp.getIni() ) ) );
           block = (iIBlockBase)MapOp.next( data->blockMap );
         }
       }
