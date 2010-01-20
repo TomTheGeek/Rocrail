@@ -1518,6 +1518,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
           ThreadOp.sleep( wCtrl.getblockinitpause( wRocRail.getctrl( AppOp.getIni() ) ) );
           block = (iIBlockBase)MapOp.next( data->blockMap );
         }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block init ready" );
       }
       data->autoMode = autoMode;
       /* Broadcast to clients. */
