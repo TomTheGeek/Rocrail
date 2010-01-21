@@ -21,12 +21,31 @@
 #   make DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
 # commandline for mingw cross compiling:
-#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
+#   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
+#
+# commandline for mingw native compiling:
+#   make PLATFORM=WIN32 NATIVE=WIN32 clean
+#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 NATIVE=WIN32 all
 #
 # commandline for osx compiling:
 #   make PLATFORM=MACOSX clean all
 #
+FS=/
+CS=;
+COPY=cp
+REMOVE=rm -f
+GENSUFFIX=
+
+ifeq ($(NATIVE),WIN32)
+	FS=$\\
+	CS=&
+	COPY=copy
+	REMOVE=del /Q
+	GENSUFFIX=.exe
+endif
+
+
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32
@@ -52,31 +71,31 @@ else
 endif
 
 MOUNTPOINT=..
-OUTDIR=../$(DIRPREFIX)bin
-GENDIR=../$(DIRPREFIX)gen
-TMPOUTDIR=$(GENDIR)/roclcdr/bin
+OUTDIR=..$(FS)$(DIRPREFIX)bin
+GENDIR=..$(FS)$(DIRPREFIX)gen
+TMPOUTDIR=$(GENDIR)$(FS)roclcdr$(FS)bin
 DEBUG=-g
-DESTDIR=/opt/rocrail
-BINDIR=../rocs/bin
+DESTDIR=$(FS)opt$(FS)rocrail
+BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
-CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
-RRLIBS=$(OUTDIR)/libwrapper.a $(OUTDIR)/librocs.a
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
+RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 EVENTSOBJS=$(patsubst impl/events/%.c,$(TMPOUTDIR)/events/%.o,$(wildcard impl/events/*.c))
 STATUSOBJS=$(patsubst impl/status/%.c,$(TMPOUTDIR)/status/%.o,$(wildcard impl/status/*.c))
 TOOLSOBJS=$(patsubst impl/tools/%.c,$(TMPOUTDIR)/tools/%.o,$(wildcard impl/tools/*.c))
 
-all: $(OBJS) $(OUTDIR)/lcdriver$(SHAREDSUFFIX)
-#	-rm -f $(TMPOUTDIR)/*.o
+all: $(OBJS) $(OUTDIR)$(FS)lcdriver$(SHAREDSUFFIX)
+#	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 
 # ------------------------------------------------------------
 # The LocDrivers as shared libraries.
 # ------------------------------------------------------------
-$(OUTDIR)/lcdriver$(SHAREDSUFFIX): $(TMPOUTDIR)/lcdriver.o $(RRLIBS) $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/lcdriver$(SHAREDSUFFIX) $(TMPOUTDIR)/lcdriver.o $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)lcdriver$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)lcdriver.o $(RRLIBS) $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)lcdriver$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)lcdriver.o $(EVENTSOBJS) $(STATUSOBJS) $(TOOLSOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocLcDr objects.
@@ -95,19 +114,19 @@ $(TMPOUTDIR)/%.o: impl/tools/%.c
 
 clean:
 	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)/roclcdr
+	-mkdir -p $(GENDIR)$(FS)roclcdr
 	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(TMPOUTDIR)/events
-	-mkdir -p $(TMPOUTDIR)/status
-	-mkdir -p $(TMPOUTDIR)/tools
-	-rm -f $(TMPOUTDIR)/*.o
-	-rm -f $(TMPOUTDIR)/events/*.o
-	-rm -f $(TMPOUTDIR)/status/*.o
-	-rm -f $(TMPOUTDIR)/tools/*.o
-	cd $(GENDIR)/roclcdr; ../$(BINDIR)/ogen ../../roclcdr/roclcdr.xml ../
+	-mkdir -p $(TMPOUTDIR)$(FS)events
+	-mkdir -p $(TMPOUTDIR)$(FS)status
+	-mkdir -p $(TMPOUTDIR)$(FS)tools
+	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)events$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)status$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)tools$(FS)*.o
+	cd $(GENDIR)$(FS)roclcdr$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)roclcdr$(FS)roclcdr.xml ..$(FS)
 
 install:
   ifeq ($(PLATFORM),LINUX)
-	-cp -p $(OUTDIR)/lcdriver.so $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)lcdriver.so $(DESTDIR)
   endif
 

@@ -317,16 +317,16 @@ static void __getHome( iOHClient inst ) {
     SocketOp.fmt( data->socket, "<ul>\n" );
     SocketOp.fmt( data->socket, "<li><a href=\"shutdown\">Shutdown</a></li>\n" );
     SocketOp.fmt( data->socket, "</ul>\n" );
-/*
+
     SocketOp.fmt( data->socket, "<h3>Listings:</h3>\n" );
     SocketOp.fmt( data->socket, "<ul>\n" );
     SocketOp.fmt( data->socket, "<li><a href=\"locs\"    >Locs    </a></li>\n" );
     SocketOp.fmt( data->socket, "<li><a href=\"streets\" >Streets </a></li>\n" );
-    SocketOp.fmt( data->socket, "<li><a href=\"blocks\"  >Block   </a></li>\n" );
+    /*SocketOp.fmt( data->socket, "<li><a href=\"blocks\"  >Block   </a></li>\n" );*/
     SocketOp.fmt( data->socket, "<li><a href=\"fbacks\"  >FBacks  </a></li>\n" );
     SocketOp.fmt( data->socket, "<li><a href=\"switches\">Switches</a></li>\n" );
     SocketOp.fmt( data->socket, "</ul>\n" );
-*/
+
     SocketOp.fmt( data->socket, "<h3>Documentation:</h3>\n" );
     SocketOp.fmt( data->socket, "<ul>\n" );
     SocketOp.fmt( data->socket, "<li><a title=\"Shows parsed ini as XML string.\" href=\"ini\">%s</a></li>\n",

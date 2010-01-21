@@ -22,27 +22,41 @@
 # commandline for osx compiling:
 #   make PLATFORM=MACOSX
 #
+FS=/
+CS=;
+COPY=cp
+REMOVE=rm -f
+GENSUFFIX=
+
+ifeq ($(NATIVE),WIN32)
+	FS=$\\
+	CS=&
+	COPY=copy
+	REMOVE=del /Q
+	GENSUFFIX=.exe
+endif
+
+
 
 PLATFORM=LINUX
 
 offlineall: version
-	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 all: version
-	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 fromtar: version
-	cd rocrail; make fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) make fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 release: version
-	cd rocrail; make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
+	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
 	
 install:
-	cd rocrail; make install_all
-#	cp doc/rocrail*.htb ~/rocrail
+	cd rocrail$(CS) make install_all
 
 uninstall:
-	cd rocrail; make uninstall_all
+	cd rocrail$(CS) make uninstall_all
 
 
 version:

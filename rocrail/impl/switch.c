@@ -997,7 +997,7 @@ static void _modify( iOSwitch inst, iONode props ) {
 }
 
 static const char* _tableHdr(void) {
-  return "<tr bgcolor=\"#CCCCCC\"><th>SwID</th><th>Unit</th><th>Pin</th><th>Invert</th><th>type</th><th>x</th><th>y</th><th>z</th></tr>\n";
+  return "<tr bgcolor=\"#CCCCCC\"><th>ID</th><th>Address</th><th>Port</th><th>Invert</th><th>type</th><th>x</th><th>y</th><th>z</th></tr>\n";
 }
 
 static char* _toHtml( void* inst ) {

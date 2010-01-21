@@ -1,7 +1,7 @@
 # ------------------------------------------------------------
 # Rocs - OS independent C library
 #
-# Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+# Copyright (C) 2002-2010 - Rob Versluis <r.j.versluis@rocrail.net>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -20,12 +20,31 @@
 #   make -f logon.mak AR=... PLATFORM=... DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
 # commandline for mingw cross compiling:
-#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
+#   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
+#
+# commandline for mingw native compiling:
+#   make PLATFORM=WIN32 NATIVE=WIN32 clean
+#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 NATIVE=WIN32 all
 #
 # commandline for osx compiling:
 #   make PLATFORM=MACOSX clean all
 #
+FS=/
+CS=;
+COPY=cp
+REMOVE=rm -f
+GENSUFFIX=
+
+ifeq ($(NATIVE),WIN32)
+	FS=$\\
+	CS=&
+	COPY=copy
+	REMOVE=del /Q
+	GENSUFFIX=.exe
+endif
+
+
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lwinmm
@@ -52,8 +71,8 @@ endif
 
 TOOLPREFIX=
 SRCMOUNTPOINT=..
-GENMOUNTPOINT=../$(COREDIR)gen
-OUTDIR=../$(COREDIR)bin
+GENMOUNTPOINT=..$(FS)$(COREDIR)gen
+OUTDIR=..$(FS)$(COREDIR)bin
 TMPOUTDIR=$(OUTDIR)
 DEBUG=-g
 OPENSSL=
@@ -73,51 +92,51 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 
 COREOBJS=$(patsubst impl/$(COREDIR)/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/$(COREDIR)/*.c))
 
-all: $(OUTDIR)/librocs.a $(OUTDIR)/wgen$(BINSUFFIX) $(OUTDIR)/ogen$(BINSUFFIX) $(OUTDIR)/xml2cstr$(BINSUFFIX) $(OUTDIR)/png2wx$(BINSUFFIX) \
-$(OUTDIR)/addlang$(BINSUFFIX) $(OUTDIR)/mergelang$(BINSUFFIX) $(OUTDIR)/mdoc$(BINSUFFIX) $(OUTDIR)/lang2po$(BINSUFFIX) $(OUTDIR)/po2lang$(BINSUFFIX) \
- $(OUTDIR)/keygen$(BINSUFFIX)
+all: $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)wgen$(BINSUFFIX) $(OUTDIR)$(FS)ogen$(BINSUFFIX) $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) $(OUTDIR)$(FS)png2wx$(BINSUFFIX) \
+$(OUTDIR)$(FS)addlang$(BINSUFFIX) $(OUTDIR)$(FS)mergelang$(BINSUFFIX) $(OUTDIR)$(FS)mdoc$(BINSUFFIX) $(OUTDIR)$(FS)lang2po$(BINSUFFIX) $(OUTDIR)$(FS)po2lang$(BINSUFFIX) \
+ $(OUTDIR)$(FS)keygen$(BINSUFFIX)
 
 gen:
-	bin/ogen rocs.xml
+	bin$(FS)ogen$(GENSUFFIX) rocs.xml
 
-$(OUTDIR)/librocs.a: $(OBJS) $(COREOBJS)
-	$(AR) rcs $(OUTDIR)/librocs.a $(OBJS) $(COREOBJS)
+$(OUTDIR)$(FS)librocs.a: $(OBJS) $(COREOBJS)
+	$(AR) rcs $(OUTDIR)$(FS)librocs.a $(OBJS) $(COREOBJS)
 
 
 
-$(OUTDIR)/wgen$(BINSUFFIX): $(TMPOUTDIR)/wgen.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/wgen$(BINSUFFIX) $(TMPOUTDIR)/wgen.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)/wgen$(BINSUFFIX) bin
+$(OUTDIR)$(FS)wgen$(BINSUFFIX): $(TMPOUTDIR)$(FS)wgen.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)wgen$(BINSUFFIX) $(TMPOUTDIR)$(FS)wgen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
+	cp $(OUTDIR)$(FS)wgen$(BINSUFFIX) bin
 
-$(OUTDIR)/ogen$(BINSUFFIX): $(TMPOUTDIR)/ogen.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/ogen$(BINSUFFIX) $(TMPOUTDIR)/ogen.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)/ogen$(BINSUFFIX) bin
+$(OUTDIR)$(FS)ogen$(BINSUFFIX): $(TMPOUTDIR)$(FS)ogen.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)ogen$(BINSUFFIX) $(TMPOUTDIR)$(FS)ogen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
+	cp $(OUTDIR)$(FS)ogen$(BINSUFFIX) bin
 
-$(OUTDIR)/xml2cstr$(BINSUFFIX): $(TMPOUTDIR)/xml2cstr.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/xml2cstr$(BINSUFFIX) $(TMPOUTDIR)/xml2cstr.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)/xml2cstr$(BINSUFFIX) bin
+$(OUTDIR)$(FS)xml2cstr$(BINSUFFIX): $(TMPOUTDIR)$(FS)xml2cstr.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) $(TMPOUTDIR)$(FS)xml2cstr.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
+	cp $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) bin
 
-$(OUTDIR)/png2wx$(BINSUFFIX): $(TMPOUTDIR)/png2wx.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/png2wx$(BINSUFFIX) $(TMPOUTDIR)/png2wx.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)/png2wx$(BINSUFFIX) bin
+$(OUTDIR)$(FS)png2wx$(BINSUFFIX): $(TMPOUTDIR)$(FS)png2wx.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)png2wx$(BINSUFFIX) $(TMPOUTDIR)$(FS)png2wx.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
+	cp $(OUTDIR)$(FS)png2wx$(BINSUFFIX) bin
 
-$(OUTDIR)/addlang$(BINSUFFIX): $(TMPOUTDIR)/addlang.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/addlang$(BINSUFFIX) $(TMPOUTDIR)/addlang.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)addlang$(BINSUFFIX): $(TMPOUTDIR)$(FS)addlang.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)addlang$(BINSUFFIX) $(TMPOUTDIR)$(FS)addlang.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
-$(OUTDIR)/mergelang$(BINSUFFIX): $(TMPOUTDIR)/mergelang.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/mergelang$(BINSUFFIX) $(TMPOUTDIR)/mergelang.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)mergelang$(BINSUFFIX): $(TMPOUTDIR)$(FS)mergelang.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)mergelang$(BINSUFFIX) $(TMPOUTDIR)$(FS)mergelang.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
-$(OUTDIR)/mdoc$(BINSUFFIX): $(TMPOUTDIR)/mdoc.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/mdoc$(BINSUFFIX) $(TMPOUTDIR)/mdoc.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)mdoc$(BINSUFFIX): $(TMPOUTDIR)$(FS)mdoc.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)mdoc$(BINSUFFIX) $(TMPOUTDIR)$(FS)mdoc.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
-$(OUTDIR)/lang2po$(BINSUFFIX): $(TMPOUTDIR)/lang2po.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/lang2po$(BINSUFFIX) $(TMPOUTDIR)/lang2po.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)lang2po$(BINSUFFIX): $(TMPOUTDIR)$(FS)lang2po.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)lang2po$(BINSUFFIX) $(TMPOUTDIR)$(FS)lang2po.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
-$(OUTDIR)/po2lang$(BINSUFFIX): $(TMPOUTDIR)/po2lang.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/po2lang$(BINSUFFIX) $(TMPOUTDIR)/po2lang.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)po2lang$(BINSUFFIX): $(TMPOUTDIR)$(FS)po2lang.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)po2lang$(BINSUFFIX) $(TMPOUTDIR)$(FS)po2lang.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
-$(OUTDIR)/keygen$(BINSUFFIX): $(TMPOUTDIR)/keygen.o $(OUTDIR)/librocs.a
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)/keygen$(BINSUFFIX) $(TMPOUTDIR)/keygen.o $(OUTDIR)/librocs.a $(LIBS) $(SSLLIBS)
+$(OUTDIR)$(FS)keygen$(BINSUFFIX): $(TMPOUTDIR)$(FS)keygen.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)keygen$(BINSUFFIX) $(TMPOUTDIR)$(FS)keygen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
 $(TMPOUTDIR)/%.o: impl/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
@@ -131,23 +150,23 @@ $(TMPOUTDIR)/%.o: impl/$(COREDIR)/%.c
 clean:
 	-mkdir -p $(OUTDIR)
 	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(GENMOUNTPOINT)/rocs
-	-rm -f $(TMPOUTDIR)/*.o
-	-rm -f $(OUTDIR)/librocs.a
-	cd $(GENMOUNTPOINT)/rocs; \
-	../../rocs/bin/ogen ../../rocs/rocs.xml
-	-rm $(GENMOUNTPOINT)/rocs-gen.tar.gz
-	cd $(GENMOUNTPOINT); \
-	tar -cf rocs-gen.tar rocs; gzip rocs-gen.tar; cp rocs-gen.tar.gz ../rocs;
+	-mkdir -p $(GENMOUNTPOINT)$(FS)rocs
+	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
+	-$(REMOVE) -f $(OUTDIR)$(FS)librocs.a
+	cd $(GENMOUNTPOINT)$(FS)rocs$(CS) \
+	..$(FS)..$(FS)rocs$(FS)bin$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocs$(FS)rocs.xml
+	-$(REMOVE) $(GENMOUNTPOINT)$(FS)rocs-gen.tar.gz
+	cd $(GENMOUNTPOINT)$(CS) \
+	tar -cf rocs-gen.tar rocs$(CS) gzip rocs-gen.tar$(CS) cp rocs-gen.tar.gz ..$(FS)rocs
 
 fromtar:
 	-mkdir -p $(OUTDIR)
 	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(GENMOUNTPOINT)/rocs
-	-rm -f $(TMPOUTDIR)/*.o
-	-rm -f $(OUTDIR)/librocs.a
-	cd $(GENMOUNTPOINT); \
-	cp ../rocs/rocs-gen.tar.gz .; gzip -df rocs-gen.tar.gz; tar -xf rocs-gen.tar
+	-mkdir -p $(GENMOUNTPOINT)$(FS)rocs
+	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
+	-$(REMOVE) $(OUTDIR)$(FS)librocs.a
+	cd $(GENMOUNTPOINT)$(CS) \
+	cp ..$(FS)rocs$(FS)rocs-gen.tar.gz .$(CS) gzip -df rocs-gen.tar.gz$(CS) tar -xf rocs-gen.tar
 
 
 ssl: OPENSSL=-D__OPENSSL__

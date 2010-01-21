@@ -373,7 +373,7 @@ static void _modify( iOFBack inst, iONode props ) {
 }
 
 static const char* _tableHdr(void) {
-  return "<tr bgcolor=\"#CCCCCC\"><th>FbID</th><th>Addr</th><th>x</th><th>y</th><th>z</th></tr>\n";
+  return "<tr bgcolor=\"#CCCCCC\"><th>ID</th><th>Addr</th><th>x</th><th>y</th><th>z</th></tr>\n";
 }
 
 static char* _toHtml( void* inst ) {

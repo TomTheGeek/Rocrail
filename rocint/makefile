@@ -21,9 +21,31 @@
 #   make DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
 # commandline for mingw cross compiling:
-#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 clean
+#   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
 #
+# commandline for mingw native compiling:
+#   make PLATFORM=WIN32 NATIVE=WIN32 clean
+#   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 NATIVE=WIN32 all
+#
+# commandline for osx compiling:
+#   make PLATFORM=MACOSX clean all
+#
+FS=/
+CS=;
+COPY=cp
+REMOVE=rm -f
+GENSUFFIX=
+
+ifeq ($(NATIVE),WIN32)
+	FS=$\\
+	CS=&
+	COPY=copy
+	REMOVE=del /Q
+	GENSUFFIX=.exe
+endif
+
+
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 $(SSLLIBS)
@@ -37,11 +59,11 @@ else
 endif
 
 MOUNTPOINT=..
-OUTDIR=../$(COREDIR)bin
-GENDIR=../$(COREDIR)gen
-TMPOUTDIR=$(GENDIR)/rocint/bin
+OUTDIR=..$(FS)$(COREDIR)bin
+GENDIR=..$(FS)$(COREDIR)gen
+TMPOUTDIR=$(GENDIR)$(FS)rocint$(FS)bin
 DEBUG=-g
-BINDIR=../$(COREDIR)bin
+BINDIR=..$(FS)$(COREDIR)bin
 
 CPP=gcc
 LNK=gcc
@@ -49,8 +71,8 @@ INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
 
 all:
-	cd $(GENDIR)/rocint; ../../unxbin/ogen ../../rocint/rocint.xml
+	cd $(GENDIR)$(FS)rocint$(CS) ..$(FS)..$(FS)unxbin$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocint$(FS)rocint.xml
 
 clean:
 	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)/rocint
+	-mkdir -p $(GENDIR)$(FS)rocint

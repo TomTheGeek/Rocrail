@@ -21,16 +21,41 @@
 #   make DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
 # commandline for mingw cross compiling:
-#   make clean
+#   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
 #
 #   ansi libs are installed locally:
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX= PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc LIBRARY=ansi ANSILIBS=/home/rob/wx-2.8.3-mingw/lib-ansi ANSIINSTALL=/home/rob/wx-2.8.3-mingw all
 #
+# commandline for mingw cross compiling:
+#   make PLATFORM=WIN32 NATIVE=WIN32 clean
+#   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 NATIVE=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
+#
+# commandline for osx compiling:
+#   make PLATFORM=MACOSX clean all
+#
+FS=/
+CS=;
+COPY=cp
+REMOVE=rm -f
+GENSUFFIX=
+
+ifeq ($(NATIVE),WIN32)
+	FS=$\\
+	CS=&
+	COPY=copy
+	REMOVE=del /Q
+	GENSUFFIX=.exe
+endif
+
+
+
+
+
 PLATFORM=LINUX
 LIBRARY=unicode
 LIBEXT=u
-MINGWINSTALL=/usr/i586-mingw32msvc
+MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
 ANSIINSTALL=$(MINGWINSTALL)
 ANSILIBS=
 
@@ -40,19 +65,19 @@ ifeq ($(PLATFORM),WIN32)
 		LIBEXT=
 		LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
 		LNK_FLAGS=-L$(ANSILIBS) -mthreads -Wl,--subsystem,windows -mwindows
-		WX_FLAGS=-I$(ANSIINSTALL)/include -I$(ANSIINSTALL)/lib/wx/include/i586-mingw32msvc-msw-ansi-release-static-2.8  -I$(ANSIINSTALL)/lib/wx/include/msw-ansi-release-static-2.8 -I$(ANSIINSTALL)/include/wx-2.8 -D__WXMSW__ -mthreads -DNO_GCC_PRAGMA
+		WX_FLAGS=-I$(ANSIINSTALL)$(FS)include -I$(ANSIINSTALL)$(FS)lib$(FS)wx$(FS)include$(FS)i586-mingw32msvc-msw-ansi-release-static-2.8  -I$(ANSIINSTALL)$(FS)lib$(FS)wx$(FS)include$(FS)msw-ansi-release-static-2.8 -I$(ANSIINSTALL)$(FS)include$(FS)wx-2.8 -D__WXMSW__ -mthreads -DNO_GCC_PRAGMA
 		WX_LIBS=-lwx_msw$(LIBEXT)_html-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_core-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)-2.8$(LIBSUFFIX) -lwxtiff-2.8$(LIBSUFFIX) -lwxjpeg-2.8$(LIBSUFFIX) -lwxpng-2.8$(LIBSUFFIX) -lwxzlib-2.8$(LIBSUFFIX) -lwxregex$(LIBEXT)-2.8$(LIBSUFFIX) -lwxexpat-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_adv-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_qa-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)_xml-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)_net-2.8$(LIBSUFFIX)
 	else
 		LIBS=-liphlpapi -lmpr
-		LNK_FLAGS=`/usr/i586-mingw32msvc/bin/wx-config --libs`
-		WX_FLAGS=`$(MINGWINSTALL)/bin/wx-config --cflags`
+		LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
+		WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	endif
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	BINSUFFIX=.exe
 	LIBSUFFIX=-i586-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)\rocview_rc.o
-	WX_INCL=-I$(MINGWINSTALL)/include/wx-2.8
+	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(FS)wx-2.8
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
@@ -63,12 +88,12 @@ else
 endif
 
 MOUNTPOINT=..
-OUTDIR=../$(DIRPREFIX)bin
-GENDIR=../$(DIRPREFIX)gen
-TMPOUTDIR=$(GENDIR)/rocview/bin
+OUTDIR=..$(FS)$(DIRPREFIX)bin
+GENDIR=..$(FS)$(DIRPREFIX)gen
+TMPOUTDIR=$(GENDIR)$(FS)rocview$(FS)bin
 DEBUG=-g
-DESTDIR=/opt/rocrail
-BINDIR=../rocs/bin
+DESTDIR=$(FS)opt$(FS)rocrail
+BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)c++
 CC=$(TOOLPREFIX)gcc
@@ -77,11 +102,11 @@ INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
 
 CC_WXFLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(WX_FLAGS) $(WX_INCL) -I$(INCL_PATH) -I$(GENDIR)
-RRLIBS=$(OUTDIR)/librocrail.a $(OUTDIR)/libwrapper.a $(OUTDIR)/librocs.a
+RRLIBS=$(OUTDIR)$(FS)librocrail.a $(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a
 
-SRCS=impl/guiapp.cpp impl/item.cpp impl/locdlg.cpp impl/planpanel.cpp impl/propdlg.cpp impl/swdlg.cpp impl/streetdlg.cpp impl/bktext.cpp
+SRCS=impl$(FS)guiapp.cpp impl$(FS)item.cpp impl$(FS)locdlg.cpp impl$(FS)planpanel.cpp impl$(FS)propdlg.cpp impl$(FS)swdlg.cpp impl$(FS)streetdlg.cpp impl$(FS)bktext.cpp
 
-OBJS=$(patsubst impl/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard impl/*.cpp))
+OBJS=$(patsubst impl$(FS)%.cpp,$(TMPOUTDIR)/%.o,$(wildcard impl/*.cpp))
 DOBJS=$(patsubst dialogs/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/*.cpp))
 CDOBJS=$(patsubst dialogs/controllers/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/controllers/*.cpp))
 DECOBJS=$(patsubst dialogs/decoders/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/decoders/*.cpp))
@@ -90,7 +115,7 @@ WOBJS=$(patsubst $(GENDIR)/rocview/wrapper/impl/%.c,$(GENDIR)/rocview/wrapper/bi
 ROBJS=$(patsubst $(GENDIR)/rocview/res/%.c,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.c))
 IOBJS=$(patsubst $(GENDIR)/rocview/res/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard $(GENDIR)/rocview/res/*.cpp))
 
-TARGET=$(OUTDIR)/rocview$(BINSUFFIX)
+TARGET=$(OUTDIR)$(FS)rocview$(BINSUFFIX)
 
 all: $(TARGET)
 
@@ -128,30 +153,30 @@ $(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.cpp
 
 clean:
 	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)/rocview
-	-mkdir -p $(GENDIR)/rocview/res
+	-mkdir -p $(GENDIR)$(FS)rocview
+	-mkdir -p $(GENDIR)$(FS)rocview$(FS)res
 	-mkdir -p $(TMPOUTDIR)
-	-rm -f $(TARGET)
-	-rm -f $(OUTDIR)/rocview$(BINSUFFIX)
-	-rm -f $(TMPOUTDIR)/*.o
-	-rm -f $(GENDIR)/rocview/wrapper/public/*
-	-rm -f $(GENDIR)/rocview/wrapper/impl/*
-	-rm -f $(GENDIR)/rocview/wrapper/bin/*
-	-rm -f $(GENDIR)/rocview/wrapper/doc/*
-	cd $(GENDIR)/rocview; ../$(BINDIR)/wgen ../../rocview/public/wrapper.xml
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
-	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons res/icons
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
+	-$(REMOVE) $(TARGET)
+	-$(REMOVE) $(OUTDIR)$(FS)rocview$(BINSUFFIX)
+	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
+	-$(REMOVE) $(GENDIR)$(FS)rocview$(FS)wrapper$(FS)public$(FS)*
+	-$(REMOVE) $(GENDIR)$(FS)rocview$(FS)wrapper$(FS)impl$(FS)*
+	-$(REMOVE) $(GENDIR)$(FS)rocview$(FS)wrapper$(FS)bin$(FS)*
+	-$(REMOVE) $(GENDIR)$(FS)rocview$(FS)wrapper$(FS)doc$(FS)*
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)wgen$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)public$(FS)wrapper.xml
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)res$(FS)messages.xml res$(FS)messages.c messages
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)png2wx$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)icons res$(FS)icons
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)public$(FS)wrapper.xml wrapper$(FS)impl$(FS)guiwrapperinfo.c guiwrapperinfo
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml wrapper$(FS)impl$(FS)version.c svnLog
 
 messages:
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/res/messages.xml res/messages.c messages
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../rocview/public/wrapper.xml wrapper/impl/guiwrapperinfo.c guiwrapperinfo
-	cd $(GENDIR)/rocview; ../$(BINDIR)/xml2cstr ../../common/version.xml wrapper/impl/version.c svnLog
-	cd $(GENDIR)/rocview; ../$(BINDIR)/png2wx ../../rocview/icons res/icons
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)res$(FS)messages.xml res$(FS)messages.c messages
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)public$(FS)wrapper.xml wrapper$(FS)impl$(FS)guiwrapperinfo.c guiwrapperinfo
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml wrapper$(FS)impl$(FS)version.c svnLog
+	cd $(GENDIR)$(FS)rocview$(CS) ..$(FS)$(BINDIR)$(FS)png2wx$(GENSUFFIX) ..$(FS)..$(FS)rocview$(FS)icons res$(FS)icons
 
 install:
-	-cp -p $(OUTDIR)/rocview $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)rocview $(DESTDIR)
 	
 macapp:
 	rm -rf Rocrail.app
