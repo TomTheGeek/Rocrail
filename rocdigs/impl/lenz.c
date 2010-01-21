@@ -381,11 +381,13 @@ static void __initializer( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initializer started.");
 
-  /* XpressNet
-     Asking for Interface version*/
-  byte* outa = allocMem(256);
-  outa[0] = 0xF0;
-  ThreadOp.post( data->transactor, (obj)outa );
+  if( !data->elite ) {
+    /* XpressNet
+       Asking for Interface version*/
+    byte* outa = allocMem(256);
+    outa[0] = 0xF0;
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
 
   /* Asking for CS version */
   byte* outb = allocMem(256);
@@ -1171,8 +1173,8 @@ static void __transactor( void* threadinst ) {
       } else {
         responceRecieved = True;
         waitForAnswer = False;
-
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
+        if( expectEliteAnswer )
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
 
     }
@@ -1395,9 +1397,12 @@ static void __transactor( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
           responceRecieved = True;
         }
-
+        /* Nasty Elite, response on loc command or loc operated on elite*/
+        else if (in[0] == 0xE3 || in[0] == 0xE4 || in[0] == 0xE5 ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Elite: Loc command");
+          responceRecieved = True;
+        }
         else {
-
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
         }
