@@ -2424,7 +2424,8 @@ static void _analyse( iOModel inst ) {
  * first caller should provide an empty list which will be filled with streets
  * needed to get to the destination.
  */
-static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const char* destid, int cnt, iOList searchlist, int* foundlevel ) {
+static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const char* destid,
+    int cnt, iOList searchlist, int* foundlevel, Boolean forceSameDir ) {
   iOModelData data = Data(inst);
 
   iOList list = NULL;
@@ -2463,7 +2464,7 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
       continue;
     }
 
-    if( StrOp.equals( stTo, fromid ) && !dir ) {
+    if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {
       /* swap direction */
       const char* tmp = stTo;
       stTo = stFrom;
@@ -2639,7 +2640,7 @@ static iORoute _findRoute( iOModel inst, const char* scheduleid,
  * lookup the current block in the schedule and calculate the route to the next destination
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
-                                        int* scheduleIdx, const char* curblockid, iOLoc loc ) {
+                                        int* scheduleIdx, const char* curblockid, iOLoc loc, Boolean forceSameDir ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
 
@@ -2674,7 +2675,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
       return NULL;
     }
 
-    return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc );
+    return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir );
 
   }
 
@@ -2684,7 +2685,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
 /* synchronized!!! */
 static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId, const char* toLocationId,
-                             const char* toBlockId, iOLoc loc ) {
+                             const char* toBlockId, iOLoc loc, Boolean forceSameDir ) {
   iOModelData data = Data(inst);
   iONode location = NULL;
   iORoute street = NULL;
@@ -2716,7 +2717,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
         if( stlist != NULL )
           ListOp.clear( stlist );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", id );
-        street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL );
+        street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir );
         if( street == NULL ) {
           continue;
         }
@@ -2732,7 +2733,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", toBlockId );
-      street = __lookup( inst, stlist, currBlockId, toBlockId, 0, NULL, NULL );
+      street = __lookup( inst, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir );
     }
 
 

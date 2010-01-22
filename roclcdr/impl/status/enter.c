@@ -91,7 +91,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL,
                                                                data->schedule, &data->scheduleIdx,
                                                                data->next1Block->base.id( data->next1Block ),
-                                                               data->loc );
+                                                               data->loc, False );
       }
       else {
         /* next2Route already locked by second next option; adjust the schedule index... */
