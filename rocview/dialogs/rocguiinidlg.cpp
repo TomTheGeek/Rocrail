@@ -33,7 +33,6 @@
 #endif
 
 ////@begin includes
-#include "wx/imaglist.h"
 ////@end includes
 
 #include "rocguiinidlg.h"
@@ -611,7 +610,7 @@ void RocguiIniDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer15 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer15->AddGrowableCol(0);
     itemStaticBoxSizer14->Add(itemFlexGridSizer15, 1, wxALIGN_CENTER_VERTICAL, 5);
-    m_Workspace = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Workspace = new wxTextCtrl( m_GeneralTab, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_Workspace, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_WorkspaceDlg = new wxButton( m_GeneralTab, ID_WORKSPACE, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
@@ -626,28 +625,28 @@ void RocguiIniDialog::CreateControls()
     m_labImagePath = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Image Path"));
     wxStaticBoxSizer* itemStaticBoxSizer20 = new wxStaticBoxSizer(m_labImagePath, wxHORIZONTAL);
     itemBoxSizer19->Add(itemStaticBoxSizer20, 0, wxGROW|wxALL, 5);
-    m_ImagePath = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_ImagePath = new wxTextCtrl( m_GeneralTab, wxID_ANY, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
     itemStaticBoxSizer20->Add(m_ImagePath, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_ImagePathDlg = new wxButton( m_GeneralTab, ID_IMAGEPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
+    m_ImagePathDlg = new wxButton( m_GeneralTab, ID_IMAGEPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemStaticBoxSizer20->Add(m_ImagePathDlg, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     m_labUpdatesPath = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Updates Path"));
     wxStaticBoxSizer* itemStaticBoxSizer23 = new wxStaticBoxSizer(m_labUpdatesPath, wxHORIZONTAL);
     itemBoxSizer19->Add(itemStaticBoxSizer23, 0, wxGROW|wxALL, 5);
-    m_UpdatesPath = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_UpdatesPath = new wxTextCtrl( m_GeneralTab, wxID_ANY, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
     itemStaticBoxSizer23->Add(m_UpdatesPath, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_UpdatePathDlg = new wxButton( m_GeneralTab, ID_UPDATESPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
+    m_UpdatePathDlg = new wxButton( m_GeneralTab, ID_UPDATESPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemStaticBoxSizer23->Add(m_UpdatePathDlg, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     m_labXSLPath = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Stylesheets Path"));
     wxStaticBoxSizer* itemStaticBoxSizer26 = new wxStaticBoxSizer(m_labXSLPath, wxHORIZONTAL);
     itemBoxSizer19->Add(itemStaticBoxSizer26, 0, wxGROW|wxALL, 5);
-    m_XSLPath = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_XSLPath = new wxTextCtrl( m_GeneralTab, wxID_ANY, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
     itemStaticBoxSizer26->Add(m_XSLPath, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_XSLPathDlg = new wxButton( m_GeneralTab, ID_XSLPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
+    m_XSLPathDlg = new wxButton( m_GeneralTab, ID_XSLPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemStaticBoxSizer26->Add(m_XSLPathDlg, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     m_Notebook->AddPage(m_GeneralTab, _("General"));
@@ -670,7 +669,7 @@ void RocguiIniDialog::CreateControls()
     wxStaticBox* itemStaticBoxSizer34Static = new wxStaticBox(m_TracePanel, wxID_ANY, _("File"));
     m_TraceFileBox = new wxStaticBoxSizer(itemStaticBoxSizer34Static, wxHORIZONTAL);
     itemBoxSizer30->Add(m_TraceFileBox, 0, wxGROW|wxALL, 5);
-    m_TraceFile = new wxTextCtrl( m_TracePanel, ID_TEXTCTRL_RG_TRACEFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_TraceFile = new wxTextCtrl( m_TracePanel, ID_TEXTCTRL_RG_TRACEFILE, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_TraceFileBox->Add(m_TraceFile, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_TracePanel, _("Trace"));
@@ -685,7 +684,7 @@ void RocguiIniDialog::CreateControls()
     m_labCVnrs = new wxStaticText( m_PTpanel, wxID_ANY, _("CV nrs"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer38->Add(m_labCVnrs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_CVnrs = new wxTextCtrl( m_PTpanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_CVnrs = new wxTextCtrl( m_PTpanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer38->Add(m_CVnrs, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labTimeout = new wxStaticText( m_PTpanel, wxID_ANY, _("Timeout"), wxDefaultPosition, wxDefaultSize, 0 );
