@@ -36,6 +36,7 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+MKDIR=mkdir -p
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -43,6 +44,7 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	MKDIR=mkdir
 endif
 
 
@@ -71,8 +73,8 @@ INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -ansi -I$(INCL_PATH) -I$(GENDIR)
 
 all:
-	cd $(GENDIR)$(FS)rocint$(CS) ..$(FS)..$(FS)unxbin$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocint$(FS)rocint.xml
+	cd $(GENDIR)$(FS)rocint$(CS) ..$(FS)..$(FS)rocs$(FS)bin$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocint$(FS)rocint.xml
 
 clean:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)$(FS)rocint
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(GENDIR)$(FS)rocint

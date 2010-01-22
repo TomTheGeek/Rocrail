@@ -36,6 +36,7 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+MKDIR=mkdir -p
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -43,6 +44,7 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	MKDIR=mkdir
 endif
 
 
@@ -113,12 +115,12 @@ $(TMPOUTDIR)/%.o: impl/tools/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
 clean:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)$(FS)roclcdr
-	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(TMPOUTDIR)$(FS)events
-	-mkdir -p $(TMPOUTDIR)$(FS)status
-	-mkdir -p $(TMPOUTDIR)$(FS)tools
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(GENDIR)$(FS)roclcdr
+	-$(MKDIR) $(TMPOUTDIR)
+	-$(MKDIR) $(TMPOUTDIR)$(FS)events
+	-$(MKDIR) $(TMPOUTDIR)$(FS)status
+	-$(MKDIR) $(TMPOUTDIR)$(FS)tools
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)events$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)status$(FS)*.o

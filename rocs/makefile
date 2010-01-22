@@ -35,6 +35,7 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+MKDIR=mkdir -p
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -42,6 +43,7 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	MKDIR=mkdir
 endif
 
 
@@ -106,19 +108,19 @@ $(OUTDIR)$(FS)librocs.a: $(OBJS) $(COREOBJS)
 
 $(OUTDIR)$(FS)wgen$(BINSUFFIX): $(TMPOUTDIR)$(FS)wgen.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)wgen$(BINSUFFIX) $(TMPOUTDIR)$(FS)wgen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)$(FS)wgen$(BINSUFFIX) bin
+	$(COPY) $(OUTDIR)$(FS)wgen$(BINSUFFIX) bin
 
 $(OUTDIR)$(FS)ogen$(BINSUFFIX): $(TMPOUTDIR)$(FS)ogen.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)ogen$(BINSUFFIX) $(TMPOUTDIR)$(FS)ogen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)$(FS)ogen$(BINSUFFIX) bin
+	$(COPY) $(OUTDIR)$(FS)ogen$(BINSUFFIX) bin
 
 $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX): $(TMPOUTDIR)$(FS)xml2cstr.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) $(TMPOUTDIR)$(FS)xml2cstr.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) bin
+	$(COPY) $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) bin
 
 $(OUTDIR)$(FS)png2wx$(BINSUFFIX): $(TMPOUTDIR)$(FS)png2wx.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)png2wx$(BINSUFFIX) $(TMPOUTDIR)$(FS)png2wx.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
-	cp $(OUTDIR)$(FS)png2wx$(BINSUFFIX) bin
+	$(COPY) $(OUTDIR)$(FS)png2wx$(BINSUFFIX) bin
 
 $(OUTDIR)$(FS)addlang$(BINSUFFIX): $(TMPOUTDIR)$(FS)addlang.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)addlang$(BINSUFFIX) $(TMPOUTDIR)$(FS)addlang.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
@@ -141,32 +143,32 @@ $(OUTDIR)$(FS)keygen$(BINSUFFIX): $(TMPOUTDIR)$(FS)keygen.o $(OUTDIR)$(FS)libroc
 $(TMPOUTDIR)/%.o: impl/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
-$(TMPOUTDIR)/%.o: gen/%.c
+$(TMPOUTDIR)$(CF)%.o: gen$(CF)%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
 $(TMPOUTDIR)/%.o: impl/$(COREDIR)/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
 clean:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(GENMOUNTPOINT)$(FS)rocs
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(TMPOUTDIR)
+	-$(MKDIR) $(GENMOUNTPOINT)$(FS)rocs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) -f $(OUTDIR)$(FS)librocs.a
 	cd $(GENMOUNTPOINT)$(FS)rocs$(CS) \
 	..$(FS)..$(FS)rocs$(FS)bin$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocs$(FS)rocs.xml
 	-$(REMOVE) $(GENMOUNTPOINT)$(FS)rocs-gen.tar.gz
 	cd $(GENMOUNTPOINT)$(CS) \
-	tar -cf rocs-gen.tar rocs$(CS) gzip rocs-gen.tar$(CS) cp rocs-gen.tar.gz ..$(FS)rocs
+	tar -cf rocs-gen.tar rocs$(CS) gzip rocs-gen.tar$(CS) $(COPY) rocs-gen.tar.gz ..$(FS)rocs
 
 fromtar:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(TMPOUTDIR)
-	-mkdir -p $(GENMOUNTPOINT)$(FS)rocs
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(TMPOUTDIR)
+	-$(MKDIR) $(GENMOUNTPOINT)$(FS)rocs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)librocs.a
 	cd $(GENMOUNTPOINT)$(CS) \
-	cp ..$(FS)rocs$(FS)rocs-gen.tar.gz .$(CS) gzip -df rocs-gen.tar.gz$(CS) tar -xf rocs-gen.tar
+	$(COPY) ..$(FS)rocs$(FS)rocs-gen.tar.gz .$(CS) gzip -df rocs-gen.tar.gz$(CS) tar -xf rocs-gen.tar
 
 
 ssl: OPENSSL=-D__OPENSSL__

@@ -39,6 +39,11 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+MKDIR=mkdir -p
+WXSUBINCL=/wx-2.8
+WXMSVCINCL=
+wxversion=2.8
+LINKTOOL=c++
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -46,6 +51,11 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	MKDIR=mkdir
+	WXSUBINCL=
+	WXMSVCINCL=-I$(MINGWINSTALL)$(FS)include$(FS)msvc
+	LINKTOOL=g++
+	WINLIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
 endif
 
 
@@ -71,13 +81,17 @@ ifeq ($(PLATFORM),WIN32)
 		LIBS=-liphlpapi -lmpr
 		LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
 		WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
+		ifeq ($(NATIVE),WIN32)
+			LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+			WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -DWX_PRECOMP -DNO_GCC_PRAGMA
+		endif
 	endif
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	BINSUFFIX=.exe
 	LIBSUFFIX=-i586-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)\rocview_rc.o
-	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(FS)wx-2.8
+	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
@@ -97,7 +111,7 @@ BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)c++
 CC=$(TOOLPREFIX)gcc
-LNK=$(TOOLPREFIX)c++
+LNK=$(TOOLPREFIX)$(LINKTOOL)
 INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
 
@@ -106,7 +120,7 @@ RRLIBS=$(OUTDIR)$(FS)librocrail.a $(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)libro
 
 SRCS=impl$(FS)guiapp.cpp impl$(FS)item.cpp impl$(FS)locdlg.cpp impl$(FS)planpanel.cpp impl$(FS)propdlg.cpp impl$(FS)swdlg.cpp impl$(FS)streetdlg.cpp impl$(FS)bktext.cpp
 
-OBJS=$(patsubst impl$(FS)%.cpp,$(TMPOUTDIR)/%.o,$(wildcard impl/*.cpp))
+OBJS=$(patsubst impl/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard impl/*.cpp))
 DOBJS=$(patsubst dialogs/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/*.cpp))
 CDOBJS=$(patsubst dialogs/controllers/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/controllers/*.cpp))
 DECOBJS=$(patsubst dialogs/decoders/%.cpp,$(TMPOUTDIR)/%.o,$(wildcard dialogs/decoders/*.cpp))
@@ -120,7 +134,7 @@ TARGET=$(OUTDIR)$(FS)rocview$(BINSUFFIX)
 all: $(TARGET)
 
 $(TARGET): $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(RRLIBS) $(WINRESOURCE)
-	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS)
+	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS) $(WINLIBS)
 
 $(WINRESOURCE): rocview.rc
 
@@ -152,10 +166,10 @@ $(TMPOUTDIR)/%.o: $(GENDIR)/rocview/res/%.cpp
 	$(CPP) $(CC_WXFLAGS) $< -o $@
 
 clean:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(GENDIR)$(FS)rocview
-	-mkdir -p $(GENDIR)$(FS)rocview$(FS)res
-	-mkdir -p $(TMPOUTDIR)
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(GENDIR)$(FS)rocview
+	-$(MKDIR) $(GENDIR)$(FS)rocview$(FS)res
+	-$(MKDIR) $(TMPOUTDIR)
 	-$(REMOVE) $(TARGET)
 	-$(REMOVE) $(OUTDIR)$(FS)rocview$(BINSUFFIX)
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o

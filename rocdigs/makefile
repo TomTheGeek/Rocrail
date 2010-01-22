@@ -36,6 +36,7 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+MKDIR=mkdir -p
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -43,6 +44,7 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	MKDIR=mkdir
 endif
 
 
@@ -186,15 +188,15 @@ $(TMPOUTDIR)/opendcc/%.o: impl/opendcc/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
 clean:
-	-mkdir -p $(OUTDIR)
-	-mkdir -p $(TMPOUTDIR)$(FS)ddx
-	-mkdir -p $(TMPOUTDIR)$(FS)loconet
-	-mkdir -p $(TMPOUTDIR)$(FS)rocnet
-	-mkdir -p $(TMPOUTDIR)$(FS)ecos
-	-mkdir -p $(TMPOUTDIR)$(FS)common
-	-mkdir -p $(TMPOUTDIR)$(FS)nmra
-	-mkdir -p $(TMPOUTDIR)$(FS)opendcc
-	-mkdir -p $(GENDIR)$(FS)rocdigs
+	-$(MKDIR) $(OUTDIR)
+	-$(MKDIR) $(TMPOUTDIR)$(FS)ddx
+	-$(MKDIR) $(TMPOUTDIR)$(FS)loconet
+	-$(MKDIR) $(TMPOUTDIR)$(FS)rocnet
+	-$(MKDIR) $(TMPOUTDIR)$(FS)ecos
+	-$(MKDIR) $(TMPOUTDIR)$(FS)common
+	-$(MKDIR) $(TMPOUTDIR)$(FS)nmra
+	-$(MKDIR) $(TMPOUTDIR)$(FS)opendcc
+	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)loconet$(FS)*.o
