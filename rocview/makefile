@@ -82,8 +82,8 @@ ifeq ($(PLATFORM),WIN32)
 		LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
 		WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 		ifeq ($(NATIVE),WIN32)
-			LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
-			WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -DWX_PRECOMP -DNO_GCC_PRAGMA
+			LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+			WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
 		endif
 	endif
 	DIRPREFIX=win
@@ -137,7 +137,6 @@ $(TARGET): $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(O
 	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS) $(WINLIBS)
 
 $(WINRESOURCE): rocview.rc
-
 	$(TOOLPREFIX)windres -irocview.rc -o$(WINRESOURCE)
 
 
