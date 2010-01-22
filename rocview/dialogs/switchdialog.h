@@ -215,6 +215,8 @@ public:
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;
+    wxStaticText* m_labDesc;
+    wxTextCtrl* m_Desc;
     wxStaticText* m_labBlockID;
     wxComboBox* m_BlockID;
     wxStaticText* m_LabelLocked;
