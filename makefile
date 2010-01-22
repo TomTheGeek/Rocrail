@@ -27,6 +27,7 @@ CS=;
 COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
+QUOT="
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -34,6 +35,7 @@ ifeq ($(NATIVE),WIN32)
 	COPY=copy
 	REMOVE=del /Q
 	GENSUFFIX=.exe
+	QUOT=
 endif
 
 
@@ -60,10 +62,7 @@ uninstall:
 
 
 version:
-	echo "const int bzr = " >  common/version.h
-	bzr revno >> common/version.h
-	echo ";" >> common/version.h
-
-svnversion:
-	-svn log --limit 1 -q --xml https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk > common/version.xml
+	echo $(QUOT)const int bzr = $(QUOT) > common$(FS)version.h
+	bzr revno >> common$(FS)version.h
+	echo $(QUOT);$(QUOT) >> common$(FS)version.h
 
