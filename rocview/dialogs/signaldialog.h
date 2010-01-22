@@ -33,6 +33,8 @@
 #include "wx/statline.h"
 ////@end includes
 
+#include "basedlg.h"
+
 #include "rocs/public/node.h"
 
 /*!
@@ -54,6 +56,7 @@ class wxNotebook;
 #define ID_LISTBOX_SG 10006
 #define ID_BUTTON_SG_NEW 10007
 #define ID_BUTTON_SG_DELETE 10008
+#define ID_BUTTON_SG_DOC 10373
 #define ID_PANEL_SG_GENERAL 10009
 #define wxID_STATIC_SG_ID 10010
 #define ID_TEXTCTRL_SG_ID 10011
@@ -116,7 +119,7 @@ class wxNotebook;
  * SignalDialog class declaration
  */
 
-class SignalDialog: public wxDialog
+class SignalDialog: public wxDialog, public BaseDialog
 {
     DECLARE_DYNAMIC_CLASS( SignalDialog )
     DECLARE_EVENT_TABLE()
@@ -150,6 +153,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SG_DELETE
     void OnButtonSgDeleteClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SG_DOC
+    void OnButtonSgDocClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SIGNAL_ACTIONS
     void OnSignalActionsClick( wxCommandEvent& event );
@@ -192,6 +198,7 @@ public:
     wxListBox* m_List;
     wxButton* m_New;
     wxButton* m_Delete;
+    wxButton* m_Doc;
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;

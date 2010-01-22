@@ -34,6 +34,8 @@
 #include "wx/statline.h"
 ////@end includes
 
+#include "basedlg.h"
+
 #include "rocs/public/node.h"
 
 /*!
@@ -56,6 +58,7 @@ class wxSpinCtrl;
 #define ID_LISTBOX_SW 10006
 #define ID_BUTTON_SW_NEW 10007
 #define ID_BUTTON_SW_DELETE 10008
+#define ID_BUTTON_SW_DOC 10372
 #define ID_PANEL_SW_GENERAL 10009
 #define wxID_STATIC_SW_ID 10010
 #define ID_TEXTCTRL_SW_ID 10011
@@ -133,7 +136,7 @@ class wxSpinCtrl;
  * SwitchDialog class declaration
  */
 
-class SwitchDialog: public wxDialog
+class SwitchDialog: public wxDialog, public BaseDialog
 {
     DECLARE_DYNAMIC_CLASS( SwitchDialog )
     DECLARE_EVENT_TABLE()
@@ -167,6 +170,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SW_DELETE
     void OnButtonSwDeleteClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SW_DOC
+    void OnButtonSwDocClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SW_TYPE
     void OnComboboxSwTypeSelected( wxCommandEvent& event );
@@ -212,6 +218,7 @@ public:
     wxListBox* m_List;
     wxButton* m_New;
     wxButton* m_Delete;
+    wxButton* m_Doc;
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;
