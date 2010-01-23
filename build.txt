@@ -1,121 +1,196 @@
-Get Rocrail sources
+Build Rocrail from Source
 
-Version 1.0 “Harvest” from svn:
+  ▪ Developer Corner
+  ▪ Build from source | Rocgui Dialogs 
+  ▪ 
 
-svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/branches/Rocrail-1.0.0 Rocrail-1.0.0
 
-Version 1.1 “Vision” from svn:
+Bazaar
+Tools like Bazaar are called version control systems (VCS) and have long been popular with software developers. Bazaar's ease of use, flexibility and simple setup make it ideal not only for software developers but also for other groups who work together on files and documents, such as technical writers, web designers and translators.
 
-svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/branches/Rocrail-1.1.0 Rocrail-1.1.0
+Documentation
+  ▪ Bazaar for Subversion Users
+  ▪ Bazaar User Guide
+  ▪ Bazaar User Reference
+  ▪ Bazaar Session (For developers.)
 
-HEAD revision from svn:
 
-svn co https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail/trunk Rocrail
+Front ends
+  ▪ bzr
+  ▪ Eclipse plugin
+  ▪ Olive (bzr-gtk)
+  ▪ Tortoise (Very buggy; not recommended.)
 
-Rocrail tarball
 
-If you don't want to use a subversion client you can download and untar a Rocrail tarball. You also need to install the wxGTK-2.8 and wxGTK-dev package. These packages may be found in the package manager of your OS (synaptic, yum …..)
+Get Rocrail Sources
 
-    *
-      The head release can be found here: http://rocrail.svn.sourceforge.net/viewvc/rocrail/Rocrail/trunk.tar.gz?view=tar
-    *
-      The stable release can be downloaded here: https://sourceforge.net/project/showfiles.php?group_id=62652
+Lightwait Checkout
+This is recommendet if you want the centralized concept like Subversion. Before you can commit you must be sure the branch tree is in sync with the central repo.
+More details on lightweight checkouts: http://doc.bazaar-vcs.org/bzr.dev/en/user-guide/index.html#using-checkouts 
+Read Only
+bzr checkout --lightweight https://launchpad.net/rocrail Rocrail
+Read/Write
+bzr checkout --lightweight lp:rocrail Rocrail
 
-Download the file and save it in your homedir or a subfolder of your homedir. Open a terminal, chdir to the folder where you saved the .tar.gz file and type
+Updating the local tree
+cd rocrail
+bzr update
 
-tar -xzvf name_of_file.tar.gz
 
-Chdir to the new created directory “Rocrail” (if you used the head release) or “Rocrail-1.1.0” (if you downloaded the stable release). Chdir to the subfolder rocs/bin and make ogen, wgen and xml2cstr executable by typing:
+Get Hardware Sources
 
-chmod +x ogen
+Read Only
+bzr checkout --lightweight https://launchpad.net/hardware-dev hardware
+Read/Write
+bzr checkout --lightweight lp:rocrail/hardware-dev hardware
 
-chmod +x wgen
 
-chmod +x xml2cstr
+Get RocMobile Sources
 
-Jump back to the new created “Rocrail” or “Rocrail-1.1.0” folder and type
+Read Only
+bzr checkout --lightweight https://launchpad.net/rocmobile-dev RocMobile
+Read/Write
+bzr checkout --lightweight lp:rocrail/rocmobile-dev RocMobile
 
-make
-
-These 3 files are compiled against debian4 so it might be that they will not work with your Linux distribution. They should work with a Debian based OS like Ubuntu and derivates. If you get in trouble with this please try :
-
-make fromtar
-
-Due to an error in the vision release makefile this will work only if you downloaded the head release tar file. After the compiler finished without an error you have to install the binaries by typing:
-
-sudo make install
 
 Build Rocrail from source (Linux)
-
 Use the following commands:
+  ▪ Install the wxGTK 2.8.* (libwxgtk2.8*, wxGTK-devel) including develop package
+  ▪ check out the HEAD revision Rocrail from launchpad.net.
+  ▪ cd Rocrail
+  ▪ make
+  ▪ sudo make install
 
-    *
-      Install the wxGTK 2.8.* (libwxgtk2.8*, wxGTK-devel) including develop package
-    *
-      check out the HEAD revision Rocrail from sourceforge.
-    *
-      cd Rocrail
-    *
-      make
-    *
-      sudo make install
 
 Build Rocrail from source (Windows)
-
 Get the sources as desribed earlier.
+  ▪ Install MinGW. (add the mingw\bin to your path environment)
+  ▪ Install the precompiled wx-2.6.3-mingw.
+  ▪ Change the wxroot variable in the Rocrail\rocgui\makefile-mingw to match your wxWidgets directory.
+  ▪ Install Inno Setup if you want to create the setup. 
+  ▪ cd Rocrail
+  ▪ make -f makefile-mingw unicode (use ansi for Windows 9x)
+  ▪ start Inno Setup in Rocrail\rocrail\package and open the rocrail.iss; compile.
 
-    *
-      Install MinGW. (add the mingw\bin to your path environment)
-    *
-      Install the precompiled wx-2.6.3-mingw.
-    *
-      Change the wxroot variable in the Rocrail\rocgui\makefile-mingw to match your wxWidgets directory.
-    *
-      Install Inno Setup if you want to create the setup.
-    *
-      cd Rocrail
-    *
-      make -f makefile-mingw unicode (use ansi for Windows 9x)
-    *
-      start Inno Setup in Rocrail\rocrail\package and open the rocrail.iss; compile.
 
-SVN Log
+BZR Log
+The main makefile will call the bzr program to get the revision number to use in rocrail for tracing and info.
 
-The main makefile will call the svn program to get the HEAD revisions version number to use in rocrail for tracing and info.
+
 Problems
+  ▪ Many header and source files are generated in the build process and are not in the repository!
+  ▪ If you have problems compiling the rocs library, the object generator binary does not fit to your Linux system. Try make fromtar.
+  ▪ After changing the rocs.xml you must also commit the rocs-gen.tar.gz in svn!!!
 
-    *
-      If you have problems compiling the rocs library, the object generator binary does not fit to your Linux system. Try make fromtar.
-    *
-      After changing the rocs.xml you must also commit the rocs-gen.tar.gz in svn!!!
 
 Debian Etch
-
 Add following section in the /etc/apt/sources.list file:
-
 # wxWidgets/wxPython repository at apt.wxwidgets.org
 deb http://apt.wxwidgets.org/ etch-wx main
 deb-src http://apt.wxwidgets.org/ etch-wx main  
-
 Update the sources:
-
 sudo apt-get update
-
 Just for info:
+  ▪ Debian GNU/Linux 4.0 (“etch”)
+  ▪ Debian GNU/Linux 3.1 (“sarge”)
 
-    *
-      Debian GNU/Linux 4.0 (“etch”)
-    *
-      Debian GNU/Linux 3.1 (“sarge”)
 
 Fedora Core 10
-
-To install wxwidgets on fedora core you hhave to type this in a shell window:
-
+To install wxwidgets on fedora core you have to type this in a shell window:
 sudo yum install wxGTK 2.8.* 
-
 followed by
-
 sudo yum install wxGTK-devel 
-
 Afterwards continue with the make process.
+
+
+Gentoo Linux
+To install wxwidgets on Gentoo Linux you have to “emerge” it first. “emerge” is the command under Gentoo that will compile and install a package. So after a
+emerge x11-libs/wxGTK
+and some screens full of compiling messages, you will have a RAW wxlib on your system. Then, there is a configuration utility “eselect” which can choose various profiles for various packages. The whole trick is, that you (just) have to type
+eselect wxwidgets set 1
+after emerging the lib. That way, you have selected “profile 1” (the only one there is) and wxwidgets is configured for usage when compiling apps that rely on it (which is the case for Rocrail). Perhaps when future generations read this, there are more than one profiles for wxwidgets.
+eselect wxwidgets list
+Gives you a list of available profiles, like this
+Available wxWidgets profiles:
+  [1]   gtk2-unicode-release-2.8
+and after you have selected the profile, an asterisk marks it as active:
+Available wxWidgets profiles:
+  [1]   gtk2-unicode-release-2.8 *
+After this is finished you may continue with the standard make process described at the top of the page.
+
+
+
+
+Compile Rocrail with MinGW, MSYS and wxWidgets
+
+Building the Rocrail binaries for Windows using GNU tools.
+
+Install MinGw:
+Download from http://www.mingw.org the latest mingw-5.1.3.exe setup. (http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=240780)
+Start the setup after it has been downloaded.
+Select:
+  ▪ base
+  ▪ g++
+  ▪ make
+Install it as proposed in c:\mingw.
+Set the start of the user PATH environment variable to: “C:\mingw\bin;…” (The three dots represents the rest of the variable value.)
+rename the mingw32-make.exe into make.exe
+Attention: On Vista you will get the error gcc: installation problem, cannot exec `cc1' while trying to compile Rocrail with MinGW version 5.1.3. The configure of wxwidgets fails too. It seems that the only workaround is to copy the files in C:\MinGW\libexec\gcc\mingw32\3.4.2 to C:\MinGW\bin.
+
+Get the sources:
+checkout the sources with a bzr client from launchpad.net/rocrail into C:\lp\Rocrail
+C:\>cd lp
+C:\lp>bzr checkout --lightweight https://launchpad.net/rocrail Rocrail
+A good SVN Client can be found at http://subversion.tigris.org Go to the download section and download the svn-win32-1.x.x.zip Unzip the file in your prefered directory and add the C:\…..\bin path to the global path variable in your system enviroment. After this is done remember to reboot the machine.
+
+Build the project:
+Open a command shell and change directory to C:\lp\Rocrail and execute make:
+C:\>cd C:\lp\Rocrail
+C:\lp\Rocrail>make -f makefile-mingw unicode
+
+For the current HEAD revision use this command:
+C:\>cd C:\lp\Rocrail
+C:\lp\Rocrail>make PLATFORM=WIN32 NATIVE=WIN32 MINGWINSTALL=C:\wxWidgets-2.8.3 unicode
+Except for the Rocgui you must be able to build the Rocrail server and the controller libraries. If you are planning an ANSI build you must replace the unicode target with the ansi target.
+
+Install MSys:
+Get from http://www.mingw.org the latest MSYS-1.0.10.exe setup and install it as proposed, and answer yes to all questions and tell it where you installed mingw. (http://sourceforge.net/project/showfiles.php?group_id=2435&package_id=24963) If all went OK you have an MSYS shortcut on the desktop you will need later on. (The make file is named back again to mingw32-make.exe but msys has its own make.)
+
+Install wxWidgets:
+Download from http://www.wxwidgets.org wxMSW - installer for Windows Execute the setup and install the it as proposed in C:\wxWidgets-2.8.4
+
+Build the wxWidgets libraries:
+Now double click on the MSYS shortcut to open a unix like shell and try this:
+cd c:
+cd wxWidgets-2.8.4
+mkdir mingw
+cd mingw
+../configure --disable-shared --enable-unicode --enable-mslu
+make BUILD=release
+The configure will take some time to finish depending on your hardware. If you are planning an ANSI build you must leave out the ”–enable-unicode” and ”–enable-mslu” options. But the make will take longer than you can imagine to finish. … But after a very long time the libraries are build:
+C:\wxWidgets-2.8.4\mingw>dir lib
+06.09.2007  22:12           158.846 libwxexpat-2.8.a
+06.09.2007  22:08           147.328 libwxjpeg-2.8.a
+06.09.2007  22:06           169.646 libwxpng-2.8.a
+06.09.2007  22:04           101.362 libwxregexu-2.8.a
+06.09.2007  22:11           327.360 libwxtiff-2.8.a
+06.09.2007  22:05            72.716 libwxzlib-2.8.a
+06.09.2007  22:31         2.083.884 libwx_baseu-2.8.a
+06.09.2007  22:34           311.274 libwx_baseu_net-2.8.a
+07.09.2007  00:18            46.142 libwx_baseu_xml-2.8.a
+07.09.2007  00:05         1.636.616 libwx_mswu_adv-2.8.a
+07.09.2007  00:40           567.984 libwx_mswu_aui-2.8.a
+06.09.2007  23:54         9.032.418 libwx_mswu_core-2.8.a
+07.09.2007  00:16         1.317.914 libwx_mswu_html-2.8.a
+07.09.2007  00:17           184.232 libwx_mswu_qa-2.8.a
+07.09.2007  00:54         1.903.786 libwx_mswu_richtext-2.8.a
+07.09.2007  00:37         1.644.622 libwx_mswu_xrc-2.8.a
+Move or copy the library from C:\wxWidgets-2.8.4\mingw\lib to C:\wxWidgets-2.8.4\lib-unicode Or if you builded the ANSI version: C:\wxWidgets-2.8.4\mingw\lib to C:\wxWidgets-2.8.4\lib-ansi Now it is time to try to build the Rocview.exe. Work your way down the directory tree you just moved or copied until you find a directory named wx, containing the file setup.h. Copy this file to the wxWidgets-2.8.*\include directory.
+
+Building the Rocview:
+C:\lp\Rocrail\rocview>make -f makefile-mingw wxroot=c:\wxWidgets-2.8.4 wxversion=2.8 unicode
+
+For the current HEAD revision use this command:
+C:\lp\Rocrail\rocview>make PLATFORM=WIN32 NATIVE=WIN32  MINGWINSTALL =c:\wxWidgets-2.8.4 wxversion=2.8 unicode
+If you prepared it all for an ANSI version just replace the unicode target with the ansi target on the command line.
+After the rocview.exe is created you can give it a try:
