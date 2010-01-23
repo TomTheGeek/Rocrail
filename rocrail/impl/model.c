@@ -2464,7 +2464,8 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
       continue;
     }
 
-    if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {
+    /* TODO: if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {*/
+    if( StrOp.equals( stTo, fromid ) && !dir) {
       /* swap direction */
       const char* tmp = stTo;
       stTo = stFrom;
