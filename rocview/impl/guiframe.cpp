@@ -833,10 +833,12 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
     wxPostEvent( this, event );
   }
 
-  m_ActiveLocs->AutoSize();
+  m_ActiveLocs->AutoSizeColumns(false);
+  /*
   m_ActiveLocs->FitInside();
   m_ActiveLocs->UpdateDimensions();
   m_ActiveLocsPanel->GetSizer()->Layout();
+  */
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
 
   initLocCtrlDialogs();
@@ -1630,13 +1632,13 @@ void RocGuiFrame::create() {
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
-  activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL, 2);
+  activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LocPanel..." );
   m_LCPanel = new wxPanel( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
   m_LC = NULL;
   m_LC = new LC( m_LCPanel );
-  activeLocsSizer->Add(m_LCPanel, 0, wxALL, 2);
+  activeLocsSizer->Add(m_LCPanel, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
   m_LocImage->setLC(m_LC);
 
