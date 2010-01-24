@@ -265,6 +265,7 @@ static void __restoreFx(obj inst) {
     int f = 1 << i;
     if( fx & f ) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setf0 ( fcmd, wLoc.isfn(data->props));
       wFunCmd.setfnchanged( fcmd, i + 1);
       switch( i ) {
         case 0 : wFunCmd.setf1 ( fcmd, True); break;
