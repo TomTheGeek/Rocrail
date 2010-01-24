@@ -299,9 +299,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: fbid=%s state=%s ident=%d fbfrom=%s from=%s byroute=%s",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] fbid=%s state=%s ident=%d fbfrom=%s from=%s byroute=%s",
       data->id, key, puls?"true":"false", ident,
-                 wFeedbackEvent.getfrom(fbevt), data->fromBlockId?data->fromBlockId:"?", data->byRouteId?data->byRouteId:"?" );
+                 fbevt != NULL ? wFeedbackEvent.getfrom(fbevt):"NULL",
+                 data->fromBlockId?data->fromBlockId:"?",
+                 data->byRouteId?data->byRouteId:"?" );
 
   if( data->crossing ) {
     /* ignore all events */
@@ -477,7 +479,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
       /* put all blockid's in the map */
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
-        if( byroute != NULL && StrOp.len( byroute ) > 0 && !StrOp.equals( "all", byroute) )
+        if( byroute != NULL && StrOp.len( byroute ) > 0 && !StrOp.equals( wFeedbackEvent.from_all, byroute) && !StrOp.equals( wFeedbackEvent.from_all_reverse, byroute) )
           StrOp.fmtb( key, "%s-%s-%s", fbid, fromblockid, byroute );
         else
           StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
