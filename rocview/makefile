@@ -1,7 +1,7 @@
 # ------------------------------------------------------------
 # Rocrail - Model Railroad Software
 #
-# Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+# Copyright (C) 2002-2010 - Rob Versluis <r.j.versluis@rocrail.net>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -23,9 +23,6 @@
 # commandline for mingw cross compiling:
 #   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
-#
-#   ansi libs are installed locally:
-#   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX= PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc LIBRARY=ansi ANSILIBS=/home/rob/wx-2.8.3-mingw/lib-ansi ANSIINSTALL=/home/rob/wx-2.8.3-mingw all
 #
 # commandline for mingw cross compiling:
 #   make PLATFORM=WIN32 NATIVE=WIN32 clean
@@ -66,25 +63,15 @@ PLATFORM=LINUX
 LIBRARY=unicode
 LIBEXT=u
 MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
-ANSIINSTALL=$(MINGWINSTALL)
-ANSILIBS=
 
 
 ifeq ($(PLATFORM),WIN32)
-	ifeq ($(LIBRARY),ansi)
-		LIBEXT=
-		LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
-		LNK_FLAGS=-L$(ANSILIBS) -mthreads -Wl,--subsystem,windows -mwindows
-		WX_FLAGS=-I$(ANSIINSTALL)$(FS)include -I$(ANSIINSTALL)$(FS)lib$(FS)wx$(FS)include$(FS)i586-mingw32msvc-msw-ansi-release-static-2.8  -I$(ANSIINSTALL)$(FS)lib$(FS)wx$(FS)include$(FS)msw-ansi-release-static-2.8 -I$(ANSIINSTALL)$(FS)include$(FS)wx-2.8 -D__WXMSW__ -mthreads -DNO_GCC_PRAGMA
-		WX_LIBS=-lwx_msw$(LIBEXT)_html-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_core-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)-2.8$(LIBSUFFIX) -lwxtiff-2.8$(LIBSUFFIX) -lwxjpeg-2.8$(LIBSUFFIX) -lwxpng-2.8$(LIBSUFFIX) -lwxzlib-2.8$(LIBSUFFIX) -lwxregex$(LIBEXT)-2.8$(LIBSUFFIX) -lwxexpat-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_adv-2.8$(LIBSUFFIX) -lwx_msw$(LIBEXT)_qa-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)_xml-2.8$(LIBSUFFIX) -lwx_base$(LIBEXT)_net-2.8$(LIBSUFFIX)
-	else
-		LIBS=-liphlpapi -lmpr
-		LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
-		WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
-		ifeq ($(NATIVE),WIN32)
-			LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
-			WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
-		endif
+	LIBS=-liphlpapi -lmpr
+	LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
+	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
+	ifeq ($(NATIVE),WIN32)
+		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+		WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
 	endif
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
