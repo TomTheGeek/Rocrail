@@ -688,9 +688,10 @@ bool RocGui::OnInit() {
 
   m_Frame->Raise();
 
-
+  /* Donation dialog at startup
   wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
   wxPostEvent( m_Frame, evt );
+  */
 
   if( !m_bOffline ) {
     iOThread th = ThreadOp.inst( "conthread", &conThread, this );
