@@ -2425,7 +2425,7 @@ static void _analyse( iOModel inst ) {
  * needed to get to the destination.
  */
 static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const char* destid,
-    int cnt, iOList searchlist, int* foundlevel, Boolean forceSameDir ) {
+    int cnt, iOList searchlist, int* foundlevel, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
 
   iOList list = NULL;
@@ -2465,7 +2465,7 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
     }
 
     /* TODO: if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {*/
-    if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {
+    if( StrOp.equals( stTo, fromid ) && !dir) {
       /* swap direction */
       const char* tmp = stTo;
       stTo = stFrom;
@@ -2641,7 +2641,8 @@ static iORoute _findRoute( iOModel inst, const char* scheduleid,
  * lookup the current block in the schedule and calculate the route to the next destination
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
-                                        int* scheduleIdx, const char* curblockid, iOLoc loc, Boolean forceSameDir ) {
+                                        int* scheduleIdx, const char* curblockid, iOLoc loc,
+                                        Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
 
@@ -2676,7 +2677,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
       return NULL;
     }
 
-    return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir );
+    return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
 
   }
 
@@ -2686,7 +2687,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
 /* synchronized!!! */
 static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId, const char* toLocationId,
-                             const char* toBlockId, iOLoc loc, Boolean forceSameDir ) {
+                             const char* toBlockId, iOLoc loc, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
   iONode location = NULL;
   iORoute street = NULL;
@@ -2709,6 +2710,8 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
   MutexOp.wait( data->muxFindDest );
   {
     iIBlockBase block = NULL;
+    Boolean destdir = False;
+    Boolean samedir = False;
 
     if( toBlockId == NULL || StrOp.len(toBlockId) == 0 ) {
       iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
@@ -2718,7 +2721,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
         if( stlist != NULL )
           ListOp.clear( stlist );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", id );
-        street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir );
+        street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
         if( street == NULL ) {
           continue;
         }
@@ -2734,7 +2737,21 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", toBlockId );
-      street = __lookup( inst, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir );
+      street = __lookup( inst, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
+    }
+
+    /* check if the direction is the same if wanted to be */
+    if( street != NULL && forceSameDir ) {
+      Boolean fromTo = False;
+      Boolean locdir  = LocOp.getDir( loc );
+      destdir = RouteOp.getDirection( street, currBlockId, &fromTo );
+      /* TODO: for second next block the "swapPlacingInPrevRoute" must be ignored? */
+      samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
+      if( ! samedir ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "route[%s] found but it is not in the same direction: reject.", RouteOp.getId(street) );
+        street = NULL;
+      }
     }
 
 

@@ -676,6 +676,7 @@
       <param name="curblockid" vt="const char*" remark="current blockid"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="forceSameDir" vt="Boolean" remark="Force same direction."/>
+      <param name="swapPlacingInPrevRoute" vt="Boolean" remark="Force same direction."/>
     </fun>
     <fun name="calcRoute" vt="iORoute" remark="returns the route to start with">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -685,6 +686,7 @@
       <param name="toBlockId" vt="const char*" remark="Wanted block"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="forceSameDir" vt="Boolean" remark="Force same direction."/>
+      <param name="swapPlacingInPrevRoute" vt="Boolean" remark="Force same direction."/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>

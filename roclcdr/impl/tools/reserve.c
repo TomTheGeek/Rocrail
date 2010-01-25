@@ -87,7 +87,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       /* TODO: force same direction */
       nextRoute = data->model->calcRouteFromCurBlock( data->model,
           (iOList)NULL, data->schedule, &scheduleIdx,
-          fromBlock->base.id(fromBlock), data->loc, True );
+          fromBlock->base.id(fromBlock), data->loc, True, fromRoute->isSwapPost( fromRoute ) );
 
       if( nextRoute != NULL ) {
         /* evaluate direction */
