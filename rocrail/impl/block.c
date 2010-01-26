@@ -1443,10 +1443,33 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 }
 
 
+
+static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
+  iOBlockData data = Data(inst);
+
+  if( data->fromBlockId == NULL || StrOp.len(data->fromBlockId) == 0 ) {
+    return reverse;
+  }
+
+  /* TODO: figure out which signal pair is ahead */
+  /*
+   * variables:
+   * data->fromBlockId
+   * wSignal.getfsaheadfrom(data->props) -> default = "all"
+   * wSignal.getrsaheadfrom(data->props) -> default = "all-reverse"
+   */
+
+  return reverse;
+}
+
+
+
 static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOBlockData data = Data(inst);
   Boolean semaphore = False;
   const char* sgId = NULL;
+
+  reverse = __checkAhead(inst, reverse);
 
   if( distant )
     sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
@@ -1470,6 +1493,8 @@ static Boolean _yellow( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
+  reverse = __checkAhead(inst, reverse);
+
   if( distant )
     sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
   else
@@ -1491,6 +1516,8 @@ static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
+  reverse = __checkAhead(inst, reverse);
+
   if( distant )
     sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
   else
@@ -1511,6 +1538,8 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   iOBlockData data = Data(inst);
   Boolean semaphore = False;
   const char* sgId = NULL;
+
+  reverse = __checkAhead(inst, reverse);
 
   if( distant )
     sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
