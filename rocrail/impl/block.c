@@ -1451,13 +1451,42 @@ static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
     return reverse;
   }
 
-  /* TODO: figure out which signal pair is ahead */
-  /*
-   * variables:
-   * data->fromBlockId
-   * wSignal.getfsaheadfrom(data->props) -> default = "all"
-   * wSignal.getrsaheadfrom(data->props) -> default = "all-reverse"
-   */
+  if( !reverse ) {
+    /* TODO: figure out which signal pair is ahead */
+    /*
+     variables:
+     reverse: is only true in case the route is run reverse -> no further investigation -> return reverse as is
+     data->fromBlockId
+     wBlock.getfsaheadfrom(data->props) -> default = "all"
+     wBlock.getrsaheadfrom(data->props) -> default = "all-reverse"
+    */
+    if( StrOp.startsWith( wBlock.getfsaheadfrom(data->props), wFeedbackEvent.from_all ) )
+      return reverse;
+    if( StrOp.startsWith( wBlock.getrsaheadfrom(data->props), wFeedbackEvent.from_all_reverse ) )
+      return reverse;
+
+    {
+      iOStrTok tok = StrTokOp.inst( wBlock.getfsaheadfrom(data->props), ',' );
+
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* fromblockid = StrTokOp.nextToken( tok );
+        if( StrOp.equals( fromblockid, data->fromBlockId ) ) {
+          return False;
+        }
+      };
+      StrTokOp.base.del(tok);
+
+      tok = StrTokOp.inst( wBlock.getrsaheadfrom(data->props), ',' );
+
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* fromblockid = StrTokOp.nextToken( tok );
+        if( StrOp.equals( fromblockid, data->fromBlockId ) ) {
+          return True;
+        }
+      };
+      StrTokOp.base.del(tok);
+    }
+  }
 
   return reverse;
 }
