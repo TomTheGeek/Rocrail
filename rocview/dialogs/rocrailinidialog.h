@@ -289,6 +289,7 @@ public:
     wxCheckBox* m_DisableRouteVreduce;
     wxCheckBox* m_GreenAspect;
     wxCheckBox* m_SkipSetSw;
+    wxCheckBox* m_SkipSetSg;
     wxCheckBox* m_UseBiCom;
     wxCheckBox* m_StopAtIdentMisMatch;
     wxCheckBox* m_PowerOffAtGhost;

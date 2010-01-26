@@ -12135,4 +12135,10 @@
   <Msg id="blockinitpause">
     <en txt="Block init pause"/>
   </Msg>
+  <Msg id="skipsetsg">
+    <en txt="Skip signal commands" tip="Skip signal commands if already set"/>
+  </Msg>
+  <Msg id="aheadfrom">
+    <en txt="Ahead from"/>
+  </Msg>
 </Messages>

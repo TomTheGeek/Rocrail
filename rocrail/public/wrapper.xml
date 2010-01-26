@@ -437,7 +437,8 @@
       <var name="disablerouteVreduce" vt="bool" defval="false" remark="Global disable route speed reducing by thrown switches."/>
       <var name="defaspect" vt="string" defval="red" range="red,green,yellow,white" remark="Default signal aspect."/>
       <var name="greenaspect" vt="bool" defval="false" remark="Use green aspect instead of yellow if next block has red."/>
-      <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commonds in routes for switches already in model position."/>
+      <var name="skipsetsw" vt="bool" defval="false" remark="Skip switch commands in routes for switches already in model position."/>
+      <var name="skipsetsg" vt="bool" defval="false" remark="Skip signal commands for signals already in model position."/>
       <var name="semaphorewait" vt="int" defval="1" range="0-*" unit="s" remark="Time needed by a semaphore to get in position."/>
       <var name="signalwait" vt="int" defval="0" range="0-*" unit="s" remark="Time needed by a signal to set another aspect."/>
       <var name="usebicom" vt="bool" defval="true" remark="Use bi-directional communication."/>
@@ -1217,6 +1218,8 @@
         <var name="speed" vt="string" defval="cruise" range="*" remark="Block speed on arrive."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
+        <var name="fsaheadfrom" vt="string" defval="all" range="*" remark="forward signals ahead from"/>
+        <var name="rsaheadfrom" vt="string" defval="all-reverse" range="*" remark="reverse signals ahead from"/>
         <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
         <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>
         <var name="signalR" vt="string" defval="NULL" range="*" remark="Home Signal ID for reverse direction. (sw)"/>

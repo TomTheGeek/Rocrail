@@ -667,6 +667,12 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
                  wSignal.getid( o->props ), state );
   }
 
+  if( StrOp.equals(wSignal.getstate( o->props ), state) && wCtrl.isskipsetsg( wRocRail.getctrl(AppOp.getIni())) ) {
+    chgState = False;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "skipping signal[%s] command: no change of state[%s].",
+        wSignal.getid( o->props ), state);
+  }
+
   /* save the new state of the signal */
   if( chgState ) {
     Boolean hasAddr =  (wSignal.getaddr(o->props) == 0 && wSignal.getport1(o->props) == 0 ) ? False:True;
