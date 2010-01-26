@@ -2239,6 +2239,7 @@ static iOLoc _inst( iONode props ) {
   if( !wLoc.isrestorefx(data->props))
     wLoc.setfx( data->props, 0 );
 
+  data->fn0 = wLoc.isfn(data->props);
   wLoc.setthrottleid( data->props, "" );
 
   __initCVmap( loc );
