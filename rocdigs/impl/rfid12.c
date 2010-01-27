@@ -110,13 +110,20 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 /**  */
 static void _halt( obj inst ) {
+  iORFID12Data data = Data(inst);
+  data->run = False;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  SerialOp.close( data->serial );
   return;
 }
 
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iORFID12Data data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  return True;
 }
 
 
@@ -148,6 +155,29 @@ static int _version( obj inst ) {
 }
 
 
+static void __RFIDReader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iORFID12 inst = (iORFID12)ThreadOp.getParm( th );
+  iORFID12Data data = Data(inst);
+  Boolean ok = False;
+
+  /* IO buffer */
+  byte buffer[256];
+
+  data->initOK = False;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID reader started." );
+
+  while( data->run ) {
+    ThreadOp.sleep( 10 );
+
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID reader ended." );
+
+}
+
+
 
 /**  */
 static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
@@ -158,9 +188,35 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
 
   /* Initialize data->xxx members... */
+  data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+
+  data->bps      = wDigInt.getbps( ini );
+
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RFID-12 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    =%s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device =%s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+
+  data->serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( data->serial, none );
+  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  data->serialOK = SerialOp.open( data->serial );
+
+  if( data->serialOK ) {
+    data->run = True;
+
+    data->reader = ThreadOp.inst( "rfid12", &__RFIDReader, __RFID12 );
+    ThreadOp.start( data->reader );
+  }
+  else
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rfid12 port!" );
+
+
 
   instCnt++;
   return __RFID12;
