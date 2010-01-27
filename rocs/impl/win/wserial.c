@@ -351,8 +351,11 @@ int rocs_serial_avail( iOSerial inst ) {
   iOSerialData o = Data(inst);
   unsigned long etat;
   struct _COMSTAT comstat;
-  ClearCommError( o->handle, &etat, &comstat );
-  return comstat.cbInQue;
+  int rc = ClearCommError( o->handle, &etat, &comstat );
+  if( rc == 0 )
+    return -1;
+  else
+    return comstat.cbInQue;
 #endif
 }
 

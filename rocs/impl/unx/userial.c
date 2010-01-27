@@ -483,7 +483,9 @@ int rocs_serial_avail( iOSerial inst ) {
 
   rc = ioctl( o->sh, FIONREAD, &nbytes );
   if( rc<0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ioctl FIONREAD error" );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "ioctl FIONREAD error" );
+    if(errno == ENXIO)
+      return -1;
   }
 #elif defined TIOCINQ
 

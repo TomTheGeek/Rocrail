@@ -468,9 +468,22 @@ static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
   int timeout = 100;
 
   while( wait && (timeout > 0)) {
+    int available = 0;
     timeout--;
+    if ( data->dummyio )  {
+      ThreadOp.sleep(100);
+      continue;
+    }
 
-    if ( !data->dummyio && SerialOp.available(data->serial) ) {
+    available = SerialOp.available(data->serial);
+    if( available == -1 ) {
+      /* device error */
+      data->dummyio = True;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+      continue;
+    }
+
+    if ( available > 0  ) {
       if( MutexOp.wait( data->mux ) ) {
 
         if( !SerialOp.read( data->serial, (char*) in, 1 ) ) {
@@ -1183,8 +1196,18 @@ static void __transactor( void* threadinst ) {
     /* Give up timeslice:*/
     ThreadOp.sleep( 50 );
 
+    if(data->dummyio) {
+      ThreadOp.sleep( 1000 );
+      continue;
+    }
 
-    Boolean dataAvailable = SerialOp.available(data->serial);
+    int dataAvailable = SerialOp.available(data->serial);
+    if( dataAvailable == -1 ) {
+      /* device error */
+      data->dummyio = True;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+      continue;
+    }
 
     // Wait or timeout
     while(  !(timeout != 0 || !dataAvailable) ) {
