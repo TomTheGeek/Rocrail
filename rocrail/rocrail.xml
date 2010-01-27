@@ -120,6 +120,7 @@
       <var name="reverse" vt="Boolean"/>
       <var name="group" vt="const char*"/>
       <var name="fromBlockId" vt="const char*"/>
+      <var name="aheadFrom" vt="const char*"/>
       <var name="byRouteId" vt="const char*"/>
       <var name="prevLocIdCnt" vt="int"/>
       <var name="prevLocId" vt="const char*"/>

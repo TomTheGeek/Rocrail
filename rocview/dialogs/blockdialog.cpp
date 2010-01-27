@@ -793,8 +793,8 @@ bool BlockDialog::evaluate() {
 
   // Signals
 
-  wBlock.setfsaheadfrom( m_Props, m_FsAheadFrom->GetStringSelection().mb_str(wxConvUTF8) );
-  wBlock.setrsaheadfrom( m_Props, m_RsAheadFrom->GetStringSelection().mb_str(wxConvUTF8) );
+  wBlock.setfsaheadfrom( m_Props, m_FsAheadFrom->GetValue().mb_str(wxConvUTF8) );
+  wBlock.setrsaheadfrom( m_Props, m_RsAheadFrom->GetValue().mb_str(wxConvUTF8) );
 
 
   if( StrOp.equals( "-", m_Signal->GetStringSelection().mb_str(wxConvUTF8) ) )
@@ -1347,7 +1347,7 @@ void BlockDialog::CreateControls()
     m_Signal = new wxComboBox( m_PanelWirering, ID_COMBOBOX_BK_SIGNAL, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_SignalStrings, wxCB_READONLY );
     itemFlexGridSizer60->Add(m_Signal, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_SignalProps = new wxButton( m_PanelWirering, ID_BUTTON_BK_SIGNAL, _("..."), wxDefaultPosition, wxSize(30, -1), 0 );
+    m_SignalProps = new wxButton( m_PanelWirering, ID_BUTTON_BK_SIGNAL, _("..."), wxDefaultPosition, wxSize(35, -1), 0 );
     itemFlexGridSizer60->Add(m_SignalProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelWSignal = new wxStaticText( m_PanelWirering, wxID_STATIC_BK_WSIGNAL, _("Warning Signal"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1357,7 +1357,7 @@ void BlockDialog::CreateControls()
     m_WSignal = new wxComboBox( m_PanelWirering, ID_COMBOBOX_BK_WSIGNAL, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_WSignalStrings, wxCB_READONLY );
     itemFlexGridSizer60->Add(m_WSignal, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_WSignalProps = new wxButton( m_PanelWirering, ID_BUTTON_BK_WSIGNAL, _("..."), wxDefaultPosition, wxSize(30, -1), 0 );
+    m_WSignalProps = new wxButton( m_PanelWirering, ID_BUTTON_BK_WSIGNAL, _("..."), wxDefaultPosition, wxSize(35, -1), 0 );
     itemFlexGridSizer60->Add(m_WSignalProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labFsAheadFrom = new wxStaticText( m_PanelWirering, wxID_ANY, _("Ahead from"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1379,7 +1379,7 @@ void BlockDialog::CreateControls()
     m_SignalR = new wxComboBox( m_PanelWirering, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_SignalRStrings, wxCB_READONLY );
     itemFlexGridSizer70->Add(m_SignalR, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_SignalPropsR = new wxButton( m_PanelWirering, ID_BUTTON_BK_SIGNAL_R, _("..."), wxDefaultPosition, wxSize(30, -1), 0 );
+    m_SignalPropsR = new wxButton( m_PanelWirering, ID_BUTTON_BK_SIGNAL_R, _("..."), wxDefaultPosition, wxSize(35, -1), 0 );
     itemFlexGridSizer70->Add(m_SignalPropsR, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelWSignalR = new wxStaticText( m_PanelWirering, wxID_ANY, _("Warning Signal"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1389,7 +1389,7 @@ void BlockDialog::CreateControls()
     m_WSignalR = new wxComboBox( m_PanelWirering, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_WSignalRStrings, wxCB_READONLY );
     itemFlexGridSizer70->Add(m_WSignalR, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_WSignalPropsR = new wxButton( m_PanelWirering, ID_BUTTON_BK_WSIGNAL_R, _("..."), wxDefaultPosition, wxSize(30, -1), 0 );
+    m_WSignalPropsR = new wxButton( m_PanelWirering, ID_BUTTON_BK_WSIGNAL_R, _("..."), wxDefaultPosition, wxSize(35, -1), 0 );
     itemFlexGridSizer70->Add(m_WSignalPropsR, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labRsAheadFrom = new wxStaticText( m_PanelWirering, wxID_ANY, _("Ahead from"), wxDefaultPosition, wxDefaultSize, 0 );

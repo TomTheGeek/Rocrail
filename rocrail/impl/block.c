@@ -368,10 +368,12 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
     if( evt == enter2in_event || evt == in_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
+      data->aheadFrom = data->fromBlockId;
       data->fromBlockId = data->id;
     }
 
     if( evt == shortin_event && LocOp.isShortin(loc) ) {
+      data->aheadFrom = data->fromBlockId;
       data->fromBlockId = data->id;
     }
 
@@ -1075,6 +1077,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
           "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
       data->reverse     = reverse;
       data->fromBlockId = blockid;
+      data->aheadFrom   = blockid;
       data->byRouteId   = routeid;
       if( reset )
         BlockOp.resetTrigs( inst );
@@ -1447,11 +1450,15 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
   iOBlockData data = Data(inst);
 
-  if( data->fromBlockId == NULL || StrOp.len(data->fromBlockId) == 0 ) {
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check ahead signal for block[%s]", data->id);
+
+  if( data->aheadFrom == NULL || StrOp.len(data->aheadFrom) == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check ahead signal for block[%s]: aheadFrom is undef", data->id);
     return reverse;
   }
 
   if( !reverse ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no reverse signal block[%s]", data->id);
     /* TODO: figure out which signal pair is ahead */
     /*
      variables:
@@ -1465,12 +1472,14 @@ static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
     if( StrOp.startsWith( wBlock.getrsaheadfrom(data->props), wFeedbackEvent.from_all_reverse ) )
       return reverse;
 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no default ahead from for block[%s]", data->id);
     {
       iOStrTok tok = StrTokOp.inst( wBlock.getfsaheadfrom(data->props), ',' );
 
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
-        if( StrOp.equals( fromblockid, data->fromBlockId ) ) {
+        if( StrOp.equals( fromblockid, data->aheadFrom ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block[%s] ahead signal is forward pair from %s", data->id, fromblockid);
           return False;
         }
       };
@@ -1480,7 +1489,8 @@ static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
 
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
-        if( StrOp.equals( fromblockid, data->fromBlockId ) ) {
+        if( StrOp.equals( fromblockid, data->aheadFrom ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block[%s] ahead signal is revert pair from %s", data->id, fromblockid);
           return True;
         }
       };
@@ -1488,6 +1498,7 @@ static Boolean __checkAhead(iIBlockBase inst, Boolean reverse) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block[%s] ahead signal is undefined from %s", data->id, data->aheadFrom);
   return reverse;
 }
 
