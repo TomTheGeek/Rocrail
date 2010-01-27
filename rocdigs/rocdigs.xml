@@ -527,6 +527,7 @@
       <var name="slotserver" vt="iONode"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="dummyio" vt="Boolean"/>
       <var name="serial" vt="iOSerial"/>
       <var name="socket" vt="iOSocket"/>
       <var name="readUDP" vt="iOSocket"/>

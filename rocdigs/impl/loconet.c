@@ -1289,8 +1289,16 @@ static void __loconetReader( void* threadinst ) {
     LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
   }
 
-  while( data->run ) {
-    if( !data->lnAvailable( (obj)loconet) ) {
+  while( data->run && !data->dummyio ) {
+    int available = data->lnAvailable( (obj)loconet);
+    if( available == -1 ) {
+      /* device error */
+      data->dummyio = True;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+      continue;
+    }
+
+    if( available == 0 ) {
       ThreadOp.sleep( 10 );
       continue;
     }
@@ -2265,6 +2273,8 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Evaluate attributes. */
   data->ini      = ini;
+
+  data->dummyio = wDigInt.isdummyio( ini );
 
   data->loconet = wDigInt.getloconet(ini);
   if( data->loconet == NULL ) {
