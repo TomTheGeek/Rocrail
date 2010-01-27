@@ -103,7 +103,13 @@ static p50state __cts( iOP50xData o ) {
     return P50_OK;
 
   while( wait4cts < o->ctsretry ) {
-    if( SerialOp.isCTS( o->serial ) ) {
+    int rc = SerialOp.isCTS( o->serial );
+    if( rc == -1 ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+      o->dummyio = True;
+      return P50_CTSERR;
+    }
+    if( rc > 0 ) {
       return P50_OK;
     }
     ThreadOp.sleep( 10 );

@@ -406,8 +406,11 @@ Boolean rocs_serial_isCTS( iOSerial inst ) {
   if (o->directIO) {
     __printmsr(msr);
   }
-  if( rc < 0 )
+  if( rc < 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"TIOCMGET returns rc=%d errno=%d\n", rc, errno );
+    if( errno == ENXIO )
+      return -1;
+  }
   if( msr & TIOCM_CTS )
     return True;
   else
