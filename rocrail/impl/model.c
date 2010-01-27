@@ -356,11 +356,19 @@ static Boolean _parsePlan( iOModelData o ) {
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid Plan!" );
+          /* rename plan */
+          char* invalPlan = StrOp.fmt("%s.invalid.%s", o->fileName, StrOp.createStampNoDots() );
+          FileOp.rename(o->fileName, invalPlan);
+          StrOp.free(invalPlan);
           return False;
         }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Invalid Plan file: %s", o->fileName );
+        /* rename plan */
+        char* invalPlan = StrOp.fmt("%s.invalid.%s", o->fileName, StrOp.createStampNoDots() );
+        FileOp.rename(o->fileName, invalPlan);
+        StrOp.free(invalPlan);
         return False;
       }
     }
