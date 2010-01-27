@@ -601,6 +601,27 @@
   </object>
 
 
+  <object name="RFID12" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="run" vt="Boolean"/>
+      <var name="serialOK" vt="Boolean"/>
+      <var name="initOK" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="device" vt="const char*"/>
+      <var name="bps" vt="serial_bps"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+    </data>
+  </object>
+
+
   <object name="Barjut" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
