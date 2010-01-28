@@ -18,6 +18,39 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+/*
+The Data OutPut Format – ASCII
+STX (ASCII 02) DATA (10 ASCII) CHECK SUM (2 ASCII) CR (ASCII 13) LF (ASCII 10) ETX (ASCII 03)
+The communication starts with a start-of-communication (STX) byte (ASCII 02) and ends with end-of-communication (ETX) byte
+(ASCII 03). The STX byte is immediately followed by the ten-byte tag ID (unique signature), a checksum, a carriage return
+(ASCII 13), a linefeed (ASCII 10) and then the ETX byte.
+- serial line setting: 9600 baud, 8 bits, no parity, hardware handshake.
+- The checksum is calculated as follows:
+It outputs serial data in the following format. Each [] is one ascii byte.
+[STX]
+[D1] [D2] [D3] [D4] [D5] [D6] [D7] [D8] [D9] [D10]
+[CS1] [CS2]
+[CR]
+[LF]
+[ETX]
+D1-D10 is the actual data, 10 ascii charactors. CS1 and CS2 are 2 ascii charactors that are the checksum for the data.
+Here is how the data sheet says the checksum is done to the data
+if the 10 digits of ascii come in and lets say they equal
+2 4 0 0 C C 5 7 8 3
+and the check sum is
+3 C
+then to get the checksum you need to take pairs of ascii and convert them into one HEX byte and then XOR the hex bytes.
+which would look like this.
+2 4 0 0 C C 5 7 8 3
+becomes
+[24] [00] [CC] [57] [83]
+and 3 C becomes [3C]
+then you can do a simple [24] ^ [00] ^ [CC] ^ [57] ^ [83] (^ is XOR) to see if it = [3C]
+- The reader outputs the serial data any time it reads a valid RFID tag, it doesn't need to be polled.
+- If a 8-port concentrator is used, it connects 8 readers and converts them to a single serial port;
+to identify the reader, it overwrites the [STX] character of the above data format with the bankid ( 1 to 8 ) in ASCII.
+*/
+
 #include "rocdigs/impl/rfid12_impl.h"
 
 #include "rocs/public/mem.h"
@@ -162,15 +195,44 @@ static void __RFIDReader( void* threadinst ) {
   Boolean ok = False;
 
   /* IO buffer */
-  byte buffer[256];
+  byte rfid[32];
+  int idx = 0;
 
   data->initOK = False;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID reader started." );
 
   while( data->run ) {
-    ThreadOp.sleep( 10 );
+    int bAvail = SerialOp.available(data->serial);
+    if (bAvail < 0) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
+      break;
+    }
 
+    while (bAvail > 0) {
+      char c;
+      SerialOp.read( data->serial, &c, 1 );
+      if( c == 0x02 ) {
+        /* STX */
+        idx = 0;
+        rfid[idx] = c;
+        idx++;
+      }
+      else if( c == 0x03 ) {
+        /* ETX */
+        /* evaluate the paket */
+      }
+      else if( idx < 15 ) {
+        rfid[idx] = c;
+        idx++;
+      }
+
+
+      bAvail = SerialOp.available(data->serial);
+    }
+
+
+    ThreadOp.sleep( 10 );
   }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID reader ended." );
