@@ -317,8 +317,6 @@ public:
     wxStaticText* m_LabelWSignal;
     wxComboBox* m_WSignal;
     wxButton* m_WSignalProps;
-    wxStaticText* m_labFsAheadFrom;
-    wxTextCtrl* m_FsAheadFrom;
     wxStaticBox* m_ReverseSignalsBox;
     wxStaticText* m_LabelSignalR;
     wxComboBox* m_SignalR;
@@ -326,8 +324,6 @@ public:
     wxStaticText* m_LabelWSignalR;
     wxComboBox* m_WSignalR;
     wxButton* m_WSignalPropsR;
-    wxStaticText* m_labRsAheadFrom;
-    wxTextCtrl* m_RsAheadFrom;
     wxPanel* m_PanelDetails;
     wxRadioBox* m_Incline;
     wxRadioBox* m_Wait;

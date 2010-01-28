@@ -1219,8 +1219,6 @@
         <var name="speed" vt="string" defval="cruise" range="*" remark="Block speed on arrive."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
-        <var name="fsaheadfrom" vt="string" defval="all" range="*" remark="forward signals ahead from"/>
-        <var name="rsaheadfrom" vt="string" defval="all-reverse" range="*" remark="reverse signals ahead from"/>
         <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
         <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>
         <var name="signalR" vt="string" defval="NULL" range="*" remark="Home Signal ID for reverse direction. (sw)"/>
@@ -1313,6 +1311,8 @@
         <const name="point_e" vt="string" val="point-e" remark="for single track modules"/>
         <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
         <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+        <var name="sga" vt="int" defval="0" remark="signal pair block a"/>
+        <var name="sgb" vt="int" defval="0" remark="signal pair block b"/>
         <var name="bkc" vt="string" defval="NULL" range="*" required="false"
           remark="Crossing block: optional incase a block overlaps turnouts used by this route. This is a csv list of blocks."/>
         <var name="dir" vt="bool" defval="true" remark="Direction permission; true is from-to only, false is both directions."/>

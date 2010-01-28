@@ -228,7 +228,9 @@ public:
     wxSpinCtrl* m_SpeedPercent;
     wxCheckBox* m_ReduceV;
     wxRadioBox* m_Dir;
+    wxRadioBox* m_FromSignals;
     wxRadioBox* m_RunDir;
+    wxRadioBox* m_ToSignals;
     wxStaticBox* m_DetailsBox;
     wxCheckBox* m_Swap;
     wxCheckBox* m_SwapPost;
