@@ -225,6 +225,7 @@ static Boolean __informDigInt( iOControl inst, iIDigInt pDi, iONode node, int* e
 static Boolean _cmd( iOControl inst, iONode node, int* error ) {
   iOControlData data  = Data(inst);
   Boolean rc          = True;
+  iONode modelSysCmd  = NULL;
 
   if( error != NULL )
     *error = CMD_OK;
@@ -276,8 +277,8 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
 
 
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
-      /* inform model */
-      ModelOp.cmd( AppOp.getModel(), (iONode)NodeOp.base.clone(node));
+      /* keep a copy of the command to inform the model after the digints */
+      modelSysCmd = (iONode)NodeOp.base.clone(node);
     }
 
     if( StrOp.equals( wPwrCmd.name(), NodeOp.getName(node) ) && data->powerman != NULL ) {
@@ -308,6 +309,13 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       /* inform the default */
       rc = __informDigInt(inst, data->pDi, node, error);
     }
+
+    if( modelSysCmd != NULL ) {
+      /* inform model */
+      ModelOp.cmd( AppOp.getModel(), modelSysCmd);
+    }
+
+
 
   }
 
