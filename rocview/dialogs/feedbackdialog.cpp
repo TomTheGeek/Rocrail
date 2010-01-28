@@ -141,7 +141,7 @@ void FeedbackDialog::initLabels() {
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "location" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "interface" ) );
-  m_Notebook->SetPageText( 4, wxGetApp().getMsg( "wirering" ) );
+  m_Notebook->SetPageText( 4, wxGetApp().getMsg( "wiring" ) );
 
   // Index
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );

@@ -2870,7 +2870,7 @@
     <nb txt="Lokasjon"/>
     <pl txt="Miejsce"/>
   </Msg>
-  <Msg id="wirering">
+  <Msg id="wiring">
     <de txt="Verkabelung"/>
     <en txt="Wiring"/>
     <nl txt="Bedrading"/>
@@ -12138,7 +12138,13 @@
   <Msg id="skipsetsg">
     <en txt="Skip signal commands" tip="Skip signal commands if already set"/>
   </Msg>
-  <Msg id="aheadfrom">
-    <en txt="Ahead from"/>
+  <Msg id="fromsignals">
+    <en txt="From signal pair"/>
+  </Msg>
+  <Msg id="tosignals">
+    <en txt="To signal pair"/>
+  </Msg>
+  <Msg id="button">
+    <en txt="Button"/>
   </Msg>
 </Messages>
