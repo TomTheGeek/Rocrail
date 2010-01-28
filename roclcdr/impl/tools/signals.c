@@ -108,10 +108,10 @@ static Boolean __checkSignalPair( iORoute route, iIBlockBase block, Boolean from
   if( route != NULL && block != NULL ) {
     const char* blockid = block->base.id(block);
     int sgpair = 0;
-    if( StrOp.equals( RouteOp.getFromBlock(route), blockid ) )
-      sgpair = wRoute.getsga(RouteOp.base.properties(route));
+    if( StrOp.equals( route->getFromBlock(route), blockid ) )
+      sgpair = wRoute.getsga(route->base.properties(route));
     else
-      sgpair = wRoute.getsgb(RouteOp.base.properties(route));
+      sgpair = wRoute.getsgb(route->base.properties(route));
 
     return sgpair == 0 ? !fromTo:fromTo;
   }
