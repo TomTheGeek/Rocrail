@@ -266,13 +266,27 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   else if( data->next1Block != NULL && data->next2Block != NULL &&
       data->next1Block != data->next2Block )
   {
+    Boolean hasThrownSwitches = False;
+    if( data->next2Route != NULL && data->next2Route->hasThrownSwitch(data->next2Route) ) {
+      hasThrownSwitches = True;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "setting signals for next1Block to white: thrown switches in route [%s]",
+                   data->next2Route->getId(data->next2Route) );
+    }
+
     signalpair = __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo);
     if( data->greenaspect ) {
-      data->next1Block->green( data->next1Block, True, signalpair );
-      data->next1Block->green( data->next1Block, False, signalpair );
+      if( hasThrownSwitches ) {
+        data->next1Block->white( data->next1Block, True, signalpair );
+        data->next1Block->white( data->next1Block, False, signalpair );
+      }
+      else {
+        data->next1Block->green( data->next1Block, True, signalpair );
+        data->next1Block->green( data->next1Block, False, signalpair );
+      }
       if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next2Route) ) {
         /* Set the crossing block signals */
-        setCrossingblockSignals( inst, data->next2Route, GREEN_ASPECT, signalpair );
+        setCrossingblockSignals( inst, data->next2Route, hasThrownSwitches?WHITE_ASPECT:GREEN_ASPECT, signalpair );
       }
     }
     else {
