@@ -259,6 +259,16 @@ static void __restoreFx(obj inst) {
   iOLocData data = Data(inst);
   int fx = wLoc.getfx(data->props);
   int i = 0;
+  /* Test for restoring the lights function. */
+  iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights" );
+  wLoc.setV( vcmd, 0 );
+  wLoc.setfn( vcmd, wLoc.isfn(data->props) );
+  LocOp.cmd((iOLoc)inst, vcmd);
+  ThreadOp.sleep(10);
+
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring functions" );
 
   for( i = 0; i < 28; i++ ) {
