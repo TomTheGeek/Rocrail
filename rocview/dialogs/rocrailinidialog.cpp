@@ -443,6 +443,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.p50, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.p50x, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.railcom, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.rfid12, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.rocnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
