@@ -49,6 +49,38 @@ then you can do a simple [24] ^ [00] ^ [CC] ^ [57] ^ [83] (^ is XOR) to see if i
 - The reader outputs the serial data any time it reads a valid RFID tag, it doesn't need to be polled.
 - If a 8-port concentrator is used, it connects 8 readers and converts them to a single serial port;
 to identify the reader, it overwrites the [STX] character of the above data format with the bankid ( 1 to 8 ) in ASCII.
+
+*/
+
+/*
+The task level code intercepts a reader's STX character and exchanges it for
+a reader ID character A - H appropriate to the incoming line. It then echoes
+the next 12 bytes, CR, LF from the reader and exchanges the ETX for a >.
+Framing errors are identified by a ! and overrun errors by a ?
+
+Normally you get an STX character at the start of the RFID tag string and an ETX at the end,
+the concentrator substitutes these as described above, so I would expect to see data such as
+
+<STX>0413276BC19A
+<ETX><STX>0413275FCAA5
+<ETX><STX>0413276ADB81
+<ETX><STX>041327722163
+<ETX>
+
+
+coming from a reader without a concentrator. <STX> is the non-printable ASCII character for "start of text"
+and <ETX> is the "end of text" character.
+
+And
+
+A0413276BC19A
+>B0413275FCAA5
+>A0413276ADB81
+>B041327722163
+>
+
+with a concentrator.
+
 */
 
 #include "rocdigs/impl/rfid12_impl.h"
@@ -156,6 +188,7 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
   iORFID12Data data = Data(inst);
   data->listenerObj = listenerObj;
   data->listenerFun = listenerFun;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener set" );
   return True;
 }
 
@@ -188,6 +221,43 @@ static int _version( obj inst ) {
 }
 
 
+static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
+  /* STX data[10] CRC[2] cr lf ETX */
+  iORFID12Data data = Data(inst);
+  iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  long id = 0;
+  int addr = 1;
+  int i = 0;
+
+  rfid[11] = '\0';
+  byte* b = StrOp.strToByte(rfid + 1);
+
+  for( i = 0; i < 5; i++ ) {
+    long tmp = b[i];
+    tmp = tmp << ((4-i)*8);
+    id = id + tmp;
+  }
+  freeMem(b);
+
+  if( rfid[0] >= 'A' ) {
+    addr = (rfid[0] - 'A') + 1;
+  }
+
+  addr = addr + data->fboffset;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluateRFID[%c][%s]: addr=%d id=%ld", rfid[0], rfid+1, addr, id );
+
+  wFeedback.setstate( evt, True );
+  wFeedback.setaddr( evt, addr );
+  wFeedback.setbus( evt, 5 );
+  wFeedback.setidentifier( evt, id );
+  if( data->iid != NULL )
+    wFeedback.setiid( evt, data->iid );
+
+  data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+}
+
+
 static void __RFIDReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iORFID12 inst = (iORFID12)ThreadOp.getParm( th );
@@ -195,8 +265,14 @@ static void __RFIDReader( void* threadinst ) {
   Boolean ok = False;
 
   /* IO buffer */
-  byte rfid[32];
+  char rfid[256] = {'A', '2', '4', '0', '0', 'C', 'C', '5', '7', '8', '3', '\0'};
   int idx = 0;
+  Boolean packetStart = False;
+
+  ThreadOp.sleep(1000);
+
+  /* test */
+  __evaluateRFID(inst, rfid, idx);
 
   data->initOK = False;
 
@@ -214,21 +290,31 @@ static void __RFIDReader( void* threadinst ) {
       SerialOp.read( data->serial, &c, 1 );
       if( c == 0x02 ) {
         /* STX */
+        packetStart = True;
         idx = 0;
         rfid[idx] = c;
         idx++;
       }
-      else if( c == 0x03 ) {
-        /* ETX */
-        /* evaluate the paket */
+      else if(packetStart) {
+        if( c == 0x03 ) {
+          /* ETX */
+          packetStart = False;
+          rfid[idx] = c;
+          idx++;
+          /* evaluate the paket */
+          __evaluateRFID(inst, rfid, idx);
+        }
+        else if( idx < 15 ) {
+          rfid[idx] = c;
+          idx++;
+        }
       }
-      else if( idx < 15 ) {
-        rfid[idx] = c;
-        idx++;
-      }
-
 
       bAvail = SerialOp.available(data->serial);
+      if (bAvail < 0) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
+        break;
+      }
     }
 
 
@@ -254,13 +340,15 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
 
   data->bps      = wDigInt.getbps( ini );
+  data->fboffset = wDigInt.getfboffset( ini );
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RFID-12 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    =%s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device =%s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fboffset = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 

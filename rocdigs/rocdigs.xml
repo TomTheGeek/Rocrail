@@ -618,6 +618,7 @@
       <var name="bps" vt="serial_bps"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="fboffset" vt="int"/>
     </data>
   </object>
 
