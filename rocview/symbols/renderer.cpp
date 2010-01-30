@@ -107,6 +107,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_occ );
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_route );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_occroute );
         }
       }
     }
@@ -159,6 +160,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::straight );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::straight_occ );
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::straight_route );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::straight_occroute );
         }
       }
     }
@@ -763,6 +765,12 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool ac
   const wxBrush& b = dc.GetBrush();
 
   // SVG Symbol:
+  if( actroute && occupied && m_SvgSym4!=NULL ) {
+    drawSvgSym(dc, m_SvgSym4, ori);
+    dc.SetBrush( b );
+    return;
+  }
+
   if( occupied && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
     dc.SetBrush( b );
