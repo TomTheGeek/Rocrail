@@ -1757,6 +1757,10 @@
         <const name="fun_off" vt="string" val="off"/>
         <const name="tt_goto" vt="string" val="goto"/>
         <const name="tt_turn180" vt="string" val="180"/>
+        <const name="route_set" vt="string" val="set"/>
+        <const name="route_lock" vt="string" val="lock"/>
+        <const name="route_lockset" vt="string" val="lock"/>
+        <const name="route_unlock" vt="string" val="unlock"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>

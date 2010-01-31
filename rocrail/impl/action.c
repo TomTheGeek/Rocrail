@@ -297,7 +297,28 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   else if( StrOp.equals( wRoute.name(), wAction.gettype( data->action ) ) ) {
     iORoute st = ModelOp.getRoute( model, wAction.getoid( data->action ) );
     if( st != NULL ) {
-      RouteOp.go( st );
+      if( StrOp.equals( wAction.route_set, wAction.getcmd( data->action ) ) ) {
+        RouteOp.go( st );
+      }
+      else if( StrOp.equals( wAction.route_lockset, wAction.getcmd( data->action ) ) ) {
+        const char* lockid = wAction.getparam(data->action);
+        if( lockid == NULL || StrOp.len( lockid ) == 0 )
+          lockid = wAction.getid( data->action );
+        if( RouteOp.lock(st, lockid, False, True) )
+          RouteOp.go( st );
+      }
+      else if( StrOp.equals( wAction.route_lock, wAction.getcmd( data->action ) ) ) {
+        const char* lockid = wAction.getparam(data->action);
+        if( lockid == NULL || StrOp.len( lockid ) == 0 )
+          lockid = wAction.getid( data->action );
+        RouteOp.lock(st, lockid, False, True);
+      }
+      else if( StrOp.equals( wAction.route_unlock, wAction.getcmd( data->action ) ) ) {
+        RouteOp.unLock(st, wAction.getid( data->action ), NULL, True);
+      }
+      else {
+        RouteOp.go( st );
+      }
     }
   }
 
