@@ -222,6 +222,7 @@
     </fun>
     <fun name="setDefaultAspect" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
+      <param name="signalpair" vt="Boolean"/>
     </fun>
     <fun name="hasManualSignal" vt="obj">
       <param name="inst" vt="this" remark="Block instance"/>

@@ -1230,7 +1230,7 @@ static Boolean _white( iIBlockBase inst, Boolean distant, Boolean reverse ) {
   return False;
 }
 
-static void _setDefaultAspect(iIBlockBase inst) {
+static void _setDefaultAspect(iIBlockBase inst, Boolean signalpair) {
 }
 
 static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse ) {

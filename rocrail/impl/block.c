@@ -100,7 +100,7 @@ static int __count(void) {
 }
 
 
-static void _setDefaultAspect(iIBlockBase inst) {
+static void _setDefaultAspect(iIBlockBase inst, Boolean signalpair) {
   iOBlockData data = Data(inst);
   /* set default signal aspect */
   int aspect = 0;
@@ -114,28 +114,20 @@ static void _setDefaultAspect(iIBlockBase inst) {
 
   switch( aspect ) {
     case 0:
-      BlockOp.red( inst, False, False );
-      BlockOp.red( inst, True, False );
-      BlockOp.red( inst, False, True );
-      BlockOp.red( inst, True, True );
+      BlockOp.red( inst, False, signalpair );
+      BlockOp.red( inst, True, signalpair );
       break;
     case 1:
-      BlockOp.green( inst, False, False );
-      BlockOp.green( inst, True, False );
-      BlockOp.green( inst, False, True );
-      BlockOp.green( inst, True, True );
+      BlockOp.green( inst, False, signalpair );
+      BlockOp.green( inst, True, signalpair );
       break;
     case 2:
-      BlockOp.yellow( inst, False, False );
-      BlockOp.yellow( inst, True, False );
-      BlockOp.yellow( inst, False, True );
-      BlockOp.yellow( inst, True, True );
+      BlockOp.yellow( inst, False, signalpair );
+      BlockOp.yellow( inst, True, signalpair );
       break;
     case 3:
-      BlockOp.white( inst, False, False );
-      BlockOp.white( inst, True, False );
-      BlockOp.white( inst, False, True );
-      BlockOp.white( inst, True, True );
+      BlockOp.white( inst, False, signalpair );
+      BlockOp.white( inst, True, signalpair );
       break;
   }
 }
@@ -1296,7 +1288,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
         }
         /* Set signal. */
 
-        _setDefaultAspect(inst);
+        /* TODO: Needed here? _setDefaultAspect(inst);*/
 
         ok = True;
       }
@@ -1385,7 +1377,8 @@ static void _init( iIBlockBase inst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "init() unknown locId: %s", data->locId );
   }
   else {
-    _setDefaultAspect(inst);
+    _setDefaultAspect(inst, False);
+    _setDefaultAspect(inst, True);
   }
 }
 
