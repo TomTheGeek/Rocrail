@@ -1214,6 +1214,7 @@ static void __transactor( void* threadinst ) {
       if( timeout > 0)
         timeout --;
       ThreadOp.sleep( 25 );
+      dataAvailable = SerialOp.available(data->serial);
     }
 
     if ( !data->bincmd && !data->dummyio && dataAvailable) {
@@ -1268,8 +1269,10 @@ static void __transactor( void* threadinst ) {
           bXor ^= in[ i ];
         }
 
-        if( bXor != in[datalen])
+        if( bXor != in[datalen]) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor bytes are not equal!" );
+          /* flush buffer */
+        }
 
         /* Evaluate XprerssNet Answers
          check if last command was recieved, the cs answers: 1 4 5 */
