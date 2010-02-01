@@ -210,9 +210,11 @@ void RouteDialog::initLabels() {
   m_FromSignals->SetLabel( wxGetApp().getMsg( "fromsignals" ) );
   m_FromSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
   m_FromSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
+  m_FromSignals->SetString( 1, wxGetApp().getMsg( "none" ) );
   m_ToSignals->SetLabel( wxGetApp().getMsg( "tosignals" ) );
   m_ToSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
   m_ToSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
+  m_ToSignals->SetString( 1, wxGetApp().getMsg( "none" ) );
 
 
 
@@ -1030,6 +1032,7 @@ void RouteDialog::CreateControls()
     wxArrayString m_FromSignalsStrings;
     m_FromSignalsStrings.Add(_("&forward"));
     m_FromSignalsStrings.Add(_("&reverse"));
+    m_FromSignalsStrings.Add(_("&none"));
     m_FromSignals = new wxRadioBox( m_GeneralPanel, wxID_ANY, _("From signal pair"), wxDefaultPosition, wxDefaultSize, m_FromSignalsStrings, 1, wxRA_SPECIFY_ROWS );
     m_FromSignals->SetSelection(0);
     itemFlexGridSizer30->Add(m_FromSignals, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -1044,6 +1047,7 @@ void RouteDialog::CreateControls()
     wxArrayString m_ToSignalsStrings;
     m_ToSignalsStrings.Add(_("&forward"));
     m_ToSignalsStrings.Add(_("&reverse"));
+    m_ToSignalsStrings.Add(_("&none"));
     m_ToSignals = new wxRadioBox( m_GeneralPanel, wxID_ANY, _("To signal pair"), wxDefaultPosition, wxDefaultSize, m_ToSignalsStrings, 1, wxRA_SPECIFY_ROWS );
     m_ToSignals->SetSelection(0);
     itemFlexGridSizer30->Add(m_ToSignals, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
