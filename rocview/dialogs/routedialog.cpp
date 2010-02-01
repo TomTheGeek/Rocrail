@@ -210,11 +210,11 @@ void RouteDialog::initLabels() {
   m_FromSignals->SetLabel( wxGetApp().getMsg( "fromsignals" ) );
   m_FromSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
   m_FromSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
-  m_FromSignals->SetString( 1, wxGetApp().getMsg( "none" ) );
+  m_FromSignals->SetString( 2, wxGetApp().getMsg( "none" ) );
   m_ToSignals->SetLabel( wxGetApp().getMsg( "tosignals" ) );
   m_ToSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
   m_ToSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
-  m_ToSignals->SetString( 1, wxGetApp().getMsg( "none" ) );
+  m_ToSignals->SetString( 2, wxGetApp().getMsg( "none" ) );
 
 
 
