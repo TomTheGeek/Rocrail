@@ -195,18 +195,25 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
   }
 
   wSwitch.setcmd( swcmd, invert?wSwitch.turnout:wSwitch.straight );
+  wSwitch.setaddr1( swcmd, wSignal.getaddr( o->props ) );
 
   if( StrOp.equals( state, wSignal.red ) ) {
     wSwitch.setport1( swcmd, wSignal.getport1( o->props ) );
   }
-  else if( StrOp.equals( state, wSignal.yellow ) ) {
+  else if( StrOp.equals( state, wSignal.yellow ) && wSignal.getaspects(o->props) > 2) {
+    if( wSignal.getaddr2( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr2( o->props ) );
     wSwitch.setport1( swcmd, wSignal.getport2( o->props ) );
   }
-  else if( StrOp.equals( state, wSignal.green ) ) {
-    wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
-  }
-  else if( StrOp.equals( state, wSignal.white ) ) {
+  else if( StrOp.equals( state, wSignal.white ) && wSignal.getaspects(o->props) > 3 ) {
+    if( wSignal.getaddr4( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr4( o->props ) );
     wSwitch.setport1( swcmd, wSignal.getport4( o->props ) );
+  }
+  else {
+    if( wSignal.getaddr3( o->props ) > 0 )
+      wSwitch.setaddr1( swcmd, wSignal.getaddr3( o->props ) );
+    wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
   }
   return ControlOp.cmd( control, swcmd, NULL );
 
