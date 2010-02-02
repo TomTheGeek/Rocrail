@@ -1574,6 +1574,11 @@ static void _brake( iOLoc inst ) {
 static void __checkConsist( iOLoc inst, iONode nodeA ) {
   iOLocData data = Data(inst);
 
+  if( wLoc.isconsistcmd( nodeA ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "skip check consist; command is issued from a consist context" );
+    return;
+  }
+
   /* check consist and send a copy of the nodeA */
   if( nodeA != NULL && StrOp.len( wLoc.getconsist(data->props) ) > 0 ) {
     iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
@@ -1591,6 +1596,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA ) {
           wLoc.setfn( consistcmd, False );
         }
 
+        wLoc.setconsistcmd( consistcmd, True );
         LocOp.cmd( consistloc, consistcmd );
       }
       else {
@@ -1615,7 +1621,7 @@ static void __swapConsist( iOLoc inst, iONode cmd ) {
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok );
       if( consistloc != NULL ) {
-        LocOp.swapPlacing( consistloc, cmd );
+        LocOp.swapPlacing( consistloc, cmd, True );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
@@ -1702,7 +1708,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.swap, cmd ) ) {
-      LocOp.swapPlacing(inst, nodeA);
+      LocOp.swapPlacing(inst, nodeA, False);
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
@@ -2121,7 +2127,7 @@ static void _setCV( iOLoc loc, int nr, int value ) {
 /**
  * swap placing to run in defaults routes after reaching an terminal station
  */
-static void _swapPlacing( iOLoc loc, iONode cmd ) {
+static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   iOLocData data = Data(loc);
   if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
     wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
@@ -2132,7 +2138,10 @@ static void _swapPlacing( iOLoc loc, iONode cmd ) {
   /* inform model to keep this setting in the occupation file */
   ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2 );
 
-  __swapConsist(loc, cmd);
+  if( !consist ) {
+    /* only swap if this command did not come from a multiple unit loop */
+    __swapConsist(loc, cmd);
+  }
 
   /* Broadcast to clients. */
   {
