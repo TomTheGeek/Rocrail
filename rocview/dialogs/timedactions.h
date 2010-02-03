@@ -69,6 +69,7 @@ class TimedActions: public wxDialog
   void initValues();
   bool evaluate();
   void initOutputList();
+  void initCommands();
   iONode m_Props;
 
 public:

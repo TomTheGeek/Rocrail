@@ -187,6 +187,7 @@ void TimedActions::initValues() {
     m_Type->SetSelection(10);
 
   initOutputList();
+  initCommands();
 
   m_Timed->SetValue(wAction.istimed( m_Props )?true:false);
   m_Hour->SetValue( wAction.gethour( m_Props ) );
@@ -739,6 +740,11 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
 {
   // TODO: init ID's
   initOutputList();
+  initCommands();
+}
+
+void TimedActions::initCommands()
+{
 
   m_Command->Clear();
   m_Command->SetValue(_T(""));
