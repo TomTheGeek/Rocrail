@@ -108,6 +108,9 @@ static Boolean __setActiveBus( iOSLX slx, int bus ) {
     cmd[1] = bus;
     cmd[0] |= WRITE_FLAG;
 
+    data->activebus = bus;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set active bus to [%d]", bus );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 2 );
     if( data->dummyio )
       return True;

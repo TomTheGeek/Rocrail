@@ -250,6 +250,7 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
   iOControl control = AppOp.getControl();
   int error = 0;
   wFeedback.setiid( cmd, wFeedback.getiid( data->props ) );
+  wFeedback.setbus( cmd, wFeedback.getbus( data->props ) );
   wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
   ControlOp.cmd( control, cmd, &error );
   return True;

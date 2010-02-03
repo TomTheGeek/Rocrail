@@ -698,6 +698,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setiid( nodeA, iid );
 
   wSwitch.setprot( nodeA, wSwitch.getprot( o->props ) );
+  wSwitch.setbus( nodeA, wSwitch.getbus( o->props ) );
 
   if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.threeway ) ) {
     const char* state1 = NULL;

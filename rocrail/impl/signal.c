@@ -164,6 +164,7 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
   if( iid != NULL )
     wSwitch.setiid( swcmd, iid );
 
+  wSwitch.setbus( swcmd, wSignal.getbus( o->props ) );
   wSwitch.setprot( swcmd, wSignal.getprot( o->props ) );
   wSwitch.setactdelay( swcmd, False );
 
@@ -352,6 +353,8 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   if( iid != NULL )
     wOutput.setiid( cmd, iid );
 
+  wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
@@ -443,6 +446,8 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   if( iid != NULL )
     wOutput.setiid( cmd, iid );
 
+  wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
@@ -517,6 +522,8 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
   if( iid != NULL )
     wOutput.setiid( cmd, iid );
 
+  wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
@@ -578,6 +585,7 @@ static Boolean __process2AspectsAsSwitchCmd( iOSignal inst, const char* state ) 
 
   wSwitch.setprot( cmd, wSignal.getprot( o->props ) );
   wSwitch.setcmd( cmd, wOutput.on );
+  wSwitch.setbus( cmd, wSignal.getbus( o->props ) );
   wSwitch.setaddr1( cmd, wSignal.getaddr( o->props ) );
   wSwitch.setport1( cmd, wSignal.getport1( o->props ) );
 

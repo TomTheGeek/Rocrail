@@ -190,6 +190,8 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   if( iid != NULL )
     wOutput.setiid( nodeA, iid );
 
+  wOutput.setbus( nodeA, wOutput.getbus( o->props ) );
+
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){

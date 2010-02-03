@@ -646,6 +646,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
         wLoc.setoid( cmdFn, wLoc.getoid(data->props) );
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
         wLoc.setiid( cmdFn, wLoc.getiid(data->props) );
+        wLoc.setbus( cmdFn, wLoc.getbus(data->props) );
         wLoc.setV( cmdFn, wLoc.getV(data->props) );
         wLoc.setspcnt( cmdFn, wLoc.getspcnt( data->props ) );
         wLoc.setmass( cmdFn, wLoc.getmass( data->props ) );
@@ -920,6 +921,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     wLoc.setV_min( cmd, wLoc.getV_min( data->props ) );
     wLoc.setV_max( cmd, wLoc.getV_max( data->props ) );
     wLoc.setV_mode( cmd, wLoc.getV_mode( data->props ) );
+    wLoc.setbus( cmd, wLoc.getbus( data->props ) );
     wLoc.setprot( cmd, wLoc.getprot( data->props ) );
     wLoc.setprotver( cmd, wLoc.getprotver( data->props ) );
     wLoc.setspcnt( cmd, wLoc.getspcnt( data->props ) );
