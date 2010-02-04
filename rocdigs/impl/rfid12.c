@@ -88,6 +88,7 @@ with a concentrator.
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
 #include "rocs/public/string.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -243,6 +244,7 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
     addr = (rfid[0] - 'A') + 1;
   }
 
+  data->readerTick[addr-1] = SystemOp.getTick();
   addr = addr + data->fboffset;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluateRFID[%c][%s]: addr=%d id=%ld", rfid[0], rfid+1, addr, id );
@@ -255,6 +257,38 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
     wFeedback.setiid( evt, data->iid );
 
   data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+}
+
+static void __RFIDTicker( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iORFID12 inst = (iORFID12)ThreadOp.getParm( th );
+  iORFID12Data data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID ticker started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    int i = 0;
+    for( i = 0; i < 8; i++ ) {
+      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setstate( evt, False );
+        wFeedback.setaddr( evt, i + 1 + data->fboffset );
+        wFeedback.setbus( evt, 5 );
+        wFeedback.setidentifier( evt, 0 );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+        
+        data->readerTick[i] = 0;
+      }
+      ThreadOp.sleep( 100 );
+    }
+    
+    ThreadOp.sleep( 100 );
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID ticker ended." );
 }
 
 
@@ -272,7 +306,7 @@ static void __RFIDReader( void* threadinst ) {
   ThreadOp.sleep(1000);
 
   /* test */
-  __evaluateRFID(inst, rfid, idx);
+  /*__evaluateRFID(inst, rfid, idx);*/
 
   data->initOK = False;
 
@@ -288,7 +322,7 @@ static void __RFIDReader( void* threadinst ) {
     while (bAvail > 0) {
       char c;
       SerialOp.read( data->serial, &c, 1 );
-      if( c == 0x02 ) {
+      if( !packetStart && (c == 0x02 || c >= 'A' && c <= 'H' ) ) {
         /* STX */
         packetStart = True;
         idx = 0;
@@ -334,6 +368,7 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.basecpy( __RFID12, &RFID12Op, 0, sizeof( struct ORFID12 ), data );
 
   TraceOp.set( trc );
+  SystemOp.inst();
 
   /* Initialize data->xxx members... */
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
@@ -341,6 +376,8 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->bps      = wDigInt.getbps( ini );
   data->fboffset = wDigInt.getfboffset( ini );
+  
+  MemOp.set( data->readerTick, 0, sizeof(data->readerTick) );
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -358,10 +395,18 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = SerialOp.open( data->serial );
 
   if( data->serialOK ) {
+    char* thname = NULL;
     data->run = True;
 
-    data->reader = ThreadOp.inst( "rfid12", &__RFIDReader, __RFID12 );
+    thname = StrOp.fmt("rfid12read%X", __RFID12);
+    data->reader = ThreadOp.inst( thname, &__RFIDReader, __RFID12 );
+    StrOp.free(thname),
     ThreadOp.start( data->reader );
+
+    thname = StrOp.fmt("rfid12tick%X", __RFID12);
+    data->ticker = ThreadOp.inst( thname, &__RFIDTicker, __RFID12 );
+    StrOp.free(thname),
+    ThreadOp.start( data->ticker );
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rfid12 port!" );
