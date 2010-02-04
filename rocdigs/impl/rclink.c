@@ -254,7 +254,7 @@ static void __RcLinkTicker( void* threadinst ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, i + 1 + data->fboffset );
-        wFeedback.setbus( evt, 4 );
+        wFeedback.setbus( evt, wFeedback.fbtype_railcom );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
@@ -276,27 +276,44 @@ static void __RcLinkTicker( void* threadinst ) {
 static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
   iORcLinkData data = Data(inst);
 
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, packet, idx );
+
   switch( packet[0] ) {
   case 0xD1:
     break;
   case 0xFA:
     break;
   case 0xFC:
-    break;
-  case 0xFD:
+    /* Address report */
   {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setstate( evt, False );
     wFeedback.setaddr( evt, packet[1] );
-    wFeedback.setbus( evt, 4 );
+    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
     wFeedback.setidentifier( evt, packet[2]*256 + packet[3] );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported address %d",
+        packet[1], wFeedback.getidentifier(evt) );
+
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
     data->readerTick[packet[1]] = SystemOp.getTick();
+  }
+    break;
+  case 0xFD:
+    /* System report
+      Sh = Seriennummer higher Byte
+      Sl = Seriennummer lower Byte
+      SV = Softwareversion ( /10 also z.B. 0x04 == Version 0.4)
+      HV = Hardwareversion ( /10 also z.B. 0x0A == Version 1.0)
+     */
+  {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "SN=%d Software=%.1f Hardware=%.1f", packet[1]*256 + packet[2],
+        ((float)packet[3])/10.0, ((float)packet[4])/10.0 );
   }
   break;
   case 0xFE:
