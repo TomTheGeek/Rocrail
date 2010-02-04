@@ -69,6 +69,7 @@ Source: "..\..\winbin\nce.dll"; DestDir: "{app}"
 Source: "..\..\winbin\dcc232.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rocnet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rfid12.dll"; DestDir: "{app}"
+Source: "..\..\winbin\lrc135.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rclink.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall

@@ -794,7 +794,7 @@
   </object>
 
 
-  <object name="RailCom" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex,map" include="$rocint/public/digint" remark="railcom object">
+  <object name="LRc135" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex,map" include="$rocint/public/digint" remark="railcom object">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>

@@ -257,7 +257,7 @@
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
       <const name="clock" vt="string" val="clock"/>
-      <const name="railcom" vt="string" val="railcom"/>
+      <const name="lrc135" vt="string" val="lrc135"/>
       <const name="sprog" vt="string" val="sprog"/>
       <const name="dcc232" vt="string" val="dcc232"/>
       <const name="nce" vt="string" val="nce"/>

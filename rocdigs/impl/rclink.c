@@ -197,19 +197,28 @@ static void* __event( void* inst, const void* evt ) {
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  /* Cleanup cmd node to avoid memory leak. */
+  cmd->base.del(cmd);
+  return NULL;
 }
 
 
 /**  */
 static void _halt( obj inst ) {
-  return;
+  iORcLinkData data = Data(inst);
+  data->run = False;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  SerialOp.close( data->serial );
 }
 
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iORcLinkData data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener set" );
+  return True;
 }
 
 
@@ -229,6 +238,161 @@ static int _state( obj inst ) {
 static Boolean _supportPT( obj inst ) {
   return 0;
 }
+
+
+static void __RcLinkTicker( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iORcLink inst = (iORcLink)ThreadOp.getParm( th );
+  iORcLinkData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink ticker started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    int i = 0;
+    for( i = 0; i < 24; i++ ) {
+      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setstate( evt, False );
+        wFeedback.setaddr( evt, i + 1 + data->fboffset );
+        wFeedback.setbus( evt, 4 );
+        wFeedback.setidentifier( evt, 0 );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+
+        data->readerTick[i] = 0;
+        ThreadOp.sleep( 100 );
+      }
+    }
+
+    ThreadOp.sleep( 100 );
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink ticker ended." );
+}
+
+
+static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
+  iORcLinkData data = Data(inst);
+
+  switch( packet[0] ) {
+  case 0xD1:
+    break;
+  case 0xFA:
+    break;
+  case 0xFC:
+    break;
+  case 0xFD:
+  {
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setstate( evt, False );
+    wFeedback.setaddr( evt, packet[1] );
+    wFeedback.setbus( evt, 4 );
+    wFeedback.setidentifier( evt, packet[2]*256 + packet[3] );
+    if( data->iid != NULL )
+      wFeedback.setiid( evt, data->iid );
+
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+
+    data->readerTick[packet[1]] = SystemOp.getTick();
+  }
+  break;
+  case 0xFE:
+    break;
+  }
+}
+
+
+static Boolean __isStartByte( byte c, int *datalen ) {
+  switch( c ) {
+  case 0xD1:
+    *datalen = 10;
+    return True;
+  case 0xFA:
+    *datalen = 0;
+    return True;
+  case 0xFC:
+    *datalen = 3;
+    return True;
+  case 0xFD:
+    *datalen = 4;
+    return True;
+  case 0xFE:
+    *datalen = 2;
+    return True;
+  }
+  return False;
+}
+
+
+static void __RcLinkReader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iORcLink inst = (iORcLink)ThreadOp.getParm( th );
+  iORcLinkData data = Data(inst);
+  Boolean ok = False;
+
+  /* IO buffer */
+  byte packet[256] = {0};
+  int idx = 0;
+  Boolean packetStart = False;
+
+  ThreadOp.sleep(1000);
+
+  data->initOK = False;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink reader started." );
+
+  while( data->run ) {
+    int bAvail = SerialOp.available(data->serial);
+    if (bAvail < 0) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
+      break;
+    }
+
+    while (bAvail > 0) {
+      byte c;
+      int datalen = 0;
+      SerialOp.read( data->serial, &c, 1 );
+      if( !packetStart && __isStartByte( c, &datalen ) ) {
+        /* STX */
+        packetStart = True;
+        idx = 0;
+        packet[idx] = c;
+        idx++;
+      }
+      else if(packetStart) {
+        if( (idx-1) == datalen && c == 0xFF ) {
+          /* ETX */
+          packetStart = False;
+          packet[idx] = c;
+          idx++;
+          /* evaluate the packet */
+          __evaluateRC(inst, packet, idx);
+        }
+        else if( (idx-1) < datalen ) {
+          packet[idx] = c;
+          idx++;
+        }
+      }
+
+      bAvail = SerialOp.available(data->serial);
+      if (bAvail < 0) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
+        break;
+      }
+    }
+
+
+    ThreadOp.sleep( 10 );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink reader ended." );
+
+}
+
+
 
 
 /** vmajor*1000 + vminor*100 + patch */
@@ -251,6 +415,47 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
+  data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+
+  data->bps      = wDigInt.getbps( ini );
+  data->fboffset = wDigInt.getfboffset( ini );
+
+  MemOp.set( data->readerTick, 0, sizeof(data->readerTick) );
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RcLink %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = %d", data->bps );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fboffset = %d", data->fboffset );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  data->serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( data->serial, none );
+  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  data->serialOK = SerialOp.open( data->serial );
+
+  if( data->serialOK ) {
+    char* thname = NULL;
+    data->run = True;
+
+    thname = StrOp.fmt("rclinkread%X", __RcLink);
+    data->reader = ThreadOp.inst( thname, &__RcLinkReader, __RcLink );
+    StrOp.free(thname),
+    ThreadOp.start( data->reader );
+
+    thname = StrOp.fmt("rclinktick%X", __RcLink);
+    data->ticker = ThreadOp.inst( thname, &__RcLinkTicker, __RcLink );
+    StrOp.free(thname),
+    ThreadOp.start( data->ticker );
+  }
+  else
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
+
+
 
   instCnt++;
   return __RcLink;

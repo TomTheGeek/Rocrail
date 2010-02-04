@@ -1,35 +1,33 @@
-/*
- Rocrail - Model Railroad Software
+/** ------------------------------------------------------------
+  * A U T O   G E N E R A T E D  (First time only!)
+  * Generator: Rocs ogen (build Feb  4 2010 17:07:35)
+  * Module: RocDigs
+  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
+  * XML: $Revision: 1.14 $
+  * Object: LRc135
+  * Date: Thu Feb  4 17:26:25 2010
+  * ------------------------------------------------------------
+  * $Source$
+  * $Author$
+  * $Date$
+  * $Revision$
+  * $Name$
+  */
 
- Copyright (C) Rob Versluis <r.j.versluis@rocrail.net>
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
-#include "rocdigs/impl/railcom_impl.h"
+#include "rocdigs/impl/lrc135_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/system.h"
+#include "rocs/public/trace.h"
 
 static int instCnt = 0;
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
-    iORailComData data = Data(inst);
+    iOLRc135Data data = Data(inst);
     /* Cleanup data->xxx members...*/
-
+    
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -77,7 +75,7 @@ static void* __event( void* inst, const void* evt ) {
   return NULL;
 }
 
-/** ----- ORailCom ----- */
+/** ----- OLRc135 ----- */
 
 
 /**  */
@@ -98,15 +96,15 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
 }
 
 
-/** bit0=power, bit1=programming, bit2=connection */
-static int _state( obj inst ) {
-  return 0;
+/** external shortcut event */
+static void _shortcut( obj inst ) {
+  return;
 }
 
 
-/* external shortcut event */
-static void _shortcut(obj inst) {
-  iORailComData data = Data( inst );
+/** bit0=power, bit1=programming, bit2=connection */
+static int _state( obj inst ) {
+  return 0;
 }
 
 
@@ -116,47 +114,41 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
-/* VERSION: */
-static int vmajor = 0;
-static int vminor = 0;
+/** vmajor*1000 + vminor*100 + patch */
+static int vmajor = 1;
+static int vminor = 4;
 static int patch  = 0;
 static int _version( obj inst ) {
-  iORailComData data = Data(inst);
+  iOLRc135Data data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
 }
 
 
 /**  */
-static struct ORailCom* _inst( const iONode ini ,const iOTrace trc ) {
-  iORailCom __RailCom = allocMem( sizeof( struct ORailCom ) );
-  iORailComData data = allocMem( sizeof( struct ORailComData ) );
-  MemOp.basecpy( __RailCom, &RailComOp, 0, sizeof( struct ORailCom ), data );
+static struct OLRc135* _inst( const iONode ini ,const iOTrace trc ) {
+  iOLRc135 __LRc135 = allocMem( sizeof( struct OLRc135 ) );
+  iOLRc135Data data = allocMem( sizeof( struct OLRc135Data ) );
+  MemOp.basecpy( __LRc135, &LRc135Op, 0, sizeof( struct OLRc135 ), data );
 
   TraceOp.set( trc );
+  SystemOp.inst();
 
   /* Initialize data->xxx members... */
-  data->ini    = ini;
-
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RailCom %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LRc135 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-
-
 
   instCnt++;
-  return __RailCom;
+  return __LRc135;
 }
 
 
-/* Support for dynamic Loading */
 iIDigInt rocGetDigInt( const iONode ini ,const iOTrace trc )
 {
   return (iIDigInt)_inst(ini,trc);
 }
 
 
-
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
-#include "rocdigs/impl/railcom.fm"
+#include "rocdigs/impl/lrc135.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
