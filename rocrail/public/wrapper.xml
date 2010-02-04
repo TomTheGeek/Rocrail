@@ -264,6 +264,7 @@
       <const name="io8255" vt="string" val="io8255"/>
       <const name="zimobin" vt="string" val="zimobin"/>
       <const name="rfid12" vt="string" val="rfid12"/>
+      <const name="rclink" vt="string" val="rclink"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -307,6 +308,7 @@
       <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
       <var name="sensordebounce" vt="int" defval="0" remark="No of cycles for Sensor debounce"/>
+      <var name="identdelay" vt="int" defval="2500" unit="ms" remark="Delay before sending a low sensor state for ident codes."/>
       <var name="fastclock" vt="bool" defval="false" remark="send fast clock commands to the connected command station"/>
 
 
