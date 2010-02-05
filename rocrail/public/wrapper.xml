@@ -1231,7 +1231,10 @@
         <var name="electrified" vt="bool" defval="false" remark="Block is open for electric locs."/>
         <var name="station" vt="bool" defval="false" remark="Block has a station defined by type."/>
         <const name="type_turntable" vt="string" val="turntable"/>
+        <const name="type_lightgoods" vt="string" val="lightgoods"/>
+        <const name="type_light" vt="string" val="light"/>
         <const name="type_local" vt="string" val="local"/>
+        <const name="type_regional" vt="string" val="regional"/>
         <const name="type_ice" vt="string" val="ice"/>
         <const name="type_shunting" vt="string" val="shunting"/>
         <const name="type_goods" vt="string" val="goods"/>
@@ -1571,6 +1574,9 @@
         </fundef>
 
         <const name="cargo_all" vt="string" val="all"/>
+        <const name="cargo_lightgoods" vt="string" val="lightgoods"/>
+        <const name="cargo_light" vt="string" val="light"/>
+        <const name="cargo_regional" vt="string" val="regional"/>
         <const name="cargo_person" vt="string" val="person"/>
         <const name="cargo_goods" vt="string" val="goods"/>
         <const name="cargo_mixed" vt="string" val="mixed"/>

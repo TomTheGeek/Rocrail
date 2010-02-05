@@ -438,6 +438,9 @@ void BlockDialog::initLabels() {
   m_PermType->SetString( 5, wxGetApp().getMsg( "cleaning" ) );
   m_PermType->SetString( 6, wxGetApp().getMsg( "ice" ) );
   m_PermType->SetString( 7, wxGetApp().getMsg( "post" ) );
+  m_PermType->SetString( 8, wxGetApp().getMsg( "light" ) );
+  m_PermType->SetString( 9, wxGetApp().getMsg( "lightgoods" ) );
+  m_PermType->SetString( 10, wxGetApp().getMsg( "regional" ) );
 
   // Initialize sorted Loco Permission List
   initLocPermissionList();
@@ -723,6 +726,12 @@ void BlockDialog::initValues() {
     cargo = 6;
   else if( StrOp.equals( wLoc.cargo_post, wBlock.gettypeperm( m_Props ) ) )
     cargo = 7;
+  else if( StrOp.equals( wLoc.cargo_light, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 8;
+  else if( StrOp.equals( wLoc.cargo_lightgoods, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 9;
+  else if( StrOp.equals( wLoc.cargo_regional, wBlock.gettypeperm( m_Props ) ) )
+    cargo = 10;
   m_PermType->SetSelection( cargo );
 
 
@@ -924,6 +933,12 @@ bool BlockDialog::evaluate() {
     wBlock.settypeperm( m_Props, wLoc.cargo_ice );
   else if( cargo == 7 )
     wBlock.settypeperm( m_Props, wLoc.cargo_post );
+  else if( cargo == 8 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_light );
+  else if( cargo == 9 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_lightgoods );
+  else if( cargo == 10 )
+    wBlock.settypeperm( m_Props, wLoc.cargo_regional );
 
 
 
@@ -1483,9 +1498,9 @@ void BlockDialog::CreateControls()
     m_TypeStrings.Add(_("&goods"));
     m_TypeStrings.Add(_("&shunting"));
     m_TypeStrings.Add(_("&turntable"));
-    m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_COLS );
+    m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 3, wxRA_SPECIFY_COLS );
     m_Type->SetSelection(0);
-    itemStaticBoxSizer97->Add(m_Type, 0, wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer77->Add(m_Type, 0, wxGROW|wxALL, 5);
 
     m_Notebook->AddPage(m_PanelDetails, _("Details"));
 
@@ -1668,6 +1683,9 @@ void BlockDialog::CreateControls()
     m_PermTypeStrings.Add(_("&Cleaning"));
     m_PermTypeStrings.Add(_("&ICE"));
     m_PermTypeStrings.Add(_("&Post"));
+    m_PermTypeStrings.Add(_("&Light"));
+    m_PermTypeStrings.Add(_("&Light freight"));
+    m_PermTypeStrings.Add(_("&Regional"));
     m_PermType = new wxRadioBox( m_PermissionsPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_PermTypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_PermType->SetSelection(0);
     itemBoxSizer150->Add(m_PermType, 0, wxGROW|wxALL, 5);

@@ -12147,4 +12147,13 @@
   <Msg id="button">
     <en txt="Button"/>
   </Msg>
+  <Msg id="light">
+    <en txt="Light"/>
+  </Msg>
+  <Msg id="lightgoods">
+    <en txt="Light freight"/>
+  </Msg>
+  <Msg id="regional">
+    <en txt="Regional"/>
+  </Msg>
 </Messages>

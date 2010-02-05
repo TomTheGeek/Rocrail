@@ -297,6 +297,9 @@ void LocDialog::initLabels() {
   m_CargoBox->SetString( 4, wxGetApp().getMsg( "cleaning" ) );
   m_CargoBox->SetString( 5, wxGetApp().getMsg( "ice" ) );
   m_CargoBox->SetString( 6, wxGetApp().getMsg( "post" ) );
+  m_CargoBox->SetString( 7, wxGetApp().getMsg( "light" ) );
+  m_CargoBox->SetString( 8, wxGetApp().getMsg( "lightgoods" ) );
+  m_CargoBox->SetString( 9, wxGetApp().getMsg( "regional" ) );
   m_secondNextBlock->SetLabel( wxGetApp().getMsg( "secondnextblock" ) );
   m_ShortIn->SetLabel( wxGetApp().getMsg( "useshortinevent" ) );
   m_InAtPre2In->SetLabel( wxGetApp().getMsg( "inatpre2in" ) );
@@ -618,6 +621,12 @@ void LocDialog::InitValues() {
     cargo = 5;
   else if( StrOp.equals( wLoc.cargo_post, wLoc.getcargo( m_Props ) ) )
     cargo = 6;
+  else if( StrOp.equals( wLoc.cargo_light, wLoc.getcargo( m_Props ) ) )
+    cargo = 7;
+  else if( StrOp.equals( wLoc.cargo_lightgoods, wLoc.getcargo( m_Props ) ) )
+    cargo = 8;
+  else if( StrOp.equals( wLoc.cargo_regional, wLoc.getcargo( m_Props ) ) )
+    cargo = 9;
   m_CargoBox->SetSelection( cargo );
   m_secondNextBlock->SetValue( wLoc.issecondnextblock( m_Props ) );
 
@@ -867,6 +876,12 @@ bool LocDialog::Evaluate() {
     wLoc.setcargo( m_Props, wLoc.cargo_ice );
   else if( cargo == 6 )
     wLoc.setcargo( m_Props, wLoc.cargo_post );
+  else if( cargo == 7 )
+    wLoc.setcargo( m_Props, wLoc.cargo_light );
+  else if( cargo == 8 )
+    wLoc.setcargo( m_Props, wLoc.cargo_lightgoods );
+  else if( cargo == 9 )
+    wLoc.setcargo( m_Props, wLoc.cargo_regional );
 
   wLoc.setsecondnextblock( m_Props, m_secondNextBlock->IsChecked() ? True:False );
 
@@ -1372,7 +1387,7 @@ void LocDialog::CreateControls()
     itemFlexGridSizer101->AddGrowableCol(1);
     itemBoxSizer100->Add(itemFlexGridSizer101, 0, wxALIGN_TOP, 5);
     m_Label_Blockwait = new wxStaticText( m_DetailsPanel, wxID_STATIC_BLOCKWAIT, _("Block wait"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer101->Add(m_Label_Blockwait, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer101->Add(m_Label_Blockwait, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Blockwait = new wxTextCtrl( m_DetailsPanel, ID_TEXTCTRL_BLOCKWAIT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer101->Add(m_Blockwait, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1446,7 +1461,10 @@ void LocDialog::CreateControls()
     m_CargoBoxStrings.Add(_("&Cleaning"));
     m_CargoBoxStrings.Add(_("&ICE"));
     m_CargoBoxStrings.Add(_("&Post"));
-    m_CargoBox = new wxRadioBox( m_DetailsPanel, ID_RADIOBOX_CARGO, _("Cargo"), wxDefaultPosition, wxDefaultSize, m_CargoBoxStrings, 2, wxRA_SPECIFY_COLS );
+    m_CargoBoxStrings.Add(_("&light"));
+    m_CargoBoxStrings.Add(_("&lightgoods"));
+    m_CargoBoxStrings.Add(_("&Regional"));
+    m_CargoBox = new wxRadioBox( m_DetailsPanel, ID_RADIOBOX_CARGO, _("Cargo"), wxDefaultPosition, wxDefaultSize, m_CargoBoxStrings, 3, wxRA_SPECIFY_COLS );
     m_CargoBox->SetSelection(0);
     itemBoxSizer99->Add(m_CargoBox, 0, wxGROW|wxALL, 5);
 
