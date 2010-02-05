@@ -629,6 +629,7 @@
     <const name="remove" vt="string" val="remove"/>
     <const name="plan" vt="string" val="plan" remark="Request the plan XML"/>
     <const name="lclist" vt="string" val="lclist" remark="Request the loco list"/>
+    <const name="lcprops" vt="string" val="lcprops" remark="Request the loco properties"/>
     <const name="swlist" vt="string" val="swlist" remark="Request the switch list"/>
     <const name="stlist" vt="string" val="stlist" remark="Request the street list"/>
     <const name="sclist" vt="string" val="sclist" remark="Request the schedule list"/>

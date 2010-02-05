@@ -1618,6 +1618,13 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     }
     ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(wPlan.getlclist(data->model)), wCommand.getserver( cmd ) );
   }
+  else if( StrOp.equals( wModelCmd.lcprops, cmdVal ) ) {
+    const char* lcID = wModelCmd.getval(cmd);
+    iONode lc = ModelOp.getLoc( inst, lcID );
+    if( lc != NULL ) {
+      ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(lc), wCommand.getserver( cmd ) );
+    }
+  }
   else if( StrOp.equals( wModelCmd.swlist, cmdVal ) ) {
     if( wPlan.getswlist(data->model) == NULL ) {
       iONode swlist = NodeOp.inst( wSwitchList.name(), data->model, ELEMENT_NODE );
