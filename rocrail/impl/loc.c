@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/CVByte.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/Schedule.h"
 
 static int instCnt = 0;
 
@@ -1392,9 +1393,12 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
 
 static void _gotoBlock( iOLoc inst, const char* id ) {
   iOLocData data = Data(inst);
-  data->gotoBlock = id;
-  if( data->driver != NULL )
-    data->driver->gotoblock( data->driver, id );
+  iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), id );
+  if( block != NULL ) {
+    data->gotoBlock = block->base.id(block);
+    if( data->driver != NULL )
+      data->driver->gotoblock( data->driver, data->gotoBlock );
+  }
 }
 
 static void _useSchedule( iOLoc inst, const char* id ) {
@@ -1402,7 +1406,7 @@ static void _useSchedule( iOLoc inst, const char* id ) {
   if( data->driver != NULL ) {
     iONode schedule = ModelOp.getSchedule( AppOp.getModel(), id );
     if( schedule != NULL )
-      data->driver->useschedule( data->driver, id );
+      data->driver->useschedule( data->driver, wSchedule.getid(schedule) );
     else
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Schedule [%s] not found!", id );
   }
