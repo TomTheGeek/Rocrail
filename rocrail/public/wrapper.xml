@@ -265,6 +265,7 @@
       <const name="zimobin" vt="string" val="zimobin"/>
       <const name="rfid12" vt="string" val="rfid12"/>
       <const name="rclink" vt="string" val="rclink"/>
+      <const name="mttmfcc" vt="string" val="mttmfcc"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

@@ -100,7 +100,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)lenz$(SHAREDSUFFIX) $(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)ddx$(SHAREDSUFFIX) $(OUTDIR)$(FS)slx$(SHAREDSUFFIX) $(OUTDIR)$(FS)ecos$(SHAREDSUFFIX) $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(OUTDIR)$(FS)barjut$(SHAREDSUFFIX) $(OUTDIR)$(FS)loconet$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) \
+	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(OUTDIR)$(FS)io8255$(SHAREDSUFFIX)
 	
 
@@ -163,6 +163,8 @@ $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rfid12.o $(COMMONOBJS) $(R
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rfid12.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rclink.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rclink.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)mttmfcc.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)mttmfcc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -235,6 +237,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -266,5 +269,6 @@ install:
 	-cp -p $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) $(DESTDIR)
 	
 	
