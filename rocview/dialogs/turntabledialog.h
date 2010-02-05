@@ -196,6 +196,7 @@ public:
     wxTextCtrl* m_Bus;
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
+    wxTextCtrl* m_AddressDir;
     wxStaticText* m_labPolAddr;
     wxTextCtrl* m_PolAddr;
     wxStaticText* m_labActFn;

@@ -694,6 +694,84 @@ static void __setLocDecFn( iONode cmd, int fn, Boolean state ) {
 }
 
 
+static Boolean __cmd_roco( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  iONode swcmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: %s", cmdStr );
+
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    ttdir = False;
+    data->gotopos = -1;
+    data->skippos = -1;
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    ttdir = True;
+    data->gotopos = -1;
+    data->skippos = -1;
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    data->gotopos = data->tablepos;
+    data->skippos = data->tablepos;
+  }
+  else {
+    /* Tracknumber */
+    int tracknr = atoi( cmdStr );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+
+    if( move ) {
+      data->gotopos = tracknr;
+      swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
+    }
+
+
+  }
+
+  if( swcmd != NULL && control != NULL )
+  {
+    iONode dircmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( swcmd, iid );
+
+    /* pending move operation */
+    data->pending = True;
+
+    wSwitch.setaddr1( dircmd, wTurntable.getdiraddr( data->props ) );
+    wSwitch.setprot( dircmd, wTurntable.getprot( data->props ) );
+    wSwitch.setcmd( dircmd, ttdir? wSwitch.turnout:wSwitch.straight );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: set direction to %s...", ttdir?"turnout":"straight" );
+    ControlOp.cmd( control, dircmd, NULL );
+    data->dir = ttdir;
+
+    wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
+    wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
+    wSwitch.setcmd( swcmd, wSwitch.turnout );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor on..." );
+    ControlOp.cmd( control, swcmd, NULL );
+
+  }
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+  return ok;
+}
+
+
 static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   Boolean ok = True;
@@ -702,7 +780,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   Boolean ttdir = True;
   iONode vcmd = NULL;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "locdec: %s", cmdStr );
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
     vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -806,6 +884,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.locdec ) )
     return __cmd_locdec( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) )
+    return __cmd_roco( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.digitalbahn ) )
     return __cmd_digitalbahn( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.multiport ) )
@@ -1016,6 +1096,18 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
       ControlOp.cmd( control, cmd, NULL );
 
 
+    }
+
+    else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) ) {
+      iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      const char* iid = wTurntable.getiid( data->props );
+      if( iid != NULL )
+        wSwitch.setiid( swcmd, iid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor off..." );
+      wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
+      wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
+      wSwitch.setcmd( swcmd, wSwitch.straight );
+      ControlOp.cmd( control, swcmd, NULL );
     }
 
   }
