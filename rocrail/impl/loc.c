@@ -53,6 +53,7 @@
 static int instCnt = 0;
 
 static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function);
+static void __checkConsist( iOLoc inst, iONode nodeA );
 
 /*
  ***** OBase functions.
@@ -384,6 +385,8 @@ static void* __event( void* inst, const void* evt ) {
 
     if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
+      /* TODO: inform consist slaves */
+      __checkConsist(inst, evtNode);
       broadcast = True;
     }
     else {
@@ -1772,11 +1775,6 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       }
     }
 
-
-    if( StrOp.equals( wLoc.velocity, cmd ) || StrOp.equals( wLoc.dirfun, cmd ) ) {
-      /* send throttle commands to the consist members */
-      __checkConsist(inst, nodeA);
-    }
 
     if(broadcast) {
       nodeF = (iONode)NodeOp.base.clone( nodeA );
