@@ -1766,8 +1766,12 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
           block->cmd( block, cmd );
         }
       }
+    }
 
-      nodeA->base.del(nodeA);
+
+    if( StrOp.equals( wLoc.velocity, cmd ) || StrOp.equals( wLoc.dirfun, cmd ) ) {
+      /* send throttle commands to the consist members */
+      __checkConsist(inst, nodeA);
     }
 
     if(broadcast) {
@@ -1788,6 +1792,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setactive( nodeF, wLoc.isactive(data->props) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
     }
+
+    nodeA->base.del(nodeA);
 
     return True;
   }
