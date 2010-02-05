@@ -217,6 +217,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int addr = wFeedback.getaddr( node );
     Boolean state = wFeedback.isstate( node );
 
+    if( wFeedback.isactivelow(node) )
+      wFeedback.setstate( node, !state);
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
   }

@@ -252,6 +252,7 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
   wFeedback.setiid( cmd, wFeedback.getiid( data->props ) );
   wFeedback.setbus( cmd, wFeedback.getbus( data->props ) );
   wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
+  wFeedback.setactivelow( cmd, wFeedback.isactivelow( data->props ) );
   ControlOp.cmd( control, cmd, &error );
   return True;
 }
