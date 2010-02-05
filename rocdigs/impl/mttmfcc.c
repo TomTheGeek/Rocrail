@@ -183,5 +183,5 @@ iIDigInt rocGetDigInt( const iONode ini ,const iOTrace trc )
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
-#include "rocdigs/impl/MttmFcc.fm"
+#include "rocdigs/impl/mttmfcc.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
