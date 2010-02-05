@@ -764,6 +764,15 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( StrOp.equals( wBlock.type_post, blocktype ) && StrOp.equals( wLoc.cargo_post, traintype ) )
     return suits_well;
 
+  if( StrOp.equals( wBlock.type_regional, blocktype ) && StrOp.equals( wLoc.cargo_regional, traintype ) )
+    return suits_well;
+
+  if( StrOp.equals( wBlock.type_light, blocktype ) && StrOp.equals( wLoc.cargo_light, traintype ) )
+    return suits_well;
+
+  if( StrOp.equals( wBlock.type_lightgoods, blocktype ) && StrOp.equals( wLoc.cargo_lightgoods, traintype ) )
+    return suits_well;
+
   if( wait != NULL )
     *wait = False;
 

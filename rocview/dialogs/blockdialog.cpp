@@ -390,6 +390,9 @@ void BlockDialog::initLabels() {
   m_Type->SetString( 3, wxGetApp().getMsg( "goods" ) );
   m_Type->SetString( 4, wxGetApp().getMsg( "shunting" ) );
   m_Type->SetString( 5, wxGetApp().getMsg( "turntable" ) );
+  m_Type->SetString( 6, wxGetApp().getMsg( "regional" ) );
+  m_Type->SetString( 7, wxGetApp().getMsg( "light" ) );
+  m_Type->SetString( 8, wxGetApp().getMsg( "lightgoods" ) );
   m_Incline->SetLabel( wxGetApp().getMsg( "incline" ) );
   m_Incline->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_Incline->SetString( 1, wxGetApp().getMsg( "up" ) );
@@ -603,6 +606,12 @@ void BlockDialog::initValues() {
     type = 4;
   else if( StrOp.equals( wBlock.type_turntable, wBlock.gettype( m_Props ) ) )
     type = 5;
+  else if( StrOp.equals( wBlock.type_regional, wBlock.gettype( m_Props ) ) )
+    type = 6;
+  else if( StrOp.equals( wBlock.type_light, wBlock.gettype( m_Props ) ) )
+    type = 7;
+  else if( StrOp.equals( wBlock.type_lightgoods, wBlock.gettype( m_Props ) ) )
+    type = 8;
   m_Type->SetSelection( type );
 
   int incline = 0;
@@ -851,6 +860,12 @@ bool BlockDialog::evaluate() {
     wBlock.settype( m_Props, wBlock.type_shunting );
   else if( m_Type->GetSelection() == 5 )
     wBlock.settype( m_Props, wBlock.type_turntable );
+  else if( m_Type->GetSelection() == 6 )
+    wBlock.settype( m_Props, wBlock.type_regional );
+  else if( m_Type->GetSelection() == 7 )
+    wBlock.settype( m_Props, wBlock.type_light );
+  else if( m_Type->GetSelection() == 8 )
+    wBlock.settype( m_Props, wBlock.type_lightgoods );
 
   if( m_Incline->GetSelection() == 0 )
     wBlock.setincline( m_Props, wBlock.incline_none );
@@ -1498,7 +1513,10 @@ void BlockDialog::CreateControls()
     m_TypeStrings.Add(_("&goods"));
     m_TypeStrings.Add(_("&shunting"));
     m_TypeStrings.Add(_("&turntable"));
-    m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 3, wxRA_SPECIFY_COLS );
+    m_TypeStrings.Add(_("&Regional"));
+    m_TypeStrings.Add(_("&Light"));
+    m_TypeStrings.Add(_("&Light freight"));
+    m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 4, wxRA_SPECIFY_COLS );
     m_Type->SetSelection(0);
     itemBoxSizer77->Add(m_Type, 0, wxGROW|wxALL, 5);
 
