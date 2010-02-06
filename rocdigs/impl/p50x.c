@@ -1087,6 +1087,9 @@ static void __statusReader( void* threadinst ) {
               __handleLoco(p50, in);
             }
           }
+          else {
+            break;
+          }
         } while(in[0] != 0x80);
       }
 
