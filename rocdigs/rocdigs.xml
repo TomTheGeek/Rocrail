@@ -923,6 +923,7 @@
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
+      <var name="mux" vt="iOMutex"/>
       <var name="serial" vt="iOSerial"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>

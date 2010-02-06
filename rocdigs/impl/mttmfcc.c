@@ -31,7 +31,16 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
+
+#include "rocdigs/impl/common/fada.h"
 
 static int instCnt = 0;
 
@@ -89,13 +98,87 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMttmFcc ----- */
+static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
+}
+
+static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
+  Boolean rc = False;
+  if( MutexOp.wait( data->mux ) ) {
+    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+      if( insize > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
+        rc = SerialOp.read( data->serial, in, insize );
+        if( rc ) {
+          TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+          __evaluateRsp(data, out, outsize, in, insize);
+        }
+      }
+    }
+    MutexOp.post( data->mux );
+  }
+  return rc;
+}
+
+
+static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize ) {
+  *insize = 0;
+
+  /* Switch command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+  }
+
+  /* System command. */
+  /*
+    Gleisspannung ein (SX1/2-Bus 0): Vom PC:  0x00  0xFF  0x01
+    Gleisspannung aus (SX1/2-Bus 0): Vom PC:  0x00  0xFF  0x00
+    Gleisspannung ein (SX1/2-Bus 1): Vom PC:  0x01  0xFF  0x01
+    Gleisspannung aus (SX1/2-Bus 1): Vom PC:  0x01  0xFF  0x00
+    Zum PC: 0x00 Zum PC:  0x00 Zum PC:  0x00 Zum PC:  0x00
+  */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmd = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      out[0] = 0x00;
+      out[1] = 0xFF;
+      out[2] = 0x00;
+      *insize = 1; /* Return code from FCC. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      return 3;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      out[0] = 0x00;
+      out[1] = 0xFF;
+      out[2] = 0x01;
+      *insize = 1; /* Return code from FCC. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      return 3;
+    }
+  }
+
+
+
+}
 
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  /* Cleanup cmd node to avoid memory leak. */
-  cmd->base.del(cmd);
-  return NULL;
+  iOMttmFccData data = Data(inst);
+  unsigned char out[32];
+  unsigned char in [32];
+  int    insize    = 0;
+  iONode reply     = NULL;
+
+  MemOp.set( in, 0x00, sizeof( in ) );
+
+  if( cmd != NULL ) {
+    int size = __translate( data, cmd, out, &insize );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
+    if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
+    }
+  }
+
+  return reply;
 }
 
 
@@ -156,6 +239,8 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
+  data->mux     = MutexOp.inst( NULL, True );
+
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
 
