@@ -727,7 +727,7 @@ static Boolean __cmd_roco( iOTT inst, iONode nodeA ) {
     Boolean move = __bridgeDir(inst, tracknr, &ttdir );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+        "Goto track %d, current pos=%d direction=%s", tracknr, data->tablepos, ttdir?"CCW":"CW" );
 
     if( move ) {
       data->gotopos = tracknr;

@@ -393,6 +393,7 @@ void BlockDialog::initLabels() {
   m_Type->SetString( 6, wxGetApp().getMsg( "regional" ) );
   m_Type->SetString( 7, wxGetApp().getMsg( "light" ) );
   m_Type->SetString( 8, wxGetApp().getMsg( "lightgoods" ) );
+  m_Type->SetString( 9, wxGetApp().getMsg( "post" ) );
   m_Incline->SetLabel( wxGetApp().getMsg( "incline" ) );
   m_Incline->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_Incline->SetString( 1, wxGetApp().getMsg( "up" ) );
@@ -612,6 +613,8 @@ void BlockDialog::initValues() {
     type = 7;
   else if( StrOp.equals( wBlock.type_lightgoods, wBlock.gettype( m_Props ) ) )
     type = 8;
+  else if( StrOp.equals( wBlock.type_post, wBlock.gettype( m_Props ) ) )
+    type = 9;
   m_Type->SetSelection( type );
 
   int incline = 0;
@@ -866,6 +869,8 @@ bool BlockDialog::evaluate() {
     wBlock.settype( m_Props, wBlock.type_light );
   else if( m_Type->GetSelection() == 8 )
     wBlock.settype( m_Props, wBlock.type_lightgoods );
+  else if( m_Type->GetSelection() == 9 )
+    wBlock.settype( m_Props, wBlock.type_post );
 
   if( m_Incline->GetSelection() == 0 )
     wBlock.setincline( m_Props, wBlock.incline_none );
@@ -1516,6 +1521,7 @@ void BlockDialog::CreateControls()
     m_TypeStrings.Add(_("&Regional"));
     m_TypeStrings.Add(_("&Light"));
     m_TypeStrings.Add(_("&Light freight"));
+    m_TypeStrings.Add(_("&Post"));
     m_Type = new wxRadioBox( m_PanelDetails, ID_RADIOBOX_BK_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 4, wxRA_SPECIFY_COLS );
     m_Type->SetSelection(0);
     itemBoxSizer77->Add(m_Type, 0, wxGROW|wxALL, 5);

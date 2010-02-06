@@ -545,6 +545,10 @@ void LocDialog::InitValues() {
     m_Protocol->SetSelection( 4 );
   else if( StrOp.equals( wLoc.prot_C, wLoc.getprot( m_Props ) ) )
     m_Protocol->SetSelection( 5 );
+  else if( StrOp.equals( wLoc.prot_S, wLoc.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 6 );
+  else if( StrOp.equals( wLoc.prot_X, wLoc.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 7 );
 
   str = StrOp.fmt( "%d", wLoc.getprotver( m_Props ) );
   m_ProtVersion->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
@@ -803,6 +807,10 @@ bool LocDialog::Evaluate() {
     wLoc.setprot( m_Props, wLoc.prot_A );
   else if( m_Protocol->GetSelection() == 5 )
     wLoc.setprot( m_Props, wLoc.prot_C );
+  else if( m_Protocol->GetSelection() == 6 )
+    wLoc.setprot( m_Props, wLoc.prot_S );
+  else if( m_Protocol->GetSelection() == 7 )
+    wLoc.setprot( m_Props, wLoc.prot_X );
 
   val = atoi( m_ProtVersion->GetValue().mb_str(wxConvUTF8) );
   wLoc.setprotver( m_Props, val );
@@ -1265,6 +1273,8 @@ void LocDialog::CreateControls()
     m_ProtocolStrings.Add(_("NMRA-DCC long"));
     m_ProtocolStrings.Add(_("Analog"));
     m_ProtocolStrings.Add(_("Car"));
+    m_ProtocolStrings.Add(_("SX1"));
+    m_ProtocolStrings.Add(_("SX2"));
     m_Protocol = new wxChoice( m_Interface_Panel, ID_CHOICE_PROTOCOL, wxDefaultPosition, wxDefaultSize, m_ProtocolStrings, 0 );
     m_Protocol->SetStringSelection(_("ServerDefined"));
     itemFlexGridSizer60->Add(m_Protocol, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 2);
