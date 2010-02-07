@@ -729,7 +729,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
                  data->id, blockwait?"true":"false" );
 
   /* undefined block type */
-  if( StrOp.equals( wBlock.type_none, blocktype ) ) {
+  if( StrOp.equals( wBlock.type_none, blocktype ) || ( ttId != NULL && StrOp.len( ttId ) > 0 ) ) {
     if( data->prevLocId != NULL ) {
       const char* locid = LocOp.getId( loc );
       if( StrOp.equals( data->prevLocId, locid ) ) {
@@ -741,38 +741,71 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
       else
         return suits_well;
     }
+    else
+      return suits_well;
   }
 
-  if( StrOp.equals( wBlock.type_goods, blocktype ) && StrOp.equals( wLoc.cargo_goods, traintype ) )
+  /* first check for best destinations */
+  if( StrOp.equals( wBlock.type_local, blocktype ) && (
+        StrOp.equals( wLoc.cargo_person, traintype ) ||
+        StrOp.equals( wLoc.cargo_mixed, traintype ) ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_ice, blocktype ) && StrOp.equals( wLoc.cargo_ice, traintype ) )
+  if( StrOp.equals( wBlock.type_ice, blocktype ) &&
+        StrOp.equals( wLoc.cargo_ice, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_local, blocktype ) && StrOp.equals( wLoc.cargo_person, traintype ) )
+  if( StrOp.equals( wBlock.type_goods, blocktype ) && (
+        StrOp.equals( wLoc.cargo_goods, traintype ) ||
+        StrOp.equals( wLoc.cargo_mixed, traintype ) ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_local, blocktype ) && StrOp.equals( wLoc.cargo_mixed, traintype ) )
+  if( StrOp.equals( wBlock.type_shunting, blocktype ) &&
+        StrOp.equals( wLoc.cargo_none, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_goods, blocktype ) && StrOp.equals( wLoc.cargo_mixed, traintype ) )
+  if( StrOp.equals( wBlock.type_regional, blocktype ) &&
+        StrOp.equals( wLoc.cargo_regional, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_shunting, blocktype ) && StrOp.equals( wLoc.cargo_none, traintype ) )
+  if( StrOp.equals( wBlock.type_light, blocktype ) &&
+        StrOp.equals( wLoc.cargo_light, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_post, blocktype ) && StrOp.equals( wLoc.cargo_post, traintype ) )
+  if( StrOp.equals( wBlock.type_lightgoods, blocktype ) &&
+        StrOp.equals( wLoc.cargo_lightgoods, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_regional, blocktype ) && StrOp.equals( wLoc.cargo_regional, traintype ) )
+  if( StrOp.equals( wBlock.type_post, blocktype ) &&
+        StrOp.equals( wLoc.cargo_post, traintype ) )
     return suits_well;
 
-  if( StrOp.equals( wBlock.type_light, blocktype ) && StrOp.equals( wLoc.cargo_light, traintype ) )
-    return suits_well;
+  /* then check for alternative destinations that are compatible enough for a wait */
+  if( StrOp.equals( wBlock.type_local, blocktype ) && (
+        StrOp.equals( wLoc.cargo_light, traintype ) ||
+        StrOp.equals( wLoc.cargo_regional, traintype ) ) )
+    return suits_ok;
 
-  if( StrOp.equals( wBlock.type_lightgoods, blocktype ) && StrOp.equals( wLoc.cargo_lightgoods, traintype ) )
-    return suits_well;
+  if( StrOp.equals( wBlock.type_goods, blocktype ) &&
+        StrOp.equals( wLoc.cargo_lightgoods, traintype ) )
+    return suits_ok;
 
+  if( StrOp.equals( wBlock.type_regional, blocktype ) && (
+        StrOp.equals( wLoc.cargo_ice, traintype ) ||
+        StrOp.equals( wLoc.cargo_light, traintype ) ||
+        StrOp.equals( wLoc.cargo_person, traintype ) ) )
+    return suits_ok;
+
+  if( StrOp.equals( wBlock.type_light, blocktype ) && (
+        StrOp.equals( wLoc.cargo_person, traintype ) ||
+        StrOp.equals( wLoc.cargo_regional, traintype ) ) )
+    return suits_ok;
+
+  if( StrOp.equals( wBlock.type_lightgoods, blocktype ) &&
+        StrOp.equals( wLoc.cargo_goods, traintype ) )
+    return suits_ok;
+
+  /* all other alternative destinations are not compatible enough for a wait */
   if( wait != NULL )
     *wait = False;
 
