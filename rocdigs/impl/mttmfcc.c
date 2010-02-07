@@ -129,16 +129,12 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   byte cmd[32] = {0x79, 0x01};
 
 
-  if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
-    /* native selectrix SX1 */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
-  }
   /*
     Die DCC-Lok mit der langen Adresse 1234 und 126 Fahrstufen soll an die FCC- Digitalzentrale angemeldet werden:
     Bestimmung: 1234 (binär: 00010011010010) DCC-Lokadresse: 00010011010010 00 entspricht 0x1348
     Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x13  0x48  0x07
    */
-  else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
+  if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
     /* short DCC */
     addr = addr << 2;
     cmd[4] = steps > 100 ? 0x05:0x01;
@@ -228,6 +224,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
   /* Loc command.*/
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    Boolean isSx1 = False;
     int   addr = wLoc.getaddr( node );
     int  speed = 0;
     byte cmd = 0;
@@ -239,8 +236,37 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     int index = 0;
 
     iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * spcnt) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d steps=%d lights=%s dir=%s",
+        addr, speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+
+    if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+      /* native selectrix SX1 */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
+      out[0] = wLoc.getaddr(node);
+      out[0] |= 0x80;
+      /*
+      SX1-Loks werden wie bisher direkt über die entsprechenden SX1-Kanäle des SX1/2-Bus- Systems 0 gesteuert.
+      Die Kanalbelegung ist daher selbstverständlich unverändert geblieben:
+      Bits 0 bis 4 Bit 5 Bit 6 Bit 7
+      Fahrstufen von 0 bis 31 Fahrtrichtung (0 entspricht vorwärts, 1 entspricht rückwärts)
+      Licht (0 bedeutet Licht aus, 1 bedeutet Licht ein) Horn (0 bedeutet Horn aus, 1 bedeutet Horn ein)
+      */
+      out[1] = speed & 0x1F;
+      out[1] |= wLoc.isdir(node) ? 0x00:0x20;
+      out[1] |= wLoc.isfn(node)  ? 0x00:0x40;
+      return 2;
+    }
+
+
     if( slot == NULL ) {
-      slot = __getSlot(data, node);
+      slot = __getSlot(data, node );
       if( slot != NULL ) {
         MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
       }
@@ -253,38 +279,30 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
     index = slot->index;
 
-    if( wLoc.getV( node ) != -1 ) {
-      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * spcnt) / 100;
-      else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
-    }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d steps=%d lights=%s dir=%s",
-        addr, speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
+    /*
+      Verändern der Fahrstufe einer SX2-, DCC- oder MM-Lok:
+      Vom PC: 0x79  0x03  Index FS  0x00
+      Zum PC: gleich 0x00 (im Erfolgsfalle)
+      ungleich 0x00 (im Fehlerfalle)
+
+      Verändern der Fahrstufe und der Fahrtrichtung einer SX2-, DCC- oder MM-Lok:
+      Vom PC: 0x79  0x13  Index FSFR  0x00
+      Zum PC:
+      gleich 0x00
+      ungleich 0x00
+      Index ist der bei der Anmeldung der betreffenden Lok an die FCC-Digitalzentrale zurückgegebene Wert.
+      FSFR ist der, gemäß der oben stehenden Tabelle, umgerechnete Wert der neuen Fahrstufe, wobei das höchstwertige
+      Bit die neue Fahrtrichtung bestimmt!
+     */
     out[0] = 0x79;
-    out[1] = 0x04;
+    out[1] = 0x13;
     out[2] = index;
-    out[3] = dir?0x00:0x80;
+    out[3] = speed + (dir?0x00:0x80);
     out[4] = 0x00;
-
-    if( __transact( data, out, 5, &rc, 1 ) ) {
-
-      /*
-        Verändern der Fahrstufe einer SX2-, DCC- oder MM-Lok:
-        Vom PC: 0x79  0x03  Index FS  0x00
-        Zum PC: gleich 0x00 (im Erfolgsfalle)
-        ungleich 0x00 (im Fehlerfalle)
-       */
-      out[0] = 0x79;
-      out[1] = 0x03;
-      out[2] = index;
-      out[3] = speed;
-      out[4] = 0x00;
-      *insize = 1; /* Return code from FCC. */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      return 5;
-    }
+    *insize = 1; /* Return code from FCC. */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+    return 5;
 
   }
 
