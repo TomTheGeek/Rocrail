@@ -250,7 +250,7 @@ void GenericCtrlDlg::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxPanel* itemPanel3 = new wxPanel( itemDialog1, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemPanel3, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
     itemPanel3->SetSizer(itemBoxSizer4);

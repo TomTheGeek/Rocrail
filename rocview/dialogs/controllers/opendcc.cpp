@@ -99,6 +99,7 @@ OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props )
   m_OpenDCCmode = 0;
   m_Props = props;
   MemOp.set( m_soValue, 0, sizeof(m_soValue) );
+  m_TimerMutex = MutexOp.inst( NULL, True );
 
   if( wDigInt.getopendcc(m_Props) == NULL ) {
     iONode opendccini = NodeOp.inst( wOpenDCC.name(), m_Props, ELEMENT_NODE );
@@ -149,10 +150,11 @@ OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props )
 void OpenDCCCtrlDlg::startProgress() {
   if( m_Progress == NULL ) {
     m_Progress = new wxProgressDialog(wxGetApp().getMsg( "soget" ), wxGetApp().getMsg( "waitforso" ),
-        1000, NULL, wxPD_CAN_ABORT | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
+        30, NULL, wxPD_CAN_ABORT | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
     TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "bringing up the progress dialog...0x%08X", m_Progress);
-    bool rc = m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     m_Progress->ShowModal();
+    //m_Progress->Pulse();
+    //bool rc = m_Timer->Start( 1000 );
   }
 }
 
@@ -160,21 +162,29 @@ void OpenDCCCtrlDlg::stopProgress() {
   if( m_Progress != NULL ) {
     TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "end progress dialog" );
     m_bCleanUpProgress = true;
-    m_Timer->Start( 10, wxTIMER_ONE_SHOT );
+    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
   m_ReadCVs->Enable(true);
   m_WriteCVs->Enable(true);
 }
 
 void OpenDCCCtrlDlg::OnTimer(wxTimerEvent& event) {
+  if( !MutexOp.trywait( m_TimerMutex, 100 ) ) {
+    TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "timeout on timer mutex!" );
+    return;
+  }
+
+  TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "timer tick..." );
+/*
   if( m_bStartUpProgress ) {
     m_bStartUpProgress = false;
     m_TimerCount = 0;
     sendGet(so_version);
     startProgress();
+    MutexOp.post( m_TimerMutex );
     return;
   }
-
+*/
   if( m_bCleanUpProgress ) {
     if( m_Progress != NULL ) {
       wxProgressDialog* dlg = m_Progress;
@@ -183,25 +193,29 @@ void OpenDCCCtrlDlg::OnTimer(wxTimerEvent& event) {
       TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
     }
     m_bCleanUpProgress = false;
+    MutexOp.post( m_TimerMutex );
     return;
   }
-
 
   m_TimerCount++;
   if( m_TimerCount >= 1000 ) {
     TraceOp.trc( "opendcc", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on SO acknowledge" );
     stopProgress();
   }
-  else {
-    if( m_Progress != NULL && !m_Progress->Pulse() ) {
-      stopProgress();
-      m_TimerCount = 1000;
-    }
-    else {
-      TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "timer for SO acknowledge" );
-      bool rc = m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  else if( m_Progress != NULL && !m_bCleanUpProgress ) {
+    if( m_Progress->IsShownOnScreen() ) {
+      if( !m_Progress->Pulse() ) {
+        m_Timer->Stop();
+        stopProgress();
+        m_TimerCount = 1000;
+      }
+      else {
+        TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "timer for SO acknowledge" );
+        bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+      }
     }
   }
+  MutexOp.post( m_TimerMutex );
 }
 
 
@@ -1168,7 +1182,15 @@ void OpenDCCCtrlDlg::OnReadcvsClick( wxCommandEvent& event )
   m_ReadCVs->Enable(false);
   m_WriteCVs->Enable(false);
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "initValues" );
+  /*
   m_bStartUpProgress = true;
-  m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  */
+  bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Timeout timer %sstarted %dms...", rc?"":"NOT ", 1000 );
+  m_TimerCount = 0;
+  sendGet(so_version);
+  startProgress();
 }
 

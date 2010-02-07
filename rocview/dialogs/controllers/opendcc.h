@@ -28,6 +28,7 @@
 #include "wx/progdlg.h"
 
 #include "rocs/public/node.h"
+#include "rocs/public/mutex.h"
 
 /*!
  * Forward declarations
@@ -116,6 +117,7 @@ class OpenDCCCtrlDlg: public wxDialog
     int m_TimerCount;
     bool m_bStartUpProgress;
     bool m_bCleanUpProgress;
+    iOMutex m_TimerMutex;
     void OnTimer(wxTimerEvent& event);
     wxTimer* m_Timer;
     wxProgressDialog* m_Progress;
