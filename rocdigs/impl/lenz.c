@@ -1210,10 +1210,9 @@ static void __transactor( void* threadinst ) {
     }
 
     // Wait or timeout
-    while(  !(timeout != 0 || !dataAvailable) ) {
-      if( timeout > 0)
-        timeout --;
+    while( timeout > 0 && dataAvailable == 0 ) {
       ThreadOp.sleep( 25 );
+      timeout --;
       dataAvailable = SerialOp.available(data->serial);
     }
 
@@ -1235,7 +1234,7 @@ static void __transactor( void* threadinst ) {
           MutexOp.post( data->mux );
 
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, 10 );
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, datalen+3 );
 
           /* remove extra header from LI-USB */
           for (i = 0; i < 254; i++)
@@ -1256,7 +1255,7 @@ static void __transactor( void* threadinst ) {
 
 
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+2 );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+1 );
         }
 
         if( !ok )
@@ -1270,7 +1269,9 @@ static void __transactor( void* threadinst ) {
         }
 
         if( bXor != in[datalen]) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor bytes are not equal!" );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "XOR error: datalength=%d calculated=0x%02X received=0x%02X", datalen, bXor, in[datalen] );
+          continue;
           /* flush buffer */
         }
 
