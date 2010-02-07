@@ -121,6 +121,76 @@ static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in,
 }
 
 
+static iOSlot __getSlot(iOMttmFccData data, iONode node) {
+  int steps = wLoc.getspcnt(node);
+  int addr  = wLoc.getaddr(node);
+  byte index = 0xFF;
+  iOSlot slot = NULL;
+  byte cmd[32] = {0x79, 0x01};
+
+
+  if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+    /* native selectrix SX1 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
+  }
+  /*
+    Die DCC-Lok mit der langen Adresse 1234 und 126 Fahrstufen soll an die FCC- Digitalzentrale angemeldet werden:
+    Bestimmung: 1234 (binär: 00010011010010) DCC-Lokadresse: 00010011010010 00 entspricht 0x1348
+    Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x13  0x48  0x07
+   */
+  else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
+    /* short DCC */
+    addr = addr << 2;
+    cmd[4] = steps > 100 ? 0x05:0x01;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "short DCC" );
+  }
+  else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
+    /* long DCC */
+    addr = addr << 2;
+    cmd[4] = steps > 100 ? 0x07:0x03;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long DCC" );
+  }
+  else if( StrOp.equals( wLoc.prot_M, wLoc.getprot(node) ) ) {
+    /* MM */
+    /*
+    Die MM-Lok mit der Adresse 218 soll an die FCC-Digitalzentrale angemeldet werden:
+    Bestimmung: 218 (binär: 00000011011010) MM-Lokadresse: 00000011011010 00 entspricht 0x0368
+    Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x03  0x68  0x02
+     */
+    addr = addr << 2;
+    cmd[4] = 0x02;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MM" );
+  }
+  else {
+    /*
+    Die SX2-Lok mit der Adresse 5678 soll an die FCC-Digitalzentrale angemeldet werden:
+    Rechnung: 5678 / 100 = 56 (binär: 0111000) Rest 78 (binär: 1001110)
+    SX2-Lokadresse: 0111000 1001110 00 entspricht 0x7138
+    Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x71  0x38  0x04
+    */
+    addr = (wLoc.getaddr(node) / 100) << 9;
+    addr = addr + ((wLoc.getaddr(node) % 100) << 2);
+
+    /* default SX2 */
+    cmd[4] = 0x04;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "default SX2" );
+  }
+
+  cmd[2] = addr / 256;
+  cmd[3] = addr % 256;
+
+
+  if( __transact( data, cmd, 5, &index, 1 ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got index %d for %s", index, wLoc.getid(node) );
+    slot = allocMem( sizeof( struct slot) );
+    slot->index = index;
+    slot->protocol = cmd[4];
+  }
+
+  return slot;
+}
+
+
 static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize ) {
   *insize = 0;
 
@@ -156,8 +226,69 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     }
   }
 
+  /* Loc command.*/
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+    byte cmd = 0;
+    byte rc = 0;
+    Boolean fn = wLoc.isfn( node );
+    int    dir = wLoc.isdir( node );
+    int  spcnt = wLoc.getspcnt( node );
 
+    int index = 0;
 
+    iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+    if( slot == NULL ) {
+      slot = __getSlot(data, node);
+      if( slot != NULL ) {
+        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      }
+    }
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    index = slot->index;
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * spcnt) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d steps=%d lights=%s dir=%s",
+        addr, speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+
+    out[0] = 0x79;
+    out[1] = 0x04;
+    out[2] = index;
+    out[3] = dir?0x00:0x80;
+    out[4] = 0x00;
+
+    if( __transact( data, out, 5, &rc, 1 ) ) {
+
+      /*
+        Verändern der Fahrstufe einer SX2-, DCC- oder MM-Lok:
+        Vom PC: 0x79  0x03  Index FS  0x00
+        Zum PC: gleich 0x00 (im Erfolgsfalle)
+        ungleich 0x00 (im Fehlerfalle)
+       */
+      out[0] = 0x79;
+      out[1] = 0x03;
+      out[2] = index;
+      out[3] = speed;
+      out[4] = 0x00;
+      *insize = 1; /* Return code from FCC. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      return 5;
+    }
+
+  }
+
+  return 0;
 }
 
 
@@ -240,6 +371,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   data->mux     = MutexOp.inst( NULL, True );
+  data->lcmap   = MapOp.inst();
 
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );

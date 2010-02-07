@@ -915,11 +915,16 @@
   </object>
 
 
-  <object name="MttmFcc" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="NCE">
+  <object name="MttmFcc" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint" remark="NCE">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="addr" vt="int"/>
+      <var name="index" vt="int"/>
+      <var name="protocol" vt="int" remark="0=sx1, 1=sx2, 2=dcc, 3=mm"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
@@ -933,6 +938,7 @@
       <var name="device" vt="const char*"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
     </data>
   </object>
 
