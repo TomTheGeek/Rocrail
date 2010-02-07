@@ -16,15 +16,15 @@ AppPublisherURL=http://www.rocrail.net/
 OutputBaseFilename=rocrail-setup-1.4.999-revxxx-snapshot-unicode
 
 [Tasks]
-Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
+;Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
 Name: symbols; Description: "WebClient Symbols"
 
 [Run]
-Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
-Filename: "{sys}\sc.exe"; Parameters: "description rocrail ""Model Railroad Control Program""";Tasks: service
+;Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
+;Filename: "{sys}\sc.exe"; Parameters: "description rocrail ""Model Railroad Control Program""";Tasks: service
 
 [UninstallRun]
 Filename: "{sys}\sc.exe"; Parameters: "stop rocrail "
@@ -40,8 +40,9 @@ begin
 end;
 
 [Files]
-Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; BeforeInstall: StopService; Tasks: service
-Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; Tasks: not service
+;Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; BeforeInstall: StopService; Tasks: service
+;Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; Tasks: not service
+Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"
 Source: "stopservice.cmd"; DestDir: "{app}"
 Source: "mkservice.cmd"; DestDir: "{app}"
 Source: "..\..\winbin\rocview.exe"; DestDir: "{app}"
