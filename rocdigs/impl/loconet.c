@@ -2322,6 +2322,10 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loconet %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  if( data->activeSlotServer ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Slotserver is active;\nDo not use this if there is a Command Station in this LocoNet!" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  =%s", wDigInt.getsublib( ini ) );
