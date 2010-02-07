@@ -1339,6 +1339,17 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     ControlOp.cmd( control, cmd, NULL );
 
   }
+  else if( stop && StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) ) {
+    iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( swcmd, iid );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor off..." );
+    wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
+    wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
+    wSwitch.setcmd( swcmd, wSwitch.straight );
+    ControlOp.cmd( control, swcmd, NULL );
+  }
 
   __polarize(inst, -1, polarization );
 
