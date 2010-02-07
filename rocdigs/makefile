@@ -238,6 +238,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -270,5 +271,6 @@ install:
 	-cp -p $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(DESTDIR)
 	
 	
