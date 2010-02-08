@@ -735,10 +735,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   while( !bShutdown ) {
     static int cnt1 = 0;
     int cnt2 = MemOp.getAllocCount();
-    if( cnt1 != cnt2 ) {
-      cnt1 = cnt2;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MemOp.getAllocCount() = %u", cnt2 );
+    if( cnt2 > cnt1 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "memory allocations old=%u new=%u", cnt1, cnt2 );
     }
+    cnt1 = cnt2;
     ThreadOp.sleep( 1000 );
 
     /* Check for command. */
