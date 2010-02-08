@@ -714,12 +714,14 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   const char* traintype = wLoc.getcargo( LocOp.base.properties(loc) );
   const char* blocktype = wBlock.gettype( BlockOp.base.properties(block) );
   Boolean     blockwait = wBlock.iswait(BlockOp.base.properties(block) );
-
+  Boolean     ttwait    = False;
   const char* ttId = wBlock.getttid( BlockOp.base.properties(block) );
 
   /* always wait in block if it contains a turntable */
-  if( ttId != NULL && StrOp.len( ttId ) > 0 )
+  if( ttId != NULL && StrOp.len( ttId ) > 0 ) {
     blockwait = True;
+    ttwait    = True;
+  }
 
   if( wait != NULL )
     *wait = blockwait;
@@ -727,6 +729,45 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "wait in block \"%s\" is %s",
                  data->id, blockwait?"true":"false" );
+
+  /* first handle the special train types */
+  /* cleaning should go through all blocks and not wait */
+  if( StrOp.equals( wLoc.cargo_cleaning, traintype ) ) {
+    if( wait != NULL )
+      *wait = ttwait;
+    if( data->prevLocId != NULL ) {
+      const char* locid = LocOp.getId( loc );
+      if( StrOp.equals( data->prevLocId, locid ) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Block \"%s\" is last visited by \"%s\"",
+                       data->id, locid );
+        return suits_ok;
+      }
+      else
+        return suits_well;
+    }
+    else
+      return suits_well;
+  }
+  /* all (hidden cleaning) should go through all blocks and wait */
+  if( StrOp.equals( wLoc.cargo_all, traintype ) ) {
+    if( wait != NULL )
+      *wait = blockwait;
+    if( data->prevLocId != NULL ) {
+      const char* locid = LocOp.getId( loc );
+      if( StrOp.equals( data->prevLocId, locid ) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Block \"%s\" is last visited by \"%s\"",
+                       data->id, locid );
+        return suits_ok;
+      }
+      else
+        return suits_well;
+    }
+    else
+      return suits_well;
+  }
+
 
   /* undefined block type */
   if( StrOp.equals( wBlock.type_none, blocktype ) || ( ttId != NULL && StrOp.len( ttId ) > 0 ) ) {
