@@ -1179,6 +1179,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     iOLoc lc = (iOLoc)MapOp.get( o->locMap, wLoc.getid( item ) );
     if( lc != NULL ) {
       iONode props = LocOp.base.properties( lc );
+      ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
       MapOp.remove( o->locMap, wLoc.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wLocList.name(), props );
@@ -1620,9 +1621,10 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   }
   else if( StrOp.equals( wModelCmd.lcprops, cmdVal ) ) {
     const char* lcID = wModelCmd.getval(cmd);
-    iONode lc = ModelOp.getLoc( inst, lcID );
+    iOLoc lc = ModelOp.getLoc( inst, lcID );
     if( lc != NULL ) {
-      ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(lc), wCommand.getserver( cmd ) );
+      iONode props = LocOp.base.properties(lc);
+      ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(props), wCommand.getserver( cmd ) );
     }
   }
   else if( StrOp.equals( wModelCmd.swlist, cmdVal ) ) {
@@ -3413,6 +3415,12 @@ static iOList _getRouteAliases(iOModel inst, const char* routeId) {
 static void _addSysEventListener(iOModel inst, obj listener) {
   iOModelData data = Data(inst);
   ListOp.add( data->sysEventListeners, listener );
+}
+
+
+static void _removeSysEventListener(iOModel inst, obj listener) {
+  iOModelData data = Data(inst);
+  ListOp.removeObj( data->sysEventListeners, listener );
 }
 
 

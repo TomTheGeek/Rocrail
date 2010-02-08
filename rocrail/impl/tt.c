@@ -694,7 +694,7 @@ static void __setLocDecFn( iONode cmd, int fn, Boolean state ) {
 }
 
 
-static Boolean __cmd_roco( iOTT inst, iONode nodeA ) {
+static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   Boolean ok = True;
   iOControl control = AppOp.getControl();
@@ -702,7 +702,7 @@ static Boolean __cmd_roco( iOTT inst, iONode nodeA ) {
   Boolean ttdir = True;
   iONode swcmd = NULL;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: %s", cmdStr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accdec: %s", cmdStr );
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
     swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -754,14 +754,14 @@ static Boolean __cmd_roco( iOTT inst, iONode nodeA ) {
     wSwitch.setaddr1( dircmd, wTurntable.getdiraddr( data->props ) );
     wSwitch.setprot( dircmd, wTurntable.getprot( data->props ) );
     wSwitch.setcmd( dircmd, ttdir? wSwitch.turnout:wSwitch.straight );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: set direction to %s...", ttdir?"turnout":"straight" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accdec: set direction to %s...", ttdir?"turnout":"straight" );
     ControlOp.cmd( control, dircmd, NULL );
     data->dir = ttdir;
 
     wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
     wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
     wSwitch.setcmd( swcmd, wSwitch.turnout );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor on..." );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accdec: turn motor on..." );
     ControlOp.cmd( control, swcmd, NULL );
 
   }
@@ -884,8 +884,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.locdec ) )
     return __cmd_locdec( (iOTT)inst, nodeA );
-  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) )
-    return __cmd_roco( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.accdec ) )
+    return __cmd_accdec( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.digitalbahn ) )
     return __cmd_digitalbahn( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.multiport ) )
@@ -1098,12 +1098,12 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
     }
 
-    else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) ) {
+    else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.accdec ) ) {
       iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       const char* iid = wTurntable.getiid( data->props );
       if( iid != NULL )
         wSwitch.setiid( swcmd, iid );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor off..." );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accdec: turn motor off..." );
       wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
       wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
       wSwitch.setcmd( swcmd, wSwitch.straight );
@@ -1339,12 +1339,12 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     ControlOp.cmd( control, cmd, NULL );
 
   }
-  else if( stop && StrOp.equals( wTurntable.gettype( data->props ), wTurntable.roco ) ) {
+  else if( stop && StrOp.equals( wTurntable.gettype( data->props ), wTurntable.accdec ) ) {
     iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     const char* iid = wTurntable.getiid( data->props );
     if( iid != NULL )
       wSwitch.setiid( swcmd, iid );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "roco: turn motor off..." );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accdec: turn motor off..." );
     wSwitch.setaddr1( swcmd, wTurntable.getaddr( data->props ) );
     wSwitch.setprot( swcmd, wTurntable.getprot( data->props ) );
     wSwitch.setcmd( swcmd, wSwitch.straight );

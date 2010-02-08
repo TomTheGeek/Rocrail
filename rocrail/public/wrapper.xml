@@ -1444,7 +1444,7 @@
         <const name="lightoff" vt="string" val="lightoff" remark="Turn lights off."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="locdec" vt="string" val="locdec" remark="Modified analog turntable."/>
-        <const name="roco" vt="string" val="roco" remark="Controlling a Roco turntable with switch commands."/>
+        <const name="accdec" vt="string" val="accdec" remark="Controlling a modified turntable with switch commands."/>
         <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>
         <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
         <const name="f6915" vt="string" val="f6915" remark="Fleischmann turn controller."/>
