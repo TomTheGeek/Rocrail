@@ -597,7 +597,7 @@ void BlockDialog::initValues() {
   int type = 0;
   if( StrOp.equals( wBlock.type_none, wBlock.gettype( m_Props ) ) )
     type = 0;
-  if( StrOp.equals( wBlock.type_local, wBlock.gettype( m_Props ) ) )
+  else if( StrOp.equals( wBlock.type_local, wBlock.gettype( m_Props ) ) )
     type = 1;
   else if( StrOp.equals( wBlock.type_ice, wBlock.gettype( m_Props ) ) )
     type = 2;
