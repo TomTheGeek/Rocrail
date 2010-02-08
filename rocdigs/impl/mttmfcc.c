@@ -648,9 +648,11 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, none );
   SerialOp.setLine( data->serial, 230400, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
   data->serialOK = SerialOp.open( data->serial );
 
   if(data->serialOK) {
+    data->run = True;
     data->sxReader = ThreadOp.inst( "sxReader", &__sxReader, __MttmFcc );
     ThreadOp.start( data->sxReader );
   }
