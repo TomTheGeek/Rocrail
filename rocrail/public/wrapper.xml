@@ -131,7 +131,7 @@
     <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
     <var name="scsensor" vt="string" defval="" range="0-*" remark="Shortcut sensor ID."/>
     <var name="sciid" vt="string" defval="" range="0-*" remark="Shortcut command station IID"/>
-  
+
     <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
       <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>
       <var name="id" vt="string" defval="" remark="R2Rnet ID."/>
@@ -139,7 +139,7 @@
       <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
       <var name="port" vt="int" defval="1234" range="0-*" remark="multicast port"/>
     </r2rnet>
-  
+
     <lcd wrappername="LCD" cardinality="1" remark="LCDisplay">
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
@@ -572,13 +572,13 @@
     <const name="on" vt="string" val="on"/>
     <const name="off" vt="string" val="off"/>
   </powercmd>
-  
+
   <powerevent remark="Power Manager event." wrappername="PwrEvent">
     <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>
     <var name="power" vt="bool" defval="false"/>
     <var name="shortcut" vt="bool" defval="false"/>
   </powerevent>
-  
+
   <sys remark="System command." wrappername="SysCmd">
     <const name="stoplocs" vt="string" val="stoplocs"/>
     <const name="stop" vt="string" val="stop"/>
@@ -819,10 +819,10 @@
     </occ>
   </modocc>
 
-	<actionctrl wrappername="ActionCtrl">
-	  <var name="id" vt="string" defval="" range="*" required="true"/>
-	  <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
-	  <var name="auto" vt="bool" defval="true" remark="Activate in auto mode."/>
+  <actionctrl wrappername="ActionCtrl">
+    <var name="id" vt="string" defval="" range="*" required="true"/>
+    <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
+    <var name="auto" vt="bool" defval="true" remark="Activate in auto mode."/>
     <var name="manual" vt="bool" defval="true" remark="Activate in manual mode."/>
     <var name="deact" vt="string" defval="none" range="none,enter,in" remark="Deactivation event."/>
     <var name="lcid" vt="string" defval="" range="*"/>
@@ -831,7 +831,7 @@
       <var name="type" vt="string" defval="" range="co,sw,sg,fb" required="true"/>
       <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
     </actioncond>
-	</actionctrl>
+  </actionctrl>
 
   <plan structname="RRP" wrappername="Plan" remark="Root node of the planfile.">
     <var name="title" vt="string" defval="New Plan" range="*" remark="Title of plan."/>
@@ -947,7 +947,7 @@
         <const name="prot_DO" vt="string" val="do" remark="Dinamo DO"/>
         <const name="prot_VO" vt="string" val="vo" remark="Dinamo VO"/>
 
-        <!-- CTC Address -->        
+        <!-- CTC Address -->
         <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
@@ -970,8 +970,8 @@
         <var name="ctcportled2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="ctcgateled2" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="ctcasswitchled2" vt="bool" defval="false" remark="send a switch command"/>
-        
-        
+
+
         <actionctrl cardinality="n"/>
         <accessoryctrl wrappername="AccessoryCtrl">
           <var name="active" vt="bool" defval="false" remark="Activate accessory control."/>
@@ -979,7 +979,7 @@
           <var name="delay" vt="int" defval="0" remark="Seconds to elaps to go back to the closed position."/>
           <var name="lockroutes" vt="string" defval="" range="Routes to lock at open, and unlock at close."/>
         </accessoryctrl>
-				
+
       </sw>
     </swlist>
     <sglist cardinality="1" remark="Signal table" wrappername="SignalList">
@@ -1163,7 +1163,7 @@
           <var name="hour" vt="int" defval="0" remark="Departure hour"/>
           <var name="minute" vt="int" defval="0" remark="Departure minute"/>
           <actionctrl cardinality="n"/>
-	        <var name="swap" vt="bool" defval="false" remark="swap the loc placing before traveling to this destination"/>
+          <var name="swap" vt="bool" defval="false" remark="swap the loc placing before traveling to this destination"/>
         </scentry>
         <var name="scaction" vt="string" defval="NULL" range="*" remark="schedule action id"/>
         <actionctrl cardinality="n"/>
@@ -1240,7 +1240,7 @@
         <const name="type_shunting" vt="string" val="shunting"/>
         <const name="type_goods" vt="string" val="goods"/>
         <const name="type_none" vt="string" val="none"/>
-        <const name="type_post" vt="string" val="none"/>
+        <const name="type_post" vt="string" val="post"/>
         <var name="type" vt="string" defval="none" range="none,local,ice,shunting,goods"/>
         <const name="incline_up" vt="int" val="1"/>
         <const name="incline_none" vt="int" val="0"/>
@@ -1360,7 +1360,7 @@
         <excl cardinality="n" />
         <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
         <var name="maxlen" vt="int" defval="0" range="0-*" remark="Maximal train length allowed for this route."/>
-        <!-- CTC Address -->        
+        <!-- CTC Address -->
         <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>
@@ -1743,8 +1743,8 @@
         <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
       </tx>
     </txlist>
-    
-        
+
+
     <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
       <ac cardinality="n" wrappername="Action" remark="">
         <const name="output_on" vt="string" val="on"/>
