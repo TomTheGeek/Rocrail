@@ -105,31 +105,9 @@ static void* __event( void* inst, const void* evt ) {
 static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
 }
 
-static Boolean __setActiveBus( iOMttmFccData data, int bus ) {
-
-  if( bus < 32 && data->activebus != bus ) {
-    byte cmd[2];
-    cmd[0] = 126;
-    cmd[1] = bus;
-    cmd[0] |= 0x80;
-
-    data->activebus = bus;
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set active bus to [%d]", bus );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 2 );
-    if( data->dummyio )
-      return True;
-    else
-      return SerialOp.write( data->serial, (char*)cmd, 2 );
-  }
-  return True;
-}
-
-
-static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in, int insize, int bus ) {
+static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
   Boolean rc = False;
   if( MutexOp.wait( data->mux ) ) {
-    Boolean ok = __setActiveBus( data, bus );
     TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
     if( rc = SerialOp.write( data->serial, out, outsize ) ) {
       if( insize > 0 ) {
@@ -202,7 +180,7 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   cmd[3] = addr % 256;
 
 
-  if( __transact( data, cmd, 5, &index, 1, wLoc.getbus(node) ) ) {
+  if( __transact( data, cmd, 5, &index, 1 ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got index %d for %s", index, wLoc.getid(node) );
     slot = allocMem( sizeof( struct slot) );
     slot->index = index;
@@ -223,14 +201,17 @@ static void __updateFB( iOMttmFccData data, iONode fbInfo ) {
   StrOp.free( str );
 
   /* reset the list: */
-  MemOp.set( data->fbmodcnt, 0, 32 * sizeof(int) );
-  MemOp.set( data->fbmods, 0, 32*256 );
+  MemOp.set( data->fbmodcnt, 0, 2 * sizeof(int) );
+  MemOp.set( data->fbmods, 0, 2*128 );
 
   for( i = 0; i < cnt; i++ ) {
     iONode fbmods = NodeOp.getChild( fbInfo, i );
     const char* mods = wFbMods.getmodules( fbmods );
     int bus = wFbMods.getbus( fbmods );
-    if( mods != NULL && StrOp.len( mods ) > 0 ) {
+    if( bus > 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unsupported bus=%d", bus );
+    }
+    else if( mods != NULL && StrOp.len( mods ) > 0 ) {
 
       iOStrTok tok = StrTokOp.inst( mods, ',' );
       int idx = 0;
@@ -247,34 +228,37 @@ static void __updateFB( iOMttmFccData data, iONode fbInfo ) {
 }
 
 
-static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize, int* bus ) {
+static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize ) {
   *insize = 0;
-  *bus = 0;
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
     __updateFB( data, node );
   }
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
-    byte pin = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    int bus   = wSwitch.getbus( node ) & 0x01;
+    int addr  = wSwitch.getaddr1( node ) & 0x7F;
+    byte pin  = 0x01 << ( wSwitch.getport1( node ) - 1 );
     byte mask = ~pin;
-    *bus = wSwitch.getbus( node ) & 0x1F;
-    out[0] = wSwitch.getaddr1( node );
-    out[1] = 0x01 << ( wSwitch.getport1( node ) - 1 );
-    out[0] |= 0x80;
+
+    out[0] = bus;
+    out[1] = addr | 0x80;
+    out[2] = 0x01 << ( wSwitch.getport1( node ) - 1 );
 
     /* reset pin to 0: */
-    out[1] = data->swstate[*bus][out[0]] & mask;
+    out[2] = data->swstate[bus][addr] & mask;
 
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
-      out[1] |= pin;
+      out[2] |= pin;
     /* save new state: */
-    data->swstate[*bus][out[0]] = out[1];
-    return 2;
+    data->swstate[bus][addr] = out[2];
+    *insize = 1;
+    return 3;
   }
 
   /* Output command */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int bus  = wOutput.getbus( node ) & 0x01;
     int addr = wOutput.getaddr( node );
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
@@ -282,22 +266,20 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize,
     byte pin = 0x01 << ( port - 1 );
     byte mask = ~pin;
 
-    *bus = wOutput.getbus(node);
-
-    out[0] = addr;
-    out[0] |= 0x80;
+    out[0] = bus;
+    out[1] = addr | 0x80;
 
     /* reset pin to 0: */
-    out[1] = data->swstate[*bus][out[0]] & mask;
+    out[2] = data->swstate[bus][addr] & mask;
 
     if( action )
-      out[1] |= pin;
+      out[2] |= pin;
     /* save new state: */
-    data->swstate[*bus][out[0]] = out[1];
-
-
-    return 2;
+    data->swstate[bus][addr] = out[2];
+    *insize = 1;
+    return 3;
   }
+
 
   /* System command. */
   /*
@@ -329,19 +311,13 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize,
 
   /* Loc command.*/
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    Boolean isSx1 = False;
-    int   addr = wLoc.getaddr( node );
     int  speed = 0;
-    byte cmd = 0;
-    byte rc = 0;
+    byte in = 0;
     Boolean fn = wLoc.isfn( node );
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
 
     int index = 0;
-
-    *bus = wLoc.getbus(node);
-
 
     iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
 
@@ -351,25 +327,28 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize,
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d steps=%d lights=%s dir=%s",
-        addr, speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
+        wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
     if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
       /* native selectrix SX1 */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
-      out[0] = wLoc.getaddr(node);
-      out[0] |= 0x80;
+      out[0] = wLoc.getbus(node)&0x01;
+      out[1] = wLoc.getaddr(node);
+      out[1] |= 0x80;
       /*
       SX1-Loks werden wie bisher direkt über die entsprechenden SX1-Kanäle des SX1/2-Bus- Systems 0 gesteuert.
-      Die Kanalbelegung ist daher selbstverständlich unverändert geblieben:
-      Bits 0 bis 4 Bit 5 Bit 6 Bit 7
-      Fahrstufen von 0 bis 31 Fahrtrichtung (0 entspricht vorwärts, 1 entspricht rückwärts)
-      Licht (0 bedeutet Licht aus, 1 bedeutet Licht ein) Horn (0 bedeutet Horn aus, 1 bedeutet Horn ein)
+      Die Kanalbelegung ist:
+      Bits 0 bis 4: Fahrstufen von 0 bis 31 
+      Bit 5:        Fahrtrichtung (0 entspricht vorwaerts, 1 entspricht rueckwaerts) 
+      Bit 6:        Licht (0 bedeutet Licht aus, 1 bedeutet Licht ein) 
+      Bit 7:        Horn (0 bedeutet Horn aus, 1 bedeutet Horn ein) 
       */
-      out[1] = speed & 0x1F;
-      out[1] |= wLoc.isdir(node) ? 0x00:0x20;
-      out[1] |= wLoc.isfn(node)  ? 0x00:0x40;
-      return 2;
+      out[2] = speed & 0x1F;
+      out[2] |= wLoc.isdir(node) ? 0x00:0x20;
+      out[2] |= wLoc.isfn(node)  ? 0x00:0x40;
+      *insize = 1;
+      return 3;
     }
 
 
@@ -386,7 +365,16 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize,
     }
 
     index = slot->index;
-
+    /* Lights 
+      ON : 0x79 0x05 Index 0x02 0x00
+      OFF: 0x79 0x05 Index 0x00 0x00
+    */
+    out[0] = 0x79;
+    out[1] = 0x05;
+    out[2] = index;
+    out[3] = fn?0x02:0x00;
+    out[4] = 0x00;
+    __transact( data, out, 5, &in, 1 );
 
     /*
       Verändern der Fahrstufe einer SX2-, DCC- oder MM-Lok:
@@ -409,101 +397,160 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize,
     out[3] = speed + (dir?0x00:0x80);
     out[4] = 0x00;
     *insize = 1; /* Return code from FCC. */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
     return 5;
 
   }
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    Boolean f1 = wFunCmd.isf1( node );
+    Boolean f2 = wFunCmd.isf2( node );
+    Boolean f3 = wFunCmd.isf3( node );
+    Boolean f4 = wFunCmd.isf4( node );
+    Boolean f5 = wFunCmd.isf5( node );
+    Boolean f6 = wFunCmd.isf6( node );
+    Boolean f7 = wFunCmd.isf7( node );
+    Boolean f8 = wFunCmd.isf8( node );
+    
     if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
       /* native selectrix SX1 */
       int   addr = wFunCmd.getaddr( node );
-      Boolean f1 = wFunCmd.isf1( node );
-      Boolean f2 = wFunCmd.isf2( node );
-      Boolean f3 = wFunCmd.isf3( node );
-      Boolean f4 = wFunCmd.isf4( node );
-      *bus  = wFunCmd.getbus( node ) & 0x1F;
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
+      out[0] = wLoc.getbus(node)&0x01;
+      out[1] = wLoc.getaddr(node);
+      out[1] |= 0x80;
+      out[2] = data->lcstate[out[0]][wLoc.getaddr(node)];
+      out[2] |= f1 ? 0x80:0x00;
 
-      out[0] = addr;
-      out[0] |= 0x80;
-      out[1] = data->lcstate[*bus][addr] & 0x7F;
-      out[1] |= f1 ? 0x80:0x00;
+      data->lcstate[out[0]][wLoc.getaddr(node)] = out[2];
 
-      data->lcstate[*bus][addr] = out[1];
-
-      return 2;
+      *insize = 1;
+      return 3;
     }
+    else {
+      iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+      if( slot == NULL ) {
+        slot = __getSlot(data, node );
+        if( slot != NULL ) {
+          MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+        }
+      }
+
+      if( slot == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
+        return 0;
+      }
+
+      out[0] = 0x79;
+      out[1] = 0x06;
+      out[2] = slot->index;
+      out[3] = f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7; 
+      out[4] = 0x00;
+
+      *insize = 1;
+      return 5;
+    }
+    
   }
 
   return 0;
 }
 
 
-static __evaluateFB( iOMttmFcc fcc, byte in, int addr, int bus ) {
+static __evaluateFB( iOMttmFcc fcc ) {
   iOMttmFccData data = Data(fcc);
+  int bus = 0;
+  int mod = 0;
 
-  if( in != data->fbstate[bus][addr] ) {
-    int n = 0;
-    int pin = 0;
-    int state = 0;
-    for( n = 0; n < 8; n++ ) {
-      if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
-        pin = n;
-        state = (in & (0x01 << n)) ? 1:0;
-        TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)&in, 1 );
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+pin+1, state );
-        {
-          /* inform listener: Node3 */
-          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          wFeedback.setaddr( nodeC, addr*8+pin+1 );
-          wFeedback.setbus( nodeC, bus );
-          wFeedback.setstate( nodeC, state?True:False );
-          if( data->iid != NULL )
-            wFeedback.setiid( nodeC, data->iid );
+  for( bus = 0; bus < 2; bus++ ) {
+    if( data->fbmodcnt[bus] == 0 )
+      continue;
+      
+    for( mod = 0; mod < data->fbmodcnt[bus]; mod++ ) {
+      int addr = data->fbmods[bus][mod];
+      byte in = data->sx1[bus][addr];
+      
+      if( in != data->fbstate[bus][addr] ) {
+        int n = 0;
+        int port = 0;
+        int state = 0;
+        for( n = 0; n < 8; n++ ) {
+          if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
+            port = n;
+            state = (in & (0x01 << n)) ? 1:0;
+            TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)&in, 1 );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
+            {
+              /* inform listener: Node3 */
+              iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+              wFeedback.setaddr( nodeC, addr*8+port+1 );
+              wFeedback.setbus( nodeC, bus );
+              wFeedback.setstate( nodeC, state?True:False );
+              if( data->iid != NULL )
+                wFeedback.setiid( nodeC, data->iid );
 
-          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+              data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+            }
+          }
         }
+        data->fbstate[bus][addr] = in;
       }
     }
-    data->fbstate[bus][addr] = in;
   }
+  
 }
 
 
-static void __feedbackReader( void* threadinst ) {
+static void __sxReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMttmFcc fcc = (iOMttmFcc)ThreadOp.getParm( th );
   iOMttmFccData data = Data(fcc);
-  unsigned char* fb = allocMem(256);
+  byte buffer[256];
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback reader started." );
-
-  /* TODO: bus support > 0 */
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX reader started." );
+  ThreadOp.sleep( 1000 );
+  
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to get the FCC version..." );
+  buffer[0] = 0x81;
+  if( __transact(data, buffer, 1, buffer, 7 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FCC version %d.%d", buffer[5], buffer[4] );
+  }
+  ThreadOp.sleep( 100 );
 
   while( data->run ) {
-    int i, n = 0;
-
+    byte cmd[2];
+    Boolean ok = True;
+    
     ThreadOp.sleep( 100 );
-
-    for( n=0; n < 32; n++ ) {
-      if( data->fbmodcnt[n] == 0 )
-        continue;
-
-      for( i = 0; i < data->fbmodcnt[n]; i++ ) {
-        byte cmd[2];
-        byte  in[2];
-        cmd[0] = data->fbmods[n][i] & 0x7F;
-        cmd[1] = 0;
-        if( __transact( data, cmd, 2, in, 1, n) ) {
-          __evaluateFB( fcc, in[0], data->fbmods[n][i], n );
-        }
+    if( ok ) {
+      cmd[0] = 0x78;
+      cmd[1] = 0x03;
+      ok = __transact( data, cmd, 2, buffer, 226);
+      if(ok) {
+        MemOp.copy( data->sx1[0], buffer, 113 );
+        MemOp.copy( data->sx1[1], buffer+113, 113 );
       }
     }
+    
+    ThreadOp.sleep( 100 );
+    if( ok ) {
+      cmd[0] = 0x78;
+      cmd[1] = 0xC0;
+      ok = __transact( data, cmd, 2, buffer, 192);
+      if(ok) {
+        MemOp.copy( data->sx2[0], buffer, 96 );
+        MemOp.copy( data->sx2[1], buffer+96, 96 );
+      }
+    }
+
+    if( ok ) {
+      __evaluateFB( fcc );
+    }
+    
   };
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback reader ended." );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX reader ended." );
 }
 
 
@@ -518,10 +565,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   MemOp.set( in, 0x00, sizeof( in ) );
 
   if( cmd != NULL ) {
-    int bus = 0;
-    int size = __translate( data, cmd, out, &insize, &bus );
+    int size = __translate( data, cmd, out, &insize );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
-    if( __transact( data, (char*)out, size, (char*)in, insize, bus ) ) {
+    if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
     }
   }
 
@@ -533,7 +579,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 static void _halt( obj inst ) {
   iOMttmFccData data = Data(inst);
   data->run = False;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
   SerialOp.close( data->serial );
 }
 
@@ -562,7 +608,7 @@ static int _state( obj inst ) {
 
 /**  */
 static Boolean _supportPT( obj inst ) {
-  return 0;
+  return False;
 }
 
 
@@ -605,8 +651,8 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = SerialOp.open( data->serial );
 
   if(data->serialOK) {
-    data->feedbackReader = ThreadOp.inst( "feedbackReader", &__feedbackReader, __MttmFcc );
-    ThreadOp.start( data->feedbackReader );
+    data->sxReader = ThreadOp.inst( "sxReader", &__sxReader, __MttmFcc );
+    ThreadOp.start( data->sxReader );
   }
 
   instCnt++;
