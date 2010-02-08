@@ -2002,7 +2002,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   }
 
   pen = (wxPen*)wxBLACK_PEN;
-  pen->SetWidth(1);
+  pen->SetWidth(2);
   dc.SetPen(*pen);
 
   dc.DrawCircle( 79, 79, 36 );

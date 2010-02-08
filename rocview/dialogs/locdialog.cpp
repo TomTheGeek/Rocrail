@@ -300,6 +300,7 @@ void LocDialog::initLabels() {
   m_CargoBox->SetString( 7, wxGetApp().getMsg( "light" ) );
   m_CargoBox->SetString( 8, wxGetApp().getMsg( "lightgoods" ) );
   m_CargoBox->SetString( 9, wxGetApp().getMsg( "regional" ) );
+  m_CargoBox->SetString( 10, wxGetApp().getMsg( "all" ) );
   m_secondNextBlock->SetLabel( wxGetApp().getMsg( "secondnextblock" ) );
   m_ShortIn->SetLabel( wxGetApp().getMsg( "useshortinevent" ) );
   m_InAtPre2In->SetLabel( wxGetApp().getMsg( "inatpre2in" ) );
@@ -631,6 +632,8 @@ void LocDialog::InitValues() {
     cargo = 8;
   else if( StrOp.equals( wLoc.cargo_regional, wLoc.getcargo( m_Props ) ) )
     cargo = 9;
+  else if( StrOp.equals( wLoc.cargo_all, wLoc.getcargo( m_Props ) ) )
+    cargo = 10;
   m_CargoBox->SetSelection( cargo );
   m_secondNextBlock->SetValue( wLoc.issecondnextblock( m_Props ) );
 
@@ -890,6 +893,8 @@ bool LocDialog::Evaluate() {
     wLoc.setcargo( m_Props, wLoc.cargo_lightgoods );
   else if( cargo == 9 )
     wLoc.setcargo( m_Props, wLoc.cargo_regional );
+  else if( cargo == 10 )
+    wLoc.setcargo( m_Props, wLoc.cargo_all );
 
   wLoc.setsecondnextblock( m_Props, m_secondNextBlock->IsChecked() ? True:False );
 
@@ -1474,6 +1479,7 @@ void LocDialog::CreateControls()
     m_CargoBoxStrings.Add(_("&light"));
     m_CargoBoxStrings.Add(_("&lightgoods"));
     m_CargoBoxStrings.Add(_("&Regional"));
+    m_CargoBoxStrings.Add(_("&All"));
     m_CargoBox = new wxRadioBox( m_DetailsPanel, ID_RADIOBOX_CARGO, _("Cargo"), wxDefaultPosition, wxDefaultSize, m_CargoBoxStrings, 3, wxRA_SPECIFY_COLS );
     m_CargoBox->SetSelection(0);
     itemBoxSizer99->Add(m_CargoBox, 0, wxGROW|wxALL, 5);
