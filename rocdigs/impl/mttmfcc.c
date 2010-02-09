@@ -129,26 +129,37 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
   int fncnt = wLoc.getfncnt(node);
+  Boolean ebreak = True;
+  Boolean sx1 = False;
   byte index = 0xFF;
   iOSlot slot = NULL;
   byte cmd[32] = {0x79, 0x01};
 
 
+  if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+    steps = 31;
+    sx1 = True;
+    ebreak = False;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sx1, steps=%d, fncnt=%d", steps, fncnt );
+  }
   /*
     Die DCC-Lok mit der langen Adresse 1234 und 126 Fahrstufen soll an die FCC- Digitalzentrale angemeldet werden:
     Bestimmung: 1234 (binär: 00010011010010) DCC-Lokadresse: 00010011010010 00 entspricht 0x1348
     Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x13  0x48  0x07
    */
-  if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
+  else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
     /* short DCC */
     addr = addr << 2;
     cmd[4] = steps > 100 ? 0x05:(steps > 14 ? 0x81:0x91);
+    steps =  steps > 100 ? 127:(steps > 14 ? 28:14);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "short DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
     /* long DCC */
     addr = addr << 2;
     cmd[4] = steps > 100 ? 0x07:(steps > 14 ? 0x83:0x93);
+    steps =  steps > 100 ? 127:(steps > 14 ? 28:14);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_M, wLoc.getprot(node) ) ) {
@@ -160,6 +171,7 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
      */
     addr = addr << 2;
     cmd[4] = fncnt == 4 ? 0x82:0x92;
+    steps = 14;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MM, steps=%d, fncnt=%d", steps, fncnt );
   }
   else {
@@ -174,6 +186,8 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
 
     /* default SX2 */
     cmd[4] = 0x04;
+    steps = 127;
+    ebreak = False;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "default SX2, steps=%d, fncnt=%d", steps, fncnt );
   }
 
@@ -186,6 +200,9 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     slot = allocMem( sizeof( struct slot) );
     slot->index = index;
     slot->protocol = cmd[4];
+    slot->steps = steps;
+    slot->ebreak = ebreak;
+    slot->sx1 = sx1;
   }
 
   return slot;
@@ -322,16 +339,35 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
     iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
 
+    if( slot == NULL ) {
+      slot = __getSlot(data, node );
+      if( slot != NULL ) {
+        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      }
+    }
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    spcnt = slot->steps;
+
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
         speed = (wLoc.getV( node ) * spcnt) / 100;
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
+
+    if( slot->ebreak && speed > 0 ) {
+      speed++;
+    }
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
         wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
-    if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+    if( slot->sx1 ) {
       /* native selectrix SX1 */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
       out[0] = wLoc.getbus(node)&0x01;
@@ -352,18 +388,6 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       return 3;
     }
 
-
-    if( slot == NULL ) {
-      slot = __getSlot(data, node );
-      if( slot != NULL ) {
-        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-      }
-    }
-
-    if( slot == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
-      return 0;
-    }
 
     index = slot->index;
     /* Lights 
@@ -527,6 +551,7 @@ static void __sxReader( void* threadinst ) {
     if( ok ) {
       cmd[0] = 0x78;
       cmd[1] = 0x03;
+      /*loopback test __transact( data, buffer, 224, NULL, 0);*/
       ok = __transact( data, cmd, 2, buffer, 226);
       if(ok) {
         MemOp.copy( data->sx1[0], buffer, 113 );
@@ -538,6 +563,7 @@ static void __sxReader( void* threadinst ) {
     if( ok ) {
       cmd[0] = 0x78;
       cmd[1] = 0xC0;
+      /*loopback test __transact( data, buffer, 190, NULL, 0);*/
       ok = __transact( data, cmd, 2, buffer, 192);
       if(ok) {
         MemOp.copy( data->sx2[0], buffer, 96 );

@@ -923,7 +923,10 @@
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
       <var name="addr" vt="int"/>
       <var name="index" vt="int"/>
-      <var name="protocol" vt="int" remark="0=sx1, 1=sx2, 2=dcc, 3=mm"/>
+      <var name="protocol" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="ebreak" vt="Boolean"/>
+      <var name="sx1" vt="Boolean"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
