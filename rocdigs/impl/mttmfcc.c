@@ -128,6 +128,7 @@ static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in,
 static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
+  int fncnt = wLoc.getfncnt(node);
   byte index = 0xFF;
   iOSlot slot = NULL;
   byte cmd[32] = {0x79, 0x01};
@@ -141,14 +142,14 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
     /* short DCC */
     addr = addr << 2;
-    cmd[4] = steps > 100 ? 0x05:0x01;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "short DCC" );
+    cmd[4] = steps > 100 ? 0x05:(steps > 14 ? 0x81:0x91);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "short DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
     /* long DCC */
     addr = addr << 2;
-    cmd[4] = steps > 100 ? 0x07:0x03;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long DCC" );
+    cmd[4] = steps > 100 ? 0x07:(steps > 14 ? 0x83:0x93);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_M, wLoc.getprot(node) ) ) {
     /* MM */
@@ -158,8 +159,8 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     Es ist daher Folgendes an die FCC-Digitalzentrale zu senden: Vom PC:  0x79  0x01  0x03  0x68  0x02
      */
     addr = addr << 2;
-    cmd[4] = 0x02;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MM" );
+    cmd[4] = fncnt == 4 ? 0x82:0x92;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MM, steps=%d, fncnt=%d", steps, fncnt );
   }
   else {
     /*
@@ -173,7 +174,7 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
 
     /* default SX2 */
     cmd[4] = 0x04;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "default SX2" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "default SX2, steps=%d, fncnt=%d", steps, fncnt );
   }
 
   cmd[2] = addr / 256;
