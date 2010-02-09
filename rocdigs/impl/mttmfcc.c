@@ -48,6 +48,9 @@
 
 static int instCnt = 0;
 
+static __evaluateFB( iOMttmFccData data );
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -246,6 +249,9 @@ static void __updateFB( iOMttmFccData data, iONode fbInfo ) {
     }
   }
 
+  if( data->dummyio ) {
+    __evaluateFB(data);
+  }
 }
 
 
@@ -496,10 +502,11 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 }
 
 
-static __evaluateFB( iOMttmFcc fcc ) {
-  iOMttmFccData data = Data(fcc);
+static __evaluateFB( iOMttmFccData data ) {
   int bus = 0;
   int mod = 0;
+
+  TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate sensors..." );
 
   for( bus = 0; bus < 2; bus++ ) {
     if( data->fbmodcnt[bus] == 0 )
@@ -517,8 +524,8 @@ static __evaluateFB( iOMttmFcc fcc ) {
           if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
             port = n;
             state = (in & (0x01 << n)) ? 1:0;
-            TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)&in, 1 );
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
+            TraceOp.dump ( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_BYTE, (char*)&in, 1 );
+            TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
             {
               /* inform listener: Node3 */
               iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -585,7 +592,7 @@ static void __sxReader( void* threadinst ) {
     }
 
     if( ok ) {
-      __evaluateFB( fcc );
+      __evaluateFB( data );
     }
     
   };
@@ -701,7 +708,9 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->sxReader );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );
     data->dummyio = True;
+    data->sx1[0][8] = 0x40;
   }
 
   instCnt++;
