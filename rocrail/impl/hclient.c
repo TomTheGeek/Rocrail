@@ -405,7 +405,7 @@ static void __getList( iOHClient inst, int list ) {
 
     fclose( f );
 
-    {
+    if(FileOp.exist( "list.html" ) ) {
       iOFile f = FileOp.inst( "list.html", OPEN_READONLY );
       long len = FileOp.size( f );
       char* buff = allocMem( len );
@@ -472,47 +472,50 @@ static void __getTracefile( iOHClient inst, const char* currentTrace ) {
     __header( data->socket, data->refresh );
 
     SocketOp.fmt( data->socket, "<table cellspacing= \"0\">\n" );
-    {
+    if( FileOp.exist( currentTrace ) ) {
       long size = FileOp.fileSize( currentTrace );
       char* str = allocMem( size + 1 );
       char* p = str;
       char* plf = str;
       int i = 0;
       iOFile f = FileOp.inst( currentTrace, OPEN_READONLY );
-      FileOp.read( f, str, size );
-      FileOp.base.del( f );
-      plf = StrOp.findc( p, '\n' );
 
-      while( plf != NULL ) {
-        char* bgcolor = i%2==0 ? "bgcolor=\"#DDFFDD\"":"";
-        if( StrOp.len( p ) > 25 ) {
-          if( p[25] == 'E' )
-            bgcolor = "bgcolor=\"#FFCCCC\"";
-          else if( p[25] == 'W' )
-            bgcolor = "bgcolor=\"#CCCCFF\"";
-        }
-        SocketOp.fmt( data->socket, "<tr %s><td><pre width=\"132\" style=\"display: inline\">", bgcolor );
-        i++;
-        *plf = '\0';
-        plf++;
-        if( StrOp.findc( p, '<' ) != NULL ) {
-          int i = 0;
-          for( i = 0; i < StrOp.len( p ); i++ ) {
-            if( p[i] == '<' )
-              SocketOp.fmt( data->socket, "&lt;" );
-            else if( p[i] == '>' )
-              SocketOp.fmt( data->socket, "&gt;" );
-            else
-              SocketOp.fmt( data->socket, "%c", p[i] );
-          }
-        }
-        else
-          SocketOp.fmt( data->socket, "%s\n", p );
-        p = plf;
+      if( f != NULL ) {
+        FileOp.read( f, str, size );
+        FileOp.base.del( f );
         plf = StrOp.findc( p, '\n' );
-        SocketOp.fmt( data->socket, "</pre></td></tr>\n" );
-      };
-      StrOp.free( str );
+
+        while( plf != NULL ) {
+          char* bgcolor = i%2==0 ? "bgcolor=\"#DDFFDD\"":"";
+          if( StrOp.len( p ) > 25 ) {
+            if( p[25] == 'E' )
+              bgcolor = "bgcolor=\"#FFCCCC\"";
+            else if( p[25] == 'W' )
+              bgcolor = "bgcolor=\"#CCCCFF\"";
+          }
+          SocketOp.fmt( data->socket, "<tr %s><td><pre width=\"132\" style=\"display: inline\">", bgcolor );
+          i++;
+          *plf = '\0';
+          plf++;
+          if( StrOp.findc( p, '<' ) != NULL ) {
+            int i = 0;
+            for( i = 0; i < StrOp.len( p ); i++ ) {
+              if( p[i] == '<' )
+                SocketOp.fmt( data->socket, "&lt;" );
+              else if( p[i] == '>' )
+                SocketOp.fmt( data->socket, "&gt;" );
+              else
+                SocketOp.fmt( data->socket, "%c", p[i] );
+            }
+          }
+          else
+            SocketOp.fmt( data->socket, "%s\n", p );
+          p = plf;
+          plf = StrOp.findc( p, '\n' );
+          SocketOp.fmt( data->socket, "</pre></td></tr>\n" );
+        };
+        StrOp.free( str );
+      }
     }
 
     SocketOp.fmt( data->socket, "</table>\n" );
