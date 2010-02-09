@@ -22,6 +22,7 @@
 #define YELLOW_ASPECT 1
 #define RED_ASPECT    2
 #define WHITE_ASPECT  3
+#define DEFAULT_ASPECT  4
 
 void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean routefromto);
 

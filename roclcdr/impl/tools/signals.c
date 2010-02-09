@@ -84,6 +84,10 @@ void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean
           cblock->red( cblock, True, routefromto );
           cblock->red( cblock, False, routefromto );
           break;
+        case DEFAULT_ASPECT:
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "red aspect for %s", bk );
+          cblock->setDefaultAspect( cblock, routefromto );
+          break;
         default:
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown aspect: %d", aspect );
           break;
@@ -138,6 +142,8 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
     if( data->next1Route != NULL ) {
       if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
         data->curBlock->setDefaultAspect( data->curBlock, signalpair );
+        /* crossing blocks ... */
+        setCrossingblockSignals( inst, data->next1Route, DEFAULT_ASPECT, signalpair );
       }
     }
     else {
