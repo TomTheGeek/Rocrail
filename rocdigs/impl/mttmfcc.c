@@ -106,16 +106,19 @@ static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in,
 }
 
 static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
-  Boolean rc = False;
+  Boolean rc = data->dummyio;
+
   if( MutexOp.wait( data->mux ) ) {
     TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
-    if( rc = SerialOp.write( data->serial, out, outsize ) ) {
-      if( insize > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
-        rc = SerialOp.read( data->serial, in, insize );
-        if( rc ) {
-          TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
-          __evaluateRsp(data, out, outsize, in, insize);
+    if( !data->dummyio ) {
+      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+        if( insize > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
+          rc = SerialOp.read( data->serial, in, insize );
+          if( rc ) {
+            TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+            __evaluateRsp(data, out, outsize, in, insize);
+          }
         }
       }
     }
@@ -195,7 +198,7 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   cmd[3] = addr % 256;
 
 
-  if( __transact( data, cmd, 5, &index, 1 ) ) {
+  if( sx1 || __transact( data, cmd, 5, &index, 1 ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got index %d for %s", index, wLoc.getid(node) );
     slot = allocMem( sizeof( struct slot) );
     slot->index = index;
@@ -347,7 +350,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     }
 
     if( slot == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
       return 0;
     }
 
@@ -369,7 +372,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
     if( slot->sx1 ) {
       /* native selectrix SX1 */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 loco command for %s", wLoc.getid(node) );
       out[0] = wLoc.getbus(node)&0x01;
       out[1] = wLoc.getaddr(node);
       out[1] |= 0x80;
@@ -383,7 +386,13 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       */
       out[2] = speed & 0x1F;
       out[2] |= wLoc.isdir(node) ? 0x00:0x20;
-      out[2] |= wLoc.isfn(node)  ? 0x00:0x40;
+      out[2] |= wLoc.isfn(node)  ? 0x40:0x00;
+      out[2] |= slot->horn  ? 0x80:0x00;
+
+      slot->speed = speed;
+      slot->dir = wLoc.isdir(node);
+      slot->lights = wLoc.isfn(node);
+
       *insize = 1;
       return 3;
     }
@@ -436,37 +445,41 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     Boolean f6 = wFunCmd.isf6( node );
     Boolean f7 = wFunCmd.isf7( node );
     Boolean f8 = wFunCmd.isf8( node );
-    
-    if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+
+    iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+
+    if( slot == NULL ) {
+      slot = __getSlot(data, node );
+      if( slot != NULL ) {
+        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      }
+    }
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+
+    if( slot->sx1 ) {
       /* native selectrix SX1 */
       int   addr = wFunCmd.getaddr( node );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "native SX1" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 function command for %s", wLoc.getid(node) );
       out[0] = wLoc.getbus(node)&0x01;
       out[1] = wLoc.getaddr(node);
       out[1] |= 0x80;
-      out[2] = data->lcstate[out[0]][wLoc.getaddr(node)];
+      out[2] = slot->speed & 0x1F;
+      out[2] |= slot->dir ? 0x00:0x20;
+      out[2] |= slot->lights ? 0x40:0x00;
       out[2] |= f1 ? 0x80:0x00;
-
-      data->lcstate[out[0]][wLoc.getaddr(node)] = out[2];
+      slot->horn = f1;
 
       *insize = 1;
       return 3;
     }
     else {
-      iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
-      if( slot == NULL ) {
-        slot = __getSlot(data, node );
-        if( slot != NULL ) {
-          MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-        }
-      }
-
-      if( slot == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get index for loco %s", wLoc.getid(node) );
-        return 0;
-      }
-
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function command for %s", wLoc.getid(node) );
       out[0] = 0x79;
       out[1] = 0x06;
       out[2] = slot->index;
@@ -664,6 +677,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+  data->dummyio  = wDigInt.isdummyio(ini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MTTM FCC %d.%d.%d", vmajor, vminor, patch );
@@ -672,16 +686,22 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, 230400, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
-  data->serialOK = SerialOp.open( data->serial );
+  data->serialOK = False;
+  if( !data->dummyio ) {
+    data->serial = SerialOp.inst( data->device );
+    SerialOp.setFlow( data->serial, none );
+    SerialOp.setLine( data->serial, 230400, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+    SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
+    data->serialOK = SerialOp.open( data->serial );
+  }
 
   if(data->serialOK) {
     data->run = True;
     data->sxReader = ThreadOp.inst( "sxReader", &__sxReader, __MttmFcc );
     ThreadOp.start( data->sxReader );
+  }
+  else {
+    data->dummyio = True;
   }
 
   instCnt++;

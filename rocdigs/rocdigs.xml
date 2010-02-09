@@ -925,8 +925,12 @@
       <var name="index" vt="int"/>
       <var name="protocol" vt="int"/>
       <var name="steps" vt="int"/>
+      <var name="speed" vt="int"/>
       <var name="ebreak" vt="Boolean"/>
       <var name="sx1" vt="Boolean"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="horn" vt="Boolean"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
@@ -946,7 +950,6 @@
       <var name="sx2[2][128]" vt="byte"/>
       <var name="sxReader" vt="iOThread"/>
       <var name="swstate[2][128]" vt="byte"/>
-      <var name="lcstate[2][128]" vt="byte"/>
       <var name="fbstate[2][128]" vt="byte"/>
       <var name="fbmodcnt[2]" vt="int"/>
       <var name="fbmods[2][128]" vt="byte"/>
