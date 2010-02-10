@@ -957,6 +957,7 @@
       <var name="fbmodcnt[2]" vt="int"/>
       <var name="fbmods[2][128]" vt="byte"/>
       <var name="dummyio" vt="Boolean"/>
+      <var name="power" vt="byte"/>
     </data>
   </object>
 

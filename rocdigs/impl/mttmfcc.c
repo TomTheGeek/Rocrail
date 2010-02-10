@@ -581,6 +581,15 @@ static __evaluateFB( iOMttmFccData data ) {
   int bus = 0;
   int mod = 0;
 
+  if( data->sx1[0][112] != data->power ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+    data->power = data->sx1[0][112];
+    wState.setiid( node, data->iid );
+    wState.setpower( node, data->power?True:False );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power event; changed to %s", data->power?"ON":"OFF" );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+
   TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate sensors..." );
 
   for( bus = 0; bus < 2; bus++ ) {
@@ -788,6 +797,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );
     data->dummyio = True;
     data->sx1[0][8] = 0x40;
+    data->sx1[0][112] = 0x01;
   }
 
   instCnt++;
