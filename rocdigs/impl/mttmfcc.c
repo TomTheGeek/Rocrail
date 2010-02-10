@@ -105,6 +105,78 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMttmFcc ----- */
+static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
+  Boolean changed = False;
+  int     speed   = 0;
+  Boolean dir     = True;
+  Boolean lights  = False;
+  Boolean horn    = False;
+
+  if( !slot->sx1 ) {
+    int index = slot->index;
+    int bus   = index > 15 ? 1:0;
+
+    index = index-(bus*16);
+    {
+      byte    format = data->sx2[bus][ 0 + index] & 0x0F;
+      byte    haddr  = data->sx2[bus][16 + index];
+      byte    laddr  = data->sx2[bus][32 + index];
+      byte    f1_8   = data->sx2[bus][64 + index];
+      byte    f9_16  = data->sx2[bus][80 + index];
+
+      lights = (data->sx2[bus][32 + index] & 0x02) ? True:False;
+      speed  = data->sx2[bus][48 + index] & 0x7F;
+      dir    = (data->sx2[bus][48 + index] & 0x80) ? False:True;
+    }
+  }
+  else {
+    /* SX1 */
+    byte sx1 = data->sx1[slot->bus][slot->addr];
+    speed  = sx1 & 0x1F;
+    dir    = (sx1 & 0x20) ? False:True;
+    lights = (sx1 & 0x40) ? True:False;
+    horn   = (sx1 & 0x80) ? True:False;
+  }
+
+  if( slot->speed != speed ) {
+    /* trace speed changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "speed change event from %d to %d for %s", slot->speed, speed, slot->id );
+    slot->speed != speed;
+    changed = True;
+  }
+  if( slot->dir != dir ) {
+    /* trace dir changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "direction change event from %s to %s for %s", slot->dir?"reverse":"forwards", dir?"reverse":"forwards", slot->id );
+    slot->dir != dir;
+    changed = True;
+  }
+  if( slot->lights != lights ) {
+    /* trace lights changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
+    slot->lights != lights;
+    changed = True;
+  }
+
+  return changed;
+}
+
+
+static Boolean __updateSlots(iOMttmFccData data) {
+  if( MutexOp.wait( data->lcmux ) ) {
+    iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
+    while( slot != NULL ) {
+      __updateSlot(data, slot);
+      slot = (iOSlot)MapOp.next( data->lcmap );
+    }
+    MutexOp.post(data->lcmux);
+  }
+
+}
+
+
 static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
 }
 
@@ -141,6 +213,11 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   iOSlot slot = NULL;
   byte cmd[32] = {0x79, 0x01};
 
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
 
   if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
     steps = 31;
@@ -158,14 +235,14 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     /* short DCC */
     addr = addr << 2;
     cmd[4] = steps > 100 ? 0x05:(steps > 14 ? 0x81:0x91);
-    steps =  steps > 100 ? 127:(steps > 14 ? 28:14);
+    steps =  steps > 100 ? 126:(steps > 14 ? 28:14);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "short DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
     /* long DCC */
     addr = addr << 2;
     cmd[4] = steps > 100 ? 0x07:(steps > 14 ? 0x83:0x93);
-    steps =  steps > 100 ? 127:(steps > 14 ? 28:14);
+    steps =  steps > 100 ? 126:(steps > 14 ? 28:14);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   else if( StrOp.equals( wLoc.prot_M, wLoc.getprot(node) ) ) {
@@ -209,6 +286,13 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     slot->steps = steps;
     slot->ebreak = ebreak;
     slot->sx1 = sx1;
+    slot->bus = wLoc.getbus(node);
+    slot->id = StrOp.dup(wLoc.getid(node));
+    if( MutexOp.wait( data->lcmux ) ) {
+      MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      MutexOp.post(data->lcmux);
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   }
 
   return slot;
@@ -346,19 +430,17 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
     int index = 0;
 
-    iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
-
-    if( slot == NULL ) {
-      slot = __getSlot(data, node );
-      if( slot != NULL ) {
-        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-      }
-    }
+    iOSlot slot = __getSlot(data, node );
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
       return 0;
     }
+
+    if( data->dummyio ) {
+      __updateSlots(data);
+    }
+
 
     spcnt = slot->steps;
 
@@ -391,9 +473,9 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       Bit 7:        Horn (0 bedeutet Horn aus, 1 bedeutet Horn ein) 
       */
       out[2] = speed & 0x1F;
-      out[2] |= wLoc.isdir(node) ? 0x00:0x20;
-      out[2] |= wLoc.isfn(node)  ? 0x40:0x00;
-      out[2] |= slot->horn  ? 0x80:0x00;
+      out[2] |= (wLoc.isdir(node) ? 0x00:0x20);
+      out[2] |= (wLoc.isfn(node)  ? 0x40:0x00);
+      out[2] |= (slot->horn  ? 0x80:0x00);
 
       slot->speed = speed;
       slot->dir = wLoc.isdir(node);
@@ -452,14 +534,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     Boolean f7 = wFunCmd.isf7( node );
     Boolean f8 = wFunCmd.isf8( node );
 
-    iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
-
-    if( slot == NULL ) {
-      slot = __getSlot(data, node );
-      if( slot != NULL ) {
-        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-      }
-    }
+    iOSlot slot = __getSlot(data, node );
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
@@ -476,9 +551,9 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[1] = wLoc.getaddr(node);
       out[1] |= 0x80;
       out[2] = slot->speed & 0x1F;
-      out[2] |= slot->dir ? 0x00:0x20;
-      out[2] |= slot->lights ? 0x40:0x00;
-      out[2] |= f1 ? 0x80:0x00;
+      out[2] |= (slot->dir ? 0x00:0x20);
+      out[2] |= (slot->lights ? 0x40:0x00);
+      out[2] |= (f1 ? 0x80:0x00);
       slot->horn = f1;
 
       *insize = 1;
@@ -489,7 +564,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[0] = 0x79;
       out[1] = 0x06;
       out[2] = slot->index;
-      out[3] = f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7; 
+      out[3] = (f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7);
       out[4] = 0x00;
 
       *insize = 1;
@@ -593,6 +668,7 @@ static void __sxReader( void* threadinst ) {
 
     if( ok ) {
       __evaluateFB( data );
+      __updateSlots( data );
     }
     
   };
@@ -680,6 +756,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   data->mux     = MutexOp.inst( NULL, True );
+  data->lcmux   = MutexOp.inst( NULL, True );
   data->lcmap   = MapOp.inst();
 
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );

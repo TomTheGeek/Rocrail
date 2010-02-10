@@ -921,6 +921,8 @@
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="bus" vt="int"/>
       <var name="addr" vt="int"/>
       <var name="index" vt="int"/>
       <var name="protocol" vt="int"/>
@@ -936,6 +938,7 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="mux" vt="iOMutex"/>
+      <var name="lcmux" vt="iOMutex"/>
       <var name="serial" vt="iOSerial"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
