@@ -314,7 +314,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         RouteOp.lock(st, lockid, False, True);
       }
       else if( StrOp.equals( wAction.route_unlock, wAction.getcmd( data->action ) ) ) {
-        RouteOp.unLock(st, wAction.getid( data->action ), NULL, True);
+        const char* lockid = wAction.getparam(data->action);
+        if( lockid == NULL || StrOp.len( lockid ) == 0 )
+          lockid = wAction.getid( data->action );
+        RouteOp.unLock(st, lockid, NULL, True);
       }
       else {
         RouteOp.go( st );

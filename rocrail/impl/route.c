@@ -921,12 +921,17 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
 static Boolean _unLock( iORoute inst, const char* id, const char** resblocks, Boolean unlockswitches ) {
   iORouteData o = Data(inst);
   if( StrOp.equals( id, o->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), id );
     if( unlockswitches )
       __unlockSwitches( inst, id );
     __unlockCrossingBlocks( inst, id, resblocks );
     o->lockedId = NULL;
     __broadcast(inst);
     return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s, route %s already locked by %s",
+        id, RouteOp.getId(inst), o->lockedId );
   }
   return False;
 }
