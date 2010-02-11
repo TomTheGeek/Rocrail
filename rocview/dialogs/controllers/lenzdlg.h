@@ -41,6 +41,7 @@ class wxSpinCtrl;
 
 ////@begin control identifiers
 #define ID_LENZDLG 10048
+#define ID_LENZTYPE 10048
 #define SYMBOL_LENZDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_LENZDLG_TITLE _("Lenz")
 #define SYMBOL_LENZDLG_IDNAME ID_LENZDLG
@@ -81,6 +82,9 @@ public:
 
 ////@begin LenzDlg event handler declarations
 
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_LENZTYPE
+    void OnLenztypeSelected( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -112,8 +116,6 @@ public:
     wxStaticBox* m_labSensor;
     wxStaticText* m_labSensorOffset;
     wxSpinCtrl* m_SensorOffset;
-    wxStaticText* m_labSensorDebounce;
-    wxSpinCtrl* m_SensorDebounce;
     wxStaticBox* m_labSwitch;
     wxStaticText* m_labSwitchTime;
     wxSpinCtrl* m_SwitchTime;

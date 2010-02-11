@@ -1440,26 +1440,22 @@ static void __transactor( void* threadinst ) {
       }
     }
 
-    /* Sensor Debounce */
-    data->fbCounter--;
-    if( data->fbCounter < 0) {
-      data->fbCounter = data->sensordebounce;
-      for( i=0; i<128*8; i++) {
-        if( data->fbState[i] != data->fbPreState[i] ) {
-          /* inform listener: Node3 */
-          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          data->fbState[i] = data->fbPreState[i];
-          wFeedback.setaddr( nodeC, i+data->fboffset );
-          wFeedback.setstate( nodeC, data->fbPreState[i] );
-          if( data->iid != NULL )
-            wFeedback.setiid( nodeC, data->iid );
+    /* Sensors */
+    for( i=0; i<128*8; i++) {
+      if( data->fbState[i] != data->fbPreState[i] ) {
+        /* inform listener: Node3 */
+        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        data->fbState[i] = data->fbPreState[i];
+        wFeedback.setaddr( nodeC, i+data->fboffset );
+        wFeedback.setstate( nodeC, data->fbPreState[i] );
+        if( data->iid != NULL )
+          wFeedback.setiid( nodeC, data->iid );
 
-          if( data->listenerFun != NULL && data->listenerObj != NULL )
-            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
-        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
       }
     }
 
@@ -1581,7 +1577,6 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   data->serial        = SerialOp.inst( wDigInt.getdevice( ini ) );
   data->startpwstate  = wDigInt.isstartpwstate( ini );
   data->bincmd        = False;
-  data->sensordebounce= wDigInt.getsensordebounce( ini );
   data->fastclock     = wDigInt.isfastclock(data->ini);
 
   MemOp.set( data->swTime0, -1, sizeof( data->swTime0 ) );
@@ -1608,7 +1603,6 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor debounce = %s", data->sensordebounce ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
