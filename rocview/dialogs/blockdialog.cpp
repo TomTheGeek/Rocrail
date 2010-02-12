@@ -2200,10 +2200,11 @@ void BlockDialog::initSensors() {
     TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "fbIndex %d", idx );
     const char* byroute = wFeedbackEvent.getbyroute(fb);
     const char* fromblock = wFeedbackEvent.getfrom(fb);
-    if( byroute == NULL || StrOp.len(byroute) == 0 )
-      byroute = fromblock;
+    Boolean fitByRoute = True;
+    if( byroute != NULL && StrOp.len(byroute) > 0 )
+      fitByRoute = StrOp.equals( m_ByRouteID, byroute );
 
-    if( StrOp.equals( m_FromBlockID, fromblock ) && StrOp.equals( m_ByRouteID, byroute ) ) {
+    if( StrOp.equals( m_FromBlockID, fromblock ) && fitByRoute ) {
       ids[idx]->SetStringSelection( wxString(wFeedbackEvent.getid( fb ),wxConvUTF8) );
       acts[idx]->SetStringSelection( wxString(wFeedbackEvent.getaction( fb ),wxConvUTF8) );
       end[idx]->SetValue( wFeedbackEvent.isendpuls( fb ) );
