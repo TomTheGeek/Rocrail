@@ -16,19 +16,19 @@ AppPublisherURL=http://www.rocrail.net/
 OutputBaseFilename=rocrail-setup-<VER>.<PATCH>-rev<BZR>-<TYPE>-<DIST>
 
 [Tasks]
-Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
+;Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
 Name: images; Description: "Rocview images"
 Name: themes; Description: "Rocview SVG Themes"
 Name: symbols; Description: "WebClient Symbols"
 
 [Run]
-Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
-Filename: "{sys}\sc.exe"; Parameters: "description rocrail ""Model Railroad Control Program""";Tasks: service
+;Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
+;Filename: "{sys}\sc.exe"; Parameters: "description rocrail ""Model Railroad Control Program""";Tasks: service
 
 [UninstallRun]
-Filename: "{sys}\sc.exe"; Parameters: "stop rocrail "
-Filename: "{sys}\sc.exe"; Parameters: "delete rocrail "
+;Filename: "{sys}\sc.exe"; Parameters: "stop rocrail "
+;Filename: "{sys}\sc.exe"; Parameters: "delete rocrail "
 
 [Code]
 procedure StopService();
@@ -40,8 +40,9 @@ begin
 end;
 
 [Files]
-Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; BeforeInstall: StopService; Tasks: service
-Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; Tasks: not service
+;Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; BeforeInstall: StopService; Tasks: service
+;Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"; Tasks: not service
+Source: "..\..\winbin\rocrail.exe"; DestDir: "{app}"
 Source: "stopservice.cmd"; DestDir: "{app}"
 Source: "mkservice.cmd"; DestDir: "{app}"
 Source: "..\..\winbin\rocview.exe"; DestDir: "{app}"
@@ -68,6 +69,10 @@ Source: "..\..\winbin\sprog.dll"; DestDir: "{app}"
 Source: "..\..\winbin\nce.dll"; DestDir: "{app}"
 Source: "..\..\winbin\dcc232.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rocnet.dll"; DestDir: "{app}"
+Source: "..\..\winbin\rfid12.dll"; DestDir: "{app}"
+Source: "..\..\winbin\lrc135.dll"; DestDir: "{app}"
+Source: "..\..\winbin\rclink.dll"; DestDir: "{app}"
+Source: "..\..\winbin\mttmfcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
@@ -85,6 +90,6 @@ Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; F
 Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\Rocrail"; Parameters: "-sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
-;Name: "{group}\Rocrail"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userappdata}\Rocrail\images"""; WorkingDir: "{userappdata}\Rocrail"; Filename: "{app}\rocrail.exe"
+Name: "{group}\Rocview"; Parameters: "-sp ""{app}"" -themespath ""{app}"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocview.exe"
+Name: "{group}\Rocrail Server"; IconFilename: "{app}\rocraild.ico"; Parameters: "-console -l ""{app}"" -img ""{userdocs}\Rocrail\images"""; WorkingDir: "{userdocs}\Rocrail"; Filename: "{app}\rocrail.exe"
 
