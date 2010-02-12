@@ -150,7 +150,7 @@
 // ----------------------------------------------------------------------------
 // the application icon
 
-#include "rocview/xpm/rocrail.xpm"
+#include "rocview/xpm/rocrail-32.xpm"
 #include "rocview/xpm/nopict.xpm"
 
 static void myjsListener( int device, int type, int number, int value, unsigned long msec );
@@ -1107,7 +1107,7 @@ void RocGuiFrame::initFrame() {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ThemePath=0x%08X", m_ThemePath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "m_ServerPath=0x%08X", m_ServerPath );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "init Frame..." );
-  SetIcon(wxIcon(rocrail_xpm));
+  SetIcon(wxIcon(rocrail_32_xpm));
 
   // define accelerator keys for some frequently used functions
   wxAcceleratorEntry acc_entries[64];
