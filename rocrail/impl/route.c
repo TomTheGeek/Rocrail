@@ -44,7 +44,6 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
-#include "rocrail/wrapper/public/SignalCmd.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
@@ -212,7 +211,6 @@ static Boolean _go( iORoute inst ) {
   iORouteData o = Data(inst);
   iOModel model = AppOp.getModel(  );
   iONode sw = wRoute.getswcmd( o->props );
-  iONode sg = wRoute.getsgcmd( o->props );
   iONode ac = wRoute.getactionctrl( o->props );
   int error = 0;
   int retry = 0;
@@ -229,26 +227,6 @@ static Boolean _go( iORoute inst ) {
     ac = wRoute.nextactionctrl( o->props, ac );
     ThreadOp.sleep( 10 );
   }
-
-  while( sg != NULL ) {
-    const char* sgId  = wSignalCmd.getid( sg );
-    const char* sgCmd = wSignalCmd.getcmd( sg );
-    iOSignal isg = ModelOp.getSignal( model, sgId );
-
-    if( isg != NULL ) {
-      if( StrOp.equals( wSignal.red, sgCmd ) )
-        SignalOp.red(isg);
-      else if( StrOp.equals( wSignal.green, sgCmd ) )
-        SignalOp.green(isg);
-      else if( StrOp.equals( wSignal.yellow, sgCmd ) )
-        SignalOp.yellow(isg);
-      else if( StrOp.equals( wSignal.white, sgCmd ) )
-        SignalOp.white(isg);
-    }
-
-    sg = wRoute.nextsgcmd( o->props, sg );
-  };
-
 
   while( sw != NULL ) {
     const char* swId  = wSwitchCmd.getid( sw );
@@ -290,6 +268,24 @@ static Boolean _go( iORoute inst ) {
       }
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*PANIC* No turntable object found for %s:%s", swId, swCmd );
+    }
+    else if( StrOp.equals( wSignal.red   , swCmd ) ||
+             StrOp.equals( wSignal.green , swCmd ) ||
+             StrOp.equals( wSignal.yellow, swCmd ) ||
+             StrOp.equals( wSignal.white , swCmd ) )
+    {
+      iOSignal isg = ModelOp.getSignal( model, swId );
+
+      if( isg != NULL ) {
+        if( StrOp.equals( wSignal.red, swCmd ) )
+          SignalOp.red(isg);
+        else if( StrOp.equals( wSignal.green, swCmd ) )
+          SignalOp.green(isg);
+        else if( StrOp.equals( wSignal.yellow, swCmd ) )
+          SignalOp.yellow(isg);
+        else if( StrOp.equals( wSignal.white, swCmd ) )
+          SignalOp.white(isg);
+      }
     }
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
@@ -471,7 +467,16 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
     Boolean tt = StrOp.equals( wSwitchCmd.cmd_track, wSwitchCmd.getcmd(sw) );
     Boolean lock = wSwitchCmd.islock(sw);
 
-    if( tt ) {
+    if( StrOp.equals( wSignal.red, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSignal.green, wSwitchCmd.getcmd(sw) ) ||
+        StrOp.equals( wSignal.yellow, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSignal.white, wSwitchCmd.getcmd(sw) ) )
+    {
+      iOSignal isw = ModelOp.getSignal( model, swId );
+      if( isw == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No signal object found for %s", swId );
+        return False;
+      }
+    }
+    else if( tt ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {

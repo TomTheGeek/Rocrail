@@ -1343,10 +1343,6 @@
           <const name="cmd_track" vt="string" val="track" remark="track of turntable or selectiontable: avoid using same id's for both types!"/>
           <var name="lock" vt="bool" defval="true" remark="lock the switch for exclusive use"/>
         </swcmd>
-        <sgcmd cardinality="n" wrappername="SignalCmd">
-          <var name="id" vt="string" defval="" range="*" required="true" remark="Signal ID."/>
-          <var name="cmd" vt="string" defval="red" range="green,red,yellow,white"/>
-        </sgcmd>
         <const name="go" vt="string" val="go" remark="Switch all switches for this street."/>
         <const name="test" vt="string" val="test" remark="Switch all switches for this street without sending the clients updates."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>

@@ -59,6 +59,7 @@
 #include "rocrail/wrapper/public/PermInclude.h"
 #include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Signal.h"
 
 /*!
  * RouteDialog type definition
@@ -239,7 +240,7 @@ void RouteDialog::initLabels() {
   m_Add->SetLabel( wxGetApp().getMsg( "add" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
-  m_LabelSwitchId->SetLabel( wxGetApp().getMsg( "turnoutid" ) );
+  m_LabelSwitchId->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labTrackNumber->SetLabel( wxGetApp().getMsg( "tracknr" ) );
   m_SwitchCmd->SetLabel( wxGetApp().getMsg( "command" ) );
   m_SwitchCmd->SetString( 0, wxGetApp().getMsg( "straight" ) );
@@ -247,6 +248,10 @@ void RouteDialog::initLabels() {
   m_SwitchCmd->SetString( 2, wxGetApp().getMsg( "left" ) );
   m_SwitchCmd->SetString( 3, wxGetApp().getMsg( "right" ) );
   m_SwitchCmd->SetString( 4, wxGetApp().getMsg( "track" ) );
+  m_SwitchCmd->SetString( 5, wxGetApp().getMsg( "red" ) );
+  m_SwitchCmd->SetString( 6, wxGetApp().getMsg( "green" ) );
+  m_SwitchCmd->SetString( 7, wxGetApp().getMsg( "yellow" ) );
+  m_SwitchCmd->SetString( 8, wxGetApp().getMsg( "white" ) );
   m_Lock->SetLabel( wxGetApp().getMsg( "lock" ) );
 
   // Sensors
@@ -474,6 +479,17 @@ void RouteDialog::initSwitchCombo() {
 		    }
 	    }
     }
+    iONode sglist = wPlan.getsglist( model );
+    if( sglist != NULL ) {
+      int cnt = NodeOp.getChildCnt( sglist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sg = NodeOp.getChild( sglist, i );
+        const char* id = wSignal.getid( sg );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)sg);
+        }
+      }
+    }
     iONode ttlist = wPlan.getttlist( model );
     if( ttlist != NULL ) {
       int cnt = NodeOp.getChildCnt( ttlist );
@@ -572,6 +588,10 @@ void RouteDialog::initValues() {
   m_SwitchCmd->Enable( 2, false );
   m_SwitchCmd->Enable( 3, false );
   m_SwitchCmd->Enable( 4, false );
+  m_SwitchCmd->Enable( 5, false );
+  m_SwitchCmd->Enable( 6, false );
+  m_SwitchCmd->Enable( 7, false );
+  m_SwitchCmd->Enable( 8, false );
 
   m_Lock->SetValue(true);
 
@@ -1129,7 +1149,11 @@ void RouteDialog::CreateControls()
     m_SwitchCmdStrings.Add(_("&right(3-way)"));
     m_SwitchCmdStrings.Add(_("&crossing"));
     m_SwitchCmdStrings.Add(_("&track"));
-    m_SwitchCmd = new wxRadioBox( m_CommandPanel, ID_RADIOBOX_ST_SW_CMD, _("Command"), wxDefaultPosition, wxDefaultSize, m_SwitchCmdStrings, 1, wxRA_SPECIFY_COLS );
+    m_SwitchCmdStrings.Add(_("&red"));
+    m_SwitchCmdStrings.Add(_("&green"));
+    m_SwitchCmdStrings.Add(_("&yellow"));
+    m_SwitchCmdStrings.Add(_("&white"));
+    m_SwitchCmd = new wxRadioBox( m_CommandPanel, ID_RADIOBOX_ST_SW_CMD, _("Command"), wxDefaultPosition, wxDefaultSize, m_SwitchCmdStrings, 2, wxRA_SPECIFY_COLS );
     m_SwitchCmd->SetSelection(0);
     itemBoxSizer57->Add(m_SwitchCmd, 0, wxALIGN_LEFT|wxALL, 5);
 
@@ -1367,7 +1391,19 @@ void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
       wSwitchCmd.setcmd( swcmd, wSwitchCmd.cmd_track );
       wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
       break;
-  }
+    case 5:
+        wSwitchCmd.setcmd( swcmd, wSignal.red );
+        break;
+    case 6:
+        wSwitchCmd.setcmd( swcmd, wSignal.green );
+        break;
+    case 7:
+        wSwitchCmd.setcmd( swcmd, wSignal.yellow );
+        break;
+    case 8:
+        wSwitchCmd.setcmd( swcmd, wSignal.white );
+        break;
+    }
 
   wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
 
@@ -1426,6 +1462,14 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
       m_TrackNumber->SetValue(wSwitchCmd.gettrack(swcmd));
       m_TrackNumber->Enable(true);
     }
+    else if( StrOp.equals( wSignal.red, wSwitchCmd.getcmd(swcmd) ) )
+      dir = 5;
+    else if( StrOp.equals( wSignal.green, wSwitchCmd.getcmd(swcmd) ) )
+      dir = 6;
+    else if( StrOp.equals( wSignal.yellow, wSwitchCmd.getcmd(swcmd) ) )
+      dir = 7;
+    else if( StrOp.equals( wSignal.white, wSwitchCmd.getcmd(swcmd) ) )
+      dir = 8;
     m_SwitchCmd->SetSelection(dir);
 
     m_Lock->Enable(true);
@@ -1440,6 +1484,10 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 2, true );
         m_SwitchCmd->Enable( 3, true );
         m_SwitchCmd->Enable( 4, false );
+        m_SwitchCmd->Enable( 5, false );
+        m_SwitchCmd->Enable( 6, false );
+        m_SwitchCmd->Enable( 7, false );
+        m_SwitchCmd->Enable( 8, false );
       }
       else if( StrOp.equals( wSwitch.dcrossing, wSwitch.gettype( sw ) ) ) {
         m_SwitchCmd->Enable( 0, true );
@@ -1447,6 +1495,10 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 2, true );
         m_SwitchCmd->Enable( 3, true );
         m_SwitchCmd->Enable( 4, false );
+        m_SwitchCmd->Enable( 5, false );
+        m_SwitchCmd->Enable( 6, false );
+        m_SwitchCmd->Enable( 7, false );
+        m_SwitchCmd->Enable( 8, false );
       }
       else if( StrOp.equals( wTurntable.name(), NodeOp.getName( sw ) ) ||
                StrOp.equals( wSelTab.name(), NodeOp.getName( sw ) ) ) {
@@ -1455,6 +1507,22 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 2, false );
         m_SwitchCmd->Enable( 3, false );
         m_SwitchCmd->Enable( 4, true );
+        m_SwitchCmd->Enable( 5, false );
+        m_SwitchCmd->Enable( 6, false );
+        m_SwitchCmd->Enable( 7, false );
+        m_SwitchCmd->Enable( 8, false );
+        m_Lock->Enable(false);
+      }
+      else if( StrOp.equals( wSignal.name(), NodeOp.getName( sw ) ) ) {
+        m_SwitchCmd->Enable( 0, false );
+        m_SwitchCmd->Enable( 1, false );
+        m_SwitchCmd->Enable( 2, false );
+        m_SwitchCmd->Enable( 3, false );
+        m_SwitchCmd->Enable( 4, false );
+        m_SwitchCmd->Enable( 5, true );
+        m_SwitchCmd->Enable( 6, true );
+        m_SwitchCmd->Enable( 7, true );
+        m_SwitchCmd->Enable( 8, true );
         m_Lock->Enable(false);
       }
       else {
@@ -1463,6 +1531,11 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 2, false );
         m_SwitchCmd->Enable( 3, false );
         m_SwitchCmd->Enable( 4, false );
+        m_SwitchCmd->Enable( 4, false );
+        m_SwitchCmd->Enable( 5, false );
+        m_SwitchCmd->Enable( 6, false );
+        m_SwitchCmd->Enable( 7, false );
+        m_SwitchCmd->Enable( 8, false );
       }
     }
 
@@ -1676,12 +1749,23 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
     m_SwitchCmd->Enable( 2, false );
     m_SwitchCmd->Enable( 3, false );
     m_SwitchCmd->Enable( 4, false );
+    m_SwitchCmd->Enable( 5, false );
+    m_SwitchCmd->Enable( 6, false );
+    m_SwitchCmd->Enable( 7, false );
+    m_SwitchCmd->Enable( 8, false );
     m_TrackNumber->Enable(false);
     if( StrOp.equals( wTurntable.name(), NodeOp.getName( sw ) ) ||
         StrOp.equals( wSelTab.name(), NodeOp.getName( sw ) )) {
       m_SwitchCmd->Enable( 4, true );
       m_SwitchCmd->SetSelection(4);
       m_TrackNumber->Enable(true);
+    }
+    else if( StrOp.equals( wSignal.name(), NodeOp.getName( sw ) ) ) {
+      m_SwitchCmd->Enable( 5, true );
+      m_SwitchCmd->Enable( 6, true );
+      m_SwitchCmd->Enable( 7, true );
+      m_SwitchCmd->Enable( 8, true );
+      m_SwitchCmd->SetSelection(5);
     }
     else if( StrOp.equals( wSwitch.threeway, wSwitch.gettype( sw ) ) ) {
       m_SwitchCmd->Enable( 0, true );
