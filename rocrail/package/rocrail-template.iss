@@ -74,9 +74,9 @@ Source: "..\..\winbin\lrc135.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rclink.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mttmfcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
-Source: "plan.xml"; DestDir: "{userappdata}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
-Source: "images\*.*"; DestDir: "{userappdata}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
 Source: "..\..\rocview\svg\themes\Accessories\*.*"; DestDir: "{app}\svg\themes\Accessories"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\Basic\*.*"; DestDir: "{app}\svg\themes\Basic"; Tasks: themes;
