@@ -142,21 +142,21 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     /* trace speed changed */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "speed change event from %d to %d for %s", slot->speed, speed, slot->id );
-    slot->speed != speed;
+    slot->speed = speed;
     changed = True;
   }
   if( slot->dir != dir ) {
     /* trace dir changed */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "direction change event from %s to %s for %s", slot->dir?"reverse":"forwards", dir?"reverse":"forwards", slot->id );
-    slot->dir != dir;
+    slot->dir = dir;
     changed = True;
   }
   if( slot->lights != lights ) {
     /* trace lights changed */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
-    slot->lights != lights;
+    slot->lights = lights;
     changed = True;
   }
 
