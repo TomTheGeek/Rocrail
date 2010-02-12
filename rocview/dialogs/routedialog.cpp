@@ -1512,6 +1512,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 7, false );
         m_SwitchCmd->Enable( 8, false );
         m_Lock->Enable(false);
+        m_Lock->SetValue(false);
       }
       else if( StrOp.equals( wSignal.name(), NodeOp.getName( sw ) ) ) {
         m_SwitchCmd->Enable( 0, false );
@@ -1524,6 +1525,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 7, true );
         m_SwitchCmd->Enable( 8, true );
         m_Lock->Enable(false);
+        m_Lock->SetValue(false);
       }
       else {
         m_SwitchCmd->Enable( 0, true );
@@ -1742,6 +1744,7 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
       m_Add->Enable( false );
       return;
     }
+    m_Lock->Enable(true);
     m_Add->Enable( true );
     m_SwitchCmd->SetSelection(0);
     m_SwitchCmd->Enable( 0, false );
@@ -1766,6 +1769,8 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
       m_SwitchCmd->Enable( 7, true );
       m_SwitchCmd->Enable( 8, true );
       m_SwitchCmd->SetSelection(5);
+      m_Lock->Enable(false);
+      m_Lock->SetValue(false);
     }
     else if( StrOp.equals( wSwitch.threeway, wSwitch.gettype( sw ) ) ) {
       m_SwitchCmd->Enable( 0, true );
