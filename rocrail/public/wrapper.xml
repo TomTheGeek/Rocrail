@@ -279,6 +279,8 @@
       <const name="sublib_default" vt="string" val="default"/>
       <const name="sublib_lenz_elite" vt="string" val="elite"/>
       <const name="sublib_lenz_roco" vt="string" val="roco"/>
+      <const name="sublib_lenz_opendcc" vt="string" val="opendcc"/>
+      <const name="sublib_lenz_atlas" vt="string" val="atlas"/>
       <var name="sublib" vt="string" defval="default"/>
 
       <!-- Serial connection: Fixed for most interfaces and controllers -->

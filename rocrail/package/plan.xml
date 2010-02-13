@@ -43,16 +43,16 @@
   <remark text=""/>
   <bklist>
     <bk id="01" fba="fb1a" fbb="fb1b" x="5" y="1" z="0" locid="" reserved="false" entering="false" state="open" prev_id="01" desc="" len="0" electrified="false" station="false" gomanual="true" acceptghost="false" terminalstation="false" wait="true" road="false" allowchgdir="true" smallsymbol="false" commuter="no" turnouts="" ttid="" signal="" wsignal="" signalR="" wsignalR="" speed="cruise" exitspeed="cruise" type="none" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" mvscale="87" mvdistance="0" mvmph="false" evttimer="0" iid="" addr="0" port="0" td="false" typeperm="all">
-      <fbevent id="fb1a" action="enter" from="all" byroute="all" endpuls="false"/>
-      <fbevent id="fb1b" action="in" from="all" byroute="all" endpuls="false"/>
+      <fbevent id="fb1a" action="enter" from="all"   endpuls="false"/>
+      <fbevent id="fb1b" action="in" from="all"   endpuls="false"/>
     </bk>
     <bk id="02" fba="fb2a" fbb="fb2b" x="5" y="4" z="0" reserved="true" entering="false" locid="" state="open" prev_id="02" desc="" len="0" electrified="false" station="false" gomanual="true" acceptghost="false" terminalstation="false" wait="true" road="false" allowchgdir="true" smallsymbol="false" commuter="no" turnouts="" ttid="" signal="" wsignal="" signalR="" wsignalR="" speed="cruise" exitspeed="cruise" type="none" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" mvscale="87" mvdistance="0" mvmph="false" evttimer="0" iid="" addr="0" port="0" td="false" typeperm="all">
-      <fbevent id="fb2a" action="enter" from="all" byroute="all" endpuls="false"/>
-      <fbevent id="fb2b" action="in" from="all" byroute="all" endpuls="false"/>
+      <fbevent id="fb2a" action="enter" from="all"   endpuls="false"/>
+      <fbevent id="fb2b" action="in" from="all"   endpuls="false"/>
     </bk>
     <bk id="03" fba="fb3a" fbb="fb3b" x="5" y="5" z="0" locid="E03" reserved="false" entering="false" state="open" prev_id="03" desc="" len="0" electrified="false" station="false" gomanual="true" acceptghost="false" terminalstation="false" wait="true" road="false" allowchgdir="true" smallsymbol="false" commuter="no" turnouts="" ttid="" signal="" wsignal="" signalR="" wsignalR="" speed="cruise" exitspeed="cruise" type="none" incline="0" waitmode="random" minwaittime="1" maxwaittime="30" waittime="10" mvscale="87" mvdistance="0" mvmph="false" evttimer="0" iid="" addr="0" port="0" td="false" typeperm="all">
-      <fbevent id="fb3a" action="enter" from="all" byroute="all" endpuls="false"/>
-      <fbevent id="fb3b" action="in" from="all" byroute="all" endpuls="false"/>
+      <fbevent id="fb3a" action="enter" from="all"   endpuls="false"/>
+      <fbevent id="fb3b" action="in" from="all"   endpuls="false"/>
     </bk>
   </bklist>
   <remark text=""/>

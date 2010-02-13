@@ -24,6 +24,8 @@
 #include "rocdigs/impl/xpressnet/liusb.h"
 #include "rocdigs/impl/xpressnet/elite.h"
 #include "rocdigs/impl/xpressnet/roco.h"
+#include "rocdigs/impl/xpressnet/opendcc.h"
+#include "rocdigs/impl/xpressnet/atlas.h"
 #include "rocdigs/impl/xpressnet/common.h"
 
 #include "rocs/public/mem.h"
@@ -175,19 +177,31 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite = liusbWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
-    /* LI-USB */
+    /* Hornby Elite */
     data->subInit  = eliteInit;
     data->subRead  = eliteRead;
     data->subWrite = eliteWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_roco, wDigInt.getsublib( ini ) ) ) {
-    /* LI-USB */
+    /* Roco */
     data->subInit  = rocoInit;
     data->subRead  = rocoRead;
     data->subWrite = rocoWrite;
   }
+  else if( StrOp.equals( wDigInt.sublib_lenz_opendcc, wDigInt.getsublib( ini ) ) ) {
+    /* OpenDCC */
+    data->subInit  = opendccInit;
+    data->subRead  = opendccRead;
+    data->subWrite = opendccWrite;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_atlas, wDigInt.getsublib( ini ) ) ) {
+    /* Atlas */
+    data->subInit  = atlasInit;
+    data->subRead  = atlasRead;
+    data->subWrite = atlasWrite;
+  }
   else {
-    /* LI101 */
+    /* default LI101 */
     data->subInit  = li101Init;
     data->subRead  = li101Read;
     data->subWrite = li101Write;
