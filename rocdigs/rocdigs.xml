@@ -380,6 +380,8 @@
       <var name="subWrite" vt="sublib_write"/>
       <var name="subInit" vt="sublib_init"/>
       <var name="subConnect" vt="sublib_connect"/>
+      <var name="fbmod" vt="int"/>
+      <var name="readfb" vt="Boolean"/>
     </data>
   </object>
 

@@ -20,12 +20,47 @@
 
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/li101.h"
+#include "rocrail/wrapper/public/DigInt.h"
 
 Boolean li101Connect(obj xpressnet) {
-  return True;
+  iOXpressNetData data = Data(xpressnet);
+  SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, 0, wDigInt.isrtsdisabled( data->ini ) );
+  return SerialOp.open( data->serial );
 }
 
 void li101Init(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
+
+  /* XpressNet
+     Asking for Interface version*/
+  byte* out = allocMem(32);
+  out[0] = 0xF0;
+  ThreadOp.post( data->transactor, (obj)out );
+
+  /* Asking for CS version */
+  out = allocMem(32);
+  out[0] = 0x21;
+  out[1] = 0x21;
+  out[2] = 0x00;
+  ThreadOp.post( data->transactor, (obj)out );
+
+
+
+  if( data->startpwstate) {
+    /* ALL ON */
+    out = allocMem(32);
+    out[0] = 0x21;
+    out[1] = 0x81;
+    out[2] = 0xA0;
+    ThreadOp.post( data->transactor, (obj)out );
+  } else {
+    /* ALL OFF*/
+    out = allocMem(32);
+    out[0] = 0x21;
+    out[1] = 0x80;
+    out[2] = 0xA1;
+    ThreadOp.post( data->transactor, (obj)out );
+  }
 }
 
 int li101Read(obj xpressnet, byte* buffer) {

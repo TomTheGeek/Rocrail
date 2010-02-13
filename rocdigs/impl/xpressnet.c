@@ -220,6 +220,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->serial        = SerialOp.inst( wDigInt.getdevice( ini ) );
   data->startpwstate  = wDigInt.isstartpwstate( ini );
   data->fastclock     = wDigInt.isfastclock(ini);
+  data->fbmod         = wDigInt.getfbmod( ini );
+  data->readfb        = wDigInt.isreadfb( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XpressNet %d.%d.%d", vmajor, vminor, patch );
@@ -277,6 +279,9 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite   = li101Write;
   }
 
+  data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
+
   if( data->subConnect((obj)__XpressNet) ) {
     /* start transactor */
     data->run = True;
@@ -284,10 +289,14 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->transactor = ThreadOp.inst( "transactor", &__transactor, __XpressNet );
     ThreadOp.start( data->transactor );
 
-    ThreadOp.sleep( 100 );
+    /* give the transactor thread time to start up */
+    ThreadOp.sleep( 10 );
 
     data->initializer = ThreadOp.inst( "initializer", &__initializer, __XpressNet );
     ThreadOp.start( data->initializer );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to initialize [%s]", wDigInt.getdevice( ini ) );
   }
 
 

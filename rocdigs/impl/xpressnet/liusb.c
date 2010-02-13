@@ -20,12 +20,18 @@
 
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/liusb.h"
+#include "rocdigs/impl/xpressnet/li101.h"
+#include "rocrail/wrapper/public/DigInt.h"
+
 
 Boolean liusbConnect(obj xpressnet) {
-  return False;
+  iOXpressNetData data = Data(xpressnet);
+  SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( data->ini ) );
+  return SerialOp.open( data->serial );
 }
 
 void liusbInit(obj xpressnet) {
+  li101Init(xpressnet);
 }
 
 int liusbRead(obj xpressnet, byte* buffer) {

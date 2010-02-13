@@ -26,12 +26,38 @@ Boolean eliteConnect(obj xpressnet) {
 }
 
 void eliteInit(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
+
+  /* Asking for CS version */
+  byte* out = allocMem(32);
+  out[0] = 0x21;
+  out[1] = 0x21;
+  out[2] = 0x00;
+  ThreadOp.post( data->transactor, (obj)out );
+
+
+
+  if( data->startpwstate) {
+    /* ALL ON */
+    out = allocMem(32);
+    out[0] = 0x21;
+    out[1] = 0x81;
+    out[2] = 0xA0;
+    ThreadOp.post( data->transactor, (obj)out );
+  } else {
+    /* ALL OFF*/
+    out = allocMem(32);
+    out[0] = 0x21;
+    out[1] = 0x80;
+    out[2] = 0xA1;
+    ThreadOp.post( data->transactor, (obj)out );
+  }
 }
 
 int eliteRead(obj xpressnet, byte* buffer) {
-  return 0;
+  return li101Read(xpressnet, buffer);
 }
 
 Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return False;
+  return li101Write(xpressnet, buffer, rspexpected);
 }
