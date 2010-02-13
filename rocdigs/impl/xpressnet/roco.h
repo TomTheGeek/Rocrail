@@ -24,6 +24,7 @@
 /*
  * Roco specific handling.
  */
+Boolean rocoConnect(obj xpressnet);
 void rocoInit(obj xpressnet);
 int rocoRead(obj xpressnet, byte* buffer);
 Boolean rocoWrite(obj xpressnet, byte* buffer, int* rspexpected);

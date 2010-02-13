@@ -23,6 +23,7 @@
 /*
  * Atlas specific handling.
  */
+Boolean atlasConnect(obj xpressnet);
 void atlasInit(obj xpressnet);
 int atlasRead(obj xpressnet, byte* buffer);
 Boolean atlasWrite(obj xpressnet, byte* buffer, int* rspexpected);

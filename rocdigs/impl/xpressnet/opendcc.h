@@ -24,6 +24,7 @@
 /*
  * OpenDCC specific handling.
  */
+Boolean opendccConnect(obj xpressnet);
 void opendccInit(obj xpressnet);
 int opendccRead(obj xpressnet, byte* buffer);
 Boolean opendccWrite(obj xpressnet, byte* buffer, int* rspexpected);

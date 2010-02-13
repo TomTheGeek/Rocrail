@@ -20,6 +20,7 @@
 
 #ifndef LIUSB_H_
 #define LIUSB_H_
+Boolean liusbConnect(obj xpressnet);
 void liusbInit(obj xpressnet);
 int liusbRead(obj xpressnet, byte* buffer);
 Boolean liusbWrite(obj xpressnet, byte* buffer, int* rspexpected);

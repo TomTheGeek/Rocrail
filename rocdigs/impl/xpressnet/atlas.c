@@ -22,6 +22,9 @@
 #include "rocdigs/impl/xpressnet/atlas.h"
 #include "rocdigs/impl/xpressnet/li101.h"
 
+Boolean atlasConnect(obj xpressnet) {
+  return li101Connect(xpressnet);
+}
 void atlasInit(obj xpressnet) {
   li101Init(xpressnet);
 }

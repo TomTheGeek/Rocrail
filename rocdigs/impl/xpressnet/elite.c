@@ -19,6 +19,11 @@
 */
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/elite.h"
+#include "rocdigs/impl/xpressnet/li101.h"
+
+Boolean eliteConnect(obj xpressnet) {
+  return li101Connect(xpressnet);
+}
 
 void eliteInit(obj xpressnet) {
 }
@@ -28,5 +33,5 @@ int eliteRead(obj xpressnet, byte* buffer) {
 }
 
 Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return True;
+  return False;
 }

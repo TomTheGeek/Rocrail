@@ -109,14 +109,56 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OXpressNet ----- */
 
 
+static void __transactor( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  unsigned char out[256];
+
+  ThreadOp.setDescription( th, "XpressNet transactor" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "transactor started." );
+
+  while( data->run ) {
+
+    ThreadOp.sleep(10);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "transactor ended." );
+}
+
+
+static void __initializer( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  unsigned char out[256];
+
+  ThreadOp.setDescription( th, "XpressNet initializer" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "initializer started." );
+
+  ThreadOp.sleep(100);
+  data->subInit((obj)xpressnet);
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "initializer ended." );
+  ThreadOp.base.del(th);
+}
+
+
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
+  iOXpressNetData data = Data(inst);
+
+  NodeOp.base.del(cmd);
   return 0;
 }
 
 
 /**  */
 static void _halt( obj inst ) {
+  iOXpressNetData data = Data(inst);
+  data->run = False;
   return;
 }
 
@@ -169,43 +211,85 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
   SystemOp.inst();
 
+  data->ini           = ini;
+  data->iid           = StrOp.dup( wDigInt.getiid( ini ) );
+  data->serialmux     = MutexOp.inst( StrOp.fmt( "serialMux%08X", data ), True );
+  data->swtime        = wDigInt.getswtime( ini );
+  data->dummyio       = wDigInt.isdummyio( ini );
+  data->fboffset      = wDigInt.getfboffset( ini );
+  data->serial        = SerialOp.inst( wDigInt.getdevice( ini ) );
+  data->startpwstate  = wDigInt.isstartpwstate( ini );
+  data->fastclock     = wDigInt.isfastclock(ini);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XpressNet %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib          = %s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib( ini ) ) ) {
     /* LI-USB */
-    data->subInit  = liusbInit;
-    data->subRead  = liusbRead;
-    data->subWrite = liusbWrite;
+    data->subConnect = liusbConnect;
+    data->subInit    = liusbInit;
+    data->subRead    = liusbRead;
+    data->subWrite   = liusbWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
     /* Hornby Elite */
-    data->subInit  = eliteInit;
-    data->subRead  = eliteRead;
-    data->subWrite = eliteWrite;
+    data->subConnect = eliteConnect;
+    data->subInit    = eliteInit;
+    data->subRead    = eliteRead;
+    data->subWrite   = eliteWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_roco, wDigInt.getsublib( ini ) ) ) {
     /* Roco */
-    data->subInit  = rocoInit;
-    data->subRead  = rocoRead;
-    data->subWrite = rocoWrite;
+    data->subConnect = rocoConnect;
+    data->subInit    = rocoInit;
+    data->subRead    = rocoRead;
+    data->subWrite   = rocoWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_opendcc, wDigInt.getsublib( ini ) ) ) {
     /* OpenDCC */
-    data->subInit  = opendccInit;
-    data->subRead  = opendccRead;
-    data->subWrite = opendccWrite;
+    data->subConnect = opendccConnect;
+    data->subInit    = opendccInit;
+    data->subRead    = opendccRead;
+    data->subWrite   = opendccWrite;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_atlas, wDigInt.getsublib( ini ) ) ) {
     /* Atlas */
-    data->subInit  = atlasInit;
-    data->subRead  = atlasRead;
-    data->subWrite = atlasWrite;
+    data->subConnect = atlasConnect;
+    data->subInit    = atlasInit;
+    data->subRead    = atlasRead;
+    data->subWrite   = atlasWrite;
   }
   else {
     /* default LI101 */
-    data->subInit  = li101Init;
-    data->subRead  = li101Read;
-    data->subWrite = li101Write;
+    data->subConnect = li101Connect;
+    data->subInit    = li101Init;
+    data->subRead    = li101Read;
+    data->subWrite   = li101Write;
   }
+
+  if( data->subConnect((obj)__XpressNet) ) {
+    /* start transactor */
+    data->run = True;
+
+    data->transactor = ThreadOp.inst( "transactor", &__transactor, __XpressNet );
+    ThreadOp.start( data->transactor );
+
+    ThreadOp.sleep( 100 );
+
+    data->initializer = ThreadOp.inst( "initializer", &__initializer, __XpressNet );
+    ThreadOp.start( data->initializer );
+  }
+
 
   instCnt++;
   return __XpressNet;

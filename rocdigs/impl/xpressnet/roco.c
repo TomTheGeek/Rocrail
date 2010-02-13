@@ -20,12 +20,19 @@
 
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/roco.h"
+#include "rocdigs/impl/xpressnet/li101.h"
+
+Boolean rocoConnect(obj xpressnet) {
+  return li101Connect(xpressnet);
+}
 
 void rocoInit(obj xpressnet) {
 }
+
 int rocoRead(obj xpressnet, byte* buffer) {
   return 0;
 }
+
 Boolean rocoWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return True;
+  return False;
 }

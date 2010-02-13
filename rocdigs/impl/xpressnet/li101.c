@@ -21,6 +21,10 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/li101.h"
 
+Boolean li101Connect(obj xpressnet) {
+  return True;
+}
+
 void li101Init(obj xpressnet) {
 }
 

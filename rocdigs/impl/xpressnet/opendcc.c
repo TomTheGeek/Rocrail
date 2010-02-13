@@ -22,6 +22,10 @@
 #include "rocdigs/impl/xpressnet/opendcc.h"
 #include "rocdigs/impl/xpressnet/li101.h"
 
+Boolean opendccConnect(obj xpressnet) {
+  return li101Connect(xpressnet);
+}
+
 void opendccInit(obj xpressnet) {
   li101Init(xpressnet);
 }
