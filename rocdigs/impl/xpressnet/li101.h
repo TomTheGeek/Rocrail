@@ -21,7 +21,9 @@
 
 #ifndef LI101_H_
 #define LI101_H_
+void li101Init(obj xpressnet);
 int li101Read(obj xpressnet, byte* buffer);
+Boolean li101Write(obj xpressnet, byte* buffer, int* rspexpected);
 
 
 #endif /* LI101_H_ */

@@ -24,6 +24,7 @@
 #include "rocdigs/impl/xpressnet/liusb.h"
 #include "rocdigs/impl/xpressnet/elite.h"
 #include "rocdigs/impl/xpressnet/roco.h"
+#include "rocdigs/impl/xpressnet/common.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
@@ -169,11 +170,27 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib( ini ) ) ) {
     /* LI-USB */
-    data->subRead = liusbRead;
+    data->subInit  = liusbInit;
+    data->subRead  = liusbRead;
+    data->subWrite = liusbWrite;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
+    /* LI-USB */
+    data->subInit  = eliteInit;
+    data->subRead  = eliteRead;
+    data->subWrite = eliteWrite;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_roco, wDigInt.getsublib( ini ) ) ) {
+    /* LI-USB */
+    data->subInit  = rocoInit;
+    data->subRead  = rocoRead;
+    data->subWrite = rocoWrite;
   }
   else {
     /* LI101 */
-    data->subRead = li101Read;
+    data->subInit  = li101Init;
+    data->subRead  = li101Read;
+    data->subWrite = li101Write;
   }
 
   instCnt++;

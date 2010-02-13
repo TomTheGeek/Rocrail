@@ -22,8 +22,11 @@
 #ifndef ROCO_H_
 #define ROCO_H_
 /*
- * Hornby Elite specific handling.
+ * Roco specific handling.
  */
+void rocoInit(obj xpressnet);
+int rocoRead(obj xpressnet, byte* buffer);
+Boolean rocoWrite(obj xpressnet, byte* buffer, int* rspexpected);
 
 
 #endif /* ROCO_H_ */

@@ -23,6 +23,9 @@
 /*
  * Hornby Elite specific handling.
  */
+void eliteInit(obj xpressnet);
+int eliteRead(obj xpressnet, byte* buffer);
+Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected);
 
 
 #endif /* ELITE_H_ */

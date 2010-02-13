@@ -21,7 +21,16 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/li101.h"
 
+void li101Init(obj xpressnet) {
+}
+
 int li101Read(obj xpressnet, byte* buffer) {
   return 0;
 }
+
+
+Boolean li101Write(obj xpressnet, byte* buffer, int* rspexpected) {
+  return True;
+}
+
 

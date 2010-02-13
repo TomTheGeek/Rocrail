@@ -21,3 +21,11 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/roco.h"
 
+void rocoInit(obj xpressnet) {
+}
+int rocoRead(obj xpressnet, byte* buffer) {
+  return 0;
+}
+Boolean rocoWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+  return True;
+}

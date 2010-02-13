@@ -341,8 +341,9 @@
 
 
   <object name="XpressNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint">
-    <typedef def="enum {XN_LI101=0, XN_LIUSB, XN_ELITE, XN_ROCO, XN_ATLAS } XNetType"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
+    <typedef def="Boolean(*sublib_write)(obj,byte*,int*)"/>
+    <typedef def="void(*sublib_init)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -361,7 +362,6 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="serial" vt="iOSerial"/>
-      <var name="xtype" vt="XNetType"/>
       <var name="serialmux" vt="iOMutex"/>
       <var name="fboffset" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
@@ -376,6 +376,8 @@
       <var name="fastclock" vt="Boolean"/>
       <var name="slotMap" vt="iOMap"/>
       <var name="subRead" vt="sublib_read"/>
+      <var name="subWrite" vt="sublib_write"/>
+      <var name="subInit" vt="sublib_init"/>
     </data>
   </object>
 

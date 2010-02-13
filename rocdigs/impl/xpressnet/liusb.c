@@ -21,7 +21,14 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/liusb.h"
 
+void liusbInit(obj xpressnet) {
+}
+
 int liusbRead(obj xpressnet, byte* buffer) {
   return 0;
+}
+
+Boolean liusbWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+  return True;
 }
 

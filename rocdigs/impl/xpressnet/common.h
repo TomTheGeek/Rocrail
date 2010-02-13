@@ -1,4 +1,4 @@
-/*
+ /*
  Rocrail - Model Railroad Software
 
  Copyright (C) Rob Versluis <r.j.versluis@rocrail.net>
@@ -17,16 +17,10 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#include "rocdigs/impl/xpressnet_impl.h"
-#include "rocdigs/impl/xpressnet/elite.h"
 
-void eliteInit(obj xpressnet) {
-}
 
-int eliteRead(obj xpressnet, byte* buffer) {
-  return 0;
-}
+#ifndef COMMON_H_
+#define COMMON_H_
 
-Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return True;
-}
+
+#endif /* COMMON_H_ */
