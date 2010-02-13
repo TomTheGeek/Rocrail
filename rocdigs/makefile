@@ -95,11 +95,12 @@ COMMONOBJS=$(patsubst impl/common/%.c,$(TMPOUTDIR)/common/%.o,$(wildcard impl/co
 NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c))
 ROCNETOBJS=$(patsubst impl/rocnet/%.c,$(TMPOUTDIR)/rocnet/%.o,$(wildcard impl/rocnet/*.c))
 OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl/opendcc/*.c))
+XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcard impl/xpressnet/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)lenz$(SHAREDSUFFIX) $(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)ddx$(SHAREDSUFFIX) $(OUTDIR)$(FS)slx$(SHAREDSUFFIX) $(OUTDIR)$(FS)ecos$(SHAREDSUFFIX) $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(OUTDIR)$(FS)barjut$(SHAREDSUFFIX) $(OUTDIR)$(FS)loconet$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX) \
+	$(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(OUTDIR)$(FS)barjut$(SHAREDSUFFIX) $(OUTDIR)$(FS)loconet$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(OUTDIR)$(FS)io8255$(SHAREDSUFFIX)
 	
@@ -165,6 +166,8 @@ $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rclink.o $(COMMONOBJS) $(R
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rclink.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)mttmfcc.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)mttmfcc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)xpressnet.o $(COMMONOBJS) $(RRLIBS) $(XPRESSNETOBJS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)xpressnet.o $(XPRESSNETOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -193,6 +196,9 @@ $(TMPOUTDIR)/rocnet/%.o: impl/rocnet/%.c
 $(TMPOUTDIR)/opendcc/%.o: impl/opendcc/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
+$(TMPOUTDIR)/xpressnet/%.o: impl/xpressnet/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+
 clean:
 	-$(MKDIR) $(OUTDIR)
 	-$(MKDIR) $(TMPOUTDIR)$(FS)ddx
@@ -202,6 +208,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)common
 	-$(MKDIR) $(TMPOUTDIR)$(FS)nmra
 	-$(MKDIR) $(TMPOUTDIR)$(FS)opendcc
+	-$(MKDIR) $(TMPOUTDIR)$(FS)xpressnet
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -210,6 +217,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ecos$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)common$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)opendcc$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)xpressnet$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)
@@ -239,6 +247,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -272,5 +281,6 @@ install:
 	-cp -p $(OUTDIR)$(FS)rclink$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) $(DESTDIR)
 	
 	

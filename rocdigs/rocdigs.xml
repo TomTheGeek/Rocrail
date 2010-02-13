@@ -340,6 +340,45 @@
   </object>
 
 
+  <object name="XpressNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint">
+    <typedef def="enum {XN_LI101=0, XN_LIUSB, XN_ELITE, XN_ROCO, XN_ATLAS } XNetType"/>
+    <typedef def="int(*sublib_read)(obj,byte*)"/>
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="addr" vt="int"/>
+      <var name="protocol" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="speed" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="fn" vt="int"/>
+    </struct>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="xtype" vt="XNetType"/>
+      <var name="serialmux" vt="iOMutex"/>
+      <var name="fboffset" vt="int"/>
+      <var name="dummyio" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="initializer" vt="iOThread"/>
+      <var name="transactor" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="swtime" vt="int"/>
+      <var name="startpwstate" vt="Boolean"/>
+      <var name="fastclock" vt="Boolean"/>
+      <var name="slotMap" vt="iOMap"/>
+      <var name="subRead" vt="sublib_read"/>
+    </data>
+  </object>
+
    <object name="Virtual" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
