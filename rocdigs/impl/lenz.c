@@ -39,7 +39,6 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Response.h"
-#include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -259,24 +258,6 @@ static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
         data->fbPreState[iAddr] = bState;
       }
     }
-  }
-
-  /* Throttle Broadcast */
-  if( (in[0] & 0xF0) == 0x30) {
-    iONode node = NodeOp.inst( wThrottleCmd.name(), NULL, ELEMENT_NODE );
-
-    /* TODO: translate the lenz packet in a global command format
-     *  with predefined wThrottleCmd attributes.
-     */
-
-    NodeOp.setInt( node, "slot", in[1] );
-    NodeOp.setInt( node, "type", in[2] );
-    NodeOp.setInt( node, "key", in[3] );
-    NodeOp.setInt( node, "val", in[4] );
-
-    /* fill the node with data... */
-    if( data->listenerFun != NULL && data->listenerObj != NULL )
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 
   /* SM response Direct CV mode: */
@@ -1471,34 +1452,9 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   iONode nodeB = NULL;
 
   if( nodeA != NULL ) {
-    if( StrOp.equals( wThrottleCmd.name(), NodeOp.getName(nodeA) ) ) {
 
-      /* TODO: throttle command processing */
-      /*
-      const char * str  = NodeOp.getStr(nodeA, "str",  0 );
-      int msgsize = StrOp.len( str);
-      int i;
-
-      char* outc = allocMem(256);
-      outc[0] = 0x34 + msgsize;
-      outc[1] = NodeOp.getInt(nodeA, "slot", 0 );
-      outc[2] = NodeOp.getInt(nodeA, "type", 0);
-      outc[3] = NodeOp.getInt(nodeA, "xpos", 0 );
-      outc[4] = NodeOp.getInt(nodeA, "ypos", 0 );
-
-      for (i = 0; i < msgsize; i++) {
-          outc[i + 5] = str[i];
-      }
-
-      TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999,
-          "Repeat: %X %X %X %X", outc[0],outc[1],outc[2],outc[3] );
-
-      ThreadOp.post(data->transactor, (obj) outc);
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Throttle Command sended.");
-       */
-
-      /* Bin Commands (opendcc)*/
-    } else if (StrOp.equals( NodeOp.getName( nodeA ), wBinCmd.name() )) {
+    /* Bin Commands (opendcc)*/
+    if (StrOp.equals( NodeOp.getName( nodeA ), wBinCmd.name() )) {
       nodeB = __translate_bin( (iOLenz)inst, nodeA );
     }
     else

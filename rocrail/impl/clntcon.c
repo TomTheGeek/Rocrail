@@ -426,12 +426,6 @@ static void __doBroadcast( iOClntCon inst, iONode nodeDF ) {
     MutexOp.post( data->muxMap );
   }
 
-  /* Inform the throttle of a broadcast event. */
-  if( AppOp.getControl() != NULL && ControlOp.getThrottle( AppOp.getControl() ) != NULL ) {
-    iOThrottle throttle = ControlOp.getThrottle( AppOp.getControl() );
-    throttle->base.event(throttle, nodeDF->base.clone( nodeDF ));
-  }
-
   nodeDF->base.del(nodeDF);
 }
 

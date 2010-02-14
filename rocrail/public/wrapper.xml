@@ -144,10 +144,7 @@
       <var name="host" vt="string" defval="localhost" range="*" remark="LCDproc host"/>
       <var name="port" vt="int" defval="13666" range="0-*" remark="LCDproc port"/>
     </lcd>
-    <throttle wrappername="Throttle" cardinality="1" remark="Throttle ini">
-      <var name="type" vt="string" defval="opendcc" range="*" remark="throttle type"/>
-      <var name="iid" vt="string" defval="" range="*" remark="IID to use for sending throttle commands."/>
-    </throttle>
+
     <jsmap wrappername="JsMap">
       <var name="select" vt="int" defval="9" range="*"/>
       <var name="updown" vt="int" defval="5" range="*" remark="Y"/>
@@ -561,11 +558,6 @@
   <ext remark="External command." wrappername="ExtCmd">
     <var name="cmdline" vt="string" defval="" range="*"/>
   </ext>
-
-  <thr remark="Throttle packet." wrappername="ThrottleCmd">
-    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
-    <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
-  </thr>
 
   <powercmd remark="Power Manager command." wrappername="PwrCmd">
     <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>

@@ -68,8 +68,38 @@ int li101Read(obj xpressnet, byte* buffer) {
 }
 
 
-Boolean li101Write(obj xpressnet, byte* buffer, int* rspexpected) {
-  return True;
+Boolean li101Write(obj xpressnet, byte* out, int* rspexpected) {
+  iOXpressNetData data = Data(xpressnet);
+
+  int len = 0;
+  int i = 0;
+  Boolean rc = False;
+  byte bXor = 0;
+
+  len = out[0] & 0x0f;
+  len++; /* header */
+
+  if( out[0] == 0x00 ) {
+    return False;
+  }
+
+  for ( i = 0; i < len; i++ ) {
+    bXor ^= out[i];
+  }
+  out[i] = bXor;
+  len++; /* checksum */
+
+  if( MutexOp.wait( data->serialmux ) ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+    if( !data->dummyio ) {
+      rc = SerialOp.write( data->serial, (char*)out, len );
+    }
+
+    MutexOp.post( data->serialmux );
+  }
+
+  return rc;
 }
 
 

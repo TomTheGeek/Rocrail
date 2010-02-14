@@ -38,7 +38,47 @@ int liusbRead(obj xpressnet, byte* buffer) {
   return 0;
 }
 
-Boolean liusbWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return False;
+Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {
+  iOXpressNetData data = Data(xpressnet);
+
+  int len = 0;
+  int i = 0;
+  Boolean rc = False;
+  byte bXor = 0;
+  unsigned char out[256];
+
+  len = outin[0] & 0x0f;
+  len++; /* header */
+
+  if( out[0] == 0x00 ) {
+    return False;
+  }
+
+  for ( i = 0; i < len; i++ ) {
+    bXor ^= outin[i];
+  }
+  outin[i] = bXor;
+  len++; /* checksum */
+
+  /* make extra header for LI-USB*/
+  MemOp.copy( out+2, outin, len );
+
+  len = len+2;
+  out[0] = 0xFF;
+  out[1] = 0xFE;
+
+  out[len-1] = bXor;
+
+  if( MutexOp.wait( data->serialmux ) ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+    if( !data->dummyio ) {
+      rc = SerialOp.write( data->serial, (char*)out, len );
+    }
+
+    MutexOp.post( data->serialmux );
+  }
+
+  return rc;
 }
 

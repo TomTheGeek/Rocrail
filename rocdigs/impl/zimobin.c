@@ -39,7 +39,6 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Response.h"
-#include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -111,7 +110,7 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /* Update 8-bit CRC value
-ÊÊusing polynomialÊ X^8 + X^5 + X^4 + 1 */
+ï¿½ï¿½using polynomialï¿½ X^8 + X^5 + X^4 + 1 */
 #define POLYVAL 0x8C
 static void __updateCRC(byte new, byte* crc)
 {

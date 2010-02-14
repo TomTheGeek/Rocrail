@@ -26,7 +26,6 @@
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/block.h"
-#include "rocrail/public/throttle.h"
 #include "rocrail/public/r2rnet.h"
 
 #include "rocint/public/digint.h"
@@ -68,7 +67,6 @@
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/Action.h"
-#include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/PwrCmd.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Booster.h"
@@ -712,11 +710,6 @@ static void __listener( obj inst, iONode nodeC, int level ) {
       ControlOp.cmd( (iOControl)inst, cmd, NULL );
     }
   }
-  else if( StrOp.equals( wThrottleCmd.name(), NodeOp.getName( nodeC ) ) ) {
-    /* Dispatch to the throttle object: */
-    if( data->throttle != NULL )
-      ThrottleOp.cmd( data->throttle, nodeC );
-  }
   else if( StrOp.equals( wDigInt.name(), NodeOp.getName( nodeC ) ) ) {
     /* Broadcast to clients. Node3 */
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeC );
@@ -1054,11 +1047,6 @@ static void __checker( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Checker ended." );
 }
 
-static iOThrottle _getThrottle(iOControl control) {
-  iOControlData data = Data(control);
-  return data->throttle;
-}
-
 static iOR2Rnet _getR2Rnet(iOControl control) {
   iOControlData data = Data(control);
   return data->r2rnet;
@@ -1088,12 +1076,7 @@ static iOControl _inst( Boolean nocom ) {
       __initDigInts( control );
     }
 
-    /* instantiate the throttle object if a throttle node is found in the rocrail.ini */
-    if( wRocRail.getthrottle(ini) != NULL ) {
-      data->throttle = ThrottleOp.inst(wRocRail.getthrottle(ini));
-    }
-
-    if( 1 ) {
+    {
       iOModel model = AppOp.getModel();
       if( model != NULL) {
         iONode plan = ModelOp.getModel( model );

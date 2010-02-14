@@ -188,7 +188,7 @@
   </object>
 
 
-  <object name="Control" use="node,map,thread" include="r2rnet,throttle,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
+  <object name="Control" use="node,map,thread" include="r2rnet,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
     <typedef def="enum {CMD_OK=0,CMD_RETRY,CMD_ERROR} cmd_state"/>
     <typedef def="void(*control_callback)(obj,iONode)"/>
     <fun name="inst" vt="this">
@@ -214,9 +214,6 @@
     <fun name="getState" vt="iONode">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
-    <fun name="getThrottle" vt="iOThrottle">
-      <param name="inst" vt="this" remark="Control instance"/>
-    </fun>
     <fun name="setBoosters" vt="void">
       <param name="inst" vt="this" remark="Control instance"/>
       <param name="boosterlist" vt="iONode" remark="Booster list"/>
@@ -239,7 +236,6 @@
       <var name="sensorbus" vt="Boolean"/>
       <var name="accessorybus" vt="Boolean"/>
       <var name="checker" vt="iOThread"/>
-      <var name="throttle" vt="iOThrottle"/>
       <var name="powerman" vt="iOPowerMan"/>
       <var name="r2rnet" vt="iOR2Rnet"/>
     </data>
@@ -1569,20 +1565,6 @@
       <var name="action" vt="iONode"/>
       <var name="timerthread" vt="iOThread"/>
       <var name="actionctrl" vt="iONode"/>
-    </data>
-  </object>
-
-
-  <object name="Throttle" use="node">
-    <fun name="inst" vt="this">
-      <param name="ini" vt="iONode" remark="ini node"/>
-    </fun>
-    <fun name="cmd" vt="void">
-      <param name="inst" vt="this"/>
-      <param name="cmd" vt="iONode" remark="throttle command node"/>
-    </fun>
-    <data>
-      <var name="ini" vt="iONode"/>
     </data>
   </object>
 

@@ -165,6 +165,40 @@ int rocoRead(obj xpressnet, byte* buffer) {
   return 0;
 }
 
-Boolean rocoWrite(obj xpressnet, byte* buffer, int* rspexpected) {
-  return False;
+Boolean rocoWrite(obj xpressnet, byte* outin, int* rspexpected) {
+  iOXpressNetData data = Data(xpressnet);
+
+  int len = outin[0]+1;
+  int i = 0;
+  Boolean rc = False;
+  byte bXor = 0;
+  unsigned char out[len];
+
+  // remove length header
+  for (i = 0; i < len-1; i++)
+     out[i] = (unsigned char) outin[i+1];
+
+  // calculate xor
+  for ( i = 1; i < len-1; i++ ) {
+    bXor ^= out[i];
+  }
+  out[len-1] = bXor;
+
+  // NO XOR for ok byte
+  if ( out[0] == 0x10 )
+    len = 1;
+
+  // write out
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "wait for mutex..." );
+  if( MutexOp.trywait( data->serialmux, 1000 ) ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+    if( !data->dummyio ) {
+      rc = SerialOp.write( data->serial, (char*)out, len );
+    }
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "packet written" );
+    MutexOp.post( data->serialmux );
+  }
+
+  return rc;
 }
