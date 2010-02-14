@@ -399,120 +399,6 @@ static void __initializer( void* threadinst ) {
 
 }
 
-static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
-  iOLenzData data = Data(lenz);
-  iONode nodeB = NULL;
-
-  data->bincmd = True;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bin command" );
-
-  int outLen = wBinCmd.getoutlen(nodeA);
-  byte* outBytes = StrOp.strToByte( wBinCmd.getout(nodeA));
-
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out I" );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
-
-  if( outBytes[0] == 0x78 ) {
-    /* Flip around the address bytes*/
-    byte tmp = outBytes[2];
-    outBytes[2] = outBytes[3];
-    outBytes[3] = tmp;
-
-    /* READ */
-    if( outBytes[1] == 0xA4) {
-      outBytes[0] = 0x24;
-      outBytes[1] = 0x28;
-      __sendRequest( lenz, outBytes );
-    }
-
-    /* WRITE */
-    else if( outBytes[1] == 0xA3) {
-      outBytes[0] = 0x24;
-      outBytes[1] = 0x29;
-      __sendRequest( lenz, outBytes );
-    }
-  }
-  else {
-    __sendRequest( lenz, outBytes );
-  }
-
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out II" );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
-
-  freeMem(outBytes);
-
-  int datalen;
-  byte in[256];
-
-  /* deny the transactor to read we want the answer! */
-  Boolean wait = True, ok = False;
-  int timeout = 100;
-
-  while( wait && (timeout > 0)) {
-    int available = 0;
-    timeout--;
-    if ( data->dummyio )  {
-      ThreadOp.sleep(100);
-      continue;
-    }
-
-    available = SerialOp.available(data->serial);
-    if( available == -1 ) {
-      /* device error */
-      data->dummyio = True;
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
-      continue;
-    }
-
-    if ( available > 0  ) {
-      if( MutexOp.wait( data->mux ) ) {
-
-        if( !SerialOp.read( data->serial, (char*) in, 1 ) ) {
-          MutexOp.post( data->mux );
-        }
-
-        datalen = (in[0] & 0x0f);
-        SerialOp.read( data->serial, (char*)in+1, datalen+1);
-        MutexOp.post( data->mux );
-
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command in %d", datalen );
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen + 2 );
-
-        /* SO Answer */
-        if( in[0] == 0x24 && in[1] == 0x28) {
-          in[0] = 0x00;
-          in[1] = in[4];
-          ok = True;
-        }
-
-        /* SO Error */
-        else if( in[0] == 0x61 && in[1] == 0x82) {
-          in[0] = 0x01;
-          in[1] = 0x01;
-          ok = True;
-        } else {
-          in[0] = 0x01;
-        }
-        wait = False;
-      }
-    }
-    ThreadOp.sleep(10);
-  }
-
-  /* allow the transactor to read again */
-  data->bincmd = False;
-
-  if (ok) {
-    char* s = StrOp.byteToStr( in, 2 );
-    nodeB = NodeOp.inst( NodeOp.getName( nodeA ), NULL, ELEMENT_NODE );
-    wResponse.setdata( nodeB, s );
-    StrOp.free(s);
-    return nodeB;
-  }
-
-  /* is NULL */
-  return NULL;
-}
 
 /**
  * @param node <sw unit="1" pin="1" cmd="straight"/>
@@ -1452,15 +1338,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   iONode nodeB = NULL;
 
   if( nodeA != NULL ) {
-
-    /* Bin Commands (opendcc)*/
-    if (StrOp.equals( NodeOp.getName( nodeA ), wBinCmd.name() )) {
-      nodeB = __translate_bin( (iOLenz)inst, nodeA );
-    }
-    else
-      __translate( (iOLenz)inst, nodeA );
-
-
+    nodeB = __translate( (iOLenz)inst, nodeA );
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
   }
