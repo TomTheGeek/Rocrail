@@ -379,6 +379,7 @@
       <var name="startpwstate" vt="Boolean"/>
       <var name="fastclock" vt="Boolean"/>
       <var name="slotMap" vt="iOMap"/>
+      <var name="lcfn[10000]" vt="byte" remark="TODO: Replace with slot map."/>
       <var name="subRead" vt="sublib_read"/>
       <var name="subWrite" vt="sublib_write"/>
       <var name="subInit" vt="sublib_init"/>
@@ -387,6 +388,8 @@
       <var name="subAvail" vt="sublib_available"/>
       <var name="fbmod" vt="int"/>
       <var name="readfb" vt="Boolean"/>
+      <var name="fbState[128*8]" vt="Boolean"/>
+      <var name="interfaceVersion" vt="int"/>
     </data>
   </object>
 

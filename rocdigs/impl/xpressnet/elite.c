@@ -67,5 +67,44 @@ int eliteRead(obj xpressnet, byte* buffer) {
 }
 
 Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+  /* when sending to elite we have to correct for elite (version 1.3) addressing fault
+     address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
+     address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
+   */
+  /* TODO:
+  if (data->elite) {
+    port++;
+    if (port > 4) {
+      port =1;
+      addr++;
+    }
+  }
+  */
+  /* command has been sent, in case of elite undo the correction
+     to get address, port and gate right again */
+  /*
+    if (data->elite) {
+      port--;
+      if (port < 0) {
+        port = 3;
+        addr--;
+      }
+    }
+
+  */
+
+  /* if no interfaceVersion is set it might be a LI100
+   * put off PT after each read. Elite on/off goes automatic */
+  /*
+  if ( interfaceVersion == 0 && !data->elite) {
+    byte* outc = allocMem(256);
+    outc[0] = 0x21;
+    outc[1] = 0x81;
+    outc[2] = 0xA0;
+    ThreadOp.post( data->transactor, (obj)outc );
+  }
+  */
+
+
   return li101Write(xpressnet, buffer, rspexpected);
 }

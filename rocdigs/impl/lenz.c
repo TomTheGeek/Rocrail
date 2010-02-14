@@ -331,29 +331,6 @@ static Boolean __sendRequest( iOLenz lenz, byte* outin ) {
   return rc;
 }
 
-/* Maybe obsolete*/
-static void __statusRequestSender( void* threadinst ) {
-  iOThread th = (iOThread)threadinst;
-  iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
-  iOLenzData data = Data(lenz);
-  int i;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender started." );
-
-  unsigned char out[256];
-
-  out[0] = 0x21;
-  out[1] = 0x24;
-  out[2] = 0x05;
-
-  do {
-    ThreadOp.sleep( 1000 );
-    __sendRequest( lenz, out );
-  } while( data->run );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender ended." );
-
-}
-
 static void __initializer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
