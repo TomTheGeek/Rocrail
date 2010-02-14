@@ -18,14 +18,17 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef LIUSB_H_
-#define LIUSB_H_
-Boolean liusbConnect(obj xpressnet);
-void liusbDisConnect(obj xpressnet);
-Boolean liusbAvail(obj xpressnet);
-void liusbInit(obj xpressnet);
-int liusbRead(obj xpressnet, byte* buffer);
-Boolean liusbWrite(obj xpressnet, byte* buffer, int* rspexpected);
+#ifndef XNTCP_H_
+#define XNTCP_H_
+/*
+ * XnTcp specific handling.
+ */
+Boolean xntcpConnect(obj xpressnet);
+void xntcpDisConnect(obj xpressnet);
+Boolean xntcpAvail(obj xpressnet);
+void xntcpInit(obj xpressnet);
+int xntcpRead(obj xpressnet, byte* buffer);
+Boolean xntcpWrite(obj xpressnet, byte* buffer, int* rspexpected);
 
 
-#endif /* LIUSB_H_ */
+#endif /* XNTCP_H_ */

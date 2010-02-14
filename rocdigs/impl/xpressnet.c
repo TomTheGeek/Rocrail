@@ -26,6 +26,7 @@
 #include "rocdigs/impl/xpressnet/roco.h"
 #include "rocdigs/impl/xpressnet/opendcc.h"
 #include "rocdigs/impl/xpressnet/atlas.h"
+#include "rocdigs/impl/xpressnet/xntcp.h"
 #include "rocdigs/impl/xpressnet/common.h"
 
 #include "rocs/public/mem.h"
@@ -226,9 +227,14 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XpressNet %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
+  if( StrOp.equals( wDigInt.sublib_lenz_xntcp, wDigInt.getsublib( ini ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tcp             = %s:%d", wDigInt.gethost( ini ), wDigInt.getport( ini ) );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib          = %s", wDigInt.getsublib( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
@@ -242,6 +248,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = liusbInit;
     data->subRead    = liusbRead;
     data->subWrite   = liusbWrite;
+    data->subDisConn = liusbDisConnect;
+    data->subAvail   = liusbAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
     /* Hornby Elite */
@@ -249,6 +257,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = eliteInit;
     data->subRead    = eliteRead;
     data->subWrite   = eliteWrite;
+    data->subDisConn = eliteDisConnect;
+    data->subAvail   = eliteAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_roco, wDigInt.getsublib( ini ) ) ) {
     /* Roco */
@@ -256,6 +266,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = rocoInit;
     data->subRead    = rocoRead;
     data->subWrite   = rocoWrite;
+    data->subDisConn = rocoDisConnect;
+    data->subAvail   = rocoAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_opendcc, wDigInt.getsublib( ini ) ) ) {
     /* OpenDCC */
@@ -263,6 +275,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = opendccInit;
     data->subRead    = opendccRead;
     data->subWrite   = opendccWrite;
+    data->subDisConn = opendccDisConnect;
+    data->subAvail   = opendccAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_atlas, wDigInt.getsublib( ini ) ) ) {
     /* Atlas */
@@ -270,6 +284,17 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = atlasInit;
     data->subRead    = atlasRead;
     data->subWrite   = atlasWrite;
+    data->subDisConn = atlasDisConnect;
+    data->subAvail   = atlasAvail;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_xntcp, wDigInt.getsublib( ini ) ) ) {
+    /* Atlas */
+    data->subConnect = xntcpConnect;
+    data->subInit    = xntcpInit;
+    data->subRead    = xntcpRead;
+    data->subWrite   = xntcpWrite;
+    data->subDisConn = xntcpDisConnect;
+    data->subAvail   = xntcpAvail;
   }
   else {
     /* default LI101 */
@@ -277,6 +302,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subInit    = li101Init;
     data->subRead    = li101Read;
     data->subWrite   = li101Write;
+    data->subDisConn = li101DisConnect;
+    data->subAvail   = li101Avail;
   }
 
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );

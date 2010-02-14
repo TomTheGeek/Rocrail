@@ -28,6 +28,16 @@ Boolean li101Connect(obj xpressnet) {
   return SerialOp.open( data->serial );
 }
 
+void li101DisConnect(obj xpressnet) {
+}
+
+Boolean li101Avail(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
+  return SerialOp.available(data->serial) > 0 ? True:False;
+}
+
+
+
 void li101Init(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
 
@@ -64,7 +74,19 @@ void li101Init(obj xpressnet) {
 }
 
 int li101Read(obj xpressnet, byte* buffer) {
-  return 0;
+  iOXpressNetData data = Data(xpressnet);
+  int len = 0;
+  Boolean ok = False;
+
+  if( MutexOp.wait( data->serialmux ) ) {
+    if( !SerialOp.read( data->serial, buffer, 1 ) ) {
+      len = (buffer[0] & 0x0f) + 1;
+      ok = SerialOp.read( data->serial, (char*)buffer+1, len );
+    }
+    MutexOp.post( data->serialmux );
+  }
+
+  return ok ? len:0;
 }
 
 

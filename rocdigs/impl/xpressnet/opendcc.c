@@ -26,6 +26,14 @@ Boolean opendccConnect(obj xpressnet) {
   return li101Connect(xpressnet);
 }
 
+void opendccDisConnect(obj xpressnet) {
+  li101DisConnect(xpressnet);
+}
+
+Boolean opendccAvail(obj xpressnet) {
+  return li101Avail(xpressnet);
+}
+
 void opendccInit(obj xpressnet) {
   li101Init(xpressnet);
 }

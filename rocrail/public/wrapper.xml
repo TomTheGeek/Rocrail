@@ -278,6 +278,7 @@
       <const name="sublib_lenz_roco" vt="string" val="roco"/>
       <const name="sublib_lenz_opendcc" vt="string" val="opendcc"/>
       <const name="sublib_lenz_atlas" vt="string" val="atlas"/>
+      <const name="sublib_lenz_xntcp" vt="string" val="xntcp"/>
       <var name="sublib" vt="string" defval="default"/>
 
       <!-- Serial connection: Fixed for most interfaces and controllers -->

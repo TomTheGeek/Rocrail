@@ -340,11 +340,13 @@
   </object>
 
 
-  <object name="XpressNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint">
+  <object name="XpressNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,socket,trace,thread,map" include="$rocint/public/digint">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
+    <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
     <typedef def="Boolean(*sublib_write)(obj,byte*,int*)"/>
     <typedef def="void(*sublib_init)(obj)"/>
+    <typedef def="Boolean(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -363,6 +365,7 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="serial" vt="iOSerial"/>
+      <var name="socket" vt="iOSocket"/>
       <var name="serialmux" vt="iOMutex"/>
       <var name="fboffset" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
@@ -380,6 +383,8 @@
       <var name="subWrite" vt="sublib_write"/>
       <var name="subInit" vt="sublib_init"/>
       <var name="subConnect" vt="sublib_connect"/>
+      <var name="subDisConn" vt="sublib_disconnect"/>
+      <var name="subAvail" vt="sublib_available"/>
       <var name="fbmod" vt="int"/>
       <var name="readfb" vt="Boolean"/>
     </data>

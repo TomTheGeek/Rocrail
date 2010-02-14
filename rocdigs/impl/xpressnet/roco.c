@@ -30,6 +30,14 @@ Boolean rocoConnect(obj xpressnet) {
   return SerialOp.open( data->serial );
 }
 
+void rocoDisConnect(obj xpressnet) {
+  li101DisConnect(xpressnet);
+}
+
+Boolean rocoAvail(obj xpressnet) {
+  return li101Avail(xpressnet);
+}
+
 void rocoInit(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
 

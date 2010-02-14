@@ -30,12 +30,35 @@ Boolean liusbConnect(obj xpressnet) {
   return SerialOp.open( data->serial );
 }
 
+void liusbDisConnect(obj xpressnet) {
+  li101DisConnect(xpressnet);
+}
+
+Boolean liusbAvail(obj xpressnet) {
+  return li101Avail(xpressnet);
+}
+
 void liusbInit(obj xpressnet) {
   li101Init(xpressnet);
 }
 
 int liusbRead(obj xpressnet, byte* buffer) {
-  return 0;
+  iOXpressNetData data = Data(xpressnet);
+  int len = 0;
+  Boolean ok = False;
+
+  if( MutexOp.wait( data->serialmux ) ) {
+    if( !SerialOp.read( data->serial, buffer, 2 ) ) {
+      /* TODO: check if it is the expected frame */
+      if( !SerialOp.read( data->serial, buffer, 1 ) ) {
+        len = (buffer[0] & 0x0f) + 1;
+        ok = SerialOp.read( data->serial, (char*)buffer+1, len );
+      }
+    }
+    MutexOp.post( data->serialmux );
+  }
+
+  return ok ? len:0;
 }
 
 Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {

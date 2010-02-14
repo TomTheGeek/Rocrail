@@ -25,6 +25,15 @@
 Boolean atlasConnect(obj xpressnet) {
   return li101Connect(xpressnet);
 }
+
+void atlasDisConnect(obj xpressnet) {
+  li101DisConnect(xpressnet);
+}
+
+Boolean atalsAvail(obj xpressnet) {
+  return li101Avail(xpressnet);
+}
+
 void atlasInit(obj xpressnet) {
   li101Init(xpressnet);
 }

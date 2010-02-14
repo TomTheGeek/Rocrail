@@ -25,6 +25,14 @@ Boolean eliteConnect(obj xpressnet) {
   return li101Connect(xpressnet);
 }
 
+void eliteDisConnect(obj xpressnet) {
+  li101DisConnect(xpressnet);
+}
+
+Boolean eliteAvail(obj xpressnet) {
+  return li101Avail(xpressnet);
+}
+
 void eliteInit(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
 

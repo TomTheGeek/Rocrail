@@ -24,6 +24,8 @@
  * Hornby Elite specific handling.
  */
 Boolean eliteConnect(obj xpressnet);
+void eliteDisConnect(obj xpressnet);
+Boolean eliteAvail(obj xpressnet);
 void eliteInit(obj xpressnet);
 int eliteRead(obj xpressnet, byte* buffer);
 Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected);
