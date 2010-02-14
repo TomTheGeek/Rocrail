@@ -37,6 +37,7 @@ Boolean xntcpConnect(obj xpressnet) {
   }
   else {
     SocketOp.base.del( data->socket );
+    data->socket = NULL;
     return False;
   }
 }
@@ -76,6 +77,8 @@ Boolean xntcpWrite(obj xpressnet, byte* out, int* rspexpected) {
   Boolean rc = False;
   byte bXor = 0;
 
+  *rspexpected = 1; /* XnTcp or CS will confirm every command? */
+
   len = out[0] & 0x0f;
   len++; /* header */
 
@@ -89,7 +92,7 @@ Boolean xntcpWrite(obj xpressnet, byte* out, int* rspexpected) {
   out[i] = bXor;
   len++; /* checksum */
 
-  if( MutexOp.wait( data->serialmux ) ) {
+  if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
     rc = SocketOp.write( data->socket, out, len );
     MutexOp.post( data->serialmux );
   }

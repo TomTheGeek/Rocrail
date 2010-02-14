@@ -20,9 +20,3 @@
 #include "rocdigs/impl/xpressnet/common.h"
 
 
-int rspExpected(unsigned char* out ) {
-  int rsp = 0;
-
-  return rsp;
-}
-

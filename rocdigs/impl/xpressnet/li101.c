@@ -104,7 +104,7 @@ Boolean li101Write(obj xpressnet, byte* out, int* rspexpected) {
   Boolean rc = False;
   byte bXor = 0;
 
-  *rspexpected = rspExpected(out);
+  *rspexpected = 1; /* LI101 or CS will confirm every command */
 
   len = out[0] & 0x0f;
   len++; /* header */
@@ -127,6 +127,16 @@ Boolean li101Write(obj xpressnet, byte* out, int* rspexpected) {
     }
 
     MutexOp.post( data->serialmux );
+
+    /* if no interfaceVersion is set it might be a LI100
+     * put off PT after each read. */
+    if ( rc && data->interfaceVersion == 0 && out[0] == 0x21 && out[1] == 0x10 ) {
+      byte* outc = allocMem(32);
+      outc[0] = 0x21;
+      outc[1] = 0x81;
+      outc[2] = 0xA0;
+      ThreadOp.post( data->transactor, (obj)outc );
+    }
   }
 
   return rc;

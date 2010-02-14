@@ -27,7 +27,7 @@
 Boolean liusbConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
   SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );
@@ -72,6 +72,9 @@ Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {
   Boolean rc = False;
   byte bXor = 0;
   unsigned char out[256];
+
+  *rspexpected = 1; /* LIUSB or CS will confirm every command */
+
 
   len = outin[0] & 0x0f;
   len++; /* header */

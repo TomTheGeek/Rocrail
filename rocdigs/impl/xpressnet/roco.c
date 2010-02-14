@@ -184,6 +184,9 @@ Boolean rocoWrite(obj xpressnet, byte* outin, int* rspexpected) {
   byte bXor = 0;
   unsigned char out[len];
 
+  *rspexpected = 1; /* CS will confirm every command? */
+
+
   // remove length header
   for (i = 0; i < len-1; i++)
      out[i] = (unsigned char) outin[i+1];

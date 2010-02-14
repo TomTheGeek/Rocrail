@@ -771,12 +771,6 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in, int datalen ) {
 }
 
 
-static Boolean __rspExpected( byte* out ) {
-  rspExpected = False;
-
-  return rspExpected;
-}
-
 static void __transactor( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
   iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
@@ -806,6 +800,7 @@ static void __transactor( void* threadinst ) {
         }
         else {
           /* TODO: unable to send request */
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to send request" );
         }
       }
     }
@@ -1212,7 +1207,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->initializer );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to initialize [%s]", wDigInt.getdevice( ini ) );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to initialize the XpressNet connection" );
   }
 
 
