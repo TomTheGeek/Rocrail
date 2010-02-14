@@ -771,7 +771,11 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in, int datalen ) {
 }
 
 
+static Boolean __rspExpected( byte* out ) {
+  rspExpected = False;
 
+  return rspExpected;
+}
 
 static void __transactor( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
@@ -794,11 +798,15 @@ static void __transactor( void* threadinst ) {
     if (responceRecieved) {
       post = ThreadOp.getPost( th );
       if (post != NULL) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing post..." );
         MemOp.copy(out, post, 32);
         freeMem( post);
-      }
-      if (post != NULL) {
-        responceRecieved = !data->subWrite( xpressnet, out, &rspExpected );
+        if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
+          responceRecieved = !rspExpected;
+        }
+        else {
+          /* TODO: unable to send request */
+        }
       }
     }
 
@@ -806,8 +814,9 @@ static void __transactor( void* threadinst ) {
       ThreadOp.sleep(10);
       continue;
     }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing response..." );
 
-    if ( data->subRead(xpressnet, in) > 0 ) {
+    if ( data->subRead((obj)xpressnet, in) > 0 ) {
 
       byte bXor = 0;
       int i = 0;
@@ -1076,7 +1085,7 @@ static Boolean _supportPT( obj inst ) {
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 1;
 static int vminor = 4;
-static int patch  = 999;
+static int patch  = 99;
 static int _version( obj inst ) {
   iOXpressNetData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
@@ -1188,9 +1197,6 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subDisConn = li101DisConnect;
     data->subAvail   = li101Avail;
   }
-
-  data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
   if( data->subConnect((obj)__XpressNet) ) {
     /* start transactor */

@@ -25,6 +25,8 @@
 
 Boolean rocoConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
+  data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
   SerialOp.setFlow( data->serial, none );
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );

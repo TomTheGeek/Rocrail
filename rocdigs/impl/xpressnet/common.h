@@ -21,6 +21,6 @@
 
 #ifndef COMMON_H_
 #define COMMON_H_
-
+int rspExpected(unsigned char* out );
 
 #endif /* COMMON_H_ */

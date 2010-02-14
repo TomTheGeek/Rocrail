@@ -30,7 +30,7 @@ void atlasDisConnect(obj xpressnet) {
   li101DisConnect(xpressnet);
 }
 
-Boolean atalsAvail(obj xpressnet) {
+Boolean atlasAvail(obj xpressnet) {
   return li101Avail(xpressnet);
 }
 

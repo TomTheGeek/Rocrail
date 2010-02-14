@@ -50,7 +50,7 @@ void xntcpDisConnect(obj xpressnet) {
   }
 }
 
-Boolean xntcpsAvail(obj xpressnet) {
+Boolean xntcpAvail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   char msgStr[32];
   return SocketOp.peek( data->socket, msgStr, 1 );
