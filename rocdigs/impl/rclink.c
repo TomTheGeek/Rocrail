@@ -136,6 +136,7 @@ Der RC-Link wird damit quasi ausser Betrieb gesetzt und kann mit jedem anderen K
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Program.h"
 
 static int instCnt = 0;
 
@@ -280,8 +281,21 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
 
   switch( packet[0] ) {
   case 0xD1:
+    /*
+      Diagnosemeldung:
+      0xD1 A1 A2 0xD2 V1 V2 0xD3 SB AB 0xD4 OSCCAL 0xFF
+      A1, A2 = Adressbyte 1 und 2 (bestaetigt)
+      V1, V2 = Vergleichsbytes 1 und 2 (gemeldete, unbestaetigte Adressen)
+      SB = Statusbyte
+      AB = Alivebyte
+      OSCCAL = Kallibrierwert fuer internen Oszillator
+     */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "diagnose:" );
+    TraceOp.dump ( name, TRCLEVEL_MONITOR, (char*)packet, idx );
     break;
   case 0xFA:
+    /* off */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system off" );
     break;
   case 0xFC:
     /* Address report */
@@ -317,6 +331,21 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
   }
   break;
   case 0xFE:
+    /* CV read */
+    /*
+    0xFE DD* CV* 0xFF
+   */
+  {
+    iONode evt = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported CV value %d",
+        packet[1], packet[2] );
+
+    wProgram.setvalue( evt, packet[2] );
+    wProgram.setcmd( evt, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( evt, data->iid );
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+  }
     break;
   }
 }
