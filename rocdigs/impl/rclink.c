@@ -435,7 +435,7 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
 
-  data->bps      = wDigInt.getbps( ini );
+  data->bps      = 19200;
   data->fboffset = wDigInt.getfboffset( ini );
 
   MemOp.set( data->readerTick, 0, sizeof(data->readerTick) );
@@ -444,15 +444,16 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RcLink %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = %d", data->bps );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fboffset = %d", data->fboffset );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate  = %d (fix)", 19200 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake = %s (fix)", "CTS" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fboffset  = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setLine( data->serial, 19200, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 
   if( data->serialOK ) {
