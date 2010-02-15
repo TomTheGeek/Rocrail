@@ -2219,6 +2219,8 @@ void LocDialog::OnLocCopyClick( wxCommandEvent& event )
         iONode lccopy = (iONode)NodeOp.base.clone( m_Props );
         char* id = StrOp.fmt( "%s (copy)", wLoc.getid(lccopy));
         wLoc.setid(lccopy, id);
+        wLoc.setruntime(lccopy, 0 );
+        wLoc.setmtime(lccopy, 0 );
         StrOp.free(id);
         NodeOp.addChild( lclist, lccopy );
         InitIndex();
