@@ -1137,7 +1137,8 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
   iONode routes = wPlan.getstlist(data->model);
   int cnt = NodeOp.getChildCnt(routes);
   int i = 0;
-    NodeOp.addChild( model, (iONode)NodeOp.inst( wRouteList.name(), model, ELEMENT_NODE ) );
+  iONode saveRoutes = (iONode)NodeOp.inst( wRouteList.name(), model, ELEMENT_NODE );
+    NodeOp.addChild( model, saveRoutes );
     for( i = 0; i < cnt; i++ ) {
       iONode route = NodeOp.getChild( routes, i );
       if( wRoute.getmodid(route) != NULL && (StrOp.len(wRoute.getmodid(route)) > 0 || StrOp.equals( wRoute.modid_auto_gen, wRoute.getmodid(route) ) ) ) {
@@ -1145,7 +1146,7 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
           wRoute.getid(route), wRoute.getmodid(route) );
       continue;
       }
-      NodeOp.addChild(model, (iONode)NodeOp.base.clone(route));
+      NodeOp.addChild(saveRoutes, (iONode)NodeOp.base.clone(route));
     }
   }
 
