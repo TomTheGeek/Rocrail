@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Response.h"
+//#include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -260,6 +261,23 @@ static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
     }
   }
 
+  /*
+
+  if( (in[0] & 0xF0) == 0x30) {
+    iONode node = NodeOp.inst( wThrottleCmd.name(), NULL, ELEMENT_NODE );
+
+
+    NodeOp.setInt( node, "slot", in[1] );
+    NodeOp.setInt( node, "type", in[2] );
+    NodeOp.setInt( node, "key", in[3] );
+    NodeOp.setInt( node, "val", in[4] );
+
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  */
+
   /* SM response Direct CV mode: */
   if( in[0] == 0x63 && in[1] == 0x14 ) {
     int cv = in[2];
@@ -331,6 +349,29 @@ static Boolean __sendRequest( iOLenz lenz, byte* outin ) {
   return rc;
 }
 
+/* Maybe obsolete*/
+static void __statusRequestSender( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
+  iOLenzData data = Data(lenz);
+  int i;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender started." );
+
+  unsigned char out[256];
+
+  out[0] = 0x21;
+  out[1] = 0x24;
+  out[2] = 0x05;
+
+  do {
+    ThreadOp.sleep( 1000 );
+    __sendRequest( lenz, out );
+  } while( data->run );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender ended." );
+
+}
+
 static void __initializer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
@@ -339,13 +380,11 @@ static void __initializer( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initializer started.");
 
-  if( !data->elite ) {
-    /* XpressNet
-       Asking for Interface version*/
-    byte* outa = allocMem(256);
-    outa[0] = 0xF0;
-    ThreadOp.post( data->transactor, (obj)outa );
-  }
+  /* XpressNet
+     Asking for Interface version*/
+  byte* outa = allocMem(256);
+  outa[0] = 0xF0;
+  ThreadOp.post( data->transactor, (obj)outa );
 
   /* Asking for CS version */
   byte* outb = allocMem(256);
@@ -376,6 +415,107 @@ static void __initializer( void* threadinst ) {
 
 }
 
+static iONode __translate_bin( iOLenz lenz, iONode nodeA ) {
+  iOLenzData data = Data(lenz);
+  iONode nodeB = NULL;
+
+  data->bincmd = True;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bin command" );
+
+  int outLen = wBinCmd.getoutlen(nodeA);
+  byte* outBytes = StrOp.strToByte( wBinCmd.getout(nodeA));
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out I" );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
+
+  if( outBytes[0] == 0x78 ) {
+    /* Flip around the address bytes*/
+    byte tmp = outBytes[2];
+    outBytes[2] = outBytes[3];
+    outBytes[3] = tmp;
+
+    /* READ */
+    if( outBytes[1] == 0xA4) {
+      outBytes[0] = 0x24;
+      outBytes[1] = 0x28;
+      __sendRequest( lenz, outBytes );
+    }
+
+    /* WRITE */
+    else if( outBytes[1] == 0xA3) {
+      outBytes[0] = 0x24;
+      outBytes[1] = 0x29;
+      __sendRequest( lenz, outBytes );
+    }
+  }
+  else {
+    __sendRequest( lenz, outBytes );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command out II" );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)outBytes, outLen );
+
+  freeMem(outBytes);
+
+  int datalen;
+  byte in[256];
+
+  /* deny the transactor to read we want the answer! */
+  Boolean wait = True, ok = False;
+  int timeout = 100;
+
+  while( wait && (timeout > 0)) {
+    timeout--;
+
+    if ( !data->dummyio && SerialOp.available(data->serial) ) {
+      if( MutexOp.wait( data->mux ) ) {
+
+        if( !SerialOp.read( data->serial, (char*) in, 1 ) ) {
+          MutexOp.post( data->mux );
+        }
+
+        datalen = (in[0] & 0x0f);
+        SerialOp.read( data->serial, (char*)in+1, datalen+1);
+        MutexOp.post( data->mux );
+
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bin command in %d", datalen );
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen + 2 );
+
+        /* SO Answer */
+        if( in[0] == 0x24 && in[1] == 0x28) {
+          in[0] = 0x00;
+          in[1] = in[4];
+          ok = True;
+        }
+
+        /* SO Error */
+        else if( in[0] == 0x61 && in[1] == 0x82) {
+          in[0] = 0x01;
+          in[1] = 0x01;
+          ok = True;
+        } else {
+          in[0] = 0x01;
+        }
+        wait = False;
+      }
+    }
+    ThreadOp.sleep(10);
+  }
+
+  /* allow the transactor to read again */
+  data->bincmd = False;
+
+  if (ok) {
+    char* s = StrOp.byteToStr( in, 2 );
+    nodeB = NodeOp.inst( NodeOp.getName( nodeA ), NULL, ELEMENT_NODE );
+    wResponse.setdata( nodeB, s );
+    StrOp.free(s);
+    return nodeB;
+  }
+
+  /* is NULL */
+  return NULL;
+}
 
 /**
  * @param node <sw unit="1" pin="1" cmd="straight"/>
@@ -1030,8 +1170,8 @@ static void __transactor( void* threadinst ) {
       } else {
         responceRecieved = True;
         waitForAnswer = False;
-        if( expectEliteAnswer )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
+
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
 
     }
@@ -1040,24 +1180,14 @@ static void __transactor( void* threadinst ) {
     /* Give up timeslice:*/
     ThreadOp.sleep( 50 );
 
-    if(data->dummyio) {
-      ThreadOp.sleep( 1000 );
-      continue;
-    }
 
-    int dataAvailable = SerialOp.available(data->serial);
-    if( dataAvailable == -1 ) {
-      /* device error */
-      data->dummyio = True;
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
-      continue;
-    }
+    Boolean dataAvailable = SerialOp.available(data->serial);
 
     // Wait or timeout
-    while( timeout > 0 && dataAvailable == 0 ) {
+    while(  !(timeout != 0 || !dataAvailable) ) {
+      if( timeout > 0)
+        timeout --;
       ThreadOp.sleep( 25 );
-      timeout --;
-      dataAvailable = SerialOp.available(data->serial);
     }
 
     if ( !data->bincmd && !data->dummyio && dataAvailable) {
@@ -1078,7 +1208,7 @@ static void __transactor( void* threadinst ) {
           MutexOp.post( data->mux );
 
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, datalen+3 );
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, 10 );
 
           /* remove extra header from LI-USB */
           for (i = 0; i < 254; i++)
@@ -1099,7 +1229,7 @@ static void __transactor( void* threadinst ) {
 
 
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+1 );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, datalen+2 );
         }
 
         if( !ok )
@@ -1112,12 +1242,8 @@ static void __transactor( void* threadinst ) {
           bXor ^= in[ i ];
         }
 
-        if( bXor != in[datalen]) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-              "XOR error: datalength=%d calculated=0x%02X received=0x%02X", datalen, bXor, in[datalen] );
-          continue;
-          /* flush buffer */
-        }
+        if( bXor != in[datalen])
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor bytes are not equal!" );
 
         /* Evaluate XprerssNet Answers
          check if last command was recieved, the cs answers: 1 4 5 */
@@ -1268,12 +1394,9 @@ static void __transactor( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
           responceRecieved = True;
         }
-        /* Nasty Elite, response on loc command or loc operated on elite*/
-        else if (in[0] == 0xE3 || in[0] == 0xE4 || in[0] == 0xE5 ) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Elite: Loc command");
-          responceRecieved = True;
-        }
+
         else {
+
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
         }
@@ -1284,22 +1407,26 @@ static void __transactor( void* threadinst ) {
       }
     }
 
-    /* Sensors */
-    for( i=0; i<128*8; i++) {
-      if( data->fbState[i] != data->fbPreState[i] ) {
-        /* inform listener: Node3 */
-        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        data->fbState[i] = data->fbPreState[i];
-        wFeedback.setaddr( nodeC, i+data->fboffset );
-        wFeedback.setstate( nodeC, data->fbPreState[i] );
-        if( data->iid != NULL )
-          wFeedback.setiid( nodeC, data->iid );
+    /* Sensor Debounce */
+    data->fbCounter--;
+    if( data->fbCounter < 0) {
+      //data->fbCounter = data->sensordebounce;
+      for( i=0; i<128*8; i++) {
+        if( data->fbState[i] != data->fbPreState[i] ) {
+          /* inform listener: Node3 */
+          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          data->fbState[i] = data->fbPreState[i];
+          wFeedback.setaddr( nodeC, i+data->fboffset );
+          wFeedback.setstate( nodeC, data->fbPreState[i] );
+          if( data->iid != NULL )
+            wFeedback.setiid( nodeC, data->iid );
 
-        if( data->listenerFun != NULL && data->listenerObj != NULL )
-          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "Sensor %d=%d", i + data->fboffset, data->fbPreState[i]);
+        }
       }
     }
 
@@ -1315,7 +1442,9 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   iONode nodeB = NULL;
 
   if( nodeA != NULL ) {
-    nodeB = __translate( (iOLenz)inst, nodeA );
+
+    __translate( (iOLenz)inst, nodeA );
+
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
   }
@@ -1396,10 +1525,8 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
 
   SerialOp.setFlow( data->serial, cts );
 
-  if( data->usb) {/* force to 57600 ignoring the ini.*/
-    wDigInt.setbps( ini, 57600 );
+  if( data->usb) /* force to 57600 ignoring the ini.*/
     SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
-  }
   else
     SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
 
