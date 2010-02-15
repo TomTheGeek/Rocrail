@@ -27,8 +27,8 @@ Boolean xntcpConnect(obj xpressnet);
 void xntcpDisConnect(obj xpressnet);
 Boolean xntcpAvail(obj xpressnet);
 void xntcpInit(obj xpressnet);
-int xntcpRead(obj xpressnet, byte* buffer);
-Boolean xntcpWrite(obj xpressnet, byte* buffer, int* rspexpected);
+int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived);
+Boolean xntcpWrite(obj xpressnet, byte* buffer, Boolean* rspexpected);
 
 
 #endif /* XNTCP_H_ */

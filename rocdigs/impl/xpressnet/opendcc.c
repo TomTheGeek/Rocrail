@@ -42,10 +42,10 @@ Boolean opendccAvail(obj xpressnet) {
 void opendccInit(obj xpressnet) {
   li101Init(xpressnet);
 }
-int opendccRead(obj xpressnet, byte* buffer) {
-  return li101Read(xpressnet, buffer);
+int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
+  return li101Read(xpressnet, buffer, rspreceived);
 }
-Boolean opendccWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+Boolean opendccWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
   return li101Write(xpressnet, buffer, rspexpected);
 }
 

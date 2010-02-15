@@ -45,7 +45,7 @@ void liusbInit(obj xpressnet) {
   li101Init(xpressnet);
 }
 
-int liusbRead(obj xpressnet, byte* buffer) {
+int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int len = 0;
   Boolean ok = False;
@@ -64,7 +64,7 @@ int liusbRead(obj xpressnet, byte* buffer) {
   return ok ? len:0;
 }
 
-Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {
+Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;

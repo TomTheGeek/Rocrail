@@ -77,7 +77,7 @@ void li101Init(obj xpressnet) {
   }
 }
 
-int li101Read(obj xpressnet, byte* buffer) {
+int li101Read(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int len = 0;
   Boolean ok = False;
@@ -96,7 +96,7 @@ int li101Read(obj xpressnet, byte* buffer) {
 }
 
 
-Boolean li101Write(obj xpressnet, byte* out, int* rspexpected) {
+Boolean li101Write(obj xpressnet, byte* out, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;

@@ -62,11 +62,19 @@ void eliteInit(obj xpressnet) {
   }
 }
 
-int eliteRead(obj xpressnet, byte* buffer) {
-  return li101Read(xpressnet, buffer);
+int eliteRead(obj xpressnet, byte* in, Boolean* rspreceived) {
+  int len = li101Read(xpressnet, in, rspreceived);
+  if( len > 0 ) {
+  /* Nasty Elite, response on loc command or loc operated on elite*/
+     if (in[0] == 0xE3 || in[0] == 0xE4 || in[0] == 0xE5 ) {
+       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Elite: Loc command");
+       *rspreceived = True;
+     }
+  }
+  return len;
 }
 
-Boolean eliteWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+Boolean eliteWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
   /* when sending to elite we have to correct for elite (version 1.3) addressing fault
      address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
      address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4

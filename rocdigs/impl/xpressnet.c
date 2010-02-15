@@ -738,8 +738,9 @@ static void __transactor( void* threadinst ) {
 
   byte out[256];
   byte in[256];
-  Boolean responceRecieved = True;
-  int rspExpected = 0;
+  int  inlen = 0;
+  Boolean rspReceived = True;
+  Boolean rspExpected = False;
   obj post = NULL;
 
   ThreadOp.setDescription( th, "XpressNet transactor" );
@@ -749,14 +750,14 @@ static void __transactor( void* threadinst ) {
 
     /* get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
-    if (responceRecieved) {
+    if (rspReceived) {
       post = ThreadOp.getPost( th );
       if (post != NULL) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing post..." );
         MemOp.copy(out, post, 32);
         freeMem( post);
         if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
-          responceRecieved = !rspExpected;
+          rspReceived = !rspExpected;
         }
         else {
           /* TODO: unable to send request */
@@ -771,7 +772,8 @@ static void __transactor( void* threadinst ) {
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing response..." );
 
-    if ( data->subRead((obj)xpressnet, in) > 0 ) {
+    inlen = data->subRead((obj)xpressnet, in, &rspReceived);
+    if ( inlen > 0 ) {
 
       if( !isChecksumOK(in) ) {
         ThreadOp.sleep(10);
@@ -782,17 +784,17 @@ static void __transactor( void* threadinst ) {
        check if last command was recieved, the cs answers: 1 4 5 */
       if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command OK");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Feedback */
       else if( in[0] == 0x42 ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Feedback */
       else if( (in[0] >> 4) == 0x4 ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Feedback OK");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Track Power OFF */
       else if( in[0] == 0x81 && in[1] == 0x00) {
@@ -807,7 +809,7 @@ static void __transactor( void* threadinst ) {
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Track Power OFF */
       else if( in[0] == 0x61 && in[1] == 0x00) {
@@ -824,7 +826,7 @@ static void __transactor( void* threadinst ) {
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Normal operation resumed */
       else if( in[0] == 0x61 && in[1] == 0x01) {
@@ -841,22 +843,22 @@ static void __transactor( void* threadinst ) {
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Prog Mode*/
       else if (in[0] == 0x61 && in[1] == 0x02){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming mode entered");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Prog Mode*/
       else if (in[0] == 0x61 && in[1] == 0x11){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Prog. Ready");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* transaction error*/
       else if (in[0] == 0x61 && in[1] == 0x80){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transaction error ... try again");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
@@ -869,28 +871,28 @@ static void __transactor( void* threadinst ) {
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not known.");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Shortcut*/
       else if (in[0] == 0x61 && in[1] == 0x12){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shortcut!");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* No data*/
       else if (in[0] == 0x61 && in[1] == 0x13){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No Data");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* cv answer*/
       else if ((in[0] == 0x63 && in[1] == 0x10) || (in[0] == 0x63 && in[1] == 0x14)){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming answer recieved ...");
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* Version of Interface*/
       else if (in[0] == 0x02){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Interface version: %1.1f-%d",
             in[1]/10.0 , in[2] );
-        responceRecieved = True;
+        rspReceived = True;
         data->interfaceVersion = (int) in[1];
       }
 
@@ -913,7 +915,7 @@ static void __transactor( void* threadinst ) {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %1.0x.%1.0d",
             csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F));
-        responceRecieved = True;
+        rspReceived = True;
       }
       /* SO */
       else if (in[0] == 0x78){
@@ -922,16 +924,11 @@ static void __transactor( void* threadinst ) {
       /* clock */
       else if (in[0] == 0x05){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
-        responceRecieved = True;
-      }
-      /* Nasty Elite, response on loc command or loc operated on elite*/
-      else if (in[0] == 0xE3 || in[0] == 0xE4 || in[0] == 0xE5 ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Elite: Loc command");
-        responceRecieved = True;
+        rspReceived = True;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 15);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, inlen);
       }
 
       /* anything will go to rocgui ...*/

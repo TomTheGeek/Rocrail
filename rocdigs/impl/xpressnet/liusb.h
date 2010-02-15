@@ -24,8 +24,8 @@ Boolean liusbConnect(obj xpressnet);
 void liusbDisConnect(obj xpressnet);
 Boolean liusbAvail(obj xpressnet);
 void liusbInit(obj xpressnet);
-int liusbRead(obj xpressnet, byte* buffer);
-Boolean liusbWrite(obj xpressnet, byte* buffer, int* rspexpected);
+int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived);
+Boolean liusbWrite(obj xpressnet, byte* buffer, Boolean* rspexpected);
 
 
 #endif /* LIUSB_H_ */

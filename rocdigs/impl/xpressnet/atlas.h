@@ -27,8 +27,8 @@ Boolean atlasConnect(obj xpressnet);
 void atlasDisConnect(obj xpressnet);
 Boolean atlasAvail(obj xpressnet);
 void atlasInit(obj xpressnet);
-int atlasRead(obj xpressnet, byte* buffer);
-Boolean atlasWrite(obj xpressnet, byte* buffer, int* rspexpected);
+int atlasRead(obj xpressnet, byte* buffer, Boolean* rspreceived);
+Boolean atlasWrite(obj xpressnet, byte* buffer, Boolean* rspexpected);
 
 
 #endif /* ATLAS_H_ */

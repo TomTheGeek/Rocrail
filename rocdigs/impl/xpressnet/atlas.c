@@ -37,9 +37,9 @@ Boolean atlasAvail(obj xpressnet) {
 void atlasInit(obj xpressnet) {
   li101Init(xpressnet);
 }
-int atlasRead(obj xpressnet, byte* buffer) {
-  return li101Read(xpressnet, buffer);
+int atlasRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
+  return li101Read(xpressnet, buffer, rspreceived);
 }
-Boolean atlasWrite(obj xpressnet, byte* buffer, int* rspexpected) {
+Boolean atlasWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
   return li101Write(xpressnet, buffer, rspexpected);
 }

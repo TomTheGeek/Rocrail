@@ -343,8 +343,8 @@
   <object name="XpressNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,socket,trace,thread,map" include="$rocint/public/digint">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
-    <typedef def="int(*sublib_read)(obj,byte*)"/>
-    <typedef def="Boolean(*sublib_write)(obj,byte*,int*)"/>
+    <typedef def="int(*sublib_read)(obj,byte*,Boolean*)"/>
+    <typedef def="Boolean(*sublib_write)(obj,byte*,Boolean*)"/>
     <typedef def="void(*sublib_init)(obj)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
     <typedef def="void(*sublib_translate)(obj, void*)"/>

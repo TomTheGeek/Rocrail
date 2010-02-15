@@ -60,7 +60,7 @@ Boolean xntcpAvail(obj xpressnet) {
 void xntcpInit(obj xpressnet) {
   li101Init(xpressnet);
 }
-int xntcpRead(obj xpressnet, byte* buffer) {
+int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   if( SocketOp.read( data->socket, buffer, 1 ) ) {
     int len = (buffer[0] & 0x0F) + 1;
@@ -69,7 +69,7 @@ int xntcpRead(obj xpressnet, byte* buffer) {
   }
   return 0;
 }
-Boolean xntcpWrite(obj xpressnet, byte* out, int* rspexpected) {
+Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;
