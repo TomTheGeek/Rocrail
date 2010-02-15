@@ -986,7 +986,8 @@
       <var name="sx1" vt="Boolean"/>
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
-      <var name="horn" vt="Boolean"/>
+      <var name="f1_8" vt="byte"/>
+      <var name="f9_16" vt="byte"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>

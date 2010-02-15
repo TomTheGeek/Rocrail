@@ -110,7 +110,8 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
   int     speed   = 0;
   Boolean dir     = True;
   Boolean lights  = False;
-  Boolean horn    = False;
+  byte    f1_8    = 0;
+  byte    f9_16   = 0;
 
   if( !slot->sx1 ) {
     int index = slot->index;
@@ -121,8 +122,9 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
       byte    format = data->sx2[bus][ 0 + index] & 0x0F;
       byte    haddr  = data->sx2[bus][16 + index];
       byte    laddr  = data->sx2[bus][32 + index];
-      byte    f1_8   = data->sx2[bus][64 + index];
-      byte    f9_16  = data->sx2[bus][80 + index];
+
+      f1_8   = data->sx2[bus][64 + index];
+      f9_16  = data->sx2[bus][80 + index];
 
       lights = (data->sx2[bus][32 + index] & 0x02) ? True:False;
       speed  = data->sx2[bus][48 + index] & 0x7F;
@@ -131,11 +133,11 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
   }
   else {
     /* SX1 */
-    byte sx1 = data->sx1[slot->bus][slot->addr];
+    byte sx1 = data->sx1[slot->bus&0x01][slot->addr&0x7F];
     speed  = sx1 & 0x1F;
     dir    = (sx1 & 0x20) ? False:True;
     lights = (sx1 & 0x40) ? True:False;
-    horn   = (sx1 & 0x80) ? True:False;
+    f1_8   = (sx1 & 0x80) ? 0x01:0x00;
   }
 
   if( slot->speed != speed ) {
@@ -157,6 +159,20 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
     slot->lights = lights;
+    changed = True;
+  }
+  if( slot->f1_8 != f1_8 ) {
+    /* trace functions changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function 1-8 change event from 0x%02X to 0x%02X for %s", slot->f1_8, f1_8, slot->id );
+    slot->f1_8 = f1_8;
+    changed = True;
+  }
+  if( slot->f9_16 != f9_16 ) {
+    /* trace functions changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function 9-16 change event from 0x%02X to 0x%02X for %s", slot->f9_16, f9_16, slot->id );
+    slot->f9_16 = f9_16;
     changed = True;
   }
 
@@ -281,6 +297,7 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   if( sx1 || __transact( data, cmd, 5, &index, 1 ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got index %d for %s", index, wLoc.getid(node) );
     slot = allocMem( sizeof( struct slot) );
+    slot->addr = addr;
     slot->index = index;
     slot->protocol = cmd[4];
     slot->steps = steps;
@@ -475,7 +492,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[2] = speed & 0x1F;
       out[2] |= (wLoc.isdir(node) ? 0x00:0x20);
       out[2] |= (wLoc.isfn(node)  ? 0x40:0x00);
-      out[2] |= (slot->horn  ? 0x80:0x00);
+      out[2] |= ((slot->f1_8 & 0x01)  ? 0x80:0x00);
 
       slot->speed = speed;
       slot->dir = wLoc.isdir(node);
@@ -525,14 +542,22 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    Boolean f1 = wFunCmd.isf1( node );
-    Boolean f2 = wFunCmd.isf2( node );
-    Boolean f3 = wFunCmd.isf3( node );
-    Boolean f4 = wFunCmd.isf4( node );
-    Boolean f5 = wFunCmd.isf5( node );
-    Boolean f6 = wFunCmd.isf6( node );
-    Boolean f7 = wFunCmd.isf7( node );
-    Boolean f8 = wFunCmd.isf8( node );
+    Boolean f1  = wFunCmd.isf1 ( node );
+    Boolean f2  = wFunCmd.isf2 ( node );
+    Boolean f3  = wFunCmd.isf3 ( node );
+    Boolean f4  = wFunCmd.isf4 ( node );
+    Boolean f5  = wFunCmd.isf5 ( node );
+    Boolean f6  = wFunCmd.isf6 ( node );
+    Boolean f7  = wFunCmd.isf7 ( node );
+    Boolean f8  = wFunCmd.isf8 ( node );
+    Boolean f9  = wFunCmd.isf9 ( node );
+    Boolean f10 = wFunCmd.isf10( node );
+    Boolean f11 = wFunCmd.isf11( node );
+    Boolean f12 = wFunCmd.isf12( node );
+    Boolean f13 = wFunCmd.isf13( node );
+    Boolean f14 = wFunCmd.isf14( node );
+    Boolean f15 = wFunCmd.isf15( node );
+    Boolean f16 = wFunCmd.isf16( node );
 
     iOSlot slot = __getSlot(data, node );
 
@@ -554,7 +579,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[2] |= (slot->dir ? 0x00:0x20);
       out[2] |= (slot->lights ? 0x40:0x00);
       out[2] |= (f1 ? 0x80:0x00);
-      slot->horn = f1;
+      slot->f1_8 = f1 ? 0x01:0x00;
 
       *insize = 1;
       return 3;
@@ -562,11 +587,13 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function command for %s", wLoc.getid(node) );
       out[0] = 0x79;
-      out[1] = 0x06;
+      out[1] = 0x16;
       out[2] = slot->index;
       out[3] = (f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7);
-      out[4] = 0x00;
-
+      out[4] = (f9 << 0 | f10 << 1 | f11 << 2 | f12 << 3 | f13 << 4 | f14 << 5 | f15 << 6 | f16 << 7);
+      out[5] = 0x00;
+      slot->f1_8  = out[3];
+      slot->f9_16 = out[4];
       *insize = 1;
       return 5;
     }
