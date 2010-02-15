@@ -347,6 +347,7 @@
     <typedef def="Boolean(*sublib_write)(obj,byte*,int*)"/>
     <typedef def="void(*sublib_init)(obj)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
+    <typedef def="void(*sublib_translate)(obj, void*)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -386,6 +387,7 @@
       <var name="subConnect" vt="sublib_connect"/>
       <var name="subDisConn" vt="sublib_disconnect"/>
       <var name="subAvail" vt="sublib_available"/>
+      <var name="subTranslate" vt="sublib_translate"/>
       <var name="fbmod" vt="int"/>
       <var name="readfb" vt="Boolean"/>
       <var name="fbState[128*8]" vt="Boolean"/>

@@ -30,6 +30,7 @@ Boolean opendccAvail(obj xpressnet);
 void opendccInit(obj xpressnet);
 int opendccRead(obj xpressnet, byte* buffer);
 Boolean opendccWrite(obj xpressnet, byte* buffer, int* rspexpected);
+void opendccTranslate(obj xpressnet, void* node);
 
 
 

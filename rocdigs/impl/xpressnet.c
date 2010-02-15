@@ -23,7 +23,6 @@
 #include "rocdigs/impl/xpressnet/li101.h"
 #include "rocdigs/impl/xpressnet/liusb.h"
 #include "rocdigs/impl/xpressnet/elite.h"
-#include "rocdigs/impl/xpressnet/roco.h"
 #include "rocdigs/impl/xpressnet/opendcc.h"
 #include "rocdigs/impl/xpressnet/atlas.h"
 #include "rocdigs/impl/xpressnet/xntcp.h"
@@ -51,9 +50,6 @@
 #include "rocrail/wrapper/public/FbMods.h"
 
 #include "rocdigs/impl/common/fada.h"
-
-#include <time.h>
-
 
 static int instCnt = 0;
 
@@ -186,52 +182,8 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   iOXpressNetData data = Data(xpressnet);
   iONode rsp = NULL;
 
-  /* Clock command. */
-  if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
-    /*
-    from Slave to Command Station / and from Command Station to Slave:
-
-    0x00 0x01 TCODE0 {TCODE1 TCODE2 TCODE3} Timecode transfer, accelerated layout time.
-    A TCODE consists of one byte, coded binary as CCDDDDDD, where CC denotes the type of
-    code and DDDDDDD the corresponding data.
-    TCODE Content
-    CC=00 DDDDDD = mmmmmm, this denotes the minute, range 0..59.
-    CC=10 DDDDDD = 0HHHHHH, this denotes the hour, range 0..23
-    CC=01 DDDDDD = 000WWW, this denotes the day of week,
-    0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday.
-    CC=11 DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
-    an acceleration factor of 0 means clock is stopped, a factor of 1 means clock is running
-    real time, a factor of 2 means clock is running twice as fast a real time.
-    This message is issued as broadcast once every (layout-) minute. The command is not repeated.
-
-    When no Parameters are given, it is a query and the answer will be sent only to the requesting slave.
-     */
-    if( data->fastclock && StrOp.equals( wClock.set, wClock.getcmd( node ) ) ) {
-      long l_time = wClock.gettime(node);
-      struct tm* lTime = localtime( &l_time );
-
-      int mins    = lTime->tm_min;
-      int hours   = lTime->tm_hour;
-      int wday    = lTime->tm_wday;
-      int divider = wClock.getdivider(node);
-      byte* outa  = NULL;
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock to %02d:%02d divider=%d", hours, mins, divider );
-
-      outa = allocMem(8);
-      outa[0] = 0x05;
-      outa[1] = 0xF1;
-      outa[2] = 0x00 + mins;
-      outa[3] = 0x80 + hours;
-      outa[4] = 0x40 + wday;
-      outa[5] = 0xC0 + divider;
-      ThreadOp.post( data->transactor, (obj)outa );
-    }
-  }
-
-
   /* Switch command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+  if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
 
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
@@ -255,14 +207,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
       /* make message:*/
       /* activate the gate not to be used */
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0x52;
       outa[1] = addr;
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
       /* deactivate the gate to be used */
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0x52;
       outb[1] = addr;
       outb[2] = 0x80 | 0x00 | (port << 1) | gate;
@@ -272,13 +224,13 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     } else {
 
       /* make message: */
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0x52;
       outa[1] = addr;
       outa[2] = 0x80 | 0x08 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0x52;
       outb[1] = addr;
       outb[2] = 0x80 | 0x00 | (port << 1) | state;
@@ -313,13 +265,13 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
     if (StrOp.equals( wOutput.getcmd( node ), wOutput.on )){
 
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0x52;
       outa[1] = addr;
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0x52;
       outb[1] = addr;
       outb[2] = 0x80 | 0x00 | (port << 1) | gate;
@@ -436,7 +388,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
 
     if( (data->lcfn[addr] & 0x10) != (fn?0x10:0) ) {
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0xE4;
       outa[1] = 0x20;
       __setLocAddr( addr, outa+2 );
@@ -453,7 +405,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
 
-    byte* outb = allocMem(256);
+    byte* outb = allocMem(32);
     outb[0] = 0xE4;
     outb[1] = reqid;
     __setLocAddr( addr, outb+2 );
@@ -512,7 +464,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
 
     if( group == 0 || group == 1 ) {
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0xE4;
       outa[1] = 0x20;
       __setLocAddr( addr, outa+2 );
@@ -522,7 +474,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
     if( group == 0 || group == 2 ) {
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0xE4;
       outb[1] = 0x21;
       __setLocAddr( addr, outb+2 );
@@ -533,7 +485,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
 
     if( group == 0 || group == 3 ) {
-      byte* outc = allocMem(256);
+      byte* outc = allocMem(32);
       outc[0] = 0xE4;
       outc[1] = 0x22;
       __setLocAddr( addr, outc+2 );
@@ -543,7 +495,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
     if( group == 0 || group == 4 || group == 5 ) {
-      byte* outc = allocMem(256);
+      byte* outc = allocMem(32);
       outc[0] = 0xE4;
       outc[1] = 0x23;
       __setLocAddr( addr, outc+2 );
@@ -553,7 +505,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
     if( group == 0 || group == 6 || group == 7 ) {
-      byte* outc = allocMem(256);
+      byte* outc = allocMem(32);
       outc[0] = 0xE4;
       outc[1] = 0x28;
       __setLocAddr( addr, outc+2 );
@@ -570,7 +522,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    byte* outa = allocMem(256);
+    byte* outa = allocMem(32);
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       outa[0] = 0x21;
       outa[1] = 0x80;
@@ -594,13 +546,13 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       int cv = wProgram.getcv( node );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
 
-      byte* outa = allocMem(256);
+      byte* outa = allocMem(32);
       outa[0] = 0x22;
       outa[1] = 0x15;
       outa[2] = cv & 0xFF;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0x21;
       outb[1] = 0x10;
       outb[2] = 0x31;
@@ -619,7 +571,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
         if (cv > 0) cv--;
 
-        byte* outb = allocMem(256);
+        byte* outb = allocMem(32);
         outb[0] = 0xE6;
         outb[1] = 0x30;
         __setLocAddr( decaddr, outb+2 );
@@ -639,14 +591,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
 
-        byte* outa = allocMem(256);
+        byte* outa = allocMem(32);
         outa[0] = 0x23;
         outa[1] = 0x16;
         outa[2] = cv & 0xFF;
         outa[3] = value & 0xFF;
         ThreadOp.post( data->transactor, (obj)outa );
 
-        byte* outb = allocMem(256);
+        byte* outb = allocMem(32);
         outb[0] = 0x21;
         outb[1] = 0x10;
         outb[2] = 0x31;
@@ -659,7 +611,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       /* CS will go ton Pt on on first programming request */
     }  /* PT off, send: All ON" */
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
-      byte* outb = allocMem(256);
+      byte* outb = allocMem(32);
       outb[0] = 0x21;
       outb[1] = 0x81;
       outb[2] = 0xA0;
@@ -667,11 +619,19 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
   }
+  else {
+    /* unknown command; try sublib */
+    if( data->subTranslate != NULL ) {
+      data->subTranslate((obj)xpressnet, node);
+    }
+  }
+  
+  
   return rsp;
 }
 
 
-static void __evaluateResponse( iOXpressNet xpressnet, byte* in, int datalen ) {
+static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
   iOXpressNetData data = Data(xpressnet);
 
   int i0 = in[0];
@@ -813,20 +773,9 @@ static void __transactor( void* threadinst ) {
 
     if ( data->subRead((obj)xpressnet, in) > 0 ) {
 
-      byte bXor = 0;
-      int i = 0;
-      int datalen = (in[0] & 0x0f) + 1;
-
-      for( i = 0; i < datalen; i++ ) {
-        bXor ^= in[ i ];
-      }
-
-      if( bXor != in[datalen]) {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-            "XOR error: datalength=%d calculated=0x%02X received=0x%02X", datalen, bXor, in[datalen] );
+      if( !isChecksumOK(in) ) {
         ThreadOp.sleep(10);
         continue;
-        /* flush buffer */
       }
 
       /* Evaluate XprerssNet Answers
@@ -986,7 +935,7 @@ static void __transactor( void* threadinst ) {
       }
 
       /* anything will go to rocgui ...*/
-      __evaluateResponse( xpressnet, in, datalen );
+      __evaluateResponse( xpressnet, in );
 
     }
 
@@ -1038,7 +987,7 @@ static void _halt( obj inst ) {
 
   /* ALL OFF */
   int rspExpected = False;
-  byte* outc = allocMem(256);
+  byte* outc = allocMem(32);
   outc[0] = 0x21;
   outc[1] = 0x80;
   outc[2] = 0xA1;
@@ -1127,6 +1076,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  /* optional call */
+  data->subTranslate = NULL;
 
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib( ini ) ) ) {
@@ -1139,7 +1090,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subAvail   = liusbAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
-    /* Hornby Elite */
+    /* Elite */
     data->subConnect = eliteConnect;
     data->subInit    = eliteInit;
     data->subRead    = eliteRead;
@@ -1147,23 +1098,15 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subDisConn = eliteDisConnect;
     data->subAvail   = eliteAvail;
   }
-  else if( StrOp.equals( wDigInt.sublib_lenz_roco, wDigInt.getsublib( ini ) ) ) {
-    /* Roco */
-    data->subConnect = rocoConnect;
-    data->subInit    = rocoInit;
-    data->subRead    = rocoRead;
-    data->subWrite   = rocoWrite;
-    data->subDisConn = rocoDisConnect;
-    data->subAvail   = rocoAvail;
-  }
   else if( StrOp.equals( wDigInt.sublib_lenz_opendcc, wDigInt.getsublib( ini ) ) ) {
     /* OpenDCC */
-    data->subConnect = opendccConnect;
-    data->subInit    = opendccInit;
-    data->subRead    = opendccRead;
-    data->subWrite   = opendccWrite;
-    data->subDisConn = opendccDisConnect;
-    data->subAvail   = opendccAvail;
+    data->subConnect   = opendccConnect;
+    data->subInit      = opendccInit;
+    data->subRead      = opendccRead;
+    data->subWrite     = opendccWrite;
+    data->subDisConn   = opendccDisConnect;
+    data->subAvail     = opendccAvail;
+    data->subTranslate = opendccTranslate;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_atlas, wDigInt.getsublib( ini ) ) ) {
     /* Atlas */
@@ -1175,7 +1118,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subAvail   = atlasAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_xntcp, wDigInt.getsublib( ini ) ) ) {
-    /* Atlas */
+    /* XnTcp */
     data->subConnect = xntcpConnect;
     data->subInit    = xntcpInit;
     data->subRead    = xntcpRead;

@@ -21,5 +21,9 @@
 
 #ifndef COMMON_H_
 #define COMMON_H_
+#include "rocs/public/mem.h"
 
+
+Boolean isChecksumOK(byte* in);
+int makeChecksum(byte* out);
 #endif /* COMMON_H_ */

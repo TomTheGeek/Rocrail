@@ -68,26 +68,16 @@ Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;
-  int i = 0;
   Boolean rc = False;
-  byte bXor = 0;
   unsigned char out[256];
 
   *rspexpected = 1; /* LIUSB or CS will confirm every command */
 
+  len = makeChecksum(outin);
 
-  len = outin[0] & 0x0f;
-  len++; /* header */
-
-  if( out[0] == 0x00 ) {
+  if( len == 0 ) {
     return False;
   }
-
-  for ( i = 0; i < len; i++ ) {
-    bXor ^= outin[i];
-  }
-  outin[i] = bXor;
-  len++; /* checksum */
 
   /* make extra header for LI-USB*/
   MemOp.copy( out+2, outin, len );
@@ -95,8 +85,6 @@ Boolean liusbWrite(obj xpressnet, byte* outin, int* rspexpected) {
   len = len+2;
   out[0] = 0xFF;
   out[1] = 0xFE;
-
-  out[len-1] = bXor;
 
   if( MutexOp.wait( data->serialmux ) ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );

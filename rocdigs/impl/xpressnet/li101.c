@@ -100,24 +100,16 @@ Boolean li101Write(obj xpressnet, byte* out, int* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;
-  int i = 0;
   Boolean rc = False;
-  byte bXor = 0;
 
   *rspexpected = 1; /* LI101 or CS will confirm every command */
 
-  len = out[0] & 0x0f;
-  len++; /* header */
+  len = makeChecksum(out);
 
-  if( out[0] == 0x00 ) {
+  if( len == 0 ) {
     return False;
   }
 
-  for ( i = 0; i < len; i++ ) {
-    bXor ^= out[i];
-  }
-  out[i] = bXor;
-  len++; /* checksum */
 
   if( MutexOp.wait( data->serialmux ) ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );
