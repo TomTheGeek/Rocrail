@@ -39,7 +39,6 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Response.h"
-//#include "rocrail/wrapper/public/ThrottleCmd.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -261,23 +260,6 @@ static void __evaluateResponse( iOLenz lenz, byte* in, int datalen ) {
     }
   }
 
-  /*
-
-  if( (in[0] & 0xF0) == 0x30) {
-    iONode node = NodeOp.inst( wThrottleCmd.name(), NULL, ELEMENT_NODE );
-
-
-    NodeOp.setInt( node, "slot", in[1] );
-    NodeOp.setInt( node, "type", in[2] );
-    NodeOp.setInt( node, "key", in[3] );
-    NodeOp.setInt( node, "val", in[4] );
-
-
-    if( data->listenerFun != NULL && data->listenerObj != NULL )
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-  }
-  */
-
   /* SM response Direct CV mode: */
   if( in[0] == 0x63 && in[1] == 0x14 ) {
     int cv = in[2];
@@ -349,29 +331,6 @@ static Boolean __sendRequest( iOLenz lenz, byte* outin ) {
   return rc;
 }
 
-/* Maybe obsolete*/
-static void __statusRequestSender( void* threadinst ) {
-  iOThread th = (iOThread)threadinst;
-  iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
-  iOLenzData data = Data(lenz);
-  int i;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender started." );
-
-  unsigned char out[256];
-
-  out[0] = 0x21;
-  out[1] = 0x24;
-  out[2] = 0x05;
-
-  do {
-    ThreadOp.sleep( 1000 );
-    __sendRequest( lenz, out );
-  } while( data->run );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "statusRequestSender ended." );
-
-}
-
 static void __initializer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLenz lenz = (iOLenz)ThreadOp.getParm( th );
@@ -380,11 +339,13 @@ static void __initializer( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initializer started.");
 
-  /* XpressNet
-     Asking for Interface version*/
-  byte* outa = allocMem(256);
-  outa[0] = 0xF0;
-  ThreadOp.post( data->transactor, (obj)outa );
+  if( !data->elite ) {
+    /* XpressNet
+       Asking for Interface version*/
+    byte* outa = allocMem(256);
+    outa[0] = 0xF0;
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
 
   /* Asking for CS version */
   byte* outb = allocMem(256);
@@ -1170,8 +1131,8 @@ static void __transactor( void* threadinst ) {
       } else {
         responceRecieved = True;
         waitForAnswer = False;
-
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
+        if( expectEliteAnswer )
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Command not confirmed!" );
       }
 
     }
@@ -1208,7 +1169,7 @@ static void __transactor( void* threadinst ) {
           MutexOp.post( data->mux );
 
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "in buffer" );
-          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, 10 );
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, datalen+3 );
 
           /* remove extra header from LI-USB */
           for (i = 0; i < 254; i++)
@@ -1394,7 +1355,11 @@ static void __transactor( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
           responceRecieved = True;
         }
-
+        /* Nasty Elite, response on loc command or loc operated on elite*/
+        else if (in[0] == 0xE3 || in[0] == 0xE4 || in[0] == 0xE5 ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Elite: Loc command");
+          responceRecieved = True;
+        }
         else {
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
@@ -1525,8 +1490,10 @@ static struct OLenz* _inst( const iONode ini ,const iOTrace trc ) {
 
   SerialOp.setFlow( data->serial, cts );
 
-  if( data->usb) /* force to 57600 ignoring the ini.*/
+  if( data->usb) {/* force to 57600 ignoring the ini.*/
+    wDigInt.setbps( ini, 57600 );
     SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
+  }
   else
     SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
 
