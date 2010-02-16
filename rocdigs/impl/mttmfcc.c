@@ -105,7 +105,7 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMttmFcc ----- */
-static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
+static Boolean __updateSlot(iOMttmFccData data, iOSlot slot, Boolean* vdfChanged, Boolean* funChanged) {
   Boolean changed = False;
   int     speed   = 0;
   Boolean dir     = True;
@@ -145,6 +145,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "speed change event from %d to %d for %s", slot->speed, speed, slot->id );
     slot->speed = speed;
+    *vdfChanged = True;
     changed = True;
   }
   if( slot->dir != dir ) {
@@ -152,6 +153,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "direction change event from %s to %s for %s", slot->dir?"reverse":"forwards", dir?"reverse":"forwards", slot->id );
     slot->dir = dir;
+    *vdfChanged = True;
     changed = True;
   }
   if( slot->lights != lights ) {
@@ -159,6 +161,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
     slot->lights = lights;
+    *vdfChanged = True;
     changed = True;
   }
   if( slot->f1_8 != f1_8 ) {
@@ -166,6 +169,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "function 1-8 change event from 0x%02X to 0x%02X for %s", slot->f1_8, f1_8, slot->id );
     slot->f1_8 = f1_8;
+    *funChanged = True;
     changed = True;
   }
   if( slot->f9_16 != f9_16 ) {
@@ -173,6 +177,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "function 9-16 change event from 0x%02X to 0x%02X for %s", slot->f9_16, f9_16, slot->id );
     slot->f9_16 = f9_16;
+    *funChanged = True;
     changed = True;
   }
 
@@ -184,7 +189,57 @@ static Boolean __updateSlots(iOMttmFccData data) {
   if( MutexOp.wait( data->lcmux ) ) {
     iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
     while( slot != NULL ) {
-      __updateSlot(data, slot);
+      Boolean vdfChanged = False;
+      Boolean funChanged = False;
+
+      if( __updateSlot(data, slot, &vdfChanged, &funChanged) ) {
+        iONode nodeC = NULL;
+        if( vdfChanged ) {
+          nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wLoc.setiid( nodeC, data->iid );
+          wLoc.setid( nodeC, slot->id );
+          wLoc.setaddr( nodeC, slot->addr );
+          wLoc.setV_raw( nodeC, slot->speed );
+          wLoc.setV_rawMax( nodeC, slot->steps );
+          wLoc.setfn( nodeC, slot->lights);
+          wLoc.setdir( nodeC, slot->dir );
+          wLoc.setthrottleid( nodeC, "fcc" );
+          wLoc.setcmd( nodeC, wLoc.direction );
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+
+        if( funChanged ) {
+          nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wLoc.setiid( nodeC, data->iid );
+          wFunCmd.setid( nodeC, slot->id );
+          wFunCmd.setaddr( nodeC, slot->addr );
+          wFunCmd.setf0( nodeC, slot->lights );
+          wFunCmd.setf1( nodeC, (slot->f1_8 & 0x01) ? True:False );
+          wFunCmd.setf2( nodeC, (slot->f1_8 & 0x02) ? True:False );
+          wFunCmd.setf3( nodeC, (slot->f1_8 & 0x04) ? True:False );
+          wFunCmd.setf4( nodeC, (slot->f1_8 & 0x08) ? True:False );
+          wFunCmd.setf5( nodeC, (slot->f1_8 & 0x10) ? True:False );
+          wFunCmd.setf6( nodeC, (slot->f1_8 & 0x20) ? True:False );
+          wFunCmd.setf7( nodeC, (slot->f1_8 & 0x40) ? True:False );
+          wFunCmd.setf8( nodeC, (slot->f1_8 & 0x80) ? True:False );
+
+          wFunCmd.setf9 ( nodeC, (slot->f9_16 & 0x01) ? True:False );
+          wFunCmd.setf10( nodeC, (slot->f9_16 & 0x02) ? True:False );
+          wFunCmd.setf11( nodeC, (slot->f9_16 & 0x04) ? True:False );
+          wFunCmd.setf12( nodeC, (slot->f9_16 & 0x08) ? True:False );
+          wFunCmd.setf13( nodeC, (slot->f9_16 & 0x10) ? True:False );
+          wFunCmd.setf14( nodeC, (slot->f9_16 & 0x20) ? True:False );
+          wFunCmd.setf15( nodeC, (slot->f9_16 & 0x40) ? True:False );
+          wFunCmd.setf16( nodeC, (slot->f9_16 & 0x80) ? True:False );
+
+          wLoc.setthrottleid( nodeC, "fcc" );
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+
+      }
+
       slot = (iOSlot)MapOp.next( data->lcmap );
     }
     MutexOp.post(data->lcmux);
