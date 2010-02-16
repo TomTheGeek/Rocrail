@@ -263,6 +263,8 @@
       <const name="rfid12" vt="string" val="rfid12"/>
       <const name="rclink" vt="string" val="rclink"/>
       <const name="mttmfcc" vt="string" val="mttmfcc"/>
+      <const name="xpressnet" vt="string" val="xpressnet"/>
+      <const name="rmx" vt="string" val="rmx"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -275,7 +277,6 @@
       <const name="sublib_native" vt="string" val="native"/>
       <const name="sublib_default" vt="string" val="default"/>
       <const name="sublib_lenz_elite" vt="string" val="elite"/>
-      <const name="sublib_lenz_roco" vt="string" val="roco"/>
       <const name="sublib_lenz_opendcc" vt="string" val="opendcc"/>
       <const name="sublib_lenz_atlas" vt="string" val="atlas"/>
       <const name="sublib_lenz_xntcp" vt="string" val="xntcp"/>

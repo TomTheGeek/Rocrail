@@ -436,6 +436,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.io8255, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.lenz, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.loconet, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.lrc135, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mcs2, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mttmfcc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.nce, wxConvUTF8 ) );
@@ -443,15 +444,16 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.opendcc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.p50, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.p50x, wxConvUTF8 ) );
-  //m_Lib->Append( wxString( wDigInt.railcom, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.rclink, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.rfid12, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.rmx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.rocnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.sprog, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.xpressnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
 
   m_Lib->SetSelection( 0 );

@@ -785,6 +785,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
   }
 
+  /* Cleanup Node1 */
+  cmd->base.del(cmd);
+
   return reply;
 }
 
