@@ -305,7 +305,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   }
 
   /* Inform RocRail... */
-  iOStrTok tok = StrTokOp.inst(data.ToAscii(), ':');
+  iOStrTok tok = StrTokOp.inst(data.mb_str(wxConvUTF8), ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
   const char* dropid  = StrTokOp.nextToken(tok);
   const char* fromid  = "";
