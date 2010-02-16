@@ -1675,7 +1675,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     StrOp.free( cmdstr );
   }
 
-  if( cmd != NULL ) {
+  if( cmd != NULL && !StrOp.equals( wLoc.direction, cmd )  && !StrOp.equals( wLoc.velocity, cmd ) && !StrOp.equals( wLoc.dirfun, cmd ) ) {
     Boolean broadcast = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd \"%s\" for %s.",
                    cmd, LocOp.getId( inst ) );
