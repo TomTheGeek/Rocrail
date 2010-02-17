@@ -325,9 +325,11 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
       HV = Hardwareversion ( /10 also z.B. 0x0A == Version 1.0)
      */
   {
+    byte cmd = 0x20;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "SN=%d Software=%.1f Hardware=%.1f", packet[1]*256 + packet[2],
         ((float)packet[3])/10.0, ((float)packet[4])/10.0 );
+    SerialOp.write(data->serial, &cmd, 1);
   }
   break;
   case 0xFE:
@@ -384,13 +386,19 @@ static void __RcLinkReader( void* threadinst ) {
   int idx = 0;
   Boolean packetStart = False;
 
-  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink reader started." );
+  ThreadOp.sleep(500);
+  packet[0] = 0x60;
+  SerialOp.write(data->serial, packet, 1);
+
+  ThreadOp.sleep(100);
 
   data->initOK = False;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink reader started." );
 
   while( data->run ) {
+    int datalen = 0;
     int bAvail = SerialOp.available(data->serial);
     if (bAvail < 0) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
@@ -399,9 +407,10 @@ static void __RcLinkReader( void* threadinst ) {
 
     while (bAvail > 0) {
       byte c;
-      int datalen = 0;
       SerialOp.read( data->serial, &c, 1 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, &c, 1 );
       if( !packetStart && __isStartByte( c, &datalen ) ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "STX 0x%02X", c );
         /* STX */
         packetStart = True;
         idx = 0;
@@ -411,6 +420,7 @@ static void __RcLinkReader( void* threadinst ) {
       else if(packetStart) {
         if( (idx-1) == datalen && c == 0xFF ) {
           /* ETX */
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ETX 0x%02X", c );
           packetStart = False;
           packet[idx] = c;
           idx++;
@@ -418,6 +428,7 @@ static void __RcLinkReader( void* threadinst ) {
           __evaluateRC(inst, packet, idx);
         }
         else if( (idx-1) < datalen ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "data[%d] 0x%02X", idx, c );
           packet[idx] = c;
           idx++;
         }
