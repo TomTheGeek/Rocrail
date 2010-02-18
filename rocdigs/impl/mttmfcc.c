@@ -200,7 +200,13 @@ static Boolean __updateSlots(iOMttmFccData data) {
             wLoc.setiid( nodeC, data->iid );
           wLoc.setid( nodeC, slot->id );
           wLoc.setaddr( nodeC, slot->addr );
-          wLoc.setV_raw( nodeC, slot->speed );
+          if( slot->ebreak && slot->speed > 0 ) {
+            /* correction  for ebreak */
+            wLoc.setV_raw( nodeC, slot->speed - 1 );
+          }
+          else {
+            wLoc.setV_raw( nodeC, slot->speed );
+          }
           wLoc.setV_rawMax( nodeC, slot->steps );
           wLoc.setfn( nodeC, slot->lights);
           wLoc.setdir( nodeC, slot->dir );

@@ -157,6 +157,62 @@ static int _version( obj inst ) {
 }
 
 
+static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize ) {
+  return True;
+}
+
+static Boolean __transact( iORmxData data, byte* out, int outsize, byte* in, int insize ) {
+  Boolean rc = data->dummyio;
+
+  if( MutexOp.wait( data->mux ) ) {
+    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    if( !data->dummyio ) {
+      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+        if( insize > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
+          rc = SerialOp.read( data->serial, in, insize );
+          if( rc ) {
+            TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+            rc = __evaluateRsp(data, out, outsize, in, insize);
+          }
+        }
+      }
+    }
+    MutexOp.post( data->mux );
+  }
+  return rc;
+}
+
+
+static void __rmxReader( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iORmx     rmx  = (iORmx)ThreadOp.getParm( th );
+  iORmxData data = Data(rmx);
+  byte buffer[256];
+  Boolean initialized = False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX reader started." );
+  ThreadOp.sleep( 1000 );
+  
+  while( data->run ) {
+    if( !initialized ) {
+      byte out[] = { 0x7d,0x05,0x00,0x00,0x78, 0x00 };
+      initialized = __transact(data, out, 5, buffer, 5 );
+      if( !initialized ) {
+        ThreadOp.sleep( 1000 );
+        continue;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX connection is initialized." );
+      }
+    }
+    
+    ThreadOp.sleep( 100 );
+  };
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX reader ended." );
+}
+
+
 /**  */
 static struct ORmx* _inst( const iONode ini ,const iOTrace trc ) {
   iORmx __Rmx = allocMem( sizeof( struct ORmx ) );
@@ -180,7 +236,28 @@ static struct ORmx* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = 57600 (fix)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  data->serialOK = False;
+  if( !data->dummyio ) {
+    data->serial = SerialOp.inst( data->device );
+    SerialOp.setFlow( data->serial, none );
+    SerialOp.setLine( data->serial, 57600, 8, 2, none, wDigInt.isrtsdisabled( ini ) );
+    SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
+    data->serialOK = SerialOp.open( data->serial );
+  }
+
+  if(data->serialOK) {
+    data->run = True;
+    data->sxReader = ThreadOp.inst( "rmxReader", &__rmxReader, __Rmx );
+    ThreadOp.start( data->sxReader );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );
+    data->dummyio = True;
+  }
+
 
   instCnt++;
   return __Rmx;

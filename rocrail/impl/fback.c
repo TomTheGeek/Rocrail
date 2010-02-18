@@ -322,10 +322,12 @@ static void _event( iOFBack inst, iONode nodeC ) {
 static void _modify( iOFBack inst, iONode props ) {
   iOFBackData data  = Data(inst);
   iOModel     model = AppOp.getModel();
-  Boolean move = StrOp.equals( wModelCmd.getcmd( props ), wModelCmd.move );
+  Boolean move    = StrOp.equals( wModelCmd.getcmd( props ), wModelCmd.move );
+  Boolean newaddr = (wFeedback.getaddr( data->props ) != wFeedback.getaddr( props ));
 
   int cnt = NodeOp.getAttrCnt( props );
   int i = 0;
+  
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify %s", wFeedback.getid(data->props) );
   /* TODO: inform model with current addrkey to remove from map. */
@@ -361,6 +363,13 @@ static void _modify( iOFBack inst, iONode props ) {
                                            wFeedback.getiid(data->props) );
     /* inform model with new addrkey to add to map. */
     ModelOp.addFbKey( model, data->addrKey, (obj)inst );
+    
+    /* inform SX based digints of changes */
+    if( newaddr ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "address of %s has changes; update sensor modules", wFeedback.getid(data->props) );
+      ModelOp.updateFB( model );
+    }
+    
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
