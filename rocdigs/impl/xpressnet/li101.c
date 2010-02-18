@@ -37,7 +37,23 @@ void li101DisConnect(obj xpressnet) {
 
 Boolean li101Avail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
-  return SerialOp.available(data->serial) > 0 ? True:False;
+  int available = 0;
+
+  if( data->dummyio )
+    return False;
+
+  available = SerialOp.available(data->serial);
+
+  if( available == -1 ) {
+    /* device error */
+    if( !data->dummyio ) {
+      data->dummyio = True;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+    }
+    return False;
+  }
+
+  return available > 0 ? True:False;
 }
 
 
@@ -82,6 +98,9 @@ int li101Read(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
   Boolean ok = False;
 
+  if( data->dummyio )
+    return 0;
+
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "trying to read..." );
   if( MutexOp.wait( data->serialmux ) ) {
     if( SerialOp.read( data->serial, buffer, 1 ) ) {
@@ -109,6 +128,9 @@ Boolean li101Write(obj xpressnet, byte* out, Boolean* rspexpected) {
   if( len == 0 ) {
     return False;
   }
+
+  if( data->dummyio )
+    return 0;
 
 
   if( MutexOp.wait( data->serialmux ) ) {

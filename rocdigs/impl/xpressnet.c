@@ -983,7 +983,7 @@ static void _halt( obj inst ) {
   data->run = False;
 
   /* ALL OFF */
-  int rspExpected = False;
+  Boolean rspExpected = False;
   byte* outc = allocMem(32);
   outc[0] = 0x21;
   outc[1] = 0x80;
@@ -1066,6 +1066,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout         = %d", wDigInt.gettimeout( ini ) );
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib          = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );

@@ -26,10 +26,11 @@
 
 Boolean liusbConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init serial port for LI-USB..." );
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, cts );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
-  SerialOp.setLine( data->serial, 57600, 8, 1, 0, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setLine( data->serial, 57600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );
 }
 
@@ -50,13 +51,25 @@ int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
   Boolean ok = False;
 
+  if( data->dummyio )
+    return 0;
+
   if( MutexOp.wait( data->serialmux ) ) {
-    if( !SerialOp.read( data->serial, buffer, 2 ) ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading bytes from LI-USB..." );
+    if( SerialOp.read( data->serial, buffer, 2 ) ) {
       /* TODO: check if it is the expected frame */
-      if( !SerialOp.read( data->serial, buffer, 1 ) ) {
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, 2 );
+      if( SerialOp.read( data->serial, buffer, 1 ) ) {
         len = (buffer[0] & 0x0f) + 1;
         ok = SerialOp.read( data->serial, (char*)buffer+1, len );
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len + 1 );
       }
+      else {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "could not read header byte from LI-USB..." );
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "could not read frame from LI-USB..." );
     }
     MutexOp.post( data->serialmux );
   }
@@ -70,6 +83,9 @@ Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   int len = 0;
   Boolean rc = False;
   unsigned char out[256];
+
+  if( data->dummyio )
+    return 0;
 
   *rspexpected = 1; /* LIUSB or CS will confirm every command */
 
@@ -87,7 +103,7 @@ Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   out[1] = 0xFE;
 
   if( MutexOp.wait( data->serialmux ) ) {
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "out buffer" );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "writing bytes to LI-USB" );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     if( !data->dummyio ) {
       rc = SerialOp.write( data->serial, (char*)out, len );
