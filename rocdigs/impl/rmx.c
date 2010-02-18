@@ -44,6 +44,34 @@
 
 static int instCnt = 0;
 
+#define PCKT          0x7D
+/* OPCODES */
+#define OPC_OK        0x00
+#define OPC_ERR       0x01
+#define OPC_MODE      0x03
+#define OPC_STATUS    0x04
+#define OPC_WRITESX   0x05
+#define OPC_READSX    0x06
+#define OPC_LOCOINFO  0x08
+#define OPC_RMXCHANEL 0x20
+#define OPC_LOCOV     0x24
+#define OPC_LOCOF     0x28
+#define OPC_PT        0xC0
+
+/* ERRCODES */
+#define ERR_OK        0x00
+#define ERR_UNKNOWN   0x01
+#define ERR_NORMXCH   0x02
+#define ERR_UNDEFLC   0x03
+#define ERR_INPUT     0x04
+#define ERR_MODE      0x05
+#define ERR_RMXOFF    0x06
+#define ERR_LCDBFULL  0x07
+#define ERR_ALLUSED   0x08
+#define ERR_XOR       0x0F
+
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -98,6 +126,38 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- ORmx ----- */
+
+static int __addChecksum(byte* out) {
+  int len = out[1];
+  int i = 0;
+  byte bXor = 0;
+
+  for ( i = 0; i < (len-1); i++ ) {
+    bXor ^= out[i];
+  }
+  out[i] = bXor;
+
+  return len;
+}
+
+static Boolean __isChecksum(byte* in) {
+  int len = in[1];
+  int i = 0;
+  byte bXor = 0;
+
+  for ( i = 0; i < (len-1); i++ ) {
+    bXor ^= in[i];
+  }
+
+  if( in[i] != bXor ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor error: in[%d]=0x%02X xor=0x%02X", i, in[i], bXor );
+    TraceOp.dump( name, TRCLEVEL_EXCEPTION, in, len );
+    return False;
+  }
+
+  return True;
+}
+
 
 
 /**  */
@@ -161,19 +221,34 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
   return True;
 }
 
-static Boolean __transact( iORmxData data, byte* out, int outsize, byte* in, int insize ) {
+static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
   Boolean rc = data->dummyio;
 
   if( MutexOp.wait( data->mux ) ) {
+    int outsize = out[1];
+    int insize  = 0;
+    __addChecksum(out);
+
     TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
     if( !data->dummyio ) {
       if( rc = SerialOp.write( data->serial, out, outsize ) ) {
-        if( insize > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
-          rc = SerialOp.read( data->serial, in, insize );
-          if( rc ) {
-            TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
-            rc = __evaluateRsp(data, out, outsize, in, insize);
+        if( in != NULL ) {
+          rc = SerialOp.read( data->serial, in, 2 );
+          if( rc && in[0] == 0x7D) {
+            insize = in[1];
+            rc = SerialOp.read( data->serial, in+2, insize - 2 );
+            if( rc ) {
+              TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+              rc = __evaluateRsp(data, out, outsize, in, insize);
+            }
+            else {
+              /* error reading data */
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
+            }
+          }
+          else {
+            /* error reading header */
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
           }
         }
       }
@@ -196,8 +271,8 @@ static void __rmxReader( void* threadinst ) {
   
   while( data->run ) {
     if( !initialized ) {
-      byte out[] = { 0x7d,0x05,0x00,0x00,0x78, 0x00 };
-      initialized = __transact(data, out, 5, buffer, 5 );
+      byte out[] = { PCKT,0x05,OPC_OK,ERR_OK,0x00 };
+      initialized = __transact(data, out, buffer, OPC_OK );
       if( !initialized ) {
         ThreadOp.sleep( 1000 );
         continue;
@@ -207,6 +282,10 @@ static void __rmxReader( void* threadinst ) {
       }
     }
     
+    if( MutexOp.wait( data->mux ) ) {
+      MutexOp.post( data->mux );
+    }
+
     ThreadOp.sleep( 100 );
   };
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX reader ended." );
