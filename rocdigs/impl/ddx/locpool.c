@@ -330,7 +330,8 @@ void update_NMRAPacketPool(int adr, char *packet, int packet_size,
 
 
 Boolean isShortcut(iOSerial serial, int shortcutchecking, int shortcutdelay, int inversedsr, Boolean* scdetected, unsigned long* scdelay ) {
-  if ( shortcutchecking && ( SerialOp.isDSR(serial) && !inversedsr ) ) {
+
+  if ( shortcutchecking && ((!inversedsr && SerialOp.isDSR(serial)) || (inversedsr && !SerialOp.isDSR(serial))) ) {
     /* the system tick runs at 10ms, but is system dependent... */
     TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "shortcut detected" );
 
