@@ -760,6 +760,51 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
 }
 
 
+static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
+  Boolean rspReceived = False;
+
+  /* check if last command was recieved, the cs answers: 1 4 5 */
+  if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "LI: Command OK");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 2 && in[2] == 3 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Timeout LI -> LZV");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 3 && in[2] == 2 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Unknown error");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 5 && in[2] == 4 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: No longer addressed by LZV");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 6 && in[2] == 7 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Buffer overflow");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 7 && in[2] == 6 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: LZV is addressing LI again");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 9 && in[2] == 8 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Parameter error");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 8 && in[2] == 9 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Not possible to send packet to LZV");
+    rspReceived = True;
+  }
+  else if( in[0] == 1 && in[1] == 10 && in[2] == 11 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Unexpected response from LZV");
+    rspReceived = True;
+  }
+
+  return rspReceived;
+}
+
+
 static void __transactor( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
   iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
@@ -809,15 +854,9 @@ static void __transactor( void* threadinst ) {
         continue;
       }
 
-      /* Evaluate XprerssNet Answers
-       check if last command was recieved, the cs answers: 1 4 5 */
-      if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command OK");
-        rspReceived = True;
-      }
-      else if( in[0] == 1 && in[1] == 9 && in[2] == 8 ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Parameter error");
-        rspReceived = True;
+      /* Evaluate XprerssNet Answers */
+      if( in[0] == 1 ) {
+        rspReceived = __checkLiRc(data, in);
       }
       /* Feedback */
       else if( in[0] == 0x42 ) {
@@ -903,7 +942,8 @@ static void __transactor( void* threadinst ) {
       }
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not known.");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not available.");
+        TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
         rspReceived = True;
       }
       /* Shortcut*/
@@ -960,8 +1000,8 @@ static void __transactor( void* threadinst ) {
         rspReceived = True;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command.");
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, inlen);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check dump:");
+        TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
 
       /* anything will go to rocgui ...*/
