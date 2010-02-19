@@ -717,11 +717,12 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
         Boolean bState = state & mask ? True:False;
         int iAddr = addr + n;
 
-        /* evaluated in the debounce code */
         if( data->fbState[iAddr] != bState ) {
-          /* inform listener: Node3 */
+          /* inform listener */
           iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          wFeedback.setaddr( nodeC, i+data->fboffset );
+          data->fbState[iAddr] = bState;
+
+          wFeedback.setaddr( nodeC, iAddr+data->fboffset );
           wFeedback.setstate( nodeC, data->fbState[iAddr] );
           if( data->iid != NULL )
             wFeedback.setiid( nodeC, data->iid );
@@ -730,7 +731,7 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
             data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "Sensor %d=%d", i + data->fboffset, data->fbState[iAddr]);
+              "Sensor %d=%s", iAddr + data->fboffset, data->fbState[iAddr]?"on":"off");
         }
 
       }
@@ -798,7 +799,7 @@ static void __transactor( void* threadinst ) {
       ThreadOp.sleep(10);
       continue;
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing response..." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing response..." );
 
     inlen = data->subRead((obj)xpressnet, in, &rspReceived);
     if ( inlen > 0 ) {
