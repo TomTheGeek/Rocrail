@@ -320,8 +320,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* byteStr = StrOp.fmt( "x LOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
         wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
-        wBinCmd.setinlen( lccmd, 64 );
-        wBinCmd.setinendbyte( lccmd, 0x0d );
+        wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
@@ -342,8 +341,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* byteStr = StrOp.fmt( "x LOCXMT\r" );
         wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
-        wBinCmd.setinlen( lccmd, 64 );
-        wBinCmd.setinendbyte( lccmd, 0x0d );
+        wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
