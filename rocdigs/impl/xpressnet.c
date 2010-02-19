@@ -782,7 +782,7 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
   }
   else if( in[0] == 1 && in[1] == 6 && in[2] == 7 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Buffer overflow");
-    rspReceived = True;
+    rspReceived = False;
   }
   else if( in[0] == 1 && in[1] == 7 && in[2] == 6 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: LZV is addressing LI again");
@@ -870,7 +870,7 @@ static void __transactor( void* threadinst ) {
       }
       /* Track Power OFF */
       else if( in[0] == 0x81 && in[1] == 0x00) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "STOP");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Emergency break!");
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
         if( data->iid != NULL )
@@ -902,7 +902,7 @@ static void __transactor( void* threadinst ) {
       }
       /* Normal operation resumed */
       else if( in[0] == 0x61 && in[1] == 0x01) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Normal operation resumed.");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power ON; Normal operation resumed.");
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
         if( data->iid != NULL )
@@ -924,21 +924,21 @@ static void __transactor( void* threadinst ) {
       }
       /* Prog Mode*/
       else if (in[0] == 0x61 && in[1] == 0x11){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Prog. Ready");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming Ready");
         rspReceived = True;
       }
       /* transaction error*/
       else if (in[0] == 0x61 && in[1] == 0x80){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transaction error ... try again");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Transaction error; Resend.");
         rspReceived = True;
       }
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cs busy ... try again");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy; Resend.");
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT busy ... try again");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "PT: Busy; Resend.");
       }
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
@@ -948,17 +948,17 @@ static void __transactor( void* threadinst ) {
       }
       /* Shortcut*/
       else if (in[0] == 0x61 && in[1] == 0x12){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shortcut!");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: Shortcut!");
         rspReceived = True;
       }
       /* No data*/
       else if (in[0] == 0x61 && in[1] == 0x13){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No Data");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: No Data");
         rspReceived = True;
       }
       /* cv answer*/
       else if ((in[0] == 0x63 && in[1] == 0x10) || (in[0] == 0x63 && in[1] == 0x14)){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming answer recieved ...");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming answer received ...");
         rspReceived = True;
       }
       /* Version of Interface*/
@@ -967,11 +967,6 @@ static void __transactor( void* threadinst ) {
             in[1]/10.0 , in[2] );
         rspReceived = True;
         data->interfaceVersion = (int) in[1];
-      }
-
-      /* Version of Interface*/
-      else if (in[0] == 0x01 && in[1] == 0x06){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI-USB buffer overflow ...");
       }
 
       /* Version of Command Station from version 3.0*/
@@ -1000,7 +995,7 @@ static void __transactor( void* threadinst ) {
         rspReceived = True;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check dump:");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check byte dump:");
         TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
 
