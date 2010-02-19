@@ -119,6 +119,16 @@ static void __dec2bin(int *b0, int num) {
 
 
 static void __setLocAddr( int addr, byte* addrbytes ) {
+  /*
+  Für Lokadressen < 100 gilt:
+  Highbyte der Lokadresse ist 0x00
+  Lowbyte der Lokadresse ist 0x00 bis 0x63
+
+  Für Lokadresse von 100 bis 9999 gilt:
+
+  Highbyte der Lokadresse ist: AH = (ADR&0xFF00)+0xC000
+  Lowbyte der Lokadresse ist: AL = (ADR&0x00FF)
+  */
   if( addr < 100 ) {
     addrbytes[0] = 0;
     addrbytes[1] = addr & 0x00FF;
@@ -544,24 +554,21 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
-      int decaddr = wProgram.getdecaddr( node );
+      int addr = wProgram.getaddr( node );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, decaddr );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, addr );
 
         if (cv > 0) cv--;
 
         byte* outb = allocMem(32);
         outb[0] = 0xE6;
-        outb[1] = 0x48;
-        __setLocAddr( decaddr, outb+2 );
-        outb[4] = ((cv & 0xFF00) >> 8) + 0xEA;
+        outb[1] = 0x30;
+        __setLocAddr( addr, outb+2 );
+        outb[4] = ((cv & 0xFF00) >> 8) + 0xE4;
         outb[5] = cv & 0x00FF;
-        outb[6] = 0;
-
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
-            outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
+        outb[6] = 0x00;
 
         ThreadOp.post( data->transactor, (obj)outb );
 
@@ -805,6 +812,10 @@ static void __transactor( void* threadinst ) {
        check if last command was recieved, the cs answers: 1 4 5 */
       if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Command OK");
+        rspReceived = True;
+      }
+      else if( in[0] == 1 && in[1] == 9 && in[2] == 8 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Parameter error");
         rspReceived = True;
       }
       /* Feedback */
