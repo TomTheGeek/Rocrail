@@ -329,6 +329,31 @@ static void __sysEvent( obj inst, const char* cmd ) {
 }
 
 
+static int __getVfromRaw(void* inst, iONode evtNode) {
+  iOLocData data = Data(inst);
+
+  int spcnt = wLoc.getspcnt( data->props );
+  int V = 0;
+  int V_raw = wLoc.getV_raw(evtNode);
+  int V_rawMax = wLoc.getV_rawMax(evtNode);
+
+  if( V_raw != -1 ) {
+    float fV = wLoc.getV_max( data->props ) * V_raw;
+    float div = (V_rawMax == -1 ? spcnt:V_rawMax);
+    if( StrOp.equals( wLoc.getV_mode( data->props ), wLoc.V_mode_percent ) )
+      fV = 100 * V_raw;
+    fV = fV / div;
+    V = (int)fV;
+    if( fV - V >= 0.5 )
+      V++;
+  }
+  else {
+    V = wLoc.getV( data->props );
+    if( data->curSpeed > V )
+      V = data->curSpeed;
+  }
+  return V;
+}
 
 
 static void* __event( void* inst, const void* evt ) {
@@ -346,26 +371,10 @@ static void* __event( void* inst, const void* evt ) {
   }
 
   if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) )) {
+    int V = __getVfromRaw(inst, evtNode);
     int spcnt = wLoc.getspcnt( data->props );
-    int V = 0;
     int V_raw = wLoc.getV_raw(evtNode);
     int V_rawMax = wLoc.getV_rawMax(evtNode);
-
-    if( V_raw != -1 ) {
-      float fV = wLoc.getV_max( data->props ) * V_raw;
-      float div = (V_rawMax == -1 ? spcnt:V_rawMax);
-      if( StrOp.equals( wLoc.getV_mode( data->props ), wLoc.V_mode_percent ) )
-        fV = 100 * V_raw;
-      fV = fV / div;
-      V = (int)fV;
-      if( fV - V >= 0.5 )
-        V++;
-    }
-    else {
-      V = wLoc.getV( data->props );
-      if( data->curSpeed > V )
-        V = data->curSpeed;
-    }
 
     if( StrOp.equals( wLoc.direction, wLoc.getcmd(evtNode) ) || StrOp.equals( wLoc.dirfun, wLoc.getcmd(evtNode) ) ) {
       /* function and dir update */
@@ -1606,10 +1615,13 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
         }
 
         wLoc.setconsistcmd( consistcmd, True );
-        if( byEvent )
-          LocOp.base.event( consistloc, consistcmd );
-        else
-          LocOp.cmd( consistloc, consistcmd );
+
+        if( byEvent ) {
+          int V = __getVfromRaw(inst, consistcmd);
+          wLoc.setV(consistcmd, V);
+        }
+
+        LocOp.cmd( consistloc, consistcmd );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
