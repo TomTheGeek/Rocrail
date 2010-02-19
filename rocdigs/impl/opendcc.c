@@ -318,11 +318,13 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* add the loco to the data bank, or overwrite the existing */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-        char* byteStr = StrOp.fmt( "x LOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
+        char* str = StrOp.fmt( "x LOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
+        char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
         wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
         wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
+        StrOp.free( str );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
       }
       else {
@@ -339,7 +341,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* dump the loco data base in the throttle */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-        char* byteStr = StrOp.fmt( "x LOCXMT\r" );
+        char* byteStr = StrOp.byteToStr( "x LOCXMT\r", StrOp.len("x LOCXMT\r") );
         wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
         wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
