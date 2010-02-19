@@ -302,15 +302,15 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
   {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setstate( evt, False );
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setbus( evt, wFeedback.fbtype_railcom );
     wFeedback.setidentifier( evt, packet[2]*256 + packet[3] );
+    wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported address %d",
-        packet[1], wFeedback.getidentifier(evt) );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported address %d state %s",
+        packet[1], wFeedback.getidentifier(evt), wFeedback.isstate( evt)?"on":"off" );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
@@ -512,10 +512,12 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
     StrOp.free(thname),
     ThreadOp.start( data->reader );
 
+    /*
     thname = StrOp.fmt("rclinktick%X", __RcLink);
     data->ticker = ThreadOp.inst( thname, &__RcLinkTicker, __RcLink );
     StrOp.free(thname),
     ThreadOp.start( data->ticker );
+    */
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
