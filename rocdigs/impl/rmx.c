@@ -217,9 +217,35 @@ static int _version( obj inst ) {
 }
 
 
-static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize ) {
-  return True;
+static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize, byte opcode ) {
+  return (in[2] == opcode);
 }
+
+static Boolean __readPacket( iORmxData data, byte* in ) {
+  Boolean rc = data->dummyio;
+
+  if( !data->dummyio ) {
+    rc = SerialOp.read( data->serial, in, 2 );
+    if( rc && in[0] == 0x7D) {
+      int insize = in[1];
+      rc = SerialOp.read( data->serial, in+2, insize - 2 );
+      if( rc ) {
+        TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+      }
+      else {
+        /* error reading data */
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
+      }
+    }
+    else {
+      /* error reading header */
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
+    }
+  }
+
+  return rc;
+}
+
 
 static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
   Boolean rc = data->dummyio;
@@ -233,22 +259,16 @@ static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
     if( !data->dummyio ) {
       if( rc = SerialOp.write( data->serial, out, outsize ) ) {
         if( in != NULL ) {
-          rc = SerialOp.read( data->serial, in, 2 );
-          if( rc && in[0] == 0x7D) {
-            insize = in[1];
-            rc = SerialOp.read( data->serial, in+2, insize - 2 );
-            if( rc ) {
-              TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
-              rc = __evaluateRsp(data, out, outsize, in, insize);
+          if( __readPacket( data, in ) ) {
+            int retries = 0;
+            rc = False;
+            while( !rc && retries < 128 ) {
+              rc = __evaluateRsp(data, out, outsize, in, insize, opcode);
+              if( !rc )
+                ThreadOp.sleep(10);
+              retries++;
+
             }
-            else {
-              /* error reading data */
-              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
-            }
-          }
-          else {
-            /* error reading header */
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
           }
         }
       }
@@ -279,10 +299,25 @@ static void __rmxReader( void* threadinst ) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX connection is initialized." );
+        { /* bus 0 */
+          byte out[] = { PCKT,0x06,OPC_MODE,0x00,0x20,0x00 };
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 0 request..." );
+          __transact(data, out, buffer, OPC_STATUS );
+        }
+        { /* bus 1 */
+          byte out[] = { PCKT,0x06,OPC_MODE,0x01,0x20,0x00 };
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 1 request..." );
+          __transact(data, out, buffer, OPC_STATUS );
+        }
       }
     }
     
     if( MutexOp.wait( data->mux ) ) {
+      /* checking for unsolicited packets */
+      if( SerialOp.available(data->serial) ) {
+        if( __readPacket( data, buffer ) ) {
+        }
+      }
       MutexOp.post( data->mux );
     }
 
