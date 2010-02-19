@@ -53,7 +53,7 @@
 static int instCnt = 0;
 
 static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function);
-static void __checkConsist( iOLoc inst, iONode nodeA );
+static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent );
 
 /*
  ***** OBase functions.
@@ -386,7 +386,7 @@ static void* __event( void* inst, const void* evt ) {
     if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       /* TODO: inform consist slaves */
-      __checkConsist(inst, evtNode);
+      __checkConsist(inst, evtNode, True);
       broadcast = True;
     }
     else {
@@ -1580,7 +1580,7 @@ static void _brake( iOLoc inst ) {
 }
 
 
-static void __checkConsist( iOLoc inst, iONode nodeA ) {
+static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
   iOLocData data = Data(inst);
 
   if( wLoc.isconsistcmd( nodeA ) ) {
@@ -1606,7 +1606,10 @@ static void __checkConsist( iOLoc inst, iONode nodeA ) {
         }
 
         wLoc.setconsistcmd( consistcmd, True );
-        LocOp.cmd( consistloc, consistcmd );
+        if( byEvent )
+          LocOp.base.event( consistloc, consistcmd );
+        else
+          LocOp.cmd( consistloc, consistcmd );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
@@ -1807,7 +1810,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     data->driver->info( data->driver, nodeA );
 
   __engine( inst, nodeA );
-  __checkConsist(inst, nodeF);
+  __checkConsist(inst, nodeF, False);
 
   /* Broadcast to clients. */
   wLoc.setid( nodeF, wLoc.getid( data->props ) );
