@@ -301,16 +301,22 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     /* Address report */
   {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    /*
+     * Bit7=0 Lok nach rechts
+     * Bit7=1 Lok nach links
+     */
+    Boolean direction = (packet[2] & 0x80) ? False:True;
 
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setbus( evt, wFeedback.fbtype_railcom );
-    wFeedback.setidentifier( evt, packet[2]*256 + packet[3] );
+    wFeedback.setdirection( evt, direction );
+    wFeedback.setidentifier( evt, (packet[2] & 0x7F)*256 + packet[3] );
     wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported address %d state %s",
-        packet[1], wFeedback.getidentifier(evt), wFeedback.isstate( evt)?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%d] reported address [%d] state [%s] direction [%s]",
+        packet[1], wFeedback.getidentifier(evt), wFeedback.isstate( evt)?"on":"off", direction?"right":"left" );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
@@ -469,6 +475,30 @@ static int _version( obj inst ) {
 }
 
 
+static Boolean __flush( iORcLinkData data ) {
+  /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
+  int bAvail = SerialOp.available(data->serial);
+  if( bAvail > 0 && bAvail < 1000 ) {
+    char c;
+    TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "Flushing %d bytes...", bAvail);
+    while( SerialOp.available(data->serial) > 0 ) {
+      SerialOp.read( data->serial, &c, 1 );
+    };
+  }
+  else if(bAvail >= 1000) {
+    TraceOp.trc(name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Can not flush %d bytes, check your hardware!", bAvail);
+    return False;
+  }
+  else {
+    TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "flushed");
+  }
+  return True;
+}
+
+
+
+
+
 /**  */
 static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   iORcLink __RcLink = allocMem( sizeof( struct ORcLink ) );
@@ -506,6 +536,9 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   if( data->serialOK ) {
     char* thname = NULL;
     data->run = True;
+
+    /* empty UART receive buffer */
+    __flush(data);
 
     thname = StrOp.fmt("rclinkread%X", __RcLink);
     data->reader = ThreadOp.inst( thname, &__RcLinkReader, __RcLink );
