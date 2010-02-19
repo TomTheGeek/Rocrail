@@ -544,20 +544,41 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
+      int decaddr = wProgram.getdecaddr( node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
-      byte* outa = allocMem(32);
-      outa[0] = 0x22;
-      outa[1] = 0x15;
-      outa[2] = cv & 0xFF;
-      ThreadOp.post( data->transactor, (obj)outa );
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, decaddr );
 
-      byte* outb = allocMem(32);
-      outb[0] = 0x21;
-      outb[1] = 0x10;
-      outb[2] = 0x31;
-      ThreadOp.post( data->transactor, (obj)outb );
+        if (cv > 0) cv--;
 
+        byte* outb = allocMem(32);
+        outb[0] = 0xE6;
+        outb[1] = 0x48;
+        __setLocAddr( decaddr, outb+2 );
+        outb[4] = ((cv & 0xFF00) >> 8) + 0xEA;
+        outb[5] = cv & 0x00FF;
+        outb[6] = 0;
+
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
+            outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
+
+        ThreadOp.post( data->transactor, (obj)outb );
+
+      }
+      else {
+        byte* outa = allocMem(32);
+        outa[0] = 0x22;
+        outa[1] = 0x15;
+        outa[2] = cv & 0xFF;
+        ThreadOp.post( data->transactor, (obj)outa );
+
+        byte* outb = allocMem(32);
+        outb[0] = 0x21;
+        outb[1] = 0x10;
+        outb[2] = 0x31;
+        ThreadOp.post( data->transactor, (obj)outb );
+      }
 
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
