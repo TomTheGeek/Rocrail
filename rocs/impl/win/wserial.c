@@ -365,10 +365,12 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
 #ifdef __ROCS_SERIAL__
 
   iOSerialData o = Data(inst);
-  long readed = 0;
+  long readcnt = 0;
   int  ok     = 0;
   long cnt    = 0;
   int  tries  = 0;
+
+  o->read = 0;
 
   do {
     if (o->blocking) {
@@ -383,23 +385,24 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
     }
     o->rc = rc;
     if( rc == 0 )
-      readed += cnt;
+      readcnt += cnt;
     /* Check for timeout: */
     if( rc == 0 && cnt == 0 ) {
       tries++;
     }
-  } while( rc == 0 && readed < size && tries < 3 );
+  } while( rc == 0 && readcnt < size && tries < 3 );
 
-  if( readed != size && rc == 0 )
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Timeout on serial read[%s] %d of %d read.[rc=%d] tries=%d", o->device, readed, size, rc, tries );
+  if( readcnt != size && rc == 0 )
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Timeout on serial read[%s] %d of %d read.[rc=%d] tries=%d", o->device, readcnt, size, rc, tries );
   else if( rc > 0 )
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Serial[%s] %d of %d read.[rc=%d] tries=%d", o->device, readed, size, rc, tries );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Serial[%s] %d of %d read.[rc=%d] tries=%d", o->device, readcnt, size, rc, tries );
   else
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] %d read.[rc=%d]", o->device, readed, rc );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] %d read.[rc=%d]", o->device, readcnt, rc );
 
   o->rc = rc;
   o->ioState = ok;
-  return readed == size ? True:False;
+  o->read = readcnt;
+  return readcnt == size ? True:False;
 #else
 
   return False;

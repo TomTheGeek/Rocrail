@@ -147,6 +147,11 @@ static int _getRc( iOSerial inst ) {
   return data->rc;
 }
 
+static int _getReadCnt( iOSerial inst ) {
+  iOSerialData data = Data(inst);
+  return data->read;
+}
+
 static void _setPortBase( iOSerial inst, int addr ) {
   iOSerialData data = Data(inst);
   data->portbase = addr;

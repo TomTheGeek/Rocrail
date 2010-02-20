@@ -585,15 +585,16 @@ void rocs_serial_flush( iOSerial inst ) {
 Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
-  int readed = 0;
+  int readcnt = 0;
   int rc     = 0;
   int tries  = 0;
   int maxtries = o->timeout.read / 10;
   Boolean timeout = False;
   tracelevel level = TRCLEVEL_DEBUG;
   o->rc = 0;
+  o->read = 0;
   do {
-    rc = read( o->sh, buffer + readed, size - readed );
+    rc = read( o->sh, buffer + readcnt, size - readcnt );
     if( rc < 0 ) {
       /* fix for slow USB devices */
       if( errno == EAGAIN )
@@ -602,29 +603,30 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
         o->rc = errno;
     }
     if( rc > 0 )
-      readed += rc;
+      readcnt += rc;
     /* Check for timeout: */
     if( rc == 0 && o->rc == 0 ) {
       tries++;
       ThreadOp.sleep(10);
     }
-  } while( tries < maxtries && rc >= 0 && readed < size && o->rc == 0);
+  } while( tries < maxtries && rc >= 0 && readcnt < size && o->rc == 0);
 
   /* timeout? */
-  if( size > readed && rc == 0 && o->rc == 0 ) {
+  if( size > readcnt && rc == 0 && o->rc == 0 ) {
     timeout = True;
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
                  "***READ TIMEOUT*** size=%d rc=%d read=%d errno=%d tries=%d",
-                 size, rc, readed, o->rc, tries );
+                 size, rc, readcnt, o->rc, tries );
   }
 
-  if( size != readed && o->rc != 0 )
+  if( size != readcnt && o->rc != 0 )
     level = TRCLEVEL_EXCEPTION;
 
   TraceOp.trc( name, level, __LINE__, 9999,
                "%s size=%d rc=%d read=%d errno=%d",
-               (timeout?"***READ TIMEOUT***":"read"), size, rc, readed, o->rc );
-  return readed == size ? True:False;
+               (timeout?"***READ TIMEOUT***":"read"), size, rc, readcnt, o->rc );
+  o->read = readcnt;
+  return readcnt == size ? True:False;
 #else
 
   return False;

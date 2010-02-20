@@ -1044,6 +1044,9 @@
       <param name="inst" vt="this" remark="Serial instance."/>
       <param name="soft" vt="Boolean" remark="no direct IO if soft ist set"/>
     </fun>
+    <fun name="getReadCnt" vt="int" remark="Get actual readed byte count.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+    </fun>
     <struct name="_line">
       <var name="bps" vt="int"/>
       <var name="bits" vt="int"/>
@@ -1062,6 +1065,7 @@
       <var name="handle" vt="void*" remark=""/>
       <var name="sh" vt="long" remark=""/>
       <var name="rc" vt="int" remark=""/>
+      <var name="read" vt="int" remark=""/>
       <var name="divisor" vt="int" remark="used if != 0"/>
       <var name="ioState" vt="int" remark=""/>
       <var name="line" vt="struct _line" remark=""/>
