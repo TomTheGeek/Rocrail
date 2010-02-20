@@ -291,6 +291,48 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     /* Cleanup command node */
     NodeOp.base.del(cmd);
   }
+
+  /*
+     XDCC_PDR (0xDA) - Länge = 1+4 Bytes
+       Befehlsbytes:
+       0: 0xDA XDCC_PDR (= Lok-Programmieren auf dem Hauptgleis = POM, CV-Lesen)
+       1: LSB der Lokadresse
+       2: MSB der Lokadresse (1-10239)
+       3: Low Byte der <a href="dcc_cv.html">CV-Adresse</a>, welche zu lesen ist.
+       4: High Byte der <a href="dcc_cv.html">CV-Adresse</a>, welche zu lesen ist. (1..1024)
+
+        Antwort: 0 = Ok, accepted.
+                 0x80 = busy, command ignored
+   */
+  else if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) &&
+           wProgram.ispom( cmd ) &&
+           wProgram.getcmd( cmd ) == wProgram.get )
+  {
+    iONode ptcmd = NULL;
+    if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+      ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* byteStr = NULL;
+      byte outBytes[6];
+      outBytes[0] = (byte)'x';
+      outBytes[1] = 0xDA;
+      outBytes[2] = wProgram.getaddr(cmd) % 256;
+      outBytes[3] = wProgram.getaddr(cmd) / 256;
+      outBytes[4] = wProgram.getcv(cmd) % 256;
+      outBytes[5] = wProgram.getcv(cmd) / 256;
+
+      byteStr = StrOp.byteToStr( outBytes, 6 );
+      wBinCmd.setoutlen( ptcmd, 6 );
+      wBinCmd.setinlen( ptcmd, 1 );
+      wBinCmd.setout( ptcmd, byteStr );
+      StrOp.free( byteStr );
+      data->sublib->cmd((obj)data->sublib, ptcmd);
+    }
+    else {
+      /* lenz sublib */
+    }
+  }
+
+  /* switch command */
   else if( StrOp.equals( NodeOp.getName( cmd ), wSwitch.name() ) ) {
     /* OpenDCC does not switch off the gate */
     iONode cmdoff = (iONode)NodeOp.base.clone(cmd);
