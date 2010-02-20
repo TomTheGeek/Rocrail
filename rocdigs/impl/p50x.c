@@ -155,12 +155,12 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
       MutexOp.post( o->mux );
       return False;
     }
-
+/*
     if( !__flushP50x(o) ) {
       MutexOp.post( o->mux );
       return False;
     }
-
+*/
     if( o->tok)
       printf( "\n*****token!!! B\n\n" );
     o->tok = True;
@@ -183,8 +183,10 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
             state = P50_OK;
             insize = in[0];
           }
-          else
+          else {
             state = P50_RCVERR;
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read first byte of %d", insize);
+          }
         }
         if( insize > 0 ) {
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d, inendbyte=0x%02X", insize, inendbyte);
@@ -200,14 +202,19 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
               }
               readCnt++;
             }
+            if( state == P50_RCVERR ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read in end byte [0x%02X]", inendbyte);
+            }
           }
           else {
             if( SerialOp.read( o->serial, in, insize ) ) {
               TraceOp.dump( NULL, TRCLEVEL_BYTE, in, insize );
               state = P50_OK;
             }
-            else
+            else {
               state = P50_RCVERR;
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read %d bytes", insize);
+            }
           }
         }
       }
@@ -282,7 +289,7 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     int outLen = wBinCmd.getoutlen(node);
     byte* outBytes = StrOp.strToByte( wBinCmd.getout(node));
     MemOp.copy( p50, outBytes, outLen );
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bin command" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bin command: outlen=%d inlen=%d", outLen, *insize );
     return outLen;
 
   }
@@ -1009,6 +1016,40 @@ static void __handleLoco(iOP50x p50x, byte* status) {
 
 }
 
+static void __dummy( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOP50x p50 = (iOP50x)ThreadOp.getParm( th );
+  iOP50xData data = Data(p50);
+  iONode nodeC = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tester started." );
+  ThreadOp.sleep( 2000 );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending throttle event..." );
+  nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wLoc.setaddr( nodeC, 1 );
+  wLoc.setV_raw( nodeC, 10 );
+  wLoc.setV_rawMax( nodeC, 127 );
+  wLoc.setthrottleid( nodeC, "dummy" );
+  wLoc.setcmd( nodeC, wLoc.direction );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  ThreadOp.sleep( 1000 );
+  nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wLoc.setaddr( nodeC, 1 );
+  wLoc.setV_raw( nodeC, 77 );
+  wLoc.setV_rawMax( nodeC, 127 );
+  wLoc.setthrottleid( nodeC, "dummy" );
+  wLoc.setcmd( nodeC, wLoc.direction );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tester ended." );
+}
+
 
 static void __statusReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -1054,6 +1095,9 @@ static void __statusReader( void* threadinst ) {
             o->halt  = halt;
           }
         }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no xStatus reply" );
+        }
       }
 
 
@@ -1065,12 +1109,20 @@ static void __statusReader( void* threadinst ) {
         byte ans = 0;
         if( SerialOp.read( o->serial, (char*)&ans, 1 ) ) {
           if (ans > 0x00) {
-            SerialOp.read( o->serial, (char*)in, (int) ans*2 );
-            int i = 0;
-            for ( i = 0; i < ans; i++) {
-               __handleSwitch(p50, in[i*2], in[i*2+1]);
+            if( SerialOp.read( o->serial, (char*)in, (int) ans*2 ) ) {
+              int i = 0;
+              for ( i = 0; i < ans; i++) {
+                 __handleSwitch(p50, in[i*2], in[i*2+1]);
+              }
             }
+            else {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read switch event");
+            }
+
           }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no XEvtTrnt reply" );
         }
       }
 
@@ -1079,15 +1131,28 @@ static void __statusReader( void* threadinst ) {
       out[0] = (byte)'x';
       out[1] = 0xC9;
       /* ask for locomotive changes */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XEvtLok..." );
+      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 2 );
       if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
         do {
-          if( SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
-            if (in[0] < 0x80) {
-              SerialOp.read( o->serial, (char*)in+1, 4 );
-              __handleLoco(p50, in);
+          Boolean read = SerialOp.read( o->serial, (char*)&in[0], 1 ) ;
+          if( read ) {
+            TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+            if (in[0] < 0x80 ) {
+              if( SerialOp.read( o->serial, (char*)in+1, 4 ) ) {
+                TraceOp.dump( name, TRCLEVEL_DEBUG, in, 5 );
+                __handleLoco(p50, in);
+              }
+              else {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read loco event");
+              }
+            }
+            else {
+              break;
             }
           }
           else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no XEvtLok reply" );
             break;
           }
         } while(in[0] != 0x80);
@@ -1342,6 +1407,11 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init p50x port!" );
+
+    /*
+    data->statusReader = ThreadOp.inst( "dummy", &__dummy, p50x );
+    ThreadOp.start( data->statusReader );
+    */
   }
 
   instCnt++;

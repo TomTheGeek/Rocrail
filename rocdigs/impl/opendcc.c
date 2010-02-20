@@ -312,15 +312,14 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   }
   else if( StrOp.equals( NodeOp.getName( cmd ), wLoc.name() ) ) {
     if( StrOp.equals( wLoc.shortid, wLoc.getcmd(cmd) ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "addr=%d spcnt=%d shortID=[%s]", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
       /* send short ID to OpenDCC */
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* add the loco to the data bank, or overwrite the existing */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-        char* str = StrOp.fmt( "x LOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
+        char* str = StrOp.fmt( "XLOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
         char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
-        wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
+        wBinCmd.setoutlen( lccmd, StrOp.len(str) );
         wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
@@ -341,8 +340,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* dump the loco data base in the throttle */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-        char* byteStr = StrOp.byteToStr( "x LOCXMT\r", StrOp.len("x LOCXMT\r") );
-        wBinCmd.setoutlen( lccmd, StrOp.len(byteStr) );
+        char* cmd = "XLOCXMT\r";
+        char* byteStr = StrOp.byteToStr( cmd, StrOp.len(cmd) );
+        wBinCmd.setoutlen( lccmd, StrOp.len(cmd) );
         wBinCmd.setinlen( lccmd, 0 );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
