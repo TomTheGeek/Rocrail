@@ -122,15 +122,14 @@ static p50state __cts( iOP50xData o ) {
 static Boolean __flushP50x( iOP50xData o ) {
   /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
   if( !o->dummyio ) {
+    byte buffer[256];
     int bAvail = SerialOp.available(o->serial);
-    if( bAvail > 0 && bAvail < 1000 ) {
-      char c;
+    if( bAvail > 0 && bAvail < 256 ) {
       TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "Flushing %d bytes...", bAvail);
-      while( SerialOp.available(o->serial) > 0 ) {
-        SerialOp.read( o->serial, &c, 1 );
-      };
+      SerialOp.read( o->serial, buffer, bAvail );
+      TraceOp.dump( NULL, TRCLEVEL_WARNING, buffer, bAvail );
     }
-    else if(bAvail >= 1000) {
+    else if(bAvail >= 256) {
       TraceOp.trc(name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Can not flush %d bytes, check your hardware!", bAvail);
       return False;
     }
@@ -155,12 +154,12 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
       MutexOp.post( o->mux );
       return False;
     }
-/*
+
     if( !__flushP50x(o) ) {
       MutexOp.post( o->mux );
       return False;
     }
-*/
+
     if( o->tok)
       printf( "\n*****token!!! B\n\n" );
     o->tok = True;
@@ -202,6 +201,8 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
               }
               readCnt++;
             }
+            TraceOp.dump( NULL, TRCLEVEL_BYTE, in, readCnt );
+
             if( state == P50_RCVERR ) {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read in end byte [0x%02X]", inendbyte);
             }
@@ -1070,6 +1071,11 @@ static void __statusReader( void* threadinst ) {
 
     if( !o->dummyio && MutexOp.wait( o->mux ) ) {
 
+      if( !__flushP50x(o) ) {
+        MutexOp.post( o->mux );
+        continue;
+      }
+
       out[0] = (byte)'x';
       out[1] = 0xA2; /* xStatus */
       if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
@@ -1117,6 +1123,7 @@ static void __statusReader( void* threadinst ) {
             }
             else {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read switch event");
+              TraceOp.dump( name, TRCLEVEL_WARNING, in, SerialOp.getReadCnt(o->serial) );
             }
 
           }

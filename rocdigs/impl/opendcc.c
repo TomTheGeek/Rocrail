@@ -320,7 +320,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
         wBinCmd.setoutlen( lccmd, StrOp.len(str) );
-        wBinCmd.setinlen( lccmd, 0 );
+        wBinCmd.setinlen( lccmd, 256 );
+        wBinCmd.setinendbyte( lccmd, '\r' );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         StrOp.free( str );
@@ -343,7 +344,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         char* cmd = "XLOCXMT\r";
         char* byteStr = StrOp.byteToStr( cmd, StrOp.len(cmd) );
         wBinCmd.setoutlen( lccmd, StrOp.len(cmd) );
-        wBinCmd.setinlen( lccmd, 0 );
+        wBinCmd.setinlen( lccmd, 256 );
+        wBinCmd.setinendbyte( lccmd, '\r' );
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
