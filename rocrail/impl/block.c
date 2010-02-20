@@ -319,17 +319,27 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
       char identString[32];
       StrOp.fmtb( identString, "%04d", ident );
 
-      /* TODO: set in block if a loco was found with the ident */
+      /* Set in block if a loco was found with the ident. */
       if( ident > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
         iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
         if( identLoc != NULL ) {
           if( loc == NULL || !LocOp.isAutomode(loc) ) {
+            iONode cmd = NULL;
+            if( loc != NULL ) {
+              iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+              wBlock.setid( cmd, data->id );
+              wBlock.setlocid( cmd, "" );
+              wBlock.setcmd( cmd, wBlock.loc );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove loco %s from block %s", LocOp.getId(loc), data->id );
+              inst->cmd(inst, cmd);
+            }
             /* Inform Rocrail... */
-            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
             wLoc.setid( cmd, LocOp.getId(identLoc) );
             wLoc.setcmd( cmd, wLoc.block );
             wLoc.setblockid( cmd, data->id );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set loco %s in block %s", LocOp.getId(identLoc), data->id );
             LocOp.cmd( identLoc, cmd );
           }
         }
