@@ -329,6 +329,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
     else {
       /* lenz sublib */
+      response = data->sublib->cmd((obj)data->sublib, cmd);
     }
   }
 
