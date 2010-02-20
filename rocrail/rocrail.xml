@@ -386,6 +386,9 @@
     <fun name="getAddress" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getIdent" vt="long">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="getCV" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="nr" vt="int" remark="CVByte number"/>
@@ -577,6 +580,10 @@
     <fun name="getLocByAddress" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="decaddr" vt="int" remark="Loc decoder address to search for"/>
+    </fun>
+    <fun name="getLocByIdent" vt="iOLoc">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="ident" vt="long" remark="Loc identifier to search for"/>
     </fun>
     <fun name="getLocIDs" vt="iOList">
       <param name="inst" vt="this" remark="Model instance"/>

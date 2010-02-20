@@ -2100,6 +2100,10 @@ static int _getAddress( iOLoc loc ) {
   iOLocData data = Data(loc);
   return wLoc.getaddr( data->props );
 }
+static long _getIdent( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.getidentifier( data->props );
+}
 
 
 static void __initCVmap( iOLoc loc ) {

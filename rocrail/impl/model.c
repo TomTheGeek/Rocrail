@@ -1909,6 +1909,18 @@ static iOLoc _getLocByAddress( iOModel inst, int addr ) {
   return NULL;
 }
 
+static iOLoc _getLocByIdent( iOModel inst, long ident ) {
+  iOModelData o = Data(inst);
+  iOLoc loc = (iOLoc)MapOp.first( o->locMap );
+  while( loc != NULL ) {
+    if( LocOp.getIdent(loc) == ident )
+      return loc;
+    loc = (iOLoc)MapOp.next( o->locMap );
+  };
+
+  return NULL;
+}
+
 static iOList _getLocIDs( iOModel inst ) {
   iOModelData o = Data(inst);
   iOList list = ListOp.inst();

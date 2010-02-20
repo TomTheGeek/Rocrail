@@ -318,10 +318,28 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
       /* display ident code */
       char identString[32];
       StrOp.fmtb( identString, "%04d", ident );
-      iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setid( nodeD, data->id );
-      wBlock.setlocid( nodeD, puls ? identString:data->locId );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+
+      /* TODO: set in block if a loco was found with the ident */
+      if( ident > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
+        iOModel model = AppOp.getModel(  );
+        iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
+        if( identLoc != NULL ) {
+          if( loc == NULL || !LocOp.isAutomode(loc) ) {
+            /* Inform Rocrail... */
+            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            wLoc.setid( cmd, LocOp.getId(identLoc) );
+            wLoc.setcmd( cmd, wLoc.block );
+            wLoc.setblockid( cmd, data->id );
+            LocOp.cmd( identLoc, cmd );
+          }
+        }
+      }
+      else {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, data->id );
+        wBlock.setlocid( nodeD, puls ? identString:data->locId );
+        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      }
     }
   }
   else if( ident > 0 ){
