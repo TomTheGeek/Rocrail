@@ -155,6 +155,9 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
       index = 2;
       msglen = c;
       break;
+  default:
+    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "unknown message 0x%02X length=%d", msg[0], msglen );
+    return 0;
   }
   TraceOp.trc( "lbserial", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
