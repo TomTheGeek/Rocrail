@@ -136,12 +136,13 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
 
   msg[0] = c;
 
-  switch (c & 0xe0) {
+  switch (c & 0xf0) {
   case 0x80:
       msglen = 2;
       index = 1;
       break;
   case 0xa0:
+  case 0xb0:
       msglen = 4;
       index = 1;
       break;
@@ -156,7 +157,7 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
       msglen = c;
       break;
   default:
-    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "unknown message 0x%02X length=%d", msg[0], msglen );
+    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
     return 0;
   }
   TraceOp.trc( "lbserial", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
