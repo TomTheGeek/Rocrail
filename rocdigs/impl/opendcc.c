@@ -93,6 +93,15 @@ static void* __properties( void* inst ) {
 /** ----- OOpenDCC ----- */
 
 
+static int __normalizeSteps(int insteps ) {
+  /* SPEEDSTEPS: vaild: 14, 28, 126 */
+  if( insteps < 20 )
+    return 14;
+  if( insteps > 100 )
+    return 126;
+  return 28;
+}
+
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOOpenDCCData data = Data(inst);
@@ -359,7 +368,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
         /* add the loco to the data bank, or overwrite the existing */
         iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
-        char* str = StrOp.fmt( "XLOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd), wLoc.getspcnt(cmd), wLoc.getshortid(cmd) );
+        char* str = StrOp.fmt( "XLOCADD %d,%d,DCC,%s\r", wLoc.getaddr(cmd),
+            __normalizeSteps(wLoc.getspcnt(cmd)), wLoc.getshortid(cmd) );
         char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
         wBinCmd.setoutlen( lccmd, StrOp.len(str) );
