@@ -159,61 +159,73 @@ static Boolean __isChecksum(byte* in) {
 }
 
 
+static void __updateFB( iORmxData data, iONode fbInfo ) {
+  int cnt = NodeOp.getChildCnt( fbInfo );
+  int i = 0;
 
-/**  */
-static iONode _cmd( obj inst ,const iONode cmd ) {
-  iORmxData data = Data(inst);
-  /* Cleanup Node1 */
-  cmd->base.del(cmd);
+  char* str = NodeOp.base.toString( fbInfo );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB\n%s", str );
+  StrOp.free( str );
+
+  /* reset the list: */
+  MemOp.set( data->fbmodcnt, 0, 2 * sizeof(int) );
+  MemOp.set( data->fbmods, 0, 2*128 );
+
+  for( i = 0; i < cnt; i++ ) {
+    iONode fbmods = NodeOp.getChild( fbInfo, i );
+    const char* mods = wFbMods.getmodules( fbmods );
+    int bus = wFbMods.getbus( fbmods );
+    if( bus > 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unsupported bus=%d", bus );
+    }
+    else if( mods != NULL && StrOp.len( mods ) > 0 ) {
+
+      iOStrTok tok = StrTokOp.inst( mods, ',' );
+      int idx = 0;
+      while( StrTokOp.hasMoreTokens( tok ) ) {
+        int addr = atoi( StrTokOp.nextToken(tok) );
+        data->fbmods[bus][idx] = addr & 0x7f;
+        idx++;
+      };
+      data->fbmodcnt[bus] = idx;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB bus=%d count=%d", bus, idx );
+    }
+  }
+}
+
+
+static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
+  /* Feedback configuration update */
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+    __updateFB( data, node );
+  }
+
+  /* System command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmd = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      out[0] = PCKT;
+      out[1] = 6;
+      out[2] = OPC_MODE;
+      out[3] = 0;
+      out[4] = 40;
+      *opcode = OPC_STATUS;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      return 6;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      out[0] = PCKT;
+      out[1] = 6;
+      out[2] = OPC_MODE;
+      out[3] = 0;
+      out[4] = 80;
+      *opcode = OPC_STATUS;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      return 6;
+    }
+  }
+
   return 0;
-}
-
-
-/**  */
-static void _halt( obj inst ) {
-  iORmxData data = Data(inst);
-  data->run = False;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
-  if( data->serial != NULL )
-    SerialOp.close( data->serial );
-}
-
-
-/**  */
-static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  iORmxData data = Data(inst);
-  data->listenerObj = listenerObj;
-  data->listenerFun = listenerFun;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener set" );
-  return True;
-}
-
-
-/** external shortcut event */
-static void _shortcut( obj inst ) {
-  return;
-}
-
-
-/** bit0=power, bit1=programming, bit2=connection */
-static int _state( obj inst ) {
-  return 0;
-}
-
-
-/**  */
-static Boolean _supportPT( obj inst ) {
-  return 0;
-}
-
-
-/** vmajor*1000 + vminor*100 + patch */
-static int vmajor = 1;
-static int vminor = 4;
-static int patch  = 99;
-static int _version( obj inst ) {
-  iORmxData data = Data(inst);
-  return vmajor*10000 + vminor*100 + patch;
 }
 
 
@@ -276,6 +288,81 @@ static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
     MutexOp.post( data->mux );
   }
   return rc;
+}
+
+
+
+
+/**  */
+static iONode _cmd( obj inst ,const iONode cmd ) {
+  iORmxData data = Data(inst);
+  byte out[32];
+  byte in [32];
+  iONode reply     = NULL;
+
+  MemOp.set( in, 0x00, sizeof( in ) );
+
+  if( cmd != NULL ) {
+    byte opcode = 0;
+    int size = __translate( data, cmd, out, &opcode );
+    if( size > 0 ) {
+      if( __transact( data, out, in, opcode ) ) {
+      }
+    }
+  }
+
+  /* Cleanup Node1 */
+  cmd->base.del(cmd);
+
+  return reply;
+}
+
+
+/**  */
+static void _halt( obj inst ) {
+  iORmxData data = Data(inst);
+  data->run = False;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
+  if( data->serial != NULL )
+    SerialOp.close( data->serial );
+}
+
+
+/**  */
+static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
+  iORmxData data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener set" );
+  return True;
+}
+
+
+/** external shortcut event */
+static void _shortcut( obj inst ) {
+  return;
+}
+
+
+/** bit0=power, bit1=programming, bit2=connection */
+static int _state( obj inst ) {
+  return 0;
+}
+
+
+/**  */
+static Boolean _supportPT( obj inst ) {
+  return 0;
+}
+
+
+/** vmajor*1000 + vminor*100 + patch */
+static int vmajor = 1;
+static int vminor = 4;
+static int patch  = 99;
+static int _version( obj inst ) {
+  iORmxData data = Data(inst);
+  return vmajor*10000 + vminor*100 + patch;
 }
 
 
