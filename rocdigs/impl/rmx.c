@@ -200,6 +200,32 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     __updateFB( data, node );
   }
 
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int bus   = wSwitch.getbus( node ) & 0x01;
+    int addr  = wSwitch.getaddr1( node ) & 0x7F;
+    byte pin  = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    byte mask = ~pin;
+
+    out[0] = PCKT;
+    out[1] = 6;
+    out[2] = OPC_WRITESX;
+    out[3] = bus;
+    out[4] = addr;
+    out[5] = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    /* reset pin to 0: */
+    out[5] = data->swstate[bus][addr] & mask;
+    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+      out[2] |= pin;
+    /* save new state: */
+    data->swstate[bus][addr] = out[2];
+
+    *opcode = OPC_OK;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "switch addr %d, port %d, cmd %s", addr, wSwitch.getport1( node ), wSwitch.getcmd( node ) );
+    return 7;
+  }
+
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
@@ -229,15 +255,121 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
 }
 
 
+static void __traceError(iORmxData data, byte* in) {
+  switch(in[3]) {
+  case ERR_UNKNOWN:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unknown OPCODE" ); break;
+  case ERR_NORMXCH:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No RMX channel" ); break;
+  case ERR_UNDEFLC:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco not in database" ); break;
+  case ERR_INPUT:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Input error" ); break;
+  case ERR_MODE:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Mode not equal to 0x01" ); break;
+  case ERR_RMXOFF:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "RMX-Request CS Off" ); break;
+  case ERR_LCDBFULL:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco database full" ); break;
+  case ERR_ALLUSED:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "All channels in use" ); break;
+  case ERR_XOR:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Checksum error" ); break;
+  }
+}
+
+
+
+static void __evaluateFB( iORmxData data ) {
+  int bus = 0;
+  int mod = 0;
+
+  TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate sensors..." );
+
+  for( bus = 0; bus < 2; bus++ ) {
+    if( data->fbmodcnt[bus] == 0 )
+      continue;
+
+    for( mod = 0; mod < data->fbmodcnt[bus]; mod++ ) {
+      int addr = data->fbmods[bus][mod];
+      byte in = data->sx1[bus][addr];
+
+      if( in != data->fbstate[bus][addr] ) {
+        int n = 0;
+        int port = 0;
+        int state = 0;
+        for( n = 0; n < 8; n++ ) {
+          if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
+            port = n;
+            state = (in & (0x01 << n)) ? 1:0;
+            TraceOp.dump ( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_BYTE, (char*)&in, 1 );
+            TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
+            {
+              /* inform listener: Node3 */
+              iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+              wFeedback.setaddr( nodeC, addr*8+port+1 );
+              wFeedback.setbus( nodeC, bus );
+              wFeedback.setstate( nodeC, state?True:False );
+              if( data->iid != NULL )
+                wFeedback.setiid( nodeC, data->iid );
+
+              data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+            }
+          }
+        }
+        data->fbstate[bus][addr] = in;
+      }
+    }
+  }
+
+}
+
+
+
+
+static void __evaluateSX(iORmxData data, byte* in) {
+  int bus  = in[3];
+  int addr = in[4];
+  int val  = in[5];
+  data->sx1[bus][addr] = val;
+  __evaluateFB(data);
+}
+
+
 static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize, byte opcode ) {
   switch(in[2]) {
-  case OPC_READSX:
+  case OPC_OK: /* 0x00 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OK" );
     break;
-  case OPC_MODE:
+  case OPC_ERR: /* 0x01 */
+    __traceError(data, in);
+    break;
+  case OPC_STATUS: /* 0x04 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Status" );
+    break;
+  case OPC_READSX: /* 0x06 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX value" );
+    __evaluateSX(data, in);
+    break;
+  case OPC_LOCOINFO: /* 0x08 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco info" );
+    break;
+  case OPC_RMXCHANEL: /* 0x20 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RMX chanel" );
+    break;
+  case OPC_LOCOV: /* 0x24 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco velocity" );
+    break;
+  case OPC_LOCOF: /* 0x28 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco functions" );
+    break;
+  case OPC_PT: /* 0x28 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT" );
     break;
   }
   return (in[2] == opcode);
 }
+
 
 static Boolean __readPacket( iORmxData data, byte* in ) {
   Boolean rc = data->dummyio;
