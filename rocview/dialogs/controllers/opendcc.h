@@ -72,6 +72,7 @@ enum {
   so_bps = 1,
   so_mode = 2,
   so_dcc_format = 24,
+  so_bidi = 25,
   so_loco_format_low = 40,
   so_loco_format_high = 41,
   so_s88_timing = 30,
@@ -189,6 +190,10 @@ public:
     wxRadioBox* m_Baudrate;
     wxStaticBox* m_labSpecials;
     wxCheckBox* m_Clock;
+    wxStaticBox* m_BiDiBox;
+    wxCheckBox* m_BiDiCutOut;
+    wxCheckBox* m_BiDiIdNotify;
+    wxCheckBox* m_BiDiAccQuery;
     wxButton* m_ReadCVs;
     wxButton* m_WriteCVs;
     wxPanel* m_DecoderPanel;
