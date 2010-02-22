@@ -208,7 +208,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
       out[1] = 6;
       out[2] = OPC_MODE;
       out[3] = 0;
-      out[4] = 40;
+      out[4] = 0x40;
       *opcode = OPC_STATUS;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       return 6;
@@ -218,7 +218,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
       out[1] = 6;
       out[2] = OPC_MODE;
       out[3] = 0;
-      out[4] = 80;
+      out[4] = 0x80;
       *opcode = OPC_STATUS;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       return 6;
@@ -230,6 +230,12 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
 
 
 static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize, byte opcode ) {
+  switch(in[2]) {
+  case OPC_READSX:
+    break;
+  case OPC_MODE:
+    break;
+  }
   return (in[2] == opcode);
 }
 
