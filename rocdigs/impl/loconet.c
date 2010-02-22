@@ -2194,10 +2194,12 @@ static void _halt( obj inst ) {
     return;
   }
   else {
-    byte cmd[2];
-    cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
-    cmd[1] = LocoNetOp.checksum( cmd, 1 );
-    LocoNetOp.transact( (iOLocoNet)inst, cmd, 2, NULL, NULL, 0, 0, False );
+    if( wDigInt.ispoweroffexit(data->ini) ) {
+      byte cmd[2];
+      cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
+      cmd[1] = LocoNetOp.checksum( cmd, 1 );
+      LocoNetOp.transact( (iOLocoNet)inst, cmd, 2, NULL, NULL, 0, 0, False );
+    }
 
     if( data->activeSlotServer ) {
       iONode quitNode = NodeOp.inst( "quit", NULL, ELEMENT_NODE );
