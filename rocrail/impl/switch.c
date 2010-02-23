@@ -239,6 +239,11 @@ static char* __toString(void* inst) {
 }
 static void __del(void* inst) {
   iOSwitchData data = Data(inst);
+  if( data->run ) {
+    data->run = False;
+    ThreadOp.sleep(1000);
+    data->accctrl = NULL;
+  }
   freeMem( data );
   freeMem( inst );
   instCnt--;
