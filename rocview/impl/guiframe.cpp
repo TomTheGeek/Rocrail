@@ -3290,7 +3290,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
 
     menu.Append( ME_GridLocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
     menu.Append( ME_GridLocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
-    menu.Append( ME_GridLocShortID, wxGetApp().getMenu("setshortid"), wxGetApp().getTip("selectschedule") );
+    //menu.Append( ME_GridLocShortID, wxGetApp().getMenu("setshortid"), wxGetApp().getTip("selectschedule") );
     menu.AppendSeparator();
     if( !active )
       mi = menu.Append( ME_GridLocActivate, wxGetApp().getMsg("activate") );
