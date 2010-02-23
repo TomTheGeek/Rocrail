@@ -1755,16 +1755,18 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wLoc.shortid, cmd ) ) {
       /* send short ID to command station */
-      iONode cmdNode = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setid( cmdNode, wLoc.getid(data->props) );
-      wLoc.setaddr( cmdNode, wLoc.getaddr(data->props) );
-      wLoc.setshortid( cmdNode, wLoc.getshortid(data->props) );
-      wLoc.setprot( cmdNode, wLoc.getprot( data->props ) );
-      wLoc.setprotver( cmdNode, wLoc.getprotver( data->props ) );
-      wLoc.setspcnt( cmdNode, wLoc.getspcnt( data->props ) );
-      wLoc.setfncnt( cmdNode, wLoc.getfncnt( data->props ) );
-      wLoc.setcmd( cmdNode, wLoc.shortid );
-      ControlOp.cmd( control, cmdNode, NULL );
+      if( wLoc.isuseshortid(data->props) ) {
+        iONode cmdNode = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmdNode, wLoc.getid(data->props) );
+        wLoc.setaddr( cmdNode, wLoc.getaddr(data->props) );
+        wLoc.setshortid( cmdNode, wLoc.getshortid(data->props) );
+        wLoc.setprot( cmdNode, wLoc.getprot( data->props ) );
+        wLoc.setprotver( cmdNode, wLoc.getprotver( data->props ) );
+        wLoc.setspcnt( cmdNode, wLoc.getspcnt( data->props ) );
+        wLoc.setfncnt( cmdNode, wLoc.getfncnt( data->props ) );
+        wLoc.setcmd( cmdNode, wLoc.shortid );
+        ControlOp.cmd( control, cmdNode, NULL );
+      }
     }
     else if( StrOp.equals( wLoc.block, cmd ) ) {
       const char* blockid = wLoc.getblockid( nodeA );

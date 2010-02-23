@@ -226,10 +226,12 @@
       <var name="iid" vt="const char*" remark="Interface Id"/>
       <var name="diMap" vt="iOMap"/>
       <var name="clockticker" vt="iOThread"/>
+      <var name="txshortids" vt="iOThread"/>
       <var name="devider" vt="int"/>
       <var name="time" vt="long"/>
       <var name="timeset" vt="Boolean"/>
       <var name="clockrun" vt="Boolean"/>
+      <var name="txshortidsrun" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="programming" vt="Boolean"/>
       <var name="trackbus" vt="Boolean"/>

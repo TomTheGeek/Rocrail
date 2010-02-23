@@ -407,6 +407,24 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         /* lenz sublib */
       }
     }
+    else if( StrOp.equals( wSysCmd.clearshortids, wSysCmd.getcmd(cmd) ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clear short IDs" );
+      if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+        /* dump the loco data base in the throttle */
+        iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        char* cmd = "XLOCCLEAR\r";
+        char* byteStr = StrOp.byteToStr( cmd, StrOp.len(cmd) );
+        wBinCmd.setoutlen( lccmd, StrOp.len(cmd) );
+        wBinCmd.setinlen( lccmd, 256 );
+        wBinCmd.setinendbyte( lccmd, '\r' );
+        wBinCmd.setout( lccmd, byteStr );
+        StrOp.free( byteStr );
+        response = data->sublib->cmd((obj)data->sublib, lccmd);
+      }
+      else {
+        /* lenz sublib */
+      }
+    }
     else {
       response = data->sublib->cmd((obj)data->sublib, cmd);
     }

@@ -220,6 +220,46 @@ static Boolean __informDigInt( iOControl inst, iIDigInt pDi, iONode node, int* e
 }
 
 
+static void __txshortids( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOControl  control = (iOControl)ThreadOp.getParm(th);
+  iOControlData data = Data(control);
+  iONode cmd = NULL;
+  int err;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Clear short ID's" );
+  cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+  wSysCmd.setcmd( cmd, wSysCmd.clearshortids );
+  ControlOp.cmd( control, cmd, &err );
+
+  /* iterate locos */
+  {
+    iOList list = ModelOp.getLocIDs(AppOp.getModel());
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      const char* id = (const char*)ListOp.get(list, i);
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), id );
+      if( loc != NULL ) {
+        iONode lccmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd( lccmd, wLoc.shortid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] transmit short ID", LocOp.getId(loc) );
+        LocOp.cmd( loc, lccmd );
+        ThreadOp.sleep( 10 );
+      }
+    }
+    ListOp.base.del(list);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transmit short ID's" );
+  cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+  wSysCmd.setcmd( cmd, wSysCmd.txshortids );
+  ControlOp.cmd( control, cmd, &err );
+
+  data->txshortidsrun = False;
+  ThreadOp.base.del(th);
+}
+
+
 static Boolean _cmd( iOControl inst, iONode node, int* error ) {
   iOControlData data  = Data(inst);
   Boolean rc          = True;
@@ -626,6 +666,17 @@ static void __callback( obj inst, iONode nodeA ) {
       NodeOp.base.del( nodeA );
       return;
     }
+    else if( StrOp.equals( wSysCmd.txshortids, wSysCmd.getcmd(nodeA) ) ) {
+      /* TODO: clear locodb and iterate all loco to send the shortid */
+      /* start a thread to process this job */
+      if( !data->txshortidsrun ) {
+        data->txshortidsrun = True;
+        data->txshortids = ThreadOp.inst( "txshortids", __txshortids, inst );
+        ThreadOp.start( data->txshortids );
+      }
+    }
+
+
   }
   else if( StrOp.equals( wAutoCmd.name(), nodeName ) ) {
     ModelOp.cmd( model, nodeA );

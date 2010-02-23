@@ -40,10 +40,59 @@ Boolean opendccAvail(obj xpressnet) {
 }
 
 void opendccInit(obj xpressnet) {
+  /*
+  Messages from the Host to Client
+  0x75 0xFF SID1_H SID1_L SID2_H SID2_L [XOR]
+  This is a broadcast: BiDi detectors with a SID between SID1 and SID2 should report their actual state.
+  This broadcast is typically issued after power up to collect all states of the BiDi detectors.
+  */
   li101Init(xpressnet);
 }
+
+/*
+ * BiDi Processing
+ *
+  Commands from the Client to the Host
+   
+  0x73 0xF0 SID_H SID_L [XOR]
+  BiDi detector with the logical addr SID (=sender ID) is idle. This message shall be issued once if
+  the detector changes from occupied to idle. The occupancy detector should not issue occupancy messages more often than 3s.
+
+  0x73 0xF1 SID_H SID_L [XOR]
+  BiDi detector with the logical addr SID (=sender ID) is occupied. This message shall be issued once if
+  the detector changes from idle to occupied. The occupancy detector should not issue occupancy messages more often than 2s.
+
+  0x75 0xF2 SID_H SID_L D+AddrH AddrL [XOR]
+  BiDi detector with the logical addr SID (=sender ID) has detected a locomotive with the address
+  Addr. D is the MSB of the AddrH byte and denotes the direction. D=0 indicates that the locomotive
+  has it's right side is connected to the detector, D=1 denotes the left side is connected to the detector.
+
+  0x75 0xFF SID1_H SID1_L SID2_H SID2_L [XOR]
+  Request a scan message of the command station in the given range. The command station will issue a
+  broadcast (see below) with this range.
+
+  0x74 0xE0 AddrH AddrL SPEED [XOR]
+  Locomotive with the address Addr anounces its real speed. Speedbyte is coded according to the BiDi-Standard.
+  A detector shall issue this package only if a speed change is detected.
+
+  0x78 0xE1 SID_H SID_L AddrH AddrL CV_H CV_L DAT [XOR]
+  BiDi detector with the logical addr SID (=sender ID) has detected a BiDi PoM command.
+  The locomotive with the address Addr responds to a configuration variable CV access with the content DAT
+
+  0x78 0xD0+BiDi-ID AddrH AddrL Data[1], ... Data[n] [XOR]
+  This is a raw message mirroring the BiDi message on the track 1:1 (reserved for future use)
+ */
+static void __evaluateBiDi(obj xpressnet, byte* buffer) {
+
+}
+
 int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
-  return li101Read(xpressnet, buffer, rspreceived);
+  int liRead = li101Read(xpressnet, buffer, rspreceived);
+  if(buffer[0] & 0x70 == 0x70 ) {
+    /* BiDi packet */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Processing BiDi packet." );
+  }
+  return liRead;
 }
 Boolean opendccWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
   return li101Write(xpressnet, buffer, rspexpected);

@@ -323,6 +323,7 @@ public:
     wxStaticText* m_labMTime;
     wxTextCtrl* m_MTime;
     wxCheckBox* m_Show;
+    wxCheckBox* m_UseShortID;
     wxButton* m_Serviced;
     wxStaticText* m_labMInt;
     wxSpinCtrl* m_MInt;
