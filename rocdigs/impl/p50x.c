@@ -1056,6 +1056,7 @@ static void __statusReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOP50x p50 = (iOP50x)ThreadOp.getParm( th );
   iOP50xData o = Data(p50);
+  iOList evtList = ListOp.inst();
   byte out[8];
   byte in[512];
   p50state state = P50_OK;
@@ -1140,7 +1141,9 @@ static void __statusReader( void* threadinst ) {
       /* ask for locomotive changes */
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XEvtLok..." );
       TraceOp.dump( name, TRCLEVEL_DEBUG, out, 2 );
+      ListOp.clear(evtList);
       if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
+        byte* evt = NULL;
         do {
           Boolean read = SerialOp.read( o->serial, (char*)&in[0], 1 ) ;
           if( read ) {
@@ -1148,7 +1151,9 @@ static void __statusReader( void* threadinst ) {
             if (in[0] < 0x80 ) {
               if( SerialOp.read( o->serial, (char*)in+1, 4 ) ) {
                 TraceOp.dump( name, TRCLEVEL_DEBUG, in, 5 );
-                __handleLoco(p50, in);
+                evt = allocMem(5);
+                MemOp.copy( evt, in, 5);
+                ListOp.add(evtList, (obj)evt);
               }
               else {
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read loco event");
@@ -1167,6 +1172,17 @@ static void __statusReader( void* threadinst ) {
 
 
       MutexOp.post( o->mux );
+
+      /* process the loco events */
+      if( ListOp.size(evtList) > 0) {
+        int i = 0;
+        for( i = 0; i < ListOp.size(evtList); i++ ) {
+          byte* evt = (byte*)ListOp.get(evtList, i );
+          __handleLoco(p50, evt);
+          freeMem(evt);
+        }
+        ListOp.clear(evtList);
+      }
 
     }
 
