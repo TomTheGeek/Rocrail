@@ -87,6 +87,7 @@
 #include "rocview/wrapper/public/PlanPanel.h"
 
 #include <math.h>
+#include <stdio.h>
 
 
 static double PI25DT = 3.141592653589793238462643;
@@ -116,6 +117,7 @@ enum {
     ME_LocGoTo,
     ME_LocSchedule,
     ME_LocGo,
+    ME_ScheduleGo,
     ME_LocGoManual,
     ME_LocStop,
     ME_LocReset,
@@ -163,6 +165,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocGoTo, Symbol::OnLocGoTo)
   EVT_MENU     (ME_LocSchedule, Symbol::OnLocSchedule)
   EVT_MENU     (ME_LocGo  , Symbol::OnLocGo  )
+  EVT_MENU     (ME_ScheduleGo, Symbol::OnScheduleGo)
   EVT_MENU     (ME_LocGoManual  , Symbol::OnLocGoManual  )
   EVT_MENU     (ME_LocStop, Symbol::OnLocStop)
   EVT_MENU     (ME_LocReset, Symbol::OnLocReset)
@@ -952,6 +955,14 @@ void Symbol::OnMotion(wxMouseEvent& event) {
   StrOp.free( text );
 }
 
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
 void Symbol::OnPopup(wxMouseEvent& event)
 {
     wxMenu menu( wxString(wItem.getid( m_Props ),wxConvUTF8) );
@@ -971,6 +982,42 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_LocMIC, wxGetApp().getMenu("mic") );
         menu.Append( ME_LocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
         menu.Append( ME_LocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
+
+// ########
+      // if(menuSchd2go == NULL)
+        wxMenu* menuSchd2go = new wxMenu();
+
+        //menuSchd2go->Append( ME_CmdStraight, wxGetApp().getMenu("straight") );
+
+        iONode model = wxGetApp().getModel();
+        iOList list = ListOp.inst();
+
+        if( model != NULL ) {
+          iONode bklist = wPlan.getsclist( model );
+          if( bklist != NULL ) {
+            int cnt = NodeOp.getChildCnt( bklist );
+            for( int i = 0; i < cnt; i++ ) {
+              iONode bk = NodeOp.getChild( bklist, i );
+              const char* id = wBlock.getid( bk );
+              if( id != NULL ) {
+                ListOp.add(list, (obj)id);
+                      }
+                }
+            ListOp.sort(list, &__sortStr);
+            cnt = ListOp.size( list );
+            for( int i = 0; i < cnt; i++ ) {
+              const char* id = (const char*)ListOp.get( list, i );
+              //m_Block->Append( wxString(id,wxConvUTF8) );
+              menuSchd2go->Append( ME_ScheduleGo, wxGetApp().getMenu(id) );
+            }
+          }
+        }
+        /* clean up the temp. list */
+        ListOp.base.del(list);
+
+        menu.Append( -1, wxGetApp().getMenu("schedule2go"), menuSchd2go );
+
+// ########
         wxMenuItem *mi = menu.FindItem( ME_LocGo );
         if( !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
@@ -1245,6 +1292,26 @@ void Symbol::OnLocGo(wxCommandEvent& event) {
   wLoc.setcmd( cmd, wLoc.go );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+void Symbol::OnScheduleGo(wxCommandEvent& event) {
+  /* Inform RocRail... */
+
+
+  TraceOp.trc( 0, TRCLEVEL_INFO, __LINE__, 9999, "### xxxx");
+
+  //if( menuSchd2go != 0) {
+
+  //TraceOp.trc( 0, TRCLEVEL_INFO, __LINE__, 9999, "### xxxx %d", menuSchd2go->GetMenuItemCount());
+
+  //}
+  /*
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.go );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+  */
 }
 
 void Symbol::OnLocActivate(wxCommandEvent& event) {
