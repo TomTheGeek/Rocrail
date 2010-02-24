@@ -72,7 +72,7 @@ LenzDlg::LenzDlg()
 LenzDlg::LenzDlg( wxWindow* parent, iONode props )
 {
     Init();
-    Create(parent, -1, _T("Lenz"));
+    Create(parent, -1, _T("XpressNet"));
 
     m_Props = props;
     initLabels();
