@@ -810,11 +810,13 @@ static void __transactor( void* threadinst ) {
   iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
   iOXpressNetData data = Data(xpressnet);
 
-  byte out[256];
-  byte in[256];
+  byte out[32];
+  byte in[32];
+  byte lastPacket[32];
   int  inlen = 0;
   Boolean rspReceived = True;
   Boolean rspExpected = False;
+  Boolean reSend      = False;
   obj post = NULL;
 
   ThreadOp.setDescription( th, "XpressNet transactor" );
@@ -825,19 +827,33 @@ static void __transactor( void* threadinst ) {
     /* get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
     if (rspReceived) {
-      post = ThreadOp.getPost( th );
-      if (post != NULL) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing post..." );
-        MemOp.copy(out, post, 32);
-        freeMem( post);
+      if( reSend ) {
+        reSend = False;
         if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
           rspReceived = !rspExpected;
         }
         else {
           /* TODO: unable to send request */
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to send request" );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to resend request" );
         }
       }
+      else {
+        post = ThreadOp.getPost( th );
+        if (post != NULL) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing post..." );
+          MemOp.copy(out, post, 32);
+          MemOp.copy(lastPacket, post, 32);
+          freeMem( post);
+          if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
+            rspReceived = !rspExpected;
+          }
+          else {
+            /* TODO: unable to send request */
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to send request" );
+          }
+        }
+      }
+
     }
 
     if( !data->subAvail( (obj)xpressnet ) ) {
@@ -936,6 +952,7 @@ static void __transactor( void* threadinst ) {
       else if (in[0] == 0x61 && in[1] == 0x81){
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy; Resend.");
         rspReceived = True;
+        reSend = True;
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
