@@ -443,6 +443,7 @@ static void __updateDigInt( iOModel inst ) {
 
   /* get the fb list: */
   if( db != NULL ) {
+    Boolean mustReport = False;
     int size = NodeOp.getChildCnt( db );
     int i = 0;
     int n = 0;
@@ -456,12 +457,15 @@ static void __updateDigInt( iOModel inst ) {
         if( !changed[bus] && addresses[bus][unit] != data->fbAddresses[bus][unit] ) {
           data->fbAddresses[bus][unit] = addresses[bus][unit];
           changed[bus] = True;
+          mustReport = True;
         }
       }
     }
 
-    if( !changed )
+    if( !mustReport ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors are unchanged; quit update" );
       return;
+    }
 
     /* create the address string: */
     for( n = 0; n < 32; n++ ) {
@@ -488,6 +492,7 @@ static void __updateDigInt( iOModel inst ) {
       for( n=0; n < 32; n++ ) {
         if( addrStr[n] != NULL ) {
           iONode fmods = NodeOp.inst( wFbMods.name(), cmd, ELEMENT_NODE );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add bus %d, %s...", n, addrStr[n] );
           wFbMods.setbus( fmods, n );
           wFbMods.setmodules( fmods, addrStr[n] );
           NodeOp.addChild( cmd, fmods );
