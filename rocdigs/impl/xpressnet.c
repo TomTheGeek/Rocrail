@@ -935,6 +935,7 @@ static void __transactor( void* threadinst ) {
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy; Resend.");
+        rspReceived = True;
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
