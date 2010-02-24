@@ -983,12 +983,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_LocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
         menu.Append( ME_LocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
 
-// ########
-      // if(menuSchd2go == NULL)
         wxMenu* menuSchd2go = new wxMenu();
-
-        //menuSchd2go->Append( ME_CmdStraight, wxGetApp().getMenu("straight") );
-
         iONode model = wxGetApp().getModel();
         iOList list = ListOp.inst();
 
@@ -1007,17 +1002,14 @@ void Symbol::OnPopup(wxMouseEvent& event)
             cnt = ListOp.size( list );
             for( int i = 0; i < cnt; i++ ) {
               const char* id = (const char*)ListOp.get( list, i );
-              //m_Block->Append( wxString(id,wxConvUTF8) );
               menuSchd2go->Append( ME_ScheduleGo, wxGetApp().getMenu(id) );
             }
           }
         }
         /* clean up the temp. list */
         ListOp.base.del(list);
-
         menu.Append( -1, wxGetApp().getMenu("schedule2go"), menuSchd2go );
 
-// ########
         wxMenuItem *mi = menu.FindItem( ME_LocGo );
         if( !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
@@ -1297,14 +1289,9 @@ void Symbol::OnLocGo(wxCommandEvent& event) {
 void Symbol::OnScheduleGo(wxCommandEvent& event) {
   /* Inform RocRail... */
 
+  /*Todo*/
+  TraceOp.trc( 0, TRCLEVEL_INFO, __LINE__, 9999, "not implemented yet! (Loc: %s)", wBlock.getlocid( m_Props ));
 
-  TraceOp.trc( 0, TRCLEVEL_INFO, __LINE__, 9999, "### xxxx");
-
-  //if( menuSchd2go != 0) {
-
-  //TraceOp.trc( 0, TRCLEVEL_INFO, __LINE__, 9999, "### xxxx %d", menuSchd2go->GetMenuItemCount());
-
-  //}
   /*
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
