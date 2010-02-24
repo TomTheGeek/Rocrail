@@ -364,12 +364,6 @@ static void _modify( iOFBack inst, iONode props ) {
     /* inform model with new addrkey to add to map. */
     ModelOp.addFbKey( model, data->addrKey, (obj)inst );
     
-    /* inform SX based digints of changes */
-    if( newaddr ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "address of %s has changes; update sensor modules", wFeedback.getid(data->props) );
-      ModelOp.updateFB( model );
-    }
-    
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
