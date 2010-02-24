@@ -382,9 +382,7 @@ static void* __event( void* inst, const void* evt ) {
           wLoc.getid(data->props), wLoc.isdir(evtNode), wLoc.isfn(evtNode) );
       if( !data->go ) {
         wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
-        if( StrOp.equals( wLoc.dirfun, wLoc.getcmd(evtNode) ) ) {
-          wLoc.setfn( data->props, wLoc.isfn(evtNode) );
-        }
+        wLoc.setfn( data->props, wLoc.isfn(evtNode) );
       }
     }
 
