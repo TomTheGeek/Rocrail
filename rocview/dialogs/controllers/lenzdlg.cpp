@@ -86,21 +86,24 @@ LenzDlg::LenzDlg( wxWindow* parent, iONode props )
 
 void LenzDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
+  m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
+  m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
   m_BPS->SetLabel( wxGetApp().getMsg( "bps" ) );
-  m_labSensor->SetLabel( wxGetApp().getMsg( "sensors" ) );
-  m_labSensorOffset->SetLabel( wxGetApp().getMsg( "offset" ) );
-  m_labSwitch->SetLabel( wxGetApp().getMsg( "switches" ) );
+  m_labSensorOffset->SetLabel( wxGetApp().getMsg( "sensor" ) + _T(" ") + wxGetApp().getMsg( "offset" ) );
   m_labSwitchTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPower->SetLabel( wxGetApp().getMsg( "options" ) );
   m_PowerAtStartup->SetLabel( wxGetApp().getMsg( "poweronstartup" ) );
   m_FastClock->SetLabel( wxGetApp().getMsg( "fastclock" ) );
+  m_HardwareFlow->SetLabel( wxGetApp().getMsg( "ctsflow" ) );
 }
 
 void LenzDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+  m_Port->SetValue( wDigInt.getport(m_Props));
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(m_Props) )) {
     m_Type->SetSelection(1);
@@ -109,6 +112,10 @@ void LenzDlg::initValues() {
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib(m_Props) ))
     m_Type->SetSelection(2);
+  else if( StrOp.equals( wDigInt.sublib_lenz_opendcc, wDigInt.getsublib(m_Props) ))
+    m_Type->SetSelection(3);
+  else if( StrOp.equals( wDigInt.sublib_lenz_xntcp, wDigInt.getsublib(m_Props) ))
+    m_Type->SetSelection(4);
   else
     m_Type->SetSelection(0);
 
@@ -125,10 +132,15 @@ void LenzDlg::initValues() {
     m_BPS->SetSelection(2);
   else if( wDigInt.getbps( m_Props ) == 57600 )
     m_BPS->SetSelection(3);
+  else if( wDigInt.getbps( m_Props ) == 115200 )
+    m_BPS->SetSelection(4);
   else
     m_BPS->SetSelection(1);
 
-
+  if( StrOp.equals( wDigInt.cts, wDigInt.getflow(m_Props) ) )
+    m_HardwareFlow->SetSelection(1);
+  else
+    m_HardwareFlow->SetSelection(0);
 
 }
 
@@ -137,6 +149,8 @@ void LenzDlg::evaluate() {
     return;
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.setport( m_Props, m_Port->GetValue() );
   wDigInt.setswtime( m_Props, m_SwitchTime->GetValue() );
   wDigInt.setfboffset( m_Props, m_SensorOffset->GetValue() );
   wDigInt.setstartpwstate(m_Props, m_PowerAtStartup->IsChecked()?True:False);
@@ -146,6 +160,10 @@ void LenzDlg::evaluate() {
     wDigInt.setsublib(m_Props, wDigInt.sublib_usb );
   else if( m_Type->GetSelection() == 2 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_elite );
+  else if( m_Type->GetSelection() == 3 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_opendcc );
+  else if( m_Type->GetSelection() == 4 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_xntcp );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_default );
 
@@ -158,6 +176,14 @@ void LenzDlg::evaluate() {
     wDigInt.setbps( m_Props, 38400 );
   else if( m_BPS->GetSelection() == 3 )
     wDigInt.setbps( m_Props, 57600 );
+  else if( m_BPS->GetSelection() == 4 )
+    wDigInt.setbps( m_Props, 115200 );
+
+  if( m_HardwareFlow->GetSelection() == 0 )
+    wDigInt.setflow(m_Props, wDigInt.none );
+  else
+    wDigInt.setflow(m_Props, wDigInt.cts );
+
 }
 
 
@@ -206,17 +232,20 @@ void LenzDlg::Init()
     m_IID = NULL;
     m_labDevice = NULL;
     m_Device = NULL;
-    m_Type = NULL;
+    m_labHost = NULL;
+    m_Host = NULL;
+    m_labPort = NULL;
+    m_Port = NULL;
     m_BPS = NULL;
-    m_labSensor = NULL;
-    m_labSensorOffset = NULL;
-    m_SensorOffset = NULL;
-    m_labSwitch = NULL;
-    m_labSwitchTime = NULL;
-    m_SwitchTime = NULL;
+    m_HardwareFlow = NULL;
+    m_Type = NULL;
     m_labPower = NULL;
     m_PowerAtStartup = NULL;
     m_FastClock = NULL;
+    m_labSensorOffset = NULL;
+    m_SensorOffset = NULL;
+    m_labSwitchTime = NULL;
+    m_SwitchTime = NULL;
 ////@end LenzDlg member initialisation
 }
 
@@ -236,91 +265,108 @@ void LenzDlg::CreateControls()
     m_MainPanel = new wxPanel( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     itemBoxSizer2->Add(m_MainPanel, 0, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
     m_MainPanel->SetSizer(itemBoxSizer4);
 
-    wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
-    itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW, 5);
+    wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer4->Add(itemBoxSizer5, 0, wxALIGN_TOP|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
+    itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW, 5);
 
     m_labIID = new wxStaticText( m_MainPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_IID = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_IID = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer6->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( m_MainPanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Device = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Device = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxArrayString m_TypeStrings;
-    m_TypeStrings.Add(_("&LI101F"));
-    m_TypeStrings.Add(_("&LI-USB"));
-    m_TypeStrings.Add(_("&Elite"));
-    m_Type = new wxRadioBox( m_MainPanel, ID_LENZTYPE, _("SubType"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_ROWS );
-    m_Type->SetSelection(0);
-    itemBoxSizer4->Add(m_Type, 0, wxGROW|wxALL, 5);
+    m_labHost = new wxStaticText( m_MainPanel, wxID_ANY, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_Host = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer6->Add(m_Host, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_labPort = new wxStaticText( m_MainPanel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_Port = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(120, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    itemFlexGridSizer6->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_BPSStrings;
     m_BPSStrings.Add(_("&9600"));
     m_BPSStrings.Add(_("&19200"));
     m_BPSStrings.Add(_("&38400"));
     m_BPSStrings.Add(_("&57600"));
-    m_BPS = new wxRadioBox( m_MainPanel, wxID_ANY, _("BPS"), wxDefaultPosition, wxDefaultSize, m_BPSStrings, 1, wxRA_SPECIFY_COLS );
+    m_BPSStrings.Add(_("&115200"));
+    m_BPS = new wxRadioBox( m_MainPanel, wxID_ANY, _("BPS"), wxDefaultPosition, wxDefaultSize, m_BPSStrings, 2, wxRA_SPECIFY_ROWS );
     m_BPS->SetSelection(0);
-    itemBoxSizer4->Add(m_BPS, 0, wxGROW|wxALL, 5);
+    itemBoxSizer5->Add(m_BPS, 0, wxGROW|wxALL, 5);
 
-    m_labSensor = new wxStaticBox(m_MainPanel, wxID_ANY, _("Sensor"));
-    wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(m_labSensor, wxVERTICAL);
-    itemBoxSizer4->Add(itemStaticBoxSizer12, 0, wxGROW|wxALL, 5);
+    wxArrayString m_HardwareFlowStrings;
+    m_HardwareFlowStrings.Add(_("&None"));
+    m_HardwareFlowStrings.Add(_("&CTS"));
+    m_HardwareFlow = new wxRadioBox( m_MainPanel, wxID_ANY, _("Hardware Flow"), wxDefaultPosition, wxDefaultSize, m_HardwareFlowStrings, 2, wxRA_SPECIFY_COLS );
+    m_HardwareFlow->SetSelection(0);
+    itemBoxSizer5->Add(m_HardwareFlow, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer13->AddGrowableRow(1);
-    itemStaticBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer4->Add(itemBoxSizer17, 0, wxALIGN_TOP|wxALL, 5);
 
-    m_labSensorOffset = new wxStaticText( m_MainPanel, wxID_ANY, _("Offset"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer13->Add(m_labSensorOffset, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-
-    m_SensorOffset = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
-    itemFlexGridSizer13->Add(m_SensorOffset, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-
-    m_labSwitch = new wxStaticBox(m_MainPanel, wxID_ANY, _("Switch"));
-    wxStaticBoxSizer* itemStaticBoxSizer16 = new wxStaticBoxSizer(m_labSwitch, wxVERTICAL);
-    itemBoxSizer4->Add(itemStaticBoxSizer16, 0, wxGROW|wxALL, 5);
-
-    wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemStaticBoxSizer16->Add(itemFlexGridSizer17, 0, wxGROW|wxALL, 5);
-
-    m_labSwitchTime = new wxStaticText( m_MainPanel, wxID_ANY, _("Time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer17->Add(m_labSwitchTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-
-    m_SwitchTime = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 250 );
-    itemFlexGridSizer17->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    wxArrayString m_TypeStrings;
+    m_TypeStrings.Add(_("&LI101F"));
+    m_TypeStrings.Add(_("&LI-USB"));
+    m_TypeStrings.Add(_("&Elite"));
+    m_TypeStrings.Add(_("&OpenDCC"));
+    m_TypeStrings.Add(_("&XnTcp"));
+    m_Type = new wxRadioBox( m_MainPanel, ID_LENZTYPE, _("SubType"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_ROWS );
+    m_Type->SetSelection(0);
+    itemBoxSizer17->Add(m_Type, 0, wxGROW|wxALL, 5);
 
     m_labPower = new wxStaticBox(m_MainPanel, wxID_ANY, _("Options"));
-    wxStaticBoxSizer* itemStaticBoxSizer20 = new wxStaticBoxSizer(m_labPower, wxVERTICAL);
-    itemBoxSizer4->Add(itemStaticBoxSizer20, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_labPower, wxVERTICAL);
+    itemBoxSizer17->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
     m_PowerAtStartup = new wxCheckBox( m_MainPanel, wxID_ANY, _("Power on at startup"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PowerAtStartup->SetValue(false);
-    itemStaticBoxSizer20->Add(m_PowerAtStartup, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemStaticBoxSizer19->Add(m_PowerAtStartup, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_FastClock = new wxCheckBox( m_MainPanel, wxID_ANY, _("Support fast clock"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FastClock->SetValue(false);
-    itemStaticBoxSizer20->Add(m_FastClock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer19->Add(m_FastClock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer23 = new wxStdDialogButtonSizer;
+    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer22->AddGrowableRow(1);
+    itemStaticBoxSizer19->Add(itemFlexGridSizer22, 0, wxALIGN_LEFT, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer23, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    wxButton* itemButton24 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer23->AddButton(itemButton24);
+    m_labSensorOffset = new wxStaticText( m_MainPanel, wxID_ANY, _("Sensor Offset"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer22->Add(m_labSensorOffset, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    wxButton* itemButton25 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer23->AddButton(itemButton25);
+    m_SensorOffset = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
+    itemFlexGridSizer22->Add(m_SensorOffset, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    itemStdDialogButtonSizer23->Realize();
+    m_labSwitchTime = new wxStaticText( m_MainPanel, wxID_ANY, _("Switch time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer22->Add(m_labSwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    m_SwitchTime = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 1000, 250 );
+    itemFlexGridSizer22->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer27 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxButton* itemButton28 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton28);
+
+    wxButton* itemButton29 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton29);
+
+    itemStdDialogButtonSizer27->Realize();
 
 ////@end LenzDlg content construction
 }
@@ -392,9 +438,14 @@ void LenzDlg::OnLenztypeSelected( wxCommandEvent& event )
   if( m_Type->GetSelection() == 1 ) {
     m_BPS->SetSelection(3);
     m_BPS->Enable(false);
+    return;
   }
-  else {
-    m_BPS->Enable(true);
+
+  if( m_Type->GetSelection() == 4 ) {
+    m_BPS->Enable(false);
+    return;
   }
+
+  m_BPS->Enable(true);
 }
 

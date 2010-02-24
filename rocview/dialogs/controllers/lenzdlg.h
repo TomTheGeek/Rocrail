@@ -111,17 +111,20 @@ public:
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
     wxTextCtrl* m_Device;
-    wxRadioBox* m_Type;
+    wxStaticText* m_labHost;
+    wxTextCtrl* m_Host;
+    wxStaticText* m_labPort;
+    wxSpinCtrl* m_Port;
     wxRadioBox* m_BPS;
-    wxStaticBox* m_labSensor;
-    wxStaticText* m_labSensorOffset;
-    wxSpinCtrl* m_SensorOffset;
-    wxStaticBox* m_labSwitch;
-    wxStaticText* m_labSwitchTime;
-    wxSpinCtrl* m_SwitchTime;
+    wxRadioBox* m_HardwareFlow;
+    wxRadioBox* m_Type;
     wxStaticBox* m_labPower;
     wxCheckBox* m_PowerAtStartup;
     wxCheckBox* m_FastClock;
+    wxStaticText* m_labSensorOffset;
+    wxSpinCtrl* m_SensorOffset;
+    wxStaticText* m_labSwitchTime;
+    wxSpinCtrl* m_SwitchTime;
 ////@end LenzDlg member variables
     iONode m_Props;
 };
