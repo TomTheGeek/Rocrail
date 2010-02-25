@@ -162,6 +162,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot, Boolean* vdfChanged
         "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
     slot->lights = lights;
     *vdfChanged = True;
+    *funChanged = True;
     changed = True;
   }
   if( slot->f1_8 != f1_8 ) {
