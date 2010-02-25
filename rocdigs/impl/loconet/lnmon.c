@@ -560,14 +560,8 @@ void traceLocoNet(byte* msg) {
         else ch+=1;
 
         TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
-            "Sensor report: contact %d (DS54 switch%d %s) (BLD16 %d%d) is %s",
-            ((sensoraddr-1) * 2 + ( (in2 & OPC_INPUT_REP_SW) ? 2:1) ),
-            sensoraddr,
-            ((in2 & OPC_INPUT_REP_SW) ? " Sw  input" : " Aux input"),
-            (in1+(in2&0xF)*128)/8+1,
-            ch,
-            ((in2 & OPC_INPUT_REP_HI) ? "Hi" : "Lo")
-          );
+            "Sensor report: contact %d",
+            ((sensoraddr-1) * 2 + ( (in2 & OPC_INPUT_REP_SW) ? 2:1) ) );
         break;
     }
 
