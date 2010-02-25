@@ -560,8 +560,9 @@ void traceLocoNet(byte* msg) {
         else ch+=1;
 
         TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
-            "Sensor report: contact %d",
-            ((sensoraddr-1) * 2 + ( (in2 & OPC_INPUT_REP_SW) ? 2:1) ) );
+            "Sensor report: contact %d is %s",
+            ((sensoraddr-1) * 2 + ( (in2 & OPC_INPUT_REP_SW) ? 2:1) ),
+            ((in2 & OPC_INPUT_REP_HI) ? "Hi" : "Lo") );
         break;
     }
 
