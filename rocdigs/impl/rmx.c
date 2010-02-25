@@ -70,6 +70,7 @@ static int instCnt = 0;
 #define ERR_ALLUSED   0x08
 #define ERR_XOR       0x0F
 
+static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode );
 
 
 /** ----- OBase ----- */
@@ -194,6 +195,80 @@ static void __updateFB( iORmxData data, iONode fbInfo ) {
 }
 
 
+
+static iOSlot __getSlot(iORmxData data, iONode node) {
+  int steps = wLoc.getspcnt(node);
+  int addr  = wLoc.getaddr(node);
+  int fncnt = wLoc.getfncnt(node);
+  Boolean sx1 = False;
+  byte index = 0xFF;
+  iOSlot slot = NULL;
+  byte rsp[32] = {0};
+  byte cmd[32] = {PCKT, 0x08, OPC_LOCOINFO}; /* TODO: ShortID support */
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
+    cmd[6] = 2;
+    steps = 31;
+    sx1 = True;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sx1, steps=%d, fncnt=%d", steps, fncnt );
+  }
+  /* default SX2 */
+  else {
+    cmd[6] = 7;
+    steps = 127;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "default SX2, steps=%d, fncnt=%d", steps, fncnt );
+  }
+
+  if( addr > 127 ) {
+    cmd[3] = addr / 256;
+    cmd[4] = addr % 256;
+    cmd[5] = 0;
+  }
+  else {
+    cmd[3] = 0;
+    cmd[4] = 0;
+    cmd[5] = addr;
+  }
+
+
+  if( __transact( data, cmd, rsp, OPC_LOCOINFO ) ) {
+    byte opmode = cmd[6];
+    cmd[0] = PCKT;
+    cmd[1] = 0x06;
+    cmd[2] = OPC_RMXCHANEL;
+    cmd[3] = addr / 256;
+    cmd[4] = addr % 256;
+    if( __transact( data, cmd, rsp, OPC_RMXCHANEL ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got RMX Chanel %d for %s", rsp[5], wLoc.getid(node) );
+      slot = allocMem( sizeof( struct slot) );
+      slot->addr = addr;
+      slot->index = rsp[5];
+      slot->protocol = cmd[4];
+      slot->steps = steps;
+      slot->sx1 = sx1;
+      slot->bus = wLoc.getbus(node);
+      slot->id = StrOp.dup(wLoc.getid(node));
+      if( MutexOp.wait( data->lcmux ) ) {
+        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+        MutexOp.post(data->lcmux);
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+    }
+  }
+
+  return slot;
+
+}
+
+
+
 static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
   /* Feedback configuration update */
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
@@ -249,6 +324,45 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       return 6;
     }
+  }
+
+  /* Loc command.*/
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int  speed = 0;
+    byte in = 0;
+    Boolean fn = wLoc.isfn( node );
+    int    dir = wLoc.isdir( node );
+    int  spcnt = wLoc.getspcnt( node );
+
+    int index = 0;
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    spcnt = slot->steps;
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * spcnt) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
+        wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+
+    out[0] = PCKT;
+    out[1] = 0x07;
+    out[2] = OPC_LOCOV;
+    out[3] = slot->index;
+    out[4] = speed + (dir?0x00:0x80);
+    out[5] = (dir?0x00:0x01);
+    return 7;
+
   }
 
   return 0;
