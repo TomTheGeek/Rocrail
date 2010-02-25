@@ -174,6 +174,10 @@ public:
     wxStaticBox* m_labXSLPath;
     wxTextCtrl* m_XSLPath;
     wxButton* m_XSLPathDlg;
+    wxStaticText* m_labCX;
+    wxSpinCtrl* m_CX;
+    wxStaticText* m_labCY;
+    wxSpinCtrl* m_CY;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

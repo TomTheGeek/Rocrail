@@ -496,7 +496,8 @@ BasePanel* RocGuiFrame::InitNotebookPage( iONode zlevel  ) {
   iONode ini = wGui.getplanpanel(m_Ini);
   PlanPanel* p = new PlanPanel( m_PlanNotebook, wxGetApp().getItemSize(), m_Scale, m_Bktext, wZLevel.getz( zlevel ), zlevel, wPlanPanel.isshowborder( ini) );
   int itemsize = wxGetApp().getItemSize();
-  p->SetScrollbars( (int)(itemsize*m_Scale), (int)(itemsize*m_Scale), 64, 48 );
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "scroll cx=%d cy=%d", wPlanPanel.getcx(ini), wPlanPanel.getcy(ini) );
+  p->SetScrollbars( (int)(itemsize*m_Scale), (int)(itemsize*m_Scale), wPlanPanel.getcx(ini), wPlanPanel.getcy(ini) );
   wxColor color((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini));
   p->SetBackgroundColour(color);
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Adding level %s (%d,%d)",

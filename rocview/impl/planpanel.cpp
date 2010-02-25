@@ -51,6 +51,9 @@
 #include "rocview/dialogs/selectdialog.h"
 #include "rocview/dialogs/modulepropsdlg.h"
 
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/PlanPanel.h"
+
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -176,7 +179,10 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   SetBackgroundColour( *wxWHITE );
 
   m_MultiAdd = true;
-  SetVirtualSize( (int)(m_ItemSize*m_Scale*64), (int)(m_ItemSize*m_Scale*48) );
+
+  iONode ini = wGui.getplanpanel(wxGetApp().getIni());
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "panel cx=%d cy=%d", wPlanPanel.getcx(ini), wPlanPanel.getcy(ini) );
+  SetVirtualSize( (int)(m_ItemSize*m_Scale * wPlanPanel.getcx(ini)), (int)(m_ItemSize*m_Scale * wPlanPanel.getcy(ini)) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
 
   SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
@@ -1536,7 +1542,9 @@ void PlanPanel::blockEvent( const char* id ) {
 void PlanPanel::reScale( double scale ) {
   m_Scale = scale;
   Scroll( 0, 0 );
-  SetVirtualSize( (int)(m_ItemSize*m_Scale*64), (int)(m_ItemSize*m_Scale*48) );
+
+  iONode ini = wGui.getplanpanel(wxGetApp().getIni());
+  SetVirtualSize( (int)(m_ItemSize*m_Scale * wPlanPanel.getcx(ini)), (int)(m_ItemSize*m_Scale * wPlanPanel.getcy(ini)) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
   //Show(false);
 
