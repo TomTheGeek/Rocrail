@@ -12156,4 +12156,7 @@
   <Msg id="regional">
     <en txt="Regional"/>
   </Msg>
+  <Msg id="size">
+    <en txt="size"/>
+  </Msg>
 </Messages>

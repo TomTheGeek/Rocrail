@@ -174,6 +174,7 @@ public:
     wxStaticBox* m_labXSLPath;
     wxTextCtrl* m_XSLPath;
     wxButton* m_XSLPathDlg;
+    wxStaticBox* m_labPanelSize;
     wxStaticText* m_labCX;
     wxSpinCtrl* m_CX;
     wxStaticText* m_labCY;

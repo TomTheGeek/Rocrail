@@ -175,6 +175,7 @@ void RocguiIniDialog::initLabels() {
   m_labImagePath->SetLabel( wxGetApp().getMsg( "imagepath" ) );
   m_labUpdatesPath->SetLabel( wxGetApp().getMsg( "updatespath" ) );
   m_labXSLPath->SetLabel( wxGetApp().getMsg( "xslpath" ) );
+  m_labPanelSize->SetLabel( wxGetApp().getMsg( "panel" ) + _T(" ") + wxGetApp().getMsg( "size" ) );
   m_labWorkspace->SetLabel( wxGetApp().getMsg( "defaultworkspace" ) );
   m_Workspace->SetToolTip( wxGetApp().getMsg( "defaultworkspace" ) );
   m_StartDefaultWorkspace->SetLabel( wxGetApp().getMsg( "startdefaultworkspace" ) );
@@ -461,6 +462,7 @@ bool RocguiIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_labXSLPath = NULL;
     m_XSLPath = NULL;
     m_XSLPathDlg = NULL;
+    m_labPanelSize = NULL;
     m_labCX = NULL;
     m_CX = NULL;
     m_labCY = NULL;
@@ -661,8 +663,8 @@ void RocguiIniDialog::CreateControls()
     m_XSLPathDlg = new wxButton( m_GeneralTab, ID_XSLPATH_BUTTON, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemStaticBoxSizer26->Add(m_XSLPathDlg, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
-    wxStaticBox* itemStaticBoxSizer29Static = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Planpanel size"));
-    wxStaticBoxSizer* itemStaticBoxSizer29 = new wxStaticBoxSizer(itemStaticBoxSizer29Static, wxHORIZONTAL);
+    m_labPanelSize = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Planpanel size"));
+    wxStaticBoxSizer* itemStaticBoxSizer29 = new wxStaticBoxSizer(m_labPanelSize, wxHORIZONTAL);
     itemBoxSizer19->Add(itemStaticBoxSizer29, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer29->Add(itemFlexGridSizer30, 0, wxGROW, 5);
