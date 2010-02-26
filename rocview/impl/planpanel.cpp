@@ -172,6 +172,7 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_lastAddedItem = NULL;
   m_ModViewLabel = NULL;
   m_Parent = parent;
+  m_LockedRoutes = MapOp.inst();
 
   m_Z = z;
   m_Initialized = false;
@@ -1188,17 +1189,29 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
   NodeOp.base.del( node );
 }
 
+bool PlanPanel::isRouteLocked(const char* id) {
+  return MapOp.haskey( m_LockedRoutes, id );
+}
+
 void PlanPanel::update4Route(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
   const char* routeId = wRoute.getid(node);
+  bool locked = wRoute.getstatus(node) == wRoute.status_locked ? true:false;
+
+  if( locked && MapOp.get( m_LockedRoutes, routeId ) == NULL ) {
+    MapOp.put( m_LockedRoutes, routeId, NULL );
+  }
+  else if( !locked && MapOp.get( m_LockedRoutes, routeId ) != NULL ) {
+    MapOp.remove( m_LockedRoutes, routeId );
+  }
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
   wxNode* tablenode = (wxNode*)m_ChildTable->Next();
   while( tablenode != NULL ) {
     item = (Symbol*)tablenode->GetData();
-    item->routeEvent( routeId );
+    item->routeEvent( routeId, locked );
     tablenode = (wxNode*)m_ChildTable->Next();
   }
 

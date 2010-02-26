@@ -22,6 +22,7 @@
 
 #include "rocs/public/thread.h"
 #include "rocs/public/node.h"
+#include "rocs/public/map.h"
 #include "rocview/public/basepanel.h"
 
 class PlanPanel : public BasePanel
@@ -96,10 +97,12 @@ public:
   void SetScBackgroundColor(int red, int green, int blue, bool showSc);
   void refresh(bool eraseBackground = true);
   void setPosition();
+  bool isRouteLocked(const char* id);
   iONode m_zLevel;
   int m_Z;
 
 private:
+  iOMap m_LockedRoutes;
   int m_dragX;
   int m_dragY;
   bool m_hasMouse;

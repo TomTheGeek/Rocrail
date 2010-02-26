@@ -96,7 +96,7 @@ public:
   iONode getProperties();
   void reScale( double scale );
   void blockEvent( const char* id );
-  void routeEvent( const char* id );
+  void routeEvent( const char* id, bool locked );
   void disable();
   void locoDropped() {m_locoIsDropped = true;};
 
@@ -110,7 +110,7 @@ private:
   bool m_isDragged;
   bool m_locoIsDropped;
   char* m_locidStr;
-  char* m_RouteID;
+  //char* m_RouteID;
   void sizeToScale();
   double getSize();
   void setPosition();

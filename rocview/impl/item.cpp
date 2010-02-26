@@ -265,7 +265,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_isDragged = false;
   m_locoIsDropped = false;
   m_locidStr = NULL;
-  m_RouteID = NULL;
+  //m_RouteID = NULL;
   m_locidStr = NULL;
   m_Timer = new wxTimer( this, ME_Timer );
 
@@ -434,14 +434,14 @@ void Symbol::blockEvent( const char* id ) {
   }
 }
 
-void Symbol::routeEvent( const char* id ) {
+void Symbol::routeEvent( const char* id, bool locked ) {
   if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( wItem.getrouteids( m_Props ) != NULL && StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
-      StrOp.free(m_RouteID);
-      m_RouteID = StrOp.dup(id);
+      //StrOp.free(m_RouteID);
+      //m_RouteID = StrOp.dup(id);
       Refresh();
     }
   }
@@ -499,13 +499,17 @@ void Symbol::OnPaint(wxPaintEvent& event)
     bool actroute = false;
     int status = 0;
 
-    if( m_RouteID != NULL ) {
+    if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
+        StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
+        StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
+        StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ))
+    {
       iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
 
       const char* routeid = StrTokOp.nextToken(tok);
 
       while( routeid != NULL ) {
-        if( StrOp.equals( routeid, m_RouteID )) {
+        if( m_PlanPanel->isRouteLocked(routeid ) ) {
           actroute = true;
           break;
         }
