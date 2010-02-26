@@ -533,8 +533,11 @@ static void __callback( obj inst, iONode nodeA ) {
 
         if( smallimage && FileOp.exist( sfilename ) )
           f = FileOp.inst( sfilename, OPEN_READONLY);
-        else
+        else if(FileOp.exist( filename ))
           f = FileOp.inst( filename, OPEN_READONLY);
+
+        StrOp.free(filename);
+        StrOp.free(sfilename);
 
         if( f != NULL ) {
           int   size    = FileOp.size(f);
