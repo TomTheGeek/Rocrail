@@ -6420,6 +6420,26 @@
     <nb txt="Halvautomatisk"/>
     <pl txt="Półautomatyczny"/>
   </Msg>
+  <Msg id="schedule2go">
+    <de txt="Starte mit Fahrplan"/>
+    <en txt="Go with schedule"/>
+    <nl txt="Schedule and Go"/>
+    <sv txt="Schedule and Go"/>
+    <fr txt="Schedule and Go"/>
+    <tr txt="Schedule and Go"/>
+    <es txt="Schedule and Go"/>
+    <it txt="Schedule and Go"/>
+    <da txt="Schedule and Go"/>
+    <bg txt="Schedule and Go"/>
+    <el txt="Schedule and Go"/>
+    <hu txt="Schedule and Go"/>
+    <ru txt="Schedule and Go"/>
+    <pt txt="Schedule and Go"/>
+    <bs txt="Schedule and Go"/>
+    <cs txt="Schedule and Go"/>
+    <nb txt="Schedule and Go"/>
+    <pl txt="Schedule and Go"/>
+  </Msg>
   <Msg id="mic" dialog="true" key="Ctrl-M">
     <de txt="MIC" tip="Mouse Integrated Controller"/>
     <en txt="MIC" tip="Mouse Integrated Controller"/>

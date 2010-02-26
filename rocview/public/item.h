@@ -124,6 +124,8 @@ private:
   double m_Scale;
   double m_Bktext;
 
+  iOList m_sclist;
+
   DECLARE_EVENT_TABLE()
 };
 
