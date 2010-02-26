@@ -1190,7 +1190,9 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
 }
 
 bool PlanPanel::isRouteLocked(const char* id) {
-  return MapOp.haskey( m_LockedRoutes, id );
+  bool locked = MapOp.haskey( m_LockedRoutes, id );
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Q: route %s is %s", id, locked?"locked":"free" );
+  return locked;
 }
 
 void PlanPanel::update4Route(wxCommandEvent& event) {
@@ -1199,10 +1201,14 @@ void PlanPanel::update4Route(wxCommandEvent& event) {
   const char* routeId = wRoute.getid(node);
   bool locked = wRoute.getstatus(node) == wRoute.status_locked ? true:false;
 
-  if( locked && MapOp.get( m_LockedRoutes, routeId ) == NULL ) {
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "event: route %s is %s", routeId, locked?"locked":"free" );
+
+  if( locked && !MapOp.haskey( m_LockedRoutes, routeId ) ) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "event: add route %s to map", routeId );
     MapOp.put( m_LockedRoutes, routeId, NULL );
   }
-  else if( !locked && MapOp.get( m_LockedRoutes, routeId ) != NULL ) {
+  if( !locked && MapOp.haskey( m_LockedRoutes, routeId ) ) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "event: remove route %s from map", routeId );
     MapOp.remove( m_LockedRoutes, routeId );
   }
 
