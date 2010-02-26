@@ -439,6 +439,7 @@ static void* __event( void* inst, const void* evt ) {
 
     if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
+      __checkConsist(inst, evtNode, True);
       broadcast = True;
     }
     else {
