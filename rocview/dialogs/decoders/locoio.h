@@ -49,22 +49,22 @@ class wxSpinCtrl;
 #define ID_BUTTON_SET_GEN 10019
 #define wxID_LOCOIO_SUB_ADDR 10028
 #define ID_BUTTON_RESET_LOCOIO 10006
-#define ID_BUTTON_PORT_GET 10016
-#define ID_BUTTON_PORT_SET 10017
-#define ID_LOCOIO_TYPE 10022
-#define ID_BUTTON_OPC_GET 10000
-#define ID_BUTTON_OPC_SET 10001
-#define ID_BUTTON_SERVO_PORT_GET 10020
-#define ID_BUTTON_SERVO_PORT_SET 10021
+#define ID_LN_ADDRESSLIST 10007
+#define ID_QUEURY_ADDRESSES 10008
 #define ID_EASYGETALL 10004
 #define ID_EASYSETALL 10005
 #define ID_BUTTON_EASY_SAVE 10009
 #define ID_BUTTON_EASY_READ 10010
 #define ID_LOCOIO_BOOSTER 10002
-#define ID_LN_ADDRESSLIST 10007
-#define ID_QUEURY_ADDRESSES 10008
+#define ID_BUTTON_PORT_GET 10016
+#define ID_BUTTON_PORT_SET 10017
+#define ID_LOCOIO_TYPE 10022
+#define ID_BUTTON_OPC_GET 10000
+#define ID_BUTTON_OPC_SET 10001
 #define ID_BUTTON_MP_READ 10011
 #define ID_BUTTON_MP_WRITE 10012
+#define ID_BUTTON_SERVO_PORT_GET 10020
+#define ID_BUTTON_SERVO_PORT_SET 10021
 #define SYMBOL_LOCOIO_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_LOCOIO_TITLE _("LocoIO")
 #define SYMBOL_LOCOIO_IDNAME ID_LOCOIO
@@ -129,6 +129,27 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESET_LOCOIO
     void OnButtonResetLocoioClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LN_ADDRESSLIST
+    void OnLnAddresslistDoubleClicked( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_QUEURY_ADDRESSES
+    void OnQueuryAddressesClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYGETALL
+    void OnEasygetallClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYSETALL
+    void OnEasysetallClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_EASY_SAVE
+    void OnButtonEasySaveClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_EASY_READ
+    void OnButtonEasyReadClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOCOIO_BOOSTER
+    void OnBoosterClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for wxID_ANY
     void OnAnyUpdated( wxSpinEvent& event );
 
@@ -153,38 +174,17 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_OPC_SET
     void OnButtonOpcSetClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SERVO_PORT_GET
-    void OnButtonServoPortGetClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SERVO_PORT_SET
-    void OnButtonServoPortSetClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYGETALL
-    void OnEasygetallClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYSETALL
-    void OnEasysetallClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_EASY_SAVE
-    void OnButtonEasySaveClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_EASY_READ
-    void OnButtonEasyReadClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOCOIO_BOOSTER
-    void OnBoosterClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LN_ADDRESSLIST
-    void OnLnAddresslistDoubleClicked( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_QUEURY_ADDRESSES
-    void OnQueuryAddressesClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_MP_READ
     void OnButtonMpReadClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_MP_WRITE
     void OnButtonMpWriteClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SERVO_PORT_GET
+    void OnButtonServoPortGetClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SERVO_PORT_SET
+    void OnButtonServoPortSetClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
@@ -226,62 +226,9 @@ public:
     wxTextCtrl* m_Version;
     wxStaticText* m_labModConfig;
     wxTextCtrl* m_ModConfig;
-    wxPanel* m_IOPanel;
-    wxStaticText* m_labPort;
-    wxSpinCtrl* m_Port;
-    wxButton* m_PortGet;
-    wxButton* m_PortSet;
-    wxStaticText* m_labPortAddr;
-    wxSpinCtrl* m_PortAddr;
-    wxRadioBox* m_SensorContact;
-    wxRadioBox* m_PortType;
-    wxStaticBox* m_PortSetupBox;
-    wxStaticBox* m_OutputSetupBox;
-    wxCheckBox* m_LowAtStartup;
-    wxCheckBox* m_HardwareReset;
-    wxCheckBox* m_PulseContact;
-    wxCheckBox* m_Flash;
-    wxCheckBox* m_Multi;
-    wxCheckBox* m_BlockDetector;
-    wxStaticBox* m_RegisterBox;
-    wxStaticText* m_labConfig;
-    wxTextCtrl* m_Config;
-    wxTextCtrl* m_ConfigHex;
-    wxStaticText* m_labVal1;
-    wxTextCtrl* m_Val1;
-    wxTextCtrl* m_Val1Hex;
-    wxStaticText* m_labVal2;
-    wxTextCtrl* m_Val2;
-    wxTextCtrl* m_Val2Hex;
-    wxStaticBox* m_SensorSetupBox;
-    wxCheckBox* m_SensorActiveLow;
-    wxCheckBox* m_SensorDelay;
-    wxCheckBox* m_SensorTurnout;
-    wxCheckBox* m_SensorPulse;
-    wxRadioBox* m_SensorMessage;
-    wxRadioBox* m_InputType;
-    wxPanel* m_OPCPanel;
-    wxStaticText* m_labOPCPort;
-    wxSpinCtrl* m_OPCPort;
-    wxButton* m_OPCGet;
-    wxButton* m_OPCSet;
-    wxStaticText* m_labOPC;
-    wxSpinCtrl* m_OPC;
-    wxStaticText* m_labARG1;
-    wxSpinCtrl* m_ARG1;
-    wxStaticText* m_labARG2;
-    wxSpinCtrl* m_ARG2;
-    wxStaticText* m_labServoPort;
-    wxSpinCtrl* m_ServoPort;
-    wxButton* m_ServoPortGet;
-    wxButton* m_ServoPortSet;
-    wxStaticBox* m_ServoBox;
-    wxStaticText* m_labPos1;
-    wxSpinCtrl* m_Pos1;
-    wxStaticText* m_labPos2;
-    wxSpinCtrl* m_Pos2;
-    wxStaticText* m_labV;
-    wxSpinCtrl* m_V;
+    wxPanel* m_AddressesPanel;
+    wxListBox* m_AddressList;
+    wxButton* m_QueryAddresses;
     wxPanel* m_EasyPanel;
     wxStaticText* m_labEasyPort;
     wxStaticText* m_labEasyAddress;
@@ -396,9 +343,51 @@ public:
     wxButton* m_EasySaveAll;
     wxButton* m_EasyReadAll;
     wxCheckBox* m_Booster;
-    wxPanel* m_AddressesPanel;
-    wxListBox* m_AddressList;
-    wxButton* m_QueryAddresses;
+    wxPanel* m_IOPanel;
+    wxStaticText* m_labPort;
+    wxSpinCtrl* m_Port;
+    wxButton* m_PortGet;
+    wxButton* m_PortSet;
+    wxStaticText* m_labPortAddr;
+    wxSpinCtrl* m_PortAddr;
+    wxRadioBox* m_SensorContact;
+    wxRadioBox* m_PortType;
+    wxStaticBox* m_PortSetupBox;
+    wxStaticBox* m_OutputSetupBox;
+    wxCheckBox* m_LowAtStartup;
+    wxCheckBox* m_HardwareReset;
+    wxCheckBox* m_PulseContact;
+    wxCheckBox* m_Flash;
+    wxCheckBox* m_Multi;
+    wxCheckBox* m_BlockDetector;
+    wxStaticBox* m_RegisterBox;
+    wxStaticText* m_labConfig;
+    wxTextCtrl* m_Config;
+    wxTextCtrl* m_ConfigHex;
+    wxStaticText* m_labVal1;
+    wxTextCtrl* m_Val1;
+    wxTextCtrl* m_Val1Hex;
+    wxStaticText* m_labVal2;
+    wxTextCtrl* m_Val2;
+    wxTextCtrl* m_Val2Hex;
+    wxStaticBox* m_SensorSetupBox;
+    wxCheckBox* m_SensorActiveLow;
+    wxCheckBox* m_SensorDelay;
+    wxCheckBox* m_SensorTurnout;
+    wxCheckBox* m_SensorPulse;
+    wxRadioBox* m_SensorMessage;
+    wxRadioBox* m_InputType;
+    wxPanel* m_OPCPanel;
+    wxStaticText* m_labOPCPort;
+    wxSpinCtrl* m_OPCPort;
+    wxButton* m_OPCGet;
+    wxButton* m_OPCSet;
+    wxStaticText* m_labOPC;
+    wxSpinCtrl* m_OPC;
+    wxStaticText* m_labARG1;
+    wxSpinCtrl* m_ARG1;
+    wxStaticText* m_labARG2;
+    wxSpinCtrl* m_ARG2;
     wxPanel* m_MultiPortPanel;
     wxCheckBox* m_MP1;
     wxCheckBox* m_MP2;
@@ -418,6 +407,17 @@ public:
     wxCheckBox* m_MP16;
     wxButton* m_MPRead;
     wxButton* m_MPWrite;
+    wxStaticText* m_labServoPort;
+    wxSpinCtrl* m_ServoPort;
+    wxButton* m_ServoPortGet;
+    wxButton* m_ServoPortSet;
+    wxStaticBox* m_ServoBox;
+    wxStaticText* m_labPos1;
+    wxSpinCtrl* m_Pos1;
+    wxStaticText* m_labPos2;
+    wxSpinCtrl* m_Pos2;
+    wxStaticText* m_labV;
+    wxSpinCtrl* m_V;
     wxButton* m_Cancel;
 ////@end LocoIO member variables
     
