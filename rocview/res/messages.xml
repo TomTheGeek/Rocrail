@@ -12179,7 +12179,4 @@
   <Msg id="size">
     <en txt="size"/>
   </Msg>
-  <Msg id="schedule2go">
-    <en txt="Run with schedule"/>
-  </Msg>
 </Messages>
