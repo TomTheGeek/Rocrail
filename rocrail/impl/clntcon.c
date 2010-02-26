@@ -316,6 +316,7 @@ static void __cmdReader( void* threadinst ) {
   StrOp.free( sname );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server ended." );
+  XmlhOp.base.del( xmlh );
   ThreadOp.base.del( th );
 }
 
