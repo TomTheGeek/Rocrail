@@ -134,9 +134,7 @@ enum {
     ME_TT180,
     ME_TTTrack, // Should be the last one in the enum list
                // because ME_TTTrack+0...ME_TTTrack+47 are also used!!!.
-
-    // 200 might be enough
-    ME_ScheduleGo = 200
+    ME_ScheduleGo = ME_TTTrack + 48
 };
 
 BEGIN_EVENT_TABLE(Symbol, wxWindow)
