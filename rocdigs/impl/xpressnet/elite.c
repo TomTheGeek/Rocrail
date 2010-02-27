@@ -74,7 +74,7 @@ int eliteRead(obj xpressnet, byte* in, Boolean* rspreceived) {
   return len;
 }
 
-Boolean eliteWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
+Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   /* when sending to elite we have to correct for elite (version 1.3) addressing fault
      address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
      address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
@@ -103,5 +103,18 @@ Boolean eliteWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
 
 
 
-  return li101Write(xpressnet, buffer, rspexpected);
+  Boolean rc =  li101Write(xpressnet, out, rspexpected);
+
+  if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
+    *rspexpected = False;
+  }
+  if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
+    *rspexpected = False;
+  }
+  if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
+    *rspexpected = False;
+  }
+
+  return rc;
+
 }
