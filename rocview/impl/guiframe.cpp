@@ -843,7 +843,9 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   */
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
 
-  initLocCtrlDialogs();
+  if( wGui.isrestorelcctrl(m_Ini) ) {
+    initLocCtrlDialogs();
+  }
   m_CV->init();
 
 }

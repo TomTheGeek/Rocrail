@@ -88,6 +88,7 @@
     <var name="donkey" vt="string" defval=""/>
     <var name="doneml" vt="string" defval=""/>
     <trace extern="true"/>
+    <var name="restorelcctrl" vt="bool" defval="true"/>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>
       <var name="port" vt="int" defval="62842"/>

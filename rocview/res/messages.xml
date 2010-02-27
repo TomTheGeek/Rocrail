@@ -12179,4 +12179,7 @@
   <Msg id="size">
     <en txt="size"/>
   </Msg>
+  <Msg id="restore">
+    <en txt="Restore"/>
+  </Msg>
 </Messages>

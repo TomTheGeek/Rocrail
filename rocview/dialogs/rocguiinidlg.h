@@ -161,6 +161,7 @@ public:
     wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_DispatchMode;
+    wxCheckBox* m_RestoreLcCtrl;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
