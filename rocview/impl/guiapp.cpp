@@ -1046,6 +1046,7 @@ void RocGui::cleanupOldModel() {
   if( m_OldModel != NULL ) {
     // Delete the old model node:
     m_OldModel->base.del( m_OldModel );
+    m_OldModel = NULL;
   }
 }
 
