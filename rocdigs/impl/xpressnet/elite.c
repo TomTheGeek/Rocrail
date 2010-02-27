@@ -75,35 +75,40 @@ int eliteRead(obj xpressnet, byte* in, Boolean* rspreceived) {
 }
 
 Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
+  Boolean rc = False;
+  byte b1 = 0;
+  byte b2 = 0;
+
+
   /* when sending to elite we have to correct for elite (version 1.3) addressing fault
      address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
      address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
    */
-  /* TODO:
-  if (data->elite) {
+
+  /* add port hack */
+  if( out[0] == 0x52 ) {
+    int port = (out[2] >> 1) & 0x03;
+    int addr = out[1];
+    b1 = out[1];
+    b2 = out[2];
     port++;
-    if (port > 4) {
-      port =1;
+    if( port > 3 ) {
+      port = 0;
       addr++;
+      out[1] = addr;
+      out[2] = out[2] & 0xF6;
+      out[2] |= (port << 1);
     }
   }
-  */
-  /* command has been sent, in case of elite undo the correction
-     to get address, port and gate right again */
-  /*
-    if (data->elite) {
-      port--;
-      if (port < 0) {
-        port = 3;
-        addr--;
-      }
-    }
 
-  */
+  rc =  li101Write(xpressnet, out, rspexpected);
 
+  /* remove port hack */
+  if( out[0] == 0x52 ) {
+    out[1] = b1;
+    out[2] = b2;
+  }
 
-
-  Boolean rc =  li101Write(xpressnet, out, rspexpected);
 
   if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
     *rspexpected = False;
