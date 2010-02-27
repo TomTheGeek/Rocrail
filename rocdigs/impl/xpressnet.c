@@ -1012,7 +1012,7 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
         rspReceived = True;
       }
-      else {
+      else if (!rspReceived) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check byte dump:");
         TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
