@@ -827,6 +827,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   if( firstset && firstid!=NULL && selectedLoc != NULL ) {
     m_LocID = StrOp.dup(firstid);
     m_LC->setLocProps(selectedLoc);
+    m_CV->setLocProps(selectedLoc);
 
 
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_LOC_IMAGE_EVENT );
@@ -3176,6 +3177,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     }
 
     m_LC->setLocProps( lc );
+    m_CV->setLocProps( lc );
 
     if( lc != NULL ) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_LOC_IMAGE_EVENT );

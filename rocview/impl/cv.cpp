@@ -207,6 +207,7 @@ void CV::setLocProps( iONode props ) {
   if( props != NULL ) {
     m_LocProps = props;
     m_saveAllCVs->Enable(true);
+    m_LcList->SetStringSelection(wxString(wLoc.getid(props),wxConvUTF8));
 
     char* str = StrOp.fmt( "%d", wLoc.getaddr( m_LocProps ) );
     if( wLoc.getaddr( m_LocProps ) < 128 ) {
