@@ -44,6 +44,7 @@
     <const name="info" vt="string" val="-info" defval="true" remark="Activates info tracelevel."/>
     <const name="stress" vt="string" val="-stress" defval="true" remark="Activates network stress runner."/>
     <const name="modplan" vt="string" val="-modplan" defval="true" remark="Create modplan."/>
+    <const name="run" vt="string" val="-run" defval="true" remark="Power on, enable automode and run."/>
   </Cmdline>
 
   <ConCmd title="Console commands:" createwrapper="true" remark="Commands are listed in column --Default--.">

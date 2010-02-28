@@ -52,6 +52,7 @@
     <fun name="getImgPath" vt="const char*" remark="Path to images."/>
     <fun name="getrevno" vt="int"/>
     <fun name="isCreateModplan" vt="Boolean"/>
+    <fun name="isRunAtStartup" vt="Boolean"/>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>
@@ -68,6 +69,7 @@
       <var name="stress" vt="Boolean"/>
       <var name="createmodplan" vt="Boolean"/>
       <var name="revno" vt="int"/>
+      <var name="run" vt="Boolean"/>
     </data>
   </object>
 

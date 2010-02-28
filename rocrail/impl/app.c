@@ -199,6 +199,15 @@ static Boolean _isCreateModplan( void ) {
 }
 
 
+static Boolean _isRunAtStartup( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    data->run;
+  }
+  return False;
+}
+
+
 static iONode _getNewIni( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);
@@ -480,6 +489,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   Boolean       lcd   = CmdLnOp.hasKey( arg, wCmdline.lcd );
 
 
+  data->run           = CmdLnOp.hasKey( arg, wCmdline.run );
   data->stress        = CmdLnOp.hasKey( arg, wCmdline.stress );
   data->createmodplan = CmdLnOp.hasKey( arg, wCmdline.modplan );
   data->szLibPath     = CmdLnOp.getStr( arg, wCmdline.libpath );
