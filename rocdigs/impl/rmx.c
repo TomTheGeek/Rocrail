@@ -209,6 +209,16 @@ static iOSlot __getSlotByAddr(iORmxData data, int addr) {
 }
 
 
+static int __normalizeSteps(int insteps ) {
+  /* SPEEDSTEPS: vaild: 14, 28, 126 */
+  if( insteps < 20 )
+    return 14;
+  if( insteps > 100 )
+    return 126;
+  return 28;
+}
+
+
 static iOSlot __getSlot(iORmxData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -231,6 +241,27 @@ static iOSlot __getSlot(iORmxData data, iONode node) {
     sx1 = True;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sx1, steps=%d, fncnt=%d", steps, fncnt );
+  }
+  else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) || StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
+    steps = __normalizeSteps(wLoc.getspcnt(node));
+    if( wLoc.getaddr(node) > 127 ) {
+      if( steps == 14 )
+        cmd[6] = 10;
+      else if( steps == 28 )
+        cmd[6] = 13;
+      else
+        cmd[6] = 16;
+    }
+    else {
+      if( steps == 14 )
+        cmd[6] = 9;
+      else if( steps == 28 )
+        cmd[6] = 12;
+      else
+        cmd[6] = 15;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC, steps=%d, fncnt=%d", steps, fncnt );
   }
   /* default SX2 */
   else {
