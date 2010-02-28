@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/Tcp.h"
 #include "rocrail/wrapper/public/Trace.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/SvnLog.h"
 #include "rocrail/wrapper/public/SvnLogEntry.h"
@@ -740,6 +741,24 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   /* update the feedback arrays */
   ModelOp.updateFB( data->model );
 
+  /* run every thing at startup */
+  if( data->run ) {
+    iONode cmd = NULL;
+    clntcon_callback pfun = ControlOp.getCallback(data->control);
+
+    /* power on */
+    AppOp.go();
+
+    /* auto mode on */
+    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+    wAutoCmd.setcmd( cmd, wAutoCmd.on );
+    pfun( (obj)AppOp.getControl(), cmd );
+
+    /* start all */
+    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+    wAutoCmd.setcmd( cmd, wAutoCmd.start );
+    pfun( (obj)AppOp.getControl(), cmd );
+  }
 
   /* Memory watcher */
   while( !bShutdown ) {
