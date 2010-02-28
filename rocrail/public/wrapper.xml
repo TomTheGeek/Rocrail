@@ -280,6 +280,7 @@
       <const name="sublib_lenz_opendcc" vt="string" val="opendcc"/>
       <const name="sublib_lenz_atlas" vt="string" val="atlas"/>
       <const name="sublib_lenz_xntcp" vt="string" val="xntcp"/>
+      <const name="sublib_lenz_cttran" vt="string" val="cttran"/>
       <var name="sublib" vt="string" defval="default"/>
 
       <!-- Serial connection: Fixed for most interfaces and controllers -->

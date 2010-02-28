@@ -116,6 +116,8 @@ void LenzDlg::initValues() {
     m_Type->SetSelection(3);
   else if( StrOp.equals( wDigInt.sublib_lenz_xntcp, wDigInt.getsublib(m_Props) ))
     m_Type->SetSelection(4);
+  else if( StrOp.equals( wDigInt.sublib_lenz_cttran, wDigInt.getsublib(m_Props) ))
+    m_Type->SetSelection(5);
   else
     m_Type->SetSelection(0);
 
@@ -164,6 +166,8 @@ void LenzDlg::evaluate() {
     wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_opendcc );
   else if( m_Type->GetSelection() == 4 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_xntcp );
+  else if( m_Type->GetSelection() == 5 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_cttran );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_default );
 
@@ -325,6 +329,7 @@ void LenzDlg::CreateControls()
     m_TypeStrings.Add(_("&Elite"));
     m_TypeStrings.Add(_("&OpenDCC"));
     m_TypeStrings.Add(_("&XnTcp"));
+    m_TypeStrings.Add(_("&CtTran"));
     m_Type = new wxRadioBox( m_MainPanel, ID_LENZTYPE, _("SubType"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_Type->SetSelection(0);
     itemBoxSizer17->Add(m_Type, 0, wxGROW|wxALL, 5);

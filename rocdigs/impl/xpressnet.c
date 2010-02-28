@@ -26,6 +26,7 @@
 #include "rocdigs/impl/xpressnet/opendcc.h"
 #include "rocdigs/impl/xpressnet/atlas.h"
 #include "rocdigs/impl/xpressnet/xntcp.h"
+#include "rocdigs/impl/xpressnet/cttran.h"
 #include "rocdigs/impl/xpressnet/common.h"
 
 #include "rocs/public/mem.h"
@@ -1209,6 +1210,15 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite   = xntcpWrite;
     data->subDisConn = xntcpDisConnect;
     data->subAvail   = xntcpAvail;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_cttran, wDigInt.getsublib( ini ) ) ) {
+    /* Ct Tran */
+    data->subConnect = cttranConnect;
+    data->subInit    = cttranInit;
+    data->subRead    = cttranRead;
+    data->subWrite   = cttranWrite;
+    data->subDisConn = cttranDisConnect;
+    data->subAvail   = cttranAvail;
   }
   else {
     /* default LI101 */
