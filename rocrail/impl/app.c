@@ -348,6 +348,7 @@ static __help( void ) {
   TraceOp.println( "-------------------------+--------------------------------------------"  );
   TraceOp.println( "-console                 | Read console input." );
   TraceOp.println( "-nocom                   | Switch off communication." );
+  TraceOp.println( "-run                     | Power ON, enable auto mode and start all locos." );
   TraceOp.println( "-w [workdir]             | Change the programs working directory." );
   TraceOp.println( "-l [libdir]              | Library directory." );
   TraceOp.println( "-img [imgdir]            | Images directory." );
