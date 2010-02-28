@@ -196,6 +196,19 @@ static void __updateFB( iORmxData data, iONode fbInfo ) {
 
 
 
+static iOSlot __getSlotByAddr(iORmxData data, int addr) {
+  int i = 0;
+  iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
+  while( slot != NULL ) {
+    if( slot->addr == addr )
+      return slot;
+    slot = (iOSlot)MapOp.next( data->lcmap );
+  };
+
+  return NULL;
+}
+
+
 static iOSlot __getSlot(iORmxData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -291,15 +304,47 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     /* reset pin to 0: */
     out[5] = data->swstate[bus][addr] & mask;
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
-      out[2] |= pin;
+      out[5] |= pin;
     /* save new state: */
-    data->swstate[bus][addr] = out[2];
+    data->swstate[bus][addr] = out[5];
 
     *opcode = OPC_OK;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "switch addr %d, port %d, cmd %s", addr, wSwitch.getport1( node ), wSwitch.getcmd( node ) );
     return 7;
   }
+
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int bus  = wOutput.getbus( node ) & 0x01;
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    byte pin = 0x01 << ( port - 1 );
+    byte mask = ~pin;
+
+    out[0] = PCKT;
+    out[1] = 6;
+    out[2] = OPC_WRITESX;
+    out[3] = bus;
+    out[4] = addr;
+    out[5] = 0x01 << ( port - 1 );
+    /* reset pin to 0: */
+    out[5] = data->swstate[bus][addr] & mask;
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.on ) )
+      out[5] |= pin;
+    /* save new state: */
+    data->swstate[bus][addr] = out[5];
+
+    *opcode = OPC_OK;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "switch addr %d, port %d, cmd %s", addr, wSwitch.getport1( node ), wSwitch.getcmd( node ) );
+    return 7;
+  }
+
+
+
 
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
@@ -361,6 +406,48 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     out[3] = slot->index;
     out[4] = speed + (dir?0x00:0x80);
     out[5] = (dir?0x00:0x01);
+    return 7;
+
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    Boolean f0  = False;
+    Boolean f1  = wFunCmd.isf1 ( node );
+    Boolean f2  = wFunCmd.isf2 ( node );
+    Boolean f3  = wFunCmd.isf3 ( node );
+    Boolean f4  = wFunCmd.isf4 ( node );
+    Boolean f5  = wFunCmd.isf5 ( node );
+    Boolean f6  = wFunCmd.isf6 ( node );
+    Boolean f7  = wFunCmd.isf7 ( node );
+    Boolean f8  = wFunCmd.isf8 ( node );
+    Boolean f9  = wFunCmd.isf9 ( node );
+    Boolean f10 = wFunCmd.isf10( node );
+    Boolean f11 = wFunCmd.isf11( node );
+    Boolean f12 = wFunCmd.isf12( node );
+    Boolean f13 = wFunCmd.isf13( node );
+    Boolean f14 = wFunCmd.isf14( node );
+    Boolean f15 = wFunCmd.isf15( node );
+    Boolean f16 = wFunCmd.isf16( node );
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function command for %s", wLoc.getid(node) );
+
+    f0 = slot->lights;
+
+    out[0] = PCKT;
+    out[1] = 0x08;
+    out[2] = OPC_LOCOF;
+    out[3] = slot->index;
+    out[4] = (f0 << 0 | f1 << 1 | f2 << 2 | f3 << 3 | f4 << 4 | f5 << 5 | f6 << 6 | f7 << 7);
+    out[5] = (f8 << 0 | f9 << 1 | f10 << 2 | f11 << 3 | f12 << 4 | f13 << 5 | f14 << 6 | f15 << 7);
+    out[6] = (f16 << 0);
     return 7;
 
   }
@@ -450,6 +537,42 @@ static void __evaluateSX(iORmxData data, byte* in) {
 }
 
 
+static void __evaluateRMX(iORmxData data, byte* in) {
+  int addr = in[3] * 256 + in[4];
+  int index = in[5];
+  if( index == 0 ) {
+    iOSlot slot = __getSlotByAddr(data, addr);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s with address %d has been purged", slot!=NULL?slot->id:"unknown loco", addr );
+    if( slot != NULL ) {
+      if( MutexOp.wait( data->lcmux ) ) {
+        MapOp.remove(data->lcmap, slot->id );
+        freeMem(slot);
+        MutexOp.post(data->lcmux);
+      }
+    }
+  }
+}
+
+
+static void __evaluateStatus(iORmxData data, byte* in) {
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+  byte status = in[3];
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Monitoring bus 0 is %s", status & 0x20 ? "ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Monitoring bus 1 is %s", status & 0x40 ? "ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Track power is %s", status & 0x80 ? "ON":"OFF" );
+
+  if( data->iid != NULL )
+    wState.setiid( node, data->iid );
+  wState.setpower( node, status & 0x80 ? True:False );
+  wState.settrackbus( node, status & 0x80 ? True:False );
+  wState.setsensorbus( node, status & 0x60 ? True:False );
+  wState.setaccessorybus( node, status & 0x80 ? True:False );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
 static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, int insize, byte opcode ) {
   switch(in[2]) {
   case OPC_OK: /* 0x00 */
@@ -460,6 +583,7 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
     break;
   case OPC_STATUS: /* 0x04 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Status" );
+    __evaluateStatus(data, in);
     break;
   case OPC_READSX: /* 0x06 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX value" );
@@ -470,6 +594,7 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
     break;
   case OPC_RMXCHANEL: /* 0x20 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RMX chanel" );
+    __evaluateRMX(data, in);
     break;
   case OPC_LOCOV: /* 0x24 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco velocity" );
