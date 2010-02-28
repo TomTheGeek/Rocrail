@@ -149,11 +149,8 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
     /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
     if( data->curBlock->isTerminalStation( data->curBlock ) ) {
-      /* BUG: 367452 only swap after the IN block event! */
-      if( data->swapBlock != data->curBlock ) {
-        data->loc->swapPlacing( data->loc, NULL, False );
-        data->swapBlock = data->curBlock;
-      }
+      /* only swap after the IN block event! */
+      data->loc->swapPlacing( data->loc, NULL, False );
     }
 
   }

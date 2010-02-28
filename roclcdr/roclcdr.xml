@@ -47,7 +47,6 @@
       <var name="direction" vt="lc_direction"/>
       <var name="prevBlock" vt="iIBlockBase"/>
       <var name="curBlock" vt="iIBlockBase"/>
-      <var name="swapBlock" vt="iIBlockBase"/>
       <var name="next1Block" vt="iIBlockBase"/>
       <var name="next2Block" vt="iIBlockBase"/>
       <var name="next3Block" vt="iIBlockBase"/>
