@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
@@ -285,6 +286,18 @@ static Boolean _go( iORoute inst ) {
           SignalOp.yellow(isg);
         else if( StrOp.equals( wSignal.white, swCmd ) )
           SignalOp.white(isg);
+      }
+    }
+    else if( StrOp.equals( wOutput.on   , swCmd ) ||
+             StrOp.equals( wOutput.off , swCmd ) )
+    {
+      iOOutput ico = ModelOp.getOutput( model, swId );
+
+      if( ico != NULL ) {
+        if( StrOp.equals( wOutput.on, swCmd ) )
+          OutputOp.on(ico);
+        else
+          OutputOp.off(ico);
       }
     }
     else {
