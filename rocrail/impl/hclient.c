@@ -136,7 +136,7 @@ static void __httpHeader( iOSocket s ) {
 static void __header( iOSocket s, int refresh ) {
   SocketOp.fmt( s, "HTTP/1.0 200 OK\r\n" );
   SocketOp.fmt( s, "Content-type: text/html\r\n\r\n" );
-  SocketOp.fmt( s, "<html><head><title>RocRail HTTP Service </title>\n" );
+  SocketOp.fmt( s, "<html><head><title>Rocrail HTTP Service </title>\n" );
   SocketOp.fmt( s, "<link href=\"rocrail.gif\" rel=\"shortcut icon\">\n" );
   if( refresh > 0 )
     SocketOp.fmt( s, "<META CONTENT=\"%d\" HTTP-EQUIV=\"refresh\">\n", refresh );
@@ -144,7 +144,7 @@ static void __header( iOSocket s, int refresh ) {
 }
 
 static void __footer( iOSocket s ) {
-  SocketOp.fmt( s, "<br><a href=\"/\">RocRail</a><br>\n" );
+  SocketOp.fmt( s, "<br><a href=\"/\">Rocrail</a><br>\n" );
   SocketOp.fmt( s, "<a href=\"mailto:support@rocrail.net\">support@rocrail.net</a>\n" );
   SocketOp.fmt( s, "</body></html>\n" );
 }
@@ -251,11 +251,13 @@ static void __getHome( iOHClient inst ) {
     iOHClientData data = Data(inst);
     __header( data->socket, data->refresh );
 
-    SocketOp.fmt( data->socket, "<h2><a href=\"http://www.rocrail.net\">%s</a> %d.%d.%d (%s)</h2>",
+    SocketOp.fmt( data->socket, "<h2><a href=\"http://www.rocrail.net\">%s</a> %d.%d.%d-%d %s (%s)</h2>",
              wGlobal.productname,
              wGlobal.vmajor,
              wGlobal.vminor,
              wGlobal.patch,
+             AppOp.getrevno(),
+             wGlobal.releasename,
              TraceOp.getOS() );
 
     SocketOp.fmt( data->socket, "<table cellpadding=\"4\">\n" );
@@ -331,7 +333,7 @@ static void __getHome( iOHClient inst ) {
     SocketOp.fmt( data->socket, "<ul>\n" );
     SocketOp.fmt( data->socket, "<li><a title=\"Shows parsed ini as XML string.\" href=\"ini\">%s</a></li>\n",
                                 AppOp.getIniFile() );
-    SocketOp.fmt( data->socket, "<li><a href=\"rocrail_doc\">RocRail</a></li>\n" );
+    SocketOp.fmt( data->socket, "<li><a href=\"rocrail_doc\">Rocrail</a></li>\n" );
     SocketOp.fmt( data->socket, "</ul>\n" );
 
     SocketOp.fmt( data->socket, "</td></tr>\n" );
@@ -622,7 +624,7 @@ static void __getShutdown( iOHClient inst ) {
     __header( data->socket, data->refresh );
 
     SocketOp.fmt( data->socket, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"10\"><tr><td>\n" );
-    SocketOp.fmt( data->socket, "<b>Are you sure you want to shutdown RocRail?</b>\n" );
+    SocketOp.fmt( data->socket, "<b>Are you sure you want to shutdown Rocrail?</b>\n" );
     SocketOp.fmt( data->socket, "<br><small>(Does not work in console mode!)</small>\n" );
     SocketOp.fmt( data->socket, "</td></tr></table>\n" );
 
@@ -654,7 +656,7 @@ static void __getBlank( iOHClient inst ) {
   if( inst != NULL ) {
     iOHClientData data = Data(inst);
     __header( data->socket, data->refresh );
-    SocketOp.fmt( data->socket, "<a href=\"/\">RocRail</a><br>\n" );
+    SocketOp.fmt( data->socket, "<a href=\"/\">Rocrail</a><br>\n" );
     __footer( data->socket );
   }
   else { /* NULL */
