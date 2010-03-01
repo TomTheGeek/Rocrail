@@ -349,6 +349,7 @@ static __help( void ) {
   TraceOp.println( "-console                 | Read console input." );
   TraceOp.println( "-nocom                   | Switch off communication." );
   TraceOp.println( "-run                     | Power ON, enable auto mode and start all locos." );
+  TraceOp.println( "-resume                  | Power ON, enable auto mode and start prev. locos." );
   TraceOp.println( "-w [workdir]             | Change the programs working directory." );
   TraceOp.println( "-l [libdir]              | Library directory." );
   TraceOp.println( "-img [imgdir]            | Images directory." );
@@ -491,6 +492,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   Boolean       lcd   = CmdLnOp.hasKey( arg, wCmdline.lcd );
 
 
+  Boolean resume      = CmdLnOp.hasKey( arg, wCmdline.resume );
   data->run           = CmdLnOp.hasKey( arg, wCmdline.run );
   data->stress        = CmdLnOp.hasKey( arg, wCmdline.stress );
   data->createmodplan = CmdLnOp.hasKey( arg, wCmdline.modplan );
@@ -743,7 +745,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   ModelOp.updateFB( data->model );
 
   /* run every thing at startup */
-  if( data->run ) {
+  if( data->run || resume ) {
     iONode cmd = NULL;
     clntcon_callback pfun = ControlOp.getCallback(data->control);
 
@@ -757,7 +759,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
     /* start all */
     cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
-    wAutoCmd.setcmd( cmd, wAutoCmd.start );
+    wAutoCmd.setcmd( cmd, resume? wAutoCmd.resume:wAutoCmd.start );
     pfun( (obj)AppOp.getControl(), cmd );
   }
 
