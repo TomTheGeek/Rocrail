@@ -79,6 +79,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
   /* reset schedule index */
   data->scheduleIdx = 0;
   data->prewaitScheduleIdx = -1;
+  data->scheduleCycle++;
 
   if( data->schedule != NULL ) {
     iONode sc = data->model->getSchedule( data->model, data->schedule );
@@ -86,7 +87,8 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
 
     if( sc != NULL ) {
       const char* scaction = wSchedule.getscaction(sc);
-      iONode actionctrl = wSchedule.getactionctrl(sc);
+      int           cycles = wSchedule.getcycles(sc);
+      iONode    actionctrl = wSchedule.getactionctrl(sc);
 
       while( actionctrl != NULL ) {
         iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
@@ -101,6 +103,16 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hourly schedule is recycled", scaction );
         /* set the schedule start time: */
         data->scheduletime = data->model->getTime( data->model );
+        data->scheduleCycle = 0;
+
+        if( state == LC_FINDDEST )
+          data->next1Block = NULL;
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
+        resetNext2( (iOLcDriver)inst, True );
+      }
+      else if( cycles > 0 && data->scheduleCycle < cycles ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next schedule cycle[%d] of %d activated", data->scheduleCycle, cycles );
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
 
@@ -112,6 +124,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next schedule [%s] activated", scaction );
         /* set the schedule start time: */
         data->scheduletime = data->model->getTime( data->model );
+        data->scheduleCycle = 0;
         data->schedule = scaction;
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
@@ -122,6 +135,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no new schedule" );
         data->schedule = NULL;
+        data->scheduleCycle = 0;
         if( state == LC_FINDDEST )
           data->next1Block = NULL;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
@@ -132,6 +146,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
     }
     else {
       data->schedule = NULL;
+      data->scheduleCycle = 0;
       if( state == LC_FINDDEST )
         data->next1Block = NULL;
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );

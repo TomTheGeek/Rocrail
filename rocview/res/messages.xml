@@ -12182,4 +12182,7 @@
   <Msg id="restore">
     <en txt="Restore"/>
   </Msg>
+  <Msg id="recycle">
+    <en txt="Recycle"/>
+  </Msg>
 </Messages>

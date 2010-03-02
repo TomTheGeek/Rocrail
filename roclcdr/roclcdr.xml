@@ -70,6 +70,7 @@
       <var name="gotoBlock" vt="const char*"/>
       <var name="schedule" vt="const char*"/>
       <var name="scheduleIdx" vt="int"/>
+      <var name="scheduleCycle" vt="int"/>
       <var name="prewaitScheduleIdx" vt="int"/>
       <var name="scheduletime" vt="long"/>
       <var name="V_hint[32]" vt="char"/>

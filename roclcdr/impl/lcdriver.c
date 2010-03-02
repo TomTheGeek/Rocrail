@@ -466,6 +466,7 @@ static void _useschedule( iILcDriverInt inst, const char* scheduleid ) {
   iOLcDriverData data = Data(inst);
   data->schedule = scheduleid;
   data->scheduleIdx = 0;
+  data->scheduleCycle = 0;
   data->prewaitScheduleIdx = -1;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                  "use schedule \"%s\" for \"%s\"...",
