@@ -984,7 +984,6 @@ static void __handleLoco(iOP50x p50x, byte* status) {
 
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)status, 5 );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr=%d spd=%d", addr, status[0] );
   /* inform listener: Node3 */
   nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   if( data->iid != NULL )
@@ -996,6 +995,8 @@ static void __handleLoco(iOP50x p50x, byte* status) {
   wLoc.setdir( nodeC, (status[3] & 0x80) ? True:False );
   wLoc.setthrottleid( nodeC, "p50x" );
   wLoc.setcmd( nodeC, wLoc.direction );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr=%d V_raw=%d dir=%s fn=%s [%02X]",
+      addr, status[0], wLoc.isdir(nodeC)?"fwd":"rev", wLoc.isfn(nodeC)?"on":"off", status[3] );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
   nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
