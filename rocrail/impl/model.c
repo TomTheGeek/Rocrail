@@ -110,6 +110,10 @@
 
 static int instCnt = 0;
 
+
+static Boolean __removeLoco(iOModelData o, iONode item );
+
+
 /*
  ***** OBase functions.
  */
@@ -1181,17 +1185,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     }
   }
   else if( StrOp.equals( wLoc.name(), name ) ) {
-    iOLoc lc = (iOLoc)MapOp.get( o->locMap, wLoc.getid( item ) );
-    if( lc != NULL ) {
-      iONode props = LocOp.base.properties( lc );
-      ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
-      MapOp.remove( o->locMap, wLoc.getid( item ) );
-      /* Remove item from list: */
-      __removeItemFromList( o, wLocList.name(), props );
-      lc->base.del( lc );
-      props->base.del( props );
-      removed = True;
-    }
+    removed = __removeLoco(o, item);
   }
   else if( StrOp.equals( wCar.name(), name ) ) {
     iOCar car = (iOCar)MapOp.get( o->carMap, wCar.getid( item ) );
@@ -1711,6 +1705,24 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "createMap: %s NOT found.", dbKey );
 }
 
+
+
+static Boolean __removeLoco(iOModelData o, iONode item ) {
+  iOLoc lc = (iOLoc)MapOp.get( o->locMap, wLoc.getid( item ) );
+  if( lc != NULL ) {
+    iONode props = LocOp.base.properties( lc );
+    ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
+    MapOp.remove( o->locMap, wLoc.getid( item ) );
+    /* Remove item from list: */
+    __removeItemFromList( o, wLocList.name(), props );
+    lc->base.del( lc );
+    props->base.del( props );
+    return True;
+  }
+  return False;
+}
+
+
 static void _removeGenerated( iOModelData o, const char* dbKey, const char* itemKey ) {
   iONode db = NodeOp.findNode( o->model, dbKey );
   if( db != NULL ) {
@@ -1720,8 +1732,14 @@ static void _removeGenerated( iOModelData o, const char* dbKey, const char* item
       iONode nextitem = NodeOp.findNextNode( db, item );
       if( wItem.isgenerated(item) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing: %s", wItem.getid(item) );
-        NodeOp.removeChild( db, item );
-        NodeOp.base.del( item );
+        if(StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
+          __removeLoco(o, item);
+        }
+        else {
+          /* TODO: if used for other objects than locos */
+          NodeOp.removeChild( db, item );
+          NodeOp.base.del( item );
+        }
       }
       item = nextitem;
     }
