@@ -85,13 +85,14 @@ Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   unsigned char out[256];
 
   if( data->dummyio )
-    return 0;
+    return True;
 
   *rspexpected = 1; /* LIUSB or CS will confirm every command */
 
   len = makeChecksum(outin);
 
   if( len == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-USB" );
     return False;
   }
 
@@ -105,10 +106,7 @@ Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   if( MutexOp.wait( data->serialmux ) ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "writing bytes to LI-USB" );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-    if( !data->dummyio ) {
-      rc = SerialOp.write( data->serial, (char*)out, len );
-    }
-
+    rc = SerialOp.write( data->serial, (char*)out, len );
     MutexOp.post( data->serialmux );
   }
 
