@@ -611,7 +611,8 @@ bool RocGui::OnInit() {
   if( wTrace.isparse( trace ) || parse )
     TraceOp.setLevel( m_Trace, (tracelevel)(TraceOp.getLevel( m_Trace ) | TRCLEVEL_PARSE) );
 
-  TraceOp.setFilename( m_Trace, tf?tf:wTrace.getgfile( trace ) );
+  if( tf == NULL )
+    TraceOp.setFilename( m_Trace, wTrace.getgfile( trace ) );
 
   /* Logo. */
   TraceOp.println( "--------------------------------------------------" );
@@ -623,7 +624,7 @@ bool RocGui::OnInit() {
   TraceOp.println( " rrr     ooo ooo ccc    rrr     aaa aaa iii lll   " );
   TraceOp.println( " rrr      ooooo   ccccc rrr      aaaaaa iii  lll  " );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " Copyright (c) 2002-2008 Rob Versluis"              );
+  TraceOp.println( " Copyright (c) Rob Versluis"                        );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
   TraceOp.println( " License: GNU GPL 2"                                );
