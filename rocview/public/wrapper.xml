@@ -99,6 +99,8 @@
       <var name="red" vt="int" defval="0"/>
       <var name="green" vt="int" defval="0"/>
       <var name="blue" vt="int" defval="0"/>
+      <var name="cx" vt="int" defval="128"/>
+      <var name="cy" vt="int" defval="96"/>
     </modpanel>
     <planpanel wrappername="PlanPanel">
       <var name="scale" vt="float" defval="0.5"/>

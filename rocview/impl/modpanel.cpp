@@ -78,7 +78,9 @@ ModPanel::ModPanel(wxWindow *parent, int itemsize, double scale )
   SetBackgroundColour( *wxWHITE );
 
   // TODO: resize virtual size after every module add
-  SetVirtualSize( (int)(m_ItemSize*m_Scale*128), (int)(m_ItemSize*m_Scale*96) );
+  iONode ini = wGui.getmodpanel( wxGetApp().getIni() );
+  TraceOp.trc( "modpanel", TRCLEVEL_INFO, __LINE__, 9999, "modpanel cx=%d cy=%d", wModPanel.getcx(ini), wModPanel.getcy(ini) );
+  SetVirtualSize( (int)(m_ItemSize*m_Scale * wModPanel.getcx(ini)), (int)(m_ItemSize*m_Scale * wModPanel.getcy(ini)) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
 }
 

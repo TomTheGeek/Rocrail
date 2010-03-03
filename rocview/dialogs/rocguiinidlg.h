@@ -180,6 +180,11 @@ public:
     wxSpinCtrl* m_CX;
     wxStaticText* m_labCY;
     wxSpinCtrl* m_CY;
+    wxStaticBox* m_labModPlanSize;
+    wxStaticText* m_labCXMod;
+    wxSpinCtrl* m_CXMod;
+    wxStaticText* m_labCYMod;
+    wxSpinCtrl* m_CYMod;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;
