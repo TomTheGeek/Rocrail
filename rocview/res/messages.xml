@@ -76,6 +76,9 @@
   <Msg id="lang_nb">
     <all txt="Bokmål" tip="Norwegian"/>
   </Msg>
+  <Msg id="lang_zh_TW">
+    <all txt="汉语" tip="Chinese"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Neustart zum Ändern der Sprache"/>
@@ -93,6 +96,7 @@
     <cs txt="Restartujte pro změnu jazyka"/>
     <nb txt="Omstart for å skifte språk."/>
     <pl txt="Uruchom ponownie aby zmienić język."/>
+    <zh_TW txt="重新啟動以更改語言"/>
   </Msg>
   <Msg id="cancel">
     <de txt="Abbrechen" tip="Dialog beenden."/>
@@ -114,6 +118,7 @@
     <pt txt="Cancelar"/>
     <nb txt="Avbryt"/>
     <pl txt="Anuluj"/>
+    <zh_TW txt="取消"/>
   </Msg>
   <Msg id="on">
     <de txt="ein"/>
@@ -135,6 +140,7 @@
     <pt txt="ligado"/>
     <nb txt="på"/>
     <pl txt="wł"/>
+    <zh_TW txt="開啟"/>
   </Msg>
   <Msg id="off">
     <de txt="Aus"/>
@@ -156,6 +162,7 @@
     <pt txt="desligado"/>
     <nb txt="av"/>
     <pl txt="wył"/>
+    <zh_TW txt="關閉"/>
   </Msg>
   <Msg id="ok">
     <de txt="OK"/>
@@ -177,6 +184,7 @@
     <pt txt="OK"/>
     <nb txt="OK"/>
     <pl txt="OK"/>
+    <zh_TW txt="ОК"/>
   </Msg>
   <Msg id="no">
     <de txt="nein"/>
@@ -198,6 +206,7 @@
     <pt txt="Não"/>
     <nb txt="nei"/>
     <pl txt="nie"/>
+    <zh_TW txt="否"/>
   </Msg>
   <Msg id="yes">
     <de txt="ja"/>
@@ -219,6 +228,7 @@
     <pt txt="sim"/>
     <nb txt="ja"/>
     <pl txt="tak"/>
+    <zh_TW txt="確定"/>
   </Msg>
   <Msg id="only">
     <de txt="nur"/>
@@ -240,6 +250,7 @@
     <bs txt="samo"/>
     <nb txt="kun"/>
     <pl txt="tylko"/>
+    <zh_TW txt="僅"/>
   </Msg>
   <Msg id="stop">
     <de txt="Stop" tip="Stopp Lokomotive"/>
@@ -260,6 +271,7 @@
     <el txt="Σταματάω"/>
     <pt txt="Parar"/>
     <nb txt="Stopp"/>
+    <zh_TW txt="停止"/>
   </Msg>
   <Msg id="station">
     <de txt="Bahnhof"/>
@@ -281,6 +293,7 @@
     <bs txt="Stanica"/>
     <nb txt="Stasjon"/>
     <pl txt="Stacja"/>
+    <zh_TW txt="車站"/>
   </Msg>
   <Msg id="break">
     <de txt="N O T H A L T" tip="Nothalt aller Triebfahrzeuge!"/>
@@ -301,6 +314,7 @@
     <bs txt="Z A K O Č I"/>
     <nb txt="B R E M S"/>
     <pl txt="S T O P !"/>
+    <zh_TW txt="煞車"/>
   </Msg>
   <Msg id="connect" dialog="true">
     <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
@@ -322,6 +336,7 @@
     <pt txt="Ligar a"/>
     <nb txt="Koble til"/>
     <pl txt="Połącz z"/>
+    <zh_TW txt="連接至"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
     <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
@@ -343,6 +358,7 @@
     <pt txt="Abrir"/>
     <nb txt="Åpne"/>
     <pl txt="Otwórz"/>
+    <zh_TW txt="開啟"/>
   </Msg>
   <Msg id="upload" dialog="true">
     <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
@@ -364,6 +380,7 @@
     <pt txt="Envio (upload)"/>
     <nb txt="Last opp"/>
     <pl txt="Wyślij na serwer"/>
+    <zh_TW txt="上傳"/>
   </Msg>
   <Msg id="server">
     <de txt="Server"/>
@@ -385,6 +402,7 @@
     <pt txt="Servidor"/>
     <nb txt="Tjener"/>
     <pl txt="Serwer"/>
+    <zh_TW txt="伺服器"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
     <de txt="Speichern" tip="Gleisbild speichern."/>
@@ -406,6 +424,7 @@
     <pt txt="Guardar"/>
     <nb txt="Lagre"/>
     <pl txt="Zapisz"/>
+    <zh_TW txt="儲存"/>
   </Msg>
   <Msg id="saveas" dialog="true">
     <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
@@ -427,6 +446,7 @@
     <pt txt="Gardar como"/>
     <nb txt="Lagre Som"/>
     <pl txt="Zapisz jako"/>
+    <zh_TW txt="另存新檔"/>
   </Msg>
   <Msg id="shutdown" key="Ctrl-D">
     <de txt="Rocrail und Rocview beenden" tip="Rocrail Server beenden."/>
@@ -447,6 +467,7 @@
     <cs txt="Vypnout Rocrail a Rocview"/>
     <nb txt="Avslutt Rocrail og Rocview"/>
     <pl txt="Zakończ działanie Rocrail i Rocview"/>
+    <zh_TW txt="關閉Rocrail和Rocview"/>
   </Msg>
   <Msg id="exit">
     <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
@@ -468,6 +489,7 @@
     <pt txt="Saír"/>
     <nb txt="Avslutt"/>
     <pl txt="Wyjście"/>
+    <zh_TW txt="離開"/>
   </Msg>
   <Msg id="editmode">
     <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
@@ -489,6 +511,7 @@
     <bs txt="Uredi plan"/>
     <nb txt="Rediger plan"/>
     <pl txt="Edytuj plan"/>
+    <zh_TW txt="編輯設置"/>
   </Msg>
   <Msg id="undo" key="Ctrl-Z">
     <de txt="Rückgängig" tip="Rückgängig"/>
@@ -510,6 +533,7 @@
     <pt txt="Anular"/>
     <nb txt="Angre"/>
     <pl txt="Cofnij"/>
+    <zh_TW txt="回復"/>
   </Msg>
   <Msg id="editlocs" dialog="true">
     <de txt="Lok Eigenschaften"/>
@@ -530,6 +554,7 @@
     <cs txt="Vlastnosti lokomotivy"/>
     <nb txt="Lok egenskaper"/>
     <pl txt="Właściwości lokomotywy"/>
+    <zh_TW txt="機關車屬性"/>
   </Msg>
   <Msg id="about" dialog="true">
     <de txt="Info" accel="0" tip="Information über Rocrail."/>
@@ -551,6 +576,7 @@
     <pt txt="Informação"/>
     <nb txt="Info"/>
     <pl txt="Info"/>
+    <zh_TW txt="資訊"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
     <de txt="Fahrstrom ein" accel="5" tip="Fahrstrom einschalten."/>
@@ -593,6 +619,7 @@
     <pt txt="Desligar"/>
     <nb txt="Strøm Av"/>
     <pl txt="Wyłącz"/>
+    <zh_TW txt="關閉電源"/>
   </Msg>
   <Msg id="initfield">
     <de txt="Weichen initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
@@ -613,6 +640,7 @@
     <pt txt="Inicializar campo"/>
     <nb txt="Init felt"/>
     <pl txt="Zainicjuj pole"/>
+    <zh_TW txt="初始值"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -633,6 +661,7 @@
     <cs txt="Řízení lokomotivy"/>
     <nb txt="Lok Kontroll"/>
     <pl txt="Sterowanie lokomotywą"/>
+    <zh_TW txt="機關車控制"/>
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichenschalter" accel="0" tip="Dialog um Weichen zu testen."/>
@@ -653,6 +682,7 @@
     <cs txt="Přepni řízení"/>
     <nb txt="Penskontroll"/>
     <pl txt="Sterowanie zwrotnicami"/>
+    <zh_TW txt="道岔控制"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
     <de txt="Fahrstraßenbedienung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
@@ -673,6 +703,7 @@
     <cs txt="Řízení cesty"/>
     <nb txt="Rutekontroll"/>
     <pl txt="Sterowanie trasami"/>
+    <zh_TW txt="路線規劃控制"/>
   </Msg>
   <Msg id="planprops" dialog="true">
     <de txt="Gleisbild Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
@@ -693,6 +724,7 @@
     <cs txt="Vlastnosti plánu kolejiště"/>
     <nb txt="Sporplanegenskaper"/>
     <pl txt="Właściwości planu torowiska"/>
+    <zh_TW txt="軌道計畫屬性"/>
   </Msg>
   <Msg id="startall">
     <de txt="Alle Züge starten" tip="Versetzt alle Züge in den Automatikbetrieb."/>
@@ -713,6 +745,7 @@
     <cs txt="Zapni všechny lokomotivy"/>
     <nb txt="Start alle lok"/>
     <pl txt="Uruchom wszystkie lokomotywy"/>
+    <zh_TW txt="啟動所有機關車"/>
   </Msg>
   <Msg id="stopall">
     <de txt="Alle Züge stoppen" tip="Versetzt alle Züge in Manualbetrieb."/>
@@ -733,6 +766,7 @@
     <cs txt="Zastav všechny lokomotivy"/>
     <nb txt="Stopp alle lok"/>
     <pl txt="Zatrzymaj wszystkie lokomotywy"/>
+    <zh_TW txt="停止所有機關車"/>
   </Msg>
   <Msg id="startloc">
     <de txt="Zug starten" tip="Versetzt Zug in den Automatikbetrieb."/>
@@ -753,6 +787,7 @@
     <cs txt="Zapni lokomotivu"/>
     <nb txt="Start lokomotiv"/>
     <pl txt="Uruchom lokomotywę"/>
+    <zh_TW txt="啟動單一機關車"/>
   </Msg>
   <Msg id="stoploc">
     <de txt="Automatischer Lokhalt" tip="Versetzt Zug in Manualbetrieb."/>
@@ -793,6 +828,7 @@
     <pt txt="Reiniciar tudo"/>
     <nb txt="Tilbakestill alle"/>
     <pl txt="Resetuj wszystkie"/>
+    <zh_TW txt="重設全部"/>
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
@@ -813,6 +849,7 @@
     <el txt="Επαναφορά"/>
     <pt txt="Reiniciar"/>
     <nb txt="Tilbakestill"/>
+    <zh_TW txt="重設"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -834,6 +871,7 @@
     <pt txt="Nível"/>
     <nb txt="Nivå"/>
     <pl txt="Poziom"/>
+    <zh_TW txt="等級"/>
   </Msg>
   <Msg id="levelup">
     <de txt="Nächste Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
@@ -854,6 +892,7 @@
     <pt txt="Nível acima"/>
     <nb txt="Nivå opp"/>
     <pl txt="Poziom wyżej"/>
+    <zh_TW txt="等級上升"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="Vorherige Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -874,6 +913,7 @@
     <pt txt="Nível abaixo"/>
     <nb txt="Nivå ned"/>
     <pl txt="Poziom niżej"/>
+    <zh_TW txt="等級下降"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -895,6 +935,7 @@
     <pt txt="Propriedades"/>
     <nb txt="Egenskaper"/>
     <pl txt="Właściwości"/>
+    <zh_TW txt="屬性"/>
   </Msg>
   <Msg id="clearmsg">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
@@ -916,6 +957,7 @@
     <cs txt="Smazat zprávy"/>
     <nb txt="Tøm beskjeder"/>
     <pl txt="Wyczyść komunikaty"/>
+    <zh_TW txt="清除對話訊息"/>
   </Msg>
   <Msg id="file">
     <de txt="Datei" accel="0"/>
@@ -937,6 +979,7 @@
     <pt txt="Ficheiro"/>
     <nb txt="Fil"/>
     <pl txt="Plik"/>
+    <zh_TW txt="檔案"/>
   </Msg>
   <Msg id="edit">
     <de txt="Bearbeiten" accel="0"/>
@@ -958,6 +1001,7 @@
     <pt txt="Editar"/>
     <nb txt="Rediger"/>
     <pl txt="Edycja"/>
+    <zh_TW txt="編輯"/>
   </Msg>
   <Msg id="control">
     <de txt="Steuerung" accel="0"/>
@@ -979,6 +1023,7 @@
     <pt txt="Controlo"/>
     <nb txt="Kontroll"/>
     <pl txt="Sterowanie"/>
+    <zh_TW txt="控制"/>
   </Msg>
   <Msg id="test">
     <de txt="Test" accel="0"/>
@@ -1000,6 +1045,7 @@
     <pt txt="Testar"/>
     <nb txt="Test"/>
     <pl txt="Testuj"/>
+    <zh_TW txt="測試"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -1020,6 +1066,7 @@
     <pt txt="Modo automático"/>
     <nb txt="Auto modus"/>
     <pl txt="Tryb automatyczny"/>
+    <zh_TW txt="自動模式"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Herunterfahren und beenden?"/>
@@ -1040,6 +1087,7 @@
     <cs txt="Toto ukončí Rocrail server! Ukončit a vypnout?"/>
     <nb txt="Dette vil stenge ned Rocrail tjeneren! Steng ned og avslutt?"/>
     <pl txt="To spowoduje zatrzymanie serwera Rocrail! Zatrzymać go i zakończyć program?"/>
+    <zh_TW txt="這會關閉Rocrail伺服器! 確定關閉?"/>
   </Msg>
   <Msg id="resetallwarning">
     <de txt="Diese Aktion setzt auch alle Blockbelegungen zurück. Durchführen?"/>
@@ -1059,6 +1107,7 @@
     <pt txt="Esta acção vai também reiniciar todos os blocos reservados. Proceder?"/>
     <cs txt="Tato akce také resetuje všechna rezervace bloků. Pokračovat?"/>
     <nb txt="Denne handlingen vil også tilbakestille alle blokk reservasjoner. Fortsett?"/>
+    <zh_TW txt="此活動將重設所有預留區塊，繼續?"/>
   </Msg>
   <Msg id="startallwarning">
     <de txt="Alle Züge jetzt starten?"/>
@@ -1079,6 +1128,7 @@
     <cs txt="Zapnout všechny lokomotivy ?"/>
     <nb txt="Start alle lok nå?"/>
     <pl txt="Uruchomić wszystkie lokomotywy?"/>
+    <zh_TW txt="啟動所有機關車?"/>
   </Msg>
   <Msg id="stopallwarning">
     <de txt="Alle Züge jetzt anhalten?"/>
@@ -1099,6 +1149,7 @@
     <cs txt="Zastavit všechny lokomotivy ?"/>
     <nb txt="Stopp alle lok nå?"/>
     <pl txt="Zatrzymać wszystkie lokomotywy?"/>
+    <zh_TW txt="停止所有機關車?"/>
   </Msg>
   <Msg id="automodewarning">
     <de txt="Stellen Sie sicher dass keine Züge mehr fahren! Auto Modus ausschalten?"/>
@@ -1119,6 +1170,7 @@
     <cs txt="Lokomotivy jedou ! Vypnout automatický Mód ?"/>
     <nb txt="Det kan være kjørende lok! Skru av Auto modus?"/>
     <pl txt="Możliwe, że lokomotywy teraz jeżdżą! Wyłączyć tryb automatyczny?"/>
+    <zh_TW txt="可能有機關車還在運行! 確定關閉自動模式?"/>
   </Msg>
   <Msg id="fileexistwarning">
     <de txt="Datei existiert bereits! Wirklich überschreiben?"/>
@@ -1139,6 +1191,7 @@
     <cs txt="Soubor již existuje ! Opravdu jej chcete přepsat ?"/>
     <nb txt="Filen finnes allerede! Er du sikker på at du vil overskrive?"/>
     <pl txt="Plik już istnieje! Czy na pewno go zastąpić nowym?"/>
+    <zh_TW txt="檔案已經存在! 確定覆寫?"/>
   </Msg>
   <Msg id="removewarning">
     <de txt="Möchten Sie wirklich löschen?"/>
@@ -1159,6 +1212,7 @@
     <cs txt="Opravdu smazat ?"/>
     <nb txt="Er du sikker på at du vil slette?"/>
     <pl txt="Czy na pewno chcesz to skasować?"/>
+    <zh_TW txt="確定刪除?"/>
   </Msg>
   <Msg id="connectionwarning">
     <de txt="Es konnte keine Verbindung zum Rocrail Server hergestellt werden. Bitte Host und Port überprüfen."/>
@@ -1179,6 +1233,7 @@
     <cs txt="Nelze se spojit se severem Rocrail; zkontrolujte nastavení položek Host a Port."/>
     <nb txt="Rocrailtjeneren kunne ikke tilkobles. Sjekk Vert og Port instillinger."/>
     <pl txt="Nie można nawiązać połączenia z serwerem Rocrail; sprawdź ustawienia Hosta i Portu."/>
+    <zh_TW txt="無法連結Rocrail伺服器，檢查Host跟Port的設定。"/>
   </Msg>
   <Msg id="auto">
     <de txt="Automatik" accel="0"/>
@@ -1200,6 +1255,7 @@
     <pt txt="Automático"/>
     <nb txt="Automatisk"/>
     <pl txt="Automatycznie"/>
+    <zh_TW txt="自動"/>
   </Msg>
   <Msg id="view">
     <de txt="Ansicht" accel="1"/>
@@ -1221,6 +1277,7 @@
     <pt txt="Ver"/>
     <nb txt="Vis"/>
     <pl txt="Widok"/>
+    <zh_TW txt="檢視"/>
   </Msg>
   <Msg id="extra">
     <de txt="Extra" accel="0"/>
@@ -1242,6 +1299,7 @@
     <bs txt="Ekstra"/>
     <nb txt="Ekstra"/>
     <pl txt="Dodatkowe"/>
+    <zh_TW txt="其他"/>
   </Msg>
   <Msg id="help">
     <de txt="Hilfe" accel="0"/>
@@ -1263,6 +1321,7 @@
     <pt txt="Ajuda"/>
     <nb txt="Hjelp"/>
     <pl txt="Pomoc"/>
+    <zh_TW txt="帮助"/>
   </Msg>
   <Msg id="function">
     <de txt="Funktion"/>
@@ -1284,6 +1343,7 @@
     <pt txt="Função"/>
     <nb txt="Funksjon"/>
     <pl txt="Funkcja"/>
+    <zh_TW txt="功能"/>
   </Msg>
   <Msg id="functioncount">
     <de txt="Anzahl Funktionen"/>
@@ -1305,6 +1365,7 @@
     <cs txt="Počet funkcí"/>
     <nb txt="Funksjonsnummer"/>
     <pl txt="Numer funkcji"/>
+    <zh_TW txt="功能的數量"/>
   </Msg>
   <Msg id="functions">
     <de txt="Funktionen"/>
@@ -1326,6 +1387,7 @@
     <pt txt="Funções"/>
     <nb txt="Funksjoner"/>
     <pl txt="Funkcje"/>
+    <zh_TW txt="功能"/>
   </Msg>
   <Msg id="changedirection">
     <de txt="Fahrtrichtung wechseln" tip="Fahrtrichtung ändern."/>
@@ -1348,6 +1410,7 @@
     <cs txt="Změna směru"/>
     <nb txt="Skift retning"/>
     <pl txt="Zmień kierunek"/>
+    <zh_TW txt="更改運轉方向"/>
   </Msg>
   <Msg id="add">
     <de txt="Hinzufügen"/>
@@ -1369,6 +1432,7 @@
     <pt txt="Adicionar"/>
     <nb txt="Legg til"/>
     <pl txt="Dodaj"/>
+    <zh_TW txt="新增"/>
   </Msg>
   <Msg id="delete">
     <de txt="Entfernen"/>
@@ -1390,6 +1454,7 @@
     <pt txt="Apagar"/>
     <nb txt="Slett"/>
     <pl txt="Usuń"/>
+    <zh_TW txt="刪除"/>
   </Msg>
   <Msg id="name">
     <de txt="Name"/>
@@ -1411,6 +1476,7 @@
     <pt txt="Nome"/>
     <nb txt="Navn"/>
     <pl txt="Nazwa"/>
+    <zh_TW txt="名稱"/>
   </Msg>
   <Msg id="value">
     <de txt="Wert"/>
@@ -1432,6 +1498,7 @@
     <pt txt="Valor"/>
     <nb txt="Verdi"/>
     <pl txt="Wartość"/>
+    <zh_TW txt="數值"/>
   </Msg>
   <Msg id="streetid">
     <de txt="Fahrstraßen-Kennung"/>
@@ -1452,6 +1519,7 @@
     <pt txt="ID da Rota"/>
     <nb txt="Rute ID"/>
     <pl txt="ID trasy"/>
+    <zh_TW txt="路線代碼"/>
   </Msg>
   <Msg id="swcmds">
     <de txt="Weichen Befehle"/>
@@ -1472,6 +1540,7 @@
     <cs txt="Příkazy řízení"/>
     <nb txt="Pensekommandoer"/>
     <pl txt="Polecenia zwrotnicy"/>
+    <zh_TW txt="道岔命令"/>
   </Msg>
   <Msg id="decoder">
     <de txt="Dekoder" tip="Decoder Nummer."/>
@@ -1493,6 +1562,7 @@
     <pt txt="Decodificador"/>
     <nb txt="Dekoder"/>
     <pl txt="Dekoder"/>
+    <zh_TW txt="解碼器"/>
   </Msg>
   <Msg id="decoders">
     <de txt="Dekoder" tip=""/>
