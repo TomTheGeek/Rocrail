@@ -307,13 +307,18 @@ wxString RocGui::getTip( const char* key ) {
 }
 
 
-void RocGui::readArgs() {
+void RocGui::readArgs(const char* langfile) {
   // Read in all commandline filenames:
   for( int i = 1; i < argc; i++ ) {
     if( StrOp.endsWith( (const char*)wxString(argv[i]).mb_str(wxConvUTF8), ".rrp" ) ||
-        StrOp.endsWith( (const char*)wxString(argv[i]).mb_str(wxConvUTF8), ".xml" ) ) {
-      m_LocalPlan = argv[i];
-      m_bStayOffline = true;
+        StrOp.endsWith( (const char*)wxString(argv[i]).mb_str(wxConvUTF8), ".xml" ) )
+    {
+      // do not snap the alternative translations file
+      if( langfile == NULL || !StrOp.equals( langfile, argv[i] ) ) {
+        m_LocalPlan = argv[i];
+        m_bStayOffline = true;
+        break;
+      }
     }
   }
 }
@@ -524,8 +529,6 @@ bool RocGui::OnInit() {
   }
   m_CmdLn = CmdLnOp.inst( argc, (const char**)argv_c );
 
-  // check for plan file:
-  readArgs();
 
   tracelevel  debug   = CmdLnOp.hasKey( m_CmdLn, wCmdline.debug ) ? TRCLEVEL_DEBUG:(tracelevel)0;
   tracelevel  parse   = CmdLnOp.hasKey( m_CmdLn, wCmdline.parse ) ? TRCLEVEL_PARSE:(tracelevel)0;
@@ -533,10 +536,14 @@ bool RocGui::OnInit() {
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
   const char* tp      = CmdLnOp.getStr( m_CmdLn, wCmdline.themespath );
+  const char* lang    = CmdLnOp.getStr( m_CmdLn, wCmdline.langfile );
   m_bForceTabView     = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabview);
 
+  // check for plan file:
+  readArgs(lang);
+
   // create a trace object:
-  m_Trace = TraceOp.inst( (tracelevel)(debug | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING), tf, True );
+  m_Trace = TraceOp.inst( (tracelevel)(debug | TRCLEVEL_INFO | TRCLEVEL_WARNING), tf, True );
   TraceOp.setAppID( m_Trace, "g" );
 
   // check for alternative ini file:
@@ -591,7 +598,24 @@ bool RocGui::OnInit() {
   m_Port = CmdLnOp.getIntDef( m_CmdLn,wCmdline.port, m_Port );
 
   // create the language object:
-  m_Res = ResOp.inst( messages, wGui.getlang( m_Ini ) );
+  m_Res = NULL;
+  if( lang != NULL ) {
+    // TODO: parse lang file
+    iOFile langFile = FileOp.inst( lang, True );
+    if( langFile != NULL ) {
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," using alternative translations file: %s", lang );
+      char* langXml = (char*)allocMem( FileOp.size( langFile ) + 1 );
+      FileOp.read( langFile, langXml, FileOp.size( langFile ) );
+      FileOp.close( langFile );
+      m_Res = ResOp.inst( langXml, wGui.getlang( m_Ini ) );
+    }
+  }
+
+  if( m_Res == NULL ) {
+    m_Res = ResOp.inst( messages, wGui.getlang( m_Ini ) );
+  }
+
+
   {
     const char* xmls[2] = {wrapperinfo,guiwrapperinfo};
     m_WrpInf = WrpInfOp.inst( xmls, 2 );

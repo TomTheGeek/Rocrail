@@ -89,7 +89,7 @@ public:
 
 private:
   void saveSizePos();
-  void readArgs();
+  void readArgs(const char* langfile);
   wxString      m_LocalPlan;
 
   const char*   m_IniFileName;
