@@ -670,13 +670,15 @@ static void __callback( obj inst, iONode nodeA ) {
       return;
     }
     else if( StrOp.equals( wSysCmd.txshortids, wSysCmd.getcmd(nodeA) ) ) {
-      /* TODO: clear locodb and iterate all loco to send the shortid */
+      /* clear locodb and iterate all loco to send the shortid */
       /* start a thread to process this job */
       if( !data->txshortidsrun ) {
         data->txshortidsrun = True;
         data->txshortids = ThreadOp.inst( "txshortids", __txshortids, inst );
         ThreadOp.start( data->txshortids );
       }
+      NodeOp.base.del( nodeA );
+      return;
     }
 
 
