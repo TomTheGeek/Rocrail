@@ -322,7 +322,7 @@ static void SvcInstall()
 
     /* Create the service. */
     
-    sprintf( szPathCmd, "%s -service -w %s -i %s\\rocrail.ini", szPath, __getPath(szPath), __getPath(szPath));
+    sprintf( szPathCmd, "\"%s\" -service -w \"%s\" -i \"%s\\rocrail.ini\"", szPath, __getPath(szPath), __getPath(szPath));
 
     schService = CreateService( 
         schSCManager,              /* SCM database */ 
