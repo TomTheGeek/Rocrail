@@ -27,8 +27,13 @@
 Boolean liusbConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init serial port for LI-USB..." );
+  /*
+    - Baudrate: immer 57600 Bit pro Sekunde
+    - 8 Datenbits, 1 Startbit, 1 Stopbit, kein Paritybit
+    - kein Handshake
+   */
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setFlow( data->serial, none );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
   SerialOp.setLine( data->serial, 57600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );
