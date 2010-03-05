@@ -314,7 +314,7 @@ void RocGui::readArgs(const char* langfile) {
         StrOp.endsWith( (const char*)wxString(argv[i]).mb_str(wxConvUTF8), ".xml" ) )
     {
       // do not snap the alternative translations file
-      if( langfile == NULL || !StrOp.equals( langfile, argv[i] ) ) {
+      if( langfile == NULL || !StrOp.equals( langfile, (const char*)wxString(argv[i]).mb_str(wxConvUTF8) ) ) {
         m_LocalPlan = argv[i];
         m_bStayOffline = true;
         break;
