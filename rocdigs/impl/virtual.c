@@ -233,7 +233,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int  spcnt = wLoc.getspcnt( node );
 
     if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d spcnt=%d shortID=[%s]", addr, spcnt, wLoc.getshortid(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "shortID=[%s]", wLoc.getshortid(node) );
     }
     else {
       if( wLoc.getV( node ) != -1 ) {
