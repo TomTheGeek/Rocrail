@@ -241,7 +241,7 @@ void LocDialog::initLabels() {
   m_MInt->SetToolTip( wxGetApp().getTip( "mint" ) );
   m_Serviced->SetLabel( wxGetApp().getMsg( "serviced" ) );
   m_Serviced->SetToolTip( wxGetApp().getTip( "serviced" ) );
-  m_UseShortID->SetLabel( wxGetApp().getMsg( "useshortid" ) );
+  m_UseShortID->SetLabel( wxGetApp().getMsg( "use" ) + _T(" ") + wxGetApp().getMsg( "shortid" ) );
 
   // Interface
   m_Label_Bus->SetLabel( wxGetApp().getMsg( "bus" ) );
