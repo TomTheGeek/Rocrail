@@ -83,20 +83,24 @@ static void* __properties( void* inst ) {
 
 
 /** Get a message by key. */
-static void __initMap( struct ORes* inst ) {
+static void _addTranslation( struct ORes* inst, const char* xmlStr ) {
   iOResData data = Data(inst);
-  iODoc doc = DocOp.parse( data->xmlStr );
+  iODoc doc = DocOp.parse( xmlStr );
   if( doc != NULL ) {
     data->msgNode = DocOp.getRootNode( doc );
     if( data->msgNode != NULL ) {
       int cnt = NodeOp.getChildCnt( data->msgNode );
       int i = 0;
-      data->msgMap = MapOp.inst();
+      if( data->msgMap == NULL )
+        data->msgMap = MapOp.inst();
       for( i = 0; i < cnt; i++ ) {
         iONode msg = NodeOp.getChild( data->msgNode, i );
         const char* msgid = NodeOp.getStr( msg, "id", NULL );
-        if( msgid != NULL )
+        if( msgid != NULL ) {
+          if( MapOp.haskey( data->msgMap, msgid ) )
+            MapOp.remove( data->msgMap, msgid );
           MapOp.put( data->msgMap, msgid, (obj)msg );
+        }
       }
     }
   }
@@ -112,7 +116,7 @@ static struct ORes* _inst( const char* xml ,const char* lang ) {
   /* Initialize data->xxx members... */
   data->xmlStr = xml;
   data->language = lang;
-  __initMap( __Res );
+  _addTranslation( __Res, data->xmlStr );
 
   instCnt++;
   return __Res;

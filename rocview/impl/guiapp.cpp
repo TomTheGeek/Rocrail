@@ -598,22 +598,20 @@ bool RocGui::OnInit() {
   m_Port = CmdLnOp.getIntDef( m_CmdLn,wCmdline.port, m_Port );
 
   // create the language object:
-  m_Res = NULL;
+  m_Res = ResOp.inst( messages, wGui.getlang( m_Ini ) );
+
   if( lang != NULL ) {
-    // TODO: parse lang file
+    // add extra translation file
     iOFile langFile = FileOp.inst( lang, True );
     if( langFile != NULL ) {
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," using alternative translations file: %s", lang );
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," merging alternative translations file: %s", lang );
       char* langXml = (char*)allocMem( FileOp.size( langFile ) + 1 );
       FileOp.read( langFile, langXml, FileOp.size( langFile ) );
       FileOp.close( langFile );
-      m_Res = ResOp.inst( langXml, wGui.getlang( m_Ini ) );
+      ResOp.addTranslation( m_Res, langXml );
     }
   }
 
-  if( m_Res == NULL ) {
-    m_Res = ResOp.inst( messages, wGui.getlang( m_Ini ) );
-  }
 
 
   {

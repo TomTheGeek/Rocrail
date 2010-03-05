@@ -1798,6 +1798,10 @@
       <param name="xml" vt="const char*" remark="Messages XML as C-String."/>
       <param name="lang" vt="const char*" remark="Language.(de,en...)"/>
     </fun>
+    <fun name="addTranslation" vt="const char*" remark="Add translation. Existing IDs are overwritten.">
+      <param name="inst" vt="this" remark="res instance."/>
+      <param name="xml" vt="const char*" remark="Xml string."/>
+    </fun>
     <fun name="getMsg" vt="const char*" remark="Get a message by key.">
       <param name="inst" vt="this" remark="res instance."/>
       <param name="key" vt="const char*" remark="Argument key."/>
