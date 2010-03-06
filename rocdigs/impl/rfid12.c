@@ -303,6 +303,9 @@ static void __RFIDReader( void* threadinst ) {
   int idx = 0;
   Boolean packetStart = False;
 
+  /* STX (ASCII 02) DATA (10 ASCII) CHECK SUM (2 ASCII) CR (ASCII 13) LF (ASCII 10) ETX (ASCII 03) */
+  /* ChID, 10 Alphanumeric characters, 2 checksum characters, CR, LF, > */
+  /* "A 0413276C1C 40 \r\n>" */
   ThreadOp.sleep(1000);
 
   /* test */
@@ -330,7 +333,7 @@ static void __RFIDReader( void* threadinst ) {
         idx++;
       }
       else if(packetStart) {
-        if( c == 0x03 ) {
+        if( c == 0x03 || c == '>' ) {
           /* ETX */
           packetStart = False;
           rfid[idx] = c;
