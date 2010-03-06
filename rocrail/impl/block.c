@@ -314,7 +314,8 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   /* handle a dedicated ident event */
   if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
-    if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {
+    /*if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {*/
+    if( fbevt != NULL && ident > 0 ) {
       /* display ident code */
       char identString[32];
       StrOp.fmtb( identString, "%04d", ident );
