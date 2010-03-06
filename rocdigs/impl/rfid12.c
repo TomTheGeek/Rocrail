@@ -325,7 +325,10 @@ static void __RFIDReader( void* threadinst ) {
     while (bAvail > 0) {
       char c;
       SerialOp.read( data->serial, &c, 1 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, &c, 1 );
+
       if( !packetStart && (c == 0x02 || c >= 'A' && c <= 'H' ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet start detected: [0x%02X]", c );
         /* STX */
         packetStart = True;
         idx = 0;
@@ -334,16 +337,19 @@ static void __RFIDReader( void* threadinst ) {
       }
       else if(packetStart) {
         if( c == 0x03 || c == '>' ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet end detected: [0x%02X] idx=%d", c, idx );
           /* ETX */
           packetStart = False;
           rfid[idx] = c;
           idx++;
           /* evaluate the paket */
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, rfid, idx );
           __evaluateRFID(inst, rfid, idx);
         }
         else if( idx < 15 ) {
           rfid[idx] = c;
           idx++;
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, rfid, idx );
         }
       }
 
