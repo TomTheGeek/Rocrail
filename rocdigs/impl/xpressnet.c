@@ -858,10 +858,29 @@ static void __transactor( void* threadinst ) {
 
     }
 
+    /* check if there is a xpressnet packet available */
     if( !data->subAvail( (obj)xpressnet ) ) {
-      ThreadOp.sleep(10);
-      continue;
+      if( rspExpected && !rspReceived ) {
+        Boolean avail = False;
+        int retry = 0;
+        while( retry < 5 && !avail ) {
+          retry++;
+          ThreadOp.sleep(10);
+          avail = data->subAvail( (obj)xpressnet );
+        };
+        if( !avail ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received within 50ms; continue..." );
+          rspReceived = True;
+          rspExpected = False;
+          continue;
+        }
+      }
+      else {
+        ThreadOp.sleep(10);
+        continue;
+      }
     }
+
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing response..." );
 
     inlen = data->subRead((obj)xpressnet, in, &rspReceived);
