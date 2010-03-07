@@ -248,7 +248,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
 /**
  * event listener callback for all fbevents
  */
-static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, int val, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, iONode fbevt ) {
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
@@ -362,17 +362,24 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, int ident, i
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {
     int evt = _getEventCode( wFeedbackEvent.getaction( fbevt ) );
-    int locident = wLoc.getidentifier( LocOp.base.properties(loc) );
+    long locident = LocOp.getIdent(loc);
 
     __measureVelocity( (iOBlock)inst, evt );
 
     if( ident > 0 && locident > 0 && ident != locident || ident > 0 && locident == 0 ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s loc=%d ident=%d",
-          data->id, locident, ident );
-      /* Power off? */
-      if( wCtrl.ispoweroffonidentmismatch( AppOp.getIniNode( wCtrl.name() ) ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off for mismatching ident" );
-        AppOp.stop();
+      /* TODO: Check MU consist */
+      if( LocOp.matchIdent(loc, ident) ) {
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%d",
+            data->id, locident, ident );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s loc=%d ident=%d",
+            data->id, locident, ident );
+        /* Power off? */
+        if( wCtrl.ispoweroffonidentmismatch( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off for mismatching ident" );
+          AppOp.stop();
+        }
       }
     }
     else if( ident > 0 && locident > 0 && ident == locident ) {

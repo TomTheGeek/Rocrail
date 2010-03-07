@@ -442,6 +442,10 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="mode" vt="const char*" remark="Automatic mode phase."/>
     </fun>
+    <fun name="matchIdent" vt="Boolean">
+      <param name="inst" vt="this" remark="Loco instance"/>
+      <param name="ident" vt="long" remark="Loco ident code"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>

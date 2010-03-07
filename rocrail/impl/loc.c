@@ -2257,6 +2257,32 @@ static Boolean _isUseManualRoutes( iOLoc loc ) {
 }
 
 
+static Boolean _matchIdent( iOLoc loc, long ident ) {
+  iOLocData data = Data(loc);
+  Boolean match = False;
+
+  if( wLoc.getidentifier( data->props ) == ident )
+    match = True;
+  else {
+    /* check consist */
+    iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
+    while( StrTokOp.hasMoreTokens( consist ) ) {
+      const char* tok = StrTokOp.nextToken( consist );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok );
+      if( consistloc != NULL ) {
+        if( ident == LocOp.getIdent(consistloc) ) {
+          match = True;
+          break;
+        }
+      }
+    };
+    StrTokOp.base.del( consist );
+  }
+
+  return match;
+}
+
+
 static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
   /* save the function status: */
