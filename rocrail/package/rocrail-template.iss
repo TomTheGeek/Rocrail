@@ -75,6 +75,7 @@ Source: "..\..\winbin\rclink.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mttmfcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\xpressnet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\rmx.dll"; DestDir: "{app}"
+Source: "..\..\winbin\massoth.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocraild.ico"; DestDir: "{app}"
