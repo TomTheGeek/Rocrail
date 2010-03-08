@@ -98,15 +98,112 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMassoth ----- */
+static int __addChecksum(byte* out) {
+  int len = out[0] >> 5;
+  int i = 0;
+  byte bXor = out[0];
 
+  for ( i = 0; i < len; i++ ) {
+    bXor ^= out[i+2];
+  }
+  out[1] = bXor;
+
+  return len;
+}
+
+
+static Boolean __readPacket( iOMassothData data, byte* in ) {
+  Boolean rc = data->dummyio;
+
+  if( !data->dummyio ) {
+    rc = SerialOp.read( data->serial, in, 3 );
+    if( rc ) {
+      int insize = in[2];
+      rc = SerialOp.read( data->serial, in+3, insize );
+      if( rc ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet read:" );
+        TraceOp.dump( name, TRCLEVEL_INFO, in, insize+3 );
+      }
+      else {
+        /* error reading data */
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
+      }
+    }
+    else {
+      /* error reading header */
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
+    }
+  }
+
+  return rc;
+}
+
+
+
+
+static Boolean __transact( iOMassothData data, byte* out, byte* in ) {
+  Boolean rc = data->dummyio;
+
+  if( MutexOp.wait( data->mux ) ) {
+    int outsize = (out[0] >> 5) + 2;
+    int insize  = 0;
+    __addChecksum(out);
+
+    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    if( !data->dummyio ) {
+      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+        if( in != NULL ) {
+          if( __readPacket( data, in ) ) {
+          }
+        }
+      }
+    }
+    MutexOp.post( data->mux );
+  }
+  return rc;
+}
+
+
+static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmd = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      out[0] = 0x11;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      return True;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      out[0] = 0x10;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      return True;
+    }
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command [%s] not(jet) supported", NodeOp.getName( node ) );
+
+
+  return False;
+}
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOMassothData data = Data(inst);
+  byte out[256];
+  iONode reply = NULL;
+
+  if( cmd != NULL ) {
+    byte opcode = 0;
+    if( __translate( data, cmd, out ) ) {
+      if( __transact( data, out, NULL ) ) {
+      }
+    }
+  }
 
   /* Cleanup Node1 */
   cmd->base.del(cmd);
-  return 0;
+
+  return reply;
 }
 
 
@@ -153,13 +250,32 @@ static void __reader( void* threadinst ) {
   iOMassoth     massoth = (iOMassoth)ThreadOp.getParm( th );
   iOMassothData data    = Data(massoth);
 
-  byte buffer[256];
-  Boolean initialized = False;
+  byte out[256];
+  data->initialized = False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DiMAX reader started." );
-  ThreadOp.sleep( 1000 );
+  ThreadOp.sleep( 100 );
+
+
+  /* sending the interface configuration: must be the first packet */
+  out[0] = 0xB8;
+  out[1] = 0x00; /* XOR */
+  out[2] = 0x00;
+  out[3] = 0x00;
+  out[4] = 0x00;
+  out[5] = 0x00;
+  out[6] = 0x0C;
 
   while( data->run ) {
+    if( !data->initialized ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending interface configuration..." );
+      data->initialized = __transact( data, out, NULL );
+      if( !data->initialized )
+        ThreadOp.sleep( 1000 );
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "interface configuration successfully send" );
+      }
+    }
     ThreadOp.sleep( 10 );
   }
 

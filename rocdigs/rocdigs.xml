@@ -1101,6 +1101,7 @@
       <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
       <var name="reader" vt="iOThread"/>
       <var name="dummyio" vt="Boolean"/>
+      <var name="initialized" vt="Boolean"/>
     </data>
   </object>
 
