@@ -75,9 +75,12 @@ int eliteRead(obj xpressnet, byte* in, Boolean* rspreceived) {
 }
 
 Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
+  iOXpressNetData data = Data(xpressnet);
   Boolean rc = False;
   byte b1 = 0;
   byte b2 = 0;
+  
+  data->interfaceVersion = 1;
 
 
   /* when sending to elite we have to correct for elite (version 1.3) addressing fault
@@ -112,9 +115,11 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
 
   if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
     *rspexpected = False;
+    ThreadOp.sleep( 9000 );
   }
   if (out[0] == 0x23 && (out[1] == 0x12 || out[1] == 0x16 || out[1] == 0x17)) {
     *rspexpected = False;
+    ThreadOp.sleep( 9000 );
   }
   if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
     *rspexpected = False;
