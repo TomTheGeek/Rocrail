@@ -1026,7 +1026,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
 
              for( int i = 0; i < cnt; i++ ) {
                const char* id = (const char*)ListOp.get( m_sclist, i );
-               menuSchd2go->Append( ME_ScheduleGo+i, wxGetApp().getMenu(id) );
+               menuSchd2go->Append( ME_ScheduleGo+i, wxString(id,wxConvUTF8) );
              }
            }
          }
