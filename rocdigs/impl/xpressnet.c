@@ -816,6 +816,7 @@ static void __transactor( void* threadinst ) {
   byte in[32];
   byte lastPacket[32];
   int  inlen = 0;
+  int  repeats = 0;
   Boolean rspReceived = True;
   Boolean rspExpected = False;
   Boolean reSend      = False;
@@ -862,17 +863,29 @@ static void __transactor( void* threadinst ) {
     if( !data->subAvail( (obj)xpressnet ) ) {
       if( rspExpected && !rspReceived ) {
         Boolean avail = False;
-        int retry = 0;
+        int retry   = 0;
         while( retry < 5 && !avail ) {
           retry++;
           ThreadOp.sleep(10);
           avail = data->subAvail( (obj)xpressnet );
         };
         if( !avail ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received within 50ms; continue..." );
-          rspReceived = True;
-          rspExpected = False;
+          if( repeats < 3 ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received within 50ms; resend command %d of 3 times", repeats+1 );
+            rspReceived = True;
+            rspExpected = False;
+            reSend = True;
+            repeats++;
+          } else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received after 3 resends, continue..." );
+            rspReceived = True;
+            rspExpected = False;
+            reSend = False;
+            repeats = 0;
+          }
           continue;
+        } else {
+          repeats = 0;
         }
       }
       else {
