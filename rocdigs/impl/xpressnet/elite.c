@@ -98,10 +98,10 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
     if( port > 3 ) {
       port = 0;
       addr++;
-      out[1] = addr;
-      out[2] = out[2] & 0xF6;
-      out[2] |= (port << 1);
     }
+    out[1] = addr;
+    out[2] = out[2] & 0xF9;
+    out[2] |= (port << 1);
   }
 
   rc =  li101Write(xpressnet, out, rspexpected);
