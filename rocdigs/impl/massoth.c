@@ -141,7 +141,7 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
 
 
 
-static Boolean __transact( iOMassothData data, byte* out, byte* in ) {
+static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
   Boolean rc = data->dummyio;
 
   if( MutexOp.wait( data->mux ) ) {
@@ -153,8 +153,20 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in ) {
     if( !data->dummyio ) {
       if( rc = SerialOp.write( data->serial, out, outsize ) ) {
         if( in != NULL ) {
-          if( __readPacket( data, in ) ) {
-          }
+          int wait = 0;
+          do {
+            if( __readPacket( data, in ) ) {
+              if( in[0] & 0xE0 == id ) {
+                /* id match */
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "got wanted id[0x%02X]", id );
+                break;
+              }
+              /* evaluate response */
+            }
+            wait++;
+          } while( wait < 5 );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 reads", id );
+
         }
       }
     }
@@ -195,7 +207,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   if( cmd != NULL ) {
     byte opcode = 0;
     if( __translate( data, cmd, out ) ) {
-      if( __transact( data, out, NULL ) ) {
+      if( __transact( data, out, NULL, 0 ) ) {
       }
     }
   }
@@ -269,7 +281,7 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     if( !data->initialized ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending interface configuration..." );
-      data->initialized = __transact( data, out, NULL );
+      data->initialized = __transact( data, out, NULL, 0 );
       if( !data->initialized )
         ThreadOp.sleep( 1000 );
       else {
