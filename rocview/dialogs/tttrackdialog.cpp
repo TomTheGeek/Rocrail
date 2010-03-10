@@ -81,9 +81,11 @@ TTTrackDialog::TTTrackDialog( wxWindow* parent, iONode p_Props, int min, int max
 {
   Create(parent, -1, wxGetApp().getMsg("turntabletrack") );
   m_Props = p_Props;
-  m_TrackNr->SetRange(min, max);
-  m_DecTrackNr->SetRange(min, max);
-  m_OppTrackNr->SetRange(min, max);
+  if( min > 0 ) {
+    m_TrackNr->SetRange(min, max);
+    m_DecTrackNr->SetRange(min, max);
+    m_OppTrackNr->SetRange(min, max);
+  }
   initLabels();
   initValues();
   GetSizer()->Fit(this);
