@@ -43,7 +43,6 @@
 #include "rocview/public/guiapp.h"
 
 ////@begin XPM images
-
 ////@end XPM images
 
 /*!
@@ -91,6 +90,11 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props )
 void Hsi88CntrlDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_ChainBox->SetLabel( wxGetApp().getMsg( "chain" ) );
+  m_labLeft->SetLabel( wxGetApp().getMsg( "left" ) );
+  m_labMid->SetLabel( wxGetApp().getMsg( "middle" ) );
+  m_labRight->SetLabel( wxGetApp().getMsg( "right" ) );
 }
 
 void Hsi88CntrlDlg::initValues() {
@@ -105,6 +109,8 @@ void Hsi88CntrlDlg::initValues() {
     hsi88ini = NodeOp.inst( wHSI88.name(), m_Props, ELEMENT_NODE );
     NodeOp.addChild(m_Props, hsi88ini );
   }
+
+  m_Type->SetSelection( wHSI88.isusb(hsi88ini) ? 1:0 );
 
   char* val = StrOp.fmt( "%d", wHSI88.getfbleft( hsi88ini ) );
   m_Left->SetValue( wxString( val, wxConvUTF8 ) );
@@ -130,6 +136,8 @@ void Hsi88CntrlDlg::evaluate() {
     NodeOp.addChild(m_Props, hsi88ini );
   }
 
+  wHSI88.setusb( hsi88ini, m_Type->GetSelection() == 1 ? True:False );
+
   wHSI88.setfbleft( hsi88ini, atoi( m_Left->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbmiddle( hsi88ini, atoi( m_Mid->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbright( hsi88ini, atoi( m_Right->GetValue().mb_str(wxConvUTF8) ) );
@@ -148,18 +156,20 @@ bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_IID = NULL;
     m_labDevice = NULL;
     m_Device = NULL;
+    m_Type = NULL;
+    m_ChainBox = NULL;
     m_labLeft = NULL;
-    m_Left = NULL;
     m_labMid = NULL;
-    m_Mid = NULL;
     m_labRight = NULL;
+    m_Left = NULL;
+    m_Mid = NULL;
     m_Right = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end Hsi88CntrlDlg member initialisation
 
 ////@begin Hsi88CntrlDlg creation
-    SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     wxDialog::Create( parent, id, caption, pos, size, style );
 
     CreateControls();
@@ -195,49 +205,63 @@ void Hsi88CntrlDlg::CreateControls()
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_HSI_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_DEVICE, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_Device, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labLeft = new wxStaticText( itemPanel3, wxID_STATIC_HSI_LEFT, _("Ļeft bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labLeft, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    wxArrayString m_TypeStrings;
+    m_TypeStrings.Add(_("&RS232"));
+    m_TypeStrings.Add(_("&USB"));
+    m_Type = new wxRadioBox( itemPanel3, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_ROWS );
+    m_Type->SetSelection(0);
+    itemBoxSizer4->Add(m_Type, 0, wxGROW|wxALL, 5);
+
+    m_ChainBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Chains"));
+    wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer(m_ChainBox, wxVERTICAL);
+    itemBoxSizer4->Add(itemStaticBoxSizer11, 0, wxGROW|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(2, 3, 0, 0);
+    itemStaticBoxSizer11->Add(itemFlexGridSizer12, 0, wxGROW, 5);
+
+    m_labLeft = new wxStaticText( itemPanel3, wxID_STATIC_HSI_LEFT, wxGetTranslation(wxString() + (wxChar) 0x013B + wxT("eft bus")), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labLeft, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+    m_labMid = new wxStaticText( itemPanel3, wxID_STATIC_HSI_MID, _("Middle bus"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labMid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+
+    m_labRight = new wxStaticText( itemPanel3, wxID_STATIC_HSI_RIGHT, _("Right bus"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labRight, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Left = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_LEFT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Left->SetMaxLength(5);
-    itemFlexGridSizer5->Add(m_Left, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_labMid = new wxStaticText( itemPanel3, wxID_STATIC_HSI_MID, _("Middle bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labMid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer12->Add(m_Left, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Mid = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_MID, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Mid->SetMaxLength(5);
-    itemFlexGridSizer5->Add(m_Mid, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_labRight = new wxStaticText( itemPanel3, wxID_STATIC_HSI_RIGHT, _("Right bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labRight, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer12->Add(m_Mid, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Right = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_RIGHT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Right->SetMaxLength(5);
-    itemFlexGridSizer5->Add(m_Right, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer12->Add(m_Right, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer16 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer19 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer16, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer19, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer16->AddButton(m_OK);
+    itemStdDialogButtonSizer19->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer16->AddButton(m_Cancel);
+    itemStdDialogButtonSizer19->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer16->Realize();
+    itemStdDialogButtonSizer19->Realize();
 
 ////@end Hsi88CntrlDlg content construction
 }

@@ -47,22 +47,22 @@
 
 ////@begin control identifiers
 #define ID_DIALOG_HSI_SETTINGS 10025
-#define SYMBOL_HSI88CNTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_HSI88CNTRLDLG_TITLE _("HSI88")
-#define SYMBOL_HSI88CNTRLDLG_IDNAME ID_DIALOG_HSI_SETTINGS
-#define SYMBOL_HSI88CNTRLDLG_SIZE wxSize(400, 300)
-#define SYMBOL_HSI88CNTRLDLG_POSITION wxDefaultPosition
 #define ID_PANEL 10000
 #define ID_STATICTEXT_HSI_IID 10001
 #define ID_TEXTCTRL_HSI_IID 10002
 #define ID_STATICTEXT_HSI_DEVICE 10003
 #define ID_TEXTCTRL_HSI_DEVICE 10004
 #define wxID_STATIC_HSI_LEFT 10026
-#define ID_TEXTCTRL_HSI_LEFT 10005
 #define wxID_STATIC_HSI_MID 10027
-#define ID_TEXTCTRL_HSI_MID 10006
 #define wxID_STATIC_HSI_RIGHT 10028
+#define ID_TEXTCTRL_HSI_LEFT 10005
+#define ID_TEXTCTRL_HSI_MID 10006
 #define ID_TEXTCTRL_HSI_RIGHT 10007
+#define SYMBOL_HSI88CNTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
+#define SYMBOL_HSI88CNTRLDLG_TITLE _("HSI88")
+#define SYMBOL_HSI88CNTRLDLG_IDNAME ID_DIALOG_HSI_SETTINGS
+#define SYMBOL_HSI88CNTRLDLG_SIZE wxSize(400, 300)
+#define SYMBOL_HSI88CNTRLDLG_POSITION wxDefaultPosition
 ////@end control identifiers
 
 /*!
@@ -98,6 +98,7 @@ public:
     void CreateControls();
 
 ////@begin Hsi88CntrlDlg event handler declarations
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -107,6 +108,7 @@ public:
 ////@end Hsi88CntrlDlg event handler declarations
 
 ////@begin Hsi88CntrlDlg member function declarations
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -122,11 +124,13 @@ public:
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
     wxTextCtrl* m_Device;
+    wxRadioBox* m_Type;
+    wxStaticBox* m_ChainBox;
     wxStaticText* m_labLeft;
-    wxTextCtrl* m_Left;
     wxStaticText* m_labMid;
-    wxTextCtrl* m_Mid;
     wxStaticText* m_labRight;
+    wxTextCtrl* m_Left;
+    wxTextCtrl* m_Mid;
     wxTextCtrl* m_Right;
     wxButton* m_OK;
     wxButton* m_Cancel;

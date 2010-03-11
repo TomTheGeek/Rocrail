@@ -112,9 +112,49 @@ static void* __properties( void* inst ) {
 
 /** ----- OHSI88 ----- */
 
+
+static int __availBytes(iOHSI88Data o) {
+  if( o->usb )
+    return FileOp.size(o->usbh);
+  else
+    return SerialOp.available(o->serial);
+}
+
+static Boolean __readBytes(iOHSI88Data o, byte* buffer, int cnt) {
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes from %s", cnt, o->usb?"USB":"RS232" );
+  if( o->usb ) {
+    FileOp.setpos( o->usbh, 0 );
+    return FileOp.read( o->usbh, (char*)buffer, cnt );
+  }
+  else
+    return SerialOp.read( o->serial, (char*)buffer, cnt );
+}
+
+static Boolean __writeBytes(iOHSI88Data o, byte* buffer, int cnt) {
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "writing %d bytes to %s", cnt, o->usb?"USB":"RS232" );
+  if( o->usb )
+    return FileOp.write( o->usbh, (char*)buffer, cnt );
+  else
+    return SerialOp.write( o->serial, (char*)buffer, cnt );
+}
+
+static int __getRC(iOHSI88Data o) {
+  if( o->usb )
+    return FileOp.getRc(o->usbh);
+  else
+    return SerialOp.getRc(o->serial);
+}
+
+
+
+
 /* Check if CTS is set. Retry configured times */
 static Boolean CheckCTS( iOHSI88Data o ) {
   int wait4cts = 0;
+  if( o->usb ) {
+    return True;
+  }
+
   while( wait4cts < o->ctsretry ) {
     if( SerialOp.isCTS( o->serial ) ) {
       return True;
@@ -133,9 +173,12 @@ static Boolean __sendHSI88( iOHSI88 inst, char* out, int size ) {
 
   for( i = 0; i < size; i++ ) {
     if( CheckCTS(o) ) {
-      ok = SerialOp.write( o->serial, &out[i], 1 );
+      int rc = 0;
+      ok = __writeBytes( o, &out[i], 1 );
+      rc = __getRC(o);
+
       if( !ok ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Problem writing data, rc=%d", SerialOp.getRc(o->serial) );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Problem writing data, rc=%d", rc );
         return False;
       }
       ThreadOp.sleep(50);
@@ -154,15 +197,23 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
   int waitcounter = 0;
   int idx = 0;
 
-  while( waitcounter < 50 ) {
+  while( waitcounter < 50 && idx < 256 ) {
     /* check for waiting bytes: */
-    if( SerialOp.available(o->serial) <= 0 ) {
+    int avail = 0;
+    Boolean OK = False;
+
+    avail = __availBytes(o);
+
+    if( avail <= 0 ) {
        ThreadOp.sleep( 100 );
        waitcounter++;
        continue;
     }
+
     /* read the byte: */
-    if( SerialOp.read( o->serial, &in[idx], 1 ) ) {
+    OK = __readBytes( o, &in[idx], 1 );
+
+    if( OK ) {
       waitcounter = 0;
       idx++;
       in[idx] = '\0';
@@ -242,7 +293,11 @@ static iONode _cmd( obj inst ,const iONode cmd )
 static void _halt( obj inst ) {
   iOHSI88Data data = Data(inst);
   data->run = False;
-  SerialOp.close( data->serial );
+  if( data->usb && data->usbh != NULL )
+    FileOp.close( data->usbh );
+  else if( !data->usb && data->serial != NULL )
+    SerialOp.close( data->serial );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   return;
 }
@@ -323,7 +378,7 @@ static void __getVersion( iOHSI88 inst ) {
   iOHSI88 pHSI88 = inst;
   iOHSI88Data o = Data(pHSI88);
   char out[] = {'v','\r','\0'};
-  char version [64];
+  char version [256];
   int avail = 0;
   Boolean ok = False;
 
@@ -354,24 +409,31 @@ static Boolean __flushHSI88( iOHSI88 inst, Boolean forcetrace ) {
   /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
   {
     byte tmp[1000];
-    int bAvail = SerialOp.available(o->serial);
+    int bAvail = 0;
+
+    bAvail = __availBytes(o);
+
     if (bAvail > 0 && bAvail < 1000) {
       char c;
       int extra = 0;
 
       TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "Tossing %d bytes to wastebasket...", bAvail);
 
-      SerialOp.read( o->serial, tmp, bAvail );
+      __readBytes( o, tmp, bAvail );
+
       TraceOp.dump( name, TRCLEVEL_INFO, (char*)tmp, bAvail );
 
       do {
         ThreadOp.sleep(50);
-        bAvail = SerialOp.available(o->serial);
+
+        bAvail = __availBytes(o);
+
         if( bAvail > 0 ) {
-          SerialOp.read( o->serial, &c, 1 );
+          __readBytes( o, &c, 1 );
           extra++;
         }
-      } while( bAvail > 0 );
+      } while( bAvail > 0 && extra < 100 );
+
       if( extra > 0 )
         TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "More bytes flushed: %d", extra);
 
@@ -400,7 +462,7 @@ static Boolean __preinitHSI88( iOHSI88 inst ) {
   if( __sendHSI88( inst, hello, StrOp.len( hello ) ) ) {
 
     /* After ten times it should detect at least 1 cr: */
-    ok = SerialOp.read( o->serial, &b, 1 );
+    ok = __readBytes( o, &b, 1 );
 
     /* Flush all cr's he detected: */
     __flushHSI88( inst, False );
@@ -474,6 +536,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
   Boolean crDetected = False;
   int waitcounter = 0;
   Boolean ok;
+  int avail = 0;
 
   memset(fb,0,256);
 
@@ -495,10 +558,13 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
     __fbstatetrigger( pHSI88, NULL );
 
-    if( !o->dummyio && SerialOp.available(o->serial) )
-      ok = SerialOp.read( o->serial, (char*)buffer, 1 );
-    else
+    if( o->dummyio )
       continue;
+
+    avail = __availBytes(o);
+
+    if( avail > 0 )
+      ok = __readBytes( o, buffer, 1 );
 
     if( ok )
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Byte available: 0x%02X", buffer[0]);
@@ -508,7 +574,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
       int i = 0;
       int j = 0;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Info received, waiting for module count...");
-      ok = SerialOp.read( o->serial, (char*)buffer, 1 );
+      ok = __readBytes( o, (char*)buffer, 1 );
       buffer[1] = '\0';
       modcnt = buffer[0];
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d modules",modcnt);
@@ -517,7 +583,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
         unsigned char highbyte = 0;
         unsigned char lowbyte = 0;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading module data %d...", i);
-        ok = SerialOp.read( o->serial, (char*)buffer, 3 );
+        ok = __readBytes( o, (char*)buffer, 3 );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "module data %d=0x%02X 0x%02X 0x%02X", i,
                      buffer[0], buffer[1], buffer[2] );
         modnr    = buffer[0];
@@ -557,7 +623,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
       }
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Waiting for CR response...");
-      ok = SerialOp.read( o->serial, (char*)buffer, 1 );
+      ok = __readBytes( o, (char*)buffer, 1 );
       if (buffer[0] != '\r')
       {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Protocol Error: expected 0x13 got 0x%02x",(unsigned char)buffer[0]);
@@ -573,7 +639,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
     crDetected = False;
     while (ok && !crDetected)
     {
-      ok = SerialOp.read( o->serial, (char*)&buffer[k], 1 );
+      ok = __readBytes( o, (char*)&buffer[k], 1 );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Unmatched response %d=0x%02X", k, buffer[k]);
       if(buffer[k] == '\r')
         crDetected = True;
@@ -651,15 +717,17 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   data->smooth   = wHSI88.issmooth( hsi88ini );
 
   /* HSI-88 specific settings */
-  data->fbleft = wHSI88.getfbleft( hsi88ini );
+  data->fbleft   = wHSI88.getfbleft( hsi88ini );
   data->fbmiddle = wHSI88.getfbmiddle( hsi88ini );
-  data->fbright = wHSI88.getfbright( hsi88ini );
+  data->fbright  = wHSI88.getfbright( hsi88ini );
+  data->usb      = wHSI88.isusb( hsi88ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hsi88 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"");
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  =%s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "type    =%s", data->usb ? "USB":"RS232" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbleft  =%d", data->fbleft );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle=%d", data->fbmiddle );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright =%d", data->fbright );
@@ -667,13 +735,18 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummyio =%s", data->dummyio?"true":"false" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, data->flow );
-  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity, wDigInt.isrtsdisabled( ini ) );
-  SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
-  data->serialOK = SerialOp.open( data->serial );
-  SerialOp.setDTR(data->serial, True);
-
+  if( data->usb ) {
+    data->usbh = FileOp.inst( data->device, OPEN_READWRITE );
+    data->serialOK = data->usbh != NULL ? True:False;
+  }
+  else {
+    data->serial = SerialOp.inst( data->device );
+    SerialOp.setFlow( data->serial, data->flow );
+    SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity, wDigInt.isrtsdisabled( ini ) );
+    SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
+    data->serialOK = SerialOp.open( data->serial );
+    SerialOp.setDTR(data->serial, True);
+  }
 
   if( data->serialOK ) {
     data->run = True;

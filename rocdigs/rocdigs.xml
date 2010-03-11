@@ -452,7 +452,7 @@
   </object>
 
 
-   <object name="HSI88" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex" include="$rocint/public/digint" remark="HSI-88 object">
+   <object name="HSI88" interface="$../rocint/rocint.xml:DigInt" use="node,trace,file,serial,thread,mutex" include="$rocint/public/digint" remark="HSI-88 object">
     <typedef def="enum {HSI88_OK=1, HSI88_ERROR, HSI88_CTSERR, HSI88_SNDERR, HSI88_RCVERR} HSI88state"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -467,6 +467,7 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="serial" vt="iOSerial"/>
+      <var name="usbh" vt="iOFile"/>
       <var name="mux" vt="iOMutex"/>
       <var name="feedbackReader" vt="iOThread"/>
       <var name="device" vt="const char*"/>
@@ -488,6 +489,7 @@
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
       <var name="dummyio" vt="Boolean"/>
+      <var name="usb" vt="Boolean"/>
     </data>
   </object>
 

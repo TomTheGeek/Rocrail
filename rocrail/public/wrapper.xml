@@ -324,6 +324,7 @@
         <var name="fbmiddle" vt="int" defval="0" remark="HSI-88 number of modules of 8 inputs on middle port" />
         <var name="fbright" vt="int" defval="0" remark="HSI-88 number of modules of 8 inputs on right port" />
         <var name="smooth" vt="bool" defval="false" remark="HSI-88 smooth out fb contact noice; fb must be at least 100ms low before sending event." />
+        <var name="usb" vt="bool" defval="false"/>
       </hsi88>
 
 
