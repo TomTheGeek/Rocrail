@@ -8,9 +8,14 @@ SVN=$4
 DIST=$5
 ARCH=$6
 
-if [ !  $1 ] || [ ! $2 ] || [ ! $3 ]; then
-  echo "usage: mkdeb.sh version patch relname rev dist arch"
+if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ] || [ ! $5 ]; then
+  echo "usage  : mkdeb.sh version patch relname rev dist arch"
+  echo "example: mkdeb.sh 1.4 999 snapshot 1420 debian5 i386"
   exit $?
+fi
+
+if [ ! $6 ]; then
+  ARCH="i386"
 fi
 
 if [ ! -e ../package ] ; then

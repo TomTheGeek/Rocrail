@@ -39,6 +39,7 @@ PATCH=$2
 RELEASNAME=$3
 BAZAARREVNO=$4
 DIST=$5
+ARCH=$6
 
 if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ "$FLAGERROR" = "1" ]; then
   if [ "$FLAGERROR" = "1" ]; then
@@ -47,9 +48,9 @@ if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ "$FLAGERROR" = "1" ]; then
     echo "Error: Missing parameters."
   fi
   echo ""
-  echo "    Usage: mkdeb-full.sh [-d] [-m] <version> <patch> <relname> [<revno> ] [<dist>]"
+  echo "    Usage: mkdeb-full.sh [-d] [-m] <version> <patch> <relname> [<revno> ] [<dist>] [<arch>]"
   echo ""
-  echo "    Example: \"mkdeb.sh 1.2 999 snapshot 162 debian\" will build "
+  echo "    Example: \"mkdeb.sh 1.2 999 snapshot 162 debian i386\" will build "
   echo "    \"rocrail-setup-1.2.999-rev162-snapshot-debian-i386.deb\".  "
   echo ""
   echo "    Use [-d] to make a debugging package for local use only.  \"-dbg\""
@@ -96,6 +97,11 @@ if [ ! $5 ]; then
   echo "    <dist> parameter not specified , using \"debian\"..."
 fi
 
+if [ ! $6 ]; then
+  ARCH="i386"
+  echo "    <arch> parameter not specified , using \"i386\"..."
+fi
+
 if [ $DEBUGFLAG = 1 ]; then
   DIST="$DIST-dbg"
 fi
@@ -104,7 +110,7 @@ echo ""
 
 # Show the user the filename being built
 
-PACKAGENAME="rocrail-setup-$VERSION.$PATCH-rev$BAZAARREVNO-$RELEASNAME-$DIST-i386.deb"
+PACKAGENAME="rocrail-setup-$VERSION.$PATCH-rev$BAZAARREVNO-$RELEASNAME-$DIST-$ARCH.deb"
 echo "Building $PACKAGENAME in ../package/"
 if [ $DEBUGFLAG = 1 ]; then
   echo "  -- Building a debug package"
@@ -180,7 +186,7 @@ echo ""
 
 echo "Copying objects and libraries..."
 
-cp ../rocrail/package/control debian/DEBIAN
+cp ../rocrail/package/control-$ARCH debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/usr/libexec/rocrail
 cp ../unxbin/rocview debian/usr/libexec/rocrail
