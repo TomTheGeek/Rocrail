@@ -6,9 +6,10 @@ PATCH=$2
 RELEASNAME=$3
 SVN=$4
 DIST=$5
+ARCH=$6
 
 if [ !  $1 ] || [ ! $2 ] || [ ! $3 ]; then
-  echo "usage: mkdeb.sh version patch relname svn dist"
+  echo "usage: mkdeb.sh version patch relname rev dist arch"
   exit $?
 fi
 
@@ -27,7 +28,7 @@ mkdir -p debian/usr/share/applications
 mkdir -p debian/usr/share/desktop-directories
 mkdir -p debian/etc/init.d
 
-cp ../rocrail/package/control debian/DEBIAN
+cp ../rocrail/package/control-$ARCH debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/opt/rocrail
 cp ../unxbin/rocview debian/opt/rocrail
@@ -53,6 +54,6 @@ cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
 dpkg-deb --build debian
-mv debian.deb rocrail-setup-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-i386.deb
+mv debian.deb rocrail-setup-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-$ARCH.deb
 rm -Rf debian
 cd ../rocrail

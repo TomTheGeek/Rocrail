@@ -1,0 +1,9 @@
+Package: rocrail
+Version: 1.4.0
+Section: other
+Priority: optional
+Architecture: i386
+Depends: libwxgtk2.8-0
+Maintainer: Rob Versluis <support@rocrail.net>
+Description: Rocrail - Model Railroad Control System.    
+
