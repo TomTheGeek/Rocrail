@@ -763,7 +763,7 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
 
 
 static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
-  Boolean rspReceived = False;
+  Boolean rspReceived = True;
 
   /* check if last command was recieved, the cs answers: 1 4 5 */
   if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
@@ -800,6 +800,10 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
   }
   else if( in[0] == 1 && in[1] == 10 && in[2] == 11 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LI: Unexpected response from LZV");
+    rspReceived = True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI: Response: [0x%02X][0x%02X][0x%02X]", in[0], in[1], in[2]);
     rspReceived = True;
   }
 
