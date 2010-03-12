@@ -53,6 +53,10 @@ Boolean rocs_system_releasePort( int from, int num );
 void rocs_system_writePort( int port, byte val );
 byte rocs_system_readPort( int port );
 Boolean rocs_system_accessDev( const char* device, Boolean readonly );
+long rocs_system_openDevice( const char* devname );
+Boolean rocs_system_writeDevice( long h, char* buffer, int size );
+Boolean rocs_system_readDevice( long h, char* buffer, int size );
+int rocs_system_availDevice( long h );
 
 /*
  ***** _objbase functions.
@@ -321,7 +325,7 @@ static void __execRunner( void* inst ) {
   execParam param = (void*)ThreadOp.getParm(th);
 
   ThreadOp.sleep(10);
-  
+
   #if defined _WIN32
     if( param->minimized ) {
       char* cmdStr = StrOp.fmt("start /MIN %s", param->cmdStr);

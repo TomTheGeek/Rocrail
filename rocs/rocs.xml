@@ -304,7 +304,7 @@
 
 
   <object name="File" include="#stdio" remark="File helper object.">
-    <typedef def="enum {OPEN_WRITE=0, OPEN_READONLY=1, OPEN_APPEND=2, OPEN_READWRITE=3} openmode" remark="CodePage."/>
+    <typedef def="enum {OPEN_WRITE=0, OPEN_READONLY=1, OPEN_APPEND=2, OPEN_READWRITE=3, OPEN_RW=4, OPEN_RA=5, OPEN_R=6} openmode" remark="CodePage."/>
     <fun name="inst" vt="this" remark="Object creator.">
       <param name="path" vt="const char*" remark="File path and name."/>
       <param name="openflag" vt="int" remark="How to open this file. See typedef openmode."/>
@@ -1548,6 +1548,22 @@
       <var name="ticker" vt="iOThread" remark=""/>
       <var name="tick" vt="unsigned long" remark=""/>
     </data>
+    <fun name="openDevice" implname="rocs_system_openDevice" vt="long" remark="open device access">
+      <param name="device" vt="const char*" remark="device name"/>
+    </fun>
+    <fun name="readDevice" implname="rocs_system_readDevice" vt="Boolean" remark="read from device">
+      <param name="handle" vt="long" remark="device handle"/>
+      <param name="buffer" vt="char*" remark="byte buffer"/>
+      <param name="size" vt="int" remark="number of bytes"/>
+    </fun>
+    <fun name="writeDevice" implname="rocs_system_writeDevice" vt="Boolean" remark="read from device">
+      <param name="handle" vt="long" remark="device handle"/>
+      <param name="buffer" vt="char*" remark="byte buffer"/>
+      <param name="size" vt="int" remark="number of bytes"/>
+    </fun>
+    <fun name="availDevice" implname="rocs_system_availDevice" vt="int" remark="available from device">
+      <param name="handle" vt="long" remark="device handle"/>
+    </fun>
   </object>
 
 

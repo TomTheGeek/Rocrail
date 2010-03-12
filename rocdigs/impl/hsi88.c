@@ -114,8 +114,11 @@ static void* __properties( void* inst ) {
 
 
 static int __availBytes(iOHSI88Data o) {
-  if( o->usb )
-    return FileOp.size(o->usbh);
+  if( o->usb ) {
+    /*return FileOp.size(o->usbh);*/
+    /*return SystemOp.availDevice(o->devh);*/
+    return 1;
+  }
   else
     return SerialOp.available(o->serial);
 }
@@ -123,8 +126,11 @@ static int __availBytes(iOHSI88Data o) {
 static Boolean __readBytes(iOHSI88Data o, byte* buffer, int cnt) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes from %s", cnt, o->usb?"USB":"RS232" );
   if( o->usb ) {
+    /*
     FileOp.setpos( o->usbh, 0 );
     return FileOp.read( o->usbh, (char*)buffer, cnt );
+    */
+    return SystemOp.readDevice( o->devh, (char*)buffer, cnt);
   }
   else
     return SerialOp.read( o->serial, (char*)buffer, cnt );
@@ -132,15 +138,19 @@ static Boolean __readBytes(iOHSI88Data o, byte* buffer, int cnt) {
 
 static Boolean __writeBytes(iOHSI88Data o, byte* buffer, int cnt) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "writing %d bytes to %s", cnt, o->usb?"USB":"RS232" );
-  if( o->usb )
-    return FileOp.write( o->usbh, (char*)buffer, cnt );
+  if( o->usb ) {
+    /*return FileOp.write( o->usbh, (char*)buffer, cnt );*/
+    return SystemOp.writeDevice( o->devh, (char*)buffer, cnt);
+  }
   else
     return SerialOp.write( o->serial, (char*)buffer, cnt );
 }
 
 static int __getRC(iOHSI88Data o) {
-  if( o->usb )
-    return FileOp.getRc(o->usbh);
+  if( o->usb ) {
+    /*return FileOp.getRc(o->usbh);*/
+    return 0;
+  }
   else
     return SerialOp.getRc(o->serial);
 }
@@ -736,8 +746,10 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   if( data->usb ) {
-    data->usbh = FileOp.inst( data->device, OPEN_READWRITE );
-    data->serialOK = data->usbh != NULL ? True:False;
+    /*data->usbh = FileOp.inst( data->device, OPEN_R );*/
+    data->devh = SystemOp.openDevice(data->device);
+
+    data->serialOK = data->devh != NULL ? True:False;
   }
   else {
     data->serial = SerialOp.inst( data->device );

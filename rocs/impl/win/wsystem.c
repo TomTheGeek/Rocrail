@@ -16,7 +16,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _WIN32 
+#ifdef _WIN32
 
 #include <stdlib.h>
 #include <string.h>
@@ -84,9 +84,9 @@ int rocs_system_getMillis( void ) {
 Boolean rocs_system_uBusyWait( int us) {
 #ifdef __ROCS_SYSTEM__
 	LARGE_INTEGER ticksPerSecond;
-	LARGE_INTEGER start_ticks, curr_ticks, end_ticks;   
+	LARGE_INTEGER start_ticks, curr_ticks, end_ticks;
 
-    if (!QueryPerformanceCounter(&start_ticks) ){ 
+    if (!QueryPerformanceCounter(&start_ticks) ){
 		TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "QueryPerformanceTimer not present!" );
 		return False;
 	}
@@ -100,7 +100,7 @@ Boolean rocs_system_uBusyWait( int us) {
 //	TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start_ticks:    %I64Ld ticks",start_ticks );
 
 	do {
-		if (!QueryPerformanceCounter(&curr_ticks) ){ 
+		if (!QueryPerformanceCounter(&curr_ticks) ){
 			TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "QueryPerformanceTimer failed!" );
 			return False;
 		}
@@ -136,26 +136,26 @@ char* rocs_system_getURL( const char* szFile )
   char* szReturn = NULL;
   long     iSize = 0;
   int         rc = 0;
-  
+
   char szUNC[ BUFFER_SIZE + 1 ];
-  
+
   iSize = sizeof( szUNC[0] ) * BUFFER_SIZE;
 
   szDrive = getDriveLetter( szFile );
-  
+
   if( szDrive == NULL )
     return NULL;
 
   rc = WNetGetConnection( szDrive, szUNC, &iSize );
   if ( rc == NO_ERROR ) {
-    
+
     szReturn = StrOp.fmt( "%s%s", szUNC, szFile + StrOp.len( szDrive ) );
     StrOp.free( szDrive );
     return szReturn;
   }
   else {
     StrOp.free( szDrive );
-    TraceOp.trc( "wunc", TRCLEVEL_INFO, __LINE__, 9999, "Error calling WNetGetConnection( %s, 0x%08X, 0x%08X ) rc=%d", 
+    TraceOp.trc( "wunc", TRCLEVEL_INFO, __LINE__, 9999, "Error calling WNetGetConnection( %s, 0x%08X, 0x%08X ) rc=%d",
                   szDrive, szUNC, &iSize,rc );
     return NULL;
   }
@@ -210,6 +210,54 @@ void rocs_system_writePort( int port, byte val ) {
 byte rocs_system_readPort( int port ) {
   return _inp(port);
 }
+
+
+long rocs_system_openDevice( const char* devname ) {
+  HANDLE h;
+  h = CreateFile(devname, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  if(h == INVALID_HANDLE_VALUE) {
+      int rc = GetLastError();
+      TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, rc,
+          "Opening device[%s]  [return code=%d]", devname, rc );
+      return 0;
+  }
+  return (long)h;
+}
+
+Boolean rocs_system_writeDevice( long h, char* buffer, int size ) {
+  long send = 0;
+  int  ok   = 0;
+  ok = WriteFile( (HANDLE)h, buffer, size, &send, NULL );
+
+  if( !ok ) {
+    int rc = GetLastError();
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "send %d of %d bytes [rc=%d]", send, size, rc );
+  }
+
+  return ok;
+}
+
+Boolean rocs_system_readDevice( long h, char* buffer, int size ) {
+  long read = 0;
+  int  ok   = 0;
+  ok = ReadFile( (HANDLE)h, buffer, size, &read, NULL );
+
+  if( !ok ) {
+    int rc = GetLastError();
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "read %d of %d bytes [rc=%d]", read, size, rc );
+  }
+
+  return ok;
+}
+
+
+int rocs_system_availDevice( long h ) {
+  return GetFileSize( (HANDLE)h, NULL );
+}
+
 
 
 

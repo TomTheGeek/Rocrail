@@ -150,6 +150,15 @@ static Boolean __openFile( iOFileData data ) {
       case OPEN_READONLY:
         a = "rb";
         break;
+      case OPEN_RW:
+        a = "rw";
+        break;
+      case OPEN_RA:
+        a = "ra";
+        break;
+      case OPEN_R:
+        a = "r";
+        break;
     }
 
     _convertPath2OSType( data->path );

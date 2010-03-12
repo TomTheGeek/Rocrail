@@ -468,6 +468,7 @@
       <var name="listenerFun" vt="digint_listener"/>
       <var name="serial" vt="iOSerial"/>
       <var name="usbh" vt="iOFile"/>
+      <var name="devh" vt="long"/>
       <var name="mux" vt="iOMutex"/>
       <var name="feedbackReader" vt="iOThread"/>
       <var name="device" vt="const char*"/>

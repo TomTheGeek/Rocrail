@@ -140,4 +140,23 @@ Boolean rocs_system_accessDev( const char* device, Boolean readonly ) {
   return access( device, R_OK|(readonly?0:W_OK) ) == 0 ? True:False;
 }
 
+
+long rocs_system_openDevice( const char* devname ) {
+  return 0;
+}
+
+Boolean rocs_system_writeDevice( long h, char* buffer, int size ) {
+  return False;
+}
+
+Boolean rocs_system_readDevice( long h, char* buffer, int size ) {
+  return False;
+}
+
+int rocs_system_availDevice( long h ) {
+  return 0;
+}
+
+
+
 #endif
