@@ -408,26 +408,51 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
-    Boolean f1 = wFunCmd.isf1( node );
-    Boolean f2 = wFunCmd.isf2( node );
-    Boolean f3 = wFunCmd.isf3( node );
-    Boolean f4 = wFunCmd.isf4( node );
-    Boolean f5 = wFunCmd.isf5( node );
-    Boolean f6 = wFunCmd.isf6( node );
-    Boolean f7 = wFunCmd.isf7( node );
-    Boolean f8 = wFunCmd.isf8( node );
-    int   info = (f1?0x01:0) + (f2?0x02:0) + (f3?0x04:0) + (f4?0x08:0) + (f5?0x10:0) + (f6?0x20:0) + (f7?0x40:0) + (f8?0x80:0);
-    p50[0] = (byte)'x';
-    p50[1] = 0x88;
-    p50[2] = (byte)(addr&0xFF);
-    p50[3] = (addr >> 8) & 0xFF;
-    p50[4] = (unsigned char)info;
-    *insize = 1; /* Return code from P50x. */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "loc %d f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
-            addr, f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
-            f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off" );
-    return 5;
+    int group = wFunCmd.getgroup(node);
+    if( group > 2 ) {
+      Boolean f1 = wFunCmd.isf9 ( node );
+      Boolean f2 = wFunCmd.isf10( node );
+      Boolean f3 = wFunCmd.isf11( node );
+      Boolean f4 = wFunCmd.isf12( node );
+      Boolean f5 = wFunCmd.isf13( node );
+      Boolean f6 = wFunCmd.isf14( node );
+      Boolean f7 = wFunCmd.isf15( node );
+      Boolean f8 = wFunCmd.isf16( node );
+      int   info = (f1?0x01:0) + (f2?0x02:0) + (f3?0x04:0) + (f4?0x08:0) + (f5?0x10:0) + (f6?0x20:0) + (f7?0x40:0) + (f8?0x80:0);
+      p50[0] = (byte)'x';
+      p50[1] = 0x89;
+      p50[2] = (byte)(addr&0xFF);
+      p50[3] = (addr >> 8) & 0xFF;
+      p50[4] = (unsigned char)info;
+      *insize = 1; /* Return code from P50x. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "loc %d f9=%s f10=%s f11=%s f12=%s f13=%s f14=%s f15=%s f16=%s",
+              addr, f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
+              f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off" );
+      return 5;
+    }
+    else {
+      Boolean f1 = wFunCmd.isf1( node );
+      Boolean f2 = wFunCmd.isf2( node );
+      Boolean f3 = wFunCmd.isf3( node );
+      Boolean f4 = wFunCmd.isf4( node );
+      Boolean f5 = wFunCmd.isf5( node );
+      Boolean f6 = wFunCmd.isf6( node );
+      Boolean f7 = wFunCmd.isf7( node );
+      Boolean f8 = wFunCmd.isf8( node );
+      int   info = (f1?0x01:0) + (f2?0x02:0) + (f3?0x04:0) + (f4?0x08:0) + (f5?0x10:0) + (f6?0x20:0) + (f7?0x40:0) + (f8?0x80:0);
+      p50[0] = (byte)'x';
+      p50[1] = 0x88;
+      p50[2] = (byte)(addr&0xFF);
+      p50[3] = (addr >> 8) & 0xFF;
+      p50[4] = (unsigned char)info;
+      *insize = 1; /* Return code from P50x. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "loc %d f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s",
+              addr, f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
+              f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off" );
+      return 5;
+    }
   }
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
