@@ -847,7 +847,7 @@ static void __transactor( void* threadinst ) {
       else {
         post = ThreadOp.getPost( th );
         if (post != NULL) {
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "processing post..." );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing post..." );
           MemOp.copy(out, post, 32);
           MemOp.copy(lastPacket, post, 32);
           freeMem( post);
