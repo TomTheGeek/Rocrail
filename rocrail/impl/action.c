@@ -393,6 +393,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
         LocOp.dispatch(lc);
       }
+      else if( StrOp.equals(wLoc.swap, wAction.getcmd(data->action) ) ) {
+        LocOp.swapPlacing(lc, NULL, False);
+      }
     }
   }
 
