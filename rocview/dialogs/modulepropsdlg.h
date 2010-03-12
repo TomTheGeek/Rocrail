@@ -122,6 +122,7 @@ public:
     wxStaticText* m_labY;
     wxSpinCtrl* m_Y;
     wxRadioBox* m_Rotation;
+    wxCheckBox* m_SwapRRD;
     wxPanel* m_ConnectionPanel;
     wxStaticBox* m_NorthBox;
     wxStaticText* m_labNorthModID;

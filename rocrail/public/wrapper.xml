@@ -787,6 +787,7 @@
       <var name="rotation" vt="int" defval="0" range="0,90,180,270" remark="rotation angle in degrees"/>
       <var name="cx" vt="int" defval="0" range="0-*"/>
       <var name="cy" vt="int" defval="0" range="0-*"/>
+      <var name="swaprrd" vt="bool" defval="false" remark="Swap route running directions."/>
       <var name="cmd" vt="string" defval="" range="*" remark="module command from rocgui"/>
       <const name="cmd_north" vt="string" val="north"/>
       <const name="cmd_east" vt="string" val="east"/>

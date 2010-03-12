@@ -518,18 +518,28 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
 
   route = wRouteList.getst( routes );
   while( route != NULL ) {
+    iONode stclone = NULL;
     wRoute.setmodid( route, wModule.getid(module) );
     wRoute.setz( route, level );
+
+    stclone = (iONode)NodeOp.base.clone(route);
+
+    if( wModule.isswaprrd(module) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swap running direction for route [%s] module [%s]",
+          wRoute.getid(stclone), wModule.getid(module) );
+      wRoute.setlcdir( stclone, !wRoute.islcdir(stclone));
+    }
+
     if( StrOp.startsWith( wRoute.getbka(route), "point-" ) || StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {
       /* unresolved internal route found; add to the unresolved route list */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unresolved internal route from [%s] to [%s]",
           wRoute.getbka(route), wRoute.getbkb(route) );
-      ListOp.add( data->unresolvedRouteList, NodeOp.base.clone(route) );
+      ListOp.add( data->unresolvedRouteList, stclone );
     }
     else {
       /* complete internal route; add to the normal route list */
       iONode stlist = wPlan.getstlist( model );
-      NodeOp.addChild( stlist, (iONode)NodeOp.base.clone(route) );
+      NodeOp.addChild( stlist, stclone );
     }
 
     route = wRouteList.nextst( routes, route );
