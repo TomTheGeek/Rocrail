@@ -89,9 +89,9 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props )
 
 void Hsi88CntrlDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_ChainBox->SetLabel( wxGetApp().getMsg( "chain" ) );
+  m_ChainBox->SetLabel( _T("S88 ") + wxGetApp().getMsg( "chain" ) );
   m_labLeft->SetLabel( wxGetApp().getMsg( "left" ) );
   m_labMid->SetLabel( wxGetApp().getMsg( "middle" ) );
   m_labRight->SetLabel( wxGetApp().getMsg( "right" ) );
@@ -100,7 +100,7 @@ void Hsi88CntrlDlg::initLabels() {
 void Hsi88CntrlDlg::initValues() {
   if( m_Props == NULL )
     return;
-    
+
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 
@@ -144,7 +144,7 @@ void Hsi88CntrlDlg::evaluate() {
 }
 
 
-  
+
 /*!
  * Hsi88CntrlDlg creator
  */
@@ -187,7 +187,7 @@ bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
  */
 
 void Hsi88CntrlDlg::CreateControls()
-{    
+{
 ////@begin Hsi88CntrlDlg content construction
     Hsi88CntrlDlg* itemDialog1 = this;
 

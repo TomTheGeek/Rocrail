@@ -12255,4 +12255,8 @@
   <Msg id="recycle">
     <en txt="Recycle"/>
   </Msg>
+  <Msg id="middle">
+    <en txt="Middle"/>
+  </Msg>
+
 </Messages>
