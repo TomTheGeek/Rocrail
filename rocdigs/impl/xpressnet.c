@@ -224,6 +224,8 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
+      ThreadOp.sleep( data->swtime );
+
       /* deactivate the gate to be used */
       byte* outb = allocMem(32);
       outb[0] = 0x52;
@@ -241,18 +243,19 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outa );
 
+      ThreadOp.sleep( data->swtime );
+
       byte* outb = allocMem(32);
       outb[0] = 0x52;
       outb[1] = addr;
       outb[2] = 0x80 | 0x00 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outb );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "gate %d %d ",gate,state);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "gate %d %d ",gate,state);
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d-%d %s",
         addr+1, port+1, wSwitch.getcmd( node ) );
-    ThreadOp.sleep( data->swtime );
 
   }
   /* Output command. */
@@ -281,6 +284,8 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[1] = addr;
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
+
+      ThreadOp.sleep( data->swtime );
 
       byte* outb = allocMem(32);
       outb[0] = 0x52;
@@ -414,6 +419,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       data->lcfn[addr] = outa[4];
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function group 1 (Lights ON)" );
       ThreadOp.post( data->transactor, (obj)outa );
+      ThreadOp.sleep(50);
     }
 
     byte* outb = allocMem(32);
@@ -482,6 +488,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[4] = functions1;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
       ThreadOp.post( data->transactor, (obj)outa );
+      ThreadOp.sleep(50);
     }
 
     if( group == 0 || group == 2 ) {
@@ -492,6 +499,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outb[4] = functions2;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
       ThreadOp.post( data->transactor, (obj)outb );
+      ThreadOp.sleep(50);
     }
 
 
@@ -503,6 +511,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outc[4] = functions3;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
       ThreadOp.post( data->transactor, (obj)outc );
+      ThreadOp.sleep(50);
     }
 
     if( group == 0 || group == 4 || group == 5 ) {
@@ -513,6 +522,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outc[4] = functions4;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
       ThreadOp.post( data->transactor, (obj)outc );
+      ThreadOp.sleep(50);
     }
 
     if( group == 0 || group == 6 || group == 7 ) {
@@ -581,6 +591,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outa[1] = 0x15;
         outa[2] = cv & 0xFF;
         ThreadOp.post( data->transactor, (obj)outa );
+        ThreadOp.sleep(50);
 
         byte* outb = allocMem(32);
         outb[0] = 0x21;
@@ -627,6 +638,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outa[2] = cv & 0xFF;
         outa[3] = value & 0xFF;
         ThreadOp.post( data->transactor, (obj)outa );
+        ThreadOp.sleep(50);
 
         byte* outb = allocMem(32);
         outb[0] = 0x21;
@@ -864,6 +876,7 @@ static void __transactor( void* threadinst ) {
     }
 
     /* check if there is a xpressnet packet available */
+    /*
     if( !data->subAvail( (obj)xpressnet ) ) {
       if( rspExpected && !rspReceived ) {
         Boolean avail = False;
@@ -897,11 +910,20 @@ static void __transactor( void* threadinst ) {
         continue;
       }
     }
+    */
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing response..." );
 
-    inlen = data->subRead((obj)xpressnet, in, &rspReceived);
+    inlen = 0;
+
+    if( rspExpected || data->subAvail( (obj)xpressnet ) ) {
+      inlen = data->subRead((obj)xpressnet, in, &rspReceived);
+    }
+
     if ( inlen > 0 ) {
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing response..." );
+      rspReceived = True;
+      rspExpected = False;
 
       if( !isChecksumOK(in) ) {
         ThreadOp.sleep(10);
@@ -988,7 +1010,7 @@ static void __transactor( void* threadinst ) {
       }
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy; Resend.");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
         rspReceived = True;
         reSend = True;
       }
