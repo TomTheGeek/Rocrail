@@ -215,14 +215,15 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   int percent = 0;
 
   /* the route velocity has a higher priority, so check first: */
-  if( onexit && street != NULL ) {
+  if( street != NULL ) {
     const char* V_hint_route = street->getVelocity( street, &percent );
     if( !StrOp.equals( V_hint_route, wRoute.V_none ) ) {
       StrOp.copy( data->V_hint, V_hint_route );
       if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
         StrOp.fmtb( data->V_hint, "%d", percent );
       }
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route V_hint [%s] (%s)", data->V_hint, onexit?"on exit":"on enter" );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route[%s] V_hint [%s]",
+          street->getId(street), data->V_hint );
       return data->V_hint;
     }
   }
