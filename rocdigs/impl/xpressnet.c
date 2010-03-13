@@ -1010,9 +1010,12 @@ static void __transactor( void* threadinst ) {
       }
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
+        /* Just ignore this as done in lenz.c :!: */
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
+        /*
         rspReceived = True;
         reSend = True;
+        */
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
