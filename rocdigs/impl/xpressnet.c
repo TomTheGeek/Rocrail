@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Signal.h"
@@ -192,6 +193,18 @@ static void __handleSwitch(iOXpressNet xpressnet, int addr, int port, int value)
 static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   iOXpressNetData data = Data(xpressnet);
   iONode rsp = NULL;
+
+  /* check for global power before processing accessory commands */
+  if( !data->power ) {
+    if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ||
+        StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "not processing accessory[%s] commands: Power is OFF",wItem.getid(node));
+      ThreadOp.sleep(100);
+      return rsp;
+    }
+  }
 
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
@@ -571,19 +584,22 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
       if( wProgram.ispom(node) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, addr );
+        if( data->power ) {
+          if (cv > 0) cv--;
 
-        if (cv > 0) cv--;
+          byte* outb = allocMem(32);
+          outb[0] = 0xE6;
+          outb[1] = 0x30;
+          __setLocAddr( addr, outb+2 );
+          outb[4] = ((cv & 0xFF00) >> 8) + 0xE4;
+          outb[5] = cv & 0x00FF;
+          outb[6] = 0x00;
 
-        byte* outb = allocMem(32);
-        outb[0] = 0xE6;
-        outb[1] = 0x30;
-        __setLocAddr( addr, outb+2 );
-        outb[4] = ((cv & 0xFF00) >> 8) + 0xE4;
-        outb[5] = cv & 0x00FF;
-        outb[6] = 0x00;
-
-        ThreadOp.post( data->transactor, (obj)outb );
-
+          ThreadOp.post( data->transactor, (obj)outb );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: not processing; Power is OFF" );
+        }
       }
       else {
         byte* outa = allocMem(32);
@@ -610,25 +626,31 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       if( wProgram.ispom(node) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
 
-        if (cv > 0) cv--;
+        if( data->power ) {
+          if (cv > 0) cv--;
 
-        byte* outb = allocMem(32);
-        outb[0] = 0xE6;
-        outb[1] = 0x30;
-        __setLocAddr( decaddr, outb+2 );
-        outb[4] = ((cv & 0xFF00) >> 8) + 0xEC;
-        outb[5] = cv & 0x00FF;
-        outb[6] = value & 0xFF;
+          byte* outb = allocMem(32);
+          outb[0] = 0xE6;
+          outb[1] = 0x30;
+          __setLocAddr( decaddr, outb+2 );
+          outb[4] = ((cv & 0xFF00) >> 8) + 0xEC;
+          outb[5] = cv & 0x00FF;
+          outb[6] = value & 0xFF;
 
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
-            outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
+              outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
 
-        if ( cv != 0 )
-          ThreadOp.post( data->transactor, (obj)outb );
-        else
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of adress!");
+          if ( cv != 0 )
+            ThreadOp.post( data->transactor, (obj)outb );
+          else
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of adress!");
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: not processing; Power is OFF" );
+        }
 
-      } else {
+      }
+      else {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
 
@@ -947,7 +969,7 @@ static void __transactor( void* threadinst ) {
       /* Track Power OFF */
       else if( in[0] == 0x81 && in[1] == 0x00) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Emergency break!");
-
+        data->power = False;
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
         if( data->iid != NULL )
           wState.setiid( node, data->iid );
@@ -962,6 +984,7 @@ static void __transactor( void* threadinst ) {
       /* Track Power OFF */
       else if( in[0] == 0x61 && in[1] == 0x00) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
+        data->power = False;
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
         if( data->iid != NULL )
@@ -979,6 +1002,7 @@ static void __transactor( void* threadinst ) {
       /* Normal operation resumed */
       else if( in[0] == 0x61 && in[1] == 0x01) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power ON; Normal operation resumed.");
+        data->power = True;
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
         if( data->iid != NULL )
@@ -1012,10 +1036,9 @@ static void __transactor( void* threadinst ) {
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
-        /*
         rspReceived = True;
         reSend = True;
-        */
+        ThreadOp.sleep(100);
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){

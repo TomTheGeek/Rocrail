@@ -392,6 +392,7 @@
       <var name="readfb" vt="Boolean"/>
       <var name="fbState[128*8]" vt="Boolean"/>
       <var name="interfaceVersion" vt="int"/>
+      <var name="power" vt="Boolean"/>
     </data>
   </object>
 
