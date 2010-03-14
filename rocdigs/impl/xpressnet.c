@@ -197,12 +197,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   /* check for global power before processing accessory commands */
   if( !data->power ) {
     if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ||
-        StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-          "not processing accessory[%s] commands: Power is OFF",wItem.getid(node));
-      ThreadOp.sleep(100);
-      return rsp;
+        StrOp.equals( NodeOp.getName( node ), wOutput.name() ) )
+    {
+      if( wDigInt.ispw4acc(data->ini) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "not processing accessory[%s] commands: Power is OFF",wItem.getid(node));
+        ThreadOp.sleep(100);
+        return rsp;
+      }
     }
   }
 

@@ -12258,5 +12258,7 @@
   <Msg id="middle">
     <en txt="Middle"/>
   </Msg>
-
+  <Msg id="power4acc">
+    <en txt="Power on state for accessory commands"/>
+  </Msg>
 </Messages>
