@@ -1753,6 +1753,11 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean _hasExtStop( iIBlockBase inst ) {
+  return False;
+}
+
+
 static void _setManager( iIBlockBase inst, iIBlockBase manager ) {
   iOTTData data = Data(inst);
 }

@@ -1204,6 +1204,8 @@
         <var name="mvscale" vt="int" defval="87" remark="Scale of locomotives."/>
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
+        <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
+
         <const name="shortcut" vt="string" val="shortcut"/>
         <const name="shortcutcleared" vt="string" val="shortcutcleared"/>
         <const name="ghost" vt="string" val="ghost"/>

@@ -300,6 +300,7 @@ public:
     wxCheckBox* m_Swapplacing;
     wxCheckBox* m_Road;
     wxCheckBox* m_AllowChgDir;
+    wxCheckBox* m_ExtStop;
     wxPanel* m_LocationPanel;
     wxStaticBox* m_Location;
     wxStaticText* m_LabelX;

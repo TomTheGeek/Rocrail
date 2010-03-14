@@ -212,48 +212,60 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
   /* Wait in block or no new destination found. */
   if( data->next2Block == NULL ) {
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    /* set V_mid only if it is lower than the current velocity */
-    const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
-    if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
-      wLoc.setV_hint( cmd, blockV_hint );
 
-    if( StrOp.equals(blockV_hint, wBlock.cruise) || StrOp.equals(blockV_hint, wBlock.max) ) {
-      if( data->loc->compareVhint( data->loc, wBlock.mid) == -1 )
-        wLoc.setV_hint( cmd, wBlock.mid );
-    }
-
-    if( data->next1Block != NULL ) {
-      /* data->curBlock is set after event out_block:
-         to be save we must check the data->next1Block here. */
-      iONode destbkprops = (iONode)data->next1Block->base.properties( data->next1Block );
-
-      /*
-      data->next1Block->red( data->next1Block, True, !data->next2RouteFromTo );
-      data->next1Block->red( data->next1Block, False, !data->next2RouteFromTo );
-      */
-
-      if( wBlock.getincline( destbkprops ) == wBlock.incline_up &&
-          data->direction == LC_DIR_FORWARDS )
-      {
-        const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
-        if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
-          wLoc.setV_hint( cmd, blockV_hint );
-      }
-    }
-    else
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "destBlock for \"%s\" is not set!",
-                   data->loc->getId( data->loc ) );
-
-    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-    if( !data->gomanual && !re_enter ) {
-      data->loc->cmd( data->loc, cmd );
+    if( data->next1Block->hasExtStop(data->next1Block) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "block %s has a stop module; not sending velocity hint to loco %s",
+          data->next1Block->base.id(data->next1Block), data->loc->getId(data->loc));
     }
     else {
-      /* delete un sended node */
-      NodeOp.base.del(cmd);
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      /* set V_mid only if it is lower than the current velocity */
+      const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
+      if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
+        wLoc.setV_hint( cmd, blockV_hint );
+
+      if( StrOp.equals(blockV_hint, wBlock.cruise) || StrOp.equals(blockV_hint, wBlock.max) ) {
+        if( data->loc->compareVhint( data->loc, wBlock.mid) == -1 )
+          wLoc.setV_hint( cmd, wBlock.mid );
+      }
+
+      if( data->next1Block != NULL ) {
+        /* data->curBlock is set after event out_block:
+           to be save we must check the data->next1Block here. */
+        iONode destbkprops = (iONode)data->next1Block->base.properties( data->next1Block );
+
+        /*
+        data->next1Block->red( data->next1Block, True, !data->next2RouteFromTo );
+        data->next1Block->red( data->next1Block, False, !data->next2RouteFromTo );
+        */
+
+        if( wBlock.getincline( destbkprops ) == wBlock.incline_up &&
+            data->direction == LC_DIR_FORWARDS )
+        {
+          const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
+          if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
+            wLoc.setV_hint( cmd, blockV_hint );
+        }
+      }
+      else
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                     "destBlock for \"%s\" is not set!",
+                     data->loc->getId( data->loc ) );
+
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+
+
+      if( !data->gomanual && !re_enter ) {
+        data->loc->cmd( data->loc, cmd );
+      }
+      else {
+        /* delete un sended node */
+        NodeOp.base.del(cmd);
+      }
     }
+
+
     data->state = LC_WAIT4EVENT;
     data->eventTimeout = 0;
     data->signalReset  = 0;

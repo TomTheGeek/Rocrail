@@ -12261,4 +12261,7 @@
   <Msg id="power4acc">
     <en txt="Power on state for accessory commands"/>
   </Msg>
+  <Msg id="extstop">
+    <en txt="Stop controller"/>
+  </Msg>
 </Messages>

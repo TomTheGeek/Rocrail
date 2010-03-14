@@ -603,6 +603,12 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean _hasExtStop( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.isextstop(data->props);
+}
+
+
 static Boolean __isElectricallyFree(iOBlock inst) {
   iOBlockData data = Data(inst);
   /* check all sensors... */

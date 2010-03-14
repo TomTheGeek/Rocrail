@@ -45,10 +45,17 @@ void statusIn( iILcDriverInt inst ) {
   /* Signal of destination block. (_event) */
   if( data->next2Block == NULL ) {
     if( !data->gomanual ) {
-      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setV( cmd, 0 );
-      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-      data->loc->cmd( data->loc, cmd );
+      if( data->next1Block->hasExtStop(data->next1Block) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "block %s has a stop module; not sending velocity 0 to loco %s",
+            data->next1Block->base.id(data->next1Block), data->loc->getId(data->loc));
+      }
+      else {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setV( cmd, 0 );
+        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+        data->loc->cmd( data->loc, cmd );
+      }
     }
 
     data->state = LC_WAITBLOCK;

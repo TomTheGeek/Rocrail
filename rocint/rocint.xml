@@ -119,6 +119,9 @@
     <fun name="isReady" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="hasExtStop" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <fun name="isFree" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*" remark="Querying loc"/>
