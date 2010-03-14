@@ -1756,7 +1756,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wLoc.shortid, cmd ) ) {
       /* send short ID to command station */
-      if( wLoc.isuseshortid(data->props) ) {
+      if( wLoc.isuseshortid(data->props) && wLoc.getshortid(data->props) != NULL &&
+          StrOp.len(wLoc.getshortid(data->props)) > 0 )
+      {
         iONode cmdNode = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setid( cmdNode, wLoc.getid(data->props) );
         wLoc.setaddr( cmdNode, wLoc.getaddr(data->props) );
