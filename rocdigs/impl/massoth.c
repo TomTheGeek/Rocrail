@@ -139,8 +139,6 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
 }
 
 
-
-
 static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
   Boolean rc = data->dummyio;
 
@@ -176,6 +174,53 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
 }
 
 
+static int __normalizeSteps(int insteps ) {
+  /* SPEEDSTEPS: vaild: 14, 28, 128 */
+  if( insteps < 20 )
+    return 14;
+  if( insteps > 100 )
+    return 128;
+  return 28;
+}
+
+
+static iOSlot __getSlot(iOMassothData data, iONode node) {
+  int steps = wLoc.getspcnt(node);
+  int addr  = wLoc.getaddr(node);
+  int fncnt = wLoc.getfncnt(node);
+  iOSlot slot = NULL;
+  byte rsp[32] = {0};
+  byte cmd[32] = {0};
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+  cmd[0] = 0x64;
+  cmd[1] = 0; /*xor*/
+  cmd[2] = addr >> 8;
+  cmd[3] = addr & 0x00FF;
+  cmd[4] = 0x81;
+
+  if( __transact( data, cmd, rsp, 0x40 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
+    slot = allocMem( sizeof( struct slot) );
+    slot->addr = addr;
+    slot->steps = __normalizeSteps(steps);
+    slot->id = StrOp.dup(wLoc.getid(node));
+    if( MutexOp.wait( data->lcmux ) ) {
+      MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      MutexOp.post(data->lcmux);
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  }
+
+  return slot;
+}
+
+
+
 static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
   /* System command. */
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
@@ -190,6 +235,83 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       return True;
     }
+  }
+
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int addr  = wSwitch.getaddr1( node );
+
+    out[0] = 0x4A;
+    out[1] = 0; /*xor*/
+    out[2] = (addr >> 6);
+    out[3] = (addr << 2) & 0xFC;
+    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) )
+      out[3] |= 1;
+    out[3] |= 0x02; /* port on */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "switch addr %d, cmd %s", addr, wSwitch.getcmd( node ) );
+    return True;
+  }
+
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int addr   = wOutput.getaddr( node );
+    int gate   = wOutput.getgate( node );
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+    out[0] = 0x4A;
+    out[1] = 0; /*xor*/
+    out[2] = (addr >> 6);
+    out[3] = (addr << 2) & 0xFC;
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.on ) )
+      out[3] |= 1;
+    out[3] |= gate;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "output addr %d, gate %d, cmd %s", addr, gate, wSwitch.getcmd( node ) );
+    return True;
+  }
+
+
+  /* Loc command.*/
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int  speed = 0;
+    Boolean fn = wLoc.isfn( node );
+    int    dir = wLoc.isdir( node );
+    int  spcnt = wLoc.getspcnt( node );
+
+    int index = 0;
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return False;
+    }
+
+    spcnt = slot->steps;
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * spcnt) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
+        wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+
+    out[0] = 0x61;
+    out[1] = 0; /*xor*/
+    out[2] = slot->addr >> 8;
+    out[3] = slot->addr & 0x00FF;
+    out[4] = speed;
+    out[4] |= dir ? 0x80:0x00;
+
+    return True;
+
   }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command [%s] not(jet) supported", NodeOp.getName( node ) );
