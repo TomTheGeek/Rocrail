@@ -535,9 +535,15 @@ static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int*
 
   if( src == 0 ) {
     /* DISPATCH GET */
-    /* send slot data */
-    __slotdataRsp( loconet, slot, *dispatchedslot );
-    *dispatchedslot = 0;
+    if( *dispatchedslot == 0 ) {
+      /* send long ack with with fail code 0 */
+      __longAck( loconet, OPC_MOVE_SLOTS, 0 );
+    }
+    else {
+      /* send slot data */
+      __slotdataRsp( loconet, slot, *dispatchedslot );
+      *dispatchedslot = 0;
+    }
   }
   else if( src == dst ) {
     /* NULL move: set slot inuse */
