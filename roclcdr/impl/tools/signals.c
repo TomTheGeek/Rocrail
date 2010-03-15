@@ -332,18 +332,16 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       data->next2Block != data->next3Block )
   {
     if( __checkSignalPair( data->next3Route, data->next2Block, data->next3RouteFromTo, &signalpair) ) {
-      if( data->greenaspect ) {
-        if( data->next3Route->hasThrownSwitch(data->next3Route) ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "setting signals for next2Block to white: thrown switches in route [%s]",
-                       data->next3Route->getId(data->next3Route) );
-          data->next2Block->white( data->next2Block, True, signalpair );
-          data->next2Block->white( data->next2Block, False, signalpair );
-        }
-        else {
-          data->next2Block->green( data->next2Block, True, signalpair );
-          data->next2Block->green( data->next2Block, False, signalpair );
-        }
+      if( data->next3Route->hasThrownSwitch(data->next3Route) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "setting signals for next2Block to white: thrown switches in route [%s]",
+                     data->next3Route->getId(data->next3Route) );
+        data->next2Block->white( data->next2Block, True, signalpair );
+        data->next2Block->white( data->next2Block, False, signalpair );
+      }
+      else if( data->greenaspect ) {
+        data->next2Block->green( data->next2Block, True, signalpair );
+        data->next2Block->green( data->next2Block, False, signalpair );
       }
       else {
         data->next2Block->yellow( data->next2Block, True, signalpair );
