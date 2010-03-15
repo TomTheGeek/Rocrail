@@ -202,9 +202,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
     if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "setting signals for curBlock to yellow%s, reverse[%s], signalpair[%s]",
-          data->greenaspect ? " (force green)":"", data->next1RouteFromTo?"false":"true",
-              signalpair?"forwards":"reverse");
+          "setting signalpair[%s] for curBlock", signalpair?"forwards":"reverse");
 
       if( data->next1Route != NULL && data->next1Route->hasThrownSwitch(data->next1Route) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -261,10 +259,10 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       data->next1Block != data->next2Block && data->next2Block != data->next3Block )
   {
     if( data->next2Route != NULL && data->next2Route->hasThrownSwitch(data->next2Route) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+      if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "setting signals for next1Block to white: thrown switches in route [%s]",
                    data->next2Route->getId(data->next2Route) );
-      if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
         data->next1Block->white( data->next1Block, True, signalpair );
         data->next1Block->white( data->next1Block, False, signalpair );
         if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next2Route) ) {
@@ -288,16 +286,17 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       data->next1Block != data->next2Block )
   {
     Boolean hasThrownSwitches = False;
+
     if( data->next2Route != NULL && data->next2Route->hasThrownSwitch(data->next2Route) ) {
       hasThrownSwitches = True;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "setting signals for next1Block to white: thrown switches in route [%s]",
-                   data->next2Route->getId(data->next2Route) );
     }
 
     if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
       if( data->greenaspect ) {
         if( hasThrownSwitches ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "setting signals for next1Block to white: thrown switches in route [%s]",
+                       data->next2Route->getId(data->next2Route) );
           data->next1Block->white( data->next1Block, True, signalpair );
           data->next1Block->white( data->next1Block, False, signalpair );
         }
