@@ -899,44 +899,6 @@ static void __transactor( void* threadinst ) {
 
     }
 
-    /* check if there is a xpressnet packet available */
-    /*
-    if( !data->subAvail( (obj)xpressnet ) ) {
-      if( rspExpected && !rspReceived ) {
-        Boolean avail = False;
-        int retry   = 0;
-        while( retry < 5 && !avail ) {
-          retry++;
-          ThreadOp.sleep(10);
-          avail = data->subAvail( (obj)xpressnet );
-        };
-        if( !avail ) {
-          if( repeats < 3 ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received within 50ms; resend command %d of 3 times", repeats+1 );
-            rspReceived = True;
-            rspExpected = False;
-            reSend = True;
-            repeats++;
-          } else {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received after 3 resends, continue..." );
-            rspReceived = True;
-            rspExpected = False;
-            reSend = False;
-            repeats = 0;
-          }
-          continue;
-        } else {
-          repeats = 0;
-        }
-      }
-      else {
-        ThreadOp.sleep(10);
-        continue;
-      }
-    }
-    */
-
-
     inlen = 0;
 
     if( rspExpected || data->subAvail( (obj)xpressnet ) ) {
@@ -1029,10 +991,12 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming Ready");
         rspReceived = True;
       }
-      /* transaction error*/
+      /* transaction error, cs reported xor test failed */
       else if (in[0] == 0x61 && in[1] == 0x80){
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Transaction error; Resend.");
         rspReceived = True;
+        reSend = True;
+        ThreadOp.sleep(100);
       }
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
@@ -1049,7 +1013,6 @@ static void __transactor( void* threadinst ) {
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not available.");
-        TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
         rspReceived = True;
       }
       /* Shortcut*/
