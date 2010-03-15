@@ -876,6 +876,11 @@ static Boolean __initDigInts( iOControl inst ) {
     iOLib    pLib = NULL;
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
 
+    if( StrOp.equals( wDigInt.lenz, lib ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set lib from [lenz] to [xpressnet]" );
+      lib = wDigInt.xpressnet;
+    }
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "initDigInts lib=\"%s\" idd=\"%s\"", lib, iid!=NULL ? iid:"?" );
 
     wDigInt.setstress( digint, AppOp.isStress());
