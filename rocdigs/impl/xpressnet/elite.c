@@ -106,13 +106,6 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
 
   rc =  li101Write(xpressnet, out, rspexpected);
 
-  /* remove port hack */
-  if( out[0] == 0x52 ) {
-    out[1] = b1;
-    out[2] = b2;
-  }
-
-
   if ( out[0] == 0x22 && (out[1] == 0x11 || out[1] == 0x14 || out[1] == 0x15)) {
     *rspexpected = False;
     ThreadOp.sleep( 9000 );
@@ -124,6 +117,34 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   if (out[0] == 0x21 && (out[1] == 0x80 || out[1] == 0x81)) {
     *rspexpected = False;
   }
+
+  /* check that, when an answer is expected, there is one available. Sometimes the elite
+     does not answer and the command has te be resend to get an answer.
+  */
+  if( *rspexpected ) {
+    ThreadOp.sleep(10);
+    if( !eliteAvail( xpressnet ) ) {
+      Boolean avail = False;
+      int repeat    = 0;
+      while( repeat < 5 && !avail ) {
+        repeat++;
+        rc = li101Write(xpressnet, out, rspexpected);
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received on command, resend %d times", repeat );
+        ThreadOp.sleep(100);
+        avail = eliteAvail( xpressnet );
+      };
+      if( !avail ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no response received on command, continue with next command" );
+        *rspexpected = False;
+      }
+    }
+  }
+
+  /* remove port hack */
+  if( out[0] == 0x52 ) {
+    out[1] = b1;
+    out[2] = b2;
+  }  
 
   return rc;
 
