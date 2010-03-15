@@ -219,6 +219,37 @@ static int __normalizeSteps(int insteps ) {
 }
 
 
+static iOSlot __getRmxSlot(iORmxData data, iONode node) {
+  iOSlot slot = NULL;
+  byte cmd[32] = {0};
+  byte rsp[32] = {0};
+  int addr  = wLoc.getaddr(node);
+
+  cmd[0] = PCKT;
+  cmd[1] = 0x06;
+  cmd[2] = OPC_RMXCHANEL;
+  cmd[3] = addr / 256;
+  cmd[4] = addr % 256;
+  if( __transact( data, cmd, rsp, OPC_RMXCHANEL ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got RMX Chanel %d for %s", rsp[5], wLoc.getid(node) );
+    slot = allocMem( sizeof( struct slot) );
+    slot->addr = addr;
+    slot->index = rsp[5];
+    slot->protocol = cmd[4];
+    slot->steps = rsp[7];
+    slot->sx1 = rsp[6] < 7 ? True:False;
+    slot->bus = wLoc.getbus(node);
+    slot->id = StrOp.dup(wLoc.getid(node));
+    if( MutexOp.wait( data->lcmux ) ) {
+      MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      MutexOp.post(data->lcmux);
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  }
+  return slot;
+}
+
+
 static iOSlot __getSlot(iORmxData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -229,12 +260,21 @@ static iOSlot __getSlot(iORmxData data, iONode node) {
   byte rsp[32] = {0};
   byte cmd[32] = {PCKT, 0x08, OPC_LOCOINFO}; /* TODO: ShortID support */
 
+  /* get the slot from the map */
   slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
     return slot;
   }
 
+  /* check if the loco is already defined */
+  slot = __getRmxSlot(data, node);
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for existing loco %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  /* the loco is undefined; add it to the CS */
   if( StrOp.equals( wLoc.prot_S, wLoc.getprot(node) ) ) {
     cmd[6] = 2;
     steps = 31;
@@ -281,30 +321,10 @@ static iOSlot __getSlot(iORmxData data, iONode node) {
     cmd[5] = addr;
   }
 
-
+  /* get the RMX chanel for the newly defined loco */
   if( __transact( data, cmd, rsp, OPC_LOCOINFO ) ) {
     byte opmode = cmd[6];
-    cmd[0] = PCKT;
-    cmd[1] = 0x06;
-    cmd[2] = OPC_RMXCHANEL;
-    cmd[3] = addr / 256;
-    cmd[4] = addr % 256;
-    if( __transact( data, cmd, rsp, OPC_RMXCHANEL ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got RMX Chanel %d for %s", rsp[5], wLoc.getid(node) );
-      slot = allocMem( sizeof( struct slot) );
-      slot->addr = addr;
-      slot->index = rsp[5];
-      slot->protocol = cmd[4];
-      slot->steps = steps;
-      slot->sx1 = sx1;
-      slot->bus = wLoc.getbus(node);
-      slot->id = StrOp.dup(wLoc.getid(node));
-      if( MutexOp.wait( data->lcmux ) ) {
-        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-        MutexOp.post(data->lcmux);
-      }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
-    }
+    slot = __getRmxSlot(data, node);
   }
 
   return slot;
