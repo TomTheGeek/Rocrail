@@ -162,6 +162,7 @@ install_all:
 	-cp -Rp ..$(FS)rocview$(FS)icons $(DESTDIR)
 	-cp -Rp ..$(FS)rocview$(FS)svg $(DESTDIR)
 	-cp -Rpu symbols $(DESTDIR)
+	-cp -Rpu ..$(FS)stylesheets $(DESTDIR)
 	-cp -Rpu package$(FS)images $(DESTDIR)
 	-cp -pu package$(FS)plan.xml $(DESTDIR)
 	-cp -p package$(FS)rocrail.sh $(DESTDIR)
