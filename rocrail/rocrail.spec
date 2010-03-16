@@ -40,7 +40,6 @@ install -s -m 755 Rocrail/unxbin/p50x.so $RPM_BUILD_ROOT/opt/rocrail/p50x.so
 install -s -m 755 Rocrail/unxbin/srcp.so $RPM_BUILD_ROOT/opt/rocrail/srcp.so
 install -s -m 755 Rocrail/unxbin/dinamo.so $RPM_BUILD_ROOT/opt/rocrail/dinamo.so
 install -s -m 755 Rocrail/unxbin/om32.so $RPM_BUILD_ROOT/opt/rocrail/om32.so
-install -s -m 755 Rocrail/unxbin/lenz.so $RPM_BUILD_ROOT/opt/rocrail/lenz.so
 install -s -m 755 Rocrail/unxbin/roco.so $RPM_BUILD_ROOT/opt/rocrail/roco.so
 install -s -m 755 Rocrail/unxbin/zimo.so $RPM_BUILD_ROOT/opt/rocrail/zimo.so
 install -s -m 755 Rocrail/unxbin/ddx.so $RPM_BUILD_ROOT/opt/rocrail/ddx.so
@@ -51,7 +50,15 @@ install -s -m 755 Rocrail/unxbin/rocview $RPM_BUILD_ROOT/opt/rocrail/rocview
 install -s -m 755 Rocrail/unxbin/virtual.so $RPM_BUILD_ROOT/opt/rocrail/virtual.so
 install -s -m 755 Rocrail/unxbin/cs2.so $RPM_BUILD_ROOT/opt/rocrail/cs2.so
 install -s -m 755 Rocrail/unxbin/nec.so $RPM_BUILD_ROOT/opt/rocrail/nec.so
-install -s -m 755 Rocrail/unxbin/ecos.so $RPM_BUILD_ROOT/opt/rocrail/nec.so
+install -s -m 755 Rocrail/unxbin/ecos.so $RPM_BUILD_ROOT/opt/rocrail/ecos.so
+install -s -m 755 Rocrail/unxbin/xpressnet.so $RPM_BUILD_ROOT/opt/rocrail/xpressnet.so
+install -s -m 755 Rocrail/unxbin/rmx.so $RPM_BUILD_ROOT/opt/rocrail/rmx.so
+install -s -m 755 Rocrail/unxbin/rclink.so $RPM_BUILD_ROOT/opt/rocrail/rclink.so
+install -s -m 755 Rocrail/unxbin/mttmfcc.so $RPM_BUILD_ROOT/opt/rocrail/mttmfcc.so
+install -s -m 755 Rocrail/unxbin/rfid12.so $RPM_BUILD_ROOT/opt/rocrail/rfid12.so
+install -s -m 755 Rocrail/unxbin/massoth.so $RPM_BUILD_ROOT/opt/rocrail/massoth.so
+install -s -m 755 Rocrail/unxbin/lrc135.so $RPM_BUILD_ROOT/opt/rocrail/lrc135.so
+
 
 install -g users -m 666 Rocrail/rocrail/package/Rocrail.directory $RPM_BUILD_ROOT/usr/share/desktop-directories
 install -g users -m 666 Rocrail/rocrail/package/Roc*.desktop $RPM_BUILD_ROOT/usr/share/applications

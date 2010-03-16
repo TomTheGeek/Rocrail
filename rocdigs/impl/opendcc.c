@@ -526,17 +526,18 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
 
+  /* clone the ini node for further use and reference */
   data->ini = (iONode)NodeOp.base.clone(ini);
-  data->opendccini = wDigInt.getopendcc(ini);
-  data->iid        = StrOp.dup( wDigInt.getiid( ini ) );
+
+  data->opendccini = wDigInt.getopendcc(data->ini);
+  data->iid        = wDigInt.getiid( data->ini );
 
   if( data->opendccini == NULL )
     data->opendccini = NodeOp.inst( wOpenDCC.name(), ini, ELEMENT_NODE );
 
-  data->sublibname = StrOp.dup( wOpenDCC.getlib( data->opendccini ) );
+  data->sublibname = wOpenDCC.getlib( data->opendccini );
   if( StrOp.equals( wDigInt.lenz, data->sublibname ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set sublib from [lenz] to [xpressnet]" );
-    wDigInt.setsublib( data->ini, wDigInt.opendcc );
     data->sublibname = wDigInt.xpressnet;
   }
 
@@ -561,6 +562,10 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
     if (pLib != NULL) {
       pInitFun = (LPFNROCGETDIGINT)LibOp.getProc(pLib,"rocGetDigInt");
       if (pInitFun != NULL) {
+        if( StrOp.equals( wDigInt.xpressnet, data->sublibname ) ) {
+          /* inform the xpressnet library to adde opendcc support */
+          wDigInt.setsublib( data->ini, wDigInt.opendcc );
+        }
         data->sublib = pInitFun( data->ini, trc );
       }
     }

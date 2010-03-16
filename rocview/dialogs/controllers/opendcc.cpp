@@ -310,7 +310,7 @@ void OpenDCCCtrlDlg::evaluate() {
   wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue()*2 + m_S88Bus2->GetValue()*2 + m_S88Bus3->GetValue()*2 );
 
   iONode opendccini = wDigInt.getopendcc(m_Props);
-  wOpenDCC.setlib(opendccini, m_SubLib->GetSelection() == 0 ? wDigInt.p50x:wDigInt.lenz);
+  wOpenDCC.setlib(opendccini, m_SubLib->GetSelection() == 0 ? wDigInt.p50x:wDigInt.xpressnet);
 
 }
 
@@ -704,7 +704,7 @@ void OpenDCCCtrlDlg::OnPTEvent( wxCommandEvent& event ) {
 
   int so = wProgram.getcv(node);
   int value = wProgram.getvalue(node);
-  m_bLenz = StrOp.equals( wDigInt.lenz, wOpenDCC.getlib(node) ) ? true:false;
+  m_bLenz = StrOp.equals( wDigInt.xpressnet, wOpenDCC.getlib(node) ) ? true:false;
 
   TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "%s node received: [%d][%d]",
       NodeOp.getName(node), so, value );
