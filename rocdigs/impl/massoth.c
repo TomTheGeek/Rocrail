@@ -379,6 +379,23 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static void __handleSensor(iOMassothData data, byte* in) {
+  iONode nodeC = NULL;
+  Boolean state = in[3] & 0x01 ? True:False;
+  int addr = in[2] << 6;
+  addr += in[3] >> 2;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report: addr=%d, state=%d", addr, state );
+  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, state );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOMassoth     massoth = (iOMassoth)ThreadOp.getParm( th );
@@ -404,12 +421,34 @@ static void __reader( void* threadinst ) {
     if( !data->initialized ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending interface configuration..." );
       data->initialized = __transact( data, out, NULL, 0 );
-      if( !data->initialized )
+      if( !data->initialized ) {
         ThreadOp.sleep( 1000 );
+        continue;
+      }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "interface configuration successfully send" );
       }
     }
+
+    /* normal reading processing */
+    if( MutexOp.wait( data->mux ) ) {
+
+      if( SerialOp.available( data->serial ) ) {
+        byte in[256];
+        if( __readPacket(data, in) ) {
+          if( in[0] & 0x1F == 0x0B ) {
+            /* sensor report */
+            __handleSensor(data, in);
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
+          }
+        }
+      }
+
+      MutexOp.post( data->mux );
+    }
+
     ThreadOp.sleep( 10 );
   }
 
