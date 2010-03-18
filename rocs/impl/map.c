@@ -28,6 +28,9 @@
 
 static int instCnt = 0;
 
+/* declarations */
+static obj __removeMapItem( iOMapData data, const char* key );
+
 /*
  ***** OBase operations.
  */
@@ -103,8 +106,16 @@ static obj __findMapItem( iOMapData data, const char* key, Boolean* keyfound ) {
 }
 
 static void __addMapItem( iOMapData data, const char* k, obj o ) {
-  iMapItem item = NULL;
-  int hashVal = __hash( k );
+  iMapItem item     = NULL;
+  Boolean  keyfound = False;
+  int      hashVal  = __hash( k );
+
+  /* remove object with the same key if exist */
+  __findMapItem(data, k, &keyfound );
+  if( keyfound ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "replace existing object with key [%s]", k );
+    __removeMapItem(data, k);
+  }
 
   /* hashMap */
   if( data->hashTable[ hashVal ] == NULL ) {
