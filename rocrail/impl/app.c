@@ -348,8 +348,9 @@ static __help( void ) {
   TraceOp.println( "-------------------------+--------------------------------------------"  );
   TraceOp.println( "-console                 | Read console input." );
   TraceOp.println( "-nocom                   | Switch off communication." );
-  TraceOp.println( "-run                     | Power ON, enable auto mode and start all locos." );
-  TraceOp.println( "-resume                  | Power ON, enable auto mode and start prev. locos." );
+  TraceOp.println( "-auto                    | Power and auto mode on." );
+  TraceOp.println( "-run                     | Start all locos." );
+  TraceOp.println( "-resume                  | Start prev. locos." );
   TraceOp.println( "-w [workdir]             | Change the programs working directory." );
   TraceOp.println( "-l [libdir]              | Library directory." );
   TraceOp.println( "-img [imgdir]            | Images directory." );
@@ -492,6 +493,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   Boolean       lcd   = CmdLnOp.hasKey( arg, wCmdline.lcd );
 
 
+  Boolean automode    = CmdLnOp.hasKey( arg, wCmdline.automode );
   Boolean resume      = CmdLnOp.hasKey( arg, wCmdline.resume );
   data->run           = CmdLnOp.hasKey( arg, wCmdline.run );
   data->stress        = CmdLnOp.hasKey( arg, wCmdline.stress );
@@ -745,7 +747,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   ModelOp.updateFB( data->model );
 
   /* run every thing at startup */
-  if( data->run || resume ) {
+  if( automode ) {
     iONode cmd = NULL;
     clntcon_callback pfun = ControlOp.getCallback(data->control);
 
@@ -758,9 +760,11 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     pfun( (obj)AppOp.getControl(), cmd );
 
     /* start all */
-    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
-    wAutoCmd.setcmd( cmd, resume? wAutoCmd.resume:wAutoCmd.start );
-    pfun( (obj)AppOp.getControl(), cmd );
+    if(data->run || resume) {
+      cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+      wAutoCmd.setcmd( cmd, resume? wAutoCmd.resume:wAutoCmd.start );
+      pfun( (obj)AppOp.getControl(), cmd );
+    }
   }
 
   /* Memory watcher */

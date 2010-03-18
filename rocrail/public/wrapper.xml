@@ -44,8 +44,9 @@
     <const name="info" vt="string" val="-info" defval="true" remark="Activates info tracelevel."/>
     <const name="stress" vt="string" val="-stress" defval="true" remark="Activates network stress runner."/>
     <const name="modplan" vt="string" val="-modplan" defval="true" remark="Create modplan."/>
-    <const name="run" vt="string" val="-run" defval="true" remark="Power on, enable automode and run."/>
-    <const name="resume" vt="string" val="-resume" defval="true" remark="Power on, enable automode and run all prev. locos."/>
+    <const name="run" vt="string" val="-run" defval="false" remark="Run all locos."/>
+    <const name="resume" vt="string" val="-resume" defval="false" remark="Run all prev. locos."/>
+    <const name="automode" vt="string" val="-auto" defval="flase" remark="Power and automode on."/>
   </Cmdline>
 
   <ConCmd title="Console commands:" createwrapper="true" remark="Commands are listed in column --Default--.">
