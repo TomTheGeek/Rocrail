@@ -23,6 +23,8 @@
 #include "rocdigs/impl/xpressnet/li101.h"
 
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/BinCmd.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include <time.h>
 
@@ -87,11 +89,24 @@ static void __evaluateBiDi(obj xpressnet, byte* buffer) {
 }
 
 int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
+  iOXpressNetData data = Data(xpressnet);
   int liRead = li101Read(xpressnet, buffer, rspreceived);
-  if(buffer[0] & 0x70 == 0x70 ) {
+  if((buffer[0] & 0x70) == 0x70 ) {
     /* BiDi packet */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Processing BiDi packet." );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Processing BiDi packet[0x%02X][0x%02X]", buffer[0], buffer[1] );
   }
+
+  else if( buffer[0] == 0x24 && buffer[1] == 0x28 ) {
+    /* SO response */
+    int so = buffer[2] * 256 + buffer[3];
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setlntype( node, wProgram.lntype_cs );
+    /*wProgram.setcmd( node, wProgram.get );*/
+    wProgram.setcv( node, so );
+    wProgram.setvalue( node, buffer[4] );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+
   return liRead;
 }
 Boolean opendccWrite(obj xpressnet, byte* buffer, Boolean* rspexpected) {
@@ -143,5 +158,13 @@ void opendccTranslate( obj xpressnet, void* node ) {
       outa[5] = 0xC0 + divider;
       ThreadOp.post( data->transactor, (obj)outa );
     }
+  }
+
+  /* Bin command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wBinCmd.name() ) ) {
+    byte* outBytes = StrOp.strToByte( wBinCmd.getout(node));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "binary command 0x%02X", outBytes[0] );
+    ThreadOp.post( data->transactor, (obj)outBytes );
+
   }
 }

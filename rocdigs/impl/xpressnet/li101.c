@@ -104,9 +104,11 @@ int li101Read(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "trying to read..." );
   if( MutexOp.wait( data->serialmux ) ) {
     if( SerialOp.read( data->serial, buffer, 1 ) ) {
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "header byte read = 0x%02X", buffer[0] );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "header byte read = 0x%02X", buffer[0] );
       len = (buffer[0] & 0x0f) + 1;
       ok = SerialOp.read( data->serial, (char*)buffer+1, len );
+      if(ok)
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
     }
     MutexOp.post( data->serialmux );
   }

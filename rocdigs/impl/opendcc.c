@@ -280,21 +280,23 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       byte* inData = NULL;
       response = data->sublib->cmd((obj)data->sublib, ptcmd);
       /* TODO: convert response incase of a bincmd */
-      inData = StrOp.strToByte( wResponse.getdata( response ) );
-      NodeOp.base.del(response);
-      response = (iONode)NodeOp.base.clone(cmd);
-      if( getCV && inData[0] == 0 ) {
-        wProgram.setvalue( response, inData[1] );
-        wOpenDCC.setlib( response, wOpenDCC.getlib(data->opendccini) );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "Successfully XSO%s [%d][%d]", (getCV?"Get":"Set"), wProgram.getcv(cmd), inData[1] );
+      if( response != NULL ) {
+        inData = StrOp.strToByte( wResponse.getdata( response ) );
+        NodeOp.base.del(response);
+        response = (iONode)NodeOp.base.clone(cmd);
+        if( getCV && inData[0] == 0 ) {
+          wProgram.setvalue( response, inData[1] );
+          wOpenDCC.setlib( response, wOpenDCC.getlib(data->opendccini) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "Successfully XSO%s [%d][%d]", (getCV?"Get":"Set"), wProgram.getcv(cmd), inData[1] );
+        }
+        else if( inData[0] != 0 ) {
+          /* Error PT command */
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+              "Error [%s] XSO%d [%d]", (getCV?"Get":"Set"), inData[0], wProgram.getcv(response) );
+        }
+        freeMem(inData);
       }
-      else if( inData[0] != 0 ) {
-        /* Error PT command */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-            "Error [%s] XSO%d [%d]", (getCV?"Get":"Set"), inData[0], wProgram.getcv(response) );
-      }
-      freeMem(inData);
     }
 
     /* Cleanup command node */
