@@ -25,6 +25,7 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 #include <time.h>
 
@@ -85,15 +86,70 @@ void opendccInit(obj xpressnet) {
   This is a raw message mirroring the BiDi message on the track 1:1 (reserved for future use)
  */
 static void __evaluateBiDi(obj xpressnet, byte* buffer) {
+  iOXpressNetData data = Data(xpressnet);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Processing BiDi packet[0x%02X][0x%02X]", buffer[0], buffer[1] );
+
+  if( buffer[0] == 0x75 && buffer[1] == 0xF2) {
+    /* Loco address from detector
+     * 0x75 0xF2 SID_H SID_L D+AddrH AddrL
+     */
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setaddr( evt, buffer[2] * 256 + buffer[3] );
+    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
+    wFeedback.setidentifier( evt, buffer[2] * 256 + buffer[3] );
+    wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( evt, data->iid );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%d] reported address [%d] state [%s]",
+        wFeedback.getaddr( evt), wFeedback.getidentifier(evt), wFeedback.isstate( evt)?"on":"off" );
+
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+  }
+  else if( buffer[0] == 0x73) {
+    /* Idle/Occupied
+     * 0x73 0xF0/0xF1 SID_H SID_L */
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setaddr( evt, buffer[2] * 256 + buffer[3] );
+    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
+    wFeedback.setstate( evt, buffer[1] == 0xF1 ? True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( evt, data->iid );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%d] state [%s]",
+        wFeedback.getaddr( evt), wFeedback.isstate( evt)?"on":"off" );
+
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+  }
+  else if( buffer[0] == 0x78 && buffer[1] == 0xE1) {
+    /* POM
+     * 0x78 0xE1 SID_H SID_L AddrH AddrL CV_H CV_L DAT */
+    int sid  = buffer[2] * 256 + buffer[3];
+    int addr = buffer[4] * 256 + buffer[5];
+    int cv   = buffer[6] * 256 + buffer[7];
+    int val  = buffer[8];
+    iONode evt = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector %d reported CV %d value %d for address %d",
+        sid, cv, val, addr );
+
+    wProgram.setaddr( evt, addr );
+    wProgram.setcv( evt, cv );
+    wProgram.setvalue( evt, val );
+    wProgram.setcmd( evt, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( evt, data->iid );
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+  }
 
 }
 
 int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int liRead = li101Read(xpressnet, buffer, rspreceived);
+
   if((buffer[0] & 0x70) == 0x70 ) {
     /* BiDi packet */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Processing BiDi packet[0x%02X][0x%02X]", buffer[0], buffer[1] );
+    __evaluateBiDi(xpressnet, buffer);
   }
 
   else if( buffer[0] == 0x24 && buffer[1] == 0x28 ) {
