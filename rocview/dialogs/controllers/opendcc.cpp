@@ -164,6 +164,11 @@ void OpenDCCCtrlDlg::stopProgress() {
     m_bCleanUpProgress = true;
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
+  m_DecoderPanel->Enable(true);
+  m_S88Panel->Enable(true);
+  m_ProgrammingTab->Enable(true);
+  m_SCDPanel->Enable(true);
+  m_SwitchPanel->Enable(true);
   m_ReadCVs->Enable(true);
   m_WriteCVs->Enable(true);
 }
@@ -644,11 +649,6 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
     if( m_OpenDCCmode & mode_type_xpr ) {
       /* TODO: handle mode_type_xpr database */
       stopProgress();
-      m_DecoderPanel->Enable(true);
-      m_S88Panel->Enable(true);
-      m_ProgrammingTab->Enable(true);
-      m_SCDPanel->Enable(true);
-      m_SwitchPanel->Enable(true);
     }
     else {
       if( so % 2 == 1) {
@@ -673,14 +673,11 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
 
           if( index < 64 )
             sendGet( so + 1 );
+          else
+            stopProgress();
         }
         else {
           stopProgress();
-          m_DecoderPanel->Enable(true);
-          m_S88Panel->Enable(true);
-          m_ProgrammingTab->Enable(true);
-          m_SCDPanel->Enable(true);
-          m_SwitchPanel->Enable(true);
         }
       }
       else
@@ -689,11 +686,6 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
   }
   else {
     stopProgress();
-    m_DecoderPanel->Enable(true);
-    m_S88Panel->Enable(true);
-    m_ProgrammingTab->Enable(true);
-    m_SCDPanel->Enable(true);
-    m_SwitchPanel->Enable(true);
   }
 
 }
