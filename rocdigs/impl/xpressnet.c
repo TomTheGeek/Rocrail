@@ -1002,9 +1002,11 @@ static void __transactor( void* threadinst ) {
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
-        rspReceived = True;
-        reSend = True;
-        ThreadOp.sleep(100);
+        if( !data->ignoreBusy ) {
+          rspReceived = True;
+          reSend = True;
+          ThreadOp.sleep(10);
+        }
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
@@ -1191,6 +1193,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->fastclock     = wDigInt.isfastclock(ini);
   data->fbmod         = wDigInt.getfbmod( ini );
   data->readfb        = wDigInt.isreadfb( ini );
+  data->ignoreBusy    = wDigInt.isignorebusy( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "WIP: Do not use!" );

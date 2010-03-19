@@ -317,6 +317,7 @@
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
       <var name="identdelay" vt="int" defval="2500" unit="ms" remark="Delay before sending a low sensor state for ident codes."/>
       <var name="fastclock" vt="bool" defval="false" remark="send fast clock commands to the connected command station"/>
+      <var name="ignorebusy" vt="bool" defval="false" remark="ignore the busy message from command station"/>
 
 
       <!-- HSI88 -->

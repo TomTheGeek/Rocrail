@@ -356,6 +356,7 @@
       <var name="fbState[128*8]" vt="Boolean"/>
       <var name="interfaceVersion" vt="int"/>
       <var name="power" vt="Boolean"/>
+      <var name="ignoreBusy" vt="Boolean"/>
     </data>
   </object>
 

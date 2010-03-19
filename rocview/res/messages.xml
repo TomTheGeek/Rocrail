@@ -12264,4 +12264,7 @@
   <Msg id="extstop">
     <en txt="Stop controller"/>
   </Msg>
+  <Msg id="ignorebusy">
+    <en txt="Ignore Busy message"/>
+  </Msg>
 </Messages>
