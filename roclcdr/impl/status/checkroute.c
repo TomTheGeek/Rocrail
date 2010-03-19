@@ -62,8 +62,7 @@ void statusCheckRoute( iILcDriverInt inst ) {
       wLoc.setdir( cmd, dir );
       wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route ) );
 
-      if( StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) ||
-          data->next1Route->hasThrownSwitch(data->next1Route) ) {
+      if( !StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) && data->next1Route->hasThrownSwitch(data->next1Route) ) {
         if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 || data->loc->getV( data->loc ) == 0 )
           wLoc.setV_hint( cmd, wLoc.mid );
       }
