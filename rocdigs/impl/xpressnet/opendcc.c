@@ -43,13 +43,9 @@ Boolean opendccAvail(obj xpressnet) {
 }
 
 void opendccInit(obj xpressnet) {
-  /*
-  Messages from the Host to Client
-  0x75 0xFF SID1_H SID1_L SID2_H SID2_L [XOR]
-  This is a broadcast: BiDi detectors with a SID between SID1 and SID2 should report their actual state.
-  This broadcast is typically issued after power up to collect all states of the BiDi detectors.
-  */
+  iOXpressNetData data = Data(xpressnet);
   li101Init(xpressnet);
+
 }
 
 /*
@@ -162,6 +158,25 @@ int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
     wProgram.setvalue( node, buffer[4] );
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
+
+  /*
+  Messages from the Host to Client
+  0x75 0xFF SID1_H SID1_L SID2_H SID2_L [XOR]
+  This is a broadcast: BiDi detectors with a SID between SID1 and SID2 should report their actual state.
+  This broadcast is typically issued after power up to collect all states of the BiDi detectors.
+  */
+  else if( buffer[0] == 0x61 && buffer[1] == 0x01 ) {
+    byte* out = allocMem(32);
+    out[0] = 0x75;
+    out[1] = 0xFF;
+    out[2] = 0x00;
+    out[3] = 0x01;
+    out[4] = 0x01;
+    out[5] = 0xFF;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Inquire BiDi state" );
+    ThreadOp.post( data->transactor, (obj)out );
+  }
+
 
   return liRead;
 }
