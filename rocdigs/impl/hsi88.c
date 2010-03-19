@@ -575,9 +575,13 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
     if( avail > 0 )
       ok = __readBytes( o, buffer, 1 );
+    else
+      continue;
 
     if( ok )
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Byte available: 0x%02X", buffer[0]);
+    else
+      continue;
 
     if( ok && buffer[0] == 'i' ) {
       int modcnt = 0;
