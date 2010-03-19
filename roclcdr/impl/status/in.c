@@ -98,9 +98,10 @@ void statusIn( iILcDriverInt inst ) {
       wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, True, data->next1Route ) );
 
       /* check for thrown switches in route */
-      if( ( data->loc->compareVhint( data->loc, wLoc.mid) == -1 || data->loc->getV(data->loc ) == 0 ) &&
-              data->next1Route->hasThrownSwitch(data->next1Route) )
-        wLoc.setV_hint( cmd, wLoc.mid );
+      if( !StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) && data->next1Route->hasThrownSwitch(data->next1Route) ) {
+        if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 || data->loc->getV( data->loc ) == 0 )
+          wLoc.setV_hint( cmd, wLoc.mid );
+      }
 
       wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
       data->loc->cmd( data->loc, cmd );
