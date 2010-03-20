@@ -219,6 +219,43 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   return slot;
 }
 
+static Boolean __getFunState(iONode node) {
+  int fnchanged = wFunCmd.getfnchanged(node);
+
+  switch( fnchanged ) {
+  case  0: return wFunCmd.isf0(node);
+  case  1: return wFunCmd.isf1(node);
+  case  2: return wFunCmd.isf2(node);
+  case  3: return wFunCmd.isf3(node);
+  case  4: return wFunCmd.isf4(node);
+  case  5: return wFunCmd.isf5(node);
+  case  6: return wFunCmd.isf6(node);
+  case  7: return wFunCmd.isf7(node);
+  case  8: return wFunCmd.isf8(node);
+  case  9: return wFunCmd.isf9(node);
+  case 10: return wFunCmd.isf10(node);
+  case 11: return wFunCmd.isf11(node);
+  case 12: return wFunCmd.isf12(node);
+  case 13: return wFunCmd.isf13(node);
+  case 14: return wFunCmd.isf14(node);
+  case 15: return wFunCmd.isf15(node);
+  case 16: return wFunCmd.isf16(node);
+  case 17: return wFunCmd.isf17(node);
+  case 18: return wFunCmd.isf18(node);
+  case 19: return wFunCmd.isf19(node);
+  case 20: return wFunCmd.isf20(node);
+  case 21: return wFunCmd.isf21(node);
+  case 22: return wFunCmd.isf22(node);
+  case 23: return wFunCmd.isf23(node);
+  case 24: return wFunCmd.isf24(node);
+  case 25: return wFunCmd.isf25(node);
+  case 26: return wFunCmd.isf26(node);
+  case 27: return wFunCmd.isf27(node);
+  case 28: return wFunCmd.isf28(node);
+  }
+
+  return False;
+}
 
 
 static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
@@ -310,9 +347,49 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     out[4] = speed;
     out[4] |= dir ? 0x80:0x00;
 
+    if( slot->lights != fn ) {
+      if( __transact( data, out, NULL, 0 ) ) {
+        out[0] = 0x62;
+        out[1] = 0; /*xor*/
+        out[2] = slot->addr >> 8;
+        out[3] = slot->addr & 0x00FF;
+        out[4] = fn ? 0x80:0x00;
+        slot->lights = fn;
+      }
+    }
+
     return True;
 
   }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int fnchanged = wFunCmd.getfnchanged(node);
+    int addr      = wFunCmd.getaddr(node);
+    Boolean fon   = False;
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function %d command for %s", fnchanged, wLoc.getid(node) );
+
+    fon = __getFunState(node);
+
+    out[0] = 0x62;
+    out[1] = 0; /*xor*/
+    out[2] = slot->addr >> 8;
+    out[3] = slot->addr & 0x00FF;
+    out[4] = fnchanged;
+    out[4] |= fon ? 0x20:0x00;
+
+    return True;
+
+  }
+
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command [%s] not(jet) supported", NodeOp.getName( node ) );
 
