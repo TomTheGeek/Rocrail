@@ -116,13 +116,29 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
   Boolean rc = data->dummyio;
 
   if( !data->dummyio ) {
-    rc = SerialOp.read( data->serial, in, 3 );
+    Boolean isInfo = False;
+    int insize = 0;
+    int offset = 0;
+    rc = SerialOp.read( data->serial, in, 1 );
+
+    if( rc && (in[0] & 0xE0) == 0 ) {
+      /* info or answer received */
+      rc = SerialOp.read( data->serial, in+1, 2 );
+      insize = in[2];
+      offset = 3;
+      isInfo = True;
+    }
+    else {
+      /* command received */
+      insize = in[0] >> 5;
+      offset = 1;
+    }
+
     if( rc ) {
-      int insize = in[2];
-      rc = SerialOp.read( data->serial, in+3, insize );
+      rc = SerialOp.read( data->serial, in+offset, insize );
       if( rc ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet read:" );
-        TraceOp.dump( name, TRCLEVEL_INFO, in, insize+3 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
+        TraceOp.dump( name, TRCLEVEL_INFO, in, insize+offset );
       }
       else {
         /* error reading data */
@@ -133,6 +149,8 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
       /* error reading header */
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
     }
+
+
   }
 
   return rc;
@@ -154,7 +172,7 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
           int wait = 0;
           do {
             if( __readPacket( data, in ) ) {
-              if( in[0] & 0xE0 == id ) {
+              if( in[0] == id ) {
                 /* id match */
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "got wanted id[0x%02X]", id );
                 break;
@@ -513,7 +531,7 @@ static void __reader( void* threadinst ) {
       if( SerialOp.available( data->serial ) ) {
         byte in[256];
         if( __readPacket(data, in) ) {
-          if( in[0] & 0x1F == 0x0B ) {
+          if( in[0] == 0x4B ) {
             /* sensor report */
             __handleSensor(data, in);
           }
