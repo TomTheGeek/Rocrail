@@ -156,6 +156,42 @@ int opendccRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
     /*wProgram.setcmd( node, wProgram.get );*/
     wProgram.setcv( node, so );
     wProgram.setvalue( node, buffer[4] );
+    if( so == 1 ) {
+      int baudrate = buffer[4];
+      /* the opendcc setup dialog is expecting the baudrate coded as the p50x XSOget */
+
+/*
+      Baudrate, Kodierung beim Schreiben:
+       0: 9600 Baud
+       1: 19200 Baud (default)
+       2: 38400 Baud
+       3: 57600 Baud
+       4: 115200 Baud
+       5: 2400 Baud
+       6: 4800 Baud
+ *
+ *
+      Baudrate, Kodierung beim Lesen per p50xb:
+       0: 2400 Baud
+       1: 4800 Baud
+       2: 9600 Baud
+       3: 19200 Baud
+       4: 38400 Baud
+       5: 57600 Baud (vermutlich - ist noch ungetestet)
+       6: 115200 Baud (vermutlich - ist noch ungetestet)
+*/
+
+      switch( buffer[4] ) {
+      case 0: baudrate = 2; break;
+      case 1: baudrate = 3; break;
+      case 2: baudrate = 4; break;
+      case 3: baudrate = 5; break;
+      case 4: baudrate = 6; break;
+      case 5: baudrate = 0; break;
+      case 6: baudrate = 1; break;
+      }
+      wProgram.setvalue( node, baudrate );
+    }
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 
