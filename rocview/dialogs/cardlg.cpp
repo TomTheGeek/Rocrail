@@ -148,7 +148,7 @@ void CarDlg::initLabels() {
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
-  m_labIdent->SetLabel( wxGetApp().getMsg( "ident" ) );
+  m_labIdent->SetLabel( wxGetApp().getMsg( "identifier" ) );
   m_labNumber->SetLabel( wxGetApp().getMsg( "number" ) );
   m_labRoadname->SetLabel( wxGetApp().getMsg( "roadname" ) );
   m_labColor->SetLabel( wxGetApp().getMsg( "color" ) );
