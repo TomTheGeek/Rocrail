@@ -839,7 +839,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxComboBox" expanded="1">
                                                     <property name="bg"></property>
@@ -1826,7 +1826,7 @@
                                                     <property name="name">m_Length</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="size"></property>
+                                                    <property name="size">100,-1</property>
                                                     <property name="style">wxSP_ARROW_KEYS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>

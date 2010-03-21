@@ -35,6 +35,7 @@
 #include "rocrail/wrapper/public/Location.h"
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/DataReq.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -270,6 +271,13 @@ void CarDlg::initValues() {
     else {
       TraceOp.trc( "cardlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
       m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      // request the image from server:
+      iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+      wDataReq.setid( node, wCar.getid(m_Props) );
+      wDataReq.setcmd( node, wDataReq.get );
+      wDataReq.settype( node, wDataReq.image );
+      wDataReq.setfilename( node, wCar.getimage(m_Props) );
+      wxGetApp().sendToRocrail( node );
     }
     m_CarImage->SetToolTip(wxString(wCar.getnumber( m_Props ),wxConvUTF8));
 
