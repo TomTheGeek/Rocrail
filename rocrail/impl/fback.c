@@ -141,9 +141,17 @@ static void __checkAction( iOFBack inst ) {
 
   /* loop over all actions */
   while( fbaction != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( fbaction ));
+
     if( StrOp.equals( data->state?"on":"off"    , wActionCtrl.getstate( fbaction ) ) ||
         StrOp.equals( data->state?"true":"false", wActionCtrl.getstate( fbaction ) ) ||
-        data->state && StrOp.len(wActionCtrl.getstate( fbaction )) == 0 ) {
+        data->state && StrOp.len(wActionCtrl.getstate( fbaction )) == 0 ||
+        counter > 0 && data->counter == counter )
+    {
+      if( data->counter == counter ) {
+        /* reset counter */
+        data->counter = 0;
+      }
 
       if( data->listenerObj != NULL ) {
         iIBlockBase bk = (iIBlockBase)data->listenerObj;
@@ -225,6 +233,16 @@ static Boolean _getState( iOFBack inst ) {
   return data->state;
 }
 
+static int _getCounter( iOFBack inst ) {
+  iOFBackData data = Data(inst);
+  return data->counter;
+}
+
+static void _resetCounter( iOFBack inst ) {
+  iOFBackData data = Data(inst);
+  data->counter = 0;
+}
+
 static int _getIdentifier( iOFBack inst ) {
   iOFBackData data = Data(inst);
   return wFeedback.getidentifier( data->props );
@@ -273,8 +291,17 @@ static void _event( iOFBack inst, iONode nodeC ) {
   if( wFeedback.isactivelow( data->props ) )
     data->state = !data->state;
 
+  if(data->state ) {
+    data->counter++;
+  }
+
   wFeedback.setstate( data->props, data->state );
+  wFeedback.setcounter( data->props, data->counter );
   wFeedback.setidentifier( data->props, wFeedback.getidentifier( nodeC ) );
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%d val=%d count=%d",
+               FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
+               wFeedback.getval( nodeC ), data->counter );
 
   /* Call listener. */
   if( data->listenerFun != NULL ) {
@@ -286,18 +313,21 @@ static void _event( iOFBack inst, iONode nodeC ) {
     obj listener = ListOp.first( data->listeners );
     while( listener != NULL ) {
       hasListener = True;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb [%s](%s) ident=%d val=%d call listener 0x%08X...",
-                   FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ), wFeedback.getval( nodeC ), listener );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb [%s](%s) ident=%d val=%d count=%d call listener 0x%08X...",
+                   FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
+                   wFeedback.getval( nodeC ), data->counter, listener );
       listener->event( listener, data->props );
       listener = ListOp.next( data->listeners );
     };
   }
+
   __ctcAction( inst );
   __checkAction( inst );
 
   if(!hasListener) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb \"%s\"(%s) ident=%d val=%d has no listener...",
-                 FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ), wFeedback.getval( nodeC ) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb \"%s\"(%s) ident=%d val=%d count=%d has no listener...",
+                 FBackOp.getId(inst), data->state?"ON":"OFF",
+                 wFeedback.getidentifier( nodeC ), wFeedback.getval( nodeC ), data->counter );
   }
 
   /* Broadcast to clients. Node4 */

@@ -1125,6 +1125,7 @@
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
         <var name="identifier" vt="long" defval="0" remark="Loc identifier"/>
+        <var name="counter" vt="int" defval="0" remark="occupied counter"/>
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
         <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
         <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>

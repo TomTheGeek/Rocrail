@@ -1813,12 +1813,13 @@ void Symbol::modelEvent( iONode node ) {
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
     Boolean state = wFeedback.isstate( node );
     int ident = wFeedback.getidentifier( node );
+    int counter = wFeedback.getcounter( node );
     int val = wFeedback.getval( node );
     int addr = wFeedback.getaddr( m_Props );
     const char* info = wFeedback.getinfo( node );
 
-    char* str = StrOp.fmt( "%s addr=%d ident=%d val=%d info=%s",
-                           wFeedback.getid( node ), addr, ident, val, info );
+    char* str = StrOp.fmt( "%s addr=%d ident=%d val=%d count=%d info=%s",
+                           wFeedback.getid( node ), addr, ident, val, counter, info );
     SetToolTip( wxString(str,wxConvUTF8) );
     if( ident > 0 )
       wxGetApp().getFrame()->setInfoText( str );

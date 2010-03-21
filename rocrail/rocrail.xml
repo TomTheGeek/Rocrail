@@ -302,6 +302,12 @@
       <param name="inst" vt="this"/>
       <param name="state" vt="const char*" remark="State to compare with."/>
     </fun>
+    <fun name="getCounter" vt="int">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="resetCounter" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
     <data>
       <var name="props" vt="iONode" remark="Feedback properties"/>
       <var name="state" vt="Boolean" remark="Current state"/>
@@ -309,6 +315,7 @@
       <var name="listenerObj" vt="obj" remark="Feedback listener object"/>
       <var name="listenerFun" vt="fback_listener" remark="Feedback listener function"/>
       <var name="listeners" vt="iOList" remark="Feedback listeners"/>
+      <var name="counter" vt="int" remark="occupied counter"/>
     </data>
   </object>
 
