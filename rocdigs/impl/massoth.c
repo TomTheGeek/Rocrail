@@ -125,7 +125,6 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
       /* info or answer received */
       rc = SerialOp.read( data->serial, in+1, 2 );
       insize = in[2];
-      insize++; /* XOR byte */
       offset = 3;
       isInfo = True;
     }
