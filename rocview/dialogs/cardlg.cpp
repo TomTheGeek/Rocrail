@@ -148,6 +148,7 @@ void CarDlg::initLabels() {
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labIdent->SetLabel( wxGetApp().getMsg( "ident" ) );
   m_labNumber->SetLabel( wxGetApp().getMsg( "number" ) );
   m_labRoadname->SetLabel( wxGetApp().getMsg( "roadname" ) );
   m_labColor->SetLabel( wxGetApp().getMsg( "color" ) );
@@ -285,6 +286,7 @@ void CarDlg::initValues() {
 
   // init General
   m_ID->SetValue( wxString(wCar.getid( m_Props ),wxConvUTF8) );
+  m_Ident->SetValue( wxString::Format(_T("%ld"), wCar.getident( m_Props )) );
   m_Number->SetValue( wxString(wCar.getnumber( m_Props ),wxConvUTF8) );
   m_Color->SetValue( wxString(wCar.getcolor( m_Props ),wxConvUTF8) );
   m_Roadname->SetValue( wxString(wCar.getroadname( m_Props ),wxConvUTF8) );
@@ -330,6 +332,9 @@ bool CarDlg::evaluate(){
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wCar.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  long ident = 0;
+  m_Ident->GetValue().ToLong(&ident);
+  wCar.setident( m_Props, ident );
   wCar.setnumber( m_Props, m_Number->GetValue().mb_str(wxConvUTF8) );
   wCar.setcolor( m_Props, m_Color->GetValue().mb_str(wxConvUTF8) );
   wCar.setroadname( m_Props, m_Roadname->GetValue().mb_str(wxConvUTF8) );

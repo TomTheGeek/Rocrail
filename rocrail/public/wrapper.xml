@@ -1667,6 +1667,7 @@
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="ident" vt="long" defval="0" range="*"/>
         <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
         <var name="number" vt="string" defval="" range="*"/>
