@@ -480,6 +480,13 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     Boolean f14 = wFunCmd.isf14( node );
     Boolean f15 = wFunCmd.isf15( node );
     Boolean f16 = wFunCmd.isf16( node );
+    Boolean f17 = wFunCmd.isf17( node );
+    Boolean f18 = wFunCmd.isf18( node );
+    Boolean f19 = wFunCmd.isf19( node );
+    Boolean f20 = wFunCmd.isf20( node );
+    Boolean f21 = wFunCmd.isf21( node );
+    Boolean f22 = wFunCmd.isf22( node );
+    Boolean f23 = wFunCmd.isf23( node );
 
     iOSlot slot = __getSlot(data, node );
 
@@ -498,7 +505,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     out[3] = slot->index;
     out[4] = (f0 << 0 | f1 << 1 | f2 << 2 | f3 << 3 | f4 << 4 | f5 << 5 | f6 << 6 | f7 << 7);
     out[5] = (f8 << 0 | f9 << 1 | f10 << 2 | f11 << 3 | f12 << 4 | f13 << 5 | f14 << 6 | f15 << 7);
-    out[6] = (f16 << 0);
+    out[6] = (f16 << 0 | f17 << 1 | f18 << 2 | f19 << 3 | f20 << 4 | f21 << 5 | f22 << 6 | f23 << 7);
     return 7;
 
   }
