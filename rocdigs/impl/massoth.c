@@ -184,7 +184,8 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
             }
             wait++;
           } while( wait < 5 );
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 reads", id );
+          if( wait > 4 )
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 reads", id );
 
         }
       }
