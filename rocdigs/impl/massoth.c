@@ -44,6 +44,10 @@
 
 static int instCnt = 0;
 
+/* declarations */
+static void __evaluatePacket(iOMassothData data, byte* in);
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -181,6 +185,7 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
                 break;
               }
               /* evaluate response */
+              __evaluatePacket(data, in);
             }
             wait++;
           } while( wait < 5 );
@@ -528,6 +533,27 @@ static void __handleSensor(iOMassothData data, byte* in) {
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
+static void __evaluatePacket(iOMassothData data, byte* in) {
+  switch( in[0] ) {
+  case 0x00:
+    /* system status */
+    __handleSystem(data, in);
+    break;
+  case 0x40:
+  case 0x60:
+    /* system status */
+    __handleVehicle(data, in);
+    break;
+  case 0x4B:
+    /* sensor report */
+    __handleSensor(data, in);
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
+    break;
+  }
+}
+
 
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
@@ -569,24 +595,7 @@ static void __reader( void* threadinst ) {
       if( SerialOp.available( data->serial ) ) {
         byte in[256];
         if( __readPacket(data, in) ) {
-          switch( in[0] ) {
-          case 0x00:
-            /* system status */
-            __handleSystem(data, in);
-            break;
-          case 0x40:
-          case 0x60:
-            /* system status */
-            __handleVehicle(data, in);
-            break;
-          case 0x4B:
-            /* sensor report */
-            __handleSensor(data, in);
-            break;
-          default:
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
-            break;
-          }
+          __evaluatePacket(data, in);
         }
       }
 
