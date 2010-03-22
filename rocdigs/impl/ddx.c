@@ -250,7 +250,7 @@ static iONode __translate( obj inst, const iONode node ) {
         delayedCmd->delay=delay;
         delayedCmd->busnr=-1;
         delayedCmd->devicegroup=-1;
-        data->swReset = ThreadOp.inst( "swreset", &thr_delayedAccCmd, delayedCmd );
+        data->swReset = ThreadOp.inst( NULL, &thr_delayedAccCmd, delayedCmd );
         ThreadOp.start( data->swReset );
       }
     }
