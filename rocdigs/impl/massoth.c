@@ -478,6 +478,40 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static void __handleVehicle(iOMassothData data, byte* in) {
+  if( in[0] == 0x60 ) {
+    int addr = in[3] * 256 + in[4];
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "vehicle %d logged out from device %d", addr, in[5] );
+  }
+  else if( in[0] == 0x40 && in[2] == 0x08 ) {
+    int addr = in[3] * 256 + in[4];
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "vehicle %d not in use", addr );
+  }
+  else if( in[0] == 0x40 && in[2] == 0x04 ) {
+    int addr = in[4] * 256 + in[5];
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "vehicle %d in use by device %d", addr, in[6] );
+  }
+}
+
+
+static void __handleSystem(iOMassothData data, byte* in) {
+  if( in[2] == 0x01 ) {
+    Boolean power = (in[3] & 0x03) == 0x02 ? True:False;
+
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, power );
+    wState.settrackbus( node, power );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system status=0x%02X", in[3] );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
 static void __handleSensor(iOMassothData data, byte* in) {
   iONode nodeC = NULL;
   Boolean state = in[3] & 0x01 ? True:False;
@@ -535,12 +569,23 @@ static void __reader( void* threadinst ) {
       if( SerialOp.available( data->serial ) ) {
         byte in[256];
         if( __readPacket(data, in) ) {
-          if( in[0] == 0x4B ) {
+          switch( in[0] ) {
+          case 0x00:
+            /* system status */
+            __handleSystem(data, in);
+            break;
+          case 0x40:
+          case 0x60:
+            /* system status */
+            __handleVehicle(data, in);
+            break;
+          case 0x4B:
             /* sensor report */
             __handleSensor(data, in);
-          }
-          else {
+            break;
+          default:
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
+            break;
           }
         }
       }
