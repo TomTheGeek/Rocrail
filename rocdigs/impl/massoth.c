@@ -120,30 +120,32 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
     int insize = 0;
     int offset = 0;
     rc = SerialOp.read( data->serial, in, 1 );
-
-    if( rc && (in[0] & 0xE0) == 0 ) {
-      /* info or answer received */
-      rc = SerialOp.read( data->serial, in+1, 2 );
-      insize = in[2];
-      offset = 3;
-      isInfo = True;
-    }
-    else {
-      /* command received */
-      insize = in[0] >> 5;
-      insize++; /* XOR byte */
-      offset = 1;
-    }
-
     if( rc ) {
-      rc = SerialOp.read( data->serial, in+offset, insize );
-      if( rc ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
-        TraceOp.dump( name, TRCLEVEL_INFO, in, insize+offset );
+
+      if( (in[0] & 0xE0) == 0 ) {
+        /* info or answer received */
+        rc = SerialOp.read( data->serial, in+1, 2 );
+        insize = in[2];
+        offset = 3;
+        isInfo = True;
       }
       else {
-        /* error reading data */
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
+        /* command received */
+        insize = in[0] >> 5;
+        insize++; /* XOR byte */
+        offset = 1;
+      }
+
+      if( rc ) {
+        rc = SerialOp.read( data->serial, in+offset, insize );
+        if( rc ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
+          TraceOp.dump( name, TRCLEVEL_INFO, in, insize+offset );
+        }
+        else {
+          /* error reading data */
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading data" );
+        }
       }
     }
     else {
