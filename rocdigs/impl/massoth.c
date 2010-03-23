@@ -588,7 +588,7 @@ static void __reader( void* threadinst ) {
   iOMassothData data    = Data(massoth);
 
   byte out[256];
-  byte test[] = {0x4B, 0x5B, 0x00, 0x10};
+  byte test[] = {0x4B, 0x5B, 0x00, 0x05};
   data->initialized = False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DiMAX reader started." );
@@ -614,7 +614,7 @@ static void __reader( void* threadinst ) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "interface configuration successfully send" );
-        __evaluatePacket(data, test);
+        /*__evaluatePacket(data, test);*/
       }
     }
 
