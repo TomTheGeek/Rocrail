@@ -516,6 +516,30 @@ static void __handleSystem(iOMassothData data, byte* in) {
   }
 }
 
+static void __handleContact(iOMassothData data, byte* in) {
+  iONode nodeC = NULL;
+  iONode nodeD = NULL;
+  Boolean state = in[3] & 0x01 ? True:False;
+  int addr = in[2] << 6;
+  addr += in[3] >> 2;
+  addr = addr * 2 - 1 + state;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "contact report: addr=%d", addr );
+  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, True );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  nodeD = (iONode)NodeOp.base.clone(nodeC);
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  NodeOp.setLong(nodeD, "tick", SystemOp.getTick() );
+  ThreadOp.post( data->ticker, (obj)(nodeD) );
+
+}
+
+
 
 static void __handleSensor(iOMassothData data, byte* in) {
   iONode nodeC = NULL;
@@ -546,7 +570,10 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     break;
   case 0x4B:
     /* sensor report */
-    __handleSensor(data, in);
+    if( data->useSensor )
+      __handleSensor(data, in);
+    else
+      __handleContact(data, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
@@ -561,6 +588,7 @@ static void __reader( void* threadinst ) {
   iOMassothData data    = Data(massoth);
 
   byte out[256];
+  byte test[] = {0x4B, 0x5B, 0x00, 0x10};
   data->initialized = False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DiMAX reader started." );
@@ -586,6 +614,7 @@ static void __reader( void* threadinst ) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "interface configuration successfully send" );
+        __evaluatePacket(data, test);
       }
     }
 
@@ -620,6 +649,47 @@ static int _version( obj inst ) {
 }
 
 
+static void __ContactTicker( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOMassoth inst = (iOMassoth)ThreadOp.getParm( th );
+  iOMassothData data = Data(inst);
+  iOList list = ListOp.inst();
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "contact ticker started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    int i = 0;
+    obj post = ThreadOp.getPost( th );
+    if (post != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "post: contact addr=%d", wFeedback.getaddr((iONode)post) );
+      ListOp.add(list, post);
+    }
+
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iONode node = (iONode)ListOp.get(list, i);
+      if( SystemOp.getTick() - NodeOp.getLong( node, "tick", 0 ) > 250 ) {
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setstate( evt, False );
+        wFeedback.setaddr( evt, wFeedback.getaddr(node) );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+        ListOp.removeObj(list, (obj)node);
+        NodeOp.base.del(node);
+        break;
+      }
+      ThreadOp.sleep(10);
+    }
+
+    ThreadOp.sleep(100);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "contact ticker ended." );
+}
+
+
 /**  */
 static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   iOMassoth __Massoth = allocMem( sizeof( struct OMassoth ) );
@@ -634,9 +704,10 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->lcmux   = MutexOp.inst( NULL, True );
   data->lcmap   = MapOp.inst();
 
-  data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
-  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
-  data->dummyio  = wDigInt.isdummyio(ini);
+  data->device    = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->iid       = StrOp.dup( wDigInt.getiid( ini ) );
+  data->dummyio   = wDigInt.isdummyio(ini);
+  data->useSensor = False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Massoth %d.%d.%d", vmajor, vminor, patch );
@@ -644,6 +715,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = 57600 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedback = %s", data->useSensor ? "sensor":"contact" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;
@@ -659,6 +731,13 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
     data->run = True;
     data->reader = ThreadOp.inst( "dimaxreader", &__reader, __Massoth );
     ThreadOp.start( data->reader );
+
+    if( !data->useSensor ) {
+      char* thname = StrOp.fmt("massothtick%X", __Massoth);
+      data->ticker = ThreadOp.inst( thname, &__ContactTicker, __Massoth );
+      StrOp.free(thname),
+      ThreadOp.start( data->ticker );
+    }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );

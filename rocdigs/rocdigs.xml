@@ -1070,6 +1070,8 @@
       <var name="reader" vt="iOThread"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="initialized" vt="Boolean"/>
+      <var name="ticker" vt="iOThread"/>
+      <var name="useSensor" vt="Boolean"/>
     </data>
   </object>
 
