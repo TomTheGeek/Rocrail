@@ -1051,6 +1051,7 @@
       <var name="lights" vt="Boolean"/>
       <var name="f1_8" vt="byte"/>
       <var name="f9_16" vt="byte"/>
+      <var name="idle" vt="long"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
@@ -1071,6 +1072,7 @@
       <var name="dummyio" vt="Boolean"/>
       <var name="initialized" vt="Boolean"/>
       <var name="ticker" vt="iOThread"/>
+      <var name="purger" vt="iOThread"/>
       <var name="useSensor" vt="Boolean"/>
     </data>
   </object>

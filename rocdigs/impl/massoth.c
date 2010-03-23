@@ -189,8 +189,10 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
             }
             wait++;
           } while( wait < 5 );
-          if( wait > 4 )
+          if( wait > 4 ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 reads", id );
+            rc = False;
+          }
 
         }
       }
@@ -219,7 +221,11 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   byte rsp[32] = {0};
   byte cmd[32] = {0};
 
-  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+    MutexOp.post(data->lcmux);
+  }
+
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
     return slot;
@@ -236,6 +242,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
     slot->addr = addr;
     slot->steps = __normalizeSteps(steps);
     slot->id = StrOp.dup(wLoc.getid(node));
+    slot->idle = SystemOp.getTick();
     if( MutexOp.wait( data->lcmux ) ) {
       MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
       MutexOp.post(data->lcmux);
@@ -367,6 +374,8 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
         wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
+    slot->idle = SystemOp.getTick();
+
     out[0] = 0x61;
     out[1] = 0; /*xor*/
     out[2] = slot->addr >> 8;
@@ -403,6 +412,8 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function %d command for %s", fnchanged, wLoc.getid(node) );
+
+    slot->idle = SystemOp.getTick();
 
     fon = __getFunState(node);
 
@@ -690,6 +701,44 @@ static void __ContactTicker( void* threadinst ) {
 }
 
 
+static void __purger( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOMassoth inst = (iOMassoth)ThreadOp.getParm( th );
+  iOMassothData data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "purger started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    if( MutexOp.wait( data->lcmux ) ) {
+      iOSlot slot = (iOSlot)MapOp.first(data->lcmap);
+      while( slot != NULL ) {
+        if( slot->speed == 0 && ( SystemOp.getTick() - slot->idle ) > 3000 ) {
+          byte cmd[32];
+          cmd[0] = 0x64;
+          cmd[1] = 0; /*xor*/
+          cmd[2] = slot->addr >> 8;
+          cmd[3] = slot->addr & 0x00FF;
+          cmd[4] = 0x00;
+
+          if( __transact( data, cmd, NULL, 0 ) ) {
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "slot purged for %s", slot->id );
+            MapOp.remove(data->lcmap, slot->id );
+          }
+          break;
+        }
+        slot = (iOSlot)MapOp.next(data->lcmap);
+      }
+      MutexOp.post(data->lcmux);
+    }
+
+    ThreadOp.sleep(100);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "purger ended." );
+}
+
+
 /**  */
 static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   iOMassoth __Massoth = allocMem( sizeof( struct OMassoth ) );
@@ -731,6 +780,9 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
     data->run = True;
     data->reader = ThreadOp.inst( "dimaxreader", &__reader, __Massoth );
     ThreadOp.start( data->reader );
+
+    data->purger = ThreadOp.inst( "purger", &__purger, __Massoth );
+    ThreadOp.start( data->purger );
 
     if( !data->useSensor ) {
       char* thname = StrOp.fmt("massothtick%X", __Massoth);
