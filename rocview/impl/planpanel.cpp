@@ -770,8 +770,8 @@ void PlanPanel::removeItemFromList( iONode item ) {
   const char* name = NodeOp.getName( item );
   const char* dbkey = "";
 
-  if( !wxGetApp().isOffline() )
-    return;
+  //if( !wxGetApp().isOffline() )
+  //  return;
 
   if( StrOp.equals( wBlock.name(), name ) ) {
     dbkey = wBlockList.name();
@@ -809,7 +809,16 @@ void PlanPanel::removeItemFromList( iONode item ) {
 
   iONode db = NodeOp.findNode( model, dbkey );
   if( db != NULL ) {
-    NodeOp.removeChild( db, item );
+    int cnt = NodeOp.getChildCnt(db);
+    for( int i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild(db, i);
+      if( StrOp.equals( wItem.getid(child), wItem.getid(item) ) ) {
+        NodeOp.removeChild( db, child );
+        TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "item [%s] removed", wItem.getid(item) );
+        break;
+      }
+    }
+    //NodeOp.removeChild( db, item );
   }
 }
 
@@ -1337,16 +1346,17 @@ void PlanPanel::modelEvent( iONode node ) {
         char key[256];
         itemKey( child, key, NULL );
 
-        TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "PlanPanel::modelEvent() id=%s", id );
+        TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "PlanPanel::modelEvent() id=%s", key );
 
         Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
         if( item != NULL ) {
-          TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "removing item id=%s from table...", id );
+          TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "removing item id=%s from table...", key );
           m_ChildTable->Delete( wxString(key,wxConvUTF8) );
           item->Show( false );
           // TODO: when this item is destroyed a refresh will try to access it which crashes the GUI.
           // For now we will leave it heare as zombie.;-)
           //item->Destroy();
+          removeItemFromList(child);
           Refresh();
           char* text = StrOp.fmt( "%d items", m_ChildTable->GetCount() );
           wxGetApp().getFrame()->setInfoText( text );
