@@ -220,7 +220,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
     if( block != NULL ) {
       iONode lc = NodeOp.findNode(req, wLoc.name());
       iONode bk = NodeOp.findNode(req, wBlock.name());
-      Boolean reserved = block->lock(block, wLoc.getid(lc), wNetReq.getlocalbk(req), wNetReq.getrouteid(req), False, False, False);
+      Boolean reserved = block->lock(block, wLoc.getid(lc), wNetReq.getlocalbk(req), wNetReq.getrouteid(req), False, False, False, 0);
       iORoute route = ModelOp.getRoute( AppOp.getModel(), wNetReq.getrouteid(req) );
 
       if( route != NULL ) {
@@ -231,7 +231,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
           iOLoc loc = ModelOp.addNetLoc( AppOp.getModel(), lc );
 
           /* re-lock again to provide the block with the cloned ID pointer */
-          block->lock(block, LocOp.getId(loc), wNetReq.getlocalbk(req), wNetReq.getrouteid(req), False, False, False);
+          block->lock(block, LocOp.getId(loc), wNetReq.getlocalbk(req), wNetReq.getrouteid(req), False, False, False, 0);
 
           wBlock.setremote( bk, True );
           wBlock.setrrid( bk, wNetReq.getlocalid(req) );

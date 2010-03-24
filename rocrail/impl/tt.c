@@ -1423,7 +1423,7 @@ static void __initCallback( iOTT inst ) {
 }
 
 
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse, int indelay ) {
   iOTTData data = Data(inst);
   Boolean ok = False;
 

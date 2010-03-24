@@ -2694,7 +2694,7 @@ static iORoute _findRoute( iOModel inst, const char* scheduleid,
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
                                         int* scheduleIdx, const char* curblockid, iOLoc loc,
-                                        Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
+                                        Boolean forceSameDir, Boolean swapPlacingInPrevRoute, int *indelay ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
 
@@ -2729,6 +2729,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
       return NULL;
     }
 
+    *indelay = wScheduleEntry.getindelay( entry );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
     return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
 
   }

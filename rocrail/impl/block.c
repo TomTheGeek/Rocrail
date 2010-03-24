@@ -389,7 +389,15 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
 
     if( evt == enter2in_event ) {
       LocOp.event( loc, manager, enter_event, 0 );
-      LocOp.event( loc, manager, in_event, data->timer > 0 ? data->timer:1 );
+      if( data->indelay > 0 )
+        LocOp.event( loc, manager, in_event, data->indelay );
+      else
+        LocOp.event( loc, manager, in_event, data->timer > 0 ? data->timer:1 );
+    }
+    else if( evt == in_event ) {
+      /* an in event delay can be set with lock for a schedule entry */
+      LocOp.event( loc, manager, in_event, data->indelay );
+      data->indelay = 0;
     }
     else
       LocOp.event( loc, manager, evt, 0 );
@@ -1115,7 +1123,9 @@ static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
 /**
  * Ignore all events wenn the crossing flag is set.
  */
-static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse ) {
+static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid,
+    Boolean crossing, Boolean reset, Boolean reverse, int indelay )
+{
   iOBlockData data = NULL;
   Boolean ok = False;
 
@@ -1192,7 +1202,8 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     if( ok ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "block %s locked for [%s][%s][%s] in [%s] direction", data->id, id, data->locId, blockid, reverse?"reverse":"normal" );
+          "block %s locked for [%s][%s][%s] in [%s] direction, indelay=%d",
+          data->id, id, data->locId, blockid, reverse?"reverse":"normal", indelay );
       data->reverse     = reverse;
       data->fromBlockId = blockid;
       data->byRouteId   = routeid;
@@ -1203,6 +1214,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     if( ok ) {
       /* reset occupation ticker */
       data->occtime = SystemOp.getTick();
+      data->indelay = indelay;
     }
 
     /* Unlock the semaphore: */

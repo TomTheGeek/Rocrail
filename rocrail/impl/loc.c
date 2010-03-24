@@ -1220,7 +1220,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
     iIBlockBase emitterblock = (iIBlockBase)emitter;
     const char* blockid = emitterblock->base.id( emitterblock );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Event %d from \"%s\"", evt, blockid );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
 
     while( fundef != NULL ) {
       const char* onevent = wFunDef.getonevent( fundef );

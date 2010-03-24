@@ -265,6 +265,7 @@ void ScheduleDialog::initLabels() {
 
   m_labDeparture->SetLabel( wxGetApp().getMsg( "departure" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
+  m_labInDelay->SetLabel( wxGetApp().getMsg( "indelay" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -486,6 +487,7 @@ void ScheduleDialog::initEntry(int row) {
   m_Hour->SetValue( wScheduleEntry.gethour( entry ) );
   m_Minute->SetValue( wScheduleEntry.getminute( entry ) );
   m_EntrySwap->SetValue( wScheduleEntry.isswap( entry ) );
+  m_InDelay->SetValue( wScheduleEntry.getindelay( entry ) );
 
 }
 
@@ -522,6 +524,7 @@ bool ScheduleDialog::evaluate() {
     wScheduleEntry.setblock( entry, m_Block->GetValue().mb_str(wxConvUTF8) );
     wScheduleEntry.sethour( entry, m_Hour->GetValue() );
     wScheduleEntry.setminute( entry, m_Minute->GetValue() );
+    wScheduleEntry.setindelay( entry, m_InDelay->GetValue() );
 
   }
 
@@ -577,6 +580,8 @@ bool ScheduleDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Minute = NULL;
     m_EntryDetails = NULL;
     m_EntrySwap = NULL;
+    m_labInDelay = NULL;
+    m_InDelay = NULL;
     m_ScheduleActions = NULL;
     m_ScheduleBox = NULL;
     m_ScheduleAction = NULL;
@@ -770,41 +775,49 @@ void ScheduleDialog::CreateControls()
     itemBoxSizer40->Add(itemStaticBoxSizer52, 0, wxALIGN_TOP|wxALL, 5);
     m_EntrySwap = new wxCheckBox( m_Destinations, wxID_ANY, _("Swap placing"), wxDefaultPosition, wxDefaultSize, 0 );
     m_EntrySwap->SetValue(false);
-    itemStaticBoxSizer52->Add(m_EntrySwap, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemStaticBoxSizer52->Add(m_EntrySwap, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer54 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer52->Add(itemFlexGridSizer54, 0, wxGROW, 5);
+    m_labInDelay = new wxStaticText( m_Destinations, wxID_ANY, _("IN delay"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer54->Add(m_labInDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_InDelay = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
+    itemFlexGridSizer54->Add(m_InDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_NoteBook->AddPage(m_Destinations, _("Destinations"));
 
     m_ScheduleActions = new wxPanel( m_NoteBook, ID_PANEL_SCHEDULES_ACTIONS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer55 = new wxBoxSizer(wxVERTICAL);
-    m_ScheduleActions->SetSizer(itemBoxSizer55);
+    wxBoxSizer* itemBoxSizer58 = new wxBoxSizer(wxVERTICAL);
+    m_ScheduleActions->SetSizer(itemBoxSizer58);
 
     m_ScheduleBox = new wxStaticBox(m_ScheduleActions, wxID_ANY, _("Schedule"));
-    wxStaticBoxSizer* itemStaticBoxSizer56 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
-    itemBoxSizer55->Add(itemStaticBoxSizer56, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer59 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
+    itemBoxSizer58->Add(itemStaticBoxSizer59, 0, wxGROW|wxALL, 5);
     wxArrayString m_ScheduleActionStrings;
     m_ScheduleAction = new wxComboBox( m_ScheduleActions, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_ScheduleActionStrings, wxCB_DROPDOWN );
-    itemStaticBoxSizer56->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer59->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_ScheduleActions, ID_SCHEDULE_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer55->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer58->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_NoteBook->AddPage(m_ScheduleActions, _("Actions"));
 
     itemBoxSizer2->Add(m_NoteBook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer59 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer62 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer59, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer62, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer59->AddButton(m_OK);
+    itemStdDialogButtonSizer62->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer59->AddButton(m_Cancel);
+    itemStdDialogButtonSizer62->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer59->AddButton(m_Apply);
+    itemStdDialogButtonSizer62->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer59->Realize();
+    itemStdDialogButtonSizer62->Realize();
 
 ////@end ScheduleDialog content construction
 }
@@ -1035,6 +1048,7 @@ void ScheduleDialog::OnAddLocationClick( wxCommandEvent& event )
   wScheduleEntry.sethour( scentry, m_Hour->GetValue() );
   wScheduleEntry.setminute( scentry, m_Minute->GetValue() );
   wScheduleEntry.setswap( scentry, m_EntrySwap->IsChecked()?True:False );
+  wScheduleEntry.setindelay( scentry, m_InDelay->GetValue() );
   NodeOp.addChild( m_Props, scentry );
   initSchedule();
 
@@ -1056,6 +1070,7 @@ void ScheduleDialog::OnAddBlockClick( wxCommandEvent& event )
   wScheduleEntry.sethour( scentry, m_Hour->GetValue() );
   wScheduleEntry.setminute( scentry, m_Minute->GetValue() );
   wScheduleEntry.setswap( scentry, m_EntrySwap->IsChecked()?True:False );
+  wScheduleEntry.setindelay( scentry, m_InDelay->GetValue() );
   NodeOp.addChild( m_Props, scentry );
   initSchedule();
 
@@ -1092,6 +1107,7 @@ void ScheduleDialog::OnModifyDestinationClick( wxCommandEvent& event )
     wScheduleEntry.sethour( entry, m_Hour->GetValue() );
     wScheduleEntry.setminute( entry, m_Minute->GetValue() );
     wScheduleEntry.setswap( entry, m_EntrySwap->IsChecked()?True:False );
+    wScheduleEntry.setindelay( entry, m_InDelay->GetValue() );
     initSchedule();
   }
 

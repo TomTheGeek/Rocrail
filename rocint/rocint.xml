@@ -142,6 +142,7 @@
       <param name="crossing" vt="Boolean" remark="if this block overlaps turnouts used by other routes, this flag does ignore all events!"/>
       <param name="reset" vt="Boolean" remark="reset all triggers"/>
       <param name="reverse" vt="Boolean" remark="reverse enter"/>
+      <param name="indelay" vt="int" remark="in event delay timer"/>
     </fun>
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this"/>

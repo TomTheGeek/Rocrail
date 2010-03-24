@@ -12267,4 +12267,7 @@
   <Msg id="ignorebusy">
     <en txt="Ignore Busy message"/>
   </Msg>
+  <Msg id="indelay">
+    <en txt="IN delay"/>
+  </Msg>
 </Messages>

@@ -69,7 +69,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->prewaitScheduleIdx = -1;
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), data->loc, False, False );
+                                                      data->loc->getCurBlock( data->loc ), data->loc, False, False, &data->indelay );
     }
 
     if( !wait && data->next1Route != NULL ) {
@@ -141,5 +141,6 @@ void statusFindDest( iILcDriverInt inst ) {
                    "Setting state for [%s] from LC_FINDDEST to LC_WAITBLOCK.",
                    data->loc->getId( data->loc ) );
   }
+
 }
 

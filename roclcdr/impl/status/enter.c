@@ -41,6 +41,7 @@
 
 void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   iOLcDriverData data = Data(inst);
+  int indelay = 0;
 
   /* Signal of destination block; wait or search for next destination? (_event) */
   iONode bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
@@ -92,7 +93,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                                                                data->schedule, &data->scheduleIdx,
                                                                data->next1Block->base.id( data->next1Block ),
                                                                data->loc, False,
-                                                               data->next1Route->isSwapPost( data->next1Route ));
+                                                               data->next1Route->isSwapPost( data->next1Route ),
+                                                               &indelay);
       }
       else {
         /* next2Route already locked by second next option; adjust the schedule index... */
@@ -166,7 +168,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        data->next2Block,
                        data->next2Route,
                        data->next1Block,
-                       data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo ) &&
+                       data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo, indelay ) &&
                initializeSwap( (iOLcDriver)inst, data->next2Route) )
       {
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );

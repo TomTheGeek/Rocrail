@@ -85,6 +85,7 @@
       <var name="greenaspect" vt="Boolean"/>
       <var name="semaphoreWait" vt="int"/>
       <var name="signalWait" vt="int"/>
+      <var name="indelay" vt="int"/>
     </data>
   </object>
 

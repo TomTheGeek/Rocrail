@@ -63,9 +63,10 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
 void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute ) {
   iOLcDriverData data = Data(inst);
 
-  iORoute    nextRoute = NULL;
+  iORoute     nextRoute = NULL;
   iIBlockBase nextBlock = NULL;
   Boolean     fromto    = False;
+  int         indelay   = 0;
 
   /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
   /* TODO: use the right direction for finding the next block in the same direction */
@@ -87,7 +88,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       /* TODO: force same direction */
       nextRoute = data->model->calcRouteFromCurBlock( data->model,
           (iOList)NULL, data->schedule, &scheduleIdx,
-          fromBlock->base.id(fromBlock), data->loc, True, fromRoute->isSwapPost( fromRoute ) );
+          fromBlock->base.id(fromBlock), data->loc, True, fromRoute->isSwapPost( fromRoute ), &indelay );
 
       if( nextRoute != NULL ) {
         /* evaluate direction */
@@ -107,7 +108,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
 
       nextRoute->getDirection( nextRoute, fromBlock->base.id(fromBlock), &fromto );
       /* lock second next destination */
-      if( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto ) ) {
+      if( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto, indelay ) ) {
         if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, True ) ) {
           *toBlock = nextBlock;
           *toRoute = nextRoute;

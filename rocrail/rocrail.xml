@@ -141,6 +141,7 @@
       <var name="props" vt="iONode" remark="Block properties"/>
       <var name="fbEvents" vt="iOMap"/>
       <var name="timer" vt="int" remark="event timer"/>
+      <var name="indelay" vt="int" remark="in event delay timer"/>
       <var name="muxLock" vt="iOMutex"/>
       <var name="mvMillis" vt="int"/>
       <var name="mvTime" vt="long"/>
@@ -696,6 +697,7 @@
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="forceSameDir" vt="Boolean" remark="Force same direction."/>
       <param name="swapPlacingInPrevRoute" vt="Boolean" remark="Force same direction."/>
+      <param name="indelay" vt="int*" remark="in event delay timer"/>
     </fun>
     <fun name="calcRoute" vt="iORoute" remark="returns the route to start with">
       <param name="inst" vt="this" remark="Model instance"/>

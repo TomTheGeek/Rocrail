@@ -1172,6 +1172,7 @@
           <var name="minute" vt="int" defval="0" remark="Departure minute"/>
           <actionctrl cardinality="n"/>
           <var name="swap" vt="bool" defval="false" remark="swap the loc placing before traveling to this destination"/>
+          <var name="indelay" vt="int" defval="0" remark="in event delay timer"/>
         </scentry>
         <var name="scaction" vt="string" defval="NULL" range="*" remark="schedule action id"/>
         <actionctrl cardinality="n"/>

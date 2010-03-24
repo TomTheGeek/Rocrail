@@ -253,6 +253,8 @@ public:
     wxSpinCtrl* m_Minute;
     wxStaticBox* m_EntryDetails;
     wxCheckBox* m_EntrySwap;
+    wxStaticText* m_labInDelay;
+    wxSpinCtrl* m_InDelay;
     wxPanel* m_ScheduleActions;
     wxStaticBox* m_ScheduleBox;
     wxComboBox* m_ScheduleAction;
