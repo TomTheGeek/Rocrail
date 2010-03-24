@@ -126,7 +126,7 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
     rc = SerialOp.read( data->serial, in, 1 );
     if( rc ) {
 
-      if( (in[0] & 0xE0) == 0 ) {
+      if( (in[0] & 0x1F) == 0 ) {
         /* info or answer received */
         rc = SerialOp.read( data->serial, in+1, 2 );
         insize = in[2];
@@ -240,7 +240,23 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
     slot = allocMem( sizeof( struct slot) );
     slot->addr = addr;
-    slot->steps = __normalizeSteps(steps);
+
+    if( rsp[2] == 0x08 ) {
+      /* address not in use */
+      if( rsp[5] & 0x03 == 0x01 )
+        slot->steps = 28;
+      else if( rsp[5] & 0x03 == 0x10 )
+        slot->steps = 128;
+      else
+        slot->steps = 14;
+    }
+    else {
+      /* address in use */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %s in use...", wLoc.getid(node) );
+      slot->steps = __normalizeSteps(steps);
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
+
     slot->id = StrOp.dup(wLoc.getid(node));
     slot->idle = SystemOp.getTick();
     if( MutexOp.wait( data->lcmux ) ) {
