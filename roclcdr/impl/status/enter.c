@@ -124,7 +124,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         else
           data->next2Block = data->model->getBlock( data->model, data->next2Route->getToBlock( data->next2Route ) );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions..." );
-        if( checkScheduleEntryActions(inst) ) {
+        if( checkScheduleEntryActions(inst, scheduleIdx) ) {
           /* wait in block if we have to swap placing... */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Wait in block because the schedule entry wants a swap placing..." );
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
@@ -138,6 +138,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
+        checkScheduleEntryActions(inst, -1);
         checkScheduleActions(inst, LC_ENTERBLOCK);
       }
     }

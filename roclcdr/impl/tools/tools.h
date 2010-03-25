@@ -42,6 +42,6 @@ void resetSignals(iOLcDriver inst );
 Boolean setSignals(iOLcDriver inst, Boolean onEnter );
 
 void checkScheduleActions( iILcDriverInt inst, int state);
-Boolean checkScheduleEntryActions( iILcDriverInt inst );
+Boolean checkScheduleEntryActions( iILcDriverInt inst, int index );
 
 Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int scheduleIdx );

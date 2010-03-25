@@ -156,17 +156,18 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
   }
 }
 
-Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
+Boolean checkScheduleEntryActions( iILcDriverInt inst, int index ) {
   iOLcDriverData data = Data(inst);
+  int scheduleIdx = (index == -1 ? data->scheduleIdx:index);
 
   if( data->schedule != NULL ) {
     iONode sc = data->model->getSchedule( data->model, data->schedule );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "check schedule entry actions [%s:%d]",
-        data->schedule, data->scheduleIdx );
+        data->schedule, scheduleIdx );
 
-    if( sc != NULL && data->scheduleIdx < NodeOp.getChildCnt(sc)) {
-      iONode entry = NodeOp.getChild(sc,data->scheduleIdx);
+    if( sc != NULL && scheduleIdx < NodeOp.getChildCnt(sc)) {
+      iONode entry = NodeOp.getChild(sc,scheduleIdx);
       if( entry != NULL ) {
         iONode actionctrl = wScheduleEntry.getactionctrl(entry);
 
@@ -185,7 +186,7 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst ) {
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "schedule index %d is out of bounds for schedule %s",
-          data->scheduleIdx, data->schedule );
+          scheduleIdx, data->schedule );
     }
   }
   return False;

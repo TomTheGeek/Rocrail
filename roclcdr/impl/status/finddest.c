@@ -41,6 +41,7 @@
 
 void statusFindDest( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
+  int scheduleIdx = data->scheduleIdx;
 
   /* Find a free destination. */
   if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
@@ -79,7 +80,7 @@ void statusFindDest( iILcDriverInt inst ) {
       else
         data->next1Block = data->model->getBlock( data->model, data->next1Route->getToBlock( data->next1Route ) );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions..." );
-      if( checkScheduleEntryActions(inst) ) {
+      if( checkScheduleEntryActions(inst, data->scheduleIdx) ) {
         /* wait in block if we have to swap placing... */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
         data->loc->swapPlacing( data->loc, NULL, False );
@@ -90,7 +91,7 @@ void statusFindDest( iILcDriverInt inst ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
-      if( checkScheduleEntryActions(inst) ) {
+      if( checkScheduleEntryActions(inst, scheduleIdx) ) {
         /* wait in block if we have to swap placing... */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
         data->loc->swapPlacing( data->loc, NULL, False );
