@@ -164,7 +164,7 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
 }
 
 
-static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
+static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id, Boolean *gotid ) {
   Boolean rc = data->dummyio;
 
   if( MutexOp.wait( data->mux ) ) {
@@ -178,20 +178,26 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id ) {
         if( in != NULL ) {
           int wait = 0;
           do {
-            if( __readPacket( data, in ) ) {
-              if( in[0] == id ) {
-                /* id match */
-                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "got wanted id[0x%02X]", id );
-                break;
+            if( SerialOp.available( data->serial ) ) {
+              if( __readPacket( data, in ) ) {
+                if( in[0] == id ) {
+                  /* id match */
+                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "got wanted id[0x%02X]", id );
+                  *gotid = True;
+                  break;
+                }
+                /* evaluate response */
+                __evaluatePacket(data, in);
               }
-              /* evaluate response */
-              __evaluatePacket(data, in);
+            }
+            else {
+              ThreadOp.sleep(100);
             }
             wait++;
           } while( wait < 5 );
           if( wait > 4 ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 reads", id );
-            rc = False;
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted id[0x%02X] not seen within 5 read tries", id );
+            *gotid = False;
           }
 
         }
@@ -220,6 +226,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   iOSlot slot = NULL;
   byte rsp[32] = {0};
   byte cmd[32] = {0};
+  Boolean gotid = False;
 
   if( MutexOp.wait( data->lcmux ) ) {
     slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
@@ -236,34 +243,65 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   cmd[3] = addr & 0x00FF;
   cmd[4] = 0x81;
 
-  if( __transact( data, cmd, rsp, 0x40 ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
-    slot = allocMem( sizeof( struct slot) );
-    slot->addr = addr;
+  if( __transact( data, cmd, rsp, 0x40, &gotid ) ) {
+    if( gotid ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
+      slot = allocMem( sizeof( struct slot) );
+      slot->addr = addr;
 
-    if( rsp[2] == 0x08 ) {
-      /* address not in use */
-      if( rsp[5] & 0x03 == 0x01 )
-        slot->steps = 28;
-      else if( rsp[5] & 0x03 == 0x10 )
-        slot->steps = 128;
-      else
-        slot->steps = 14;
+      if( rsp[2] == 0x08 ) {
+        /* address not in use */
+        if( rsp[5] & 0x03 == 0x01 )
+          slot->steps = 28;
+        else if( rsp[5] & 0x03 == 0x10 )
+          slot->steps = 128;
+        else
+          slot->steps = 14;
+      }
+      else {
+        /* address in use */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %s in use...", wLoc.getid(node) );
+        slot->steps = __normalizeSteps(steps);
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
+
+      slot->id = StrOp.dup(wLoc.getid(node));
+      slot->idle = SystemOp.getTick();
+      if( MutexOp.wait( data->lcmux ) ) {
+        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+        MutexOp.post(data->lcmux);
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
     }
     else {
-      /* address in use */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %s in use...", wLoc.getid(node) );
-      slot->steps = __normalizeSteps(steps);
-    }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
+      /* configure vehicle */
+      int nsteps = __normalizeSteps(steps);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: %s not configured", wLoc.getid(node) );
+      cmd[0] = 0x85;
+      cmd[1] = 0; /*xor*/
+      cmd[2] = addr >> 8;
+      cmd[3] = addr & 0x00FF;
+      if( nsteps == 128 )
+        cmd[4] = 0x02;
+      else if( nsteps == 28 )
+        cmd[4] = 0x01;
+      else
+        cmd[4] = 0x00;
+      cmd[5] = 0x00;
 
-    slot->id = StrOp.dup(wLoc.getid(node));
-    slot->idle = SystemOp.getTick();
-    if( MutexOp.wait( data->lcmux ) ) {
-      MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-      MutexOp.post(data->lcmux);
+      if( __transact( data, cmd, NULL, 0, NULL ) ) {
+        slot = allocMem( sizeof( struct slot) );
+        slot->addr = addr;
+        slot->steps = __normalizeSteps(steps);
+        slot->id = StrOp.dup(wLoc.getid(node));
+        slot->idle = SystemOp.getTick();
+        if( MutexOp.wait( data->lcmux ) ) {
+          MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+          MutexOp.post(data->lcmux);
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+      }
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   }
 
   return slot;
@@ -400,7 +438,7 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     out[4] |= dir ? 0x80:0x00;
 
     if( slot->lights != fn ) {
-      if( __transact( data, out, NULL, 0 ) ) {
+      if( __transact( data, out, NULL, 0, NULL ) ) {
         out[0] = 0x62;
         out[1] = 0; /*xor*/
         out[2] = slot->addr >> 8;
@@ -460,7 +498,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   if( cmd != NULL ) {
     byte opcode = 0;
     if( __translate( data, cmd, out ) ) {
-      if( __transact( data, out, NULL, 0 ) ) {
+      if( __transact( data, out, NULL, 0, NULL ) ) {
       }
     }
   }
@@ -573,16 +611,27 @@ static void __handleSensor(iOMassothData data, byte* in) {
   Boolean state = in[3] & 0x01 ? True:False;
   int addr = in[2] << 6;
   addr += in[3] >> 2;
+  addr = addr * 2 - 1 + state;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report: addr=%d, state=%d", addr, state );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "feedback report: addr=%d", addr );
   nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, state );
+  wFeedback.setstate( nodeC, True );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  ThreadOp.sleep(10);
+  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, False );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
 
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
+
 
 static void __evaluatePacket(iOMassothData data, byte* in) {
   switch( in[0] ) {
@@ -634,7 +683,7 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     if( !data->initialized ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending interface configuration..." );
-      data->initialized = __transact( data, out, NULL, 0 );
+      data->initialized = __transact( data, out, NULL, 0, NULL );
       if( !data->initialized ) {
         ThreadOp.sleep( 1000 );
         continue;
@@ -737,7 +786,7 @@ static void __purger( void* threadinst ) {
           cmd[3] = slot->addr & 0x00FF;
           cmd[4] = 0x00;
 
-          if( __transact( data, cmd, NULL, 0 ) ) {
+          if( __transact( data, cmd, NULL, 0, NULL ) ) {
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "slot purged for %s", slot->id );
             MapOp.remove(data->lcmap, slot->id );
           }
