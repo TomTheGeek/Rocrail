@@ -2003,6 +2003,8 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
       DocOp.base.del( doc );
       wxGetApp().Callback( (obj)&wxGetApp(), node );
       wxGetApp().setStayOffline( true );
+      SetStatusText( plan, status_digint );
+
     }
     else {
       TraceOp.trc( "frame", TRCLEVEL_EXCEPTION, __LINE__, 9999, "LocalPlan [%s] is not parseable!", (const char*)m_LocalPlan.mb_str(wxConvUTF8) );
