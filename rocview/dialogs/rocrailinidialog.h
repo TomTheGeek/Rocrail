@@ -295,6 +295,7 @@ public:
     wxCheckBox* m_PowerOffAtGhost;
     wxCheckBox* m_KeepGhost;
     wxCheckBox* m_DisableSteal;
+    wxCheckBox* m_PowerOffAtReset;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

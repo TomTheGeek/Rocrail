@@ -12273,4 +12273,7 @@
   <Msg id="led">
     <en txt="LED"/>
   </Msg>
+  <Msg id="poweroffatreset">
+    <en txt="Power off at reset"/>
+  </Msg>
 </Messages>

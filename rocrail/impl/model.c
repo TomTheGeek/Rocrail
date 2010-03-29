@@ -1344,8 +1344,11 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
 
 static void __reset( iOModel inst, Boolean saveCurBlock ) {
   iOModelData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Sending safety Power Off before Reset." );
-  AppOp.stop(  );
+
+  if( wCtrl.ispoweroffatreset( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Sending safety Power Off before Reset." );
+    AppOp.stop(  );
+  }
 
   {
     iOLoc loc = (iOLoc)MapOp.first( data->locMap );
