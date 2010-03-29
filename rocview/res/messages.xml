@@ -12270,4 +12270,7 @@
   <Msg id="indelay">
     <en txt="IN delay"/>
   </Msg>
+  <Msg id="led">
+    <en txt="LED"/>
+  </Msg>
 </Messages>
