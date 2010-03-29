@@ -143,7 +143,12 @@ static void _white( iOSignal inst ) {
   if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
-    wSignal.setcmd( node, wSignal.white );
+    if( wSignal.getaspects( data->props ) == 2 )
+      wSignal.setcmd( node, wSignal.green );
+    else if( wSignal.getaspects( data->props ) == 3 )
+      wSignal.setcmd( node, wSignal.yellow );
+    else
+      wSignal.setcmd( node, wSignal.white );
     wSignal.setid( node, SignalOp.getId( inst ) );
     SignalOp.cmd( inst, node, True );
   }
