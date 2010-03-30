@@ -330,10 +330,12 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   char out[32];
-  sprintf( out, "SA;\r" );
-  __transact( (iOZimo)inst, out, StrOp.len(out), NULL, 0 );
+  if( poweroff ) {
+    sprintf( out, "SA;\r" );
+    __transact( (iOZimo)inst, out, StrOp.len(out), NULL, 0 );
+  }
   return;
 }
 

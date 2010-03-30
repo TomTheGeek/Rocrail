@@ -1022,7 +1022,7 @@ static iONode _cmd( obj inst, const iONode cmd ) {
  * _halt -- Called when Rocrail is shutting down?
  *
  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOECoSData data = Data( inst );
 
   __releaseViews( ( iOECoS )inst );

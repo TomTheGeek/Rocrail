@@ -12276,4 +12276,7 @@
   <Msg id="poweroffatreset">
     <en txt="Power off at reset"/>
   </Msg>
+  <Msg id="poweroffonexit">
+    <en txt="Power off on exit"/>
+  </Msg>
 </Messages>

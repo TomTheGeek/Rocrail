@@ -105,7 +105,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOClockData data = Data(inst);
   iONode quitNode = NodeOp.inst( "quit", NULL, ELEMENT_NODE );
   data->run = False;

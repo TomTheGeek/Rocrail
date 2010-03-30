@@ -400,7 +400,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   return response;
 }
 
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOSRCP08Data data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
 }

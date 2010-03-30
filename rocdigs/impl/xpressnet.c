@@ -1117,17 +1117,19 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOXpressNetData data = Data(inst);
   data->run = False;
 
-  /* ALL OFF */
-  Boolean rspExpected = False;
-  byte* outc = allocMem(32);
-  outc[0] = 0x21;
-  outc[1] = 0x80;
-  outc[2] = 0xA1;
-  data->subWrite(inst, outc, &rspExpected);
+  if( poweroff ){
+    /* ALL OFF */
+    Boolean rspExpected = False;
+    byte* outc = allocMem(32);
+    outc[0] = 0x21;
+    outc[1] = 0x80;
+    outc[2] = 0xA1;
+    data->subWrite(inst, outc, &rspExpected);
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   data->subDisConn(inst);
   return;

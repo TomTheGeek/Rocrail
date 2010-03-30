@@ -304,6 +304,8 @@ public:
     wxStaticBoxSizer* m_AddControllerBox;
     wxComboBox* m_Lib;
     wxButton* m_ControllerAdd;
+    wxStaticBox* m_ControllerOptionsBox;
+    wxCheckBox* m_PowerOffOnExit;
     wxPanel* m_R2RnetPanel;
     wxStaticText* m_labR2RnetID;
     wxTextCtrl* m_R2RnetID;

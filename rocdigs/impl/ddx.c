@@ -525,7 +525,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iODDXData data = Data((iODDX)inst);
   stop_voltage(inst);
   close_comport(inst);

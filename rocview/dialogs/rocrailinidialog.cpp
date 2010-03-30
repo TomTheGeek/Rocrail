@@ -260,6 +260,7 @@ void RocrailIniDialog::initLabels() {
   m_ControllerProps->SetLabel( wxGetApp().getMsg( "properties" ) );
   m_ControllerAdd->SetLabel( wxGetApp().getMsg( "add" ) );
   m_AddControllerBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "new" ) );
+  m_PowerOffOnExit->SetLabel( wxGetApp().getMsg( "poweroffonexit" ) );
 
 
   // R2Rnet
@@ -426,6 +427,7 @@ void RocrailIniDialog::initValues() {
 
   // Controllers
   initControllerList();
+  m_PowerOffOnExit->SetValue(wRocRail.ispoweroffonexit(m_Props)?true:false);
 
   m_Lib->Append( wxString( wDigInt.barjut, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.clock, wxConvUTF8 ) );
@@ -458,6 +460,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.xpressnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.zimobin, wxConvUTF8 ) );
 
   m_Lib->SetSelection( 0 );
   m_Controller = NULL;
@@ -570,6 +573,9 @@ void RocrailIniDialog::evaluate() {
   wTrace.setautomatic( trace, m_Auto->IsChecked() ? True:False );
   wTrace.setmonitor( trace, m_Monitor->IsChecked() ? True:False );
   wTrace.setlisten2all( trace, m_SendAllTraces->IsChecked() ? True:False );
+
+  // Controllers
+  wRocRail.setpoweroffonexit(m_Props, m_PowerOffOnExit->IsChecked() ? True:False);
 
   // Automat
   iONode ctrl = wRocRail.getctrl( m_Props );
@@ -733,6 +739,8 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_AddControllerBox = NULL;
     m_Lib = NULL;
     m_ControllerAdd = NULL;
+    m_ControllerOptionsBox = NULL;
+    m_PowerOffOnExit = NULL;
     m_R2RnetPanel = NULL;
     m_labR2RnetID = NULL;
     m_R2RnetID = NULL;
@@ -1181,69 +1189,78 @@ void RocrailIniDialog::CreateControls()
     m_ControllerAdd = new wxButton( m_ControllersPanel, ID_BUTTON_RR_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
     m_AddControllerBox->Add(m_ControllerAdd, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_ControllerOptionsBox = new wxStaticBox(m_ControllersPanel, wxID_ANY, _("Options"));
+    wxStaticBoxSizer* itemStaticBoxSizer126 = new wxStaticBoxSizer(m_ControllerOptionsBox, wxVERTICAL);
+    itemBoxSizer118->Add(itemStaticBoxSizer126, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer127 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer126->Add(itemFlexGridSizer127, 0, wxGROW, 5);
+    m_PowerOffOnExit = new wxCheckBox( m_ControllersPanel, wxID_ANY, _("Power off on exit"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_PowerOffOnExit->SetValue(false);
+    itemFlexGridSizer127->Add(m_PowerOffOnExit, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_RRNotebook->AddPage(m_ControllersPanel, _("Controllers"));
 
     m_R2RnetPanel = new wxPanel( m_RRNotebook, ID_PANEL_R2RNET, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer127 = new wxBoxSizer(wxVERTICAL);
-    m_R2RnetPanel->SetSizer(itemBoxSizer127);
+    wxBoxSizer* itemBoxSizer130 = new wxBoxSizer(wxVERTICAL);
+    m_R2RnetPanel->SetSizer(itemBoxSizer130);
 
-    wxFlexGridSizer* itemFlexGridSizer128 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer128->AddGrowableCol(1);
-    itemBoxSizer127->Add(itemFlexGridSizer128, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer131 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer131->AddGrowableCol(1);
+    itemBoxSizer130->Add(itemFlexGridSizer131, 0, wxGROW|wxALL, 5);
     m_labR2RnetID = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer128->Add(m_labR2RnetID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_labR2RnetID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetID = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer128->Add(m_R2RnetID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_R2RnetID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labR2RnetAddr = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer128->Add(m_labR2RnetAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_labR2RnetAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetAddr = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer128->Add(m_R2RnetAddr, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_R2RnetAddr, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labR2RnetPort = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer128->Add(m_labR2RnetPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_labR2RnetPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetPort = new wxSpinCtrl( m_R2RnetPanel, wxID_ANY, _T("1234"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 65535, 1234 );
-    itemFlexGridSizer128->Add(m_R2RnetPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer131->Add(m_R2RnetPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer135 = new wxFlexGridSizer(2, 3, 0, 0);
-    itemFlexGridSizer135->AddGrowableCol(1);
-    itemBoxSizer127->Add(itemFlexGridSizer135, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer138 = new wxFlexGridSizer(2, 3, 0, 0);
+    itemFlexGridSizer138->AddGrowableCol(1);
+    itemBoxSizer130->Add(itemFlexGridSizer138, 0, wxGROW|wxALL, 5);
     m_labR2RnetRoutes = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Routes file"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer135->Add(m_labR2RnetRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer138->Add(m_labR2RnetRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetRoutes = new wxTextCtrl( m_R2RnetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer135->Add(m_R2RnetRoutes, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer138->Add(m_R2RnetRoutes, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetRoutesDlg = new wxButton( m_R2RnetPanel, ID_BUTTON_R2RNET_ROUTES, _("..."), wxDefaultPosition, wxSize(30, 25), 0 );
-    itemFlexGridSizer135->Add(m_R2RnetRoutesDlg, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer138->Add(m_R2RnetRoutesDlg, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_R2RnetEnable = new wxCheckBox( m_R2RnetPanel, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
     m_R2RnetEnable->SetValue(false);
-    itemBoxSizer127->Add(m_R2RnetEnable, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer130->Add(m_R2RnetEnable, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_RRNotebook->AddPage(m_R2RnetPanel, _("R2Rnet"));
 
     itemBoxSizer2->Add(m_RRNotebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer140 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer143 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer140, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer143, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer140->AddButton(m_OK);
+    itemStdDialogButtonSizer143->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer140->AddButton(m_Cancel);
+    itemStdDialogButtonSizer143->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     if (RocrailIniDialog::ShowToolTips())
         m_Apply->SetToolTip(_("Apply Controller settings locally."));
-    itemStdDialogButtonSizer140->AddButton(m_Apply);
+    itemStdDialogButtonSizer143->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer140->Realize();
+    itemStdDialogButtonSizer143->Realize();
 
 ////@end RocrailIniDialog content construction
 }

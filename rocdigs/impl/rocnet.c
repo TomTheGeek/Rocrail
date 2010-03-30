@@ -351,20 +351,24 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOrocNetData data = Data(inst);
-  byte* rn;
-  rn = allocMem(32);
-  rn[0] = 0;
-  rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
-  rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
-  rn[RN_PACKET_LEN] = 1;
-  rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-  ThreadOp.post( data->writer, (obj)rn );
-  /* grab some time to process the request */
-  ThreadOp.sleep(100);
+  if( poweroff ) {
+    byte* rn;
+    rn = allocMem(32);
+    rn[0] = 0;
+    rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+    rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
+    rn[RN_PACKET_LEN] = 1;
+    rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+    ThreadOp.post( data->writer, (obj)rn );
+    /* grab some time to process the request */
+    ThreadOp.sleep(100);
+  }
+
   data->run = False;
   return;
 }

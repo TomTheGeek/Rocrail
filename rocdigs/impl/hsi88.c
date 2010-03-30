@@ -300,7 +300,7 @@ static iONode _cmd( obj inst ,const iONode cmd )
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOHSI88Data data = Data(inst);
   data->run = False;
   if( data->usb && data->usbh != NULL )

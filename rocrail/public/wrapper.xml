@@ -134,6 +134,7 @@
     <var name="sviid" vt="string" defval="" range="*" remark="IID to use with LN SV programming; using default in case not set."/>
     <var name="scsensor" vt="string" defval="" range="0-*" remark="Shortcut sensor ID."/>
     <var name="sciid" vt="string" defval="" range="0-*" remark="Shortcut command station IID"/>
+    <var name="poweroffonexit" vt="bool" defval="true" remark="Turn track power off on server exit."/>
 
     <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
       <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>

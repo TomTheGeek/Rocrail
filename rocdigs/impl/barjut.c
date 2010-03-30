@@ -179,7 +179,7 @@ _cmd(
 /**  */
 static void
 _halt(
-	obj inst )
+	obj inst, Boolean poweroff )
 {
 	iOBarjutData    data = Data( inst );
 

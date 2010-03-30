@@ -2181,7 +2181,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOLocoNetData data = Data(inst);
   data->run = False;
   if( data->swReset != NULL ) {
@@ -2194,7 +2194,7 @@ static void _halt( obj inst ) {
     return;
   }
   else {
-    if( wDigInt.ispoweroffexit(data->ini) ) {
+    if( wDigInt.ispoweroffexit(data->ini) || poweroff ) {
       byte cmd[2];
       cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
       cmd[1] = LocoNetOp.checksum( cmd, 1 );

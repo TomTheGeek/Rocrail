@@ -388,15 +388,17 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOSLXData data = Data(inst);
-  byte cmd[2];
 
   /* TODO: bus */
   data->run = False;
-  cmd[0] = 127;
-  cmd[1] = 0;
-  __transact( (iOSLX)inst, cmd, 2, NULL, 0, 0 );
+  if( poweroff ) {
+    byte cmd[2];
+    cmd[0] = 127;
+    cmd[1] = 0;
+    __transact( (iOSLX)inst, cmd, 2, NULL, 0, 0 );
+  }
   SerialOp.close( data->serial );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   return;

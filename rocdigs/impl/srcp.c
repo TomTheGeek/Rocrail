@@ -141,15 +141,15 @@ static iONode _cmd( obj inst, const iONode nodeA )
   return NULL;
 }
 
-static void _halt( obj inst )
+static void _halt( obj inst, Boolean poweroff )
 {
   iOSRCPData o = Data( inst );
   o->run = False;
 
   if ( o->srcpversion == SRCP_07 )
-    SRCP07Op.halt( o->srcpx );
+    SRCP07Op.halt( o->srcpx, poweroff );
   else if ( o->srcpversion == SRCP_08 )
-    SRCP08Op.halt( o->srcpx );
+    SRCP08Op.halt( o->srcpx, poweroff );
 }
 
 static Boolean _supportPT( obj inst ) {

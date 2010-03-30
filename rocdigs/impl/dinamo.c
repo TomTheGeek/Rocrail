@@ -1042,7 +1042,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 /** ------------------------------------------------------------
  * shutdown
  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iODINAMOData data = Data(inst);
   data->header |= FAULT_FLAG;
   /* TODO: shutdown? */

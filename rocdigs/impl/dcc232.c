@@ -397,7 +397,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iODCC232Data data = Data(inst);
   data->run = False;
   data->power = False;

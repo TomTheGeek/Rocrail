@@ -103,7 +103,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst , Boolean poweroff) {
   iOInter10Data data = Data(inst);
   data->run = False;
   SerialOp.close( data->serial );

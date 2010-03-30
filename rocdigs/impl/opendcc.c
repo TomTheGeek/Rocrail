@@ -443,10 +443,10 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOOpenDCCData data = Data(inst);
   data->run = False;
-  data->sublib->halt((obj)data->sublib);
+  data->sublib->halt((obj)data->sublib, poweroff);
   return;
 }
 

@@ -104,7 +104,7 @@ static void __inform( iOVirtual inst ) {
 }
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iOVirtualData data = Data(inst);
   data->run = False;
   return;

@@ -96,7 +96,7 @@ static void* __properties( void* inst ) {
 
 
 /**  */
-static void _halt( obj inst ) {
+static void _halt( obj inst, Boolean poweroff ) {
   iORocoData data = Data(inst);
   data->run = False;
   return;
