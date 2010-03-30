@@ -89,7 +89,7 @@
   </interface>
 
   <object name="Block" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">
-    <typedef def="enum {enter_event=100,enter2in_event,in_event,exit_event,pre2in_event,ghost_event,occupied_event,ident_event,shortin_event} block_fbevent"/>
+    <typedef def="enum {enter_event=100,enter2in_event,in_event,exit_event,pre2in_event,ghost_event,occupied_event,ident_event,shortin_event,run_event,stall_event} block_fbevent"/>
     <typedef def="enum {suits_not=0,suits_well=1,suits_ok=2} block_suits"/>
     <typedef def="void (*block_listener)(obj,block_fbevent)"/>
     <fun name="inst" vt="this">

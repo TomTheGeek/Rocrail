@@ -1584,6 +1584,8 @@
           <const name="enter_block" vt="string" val="enter_block"/>
           <const name="in_block" vt="string" val="in_block"/>
           <const name="exit_block" vt="string" val="exit_block"/>
+          <const name="run" vt="string" val="run"/>
+          <const name="stall" vt="string" val="stall"/>
         </fundef>
 
         <const name="cargo_all" vt="string" val="all"/>

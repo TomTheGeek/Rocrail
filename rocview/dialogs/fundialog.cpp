@@ -159,10 +159,14 @@ void FunctionDialog::InitValues() {
   m_BlockOnEvent->Append( wxString(wFunDef.enter_block,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.in_block,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.exit_block,wxConvUTF8) );
+  m_BlockOnEvent->Append( wxString(wFunDef.run,wxConvUTF8) );
+  m_BlockOnEvent->Append( wxString(wFunDef.stall,wxConvUTF8) );
 
   m_BlockOffEvent->Append( wxString(wFunDef.enter_block,wxConvUTF8) );
   m_BlockOffEvent->Append( wxString(wFunDef.in_block,wxConvUTF8) );
   m_BlockOffEvent->Append( wxString(wFunDef.exit_block,wxConvUTF8) );
+  m_BlockOffEvent->Append( wxString(wFunDef.run,wxConvUTF8) );
+  m_BlockOffEvent->Append( wxString(wFunDef.stall,wxConvUTF8) );
 
   m_BlockOnEvent->SetValue( wxString(wFunDef.getonevent(m_FunDef),wxConvUTF8) );
   m_BlockOffEvent->SetValue( wxString(wFunDef.getoffevent(m_FunDef),wxConvUTF8) );
