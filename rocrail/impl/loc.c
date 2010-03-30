@@ -1235,30 +1235,35 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checking event for function \"%s\"", wFunDef.gettext(fundef) );
 
-    while( StrTokOp.hasMoreTokens( onblocks ) ) {
-      const char* tok = StrTokOp.nextToken( onblocks );
-      if( StrOp.equals( blockid, tok ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ON Event %d from \"%s\"", evt, blockid );
-        isonevent = True;
-        break;
-      }
-    };
-    while( StrTokOp.hasMoreTokens( offblocks ) ) {
-      const char* tok = StrTokOp.nextToken( offblocks );
-      if( StrOp.equals( blockid, tok ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 99949, "OFF Event %d from \"%s\"", evt, blockid );
-        isoffevent = True;
-        break;
-      }
-    };
+    if( blockid != NULL ) {
+      while( StrTokOp.hasMoreTokens( onblocks ) ) {
+        const char* tok = StrTokOp.nextToken( onblocks );
+        if( StrOp.equals( blockid, tok ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ON Event %d from \"%s\"", evt, blockid );
+          isonevent = True;
+          break;
+        }
+      };
+      while( StrTokOp.hasMoreTokens( offblocks ) ) {
+        const char* tok = StrTokOp.nextToken( offblocks );
+        if( StrOp.equals( blockid, tok ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 99949, "OFF Event %d from \"%s\"", evt, blockid );
+          isoffevent = True;
+          break;
+        }
+      };
+    }
+    else {
+      isonevent = True;
+      isoffevent = True;
+    }
 
     if( isonevent ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "onevent[%s] evt[%d]", onevent, evt );
       if( StrOp.equals( wFunDef.enter_block, onevent ) && evt == enter_event ||
           StrOp.equals( wFunDef.in_block   , onevent ) && evt == in_event    ||
           StrOp.equals( wFunDef.exit_block , onevent ) && evt == exit_event  ||
-          StrOp.equals( wFunDef.run        , onevent ) && evt == run_event   ||
-          StrOp.equals( wFunDef.stall      , onevent ) && evt == stall_event
+          StrOp.equals( wFunDef.run        , onevent ) && evt == run_event
          ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "On Event for funcion %d.", fn );
@@ -1274,7 +1279,6 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
       if( StrOp.equals( wFunDef.enter_block, offevent ) && evt == enter_event ||
           StrOp.equals( wFunDef.in_block   , offevent ) && evt == in_event    ||
           StrOp.equals( wFunDef.exit_block , offevent ) && evt == exit_event  ||
-          StrOp.equals( wFunDef.run        , offevent ) && evt == run_event   ||
           StrOp.equals( wFunDef.stall      , offevent ) && evt == stall_event
          ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
