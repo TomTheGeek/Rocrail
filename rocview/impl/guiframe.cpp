@@ -2003,7 +2003,7 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
       DocOp.base.del( doc );
       wxGetApp().Callback( (obj)&wxGetApp(), node );
       wxGetApp().setStayOffline( true );
-      SetStatusText( plan, status_digint );
+      SetStatusText( plan, status_rcon );
 
     }
     else {
