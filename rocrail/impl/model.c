@@ -357,6 +357,8 @@ static Boolean _parsePlan( iOModelData o ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unsupported Plan: %s", NodeOp.getName(root) );
             return False;
           }
+
+          wPlan.settitle( o->model, FileOp.ripPath( o->fileName ) );
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid Plan!" );

@@ -1173,8 +1173,8 @@ void RocGuiFrame::initFrame() {
 
   menuFile->Append(wxID_PREFERENCES, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
   menuFile->Append(ME_RocrailIni, wxGetApp().getMenu("rocrailini"), wxGetApp().getTip("rocrailini") );
-  menuFile->AppendSeparator();
-  menuFile->Append(ME_PlanTitle, wxGetApp().getMenu("plantitle"), wxGetApp().getTip("plantitle") );
+  //menuFile->AppendSeparator();
+  //menuFile->Append(ME_PlanTitle, wxGetApp().getMenu("plantitle"), wxGetApp().getTip("plantitle") );
   menuFile->AppendSeparator();
 
   wxMenuItem *new_menuFile = new wxMenuItem(menuFile, ME_New, wxGetApp().getMenu("new"), wxGetApp().getTip("new") );
@@ -2001,6 +2001,7 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
     if( doc != NULL ) {
       iONode node = DocOp.getRootNode( doc );
       DocOp.base.del( doc );
+      wPlan.settitle(node, FileOp.ripPath(m_LocalPlan.mb_str(wxConvUTF8)));
       wxGetApp().Callback( (obj)&wxGetApp(), node );
       wxGetApp().setStayOffline( true );
       SetStatusText( plan, status_rcon );
