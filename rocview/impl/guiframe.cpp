@@ -1173,8 +1173,8 @@ void RocGuiFrame::initFrame() {
 
   menuFile->Append(wxID_PREFERENCES, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
   menuFile->Append(ME_RocrailIni, wxGetApp().getMenu("rocrailini"), wxGetApp().getTip("rocrailini") );
-  //menuFile->AppendSeparator();
-  //menuFile->Append(ME_PlanTitle, wxGetApp().getMenu("plantitle"), wxGetApp().getTip("plantitle") );
+  menuFile->AppendSeparator();
+  menuFile->Append(ME_PlanTitle, wxGetApp().getMenu("plantitle"), wxGetApp().getTip("plantitle") );
   menuFile->AppendSeparator();
 
   wxMenuItem *new_menuFile = new wxMenuItem(menuFile, ME_New, wxGetApp().getMenu("new"), wxGetApp().getTip("new") );
