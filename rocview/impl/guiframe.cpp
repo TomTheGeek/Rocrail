@@ -2001,7 +2001,7 @@ void RocGuiFrame::setLocalPlan( wxString plan ) {
     if( doc != NULL ) {
       iONode node = DocOp.getRootNode( doc );
       DocOp.base.del( doc );
-      wPlan.settitle(node, FileOp.ripPath(m_LocalPlan.mb_str(wxConvUTF8)));
+      //wPlan.settitle(node, FileOp.ripPath(m_LocalPlan.mb_str(wxConvUTF8)));
       wxGetApp().Callback( (obj)&wxGetApp(), node );
       wxGetApp().setStayOffline( true );
       SetStatusText( plan, status_rcon );
