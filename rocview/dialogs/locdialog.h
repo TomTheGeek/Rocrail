@@ -79,6 +79,7 @@ class wxGrid;
 #define ID_STATICTEXT 10063
 #define ID_STATICTEXT1 10064
 #define ID_LC_SERVICED 10313
+#define ID_LOC_ACTIONS 10380
 #define ID_PANEL_INTERFACE 10010
 #define wxID_STATIC_ADDRESS 10023
 #define ID_TEXTCTRL_ADDRESS 10011
@@ -218,6 +219,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LC_SERVICED
     void OnLcServicedClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOC_ACTIONS
+    void OnLocActionsClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SPEEDSTEPS
     void OnTextctrlSpeedstepsTextUpdated( wxCommandEvent& event );
 
@@ -329,6 +333,7 @@ public:
     wxSpinCtrl* m_MInt;
     wxStaticText* m_labRemark;
     wxTextCtrl* m_Remark;
+    wxButton* m_Actions;
     wxPanel* m_Interface_Panel;
     wxStaticText* m_Label_Address;
     wxTextCtrl* m_Address;

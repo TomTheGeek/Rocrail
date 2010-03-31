@@ -1658,6 +1658,8 @@
         <var name="consistcmd" vt="bool" defval="False" remark="Consist context command; Flag for preventing loops."/>
 
         <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
+
+        <actionctrl cardinality="n"/>
       </lc>
     </lclist>
 

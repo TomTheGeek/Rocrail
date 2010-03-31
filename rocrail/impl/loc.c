@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 static int instCnt = 0;
 
@@ -62,6 +63,32 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
 static const char* __id( void* inst ) {
   return NULL;
 }
+
+static void __checkAction( iOLoc inst, const char* state ) {
+
+  iOLocData data     = Data(inst);
+  iOModel   model    = AppOp.getModel();
+  iONode    lcaction = wLoc.getactionctrl( data->props );
+
+  while( lcaction != NULL) {
+      if( StrOp.equals(wActionCtrl.getstate(lcaction), state ) )
+      {
+
+        iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( lcaction ));
+        if( action != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco action: %s", wActionCtrl.getid( lcaction ));
+          ActionOp.exec(action, lcaction);
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+            wActionCtrl.getstate( lcaction ), state );
+      }
+    lcaction = wLoc.nextactionctrl( data->props, lcaction );
+  }
+
+}
+
 
 
 static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd) {
@@ -864,6 +891,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
   /* New speed attributes: */
   if( V_hint != NULL ) {
+    __checkAction(inst, V_hint);
     V_new = __translateVhint( inst, V_hint );
 
     if( data->drvSpeed != V_new || StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
@@ -894,10 +922,14 @@ static void __engine( iOLoc inst, iONode cmd ) {
   /* check for run and stall event */
   if( wLoc.getV(data->props) != data->drvSpeed ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", wLoc.getV(data->props), data->drvSpeed );
-    if( wLoc.getV(data->props) == 0 )
+    if( wLoc.getV(data->props) == 0 ) {
       __funEvent(inst, NULL, run_event, 0);
-    if( data->drvSpeed == 0 )
+      __checkAction(inst, "run");
+    }
+    if( data->drvSpeed == 0 ) {
       __funEvent(inst, NULL, stall_event, 0);
+      __checkAction(inst, "stall");
+    }
   }
 
 
