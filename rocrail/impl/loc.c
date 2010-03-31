@@ -892,8 +892,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
 
   /* check for run and stall event */
-  if( data->curSpeed != data->drvSpeed ) {
-    if( data->curSpeed == 0 )
+  if( wLoc.getV(data->props) != data->drvSpeed ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", wLoc.getV(data->props), data->drvSpeed );
+    if( wLoc.getV(data->props) == 0 )
       __funEvent(inst, NULL, run_event, 0);
     if( data->drvSpeed == 0 )
       __funEvent(inst, NULL, stall_event, 0);
