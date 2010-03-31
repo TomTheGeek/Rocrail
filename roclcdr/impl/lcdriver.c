@@ -216,6 +216,7 @@ static void __checkSignalReset( iILcDriverInt inst ) {
  */
 static void _drive( iILcDriverInt inst, obj emitter, int event ) {
   iOLcDriverData data = Data(inst);
+  Boolean reverse = False; /* TODO: set the correct reverse value */
 
   if( event > 0 )
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcdriver event=%d", event );
@@ -228,11 +229,11 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
   switch( data->state ) {
 
     case LC_PAUSE:
-      statusPause( inst );
+      statusPause( inst, reverse );
       break;
 
     case LC_IDLE:
-      statusIdle( inst );
+      statusIdle( inst, reverse );
       break;
 
     case LC_FINDDEST:
@@ -292,11 +293,11 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
       break;
 
     case LC_WAITBLOCK:
-      statusWait( inst );
+      statusWait( inst, reverse );
       break;
 
     case LC_TIMER:
-      statusTimer( inst );
+      statusTimer( inst, reverse );
       break;
 
     case LC_WAIT4EVENT:

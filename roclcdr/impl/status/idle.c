@@ -39,12 +39,12 @@
 
 
 
-void statusIdle( iILcDriverInt inst ) {
+void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
 
   /* Waiting for run-flag. */
   if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL &&
-      data->curBlock->getWait(data->curBlock, data->loc ) != -1 )
+      data->curBlock->getWait(data->curBlock, data->loc, reverse ) != -1 )
   {
 
     data->state = LC_FINDDEST;

@@ -39,7 +39,7 @@
 
 
 
-void statusWait( iILcDriverInt inst ) {
+void statusWait( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
 
   iONode bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
@@ -53,12 +53,12 @@ void statusWait( iILcDriverInt inst ) {
     data->state = LC_TIMER;
     data->loc->setMode(data->loc, wLoc.mode_wait);
 
-    if( data->curBlock->wait(data->curBlock, data->loc ) ) {
+    if( data->curBlock->wait(data->curBlock, data->loc, reverse ) ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
         data->timer = 1; /* just wait 100ms */
       else {
-        data->timer = data->curBlock->getWait( data->curBlock, data->loc );
+        data->timer = data->curBlock->getWait( data->curBlock, data->loc, reverse );
 
         if( data->timer != -1 ) {
           if( data->prevState == LC_FINDDEST )

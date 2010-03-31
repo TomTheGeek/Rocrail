@@ -60,7 +60,7 @@ void statusCheckRoute( iILcDriverInt inst ) {
     if( !data->gomanual ) {
       /* Send the second command to the loc: */
       wLoc.setdir( cmd, dir );
-      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route ) );
+      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route, !data->next1RouteFromTo ) );
 
       if( !StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) && data->next1Route->hasThrownSwitch(data->next1Route) ) {
         if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 || data->loc->getV( data->loc ) == 0 )

@@ -44,7 +44,10 @@ void statusWait4Event( iILcDriverInt inst ) {
 
   if( data->next1Block != NULL ) {
     if( data->next2Block == NULL ) {
-      if( data->model->isCheck2In( data->model ) && !data->next1Block->wait( data->next1Block, data->loc ) && data->run && !data->reqstop ) {
+      if( data->model->isCheck2In( data->model ) &&
+          !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo ) &&
+          data->run && !data->reqstop )
+      {
         /* set step back to ENTER? may be a possible destination block did come free... */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "Setting state for [%s] from LC_WAIT4EVENT to LC_RE_ENTERBLOCK. (check for free block)",
@@ -71,7 +74,7 @@ void statusWait4Event( iILcDriverInt inst ) {
         if( !data->gomanual ) {
           /* set the velocity back */
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route ) );
+          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route, !data->next1RouteFromTo ) );
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );
           data->slowdown4route = False;

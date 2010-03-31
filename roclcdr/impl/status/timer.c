@@ -39,12 +39,12 @@
 
 
 
-void statusTimer( iILcDriverInt inst ) {
+void statusTimer( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
 
   if( data->timer == -1 ) {
     /* handle manual operated signal */
-    if( !data->curBlock->wait(data->curBlock, data->loc ) ) {
+    if( !data->curBlock->wait(data->curBlock, data->loc, reverse ) ) {
       data->timer = 0;
     }
   }

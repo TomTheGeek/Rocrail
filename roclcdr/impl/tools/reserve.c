@@ -60,7 +60,7 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
  * @param inst      LcDriver instance
  * @param gotoBlock goto block ID
  */
-void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute ) {
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
 
   iORoute     nextRoute = NULL;
@@ -71,7 +71,9 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
   /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
   /* TODO: use the right direction for finding the next block in the same direction */
 
-  if( !fromBlock->wait( fromBlock, data->loc ) && !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop )   {
+  if( !fromBlock->wait( fromBlock, data->loc, reverse ) &&
+      !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop )
+  {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "finding a second next block for [%s]", data->loc->getId( data->loc ) );
 

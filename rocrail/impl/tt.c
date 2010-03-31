@@ -1632,13 +1632,13 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
   /* TODO: dispatch to active tracke block */
 }
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
   return "";
 }
 
-static int _getWait( iIBlockBase inst, iOLoc loc ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
   return 0;
@@ -1733,7 +1733,7 @@ static void _resetTrigs( iIBlockBase inst ) {
   /* TODO: dispatch to active tracke block */
 }
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
   return False;

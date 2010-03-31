@@ -1180,19 +1180,19 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     block->enterBlock( block, id );
 }
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getVelocity");
   *percent = 0;
   /* dispatch to active tracke block */
-  return block != NULL ? block->getVelocity( block, percent, onexit ) : "";
+  return block != NULL ? block->getVelocity( block, percent, onexit, reverse ) : "";
 }
 
-static int _getWait( iIBlockBase inst, iOLoc loc ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getWait");
   /* dispatch to active tracke block */
-  return block != NULL ? block->getWait( block, loc ) : 0;
+  return block != NULL ? block->getWait( block, loc, reverse ) : 0;
 }
 
 static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
@@ -1316,11 +1316,11 @@ static void _resetTrigs( iIBlockBase inst ) {
     block->resetTrigs( block );
 }
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "wait");
   /* dispatch to active tracke block */
-  return block != NULL ? block->wait( block, loc ) : False;
+  return block != NULL ? block->wait( block, loc, reverse ) : False;
 }
 
 

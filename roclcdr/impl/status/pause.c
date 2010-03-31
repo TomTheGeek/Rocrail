@@ -39,12 +39,12 @@
 
 
 
-void statusPause( iILcDriverInt inst ) {
+void statusPause( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
 
   if( data->pause == -1 ) {
     /* handle manual operated signal */
-    if( !data->curBlock->wait(data->curBlock, data->loc ) ) {
+    if( !data->curBlock->wait(data->curBlock, data->loc, reverse ) ) {
       data->pause = 0;
       data->state = LC_IDLE;
       data->loc->setMode(data->loc, wLoc.mode_idle);

@@ -196,6 +196,7 @@
     <fun name="wait" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
     </fun>
     <fun name="inBlock" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
@@ -240,11 +241,13 @@
     <fun name="getWait" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
     </fun>
     <fun name="getVelocity" vt="const char*">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="percent" vt="int*" remark="Speed percent"/>
       <param name="onexit" vt="Boolean" remark="Speed on exit"/>
+      <param name="reverse" vt="Boolean" remark="reverse signal"/>
     </fun>
     <fun name="hasEnter2Route" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>

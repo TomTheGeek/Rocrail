@@ -210,7 +210,7 @@ Boolean initializeSwap( iOLcDriver inst, iORoute route ) {
  * create a block speed hint
  *
  */
-const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street ) {
+const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
   int percent = 0;
 
@@ -228,7 +228,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
     }
   }
   /* OK, no valid route hint: get it from the block: */
-  StrOp.copy( data->V_hint, block->getVelocity( block, &percent, onexit ) );
+  StrOp.copy( data->V_hint, block->getVelocity( block, &percent, onexit, reverse ) );
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }

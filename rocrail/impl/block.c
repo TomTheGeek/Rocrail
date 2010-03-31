@@ -689,10 +689,10 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 }
 
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
   iOBlockData data    = Data(inst);
-  iOSignal    signal  = (iOSignal)inst->hasManualSignal(inst, False, False );
-  iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, False );
+  iOSignal    signal  = (iOSignal)inst->hasManualSignal(inst, False, reverse );
+  iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, reverse );
   const char* V_hint  = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
 
   *percent = wBlock.getspeedpercent(data->props);
@@ -722,9 +722,9 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit 
 }
 
 
-static int _getWait( iIBlockBase inst, iOLoc loc ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOBlockData data = Data(inst);
-  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
 
   /* check the manual operated signal */
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
@@ -1017,10 +1017,10 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   return __crossCheckType((iOBlock)inst, loc, NULL);
 }
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOBlockData data = Data(inst);
   Boolean wait = False;
-  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, False );
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );

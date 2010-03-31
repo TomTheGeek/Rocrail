@@ -88,7 +88,7 @@ void statusInitDest( iILcDriverInt inst ) {
 
       if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
         reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route,
-                                  &data->next2Block, &data->next2Route );
+                                  &data->next2Block, &data->next2Route, !data->next1RouteFromTo );
         if( data->next2Route != NULL ) {
           /* TODO: make sure the running direction does not change */
           data->next2Route->getDirection( data->next2Route,
@@ -119,8 +119,9 @@ void statusInitDest( iILcDriverInt inst ) {
     else {
       /* Error! */
       /* if running a schedule the schedule index should be decreased by one to match the current block */
-      if( data->curBlock->wait(data->curBlock, data->loc ) ) {
-        data->pause = data->curBlock->getWait(data->curBlock, data->loc );
+      /* TODO: wait and getWait reverse signal flag */
+      if( data->curBlock->wait(data->curBlock, data->loc, False ) ) {
+        data->pause = data->curBlock->getWait(data->curBlock, data->loc, False );
         if( data->pause != -1 )
           data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
       } else

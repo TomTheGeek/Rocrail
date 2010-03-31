@@ -64,7 +64,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   */
   data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
 
-  if( !data->next1Block->wait( data->next1Block, data->loc ) &&
+  if( !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo ) &&
       data->run &&
       !data->reqstop &&
       !data->next1Block->isTerminalStation(data->next1Block) )
@@ -195,7 +195,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
             wLoc.setV_hint( cmd, wLoc.climb );
           }
           else {
-            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route ) );
+            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo ) );
           }
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );
@@ -224,7 +224,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     else {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       /* set V_mid only if it is lower than the current velocity */
-      const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
+      const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo );
       if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
         wLoc.setV_hint( cmd, blockV_hint );
 
@@ -246,7 +246,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         if( wBlock.getincline( destbkprops ) == wBlock.incline_up &&
             data->direction == LC_DIR_FORWARDS )
         {
-          const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL );
+          const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo );
           if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
             wLoc.setV_hint( cmd, blockV_hint );
         }
@@ -283,7 +283,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   else if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
     /* try to reserve next3Block if the train does not have to wait in the next next2Block */
     reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next2Block, data->next2Route,
-                              &data->next3Block, &data->next3Route );
+                              &data->next3Block, &data->next3Route, !data->next2RouteFromTo );
 
     if( data->next3Route != NULL ) {
       data->next3Route->getDirection( data->next3Route,
@@ -297,7 +297,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
   if( re_enter && data->next2Block != NULL ) {
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route ) );
+    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo ) );
     data->loc->cmd( data->loc, cmd );
   }
 

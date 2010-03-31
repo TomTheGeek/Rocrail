@@ -18,8 +18,8 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-void statusPause( iILcDriverInt inst );
-void statusIdle( iILcDriverInt inst );
+void statusPause( iILcDriverInt inst, Boolean reverse );
+void statusIdle( iILcDriverInt inst, Boolean reverse );
 void statusFindDest( iILcDriverInt inst );
 void statusInitDest( iILcDriverInt inst );
 void statusCheckRoute( iILcDriverInt inst );
@@ -30,7 +30,7 @@ void statusOut( iILcDriverInt inst );
 void statusEnter( iILcDriverInt inst, Boolean re_enter );
 void statusPre2In( iILcDriverInt inst );
 void statusIn( iILcDriverInt inst );
-void statusWait( iILcDriverInt inst );
-void statusTimer( iILcDriverInt inst );
+void statusWait( iILcDriverInt inst, Boolean reverse );
+void statusTimer( iILcDriverInt inst, Boolean reverse );
 void statusWait4Event( iILcDriverInt inst );
 
