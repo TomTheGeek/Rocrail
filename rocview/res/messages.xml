@@ -493,7 +493,7 @@
   </Msg>
   <Msg id="editmode">
     <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
-    <en txt="Edit plan" tip="Edit track plan."/>
+    <en txt="Edit panel" tip="Edit track panel."/>
     <nl txt="Bewerken" tip="Spoorplan bewerken."/>
     <sv txt="Redigera" tip="Bearbeta spårplan."/>
     <fr txt="Mode édition" tip="Editer le TCO"/>
@@ -707,7 +707,7 @@
   </Msg>
   <Msg id="planprops" dialog="true">
     <de txt="Gleisbild Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
-    <en txt="Track plan properties" accel="0" tip="Dialog to view and set Track plan properties."/>
+    <en txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
     <nl txt="Spoorplan eigenschappen" accel="0" tip="Window om de Spoorplan eigenschappen te bekijken en te muteren."/>
     <sv txt="Egenskaper för spårplan" accel="0" tip="Öppna spårplansegenskaper."/>
     <fr txt="Propriétés du plan" accel="0" tip="Paramètres, affichage du TCO."/>
@@ -1894,7 +1894,7 @@
   </Msg>
   <Msg id="addpanel" dialog="true">
     <de txt="Gleisplan hinzufügen" tip="Gleisplan hinzufügen"/>
-    <en txt="Add track plan" tip="Add track plan"/>
+    <en txt="Add track panel" tip="Add track panel"/>
     <nl txt="Spoorplan toevoegen" tip="Spoorplan toevoegen"/>
     <sv txt="Lägg till spårplan" tip="Lägg till spårplan"/>
     <fr txt="Ajouter un plan" tip="Ajouter un TCO"/>
@@ -1913,7 +1913,7 @@
   </Msg>
   <Msg id="removepanel">
     <de txt="Gleisplan löschen"/>
-    <en txt="Delete track plan"/>
+    <en txt="Delete track panel"/>
     <nl txt="Spoorplan verwijderen"/>
     <sv txt="Ta bort spårplan"/>
     <fr txt="Effacer un plan"/>
