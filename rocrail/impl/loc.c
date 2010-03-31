@@ -636,6 +636,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
   const char* V_hint = NULL;
   int         V_new  = -1;
+  int         V_old  = wLoc.getV(data->props);
   iONode      cmdTD  = NULL;
   iONode      cmdFn  = NULL;
   static Boolean  f0changed = False;
@@ -920,9 +921,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
 
   /* check for run and stall event */
-  if( wLoc.getV(data->props) != data->drvSpeed ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", wLoc.getV(data->props), data->drvSpeed );
-    if( wLoc.getV(data->props) == 0 ) {
+  if( V_old != data->drvSpeed ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", V_old, data->drvSpeed );
+    if( V_old == 0 ) {
       __funEvent(inst, NULL, run_event, 0);
       __checkAction(inst, "run");
     }
