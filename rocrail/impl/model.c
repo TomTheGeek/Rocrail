@@ -3028,6 +3028,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                   ListOp.add( altBlocks, (obj)block );
                   ListOp.add( altRoutes, (obj)route );
                 }
+                else if( forceSameDir ) {
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                                 "block [%s] for [%s] is in the wrong direction (force same direction)",
+                                 blockId, LocOp.getId( loc ) );
+                }
               }
               else if( suits == suits_ok ) {
                 Boolean dirOK = True;
@@ -3081,6 +3086,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                                  blockId, LocOp.getId( loc ) );
                 }
               }
+              else {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                               "block [%s] for [%s] does not fit",
+                               blockId, LocOp.getId( loc ) );
+              }
 
             }
             else {
@@ -3089,6 +3099,14 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
                              blockId, LocOp.getId( loc ) );
             }
           }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                           "Block [%s] not found", stTo );
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                         "from block %s is not equal to route from %s", fromBlockId, stFrom );
         }
 
       }
