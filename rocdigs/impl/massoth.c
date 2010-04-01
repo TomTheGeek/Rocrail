@@ -514,6 +514,10 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 static void _halt( obj inst, Boolean poweroff ) {
   iOMassothData data = Data(inst);
   data->run = False;
+  if( poweroff ) {
+    byte cmd[] = {0x11};
+    __transact( data, cmd, NULL, 0, NULL );
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
   if( data->serial != NULL )
     SerialOp.close( data->serial );
@@ -573,6 +577,8 @@ static void __handleSystem(iOMassothData data, byte* in) {
       wState.setiid( node, data->iid );
     wState.setpower( node, power );
     wState.settrackbus( node, power );
+    wState.setsensorbus( node, power );
+    wState.setaccessorybus( node, power );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system status=0x%02X", in[3] );
 
