@@ -103,7 +103,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       }
 
       if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
-          !checkScheduleTime( inst, data->schedule, data->scheduleIdx ) )
+          !checkScheduleTime( inst, data->schedule, scheduleIdx ) )
       {
         wait = True;
 
