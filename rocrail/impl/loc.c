@@ -1217,11 +1217,11 @@ static void __runner( void* threadinst ) {
 
 
     /* call this function unconditional for updating velocity */
-    __engine( loc, fncmd );
 
     if( fncmd != NULL ) {
       wLoc.setV( fncmd, -1 );
       broadcast = (iONode)NodeOp.base.clone(fncmd);
+      __engine( loc, fncmd );
 
       /* Broadcast to clients. */
       wLoc.setid( broadcast, wLoc.getid( data->props ) );
