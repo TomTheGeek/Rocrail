@@ -301,7 +301,8 @@ wxString RocGui::getMsg( const char* key ) {
 }
 wxString RocGui::getMenu( const char* key ) {
   wxString s = wxString(ResOp.getMenu( m_Res, key, False ),wxConvUTF8);
-  return s.Capitalize();
+  //return s.Capitalize(); // wxWidgets 2.9+
+  return s;
 }
 wxString RocGui::getTip( const char* key ) {
   return wxString(ResOp.getTip( m_Res, key ),wxConvUTF8);
