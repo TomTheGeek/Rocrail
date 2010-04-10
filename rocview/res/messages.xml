@@ -13486,4 +13486,22 @@
     <en txt="Power off on exit"/>
     <ca txt="Apaga el corrent al sortir"/>
   </Msg>
+  <Msg id="polarization">
+    <en txt="Polarization"/>
+  </Msg>
+  <Msg id="servo">
+    <en txt="Servo"/>
+  </Msg>
+  <Msg id="setup">
+    <en txt="Setup"/>
+  </Msg>
+  <Msg id="reset">
+    <en txt="Reset"/>
+  </Msg>
+  <Msg id="recentworkspaces">
+    <en txt="Recent Workspaces"/>
+  </Msg>
+  <Msg id="ignorepowercmds">
+    <en txt="Ignore power commands"/>
+  </Msg>
 </Messages>

@@ -88,6 +88,7 @@
 #include "rocview/dialogs/donkey.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
+#include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
 #include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
@@ -110,6 +111,8 @@
 #include "rocview/wrapper/public/ThemeBlock.h"
 #include "rocview/wrapper/public/LcCtrl.h"
 #include "rocview/wrapper/public/Shortcut.h"
+#include "rocview/wrapper/public/WorkSpaces.h"
+#include "rocview/wrapper/public/WorkSpace.h"
 
 #include "rocrail/wrapper/public/JsEvent.h"
 #include "rocrail/wrapper/public/JsMap.h"
@@ -212,6 +215,15 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
     EVT_MENU( ME_OpenWorkspace  , RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+1, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+2, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+3, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+4, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+5, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+6, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+7, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+8, RocGuiFrame::OnOpenWorkspace)
+    EVT_MENU( ME_OpenWorkspace+9, RocGuiFrame::OnOpenWorkspace)
     EVT_MENU( ME_New            , RocGuiFrame::OnNew)
     EVT_MENU( ME_Upload         , RocGuiFrame::OnUpload)
     EVT_MENU( wxID_ABOUT        , RocGuiFrame::OnAbout)
@@ -284,6 +296,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
     EVT_MENU( ME_LOCOIO         , RocGuiFrame::OnLocoIO)
+    EVT_MENU( ME_MGV            , RocGuiFrame::OnMGV)
     EVT_MENU( ME_DTOpSw         , RocGuiFrame::OnDTOpSw)
 
     EVT_MENU( ME_LangEnglish    , RocGuiFrame::OnLangEnglish)
@@ -575,6 +588,10 @@ void RocGuiFrame::CleanNotebook() {
 void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   CleanNotebook();
   wxCursor cursor = wxCursor(wxCURSOR_WAIT);
+
+  if( m_WorkSpace != NULL ) {
+    wWorkSpace.settitle(m_WorkSpace, wPlan.gettitle(wxGetApp().getModel()));
+  }
 
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
 
@@ -1106,6 +1123,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_PowerCtrl          = NULL;
   m_bActiveWorkspace   = false;
   m_bCheckedDonKey     = false;
+  m_WorkSpace          = NULL;
 }
 
 void RocGuiFrame::initFrame() {
@@ -1188,6 +1206,20 @@ void RocGuiFrame::initFrame() {
   wxMenuItem *openworkspace_menuFile = new wxMenuItem(menuFile, ME_OpenWorkspace, wxGetApp().getMenu("openworkspace"), wxGetApp().getTip("openworkspace") );
   openworkspace_menuFile->SetBitmap(*_img_system);
   menuFile->Append(openworkspace_menuFile);
+
+  iONode workspaces = wGui.getworkspaces(m_Ini);
+  if( workspaces != NULL ) {
+    int i = 1;
+    wxMenu* menuWorkSpaces = new wxMenu();
+    iONode ws = wWorkSpaces.getws(workspaces);
+    while(ws != NULL) {
+      menuWorkSpaces->Append( ME_OpenWorkspace+i, wxString(wWorkSpace.gettitle(ws),wxConvUTF8) + _T(" - ") + wxString(wWorkSpace.getpath(ws),wxConvUTF8) );
+      i++;
+      ws = wWorkSpaces.nextws(workspaces, ws);
+    }
+    menuFile->Append( ME_RecentWorkspaces, wxGetApp().getMenu("recentworkspaces"), menuWorkSpaces );
+
+  }
 
   wxMenuItem *save_menuFile = new wxMenuItem(menuFile, ME_Save, wxGetApp().getMenu("save"), wxGetApp().getTip("save") );
   save_menuFile->SetBitmap(*_img_save);
@@ -1356,6 +1388,7 @@ void RocGuiFrame::initFrame() {
   menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
 
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
+  menuProgramming->Append( ME_MGV, _T("MGV") + wxString(_T("...")), _T("MGV") );
 
   //wxMenu *menuPTDCC = new wxMenu();
   //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
@@ -2043,16 +2076,36 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     return;
   }
 
+  int idx = event.GetId() - ME_OpenWorkspace;
   char* workspace = NULL;
-  if( wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
-    workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
+
+  if( idx == 0 ) {
+    if( wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
+      workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
+    }
+    else if( event.GetExtraLong() != 4711 ) {
+      wxDirDialog* dlg = new wxDirDialog( this );
+      if( StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 )
+        dlg->SetPath(wxString(wGui.getdefaultworkspace(wxGetApp().getIni()),wxConvUTF8));
+      if( dlg->ShowModal() == wxID_OK ) {
+        workspace = StrOp.dup((const char*)dlg->GetPath().mb_str(wxConvUTF8));
+      }
+    }
   }
-  else if( event.GetExtraLong() != 4711 ) {
-    wxDirDialog* dlg = new wxDirDialog( this );
-    if( StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 )
-      dlg->SetPath(wxString(wGui.getdefaultworkspace(wxGetApp().getIni()),wxConvUTF8));
-    if( dlg->ShowModal() == wxID_OK ) {
-      workspace = StrOp.dup((const char*)dlg->GetPath().mb_str(wxConvUTF8));
+  else {
+    // get the workspace path from ini
+    int i = 1;
+    iONode workspaces = wGui.getworkspaces(m_Ini);
+    if( workspaces != NULL ) {
+      iONode ws = wWorkSpaces.getws(workspaces);
+      while( ws != NULL ) {
+        if( i == idx ) {
+          workspace = StrOp.dup(wWorkSpace.getpath(ws));
+          break;
+        }
+        i++;
+        ws = wWorkSpaces.nextws(workspaces, ws);
+      };
     }
   }
 
@@ -2077,7 +2130,51 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
       SystemOp.system( rrcall, True, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;
+      m_WorkSpace = NULL;
       Connect( "localhost", 62842, true); // TODO: add const to the wrapper.xml for the defaults.
+
+      iONode workspaces = wGui.getworkspaces(m_Ini);
+      if( workspaces == NULL ) {
+        workspaces = NodeOp.inst( wWorkSpaces.name(), m_Ini, ELEMENT_NODE );
+        NodeOp.addChild( m_Ini, workspaces );
+      }
+
+      m_WorkSpace = wWorkSpaces.getws(workspaces);
+      Boolean hasWS = False;
+      while( m_WorkSpace != NULL && !hasWS) {
+        hasWS = StrOp.equals(wWorkSpace.getpath(m_WorkSpace), workspace);
+        if( hasWS )
+          break;
+        m_WorkSpace = wWorkSpaces.nextws(workspaces, m_WorkSpace);
+      };
+
+      if( !hasWS ) {
+        // save the most recent 8 workspaces
+        iOList list = ListOp.inst();
+        int cnt = 0;
+        iONode ws = wWorkSpaces.getws(workspaces);
+        while( ws != NULL && cnt < 8 ) {
+          ListOp.add( list, (obj)ws);
+          cnt++;
+          ws = wWorkSpaces.nextws(workspaces, ws);
+        };
+
+        // remove all from parent
+        ws = wWorkSpaces.getws(workspaces);
+        while( ws != NULL ) {
+          NodeOp.removeChild( workspaces, ws );
+          ws = wWorkSpaces.getws(workspaces);
+        };
+
+        // Add workspace to the ini
+        m_WorkSpace = NodeOp.inst(wWorkSpace.name(), workspaces, ELEMENT_NODE);
+        wWorkSpace.setpath(m_WorkSpace, workspace);
+        NodeOp.addChild(workspaces,m_WorkSpace);
+        for( int i = 0; i < ListOp.size(list); i++ ) {
+          NodeOp.addChild(workspaces,(iONode)ListOp.get(list, i));
+        }
+        ListOp.base.del(list);
+      }
 
     }
     else {
@@ -2576,6 +2673,15 @@ void RocGuiFrame::OnUhl68610( wxCommandEvent& event ) {
   m_Uhl68610 = NULL;
 }
 
+void RocGuiFrame::OnMGV( wxCommandEvent& event ) {
+  m_MGV = new MGVDlg(this);
+  if( wxID_OK == m_MGV->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  m_MGV->Destroy();
+  m_MGV = NULL;
+}
+
 void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {
   m_LocoIO = new LocoIO(this);
   if( wxID_OK == m_LocoIO->ShowModal() ) {
@@ -2648,6 +2754,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Quit);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
   mi = menuBar->FindItem(ME_OpenWorkspace);
+  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
+  mi = menuBar->FindItem(ME_RecentWorkspaces);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
 
   mi = menuBar->FindItem(ME_Go);

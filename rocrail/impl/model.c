@@ -26,6 +26,7 @@
 #include "rocrail/public/car.h"
 #include "rocrail/public/operator.h"
 #include "rocrail/public/block.h"
+#include "rocrail/public/stage.h"
 #include "rocrail/public/fback.h"
 #include "rocrail/public/switch.h"
 #include "rocrail/public/output.h"
@@ -107,6 +108,8 @@
 #include "rocrail/wrapper/public/ModuleConnection.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageList.h"
 
 static int instCnt = 0;
 
@@ -542,6 +545,13 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->seltabMap, wSelTab.getid( item ), (obj)seltab );
     added = True;
   }
+  else if( StrOp.equals( wStage.name(), itemName ) ) {
+    iONode clone = (iONode)item->base.clone( item );
+    iOStage stage = StageOp.inst( clone );
+    __addItemInList( data, wStageList.name(), clone );
+    MapOp.put( data->stageMap, wStage.getid( item ), (obj)stage );
+    added = True;
+  }
   else if( StrOp.equals( wAction.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOAction action = ActionOp.inst( clone );
@@ -913,6 +923,22 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       _addItem( inst, item );
     }
   }
+  else if( StrOp.equals( wStage.name(), name ) ) {
+    iOStage stage = (iOStage)MapOp.get( data->stageMap, wStage.getid( item ) );
+    if( stage != NULL ) {
+      StageOp.modify( stage, (iONode)NodeOp.base.clone( item ) );
+      modified = True;
+    }
+    else if( StrOp.len(prev_id) > 0 && (stage = (iOStage)MapOp.get( data->stageMap, prev_id ) ) ) {
+      StageOp.modify( stage, (iONode)NodeOp.base.clone( item ) );
+      MapOp.remove( data->stageMap, prev_id );
+      MapOp.put( data->stageMap, id, (obj)stage );
+      modified = True;
+    }
+    else if( wStage.getid( item ) != NULL && StrOp.len( wStage.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
   else if( StrOp.equals( wAction.name(), name ) ) {
     iOAction action = (iOAction)MapOp.get( data->actionMap, wAction.getid( item ) );
     if( action != NULL ) {
@@ -1155,6 +1181,18 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       /* Remove item from list: */
       __removeItemFromList( o, wSelTabList.name(), props );
       seltab->base.del( seltab );
+      props->base.del( props );
+      removed = True;
+    }
+  }
+  else if( StrOp.equals( wStage.name(), name ) ) {
+    iOStage stage = (iOStage)MapOp.get( o->stageMap, wStage.getid( item ) );
+    if( stage != NULL ) {
+      iONode props = StageOp.base.properties( stage );
+      MapOp.remove( o->stageMap, wStage.getid( item ) );
+      /* Remove item from list: */
+      __removeItemFromList( o, wStageList.name(), props );
+      stage->base.del( stage );
       props->base.del( props );
       removed = True;
     }
@@ -2292,6 +2330,7 @@ static void _init( iOModel inst ) {
   __clearMap( o->outputMap );
   __clearMap( o->ttMap );
   __clearMap( o->seltabMap );
+  __clearMap( o->stageMap );
   __clearMap( o->actionMap );
   __clearMap( o->textMap );
   __clearMap( o->locationMap );
@@ -2312,6 +2351,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
   _createMap( o, o->ttMap      , wTurntableList.name(), wTurntable.name(), (item_inst)TTOp.inst, NULL  );
   _createMap( o, o->seltabMap  , wSelTabList.name(), wSelTab.name(), (item_inst)SelTabOp.inst, NULL  );
+  _createMap( o, o->stageMap   , wStageList.name(), wStage.name(), (item_inst)StageOp.inst, NULL  );
   _createMap( o, o->actionMap  , wActionList.name(), wAction.name(), (item_inst)ActionOp.inst, NULL  );
   _createMap( o, o->blockMap   , wBlockList.name(), wBlock.name(), (item_inst)BlockOp.inst, NULL  );
   _createMap( o, o->textMap    , wTextList.name(), wText.name(), (item_inst)TextOp.inst, NULL  );
@@ -2341,6 +2381,11 @@ static void _init( iOModel inst ) {
       /* adding the selection tables to the block map: */
       MapOp.put( o->blockMap, block->base.id( block ), (obj)block );
       block = (iIBlockBase)MapOp.next( o->seltabMap );
+    };
+    block = (iIBlockBase)MapOp.first( o->stageMap );
+    while( block != NULL ) {
+      block->init( block );
+      block = (iIBlockBase)MapOp.next( o->stageMap );
     };
   }
 
@@ -2969,6 +3014,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
             /* id could be a seltab: */
             block = (iIBlockBase)MapOp.get( o->seltabMap, stTo );
           }
+          if( block == NULL ) {
+            /* id could be a stage block: */
+            block = (iIBlockBase)MapOp.get( o->stageMap, stTo );
+          }
 
           if( block != NULL ) {
             const char* blockId = block->base.id( block );
@@ -3508,6 +3557,7 @@ static iOModel _inst( const char* fileName ) {
   data->trackMap    = MapOp.inst();
   data->ttMap       = MapOp.inst();
   data->seltabMap   = MapOp.inst();
+  data->stageMap    = MapOp.inst();
   data->actionMap   = MapOp.inst();
   data->textMap     = MapOp.inst();
   data->locationMap = MapOp.inst();

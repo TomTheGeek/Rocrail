@@ -152,7 +152,7 @@ static const char* _getMsg( struct ORes* inst ,const char* key ) {
 
 
 /** Get a message by key. */
-static const char* _getMenu( struct ORes* inst ,const char* key ) {
+static const char* _getMenu( struct ORes* inst ,const char* key, Boolean useAccel ) {
   iOResData data = Data(inst);
   if( data->msgMap != NULL ) {
     iONode msg = (iONode)MapOp.get( data->msgMap, key );
@@ -165,7 +165,7 @@ static const char* _getMenu( struct ORes* inst ,const char* key ) {
         lang = NodeOp.findNode( msg, "en" );
       if( lang != NULL ) {
         Boolean dialog = NodeOp.getBool( msg, "dialog", False );
-        int accel = NodeOp.getInt( lang, "accel", -1 );
+        int accel = useAccel ? NodeOp.getInt( lang, "accel", -1 ) : -1;
         const char* txt = NodeOp.getStr( lang, "alttxt", NULL );
         const char* menu = NodeOp.getStr( lang, "menu", NULL );
         if( txt == NULL || StrOp.len(txt) == 0 )

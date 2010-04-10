@@ -43,6 +43,7 @@
 #include "rocview/public/statbar.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
+#include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
 #include "rocview/dialogs/rocrailinidialog.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
@@ -228,6 +229,7 @@ public:
   void OnBackColor(wxCommandEvent& event);
   void OnFullScreen(wxCommandEvent& event);
 
+  void OnMGV(wxCommandEvent& event);
   void OnUhl63350(wxCommandEvent& event);
   void OnUhl68610(wxCommandEvent& event);
   void OnLocoIO(wxCommandEvent& event);
@@ -315,6 +317,7 @@ private:
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
   Uhl633x0Dlg* m_Uhl633x0;
+  MGVDlg* m_MGV;
   PowerCtrlDlg* m_PowerCtrl;
 
   iOMutex m_muxInitActiveLocs;
@@ -345,6 +348,7 @@ private:
   iOMap m_LocDlgMap;
   JsSupport* m_JsSupport;
   bool m_bCheckedDonKey;
+  iONode m_WorkSpace;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };
@@ -362,7 +366,6 @@ enum
     ME_SaveAs,
     ME_Upload,
     ME_Open,
-    ME_OpenWorkspace,
     ME_New,
     ME_About,
     ME_Update,
@@ -474,6 +477,7 @@ enum
     ME_UHL_63350,
     ME_UHL_68610,
     ME_LOCOIO,
+    ME_MGV,
     ME_OpenDecoder,
     ME_DTOpSw,
     ME_Uhlenbrock,
@@ -512,6 +516,8 @@ enum
     ID_SCALE_COMBO,
     ME_INITACTIVELOCS,
     ME_SetStatusText,
+    ME_OpenWorkspace,
+    ME_RecentWorkspaces = ME_OpenWorkspace + 10,
 };
 
 enum {

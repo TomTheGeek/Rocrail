@@ -598,6 +598,7 @@
       <var name="stressRunner" vt="iOThread"/>
       <var name="cts" vt="Boolean"/>
       <var name="fcsync" vt="Boolean"/>
+      <var name="powerison" vt="Boolean"/>
     </data>
   </object>
 

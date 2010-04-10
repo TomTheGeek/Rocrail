@@ -151,6 +151,20 @@
     </data>
   </object>
 
+  <object name="Stage" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="Stage node"/>
+    </fun>
+    <fun name="modify" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="modification" vt="iONode" remark="Modification node"/>
+    </fun>
+    <data>
+      <var name="id" vt="const char*"/>
+      <var name="props" vt="iONode" remark="Stage properties"/>
+      <var name="fbEvents" vt="iOMap"/>
+    </data>
+  </object>
 
   <object name="ClntCon" use="node,map,socket,thread,mutex" remark="Client connection.">
     <typedef def="void(*clntcon_callback)(obj,iONode)"/>
@@ -857,6 +871,7 @@
       <var name="textMap" vt="iOMap"/>
       <var name="ttMap" vt="iOMap"/>
       <var name="seltabMap" vt="iOMap"/>
+      <var name="stageMap" vt="iOMap"/>
       <var name="fbAddrMap" vt="iOMap"/>
       <var name="swAddrMap" vt="iOMap"/>
       <var name="coAddrMap" vt="iOMap"/>

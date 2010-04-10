@@ -1829,6 +1829,7 @@
     <fun name="getMenu" vt="const char*" remark="Get a message by key.">
       <param name="inst" vt="this" remark="res instance."/>
       <param name="key" vt="const char*" remark="Argument key."/>
+      <param name="useAccel" vt="Boolean" remark="Use accelerator character in string."/>
     </fun>
     <fun name="hasKey" vt="Boolean" remark="Test if the given key is in the XML.">
       <param name="inst" vt="this" remark="Res instance."/>

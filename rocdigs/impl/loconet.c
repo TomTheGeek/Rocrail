@@ -1935,15 +1935,30 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SysCmd %s", cmdstr );
+
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
-      cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
-      cmd[1] = LocoNetOp.checksum( cmd, 1 );
-      return 2;
+      if( !wLocoNet.isignorepowercmds(data->loconet) || !data->powerison ) {
+        cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
+        cmd[1] = LocoNetOp.checksum( cmd, 1 );
+        data->powerison = False;
+        return 2;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Ignoring power off command for %s.", data->iid );
+        return 0;
+      }
     }
     if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
-      cmd[0] = OPC_GPON;
-      cmd[1] = LocoNetOp.checksum( cmd, 1 );
-      return 2;
+      if( !wLocoNet.isignorepowercmds(data->loconet) || !data->powerison ) {
+        cmd[0] = OPC_GPON;
+        cmd[1] = LocoNetOp.checksum( cmd, 1 );
+        data->powerison = True;
+        return 2;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Ignoring power on command for %s.", data->iid );
+        return 0;
+      }
     }
     if( StrOp.equals( cmdstr, wSysCmd.slots ) ) {
       __getSlots(loconet_inst);

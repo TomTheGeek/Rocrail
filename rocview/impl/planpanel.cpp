@@ -175,6 +175,7 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_LockedRoutes = MapOp.inst();
 
   m_Z = z;
+  m_Ori = wItem.west;
   m_Initialized = false;
   m_ChildTable = new wxHashTable( wxKEY_STRING );
   SetBackgroundColour( *wxWHITE );
@@ -648,6 +649,7 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     m_Y = (int)(m_mouseY / (m_ItemSize*m_Scale));
 
     if( m_lastAddedItem != NULL && wxGetApp().getFrame()->isEditMode() ) {
+      wItem.setori(m_lastAddedItem, m_Ori);
       addItemAttr(m_lastAddedItem);
     }
   }
@@ -988,8 +990,8 @@ void PlanPanel::addItemAttr( iONode node ) {
 
   m_lastAddedItem = l_clone;
 
-  char* clipboard = StrOp.fmt( "clipboard: %s-%s",
-      NodeOp.getName(m_lastAddedItem), wItem.gettype(m_lastAddedItem) );
+  char* clipboard = StrOp.fmt( "clipboard: %s-%s %s",
+      NodeOp.getName(m_lastAddedItem), wItem.gettype(m_lastAddedItem), wItem.getori(m_lastAddedItem) );
   wxGetApp().getFrame()->setDigintText( clipboard );
   StrOp.free( clipboard );
 
@@ -998,6 +1000,7 @@ void PlanPanel::addItemAttr( iONode node ) {
 void PlanPanel::addTrackStraight(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wTrack.name(), NULL, ELEMENT_NODE );
   wTrack.settype( node, wTrack.straight );
+  wItem.setori(node, m_Ori);
   if( event.GetId() == ME_AddRoadStraight )
     wItem.setroad(node, True);
   addItemAttr( node );
@@ -1006,6 +1009,7 @@ void PlanPanel::addTrackStraight(wxCommandEvent& event) {
 void PlanPanel::addTrackCurve(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wTrack.name(), NULL, ELEMENT_NODE );
   wTrack.settype( node, wTrack.curve );
+  wItem.setori(node, m_Ori);
   if( event.GetId() == ME_AddRoadCurve )
     wItem.setroad(node, True);
   addItemAttr( node );
@@ -1249,6 +1253,7 @@ void PlanPanel::addItem( iONode child, bool add2list ) {
 
       if(wItem.isshow( child )) {
         Symbol* item = new Symbol( (PlanPanel*)this, child, m_ItemSize, m_Z, m_Scale, m_Bktext );
+        item->SetFocus();
         m_ChildTable->Put( wxString(key,wxConvUTF8), item );
         item->SetBackgroundColour( GetBackgroundColour() );
       }

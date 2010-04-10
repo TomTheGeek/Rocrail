@@ -412,6 +412,7 @@
         <var name="sensorquery" vt="bool" defval="true" remark="do sensor query at OPC_GPON"/>
         <var name="usefc" vt="bool" defval="true" remark="enable fast clock"/>
         <var name="syncfc" vt="bool" defval="false" remark="synchronize fast clock"/>
+        <var name="ignorepowercmds" vt="bool" defval="false" remark="Ignore subsequetial power commands."/>
         <options wrappername="CSOptions">
           <var name="store" vt="bool" defval="false" remark="set by client to signal to store the options in the command station"/>
           <var name="opsw" vt="string" defval="" range="*" remark="zero based options list 0=open 1=set"/>
@@ -1281,6 +1282,7 @@
           <const name="in_event" vt="string" val="in"/>
           <const name="shortin_event" vt="string" val="shortin"/>
           <const name="exit_event" vt="string" val="exit"/>
+          <const name="section_event" vt="string" val="section"/>
           <const name="pre2in_event" vt="string" val="pre2in"/>
           <const name="occupied_event" vt="string" val="occupied"/>
           <const name="V_min_event" vt="string" val="V_min"/>
@@ -1295,6 +1297,29 @@
         </fbevent>
       </bk>
     </bklist>
+
+    <sblist cardinality="1" remark="Stage Block Table" wrappername="StageList">
+      <sb cardinality="n" wrappername="Stage">
+        <var name="id" vt="string" defval="?" range="*" required="true"/>
+        <var name="desc" vt="string" defval="" range="*" remark="Description of stage block."/>
+        <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="slen" vt="int" defval="0" range="0-*" unit="cm" remark="Section length."/>
+        <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
+        <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
+        <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="reserved" vt="bool" defval="false" remark=""/>
+        <var name="entering" vt="bool" defval="false" remark=""/>
+        <section cardinality="n" wrappername="StageSection">
+          <var name="lcid" vt="string" defval="NULL" range="*" remark=""/>
+          <var name="fbid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
+          <var name="action" vt="string" defval=""/>
+        </section>
+      </sb>
+    </sblist>
+
+
     <linklist cardinality="1" remark="Block Link table" wrappername="LinkList">
       <link cardinality="n" wrappername="Link" remark="in case of critsect the src is ignored and all blocks listed in dst are group members">
         <var name="id" vt="string" defval="" range="*" required="true"/>

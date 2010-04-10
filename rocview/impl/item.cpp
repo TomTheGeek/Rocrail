@@ -310,6 +310,14 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   }
 
   sizeToScale();
+
+  // define accelerator keys for some frequently used functions
+  wxAcceleratorEntry acc_entries[8];
+  acc_entries[0].Set(wxACCEL_ALT, (int) 'R', ME_Rotate);
+  acc_entries[1].Set(wxACCEL_ALT, (int) 'r', ME_Rotate);
+  wxAcceleratorTable m_accel(2, acc_entries);
+  this->SetAcceleratorTable(m_accel);
+
 }
 
 bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
@@ -1607,6 +1615,15 @@ void Symbol::OnRotate(wxCommandEvent& event) {
     else if( StrOp.equals( wItem.south, ori ) )
       wItem.setori( m_Props, wItem.west );
   }
+
+  if( StrOp.equals( wItem.west, wItem.getori(m_Props) ) )
+    m_PlanPanel->m_Ori = wItem.west;
+  else if( StrOp.equals( wItem.north, wItem.getori(m_Props) ) )
+    m_PlanPanel->m_Ori = wItem.north;
+  else if( StrOp.equals( wItem.east, wItem.getori(m_Props) ) )
+    m_PlanPanel->m_Ori = wItem.east;
+  else if( StrOp.equals( wItem.south, wItem.getori(m_Props) ) )
+    m_PlanPanel->m_Ori = wItem.south;
 
   Refresh();
 

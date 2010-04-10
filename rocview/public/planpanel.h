@@ -100,6 +100,7 @@ public:
   bool isRouteLocked(const char* id);
   iONode m_zLevel;
   int m_Z;
+  const char* m_Ori;
 
 private:
   iOMap m_LockedRoutes;

@@ -51,6 +51,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_RESET_LOCOIO 10006
 #define ID_LN_ADDRESSLIST 10007
 #define ID_QUEURY_ADDRESSES 10008
+#define ID_LOCOIO_REPORT 10013
 #define ID_EASYGETALL 10004
 #define ID_EASYSETALL 10005
 #define ID_BUTTON_EASY_SAVE 10009
@@ -134,6 +135,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_QUEURY_ADDRESSES
     void OnQueuryAddressesClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOCOIO_REPORT
+    void OnLocoIOReport( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYGETALL
     void OnEasygetallClick( wxCommandEvent& event );
@@ -229,6 +233,7 @@ public:
     wxPanel* m_AddressesPanel;
     wxListBox* m_AddressList;
     wxButton* m_QueryAddresses;
+    wxButton* m_Report;
     wxPanel* m_EasyPanel;
     wxStaticText* m_labEasyPort;
     wxStaticText* m_labEasyAddress;

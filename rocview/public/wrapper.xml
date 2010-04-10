@@ -91,6 +91,22 @@
     <var name="doneml" vt="string" defval=""/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>
+    <workspaces cardinality="1" wrappername="WorkSpaces">
+      <ws cardinality="n" wrappername="WorkSpace">
+        <var name="title" vt="string" defval="New"/>
+        <var name="path" vt="string" defval=""/>
+      </ws>
+    </workspaces>
+    <mgv cardinality="1" wrappername="MGV">
+      <mgvservo cardinality="n" wrappername="MGVServo">
+        <var name="addr" vt="int" defval="0"/>
+        <var name="port" vt="int" defval="0"/>
+        <var name="leftangle" vt="int" defval="0"/>
+        <var name="rightangle" vt="int" defval="0"/>
+        <var name="speed" vt="int" defval="0"/>
+        <var name="relay" vt="bool" defval="false"/>
+      </mgvservo>
+    </mgv>
     <rrcon cardinality="n" wrappername="RRCon">
       <var name="host" vt="string" defval="localhost"/>
       <var name="port" vt="int" defval="62842"/>
