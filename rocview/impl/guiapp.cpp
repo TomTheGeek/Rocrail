@@ -82,9 +82,13 @@
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/BlockList.h"
 #include "rocrail/wrapper/public/FeedbackList.h"
+#include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/SwitchList.h"
+#include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/SignalList.h"
+#include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/OutputList.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/TurntableList.h"
 #include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/DigInt.h"
@@ -1066,6 +1070,68 @@ void RocGui::setModel( iONode node ) {
     m_Model = (iONode)node->base.clone( node );
 }
 
+const char* RocGui::findID( bool output, int addr ) {
+  // TODO: Lookup ID in model.
+  if( m_Model != NULL ) {
+    if( output ) {
+      iONode swlist = wPlan.getswlist( m_Model );
+      if( swlist != NULL ) {
+        int cnt = NodeOp.getChildCnt( swlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode sw = NodeOp.getChild( swlist, i );
+          if( addr == wSwitch.getport1( sw ) ) {
+            return wSwitch.getid( sw );
+          }
+          if( addr == wSwitch.getport2( sw ) ) {
+            return wSwitch.getid( sw );
+          }
+        }
+      }
+      iONode sglist = wPlan.getsglist( m_Model );
+      if( sglist != NULL ) {
+        int cnt = NodeOp.getChildCnt( sglist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode sg = NodeOp.getChild( sglist, i );
+          if( addr == wSignal.getport1( sg ) ) {
+            return wSignal.getid( sg );
+          }
+          if( addr == wSignal.getport2( sg ) ) {
+            return wSignal.getid( sg );
+          }
+          if( addr == wSignal.getport3( sg ) ) {
+            return wSignal.getid( sg );
+          }
+          if( addr == wSignal.getport4( sg ) ) {
+            return wSignal.getid( sg );
+          }
+        }
+      }
+      iONode colist = wPlan.getcolist( m_Model );
+      if( colist != NULL ) {
+        int cnt = NodeOp.getChildCnt( colist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode co = NodeOp.getChild( colist, i );
+          if( addr == wOutput.getport( co ) ) {
+            return wOutput.getid( co );
+          }
+        }
+      }
+    }
+    else {
+      iONode fblist = wPlan.getfblist( m_Model );
+      if( fblist != NULL ) {
+        int cnt = NodeOp.getChildCnt( fblist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode fb = NodeOp.getChild( fblist, i );
+          if( addr == wFeedback.getaddr( fb ) ) {
+            return wFeedback.getid( fb );
+          }
+        }
+      }
+    }
+  }
+  return "not used";
+}
 
 void RocGui::cleanupOldModel() {
   if( m_OldModel != NULL ) {

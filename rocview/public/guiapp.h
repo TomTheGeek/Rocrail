@@ -77,6 +77,7 @@ public:
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
   bool isForceTabView() { return m_bForceTabView; }
+  const char* findID(bool output, int addr);
 
   iORCon        m_RCon;
   const char*   m_Host;

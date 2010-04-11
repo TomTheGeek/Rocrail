@@ -139,6 +139,9 @@ LocoIO::LocoIO( wxWindow* parent, wxWindowID id, const wxString& caption, const 
 
     SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
     m_Report->Enable(false);
+    m_bReporting = false;
+    m_ReportFile = NULL;
+    m_iReportIdx = 0;
 
 }
 
@@ -159,6 +162,22 @@ void LocoIO::sendPacket() {
   else {
     m_Timer->Stop();
     this->SetCursor(wxCURSOR_ARROW);
+    if( m_bReporting ) {
+      m_iReportIdx++;
+      if( m_iReportIdx < m_AddressList->GetCount() ) {
+        m_AddressList->SetSelection(m_iReportIdx);
+        wxCommandEvent event( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, ID_LN_ADDRESSLIST );
+        OnLnAddresslistDoubleClicked(event);
+        OnEasygetallClick(event);
+      }
+      else {
+        // end of report
+        FileOp.close(m_ReportFile);
+        FileOp.base.del(m_ReportFile);
+        m_ReportFile = NULL;
+        m_bReporting = false;
+      }
+    }
   }
 }
 void LocoIO::OnTimer(wxTimerEvent& event) {
@@ -1935,6 +1954,14 @@ void LocoIO::evaluatePort( int sv, int val ) {
     }
     easyPort[port]->SetValue(m_PortAddr->GetValue());
 
+    // Reporting
+    if( m_bReporting && m_ReportFile != NULL ) {
+      // TODO: Lookup the Rocrail object ID.
+      const char* id = wxGetApp().findID(easyOutput[port]->GetValue(), easyPort[port]->GetValue());
+      FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+          m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), easyOutput[port]->GetValue()?"output":"input", id );
+   }
+
   }
 
 }
@@ -2585,9 +2612,42 @@ void LocoIO::OnBoosterClick( wxCommandEvent& event )
 
 void LocoIO::OnLocoIOReport( wxCommandEvent& event )
 {
-  m_AddressList->GetSelection();
+  int count = m_AddressList->GetCount();
+  m_iReportIdx = 0;
 
-  OnLnAddresslistDoubleClicked(event);
+  if( count == 0 ) {
+    return;
+  }
+
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("LocoIO-Report (*.csv)|*.csv");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("savelocoiofileas"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("lio-report.csv")), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".csv") ) )
+      path.Append( _T(".csv") );
+
+    iOFile m_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    m_bReporting = true;
+    FileOp.writeStr(m_ReportFile, "\"low-addr.\",\"sub-addr.\",\"port\",\"I/O\",\"ID\"\n");
+
+    if( m_iReportIdx < m_AddressList->GetCount() ) {
+      m_AddressList->SetSelection(m_iReportIdx);
+      OnLnAddresslistDoubleClicked(event);
+      OnEasygetallClick(event);
+    }
+  }
+  fdlg->Destroy();
 
 }
 

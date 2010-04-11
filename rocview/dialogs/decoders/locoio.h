@@ -29,6 +29,7 @@
 
 #include "rocs/public/node.h"
 #include "rocs/public/queue.h"
+#include "rocs/public/file.h"
 
 /*!
  * Forward declarations
@@ -92,6 +93,9 @@ class LocoIO: public wxDialog
     int m_iSubAddress;
     iOQueue m_Queue;
     iONode m_SendedCmd;
+    iOFile m_ReportFile;
+    int m_iReportIdx;
+    bool m_bReporting;
     wxTimer* m_Timer;
     int m_TabAlign;
     int m_SV[256];
