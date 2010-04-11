@@ -128,6 +128,7 @@ LocoIO::LocoIO()
 
 LocoIO::LocoIO( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+  TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "init dialog");
     Init();
     m_TabAlign = wxGetApp().getTabAlign();
     Create(parent, id, caption, pos, size, style);
@@ -165,12 +166,14 @@ void LocoIO::sendPacket() {
     if( m_bReporting ) {
       m_iReportIdx++;
       if( m_iReportIdx < m_AddressList->GetCount() ) {
+        TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "reporting next locoIO...");
         m_AddressList->SetSelection(m_iReportIdx);
         wxCommandEvent event( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, ID_LN_ADDRESSLIST );
         OnLnAddresslistDoubleClicked(event);
         OnEasygetallClick(event);
       }
-      else {
+      else if(m_ReportFile != NULL) {
+        TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "end of reporting");
         // end of report
         FileOp.close(m_ReportFile);
         FileOp.base.del(m_ReportFile);
@@ -1955,11 +1958,14 @@ void LocoIO::evaluatePort( int sv, int val ) {
     easyPort[port]->SetValue(m_PortAddr->GetValue());
 
     // Reporting
-    if( m_bReporting && m_ReportFile != NULL ) {
+    if( m_bReporting ) {
       // TODO: Lookup the Rocrail object ID.
       const char* id = wxGetApp().findID(easyOutput[port]->GetValue(), easyPort[port]->GetValue());
+      TraceOp.trc("locoio", TRCLEVEL_INFO, __LINE__, 9999, "(0x%08X) \"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+          (int)m_ReportFile, m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), easyOutput[port]->GetValue()?"output":"input", id );
       FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
           m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), easyOutput[port]->GetValue()?"output":"input", id );
+      FileOp.flush(m_ReportFile);
    }
 
   }
@@ -2637,9 +2643,10 @@ void LocoIO::OnLocoIOReport( wxCommandEvent& event )
     if( !path.Contains( _T(".csv") ) )
       path.Append( _T(".csv") );
 
-    iOFile m_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    m_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
     m_bReporting = true;
-    FileOp.writeStr(m_ReportFile, "\"low-addr.\",\"sub-addr.\",\"port\",\"I/O\",\"ID\"\n");
+    FileOp.fmt(m_ReportFile, "\"low-addr.\",\"sub-addr.\",\"port\",\"I/O\",\"ID\"\n");
+    FileOp.flush(m_ReportFile);
 
     if( m_iReportIdx < m_AddressList->GetCount() ) {
       m_AddressList->SetSelection(m_iReportIdx);
