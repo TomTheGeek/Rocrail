@@ -287,7 +287,8 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
         cmd[4] = 0x01;
       else
         cmd[4] = 0x00;
-      cmd[5] = 0x00;
+      cmd[4] |= data->useParallelFunctions ? 0x04:0x00;
+      cmd[5] = wLoc.getimagenr(node);
 
       if( __transact( data, cmd, NULL, 0, NULL ) ) {
         slot = allocMem( sizeof( struct slot) );
@@ -425,6 +426,11 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
         speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
 
+    if( spcnt == 28 && speed > 0 )
+      speed += 3; /* 0+1=halt, 2+3=emergency break, 4-31=speed step 1..28 */
+    else if( spcnt == 14 && speed > 0 )
+      speed += 1; /* 0=halt, 1=emergency break, 2-15=speed step 1..14 */
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
         wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
@@ -514,13 +520,16 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 static void _halt( obj inst, Boolean poweroff ) {
   iOMassothData data = Data(inst);
   data->run = False;
-  if( poweroff ) {
-    byte cmd[] = {0x11};
-    __transact( data, cmd, NULL, 0, NULL );
-  }
+  ThreadOp.sleep(100);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
-  if( data->serial != NULL )
+  if( data->serial != NULL && data->serialOK ) {
+    if( poweroff ) {
+      byte cmd[8] = {0x11};
+      __transact( data, cmd, NULL, 0, NULL );
+      ThreadOp.sleep(100);
+    }
     SerialOp.close( data->serial );
+  }
 }
 
 
@@ -703,7 +712,7 @@ static void __reader( void* threadinst ) {
     /* normal reading processing */
     if( MutexOp.wait( data->mux ) ) {
 
-      if( SerialOp.available( data->serial ) ) {
+      if( data->run && data->serial != NULL && SerialOp.available( data->serial ) ) {
         byte in[256];
         if( __readPacket(data, in) ) {
           __evaluatePacket(data, in);
@@ -828,14 +837,16 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid       = StrOp.dup( wDigInt.getiid( ini ) );
   data->dummyio   = wDigInt.isdummyio(ini);
   data->useSensor = False;
+  data->useParallelFunctions = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Massoth %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = 57600 (fix)" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedback = %s", data->useSensor ? "sensor":"contact" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate  = 57600 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedback  = %s", data->useSensor ? "sensor":"contact" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "functions = %s", data->useParallelFunctions ? "parallel":"serial" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;
@@ -865,6 +876,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );
     data->dummyio = True;
+    data->serial = NULL;
   }
 
   instCnt++;

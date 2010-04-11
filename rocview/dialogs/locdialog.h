@@ -312,6 +312,7 @@ public:
     wxTextCtrl* m_Description;
     wxStaticText* m_labImageName;
     wxTextCtrl* m_ImageName;
+    wxSpinCtrl* m_ImageNr;
     wxStaticText* m_Label_Length;
     wxTextCtrl* m_Length;
     wxStaticText* m_Label_CatalogNr;

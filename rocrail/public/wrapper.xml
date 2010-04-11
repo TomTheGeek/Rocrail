@@ -1510,6 +1510,7 @@
       <lc cardinality="n" wrappername="Loc" remark="Loc definition.">
         <var name="show" vt="bool" defval="true" remark="Show in loco table."/>
         <var name="image" vt="string" defval="NULL" range="*" remark="local image file to show in dialogs"/>
+        <var name="imagenr" vt="int" defval="0" range="*" remark="throttle image number"/>
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shortid" vt="string" defval="" range="*" remark="Short IDs are used for throttle displays."/>
         <var name="useshortid" vt="bool" defval="false" remark="Use short ID to send to throttle."/>
