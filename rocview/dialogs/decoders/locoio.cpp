@@ -1961,10 +1961,10 @@ void LocoIO::evaluatePort( int sv, int val ) {
     if( m_bReporting ) {
       // TODO: Lookup the Rocrail object ID.
       const char* id = wxGetApp().findID(easyOutput[port]->GetValue(), easyPort[port]->GetValue());
-      TraceOp.trc("locoio", TRCLEVEL_INFO, __LINE__, 9999, "(0x%08X) \"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
-          (int)m_ReportFile, m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), easyOutput[port]->GetValue()?"output":"input", id );
-      FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
-          m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), easyOutput[port]->GetValue()?"output":"input", id );
+      TraceOp.trc("locoio", TRCLEVEL_INFO, __LINE__, 9999, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+          m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), port, easyOutput[port]->GetValue()?"output":"input", id );
+      FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+          m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), port, easyOutput[port]->GetValue()?"output":"input", id );
       FileOp.flush(m_ReportFile);
    }
 
@@ -2645,7 +2645,7 @@ void LocoIO::OnLocoIOReport( wxCommandEvent& event )
 
     m_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
     m_bReporting = true;
-    FileOp.fmt(m_ReportFile, "\"low-addr.\",\"sub-addr.\",\"port\",\"I/O\",\"ID\"\n");
+    FileOp.fmt(m_ReportFile, "\"low-addr.\",\"sub-addr.\",\"port\",\"pin\",\"I/O\",\"ID\"\n");
     FileOp.flush(m_ReportFile);
 
     if( m_iReportIdx < m_AddressList->GetCount() ) {
