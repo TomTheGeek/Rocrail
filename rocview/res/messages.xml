@@ -3052,29 +3052,6 @@
     <ca txt="General"/>
     <zh_TW txt="一般"/>
   </Msg>
-  <Msg id="location">
-    <de txt="Position"/>
-    <en txt="Location"/>
-    <nl txt="Locatie"/>
-    <sv txt="Position"/>
-    <fr txt="Emplacement"/>
-    <tr txt="Konum"/>
-    <es txt="Lugar"/>
-    <it txt="Posizione"/>
-    <it txt="Località"/>
-    <da txt="Position"/>
-    <bs txt="Lokacija"/>
-    <cs txt="Umístění"/>
-    <bg txt="Място"/>
-    <el txt="Τοποθεσία"/>
-    <hu txt="Hely"/>
-    <ru txt="Расположение"/>
-    <pt txt="Localização"/>
-    <nb txt="Lokasjon"/>
-    <pl txt="Miejsce"/>
-    <ca txt="Localització"/>
-    <zh_TW txt="位置"/>
-  </Msg>
   <Msg id="wiring">
     <de txt="Verkabelung"/>
     <en txt="Wiring"/>

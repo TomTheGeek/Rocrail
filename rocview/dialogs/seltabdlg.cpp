@@ -171,7 +171,7 @@ static int __sortStr(obj* _a, obj* _b)
 
 void SelTabDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
-  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "location" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "position" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "interface" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "tracks" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "routes" ) );

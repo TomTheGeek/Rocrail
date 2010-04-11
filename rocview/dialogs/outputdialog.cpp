@@ -125,7 +125,7 @@ void OutputDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "interface" ) );
-  m_Notebook->SetPageText( 3, wxGetApp().getMsg( "location" ) );
+  m_Notebook->SetPageText( 3, wxGetApp().getMsg( "position" ) );
 
   // Index
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );

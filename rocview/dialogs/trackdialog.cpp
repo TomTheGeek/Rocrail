@@ -103,7 +103,7 @@ static int __sortStr(obj* _a, obj* _b)
 
 void TrackDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
-  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "location" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "position" ) );
 
   // General
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );

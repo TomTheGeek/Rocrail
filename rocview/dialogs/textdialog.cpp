@@ -102,7 +102,7 @@ TextDialog::TextDialog( wxWindow* parent, iONode p_Props )
 
 void TextDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
-  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "location" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "position" ) );
 
   // General
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );
