@@ -179,6 +179,8 @@ void LocoIO::sendPacket() {
         FileOp.base.del(m_ReportFile);
         m_ReportFile = NULL;
         m_bReporting = false;
+        m_Report->Enable(true);
+        m_QueryAddresses->Enable(true);
       }
     }
   }
@@ -2649,6 +2651,8 @@ void LocoIO::OnLocoIOReport( wxCommandEvent& event )
     FileOp.flush(m_ReportFile);
 
     if( m_iReportIdx < m_AddressList->GetCount() ) {
+      m_Report->Enable(false);
+      m_QueryAddresses->Enable(false);
       m_AddressList->SetSelection(m_iReportIdx);
       OnLnAddresslistDoubleClicked(event);
       OnEasygetallClick(event);
