@@ -199,6 +199,16 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_ScheduleGo+7, Symbol::OnScheduleGo)
   EVT_MENU     (ME_ScheduleGo+8, Symbol::OnScheduleGo)
   EVT_MENU     (ME_ScheduleGo+9, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+10, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+11, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+12, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+13, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+14, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+15, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+16, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+17, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+18, Symbol::OnScheduleGo)
+  EVT_MENU     (ME_ScheduleGo+19, Symbol::OnScheduleGo)
 
   EVT_MENU     (ME_TTLightOn, Symbol::OnTTLight)
   EVT_MENU     (ME_TTLightOff, Symbol::OnTTLight)
@@ -1029,8 +1039,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
 
              cnt = ListOp.size( m_sclist );
 
-             if(cnt > 10) // MAX 10!
-               cnt = 10;
+             if(cnt > 20) // MAX 20!
+               cnt = 20;
 
              for( int i = 0; i < cnt; i++ ) {
                const char* id = (const char*)ListOp.get( m_sclist, i );
@@ -1996,8 +2006,18 @@ void Symbol::modelEvent( iONode node ) {
         else
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
       }
-      else
+      else if (locid!=NULL && StrOp.len(locid)>0) {
+        /*
+        iONode model = wxGetApp().getModel();
+
+        iONode loc = ModelOp.getLoc( model, locid );
+        Boolean dir = wLoc.isdir( loc );
+
+        l_locidStr = StrOp.fmt( "%s%s", dir?">":"<", locid==NULL?"":locid );
+
+      } else { */
         l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
+      }
 
       if( locid != NULL && StrOp.len( locid ) > 0 ) {
         char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
