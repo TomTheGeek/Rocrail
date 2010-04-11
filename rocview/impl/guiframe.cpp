@@ -1211,11 +1211,11 @@ void RocGuiFrame::initFrame() {
   if( workspaces != NULL ) {
     int i = 1;
     wxMenu* menuWorkSpaces = new wxMenu();
-    iONode ws = wWorkSpaces.getws(workspaces);
+    iONode ws = wWorkSpaces.getworkspace(workspaces);
     while(ws != NULL) {
       menuWorkSpaces->Append( ME_OpenWorkspace+i, wxString(wWorkSpace.gettitle(ws),wxConvUTF8) + _T(" - ") + wxString(wWorkSpace.getpath(ws),wxConvUTF8) );
       i++;
-      ws = wWorkSpaces.nextws(workspaces, ws);
+      ws = wWorkSpaces.nextworkspace(workspaces, ws);
     }
     menuFile->Append( ME_RecentWorkspaces, wxGetApp().getMenu("recentworkspaces"), menuWorkSpaces );
 
@@ -1599,7 +1599,7 @@ void RocGuiFrame::initFrame() {
   m_JsSupport = NULL;
   if( wGui.isjssupport(m_Ini) )
     initJS();
-    
+
 }
 
 
@@ -2097,14 +2097,14 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     int i = 1;
     iONode workspaces = wGui.getworkspaces(m_Ini);
     if( workspaces != NULL ) {
-      iONode ws = wWorkSpaces.getws(workspaces);
+      iONode ws = wWorkSpaces.getworkspace(workspaces);
       while( ws != NULL ) {
         if( i == idx ) {
           workspace = StrOp.dup(wWorkSpace.getpath(ws));
           break;
         }
         i++;
-        ws = wWorkSpaces.nextws(workspaces, ws);
+        ws = wWorkSpaces.nextworkspace(workspaces, ws);
       };
     }
   }
@@ -2122,11 +2122,11 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
       char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
 #endif
       TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
-      
+
       CleanNotebook();
       wxGetApp().setModel(NULL);
-      
-      
+
+
       SystemOp.system( rrcall, True, True );
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;
@@ -2139,31 +2139,31 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
         NodeOp.addChild( m_Ini, workspaces );
       }
 
-      m_WorkSpace = wWorkSpaces.getws(workspaces);
+      m_WorkSpace = wWorkSpaces.getworkspace(workspaces);
       Boolean hasWS = False;
       while( m_WorkSpace != NULL && !hasWS) {
         hasWS = StrOp.equals(wWorkSpace.getpath(m_WorkSpace), workspace);
         if( hasWS )
           break;
-        m_WorkSpace = wWorkSpaces.nextws(workspaces, m_WorkSpace);
+        m_WorkSpace = wWorkSpaces.nextworkspace(workspaces, m_WorkSpace);
       };
 
       if( !hasWS ) {
         // save the most recent 8 workspaces
         iOList list = ListOp.inst();
         int cnt = 0;
-        iONode ws = wWorkSpaces.getws(workspaces);
+        iONode ws = wWorkSpaces.getworkspace(workspaces);
         while( ws != NULL && cnt < 8 ) {
           ListOp.add( list, (obj)ws);
           cnt++;
-          ws = wWorkSpaces.nextws(workspaces, ws);
+          ws = wWorkSpaces.nextworkspace(workspaces, ws);
         };
 
         // remove all from parent
-        ws = wWorkSpaces.getws(workspaces);
+        ws = wWorkSpaces.getworkspace(workspaces);
         while( ws != NULL ) {
           NodeOp.removeChild( workspaces, ws );
-          ws = wWorkSpaces.getws(workspaces);
+          ws = wWorkSpaces.getworkspace(workspaces);
         };
 
         // Add workspace to the ini
@@ -2726,14 +2726,14 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
     dlg->Destroy();
   }
 }
-  
+
 void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
   DonKey* dlg = new DonKey(this, m_Ini );
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();
 }
-  
+
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
 
