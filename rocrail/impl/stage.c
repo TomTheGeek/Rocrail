@@ -32,11 +32,13 @@
 #include "rocs/public/str.h"
 
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 
 
@@ -112,7 +114,22 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
 
 /**  */
 static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,int val ,iONode evtDescr ) {
+  iOStageData data = Data(inst);
+  iONode section = (iONode)MapOp.get( data->fbMap, id );
+
+  if( section != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
+        id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown sensors [%s] for stage [%s]...", id, data->id );
+  }
+
   return;
+}
+
+static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
+  _event( (iIBlockBase)inst, puls, id, ident, val, NULL );
 }
 
 
@@ -367,6 +384,43 @@ static void _modify( iOStage inst, iONode props ) {
 }
 
 
+/**
+ * map all fb's and set the listener to the common _event
+ */
+static void __initSensors( iOStage inst ) {
+  iOStageData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  int sectionNr = 0;
+  iONode section = wStage.getsection( data->props );
+
+  MapOp.clear( data->fbMap );
+  ListOp.clear( data->sectionList );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init sensors for stage %s...", data->id );
+
+  while( section != NULL ) {
+    const char* fbid = wStageSection.getfbid( section );
+    wStageSection.setnr(section, sectionNr);
+
+    if( StrOp.len( fbid ) > 0 ) {
+    iOFBack fb = ModelOp.getFBack( model, fbid );
+
+      if( fb != NULL ) {
+        FBackOp.setListener( fb, (obj)inst, &_fbEvent );
+        MapOp.put( data->fbMap, fbid, (obj)section);
+      }
+    }
+    ListOp.add( data->sectionList, (obj)section );
+    sectionNr++;
+    section = wStage.nextsection( data->props, section );
+  };
+  data->sectionCount = sectionNr;
+
+}
+
+
+
+
 /**  */
 static struct OStage* _inst( iONode props ) {
   iOStage __Stage = allocMem( sizeof( struct OStage ) );
@@ -374,8 +428,12 @@ static struct OStage* _inst( iONode props ) {
   MemOp.basecpy( __Stage, &StageOp, 0, sizeof( struct OStage ), data );
 
   /* Initialize data->xxx members... */
-  data->props = props;
-  data->id    = wStage.getid( props );
+  data->props       = props;
+  data->id          = wStage.getid( props );
+  data->fbMap       = MapOp.inst();
+  data->sectionList = ListOp.inst();
+
+  __initSensors(__Stage);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage %s created", data->id );
 

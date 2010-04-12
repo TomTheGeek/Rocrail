@@ -1312,9 +1312,11 @@
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
         <section cardinality="n" wrappername="StageSection">
+          <var name="id" vt="string" defval="?" range="*" required="true"/>
           <var name="lcid" vt="string" defval="NULL" range="*" remark=""/>
           <var name="fbid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
           <var name="action" vt="string" defval=""/>
+          <var name="nr" vt="int" defval="0"/>
         </section>
       </sb>
     </sblist>

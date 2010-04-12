@@ -162,7 +162,9 @@
     <data>
       <var name="id" vt="const char*"/>
       <var name="props" vt="iONode" remark="Stage properties"/>
-      <var name="fbEvents" vt="iOMap"/>
+      <var name="sectionList" vt="iOList"/>
+      <var name="fbMap" vt="iOMap"/>
+      <var name="sectionCount" vt="int"/>
     </data>
   </object>
 
