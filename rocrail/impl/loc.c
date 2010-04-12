@@ -1216,8 +1216,6 @@ static void __runner( void* threadinst ) {
     }
 
 
-    /* call this function unconditional for updating velocity */
-
     if( fncmd != NULL ) {
       wLoc.setV( fncmd, -1 );
       broadcast = (iONode)NodeOp.base.clone(fncmd);
@@ -1241,6 +1239,10 @@ static void __runner( void* threadinst ) {
         wLoc.setscidx( broadcast, data->driver->getScheduleIdx( data->driver ) );
       }
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+    }
+    else {
+      /* call this function for updating velocity for unmanaged decoders */
+      __engine( loc, NULL );
     }
 
 
