@@ -102,7 +102,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
     }
 
     if( nextBlock != NULL && nextRoute != NULL ) {
-      if( data->curBlock == nextBlock || data->next1Block == nextBlock || data->next2Block == nextBlock ) {
+      if( data->curBlock == nextBlock || data->next1Block == nextBlock || data->next2Block == nextBlock || data->next3Block == nextBlock ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "ignoring second next block [%s] for [%s] because it is already reserved",
                        nextBlock->base.id(nextBlock), data->loc->getId( data->loc ) );
