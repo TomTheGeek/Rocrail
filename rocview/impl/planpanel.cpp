@@ -63,6 +63,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Turntable.h"
@@ -78,6 +79,7 @@
 #include "rocrail/wrapper/public/SignalList.h"
 #include "rocrail/wrapper/public/OutputList.h"
 #include "rocrail/wrapper/public/BlockList.h"
+#include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/FeedbackList.h"
 #include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/TurntableList.h"
@@ -778,6 +780,9 @@ void PlanPanel::removeItemFromList( iONode item ) {
   if( StrOp.equals( wBlock.name(), name ) ) {
     dbkey = wBlockList.name();
   }
+  else if( StrOp.equals( wStage.name(), name ) ) {
+    dbkey = wStageList.name();
+  }
   else if( StrOp.equals( wTurntable.name(), name ) ) {
     dbkey = wTurntableList.name();
   }
@@ -844,6 +849,9 @@ iONode PlanPanel::addItemInList( iONode item ) {
 
   if( StrOp.equals( wBlock.name(), name ) ) {
     dbkey = wBlockList.name();
+  }
+  else if( StrOp.equals( wStage.name(), name ) ) {
+    dbkey = wStageList.name();
   }
   else if( StrOp.equals( wTurntable.name(), name ) ) {
     dbkey = wTurntableList.name();
@@ -1103,6 +1111,11 @@ void PlanPanel::addBlock(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
   if( event.GetId() == ME_AddRoadBlock )
     wItem.setroad(node, True);
+  addItemAttr( node );
+}
+
+void PlanPanel::addStage(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
   addItemAttr( node );
 }
 
@@ -1518,6 +1531,7 @@ static void initPlan( PlanPanel* o ) {
   o->addItems( wPlan.getttlist( model ) );
   o->addItems( wPlan.getseltablist( model ) );
   o->addItems( wPlan.getstlist( model ) );
+  o->addItems( wPlan.getsblist( model ) );
 
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.fstat );

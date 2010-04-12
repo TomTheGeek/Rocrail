@@ -1,0 +1,7 @@
+<svg width="128" height="32">
+  <g>
+    <!-- Stage -->
+    <path stroke="rgb(0,0,0)" fill="none" d="M 6,3 L 127,3 L 121,28 L 0,28 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 7,4 L 126,4 L 120,27 L 1,27 z " />
+  </g>
+</svg>

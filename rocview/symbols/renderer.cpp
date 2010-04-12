@@ -30,6 +30,7 @@
 
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -511,6 +512,13 @@ void SymbolRenderer::initSym() {
         m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost_s );
         m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_sc_s );
       }
+    }
+  }
+  else if( StrOp.equals( wStage.name(), nodeName ) ) {
+    m_iSymType = symtype::i_stage;
+    m_iSymSubType = stagetype::i_stage;
+    if( m_SymMap != NULL ) {
+      m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage );
     }
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
@@ -1607,6 +1615,17 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
   }
 }
 
+/**
+ * Stage object
+ */
+void SymbolRenderer::drawStage( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+  m_bRotateable = true;
+  if( m_SvgSym1 != NULL )
+  {
+    drawSvgSym(dc, m_SvgSym1, ori);
+  }
+}
+
 
 /**
  * Block object
@@ -2061,6 +2080,9 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
       break;
     case symtype::i_block:
       drawBlock( dc, fill, occupied, ori );
+      break;
+    case symtype::i_stage:
+      drawStage( dc, fill, occupied, ori );
       break;
     case symtype::i_text:
       drawText( dc, fill, occupied, ori );

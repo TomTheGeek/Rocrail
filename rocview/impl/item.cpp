@@ -68,6 +68,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
@@ -434,7 +435,7 @@ void Symbol::sizeToScale() {
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "item %s: z level does not match %d!=%d", name, m_Z, z );
   }
   else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
-           StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) ) {
+           StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) || StrOp.equals( wStage.name(), name ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
     Show(wOutput.isshow(m_Props));
   }

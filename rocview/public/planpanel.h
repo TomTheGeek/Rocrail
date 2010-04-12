@@ -58,6 +58,7 @@ public:
   void addSignal(wxCommandEvent& event);
   void addOutput(wxCommandEvent& event);
   void addBlock(wxCommandEvent& event);
+  void addStage(wxCommandEvent& event);
   void addFBack(wxCommandEvent& event);
   void addRoute(wxCommandEvent& event);
   void addTT(wxCommandEvent& event);

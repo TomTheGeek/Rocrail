@@ -32,6 +32,7 @@ namespace symtype {
   static const int i_turntable  = 8;
   static const int i_selecttable= 9;
   static const int i_route      = 10;
+  static const int i_stage      = 11;
 }
 
 namespace tracktype {
@@ -352,6 +353,12 @@ namespace blocktype {
   static const char* road_block_ent = "road-block-ent.svg";
 
   static const int i_block = 1;
+}
+
+namespace stagetype {
+  static const char* stage     = "stage.svg";
+
+  static const int i_stage = 1;
 }
 
 namespace seltabtype {

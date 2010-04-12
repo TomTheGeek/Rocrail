@@ -104,6 +104,7 @@ public:
   void drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status );
   void drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
+  void drawStage( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawText( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawTurntable( wxPaintDC& dc, bool fill, bool occupied, double* bridgepos, const char* ori );
