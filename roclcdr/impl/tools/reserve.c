@@ -107,6 +107,8 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
                        "ignoring second next block [%s] for [%s] because it is already reserved",
                        nextBlock->base.id(nextBlock), data->loc->getId( data->loc ) );
         nextBlock = NULL;
+        *toBlock = NULL;
+        *toRoute = NULL;
       }
     }
 
