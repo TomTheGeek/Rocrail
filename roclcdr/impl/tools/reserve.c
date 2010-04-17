@@ -60,7 +60,8 @@ void unlockBlockGroup( iOLcDriver inst, iONode group) {
  * @param inst      LcDriver instance
  * @param gotoBlock goto block ID
  */
-void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock, iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute, Boolean reverse ) {
+void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock,
+    iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute, Boolean reverse, Boolean swapNext1Route ) {
   iOLcDriverData data = Data(inst);
 
   iORoute     nextRoute = NULL;
@@ -81,7 +82,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       nextRoute = NULL;
       nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock),
                                          data->loc, &nextRoute, gotoBlock, True, False, True, /* force same dir */
-		      			 fromRoute->isSwapPost( fromRoute ) );
+		      			 fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route );
     }
     else {
       /* find destination using schedule */

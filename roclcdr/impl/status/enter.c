@@ -283,7 +283,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   else if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
     /* try to reserve next3Block if the train does not have to wait in the next next2Block */
     reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next2Block, data->next2Route,
-                              &data->next3Block, &data->next3Route, !data->next2RouteFromTo );
+                              &data->next3Block, &data->next3Route, !data->next2RouteFromTo, data->next1Route->isSwapPost( data->next1Route ) );
 
     if( data->next3Route != NULL ) {
       data->next3Route->getDirection( data->next3Route,
