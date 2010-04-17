@@ -185,7 +185,7 @@ void RouteDialog::initLabels() {
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "turnouttable" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "sensors" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "permissions" ) );
-  m_Notebook->SetPageText( 5, wxGetApp().getMsg( "location" ) );
+  m_Notebook->SetPageText( 5, wxGetApp().getMsg( "position" ) );
   m_Notebook->SetPageText( 6, wxGetApp().getMsg( "wiring" ) );
 
   // Index
