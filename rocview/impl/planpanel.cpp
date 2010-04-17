@@ -298,8 +298,9 @@ void PlanPanel::moveSelection(iONode sel) {
   int z  = NodeOp.getInt(sel, "z", 0);
   int cx = NodeOp.getInt(sel, "cx", 0);
   int cy = NodeOp.getInt(sel, "cy", 0);
-  int destx = NodeOp.getInt(sel, "destx", 0);
-  int desty = NodeOp.getInt(sel, "desty", 0);
+  int destx = NodeOp.getInt(sel, "destx", x);
+  int desty = NodeOp.getInt(sel, "desty", y);
+  int destz = NodeOp.getInt(sel, "destz", z);
 
   /* prepare notify RocRail */
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "move selection" );
@@ -333,7 +334,7 @@ void PlanPanel::moveSelection(iONode sel) {
       wItem.setid( move, wItem.getid(props) );
       wItem.setx( move, wItem.getx(props) + destx - x );
       wItem.sety( move, wItem.gety(props) + desty - y );
-      wItem.setz( move, z );
+      wItem.setz( move, destz );
       wModelCmd.setcmd( move, wModelCmd.move );
       item->modelEvent(move);
 
@@ -366,8 +367,9 @@ void PlanPanel::copySelection(iONode sel) {
   int z  = NodeOp.getInt(sel, "z", 0);
   int cx = NodeOp.getInt(sel, "cx", 0);
   int cy = NodeOp.getInt(sel, "cy", 0);
-  int destx = NodeOp.getInt(sel, "destx", 0);
-  int desty = NodeOp.getInt(sel, "desty", 0);
+  int destx = NodeOp.getInt(sel, "destx", x);
+  int desty = NodeOp.getInt(sel, "desty", y);
+  int destz = NodeOp.getInt(sel, "destz", z);
 
   /* prepare notify RocRail */
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copy selection" );
@@ -390,7 +392,7 @@ void PlanPanel::copySelection(iONode sel) {
       wItem.setid( copy, newid );
       wItem.setx( copy, wItem.getx(props) + destx - x );
       wItem.sety( copy, wItem.gety(props) + desty - y );
-      wItem.setz( copy, z );
+      wItem.setz( copy, destz );
       NodeOp.setBool( copy, "copy", True );
 
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copy [%s] from(%d,%d) to (%d,%d)",
