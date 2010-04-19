@@ -1136,6 +1136,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
         wSwitch.setaddr2( nodeD, wSwitch.getaddr2( data->props ) );
         wSwitch.setport2( nodeD, wSwitch.getport2( data->props ) );
       }
+      if( data->lockedId != NULL )
+        wSwitch.setlocid( nodeD, data->lockedId );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
     }
   }
