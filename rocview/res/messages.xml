@@ -13487,4 +13487,9 @@
   <Msg id="ignorepowercmds">
     <en txt="Ignore power commands"/>
   </Msg>
+  <Msg id="manually">
+    <en txt="Manually"/>
+    <de txt="Manuell"/>
+    <nl txt="Manueel"/>
+  </Msg>
 </Messages>

@@ -234,7 +234,7 @@ void RouteDialog::initLabels() {
   m_CrossingblockSignals->SetLabel( wxGetApp().getMsg( "crossingblocksignals" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
   m_Show->SetLabel( wxGetApp().getMsg( "show" ) );
-  m_Manual->SetLabel( wxGetApp().getMsg( "manual" ) );
+  m_Manual->SetLabel( wxGetApp().getMsg( "manually" ) );
 
   // Commands
   m_Add->SetLabel( wxGetApp().getMsg( "add" ) );
