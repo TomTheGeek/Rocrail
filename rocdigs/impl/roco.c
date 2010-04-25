@@ -266,9 +266,9 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
 
   } /* end sensor */
 
-  /* SM response Direct CV mode: */
+  /* SM response Direct CV mode; cv 1 is returned as 0 */
   if( in[0] == 0x44 && in[1] == 0xF2 ) {
-    int cv = in[2];
+    int cv = in[2] + 1;
     int value = in[3];
     iONode node = NULL;
 
@@ -337,7 +337,7 @@ static void __initializer( void* threadinst ) {
     sensorstate[i] = 0;
 
 
-  // tree times the confirmation
+  // three times the confirmation
   byte* outa = allocMem(256);
   outa[0] = 1;
   outa[1] = 0x10;
@@ -607,9 +607,9 @@ static void __transactor( void* threadinst ) {
            responceRecieved = True;
         }
 
-        // Answer cv read/write
+        // Answer cv read/write; cv 1 is returned with 0
         else if ( (in[0] == 0x44 || in[0] == 0x42)&& in[1] == 0xF2 ){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CV %d = %d", in[2], in[3]);
+           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CV %d = %d", in[2] + 1, in[3]);
            responceRecieved = True;
         }
 
