@@ -266,13 +266,14 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
 
   } /* end sensor */
 
-  /* SM response Direct CV mode; cv 1 is returned as 0 */
-  if( in[0] == 0x44 && in[1] == 0xF2 ) {
+  /* SM response Direct CV mode; cv numbers have -1 offset; cv 1 is returned as 0
+     0x44 is answer on cv read, 0x42 on cv write */
+  if( (in[0] == 0x44 || in[0] == 0x42) && in[1] == 0xF2 ) {
     int cv = in[2] + 1;
     int value = in[3];
     iONode node = NULL;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cv %d has a value of %d", cv, value );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cv %d %s a value of %d", cv, in[0]==0x42?"set to":"has", value );
 
     node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcv( node, cv );
@@ -283,6 +284,13 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
 
     if( data->listenerFun != NULL && data->listenerObj != NULL )
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+    /* turn off Pt after answer */
+    byte* outb = allocMem(256);
+    outb[0] = 2;
+    outb[1] = 0x40;
+    outb[2] = 0xF0;
+    ThreadOp.post( data->transactor, (obj)outb );
   } /* end SM response Direct CV mode: */
 
 }
