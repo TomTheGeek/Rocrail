@@ -426,7 +426,9 @@ void OpenDCCCtrlDlg::writeAll() {
   if( m_soValue[so_dcc_format] != m_DecSpeedSteps->GetSelection() ) {
     sendSet( so_dcc_format, m_DecSpeedSteps->GetSelection() );
   }
-  int bidi = m_BiDiCutOut->IsChecked()?0x01:0x00 + m_BiDiIdNotify->IsChecked()?0x02:0x00 + m_BiDiAccQuery->IsChecked()?0x04:0x00;
+  int bidi = (m_BiDiCutOut->IsChecked() ? 0x01:0x00);
+  bidi |= (m_BiDiIdNotify->IsChecked() ? 0x02:0x00);
+  bidi |= (m_BiDiAccQuery->IsChecked() ? 0x04:0x00);
   if( m_soValue[so_bidi] != bidi ) {
     sendSet( so_bidi, bidi );
   }
@@ -443,8 +445,8 @@ void OpenDCCCtrlDlg::writeAll() {
     sendSet( so_s88_bus3, m_S88Bus3->GetValue() );
   }
 
-  int mode = m_S88Active->IsChecked() ? 0x01:0x00;
-  mode |= m_S88TurnoutSensors->IsChecked() ? 0x02:0x00;
+  int mode = (m_S88Active->IsChecked() ? 0x01:0x00);
+  mode |= (m_S88TurnoutSensors->IsChecked() ? 0x02:0x00);
   if( m_soValue[so_s88_mode] != mode ) {
     sendSet( so_s88_mode, mode );
   }
@@ -478,6 +480,9 @@ void OpenDCCCtrlDlg::writeAll() {
   }
   if( m_soValue[so_sw_sensor_mode] != m_SwitchSensorMode->GetSelection() ) {
     sendSet( so_sw_sensor_mode, m_SwitchSensorMode->GetSelection() );
+  }
+  if( m_soValue[so_sw_sensor_offset] != m_SwitchSensorOffset->GetValue() ) {
+    sendSet( so_sw_sensor_offset, m_SwitchSensorOffset->GetValue() );
   }
 
   m_ReadCVs->Enable(true);
@@ -644,7 +649,6 @@ void OpenDCCCtrlDlg::evaluateGet( int so, int value ) {
   // 64 pairs starting with: so_loco_format_low, so_loco_format_high
   else if( so >= so_loco_format_low && so <= so_loco_format_high + 64*2 ) {
     TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "loco format %d = %d", so, value );
-    m_SwitchSensorMode->SetSelection( value );
 
     if( m_OpenDCCmode & mode_type_xpr ) {
       /* TODO: handle mode_type_xpr database */
