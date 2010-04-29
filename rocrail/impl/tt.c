@@ -879,6 +879,11 @@ static Boolean _setListener( iOTT inst, obj listenerObj, const tt_listener liste
 
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOTTData data = Data(inst);
+  if( wTurntable.getcmd(nodeA) == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
+    return False;
+  }
+
   if( StrOp.equals( wTurntable.getcmd(nodeA), wSwitch.unlock ) ) {
     TTOp.unLock( inst, data->lockedId );
   }
