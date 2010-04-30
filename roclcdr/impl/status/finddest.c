@@ -57,7 +57,8 @@ void statusFindDest( iILcDriverInt inst ) {
 
     /* evaluate departure time */
     if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
-        !checkScheduleTime( inst, data->schedule, data->scheduleIdx ) ){
+        !checkScheduleTime( inst, data->schedule, data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx ) ){
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"Waiting for schedule[%d]", data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx);
       wait = True;
     }
 
