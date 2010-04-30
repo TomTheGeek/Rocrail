@@ -99,16 +99,22 @@ void CV::CVconf() {
   iOStrTok tok = StrTokOp.inst( nrs, ',' );
   int nridx = 0;
   const char* nr = StrTokOp.nextToken(tok);
+  Boolean has17 = False;
+  Boolean has18 = False;
+
   while( nr != NULL ) {
     int cvnr = atoi(nr);
     m_CVall[nridx] = cvnr;
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
-
+    if( cvnr == 17 ) has17 = True;
+    if( cvnr == 18 ) has18 = True;
     nridx++;
     nr = StrTokOp.nextToken(tok);
   };
   StrTokOp.base.del( tok );
   m_CVcountAll = nridx;
+  if( has17 && !has18 )
+    m_CVcountAll++;
 }
 
 
