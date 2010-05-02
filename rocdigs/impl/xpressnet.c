@@ -239,7 +239,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep( data->swtime );
+      ThreadOp.sleep(100);
 
       /* deactivate the gate to be used */
       byte* outb = allocMem(32);
@@ -258,7 +258,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep( data->swtime );
+      ThreadOp.sleep(100);
 
       byte* outb = allocMem(32);
       outb[0] = 0x52;
@@ -300,7 +300,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep( data->swtime );
+      ThreadOp.sleep(100);
 
       byte* outb = allocMem(32);
       outb[0] = 0x52;
