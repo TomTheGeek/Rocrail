@@ -309,7 +309,7 @@ void ActionsCtrlDlg::initCondIDs() {
   iOList list = ListOp.inst();
 
   m_CondID->Clear();
-  m_CondID->Append( _T("") );
+  m_CondID->Append( _T("*") );
 
   if( model != NULL ) {
     iONode colist = wPlan.getswlist( model );

@@ -29,6 +29,8 @@
 
 #include "rocs/public/system.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
@@ -165,7 +167,46 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         }
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
-          rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
+          const char* state = wActionCond.getstate(actionCond);
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
+          rc = False;
+
+          if( lc != NULL && state[0] == '#' ) {
+            iOStrTok tok = StrTokOp.inst(state, ',');
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "check if loco address %d fits in [%s]", LocOp.getAddress(lc), state );
+            while( StrTokOp.hasMoreTokens(tok) ) {
+              const char* sAddr = StrTokOp.nextToken(tok);
+              char* sHAddr = StrOp.find( sAddr, "-" );
+              if( sHAddr != NULL ) {
+                int addr = 0;
+                int hAddr = atoi(sHAddr+1);
+                *sHAddr = '\0';
+                addr = atoi(sAddr+1);
+                if( LocOp.getAddress(lc) >= addr && LocOp.getAddress(lc) <= hAddr ) {
+                  rc = True;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco address %d fits in range [%d-%d]", LocOp.getAddress(lc), addr, hAddr );
+                  break; /* break out the while loop */
+                }
+              }
+              else {
+                int addr = atoi(sAddr+1);
+                if( addr == LocOp.getAddress(lc) ) {
+                  rc = True;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco address %d equals [%d]", LocOp.getAddress(lc), addr );
+                  break; /* break out the while loop */
+                }
+              }
+            };
+            StrTokOp.base.del(tok);
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
+            rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
+          }
         }
 
 
