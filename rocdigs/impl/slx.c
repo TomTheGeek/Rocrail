@@ -396,7 +396,8 @@ static void _halt( obj inst, Boolean poweroff ) {
   if( poweroff ) {
     byte cmd[2];
     cmd[0] = 127;
-    cmd[1] = 0;
+    cmd[0] |= WRITE_FLAG;
+    cmd[1] = 0x00;
     __transact( (iOSLX)inst, cmd, 2, NULL, 0, 0 );
   }
   SerialOp.close( data->serial );
