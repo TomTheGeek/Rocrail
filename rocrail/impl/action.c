@@ -153,14 +153,40 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         }
         else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
           iOFBack fb = ModelOp.getFBack( model, id );
-          const char* state = wActionCond.getstate(actionCond);
-          int ident = atoi(state);
+          const char* state = "";
+          const char* direction = NULL;
+          int ident = 0;
+
+          iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
+          if(StrTokOp.hasMoreTokens(tok))
+            state = StrTokOp.nextToken(tok);
+          if(StrTokOp.hasMoreTokens(tok))
+            direction = StrTokOp.nextToken(tok);
+          StrTokOp.base.del(tok);
+
+          ident = atoi(state);
           if( fb != NULL ) {
             if( ident > 0 && ident == FBackOp.getIdentifier(fb) )
               rc = True;
             else if( ident == 0 )
               rc = FBackOp.isState(fb, state );
+
+            if( rc && direction != NULL && lc != NULL ) {
+              /**/
+              Boolean dir = LocOp.getDir(lc);
+              if( StrOp.equals( "forwards", direction ) && !dir ) {
+                rc = False;
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                    "loco %s direction %s does not match [%s]", LocOp.getId(lc), dir?"forwards":"reverse", direction );
+              }
+              else if( StrOp.equals( "reverse", direction ) && dir ) {
+                rc = False;
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                    "loco %s direction %s does not match [%s]", LocOp.getId(lc), dir?"forwards":"reverse", direction );
+              }
+            }
           }
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
