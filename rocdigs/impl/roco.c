@@ -176,7 +176,7 @@ static void __handleSwitch(iORoco roco, int addr, int port, int value) {
   iORocoData data = Data(roco);
   int valuew = value;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %d", addr+1, port, value?"straight":"thrown" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %s", addr+1, port, value?"straight":"thrown" );
 
    {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
