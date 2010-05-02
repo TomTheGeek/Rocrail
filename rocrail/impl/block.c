@@ -315,7 +315,8 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   /* handle a dedicated ident event */
   if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
     /*if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {*/
-    if( fbevt != NULL && ident > 0 ) {
+    /*if( fbevt != NULL && ident > 0 ) {*/
+    if( ident > 0 ) {
       /* display ident code */
       char identString[32];
       StrOp.fmtb( identString, "%04d", ident );
@@ -352,6 +353,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
         ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
       }
     }
+
   }
   else if( ident > 0 ){
     /* reset ident */
