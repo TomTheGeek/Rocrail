@@ -577,6 +577,8 @@ static void __mergeList( const char* listname, iONode model, iONode module, int 
       wItem.setprev_y( child, wItem.gety(child) );
       if( wItem.getori(child) != NULL )
         wItem.setprev_ori( child, wItem.getori(child) );
+      else
+        wItem.setprev_ori( child, wItem.west ); /* set prev_ori to the default for andRoc */
 
       if( r == 180 && cx > 0 && cy > 0 )
         ModuleOp.rotate180( child, cx,cy );
