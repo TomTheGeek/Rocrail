@@ -395,10 +395,10 @@ void PlanPanel::copySelection(iONode sel) {
       wItem.setz( copy, destz );
       NodeOp.setBool( copy, "copy", True );
 
-      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copy [%s] from(%d,%d) to (%d,%d)",
+      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copy [%s] from(%d,%d,%d) to (%d,%d,%d)",
           wItem.getid(copy),
-          wItem.getx(props), wItem.gety(props),
-          wItem.getx(copy), wItem.gety(copy) );
+          wItem.getx(props), wItem.gety(props), wItem.getz(props),
+          wItem.getx(copy), wItem.gety(copy), wItem.getz(copy) );
       addItemAttr( copy );
     }
     node = (wxNode*)m_ChildTable->Next();
@@ -974,6 +974,9 @@ void PlanPanel::addItemAttr( iONode node ) {
     wItem.setx( node, m_X+x );
     wItem.sety( node, m_Y+y );
     wItem.setz( node, m_Z );
+  }
+  else {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copied item added, z=%d", wItem.getz(node) );
   }
 
   if( wxGetApp().isOffline() ) {

@@ -169,11 +169,13 @@ void SelectDialog::evaluate() {
   m_destY = m_TargetY->GetValue();
   m_action = m_ActionBox->GetSelection();
   if( wxNOT_FOUND != m_Level->GetSelection() ) {
-    iONode zlevel = (iONode)m_Level->GetClientData();
+    iONode zlevel = (iONode)m_Level->GetClientData(m_Level->GetSelection());
     m_destZ = wZLevel.getz(zlevel);
     m_destTitle = wZLevel.gettitle(zlevel);
+    TraceOp.trc( "seldlg", TRCLEVEL_INFO, __LINE__, 9999, "zlevel[%d] %s selected", m_destZ, m_destTitle );
   }
   else {
+    TraceOp.trc( "seldlg", TRCLEVEL_INFO, __LINE__, 9999, "no zlevel selected" );
     m_destTitle = "";
   }
 }
