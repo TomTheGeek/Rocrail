@@ -38,8 +38,14 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( "lbudp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet UDP reader started." );
 
   do {
-    int size = SocketOp.recvfrom( data->readUDP, ln, 0x7F );
-    TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)ln, size );
+    if( !data->udpPacketAvailable ) {
+      data->udpPacketSize = SocketOp.recvfrom( data->readUDP, data->udpPacket, 0x7F );
+      data->udpPacketAvailable = True;
+      TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)data->udpPacket, data->udpPacketSize );
+    }
+    else {
+      ThreadOp.sleep(10);
+    }
 
   } while( data->run );
 
@@ -56,24 +62,38 @@ Boolean lbUDPConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  data->udpPacketAvailable = False;
+
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True );
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True );
 
-  return False;
+  data->udpReader = ThreadOp.inst( "lnudpreader", &__reader, inst );
+  ThreadOp.start( data->udpReader );
+
+  return True;
 }
 
 void  lbUDPDisconnect( obj inst ) {
+  iOLocoNetData data = Data(inst);
 }
 
 int lbUDPRead ( obj inst, unsigned char *msg ) {
+  iOLocoNetData data = Data(inst);
+  if( data->udpPacketAvailable ) {
+    MemOp.copy( msg, data->udpPacket, data->udpPacketSize );
+    data->udpPacketAvailable = False;
+    return data->udpPacketSize;
+  }
   return 0;
 }
 
 Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
-  return False;
+  iOLocoNetData data = Data(inst);
+  return SocketOp.sendto( data->writeUDP, msg, len );
 }
 
 Boolean lbUDPAvailable( obj inst ) {
-  return False;
+  iOLocoNetData data = Data(inst);
+  return data->udpPacketAvailable;
 }

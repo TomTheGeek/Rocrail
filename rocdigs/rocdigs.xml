@@ -600,6 +600,10 @@
       <var name="cts" vt="Boolean"/>
       <var name="fcsync" vt="Boolean"/>
       <var name="powerison" vt="Boolean"/>
+      <var name="udpPacket[0x7F]" vt="byte"/>
+      <var name="udpPacketAvailable" vt="Boolean"/>
+      <var name="udpPacketSize" vt="int"/>
+      <var name="udpReader" vt="iOThread"/>
     </data>
   </object>
 
