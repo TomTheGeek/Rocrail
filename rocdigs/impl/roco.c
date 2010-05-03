@@ -33,7 +33,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
-
+#include "rocrail/wrapper/public/State.h"
 #include "rocdigs/impl/common/fada.h"
 
 static int instCnt = 0;
@@ -583,13 +583,39 @@ static void __transactor( void* threadinst ) {
         /* INCOMING COMMANDS */
          // Track Power OFF
         else if( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x00) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
+          data->power = False;
+
+          iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wState.setiid( node, data->iid );
+          wState.setpower( node, False );
+          wState.settrackbus( node, False );
+          wState.setsensorbus( node, False );
+          wState.setaccessorybus( node, False );
+
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+          responceRecieved = True;
         }
         // Normal operation resumed
         else if( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x01) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Normal operation resumed.");
-           responceRecieved = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Normal operation resumed.");
+          data->power = True;
+
+          iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wState.setiid( node, data->iid );
+          wState.setpower( node, True );
+          wState.settrackbus( node, True );
+          wState.setsensorbus( node, True );
+          wState.setaccessorybus( node, True );
+
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+          responceRecieved = True;
         }
         // CS busy
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x81){
