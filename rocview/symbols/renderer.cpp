@@ -1442,43 +1442,43 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSignal.yellow ) ) {
-    if( actroute && m_SvgSym10 != NULL)
-      drawSvgSym(dc, m_SvgSym10, ori);
-    else if( occupied && m_SvgSym5 != NULL)
+    if( occupied && m_SvgSym5 != NULL)
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym10 != NULL)
+      drawSvgSym(dc, m_SvgSym10, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym3!=NULL && StrOp.equals( state, wSignal.green ) ) {
-    if( actroute && m_SvgSym11 != NULL)
-      drawSvgSym(dc, m_SvgSym11, ori);
-    else if( occupied && m_SvgSym6 != NULL)
+    if( occupied && m_SvgSym6 != NULL)
       drawSvgSym(dc, m_SvgSym6, ori);
+    else if( actroute && m_SvgSym11 != NULL)
+      drawSvgSym(dc, m_SvgSym11, ori);
     else
       drawSvgSym(dc, m_SvgSym3, ori);
   }
   else if( m_SvgSym7!=NULL && StrOp.equals( state, wSignal.white ) ) {
-    if( actroute && m_SvgSym12 != NULL)
-      drawSvgSym(dc, m_SvgSym12, ori);
-    else if( occupied && m_SvgSym8 != NULL)
+    if( occupied && m_SvgSym8 != NULL)
       drawSvgSym(dc, m_SvgSym8, ori);
+    else if( actroute && m_SvgSym12 != NULL)
+      drawSvgSym(dc, m_SvgSym12, ori);
     else
       drawSvgSym(dc, m_SvgSym7, ori);
   }
   else if( m_SvgSym2!=NULL && ( StrOp.equals( state, wSignal.green ) || StrOp.equals( state, wSignal.white ) ) && aspects == 2 ) {
     /* default to yellow aspect */
-    if( actroute && m_SvgSym11 != NULL)
-      drawSvgSym(dc, m_SvgSym11, ori);
-    else if( occupied && m_SvgSym5 != NULL)
+    if( occupied && m_SvgSym5 != NULL)
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym11 != NULL)
+      drawSvgSym(dc, m_SvgSym11, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( actroute && m_SvgSym9 != NULL)
-      drawSvgSym(dc, m_SvgSym9, ori);
-    else if( occupied && m_SvgSym4 != NULL)
+    if( occupied && m_SvgSym4 != NULL)
       drawSvgSym(dc, m_SvgSym4, ori);
+    else if( actroute && m_SvgSym9 != NULL)
+      drawSvgSym(dc, m_SvgSym9, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
@@ -1620,10 +1620,55 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
  */
 void SymbolRenderer::drawStage( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
   m_bRotateable = true;
+  int len = 4;
+
   if( m_SvgSym1 != NULL )
   {
     drawSvgSym(dc, m_SvgSym1, ori);
   }
+
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+  //wxFont* font = new wxFont( dc.GetFont() );
+  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  //dc.SetFont(*font);
+#else
+  wxFont* font = new wxFont( dc.GetFont() );
+  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  dc.SetFont(*font);
+#endif
+
+  if( StrOp.len(m_Label) > 0 ) {
+    wxColour tfc = dc.GetTextForeground();
+
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+
+
+    iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
+    if( planpanelIni != NULL ) {
+      red = wPlanPanel.getbktext_red(planpanelIni);
+      green = wPlanPanel.getbktext_green(planpanelIni);
+      blue = wPlanPanel.getbktext_blue(planpanelIni);
+    }
+
+    dc.SetTextForeground(wxColour(red,green,blue));
+
+    if( StrOp.equals( ori, wItem.south ) )
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
+    else if( StrOp.equals( ori, wItem.north ) )
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * len)-3, 90.0 );
+    else
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 3, 5, 0.0 );
+
+    // restore previous color
+    dc.SetTextForeground(tfc);
+  }
+
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+#else
+  delete font;
+#endif
 }
 
 
