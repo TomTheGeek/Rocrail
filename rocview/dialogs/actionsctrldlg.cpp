@@ -139,7 +139,7 @@ void ActionsCtrlDlg::initLabels() {
 
   m_Auto->SetLabel( wxGetApp().getMsg( "mode" ) );
   m_Auto->SetString( 0, wxGetApp().getMsg( "auto" ) );
-  m_Auto->SetString( 1, wxGetApp().getMsg( "manual" ) );
+  m_Auto->SetString( 1, wxGetApp().getMsg( "manually" ) );
   m_Auto->SetString( 2, wxGetApp().getMsg( "both" ) );
   m_Auto->SetSelection(2);
 
