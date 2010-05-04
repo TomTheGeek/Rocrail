@@ -331,6 +331,14 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
 
 }
 
+void Symbol::setPanel(PlanPanel* panel){
+  m_PlanPanel = panel;
+  Reparent(panel);
+  sizeToScale();
+
+}
+
+
 bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( wxGetApp().isOffline() ) {
     /**/
@@ -432,12 +440,17 @@ void Symbol::sizeToScale() {
 
   if( m_Z != z ) {
     Show( false );
-    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "item %s: z level does not match %d!=%d", name, m_Z, z );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "item %s, %s: z level does not match %d!=%d",
+        name, wItem.getid( m_Props ), m_Z, z );
   }
   else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
            StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) || StrOp.equals( wStage.name(), name ) ) {
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s, %s in level %d",
+        wOutput.isshow(m_Props), name, wItem.getid( m_Props ), m_Z);
     Show(wOutput.isshow(m_Props));
+  }
+  else {
+    Show(true);
   }
 
   int cx = 1;

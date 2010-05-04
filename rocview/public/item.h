@@ -99,6 +99,8 @@ public:
   void routeEvent( const char* id, bool locked );
   void disable();
   void locoDropped() {m_locoIsDropped = true;};
+  void setZ(int z){m_Z = z;}
+  void setPanel(PlanPanel* panel);
 
 private:
   SymbolRenderer* m_Renderer;

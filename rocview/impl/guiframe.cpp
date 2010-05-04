@@ -543,6 +543,23 @@ void RocGuiFrame::RemoveNotebookPage( iONode zlevel  ) {
 }
 
 
+void RocGuiFrame::putChild( void* item, int z  ) {
+  if( m_ModPanel != NULL ) {
+    // Not supported;
+  }
+  else {
+    int pages = m_PlanNotebook->GetPageCount();
+    for( int i = 0; i < pages; i++ ) {
+      PlanPanel* p = (PlanPanel*)m_PlanNotebook->GetPage(i);
+      if( z == p->getZ() ) {
+        p->putChild(item);
+        break;
+      }
+    }
+  }
+}
+
+
 void RocGuiFrame::OnPageChange(wxNotebookEvent& event) {
   if( event.GetEventObject() == m_PlanNotebook ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "select changed from %d to %d",

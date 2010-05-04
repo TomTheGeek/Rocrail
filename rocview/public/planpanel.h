@@ -99,6 +99,7 @@ public:
   void refresh(bool eraseBackground = true);
   void setPosition();
   bool isRouteLocked(const char* id);
+  void putChild(void* item);
   iONode m_zLevel;
   int m_Z;
   const char* m_Ori;

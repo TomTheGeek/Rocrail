@@ -1159,6 +1159,19 @@ void PlanPanel::addItemCmd(wxCommandEvent& event) {
   addItem( child );
 }
 
+void PlanPanel::putChild(void* item) {
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "put moved Item at level %d", m_Z );
+
+  Symbol* child = (Symbol*)item;
+  char key[256];
+  itemKey( child->getProperties(), key, NULL );
+  m_ChildTable->Put( wxString(key,wxConvUTF8), child );
+  child->setZ(m_Z);
+  child->setPanel(this);
+  child->Refresh();
+}
+
+
 void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
@@ -1180,12 +1193,26 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   else if( item != NULL ) {
     item->modelEvent( node );
     TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s is informed", key );
+
+    if( wItem.getz(item->getProperties()) != this->m_Z ) {
+      m_ChildTable->Delete(wxString(prevkey,wxConvUTF8));
+      // TODO: put it in the right z panel
+      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "move Item to level %d", wItem.getz(item->getProperties()) );
+      wxGetApp().getFrame()->putChild(item, wItem.getz(item->getProperties()));
+    }
   }
   else if( StrOp.len(prevkey) > 0 && (item = (Symbol*)m_ChildTable->Get( wxString(prevkey,wxConvUTF8) )) ) {
     if( item != NULL ) {
       item->modelEvent( node );
       m_ChildTable->Delete(wxString(prevkey,wxConvUTF8));
-      m_ChildTable->Put( wxString(key,wxConvUTF8), item);
+      // check the zlevel
+      if( wItem.getz(item->getProperties()) == this->m_Z )
+        m_ChildTable->Put( wxString(key,wxConvUTF8), item);
+      else {
+        // TODO: put it in the right z panel
+        TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "move Item to level %d", wItem.getz(item->getProperties()) );
+        wxGetApp().getFrame()->putChild(item, wItem.getz(item->getProperties()));
+      }
     }
     else
       TraceOp.trc( "plan", TRCLEVEL_WARNING, __LINE__, 9999, "Item with id=%s not found!", key );

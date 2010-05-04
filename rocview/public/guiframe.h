@@ -280,6 +280,7 @@ public:
   void setOffline( bool p_bOffline );
   void initFrame();
   void Connect( const char* host, int port, bool wait4rr=false );
+  void putChild( void* item, int z  );
 
 
 private:
