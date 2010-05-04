@@ -347,6 +347,8 @@ void PlanPanel::moveSelection(iONode sel) {
     node = (wxNode*)m_ChildTable->Next();
   }
 
+  // TODO: if the move is to another level, remove from this child table and put it in the other
+
   /* notify RocRail */
   if( NodeOp.getChildCnt(cmd) > 0 ) {
     if( !wxGetApp().isOffline() )
@@ -358,6 +360,7 @@ void PlanPanel::moveSelection(iONode sel) {
   cmd->base.del(cmd);
 
   NodeOp.base.del(move);
+
 }
 
 
