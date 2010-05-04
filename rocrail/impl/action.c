@@ -231,7 +231,29 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
-            rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
+            if( StrOp.equals("*", id ) ) {
+              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
+              if( lc != NULL ) {
+                Boolean dir = LocOp.getDir(lc);
+                rc = True;
+                if( StrOp.equals( "forwards", wActionCond.getstate(actionCond) ) && !dir ) {
+                  rc = False;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco %s direction %s does not match [%s]", LocOp.getId(lc),
+                      dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
+                }
+                else if( StrOp.equals( "reverse", wActionCond.getstate(actionCond) ) && dir ) {
+                  rc = False;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco %s direction %s does not match [%s]", LocOp.getId(lc),
+                      dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
+                }
+              }
+              else
+                rc = False;
+            }
+            else
+              rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
           }
         }
 
