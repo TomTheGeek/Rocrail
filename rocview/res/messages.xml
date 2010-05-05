@@ -13492,4 +13492,7 @@
     <de txt="Manuell"/>
     <nl txt="Manueel"/>
   </Msg>
+  <Msg id="evtcorrection">
+    <en txt="Event correction"/>
+  </Msg>
 </Messages>
