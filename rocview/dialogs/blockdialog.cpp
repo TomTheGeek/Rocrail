@@ -107,6 +107,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END1, BlockDialog::OnBlockSensor )
 
+    EVT_CHECKBOX( ID_BLOCK_SENS1_T2, BlockDialog::OnBlockSensor )
+
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS1, BlockDialog::OnSensorProps )
 
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID2, BlockDialog::OnBlockSensor )
@@ -114,6 +116,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION2, BlockDialog::OnBlockSensor )
 
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END2, BlockDialog::OnBlockSensor )
+
+    EVT_CHECKBOX( ID_BLOCK_SENS2_T2, BlockDialog::OnBlockSensor )
 
     EVT_BUTTON( ID_BUTTON_BLOCK_SENSOR_PROPS2, BlockDialog::OnSensorProps )
 
@@ -123,6 +127,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END3, BlockDialog::OnBlockSensor )
 
+    EVT_CHECKBOX( ID_BLOCK_SENS3_T2, BlockDialog::OnBlockSensor )
+
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS3, BlockDialog::OnSensorProps )
 
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID4, BlockDialog::OnBlockSensor )
@@ -131,6 +137,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END4, BlockDialog::OnBlockSensor )
 
+    EVT_CHECKBOX( ID_BLOCK_SENS4_T2, BlockDialog::OnBlockSensor )
+
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS4, BlockDialog::OnSensorProps )
 
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID5, BlockDialog::OnBlockSensor )
@@ -138,6 +146,8 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION5, BlockDialog::OnBlockSensor )
 
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END5, BlockDialog::OnBlockSensor )
+
+    EVT_CHECKBOX( ID_BLOCK_SENS5_T2, BlockDialog::OnBlockSensor )
 
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS5, BlockDialog::OnSensorProps )
 
@@ -1588,7 +1598,7 @@ void BlockDialog::CreateControls()
     m_SensorEnd1->SetValue(false);
     itemFlexGridSizer109->Add(m_SensorEnd1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Tim2_1 = new wxCheckBox( m_RoutesPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Tim2_1 = new wxCheckBox( m_RoutesPanel, ID_BLOCK_SENS1_T2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_Tim2_1->SetValue(false);
     itemFlexGridSizer109->Add(m_Tim2_1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1607,7 +1617,7 @@ void BlockDialog::CreateControls()
     m_SensorEnd2->SetValue(false);
     itemFlexGridSizer109->Add(m_SensorEnd2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Tim2_2 = new wxCheckBox( m_RoutesPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Tim2_2 = new wxCheckBox( m_RoutesPanel, ID_BLOCK_SENS2_T2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_Tim2_2->SetValue(false);
     itemFlexGridSizer109->Add(m_Tim2_2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1626,7 +1636,7 @@ void BlockDialog::CreateControls()
     m_SensorEnd3->SetValue(false);
     itemFlexGridSizer109->Add(m_SensorEnd3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Tim2_3 = new wxCheckBox( m_RoutesPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Tim2_3 = new wxCheckBox( m_RoutesPanel, ID_BLOCK_SENS3_T2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_Tim2_3->SetValue(false);
     itemFlexGridSizer109->Add(m_Tim2_3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1645,7 +1655,7 @@ void BlockDialog::CreateControls()
     m_SensorEnd4->SetValue(false);
     itemFlexGridSizer109->Add(m_SensorEnd4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Tim2_4 = new wxCheckBox( m_RoutesPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Tim2_4 = new wxCheckBox( m_RoutesPanel, ID_BLOCK_SENS4_T2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_Tim2_4->SetValue(false);
     itemFlexGridSizer109->Add(m_Tim2_4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1664,7 +1674,7 @@ void BlockDialog::CreateControls()
     m_SensorEnd5->SetValue(false);
     itemFlexGridSizer109->Add(m_SensorEnd5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Tim2_5 = new wxCheckBox( m_RoutesPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Tim2_5 = new wxCheckBox( m_RoutesPanel, ID_BLOCK_SENS5_T2, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     m_Tim2_5->SetValue(false);
     itemFlexGridSizer109->Add(m_Tim2_5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
