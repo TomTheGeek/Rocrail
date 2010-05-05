@@ -903,6 +903,7 @@ bool BlockDialog::evaluate() {
   wBlock.setmvmph( m_Props, m_MPH->IsChecked()?True:False );
 
   wBlock.setevttimer( m_Props, atoi( m_Timer->GetValue().mb_str(wxConvUTF8) ) );
+  wBlock.setevttimer2( m_Props, atoi( m_Timer2->GetValue().mb_str(wxConvUTF8) ) );
 
   // Interface
   wBlock.setiid( m_Props, m_iid->GetValue().mb_str(wxConvUTF8) );
@@ -1682,7 +1683,7 @@ void BlockDialog::CreateControls()
     m_labTimer2 = new wxStaticText( m_RoutesPanel, wxID_ANY, _("Timer 2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer140->Add(m_labTimer2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Timer2 = new wxTextCtrl( m_RoutesPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Timer2 = new wxTextCtrl( m_RoutesPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Timer2->SetMaxLength(5);
     itemBoxSizer140->Add(m_Timer2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
