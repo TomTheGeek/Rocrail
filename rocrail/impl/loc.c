@@ -1155,9 +1155,17 @@ static void __runner( void* threadinst ) {
 
     if( data->driver != NULL ) {
       if( timer > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", wLoc.getevttimer(data->props) );
-        if( wLoc.getevttimer(data->props) > 0 )
+        if( wLoc.getevttimer(data->props) > 0 ) {
           timer = wLoc.getevttimer(data->props);
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+        } else if( event == in_event ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms * %d %%", timer, wLoc.getent2incorr(data->props) );
+          timer = timer * wLoc.getent2incorr(data->props) / 100;
+          if( timer < 1 )
+            timer = 1;
+        } else {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+        }
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
         ThreadOp.sleep( timer );
       }

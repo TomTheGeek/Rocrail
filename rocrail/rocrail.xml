@@ -141,6 +141,7 @@
       <var name="props" vt="iONode" remark="Block properties"/>
       <var name="fbEvents" vt="iOMap"/>
       <var name="timer" vt="int" remark="event timer"/>
+      <var name="timer2" vt="int" remark="event timer reverse direction"/>
       <var name="indelay" vt="int" remark="in event delay timer"/>
       <var name="muxLock" vt="iOMutex"/>
       <var name="mvMillis" vt="int"/>

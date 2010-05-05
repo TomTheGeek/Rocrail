@@ -390,16 +390,22 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
     }
 
     if( evt == enter2in_event ) {
+      int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       LocOp.event( loc, manager, enter_event, 0 );
       if( data->indelay > 0 )
         LocOp.event( loc, manager, in_event, data->indelay );
       else
-        LocOp.event( loc, manager, in_event, data->timer > 0 ? data->timer:1 );
+        LocOp.event( loc, manager, in_event, timing > 0 ? timing:1 );
     }
     else if( evt == in_event ) {
-      /* an in event delay can be set with lock for a schedule entry */
-      LocOp.event( loc, manager, in_event, data->indelay );
-      data->indelay = 0;
+      int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
+      if( data->indelay > 0 ){
+        /* an in event delay can be set with lock for a schedule entry */
+        LocOp.event( loc, manager, in_event, data->indelay );
+        data->indelay = 0;
+      } else {
+        LocOp.event( loc, manager, in_event, timing );
+      }
     }
     else
       LocOp.event( loc, manager, evt, 0 );
@@ -1729,7 +1735,8 @@ static void _modify( iOBlock inst, iONode props ) {
     __initFeedbackEvents( inst );
 
     /* re-init timer */
-    data->timer = wBlock.getevttimer( data->props );
+    data->timer  = wBlock.getevttimer( data->props );
+    data->timer2 = wBlock.getevttimer2( data->props );
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
@@ -1846,6 +1853,7 @@ static iOBlock _inst( iONode props ) {
   data->minbklc = wCtrl.getminbklc( AppOp.getIniNode( wCtrl.name() ) );
   data->fbEvents = MapOp.inst();
   data->timer = wBlock.getevttimer( props );
+  data->timer2 = wBlock.getevttimer2( data->props );
   data->id = wBlock.getid( props );
 
   wBlock.setreserved( data->props, False );

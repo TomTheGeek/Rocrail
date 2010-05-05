@@ -1193,6 +1193,7 @@
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Distance between enter and in event to check with train length."/>
         <var name="gomanual" vt="bool" defval="true" remark="allow half-automatic mode"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
+        <var name="evttimer2" vt="int" defval="0" range="0-*" unit="ms" remark="event timer reverse direction; loc should wait this time before processing the event"/>
         <var name="acceptghost" vt="bool" defval="false" remark="accept a ghosttrain and signal the block occupied."/>
         <var name="terminalstation" vt="bool" defval="false" remark="swap placing of an incomming loc to get another default direction.(terminal station)"/>
         <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>
@@ -1294,6 +1295,7 @@
           <const name="from_all_reverse" vt="string" val="all-reverse"/>
           <var name="from" vt="string" defval="" range="*" remark="from block id (csv list for more blocks)"/>
           <var name="byroute" vt="string" defval="" range="*" remark="Comming from block x by route y. (optional)"/>
+          <var name="use_timer2" vt="bool" defval="false" remark="use reverse direction timer"/>
         </fbevent>
       </bk>
     </bklist>
@@ -1668,6 +1670,7 @@
         <var name="mtime" vt="long" defval="0" remark="last maintenance in seconds"/>
         <var name="mint" vt="int" defval="0" remark="maintenance interval in hours"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
+        <var name="ent2incorr" vt="int" defval="100" range="1-*" unit="%" remark="Correction percentage for enter2in block timer"/>
 
         <const name="mode_idle" vt="string" val="idle"/>
         <const name="mode_wait" vt="string" val="wait"/>
