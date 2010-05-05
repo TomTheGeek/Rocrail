@@ -219,17 +219,17 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   __dec2bin( &b3[0], i3);
 
   /* tunout */
-  if ( i0 == 0x42 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
-    int baseadress = i1;
+  if ( i1 == 0x42 && i2 <= 0x80 && (b3[1] == 0 && b3[2] == 0) || (b3[1] == 0 && b3[2] == 1)) {
+    int baseadress = i2;
     int k, start;
 
-    if( b2[3] == 0 )
+    if( b3[3] == 0 )
       start = 1;
     else
       start = 3;
 
     for (k = 0; k < 2; k++) {
-      __handleSwitch(roco, baseadress, start+k, b2[7-k*2]);
+      __handleSwitch(roco, baseadress, start+k, b3[7-k*2]);
     }
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Updating roco turnouts in group: %d", baseadress );
 
