@@ -1770,9 +1770,12 @@ void Symbol::modelEvent( iONode node ) {
   if( StrOp.equals( NodeOp.getName( node ), NodeOp.getName( m_Props ) ) ) {
     int x = wItem.getx( node );
     int y = wItem.gety( node );
-    int z = wItem.getz( node );
 
-    wItem.setz( m_Props, z );
+    if( NodeOp.findAttr(node, "z") ) {
+      int z = wItem.getz( node );
+      wItem.setz( m_Props, z );
+    }
+
     if( x != -1 && y != -1 ) {
       wItem.setx( m_Props, x );
       wItem.sety( m_Props, y );
