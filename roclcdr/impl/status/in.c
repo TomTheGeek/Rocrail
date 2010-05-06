@@ -81,6 +81,8 @@ void statusIn( iILcDriverInt inst ) {
     data->next2Block = data->next3Block;
     data->next3Block = NULL;
     data->next1Block->link( data->next1Block, data->curBlock );
+    data->next1RouteFromTo = data->next2RouteFromTo;
+    data->next2RouteFromTo = data->next3RouteFromTo;
 
     data->state = LC_CHECKROUTE;
 
@@ -111,6 +113,8 @@ void statusIn( iILcDriverInt inst ) {
     data->next2Block = data->next3Block;
     data->next3Block = NULL;
     data->next1Block->link( data->next1Block, data->curBlock );
+    data->next1RouteFromTo = data->next2RouteFromTo;
+    data->next2RouteFromTo = data->next3RouteFromTo;
 
     data->state = LC_PRE2GO;
 
