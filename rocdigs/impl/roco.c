@@ -218,8 +218,8 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   __dec2bin( &b2[0], i2);
   __dec2bin( &b3[0], i3);
 
-  /* tunout */
-  if ( i1 == 0x42 && i2 <= 0x80 && (b3[1] == 0 && b3[2] == 0) || (b3[1] == 0 && b3[2] == 1)) {
+  /* switch */
+  if ( i0 == 0x00 && i1 == 0x42 && i2 <= 0x80 && (b3[1] == 0 && b3[2] == 0) || (b3[1] == 0 && b3[2] == 1)) {
     int baseadress = i2;
     int k, start;
 
@@ -231,9 +231,9 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
     for (k = 0; k < 2; k++) {
       __handleSwitch(roco, baseadress, start+k, b3[7-k*2]);
     }
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Updating roco turnouts in group: %d", baseadress );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Updating roco switches in group: %d", baseadress );
 
-  } /* end tunout */
+  } /* end switch */
 
 
   /* sensor */
