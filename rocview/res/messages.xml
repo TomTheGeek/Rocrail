@@ -836,7 +836,7 @@
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
-    <en txt="Reset all" tip="Reset automat but save current block occupation."/>
+    <en txt="Soft reset" tip="Reset automat but save current block occupation."/>
     <nl txt="Reset" tip="Reset automaat mode met behoud van blok bezettingen."/>
     <sv txt="Återställ" tip="Återställ"/>
     <fr txt="Réinitialiser les machines" tip="Remise à zéro de toutes les machines."/>
