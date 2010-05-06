@@ -439,10 +439,23 @@ void SwitchDialog::initValues() {
     }
   }
 
-  m_Fb1R->SetStringSelection( wSwitch.getfbR (m_Props)==NULL?_T("-"):wxString(wSwitch.getfbR (m_Props),wxConvUTF8) );
-  m_Fb1G->SetStringSelection( wSwitch.getfbG (m_Props)==NULL?_T("-"):wxString(wSwitch.getfbG (m_Props),wxConvUTF8) );
-  m_Fb2R->SetStringSelection( wSwitch.getfb2R(m_Props)==NULL?_T("-"):wxString(wSwitch.getfb2R(m_Props),wxConvUTF8) );
-  m_Fb2G->SetStringSelection( wSwitch.getfb2G(m_Props)==NULL?_T("-"):wxString(wSwitch.getfb2G(m_Props),wxConvUTF8) );
+  if( wSwitch.getfbR (m_Props)==NULL || StrOp.len(wSwitch.getfbR (m_Props)) == 0 )
+    m_Fb1R->SetStringSelection( _T("-") );
+  else
+    m_Fb1R->SetStringSelection( wxString(wSwitch.getfbR (m_Props),wxConvUTF8) );
+  if( wSwitch.getfbG (m_Props)==NULL || StrOp.len(wSwitch.getfbG (m_Props)) == 0 )
+    m_Fb1G->SetStringSelection( _T("-") );
+  else
+    m_Fb1G->SetStringSelection( wxString(wSwitch.getfbG (m_Props),wxConvUTF8) );
+
+  if( wSwitch.getfb2R (m_Props)==NULL || StrOp.len(wSwitch.getfb2R (m_Props)) == 0 )
+    m_Fb2R->SetStringSelection( _T("-") );
+  else
+    m_Fb2R->SetStringSelection( wxString(wSwitch.getfb2R (m_Props),wxConvUTF8) );
+  if( wSwitch.getfb2G (m_Props)==NULL || StrOp.len(wSwitch.getfb2G (m_Props)) == 0 )
+    m_Fb2G->SetStringSelection( _T("-") );
+  else
+    m_Fb2G->SetStringSelection( wxString(wSwitch.getfb2G (m_Props),wxConvUTF8) );
 
   m_Fb1Rinvert->SetValue( wSwitch.isfbRinv(m_Props) );
   m_Fb1Ginvert->SetValue( wSwitch.isfbGinv(m_Props) );
@@ -612,20 +625,20 @@ bool SwitchDialog::evaluate() {
 
   // Wiring
   if( StrOp.equals( "-", m_Fb1R->GetStringSelection().mb_str(wxConvUTF8) ) )
-    wSwitch.setfbR( m_Props, NULL );
+    wSwitch.setfbR( m_Props, "" );
   else
     wSwitch.setfbR( m_Props, m_Fb1R->GetStringSelection().mb_str(wxConvUTF8) );
   if( StrOp.equals( "-", m_Fb1G->GetStringSelection().mb_str(wxConvUTF8) ) )
-    wSwitch.setfbG( m_Props, NULL );
+    wSwitch.setfbG( m_Props, "" );
   else
     wSwitch.setfbG( m_Props, m_Fb1G->GetStringSelection().mb_str(wxConvUTF8) );
 
   if( StrOp.equals( "-", m_Fb2R->GetStringSelection().mb_str(wxConvUTF8) ) )
-    wSwitch.setfb2R( m_Props, NULL );
+    wSwitch.setfb2R( m_Props, "" );
   else
     wSwitch.setfb2R( m_Props, m_Fb2R->GetStringSelection().mb_str(wxConvUTF8) );
   if( StrOp.equals( "-", m_Fb2G->GetStringSelection().mb_str(wxConvUTF8) ) )
-    wSwitch.setfb2G( m_Props, NULL );
+    wSwitch.setfb2G( m_Props, "" );
   else
     wSwitch.setfb2G( m_Props, m_Fb2G->GetStringSelection().mb_str(wxConvUTF8) );
 
