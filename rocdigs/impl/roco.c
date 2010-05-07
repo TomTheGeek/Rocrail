@@ -229,9 +229,16 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
       start = 3;
 
     for (k = 0; k < 2; k++) {
-      __handleSwitch(roco, baseadress, start+k, b3[7-k*2]);
+      if( (b3[7-k*2] + b3[6-k*2]) == 1 ) {       // only handle changed turnouts ignore those unchanged (00) or invalid (11)
+        __handleSwitch(roco, baseadress, start+k, b3[7-k*2]);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Switch status change address %d port %d", baseadress+1, start+k );
+      } else {
+        if( (b3[7-k*2] + b3[6-k*2]) == 2 )       // turnout reported invalid position
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch reports invalid position address %d port %d", baseadress+1, start+k );
+        else                                     // turnout not yet operated since power on
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Switch not operated yet address %d port %d", baseadress+1, start+k );
+      }
     }
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Updating roco switches in group: %d", baseadress );
 
   } /* end switch */
 
