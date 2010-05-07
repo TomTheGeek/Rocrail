@@ -2282,8 +2282,12 @@ static void __initFieldRunner( void* threadinst ) {
       /* Set the signal to its last known state. */
       if( state != NULL && StrOp.len(state) > 0 ) {
         wSignal.setcmd( cmd, state );
-        SignalOp.cmd( sg, cmd, True );
       }
+      else
+        wSignal.setcmd( cmd, wSignal.red );
+
+      NodeOp.setBool( cmd, "force", True );
+      SignalOp.cmd( sg, cmd, True );
     }
 
 
