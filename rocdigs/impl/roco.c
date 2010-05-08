@@ -176,7 +176,7 @@ static void __handleSwitch(iORoco roco, int addr, int port, int value) {
   iORocoData data = Data(roco);
   int valuew = value;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %s", addr+1, port, value?"straight":"thrown" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d %d = %s", addr+1, port, value?"thrown":"straight" );
 
    {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -187,7 +187,7 @@ static void __handleSwitch(iORoco roco, int addr, int port, int value) {
     if( data->iid != NULL )
       wSwitch.setiid( nodeC, data->iid );
 
-    wSwitch.setstate( nodeC, value?"straight":"turnout" );
+    wSwitch.setstate( nodeC, value?"turnout":"straight" );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
@@ -227,7 +227,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
       start = 1;
     else
       start = 3;
-
+    /* two bit status reply 00 = not operated yet, 01 = gate 1 activated, 10 = gate 2 activated, 11 = error */
     for (k = 0; k < 2; k++) {
       if( (b3[7-k*2] + b3[6-k*2]) == 1 ) {       // only handle changed turnouts ignore those unchanged (00) or invalid (11)
         __handleSwitch(roco, baseadress, start+k, b3[7-k*2]);
@@ -695,7 +695,7 @@ static void __translate( iORoco roco, iONode node ) {
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
 
-    int gate1 = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01;
+    int gate1 = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01; //0 = use gate 1, 1 = use gate 2
     int gate2 = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
 
     // make message:
@@ -704,15 +704,17 @@ static void __translate( iORoco roco, iONode node ) {
     outb[1] = 0x00;
     outb[2] = 0x52;
     outb[3] = addr;
-    outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //deactivate gate first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
+    outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //turn gate on, first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
     ThreadOp.post( data->transactor, (obj)outb );
+
+    ThreadOp.sleep(100);
 
     byte* outbb = allocMem(256);
     outbb[0] = 4;
     outbb[1] = 0x00;
     outbb[2] = 0x52;
     outbb[3] = addr;
-    outbb[4] = 0x90 | 0x00 | (port << 1) | gate1;  //activate gate
+    outbb[4] = 0x90 | 0x00 | (port << 1) | gate1;  //turn gate off
     ThreadOp.post( data->transactor, (obj)outbb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
