@@ -194,6 +194,12 @@
     <fun name="getClientCount" vt="int">
       <param name="inst" vt="this" remark="ClntCon instance"/>
     </fun>
+    <fun name="getClientPort" vt="int">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
+    <fun name="getClientHost" vt="const char*">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="callback" vt="clntcon_callback"/>
@@ -204,6 +210,7 @@
       <var name="infoWriters" vt="iOMap"/>
       <var name="muxMap" vt="iOMutex"/>
       <var name="broadcaster" vt="iOThread"/>
+      <var name="port" vt="int"/>
     </data>
   </object>
 

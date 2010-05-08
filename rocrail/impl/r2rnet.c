@@ -313,6 +313,20 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
       LocOp.reset(loco, False);
     }
   }
+
+  /* client connection request */
+  else if( StrOp.equals( wNetReq.req_clientconn, wNetReq.getreq(req) ) )
+  {
+    iONode rsp = NodeOp.inst( wNetRsp.name(), NULL, ELEMENT_NODE );
+    iOClntCon clntcon = AppOp.getClntCon();
+    wNetRsp.sethost( rsp, ClntConOp.getClientHost(clntcon) );
+    wNetRsp.setport( rsp, ClntConOp.getClientPort(clntcon) );
+    wNetRsp.setrsp( rsp, wNetRsp.rsp_clientconn );
+    char* s = NodeOp.base.toString(rsp);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connection response" );
+    ThreadOp.post(data->writer, (obj)s);
+  }
+
 }
 
 
@@ -459,6 +473,7 @@ static void __writer( void* threadinst ) {
   iOR2Rnet r2rnet = (iOR2Rnet)ThreadOp.getParm( th );
   iOR2RnetData data = Data(r2rnet);
   int retryGetNetRoutes = 0;
+  int retryReqNetRoutes = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "R2Rnet writer started." );
 
@@ -472,7 +487,7 @@ static void __writer( void* threadinst ) {
       StrOp.free(req);
     }
 
-    if( !data->gotnetroutes ) {
+    if( !data->gotnetroutes && retryReqNetRoutes < 10 ) {
       if( retryGetNetRoutes > 100 ) {
         char* s = NULL;
         iONode req = NodeOp.inst( wNetReq.name(), NULL, ELEMENT_NODE );
@@ -483,6 +498,7 @@ static void __writer( void* threadinst ) {
         SocketOp.sendto( data->writeUDP, s, StrOp.len(s) );
         StrOp.free(s);
         retryGetNetRoutes = 0;
+        retryReqNetRoutes++;
       }
       else {
         retryGetNetRoutes++;

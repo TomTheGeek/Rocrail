@@ -87,6 +87,7 @@
     <const name="req_unlock" vt="string" val="unlock"/>
     <const name="req_locoisin" vt="string" val="locoisin"/>
     <const name="req_getblock" vt="string" val="getblock"/>
+    <const name="req_clientconn" vt="string" val="clientconn"/>
     <var name="req" vt="string" defval="" remark="Request type."/>
     <var name="localbk" vt="string" defval="NULL" range="*" required="true" remark="Local block ID; rrid::bkid"/>
     <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
@@ -98,11 +99,14 @@
     <var name="remoteid" vt="string" defval="*" remark="Remote server name."/>
     <var name="localbk" vt="string" defval="NULL" range="*" required="true" remark="Local block ID; rrid::bkid"/>
     <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
+    <var name="host" vt="string" defval="" remark="Server client service."/>
+    <var name="port" vt="int" defval="62842" remark="Server client service."/>
     <const name="rsp_occupied" vt="string" val="occupied"/>
     <const name="rsp_reserved" vt="string" val="reserved"/>
     <const name="rsp_block" vt="string" val="block"/>
     <const name="rsp_unlocked" vt="string" val="unlocked"/>
     <const name="rsp_isfree" vt="string" val="isfree"/>
+    <const name="rsp_clientconn" vt="string" val="clientconn"/>
     <var name="rsp" vt="string" defval="" range="occupied,reserved,block,isfree,unlocked" remark=""/>
   </netrsp>
 

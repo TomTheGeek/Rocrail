@@ -502,6 +502,16 @@ static int _getClientCount( iOClntCon inst ) {
   return MapOp.size( data->infoWriters );
 }
 
+static int _getClientPort( iOClntCon inst ) {
+  iOClntConData data = Data(inst);
+  return data->port;
+}
+
+static const char* _getClientHost( iOClntCon inst ) {
+  iOClntConData data = Data(inst);
+  return SocketOp.gethostname();
+}
+
 static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbackObj ) {
   iOClntCon     clntcon = allocMem( sizeof( struct OClntCon ) );
   iOClntConData data    = allocMem( sizeof( struct OClntConData ) );
@@ -510,6 +520,7 @@ static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbac
   MemOp.basecpy( clntcon, &ClntConOp, 0, sizeof( struct OClntCon ), data );
 
   data->ini         = ini;
+  data->port        = port;
   data->srvrsocket  = SocketOp.inst( "localhost", port, False, False );
   data->callback    = pfun;
   data->callbackObj = callbackObj;
