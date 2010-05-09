@@ -887,7 +887,6 @@ const char* rocs_socket_gethostaddr( void ) {
   struct in_addr a;
   int i = 0;
 
-#if defined __linux__ || defined __hpux || defined _AIX
   gethostname( __hostname, sizeof( __hostname ) );
   he = gethostbyname (__hostname);
   while(he->h_addr_list[i] != NULL ) {
@@ -898,8 +897,6 @@ const char* rocs_socket_gethostaddr( void ) {
       return s;
   }
   return __hostname;
-#endif
-  return "localhost";
 }
 
 
