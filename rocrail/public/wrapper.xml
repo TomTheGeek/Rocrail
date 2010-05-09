@@ -101,6 +101,7 @@
     <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
     <var name="host" vt="string" defval="" remark="Server client service."/>
     <var name="port" vt="int" defval="62842" remark="Server client service."/>
+    <var name="plan" vt="string" defval="" remark="Plan title."/>
     <const name="rsp_occupied" vt="string" val="occupied"/>
     <const name="rsp_reserved" vt="string" val="reserved"/>
     <const name="rsp_block" vt="string" val="block"/>

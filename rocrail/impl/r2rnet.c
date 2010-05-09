@@ -321,6 +321,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
     iOClntCon clntcon = AppOp.getClntCon();
     wNetRsp.sethost( rsp, ClntConOp.getClientHost(clntcon) );
     wNetRsp.setport( rsp, ClntConOp.getClientPort(clntcon) );
+    wNetRsp.setplan( rsp, ModelOp.getTitle(AppOp.getModel()));
     wNetRsp.setrsp( rsp, wNetRsp.rsp_clientconn );
     char* s = NodeOp.base.toString(rsp);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connection response" );
