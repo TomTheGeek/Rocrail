@@ -69,6 +69,7 @@ Boolean rocs_socket_setKeepalive(iOSocket,Boolean);
 Boolean rocs_socket_peek( iOSocket inst, char* buf, int size );
 char* rocs_socket_mac( const char* device );
 Boolean rocs_socket_LoadCerts( iOSocket inst, const char *cFile, const char *kFile );
+const char* rocs_socket_gethostaddr( void );
 
 #ifdef __OPENSSL__
 Boolean rocs_socket_CreateCTX( iOSocket inst );
@@ -302,6 +303,10 @@ static const char* _gethostname( void ) {
 #else
   return "localhost";
 #endif
+}
+
+static const char* _gethostaddr( void ) {
+  return rocs_socket_gethostaddr();
 }
 
 static char* _getMAC( const char* device ) {

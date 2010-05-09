@@ -509,7 +509,7 @@ static int _getClientPort( iOClntCon inst ) {
 
 static const char* _getClientHost( iOClntCon inst ) {
   iOClntConData data = Data(inst);
-  return SocketOp.gethostname();
+  return SocketOp.gethostaddr();
 }
 
 static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbackObj ) {
