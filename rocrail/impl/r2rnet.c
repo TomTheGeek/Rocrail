@@ -164,7 +164,7 @@ static Boolean __readNetRoutes( iOR2Rnet inst ) {
 
 static void __handleNetReq(iOR2Rnet inst, iONode req) {
   iOR2RnetData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handle netreq %s", wNetReq.getreq(req) );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle netreq %s", wNetReq.getreq(req) );
 
   /* netroutes request */
   if( StrOp.equals( wNetReq.req_netroutes, wNetReq.getreq(req) ) && data->netroutesprovider ) {
@@ -324,7 +324,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
     wNetRsp.setplan( rsp, ModelOp.getTitle(AppOp.getModel()));
     wNetRsp.setrsp( rsp, wNetRsp.rsp_clientconn );
     char* s = NodeOp.base.toString(rsp);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connection response" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connection response: %s", s );
     ThreadOp.post(data->writer, (obj)s);
   }
 
@@ -333,7 +333,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
 
 static void __handleNetRsp(iOR2Rnet inst, iONode rsp) {
   iOR2RnetData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handle netrsp %s", wNetRsp.getrsp(rsp) );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle netrsp %s", wNetRsp.getrsp(rsp) );
 
   /* get block response */
   if( StrOp.equals( wNetRsp.rsp_block, wNetRsp.getrsp(rsp) ) && data->openreq != NULL ) {
@@ -423,7 +423,7 @@ static void __evaluateMessage(iOR2Rnet inst, const char* s) {
     DocOp.base.del( msgDoc );
 
     if( msg != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s message parsed", NodeOp.getName(msg) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s message parsed", NodeOp.getName(msg) );
       if( StrOp.equals( wNetReq.name(), NodeOp.getName(msg) ) )
         __handleNetReq(inst, msg);
       else if( StrOp.equals( wNetRsp.name(), NodeOp.getName(msg) ) )
@@ -458,7 +458,7 @@ static void __reader( void* threadinst ) {
     MemOp.set( msg, 0, MSGSIZE );
 
     SocketOp.recvfrom( data->readUDP, msg, MSGSIZE );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "msg:\n%s", msg );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "msg:\n%s", msg );
     __evaluateMessage(r2rnet, msg);
 
   } while( data->run && !ThreadOp.isQuit(th) );
@@ -474,7 +474,6 @@ static void __writer( void* threadinst ) {
   iOR2Rnet r2rnet = (iOR2Rnet)ThreadOp.getParm( th );
   iOR2RnetData data = Data(r2rnet);
   int retryGetNetRoutes = 0;
-  int retryReqNetRoutes = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "R2Rnet writer started." );
 
@@ -483,12 +482,12 @@ static void __writer( void* threadinst ) {
     if (req != NULL) {
       int plen     = 0;
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write request from queue:\n%s", req );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "write request from queue:\n%s", req );
       SocketOp.sendto( data->writeUDP, req, StrOp.len(req) );
       StrOp.free(req);
     }
 
-    if( !data->gotnetroutes && retryReqNetRoutes < 10 ) {
+    if( !data->gotnetroutes ) {
       if( retryGetNetRoutes > 100 ) {
         char* s = NULL;
         iONode req = NodeOp.inst( wNetReq.name(), NULL, ELEMENT_NODE );
@@ -499,7 +498,6 @@ static void __writer( void* threadinst ) {
         SocketOp.sendto( data->writeUDP, s, StrOp.len(s) );
         StrOp.free(s);
         retryGetNetRoutes = 0;
-        retryReqNetRoutes++;
       }
       else {
         retryGetNetRoutes++;
