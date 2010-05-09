@@ -705,18 +705,22 @@ Boolean rocs_socket_LoadCerts( iOSocket inst, const char *cFile, const char *kFi
 #endif
 }
 
+static char __hostname[256];
 const char* rocs_socket_gethostaddr( void ) {
-  char __hostname[256];
   struct hostent *he;
   struct in_addr a;
+  int i = 0;
 
-#if defined __linux__ || defined __hpux || defined _AIX
   gethostname( __hostname, sizeof( __hostname ) );
   he = gethostbyname (__hostname);
-  return inet_ntoa (*(struct in_addr *)*he->h_addr_list);
-#else
-  return "localhost";
-#endif
+  while(he->h_addr_list[i] != NULL ) {
+    const char* s = inet_ntoa (*(struct in_addr *)he->h_addr_list[i]);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "address %d = %s", i, s );
+    i++;
+    if( !StrOp.equals( "127.0.1.1", s ) )
+      return s;
+  }
+  return __hostname;
 }
 
 

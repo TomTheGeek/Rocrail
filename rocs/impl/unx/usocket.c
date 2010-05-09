@@ -881,8 +881,8 @@ Boolean rocs_socket_LoadCerts( iOSocket inst, const char *cFile, const char *kFi
 }
 
 
+static char __hostname[256];
 const char* rocs_socket_gethostaddr( void ) {
-  char __hostname[256];
   struct hostent *he;
   struct in_addr a;
   int i = 0;
