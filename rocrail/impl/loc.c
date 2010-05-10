@@ -1341,7 +1341,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
     fundef = wLoc.nextfundef( data->props, fundef );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timedfn=%d fnevent=%d fnblock=%s evt=%d",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timedfn=%d fnevent=%d fnblock=%s evt=%d",
       data->timedfn, data->fnevent, data->fneventblock, evt );
   if( data->timedfn >= 0 && data->fnevent > 0 && data->fneventblock != NULL ) {
     if( blockid != NULL && StrOp.equals(data->fneventblock, blockid)) {
