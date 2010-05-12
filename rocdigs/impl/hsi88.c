@@ -516,7 +516,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
 
       if (in[2] != '\r')
       {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Protocol Error: expected 0x13 got 0x%02x", in[2]);
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Protocol Error: expected 0x0D got 0x%02x", in[2]);
       }
       else
         initOK = True;
@@ -524,7 +524,8 @@ static Boolean __initHSI88( iOHSI88 inst ) {
     else
     {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "Init response expecting 0x%02X but got 0x%02X", (int)'s', (int)in[0]);
+                   "Init response expecting 0x%02X, length 3 but got 0x%02X, length %d", (int)'s', (int)in[0], len);
+      TraceOp.dump( NULL, TRCLEVEL_WARNING, in, len );
     }
 
   }
