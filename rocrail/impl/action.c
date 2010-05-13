@@ -560,6 +560,23 @@ static void __timerThread( void* threadinst ) {
 }
 
 
+static Boolean _cmd( iOAction inst, iONode cmd ) {
+  iOActionData data = Data(inst);
+  Boolean ok = False;
+  const char* cmdStr = wAction.getcmd( cmd );
+
+  if( StrOp.equals( wAction.test, cmdStr ) ) {
+    iONode actionctrl = NodeOp.inst(wActionCtrl.name(), NULL, ELEMENT_NODE);
+    __executeAction( inst, actionctrl );
+    NodeOp.base.del(actionctrl);
+ }
+
+  /* Cleanup Node1 */
+  NodeOp.base.del(cmd);
+  return ok;
+}
+
+
 static void _exec( struct OAction* inst, iONode actionctrl ) {
   iOActionData data = Data(inst);
   iOModel model = AppOp.getModel();

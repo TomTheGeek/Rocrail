@@ -513,6 +513,13 @@ static void __callback( obj inst, iONode nodeA ) {
       return;
     }
   }
+  else if( StrOp.equals( wAction.name(), nodeName ) ) {
+    iOAction action = ModelOp.getAction( model, wAction.getid( nodeA ) );
+    if( action != NULL ) {
+      ActionOp.cmd( action, nodeA );
+      return;
+    }
+  }
   else if( StrOp.equals( wLoc.name(), nodeName ) ) {
     iOLoc loc = ModelOp.getLoc( model, wLoc.getid( nodeA ) );
     if( loc != NULL ) {

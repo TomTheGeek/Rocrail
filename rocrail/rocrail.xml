@@ -1610,6 +1610,10 @@
       <param name="inst" vt="this" remark="Action instance"/>
       <param name="modification" vt="iONode" remark="Modification node"/>
     </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="Action instance"/>
+      <param name="cmd" vt="iONode" remark="Command node"/>
+    </fun>
     <data>
       <var name="action" vt="iONode"/>
       <var name="timerthread" vt="iOThread"/>

@@ -1841,6 +1841,7 @@
         <var name="timed" vt="bool" defval="false" remark="Use time for activation."/>
         <var name="timer" vt="int" defval="0" remark="Timer in ms before activation this action."/>
         <var name="oid" vt="string" defval="NULL" range="*" remark="output id"/>
+        <const name="test" vt="string" val="test" remark="Test this action unconditional."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="on, off or an external program or script to be executed"/>
         <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>
         <var name="actiontime" vt="int" defval="0" unit="s" remark="function activation time"/>
