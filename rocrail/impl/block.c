@@ -102,7 +102,7 @@ static int __count(void) {
 }
 
 
-static void __checkAction( iOBlock inst ) {
+static void __checkAction( iOBlock inst, const char* state ) {
   iOBlockData data   = Data(inst);
   iOModel     model  = AppOp.getModel();
   iONode      action = wBlock.getactionctrl( data->props );
@@ -112,7 +112,7 @@ static void __checkAction( iOBlock inst ) {
     int counter = atoi(wActionCtrl.getstate( action ));
 
     if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
-        StrOp.equals(wBlock.getstate(data->props), wActionCtrl.getstate( action )) )
+        StrOp.equals(state, wActionCtrl.getstate( action )) )
     {
 
       iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
@@ -121,7 +121,7 @@ static void __checkAction( iOBlock inst ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( action ), wBlock.getstate(data->props) );
+          wActionCtrl.getstate( action ), state );
     }
 
     action = wBlock.nextactionctrl( data->props, action );
@@ -470,7 +470,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setstate( nodeD, wBlock.ghost );
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-          __checkAction(inst);
+          __checkAction((iOBlock)inst, "ghost");
         }
         tl = TRCLEVEL_EXCEPTION;
 
@@ -506,7 +506,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setstate( nodeD, wBlock.getstate(data->props) );
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-          __checkAction(inst);
         }
       }
     }
@@ -1095,6 +1094,7 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     wBlock.setentering( nodeD, True );
     wBlock.setlocid( nodeD, id );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    __checkAction((iOBlock)inst, "enter");
   }
 }
 
@@ -1108,6 +1108,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
     wBlock.setreserved( nodeD, False );
     wBlock.setlocid( nodeD, id );
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    __checkAction((iOBlock)inst, "occupied");
   }
 }
 
@@ -1240,6 +1241,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       wBlock.setreserved( nodeD, True );
       wBlock.setlocid( nodeD, id );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      __checkAction((iOBlock)inst, "reserved");
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -1466,13 +1468,14 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
           if( data->locIdGroup == NULL ) {
             wBlock.setlocid( nodeD, "" );
+            __checkAction((iOBlock)inst, "free");
           }
           else {
             wBlock.setlocid( nodeD, data->locIdGroup );
             wBlock.setreserved( nodeD, True );
+            __checkAction((iOBlock)inst, "reserved");
           }
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-          __checkAction(inst);
         }
         /* Set signal. */
 
@@ -1609,7 +1612,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       state = wBlock.closed;
       wBlock.setstate( nodeA, state );
       data->closereq = False;
-      __checkAction(inst);
+      __checkAction((iOBlock)inst, "closed");
     }
     wBlock.setstate( data->props, state );
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0 );
