@@ -206,7 +206,7 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
   iOHSI88Data o = Data(inst);
   int waitcounter = 0;
   int idx = 0;
-
+  
   while( waitcounter < 50 && idx < 256 ) {
     /* check for waiting bytes: */
     int avail = 0;
@@ -225,10 +225,36 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
 
     if( OK ) {
       waitcounter = 0;
-      idx++;
-      in[idx] = '\0';
-      if( in[idx-1] == '\r' ) {
-        break;
+      if( in[0] == 's' ) {
+        /* first byte s then read 3 bytes, second byte is number of modules */
+        idx++;
+        in[idx] = '\0';
+        if( idx == 3 ) {
+          if( in[idx-1] == '\r' ) {
+            break;
+          } else {
+            idx = 0;
+            break;
+          }
+        }
+      } else if( in[0] == 'V' ) {
+        /* first byte V then version info comes, length 41 bytes */
+        idx++;
+        in[idx] = '\0';
+        if( idx == 41 ) {
+          if( in[idx-1] == '\r' ) {
+            break;
+          } else {
+            idx = 0;
+            break;
+          }
+        }
+      } else {
+        idx++;
+        in[idx] = '\0';
+        if( in[idx-1] == '\r' ) {
+          break;
+        }
       }
     }
     else {
