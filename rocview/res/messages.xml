@@ -1400,7 +1400,6 @@
     <en txt="Change direction" tip="Change direction."/>
     <nl txt="Verander rijrichting" tip="Rij richting wisselen."/>
     <sv txt="Ändra riktning" tip="Ändra riktning."/>
-    <de txt="Direction" tip="Changer de direction."/>
     <tr txt="Yön" tip="Yön değiştir."/>
     <es txt="Dirección" tip="Cambiar dirección."/>
     <it txt="Cambia direzione" tip="Cambia direzione."/>
@@ -2583,7 +2582,6 @@
     <en txt="Add item"/>
     <nl txt="Onderdeel toevoegen"/>
     <sv txt="Lägg till symbol"/>
-    <de txt="Symbole Ajouter"/>
     <tr txt="Nesne Ekle"/>
     <es txt="Añadir elemento"/>
     <it txt="Aggiungi elemento"/>
