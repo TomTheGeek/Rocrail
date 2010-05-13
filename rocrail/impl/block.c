@@ -28,6 +28,7 @@
 #include "rocrail/public/route.h"
 #include "rocrail/public/control.h"
 #include "rocrail/public/modplan.h"
+#include "rocrail/public/action.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -48,6 +49,7 @@
 #include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 
 static int instCnt = 0;
@@ -98,6 +100,35 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 static int __count(void) {
   return instCnt;
 }
+
+
+static void __checkAction( iOBlock inst ) {
+  iOBlockData data   = Data(inst);
+  iOModel     model  = AppOp.getModel();
+  iONode      action = wBlock.getactionctrl( data->props );
+
+  /* loop over all actions */
+  while( action != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( action ));
+
+    if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
+        StrOp.equals(wBlock.getstate(data->props), wActionCtrl.getstate( action )) )
+    {
+
+      iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+      if( Action != NULL )
+        ActionOp.exec(Action, action);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( action ), wBlock.getstate(data->props) );
+    }
+
+    action = wBlock.nextactionctrl( data->props, action );
+  }
+}
+
+
 
 
 static void _setDefaultAspect(iIBlockBase inst, Boolean signalpair) {
@@ -439,6 +470,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setstate( nodeD, wBlock.ghost );
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          __checkAction(inst);
         }
         tl = TRCLEVEL_EXCEPTION;
 
@@ -474,6 +506,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setstate( nodeD, wBlock.getstate(data->props) );
           wBlock.setlocid( nodeD, data->locId );
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          __checkAction(inst);
         }
       }
     }
@@ -1439,6 +1472,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
             wBlock.setreserved( nodeD, True );
           }
           ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          __checkAction(inst);
         }
         /* Set signal. */
 
@@ -1575,6 +1609,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       state = wBlock.closed;
       wBlock.setstate( nodeA, state );
       data->closereq = False;
+      __checkAction(inst);
     }
     wBlock.setstate( data->props, state );
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0 );

@@ -368,6 +368,8 @@ void ActionsCtrlDlg::evaluate() {
     wActionCtrl.setstate(node, m_State->GetValue().mb_str(wxConvUTF8) );
 
     m_CtrlList->SetString(cursel, m_ID->GetStringSelection() );
+    m_ConditionsPanel->Enable(true);
+
   }
 }
 
@@ -623,7 +625,7 @@ void ActionsCtrlDlg::CreateControls()
     itemFlexGridSizer7->Add(m_labState, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_State = new wxTextCtrl( m_IndexPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer7->Add(m_State, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer7->Add(m_State, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(2, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer12, 0, wxGROW, 5);
