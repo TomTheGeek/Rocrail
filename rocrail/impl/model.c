@@ -2343,6 +2343,7 @@ static void _init( iOModel inst ) {
   __clearMap( o->scheduleMap );
 
   ListOp.clear( o->routeList);
+  ListOp.clear( o->switchList);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingMaps..." );
   _createMap( o, o->trackMap   , wTrackList.name(), wTrack.name(), (item_inst)TrackOp.inst, NULL  );
@@ -2351,7 +2352,7 @@ static void _init( iOModel inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingFbAddrMap..." );
   _createFbAddrMap( inst );
 
-  _createMap( o, o->switchMap  , wSwitchList.name(), wSwitch.name(), (item_inst)SwitchOp.inst, NULL );
+  _createMap( o, o->switchMap  , wSwitchList.name(), wSwitch.name(), (item_inst)SwitchOp.inst, o->switchList );
   _createMap( o, o->signalMap  , wSignalList.name(), wSignal.name(), (item_inst)SignalOp.inst, NULL );
   _createMap( o, o->outputMap  , wOutputList.name(), wOutput.name(), (item_inst)OutputOp.inst, NULL );
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
@@ -2483,10 +2484,12 @@ static void _event( iOModel inst, iONode nodeC ) {
     StrOp.free( key );
     */
 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
     iOSwitch sw = (iOSwitch)ListOp.first(o->switchList);
     while( sw != NULL ) {
       iONode props = SwitchOp.base.properties(sw);
       if( wSwitch.getbus(props) == bus && wSwitch.getaddr1(props) == addr && wSwitch.getport1(props) == port  ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw %s", SwitchOp.getId(sw) );
         if( iid == NULL ) {
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
         }
