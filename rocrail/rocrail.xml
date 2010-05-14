@@ -869,6 +869,7 @@
       <var name="carMap" vt="iOMap"/>
       <var name="operatorMap" vt="iOMap"/>
       <var name="switchMap" vt="iOMap"/>
+      <var name="switchList" vt="iOList"/>
       <var name="signalMap" vt="iOMap"/>
       <var name="outputMap" vt="iOMap"/>
       <var name="feedbackMap" vt="iOMap"/>

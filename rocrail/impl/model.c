@@ -613,6 +613,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     iOSwitch sw = SwitchOp.inst( clone );
     __addItemInList( data, wSwitchList.name(), clone );
     MapOp.put( data->switchMap, wSwitch.getid( item ), (obj)sw );
+    ListOp.add( data->switchList, (obj)sw );
     added = True;
   }
   else if( StrOp.equals( wSignal.name(), itemName ) ) {
@@ -1270,6 +1271,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       MapOp.remove( o->switchMap, wSwitch.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wSwitchList.name(), props );
+      ListOp.removeObj( o->switchList, (obj)sw);
       sw->base.del( sw );
       props->base.del( props );
       removed = True;
@@ -2467,6 +2469,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     const char* iid = wSwitch.getiid( nodeC );
+    /*
     char* key = SwitchOp.createAddrKey( bus, addr, port, iid );
     iOSwitch sw = (iOSwitch)MapOp.get( o->swAddrMap, key );
     if( sw != NULL ) {
@@ -2475,10 +2478,25 @@ static void _event( iOModel inst, iONode nodeC ) {
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN SW: %s %s",
                    key, wSwitch.getstate( nodeC ) );
-      /* Cleanup Node3 */
       nodeC->base.del(nodeC);
     }
     StrOp.free( key );
+    */
+
+    iOSwitch sw = (iOSwitch)ListOp.first(o->switchList);
+    while( sw != NULL ) {
+      iONode props = SwitchOp.base.properties(sw);
+      if( wSwitch.getbus(props) == bus && wSwitch.getaddr1(props) == addr && wSwitch.getport1(props) == port  ) {
+        if( iid == NULL ) {
+          SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
+        }
+        else if( wSwitch.getiid(props) != NULL && StrOp.equals(iid, wSwitch.getiid(props)) )  {
+          SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
+        }
+      }
+      sw = (iOSwitch)ListOp.next(o->switchList);
+    }
+    NodeOp.base.del(nodeC);
   }
 
   else if( StrOp.equals( wOutput.name(), NodeOp.getName( nodeC ) ) ) {
@@ -3552,6 +3570,7 @@ static iOModel _inst( const char* fileName ) {
   data->waybillMap  = MapOp.inst();
   data->operatorMap = MapOp.inst();
   data->switchMap   = MapOp.inst();
+  data->switchList  = ListOp.inst();
   data->signalMap   = MapOp.inst();
   data->outputMap   = MapOp.inst();
   data->feedbackMap = MapOp.inst();
