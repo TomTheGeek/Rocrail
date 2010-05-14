@@ -110,7 +110,7 @@ void TrackDialog::initLabels() {
   m_Road->SetLabel( wxGetApp().getMsg( "road" ) );
   m_LabelType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_LabelBlockID->SetLabel( wxGetApp().getMsg( "blockid" ) );
-  m_RouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
+  m_labRouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
 
   m_BlockID->Append( _T("") );
   iONode model = wxGetApp().getModel();
