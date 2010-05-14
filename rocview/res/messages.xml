@@ -13493,4 +13493,9 @@
   <Msg id="evtcorrection">
     <en txt="Event correction"/>
   </Msg>
+  <Msg id="relay">
+    <en txt="Relay"/>
+    <nl txt="Relais"/>
+    <de txt="Relais"/>
+  </Msg>
 </Messages>
