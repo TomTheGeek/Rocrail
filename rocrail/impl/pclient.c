@@ -764,10 +764,17 @@ static void __doFunction( iOLoc loc, const char* req ) {
 
   if( StrOp.find(req, "function0") ) {
     iONode props = LocOp.base.properties(loc);
+    Boolean lights = !wLoc.isfn(props);
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setid( cmd, id );
-    wLoc.setfn( cmd, !wLoc.isfn(props) );
+    wLoc.setfn( cmd, lights );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flip loc lights ID [%s]", id );
+    LocOp.cmd( loc, cmd );
+
+    cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    wFunCmd.setid( cmd, id );
+    wFunCmd.setf0( cmd, lights );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loc f0 ID [%s]", id );
     LocOp.cmd( loc, cmd );
   }
   else if( StrOp.find(req, "function1") ) {
@@ -998,7 +1005,7 @@ static Boolean _work( struct OPClient* inst ) {
         contlen = atoi( p );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "contlen = %d\n", contlen );
       }
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, str );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str );
     };
     if( SocketOp.isBroken( data->socket ) )
       return True;
