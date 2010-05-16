@@ -2469,6 +2469,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
+    int matchaddr;
+    int matchport;
+    int fada;
+    int pada;
     const char* iid = wSwitch.getiid( nodeC );
     const char* defiid;
     iONode ini    = AppOp.getIni();
@@ -2496,8 +2500,21 @@ static void _event( iOModel inst, iONode nodeC ) {
     iOSwitch sw = (iOSwitch)ListOp.first(o->switchList);
     while( sw != NULL ) {
       iONode props = SwitchOp.base.properties(sw);
-      if( wSwitch.getbus(props) == bus && wSwitch.getaddr1(props) == addr && wSwitch.getport1(props) == port  ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw %s", SwitchOp.getId(sw) );
+
+      matchaddr = wSwitch.getaddr1(props);
+      matchport = wSwitch.getport1(props);
+      if( matchport == 0 ) {
+        fada = matchaddr;
+        matchaddr = fada / 8 + 1;
+        matchport = (fada % 8) /2 + 1;
+      } else if( matchaddr == 0 && matchport > 0 ) {
+        pada = matchport;
+        matchaddr = (pada - 1) / 4 + 1;
+        matchport = (pada - 1) % 4 + 1;
+      }
+
+      if( wSwitch.getbus(props) == bus && matchaddr == addr && matchport == port  ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", SwitchOp.getId(sw) );
         if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
         else if( StrOp.len( wSwitch.getiid(props) ) == 0  && StrOp.equals( iid, defiid ) )
