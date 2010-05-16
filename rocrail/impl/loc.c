@@ -1545,6 +1545,11 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
 
 static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
+  if( data->go ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is already in auto mode", LocOp.getId(inst) );
+    return False;
+  }
+
   wLoc.setresumeauto( data->props, False);
   if( wLoc.isactive(data->props)) {
     if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
