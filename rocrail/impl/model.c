@@ -110,7 +110,7 @@
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageList.h"
-
+#include "rocrail/wrapper/public/DigInt.h"
 static int instCnt = 0;
 
 
@@ -2470,6 +2470,14 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     const char* iid = wSwitch.getiid( nodeC );
+    const char* defiid;
+    iONode ini    = AppOp.getIni();
+    iONode digint = wRocRail.getdigint( ini );
+    
+    if( digint != NULL)
+      defiid = wDigInt.getiid( digint );
+    else
+      defiid = "vcs-1";
     /*
     char* key = SwitchOp.createAddrKey( bus, addr, port, iid );
     iOSwitch sw = (iOSwitch)MapOp.get( o->swAddrMap, key );
@@ -2490,12 +2498,10 @@ static void _event( iOModel inst, iONode nodeC ) {
       iONode props = SwitchOp.base.properties(sw);
       if( wSwitch.getbus(props) == bus && wSwitch.getaddr1(props) == addr && wSwitch.getport1(props) == port  ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw %s", SwitchOp.getId(sw) );
-        if( iid == NULL ) {
+        if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
-        }
-        else if( wSwitch.getiid(props) != NULL && StrOp.equals(iid, wSwitch.getiid(props)) )  {
+        else if( StrOp.len( wSwitch.getiid(props) ) == 0  && StrOp.equals( iid, defiid ) )
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
-        }
       }
       sw = (iOSwitch)ListOp.next(o->switchList);
     }
