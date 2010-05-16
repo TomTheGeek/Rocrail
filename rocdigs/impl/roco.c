@@ -695,8 +695,8 @@ static void __translate( iORoco roco, iONode node ) {
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
 
-    int gate1 = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01; //0 = use gate 1, 1 = use gate 2
-    int gate2 = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
+    int gate1  = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01; //0 = use gate 1, 1 = use gate 2
+    int action = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x08; //0 = gate off, 8 = gate on
 
     // make message:
     byte* outb = allocMem(256);
@@ -704,26 +704,35 @@ static void __translate( iORoco roco, iONode node ) {
     outb[1] = 0x00;
     outb[2] = 0x52;
     outb[3] = addr;
-    outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //turn gate on, first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
-    ThreadOp.post( data->transactor, (obj)outb );
 
-    ThreadOp.sleep(100);
+    if( wSwitch.issinglegate( node ) ) {
+      //when single gate turn gate on (cmd straight) or off (cmd turnout)
+      outb[4] = 0x90 | action | (port << 1) | gate; //first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
+      ThreadOp.post( data->transactor, (obj)outb );
 
-    byte* outbb = allocMem(256);
-    outbb[0] = 4;
-    outbb[1] = 0x00;
-    outbb[2] = 0x52;
-    outbb[3] = addr;
-    outbb[4] = 0x90 | 0x00 | (port << 1) | gate1;  //turn gate off
-    ThreadOp.post( data->transactor, (obj)outbb );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout gate %d %d %d %s",
+        addr+1, port+1, gate, action==0?"off":"on" );
+    } else {
+      //otherwise turn gate 1 (cmd turnout) or gate 2 (cmd straight) on and 100 ms later off again
+      outb[4] = 0x90 | 0x08 | (port << 1) | gate1;  //turn gate on
+      ThreadOp.post( data->transactor, (obj)outb );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
-        addr+1, port+1, wSwitch.getcmd( node ) );
+      ThreadOp.sleep(100);
+
+      byte* outbb = allocMem(256);
+      outbb[0] = 4;
+      outbb[1] = 0x00;
+      outbb[2] = 0x52;
+      outbb[3] = addr;
+      outbb[4] = 0x90 | 0x00 | (port << 1) | gate1;  //turn gate off
+      ThreadOp.post( data->transactor, (obj)outbb );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s",
+          addr+1, port+1, wSwitch.getcmd( node ) );
+    }
   }
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-    int action1 = 0x00;
-    int action2 = 0x00;
 
     int addr   = wOutput.getaddr( node );
     int port   = wOutput.getport( node );
@@ -737,8 +746,7 @@ static void __translate( iORoco roco, iONode node ) {
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
 
-    action1 = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x00:0x08;
-    action2 = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x08:0x00;
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x08:0x00;
 
     // make message:
     byte* outb = allocMem(256);
@@ -746,11 +754,11 @@ static void __translate( iORoco roco, iONode node ) {
     outb[1] = 0x00;
     outb[2] = 0x52;
     outb[3] = addr;
-    outb[4] = 0x90 | action1 | (port << 1) | gate;  //same nibble story as with the turnouts
+    outb[4] = 0x90 | action | (port << 1) | gate;  //same nibble story as with the turnouts
     ThreadOp.post( data->transactor, (obj)outb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s",
-        addr, port, gate, wOutput.getcmd( node ) );
+        addr+1, port+1, gate, wOutput.getcmd( node ) );
   }
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
