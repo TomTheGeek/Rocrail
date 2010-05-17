@@ -757,7 +757,7 @@ void OutputDialog::OnButtonCoDeleteClick( wxCommandEvent& event )
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
-    iONode colist = wPlan.getsglist( model );
+    iONode colist = wPlan.getcolist( model );
     if( colist != NULL ) {
       NodeOp.removeChild( colist, m_Props );
       m_Props = NULL;
