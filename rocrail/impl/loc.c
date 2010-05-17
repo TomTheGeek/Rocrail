@@ -1545,8 +1545,9 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
 
 static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
-  if( data->go ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is already in auto mode", LocOp.getId(inst) );
+
+  if( data->driver != NULL && data->driver->isRun( data->driver ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is already running in auto mode", LocOp.getId(inst) );
     return False;
   }
 
