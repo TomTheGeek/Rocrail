@@ -266,6 +266,7 @@ bool TimedActions::evaluate() {
     return false;
   }
 
+  wItem.setprev_id(m_Props, wAction.getid( m_Props));
   wAction.setid( m_Props, m_ActionID->GetValue().mb_str(wxConvUTF8) );
   wAction.settimed( m_Props, m_Timed->IsChecked() ? True:False );
   wAction.sethour( m_Props, m_Hour->GetValue() );
