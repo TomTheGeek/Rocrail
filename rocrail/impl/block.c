@@ -1452,6 +1452,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
           wBlock.setstate( data->props, wBlock.closed );
           data->closereq = False;
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set block to close: requested" );
+          __checkAction((iOBlock)inst, "closed");
         }
 
         ModelOp.setBlockOccupation( AppOp.getModel(), data->id, "", False, 0 );
