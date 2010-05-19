@@ -239,7 +239,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep(100);
+      /*ThreadOp.sleep(100);*/
 
       /* deactivate the gate to be used */
       byte* outb = allocMem(32);
@@ -258,7 +258,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep(100);
+      /*ThreadOp.sleep(100);*/
 
       byte* outb = allocMem(32);
       outb[0] = 0x52;
@@ -300,7 +300,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      ThreadOp.sleep(100);
+      /*ThreadOp.sleep(100);*/
 
       byte* outb = allocMem(32);
       outb[0] = 0x52;
@@ -434,7 +434,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       data->lcfn[addr] = outa[4];
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function group 1 (Lights ON)" );
       ThreadOp.post( data->transactor, (obj)outa );
-      ThreadOp.sleep(50);
+      /*ThreadOp.sleep(50);*/
     }
 
     byte* outb = allocMem(32);
@@ -503,7 +503,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[4] = functions1;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
       ThreadOp.post( data->transactor, (obj)outa );
-      ThreadOp.sleep(50);
+      /*ThreadOp.sleep(50);*/
     }
 
     if( group == 0 || group == 2 ) {
@@ -514,7 +514,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outb[4] = functions2;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
       ThreadOp.post( data->transactor, (obj)outb );
-      ThreadOp.sleep(50);
+      /*ThreadOp.sleep(50);*/
     }
 
 
@@ -526,7 +526,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outc[4] = functions3;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
       ThreadOp.post( data->transactor, (obj)outc );
-      ThreadOp.sleep(50);
+      /*ThreadOp.sleep(50);*/
     }
 
     if( group == 0 || group == 4 || group == 5 ) {
@@ -537,7 +537,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outc[4] = functions4;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
       ThreadOp.post( data->transactor, (obj)outc );
-      ThreadOp.sleep(50);
+      /*ThreadOp.sleep(50);*/
     }
 
     if( group == 0 || group == 6 || group == 7 ) {
@@ -609,7 +609,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outa[1] = 0x15;
         outa[2] = cv & 0xFF;
         ThreadOp.post( data->transactor, (obj)outa );
-        ThreadOp.sleep(50);
+        /*ThreadOp.sleep(50);*/
 
         byte* outb = allocMem(32);
         outb[0] = 0x21;
@@ -662,7 +662,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outa[2] = cv & 0xFF;
         outa[3] = value & 0xFF;
         ThreadOp.post( data->transactor, (obj)outa );
-        ThreadOp.sleep(50);
+        /*ThreadOp.sleep(50);*/
 
         byte* outb = allocMem(32);
         outb[0] = 0x21;
@@ -803,7 +803,7 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
 
   /* check if last command was recieved, the cs answers: 1 4 5 */
   if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "LI: Command OK");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI: Command OK");
     rspReceived = True;
   }
   else if( in[0] == 1 && in[1] == 2 && in[2] == 3 ) {
@@ -1001,7 +1001,7 @@ static void __transactor( void* threadinst ) {
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LZV busy.");
         if( !data->ignoreBusy ) {
           rspReceived = True;
           reSend = True;
