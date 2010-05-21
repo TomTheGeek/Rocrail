@@ -2469,8 +2469,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
-    int matchaddr;
-    int matchport;
+    int matchaddr1;
+    int matchport1;
+    int matchaddr2;
+    int matchport2;
     int fada;
     int pada;
     const char* iid = wSwitch.getiid( nodeC );
@@ -2501,19 +2503,33 @@ static void _event( iOModel inst, iONode nodeC ) {
     while( sw != NULL ) {
       iONode props = SwitchOp.base.properties(sw);
 
-      matchaddr = wSwitch.getaddr1(props);
-      matchport = wSwitch.getport1(props);
-      if( matchport == 0 ) {
-        fada = matchaddr;
-        matchaddr = fada / 8 + 1;
-        matchport = (fada % 8) /2 + 1;
-      } else if( matchaddr == 0 && matchport > 0 ) {
-        pada = matchport;
-        matchaddr = (pada - 1) / 4 + 1;
-        matchport = (pada - 1) % 4 + 1;
+      matchaddr1 = wSwitch.getaddr1(props);
+      matchport1 = wSwitch.getport1(props);
+      if( matchport1 == 0 && matchaddr1 > 0 ) {
+        fada = matchaddr1;
+        matchaddr1 = fada / 8 + 1;
+        matchport1 = (fada % 8) /2 + 1;
+      } else if( matchaddr1 == 0 && matchport1 > 0 ) {
+        pada = matchport1;
+        matchaddr1 = (pada - 1) / 4 + 1;
+        matchport1 = (pada - 1) % 4 + 1;
       }
 
-      if( wSwitch.getbus(props) == bus && matchaddr == addr && matchport == port  ) {
+      matchaddr2 = wSwitch.getaddr2(props);
+      matchport2 = wSwitch.getport2(props);
+      if( matchport2 == 0 && matchaddr2 > 0 ) {
+        fada = matchaddr2;
+        matchaddr2 = fada / 8 + 1;
+        matchport2 = (fada % 8) /2 + 1;
+      } else if( matchaddr2 == 0 && matchport2 > 0 ) {
+        pada = matchport2;
+        matchaddr2 = (pada - 1) / 4 + 1;
+        matchport2 = (pada - 1) % 4 + 1;
+      }
+
+      if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port ||
+          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port )
+      {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", SwitchOp.getId(sw) );
         if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
