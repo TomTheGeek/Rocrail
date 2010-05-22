@@ -509,7 +509,7 @@ static int _getClientPort( iOClntCon inst ) {
 
 static const char* _getClientHost( iOClntCon inst ) {
   iOClntConData data = Data(inst);
-  return SocketOp.gethostaddr();
+  return SocketOp.gethostname(); /* return the name; DHCP server should solve it */
 }
 
 static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbackObj ) {
