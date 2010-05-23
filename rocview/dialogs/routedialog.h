@@ -231,6 +231,8 @@ public:
     wxRadioBox* m_FromSignals;
     wxRadioBox* m_RunDir;
     wxRadioBox* m_ToSignals;
+    wxStaticText* m_PlaceHolderX;
+    wxRadioBox* m_CountCars;
     wxStaticBox* m_DetailsBox;
     wxCheckBox* m_Swap;
     wxCheckBox* m_SwapPost;

@@ -315,6 +315,7 @@ public:
     wxSpinCtrl* m_ImageNr;
     wxStaticText* m_Label_Length;
     wxTextCtrl* m_Length;
+    wxSpinCtrl* m_NrCars;
     wxStaticText* m_Label_CatalogNr;
     wxTextCtrl* m_CatNr;
     wxStaticText* m_Label_Purchased;

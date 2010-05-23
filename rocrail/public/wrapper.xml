@@ -1404,6 +1404,7 @@
         <excl cardinality="n" />
         <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
         <var name="maxlen" vt="int" defval="0" range="0-*" remark="Maximal train length allowed for this route."/>
+        <var name="countcars" vt="string" defval="no" range="no,forwards,reverse" remark="Count number of cars before firing events."/>
         <!-- CTC Address -->
         <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
@@ -1536,6 +1537,7 @@
         <var name="port" vt="int" defval="0" range="0-*" required="false"
           remark="Block number in the Dinamo system. (Block property)"/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Total length of loc with wagons to check with block length.."/>
+        <var name="nrcars" vt="int" defval="0" range="0-*" remark="Number of cars. Needed for counting in sensors."/>
         <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
         <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
         <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
