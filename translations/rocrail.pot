@@ -1,0 +1,4981 @@
+# ?.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+
+msgid ""
+msgstr ""
+"Project-Id-Version: rocrail 1.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-26 07:51+0100\n"
+"PO-Revision-Date: 2010-05-23 07:51+0100\n"
+"Last-Translator: Rob Versluis <team@rocrail.net>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. 
+# id="changelang"
+#, c-format
+msgid "Restart to change language."
+msgstr ""
+
+#. 
+# id="cancel"
+#, c-format
+msgid "Cancel"
+msgstr ""
+
+#. 
+# id="cancel"
+#, c-format
+msgid "Cancel the dialog."
+msgstr ""
+
+#. 
+# id="on"
+#, c-format
+msgid "on"
+msgstr ""
+
+#. 
+# id="off"
+#, c-format
+msgid "off"
+msgstr ""
+
+#. 
+# id="ok"
+#, c-format
+msgid "OK"
+msgstr ""
+
+#. 
+# id="no"
+#, c-format
+msgid "no"
+msgstr ""
+
+#. 
+# id="yes"
+#, c-format
+msgid "yes"
+msgstr ""
+
+#. 
+# id="only"
+#, c-format
+msgid "only"
+msgstr ""
+
+#. 
+# id="stop"
+#, c-format
+msgid "Stop"
+msgstr ""
+
+#. 
+# id="stop"
+#, c-format
+msgid "Stop locomotive"
+msgstr ""
+
+#. 
+# id="station"
+#, c-format
+msgid "Station"
+msgstr ""
+
+#. 
+# id="break"
+#, c-format
+msgid "B R E A K"
+msgstr ""
+
+#. 
+# id="break"
+#, c-format
+msgid "Stop loc immediately!"
+msgstr ""
+
+#. 
+# id="connect"
+#, c-format
+msgid "Connect to"
+msgstr ""
+
+#. 
+# id="connect"
+#, c-format
+msgid "Connect to a Rocrail server."
+msgstr ""
+
+#. 
+# id="open"
+#, c-format
+msgid "Open"
+msgstr ""
+
+#. 
+# id="open"
+#, c-format
+msgid "Open a track plan."
+msgstr ""
+
+#. 
+# id="upload"
+#, c-format
+msgid "Upload"
+msgstr ""
+
+#. 
+# id="upload"
+#, c-format
+msgid "Send a track plan to server."
+msgstr ""
+
+#. 
+# id="server"
+#, c-format
+msgid "Server"
+msgstr ""
+
+#. 
+# id="save"
+#, c-format
+msgid "Save"
+msgstr ""
+
+#. 
+# id="save"
+#, c-format
+msgid "Save track plan."
+msgstr ""
+
+#. 
+# id="saveas"
+#, c-format
+msgid "Save As"
+msgstr ""
+
+#. 
+# id="saveas"
+#, c-format
+msgid "Save track plan with an other name."
+msgstr ""
+
+#. 
+# id="shutdown"
+#, c-format
+msgid "Shutdown Rocrail and Rocview"
+msgstr ""
+
+#. 
+# id="shutdown"
+#, c-format
+msgid "Shutdown Rocrail server and exit Rocview."
+msgstr ""
+
+#. 
+# id="exit"
+#, c-format
+msgid "Exit"
+msgstr ""
+
+#. 
+# id="exit"
+#, c-format
+msgid "Exit GUI."
+msgstr ""
+
+#. 
+# id="editmode"
+#, c-format
+msgid "Edit panel"
+msgstr ""
+
+#. 
+# id="editmode"
+#, c-format
+msgid "Edit track panel."
+msgstr ""
+
+#. 
+# id="undo"
+#, c-format
+msgid "Undo"
+msgstr ""
+
+#. 
+# id="editlocs"
+#, c-format
+msgid "Loc Properties"
+msgstr ""
+
+#. 
+# id="about"
+#, c-format
+msgid "Info"
+msgstr ""
+
+#. 
+# id="about"
+#, c-format
+msgid "Information Rocrail."
+msgstr ""
+
+#. 
+# id="poweron"
+#, c-format
+msgid "Power On"
+msgstr ""
+
+#. 
+# id="poweron"
+#, c-format
+msgid "Switch power on."
+msgstr ""
+
+#. 
+# id="poweroff"
+#, c-format
+msgid "Power Off"
+msgstr ""
+
+#. 
+# id="poweroff"
+#, c-format
+msgid "Switch power off."
+msgstr ""
+
+#. 
+# id="initfield"
+#, c-format
+msgid "Init field"
+msgstr ""
+
+#. 
+# id="initfield"
+#, c-format
+msgid "Initialize switches according the track plan."
+msgstr ""
+
+#. 
+# id="locctrl"
+#, c-format
+msgid "Loc Control"
+msgstr ""
+
+#. 
+# id="locctrl"
+#, c-format
+msgid "Dialog to control locs."
+msgstr ""
+
+#. 
+# id="swctrl"
+#, c-format
+msgid "Switch Control"
+msgstr ""
+
+#. 
+# id="swctrl"
+#, c-format
+msgid "Dialog to test switches."
+msgstr ""
+
+#. 
+# id="stctrl"
+#, c-format
+msgid "Routes Control"
+msgstr ""
+
+#. 
+# id="stctrl"
+#, c-format
+msgid "Dialog to test routes."
+msgstr ""
+
+#. 
+# id="planprops"
+#, c-format
+msgid "Track panel properties"
+msgstr ""
+
+#. 
+# id="planprops"
+#, c-format
+msgid "Dialog to view and set Track panel properties."
+msgstr ""
+
+#. 
+# id="startall"
+#, c-format
+msgid "Start all locs"
+msgstr ""
+
+#. 
+# id="startall"
+#, c-format
+msgid "Put all locs in auto mode."
+msgstr ""
+
+#. 
+# id="stopall"
+#, c-format
+msgid "Stop all locs"
+msgstr ""
+
+#. 
+# id="stopall"
+#, c-format
+msgid "Put all locs in manual mode."
+msgstr ""
+
+#. 
+# id="startloc"
+#, c-format
+msgid "Start locomotive"
+msgstr ""
+
+#. 
+# id="startloc"
+#, c-format
+msgid "Put locomotive in auto mode."
+msgstr ""
+
+#. 
+# id="stoploc"
+#, c-format
+msgid "Stop locomotive automat"
+msgstr ""
+
+#. 
+# id="stoploc"
+#, c-format
+msgid "Put locomotive in manual mode."
+msgstr ""
+
+#. 
+# id="resetall"
+#, c-format
+msgid "Reset all"
+msgstr ""
+
+#. 
+# id="resetall"
+#, c-format
+msgid "Reset automat."
+msgstr ""
+
+#. 
+# id="softresetall"
+#, c-format
+msgid "Soft reset"
+msgstr ""
+
+#. 
+# id="softresetall"
+#, c-format
+msgid "Reset automat but save current block occupation."
+msgstr ""
+
+#. 
+# id="level"
+#, c-format
+msgid "Level"
+msgstr ""
+
+#. 
+# id="levelup"
+#, c-format
+msgid "Level up"
+msgstr ""
+
+#. 
+# id="levelup"
+#, c-format
+msgid "Next level of track plan."
+msgstr ""
+
+#. 
+# id="leveldown"
+#, c-format
+msgid "Level down"
+msgstr ""
+
+#. 
+# id="leveldown"
+#, c-format
+msgid "Previous level of track plan."
+msgstr ""
+
+#. 
+# id="properties"
+#, c-format
+msgid "Properties"
+msgstr ""
+
+#. 
+# id="properties"
+#, c-format
+msgid "Dialog to view and set properties."
+msgstr ""
+
+#. 
+# id="clearmsg"
+#, c-format
+msgid "Clear messages"
+msgstr ""
+
+#. 
+# id="clearmsg"
+#, c-format
+msgid "Clear all messages."
+msgstr ""
+
+#. 
+# id="file"
+#, c-format
+msgid "File"
+msgstr ""
+
+#. 
+# id="edit"
+#, c-format
+msgid "Edit"
+msgstr ""
+
+#. 
+# id="control"
+#, c-format
+msgid "Control"
+msgstr ""
+
+#. 
+# id="test"
+#, c-format
+msgid "Test"
+msgstr ""
+
+#. 
+# id="automode"
+#, c-format
+msgid "Auto mode"
+msgstr ""
+
+#. 
+# id="automode"
+#, c-format
+msgid "Switch auto mode on."
+msgstr ""
+
+#. 
+# id="shutdownwarning"
+#, c-format
+msgid "This will shutdown the Rocrail server! Shutdown and exit?"
+msgstr ""
+
+#. 
+# id="resetallwarning"
+#, c-format
+msgid "This action also resets all block reservations. Proceed?"
+msgstr ""
+
+#. 
+# id="startallwarning"
+#, c-format
+msgid "Start all locs now?"
+msgstr ""
+
+#. 
+# id="stopallwarning"
+#, c-format
+msgid "Stop all locs now?"
+msgstr ""
+
+#. 
+# id="automodewarning"
+#, c-format
+msgid "There could be Locs running! Turn off AutoMode?"
+msgstr ""
+
+#. 
+# id="fileexistwarning"
+#, c-format
+msgid "File already exists! Realy overwrite?"
+msgstr ""
+
+#. 
+# id="removewarning"
+#, c-format
+msgid "Do you realy want to delete?"
+msgstr ""
+
+#. 
+# id="connectionwarning"
+#, c-format
+msgid "The Rocrail server could not be connected; check the Host and Port settings."
+msgstr ""
+
+#. 
+# id="auto"
+#, c-format
+msgid "Automatic"
+msgstr ""
+
+#. 
+# id="view"
+#, c-format
+msgid "View"
+msgstr ""
+
+#. 
+# id="extra"
+#, c-format
+msgid "Extra"
+msgstr ""
+
+#. 
+# id="help"
+#, c-format
+msgid "Help"
+msgstr ""
+
+#. 
+# id="function"
+#, c-format
+msgid "Function"
+msgstr ""
+
+#. 
+# id="functioncount"
+#, c-format
+msgid "Number of Function"
+msgstr ""
+
+#. 
+# id="functions"
+#, c-format
+msgid "Functions"
+msgstr ""
+
+#. 
+# id="changedirection"
+#, c-format
+msgid "Change direction"
+msgstr ""
+
+#. 
+# id="changedirection"
+#, c-format
+msgid "Change direction."
+msgstr ""
+
+#. 
+# id="add"
+#, c-format
+msgid "Add"
+msgstr ""
+
+#. 
+# id="delete"
+#, c-format
+msgid "Delete"
+msgstr ""
+
+#. 
+# id="name"
+#, c-format
+msgid "Name"
+msgstr ""
+
+#. 
+# id="value"
+#, c-format
+msgid "Value"
+msgstr ""
+
+#. 
+# id="streetid"
+#, c-format
+msgid "Route ID"
+msgstr ""
+
+#. 
+# id="swcmds"
+#, c-format
+msgid "Switch commands"
+msgstr ""
+
+#. 
+# id="decoder"
+#, c-format
+msgid "Decoder"
+msgstr ""
+
+#. 
+# id="decoder"
+#, c-format
+msgid "Decoder number."
+msgstr ""
+
+#. 
+# id="decoders"
+#, c-format
+msgid "Decoders"
+msgstr ""
+
+#. 
+# id="clickblock"
+#, c-format
+msgid "Double click to Start/Stop %s."
+msgstr ""
+
+#. 
+# id="blockdlg"
+#, c-format
+msgid "Block Properties"
+msgstr ""
+
+#. 
+# id="commuter"
+#, c-format
+msgid "Commuter train"
+msgstr ""
+
+#. 
+# id="loctable"
+#, c-format
+msgid "Locomotive table"
+msgstr ""
+
+#. 
+# id="programming"
+#, c-format
+msgid "Programming"
+msgstr ""
+
+#. 
+# id="pt"
+#, c-format
+msgid "Programming track"
+msgstr ""
+
+#. 
+# id="lncvprogramming"
+#, c-format
+msgid "LN CV/SV"
+msgstr ""
+
+#. 
+# id="routetable"
+#, c-format
+msgid "Route table"
+msgstr ""
+
+#. 
+# id="blockgrouptable"
+#, c-format
+msgid "Block group table"
+msgstr ""
+
+#. 
+# id="blocktable"
+#, c-format
+msgid "Block table"
+msgstr ""
+
+#. 
+# id="turnouttable"
+#, c-format
+msgid "Switch table"
+msgstr ""
+
+#. 
+# id="outputtable"
+#, c-format
+msgid "Output table"
+msgstr ""
+
+#. 
+# id="signaltable"
+#, c-format
+msgid "Signal table"
+msgstr ""
+
+#. 
+# id="turntable"
+#, c-format
+msgid "Turntable"
+msgstr ""
+
+#. 
+# id="sensortable"
+#, c-format
+msgid "Sensor table"
+msgstr ""
+
+#. 
+# id="sensorfromblock"
+#, c-format
+msgid "Sensors comming from block %s:"
+msgstr ""
+
+#. 
+# id="addpanel"
+#, c-format
+msgid "Add track panel"
+msgstr ""
+
+#. 
+# id="removepanel"
+#, c-format
+msgid "Delete track panel"
+msgstr ""
+
+#. 
+# id="panelprops"
+#, c-format
+msgid "Panel properties"
+msgstr ""
+
+#. 
+# id="panel"
+#, c-format
+msgid "Track plan"
+msgstr ""
+
+#. 
+# id="tables"
+#, c-format
+msgid "Tables"
+msgstr ""
+
+#. 
+# id="language"
+#, c-format
+msgid "Language"
+msgstr ""
+
+#. 
+# id="activelocs"
+#, c-format
+msgid "Active Locos"
+msgstr ""
+
+#. 
+# id="id"
+#, c-format
+msgid "ID"
+msgstr ""
+
+#. 
+# id="address"
+#, c-format
+msgid "Address"
+msgstr ""
+
+#. 
+# id="block"
+#, c-format
+msgid "Block"
+msgstr ""
+
+#. 
+# id="blocks"
+#, c-format
+msgid "Blocks"
+msgstr ""
+
+#. 
+# id="exceptions"
+#, c-format
+msgid "Exceptions:"
+msgstr ""
+
+#. 
+# id="warnings"
+#, c-format
+msgid "Warnings:"
+msgstr ""
+
+#. 
+# id="offline"
+#, c-format
+msgid "Offline"
+msgstr ""
+
+#. 
+# id="plantitle"
+#, c-format
+msgid "Track plan title"
+msgstr ""
+
+#. 
+# id="plantitle"
+#, c-format
+msgid "Change track plan title."
+msgstr ""
+
+#. 
+# id="planfile"
+#, c-format
+msgid "Track plan file"
+msgstr ""
+
+#. 
+# id="planfiles"
+#, c-format
+msgid "Track plan files (*.xml)|*.xml"
+msgstr ""
+
+#. 
+# id="saveplanfileas"
+#, c-format
+msgid "Save track plan as"
+msgstr ""
+
+#. 
+# id="openplanfile"
+#, c-format
+msgid "Open track plan"
+msgstr ""
+
+#. 
+# id="rocrailini"
+#, c-format
+msgid "Rocrail Properties"
+msgstr ""
+
+#. 
+# id="rocrailini"
+#, c-format
+msgid "Edit Rocrail properties."
+msgstr ""
+
+#. 
+# id="change_language_msg"
+#, c-format
+msgid "The language setting of the user interface has been updated and will take effect the next time you start."
+msgstr ""
+
+#. 
+# id="straight"
+#, c-format
+msgid "Straight"
+msgstr ""
+
+#. 
+# id="curve"
+#, c-format
+msgid "Curve"
+msgstr ""
+
+#. 
+# id="right"
+#, c-format
+msgid "Right"
+msgstr ""
+
+#. 
+# id="left"
+#, c-format
+msgid "Left"
+msgstr ""
+
+#. 
+# id="rightturnout"
+#, c-format
+msgid "Right switch"
+msgstr ""
+
+#. 
+# id="leftturnout"
+#, c-format
+msgid "Left switch"
+msgstr ""
+
+#. 
+# id="crossing"
+#, c-format
+msgid "Crossing"
+msgstr ""
+
+#. 
+# id="dcrossing"
+#, c-format
+msgid "Double Crossing"
+msgstr ""
+
+#. 
+# id="ccrossing"
+#, c-format
+msgid "Center Crossing"
+msgstr ""
+
+#. 
+# id="threeway"
+#, c-format
+msgid "Threeway"
+msgstr ""
+
+#. 
+# id="additem"
+#, c-format
+msgid "Add item"
+msgstr ""
+
+#. 
+# id="track"
+#, c-format
+msgid "Track"
+msgstr ""
+
+#. 
+# id="tracks"
+#, c-format
+msgid "Tracks"
+msgstr ""
+
+#. 
+# id="turnout"
+#, c-format
+msgid "Switch"
+msgstr ""
+
+#. 
+# id="switches"
+#, c-format
+msgid "Switches"
+msgstr ""
+
+#. 
+# id="signal"
+#, c-format
+msgid "Signal"
+msgstr ""
+
+#. 
+# id="signals"
+#, c-format
+msgid "Signals"
+msgstr ""
+
+#. 
+# id="sensor"
+#, c-format
+msgid "Sensor"
+msgstr ""
+
+#. 
+# id="setlocid"
+#, c-format
+msgid "Set Locomotive assignment"
+msgstr ""
+
+#. 
+# id="resetlocid"
+#, c-format
+msgid "Reset Locomotive assignment"
+msgstr ""
+
+#. 
+# id="close"
+#, c-format
+msgid "Close"
+msgstr ""
+
+#. 
+# id="rotate"
+#, c-format
+msgid "Rotate"
+msgstr ""
+
+#. 
+# id="type"
+#, c-format
+msgid "Type"
+msgstr ""
+
+#. 
+# id="nexttrack"
+#, c-format
+msgid "Next track"
+msgstr ""
+
+#. 
+# id="prevtrack"
+#, c-format
+msgid "Previous track"
+msgstr ""
+
+#. 
+# id="turn180"
+#, c-format
+msgid "Turn 180"
+msgstr ""
+
+#. 
+# id="gototrack"
+#, c-format
+msgid "Goto track"
+msgstr ""
+
+#. 
+# id="rotationvelocity"
+#, c-format
+msgid "Rotation velocity"
+msgstr ""
+
+#. 
+# id="info"
+#, c-format
+msgid "Information"
+msgstr ""
+
+#. 
+# id="start"
+#, c-format
+msgid "Start"
+msgstr ""
+
+#. 
+# id="index"
+#, c-format
+msgid "Index"
+msgstr ""
+
+#. 
+# id="general"
+#, c-format
+msgid "General"
+msgstr ""
+
+#. 
+# id="wiring"
+#, c-format
+msgid "Wiring"
+msgstr ""
+
+#. 
+# id="details"
+#, c-format
+msgid "Details"
+msgstr ""
+
+#. 
+# id="routes"
+#, c-format
+msgid "Routes"
+msgstr ""
+
+#. 
+# id="route"
+#, c-format
+msgid "Route"
+msgstr ""
+
+#. 
+# id="new"
+#, c-format
+msgid "New"
+msgstr ""
+
+#. 
+# id="new"
+#, c-format
+msgid "New track plan"
+msgstr ""
+
+#. 
+# id="description"
+#, c-format
+msgid "Description"
+msgstr ""
+
+#. 
+# id="length"
+#, c-format
+msgid "Length"
+msgstr ""
+
+#. 
+# id="locid"
+#, c-format
+msgid "Loc ID"
+msgstr ""
+
+#. 
+# id="turntableid"
+#, c-format
+msgid "Turntable ID"
+msgstr ""
+
+#. 
+# id="configuration"
+#, c-format
+msgid "Configuration"
+msgstr ""
+
+#. 
+# id="electrified"
+#, c-format
+msgid "Electrified"
+msgstr ""
+
+#. 
+# id="closed"
+#, c-format
+msgid "Closed"
+msgstr ""
+
+#. 
+# id="x"
+#, c-format
+msgid "X"
+msgstr ""
+
+#. 
+# id="y"
+#, c-format
+msgid "Y"
+msgstr ""
+
+#. 
+# id="z"
+#, c-format
+msgid "Z"
+msgstr ""
+
+#. 
+# id="orientation"
+#, c-format
+msgid "Orientation"
+msgstr ""
+
+#. 
+# id="north"
+#, c-format
+msgid "North"
+msgstr ""
+
+#. 
+# id="east"
+#, c-format
+msgid "East"
+msgstr ""
+
+#. 
+# id="south"
+#, c-format
+msgid "South"
+msgstr ""
+
+#. 
+# id="west"
+#, c-format
+msgid "West"
+msgstr ""
+
+#. 
+# id="speed"
+#, c-format
+msgid "Speed"
+msgstr ""
+
+#. 
+# id="speedsteps"
+#, c-format
+msgid "Decoder steps"
+msgstr ""
+
+#. 
+# id="min"
+#, c-format
+msgid "Min."
+msgstr ""
+
+#. 
+# id="mid"
+#, c-format
+msgid "Mid."
+msgstr ""
+
+#. 
+# id="cruise"
+#, c-format
+msgid "Cruise"
+msgstr ""
+
+#. 
+# id="max"
+#, c-format
+msgid "Max."
+msgstr ""
+
+#. 
+# id="local"
+#, c-format
+msgid "Local"
+msgstr ""
+
+#. 
+# id="ice"
+#, c-format
+msgid "Intercity"
+msgstr ""
+
+#. 
+# id="goods"
+#, c-format
+msgid "Freight"
+msgstr ""
+
+#. 
+# id="shunting"
+#, c-format
+msgid "Shunting"
+msgstr ""
+
+#. 
+# id="incline"
+#, c-format
+msgid "Incline"
+msgstr ""
+
+#. 
+# id="none"
+#, c-format
+msgid "None"
+msgstr ""
+
+#. 
+# id="up"
+#, c-format
+msgid "Up"
+msgstr ""
+
+#. 
+# id="down"
+#, c-format
+msgid "Down"
+msgstr ""
+
+#. 
+# id="wait"
+#, c-format
+msgid "Wait"
+msgstr ""
+
+#. 
+# id="random"
+#, c-format
+msgid "Random"
+msgstr ""
+
+#. 
+# id="fixed"
+#, c-format
+msgid "Fixed"
+msgstr ""
+
+#. 
+# id="loc"
+#, c-format
+msgid "Loc"
+msgstr ""
+
+#. 
+# id="waitdetails"
+#, c-format
+msgid "Wait details"
+msgstr ""
+
+#. 
+# id="randommin"
+#, c-format
+msgid "Random Min."
+msgstr ""
+
+#. 
+# id="randommax"
+#, c-format
+msgid "Random Max."
+msgstr ""
+
+#. 
+# id="apply"
+#, c-format
+msgid "Apply"
+msgstr ""
+
+#. 
+# id="title"
+#, c-format
+msgid "Title"
+msgstr ""
+
+#. 
+# id="host"
+#, c-format
+msgid "Hostname"
+msgstr ""
+
+#. 
+# id="port"
+#, c-format
+msgid "Port"
+msgstr ""
+
+#. 
+# id="interface"
+#, c-format
+msgid "Interface"
+msgstr ""
+
+#. 
+# id="state"
+#, c-format
+msgid "State"
+msgstr ""
+
+#. 
+# id="show"
+#, c-format
+msgid "Show"
+msgstr ""
+
+#. 
+# id="iid"
+#, c-format
+msgid "Interface ID"
+msgstr ""
+
+#. 
+# id="event"
+#, c-format
+msgid "Event"
+msgstr ""
+
+#. 
+# id="on_event"
+#, c-format
+msgid "On event"
+msgstr ""
+
+#. 
+# id="off_event"
+#, c-format
+msgid "Off event"
+msgstr ""
+
+#. 
+# id="catnr"
+#, c-format
+msgid "Catalog number"
+msgstr ""
+
+#. 
+# id="purchased"
+#, c-format
+msgid "Date of purchase"
+msgstr ""
+
+#. 
+# id="runtime"
+#, c-format
+msgid "Run time"
+msgstr ""
+
+#. 
+# id="protocol"
+#, c-format
+msgid "Protocol"
+msgstr ""
+
+#. 
+# id="protocol_version"
+#, c-format
+msgid "Protocol version"
+msgstr ""
+
+#. 
+# id="v_min"
+#, c-format
+msgid "V_Min"
+msgstr ""
+
+#. 
+# id="v_mid"
+#, c-format
+msgid "V_Mid"
+msgstr ""
+
+#. 
+# id="v_max"
+#, c-format
+msgid "V_Max"
+msgstr ""
+
+#. 
+# id="v_rmin"
+#, c-format
+msgid "V_RMin"
+msgstr ""
+
+#. 
+# id="v_rmin"
+#, c-format
+msgid "Reverse minimal speed"
+msgstr ""
+
+#. 
+# id="v_rmid"
+#, c-format
+msgid "V_RMid"
+msgstr ""
+
+#. 
+# id="v_rmid"
+#, c-format
+msgid "Reverse middle speed"
+msgstr ""
+
+#. 
+# id="v_rmax"
+#, c-format
+msgid "V_RMax"
+msgstr ""
+
+#. 
+# id="v_rmax"
+#, c-format
+msgid "Reverse maximal speed"
+msgstr ""
+
+#. 
+# id="v_step"
+#, c-format
+msgid "V_Step"
+msgstr ""
+
+#. 
+# id="v_mode"
+#, c-format
+msgid "V_Mode"
+msgstr ""
+
+#. 
+# id="percent"
+#, c-format
+msgid "Percent"
+msgstr ""
+
+#. 
+# id="driverlib"
+#, c-format
+msgid "Driver library"
+msgstr ""
+
+#. 
+# id="placing"
+#, c-format
+msgid "Placing"
+msgstr ""
+
+#. 
+# id="default"
+#, c-format
+msgid "Default"
+msgstr ""
+
+#. 
+# id="fromto"
+#, c-format
+msgid "From - To"
+msgstr ""
+
+#. 
+# id="blockwait"
+#, c-format
+msgid "Block wait time"
+msgstr ""
+
+#. 
+# id="engine"
+#, c-format
+msgid "Engine"
+msgstr ""
+
+#. 
+# id="diesel"
+#, c-format
+msgid "Diesel"
+msgstr ""
+
+#. 
+# id="steam"
+#, c-format
+msgid "Steam"
+msgstr ""
+
+#. 
+# id="electric"
+#, c-format
+msgid "Electric"
+msgstr ""
+
+#. 
+# id="cargo"
+#, c-format
+msgid "Train type"
+msgstr ""
+
+#. 
+# id="passengers"
+#, c-format
+msgid "Passenger"
+msgstr ""
+
+#. 
+# id="mixed"
+#, c-format
+msgid "Mixed"
+msgstr ""
+
+#. 
+# id="cleaning"
+#, c-format
+msgid "Cleaning"
+msgstr ""
+
+#. 
+# id="ctrlmode"
+#, c-format
+msgid "Operate"
+msgstr ""
+
+#. 
+# id="ctrlmode"
+#, c-format
+msgid "Operate track plan"
+msgstr ""
+
+#. 
+# id="zoom"
+#, c-format
+msgid "Zoom"
+msgstr ""
+
+#. 
+# id="zoom"
+#, c-format
+msgid "Track plan size."
+msgstr ""
+
+#. 
+# id="trace"
+#, c-format
+msgid "Trace"
+msgstr ""
+
+#. 
+# id="tracefile"
+#, c-format
+msgid "Trace file"
+msgstr ""
+
+#. 
+# id="tracelevel"
+#, c-format
+msgid "Trace level"
+msgstr ""
+
+#. 
+# id="debug"
+#, c-format
+msgid "Debug"
+msgstr ""
+
+#. 
+# id="byte"
+#, c-format
+msgid "Byte"
+msgstr ""
+
+#. 
+# id="parse"
+#, c-format
+msgid "Parse"
+msgstr ""
+
+#. 
+# id="service"
+#, c-format
+msgid "Service"
+msgstr ""
+
+#. 
+# id="controller"
+#, c-format
+msgid "Controller"
+msgstr ""
+
+#. 
+# id="libpath"
+#, c-format
+msgid "Library path"
+msgstr ""
+
+#. 
+# id="http"
+#, c-format
+msgid "HTTP service"
+msgstr ""
+
+#. 
+# id="enable"
+#, c-format
+msgid "Enable"
+msgstr ""
+
+#. 
+# id="clientport"
+#, c-format
+msgid "Client port"
+msgstr ""
+
+#. 
+# id="maxclientcon"
+#, c-format
+msgid "Max. number of clients"
+msgstr ""
+
+#. 
+# id="switchtime"
+#, c-format
+msgid "Switch time (ms)"
+msgstr ""
+
+#. 
+# id="minblocklen"
+#, c-format
+msgid "Min. block - train length (cm)"
+msgstr ""
+
+#. 
+# id="ignevent"
+#, c-format
+msgid "Ignore events within (10ms ticks)"
+msgstr ""
+
+#. 
+# id="bps"
+#, c-format
+msgid "Baudrate"
+msgstr ""
+
+#. 
+# id="sensormodules"
+#, c-format
+msgid "Sensor Modules (left,middle,right,size)"
+msgstr ""
+
+#. 
+# id="erddcdports"
+#, c-format
+msgid "Erddcd Ports (cmd,sensor,info)"
+msgstr ""
+
+#. 
+# id="commands"
+#, c-format
+msgid "Commands"
+msgstr ""
+
+#. 
+# id="command"
+#, c-format
+msgid "Command"
+msgstr ""
+
+#. 
+# id="fromblock"
+#, c-format
+msgid "From block"
+msgstr ""
+
+#. 
+# id="toblock"
+#, c-format
+msgid "To block"
+msgstr ""
+
+#. 
+# id="outputid"
+#, c-format
+msgid "Output ID"
+msgstr ""
+
+#. 
+# id="output"
+#, c-format
+msgid "Output"
+msgstr ""
+
+#. 
+# id="turnoutid"
+#, c-format
+msgid "Switch ID"
+msgstr ""
+
+#. 
+# id="turnout_left"
+#, c-format
+msgid "Switch (left)"
+msgstr ""
+
+#. 
+# id="right_3way"
+#, c-format
+msgid "Right (3-way)"
+msgstr ""
+
+#. 
+# id="locked"
+#, c-format
+msgid "Locked by"
+msgstr ""
+
+#. 
+# id="invert"
+#, c-format
+msgid "Invert"
+msgstr ""
+
+#. 
+# id="sensor_green"
+#, c-format
+msgid "Sensor straight"
+msgstr ""
+
+#. 
+# id="sensor_red"
+#, c-format
+msgid "Sensor turnout"
+msgstr ""
+
+#. 
+# id="opposite"
+#, c-format
+msgid "Opposite"
+msgstr ""
+
+#. 
+# id="tracknr"
+#, c-format
+msgid "Track number"
+msgstr ""
+
+#. 
+# id="posfb"
+#, c-format
+msgid "Position sensor"
+msgstr ""
+
+#. 
+# id="locfb"
+#, c-format
+msgid "Loc sensor"
+msgstr ""
+
+#. 
+# id="turntabletrack"
+#, c-format
+msgid "Turntable track"
+msgstr ""
+
+#. 
+# id="add_track"
+#, c-format
+msgid "Add track"
+msgstr ""
+
+#. 
+# id="del_track"
+#, c-format
+msgid "Delete track"
+msgstr ""
+
+#. 
+# id="blockid"
+#, c-format
+msgid "Block ID"
+msgstr ""
+
+#. 
+# id="gotoblock"
+#, c-format
+msgid "Set destination"
+msgstr ""
+
+#. 
+# id="gotoblock"
+#, c-format
+msgid "Loc stops after reaching the destination."
+msgstr ""
+
+#. 
+# id="enterid"
+#, c-format
+msgid "Enter ID"
+msgstr ""
+
+#. 
+# id="entertext"
+#, c-format
+msgid "Enter text"
+msgstr ""
+
+#. 
+# id="fill"
+#, c-format
+msgid "Fill tracks"
+msgstr ""
+
+#. 
+# id="fill"
+#, c-format
+msgid "Fills tracks with gray."
+msgstr ""
+
+#. 
+# id="outoforder"
+#, c-format
+msgid "Put out of operation"
+msgstr ""
+
+#. 
+# id="operational"
+#, c-format
+msgid "Put into operation"
+msgstr ""
+
+#. 
+# id="raster"
+#, c-format
+msgid "Show grid"
+msgstr ""
+
+#. 
+# id="locseldlg"
+#, c-format
+msgid "Loc Selection"
+msgstr ""
+
+#. 
+# id="dir"
+#, c-format
+msgid "Direction"
+msgstr ""
+
+#. 
+# id="dirall"
+#, c-format
+msgid "Both directions"
+msgstr ""
+
+#. 
+# id="unused"
+#, c-format
+msgid "unused"
+msgstr ""
+
+#. 
+# id="lights"
+#, c-format
+msgid "Lights"
+msgstr ""
+
+#. 
+# id="speedcontroller"
+#, c-format
+msgid "Speed controller"
+msgstr ""
+
+#. 
+# id="rocrail_help"
+#, c-format
+msgid "http://wiki.rocrail.net/doku.php?id=english"
+msgstr ""
+
+#. 
+# id="Vstart"
+#, c-format
+msgid "Start speed step"
+msgstr ""
+
+#. 
+# id="acceleration_rate"
+#, c-format
+msgid "Acceleration rate"
+msgstr ""
+
+#. 
+# id="deceleration_rate"
+#, c-format
+msgid "Deceleration rate"
+msgstr ""
+
+#. 
+# id="Vhigh"
+#, c-format
+msgid "Maximum speed step"
+msgstr ""
+
+#. 
+# id="Vmid"
+#, c-format
+msgid "Middle speed step"
+msgstr ""
+
+#. 
+# id="version"
+#, c-format
+msgid "Version"
+msgstr ""
+
+#. 
+# id="manufactured_ID"
+#, c-format
+msgid "Manufacturer ID"
+msgstr ""
+
+#. 
+# id="documentation"
+#, c-format
+msgid "Guide"
+msgstr ""
+
+#. 
+# id="documentation"
+#, c-format
+msgid "The online Manual."
+msgstr ""
+
+#. 
+# id="fbmodsize"
+#, c-format
+msgid "FB ports"
+msgstr ""
+
+#. 
+# id="swmodsize"
+#, c-format
+msgid "SW ports"
+msgstr ""
+
+#. 
+# id="switchaction"
+#, c-format
+msgid "Switch action"
+msgstr ""
+
+#. 
+# id="signalaction"
+#, c-format
+msgid "Signal action"
+msgstr ""
+
+#. 
+# id="streetaction"
+#, c-format
+msgid "Route action"
+msgstr ""
+
+#. 
+# id="systemaction"
+#, c-format
+msgid "System action"
+msgstr ""
+
+#. 
+# id="enableaction"
+#, c-format
+msgid "Enable action"
+msgstr ""
+
+#. 
+# id="action"
+#, c-format
+msgid "Action"
+msgstr ""
+
+#. 
+# id="mass"
+#, c-format
+msgid "Mass"
+msgstr ""
+
+#. 
+# id="visible"
+#, c-format
+msgid "visible"
+msgstr ""
+
+#. 
+# id="module"
+#, c-format
+msgid "module"
+msgstr ""
+
+#. 
+# id="trackdriver"
+#, c-format
+msgid "TD"
+msgstr ""
+
+#. 
+# id="trackdriver"
+#, c-format
+msgid "Track Driver"
+msgstr ""
+
+#. 
+# id="sourceblock"
+#, c-format
+msgid "Source block"
+msgstr ""
+
+#. 
+# id="linkedblocks"
+#, c-format
+msgid "Linked blocks"
+msgstr ""
+
+#. 
+# id="activate"
+#, c-format
+msgid "Activate"
+msgstr ""
+
+#. 
+# id="signal_type"
+#, c-format
+msgid "Signal type"
+msgstr ""
+
+#. 
+# id="distant_signal"
+#, c-format
+msgid "Distant signal"
+msgstr ""
+
+#. 
+# id="main_signal"
+#, c-format
+msgid "Main signal"
+msgstr ""
+
+#. 
+# id="shunting_signal"
+#, c-format
+msgid "Shunting signal"
+msgstr ""
+
+#. 
+# id="signification"
+#, c-format
+msgid "Signification"
+msgstr ""
+
+#. 
+# id="light_signal"
+#, c-format
+msgid "Light signal"
+msgstr ""
+
+#. 
+# id="semaphore_signal"
+#, c-format
+msgid "Semaphore signal"
+msgstr ""
+
+#. 
+# id="bus"
+#, c-format
+msgid "Bus"
+msgstr ""
+
+#. 
+# id="free"
+#, c-format
+msgid "free"
+msgstr ""
+
+#. 
+# id="buffer"
+#, c-format
+msgid "Buffer"
+msgstr ""
+
+#. 
+# id="decoupler"
+#, c-format
+msgid "Decoupler"
+msgstr ""
+
+#. 
+# id="endpulse"
+#, c-format
+msgid "endpulse"
+msgstr ""
+
+#. 
+# id="ghost"
+#, c-format
+msgid "ghost"
+msgstr ""
+
+#. 
+# id="text"
+#, c-format
+msgid "Text"
+msgstr ""
+
+#. 
+# id="deprecatedwirering"
+#, c-format
+msgid "The new Events found at the Routes tab are prefered."
+msgstr ""
+
+#. 
+# id="notsaved"
+#, c-format
+msgid "Save the changes before closing?"
+msgstr ""
+
+#. 
+# id="scheduletable"
+#, c-format
+msgid "Schedule table"
+msgstr ""
+
+#. 
+# id="schedule"
+#, c-format
+msgid "Schedule"
+msgstr ""
+
+#. 
+# id="hour"
+#, c-format
+msgid "hour"
+msgstr ""
+
+#. 
+# id="minute"
+#, c-format
+msgid "minute"
+msgstr ""
+
+#. 
+# id="locationtable"
+#, c-format
+msgid "Location table"
+msgstr ""
+
+#. 
+# id="location"
+#, c-format
+msgid "Locality"
+msgstr ""
+
+#. 
+# id="locations"
+#, c-format
+msgid "Localities"
+msgstr ""
+
+#. 
+# id="from"
+#, c-format
+msgid "from"
+msgstr ""
+
+#. 
+# id="to"
+#, c-format
+msgid "to"
+msgstr ""
+
+#. 
+# id="time"
+#, c-format
+msgid "time"
+msgstr ""
+
+#. 
+# id="selectschedule"
+#, c-format
+msgid "Select schedule"
+msgstr ""
+
+#. 
+# id="modify"
+#, c-format
+msgid "modify"
+msgstr ""
+
+#. 
+# id="refresh"
+#, c-format
+msgid "refresh"
+msgstr ""
+
+#. 
+# id="webclient"
+#, c-format
+msgid "WebClient"
+msgstr ""
+
+#. 
+# id="gomanual"
+#, c-format
+msgid "Half automatic"
+msgstr ""
+
+#. 
+# id="schedule2go"
+#, c-format
+msgid "Go with schedule"
+msgstr ""
+
+#. 
+# id="mic"
+#, c-format
+msgid "MIC"
+msgstr ""
+
+#. 
+# id="mic"
+#, c-format
+msgid "Mouse Integrated Controller"
+msgstr ""
+
+#. 
+# id="mode"
+#, c-format
+msgid "Mode"
+msgstr ""
+
+#. 
+# id="path"
+#, c-format
+msgid "Path"
+msgstr ""
+
+#. 
+# id="power"
+#, c-format
+msgid "Power"
+msgstr ""
+
+#. 
+# id="repeat"
+#, c-format
+msgid "Repeat"
+msgstr ""
+
+#. 
+# id="use"
+#, c-format
+msgid "Use"
+msgstr ""
+
+#. 
+# id="ric"
+#, c-format
+msgid "RIC"
+msgstr ""
+
+#. 
+# id="ric"
+#, c-format
+msgid "Rocrail Innovative Controller"
+msgstr ""
+
+#. 
+# id="stoponexit"
+#, c-format
+msgid "Stop on exit"
+msgstr ""
+
+#. 
+# id="rocguiini"
+#, c-format
+msgid "Rocview Properties"
+msgstr ""
+
+#. 
+# id="rocguiini"
+#, c-format
+msgid "Edit Rocview properties."
+msgstr ""
+
+#. 
+# id="bktext"
+#, c-format
+msgid "Blocktext scaling"
+msgstr ""
+
+#. 
+# id="gate"
+#, c-format
+msgid "Gate"
+msgstr ""
+
+#. 
+# id="identifier"
+#, c-format
+msgid "Identifier"
+msgstr ""
+
+#. 
+# id="identifier"
+#, c-format
+msgid "In case the train detection system returns not the decoder address."
+msgstr ""
+
+#. 
+# id="dispatch"
+#, c-format
+msgid "Dispatch for throttle"
+msgstr ""
+
+#. 
+# id="dispatch"
+#, c-format
+msgid "Dispath Locaddress to take over by a throttle."
+msgstr ""
+
+#. 
+# id="samedir"
+#, c-format
+msgid "same destination direction"
+msgstr ""
+
+#. 
+# id="samedir"
+#, c-format
+msgid "Search new destination without changing the current direction."
+msgstr ""
+
+#. 
+# id="oppositedir"
+#, c-format
+msgid "opposite destinations"
+msgstr ""
+
+#. 
+# id="oppositedir"
+#, c-format
+msgid "Search new destination in the to-from direction."
+msgstr ""
+
+#. 
+# id="forcesamedir"
+#, c-format
+msgid "force same destination direction"
+msgstr ""
+
+#. 
+# id="forcesamedir"
+#, c-format
+msgid "Search forced new destination without changing the current direction."
+msgstr ""
+
+#. 
+# id="deactivate"
+#, c-format
+msgid "Deactivate"
+msgstr ""
+
+#. 
+# id="criticalsection"
+#, c-format
+msgid "Critical section"
+msgstr ""
+
+#. 
+# id="eventtimer"
+#, c-format
+msgid "Event timer"
+msgstr ""
+
+#. 
+# id="acceptghost"
+#, c-format
+msgid "Accept ghost trains"
+msgstr ""
+
+#. 
+# id="cx"
+#, c-format
+msgid "cx"
+msgstr ""
+
+#. 
+# id="cy"
+#, c-format
+msgid "cy"
+msgstr ""
+
+#. 
+# id="pointsize"
+#, c-format
+msgid "Point size"
+msgstr ""
+
+#. 
+# id="tip"
+#, c-format
+msgid "Tip"
+msgstr ""
+
+#. 
+# id="device"
+#, c-format
+msgid "Device"
+msgstr ""
+
+#. 
+# id="terminalstation"
+#, c-format
+msgid "Terminal station"
+msgstr ""
+
+#. 
+# id="hsi88"
+#, c-format
+msgid "High Speed Interface-88"
+msgstr ""
+
+#. 
+# id="barjut"
+#, c-format
+msgid "Barcode Detection"
+msgstr ""
+
+#. 
+# id="ddl"
+#, c-format
+msgid "DDL"
+msgstr ""
+
+#. 
+# id="dda"
+#, c-format
+msgid "Digital Direct for AWL"
+msgstr ""
+
+#. 
+# id="dinamo"
+#, c-format
+msgid "Dinamo"
+msgstr ""
+
+#. 
+# id="srcp"
+#, c-format
+msgid "SRCP"
+msgstr ""
+
+#. 
+# id="om32"
+#, c-format
+msgid "Dinamo OM32 serial"
+msgstr ""
+
+#. 
+# id="p50"
+#, c-format
+msgid "Märklin 6050/51"
+msgstr ""
+
+#. 
+# id="p50x"
+#, c-format
+msgid "Intellibox (Extended P50)"
+msgstr ""
+
+#. 
+# id="slx"
+#, c-format
+msgid "SLX825"
+msgstr ""
+
+#. 
+# id="inter10"
+#, c-format
+msgid "LDT"
+msgstr ""
+
+#. 
+# id="zimo"
+#, c-format
+msgid "Zimo MX1"
+msgstr ""
+
+#. 
+# id="lenz"
+#, c-format
+msgid "Lenz"
+msgstr ""
+
+#. 
+# id="dirpause"
+#, c-format
+msgid "DirChange pause"
+msgstr ""
+
+#. 
+# id="dirpause"
+#, c-format
+msgid "Pause xxxms after last switch command."
+msgstr ""
+
+#. 
+# id="dirchgspd"
+#, c-format
+msgid "V=0 at dir change"
+msgstr ""
+
+#. 
+# id="dirchgspd"
+#, c-format
+msgid "Set velocity to 0 when chang direction."
+msgstr ""
+
+#. 
+# id="destinations"
+#, c-format
+msgid "Destinations"
+msgstr ""
+
+#. 
+# id="destination"
+#, c-format
+msgid "Destination"
+msgstr ""
+
+#. 
+# id="crossingblock"
+#, c-format
+msgid "crossing block"
+msgstr ""
+
+#. 
+# id="crossingblocks"
+#, c-format
+msgid "Crossing blocks"
+msgstr ""
+
+#. 
+# id="crossingblocks"
+#, c-format
+msgid "Comma separated list of crossing blocks."
+msgstr ""
+
+#. 
+# id="overlappedturnouts"
+#, c-format
+msgid "Overlapped switches"
+msgstr ""
+
+#. 
+# id="departure"
+#, c-format
+msgid "Departure"
+msgstr ""
+
+#. 
+# id="usepatterns"
+#, c-format
+msgid "use patterns"
+msgstr ""
+
+#. 
+# id="purgetime"
+#, c-format
+msgid "Slot Purge time (s)"
+msgstr ""
+
+#. 
+# id="useidle"
+#, c-format
+msgid "Use IDLE instead of GPOFF"
+msgstr ""
+
+#. 
+# id="useidle"
+#, c-format
+msgid "The LocoBuffer-USB needs the RailSync."
+msgstr ""
+
+#. 
+# id="ptiid"
+#, c-format
+msgid "PT IID"
+msgstr ""
+
+#. 
+# id="ptiid"
+#, c-format
+msgid "Use this controller for programming."
+msgstr ""
+
+#. 
+# id="sviid"
+#, c-format
+msgid "SV IID"
+msgstr ""
+
+#. 
+# id="sviid"
+#, c-format
+msgid "Use this controller for LN-SV programming."
+msgstr ""
+
+#. 
+# id="lciid"
+#, c-format
+msgid "LC IID"
+msgstr ""
+
+#. 
+# id="lciid"
+#, c-format
+msgid "Use this controller for locomotives."
+msgstr ""
+
+#. 
+# id="dpiid"
+#, c-format
+msgid "DP IID"
+msgstr ""
+
+#. 
+# id="dpiid"
+#, c-format
+msgid "Use this controller to dispatch locomotives for use with a throttle."
+msgstr ""
+
+#. 
+# id="clocktype"
+#, c-format
+msgid "Clocktype"
+msgstr ""
+
+#. 
+# id="opendecoder"
+#, c-format
+msgid "OpenDecoder"
+msgstr ""
+
+#. 
+# id="red"
+#, c-format
+msgid "red"
+msgstr ""
+
+#. 
+# id="yellow"
+#, c-format
+msgid "yellow"
+msgstr ""
+
+#. 
+# id="green"
+#, c-format
+msgid "green"
+msgstr ""
+
+#. 
+# id="white"
+#, c-format
+msgid "white"
+msgstr ""
+
+#. 
+# id="permissions"
+#, c-format
+msgid "Permissions"
+msgstr ""
+
+#. 
+# id="exclude"
+#, c-format
+msgid "Deny Loco"
+msgstr ""
+
+#. 
+# id="include"
+#, c-format
+msgid "Allow Loco"
+msgstr ""
+
+#. 
+# id="iconpath"
+#, c-format
+msgid "Icon path"
+msgstr ""
+
+#. 
+# id="imagepath"
+#, c-format
+msgid "Image path"
+msgstr ""
+
+#. 
+# id="regulated"
+#, c-format
+msgid "Regulated"
+msgstr ""
+
+#. 
+# id="regulated"
+#, c-format
+msgid "Decoder has a motor regulator."
+msgstr ""
+
+#. 
+# id="arrive"
+#, c-format
+msgid "Arrive"
+msgstr ""
+
+#. 
+# id="tabalign"
+#, c-format
+msgid "Tab align"
+msgstr ""
+
+#. 
+# id="multiline"
+#, c-format
+msgid "Multiline"
+msgstr ""
+
+#. 
+# id="usage"
+#, c-format
+msgid "Usage"
+msgstr ""
+
+#. 
+# id="rundirection"
+#, c-format
+msgid "Run direction"
+msgstr ""
+
+#. 
+# id="forwards"
+#, c-format
+msgid "Forwards"
+msgstr ""
+
+#. 
+# id="reverse"
+#, c-format
+msgid "Reverse"
+msgstr ""
+
+#. 
+# id="forwardsignals"
+#, c-format
+msgid "Signals at ahead drive"
+msgstr ""
+
+#. 
+# id="reversesignals"
+#, c-format
+msgid "Signals at reverse drive"
+msgstr ""
+
+#. 
+# id="multipleunit"
+#, c-format
+msgid "Multiple Unit"
+msgstr ""
+
+#. 
+# id="consist"
+#, c-format
+msgid "Consist"
+msgstr ""
+
+#. 
+# id="members"
+#, c-format
+msgid "Members"
+msgstr ""
+
+#. 
+# id="zconnector"
+#, c-format
+msgid "Level connector"
+msgstr ""
+
+#. 
+# id="actiontable"
+#, c-format
+msgid "Action table"
+msgstr ""
+
+#. 
+# id="actions"
+#, c-format
+msgid "Actions"
+msgstr ""
+
+#. 
+# id="number"
+#, c-format
+msgid "Number"
+msgstr ""
+
+#. 
+# id="activationtime"
+#, c-format
+msgid "Activation time"
+msgstr ""
+
+#. 
+# id="next_locomotive"
+#, c-format
+msgid "Next loco"
+msgstr ""
+
+#. 
+# id="swtype_raster"
+#, c-format
+msgid "Raster"
+msgstr ""
+
+#. 
+# id="showall"
+#, c-format
+msgid "Show all"
+msgstr ""
+
+#. 
+# id="startblock"
+#, c-format
+msgid "Start block"
+msgstr ""
+
+#. 
+# id="select"
+#, c-format
+msgid "Select"
+msgstr ""
+
+#. 
+# id="range"
+#, c-format
+msgid "Range"
+msgstr ""
+
+#. 
+# id="target"
+#, c-format
+msgid "Target"
+msgstr ""
+
+#. 
+# id="move"
+#, c-format
+msgid "Move"
+msgstr ""
+
+#. 
+# id="copy"
+#, c-format
+msgid "Copy"
+msgstr ""
+
+#. 
+# id="width"
+#, c-format
+msgid "Width"
+msgstr ""
+
+#. 
+# id="height"
+#, c-format
+msgid "Height"
+msgstr ""
+
+#. 
+# id="usescheduletime"
+#, c-format
+msgid "use schedule departure time"
+msgstr ""
+
+#. 
+# id="clock"
+#, c-format
+msgid "Clock"
+msgstr ""
+
+#. 
+# id="adjusttime"
+#, c-format
+msgid "Adjust time"
+msgstr ""
+
+#. 
+# id="remark"
+#, c-format
+msgid "Remark"
+msgstr ""
+
+#. 
+# id="option"
+#, c-format
+msgid "Option"
+msgstr ""
+
+#. 
+# id="swapplacing"
+#, c-format
+msgid "Swap placing"
+msgstr ""
+
+#. 
+# id="swapplacingpost"
+#, c-format
+msgid "Swap placing post"
+msgstr ""
+
+#. 
+# id="relativetime"
+#, c-format
+msgid "Relative time"
+msgstr ""
+
+#. 
+# id="cvget"
+#, c-format
+msgid "Get CV"
+msgstr ""
+
+#. 
+# id="waitforpt"
+#, c-format
+msgid "Wait for PT"
+msgstr ""
+
+#. 
+# id="soget"
+#, c-format
+msgid "Get SO"
+msgstr ""
+
+#. 
+# id="waitforso"
+#, c-format
+msgid "Wait for CS"
+msgstr ""
+
+#. 
+# id="softwareupdates"
+#, c-format
+msgid "Software Updates"
+msgstr ""
+
+#. 
+# id="softwareupdates"
+#, c-format
+msgid "Check for available updates for Rocrail."
+msgstr ""
+
+#. 
+# id="availableupdates"
+#, c-format
+msgid "Available Updates"
+msgstr ""
+
+#. 
+# id="updateinfo"
+#, c-format
+msgid "Update Info"
+msgstr ""
+
+#. 
+# id="searchingupdates"
+#, c-format
+msgid "Searching for available updates..."
+msgstr ""
+
+#. 
+# id="downloadingupdates"
+#, c-format
+msgid "Downloading updates..."
+msgstr ""
+
+#. 
+# id="successfullydownloaded"
+#, c-format
+msgid "Updates successfully downloaded."
+msgstr ""
+
+#. 
+# id="updatespath"
+#, c-format
+msgid "Updates path"
+msgstr ""
+
+#. 
+# id="errorondownloading"
+#, c-format
+msgid "Error on downloading! Check trace for details."
+msgstr ""
+
+#. 
+# id="program"
+#, c-format
+msgid "run ext. program."
+msgstr ""
+
+#. 
+# id="s88"
+#, c-format
+msgid "S88"
+msgstr ""
+
+#. 
+# id="busses"
+#, c-format
+msgid "Busses"
+msgstr ""
+
+#. 
+# id="ecos"
+#, c-format
+msgid "Ecos"
+msgstr ""
+
+#. 
+# id="sensors"
+#, c-format
+msgid "Sensors"
+msgstr ""
+
+#. 
+# id="poll"
+#, c-format
+msgid "Poll"
+msgstr ""
+
+#. 
+# id="options"
+#, c-format
+msgid "Options"
+msgstr ""
+
+#. 
+# id="scentryactions"
+#, c-format
+msgid "Schedule Entry Actions"
+msgstr ""
+
+#. 
+# id="unabletoconnect"
+#, c-format
+msgid "Unable to connect to "
+msgstr ""
+
+#. 
+# id="usergroup"
+#, c-format
+msgid "User group"
+msgstr ""
+
+#. 
+# id="usergroup"
+#, c-format
+msgid "Share your experiences, meet other Rocrailers and have fun!"
+msgstr ""
+
+#. 
+# id="translations"
+#, c-format
+msgid "Translations"
+msgstr ""
+
+#. 
+# id="translations"
+#, c-format
+msgid "Translations in Launchpad.net"
+msgstr ""
+
+#. 
+# id="consrv"
+#, c-format
+msgid "Configuration Service"
+msgstr ""
+
+#. 
+# id="consrv"
+#, c-format
+msgid "Interactive rocrail.ini configuration."
+msgstr ""
+
+#. 
+# id="bug"
+#, c-format
+msgid "Report a Bug"
+msgstr ""
+
+#. 
+# id="bug"
+#, c-format
+msgid "If you encounter a Bug..."
+msgstr ""
+
+#. 
+# id="feature"
+#, c-format
+msgid "Feature request"
+msgstr ""
+
+#. 
+# id="feature"
+#, c-format
+msgid "If you have a good idea..."
+msgstr ""
+
+#. 
+# id="usept"
+#, c-format
+msgid "Use PT"
+msgstr ""
+
+#. 
+# id="shortcutchecking"
+#, c-format
+msgid "Shortcut checking"
+msgstr ""
+
+#. 
+# id="inversedsr"
+#, c-format
+msgid "Invert DSR"
+msgstr ""
+
+#. 
+# id="delay"
+#, c-format
+msgid "Delay"
+msgstr ""
+
+#. 
+# id="locorefresh"
+#, c-format
+msgid "Locdecoder refresh"
+msgstr ""
+
+#. 
+# id="singlegate"
+#, c-format
+msgid "Single Gate"
+msgstr ""
+
+#. 
+# id="aspects"
+#, c-format
+msgid "Aspects"
+msgstr ""
+
+#. 
+# id="aspect"
+#, c-format
+msgid "Aspect"
+msgstr ""
+
+#. 
+# id="panelcolor"
+#, c-format
+msgid "Track plan color"
+msgstr ""
+
+#. 
+# id="functiongroup"
+#, c-format
+msgid "Function group"
+msgstr ""
+
+#. 
+# id="iconnotfound"
+#, c-format
+msgid "Rocview Icon(s) could could not be found! Check your settings. [%s]"
+msgstr ""
+
+#. 
+# id="dwarfsignal"
+#, c-format
+msgid "Dwarf signal"
+msgstr ""
+
+#. 
+# id="accessorydecoder"
+#, c-format
+msgid "Accessory Decoder"
+msgstr ""
+
+#. 
+# id="functiononleftturnout"
+#, c-format
+msgid "on left switch"
+msgstr ""
+
+#. 
+# id="functiononrightturnout"
+#, c-format
+msgid "on right switch"
+msgstr ""
+
+#. 
+# id="deactivationevent"
+#, c-format
+msgid "Deactivation event"
+msgstr ""
+
+#. 
+# id="pairgates"
+#, c-format
+msgid "Pair gates"
+msgstr ""
+
+#. 
+# id="randomseed"
+#, c-format
+msgid "Random generator"
+msgstr ""
+
+#. 
+# id="road"
+#, c-format
+msgid "Road"
+msgstr ""
+
+#. 
+# id="turnoff"
+#, c-format
+msgid "Turnoff"
+msgstr ""
+
+#. 
+# id="thrown"
+#, c-format
+msgid "Thrown"
+msgstr ""
+
+#. 
+# id="savepos"
+#, c-format
+msgid "Save position"
+msgstr ""
+
+#. 
+# id="savepostime"
+#, c-format
+msgid "Save position timer"
+msgstr ""
+
+#. 
+# id="theme"
+#, c-format
+msgid "Theme"
+msgstr ""
+
+#. 
+# id="check2in"
+#, c-format
+msgid "Check for free destination until reaching IN"
+msgstr ""
+
+#. 
+# id="locobook"
+#, c-format
+msgid "Loco Panel"
+msgstr ""
+
+#. 
+# id="secondnextblock"
+#, c-format
+msgid "Reserve second next block."
+msgstr ""
+
+#. 
+# id="dccformat"
+#, c-format
+msgid "DCC Format"
+msgstr ""
+
+#. 
+# id="dccformat"
+#, c-format
+msgid "Default DCC Format"
+msgstr ""
+
+#. 
+# id="timing"
+#, c-format
+msgid "Timing"
+msgstr ""
+
+#. 
+# id="timing"
+#, c-format
+msgid "Pulse timing S88-Bus."
+msgstr ""
+
+#. 
+# id="ptreset"
+#, c-format
+msgid "PT Resets"
+msgstr ""
+
+#. 
+# id="ptreset"
+#, c-format
+msgid "Extended Reset Commands"
+msgstr ""
+
+#. 
+# id="ptcommands"
+#, c-format
+msgid "PT Commands"
+msgstr ""
+
+#. 
+# id="ptcommands"
+#, c-format
+msgid "Extended Program Commands"
+msgstr ""
+
+#. 
+# id="ptpom"
+#, c-format
+msgid "PT POM"
+msgstr ""
+
+#. 
+# id="ptpom"
+#, c-format
+msgid "Command repetition for Programming on the Main."
+msgstr ""
+
+#. 
+# id="scdmain"
+#, c-format
+msgid "SCD Main"
+msgstr ""
+
+#. 
+# id="scdmain"
+#, c-format
+msgid "Power switch off time after short cut detection on the main."
+msgstr ""
+
+#. 
+# id="scdpt"
+#, c-format
+msgid "SCD PT"
+msgstr ""
+
+#. 
+# id="scdpt"
+#, c-format
+msgid "Power switch off time after short cut detection on the programming track."
+msgstr ""
+
+#. 
+# id="swsensors"
+#, c-format
+msgid "Switch sensors"
+msgstr ""
+
+#. 
+# id="swinvert"
+#, c-format
+msgid "Switch invert"
+msgstr ""
+
+#. 
+# id="swcommands"
+#, c-format
+msgid "Switch command repetition"
+msgstr ""
+
+#. 
+# id="swsensoroffset"
+#, c-format
+msgid "Switch sensor offset"
+msgstr ""
+
+#. 
+# id="swsensormode"
+#, c-format
+msgid "Switch sensor mode"
+msgstr ""
+
+#. 
+# id="scale"
+#, c-format
+msgid "Gauge"
+msgstr ""
+
+#. 
+# id="distance"
+#, c-format
+msgid "Distance"
+msgstr ""
+
+#. 
+# id="measurement"
+#, c-format
+msgid "Velocity measurement"
+msgstr ""
+
+#. 
+# id="mvtrack"
+#, c-format
+msgid "MVTrack"
+msgstr ""
+
+#. 
+# id="mvtrack"
+#, c-format
+msgid "Measure Velocity Track"
+msgstr ""
+
+#. 
+# id="convert2mph"
+#, c-format
+msgid "Convert to MPH"
+msgstr ""
+
+#. 
+# id="seltab"
+#, c-format
+msgid "Fiddle Yard"
+msgstr ""
+
+#. 
+# id="seltab"
+#, c-format
+msgid "Traverser type."
+msgstr ""
+
+#. 
+# id="seltabpos"
+#, c-format
+msgid "Traverser Position"
+msgstr ""
+
+#. 
+# id="image"
+#, c-format
+msgid "Image"
+msgstr ""
+
+#. 
+# id="activelow"
+#, c-format
+msgid "Active low"
+msgstr ""
+
+#. 
+# id="timedactions"
+#, c-format
+msgid "Timed Actions"
+msgstr ""
+
+#. 
+# id="timedactions"
+#, c-format
+msgid "Activate actions at a certain time."
+msgstr ""
+
+#. 
+# id="attributes"
+#, c-format
+msgid "Attributes"
+msgstr ""
+
+#. 
+# id="color"
+#, c-format
+msgid "Color"
+msgstr ""
+
+#. 
+# id="background"
+#, c-format
+msgid "Background"
+msgstr ""
+
+#. 
+# id="bold"
+#, c-format
+msgid "bold"
+msgstr ""
+
+#. 
+# id="italic"
+#, c-format
+msgid "italic"
+msgstr ""
+
+#. 
+# id="underlined"
+#, c-format
+msgid "underlined"
+msgstr ""
+
+#. 
+# id="transparent"
+#, c-format
+msgid "transparent"
+msgstr ""
+
+#. 
+# id="swcmd"
+#, c-format
+msgid "Switch command"
+msgstr ""
+
+#. 
+# id="doc_report"
+#, c-format
+msgid "Documentation"
+msgstr ""
+
+#. 
+# id="xslpath"
+#, c-format
+msgid "XSL path"
+msgstr ""
+
+#. 
+# id="showid"
+#, c-format
+msgid "Show ID's"
+msgstr ""
+
+#. 
+# id="showid"
+#, c-format
+msgid "Show object ID's."
+msgstr ""
+
+#. 
+# id="modpanel"
+#, c-format
+msgid "Module plan"
+msgstr ""
+
+#. 
+# id="addmodule"
+#, c-format
+msgid "Add Module"
+msgstr ""
+
+#. 
+# id="blockoccupation"
+#, c-format
+msgid "Block occupation"
+msgstr ""
+
+#. 
+# id="modproperties"
+#, c-format
+msgid "Module Properties"
+msgstr ""
+
+#. 
+# id="modid"
+#, c-format
+msgid "Module ID"
+msgstr ""
+
+#. 
+# id="connections"
+#, c-format
+msgid "Connections"
+msgstr ""
+
+#. 
+# id="rotation"
+#, c-format
+msgid "Rotation"
+msgstr ""
+
+#. 
+# id="side"
+#, c-format
+msgid "Side"
+msgstr ""
+
+#. 
+# id="initfieldpause"
+#, c-format
+msgid "Init field pause"
+msgstr ""
+
+#. 
+# id="initfieldpower"
+#, c-format
+msgid "Init field power on"
+msgstr ""
+
+#. 
+# id="enableswfb"
+#, c-format
+msgid "Enable switch feedback"
+msgstr ""
+
+#. 
+# id="unusedfbevent"
+#, c-format
+msgid "Event from block [%s] is not used. Remove it from the list?"
+msgstr ""
+
+#. 
+# id="allowchgdir"
+#, c-format
+msgid "Allow change direction"
+msgstr ""
+
+#. 
+# id="eventtimeout"
+#, c-format
+msgid "Event timeout"
+msgstr ""
+
+#. 
+# id="eventtimeout"
+#, c-format
+msgid "Time to wait for an event in seconds."
+msgstr ""
+
+#. 
+# id="accessory"
+#, c-format
+msgid "Accessory"
+msgstr ""
+
+#. 
+# id="accnr"
+#, c-format
+msgid "Accessory#"
+msgstr ""
+
+#. 
+# id="portbase"
+#, c-format
+msgid "Port base"
+msgstr ""
+
+#. 
+# id="queuecheck"
+#, c-format
+msgid "Check Tx"
+msgstr ""
+
+#. 
+# id="signalreset"
+#, c-format
+msgid "Reset signal"
+msgstr ""
+
+#. 
+# id="routeswtime"
+#, c-format
+msgid "Route switch time"
+msgstr ""
+
+#. 
+# id="reducespeed"
+#, c-format
+msgid "Reduce speed"
+msgstr ""
+
+#. 
+# id="conditions"
+#, c-format
+msgid "Conditions"
+msgstr ""
+
+#. 
+# id="resumeall"
+#, c-format
+msgid "Resume all locs"
+msgstr ""
+
+#. 
+# id="resumeall"
+#, c-format
+msgid "Put all locs in auto mode from previous session."
+msgstr ""
+
+#. 
+# id="resumeallwarning"
+#, c-format
+msgid "Start all locs now from the previous session?"
+msgstr ""
+
+#. 
+# id="disablerouteVreduce"
+#, c-format
+msgid "No speed change for switches"
+msgstr ""
+
+#. 
+# id="onlyfirstmaster"
+#, c-format
+msgid "Only first can control"
+msgstr ""
+
+#. 
+# id="defaspect"
+#, c-format
+msgid "Default signal aspect"
+msgstr ""
+
+#. 
+# id="greenaspect"
+#, c-format
+msgid "Green aspect if next is red"
+msgstr ""
+
+#. 
+# id="routeids"
+#, c-format
+msgid "Route IDs"
+msgstr ""
+
+#. 
+# id="sharedfb"
+#, c-format
+msgid "Shared sensors"
+msgstr ""
+
+#. 
+# id="managetrackblocks"
+#, c-format
+msgid "Manage track blocks"
+msgstr ""
+
+#. 
+# id="skipsetsw"
+#, c-format
+msgid "Skip switch commands"
+msgstr ""
+
+#. 
+# id="skipsetsw"
+#, c-format
+msgid "Skip switch commands in routes if already set"
+msgstr ""
+
+#. 
+# id="gamepad"
+#, c-format
+msgid "Gamepad"
+msgstr ""
+
+#. 
+# id="restrictedit4auto"
+#, c-format
+msgid "Restrict edit in automode"
+msgstr ""
+
+#. 
+# id="semaphorewait"
+#, c-format
+msgid "Semaphore time"
+msgstr ""
+
+#. 
+# id="lightsoff"
+#, c-format
+msgid "Lights off"
+msgstr ""
+
+#. 
+# id="svg"
+#, c-format
+msgid "SVG"
+msgstr ""
+
+#. 
+# id="followup"
+#, c-format
+msgid "Follow-up"
+msgstr ""
+
+#. 
+# id="ctsflow"
+#, c-format
+msgid "CTS Flow"
+msgstr ""
+
+#. 
+# id="savelocoiofileas"
+#, c-format
+msgid "Save LocoIO file as"
+msgstr ""
+
+#. 
+# id="openlocoiofile"
+#, c-format
+msgid "Open LocoIO file"
+msgstr ""
+
+#. 
+# id="roundhouse"
+#, c-format
+msgid "Roundhouse"
+msgstr ""
+
+#. 
+# id="access"
+#, c-format
+msgid "Access"
+msgstr ""
+
+#. 
+# id="ttdirpause"
+#, c-format
+msgid "Direction change pause"
+msgstr ""
+
+#. 
+# id="swaprotationdirection"
+#, c-format
+msgid "swap rotation direction"
+msgstr ""
+
+#. 
+# id="shortid"
+#, c-format
+msgid "Short ID"
+msgstr ""
+
+#. 
+# id="setshortid"
+#, c-format
+msgid "Set short ID"
+msgstr ""
+
+#. 
+# id="txshortids"
+#, c-format
+msgid "Transmit short IDs"
+msgstr ""
+
+#. 
+# id="txshortids"
+#, c-format
+msgid "Transmit short IDs to a connected throttle."
+msgstr ""
+
+#. 
+# id="cartable"
+#, c-format
+msgid "Car table"
+msgstr ""
+
+#. 
+# id="waybilltable"
+#, c-format
+msgid "Waybill table"
+msgstr ""
+
+#. 
+# id="operatortable"
+#, c-format
+msgid "Operator table"
+msgstr ""
+
+#. 
+# id="operator"
+#, c-format
+msgid "Operator"
+msgstr ""
+
+#. 
+# id="waybill"
+#, c-format
+msgid "Waybill"
+msgstr ""
+
+#. 
+# id="freezetime"
+#, c-format
+msgid "Freeze time"
+msgstr ""
+
+#. 
+# id="resumetime"
+#, c-format
+msgid "Resume time"
+msgstr ""
+
+#. 
+# id="code"
+#, c-format
+msgid "Code"
+msgstr ""
+
+#. 
+# id="roadname"
+#, c-format
+msgid "Roadname"
+msgstr ""
+
+#. 
+# id="era"
+#, c-format
+msgid "Era"
+msgstr ""
+
+#. 
+# id="subtype"
+#, c-format
+msgid "Subtype"
+msgstr ""
+
+#. 
+# id="car"
+#, c-format
+msgid "Car"
+msgstr ""
+
+#. 
+# id="poladdr"
+#, c-format
+msgid "Polarization addr."
+msgstr ""
+
+#. 
+# id="ttbridgepolarization"
+#, c-format
+msgid "Bridge polarization"
+msgstr ""
+
+#. 
+# id="readspeedcurve"
+#, c-format
+msgid "Read current speed curve from decoder?"
+msgstr ""
+
+#. 
+# id="sync"
+#, c-format
+msgid "Synchronize"
+msgstr ""
+
+#. 
+# id="onlymobiledec"
+#, c-format
+msgid "Mobile only"
+msgstr ""
+
+#. 
+# id="purgeslots"
+#, c-format
+msgid "Purge slots"
+msgstr ""
+
+#. 
+# id="stopatpurge"
+#, c-format
+msgid "Stop at purge"
+msgstr ""
+
+#. 
+# id="useshortinevent"
+#, c-format
+msgid "Use shortin event"
+msgstr ""
+
+#. 
+# id="inatpre2in"
+#, c-format
+msgid "Stop at pre2in event"
+msgstr ""
+
+#. 
+# id="routing"
+#, c-format
+msgid "Routing"
+msgstr ""
+
+#. 
+# id="shipper"
+#, c-format
+msgid "Shipper"
+msgstr ""
+
+#. 
+# id="origin"
+#, c-format
+msgid "Origin"
+msgstr ""
+
+#. 
+# id="consignee"
+#, c-format
+msgid "Consignee"
+msgstr ""
+
+#. 
+# id="commodity"
+#, c-format
+msgid "Commodity"
+msgstr ""
+
+#. 
+# id="status"
+#, c-format
+msgid "Status"
+msgstr ""
+
+#. 
+# id="waiting"
+#, c-format
+msgid "Waiting"
+msgstr ""
+
+#. 
+# id="shipping"
+#, c-format
+msgid "Shipping"
+msgstr ""
+
+#. 
+# id="delivered"
+#, c-format
+msgid "Delivered"
+msgstr ""
+
+#. 
+# id="empty"
+#, c-format
+msgid "Empty"
+msgstr ""
+
+#. 
+# id="loaded"
+#, c-format
+msgid "Loaded"
+msgstr ""
+
+#. 
+# id="maintenance"
+#, c-format
+msgid "Maintenance"
+msgstr ""
+
+#. 
+# id="boxcar"
+#, c-format
+msgid "Boxcar"
+msgstr ""
+
+#. 
+# id="gondola"
+#, c-format
+msgid "Gondola"
+msgstr ""
+
+#. 
+# id="flatcar"
+#, c-format
+msgid "Flatcar"
+msgstr ""
+
+#. 
+# id="reefer"
+#, c-format
+msgid "Reefer"
+msgstr ""
+
+#. 
+# id="stockcar"
+#, c-format
+msgid "Stockcar"
+msgstr ""
+
+#. 
+# id="tankcar"
+#, c-format
+msgid "Tankcar"
+msgstr ""
+
+#. 
+# id="wellcar"
+#, c-format
+msgid "Wellcar"
+msgstr ""
+
+#. 
+# id="hopper"
+#, c-format
+msgid "Hopper"
+msgstr ""
+
+#. 
+# id="caboose"
+#, c-format
+msgid "Caboose"
+msgstr ""
+
+#. 
+# id="autorack"
+#, c-format
+msgid "Autorack"
+msgstr ""
+
+#. 
+# id="autocarrier"
+#, c-format
+msgid "Autocarrier"
+msgstr ""
+
+#. 
+# id="logdumpcar"
+#, c-format
+msgid "Logdumpcar"
+msgstr ""
+
+#. 
+# id="coilcar"
+#, c-format
+msgid "Coilcar"
+msgstr ""
+
+#. 
+# id="coach"
+#, c-format
+msgid "Coach"
+msgstr ""
+
+#. 
+# id="lounge"
+#, c-format
+msgid "Lounge"
+msgstr ""
+
+#. 
+# id="dome"
+#, c-format
+msgid "Dome"
+msgstr ""
+
+#. 
+# id="express"
+#, c-format
+msgid "Express"
+msgstr ""
+
+#. 
+# id="dinner"
+#, c-format
+msgid "Dinner"
+msgstr ""
+
+#. 
+# id="sleeper"
+#, c-format
+msgid "Sleeper"
+msgstr ""
+
+#. 
+# id="baggage"
+#, c-format
+msgid "Baggage"
+msgstr ""
+
+#. 
+# id="postoffice"
+#, c-format
+msgid "Postoffice"
+msgstr ""
+
+#. 
+# id="lock"
+#, c-format
+msgid "Lock"
+msgstr ""
+
+#. 
+# id="invalidid"
+#, c-format
+msgid "The ID must be at least one character!"
+msgstr ""
+
+#. 
+# id="minocc"
+#, c-format
+msgid "Minimal occupied"
+msgstr ""
+
+#. 
+# id="timeprocessing"
+#, c-format
+msgid "Time processing"
+msgstr ""
+
+#. 
+# id="real"
+#, c-format
+msgid "Absolute"
+msgstr ""
+
+#. 
+# id="relative"
+#, c-format
+msgid "Relative"
+msgstr ""
+
+#. 
+# id="hourly"
+#, c-format
+msgid "Hourly"
+msgstr ""
+
+#. 
+# id="fullscreen"
+#, c-format
+msgid "Full screen"
+msgstr ""
+
+#. 
+# id="timeframe"
+#, c-format
+msgid "Time frame"
+msgstr ""
+
+#. 
+# id="usebicom"
+#, c-format
+msgid "Use Bi-Directional Communication"
+msgstr ""
+
+#. 
+# id="serviced"
+#, c-format
+msgid "Serviced"
+msgstr ""
+
+#. 
+# id="serviced"
+#, c-format
+msgid "Set locomotive to serviced."
+msgstr ""
+
+#. 
+# id="mtime"
+#, c-format
+msgid "M-Time"
+msgstr ""
+
+#. 
+# id="mtime"
+#, c-format
+msgid "Last serviced run time."
+msgstr ""
+
+#. 
+# id="mint"
+#, c-format
+msgid "M-Int"
+msgstr ""
+
+#. 
+# id="mint"
+#, c-format
+msgid "Maintenance interval in hours."
+msgstr ""
+
+#. 
+# id="offpos"
+#, c-format
+msgid "Shutdown position"
+msgstr ""
+
+#. 
+# id="position"
+#, c-format
+msgid "Position"
+msgstr ""
+
+#. 
+# id="motoroffdelay"
+#, c-format
+msgid "Motor off delay"
+msgstr ""
+
+#. 
+# id="stopatidentmismatch"
+#, c-format
+msgid "Power off at ident mismatch"
+msgstr ""
+
+#. 
+# id="manualoperated"
+#, c-format
+msgid "Manual operated"
+msgstr ""
+
+#. 
+# id="autooperated"
+#, c-format
+msgid "Automatically operated"
+msgstr ""
+
+#. 
+# id="import"
+#, c-format
+msgid "Import"
+msgstr ""
+
+#. 
+# id="chain"
+#, c-format
+msgid "Chain"
+msgstr ""
+
+#. 
+# id="chains"
+#, c-format
+msgid "Chains"
+msgstr ""
+
+#. 
+# id="shortcutsensor"
+#, c-format
+msgid "Shortcut sensor"
+msgstr ""
+
+#. 
+# id="shortcut"
+#, c-format
+msgid "Shortcut"
+msgstr ""
+
+#. 
+# id="boostertable"
+#, c-format
+msgid "Boosters"
+msgstr ""
+
+#. 
+# id="boostertable"
+#, c-format
+msgid "Booster setup for power manager."
+msgstr ""
+
+#. 
+# id="powerctrl"
+#, c-format
+msgid "Power control"
+msgstr ""
+
+#. 
+# id="powerctrl"
+#, c-format
+msgid "Power manager booster control."
+msgstr ""
+
+#. 
+# id="boosterid"
+#, c-format
+msgid "Booster ID"
+msgstr ""
+
+#. 
+# id="trackpower"
+#, c-format
+msgid "Track power"
+msgstr ""
+
+#. 
+# id="powerdistrict"
+#, c-format
+msgid "District"
+msgstr ""
+
+#. 
+# id="fastclock"
+#, c-format
+msgid "Fastclock"
+msgstr ""
+
+#. 
+# id="poweronstartup"
+#, c-format
+msgid "Power on at startup"
+msgstr ""
+
+#. 
+# id="offset"
+#, c-format
+msgid "Offset"
+msgstr ""
+
+#. 
+# id="debounce"
+#, c-format
+msgid "Debounce"
+msgstr ""
+
+#. 
+# id="scopt_poweroffall"
+#, c-format
+msgid "Power off all boosters."
+msgstr ""
+
+#. 
+# id="scopt_stoplocos"
+#, c-format
+msgid "Stop all locos in this district."
+msgstr ""
+
+#. 
+# id="scopt_repoweron"
+#, c-format
+msgid "Repower on after the shortcut is cleared."
+msgstr ""
+
+#. 
+# id="multiport"
+#, c-format
+msgid "Multiport"
+msgstr ""
+
+#. 
+# id="itemidps"
+#, c-format
+msgid "Item ID pointsize"
+msgstr ""
+
+#. 
+# id="timeout"
+#, c-format
+msgid "Timeout"
+msgstr ""
+
+#. 
+# id="virtual"
+#, c-format
+msgid "Virtual"
+msgstr ""
+
+#. 
+# id="smallsymbol"
+#, c-format
+msgid "Small symbol"
+msgstr ""
+
+#. 
+# id="modview"
+#, c-format
+msgid "Module view"
+msgstr ""
+
+#. 
+# id="post"
+#, c-format
+msgid "Post"
+msgstr ""
+
+#. 
+# id="all"
+#, c-format
+msgid "All"
+msgstr ""
+
+#. 
+# id="netroutes"
+#, c-format
+msgid "NetRoutes"
+msgstr ""
+
+#. 
+# id="restorefx"
+#, c-format
+msgid "Restore functions"
+msgstr ""
+
+#. 
+# id="maxtrainlen"
+#, c-format
+msgid "Max. train length"
+msgstr ""
+
+#. 
+# id="owner"
+#, c-format
+msgid "Owner"
+msgstr ""
+
+#. 
+# id="cartype"
+#, c-format
+msgid "Car type"
+msgstr ""
+
+#. 
+# id="routestolock"
+#, c-format
+msgid "Routes to lock"
+msgstr ""
+
+#. 
+# id="seconds"
+#, c-format
+msgid "sec."
+msgstr ""
+
+#. 
+# id="interval"
+#, c-format
+msgid "Interval"
+msgstr ""
+
+#. 
+# id="crossingblocksignals"
+#, c-format
+msgid "Crossing block signals"
+msgstr ""
+
+#. 
+# id="editmodplan"
+#, c-format
+msgid "Edit module plan"
+msgstr ""
+
+#. 
+# id="editmodplan"
+#, c-format
+msgid "Enable editting the module plan."
+msgstr ""
+
+#. 
+# id="dispatchmode"
+#, c-format
+msgid "Use mode column to dispatch"
+msgstr ""
+
+#. 
+# id="poweroffatghost"
+#, c-format
+msgid "Power off at ghost train"
+msgstr ""
+
+#. 
+# id="timer"
+#, c-format
+msgid "Timer"
+msgstr ""
+
+#. 
+# id="system"
+#, c-format
+msgid "System"
+msgstr ""
+
+#. 
+# id="locomotive"
+#, c-format
+msgid "Locomotive"
+msgstr ""
+
+#. 
+# id="modules"
+#, c-format
+msgid "Modules"
+msgstr ""
+
+#. 
+# id="openworkspace"
+#, c-format
+msgid "Open Workspace"
+msgstr ""
+
+#. 
+# id="openworkspace"
+#, c-format
+msgid "Open a Workspace to play."
+msgstr ""
+
+#. 
+# id="rocrailservernotfound"
+#, c-format
+msgid "The Rocrail server is not found in the following location:"
+msgstr ""
+
+#. 
+# id="defaultworkspace"
+#, c-format
+msgid "Default Workspace"
+msgstr ""
+
+#. 
+# id="defaultworkspace"
+#, c-format
+msgid "Default Workspace to open at startup."
+msgstr ""
+
+#. 
+# id="startdefaultworkspace"
+#, c-format
+msgid "Use Workspace at startup"
+msgstr ""
+
+#. 
+# id="keepghost"
+#, c-format
+msgid "Keep ghost state"
+msgstr ""
+
+#. 
+# id="priority"
+#, c-format
+msgid "Priority"
+msgstr ""
+
+#. 
+# id="priority"
+#, c-format
+msgid "The wait time will be multiplied with this value in case no destination is found."
+msgstr ""
+
+#. 
+# id="signalwait"
+#, c-format
+msgid "Signal time"
+msgstr ""
+
+#. 
+# id="locostartgap"
+#, c-format
+msgid "Loco start gap"
+msgstr ""
+
+#. 
+# id="sendalltraces"
+#, c-format
+msgid "Send all server traces to Rocview"
+msgstr ""
+
+#. 
+# id="manual"
+#, c-format
+msgid "Manual"
+msgstr ""
+
+#. 
+# id="both"
+#, c-format
+msgid "Both"
+msgstr ""
+
+#. 
+# id="email"
+#, c-format
+msgid "Email"
+msgstr ""
+
+#. 
+# id="expdate"
+#, c-format
+msgid "Expiration date"
+msgstr ""
+
+#. 
+# id="donatenow"
+#, c-format
+msgid "Donate now"
+msgstr ""
+
+#. 
+# id="donkey"
+#, c-format
+msgid "Donate"
+msgstr ""
+
+#. 
+# id="loadkey"
+#, c-format
+msgid "Load key"
+msgstr ""
+
+#. 
+# id="donatekey"
+#, c-format
+msgid "Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did donate you can ask a key to disable this on startup dialog: donate@rocrail.net"
+msgstr ""
+
+#. 
+# id="donatethanks"
+#, c-format
+msgid "Thanks for donating! Enjoy using Rocrail."
+msgstr ""
+
+#. 
+# id="donatelink"
+#, c-format
+msgid "http://wiki.rocrail.net/doku.php?id=donate-en"
+msgstr ""
+
+#. 
+# id="tristate"
+#, c-format
+msgid "Tri-State"
+msgstr ""
+
+#. 
+# id="toggleswitch"
+#, c-format
+msgid "Toggle switch"
+msgstr ""
+
+#. 
+# id="pushbutton"
+#, c-format
+msgid "Push button"
+msgstr ""
+
+#. 
+# id="ctc"
+#, c-format
+msgid "CTC"
+msgstr ""
+
+#. 
+# id="ctc"
+#, c-format
+msgid "Centralized Traffic Control"
+msgstr ""
+
+#. 
+# id="motor"
+#, c-format
+msgid "Motor"
+msgstr ""
+
+#. 
+# id="usemanualroutes"
+#, c-format
+msgid "Use manual routes"
+msgstr ""
+
+#. 
+# id="disablesteal"
+#, c-format
+msgid "Disable steal loco control"
+msgstr ""
+
+#. 
+# id="blockinitpause"
+#, c-format
+msgid "Block init pause"
+msgstr ""
+
+#. 
+# id="skipsetsg"
+#, c-format
+msgid "Skip signal commands"
+msgstr ""
+
+#. 
+# id="skipsetsg"
+#, c-format
+msgid "Skip signal commands if already set"
+msgstr ""
+
+#. 
+# id="fromsignals"
+#, c-format
+msgid "From signal pair"
+msgstr ""
+
+#. 
+# id="tosignals"
+#, c-format
+msgid "To signal pair"
+msgstr ""
+
+#. 
+# id="button"
+#, c-format
+msgid "Button"
+msgstr ""
+
+#. 
+# id="light"
+#, c-format
+msgid "Light"
+msgstr ""
+
+#. 
+# id="lightgoods"
+#, c-format
+msgid "Light freight"
+msgstr ""
+
+#. 
+# id="regional"
+#, c-format
+msgid "Regional"
+msgstr ""
+
+#. 
+# id="size"
+#, c-format
+msgid "size"
+msgstr ""
+
+#. 
+# id="restore"
+#, c-format
+msgid "Restore"
+msgstr ""
+
+#. 
+# id="recycle"
+#, c-format
+msgid "Recycle"
+msgstr ""
+
+#. 
+# id="middle"
+#, c-format
+msgid "Middle"
+msgstr ""
+
+#. 
+# id="power4acc"
+#, c-format
+msgid "Power on state for accessory commands"
+msgstr ""
+
+#. 
+# id="extstop"
+#, c-format
+msgid "Stop controller"
+msgstr ""
+
+#. 
+# id="ignorebusy"
+#, c-format
+msgid "Ignore Busy message"
+msgstr ""
+
+#. 
+# id="indelay"
+#, c-format
+msgid "IN delay"
+msgstr ""
+
+#. 
+# id="led"
+#, c-format
+msgid "LED"
+msgstr ""
+
+#. 
+# id="poweroffatreset"
+#, c-format
+msgid "Power off at reset"
+msgstr ""
+
+#. 
+# id="poweroffonexit"
+#, c-format
+msgid "Power off on exit"
+msgstr ""
+
+#. 
+# id="polarization"
+#, c-format
+msgid "Polarization"
+msgstr ""
+
+#. 
+# id="servo"
+#, c-format
+msgid "Servo"
+msgstr ""
+
+#. 
+# id="setup"
+#, c-format
+msgid "Setup"
+msgstr ""
+
+#. 
+# id="reset"
+#, c-format
+msgid "Reset"
+msgstr ""
+
+#. 
+# id="recentworkspaces"
+#, c-format
+msgid "Recent Workspaces"
+msgstr ""
+
+#. 
+# id="ignorepowercmds"
+#, c-format
+msgid "Ignore power commands"
+msgstr ""
+
+#. 
+# id="manually"
+#, c-format
+msgid "Manually"
+msgstr ""
+
+#. 
+# id="evtcorrection"
+#, c-format
+msgid "Event correction"
+msgstr ""
+
+#. 
+# id="relay"
+#, c-format
+msgid "Relay"
+msgstr ""
+
+#. 
+# id="countcars"
+#, c-format
+msgid "Count cars before firing events."
+msgstr ""
+
