@@ -538,6 +538,8 @@ static void _setCarCount( iOBlock inst, int count ) {
   iOModel model = AppOp.getModel();
   iONode fbevt = wBlock.getfbevent( data->props );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] CAR COUNT = %d", data->id, count );
+
   while( fbevt != NULL ) {
     const char* fbid = wFeedbackEvent.getid( fbevt );
     const char* byroute = wFeedbackEvent.getbyroute( fbevt );
