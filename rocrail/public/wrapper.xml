@@ -1405,6 +1405,9 @@
         <var name="typeperm" vt="string" defval="" range="*" remark="Only allow this type of trains."/>
         <var name="maxlen" vt="int" defval="0" range="0-*" remark="Maximal train length allowed for this route."/>
         <var name="countcars" vt="string" defval="no" range="no,forwards,reverse" remark="Count number of cars before firing events."/>
+        <const name="no" vt="string" val="no"/>
+        <const name="forwards" vt="string" val="forwards"/>
+        <const name="reverse" vt="string" val="reverse"/>
         <!-- CTC Address -->
         <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>

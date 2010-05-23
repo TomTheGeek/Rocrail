@@ -892,6 +892,8 @@ static Boolean _isFree( iORoute inst, const char* id ) {
 static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean lockswitches ) {
   iORouteData o = Data(inst);
   Boolean isset = False;
+  iOModel model = AppOp.getModel(  );
+  iOLoc lc = NULL;
   o->reverse = reverse;
 
   if( o->lockedId != NULL && StrOp.equals(o->lockedId, RouteOp.getId(inst) ) && RouteOp.isManual(inst, &isset) ) {
@@ -924,6 +926,22 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     o->lockedId = id;
 
     __broadcast(inst);
+
+    if( reverse && StrOp.equals( wRoute.reverse, wRoute.getcountcars(o->props) ) ) {
+      iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbkb( o->props ) );
+      lc = ModelOp.getLoc(model, o->lockedId );
+      BlockOp.setCarCount( (iOBlock)bk, LocOp.getCarCount(lc) );
+    }
+    else if( !reverse && StrOp.equals( wRoute.forwards, wRoute.getcountcars(o->props) ) ) {
+      iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbka( o->props ) );
+      lc = ModelOp.getLoc(model, o->lockedId );
+      BlockOp.setCarCount( (iOBlock)bk, LocOp.getCarCount(lc) );
+    }
+    else {
+      iIBlockBase bk = ModelOp.getBlock( model, reverse?wRoute.getbkb( o->props ):wRoute.getbka( o->props ) );
+      BlockOp.setCarCount( (iOBlock)bk, 0 );
+    }
+
 
     return True;
   }

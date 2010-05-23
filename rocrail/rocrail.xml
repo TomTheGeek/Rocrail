@@ -114,6 +114,10 @@
     <fun name="getEventCode" vt="int">
       <param name="evtname" vt="const char*"/>
     </fun>
+    <fun name="setCarCount" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
+    </fun>
     <data>
       <var name="id" vt="const char*"/>
       <var name="locId" vt="const char*"/>
@@ -333,6 +337,10 @@
     <fun name="resetCounter" vt="void">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="setCarCount" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
+    </fun>
     <data>
       <var name="props" vt="iONode" remark="Feedback properties"/>
       <var name="state" vt="Boolean" remark="Current state"/>
@@ -341,6 +349,8 @@
       <var name="listenerFun" vt="fback_listener" remark="Feedback listener function"/>
       <var name="listeners" vt="iOList" remark="Feedback listeners"/>
       <var name="counter" vt="int" remark="occupied counter"/>
+      <var name="carcount" vt="int"/>
+      <var name="countedcars" vt="int"/>
     </data>
   </object>
 
@@ -477,6 +487,9 @@
     <fun name="matchIdent" vt="Boolean">
       <param name="inst" vt="this" remark="Loco instance"/>
       <param name="ident" vt="long" remark="Loco ident code"/>
+    </fun>
+    <fun name="getCarCount" vt="int">
+      <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>

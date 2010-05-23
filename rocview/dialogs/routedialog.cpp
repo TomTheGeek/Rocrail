@@ -217,6 +217,10 @@ void RouteDialog::initLabels() {
   m_ToSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
   m_ToSignals->SetString( 2, wxGetApp().getMsg( "none" ) );
 
+  m_CountCars->SetLabel( wxGetApp().getMsg( "countcars" ) );
+  m_CountCars->SetString( 0, wxGetApp().getMsg( "none" ) );
+  m_CountCars->SetString( 1, wxGetApp().getMsg( "forwards" ) );
+  m_CountCars->SetString( 2, wxGetApp().getMsg( "reverse" ) );
 
 
   m_Speed->SetLabel( wxGetApp().getMsg( "speed" ) );
@@ -592,6 +596,15 @@ void RouteDialog::initValues() {
   m_Show->SetValue(wRoute.isshow( m_Props ));
   m_Manual->SetValue(wRoute.ismanual( m_Props ));
 
+
+  int countcars = 0; // no
+  if( StrOp.equals( wRoute.forwards, wRoute.getcountcars( m_Props ) ) )
+    countcars = 1;
+  else if( StrOp.equals( wRoute.reverse, wRoute.getcountcars( m_Props ) ) )
+    countcars = 2;
+  m_CountCars->SetSelection( countcars );
+
+
   initCommands();
 
   // Initialize sorted Switch Combo
@@ -764,6 +777,16 @@ bool RouteDialog::evaluate() {
   }
   else
     wRoute.setspeed( m_Props, wRoute.V_none );
+
+
+  if( m_CountCars->GetSelection() == 1 )
+    wRoute.setcountcars( m_Props, wRoute.forwards);
+  else if( m_CountCars->GetSelection() == 2 )
+    wRoute.setcountcars( m_Props, wRoute.reverse);
+  else
+    wRoute.setcountcars( m_Props, wRoute.no);
+
+
 
   wRoute.setreduceV( m_Props, m_ReduceV->IsChecked()?True:False);
 

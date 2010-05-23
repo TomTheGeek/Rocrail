@@ -13498,4 +13498,7 @@
     <nl txt="Relais"/>
     <de txt="Relais"/>
   </Msg>
+  <Msg id="countcars">
+    <en txt="Count cars before firing events."/>
+  </Msg>
 </Messages>

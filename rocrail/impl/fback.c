@@ -243,6 +243,11 @@ static void _resetCounter( iOFBack inst ) {
   data->counter = 0;
 }
 
+static void _setCarCount( iOFBack inst, int count ) {
+  iOFBackData data = Data(inst);
+  data->carcount = count;
+}
+
 static int _getIdentifier( iOFBack inst ) {
   iOFBackData data = Data(inst);
   return wFeedback.getidentifier( data->props );
@@ -293,7 +298,23 @@ static void _event( iOFBack inst, iONode nodeC ) {
 
   if(data->state ) {
     data->counter++;
+
+    if( data->carcount > 0 ) {
+      data->countedcars++;
+    }
   }
+
+  if( data->carcount > 0 && data->countedcars < data->carcount ) {
+    /* Cleanup Node3 */
+    nodeC->base.del(nodeC);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "COUNTING CARS: fb[%s] state=%s ident=%d val=%d carcount=%d countedcars=%d",
+                 FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
+                 wFeedback.getval( nodeC ), data->carcount, data->countedcars );
+    return;
+  }
+
+  data->countedcars = 0;
+
 
   wFeedback.setstate( data->props, data->state );
   wFeedback.setcounter( data->props, data->counter );

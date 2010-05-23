@@ -2366,6 +2366,13 @@ static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
 }
 
 
+static int _getCarCount( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  /* save the function status: */
+  return wLoc.getnrcars(data->props);
+}
+
+
 static Boolean _trySecondNextBlock( iOLoc inst ) {
   iOLocData data = Data(inst);
 

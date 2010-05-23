@@ -533,6 +533,21 @@ static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val
 }
 
 
+static void _setCarCount( iOBlock inst, int count ) {
+  iOBlockData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iONode fbevt = wBlock.getfbevent( data->props );
+
+  while( fbevt != NULL ) {
+    const char* fbid = wFeedbackEvent.getid( fbevt );
+    const char* byroute = wFeedbackEvent.getbyroute( fbevt );
+    iOFBack fb = ModelOp.getFBack( model, fbid );
+    FBackOp.setCarCount( fb, count );
+    fbevt = wBlock.nextfbevent( data->props, fbevt );
+  };
+}
+
+
 /**
  * map all fbevent's and set the listener to the common __fbEvent
  */
@@ -1572,6 +1587,8 @@ static void _init( iIBlockBase inst ) {
     _setDefaultAspect(inst, False);
     _setDefaultAspect(inst, True);
   }
+
+  BlockOp.setCarCount((iOBlock)inst, 0);
 }
 
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
