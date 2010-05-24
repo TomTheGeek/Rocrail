@@ -13501,4 +13501,12 @@
   <Msg id="countcars">
     <en txt="Count cars before firing events."/>
   </Msg>
+  <Msg id="odsernum">
+    <en txt="Serial Number" tip="OpenDCC serial number"/>
+    <de txt="Seriennummer" tip="OpenDCC Seriennummer"/>
+  </Msg>
+  <Msg id="xpnfbmapping">
+    <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
+    <de txt="XpressNet Abfragezuordnung" tip="OpenDCC Beschreibung lesen"/>
+  </Msg>
 </Messages>

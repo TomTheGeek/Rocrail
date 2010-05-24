@@ -22,8 +22,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
+#include "wx/listctrl.h"
 ////@end includes
 #include "wx/progdlg.h"
 
@@ -36,8 +36,8 @@
 
 ////@begin forward declarations
 class wxNotebook;
-class wxListCtrl;
 class wxSpinCtrl;
+class wxListCtrl;
 ////@end forward declarations
 
 /*!
@@ -80,6 +80,7 @@ enum {
   so_s88_bus2 = 10,
   so_s88_bus3 = 11,
   so_s88_mode = 7,
+  so_serial_number = 39,
   so_pt_resets = 18,
   so_pt_commands = 19,
   so_pt_pom = 20,
@@ -90,6 +91,7 @@ enum {
   so_sw_time = 14,
   so_sw_sensor_offset = 16,
   so_sw_sensor_mode = 17,
+  so_xpn_feedback_mapping = 29,
 };
 
 #define ME_SOTimer 10003
@@ -107,7 +109,6 @@ class OpenDCCCtrlDlg: public wxDialog
     void sendSet( int so, int value );
     void evaluateGet( int so, int value );
     void evaluateSet( int so, int value );
-    int getBPSval();
 
     int m_soValue[256];
     int m_soNewValue[256];
@@ -186,6 +187,8 @@ public:
     wxStaticText* m_labVersion;
     wxTextCtrl* m_Version;
     wxTextCtrl* m_Mode;
+    wxStaticText* m_labSerialNumber;
+    wxSpinCtrl* m_SerialNumber;
     wxRadioBox* m_SubLib;
     wxRadioBox* m_Baudrate;
     wxStaticBox* m_labSpecials;
@@ -216,6 +219,7 @@ public:
     wxRadioBox* m_SwitchSensorMode;
     wxStaticText* m_labSwitchSensorOffset;
     wxSpinCtrl* m_SwitchSensorOffset;
+    wxRadioBox* m_XpnFeedbackMapping;
     wxPanel* m_ProgrammingTab;
     wxStaticText* m_labPTResets;
     wxSpinCtrl* m_PTResets;
