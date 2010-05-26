@@ -102,7 +102,7 @@ static void* __properties( void* inst ) {
 static Boolean __setActiveBus( iOSLX slx, int bus ) {
   iOSLXData data = Data(slx);
 
-  if( bus < 32 && data->activebus != bus ) {
+  if( bus < 2 && data->activebus != bus ) {
     byte cmd[2];
     cmd[0] = 126;
     cmd[1] = bus;
@@ -143,6 +143,28 @@ static Boolean __transact( iOSLX slx, byte* out, int outsize, byte* in, int insi
   return ok;
 }
 
+static iOSlot __getSlot(iOSLXData data, iONode node) {
+  int addr  = wLoc.getaddr(node);
+  iOSlot slot = NULL;
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  slot = allocMem( sizeof( struct slot) );
+  slot->addr = addr;
+  slot->bus = wLoc.getbus(node);
+  slot->id = StrOp.dup(wLoc.getid(node));
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+
+}
+
 
 /* fbmods is a comman separated address list of connected feedback modules. */
 static void __updateFB( iOSLX slx, iONode fbInfo ) {
@@ -155,8 +177,8 @@ static void __updateFB( iOSLX slx, iONode fbInfo ) {
   StrOp.free( str );
 
   /* reset the list: */
-  MemOp.set( data->fbmodcnt, 0, 32 * sizeof(int) );
-  MemOp.set( data->fbmods, 0, 32*256 );
+  MemOp.set( data->fbmodcnt, 0, 2 * sizeof(int) );
+  MemOp.set( data->fbmods, 0, 2*256 );
 
   for( i = 0; i < cnt; i++ ) {
     iONode fbmods = NodeOp.getChild( fbInfo, i );
@@ -245,7 +267,15 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
     int  speed = 0;
     Boolean fn  = wLoc.isfn( node );
     Boolean dir = wLoc.isdir( node ); /* True == forwards */
-    *bus  = wLoc.getbus( node ) & 0x1F;
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+
+    *bus  = slot->bus;
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -259,9 +289,11 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
     cmd[1] = speed & 0x1F;
     cmd[1] |= dir ? 0x00:0x20;
     cmd[1] |= fn  ? 0x00:0x40;
-    cmd[1] |= data->lcstate[*bus][addr] & 0x80;
+    cmd[1] |= slot->fn ? 0x80:0x00;
 
-    data->lcstate[*bus][addr] = cmd[1];
+    slot->speed = speed;
+    slot->dir = wLoc.isdir(node);
+    slot->lights = wLoc.isfn(node);
 
     return 2;
   }
@@ -269,17 +301,23 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
     Boolean f1 = wFunCmd.isf1( node );
-    Boolean f2 = wFunCmd.isf2( node );
-    Boolean f3 = wFunCmd.isf3( node );
-    Boolean f4 = wFunCmd.isf4( node );
-    *bus  = wFunCmd.getbus( node ) & 0x1F;
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return 0;
+    }
+    *bus  = slot->bus;
 
     cmd[0] = addr;
     cmd[0] |= WRITE_FLAG;
-    cmd[1] = data->lcstate[*bus][addr] & 0x7F;
+    cmd[1] = slot->speed;
+    cmd[1] |= slot->dir ? 0x00:0x20;
+    cmd[1] |= slot->lights  ? 0x00:0x40;
     cmd[1] |= f1 ? 0x80:0x00;
 
-    data->lcstate[*bus][addr] = cmd[1];
+    slot->fn = f1;
 
     return 2;
   }
@@ -333,6 +371,117 @@ static __evaluateFB( iOSLX slx, byte in, int addr, int bus ) {
 }
 
 
+static Boolean __updateSlot(iOSLXData data, iOSlot slot, Boolean* vdfChanged, Boolean* funChanged) {
+  Boolean changed = False;
+  int     speed   = 0;
+  Boolean dir     = True;
+  Boolean lights  = False;
+  Boolean fn      = False;
+
+  /* SX1 */
+  byte sx1 = data->sx1[slot->bus&0x01][slot->addr&0x7F];
+  speed  = sx1 & 0x1F;
+  dir    = (sx1 & 0x20) ? False:True;
+  lights = (sx1 & 0x40) ? True:False;
+  fn     = (sx1 & 0x80) ? True:False;
+
+  if( slot->speed != speed ) {
+    /* trace speed changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "speed change event from %d to %d for %s", slot->speed, speed, slot->id );
+    slot->speed = speed;
+    *vdfChanged = True;
+    changed = True;
+  }
+  if( slot->dir != dir ) {
+    /* trace dir changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "direction change event from %s to %s for %s", slot->dir?"reverse":"forwards", dir?"reverse":"forwards", slot->id );
+    slot->dir = dir;
+    *vdfChanged = True;
+    changed = True;
+  }
+  if( slot->lights != lights ) {
+    /* trace lights changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
+    slot->lights = lights;
+    *vdfChanged = True;
+    *funChanged = True;
+    changed = True;
+  }
+  if( slot->fn != fn ) {
+    /* trace functions changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function change event from %s to %s for %s", slot->fn?"on":"off", fn?"on":"off", slot->id );
+    slot->fn = fn;
+    *funChanged = True;
+    changed = True;
+  }
+
+  return changed;
+}
+
+
+
+
+static Boolean __updateSlots(iOSLX slx) {
+  iOSLXData data = Data(slx);
+  if( MutexOp.wait( data->lcmux ) ) {
+    iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
+    while( slot != NULL ) {
+      Boolean vdfChanged = False;
+      Boolean funChanged = False;
+
+      byte cmd[2];
+      cmd[0] = slot->addr;
+      cmd[1] = 0;
+      if( __transact( slx, cmd, 2, &data->sx1[slot->bus][slot->addr], 1, slot->bus) ) {
+
+        if( __updateSlot(data, slot, &vdfChanged, &funChanged) ) {
+          iONode nodeC = NULL;
+          if( vdfChanged ) {
+            nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            if( data->iid != NULL )
+              wLoc.setiid( nodeC, data->iid );
+            wLoc.setid( nodeC, slot->id );
+            wLoc.setaddr( nodeC, slot->addr );
+            wLoc.setV_raw( nodeC, slot->speed );
+            wLoc.setV_rawMax( nodeC, 31 );
+            wLoc.setfn( nodeC, slot->lights);
+            wLoc.setdir( nodeC, slot->dir );
+            wLoc.setcmd( nodeC, wLoc.direction );
+            wLoc.setthrottleid( nodeC, "slx" );
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+          }
+
+          if( funChanged ) {
+            nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+            if( data->iid != NULL )
+              wLoc.setiid( nodeC, data->iid );
+            wFunCmd.setid( nodeC, slot->id );
+            wFunCmd.setaddr( nodeC, slot->addr );
+            wFunCmd.setf0( nodeC, slot->lights );
+            wFunCmd.setf1( nodeC, slot->fn );
+
+            wLoc.setthrottleid( nodeC, "slx" );
+            data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+          }
+        }
+
+      }
+
+      slot = (iOSlot)MapOp.next( data->lcmap );
+    }
+    MutexOp.post(data->lcmux);
+  }
+
+}
+
+
+
+
+
 static void __feedbackReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOSLX slx = (iOSLX)ThreadOp.getParm( th );
@@ -348,20 +497,22 @@ static void __feedbackReader( void* threadinst ) {
 
     ThreadOp.sleep( 100 );
 
-    for( n=0; n < 32; n++ ) {
+    for( n=0; n < 2; n++ ) {
       if( data->fbmodcnt[n] == 0 )
         continue;
 
       for( i = 0; i < data->fbmodcnt[n]; i++ ) {
         byte cmd[2];
-        byte  in[2];
         cmd[0] = data->fbmods[n][i] & 0x7F;
         cmd[1] = 0;
-        if( __transact( slx, cmd, 2, in, 1, n) ) {
-          __evaluateFB( slx, in[0], data->fbmods[n][i], n );
+        if( __transact( slx, cmd, 2, &data->sx1[n][cmd[0]], 1, n) ) {
+          __evaluateFB( slx, data->sx1[n][cmd[0]], data->fbmods[n][i], n );
         }
       }
     }
+
+    __updateSlots(slx);
+
   };
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback reader ended." );
 }
@@ -470,6 +621,8 @@ static struct OSLX* _inst( const iONode ini ,const iOTrace trc ) {
   data->activebus = 0;
 
   data->mux = MutexOp.inst( StrOp.fmt( "serialMux%08X", data ), True );
+  data->lcmux   = MutexOp.inst( NULL, True );
+  data->lcmap   = MapOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slx %d.%d.%d", vmajor, vminor, patch );
