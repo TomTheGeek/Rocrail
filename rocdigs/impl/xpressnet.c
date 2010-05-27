@@ -239,14 +239,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      /*ThreadOp.sleep(100);*/
-
       /* deactivate the gate to be used */
-      byte* outb = allocMem(32);
-      outb[0] = 0x52;
-      outb[1] = addr;
-      outb[2] = 0x80 | 0x00 | (port << 1) | gate;
-      ThreadOp.post( data->transactor, (obj)outb );
+      iQCmd cmd = allocMem(sizeof(struct QCmd));
+      cmd->time   = SystemOp.getTick();
+      cmd->delay  = 10;
+      cmd->out[0] = 0x52;
+      cmd->out[1] = addr;
+      cmd->out[2] = 0x80 | 0x00 | (port << 1) | gate;
+      ThreadOp.post( data->timedQueue, (obj)cmd );
 
 
     } else {
@@ -258,13 +258,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | state;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      /*ThreadOp.sleep(100);*/
-
-      byte* outb = allocMem(32);
-      outb[0] = 0x52;
-      outb[1] = addr;
-      outb[2] = 0x80 | 0x00 | (port << 1) | state;
-      ThreadOp.post( data->transactor, (obj)outb );
+      /* deactivate the gate to be used */
+      iQCmd cmd = allocMem(sizeof(struct QCmd));
+      cmd->time   = SystemOp.getTick();
+      cmd->delay  = 10;
+      cmd->out[0] = 0x52;
+      cmd->out[1] = addr;
+      cmd->out[2] = 0x80 | 0x00 | (port << 1) | state;
+      ThreadOp.post( data->timedQueue, (obj)cmd );
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "gate %d %d ",gate,state);
     }
@@ -300,13 +301,14 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outa[2] = 0x80 | 0x08 | (port << 1) | gate;
       ThreadOp.post( data->transactor, (obj)outa );
 
-      /*ThreadOp.sleep(100);*/
-
-      byte* outb = allocMem(32);
-      outb[0] = 0x52;
-      outb[1] = addr;
-      outb[2] = 0x80 | 0x00 | (port << 1) | gate;
-      ThreadOp.post( data->transactor, (obj)outb );
+      /* deactivate the gate to be used */
+      iQCmd cmd = allocMem(sizeof(struct QCmd));
+      cmd->time   = SystemOp.getTick();
+      cmd->delay  = 10;
+      cmd->out[0] = 0x52;
+      cmd->out[1] = addr;
+      cmd->out[2] = 0x80 | 0x00 | (port << 1) | gate;
+      ThreadOp.post( data->timedQueue, (obj)cmd );
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s",
@@ -847,6 +849,38 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
 }
 
 
+static void __timedqueue( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  iOList list = ListOp.inst();
+
+  while( data->run ) {
+    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        byte* outa = allocMem(32);
+        MemOp.copy( outa, cmd->out, 32 );
+        ThreadOp.post( data->transactor, (obj)outa );
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+}
+
+
 static void __transactor( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
   iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
@@ -1292,6 +1326,10 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
 
     /* give the transactor thread time to start up */
     ThreadOp.sleep( 10 );
+
+    data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __XpressNet );
+    ThreadOp.start( data->timedQueue );
+
 
     data->initializer = ThreadOp.inst( "initializer", &__initializer, __XpressNet );
     ThreadOp.start( data->initializer );

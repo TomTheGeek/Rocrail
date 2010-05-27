@@ -316,6 +316,11 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="out[32]" vt="byte"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+    </struct>
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
       <var name="id" vt="char*"/>
       <var name="addr" vt="int"/>
@@ -337,6 +342,7 @@
       <var name="reader" vt="iOThread"/>
       <var name="initializer" vt="iOThread"/>
       <var name="transactor" vt="iOThread"/>
+      <var name="timedQueue" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
