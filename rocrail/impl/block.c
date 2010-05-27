@@ -538,13 +538,18 @@ static void _setCarCount( iOBlock inst, int count ) {
   iOModel model = AppOp.getModel();
   iONode fbevt = wBlock.getfbevent( data->props );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] CAR COUNT = %d", data->id, count );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "[%s] CAR COUNT = %d", data->id, count );
 
   while( fbevt != NULL ) {
     const char* fbid = wFeedbackEvent.getid( fbevt );
     const char* byroute = wFeedbackEvent.getbyroute( fbevt );
     iOFBack fb = ModelOp.getFBack( model, fbid );
-    FBackOp.setCarCount( fb, count );
+    if( fb != NULL ) {
+      FBackOp.setCarCount( fb, count );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "feedback[%s] does not exist", fbid );
+    }
     fbevt = wBlock.nextfbevent( data->props, fbevt );
   };
 }

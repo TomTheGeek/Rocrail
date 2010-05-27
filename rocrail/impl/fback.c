@@ -246,7 +246,7 @@ static void _resetCounter( iOFBack inst ) {
 static void _setCarCount( iOFBack inst, int count ) {
   iOFBackData data = Data(inst);
   data->carcount = count;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] CAR COUNT = %d", FBackOp.getId(inst), data->carcount );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "[%s] CAR COUNT = %d", FBackOp.getId(inst), data->carcount );
 }
 
 static int _getIdentifier( iOFBack inst ) {

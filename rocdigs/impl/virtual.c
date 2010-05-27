@@ -438,7 +438,7 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
   data->run = True;
 
 
-  data->transactor = ThreadOp.inst( "transactor", &__transactor, __Virtual );
+  data->transactor = ThreadOp.inst( data->iid, &__transactor, __Virtual );
   ThreadOp.start( data->transactor );
 
   instCnt++;
