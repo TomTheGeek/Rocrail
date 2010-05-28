@@ -307,7 +307,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     }
   }
 
-  if( data->carcount > 0 && data->countedcars < data->carcount ) {
+  if( data->carcount > 0 && data->countedcars <= data->carcount ) {
     /* Cleanup Node3 */
     nodeC->base.del(nodeC);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "COUNTING CARS: fb[%s] state=%s ident=%d val=%d carcount=%d countedcars=%d",
@@ -316,6 +316,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
     return;
   }
 
+  /* reset car counting */
+  data->carcount    = 0;
   data->countedcars = 0;
 
 
