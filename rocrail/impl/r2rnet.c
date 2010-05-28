@@ -497,6 +497,7 @@ static void __writer( void* threadinst ) {
         s = NodeOp.base.toString(req);
         SocketOp.sendto( data->writeUDP, s, StrOp.len(s) );
         StrOp.free(s);
+        NodeOp.base.del(req);
         retryGetNetRoutes = 0;
       }
       else {
