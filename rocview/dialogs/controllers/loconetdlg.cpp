@@ -273,6 +273,7 @@ void LocoNetCtrlDlg::evaluate() {
     iONode slotserver = wLocoNet.getslotserver( loconet );
 
     wLocoNet.setpurgetime( loconet, atoi( m_PurgeTime->GetValue().mb_str(wxConvUTF8) ) );
+    wDigInt.setfastclock( m_Props, m_UseFC->IsChecked() ? True:False );
     wLocoNet.setusefc(loconet, m_UseFC->IsChecked() ? True:False );
     wLocoNet.setsyncfc(loconet, m_SyncFC->IsChecked() ? True:False );
     wLocoNet.setignorepowercmds(loconet, m_IgnorePowerCmds->IsChecked() ? True:False );
