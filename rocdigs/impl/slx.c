@@ -382,7 +382,7 @@ static Boolean __updateSlot(iOSLXData data, iOSlot slot, Boolean* vdfChanged, Bo
   byte sx1 = data->sx1[slot->bus&0x01][slot->addr&0x7F];
   speed  = sx1 & 0x1F;
   dir    = (sx1 & 0x20) ? False:True;
-  lights = (sx1 & 0x40) ? True:False;
+  lights = (sx1 & 0x40) ? False:True;
   fn     = (sx1 & 0x80) ? True:False;
 
   if( slot->speed != speed ) {
