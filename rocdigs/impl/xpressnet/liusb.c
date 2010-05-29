@@ -85,6 +85,8 @@ int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
 Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
+  ThreadOp.sleep( 50 );
+
   int len = 0;
   Boolean rc = False;
   unsigned char out[256];
