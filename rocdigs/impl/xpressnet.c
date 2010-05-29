@@ -1092,7 +1092,25 @@ static void __transactor( void* threadinst ) {
       }
       /* xpressnet adress */
       else if (in[0] == 0xF2 && in[1] == 0x01){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI Xpressnet address: %d", in[2]);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI xpressnet address: %d", in[2]);
+      }
+      /* xpressnet adress */
+      else if (in[0] == 0xF2 && in[1] == 0x02){
+
+        char* baud = NULL;
+         if( in[2] == 0x01 )
+           baud = "19200";
+         else if( in[2] == 0x02 )
+           baud = "38400";
+         else if( in[2] == 0x03 )
+           baud = "57600";
+         else if( in[2] == 0x04 )
+           baud = "115200";
+         else
+           baud = "(null)";
+
+       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI baudrate: %s", baud);
+
       }
       /* SO */
       else if (in[0] == 0x78){
