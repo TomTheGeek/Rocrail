@@ -47,6 +47,8 @@
     <const name="previnifile" vt="string" val="rocview.ini" remark="previous ini file name"/>
     <const name="inifile" vt="string" val="rocview.ini"/>
     <const name="lang_english" vt="string" val="en"/>
+    <const name="lang_englishAU" vt="string" val="en_AU"/>
+    <const name="lang_englishGB" vt="string" val="en_GB"/>
     <const name="lang_german" vt="string" val="de"/>
     <const name="lang_dutch" vt="string" val="nl"/>
     <const name="lang_swedisch" vt="string" val="sv"/>

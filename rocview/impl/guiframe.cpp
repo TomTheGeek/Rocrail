@@ -300,6 +300,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_DTOpSw         , RocGuiFrame::OnDTOpSw)
 
     EVT_MENU( ME_LangEnglish    , RocGuiFrame::OnLangEnglish)
+    EVT_MENU( ME_LangEnglishAU  , RocGuiFrame::OnLangEnglishAU)
+    EVT_MENU( ME_LangEnglishGB  , RocGuiFrame::OnLangEnglishGB)
     EVT_MENU( ME_LangGerman     , RocGuiFrame::OnLangGerman)
     EVT_MENU( ME_LangDutch      , RocGuiFrame::OnLangDutch)
     EVT_MENU( ME_LangSwedisch   , RocGuiFrame::OnLangSwedisch)
@@ -1355,6 +1357,8 @@ void RocGuiFrame::initFrame() {
   menuLang->AppendCheckItem( ME_LangDanish   , wxGetApp().getMenu("lang_da"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangDutch    , wxGetApp().getMenu("lang_nl"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangEnglish  , wxGetApp().getMenu("lang_en"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangEnglishAU, wxGetApp().getMenu("lang_en_AU"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangEnglishGB, wxGetApp().getMenu("lang_en_GB"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangFrench   , wxGetApp().getMenu("lang_fr"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangGerman   , wxGetApp().getMenu("lang_de"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangGreek    , wxGetApp().getMenu("lang_el"), wxGetApp().getMsg("changelang") );
@@ -2856,6 +2860,12 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LangEnglish);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_english, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangEnglishAU);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_englishAU, wGui.getlang( wxGetApp().getIni() ) ) );
+  mi = menuBar->FindItem(ME_LangEnglishGB);
+  if( mi != NULL )
+    mi->Check( StrOp.equals( wGui.lang_englishGB, wGui.getlang( wxGetApp().getIni() ) ) );
   mi = menuBar->FindItem(ME_LangGerman);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_german, wGui.getlang( wxGetApp().getIni() ) ) );
@@ -3713,6 +3723,14 @@ void RocGuiFrame::OnUndo(wxCommandEvent& event) {
 
 void RocGuiFrame::OnLangEnglish(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_english );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+void RocGuiFrame::OnLangEnglishAU(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_englishAU );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+void RocGuiFrame::OnLangEnglishGB(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_englishGB );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 void RocGuiFrame::OnLangGerman(wxCommandEvent& event) {
