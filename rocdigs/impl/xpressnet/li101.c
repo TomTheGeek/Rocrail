@@ -74,7 +74,12 @@ void li101Init(obj xpressnet) {
   out[2] = 0x00;
   ThreadOp.post( data->transactor, (obj)out );
 
-
+  /* Asking for xpressnet adress */
+  out = allocMem(32);
+  out[0] = 0xF2;
+  out[1] = 0x01;
+  out[2] = 0x55;
+  ThreadOp.post( data->transactor, (obj)out );
 
   if( data->startpwstate) {
     /* ALL ON */

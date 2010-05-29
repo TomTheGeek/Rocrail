@@ -1035,7 +1035,7 @@ static void __transactor( void* threadinst ) {
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LZV busy.");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
         if( !data->ignoreBusy ) {
           rspReceived = True;
           reSend = True;
@@ -1089,6 +1089,10 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %d.%d",
             csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F));
         rspReceived = True;
+      }
+      /* xpressnet adress */
+      else if (in[0] == 0xF2 && in[1] == 0x01){
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI Xpressnet address: %d", in[2]);
       }
       /* SO */
       else if (in[0] == 0x78){
