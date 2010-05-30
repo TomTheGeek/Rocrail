@@ -309,10 +309,23 @@ static void _event( iOFBack inst, iONode nodeC ) {
 
   if( data->carcount > 0 && data->countedcars <= data->carcount ) {
     /* Cleanup Node3 */
-    nodeC->base.del(nodeC);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "COUNTING CARS: fb[%s] state=%s ident=%d val=%d carcount=%d countedcars=%d",
                  FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
                  wFeedback.getval( nodeC ), data->carcount, data->countedcars );
+
+    /* Broadcast to clients. Node4 */
+    {
+      iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+      wFeedback.setid( nodeD, FBackOp.getId( inst ) );
+      wFeedback.setcarcount( nodeD, data->carcount );
+      wFeedback.setcountedcars( nodeD, data->countedcars );
+      wFeedback.setstate( nodeD, data->state );
+      wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
+      wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+      wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    }
+    nodeC->base.del(nodeC);
     return;
   }
 

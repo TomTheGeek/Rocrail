@@ -1861,21 +1861,23 @@ void Symbol::modelEvent( iONode node ) {
     Boolean state = wFeedback.isstate( node );
     int ident = wFeedback.getidentifier( node );
     int counter = wFeedback.getcounter( node );
+    int carcount = wFeedback.getcarcount( node );
+    int countedcars = wFeedback.getcountedcars( node );
     int val = wFeedback.getval( node );
     int addr = wFeedback.getaddr( m_Props );
     const char* info = wFeedback.getinfo( node );
 
-    char* str = StrOp.fmt( "%s addr=%d ident=%d val=%d count=%d info=%s",
-                           wFeedback.getid( node ), addr, ident, val, counter, info );
+    char* str = StrOp.fmt( "%s addr=%d ident=%d val=%d count=%d info=%s cars=%d/%d",
+                           wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount );
     SetToolTip( wxString(str,wxConvUTF8) );
     if( ident > 0 )
       wxGetApp().getFrame()->setInfoText( str );
     StrOp.free( str );
 
-    if( state != wFeedback.isstate( m_Props ) ) {
-      wFeedback.setstate( m_Props, state );
-      refresh = true;
-    }
+    wFeedback.setstate( m_Props, state );
+    wFeedback.setcarcount( m_Props, carcount );
+    wFeedback.setcountedcars( m_Props, countedcars );
+    refresh = true;
   }
   else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
     int status = wRoute.getstatus( node );

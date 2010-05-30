@@ -552,6 +552,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::curve_sensor_on_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::curve_sensor_off_route );
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::curve_sensor_on_route );
+          m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::curve_sensor_cnt );
         }
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_off );
@@ -560,6 +561,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_on_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_off_route );
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_on_route );
+          m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, feedbacktype::sensor_cnt );
         }
       }
     }
@@ -1940,9 +1942,19 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool fill, bool occupied, const ch
  *
  */
 void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+  bool cnt = false;
+
+  if(wFeedback.getcountedcars( m_Props ) != wFeedback.getcarcount( m_Props )) {
+    cnt = true;
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "sensor %s is counting cars %d/%d",
+        wFeedback.getid( m_Props ), wFeedback.getcountedcars( m_Props ), wFeedback.getcarcount( m_Props ) );
+  }
 
   // SVG Symbol:
-  if( m_SvgSym2!=NULL && wFeedback.isstate( m_Props ) ) {
+  if( m_SvgSym7!=NULL && wFeedback.isstate( m_Props ) && cnt) {
+    drawSvgSym(dc, m_SvgSym7, ori);
+  }
+  else if( m_SvgSym2!=NULL && wFeedback.isstate( m_Props ) ) {
     if(occupied && m_SvgSym4!= NULL)
       drawSvgSym(dc, m_SvgSym4, ori);
     else if(actroute && m_SvgSym6!= NULL)

@@ -381,6 +381,7 @@ namespace feedbacktype {
   static const char* sensor_off_occ = "sensor-off-occ.svg";
   static const char* sensor_on_route  = "sensor-on-route.svg";
   static const char* sensor_off_route = "sensor-off-route.svg";
+  static const char* sensor_cnt  = "sensor-cnt.svg";
 
   static const char* road_sensor_on  = "road-sensor-on.svg";
   static const char* road_sensor_off = "road-sensor-off.svg";
@@ -393,6 +394,7 @@ namespace feedbacktype {
   static const char* curve_sensor_off_occ = "curve-sensor-off-occ.svg";
   static const char* curve_sensor_on_route  = "curve-sensor-on-route.svg";
   static const char* curve_sensor_off_route = "curve-sensor-off-route.svg";
+  static const char* curve_sensor_cnt  = "curve-sensor-cnt.svg";
 
   static const int i_sensor = 1;
 }
