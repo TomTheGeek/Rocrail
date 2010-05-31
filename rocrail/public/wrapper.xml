@@ -1339,6 +1339,7 @@
         <const name="usage_manual" vt="int" val="0"/>
         <const name="usage_critsect" vt="int" val="1" remark="group is used as a critical section"/>
         <var name="usage" vt="int" defval="0" range="*" remark="group usage"/>
+        <var name="allowfollowup" vt="bool" defval="false" remark="Allow follow up in critsec for the same direction."/>
         <var name="active" vt="bool" defval="false" remark="Activates links: all blocks are set to manual mode."/>
         <var name="src" vt="string" defval="" range="*" required="true" remark="source block"/>
         <var name="dst" vt="string" defval="" range="*" required="true" remark="destination blocks; id's in CSV format"/>

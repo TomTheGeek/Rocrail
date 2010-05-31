@@ -2956,6 +2956,41 @@ static iONode _checkForBlockGroup(iOModel inst, const char* BlockId) {
   return group;
 }
 
+static Boolean _lockBlockGroup(iOModel inst, iONode group, const char* BlockId, const char* LocoId) {
+  iOModelData data = Data(inst);
+  iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
+  Boolean grouplocked = True;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block group is %s", wLink.getid(group));
+
+  while( StrTokOp.hasMoreTokens(tok) && grouplocked ) {
+    const char* id = StrTokOp.nextToken( tok );
+    iIBlockBase gblock = ModelOp.getBlock( inst, id );
+    if( gblock != NULL ) {
+      grouplocked = gblock->lockForGroup( gblock, LocoId );
+    }
+  };
+  StrTokOp.base.del(tok);
+  return grouplocked;
+}
+
+static Boolean _unlockBlockGroup(iOModel inst, iONode group, const char* LocoId) {
+  iOModelData data = Data(inst);
+
+  iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* id = StrTokOp.nextToken( tok );
+    iIBlockBase gblock = ModelOp.getBlock( inst, id );
+    if( gblock != NULL ) {
+      gblock->unLockForGroup( gblock, LocoId );
+    }
+  };
+  StrTokOp.base.del(tok);
+
+  return True;
+}
+
+
+
 
 static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
   /* check if the block is managed by a selectioin table */

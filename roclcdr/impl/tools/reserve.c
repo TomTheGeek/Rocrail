@@ -40,16 +40,7 @@
 
 void unlockBlockGroup( iOLcDriver inst, iONode group) {
   iOLcDriverData data = Data(inst);
-  /* rewind */
-  iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
-  while( StrTokOp.hasMoreTokens(tok) ) {
-    const char* id = StrTokOp.nextToken( tok );
-    iIBlockBase gblock = data->model->getBlock( data->model, id );
-    if( gblock != NULL ) {
-      gblock->unLockForGroup( gblock, data->loc->getId( data->loc ) );
-    }
-  };
-  StrTokOp.base.del(tok);
+  data->model->unlockBlockGroup(data->model, group, data->loc->getId( data->loc ));
 }
 
 

@@ -60,19 +60,9 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   }
 
   if( group != NULL ) {
-    iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
-    grouplocked = True;
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block group is %s", wLink.getid(group));
+    grouplocked = data->model->lockBlockGroup( data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
 
-    while( StrTokOp.hasMoreTokens(tok) && grouplocked ) {
-      const char* id = StrTokOp.nextToken( tok );
-      iIBlockBase gblock = data->model->getBlock( data->model, id );
-      if( gblock != NULL ) {
-        grouplocked = gblock->lockForGroup( gblock, data->loc->getId( data->loc ) );
-      }
-    };
-    StrTokOp.base.del(tok);
-    if(!grouplocked) {
+    if( group == NULL ) {
       unlockBlockGroup(inst, group);
       return False;
     }

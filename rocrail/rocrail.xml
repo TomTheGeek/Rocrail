@@ -804,6 +804,17 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="BlockId" vt="const char*" remark="block id to find in a group"/>
     </fun>
+    <fun name="lockBlockGroup" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="Group" vt="iONode"/>
+      <param name="BlockId" vt="const char*"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <fun name="unlockBlockGroup" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="Group" vt="iONode"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
     <fun name="getTime" vt="long">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
