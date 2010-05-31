@@ -419,6 +419,8 @@ static void __initSensors( iOStage inst ) {
 }
 
 
+static void _setCarCount( iIBlockBase inst, int count ) {
+}
 
 
 /**  */

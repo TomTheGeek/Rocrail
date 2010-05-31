@@ -1323,6 +1323,9 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   return block != NULL ? block->wait( block, loc, reverse ) : False;
 }
 
+static void _setCarCount( iIBlockBase inst, int count ) {
+}
+
 
 static void _init( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);

@@ -114,10 +114,6 @@
     <fun name="getEventCode" vt="int">
       <param name="evtname" vt="const char*"/>
     </fun>
-    <fun name="setCarCount" vt="void">
-      <param name="inst" vt="this" remark="Block instance"/>
-      <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
-    </fun>
     <data>
       <var name="id" vt="const char*"/>
       <var name="locId" vt="const char*"/>

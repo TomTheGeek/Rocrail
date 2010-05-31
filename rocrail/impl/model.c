@@ -2155,8 +2155,16 @@ static iORoute _getRoute( iOModel inst, const char* id ) {
   if( route == NULL && o->moduleplan != NULL ) {
     const char* routeID = ModPlanOp.getResolvedRouteID( o->moduleplan, id );
     if( routeID != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "use resolved route [%s]", routeID );
       route = (iORoute)MapOp.get( o->routeMap, routeID );
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route [%s] undefined", id );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route [%s] undefined", id );
+    return NULL;
   }
   return route;
 }

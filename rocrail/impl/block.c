@@ -533,7 +533,7 @@ static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val
 }
 
 
-static void _setCarCount( iOBlock inst, int count ) {
+static void _setCarCount( iIBlockBase inst, int count ) {
   iOBlockData data = Data(inst);
   iOModel model = AppOp.getModel();
   iONode fbevt = wBlock.getfbevent( data->props );

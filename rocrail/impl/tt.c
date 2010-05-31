@@ -1794,6 +1794,8 @@ static int _getOccTime( iIBlockBase inst ) {
   return 0;
 }
 
+static void _setCarCount( iIBlockBase inst, int count ) {
+}
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

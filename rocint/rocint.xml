@@ -292,6 +292,10 @@
     <fun name="getState" vt="const char*">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="setCarCount" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
+    </fun>
   </interface>
 
 
