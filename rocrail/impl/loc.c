@@ -1396,6 +1396,13 @@ static const char* _getCurBlock( iOLoc inst ) {
   return data->curBlock;
 }
 
+
+static void _setCarCount( iOLoc inst, int carcount ) {
+  iOLocData data = Data(inst);
+  wLoc.setnrcars(data->props, carcount);
+}
+
+
 /* CRjBlock calls this function.
  * Loc can't go in automatic when curBlock in not set.
  */

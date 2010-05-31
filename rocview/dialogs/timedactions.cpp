@@ -799,6 +799,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.loco_velocity, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_dispatch, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_swap, wxConvUTF8));
+      m_Command->Append(wxString( wAction.loco_carcount, wxConvUTF8));
       break;
     case 8: // function
       m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));

@@ -466,6 +466,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           LocOp.useSchedule( lc, wAction.getparam(data->action));
         LocOp.go(lc);
       }
+      else if( StrOp.equals(wAction.loco_carcount, wAction.getcmd(data->action) ) ) {
+        LocOp.setCarCount(lc, atoi(wAction.getparam(data->action)));
+      }
       else if( StrOp.equals(wLoc.stop, wAction.getcmd(data->action) ) ) {
         LocOp.stop(lc, False);
       }
