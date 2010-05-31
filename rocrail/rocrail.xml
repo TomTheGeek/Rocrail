@@ -1817,5 +1817,34 @@
     </data>
   </object>
 
+  <object name="BlockGroup" use="node,map" remark="Block Group object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="BlockGroup definition"/>
+    </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="instance"/>
+      <param name="cmd" vt="iONode" remark="Cmd node"/>
+    </fun>
+    <fun name="modify" vt="void">
+      <param name="inst" vt="this" remark="instance"/>
+      <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="lock" vt="Boolean">
+      <param name="inst" vt="this" remark="BlockGroup instance"/>
+      <param name="BlockId" vt="const char*"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <fun name="unlock" vt="Boolean">
+      <param name="inst" vt="this" remark="BlockGroup instance"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
+      <var name="lockmap" vt="iOMap"/>
+    </data>
+  </object>
+
+
+
 
 </Project>
