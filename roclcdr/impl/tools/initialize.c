@@ -54,7 +54,9 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
       group == NULL && data->blockgroup != NULL ) {
-    /* unlock previouse group; entering another one */
+    /* unlock previous group; entering another one */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock previous blockgroup %s", data->blockgroup );
+
     unlockBlockGroup(inst, data->blockgroup );
     data->blockgroup = NULL;
   }
@@ -62,7 +64,8 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   if( group != NULL ) {
     grouplocked = data->model->lockBlockGroup( data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
 
-    if( group == NULL ) {
+    if( !grouplocked ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock blockgroup %s", group );
       unlockBlockGroup(inst, group);
       return False;
     }
@@ -146,7 +149,8 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
       group == NULL && data->blockgroup != NULL ) {
-    /* unlock previouse group; entering another one */
+    /* unlock previous group; entering another one */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock previous blockgroup %s", data->blockgroup );
     unlockBlockGroup(inst, data->blockgroup );
     data->blockgroup = NULL;
   }
@@ -155,6 +159,7 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
     grouplocked = data->model->lockBlockGroup(data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
 
     if(!grouplocked) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock blockgroup %s", group );
       unlockBlockGroup(inst, group);
       return False;
     }
