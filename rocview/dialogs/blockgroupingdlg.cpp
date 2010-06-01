@@ -33,7 +33,6 @@
 #endif
 
 ////@begin includes
-#include "wx/imaglist.h"
 ////@end includes
 
 #include "blockgroupingdlg.h"
@@ -151,6 +150,7 @@ void BlockGroupingDialog::initLabels() {
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_LabelDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_Critical->SetLabel( wxGetApp().getMsg( "criticalsection" ) );
+  m_AllowFollowUp->SetLabel( wxGetApp().getMsg( "allowfollowup" ) );
 
   // Properties
   m_LabelMainBlock->SetLabel( wxGetApp().getMsg( "sourceblock" ) );
@@ -218,6 +218,7 @@ void BlockGroupingDialog::initValues() {
   m_ID->SetValue( wxString(wLink.getid( m_Props ),wxConvUTF8) );
   m_Desc->SetValue( wxString(wLink.getdesc( m_Props ),wxConvUTF8) );
   m_Critical->SetValue( (wLink.getusage( m_Props ) == wLink.usage_critsect));
+  m_AllowFollowUp->SetValue( wLink.isallowfollowup( m_Props ) ? true:false );
 
   // Properties
   m_MainBlock->SetStringSelection( wxString(wLink.getsrc( m_Props ),wxConvUTF8) );
@@ -252,6 +253,7 @@ bool BlockGroupingDialog::evaluate() {
   wLink.setsrc( m_Props, m_MainBlock->GetValue().mb_str(wxConvUTF8) );
 
   wLink.setusage( m_Props, (m_Critical->IsChecked() ? wLink.usage_critsect : wLink.usage_manual ) );
+  wLink.setallowfollowup( m_Props, m_AllowFollowUp->IsChecked() ? True:False );
 
 
   int cnt = m_BlockList->GetCount();
@@ -297,6 +299,7 @@ bool BlockGroupingDialog::Create( wxWindow* parent, wxWindowID id, const wxStrin
     m_Add = NULL;
     m_Remove = NULL;
     m_Critical = NULL;
+    m_AllowFollowUp = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -362,15 +365,15 @@ void BlockGroupingDialog::CreateControls()
     itemFlexGridSizer14->AddGrowableCol(1);
     itemBoxSizer13->Add(itemFlexGridSizer14, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_LINK_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer14->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer14->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDesc = new wxStaticText( m_GeneralPanel, wxID_STATIC_LINK_DESC, _("description"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer13->Add(m_LabelDesc, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer13->Add(m_LabelDesc, 0, wxALIGN_LEFT|wxALL, 5);
 
-    m_Desc = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Desc = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_LINK_DESC, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer13->Add(m_Desc, 0, wxGROW|wxALL, 5);
 
     m_Notebook->AddPage(m_GeneralPanel, _("General"));
@@ -383,23 +386,23 @@ void BlockGroupingDialog::CreateControls()
     itemFlexGridSizer21->AddGrowableCol(1);
     itemBoxSizer20->Add(itemFlexGridSizer21, 0, wxGROW|wxALL, 5);
     m_LabelMainBlock = new wxStaticText( m_PropertiesPanel, wxID_STATIC_LINK_MAIN, _("source block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer21->Add(m_LabelMainBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer21->Add(m_LabelMainBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_MainBlockStrings;
-    m_MainBlock = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_MAIN, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_MainBlockStrings, wxCB_READONLY );
+    m_MainBlock = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_MAIN, _T(""), wxDefaultPosition, wxDefaultSize, m_MainBlockStrings, wxCB_READONLY );
     itemFlexGridSizer21->Add(m_MainBlock, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer24 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer20->Add(itemBoxSizer24, 1, wxGROW|wxALL, 5);
     m_LabelLinked = new wxStaticText( m_PropertiesPanel, wxID_STATIC_LINK_LINKED, _("linked blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer24->Add(m_LabelLinked, 0, wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE, 5);
+    itemBoxSizer24->Add(m_LabelLinked, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxArrayString m_BlockListStrings;
     m_BlockList = new wxListBox( m_PropertiesPanel, ID_LISTBOX_LINK_LIST, wxDefaultPosition, wxSize(-1, 140), m_BlockListStrings, wxLB_SINGLE );
     itemBoxSizer24->Add(m_BlockList, 1, wxGROW|wxALL, 5);
 
     wxArrayString m_AddBlockListStrings;
-    m_AddBlockList = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_ADD_BLOCK, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_AddBlockListStrings, wxCB_DROPDOWN );
+    m_AddBlockList = new wxComboBox( m_PropertiesPanel, ID_COMBOBOX_LINK_ADD_BLOCK, _T(""), wxDefaultPosition, wxDefaultSize, m_AddBlockListStrings, wxCB_DROPDOWN );
     itemBoxSizer24->Add(m_AddBlockList, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -416,24 +419,28 @@ void BlockGroupingDialog::CreateControls()
     m_Critical->SetValue(false);
     itemBoxSizer31->Add(m_Critical, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_AllowFollowUp = new wxCheckBox( m_PropertiesPanel, wxID_ANY, _("Allow follow up"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_AllowFollowUp->SetValue(false);
+    itemBoxSizer31->Add(m_AllowFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_Notebook->AddPage(m_PropertiesPanel, _("Properties"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer33 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer34 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer33, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer34, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_Cancel);
+    itemStdDialogButtonSizer34->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer33->AddButton(m_OK);
+    itemStdDialogButtonSizer34->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_Apply);
+    itemStdDialogButtonSizer34->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer33->Realize();
+    itemStdDialogButtonSizer34->Realize();
 
 ////@end BlockGroupingDialog content construction
 }

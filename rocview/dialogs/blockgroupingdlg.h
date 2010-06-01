@@ -199,6 +199,7 @@ public:
     wxButton* m_Add;
     wxButton* m_Remove;
     wxCheckBox* m_Critical;
+    wxCheckBox* m_AllowFollowUp;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;
