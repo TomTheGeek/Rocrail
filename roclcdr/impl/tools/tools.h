@@ -26,7 +26,7 @@
 
 void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean routefromto);
 
-void unlockBlockGroup( iOLcDriver inst, iONode group);
+void unlockBlockGroup( iOLcDriver inst, const char* group);
 void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase fromBlock,
     iORoute fromRoute, iIBlockBase* toBlock, iORoute* toRoute, Boolean reverse, Boolean swapNext1Route );
 void listBlocks(iOLcDriver inst);

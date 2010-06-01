@@ -38,7 +38,7 @@
 
 
 
-void unlockBlockGroup( iOLcDriver inst, iONode group) {
+void unlockBlockGroup( iOLcDriver inst, const char* group) {
   iOLcDriverData data = Data(inst);
   data->model->unlockBlockGroup(data->model, group, data->loc->getId( data->loc ));
 }

@@ -74,7 +74,7 @@
       <var name="prewaitScheduleIdx" vt="int"/>
       <var name="scheduletime" vt="long"/>
       <var name="V_hint[32]" vt="char"/>
-      <var name="blockgroup" vt="iONode"/>
+      <var name="blockgroup" vt="const char*"/>
       <var name="slowdown4route" vt="Boolean"/>
       <var name="secondnextblock" vt="Boolean"/>
       <var name="warningnodestfound" vt="Boolean"/>

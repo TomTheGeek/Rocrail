@@ -26,6 +26,7 @@
 #include "rocrail/public/car.h"
 #include "rocrail/public/operator.h"
 #include "rocrail/public/block.h"
+#include "rocrail/public/blockgroup.h"
 #include "rocrail/public/stage.h"
 #include "rocrail/public/fback.h"
 #include "rocrail/public/switch.h"
@@ -531,6 +532,13 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->blockMap, wBlock.getid( item ), (obj)bk );
     added = True;
   }
+  else if( StrOp.equals( wLink.name(), itemName ) ) {
+    iONode clone = (iONode)item->base.clone( item );
+    iOBlockGroup bg = BlockGroupOp.inst( clone );
+    __addItemInList( data, wLinkList.name(), clone );
+    MapOp.put( data->blockGroupMap, wLink.getid( item ), (obj)bg );
+    added = True;
+  }
   else if( StrOp.equals( wTurntable.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOTT tt = TTOp.inst( clone );
@@ -728,6 +736,22 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       modified = True;
     }
     else if( wBlock.getid( item ) != NULL && StrOp.len( wBlock.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
+  else if( StrOp.equals( wLink.name(), name ) ) {
+    iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, id );
+    if( bg != NULL ) {
+      BlockGroupOp.modify( bg, (iONode)NodeOp.base.clone( item ) );
+      modified = True;
+    }
+    else if( StrOp.len(prev_id) > 0 && (bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, prev_id ) ) ) {
+      BlockGroupOp.modify( bg, (iONode)NodeOp.base.clone( item ) );
+      MapOp.remove( data->blockGroupMap, prev_id );
+      MapOp.put( data->blockGroupMap, id, (obj)bg );
+      modified = True;
+    }
+    else if( wLink.getid( item ) != NULL && StrOp.len( wLink.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
   }
@@ -1135,19 +1159,15 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     }
   }
   else if( StrOp.equals( wLink.name(), name ) ) {
-    iONode linklist = wPlan.getlinklist( o->model );
-    if( linklist != NULL ) {
-      iONode link = wLinkList.getlink(linklist);
-      const char* id = wLink.getid(item);
-      while( link != NULL ) {
-        if( StrOp.equals( id, wLink.getid(link) ) ) {
-          NodeOp.removeChild( linklist, link );
-          NodeOp.base.del(link);
-          removed = True;
-          break;
-        }
-        link = wLinkList.nextlink(linklist, link);
-      }
+    iOBlockGroup bg = (iOBlockGroup)MapOp.get( o->blockGroupMap, wLink.getid( item ) );
+    if( bg != NULL ) {
+      iONode props = BlockGroupOp.base.properties( bg );
+      MapOp.remove( o->blockGroupMap, wLink.getid( item ) );
+      /* Remove item from list: */
+      __removeItemFromList( o, wLinkList.name(), props );
+      bg->base.del( bg );
+      props->base.del( props );
+      removed = True;
     }
   }
   else if( StrOp.equals( wTrack.name(), name ) ) {
@@ -1403,6 +1423,14 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     while( block != NULL ) {
       block->reset( block );
       block = (iIBlockBase)MapOp.next( data->blockMap );
+    }
+  }
+
+  {
+    iOBlockGroup bg = (iOBlockGroup)MapOp.first( data->blockGroupMap );
+    while( bg != NULL ) {
+      bg->reset( bg );
+      bg = (iOBlockGroup)MapOp.next( data->blockGroupMap );
     }
   }
 
@@ -2334,6 +2362,7 @@ static void _init( iOModel inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init clearingMaps..." );
   __clearMap( o->blockMap );
+  __clearMap( o->blockGroupMap );
   __clearMap( o->feedbackMap );
   __clearMap( o->locMap );
   __clearMap( o->carMap );
@@ -2369,6 +2398,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->stageMap   , wStageList.name(), wStage.name(), (item_inst)StageOp.inst, NULL  );
   _createMap( o, o->actionMap  , wActionList.name(), wAction.name(), (item_inst)ActionOp.inst, NULL  );
   _createMap( o, o->blockMap   , wBlockList.name(), wBlock.name(), (item_inst)BlockOp.inst, NULL  );
+  _createMap( o, o->blockGroupMap, wLinkList.name(), wLink.name(), (item_inst)BlockGroupOp.inst, NULL  );
   _createMap( o, o->textMap    , wTextList.name(), wText.name(), (item_inst)TextOp.inst, NULL  );
   _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, NULL );
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
@@ -2940,9 +2970,8 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
 }
 
 /* Checks the linklist if this block belongs to a group */
-static iONode _checkForBlockGroup(iOModel inst, const char* BlockId) {
+static const char* _checkForBlockGroup(iOModel inst, const char* BlockId) {
   iOModelData data = Data(inst);
-  iONode group = NULL;
   iONode linklist = wPlan.getlinklist(data->model);
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check blockgroup for [%s]", BlockId);
@@ -2954,47 +2983,40 @@ static iONode _checkForBlockGroup(iOModel inst, const char* BlockId) {
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* id = StrTokOp.nextToken( tok );
         if( id != NULL && StrOp.equals(id, BlockId) && wLink.getusage(link) == wLink.usage_critsect ) {
-          return link;
+          return wLink.getid(link);
         }
       };
       link = wLinkList.nextlink(linklist, link);
       StrTokOp.base.del(tok);
     };
   }
-  return group;
+  return NULL;
 }
 
-static Boolean _lockBlockGroup(iOModel inst, iONode group, const char* BlockId, const char* LocoId) {
+static Boolean _lockBlockGroup(iOModel inst, const char* group, const char* BlockId, const char* LocoId) {
   iOModelData data = Data(inst);
-  iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
-  Boolean grouplocked = True;
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block group is %s", wLink.getid(group));
+  iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
 
-  while( StrTokOp.hasMoreTokens(tok) && grouplocked ) {
-    const char* id = StrTokOp.nextToken( tok );
-    iIBlockBase gblock = ModelOp.getBlock( inst, id );
-    if( gblock != NULL ) {
-      grouplocked = gblock->lockForGroup( gblock, LocoId );
-    }
-  };
-  StrTokOp.base.del(tok);
-  return grouplocked;
+  if( bg != NULL ) {
+    return BlockGroupOp.lock(bg, BlockId, LocoId );
+  }
+  else {
+    return False;
+  }
+
 }
 
-static Boolean _unlockBlockGroup(iOModel inst, iONode group, const char* LocoId) {
+static Boolean _unlockBlockGroup(iOModel inst, const char* group, const char* LocoId) {
   iOModelData data = Data(inst);
+  iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
 
-  iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
-  while( StrTokOp.hasMoreTokens(tok) ) {
-    const char* id = StrTokOp.nextToken( tok );
-    iIBlockBase gblock = ModelOp.getBlock( inst, id );
-    if( gblock != NULL ) {
-      gblock->unLockForGroup( gblock, LocoId );
-    }
-  };
-  StrTokOp.base.del(tok);
+  if( bg != NULL ) {
+    return BlockGroupOp.unlock(bg, LocoId );
+  }
+  else {
+    return False;
+  }
 
-  return True;
 }
 
 
@@ -3660,6 +3682,7 @@ static iOModel _inst( const char* fileName ) {
   data->outputMap   = MapOp.inst();
   data->feedbackMap = MapOp.inst();
   data->blockMap    = MapOp.inst();
+  data->blockGroupMap= MapOp.inst();
   data->routeMap    = MapOp.inst();
   data->routeList   = ListOp.inst();
   data->trackMap    = MapOp.inst();

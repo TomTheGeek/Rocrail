@@ -796,19 +796,19 @@
       <param name="cy" vt="int*" remark="max height"/>
       <param name="forserefresh" vt="Boolean" remark="collect items even if list already exist"/>
     </fun>
-    <fun name="checkForBlockGroup" vt="iONode">
+    <fun name="checkForBlockGroup" vt="const char*">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="BlockId" vt="const char*" remark="block id to find in a group"/>
     </fun>
     <fun name="lockBlockGroup" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="Group" vt="iONode"/>
+      <param name="Group" vt="const char*"/>
       <param name="BlockId" vt="const char*"/>
       <param name="LocoId" vt="const char*"/>
     </fun>
     <fun name="unlockBlockGroup" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="Group" vt="iONode"/>
+      <param name="Group" vt="const char*"/>
       <param name="LocoId" vt="const char*"/>
     </fun>
     <fun name="getTime" vt="long">
@@ -898,6 +898,7 @@
       <var name="outputMap" vt="iOMap"/>
       <var name="feedbackMap" vt="iOMap"/>
       <var name="blockMap" vt="iOMap"/>
+      <var name="blockGroupMap" vt="iOMap"/>
       <var name="routeMap" vt="iOMap"/>
       <var name="routePicker" vt="int"/>
       <var name="routeCheckDir[10]" vt="Boolean"/>
@@ -1838,9 +1839,15 @@
       <param name="inst" vt="this" remark="BlockGroup instance"/>
       <param name="LocoId" vt="const char*"/>
     </fun>
+    <fun name="reset" vt="void">
+      <param name="inst" vt="this" remark="BlockGroup instance"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="lockmap" vt="iOMap"/>
+      <var name="firstBlock" vt="const char*"/>
+      <var name="firstLoco" vt="const char*"/>
+      <var name="allowfollowup" vt="Boolean"/>1
     </data>
   </object>
 

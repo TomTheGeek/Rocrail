@@ -1595,7 +1595,7 @@ static void _init( iIBlockBase inst ) {
     _setDefaultAspect(inst, True);
   }
 
-  BlockOp.setCarCount((iOBlock)inst, 0);
+  _setCarCount(inst, 0);
 }
 
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {

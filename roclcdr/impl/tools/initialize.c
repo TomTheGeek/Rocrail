@@ -49,7 +49,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
   Boolean grouplocked = False;
 
   /* check if this block belongs to a group: */
-  iONode group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  const char* group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
 
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
@@ -141,7 +141,7 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
   Boolean grouplocked = False;
 
   /* check if this block belongs to a group: */
-  iONode group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  const char* group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
 
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
@@ -152,16 +152,8 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
   }
 
   if( group != NULL ) {
-    iOStrTok tok = StrTokOp.inst( wLink.getdst(group), ',' );
-    grouplocked = True;
-    while( StrTokOp.hasMoreTokens(tok) && grouplocked ) {
-      const char* id = StrTokOp.nextToken( tok );
-      iIBlockBase gblock = data->model->getBlock( data->model, id );
-      if( gblock != NULL ) {
-        grouplocked = gblock->lockForGroup( gblock, data->loc->getId( data->loc ) );
-      }
-    };
-    StrTokOp.base.del(tok);
+    grouplocked = data->model->lockBlockGroup(data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
+
     if(!grouplocked) {
       unlockBlockGroup(inst, group);
       return False;
