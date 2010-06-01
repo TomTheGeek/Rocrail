@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: rocrail 1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-26 07:51+0100\n"
-"PO-Revision-Date: 2010-05-23 07:51+0100\n"
+"PO-Revision-Date: 2010-06-01 07:51+0100\n"
 "Last-Translator: Rob Versluis <team@rocrail.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4977,5 +4977,41 @@ msgstr ""
 # id="countcars"
 #, c-format
 msgid "Count cars before firing events."
+msgstr ""
+
+#. 
+# id="odsernum"
+#, c-format
+msgid "Serial Number"
+msgstr ""
+
+#. 
+# id="odsernum"
+#, c-format
+msgid "OpenDCC serial number"
+msgstr ""
+
+#. 
+# id="xpnfbmapping"
+#, c-format
+msgid "XpressNet feedback mapping"
+msgstr ""
+
+#. 
+# id="xpnfbmapping"
+#, c-format
+msgid "Read OpenDCC documentation"
+msgstr ""
+
+#. 
+# id="allowfollowup"
+#, c-format
+msgid "Allow follow up"
+msgstr ""
+
+#. 
+# id="allowfollowup"
+#, c-format
+msgid "Allow critical section follow up in same direction."
 msgstr ""
 

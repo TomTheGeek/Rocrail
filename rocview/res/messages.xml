@@ -15046,4 +15046,7 @@
     <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
     <de txt="XpressNet Abfragezuordnung" tip="OpenDCC Beschreibung lesen"/>
   </Msg>
+  <Msg id="allowfollowup">
+    <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
+  </Msg>
 </Messages>
