@@ -1229,9 +1229,11 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     /* check group lock */
     if( data->locIdGroup != NULL && !StrOp.equals( data->locIdGroup, id ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block already has a group lock by [%s]", data->locIdGroup );
-      MutexOp.post( data->muxLock );
-      return False;
+      if( !ModelOp.isBlockGroupLockedForLoco(AppOp.getModel(), data->id, id) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block already has a group lock by [%s]", data->locIdGroup );
+        MutexOp.post( data->muxLock );
+        return False;
+      }
     }
 
     if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId) ) {

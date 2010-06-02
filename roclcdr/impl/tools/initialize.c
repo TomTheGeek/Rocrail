@@ -46,32 +46,11 @@
  */
 Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean reverse, int indelay ) {
   iOLcDriverData data = Data(inst);
-  Boolean grouplocked = False;
+  Boolean grouplocked = initializeGroup(inst, block);
 
-  /* check if this block belongs to a group: */
-  const char* group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
-
-  /* unlock only for init a next block */
-  if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
-      group == NULL && data->blockgroup != NULL ) {
-    /* unlock previous group; entering another one */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock previous blockgroup %s", data->blockgroup );
-
-    unlockBlockGroup(inst, data->blockgroup );
-    data->blockgroup = NULL;
+  if( !grouplocked ) {
+    return False;
   }
-
-  if( group != NULL ) {
-    grouplocked = data->model->lockBlockGroup( data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
-
-    if( !grouplocked ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock blockgroup %s", group );
-      unlockBlockGroup(inst, group);
-      return False;
-    }
-    data->blockgroup = group;
-  }
-
 
   if( street->isFree(street, data->loc->getId( data->loc )) ) {
     /* TODO: curBlock can be NULL in case of R2Rnet */
@@ -102,7 +81,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
           block->unLock( block, data->loc->getId( data->loc ) );
           street->unLock( street, data->loc->getId( data->loc ), NULL, True );
           if(grouplocked) {
-            unlockBlockGroup(inst, group);
+            unlockBlockGroup(inst, data->blockgroup);
           }
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
               "Could not switch street \"%s\", for \"%s\"...",
@@ -112,7 +91,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
       else {
         block->unLock( block, data->loc->getId( data->loc ) );
         if(grouplocked) {
-          unlockBlockGroup(inst, group);
+          unlockBlockGroup(inst, data->blockgroup);
         }
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "Could not lock route \"%s\", for \"%s\"...",
@@ -124,7 +103,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
           "Could not lock block \"%s\", for \"%s\"...",
           block->base.id( block ), data->loc->getId( data->loc ) );
       if(grouplocked) {
-        unlockBlockGroup(inst, group);
+        unlockBlockGroup(inst, data->blockgroup);
       }
     }
   }

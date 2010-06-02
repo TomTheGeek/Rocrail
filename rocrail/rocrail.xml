@@ -811,6 +811,11 @@
       <param name="Group" vt="const char*"/>
       <param name="LocoId" vt="const char*"/>
     </fun>
+    <fun name="isBlockGroupLockedForLoco" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="BlockId" vt="const char*"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
     <fun name="getTime" vt="long">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
@@ -1839,6 +1844,10 @@
       <param name="inst" vt="this" remark="BlockGroup instance"/>
       <param name="LocoId" vt="const char*"/>
     </fun>
+    <fun name="isLockedForLoco" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="BlockGroup instance"/>
     </fun>
@@ -1848,6 +1857,8 @@
       <var name="firstBlock" vt="const char*"/>
       <var name="firstLoco" vt="const char*"/>
       <var name="allowfollowup" vt="Boolean"/>1
+      <var name="maxfollowup" vt="int"/>1
+      <var name="followupend" vt="Boolean"/>1
     </data>
   </object>
 

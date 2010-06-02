@@ -101,7 +101,8 @@ static struct OBlockGroup* _inst( iONode ini ) {
   data->props = ini;
   data->lockmap = MapOp.inst();
   data->allowfollowup = wLink.isallowfollowup(ini);
-
+  data->maxfollowup = wLink.getmaxfollowup(ini);
+  data->followupend = False;
   instCnt++;
   return __BlockGroup;
 }
@@ -150,17 +151,20 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
     return grouplocked;
   }
   else if( MapOp.size(data->lockmap) > 0 && data->allowfollowup && data->firstBlock != NULL ) {
-    if( StrOp.equals( BlockId, data->firstBlock) && MapOp.get(data->lockmap, LocoId) == NULL ) {
+    if( StrOp.equals( BlockId, data->firstBlock) && MapOp.get(data->lockmap, LocoId) == NULL && !data->followupend ) {
       MapOp.put( data->lockmap, LocoId, (obj)LocoId);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "loco %s locked blockgroup %s for followup starting in block %s",
           LocoId, wLink.getid(data->props), BlockId);
+      if( data->maxfollowup > 0 && data->maxfollowup >= MapOp.size( data->lockmap ) ) {
+        data->followupend = True;
+      }
       return True;
     }
     else if( MapOp.get(data->lockmap, LocoId) == NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "loco %s not allowed to followup in blockgroup %s starting in block %s",
-          LocoId, wLink.getid(data->props), BlockId);
+          "loco %s not allowed to followup in blockgroup %s starting in block %s (max=%d/%d)",
+          LocoId, wLink.getid(data->props), BlockId, MapOp.size( data->lockmap ), data->maxfollowup );
     }
 
   }
@@ -190,6 +194,7 @@ static void _modify( struct OBlockGroup* inst ,iONode props ) {
   }
 
   data->allowfollowup = wLink.isallowfollowup(props);
+  data->maxfollowup = wLink.getmaxfollowup(props);
   return;
 }
 
@@ -198,8 +203,16 @@ static void _modify( struct OBlockGroup* inst ,iONode props ) {
 static void _reset( struct OBlockGroup* inst ) {
   iOBlockGroupData data = Data(inst);
   data->firstBlock = NULL;
+  data->followupend = False;
   MapOp.clear(data->lockmap);
   return;
+}
+
+
+static Boolean _isLockedForLoco( struct OBlockGroup* inst ,const char* LocoId ) {
+  iOBlockGroupData data = Data(inst);
+
+  return MapOp.haskey( data->lockmap, LocoId);
 }
 
 
@@ -208,7 +221,11 @@ static Boolean _unlock( struct OBlockGroup* inst ,const char* LocoId ) {
   iOBlockGroupData data = Data(inst);
   iOModel     model  = AppOp.getModel();
 
-  MapOp.remove( data->lockmap, LocoId);
+  if( MapOp.remove( data->lockmap, LocoId) == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "blockgroup %s is not locked by %s", LocoId );
+    return False;
+  }
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -222,6 +239,8 @@ static Boolean _unlock( struct OBlockGroup* inst ,const char* LocoId ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "releasing blockgroup %s from initial owner %s",
         wLink.getid(data->props), data->firstLoco);
+
+    data->followupend = False;
 
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* id = StrTokOp.nextToken( tok );

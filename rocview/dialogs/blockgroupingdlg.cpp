@@ -219,6 +219,7 @@ void BlockGroupingDialog::initValues() {
   m_Desc->SetValue( wxString(wLink.getdesc( m_Props ),wxConvUTF8) );
   m_Critical->SetValue( (wLink.getusage( m_Props ) == wLink.usage_critsect));
   m_AllowFollowUp->SetValue( wLink.isallowfollowup( m_Props ) ? true:false );
+  m_MaxFollowUp->SetValue( wLink.getmaxfollowup( m_Props ) );
 
   // Properties
   m_MainBlock->SetStringSelection( wxString(wLink.getsrc( m_Props ),wxConvUTF8) );
@@ -254,6 +255,7 @@ bool BlockGroupingDialog::evaluate() {
 
   wLink.setusage( m_Props, (m_Critical->IsChecked() ? wLink.usage_critsect : wLink.usage_manual ) );
   wLink.setallowfollowup( m_Props, m_AllowFollowUp->IsChecked() ? True:False );
+  wLink.setmaxfollowup( m_Props, m_MaxFollowUp->GetValue() );
 
 
   int cnt = m_BlockList->GetCount();
@@ -300,6 +302,7 @@ bool BlockGroupingDialog::Create( wxWindow* parent, wxWindowID id, const wxStrin
     m_Remove = NULL;
     m_Critical = NULL;
     m_AllowFollowUp = NULL;
+    m_MaxFollowUp = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -414,33 +417,38 @@ void BlockGroupingDialog::CreateControls()
     itemFlexGridSizer28->Add(m_Remove, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer31 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer20->Add(itemBoxSizer31, 0, wxGROW|wxALL, 5);
+    itemBoxSizer20->Add(itemBoxSizer31, 0, wxGROW, 5);
     m_Critical = new wxCheckBox( m_PropertiesPanel, ID_CHECKBOX, _("Critical Section"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Critical->SetValue(false);
     itemBoxSizer31->Add(m_Critical, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    wxBoxSizer* itemBoxSizer33 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer20->Add(itemBoxSizer33, 0, wxGROW, 5);
     m_AllowFollowUp = new wxCheckBox( m_PropertiesPanel, wxID_ANY, _("Allow follow up"), wxDefaultPosition, wxDefaultSize, 0 );
     m_AllowFollowUp->SetValue(false);
-    itemBoxSizer31->Add(m_AllowFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer33->Add(m_AllowFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_MaxFollowUp = new wxSpinCtrl( m_PropertiesPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
+    itemBoxSizer33->Add(m_MaxFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_PropertiesPanel, _("Properties"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer34 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer36 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer34, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer36, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer34->AddButton(m_Cancel);
+    itemStdDialogButtonSizer36->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer34->AddButton(m_OK);
+    itemStdDialogButtonSizer36->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer34->AddButton(m_Apply);
+    itemStdDialogButtonSizer36->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer34->Realize();
+    itemStdDialogButtonSizer36->Realize();
 
 ////@end BlockGroupingDialog content construction
 }

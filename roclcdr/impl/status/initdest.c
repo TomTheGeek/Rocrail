@@ -63,8 +63,7 @@ void statusInitDest( iILcDriverInt inst ) {
      * If the route direction is true there is no invert in traveling, so the default value should be the
      * opposite of the route direction flag.
      */
-    if( initializeGroup( (iOLcDriver)inst, data->next1Block ) &&
-        initializeDestination( (iOLcDriver)inst,
+    if( initializeDestination( (iOLcDriver)inst,
                 data->next1Block,
                 data->next1Route,
                 data->curBlock,

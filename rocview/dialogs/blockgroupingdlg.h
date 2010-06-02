@@ -30,6 +30,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -40,6 +41,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -200,6 +202,7 @@ public:
     wxButton* m_Remove;
     wxCheckBox* m_Critical;
     wxCheckBox* m_AllowFollowUp;
+    wxSpinCtrl* m_MaxFollowUp;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

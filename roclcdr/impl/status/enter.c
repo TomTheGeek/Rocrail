@@ -164,8 +164,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block  ***** test with unlock flag *****" );
         resetNext2( (iOLcDriver)inst, True );
       }
-      else if( initializeGroup( (iOLcDriver)inst, data->next2Block ) &&
-               initializeDestination( (iOLcDriver)inst,
+      else if( initializeDestination( (iOLcDriver)inst,
                        data->next2Block,
                        data->next2Route,
                        data->next1Block,

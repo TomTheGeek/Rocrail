@@ -2993,6 +2993,22 @@ static const char* _checkForBlockGroup(iOModel inst, const char* BlockId) {
   return NULL;
 }
 
+static Boolean _isBlockGroupLockedForLoco(iOModel inst, const char* BlockId, const char* LocoId) {
+  iOModelData data = Data(inst);
+
+  Boolean locked = False;
+  const char* group = ModelOp.checkForBlockGroup(inst, BlockId);
+  if( group != NULL ) {
+    iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
+
+    if( bg != NULL ) {
+      locked = BlockGroupOp.isLockedForLoco(bg, LocoId );
+    }
+  }
+  return locked;
+}
+
+
 static Boolean _lockBlockGroup(iOModel inst, const char* group, const char* BlockId, const char* LocoId) {
   iOModelData data = Data(inst);
   iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
