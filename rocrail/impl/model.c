@@ -3017,6 +3017,7 @@ static Boolean _lockBlockGroup(iOModel inst, const char* group, const char* Bloc
     return BlockGroupOp.lock(bg, BlockId, LocoId );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "blockgroup %s not defined", group);
     return False;
   }
 
@@ -3030,6 +3031,7 @@ static Boolean _unlockBlockGroup(iOModel inst, const char* group, const char* Lo
     return BlockGroupOp.unlock(bg, LocoId );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "blockgroup %s not defined", group);
     return False;
   }
 

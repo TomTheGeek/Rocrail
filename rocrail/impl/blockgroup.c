@@ -113,6 +113,9 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
   iOBlockGroupData data = Data(inst);
   iOModel     model  = AppOp.getModel();
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s request to lock blockgroup %s with block %s",
+      LocoId, wLink.getid(data->props), BlockId);
+
   if( MapOp.get(data->lockmap, LocoId) != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s already locked blockgroup %s", LocoId, wLink.getid(data->props));
     return True;
@@ -121,7 +124,7 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
   if( MapOp.size(data->lockmap) == 0 ) {
     iOStrTok tok = StrTokOp.inst( wLink.getdst(data->props), ',' );
     Boolean grouplocked = True;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s tries to lock blockgroup %s", LocoId, wLink.getid(data->props));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s pending to lock blockgroup %s", LocoId, wLink.getid(data->props));
 
     while( StrTokOp.hasMoreTokens(tok) && grouplocked ) {
       const char* id = StrTokOp.nextToken( tok );
@@ -143,7 +146,8 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
       data->firstLoco  = NULL;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s locked blockgroup %s", LocoId, wLink.getid(data->props));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s locked blockgroup %s with block %s",
+          LocoId, wLink.getid(data->props), BlockId);
       data->firstBlock = BlockId;
       data->firstLoco  = LocoId;
     }
