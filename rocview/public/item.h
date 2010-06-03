@@ -61,6 +61,7 @@ public:
   void OnLocSchedule(wxCommandEvent& event);
   void OnLocGo(wxCommandEvent& event);
   void OnScheduleGo(wxCommandEvent& event);
+  void OnFYGo(wxCommandEvent& event);
   void OnLocGoManual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
@@ -127,6 +128,7 @@ private:
   double m_Bktext;
 
   iOList m_sclist;
+  iOList m_fylist;
 
   DECLARE_EVENT_TABLE()
 };
