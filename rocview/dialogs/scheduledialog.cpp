@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/SelTab.h"
 
 #include "rocs/public/strtok.h"
 
@@ -178,15 +179,29 @@ void ScheduleDialog::initBlockCombo() {
         const char* id = wBlock.getid( bk );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
-		}
-	  }
-      ListOp.sort(list, &__sortStr);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        const char* id = (const char*)ListOp.get( list, i );
-        m_Block->Append( wxString(id,wxConvUTF8) );
+        }
       }
     }
+
+    iONode seltablist = wPlan.getseltablist( model );
+    if( seltablist != NULL ) {
+      int cnt = NodeOp.getChildCnt( seltablist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fy = NodeOp.getChild( seltablist, i );
+        const char* id = wSelTab.getid( fy );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_Block->Append( wxString(id,wxConvUTF8) );
+    }
+
   }
   /* clean up the temp. list */
   ListOp.base.del(list);
