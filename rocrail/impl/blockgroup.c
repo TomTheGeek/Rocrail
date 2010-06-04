@@ -34,7 +34,7 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iOBlockGroupData data = Data(inst);
     /* Cleanup data->xxx members...*/
-    
+    MapOp.base.del(data->lockmap);
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -71,11 +71,13 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 }
 
 static void* __properties( void* inst ) {
-  return NULL;
+  iOBlockGroupData data = Data(inst);
+  return data->props;
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iOBlockGroupData data = Data(inst);
+  return wLink.getid(data->props);
 }
 
 static void* __event( void* inst, const void* evt ) {
