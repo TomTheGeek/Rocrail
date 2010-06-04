@@ -355,6 +355,7 @@ public:
     wxRadioBox* m_Speed;
     wxSpinCtrl* m_SpeedPercent;
     wxRadioBox* m_ExitSpeed;
+    wxRadioBox* m_StopSpeed;
     wxRadioBox* m_Type;
     wxPanel* m_RoutesPanel;
     wxListBox* m_Routes;

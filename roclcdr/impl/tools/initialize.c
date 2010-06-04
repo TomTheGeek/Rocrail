@@ -194,7 +194,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
     }
   }
   /* OK, no valid route hint: get it from the block: */
-  StrOp.copy( data->V_hint, block->getVelocity( block, &percent, onexit, reverse ) );
+  StrOp.copy( data->V_hint, block->getVelocity( block, &percent, onexit, reverse, street==NULL?True:False ) );
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }

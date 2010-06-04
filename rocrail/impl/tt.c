@@ -1637,7 +1637,7 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
   /* TODO: dispatch to active tracke block */
 }
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
   return "";

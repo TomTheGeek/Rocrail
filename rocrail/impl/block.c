@@ -751,11 +751,16 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 }
 
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOBlockData data    = Data(inst);
   iOSignal    signal  = (iOSignal)inst->hasManualSignal(inst, False, reverse );
   iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, reverse );
-  const char* V_hint  = onexit? wBlock.getexitspeed(data->props):wBlock.getspeed(data->props);
+  const char* V_hint  = wBlock.getspeed(data->props);
+
+  if( onexit )
+    V_hint  = wBlock.getexitspeed(data->props);
+  else if( onstop )
+    V_hint  = wBlock.getstopspeed(data->props);
 
   *percent = wBlock.getspeedpercent(data->props);
 

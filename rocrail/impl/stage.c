@@ -188,7 +188,7 @@ static int _getTDport( iIBlockBase inst ) {
 
 
 /**  */
-static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit ,Boolean reverse ) {
+static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit ,Boolean reverse, Boolean onstop ) {
   return 0;
 }
 

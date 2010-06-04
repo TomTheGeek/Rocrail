@@ -1180,12 +1180,12 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     block->enterBlock( block, id );
 }
 
-static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse ) {
+static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getVelocity");
   *percent = 0;
   /* dispatch to active tracke block */
-  return block != NULL ? block->getVelocity( block, percent, onexit, reverse ) : "";
+  return block != NULL ? block->getVelocity( block, percent, onexit, reverse, onstop ) : "";
 }
 
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {

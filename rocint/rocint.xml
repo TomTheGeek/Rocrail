@@ -248,6 +248,7 @@
       <param name="percent" vt="int*" remark="Speed percent"/>
       <param name="onexit" vt="Boolean" remark="Speed on exit"/>
       <param name="reverse" vt="Boolean" remark="reverse signal"/>
+      <param name="onstop" vt="Boolean" remark="On stop speed"/>
     </fun>
     <fun name="hasEnter2Route" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>
