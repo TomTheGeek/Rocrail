@@ -759,8 +759,10 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
 
   if( onexit )
     V_hint  = wBlock.getexitspeed(data->props);
-  else if( onstop )
-    V_hint  = wBlock.getstopspeed(data->props);
+  else if( onstop ) {
+    if( !StrOp.equals( V_hint, wBlock.min ) )
+      V_hint  = wBlock.getstopspeed(data->props);
+  }
 
   *percent = wBlock.getspeedpercent(data->props);
 
