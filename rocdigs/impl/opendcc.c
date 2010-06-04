@@ -489,9 +489,9 @@ static void __swdelayThread( void* threadinst ) {
     if( post != NULL ) {
       iONode cmdoff = (iONode)post;
       long delaytime = wSwitch.getdelaytime( cmdoff );
-      if( SystemOp.getMillis() - wSwitch.getdelay(cmdoff) > 0 ) {
+      if( (delaytime + wSwitch.getdelay(cmdoff)) - SystemOp.getMillis() > 0 ) {
         /* sleep the delay in ms */
-        ThreadOp.sleep(SystemOp.getMillis() - wSwitch.getdelay(cmdoff));
+        ThreadOp.sleep((delaytime + wSwitch.getdelay(cmdoff)) - SystemOp.getMillis());
       }
       /* deactovate the output */
       wSwitch.setactivate(cmdoff, False );
