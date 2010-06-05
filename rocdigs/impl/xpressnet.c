@@ -214,6 +214,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
 
     int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
 
@@ -242,7 +243,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       /* deactivate the gate to be used */
       iQCmd cmd = allocMem(sizeof(struct QCmd));
       cmd->time   = SystemOp.getTick();
-      cmd->delay  = 10;
+      cmd->delay  = delay / 10;
       cmd->out[0] = 0x52;
       cmd->out[1] = addr;
       cmd->out[2] = 0x80 | 0x00 | (port << 1) | gate;
@@ -261,7 +262,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       /* deactivate the gate to be used */
       iQCmd cmd = allocMem(sizeof(struct QCmd));
       cmd->time   = SystemOp.getTick();
-      cmd->delay  = 10;
+      cmd->delay  = delay / 10;
       cmd->out[0] = 0x52;
       cmd->out[1] = addr;
       cmd->out[2] = 0x80 | 0x00 | (port << 1) | state;
