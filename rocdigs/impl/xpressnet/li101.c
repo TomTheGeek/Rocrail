@@ -81,12 +81,13 @@ void li101Init(obj xpressnet) {
   out[2] = 0x55;
   ThreadOp.post( data->transactor, (obj)out );
 
-  /* Asking for BAUDRATE */
+  /* Asking for BAUDRATE 
   out = allocMem(32);
   out[0] = 0xF2;
   out[1] = 0x02;
   out[2] = 0x05;
   ThreadOp.post( data->transactor, (obj)out );
+*/
 
   if( data->startpwstate) {
     /* ALL ON */
