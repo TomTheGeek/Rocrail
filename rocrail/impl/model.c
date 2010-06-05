@@ -2190,7 +2190,7 @@ static iORoute _getRoute( iOModel inst, const char* id ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route [%s] undefined", id );
     }
   }
-  else {
+  else if( route == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route [%s] undefined", id );
     return NULL;
   }
