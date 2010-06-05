@@ -2747,6 +2747,14 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
   int idx = 0;
   iONode entry = wSchedule.getscentry( schedule );
   iONode preventry = NULL;
+  iIBlockBase block = ModelOp.getBlock( inst, blockid);
+
+  if( block != NULL && block->getManager(block) != NULL ) {
+    /* managed block; use the id from the manager */
+    iIBlockBase manager = block->getManager(block);
+    blockid = manager->base.id(manager);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "managed block, using id of manager: [%s]", blockid );
+  }
 
   /* check if the schedule index is correct: */
   while( entry != NULL ) {
