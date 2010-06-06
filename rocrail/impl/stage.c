@@ -24,6 +24,7 @@
 #include "rocrail/public/route.h"
 #include "rocrail/public/control.h"
 #include "rocrail/public/model.h"
+#include "rocrail/public/loc.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -313,12 +314,39 @@ static void _init( iIBlockBase inst ) {
   return;
 }
 
-
+/**
+ * calculate if the train will fit in the free sections
+ */
 static Boolean __willLocoFit(iIBlockBase inst ,const char* locid) {
   iOStageData data = Data(inst);
   iOModel model = AppOp.getModel();
   iOLoc loco = ModelOp.getLoc( model, locid );
-  return True;
+  Boolean fit = False;
+
+  if( data->freeSections > 1 ) {
+
+    int lclen   = LocOp.getLen(loco);
+    int freeLen = data->freeSections * data->sectionLength;
+
+    if( lclen == 0 ) {
+      fit = False;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "train length of [%s] not set for stage [%s]",
+          locid, data->id );
+      return fit;
+    }
+    else if(lclen < freeLen ) {
+      fit = True;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "train length of [%s][%d] does %sfit in stage [%s][%d]",
+        locid, lclen, fit?"":"NOT ", data->id, freeLen );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no sections available on stage [%s]",
+        data->id );
+  }
+
+  return fit;
 }
 
 /**
@@ -345,7 +373,7 @@ static Boolean _isReady( iIBlockBase inst ) {
 
 /**  */
 static int _isSuited( iIBlockBase inst ,iOLoc loc ) {
-  return suits_ok;
+  return __willLocoFit(inst, LocOp.getId(loc)) ? suits_ok:suits_not;
 }
 
 
@@ -366,6 +394,10 @@ static Boolean _link( iIBlockBase inst ,iIBlockBase linkto ) {
 /**  */
 static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,const char* routeid ,Boolean crossing ,Boolean reset ,Boolean reverse ,int indelay ) {
   iOStageData data = Data(inst);
+  if( !__willLocoFit(inst, locid) ) {
+    return False;
+  }
+
   return 0;
 }
 
@@ -373,7 +405,7 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 /**  */
 static Boolean _lockForGroup( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  return 0;
+  return False;
 }
 
 
@@ -436,7 +468,7 @@ static void _setGroup( iIBlockBase inst ,const char* group ) {
 /**  */
 static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
   iOStageData data = Data(inst);
-  return 0;
+  return False;
 }
 
 
@@ -454,10 +486,71 @@ static Boolean _unLink( iIBlockBase inst ) {
 }
 
 
+
+/**
+ * move all locos to fill up the space freed up
+ */
+static Boolean __moveStageLocos(iIBlockBase inst) {
+  iOStageData data = Data(inst);
+  Boolean locoMoved = False;
+
+  iONode firstFreeSection = NULL;
+  iONode firstOccupiedSection = NULL;
+  int i = 0;
+  for( i = 0; i < ListOp.size(data->sectionList); i++) {
+    iONode section = (iONode)ListOp.get(data->sectionList, i);
+    if( firstFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+      firstFreeSection = section;
+    }
+    if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
+      firstOccupiedSection = section;
+      break;
+    }
+  }
+  if( firstFreeSection != NULL && firstOccupiedSection != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "moving loco %s from %s to %s in stage %s",
+        wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
+        wStageSection.getid(firstFreeSection), data->id );
+
+    /* TODO: V_min and wait for event of sensor firstFreeSection */
+    locoMoved = True;
+  }
+
+  return locoMoved;
+}
+
+
+static Boolean __freeSections(iIBlockBase inst, const char* locid) {
+  iOStageData data = Data(inst);
+  int i = 0;
+  iOList list = (iOList)MapOp.remove( data->lcMap, locid );
+
+  if( list == NULL )
+    return False;
+
+  for( i = 0; i < ListOp.size(list); i++) {
+    iONode section = (iONode)ListOp.get(list, i);
+    wStageSection.setlcid(section, NULL);
+  }
+
+  __moveStageLocos(inst);
+
+  /* clean up list */
+  ListOp.base.del(list);
+
+  return True;
+}
+
+
 /**  */
 static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  return 0;
+  Boolean unlocked = False;
+  if( MapOp.get( data->lcMap, locid) != NULL ) {
+    unlocked = __freeSections(inst, locid);
+  }
+  return unlocked;
 }
 
 
@@ -586,6 +679,7 @@ static struct OStage* _inst( iONode props ) {
   data->fbMap       = MapOp.inst();
   data->lcMap       = MapOp.inst();
   data->sectionList = ListOp.inst();
+  data->sectionLength = wStage.getslen(props);
 
   __initSensors(__Stage);
 
