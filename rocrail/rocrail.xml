@@ -165,7 +165,20 @@
       <var name="props" vt="iONode" remark="Stage properties"/>
       <var name="sectionList" vt="iOList"/>
       <var name="fbMap" vt="iOMap"/>
+      <var name="lcMap" vt="iOMap"/>
       <var name="sectionCount" vt="int"/>
+      <var name="linkto" vt="iIBlockBase"/>
+      <var name="closereq" vt="Boolean"/>
+      <var name="fromBlockId" vt="const char*"/>
+      <var name="byRouteId" vt="const char*"/>
+      <var name="trig_enter" vt="Boolean"/>
+      <var name="trig_in" vt="Boolean"/>
+      <var name="trig_exit" vt="Boolean"/>
+      <var name="trig_out" vt="Boolean"/>
+      <var name="trig_enter_mid" vt="Boolean"/>
+      <var name="trig_exit_mid" vt="Boolean"/>
+      <var name="trig_renter_mid" vt="Boolean" remark="reverse enter"/>
+      <var name="trig_rexit_mid" vt="Boolean" remark="reverse exit"/>
     </data>
   </object>
 

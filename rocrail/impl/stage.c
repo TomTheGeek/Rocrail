@@ -23,7 +23,7 @@
 #include "rocrail/public/fback.h"
 #include "rocrail/public/route.h"
 #include "rocrail/public/control.h"
-#include "rocrail/public/modplan.h"
+#include "rocrail/public/model.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -43,6 +43,10 @@
 
 
 static int instCnt = 0;
+
+
+static void __initSensors( iOStage inst );
+
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -86,11 +90,13 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 }
 
 static void* __properties( void* inst ) {
-  return NULL;
+  iOStageData data = Data(inst);
+  return data->props;
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iOStageData data = Data(inst);
+  return data->id;
 }
 
 static void* __event( void* inst, const void* evt ) {
@@ -102,13 +108,55 @@ static void* __event( void* inst, const void* evt ) {
 
 /**  */
 static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
-  return 0;
+  iOStageData data = Data(inst);
+  iOModel model = AppOp.getModel(  );
+
+  /* Cmds: lcid="" state="" */
+  const char* state = wStage.getstate( cmd );
+
+  if( state != NULL ) {
+    if( StrOp.equals( wBlock.closed, state ) ) {
+      if( MapOp.size(data->lcMap) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "close block request; already reserved by [%d] locos", MapOp.size(data->lcMap) );
+        NodeOp.base.del(cmd);
+        data->closereq = True;
+        return False;
+      }
+    }
+
+    if( data->closereq ) {
+      state = wBlock.closed;
+      wStage.setstate( cmd, state );
+      data->closereq = False;
+    }
+    wStage.setstate( data->props, state );
+    /*ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0 );*/
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
+  }
+
+  StageOp.init( inst );
+
+  /* Broadcast to clients. */
+  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), cmd );
+
+  return True;
 }
 
 
 /**  */
 static void _enterBlock( iIBlockBase inst ,const char* locid ) {
-  return;
+  iOStageData data = Data(inst);
+  /*
+  wBlock.setlocid( data->props, id );
+  if( id != NULL ) {
+    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    wBlock.setid( nodeD, data->id );
+    wBlock.setentering( nodeD, True );
+    wBlock.setlocid( nodeD, id );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+  }
+  */
 }
 
 
@@ -135,252 +183,355 @@ static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val
 
 /**  */
 static const char* _getFromBlockId( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return data->fromBlockId;
 }
 
 
 /**  */
 static const char* _getInLoc( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return NULL;
 }
 
 
 /**  */
 static const char* _getLoc( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return NULL;
 }
 
 
 /**  */
 static iIBlockBase _getManager( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return NULL;
 }
 
 
 /**  */
 static int _getOccTime( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static const char* _getState( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return wStage.getstate(data->props);
 }
 
 
 /**  */
 static int _getTDaddress( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static const char* _getTDiid( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static int _getTDport( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit ,Boolean reverse, Boolean onstop ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return wBlock.min;
 }
 
 
 /**  */
 static int _getVisitCnt( iIBlockBase inst ,const char* locid ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return 1000;
 }
 
 
 /**  */
 static Boolean _green( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static Boolean _hasEnter2Route( iIBlockBase inst ,const char* fromBlockId ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static Boolean _hasExtStop( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static obj _hasManualSignal( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return NULL;
 }
 
 
 /**  */
 static Boolean _hasPre2In( iIBlockBase inst ,const char* fromBlockId ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static void _inBlock( iIBlockBase inst ,const char* locid ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
 /**  */
 static void _init( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
-/**  */
+static Boolean __willLocoFit(iIBlockBase inst ,const char* locid) {
+  iOStageData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iOLoc loco = ModelOp.getLoc( model, locid );
+  return True;
+}
+
+/**
+ * Check the train length if it will fit in the available section(s).
+ */
 static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return __willLocoFit(inst, locid);
 }
 
 
 /**  */
 static Boolean _isLinked( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static Boolean _isReady( iIBlockBase inst ) {
-  return 0;
+  return True;
 }
 
 
 /**  */
 static int _isSuited( iIBlockBase inst ,iOLoc loc ) {
-  return 0;
+  return suits_ok;
 }
 
 
 /**  */
 static Boolean _isTerminalStation( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static Boolean _link( iIBlockBase inst ,iIBlockBase linkto ) {
-  return 0;
+  iOStageData data = NULL;
+  return False;
 }
 
 
 /**  */
 static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,const char* routeid ,Boolean crossing ,Boolean reset ,Boolean reverse ,int indelay ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static Boolean _lockForGroup( iIBlockBase inst ,const char* locid ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static void _reset( iIBlockBase inst ) {
-  return;
+  iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+             "reset stageblock [%s]", data->id );
+  /*Unlock the occupying must be done manual */
+  StageOp.resetTrigs(inst);
 }
 
 
 /**  */
 static void _resetTrigs( iIBlockBase inst ) {
-  return;
+  iOStageData data = Data(inst);
+  data->trig_enter = False;
+  data->trig_in    = False;
+  data->trig_exit  = False;
+  data->trig_out   = False;
+
+  data->trig_enter_mid   = False;
+  data->trig_exit_mid   = False;
+  data->trig_renter_mid = False;
+  data->trig_rexit_mid  = False;
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                 "StageBlock [%s] resetTrigs.", data->id );
 }
 
 
 /**  */
 static void _setAnalog( iIBlockBase inst ,Boolean analog ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
 /**  */
 static void _setDefaultAspect( iIBlockBase inst ,Boolean signalpair ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
 /**  */
 static void _setGroup( iIBlockBase inst ,const char* group ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
 /**  */
 static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static void _setManager( iIBlockBase inst ,iIBlockBase manager ) {
+  iOStageData data = Data(inst);
   return;
 }
 
 
 /**  */
 static Boolean _unLink( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return False;
 }
 
 
 /**  */
 static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static Boolean _unLockForGroup( iIBlockBase inst ,const char* locid ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static Boolean _wait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return True;
 }
 
 
 /**  */
 static Boolean _white( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 /**  */
 static Boolean _yellow( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
+  iOStageData data = Data(inst);
   return 0;
 }
 
 
 static void _modify( iOStage inst, iONode props ) {
   iOStageData data = Data(inst);
+  int cnt = NodeOp.getAttrCnt( props );
+  Boolean move = StrOp.equals( wModelCmd.getcmd( props ), wModelCmd.move );
+
+  int i = 0;
+  for( i = 0; i < cnt; i++ ) {
+    iOAttr attr = NodeOp.getAttr( props, i );
+    const char* name  = AttrOp.getName( attr );
+    const char* value = AttrOp.getVal( attr );
+    NodeOp.setStr( data->props, name, value );
+  }
+  data->id = wStage.getid( data->props );
+
+  if( !move ) {
+    cnt = NodeOp.getChildCnt( data->props );
+    while( cnt > 0 ) {
+      iONode child = NodeOp.getChild( data->props, 0 );
+      NodeOp.removeChild( data->props, child );
+      cnt = NodeOp.getChildCnt( data->props );
+    }
+    cnt = NodeOp.getChildCnt( props );
+    for( i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild( props, i );
+      NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+    }
+
+    /* re-init callback for all feedbacks: */
+    __initSensors( inst );
+
+  }
+  else {
+    NodeOp.removeAttrByName(data->props, "cmd");
+  }
+
+
+  /* Broadcast to clients. */
+  {
+    iONode clone = (iONode)props->base.clone( props );
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+  }
+
+  props->base.del(props);
 }
 
 
@@ -433,6 +584,7 @@ static struct OStage* _inst( iONode props ) {
   data->props       = props;
   data->id          = wStage.getid( props );
   data->fbMap       = MapOp.inst();
+  data->lcMap       = MapOp.inst();
   data->sectionList = ListOp.inst();
 
   __initSensors(__Stage);
