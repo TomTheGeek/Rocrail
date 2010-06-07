@@ -204,10 +204,14 @@ void updateReaderThread( void* threadinst ) {
   Softwareupdates* o = (Softwareupdates*)ThreadOp.getParm( th );
   bool newPatches = false;
   
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "updateReaderThread started" );
   if( o == NULL ) {
     ThreadOp.sleep(5000);
   }
+  else
+    ThreadOp.sleep(100);
   
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "updateReaderThread try to connect with %s", wGui.getupdatesserver(wxGetApp().getIni()) );
   iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False, False );
   if( SocketOp.connect( sh ) ) {
     if( o != NULL )
@@ -276,6 +280,8 @@ void updateReaderThread( void* threadinst ) {
     o->setReady(true);
   
   SocketOp.base.del(sh);
+  ThreadOp.base.del(th);
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up thread" );
 }
 
 
@@ -294,14 +300,16 @@ Softwareupdates::Softwareupdates( wxWindow* parent, wxWindowID id, const wxStrin
     m_ReleaseNode = NULL;
 
     checkForNew();
-    
+
     bool rc = m_Timer->Start( 100, true );
-    
+
     m_Progress = new wxProgressDialog(wxGetApp().getMsg( "softwareupdates" ), wxGetApp().getMsg( "searchingupdates" ), 
         2, NULL, wxPD_CAN_ABORT | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
+
     m_Progress->ShowModal();
 
     initValues();
+
 }
 
 void Softwareupdates::initLabels() {
