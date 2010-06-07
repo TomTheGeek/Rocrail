@@ -694,6 +694,26 @@ static void __setLocDecFn( iONode cmd, int fn, Boolean state ) {
 }
 
 
+/*
+ * bit 1-5 bridge position (0-31)
+ * bit 6 opposite position
+ * bit 7/8 step to right/left
+ *
+ * the command type is wProgram.lntype_mp which must be implemented in the slx library(ies)
+ */
+static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  iONode swcmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "muet: under construction..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "muet: %s", cmdStr );
+}
+
+
+
 static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   Boolean ok = True;
@@ -897,6 +917,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_multiport( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.f6915 ) )
     return __cmd_f6915( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.muet ) )
+    return __cmd_muet( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",
