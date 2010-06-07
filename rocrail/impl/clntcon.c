@@ -521,7 +521,7 @@ static iOClntCon _inst( iONode ini, int port, clntcon_callback pfun, obj callbac
 
   data->ini         = ini;
   data->port        = port;
-  data->srvrsocket  = SocketOp.inst( "localhost", port, False, False );
+  data->srvrsocket  = SocketOp.inst( "localhost", port, False, False, False );
   data->callback    = pfun;
   data->callbackObj = callbackObj;
 

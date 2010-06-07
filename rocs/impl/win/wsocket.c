@@ -22,7 +22,7 @@
 #include <string.h>
 /*#include <winsock.h>*/
 #include <winsock2.h>
-
+#include <ws2tcpip.h>
 
 /*
   You must install the Windows SDK for the [iphlpapi.h] support!!!
@@ -178,7 +178,11 @@ Boolean rocs_socket_close( iOSocketData o ) {
   }
 
   /* remove Multicast Socket from group */
-  if (o->udp ) {
+  if (o->udp && o->multicast ) {
+    struct ip_mreq command;
+    command.imr_multiaddr.s_addr = inet_addr (o->host);
+    command.imr_interface.s_addr = htonl (INADDR_ANY);
+    setsockopt( o->sh, IPPROTO_IP, IP_DROP_MEMBERSHIP,  (void*)&command, sizeof (command));
   }
 
   rc = closesocket( o->sh );
@@ -382,6 +386,40 @@ Boolean rocs_socket_bind( iOSocketData o ) {
 
 
   rc = bind( o->sh, (struct sockaddr *)&srvaddr, sizeof( struct sockaddr_in ) );
+
+  if( rc != -1 && o->udp && o->multicast ) {
+    struct ip_mreq command;
+    int loop = 1;
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Allow broadcasting..." );
+    rc = setsockopt ( o->sh, IPPROTO_IP, IP_MULTICAST_LOOP, (void*)&loop, sizeof (loop));
+    if( rc == -1 ) {
+      o->rc = errno;
+      TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "setsockopt() failed" );
+      o->binded = False;
+      return False;
+    }
+
+    /* Join the broadcast group: */
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Join the broadcast group..." );
+    command.imr_multiaddr.s_addr = inet_addr (o->host);
+    command.imr_interface.s_addr = htonl (INADDR_ANY);
+
+    if (command.imr_multiaddr.s_addr == -1) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "%s id no multicast address!", o->host );
+      o->binded = False;
+      return False;
+    }
+
+    rc = setsockopt ( o->sh, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void*)&command, sizeof (command));
+    if( rc == -1 ) {
+      o->rc = errno;
+      TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "setsockopt() failed" );
+      o->binded = False;
+      return False;
+    }
+  }
+
+
 
   if( rc == -1 ) {
     o->rc = WSAGetLastError();

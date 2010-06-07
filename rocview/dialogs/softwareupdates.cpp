@@ -89,7 +89,7 @@ static void _updateLoader( void* threadinst ) {
       if(wPatch.isdownload(patch)) {
         TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "downloading [%s]...", wPatch.getfile(patch) );
 
-        iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False );
+        iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False, False );
         if( SocketOp.connect( sh ) ) {
           TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "Connected to rocrail.net" );
 
@@ -208,7 +208,7 @@ void updateReaderThread( void* threadinst ) {
     ThreadOp.sleep(5000);
   }
   
-  iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False );
+  iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False, False );
   if( SocketOp.connect( sh ) ) {
     if( o != NULL )
       o->setConnected(true);

@@ -1085,6 +1085,7 @@
       <param name="port" vt="int" remark="Target or server port."/>
       <param name="ssl" vt="Boolean" remark="SSL mode."/>
       <param name="udp" vt="Boolean" remark="UDP mode."/>
+      <param name="multicast" vt="Boolean" remark="Multicast mode."/>
     </fun>
     <fun name="instSSLserver" vt="this" remark="Object creator.">
       <param name="port" vt="int" remark="Target or server port."/>
@@ -1224,6 +1225,7 @@
       <var name="ssl_sh" vt="SSL*" remark="SSL handle."/>
       <var name="broken" vt="Boolean" remark="Socket connection is broken."/>
       <var name="udp" vt="Boolean" remark="Socket is in UDP mode."/>
+      <var name="multicast" vt="Boolean" remark="Socket is in UDP multicast mode."/>
     </data>
   </object>
 

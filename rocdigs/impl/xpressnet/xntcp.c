@@ -30,7 +30,7 @@ Boolean xntcpConnect(obj xpressnet) {
   TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "XnTcp at %s:%d",
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
-  data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False );
+  data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
 
   if ( SocketOp.connect( data->socket ) ) {
     return True;

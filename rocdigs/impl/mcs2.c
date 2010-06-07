@@ -647,16 +647,16 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->ini = ini;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wDigInt.gethost(data->ini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast tx port [%d]", 15731 );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast rx port [%d]", 15730 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp address [%s]", wDigInt.gethost(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", 15731 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", 15730 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules       [%d]", wDigInt.getfbmod( ini ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True );
+  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
   SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True );
+  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True, False );
   data->fbmod    = wDigInt.getfbmod( ini );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->run = True;

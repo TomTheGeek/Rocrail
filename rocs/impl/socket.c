@@ -313,7 +313,7 @@ static char* _getMAC( const char* device ) {
   return rocs_socket_mac( device );
 }
 
-static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp ) {
+static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp, Boolean multicast ) {
   iOSocket     socket = allocIDMem( sizeof( struct OSocket ), RocsSocketID );
   iOSocketData data   = allocIDMem( sizeof( struct OSocketData ), RocsSocketID );
 
@@ -324,6 +324,7 @@ static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp ) {
 
   data->ssl  = ssl;
   data->udp  = udp;
+  data->multicast = multicast;
 
   if( rocs_socket_init(data) ) {
     rocs_socket_create(data);
@@ -335,7 +336,7 @@ static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp ) {
 }
 
 static iOSocket _instSSLserver( int port, const char* certFile, const char* keyFile ) {
-  iOSocket s = _inst( "localhost", port, True, False );
+  iOSocket s = _inst( "localhost", port, True, False, False );
   #ifdef __OPENSSL__
   rocs_socket_CreateCTX( s );
   rocs_socket_LoadCerts( s, certFile, keyFile );

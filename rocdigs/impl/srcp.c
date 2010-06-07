@@ -177,7 +177,7 @@ static void __feedbackReader( void * threadinst )
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting FB port %s:%d...",
                o->ddlHost, o->fbackPort );
-  o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False );
+  o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
 
   if ( SocketOp.connect( o->fbackSocket ) )
   {
@@ -507,7 +507,7 @@ static void __infoReader( void * threadinst )
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting INFO port %s:%d...",
                o->ddlHost, o->infoPort );
-  o->infoSocket = SocketOp.inst( o->ddlHost, o->infoPort, False, False );
+  o->infoSocket = SocketOp.inst( o->ddlHost, o->infoPort, False, False, False );
   if ( SocketOp.connect( o->infoSocket ) )
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected" );
@@ -555,7 +555,7 @@ static Boolean __srcpConnect( iOSRCPData o )
   /* Boolean found = False; */
 
   if ( o->cmdSocket == NULL )
-    o->cmdSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False );
+    o->cmdSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
 
   /* Disconnect if connected */
   if ( SocketOp.isConnected( o->cmdSocket ) )

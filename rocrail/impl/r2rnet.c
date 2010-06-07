@@ -786,9 +786,9 @@ static struct OR2Rnet* _inst( iONode ini ) {
   data->reqMux = MutexOp.inst( "r2rnetmux", True );
   data->rspEvt = EventOp.inst( "r2rnetevt", True );
 
-  data->readUDP = SocketOp.inst( wR2RnetIni.getaddr(ini), wR2RnetIni.getport(ini), False, True );
+  data->readUDP = SocketOp.inst( wR2RnetIni.getaddr(ini), wR2RnetIni.getport(ini), False, True, True );
   SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( wR2RnetIni.getaddr(ini), wR2RnetIni.getport(ini), False, True );
+  data->writeUDP = SocketOp.inst( wR2RnetIni.getaddr(ini), wR2RnetIni.getport(ini), False, True, True );
 
   data->run = True;
   data->routelist = ListOp.inst();

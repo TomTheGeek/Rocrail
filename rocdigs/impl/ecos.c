@@ -635,7 +635,7 @@ static Boolean __connect( iOECoS inst ) {
     /* Create a socket object: */
 
   if ( data->socket == NULL )
-    data->socket = SocketOp.inst( data->host, data->port, False, False );
+    data->socket = SocketOp.inst( data->host, data->port, False, False, False );
 
     /* Disconnect if connected */
 

@@ -223,7 +223,7 @@ static Boolean _write( iORCon inst, char* cmdStr ) {
   }
   else {
     /* Try to recover connection: */
-    o->sh = SocketOp.inst( o->host, o->port, False, False );
+    o->sh = SocketOp.inst( o->host, o->port, False, False, False );
     if( o->sh != NULL )
       return SocketOp.connect( o->sh );
     return False;
@@ -241,7 +241,7 @@ static iORCon _inst( const char* host, int port ) {
   data->port = port;
   data->run = True;
 
-  data->sh = SocketOp.inst( host, port, False, False );
+  data->sh = SocketOp.inst( host, port, False, False, False );
   if( !SocketOp.connect( data->sh ) ) {
     freeMem( data );
     freeMem( rcon );

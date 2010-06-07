@@ -64,9 +64,9 @@ Boolean lbUDPConnect( obj inst ) {
 
   data->udpPacketAvailable = False;
 
-  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True );
+  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
   SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True );
+  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
 
   data->udpReader = ThreadOp.inst( "lnudpreader", &__reader, inst );
   ThreadOp.start( data->udpReader );

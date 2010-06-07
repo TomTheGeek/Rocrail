@@ -232,7 +232,7 @@ Boolean rocs_socket_close( iOSocketData o ) {
   }
 
   /* remove Multicast Socket from group */
-  if (o->udp ) {
+  if (o->udp && o->multicast ) {
     struct ip_mreq command;
     command.imr_multiaddr.s_addr = inet_addr (o->host);
     command.imr_interface.s_addr = htonl (INADDR_ANY);
@@ -466,7 +466,7 @@ Boolean rocs_socket_bind( iOSocketData o ) {
   else
     srvaddr.sin_addr   = *addr;
 
-  if( o->udp ) {
+  if( o->udp && o->multicast ) {
     int loop = 1;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "allow all processes to use this port..." );
     setsockopt ( o->sh, SOL_SOCKET, SO_REUSEADDR, &loop, sizeof (loop));
@@ -475,7 +475,7 @@ Boolean rocs_socket_bind( iOSocketData o ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "bind..." );
   rc = bind( o->sh, (struct sockaddr *)&srvaddr, sizeof( struct sockaddr_in ) );
 
-  if( rc != -1 && o->udp ) {
+  if( rc != -1 && o->udp && o->multicast ) {
     struct ip_mreq command;
     int loop = 1;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Allow broadcasting..." );
