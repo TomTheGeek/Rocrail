@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/Program.h"
 
 
 static int instCnt = 0;
@@ -337,6 +338,26 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
       return 2;
     }
   }
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcmd( node ) == wProgram.lncvset ) {
+      int cv = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+      int addr = wProgram.getaddr( node );
+
+      if( wProgram.getlntype(node) == wProgram.lntype_mp ) {
+        cmd[0] = addr;
+        cmd[0] |= WRITE_FLAG;
+        /* reset pin to 0: */
+        cmd[1] = data->swstate[*bus][addr] & (!cv);
+        cmd[1] |= value & cv;
+        /* save new state: */
+        data->swstate[*bus][addr] = cmd[1];
+        return 2;
+      }
+    }
+  }
+
+
   return 0;
 }
 
