@@ -781,7 +781,7 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
     /* set type to multiport */
     wProgram.setlntype( cmd, wProgram.lntype_mp );
     wProgram.setcmd( cmd, wProgram.lncvset );
-    wProgram.setaddr( cmd, wTurntable.getaddr0(data->props) );
+    wProgram.setaddr( cmd, wTurntable.getaddr(data->props) );
     wProgram.setcv( cmd, 0x001F ); /* mask */
     wProgram.setvalue( cmd, tracknr ); /* value */
     ControlOp.cmd( control, cmd, NULL );
@@ -789,7 +789,6 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
 
     data->dir = ttdir;
 
-    ControlOp.cmd( control, cmd, NULL );
   }
 
 

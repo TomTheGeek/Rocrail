@@ -352,6 +352,16 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT OFF");
     }
 
+    else if( wProgram.getcmd( node ) == wProgram.lncvset ) {
+      int cv = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+      int addr = wProgram.getaddr( node );
+
+      if( wProgram.getlntype(node) == wProgram.lntype_mp ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MultiPort addr=%d mask=0x%04X value=%d", addr, cv, value);
+      }
+    }
+
   }
   return rsp;
 }
