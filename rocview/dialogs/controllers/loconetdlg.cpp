@@ -34,7 +34,6 @@
 #endif
 
 ////@begin includes
-#include "wx/imaglist.h"
 ////@end includes
 
 #include "loconetdlg.h"
@@ -392,19 +391,19 @@ void LocoNetCtrlDlg::CreateControls()
     m_labIID = new wxStaticText( m_InterfacePanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_IID = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_InterfacePanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labDevice = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( m_InterfacePanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labHost = new wxStaticText( m_InterfacePanel, wxID_STATIC, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Host = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Host = new wxTextCtrl( m_InterfacePanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Host, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labPort = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -428,7 +427,7 @@ void LocoNetCtrlDlg::CreateControls()
     m_SubLibStrings.Add(_("&LocoBuffer"));
     m_SubLibStrings.Add(_("&LbServer"));
     m_SubLibStrings.Add(_("&MS100"));
-    m_SubLibStrings.Add(_("&UDP"));
+    m_SubLibStrings.Add(_("&LNUDP (MGV101)"));
     m_SubLib = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_COLS );
     m_SubLib->SetSelection(0);
     itemBoxSizer15->Add(m_SubLib, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
@@ -448,7 +447,7 @@ void LocoNetCtrlDlg::CreateControls()
     m_OptionsPanel->SetSizer(itemBoxSizer21);
 
     wxArrayString m_CmdStnStrings;
-    m_CmdStn = new wxComboBox( m_OptionsPanel, ID_COMBOBOX_LOCONET_CMDSTN, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CmdStnStrings, wxCB_DROPDOWN );
+    m_CmdStn = new wxComboBox( m_OptionsPanel, ID_COMBOBOX_LOCONET_CMDSTN, _T(""), wxDefaultPosition, wxDefaultSize, m_CmdStnStrings, wxCB_DROPDOWN );
     itemBoxSizer21->Add(m_CmdStn, 0, wxGROW|wxALL, 5);
 
     wxArrayString m_OptionsListStrings;
@@ -519,7 +518,7 @@ void LocoNetCtrlDlg::CreateControls()
     m_labDispatchIID = new wxStaticText( m_DetailsPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer41->Add(m_labDispatchIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_DispatchIID = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_DispatchIID = new wxTextCtrl( m_DetailsPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer41->Add(m_DispatchIID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemNotebook3->AddPage(m_DetailsPanel, _("Details"));
@@ -622,13 +621,18 @@ void LocoNetCtrlDlg::initSublib()
     m_Device->Enable(true);
     m_Host->Enable(false);
     m_Port->Enable(false);
+    m_Flow->Enable(true);
   }
   else if( m_SubLib->GetSelection() == 1 ) {
     // LBServer
     m_Baudrate->Enable(false);
     m_Device->Enable(false);
+    m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+    char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
+    m_Port->SetValue( wxString( val, wxConvUTF8 ) ); StrOp.free( val );
     m_Host->Enable(true);
     m_Port->Enable(true);
+    m_Flow->Enable(false);
   }
   else if( m_SubLib->GetSelection() == 2 ) {
     // MS100
@@ -636,12 +640,16 @@ void LocoNetCtrlDlg::initSublib()
     m_Device->Enable(true);
     m_Host->Enable(false);
     m_Port->Enable(false);
+    m_Flow->Enable(true);
   }
   else if( m_SubLib->GetSelection() == 3 ) {
     // UDP
     m_Baudrate->Enable(false);
     m_Device->Enable(false);
+    m_Host->SetValue( _T("224.0.0.1") );
+    m_Port->SetValue( _T("1235") );
     m_Host->Enable(true);
     m_Port->Enable(true);
+    m_Flow->Enable(false);
   }
 }
