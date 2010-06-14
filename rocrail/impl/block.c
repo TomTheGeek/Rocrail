@@ -428,6 +428,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       else
         LocOp.event( loc, manager, in_event, timing > 0 ? timing:1 );
     }
+    else if( evt == pre2in_event ) {
+      int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
+      LocOp.event( loc, manager, pre2in_event, timing );
+    }
     else if( evt == in_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       if( data->indelay > 0 ){
