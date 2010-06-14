@@ -2749,12 +2749,7 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
   iONode preventry = NULL;
   iIBlockBase block = ModelOp.getBlock( inst, blockid);
 
-  if( block != NULL && block->getManager(block) != NULL ) {
-    /* managed block; use the id from the manager */
-    iIBlockBase manager = block->getManager(block);
-    blockid = manager->base.id(manager);
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "managed block, using id of manager: [%s]", blockid );
-  }
+  blockid = ModelOp.getManagedID(inst, blockid);
 
   /* check if the schedule index is correct: */
   while( entry != NULL ) {
@@ -2918,6 +2913,8 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     }
   }
 
+  currBlockId = ModelOp.getManagedID(inst, currBlockId);
+
   /* Lock the semaphore: */
   MutexOp.wait( data->muxFindDest );
   {
@@ -3080,7 +3077,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
   Boolean destdir = False;
   Boolean samedir = False;
 
-  fromBlockId = _getManagedID(inst, fromBlockId);
+  fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "findDest fromBlockID [%s]", fromBlockId );
