@@ -1086,6 +1086,8 @@ static void __transactor( void* threadinst ) {
           csname = "DPC";
         else if( in[3] == 0x03 )
           csname = "Control Plus";
+        else if( in[3] == 0x10 )
+          csname = "S88XpressNetLi";
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %d.%d",
             csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F));
@@ -1108,7 +1110,7 @@ static void __transactor( void* threadinst ) {
          else if( in[2] == 0x04 )
            baud = "115200";
          else
-           baud = "(null)";
+           baud = "9600";
 
        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI baudrate: %s", baud);
 
