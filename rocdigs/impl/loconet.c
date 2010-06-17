@@ -2077,7 +2077,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   }
 
   /* Clock command. */
-  else if( wDigInt.isfastclock(data->ini) && StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+  else if( wLocoNet.isusefc(data->loconet) && StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     /* Fast Clock */
 
     if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
