@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: rocrail 1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-26 07:51+0100\n"
-"PO-Revision-Date: 2010-06-01 07:51+0100\n"
+"PO-Revision-Date: 2010-06-17 07:51+0100\n"
 "Last-Translator: Rob Versluis <team@rocrail.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5013,5 +5013,17 @@ msgstr ""
 # id="allowfollowup"
 #, c-format
 msgid "Allow critical section follow up in same direction."
+msgstr ""
+
+#. 
+# id="fiddleyard2go"
+#, c-format
+msgid "Goto FiddleYard"
+msgstr ""
+
+#. 
+# id="polarizationrelais"
+#, c-format
+msgid "Polarisationsrelais"
 msgstr ""
 
