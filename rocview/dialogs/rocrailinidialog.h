@@ -296,6 +296,7 @@ public:
     wxCheckBox* m_KeepGhost;
     wxCheckBox* m_DisableSteal;
     wxCheckBox* m_PowerOffAtReset;
+    wxCheckBox* m_ZeroThrottleID;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

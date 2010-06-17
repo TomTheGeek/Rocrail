@@ -15056,4 +15056,7 @@
   <Msg id="polarizationrelais">
     <en txt="Polarisationsrelais"/>
   </Msg>
+  <Msg id="allowzerothrottleid">
+    <en txt="Allow zero throttle ID"/>
+  </Msg>
 </Messages>

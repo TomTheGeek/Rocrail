@@ -420,7 +420,8 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setV( data->props, V);
     }
 
-    if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
+    if( wCtrl.isallowzerothrottleid( AppOp.getIniNode( wCtrl.name() ) ) ||
+        StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       /* TODO: inform consist slaves */
       __checkConsist(inst, evtNode, True);
