@@ -15053,4 +15053,7 @@
   <Msg id="fiddleyard2go">
     <en txt="Goto FiddleYard"/>
   </Msg>
+  <Msg id="polarizationrelais">
+    <en txt="Polarisationsrelais"/>
+  </Msg>
 </Messages>
