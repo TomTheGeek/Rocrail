@@ -123,6 +123,8 @@ void LC::speedCmd(bool sendCmd)
     return;
   }
 
+  TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "speedCmd" );
+
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wLoc.getid( m_LocProps ) );
   wLoc.setV( cmd, m_iSpeed );
@@ -137,6 +139,8 @@ void LC::funCmd()
 {
   if( m_LocProps == NULL )
     return;
+
+  TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "funCmd" );
 
   wLoc.setfx(m_LocProps,
       (m_bFx[ 0]?0x0001:0x00) | (m_bFx[ 1]?0x0002:0x00) | (m_bFx[ 2]?0x0004:0x00) | (m_bFx[ 3]?0x0008:0x00) |
@@ -252,9 +256,11 @@ void LC::updateLoc( iONode node ) {
 
         setFLabels();
 
-        m_bFn = wFunCmd.isf0( node )?true:false;
-        wLoc.setfn( m_LocProps, m_bFn?True:False );
-        setButtonColor( m_F0, !m_bFn );
+        if( NodeOp.findAttr(node, "f0") ) {
+          m_bFn = wFunCmd.isf0( node )?true:false;
+          wLoc.setfn( m_LocProps, m_bFn?True:False );
+          setButtonColor( m_F0, !m_bFn );
+        }
 
       }
       else {
@@ -272,9 +278,11 @@ void LC::updateLoc( iONode node ) {
         m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
         m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
 
-        m_bFn = wLoc.isfn( node )?true:false;
-        wLoc.setfn( m_LocProps, m_bFn?True:False );
-        setButtonColor( m_F0, !m_bFn );
+        if( NodeOp.findAttr(node, "fn") ) {
+          m_bFn = wLoc.isfn( node )?true:false;
+          wLoc.setfn( m_LocProps, m_bFn?True:False );
+          setButtonColor( m_F0, !m_bFn );
+        }
       }
     }
   }

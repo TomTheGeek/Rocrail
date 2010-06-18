@@ -461,12 +461,13 @@ static void* __event( void* inst, const void* evt ) {
 
   }
   else if( StrOp.equals( wFunCmd.name(), NodeOp.getName(evtNode) )) {
-
     /* TODO: the digint library should provide the function group to prevent overwriting not reported functions */
     __cpNode2Fn(inst, evtNode);
     wLoc.setfn( data->props, data->fn0);
 
-    if( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
+    if( wCtrl.isallowzerothrottleid( AppOp.getIniNode( wCtrl.name() ) ) ||
+        StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) )
+    {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       __checkConsist(inst, evtNode, True);
       broadcast = True;
@@ -496,6 +497,7 @@ static void* __event( void* inst, const void* evt ) {
       __cpFn2Node(inst, node, -1);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
       wLoc.setfn( node, wLoc.isfn(data->props) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting function command...");
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
     }
   }

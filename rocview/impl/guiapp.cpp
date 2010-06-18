@@ -117,6 +117,7 @@
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -872,7 +873,8 @@ static void rocrailCallback( obj me, iONode node ) {
     wxPostEvent( guiApp->getFrame(), event );
   }
   /* Loc */
-  else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) ) {
+  else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) ||
+           StrOp.equals( wFunCmd.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, LOC_EVENT );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );

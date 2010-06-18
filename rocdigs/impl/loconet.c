@@ -629,10 +629,11 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
   int snd  = rsp[2];
   int addr = data->locoslot[slot];
   int throttleid = data->locothrottle[slot];
+  char* sthrottleid = StrOp.fmt("%d", throttleid);
+
 
   if( rsp[0] == OPC_LOCO_SPD ) {
-    char* s = StrOp.fmt("%d", throttleid);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d spd=%d", slot, addr, spd );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d spd=%d id=%d", slot, addr, spd, throttleid );
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
@@ -640,13 +641,12 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, spd );
     wLoc.setV_rawMax( nodeC, 127 );
-    wLoc.setthrottleid( nodeC, s );
-    StrOp.free(s);
+    wLoc.setthrottleid( nodeC, sthrottleid );
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
   else if( rsp[0] == OPC_LOCO_DIRF ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d dirf=0x%02X", slot, addr, dirf );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d dirf=0x%02X id=%d", slot, addr, dirf, throttleid );
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
@@ -654,6 +654,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setaddr( nodeC, addr );
     wLoc.setdir( nodeC, (dirf & DIRF_DIR)? False:True );
     wLoc.setfn( nodeC, (dirf & DIRF_F0) ? True:False );
+    wLoc.setthrottleid( nodeC, sthrottleid );
     wLoc.setcmd( nodeC, wLoc.dirfun );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
@@ -666,12 +667,13 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wFunCmd.setf2( nodeD, (dirf & DIRF_F2) ? True:False );
     wFunCmd.setf3( nodeD, (dirf & DIRF_F3) ? True:False );
     wFunCmd.setf4( nodeD, (dirf & DIRF_F4) ? True:False );
+    wLoc.setthrottleid( nodeD, sthrottleid );
     wFunCmd.setgroup( nodeD, 1 );
     data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
 
   }
   else if( rsp[0] == OPC_LOCO_SND ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d snd=0x%02X", slot, addr, snd );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d snd=0x%02X id=%d", slot, addr, snd, throttleid );
     iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
       wLoc.setiid( nodeD, data->iid );
@@ -681,8 +683,11 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wFunCmd.setf7( nodeD, (snd & SND_F7) ? True:False );
     wFunCmd.setf8( nodeD, (snd & SND_F8) ? True:False );
     wFunCmd.setgroup( nodeD, 2 );
+    wLoc.setthrottleid( nodeD, sthrottleid );
     data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
   }
+
+  StrOp.free(sthrottleid);
 }
 
 static void __slotPing( void* threadinst ) {
