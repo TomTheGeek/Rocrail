@@ -412,6 +412,7 @@ static void* __event( void* inst, const void* evt ) {
         wLoc.setdir( data->props, wLoc.isplacing(data->props) ? wLoc.isdir(evtNode):!wLoc.isdir(evtNode) );
         if( StrOp.equals( wLoc.dirfun, wLoc.getcmd(evtNode) ) ) {
           wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+          data->fn0 = wLoc.isfn(evtNode);
         }
       }
     }
@@ -496,8 +497,7 @@ static void* __event( void* inst, const void* evt ) {
       wFunCmd.setaddr( node, wLoc.getaddr( data->props ) );
       __cpFn2Node(inst, node, -1);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
-      wLoc.setfn( node, wLoc.isfn(data->props) );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting function command...");
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting function command %d...", wFunCmd.isf0( node));
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
     }
   }

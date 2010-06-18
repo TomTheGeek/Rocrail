@@ -260,6 +260,7 @@ void LC::updateLoc( iONode node ) {
           m_bFn = wFunCmd.isf0( node )?true:false;
           wLoc.setfn( m_LocProps, m_bFn?True:False );
           setButtonColor( m_F0, !m_bFn );
+          TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "function lights=%d", m_bFn );
         }
 
       }
@@ -282,6 +283,7 @@ void LC::updateLoc( iONode node ) {
           m_bFn = wLoc.isfn( node )?true:false;
           wLoc.setfn( m_LocProps, m_bFn?True:False );
           setButtonColor( m_F0, !m_bFn );
+          TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "velocity lights=%d", m_bFn );
         }
       }
     }

@@ -662,6 +662,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     if( data->iid != NULL )
       wLoc.setiid( nodeD, data->iid );
     wFunCmd.setaddr( nodeD, addr );
+    wLoc.setfn( nodeD, (dirf & DIRF_F0) ? True:False );
     wFunCmd.setf0( nodeD, (dirf & DIRF_F0) ? True:False );
     wFunCmd.setf1( nodeD, (dirf & DIRF_F1) ? True:False );
     wFunCmd.setf2( nodeD, (dirf & DIRF_F2) ? True:False );
