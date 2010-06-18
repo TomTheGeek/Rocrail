@@ -7,11 +7,11 @@
 
 msgid ""
 msgstr ""
-"Project-Id-Version: rocrail 1.4\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-26 07:51+0100\n"
-"PO-Revision-Date: 2010-06-17 07:51+0100\n"
-"Last-Translator: Rob Versluis <team@rocrail.net>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5025,5 +5025,11 @@ msgstr ""
 # id="polarizationrelais"
 #, c-format
 msgid "Polarisationsrelais"
+msgstr ""
+
+#. 
+# id="allowzerothrottleid"
+#, c-format
+msgid "Allow zero throttle ID"
 msgstr ""
 
