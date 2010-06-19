@@ -242,6 +242,7 @@ void RocrailIniDialog::initLabels() {
   m_DefAspect->SetString( 3, wxGetApp().getMsg( "white" ) );
   m_GreenAspect->SetLabel( wxGetApp().getMsg( "greenaspect" ) );
   m_SkipSetSw->SetLabel( wxGetApp().getMsg( "skipsetsw" ) );
+  m_SkipSetSg->SetLabel(wxGetApp().getMsg( "skipsetsg" ));
   m_SkipSetSg->SetToolTip(wxGetApp().getTip( "skipsetsg" ));
   m_UseBiCom->SetLabel( wxGetApp().getMsg( "usebicom" ) );
   m_labSemaphoreWait->SetLabel( wxGetApp().getMsg( "semaphorewait" ) );
