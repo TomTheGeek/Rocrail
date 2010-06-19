@@ -85,6 +85,9 @@
   <Msg id="lang_en_GB">
     <all txt="English (United Kingdom)" tip="British English"/>
   </Msg>
+  <Msg id="lang_id">
+    <all txt="Bahasa Indonesia" tip="Indonesian"/>
+  </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
     <de txt="Zum Ändern der Sprache neu starten."/>
@@ -107,6 +110,7 @@
     <em_AU txt="Restart Rocview to change the language."/>
     <em_GB txt="Restart Rocview to change the language."/>
     <fi txt="Uudelleenkäynnistä vaihtaaksesi ohjelman kieltä."/>
+    <id txt="Mulai ulang untuk mengubah bahasa."/>
   </Msg>
   <Msg id="cancel">
     <de txt="Abbrechen" tip="Dialog beenden."/>
@@ -132,9 +136,10 @@
     <em_AU txt="Cancel"/>
     <em_GB txt="Cancel"/>
     <fi txt="Peru"/>
+    <id txt="Batal"/>
   </Msg>
   <Msg id="on">
-    <de txt="ein"/>
+    <de txt="an"/>
     <en txt="on"/>
     <nl txt="aan"/>
     <sv txt="på"/>
@@ -157,6 +162,7 @@
     <em_AU txt="on"/>
     <em_GB txt="on"/>
     <fi txt="päällä"/>
+    <id txt="nyala"/>
   </Msg>
   <Msg id="off">
     <de txt="aus"/>
@@ -182,6 +188,7 @@
     <em_AU txt="off"/>
     <em_GB txt="off"/>
     <fi txt="pois päältä"/>
+    <id txt="mati"/>
   </Msg>
   <Msg id="ok">
     <de txt="OK"/>
@@ -207,6 +214,7 @@
     <em_AU txt="OK"/>
     <em_GB txt="OK"/>
     <fi txt="OK"/>
+    <id txt="Setuju"/>
   </Msg>
   <Msg id="no">
     <de txt="nein"/>
@@ -232,6 +240,7 @@
     <em_AU txt="no"/>
     <em_GB txt="no"/>
     <fi txt="ei"/>
+    <id txt="tidak"/>
   </Msg>
   <Msg id="yes">
     <de txt="ja"/>
@@ -257,6 +266,7 @@
     <em_AU txt="yes"/>
     <em_GB txt="yes"/>
     <fi txt="kyllä"/>
+    <id txt="ya"/>
   </Msg>
   <Msg id="only">
     <de txt="nur"/>
@@ -266,7 +276,7 @@
     <fr txt="seulement"/>
     <tr txt="sadece"/>
     <es txt="Solamente"/>
-    <it txt="Solo"/>
+    <it txt="solo"/>
     <da txt="kun"/>
     <cs txt="jen"/>
     <bg txt="само"/>
@@ -282,6 +292,7 @@
     <em_AU txt="only"/>
     <em_GB txt="only"/>
     <fi txt="Ainoastaan"/>
+    <id txt="hanya"/>
   </Msg>
   <Msg id="stop">
     <de txt="Stopp" tip="Stopp Lokomotive"/>
@@ -307,6 +318,7 @@
     <em_AU txt="Stop"/>
     <em_GB txt="Stop"/>
     <fi txt="Pysäytä"/>
+    <id txt="Berhenti"/>
   </Msg>
   <Msg id="station">
     <de txt="Bahnhof"/>
@@ -332,6 +344,7 @@
     <em_AU txt="Station"/>
     <em_GB txt="Station"/>
     <fi txt="Asema"/>
+    <id txt="Stasiun"/>
   </Msg>
   <Msg id="break">
     <de txt="HALT" tip="Nothalt aller Triebfahrzeuge!"/>
@@ -357,6 +370,7 @@
     <em_AU txt="B R E A K"/>
     <em_GB txt="B R E A K"/>
     <fi txt="P Y S Ä Y T Y S"/>
+    <id txt="P E C A H K A N"/>
   </Msg>
   <Msg id="connect" dialog="true">
     <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
@@ -382,6 +396,7 @@
     <em_AU txt="Connect to"/>
     <em_GB txt="Connect to"/>
     <fi txt="Yhdistä"/>
+    <id txt="Sambung ke"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
     <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
@@ -407,6 +422,7 @@
     <em_AU txt="Open"/>
     <em_GB txt="Open"/>
     <fi txt="Avaa"/>
+    <id txt="Buka"/>
   </Msg>
   <Msg id="upload" dialog="true">
     <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
@@ -432,6 +448,7 @@
     <em_AU txt="Upload"/>
     <em_GB txt="Upload"/>
     <fi txt="Lähetä"/>
+    <id txt="Unggah"/>
   </Msg>
   <Msg id="server">
     <de txt="Server"/>
@@ -457,6 +474,7 @@
     <em_AU txt="Server"/>
     <em_GB txt="Server"/>
     <fi txt="Palvelin"/>
+    <id txt="Server"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
     <de txt="Speichern" tip="Gleisbild speichern."/>
@@ -482,6 +500,7 @@
     <em_AU txt="Save"/>
     <em_GB txt="Save"/>
     <fi txt="Tallenna"/>
+    <id txt="Simpan"/>
   </Msg>
   <Msg id="saveas" dialog="true">
     <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
@@ -491,7 +510,7 @@
     <fr txt="Enregistrer sous" tip="Enregistrer le TCO sous..."/>
     <tr txt="Farklı Kaydet" accel="5" tip="Ray diyagramını farklı bir ad ile kaydet."/>
     <es txt="Salvar Como" accel="5" tip="Salvar diagrama del circuito con otro nombre."/>
-    <it txt="Salva con nome" tip="Salva il tracciato con nome...."/>
+    <it txt="Salva come" tip="Salva il tracciato con nome...."/>
     <da txt="Gem som" accel="5" tip="Gem sporplan under et nyt navn."/>
     <bs txt="Spremi kao"/>
     <cs txt="Uložit jako"/>
@@ -500,13 +519,14 @@
     <el txt="Αποθήκευση ως"/>
     <hu txt="Mentés másként"/>
     <ru txt="Сохранить как"/>
-    <pt txt="Gardar como"/>
+    <pt txt="Guardar como"/>
     <nb txt="Lagre Som"/>
     <pl txt="Zapisz jako"/>
     <zh_TW txt="另存新檔"/>
     <em_AU txt="Save As"/>
     <em_GB txt="Save As"/>
     <fi txt="Tallenna nimellä"/>
+    <id txt="Simpan Sebagai"/>
   </Msg>
   <Msg id="shutdown" key="Ctrl-D">
     <de txt="Rocrail und Rocview beenden" tip="Rocrail Server beenden."/>
@@ -531,6 +551,7 @@
     <em_AU txt="Shutdown Rocrail and Rocview"/>
     <em_GB txt="Shutdown Rocrail and Rocview"/>
     <fi txt="Sulje Rocrail ja Rocview"/>
+    <id txt="Matikan Rocrail dan Rocview"/>
   </Msg>
   <Msg id="exit">
     <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
@@ -556,6 +577,7 @@
     <em_AU txt="Exit"/>
     <em_GB txt="Exit"/>
     <fi txt="Poistu"/>
+    <id txt="Keluar"/>
   </Msg>
   <Msg id="editmode">
     <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
@@ -565,7 +587,7 @@
     <fr txt="Mode édition" tip="Editer le TCO"/>
     <tr txt="Paneli düzenle" tip="Ray diyagramını düzenle."/>
     <es txt="Editar panel" tip="Editar diagrama del circuito."/>
-    <it txt="Edita tracciato" tip="Edita il tracciato."/>
+    <it txt="Modifica pannello" tip="Edita il tracciato."/>
     <da txt="Rediger Plan" tip="Ændre sporplan."/>
     <cs txt="Edituj panel"/>
     <ca txt="Editar trajecte"/>
@@ -579,6 +601,7 @@
     <pl txt="Edytuj plan"/>
     <zh_TW txt="編輯設置"/>
     <fi txt="Mukauta paneelia"/>
+    <id txt="Sunting panel"/>
   </Msg>
   <Msg id="undo" key="Ctrl-Z">
     <de txt="Rückgängig machen" tip="Rückgängig"/>
@@ -588,7 +611,7 @@
     <fr txt="Annuler"/>
     <tr txt="Geri Al"/>
     <es txt="Undo"/>
-    <it txt="Annulla ultima azione"/>
+    <it txt="Annulla"/>
     <da txt="Fortryd"/>
     <bs txt="Povrati nazad"/>
     <cs txt="Vrátit změny"/>
@@ -604,6 +627,7 @@
     <em_AU txt="Undo"/>
     <em_GB txt="Undo"/>
     <fi txt="Kumoa"/>
+    <id txt="Batalkan perintah sebelumnnya"/>
   </Msg>
   <Msg id="editlocs" dialog="true">
     <de txt="Lokeigenschaften"/>
@@ -628,6 +652,7 @@
     <em_AU txt="Loc Properties"/>
     <em_GB txt="Loc Properties"/>
     <fi txt="Veturin ominaisuudet"/>
+    <id txt="Properti Lokomotif"/>
   </Msg>
   <Msg id="about" dialog="true">
     <de txt="Info" accel="0" tip="Information über Rocrail."/>
@@ -637,7 +662,7 @@
     <fr txt="À propos de" tip="Informations sur Rocrail"/>
     <tr txt="Bilgi" accel="0" tip="Rocrail Bilgisi."/>
     <es txt="Información" accel="0" tip="Informacion de Rocrail."/>
-    <it txt="Informazioni su Rocrail" tip="Informazioni su Rocrail."/>
+    <it txt="Informazioni" tip="Informazioni su Rocrail."/>
     <da txt="Om Rocrail" accel="0" tip="Information om Rocrail."/>
     <bs txt="Informacije"/>
     <cs txt="Informace"/>
@@ -653,6 +678,7 @@
     <em_AU txt="Info"/>
     <em_GB txt="Info"/>
     <fi txt="Tietoja"/>
+    <id txt="Info"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
     <de txt="Fahrstrom ein" accel="5" tip="Fahrstrom einschalten."/>
@@ -678,6 +704,7 @@
     <em_AU txt="Power On"/>
     <em_GB txt="Power On"/>
     <fi txt="Käynnistä"/>
+    <id txt="Power Hidup"/>
   </Msg>
   <Msg id="poweroff">
     <de txt="Fahrstrom aus" accel="5" tip="Fahrstrom ausschalten."/>
@@ -687,7 +714,7 @@
     <fr txt="Couper l'alimentation" accel="2" tip="Coupe la tension avec la commande STOP."/>
     <tr txt="Güç Kapalı" accel="0" tip="STOP komutu ile gücü kapat."/>
     <es txt="Apagar" accel="0" tip="Quitar tensión con el comando STOP."/>
-    <it txt="Leva Alimentazione" tip="Togli tensione dai binari"/>
+    <it txt="Spegni" tip="Togli tensione dai binari"/>
     <da txt="Sluk kørestrøm" accel="0" tip="Slukker for kørestrømmen."/>
     <bs txt="Gašenje"/>
     <cs txt="Vypnout"/>
@@ -703,6 +730,7 @@
     <em_AU txt="Power Off"/>
     <em_GB txt="Power Off"/>
     <fi txt="Sammuta"/>
+    <id txt="Matikan"/>
   </Msg>
   <Msg id="initfield">
     <de txt="Weichen initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
@@ -712,7 +740,7 @@
     <fr txt="Positionner les aiguillages" accel="0" tip="Positionner les aiguillages comme sur le TCO."/>
     <tr txt="Makasları hazırla" accel="0" tip="Ray diyagramına göre demiryolu makaslarını başlangıç durumuna getir."/>
     <es txt="Posicionar desvíos" accel="0" tip="Posicionar desvíos de acuerdo a diagrama del circuito."/>
-    <it txt="Inizializza sistema" tip="Inizializza gli scambi in base al tracciato."/>
+    <it txt="Inizializza il sistema" tip="Inizializza gli scambi in base al tracciato."/>
     <da txt="Initialisere anlæg" accel="8" tip="Stiller skifter og signaler i udgangsposition."/>
     <cs txt="Inicializační pole"/>
     <bg txt="Init областта"/>
@@ -727,6 +755,7 @@
     <em_AU txt="Init field"/>
     <em_GB txt="Init field"/>
     <fi txt="Alusta kenttä"/>
+    <id txt="Init field"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -751,6 +780,7 @@
     <em_AU txt="Loc Control"/>
     <em_GB txt="Loc Control"/>
     <fi txt="Veturin Ohjaus"/>
+    <id txt="Kontrol Lokomotif"/>
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichensteuerung" accel="0" tip="Dialog um Weichen zu testen."/>
@@ -775,6 +805,7 @@
     <em_AU txt="Switch Control"/>
     <em_GB txt="Switch Control"/>
     <fi txt="Vaihteiden Ohjaus"/>
+    <id txt="Saklar Kontrol"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
     <de txt="Fahrstraßensteuerung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
@@ -799,6 +830,7 @@
     <em_AU txt="Routes Control"/>
     <em_GB txt="Routes Control"/>
     <fi txt="Reittien kontrollointi"/>
+    <id txt="Atur Rute"/>
   </Msg>
   <Msg id="planprops" dialog="true">
     <de txt="Gleisplan-Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
@@ -808,7 +840,7 @@
     <fr txt="Propriétés du plan" accel="0" tip="Paramètres, affichage du TCO."/>
     <tr txt="Ray Diyagram Özellikleri" accel="0" tip="Ray Diyagramlarını görüntülemek ve yerleştirmek için diyalog."/>
     <es txt="Propiedades del panel de carriles" accel="0" tip="Ventana de propiedades del diagrama del circuito."/>
-    <it txt="Proprietà tracciato" tip="Finestra Proprietà tracciato"/>
+    <it txt="Proprietà del tracciato" tip="Finestra Proprietà tracciato"/>
     <da txt="Egenskaber for sporplan" accel="0" tip="Åbne sporplansegenskaber."/>
     <bg txt="Track план имоти"/>
     <el txt="Μετατρόχιο σχεδίου ακίνητα"/>
@@ -845,6 +877,7 @@
     <em_AU txt="Start all locs"/>
     <em_GB txt="Start all locs"/>
     <fi txt="Käynnistä kaikki veturit"/>
+    <id txt="Jalankan semua lokomotif"/>
   </Msg>
   <Msg id="stopall">
     <de txt="Alle Loks stoppen" tip="Versetzt alle Züge in Manualbetrieb."/>
@@ -869,6 +902,7 @@
     <em_AU txt="Stop all locs"/>
     <em_GB txt="Stop all locs"/>
     <fi txt="Pysäytä kaikki veturit"/>
+    <id txt="Hentikan semua lokomotif"/>
   </Msg>
   <Msg id="startloc">
     <de txt="Lok starten" tip="Versetzt Zug in den Automatikbetrieb."/>
@@ -893,6 +927,7 @@
     <em_AU txt="Start locomotive"/>
     <em_GB txt="Start locomotive"/>
     <fi txt="Käynnistä veturi"/>
+    <id txt="Jalankan lokomotif"/>
   </Msg>
   <Msg id="stoploc">
     <de txt="Automatischer Lokhalt" tip="Versetzt Zug in Manualbetrieb."/>
@@ -915,6 +950,7 @@
     <pl txt="Zatrzymaj automatykę lokomotywy"/>
     <em_AU txt="Stop locomotive automat"/>
     <em_GB txt="Stop locomotive automat"/>
+    <id txt="Hentikan lokomotif secara otomatis"/>
   </Msg>
   <Msg id="resetall">
     <de txt="Alles zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand."/>
@@ -938,6 +974,7 @@
     <zh_TW txt="重設全部"/>
     <em_AU txt="Reset all"/>
     <em_GB txt="Reset all"/>
+    <id txt="Reset semua"/>
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen; außer Blockbelegung" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
@@ -947,7 +984,7 @@
     <fr txt="Réinitialiser les machines" tip="Remise à zéro de toutes les machines."/>
     <tr txt="Locları resetle" tip="Bütün Loc otomatikleri resetle."/>
     <es txt="Reinicio por programa" tip=" Reinicializar las Locs automáticas."/>
-    <it txt="Reimposta" tip="Resetta le loco, ma lascia il blocco corrente occupato."/>
+    <it txt="Reset soft" tip="Resetta le loco, ma lascia il blocco corrente occupato."/>
     <da txt="Nulstil alle lokomotiver" tip="Sæt alt tilbage til udgangspunktet og gem blokstatus."/>
     <bs txt="Resetuj"/>
     <cs txt="měkký reset"/>
@@ -960,6 +997,7 @@
     <nb txt="Tilbakestill"/>
     <zh_TW txt="重設"/>
     <pl txt="Przywróć"/>
+    <id txt="Reset lembut"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -984,6 +1022,7 @@
     <zh_TW txt="等級"/>
     <em_AU txt="Level"/>
     <em_GB txt="Level"/>
+    <id txt="Tingkat"/>
   </Msg>
   <Msg id="levelup">
     <de txt="höhere Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
@@ -1007,6 +1046,7 @@
     <zh_TW txt="等級上升"/>
     <em_AU txt="Level up"/>
     <em_GB txt="Level up"/>
+    <id txt="Tingkatan naik"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="tiefere Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -1030,6 +1070,7 @@
     <zh_TW txt="等級下降"/>
     <em_AU txt="Level down"/>
     <em_GB txt="Level down"/>
+    <id txt="Tingkatan turun"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -1054,6 +1095,7 @@
     <zh_TW txt="屬性"/>
     <em_AU txt="Properties"/>
     <em_GB txt="Properties"/>
+    <id txt="Properti"/>
   </Msg>
   <Msg id="clearmsg">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
@@ -1063,7 +1105,7 @@
     <fr txt="Effacer les messages" tip="Effacer tous les messages de protocole."/>
     <tr txt="Mesajları temizle" tip="Bütün mesajları temizle."/>
     <es txt="Borrar mensajes" tip="Borrar todos los mensajes."/>
-    <it txt="Svuota area messaggi" tip="Cancella tutti i messaggi."/>
+    <it txt="Cancella messaggi" tip="Cancella tutti i messaggi."/>
     <en txt="Slet meddelelser" tip="Slet alle meddelelser."/>
     <bg txt="Ясно съобщения"/>
     <el txt="Χωρίς κωδικοποίηση μηνύματα"/>
@@ -1079,6 +1121,7 @@
     <da txt="Ryd meddelelse"/>
     <em_AU txt="Clear messages"/>
     <em_GB txt="Clear messages"/>
+    <id txt="Bersihkan pesan"/>
   </Msg>
   <Msg id="file">
     <de txt="Datei" accel="0"/>
@@ -1103,6 +1146,7 @@
     <zh_TW txt="檔案"/>
     <em_AU txt="File"/>
     <em_GB txt="File"/>
+    <id txt="Berkas"/>
   </Msg>
   <Msg id="edit">
     <de txt="Bearbeiten" accel="0"/>
@@ -1127,6 +1171,7 @@
     <zh_TW txt="編輯"/>
     <em_AU txt="Edit"/>
     <em_GB txt="Edit"/>
+    <id txt="Sunting"/>
   </Msg>
   <Msg id="control">
     <de txt="Steuerung" accel="0"/>
@@ -1151,6 +1196,7 @@
     <zh_TW txt="控制"/>
     <em_AU txt="Control"/>
     <em_GB txt="Control"/>
+    <id txt="Kendali"/>
   </Msg>
   <Msg id="test">
     <de txt="Test" accel="0"/>
@@ -1175,6 +1221,7 @@
     <zh_TW txt="測試"/>
     <em_AU txt="Test"/>
     <em_GB txt="Test"/>
+    <id txt="Uji"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -1198,6 +1245,7 @@
     <zh_TW txt="自動模式"/>
     <em_AU txt="Auto mode"/>
     <em_GB txt="Auto mode"/>
+    <id txt="Moda otomatis"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Herunterfahren und beenden?"/>
@@ -1207,7 +1255,7 @@
     <fr txt="Cela arrêtera le serveur Rocrail ! Arrêter et quitter ?"/>
     <tr txt="Rocrail vericisini kapatacak! Kapatıp çıkış yapılsın mı?"/>
     <es txt="¡Parar el servidor de Rocrail¡ ¿Parar y salir?"/>
-    <it txt="L'operazione richiesta arresterà il server Rocrail, spegnere e uscire?"/>
+    <it txt="Questo fermerà il server Rocrail! Fermare e uscire?"/>
     <da txt="Dette vil lukke Rocrail serveren! Vil du afslutte ?"/>
     <bg txt="Това ще изключването на Rocrail сървър! Shutdown и изход?"/>
     <ca txt="Aquesta acció tancarà el servidor Rocrail! Tancar i sortir?"/>
@@ -1221,6 +1269,7 @@
     <zh_TW txt="這會關閉Rocrail伺服器! 確定關閉?"/>
     <em_AU txt="This will shutdown the Rocrail server! Shutdown and exit?"/>
     <em_GB txt="This will shutdown the Rocrail server! Shutdown and exit?"/>
+    <id txt="Ini akan mematikan server Rocrail! Matikan dan keluar?"/>
   </Msg>
   <Msg id="resetallwarning">
     <de txt="Diese Aktion setzt auch alle Blockbelegungen zurück. Weiter?"/>
@@ -1230,7 +1279,7 @@
     <fr txt="Cette action effacera toutes les réservations de blocs. Continuer ?"/>
     <tr txt="This action also resets all block reservations. Proceed?"/>
     <es txt="This action also resets all block reservations. Proceed?"/>
-    <it txt="L'azione richiesta reimposta tutte le  prenotazioni dei blocchi, continuare?"/>
+    <it txt="Questa azione reimposta tutti i blocchi riservati, continuare?"/>
     <da txt="Dette vil nulstille alle blok-reservationer. Fortsæt ?"/>
     <bg txt="Тази дейност също нулира всички блок резервации. Продължите?"/>
     <ca txt="Aquesta acció també restableix tots els blocs.Continuar?"/>
@@ -1243,6 +1292,7 @@
     <zh_TW txt="此活動將重設所有預留區塊，繼續?"/>
     <em_AU txt="This action also resets all block reservations. Proceed?"/>
     <em_GB txt="This action also resets all block reservations. Proceed?"/>
+    <id txt="Aksi ini juga akan mereset semua pesanan blok. Proses?"/>
   </Msg>
   <Msg id="startallwarning">
     <de txt="Alle Loks jetzt starten?"/>
@@ -1252,7 +1302,7 @@
     <fr txt="Démarrer toutes les locomotives maintenant ?"/>
     <tr txt="Bütün Loclar şimdi başlatılsın mı?"/>
     <es txt="¿Arrancar todas las Locs?"/>
-    <it txt="Avviare ora tutte le locomotive?"/>
+    <it txt="Avviare tutte le locomotive ora?"/>
     <da txt="Vil du starte alle lokomotiver nu?"/>
     <bg txt="Започнете всички locs сега?"/>
     <ca txt="Engegar totes les locomotores?"/>
@@ -1266,6 +1316,7 @@
     <zh_TW txt="啟動所有機關車?"/>
     <em_AU txt="Start all locs now?"/>
     <em_GB txt="Start all locs now?"/>
+    <id txt="Jalankan semua lokomotif sekarang?"/>
   </Msg>
   <Msg id="stopallwarning">
     <de txt="Alle Loks jetzt anhalten?"/>
@@ -1275,7 +1326,7 @@
     <fr txt="Arrêter toutes les locomotives maintenant ?"/>
     <tr txt="Stop all locs now?"/>
     <es txt="Stop all locs now?"/>
-    <it txt="Arrestare ora tutte le locomotive?"/>
+    <it txt="Fermare tutte le locomotive ora?"/>
     <da txt="Vil du stoppe alle lokomotiver nu?"/>
     <bg txt="Спрете всички locs сега?"/>
     <ca txt="Apagar totes les locomotores?"/>
@@ -1289,6 +1340,7 @@
     <zh_TW txt="停止所有機關車?"/>
     <em_AU txt="Stop all locs now?"/>
     <em_GB txt="Stop all locs now?"/>
+    <id txt="Hentikan semua lokomotif sekarang?"/>
   </Msg>
   <Msg id="automodewarning">
     <de txt="Stellen Sie sicher dass keine Loks mehr fahren! Automatikmodus ausschalten?"/>
@@ -1298,7 +1350,7 @@
     <fr txt="Des locomotives peuvent encore être en route ! Voulez-vous arrêter le mode automatique ?"/>
     <tr txt="Loclar çalışıyor olmalı! OtoMod kapatılsın mı?"/>
     <es txt="Podría haber Locs en marcha! ¿Desactivar modo automático?"/>
-    <it txt="Alcune locomotive potrebbero essere in movimento, arrestare modalità automatica?"/>
+    <it txt="Alcune locomotive potrebbero essere in movimento! Uscire dalla modalità automatica?"/>
     <da txt="Der kan køre lokomotiver! Vil du afslutte automatisk drifttilstand ?"/>
     <bg txt="Там може да се Locs работи! Изключете AutoMode?"/>
     <ca txt="Poden haver locomotores en marxa! Apagar el mode automàtic?"/>
@@ -1312,6 +1364,7 @@
     <zh_TW txt="可能有機關車還在運行! 確定關閉自動模式?"/>
     <em_AU txt="There could be Locs running! Turn off AutoMode?"/>
     <em_GB txt="There could be Locs running! Turn off AutoMode?"/>
+    <id txt="Mungkin ada Lokomotif yang sedang berjalan! Matikan Moda Otomatis?"/>
   </Msg>
   <Msg id="fileexistwarning">
     <de txt="Datei existiert bereits! Wirklich überschreiben?"/>
@@ -1335,6 +1388,7 @@
     <zh_TW txt="檔案已經存在! 確定覆寫?"/>
     <em_AU txt="File already exists! Realy overwrite?"/>
     <em_GB txt="File already exists! Realy overwrite?"/>
+    <id txt="Berkas sudah ada! Ditimpa?"/>
   </Msg>
   <Msg id="removewarning">
     <de txt="Möchten Sie wirklich löschen?"/>
@@ -1344,7 +1398,7 @@
     <fr txt="Voulez-vous vraiment le supprimer ?"/>
     <tr txt="Gerçekten silmek istiyor musunuz?"/>
     <es txt="¿Realmente quiere borrar?"/>
-    <it txt="Cancellare il file?"/>
+    <it txt="Sei sicuro di volerlo cancellare"/>
     <da txt="Vil du virkelig slette filen ?"/>
     <bg txt="Наистина ли искате да изтриете?"/>
     <ca txt="Realment vol esborrar?"/>
@@ -1358,6 +1412,7 @@
     <zh_TW txt="確定刪除?"/>
     <em_AU txt="Do you realy want to delete?"/>
     <em_GB txt="Do you realy want to delete?"/>
+    <id txt="Anda ingin menghapus?"/>
   </Msg>
   <Msg id="connectionwarning">
     <de txt="Es konnte keine Verbindung zum Rocrail Server hergestellt werden. Bitte Host und Port überprüfen."/>
@@ -1381,6 +1436,7 @@
     <zh_TW txt="無法連結Rocrail伺服器，檢查Host跟Port的設定。"/>
     <em_AU txt="The Rocrail server could not be connected; check the Host and Port settings."/>
     <em_GB txt="The Rocrail server could not be connected; check the Host and Port settings."/>
+    <id txt="Server Rocral tidak dapat terhubung; periksa setelan Host dan Port."/>
   </Msg>
   <Msg id="auto">
     <de txt="Automatik" accel="0"/>
@@ -1390,7 +1446,7 @@
     <fr txt="Automatique" accel="1"/>
     <tr txt="Otomatik" accel="0"/>
     <es txt="Automático" accel="0"/>
-    <it txt="Automatizza"/>
+    <it txt="Automatica"/>
     <da txt="Automatisk" accel="0"/>
     <bs txt="Automatski"/>
     <cs txt="Automatický"/>
@@ -1405,6 +1461,7 @@
     <zh_TW txt="自動"/>
     <em_AU txt="Automatic"/>
     <em_GB txt="Automatic"/>
+    <id txt="Otomatis"/>
   </Msg>
   <Msg id="view">
     <de txt="Ansicht" accel="1"/>
@@ -1429,6 +1486,7 @@
     <zh_TW txt="檢視"/>
     <em_AU txt="View"/>
     <em_GB txt="View"/>
+    <id txt="Lihat"/>
   </Msg>
   <Msg id="extra">
     <de txt="Extra" accel="0"/>
@@ -1453,6 +1511,7 @@
     <zh_TW txt="其他"/>
     <em_AU txt="Extra"/>
     <em_GB txt="Extra"/>
+    <id txt="Ekstra"/>
   </Msg>
   <Msg id="help">
     <de txt="Hilfe" accel="0"/>
@@ -1462,7 +1521,7 @@
     <fr txt="Aide" accel="0"/>
     <tr txt="Yardım" accel="0"/>
     <es txt="Ayuda" accel="0"/>
-    <it txt="Aiuto"/>
+    <it txt="Guida"/>
     <da txt="Hjælp" accel="0"/>
     <bs txt="Pomoć"/>
     <cs txt="Nápověda"/>
@@ -1477,6 +1536,7 @@
     <zh_TW txt="帮助"/>
     <em_AU txt="Help"/>
     <em_GB txt="Help"/>
+    <id txt="Panduan"/>
   </Msg>
   <Msg id="function">
     <de txt="Funktion"/>
@@ -1501,6 +1561,7 @@
     <zh_TW txt="功能"/>
     <em_AU txt="Function"/>
     <em_GB txt="Function"/>
+    <id txt="Fungsi"/>
   </Msg>
   <Msg id="functioncount">
     <de txt="Anzahl der Funktionen"/>
@@ -1510,7 +1571,7 @@
     <fr txt="Nombre de fonction"/>
     <tr txt="Fonksiyonların sayısı"/>
     <es txt="Nombre de Función"/>
-    <it txt="Numero funzione"/>
+    <it txt="Numero della funzione"/>
     <da txt="Antal funktion"/>
     <bg txt="Брой Длъжност"/>
     <ca txt="Nombre de funció"/>
@@ -1525,6 +1586,7 @@
     <zh_TW txt="功能的數量"/>
     <em_AU txt="Number of Function"/>
     <em_GB txt="Number of Function"/>
+    <id txt="Nomer Fungsi"/>
   </Msg>
   <Msg id="functions">
     <de txt="Funktionen"/>
@@ -1549,6 +1611,7 @@
     <zh_TW txt="功能"/>
     <em_AU txt="Functions"/>
     <em_GB txt="Functions"/>
+    <id txt="Fungsi"/>
   </Msg>
   <Msg id="changedirection">
     <de txt="Fahrtrichtung wechseln" tip="Fahrtrichtung ändern."/>
@@ -1573,6 +1636,7 @@
     <zh_TW txt="更改運轉方向"/>
     <em_AU txt="Change direction"/>
     <em_GB txt="Change direction"/>
+    <id txt="Ubah arah"/>
   </Msg>
   <Msg id="add">
     <de txt="Hinzufügen"/>
@@ -1597,6 +1661,7 @@
     <zh_TW txt="新增"/>
     <em_AU txt="Add"/>
     <em_GB txt="Add"/>
+    <id txt="Tambah"/>
   </Msg>
   <Msg id="delete">
     <de txt="Entfernen"/>
@@ -1621,6 +1686,7 @@
     <zh_TW txt="刪除"/>
     <em_AU txt="Delete"/>
     <em_GB txt="Delete"/>
+    <id txt="Hapus"/>
   </Msg>
   <Msg id="name">
     <de txt="Name"/>
@@ -1645,6 +1711,7 @@
     <zh_TW txt="名稱"/>
     <em_AU txt="Name"/>
     <em_GB txt="Name"/>
+    <id txt="Nama"/>
   </Msg>
   <Msg id="value">
     <de txt="Wert"/>
@@ -1678,7 +1745,7 @@
     <fr txt="ID de l'itinéraire"/>
     <tr txt="Rota ID"/>
     <es txt="Denominación de Ruta"/>
-    <it txt="Identificativo instradamento"/>
+    <it txt="ID instradamento"/>
     <da txt="Rute-ID"/>
     <cs txt="ID Vlakové cesty"/>
     <bg txt="Път ID"/>
@@ -1692,6 +1759,7 @@
     <zh_TW txt="路線代碼"/>
     <em_AU txt="Route ID"/>
     <em_GB txt="Route ID"/>
+    <id txt="ID Rute"/>
   </Msg>
   <Msg id="swcmds">
     <de txt="Weichen Befehle"/>
@@ -1701,7 +1769,7 @@
     <fr txt="Commandes d'aiguillage"/>
     <tr txt="Makas komutları"/>
     <es txt="Cambiar órdenes"/>
-    <it txt="Comandi deviatoi"/>
+    <it txt="Comandi deviatoio"/>
     <da txt="Skifte komando"/>
     <bg txt="Активност команди"/>
     <el txt="Προσέλευση εντολές"/>
@@ -1715,6 +1783,7 @@
     <zh_TW txt="道岔命令"/>
     <em_AU txt="Switch commands"/>
     <em_GB txt="Switch commands"/>
+    <id txt="Tombol perintah"/>
   </Msg>
   <Msg id="decoder">
     <de txt="Dekoder" tip="Decoder Nummer."/>
@@ -1739,6 +1808,7 @@
     <zh_TW txt="解碼器"/>
     <em_AU txt="Decoder"/>
     <em_GB txt="Decoder"/>
+    <id txt="Dekoker"/>
   </Msg>
   <Msg id="decoders">
     <de txt="Dekoder" tip=""/>
@@ -1763,6 +1833,7 @@
     <zh_TW txt="解碼器"/>
     <em_AU txt="Decoders"/>
     <em_GB txt="Decoders"/>
+    <id txt="Dekoder"/>
   </Msg>
   <Msg id="clickblock">
     <de txt="Doppelklick zum Starten/Stoppen %s."/>
@@ -1772,7 +1843,7 @@
     <fr txt="Double-cliquez pour démarrer/arrêter %s."/>
     <tr txt="Çalıştırmak/durdurmak için çift tıkla %s."/>
     <es txt="Doble click para Iniciar/Parar %s"/>
-    <it txt="Doppio clic per Avvio/Arresto %s"/>
+    <it txt="Doppio clic per Avviare/Fermare %s"/>
     <da txt="Dobbelt klik for start/stop %s."/>
     <bg txt="Щракнете отляво Старт / Стоп% s."/>
     <el txt="Κάντε κλικ αριστερά στο Start / Stop% s."/>
@@ -1784,6 +1855,7 @@
     <pl txt="Kliknij dwukrotnie aby uruchomić/zatrzymać %s."/>
     <em_AU txt="Double click to Start/Stop %s."/>
     <em_GB txt="Double click to Start/Stop %s."/>
+    <id txt="Klik ganda untuk mulai/hentikan %s."/>
   </Msg>
   <Msg id="blockdlg">
     <de txt="Block Eigenschaften"/>
@@ -1807,6 +1879,7 @@
     <zh_TW txt="區塊特性"/>
     <em_AU txt="Block Properties"/>
     <em_GB txt="Block Properties"/>
+    <id txt="Properti Blok"/>
   </Msg>
   <Msg id="commuter">
     <de txt="Pendelzug"/>
@@ -1829,6 +1902,7 @@
     <zh_TW txt="通勤列車"/>
     <em_AU txt="Commuter train"/>
     <em_GB txt="Commuter train"/>
+    <id txt="Kereta komuter"/>
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
@@ -1852,6 +1926,7 @@
     <zh_TW txt="機關車列表"/>
     <em_AU txt="Locomotive table"/>
     <em_GB txt="Locomotive table"/>
+    <id txt="Meja lokomotif"/>
   </Msg>
   <Msg id="programming">
     <de txt="Programmieren"/>
@@ -1876,6 +1951,7 @@
     <zh_TW txt="程式設計"/>
     <em_AU txt="Programming"/>
     <em_GB txt="Programming"/>
+    <id txt="Pemrogaman"/>
   </Msg>
   <Msg id="pt">
     <de txt="Programmiergleis"/>
@@ -1899,6 +1975,7 @@
     <zh_TW txt="軌道[程式]"/>
     <em_AU txt="Programming track"/>
     <em_GB txt="Programming track"/>
+    <id txt="Memprogram jalan"/>
   </Msg>
   <Msg id="lncvprogramming">
     <de txt="LN CV/SV"/>
@@ -1921,6 +1998,7 @@
     <nb txt="LN CV/SV"/>
     <em_AU txt="LN CV/SV"/>
     <em_GB txt="LN CV/SV"/>
+    <id txt="LN CV/SV"/>
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
@@ -1944,6 +2022,7 @@
     <zh_TW txt="路線一覽表"/>
     <em_AU txt="Route table"/>
     <em_GB txt="Route table"/>
+    <id txt="Daftar rute"/>
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
@@ -1966,6 +2045,7 @@
     <zh_TW txt="區塊分類一覽表"/>
     <em_AU txt="Block group table"/>
     <em_GB txt="Block group table"/>
+    <id txt="Blok daftar group"/>
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
@@ -1988,6 +2068,7 @@
     <zh_TW txt="區塊一覽表"/>
     <em_AU txt="Block table"/>
     <em_GB txt="Block table"/>
+    <id txt="Daftar blok"/>
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
@@ -1997,7 +2078,7 @@
     <fr txt="Aiguillages" tip="Tableau d'aiguillages"/>
     <tr txt="Makaslar" tip="Makaslar"/>
     <es txt="Cambiar tabla" tip="Desvíos"/>
-    <it txt="Tabella deviatoi" tip="Deviatoi"/>
+    <it txt="Tabella deviatoio" tip="Deviatoi"/>
     <da txt="Skifte tabel" tip="Skiftespor-tabel"/>
     <bg txt="Активност таблица"/>
     <el txt="Προσέλευση πίνακα"/>
@@ -2020,7 +2101,7 @@
     <fr txt="Sorties" tip="Tableau de sorties"/>
     <tr txt="Çıkışlar" tip="Çıkışlar"/>
     <es txt="Salidas" tip="Salidas"/>
-    <it txt="Tabella comandi" tip="Uscite"/>
+    <it txt="Tabella uscita" tip="Uscite"/>
     <da txt="Udgang tabel" tip="Udgange-tabel"/>
     <bg txt="Изходна таблица"/>
     <el txt="Εκροών"/>
@@ -2056,6 +2137,7 @@
     <zh_TW txt="信號一覽表"/>
     <em_AU txt="Signal table"/>
     <em_GB txt="Signal table"/>
+    <id txt="Daftar sinyal"/>
   </Msg>
   <Msg id="turntable" dialog="true">
     <de txt="Drehscheibe" tip="Drehscheibe"/>
@@ -2102,6 +2184,7 @@
     <zh_TW txt="感應器一覽表"/>
     <em_AU txt="Sensor table"/>
     <em_GB txt="Sensor table"/>
+    <id txt="Daftar sensor"/>
   </Msg>
   <Msg id="sensorfromblock">
     <de txt="Rückmelder von Block %s aus:"/>
@@ -2125,6 +2208,7 @@
     <da txt="Sensor kommer fra blok %s:"/>
     <em_AU txt="Sensors comming from block %s:"/>
     <em_GB txt="Sensors comming from block %s:"/>
+    <id txt="Sensor datang dari blok %s:"/>
   </Msg>
   <Msg id="addpanel" dialog="true">
     <de txt="Gleisplan hinzufügen" tip="Gleisplan hinzufügen"/>
@@ -2145,6 +2229,7 @@
     <nb txt="Legg til sporplan"/>
     <pl txt="Dodaj plan torowiska"/>
     <ca txt="Afegeix diagrama de traçat"/>
+    <id txt="Tambah panel jalan"/>
   </Msg>
   <Msg id="removepanel">
     <de txt="Gleisplan löschen"/>
@@ -2154,7 +2239,7 @@
     <fr txt="Effacer un plan"/>
     <tr txt="Ray Diyagramı Sil"/>
     <es txt="Borrar panel de carriles"/>
-    <it txt="Cancella tracciato"/>
+    <it txt="Elimina tracciato"/>
     <da txt="Slet sporplan"/>
     <bg txt="Изтриване на следите план"/>
     <el txt="Διαγραφή γραμμής σχέδιο"/>
@@ -2165,6 +2250,7 @@
     <nb txt="Slett sporplan"/>
     <pl txt="Usuń plan torowiska"/>
     <ca txt="Elimina diagrama de traçat"/>
+    <id txt="Hapus panel jalan"/>
   </Msg>
   <Msg id="panelprops" dialog="true">
     <de txt="Gleisplan Eigenschaften" tip="Gleisplan Eigenschaften"/>
@@ -2174,7 +2260,7 @@
     <fr txt="Propriétés du plan" tip="Propriétés du TCO"/>
     <tr txt="Panel özellikleri" tip="Ray Diyagram Özellikleri"/>
     <es txt="Propiedades del diagrama de circuito" tip="Propiedades del diagrama del circuito"/>
-    <it txt="Proprietà tracciato" tip="Proprietà del tracciato"/>
+    <it txt="Proprietà pannello" tip="Proprietà del tracciato"/>
     <da txt="Sporplansegenskaber" tip="Sporplansegenskaber"/>
     <bg txt="Панелна имота"/>
     <el txt="Πάνελ ιδιότητες"/>
@@ -2188,6 +2274,7 @@
     <zh_TW txt="面板特性"/>
     <em_AU txt="Panel properties"/>
     <em_GB txt="Panel properties"/>
+    <id txt="Properti panel"/>
   </Msg>
   <Msg id="panel">
     <de txt="Gleisplan" accel="0"/>
@@ -2211,6 +2298,7 @@
     <zh_TW txt="軌道規劃"/>
     <em_AU txt="Track plan"/>
     <em_GB txt="Track plan"/>
+    <id txt="Rencana Jalan"/>
   </Msg>
   <Msg id="tables">
     <de txt="Tabellen" accel="0"/>
@@ -2235,6 +2323,7 @@
     <zh_TW txt="表格"/>
     <em_AU txt="Tables"/>
     <em_GB txt="Tables"/>
+    <id txt="Daftar"/>
   </Msg>
   <Msg id="language">
     <de txt="Sprache" accel="0"/>
@@ -2259,6 +2348,7 @@
     <zh_TW txt="語系"/>
     <em_AU txt="Language"/>
     <em_GB txt="Language"/>
+    <id txt="Bahasa"/>
   </Msg>
   <Msg id="activelocs">
     <de txt="Lokomotiven"/>
@@ -2282,6 +2372,7 @@
     <zh_TW txt="機關車(活動中)"/>
     <em_AU txt="Active Locos"/>
     <em_GB txt="Active Locos"/>
+    <id txt="Loko Aktif"/>
   </Msg>
   <Msg id="id">
     <de txt="Kennung"/>
@@ -2291,7 +2382,7 @@
     <fr txt="Indicatif"/>
     <tr txt="ID"/>
     <es txt="Denominación"/>
-    <it txt="Identificativo"/>
+    <it txt="ID"/>
     <da txt="ID"/>
     <bs txt="ID"/>
     <cs txt="ID"/>
@@ -2306,6 +2397,7 @@
     <zh_TW txt="ID"/>
     <em_AU txt="ID"/>
     <em_GB txt="ID"/>
+    <id txt="ID"/>
   </Msg>
   <Msg id="address">
     <de txt="Adresse"/>
@@ -2330,6 +2422,7 @@
     <zh_TW txt="地址"/>
     <em_AU txt="Address"/>
     <em_GB txt="Address"/>
+    <id txt="Alamat"/>
   </Msg>
   <Msg id="block">
     <de txt="Block"/>
@@ -2354,6 +2447,7 @@
     <zh_TW txt="區塊"/>
     <em_AU txt="Block"/>
     <em_GB txt="Block"/>
+    <id txt="Blok"/>
   </Msg>
   <Msg id="blocks">
     <de txt="Blöcke"/>
@@ -2377,6 +2471,7 @@
     <zh_TW txt="區塊"/>
     <em_AU txt="Blocks"/>
     <em_GB txt="Blocks"/>
+    <id txt="Blok"/>
   </Msg>
   <Msg id="exceptions">
     <de txt="Ausnahmen:"/>
@@ -2401,6 +2496,7 @@
     <zh_TW txt="例外："/>
     <em_AU txt="Exceptions:"/>
     <em_GB txt="Exceptions:"/>
+    <id txt="Pengecualian:"/>
   </Msg>
   <Msg id="warnings">
     <de txt="Warnungen:"/>
@@ -2424,6 +2520,7 @@
     <ca txt="Avisos"/>
     <em_AU txt="Warnings:"/>
     <em_GB txt="Warnings:"/>
+    <id txt="Peringatan:"/>
   </Msg>
   <Msg id="offline">
     <de txt="Nicht verbunden"/>
@@ -2448,6 +2545,7 @@
     <zh_TW txt="離線"/>
     <em_AU txt="Offline"/>
     <em_GB txt="Offline"/>
+    <id txt="Tidak terhubung"/>
   </Msg>
   <Msg id="plantitle" dialog="true">
     <de txt="Gleisplan-Name" accel="0" tip="Gleisplan Name ändern."/>
@@ -2471,6 +2569,7 @@
     <zh_TW txt="軌道計畫名稱"/>
     <em_AU txt="Track plan title"/>
     <em_GB txt="Track plan title"/>
+    <id txt="Judul rencana jalur"/>
   </Msg>
   <Msg id="planfile">
     <de txt="Gleisplandatei"/>
@@ -2494,6 +2593,7 @@
     <zh_TW txt="軌道計畫檔案"/>
     <em_AU txt="Track plan file"/>
     <em_GB txt="Track plan file"/>
+    <id txt="Berkas rencana jalur"/>
   </Msg>
   <Msg id="planfiles">
     <de txt="Gleisplandateien (*.xml)|*.xml"/>
@@ -2517,6 +2617,7 @@
     <zh_TW txt="軌道計畫檔案(*.xml)"/>
     <em_AU txt="Track plan files (*.xml)|*.xml"/>
     <em_GB txt="Track plan files (*.xml)|*.xml"/>
+    <id txt="Berkas jalur rencana (*.xml)|*.xml"/>
   </Msg>
   <Msg id="saveplanfileas" dialog="true">
     <de txt="Gleisplandatei speichern unter"/>
@@ -2540,6 +2641,7 @@
     <zh_TW txt="另存軌道計畫"/>
     <em_AU txt="Save track plan as"/>
     <em_GB txt="Save track plan as"/>
+    <id txt="Simpan rencana jalan sebagai"/>
   </Msg>
   <Msg id="openplanfile" dialog="true">
     <de txt="Gleisplandatei öffnen"/>
@@ -2563,6 +2665,7 @@
     <zh_TW txt="開啟軌道計畫"/>
     <em_AU txt="Open track plan"/>
     <em_GB txt="Open track plan"/>
+    <id txt="Buka rencana jalan"/>
   </Msg>
   <Msg id="rocrailini" dialog="true">
     <de txt="Rocrail Eigenschaften" accel="0" tip="Rocrail Eigenschaften ändern."/>
@@ -2587,6 +2690,7 @@
     <zh_TW txt="Rocrail屬性"/>
     <em_AU txt="Rocrail Properties"/>
     <em_GB txt="Rocrail Properties"/>
+    <id txt="Properti Rocrail"/>
   </Msg>
   <Msg id="change_language_msg">
     <de txt="Die Spracheinstellung der Benutzeroberfläche wurde geändert und wird erst beim nächsten Start wirksam."/>
@@ -2610,6 +2714,7 @@
     <zh_TW txt="使用者介面的語系設定已被更新，將於下次重新啟動時生效。"/>
     <em_AU txt="The language setting of the user interface has been updated and will take effect the next time you start."/>
     <em_GB txt="The language setting of the user interface has been updated and will take effect the next time you start."/>
+    <id txt="Setelan bahasa dari penghubung pengguna telah diperbaruhi dan akan berpengaruh saat memulai selanjutnya."/>
   </Msg>
   <Msg id="straight">
     <de txt="Gerade"/>
@@ -2634,6 +2739,7 @@
     <zh_TW txt="直線(軌道)"/>
     <em_AU txt="Straight"/>
     <em_GB txt="Straight"/>
+    <id txt="Lurus"/>
   </Msg>
   <Msg id="curve">
     <de txt="Kurve/Bogen"/>
@@ -2658,6 +2764,7 @@
     <zh_TW txt="曲線(軌道)"/>
     <em_AU txt="Curve"/>
     <em_GB txt="Curve"/>
+    <id txt="Tikungan"/>
   </Msg>
   <Msg id="right">
     <de txt="Rechts"/>
@@ -2681,6 +2788,7 @@
     <zh_TW txt="右"/>
     <em_AU txt="Right"/>
     <em_GB txt="Right"/>
+    <id txt="Kanan"/>
   </Msg>
   <Msg id="left">
     <de txt="Links"/>
@@ -2704,6 +2812,7 @@
     <zh_TW txt="左"/>
     <em_AU txt="Left"/>
     <em_GB txt="Left"/>
+    <id txt="Kiri"/>
   </Msg>
   <Msg id="rightturnout">
     <de txt="Weiche rechts"/>
@@ -2728,6 +2837,7 @@
     <pl txt="Prawy przełącznik"/>
     <em_AU txt="Right switch"/>
     <em_GB txt="Right switch"/>
+    <id txt="Alih kanan"/>
   </Msg>
   <Msg id="leftturnout">
     <de txt="Weiche links"/>
@@ -2752,6 +2862,7 @@
     <pl txt="lewy przełącznik"/>
     <em_AU txt="Left switch"/>
     <em_GB txt="Left switch"/>
+    <id txt="Alih kiri"/>
   </Msg>
   <Msg id="crossing">
     <de txt="Kreuzung"/>
@@ -2774,6 +2885,7 @@
     <zh_TW txt="(軌道)交叉"/>
     <em_AU txt="Crossing"/>
     <em_GB txt="Crossing"/>
+    <id txt="Memotong"/>
   </Msg>
   <Msg id="dcrossing">
     <de txt="Doppelte Kreuzung"/>
@@ -2796,6 +2908,7 @@
     <zh_TW txt="(軌道)雙交叉"/>
     <em_AU txt="Double Crossing"/>
     <em_GB txt="Double Crossing"/>
+    <id txt="Memotong Rangkap"/>
   </Msg>
   <Msg id="ccrossing">
     <de txt="Zentrierte Kreuzung"/>
@@ -2817,6 +2930,7 @@
     <zh_TW txt="(軌道)中心交叉"/>
     <em_AU txt="Centre Crossing"/>
     <em_GB txt="Centre Crossing"/>
+    <id txt="Memotong Tengah"/>
   </Msg>
   <Msg id="threeway">
     <de txt="Dreiwegeweiche"/>
@@ -2839,6 +2953,7 @@
     <zh_TW txt="(軌道)三道分叉"/>
     <em_AU txt="Threeway"/>
     <em_GB txt="Threeway"/>
+    <id txt="Tiga-jalur"/>
   </Msg>
   <Msg id="additem">
     <de txt="Symbol hinzufügen"/>
@@ -2862,6 +2977,7 @@
     <zh_TW txt="新增項目"/>
     <em_AU txt="Add item"/>
     <em_GB txt="Add item"/>
+    <id txt="Menambah hal"/>
   </Msg>
   <Msg id="track">
     <de txt="Gleis"/>
@@ -2886,6 +3002,7 @@
     <zh_TW txt="軌段"/>
     <em_AU txt="Track"/>
     <em_GB txt="Track"/>
+    <id txt="Jalan"/>
   </Msg>
   <Msg id="tracks">
     <de txt="Gleise"/>
@@ -2910,6 +3027,7 @@
     <zh_TW txt="軌段"/>
     <em_AU txt="Tracks"/>
     <em_GB txt="Tracks"/>
+    <id txt="Jalan"/>
   </Msg>
   <Msg id="turnout">
     <de txt="Weiche"/>
@@ -2933,6 +3051,7 @@
     <zh_TW txt="轉轍器"/>
     <em_AU txt="Switch"/>
     <em_GB txt="Switch"/>
+    <id txt="Beralih"/>
   </Msg>
   <Msg id="switches">
     <de txt="Weichen"/>
@@ -2957,6 +3076,7 @@
     <zh_TW txt="轉轍器"/>
     <em_AU txt="Switches"/>
     <em_GB txt="Switches"/>
+    <id txt="Saklar"/>
   </Msg>
   <Msg id="signal">
     <de txt="Signal"/>
@@ -2980,6 +3100,7 @@
     <zh_TW txt="信號"/>
     <em_AU txt="Signal"/>
     <em_GB txt="Signal"/>
+    <id txt="Sinyal"/>
   </Msg>
   <Msg id="signals">
     <de txt="Signale"/>
@@ -3003,6 +3124,7 @@
     <zh_TW txt="信號"/>
     <em_AU txt="Signals"/>
     <em_GB txt="Signals"/>
+    <id txt="Sinyal"/>
   </Msg>
   <Msg id="sensor">
     <de txt="Rückmeldung"/>
@@ -3027,6 +3149,7 @@
     <zh_TW txt="感應器"/>
     <em_AU txt="Sensor"/>
     <em_GB txt="Sensor"/>
+    <id txt="Sensor"/>
   </Msg>
   <Msg id="setlocid" dialog="true">
     <de txt="Lokbelegung setzen"/>
@@ -3050,6 +3173,7 @@
     <zh_TW txt="設定機關車"/>
     <em_AU txt="Set Locomotive assignment"/>
     <em_GB txt="Set Locomotive assignment"/>
+    <id txt="Tentukan tugas Lokomotif"/>
   </Msg>
   <Msg id="resetlocid">
     <de txt="Lokbelegung zurücknehmen"/>
@@ -3073,6 +3197,7 @@
     <zh_TW txt="重設機關車"/>
     <em_AU txt="Reset Locomotive assignment"/>
     <em_GB txt="Reset Locomotive assignment"/>
+    <id txt="Reset penugasan Lokomotif"/>
   </Msg>
   <Msg id="close">
     <de txt="Schließen"/>
@@ -3097,6 +3222,7 @@
     <zh_TW txt="關閉"/>
     <em_AU txt="Close"/>
     <em_GB txt="Close"/>
+    <id txt="Tutup"/>
   </Msg>
   <Msg id="rotate">
     <de txt="Drehen"/>
@@ -3121,6 +3247,7 @@
     <zh_TW txt="旋轉"/>
     <em_AU txt="Rotate"/>
     <em_GB txt="Rotate"/>
+    <id txt="Putar"/>
   </Msg>
   <Msg id="type">
     <de txt="Typ"/>
@@ -3145,6 +3272,7 @@
     <zh_TW txt="類型"/>
     <em_AU txt="Type"/>
     <em_GB txt="Type"/>
+    <id txt="Tipe"/>
   </Msg>
   <Msg id="nexttrack">
     <de txt="nächstes Gleis"/>
@@ -3168,6 +3296,7 @@
     <zh_TW txt="下一個軌段"/>
     <em_AU txt="Next track"/>
     <em_GB txt="Next track"/>
+    <id txt="Trek berikutnya"/>
   </Msg>
   <Msg id="prevtrack">
     <de txt="vorheriges Gleis"/>
@@ -3191,6 +3320,7 @@
     <zh_TW txt="前一個軌段"/>
     <em_AU txt="Previous track"/>
     <em_GB txt="Previous track"/>
+    <id txt="Trek sebelumnya"/>
   </Msg>
   <Msg id="turn180">
     <de txt="180° Drehung"/>
@@ -3215,6 +3345,7 @@
     <zh_TW txt="旋轉180度"/>
     <em_AU txt="Turn 180"/>
     <em_GB txt="Turn 180"/>
+    <id txt="Putar 180"/>
   </Msg>
   <Msg id="gototrack">
     <de txt="Gehe zum Gleis"/>
@@ -3238,6 +3369,7 @@
     <pl txt="Idź do ścieżki"/>
     <em_AU txt="Goto track"/>
     <em_GB txt="Goto track"/>
+    <id txt="Ke jalur"/>
   </Msg>
   <Msg id="rotationvelocity">
     <de txt="Drehgeschwindigkeit"/>
@@ -3261,6 +3393,7 @@
     <zh_TW txt="角速度"/>
     <em_AU txt="Rotation velocity"/>
     <em_GB txt="Rotation velocity"/>
+    <id txt="Kecepatan Putaran"/>
   </Msg>
   <Msg id="info">
     <de txt="Informationen"/>
@@ -3285,6 +3418,7 @@
     <zh_TW txt="資訊"/>
     <em_AU txt="Information"/>
     <em_GB txt="Information"/>
+    <id txt="Informasi"/>
   </Msg>
   <Msg id="start">
     <de txt="Start"/>
@@ -3308,6 +3442,7 @@
     <zh_TW txt="開始"/>
     <em_AU txt="Start"/>
     <em_GB txt="Start"/>
+    <id txt="Mulai"/>
   </Msg>
   <Msg id="index">
     <de txt="Übersicht"/>
@@ -3332,6 +3467,7 @@
     <zh_TW txt="索引"/>
     <em_AU txt="Index"/>
     <em_GB txt="Index"/>
+    <id txt="Indeks"/>
   </Msg>
   <Msg id="general">
     <de txt="Allgemein"/>
@@ -3356,6 +3492,7 @@
     <zh_TW txt="一般"/>
     <em_AU txt="General"/>
     <em_GB txt="General"/>
+    <id txt="Umum"/>
   </Msg>
   <Msg id="wiring">
     <de txt="Verkabelung"/>
@@ -3379,6 +3516,7 @@
     <zh_TW txt="線路"/>
     <em_AU txt="Wiring"/>
     <em_GB txt="Wiring"/>
+    <id txt="Pengkawatan"/>
   </Msg>
   <Msg id="details">
     <de txt="Einzelheiten"/>
@@ -3403,6 +3541,7 @@
     <zh_TW txt="詳細資料"/>
     <em_AU txt="Details"/>
     <em_GB txt="Details"/>
+    <id txt="Detail"/>
   </Msg>
   <Msg id="routes">
     <de txt="Fahrstraßen"/>
@@ -3426,6 +3565,7 @@
     <zh_TW txt="路徑"/>
     <em_AU txt="Routes"/>
     <em_GB txt="Routes"/>
+    <id txt="Rute"/>
   </Msg>
   <Msg id="route">
     <de txt="Fahrstraße"/>
@@ -3449,6 +3589,7 @@
     <zh_TW txt="路徑"/>
     <em_AU txt="Route"/>
     <em_GB txt="Route"/>
+    <id txt="Rute"/>
   </Msg>
   <Msg id="new" key="Ctrl-N">
     <de txt="Neu" tip="Neues Gleisbild"/>
@@ -3472,6 +3613,7 @@
     <zh_TW txt="新增"/>
     <em_AU txt="New"/>
     <em_GB txt="New"/>
+    <id txt="Baru"/>
   </Msg>
   <Msg id="description">
     <de txt="Beschreibung"/>
@@ -3496,6 +3638,7 @@
     <zh_TW txt="描述"/>
     <em_AU txt="Description"/>
     <em_GB txt="Description"/>
+    <id txt="Gambaran"/>
   </Msg>
   <Msg id="length">
     <de txt="Länge"/>
@@ -3520,6 +3663,7 @@
     <zh_TW txt="長度"/>
     <em_AU txt="Length"/>
     <em_GB txt="Length"/>
+    <id txt="Panjang"/>
   </Msg>
   <Msg id="locid">
     <de txt="Lokkennung"/>
@@ -3543,6 +3687,7 @@
     <zh_TW txt="機關車代碼ID"/>
     <em_AU txt="Loc ID"/>
     <em_GB txt="Loc ID"/>
+    <id txt="ID Loko"/>
   </Msg>
   <Msg id="turntableid">
     <de txt="Drehscheibenkennung"/>
@@ -3566,6 +3711,7 @@
     <zh_TW txt="轉轍器代碼ID"/>
     <em_AU txt="Turntable ID"/>
     <em_GB txt="Turntable ID"/>
+    <id txt="Putaran ID"/>
   </Msg>
   <Msg id="configuration">
     <de txt="Einstellungen"/>
@@ -3590,6 +3736,7 @@
     <zh_TW txt="組態"/>
     <em_AU txt="Configuration"/>
     <em_GB txt="Configuration"/>
+    <id txt="Pengaturan"/>
   </Msg>
   <Msg id="electrified">
     <de txt="Elektrifiziert"/>
@@ -3613,6 +3760,7 @@
     <zh_TW txt="電力推動"/>
     <em_AU txt="Electrified"/>
     <em_GB txt="Electrified"/>
+    <id txt="Menimbulkan listrik"/>
   </Msg>
   <Msg id="closed">
     <de txt="gesperrt"/>
@@ -3636,6 +3784,7 @@
     <zh_TW txt="已關閉"/>
     <em_AU txt="Closed"/>
     <em_GB txt="Closed"/>
+    <id txt="Ditutup"/>
   </Msg>
   <Msg id="x">
     <de txt="X"/>
@@ -3660,6 +3809,7 @@
     <zh_TW txt="X"/>
     <em_AU txt="X"/>
     <em_GB txt="X"/>
+    <id txt="X"/>
   </Msg>
   <Msg id="y">
     <de txt="Y"/>
@@ -3684,6 +3834,7 @@
     <zh_TW txt="Y"/>
     <em_AU txt="Y"/>
     <em_GB txt="Y"/>
+    <id txt="Y"/>
   </Msg>
   <Msg id="z">
     <de txt="Z"/>
@@ -3708,6 +3859,7 @@
     <zh_TW txt="Z"/>
     <em_AU txt="Z"/>
     <em_GB txt="Z"/>
+    <id txt="Z"/>
   </Msg>
   <Msg id="orientation">
     <de txt="Lage"/>
@@ -3732,6 +3884,7 @@
     <zh_TW txt="方向"/>
     <em_AU txt="Orientation"/>
     <em_GB txt="Orientation"/>
+    <id txt="Orientasi"/>
   </Msg>
   <Msg id="north">
     <de txt="Nord"/>
@@ -3756,6 +3909,7 @@
     <zh_TW txt="北"/>
     <em_AU txt="North"/>
     <em_GB txt="North"/>
+    <id txt="Utara"/>
   </Msg>
   <Msg id="east">
     <de txt="Ost"/>
@@ -3780,6 +3934,7 @@
     <zh_TW txt="東"/>
     <em_AU txt="East"/>
     <em_GB txt="East"/>
+    <id txt="Timur"/>
   </Msg>
   <Msg id="south">
     <de txt="Süd"/>
@@ -3804,6 +3959,7 @@
     <zh_TW txt="南"/>
     <em_AU txt="South"/>
     <em_GB txt="South"/>
+    <id txt="Selatan"/>
   </Msg>
   <Msg id="west">
     <de txt="West"/>
@@ -3828,6 +3984,7 @@
     <zh_TW txt="西"/>
     <em_AU txt="West"/>
     <em_GB txt="West"/>
+    <id txt="Barat"/>
   </Msg>
   <Msg id="speed">
     <de txt="Geschwindigkeit"/>
@@ -3852,6 +4009,7 @@
     <zh_TW txt="速度"/>
     <em_AU txt="Speed"/>
     <em_GB txt="Speed"/>
+    <id txt="Kecepatan"/>
   </Msg>
   <Msg id="speedsteps">
     <de txt="Fahrstufen"/>
@@ -3874,6 +4032,7 @@
     <zh_TW txt="解碼器階數"/>
     <em_AU txt="Decoder steps"/>
     <em_GB txt="Decoder steps"/>
+    <id txt="Langkah dekoder"/>
   </Msg>
   <Msg id="min">
     <de txt="Min."/>
@@ -3898,6 +4057,7 @@
     <zh_TW txt="最小值"/>
     <em_AU txt="Min."/>
     <em_GB txt="Min."/>
+    <id txt="Min."/>
   </Msg>
   <Msg id="mid">
     <de txt="Mid."/>
@@ -3921,6 +4081,7 @@
     <zh_TW txt="中值"/>
     <em_AU txt="Mid."/>
     <em_GB txt="Mid."/>
+    <id txt="Mid."/>
   </Msg>
   <Msg id="cruise">
     <de txt="Dauer"/>
@@ -3942,6 +4103,7 @@
     <zh_TW txt="巡弋"/>
     <em_AU txt="Cruise"/>
     <em_GB txt="Cruise"/>
+    <id txt="Pelayaran"/>
   </Msg>
   <Msg id="max">
     <de txt="Max."/>
@@ -3966,6 +4128,7 @@
     <zh_TW txt="最大值"/>
     <em_AU txt="Max."/>
     <em_GB txt="Max."/>
+    <id txt="Max."/>
   </Msg>
   <Msg id="local">
     <de txt="Nahverkehr"/>
@@ -3990,6 +4153,7 @@
     <pl txt="Lokalny"/>
     <em_AU txt="Local"/>
     <em_GB txt="Local"/>
+    <id txt="Lokal"/>
   </Msg>
   <Msg id="ice">
     <de txt="Fernverkehr"/>
@@ -4011,6 +4175,7 @@
     <pl txt="Intercity"/>
     <em_AU txt="Intercity"/>
     <em_GB txt="Intercity"/>
+    <id txt="Antar-kota"/>
   </Msg>
   <Msg id="goods">
     <de txt="Güterverkehr"/>
@@ -4034,6 +4199,7 @@
     <zh_TW txt="貨運車"/>
     <em_AU txt="Freight"/>
     <em_GB txt="Freight"/>
+    <id txt="Muatan"/>
   </Msg>
   <Msg id="shunting">
     <de txt="Rangieren"/>
@@ -4055,6 +4221,7 @@
     <zh_TW txt="轉軌"/>
     <em_AU txt="Shunting"/>
     <em_GB txt="Shunting"/>
+    <id txt="Melangsir"/>
   </Msg>
   <Msg id="incline">
     <de txt="Steigung"/>
@@ -4077,6 +4244,7 @@
     <zh_TW txt="傾斜坡"/>
     <em_AU txt="Incline"/>
     <em_GB txt="Incline"/>
+    <id txt="Lereng"/>
   </Msg>
   <Msg id="none">
     <de txt="Keine"/>
@@ -4101,6 +4269,7 @@
     <pl txt="Żaden"/>
     <em_AU txt="None"/>
     <em_GB txt="None"/>
+    <id txt="Tidak ada"/>
   </Msg>
   <Msg id="up">
     <de txt="Aufwärts"/>
@@ -4125,6 +4294,7 @@
     <pl txt="W górę"/>
     <em_AU txt="Up"/>
     <em_GB txt="Up"/>
+    <id txt="Naik"/>
   </Msg>
   <Msg id="down">
     <de txt="Abwärts"/>
@@ -4149,6 +4319,7 @@
     <pl txt="W dół"/>
     <em_AU txt="Down"/>
     <em_GB txt="Down"/>
+    <id txt="Bawah"/>
   </Msg>
   <Msg id="wait">
     <de txt="Warten"/>
@@ -4173,6 +4344,7 @@
     <pl txt="Czekaj"/>
     <em_AU txt="Wait"/>
     <em_GB txt="Wait"/>
+    <id txt="Menunggu"/>
   </Msg>
   <Msg id="random">
     <de txt="Zufall"/>
@@ -4197,6 +4369,7 @@
     <pl txt="Losowo"/>
     <em_AU txt="Random"/>
     <em_GB txt="Random"/>
+    <id txt="Acak"/>
   </Msg>
   <Msg id="fixed">
     <de txt="Fest"/>
@@ -4220,6 +4393,7 @@
     <zh_TW txt="固定的"/>
     <em_AU txt="Fixed"/>
     <em_GB txt="Fixed"/>
+    <id txt="Baku"/>
   </Msg>
   <Msg id="loc">
     <de txt="Lok"/>
@@ -4242,6 +4416,7 @@
     <zh_TW txt="機關車"/>
     <em_AU txt="Loc"/>
     <em_GB txt="Loc"/>
+    <id txt="Loko"/>
   </Msg>
   <Msg id="waitdetails">
     <de txt="Wartedetails"/>
@@ -4264,6 +4439,7 @@
     <zh_TW txt="細節(等待)"/>
     <em_AU txt="Wait details"/>
     <em_GB txt="Wait details"/>
+    <id txt="Tunggu rincian"/>
   </Msg>
   <Msg id="randommin">
     <de txt="Zufall Min."/>
@@ -4286,6 +4462,7 @@
     <zh_TW txt="亂數最小值"/>
     <em_AU txt="Random Min."/>
     <em_GB txt="Random Min."/>
+    <id txt="Acak Min."/>
   </Msg>
   <Msg id="randommax">
     <de txt="Zufall Max."/>
@@ -4308,6 +4485,7 @@
     <zh_TW txt="亂數最大值"/>
     <em_AU txt="Random Max."/>
     <em_GB txt="Random Max."/>
+    <id txt="Acak Max."/>
   </Msg>
   <Msg id="apply">
     <de txt="Übernehmen"/>
@@ -4332,6 +4510,7 @@
     <zh_TW txt="套用"/>
     <em_AU txt="Apply"/>
     <em_GB txt="Apply"/>
+    <id txt="Terapkan"/>
   </Msg>
   <Msg id="title">
     <de txt="Überschrift"/>
@@ -4356,6 +4535,7 @@
     <zh_TW txt="標題"/>
     <em_AU txt="Title"/>
     <em_GB txt="Title"/>
+    <id txt="Judul"/>
   </Msg>
   <Msg id="host">
     <de txt="Hostname"/>
@@ -4380,6 +4560,7 @@
     <zh_TW txt="主機名稱"/>
     <em_AU txt="Hostname"/>
     <em_GB txt="Hostname"/>
+    <id txt="Nama host"/>
   </Msg>
   <Msg id="port">
     <de txt="Port"/>
@@ -4404,6 +4585,7 @@
     <zh_TW txt="端口"/>
     <em_AU txt="Port"/>
     <em_GB txt="Port"/>
+    <id txt="Port"/>
   </Msg>
   <Msg id="interface">
     <de txt="Schnittstelle"/>
@@ -4428,6 +4610,7 @@
     <zh_TW txt="介面"/>
     <em_AU txt="Interface"/>
     <em_GB txt="Interface"/>
+    <id txt="Antarmuka"/>
   </Msg>
   <Msg id="state">
     <de txt="Status"/>
@@ -4452,6 +4635,7 @@
     <zh_TW txt="狀態"/>
     <em_AU txt="State"/>
     <em_GB txt="State"/>
+    <id txt="Kondisi"/>
   </Msg>
   <Msg id="show">
     <de txt="Anzeigen"/>
@@ -4476,6 +4660,7 @@
     <zh_TW txt="顯示"/>
     <em_AU txt="Show"/>
     <em_GB txt="Show"/>
+    <id txt="Tampilkan"/>
   </Msg>
   <Msg id="iid">
     <de txt="Schnittstellenkennung"/>
@@ -4498,6 +4683,7 @@
     <zh_TW txt="介面編號(ID)"/>
     <em_AU txt="Interface ID"/>
     <em_GB txt="Interface ID"/>
+    <id txt="Antarmuka ID"/>
   </Msg>
   <Msg id="event">
     <de txt="Ereignis"/>
@@ -4521,6 +4707,7 @@
     <ca txt="Esdeveniment"/>
     <em_AU txt="Event"/>
     <em_GB txt="Event"/>
+    <id txt="Peristiwa"/>
   </Msg>
   <Msg id="on_event">
     <de txt="Einschaltereignis"/>
@@ -4542,6 +4729,7 @@
     <ca txt="En activació"/>
     <em_AU txt="On event"/>
     <em_GB txt="On event"/>
+    <id txt="Aktifkan kejadian"/>
   </Msg>
   <Msg id="off_event">
     <de txt="Ausschaltereignis"/>
@@ -4563,6 +4751,7 @@
     <ca txt="En desactivació"/>
     <em_AU txt="Off event"/>
     <em_GB txt="Off event"/>
+    <id txt="Matikan kejadian"/>
   </Msg>
   <Msg id="catnr">
     <de txt="Katalognummer"/>
@@ -4585,6 +4774,7 @@
     <ca txt="referènica"/>
     <em_AU txt="Catalogue number"/>
     <em_GB txt="Catalogue number"/>
+    <id txt="Nomer katalok"/>
   </Msg>
   <Msg id="purchased">
     <de txt="Kaufdatum"/>
@@ -4608,6 +4798,7 @@
     <ca txt="Data d'adquisició"/>
     <em_AU txt="Date of purchase"/>
     <em_GB txt="Date of purchase"/>
+    <id txt="Tanggal pembelian"/>
   </Msg>
   <Msg id="runtime">
     <de txt="Betriebszeit"/>
@@ -4630,6 +4821,7 @@
     <pl txt="Czas trwania"/>
     <em_AU txt="Run time"/>
     <em_GB txt="Run time"/>
+    <id txt="Jalankan waktu"/>
   </Msg>
   <Msg id="protocol">
     <de txt="Protokoll"/>
@@ -4653,6 +4845,7 @@
     <ca txt="Protocol"/>
     <em_AU txt="Protocol"/>
     <em_GB txt="Protocol"/>
+    <id txt="Protokol"/>
   </Msg>
   <Msg id="protocol_version">
     <de txt="Protokollversion"/>
@@ -4676,6 +4869,7 @@
     <ca txt="Versió del protocol"/>
     <em_AU txt="Protocol version"/>
     <em_GB txt="Protocol version"/>
+    <id txt="Versi protokol"/>
   </Msg>
   <Msg id="v_min">
     <de txt="V_Min" tip="Minimale Geschwindigkeit vorwärts"/>
@@ -4699,6 +4893,7 @@
     <ca txt="V mín."/>
     <em_AU txt="V_Min"/>
     <em_GB txt="V_Min"/>
+    <id txt="V_Min"/>
   </Msg>
   <Msg id="v_mid">
     <de txt="V_Mid" tip="Mittlere Geschwindigkeit vorwärts"/>
@@ -4722,6 +4917,7 @@
     <ca txt="V mig"/>
     <em_AU txt="V_Mid"/>
     <em_GB txt="V_Mid"/>
+    <id txt="V_Mid"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -4745,6 +4941,7 @@
     <ca txt="V màx."/>
     <em_AU txt="V_Max"/>
     <em_GB txt="V_Max"/>
+    <id txt="V_Max"/>
   </Msg>
   <Msg id="v_rmin">
     <de txt="V_RMin" tip="Minimale Geschwindigkeit rückwärts"/>
@@ -4767,6 +4964,7 @@
     <ca txt="V Mín. enrere"/>
     <em_AU txt="V_RMin"/>
     <em_GB txt="V_RMin"/>
+    <id txt="V_RMin"/>
   </Msg>
   <Msg id="v_rmid">
     <de txt="V_RMid" tip="Mittlere Geschwindigkeit rückwärts"/>
@@ -4789,6 +4987,7 @@
     <ca txt="V Mid enrere"/>
     <em_AU txt="V_RMid"/>
     <em_GB txt="V_RMid"/>
+    <id txt="V_RMid"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -4811,6 +5010,7 @@
     <ca txt="V màx. enrere"/>
     <em_AU txt="V_RMax"/>
     <em_GB txt="V_RMax"/>
+    <id txt="V_RMax"/>
   </Msg>
   <Msg id="v_step">
     <de txt="V_Step"/>
@@ -4832,6 +5032,7 @@
     <ca txt="Velocitat del pas"/>
     <em_AU txt="V_Step"/>
     <em_GB txt="V_Step"/>
+    <id txt="V_Step"/>
   </Msg>
   <Msg id="v_mode">
     <de txt="V_Modus"/>
@@ -4853,6 +5054,7 @@
     <ca txt="Mode de velocitat"/>
     <em_AU txt="V_Mode"/>
     <em_GB txt="V_Mode"/>
+    <id txt="V_Mode"/>
   </Msg>
   <Msg id="percent">
     <de txt="Prozent"/>
@@ -4875,6 +5077,7 @@
     <ca txt="Percentatge"/>
     <em_AU txt="Percent"/>
     <em_GB txt="Percent"/>
+    <id txt="Persen"/>
   </Msg>
   <Msg id="driverlib">
     <de txt="Lokführerbibliothek"/>
@@ -4896,6 +5099,7 @@
     <ca txt="Llibreria de controladors"/>
     <em_AU txt="Driver library"/>
     <em_GB txt="Driver library"/>
+    <id txt="Pustaka driver"/>
   </Msg>
   <Msg id="placing">
     <de txt="Platzierung"/>
@@ -4916,6 +5120,7 @@
     <nb txt="Plassering"/>
     <em_AU txt="Placing"/>
     <em_GB txt="Placing"/>
+    <id txt="Menempatkan"/>
   </Msg>
   <Msg id="default">
     <de txt="Standard"/>
@@ -4938,6 +5143,7 @@
     <ca txt="Per defecte"/>
     <em_AU txt="Default"/>
     <em_GB txt="Default"/>
+    <id txt="Bawaan"/>
   </Msg>
   <Msg id="fromto">
     <de txt="Von - Nach"/>
@@ -4961,6 +5167,7 @@
     <ca txt="Des de - Fins"/>
     <em_AU txt="From - To"/>
     <em_GB txt="From - To"/>
+    <id txt="Dari - Ke"/>
   </Msg>
   <Msg id="blockwait">
     <de txt="Blockwartezeit"/>
@@ -4982,6 +5189,7 @@
     <ca txt="Temps d'espera al bloc"/>
     <em_AU txt="Block wait time"/>
     <em_GB txt="Block wait time"/>
+    <id txt="Blok tunggu waktu"/>
   </Msg>
   <Msg id="engine">
     <de txt="Antriebsart"/>
@@ -5005,6 +5213,7 @@
     <ca txt="Màquina"/>
     <em_AU txt="Engine"/>
     <em_GB txt="Engine"/>
+    <id txt="Mesin"/>
   </Msg>
   <Msg id="diesel">
     <de txt="Diesel"/>
@@ -5028,6 +5237,7 @@
     <ca txt="Dièsel"/>
     <em_AU txt="Diesel"/>
     <em_GB txt="Diesel"/>
+    <id txt="Diesel"/>
   </Msg>
   <Msg id="steam">
     <de txt="Dampf"/>
@@ -5051,6 +5261,7 @@
     <ca txt="Vapor"/>
     <em_AU txt="Steam"/>
     <em_GB txt="Steam"/>
+    <id txt="Uap"/>
   </Msg>
   <Msg id="electric">
     <de txt="Elektrisch"/>
@@ -5074,6 +5285,7 @@
     <ca txt="Elèctric"/>
     <em_AU txt="Electric"/>
     <em_GB txt="Electric"/>
+    <id txt="Listrik"/>
   </Msg>
   <Msg id="cargo">
     <de txt="Zugart"/>
@@ -5096,6 +5308,7 @@
     <ca txt="Tipus de tren"/>
     <em_AU txt="Train type"/>
     <em_GB txt="Train type"/>
+    <id txt="Tipe kereta"/>
   </Msg>
   <Msg id="passengers">
     <de txt="Personenverkehr"/>
@@ -5119,6 +5332,7 @@
     <ca txt="Passatgers"/>
     <em_AU txt="Passenger"/>
     <em_GB txt="Passenger"/>
+    <id txt="Penumpang"/>
   </Msg>
   <Msg id="mixed">
     <de txt="Mischverkehr"/>
@@ -5141,6 +5355,7 @@
     <ca txt="Mixte"/>
     <em_AU txt="Mixed"/>
     <em_GB txt="Mixed"/>
+    <id txt="Campuran"/>
   </Msg>
   <Msg id="cleaning">
     <de txt="Gleisreinigung"/>
@@ -5162,6 +5377,7 @@
     <ca txt="Vagó de neteja"/>
     <em_AU txt="Cleaning"/>
     <em_GB txt="Cleaning"/>
+    <id txt="Membersihkan"/>
   </Msg>
   <Msg id="ctrlmode">
     <de txt="Bedienung" tip="Gleisbild bedienen."/>
@@ -5183,6 +5399,7 @@
     <ca txt="Mode d'explotació"/>
     <em_AU txt="Operate"/>
     <em_GB txt="Operate"/>
+    <id txt="Operasikan"/>
   </Msg>
   <Msg id="zoom">
     <de txt="Zoom" tip="Gleisbildgröße."/>
@@ -5205,6 +5422,7 @@
     <ca txt="Escala"/>
     <em_AU txt="Zoom"/>
     <em_GB txt="Zoom"/>
+    <id txt="Perbesar"/>
   </Msg>
   <Msg id="trace">
     <de txt="Fehlerprotokoll"/>
@@ -5226,6 +5444,7 @@
     <nb txt="Bane"/>
     <em_AU txt="Trace"/>
     <em_GB txt="Trace"/>
+    <id txt="Lacak"/>
   </Msg>
   <Msg id="tracefile">
     <de txt="Log Datei"/>
@@ -5247,6 +5466,7 @@
     <pl txt="Plik śledzenia"/>
     <em_AU txt="Trace file"/>
     <em_GB txt="Trace file"/>
+    <id txt="Berkas lacak"/>
   </Msg>
   <Msg id="tracelevel">
     <de txt="Log Protokoll Intensität"/>
@@ -5267,6 +5487,7 @@
     <pl txt="Poziom śledzenia"/>
     <em_AU txt="Trace level"/>
     <em_GB txt="Trace level"/>
+    <id txt="Tingkat lacak"/>
   </Msg>
   <Msg id="debug">
     <de txt="Debug"/>
@@ -5289,6 +5510,7 @@
     <ca txt="Depuració"/>
     <em_AU txt="Debug"/>
     <em_GB txt="Debug"/>
+    <id txt="Debug"/>
   </Msg>
   <Msg id="byte">
     <de txt="Byte"/>
@@ -5311,6 +5533,7 @@
     <ca txt="Byte"/>
     <em_AU txt="Byte"/>
     <em_GB txt="Byte"/>
+    <id txt="Byte"/>
   </Msg>
   <Msg id="parse">
     <de txt="Analysieren"/>
@@ -5331,6 +5554,7 @@
     <ca txt="Processa"/>
     <em_AU txt="Parse"/>
     <em_GB txt="Parse"/>
+    <id txt="Urai"/>
   </Msg>
   <Msg id="service">
     <de txt="Dienst"/>
@@ -5352,6 +5576,7 @@
     <nb txt="Tjeneste"/>
     <em_AU txt="Service"/>
     <em_GB txt="Service"/>
+    <id txt="Layanan"/>
   </Msg>
   <Msg id="controller">
     <de txt="Zentrale"/>
@@ -5373,6 +5598,7 @@
     <ca txt="Central"/>
     <em_AU txt="Controller"/>
     <em_GB txt="Controller"/>
+    <id txt="Pengendali"/>
   </Msg>
   <Msg id="libpath">
     <de txt="Bibliotheksverzeichnis"/>
@@ -5395,6 +5621,7 @@
     <pl txt="Ścieżka biblioteki"/>
     <em_AU txt="Library path"/>
     <em_GB txt="Library path"/>
+    <id txt="Alamat pustaka"/>
   </Msg>
   <Msg id="http">
     <de txt="HTTP-Dienste"/>
@@ -5417,6 +5644,7 @@
     <ca txt="Servidor HTTP"/>
     <em_AU txt="HTTP service"/>
     <em_GB txt="HTTP service"/>
+    <id txt="Layanan HTTP"/>
   </Msg>
   <Msg id="enable">
     <de txt="Freigeben"/>
@@ -5439,6 +5667,7 @@
     <ca txt="Habilita"/>
     <em_AU txt="Enable"/>
     <em_GB txt="Enable"/>
+    <id txt="Aktifkan"/>
   </Msg>
   <Msg id="clientport">
     <de txt="Client Port"/>
@@ -5460,6 +5689,7 @@
     <ca txt="Port del client"/>
     <em_AU txt="Client port"/>
     <em_GB txt="Client port"/>
+    <id txt="Port klien"/>
   </Msg>
   <Msg id="maxclientcon">
     <de txt="Max. Anzahl Clients"/>
@@ -5482,6 +5712,7 @@
     <ca txt="Num. màm. de clients"/>
     <em_AU txt="Max. number of clients"/>
     <em_GB txt="Max. number of clients"/>
+    <id txt="Maks. nomer klien"/>
   </Msg>
   <Msg id="switchtime">
     <de txt="Weichenschaltzeit (ms)"/>
@@ -5503,6 +5734,7 @@
     <ca txt="Temps de commutació d'agulles (ms)"/>
     <em_AU txt="Switch time (ms)"/>
     <em_GB txt="Switch time (ms)"/>
+    <id txt="Pindah waktu (ms)"/>
   </Msg>
   <Msg id="minblocklen">
     <de txt="Min. Block - Zuglänge (cm)"/>
@@ -5523,6 +5755,7 @@
     <ca txt="Longitud mínima del bloc - Tren (cm)"/>
     <em_AU txt="Min. block - train length (cm)"/>
     <em_GB txt="Min. block - train length (cm)"/>
+    <id txt="Min. blok - panjang kereta (cm)"/>
   </Msg>
   <Msg id="ignevent">
     <de txt="Ereignisse ignorieren innerhalb (10ms ticks)"/>
@@ -5544,6 +5777,7 @@
     <ca txt="Ignora esdeveniments de (10 ms)"/>
     <em_AU txt="Ignore events within (10ms ticks)"/>
     <em_GB txt="Ignore events within (10ms ticks)"/>
+    <id txt="Abaikan kejadian dalam (10ms detik)"/>
   </Msg>
   <Msg id="bps">
     <de txt="Baudrate"/>
@@ -5565,6 +5799,7 @@
     <ca txt="Velocitat de connexió"/>
     <em_AU txt="Baudrate"/>
     <em_GB txt="Baudrate"/>
+    <id txt="Baudrate"/>
   </Msg>
   <Msg id="sensormodules">
     <de txt="Sensor Module (links, mitte, rechts, größe)"/>
@@ -5586,6 +5821,7 @@
     <ca txt="Mòduls de sensor (esquerra, centre, dreta, mida)"/>
     <em_AU txt="Sensor Modules (left,middle,right,size)"/>
     <em_GB txt="Sensor Modules (left,middle,right,size)"/>
+    <id txt="Modul Sensor (kri,tengah,kanan,ukuran)"/>
   </Msg>
   <Msg id="erddcdports">
     <de txt="Erddcd Ports (cmd,sensor,info)"/>
@@ -5606,6 +5842,7 @@
     <ca txt="Ports Erddcd (cmd, contacte, info)"/>
     <em_AU txt="Erddcd Ports (cmd,sensor,info)"/>
     <em_GB txt="Erddcd Ports (cmd,sensor,info)"/>
+    <id txt="Port Erddcd (cmd,sensor,info)"/>
   </Msg>
   <Msg id="commands">
     <de txt="Befehle"/>
@@ -5628,6 +5865,7 @@
     <ca txt="Ordres"/>
     <em_AU txt="Commands"/>
     <em_GB txt="Commands"/>
+    <id txt="Perintah"/>
   </Msg>
   <Msg id="command">
     <de txt="Befehl"/>
@@ -5650,6 +5888,7 @@
     <ca txt="Ordre"/>
     <em_AU txt="Command"/>
     <em_GB txt="Command"/>
+    <id txt="Perintah"/>
   </Msg>
   <Msg id="fromblock">
     <de txt="Von Block"/>
@@ -5671,6 +5910,7 @@
     <ca txt="Del bloc"/>
     <em_AU txt="From block"/>
     <em_GB txt="From block"/>
+    <id txt="Dari blok"/>
   </Msg>
   <Msg id="toblock">
     <de txt="Nach Block"/>
@@ -5692,6 +5932,7 @@
     <ca txt="Al bloc"/>
     <em_AU txt="To block"/>
     <em_GB txt="To block"/>
+    <id txt="Ke blok"/>
   </Msg>
   <Msg id="outputid">
     <de txt="Ausgangs-Kennung"/>
@@ -5714,6 +5955,7 @@
     <ca txt="ID Sortida"/>
     <em_AU txt="Output ID"/>
     <em_GB txt="Output ID"/>
+    <id txt="Keluaran ID"/>
   </Msg>
   <Msg id="output">
     <de txt="Ausgang"/>
@@ -5736,6 +5978,7 @@
     <ca txt="Sortida"/>
     <em_AU txt="Output"/>
     <em_GB txt="Output"/>
+    <id txt="Keluaran"/>
   </Msg>
   <Msg id="turnoutid">
     <de txt="Weichen-Kennung"/>
@@ -5757,6 +6000,7 @@
     <ca txt="ID d'Agulla"/>
     <em_AU txt="Switch ID"/>
     <em_GB txt="Switch ID"/>
+    <id txt="Ganti ID"/>
   </Msg>
   <Msg id="turnout_left">
     <de txt="Weiche (links)"/>
@@ -5778,6 +6022,7 @@
     <ca txt="Agulla (Esquerra)"/>
     <em_AU txt="Switch (left)"/>
     <em_GB txt="Switch (left)"/>
+    <id txt="Ganti (kiri)"/>
   </Msg>
   <Msg id="right_3way">
     <de txt="Rechts (Dreiweg)"/>
@@ -5799,6 +6044,7 @@
     <ca txt="Dreta (Agulla triple)"/>
     <em_AU txt="Right (3-way)"/>
     <em_GB txt="Right (3-way)"/>
+    <id txt="Kanan (3-jalur)"/>
   </Msg>
   <Msg id="locked">
     <de txt="Belegt durch"/>
@@ -5820,6 +6066,7 @@
     <ca txt="Bloquejat per"/>
     <em_AU txt="Locked by"/>
     <em_GB txt="Locked by"/>
+    <id txt="Kunci oleh"/>
   </Msg>
   <Msg id="invert">
     <de txt="Umkehren"/>
@@ -5840,6 +6087,7 @@
     <nb txt="Inverter"/>
     <em_AU txt="Invert"/>
     <em_GB txt="Invert"/>
+    <id txt="Balik"/>
   </Msg>
   <Msg id="sensor_green">
     <de txt="Rückmeldung Gerade"/>
@@ -5860,6 +6108,7 @@
     <nb txt="Føler rett"/>
     <em_AU txt="Sensor straight"/>
     <em_GB txt="Sensor straight"/>
+    <id txt="Sensor lurus"/>
   </Msg>
   <Msg id="sensor_red">
     <de txt="Rückmeldung Abbiegen"/>
@@ -5881,6 +6130,7 @@
     <ca txt="Agulla amb sensor"/>
     <em_AU txt="Sensor turnout"/>
     <em_GB txt="Sensor turnout"/>
+    <id txt="Sensor putar"/>
   </Msg>
   <Msg id="opposite">
     <de txt="Entgegengesetzt"/>
@@ -5902,6 +6152,7 @@
     <nb txt="Motsatt"/>
     <em_AU txt="Opposite"/>
     <em_GB txt="Opposite"/>
+    <id txt="Lawan"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -5924,6 +6175,7 @@
     <ca txt="Número de via"/>
     <em_AU txt="Track number"/>
     <em_GB txt="Track number"/>
+    <id txt="Nomor trek"/>
   </Msg>
   <Msg id="posfb">
     <de txt="Positionsrückmeldung"/>
@@ -5946,6 +6198,7 @@
     <ca txt="Sensor de posició"/>
     <em_AU txt="Position sensor"/>
     <em_GB txt="Position sensor"/>
+    <id txt="Posisi sensor"/>
   </Msg>
   <Msg id="locfb">
     <de txt="Lokrückmeldung"/>
@@ -5966,6 +6219,7 @@
     <nb txt="Lokomotivføler"/>
     <em_AU txt="Loc sensor"/>
     <em_GB txt="Loc sensor"/>
+    <id txt="Sensor loko"/>
   </Msg>
   <Msg id="turntabletrack">
     <de txt="Drehscheibengleis"/>
@@ -5987,6 +6241,7 @@
     <ca txt="Via de plataforma giratòria"/>
     <em_AU txt="Turntable track"/>
     <em_GB txt="Turntable track"/>
+    <id txt="Jalur dapat-diputar"/>
   </Msg>
   <Msg id="add_track">
     <de txt="Gleis hinzufügen"/>
@@ -6009,6 +6264,7 @@
     <ca txt="Afegeix una via"/>
     <em_AU txt="Add track"/>
     <em_GB txt="Add track"/>
+    <id txt="Tambah jalur"/>
   </Msg>
   <Msg id="del_track">
     <de txt="Gleis entfernen"/>
@@ -6031,6 +6287,7 @@
     <ca txt="Suprimeix la via"/>
     <em_AU txt="Delete track"/>
     <em_GB txt="Delete track"/>
+    <id txt="Hapus trek"/>
   </Msg>
   <Msg id="blockid">
     <de txt="Block-Kennung"/>
@@ -6052,6 +6309,7 @@
     <ca txt="ID del Bloc"/>
     <em_AU txt="Block ID"/>
     <em_GB txt="Block ID"/>
+    <id txt="Blok ID"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
     <de txt="Ziel setzen" tip="Lok stoppt nach erreichen des Ziels."/>
@@ -6075,6 +6333,7 @@
     <ca txt="Fixa destinació"/>
     <em_AU txt="Set destination"/>
     <em_GB txt="Set destination"/>
+    <id txt="Tentukan tujuan"/>
   </Msg>
   <Msg id="enterid">
     <de txt="Kennung eingeben"/>
@@ -6098,6 +6357,7 @@
     <pl txt="Wpisz ID"/>
     <em_AU txt="Enter ID"/>
     <em_GB txt="Enter ID"/>
+    <id txt="Masukkan ID"/>
   </Msg>
   <Msg id="entertext">
     <de txt="Text eingeben"/>
@@ -6121,6 +6381,7 @@
     <pl txt="Wprowadź tekst"/>
     <em_AU txt="Enter text"/>
     <em_GB txt="Enter text"/>
+    <id txt="Masukkan teks"/>
   </Msg>
   <Msg id="fill">
     <de txt="Gleis auffüllen" tip="Füllt Gleise grau auf."/>
@@ -6142,6 +6403,7 @@
     <ca txt="Omple les vies"/>
     <em_AU txt="Fill tracks"/>
     <em_GB txt="Fill tracks"/>
+    <id txt="Isi jalur"/>
   </Msg>
   <Msg id="outoforder">
     <de txt="Außer Betrieb setzen"/>
@@ -6163,6 +6425,7 @@
     <ca txt="Posa fora de servei"/>
     <em_AU txt="Put out of operation"/>
     <em_GB txt="Put out of operation"/>
+    <id txt="Letakkan pada operasi"/>
   </Msg>
   <Msg id="operational">
     <de txt="In Betrieb nehmen"/>
@@ -6184,6 +6447,7 @@
     <ca txt="Posa en funcionament"/>
     <em_AU txt="Put into operation"/>
     <em_GB txt="Put into operation"/>
+    <id txt="Letakkan dalam operasi"/>
   </Msg>
   <Msg id="raster">
     <de txt="Raster einblenden"/>
@@ -6206,6 +6470,7 @@
     <ca txt="Mostra la graella"/>
     <em_AU txt="Show grid"/>
     <em_GB txt="Show grid"/>
+    <id txt="Tampilkan grid"/>
   </Msg>
   <Msg id="locseldlg">
     <de txt="Lok Auswahl"/>
@@ -6228,6 +6493,7 @@
     <ca txt="Selecció de locomotora"/>
     <em_AU txt="Loc Selection"/>
     <em_GB txt="Loc Selection"/>
+    <id txt="Pemilihan Loko"/>
   </Msg>
   <Msg id="dir">
     <de txt="Richtung"/>
@@ -6251,6 +6517,7 @@
     <ca txt="Unidireccional"/>
     <em_AU txt="Direction"/>
     <em_GB txt="Direction"/>
+    <id txt="Arah"/>
   </Msg>
   <Msg id="dirall">
     <de txt="Beide Richtungen"/>
@@ -6274,6 +6541,7 @@
     <ca txt="Ambdós sentits"/>
     <em_AU txt="Both directions"/>
     <em_GB txt="Both directions"/>
+    <id txt="Kedua arah"/>
   </Msg>
   <Msg id="unused">
     <de txt="nicht belegt"/>
@@ -6297,6 +6565,7 @@
     <ca txt="sense usar"/>
     <em_AU txt="unused"/>
     <em_GB txt="unused"/>
+    <id txt="tak terpakai"/>
   </Msg>
   <Msg id="lights">
     <de txt="Beleuchtung"/>
@@ -6320,6 +6589,7 @@
     <ca txt="Llums"/>
     <em_AU txt="Lights"/>
     <em_GB txt="Lights"/>
+    <id txt="Cahaya"/>
   </Msg>
   <Msg id="speedcontroller">
     <de txt="Geschwindigkeitsregler"/>
@@ -6342,6 +6612,7 @@
     <ca txt="Regulador de velocitat"/>
     <em_AU txt="Speed controller"/>
     <em_GB txt="Speed controller"/>
+    <id txt="Kecepatan pengontrol"/>
   </Msg>
   <Msg id="rocrail_help">
     <de txt="http://wiki.rocrail.net/doku.php?id=german"/>
@@ -6362,6 +6633,7 @@
     <ca txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <em_AU txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <em_GB txt="http://wiki.rocrail.net/doku.php?id=english"/>
+    <id txt="http://wiki.rocrail.net/doku.php?id=english"/>
   </Msg>
   <Msg id="Vstart">
     <de txt="Startgeschwindigkeit"/>
@@ -6383,6 +6655,7 @@
     <ca txt="Pas de velocitat d'inici"/>
     <em_AU txt="Start speed step"/>
     <em_GB txt="Start speed step"/>
+    <id txt="Jalankan langkah kecepatan"/>
   </Msg>
   <Msg id="acceleration_rate">
     <de txt="Beschleunigungstufe"/>
@@ -6404,6 +6677,7 @@
     <ca txt="Grau d'acceleració"/>
     <em_AU txt="Acceleration rate"/>
     <em_GB txt="Acceleration rate"/>
+    <id txt="Rata-rata percepatan"/>
   </Msg>
   <Msg id="deceleration_rate">
     <de txt="Bremsstufe"/>
@@ -6425,6 +6699,7 @@
     <nb txt="Nedbremsingsrate"/>
     <em_AU txt="Deceleration rate"/>
     <em_GB txt="Deceleration rate"/>
+    <id txt="Rata-rata perlambatan"/>
   </Msg>
   <Msg id="Vhigh">
     <de txt="Höchstgeschwindigkeit"/>
@@ -6446,6 +6721,7 @@
     <ca txt="Pas de màxima velocitat"/>
     <em_AU txt="Maximum speed step"/>
     <em_GB txt="Maximum speed step"/>
+    <id txt="Langkah kecepatan maksimal"/>
   </Msg>
   <Msg id="Vmid">
     <de txt="Mittlere Geschwindigkeit"/>
@@ -6467,6 +6743,7 @@
     <ca txt="Pas de velocitat mitjana"/>
     <em_AU txt="Middle speed step"/>
     <em_GB txt="Middle speed step"/>
+    <id txt="Langkah kecepatan menengah"/>
   </Msg>
   <Msg id="version">
     <de txt="Version"/>
@@ -6490,6 +6767,7 @@
     <ca txt="Versió"/>
     <em_AU txt="Version"/>
     <em_GB txt="Version"/>
+    <id txt="Versi"/>
   </Msg>
   <Msg id="manufactured_ID">
     <de txt="Herstellerkennung"/>
@@ -6512,6 +6790,7 @@
     <ca txt="ID del Fabricant"/>
     <em_AU txt="Manufacturer ID"/>
     <em_GB txt="Manufacturer ID"/>
+    <id txt="ID Pembuat"/>
   </Msg>
   <Msg id="documentation" dialog="true">
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
@@ -6536,6 +6815,7 @@
     <ca txt="Guia"/>
     <em_AU txt="Guide"/>
     <em_GB txt="Guide"/>
+    <id txt="Pandu"/>
   </Msg>
   <Msg id="fbmodsize">
     <de txt="FB ports"/>
@@ -6557,6 +6837,7 @@
     <ca txt="Ports FB"/>
     <em_AU txt="FB ports"/>
     <em_GB txt="FB ports"/>
+    <id txt="Port FB"/>
   </Msg>
   <Msg id="swmodsize">
     <de txt="SW ports"/>
@@ -6578,6 +6859,7 @@
     <ca txt="Ports Agulles"/>
     <em_AU txt="SW ports"/>
     <em_GB txt="SW ports"/>
+    <id txt="Port SW"/>
   </Msg>
   <Msg id="switchaction">
     <de txt="Weichen stellen"/>
@@ -6599,6 +6881,7 @@
     <ca txt="Acció d'agulla"/>
     <em_AU txt="Switch action"/>
     <em_GB txt="Switch action"/>
+    <id txt="Ganti aksi"/>
   </Msg>
   <Msg id="signalaction">
     <de txt="Signal stellen"/>
@@ -6620,6 +6903,7 @@
     <ca txt="Acció sobre senyal"/>
     <em_AU txt="Signal action"/>
     <em_GB txt="Signal action"/>
+    <id txt="Aksi sinyal"/>
   </Msg>
   <Msg id="streetaction">
     <de txt="Fahrstraße stellen"/>
@@ -6641,6 +6925,7 @@
     <ca txt="Acció sobre l'itinerari"/>
     <em_AU txt="Route action"/>
     <em_GB txt="Route action"/>
+    <id txt="Aksi rute"/>
   </Msg>
   <Msg id="systemaction">
     <de txt="System Aktion"/>
@@ -6661,6 +6946,7 @@
     <nb txt="Systemhandling"/>
     <em_AU txt="System action"/>
     <em_GB txt="System action"/>
+    <id txt="Aksi sistem"/>
   </Msg>
   <Msg id="enableaction">
     <de txt="Aktiviere Aktion"/>
@@ -6682,6 +6968,7 @@
     <ca txt="Activa l'acció"/>
     <em_AU txt="Enable action"/>
     <em_GB txt="Enable action"/>
+    <id txt="Aktifkan aksi"/>
   </Msg>
   <Msg id="action">
     <de txt="Aktion"/>
@@ -6704,6 +6991,7 @@
     <ca txt="Acció"/>
     <em_AU txt="Action"/>
     <em_GB txt="Action"/>
+    <id txt="Aksi"/>
   </Msg>
   <Msg id="mass">
     <de txt="Masse"/>
@@ -6725,6 +7013,7 @@
     <ca txt="Massa"/>
     <em_AU txt="Mass"/>
     <em_GB txt="Mass"/>
+    <id txt="Mass"/>
   </Msg>
   <Msg id="visible">
     <de txt="sichtbar"/>
@@ -6747,6 +7036,7 @@
     <ca txt="visible"/>
     <em_AU txt="visible"/>
     <em_GB txt="visible"/>
+    <id txt="kelihatan"/>
   </Msg>
   <Msg id="module">
     <de txt="Module"/>
@@ -6769,6 +7059,7 @@
     <ca txt="mòdul"/>
     <em_AU txt="module"/>
     <em_GB txt="module"/>
+    <id txt="modul"/>
   </Msg>
   <Msg id="trackdriver">
     <de txt="TD" tip="Analoge Loksteuerung"/>
@@ -6790,6 +7081,7 @@
     <nb txt="TD"/>
     <em_AU txt="TD"/>
     <em_GB txt="TD"/>
+    <id txt="TD"/>
   </Msg>
   <Msg id="sourceblock">
     <de txt="Quellblock"/>
@@ -6810,6 +7102,7 @@
     <nb txt="Kildeblokk"/>
     <em_AU txt="Source block"/>
     <em_GB txt="Source block"/>
+    <id txt="Blok sumber"/>
   </Msg>
   <Msg id="linkedblocks">
     <de txt="Verbundene Blöcke"/>
@@ -6831,6 +7124,7 @@
     <ca txt="Blocs enllaçats"/>
     <em_AU txt="Linked blocks"/>
     <em_GB txt="Linked blocks"/>
+    <id txt="Blok kaitan"/>
   </Msg>
   <Msg id="activate">
     <de txt="Aktivieren"/>
@@ -6853,6 +7147,7 @@
     <ca txt="Activa"/>
     <em_AU txt="Activate"/>
     <em_GB txt="Activate"/>
+    <id txt="Aktifkan"/>
   </Msg>
   <Msg id="signal_type">
     <de txt="Signaltyp"/>
@@ -6875,6 +7170,7 @@
     <ca txt="Tipus de senyal"/>
     <em_AU txt="Signal type"/>
     <em_GB txt="Signal type"/>
+    <id txt="Tipe sinyal"/>
   </Msg>
   <Msg id="distant_signal">
     <de txt="Vorsignal"/>
@@ -6897,6 +7193,7 @@
     <ca txt="Senyal avançada"/>
     <em_AU txt="Distant signal"/>
     <em_GB txt="Distant signal"/>
+    <id txt="Sinyal jauh"/>
   </Msg>
   <Msg id="main_signal">
     <de txt="Hauptsignal"/>
@@ -6919,6 +7216,7 @@
     <ca txt="Senyal principal"/>
     <em_AU txt="Main signal"/>
     <em_GB txt="Main signal"/>
+    <id txt="Sinyal utama"/>
   </Msg>
   <Msg id="shunting_signal">
     <de txt="Sperrsignal"/>
@@ -6940,6 +7238,7 @@
     <ca txt="Senyal de maniobres"/>
     <em_AU txt="Shunting signal"/>
     <em_GB txt="Shunting signal"/>
+    <id txt="Sinyal melangsir"/>
   </Msg>
   <Msg id="signification">
     <de txt="Bedeutung"/>
@@ -6962,6 +7261,7 @@
     <pl txt="Znaczenie"/>
     <em_AU txt="Signification"/>
     <em_GB txt="Signification"/>
+    <id txt="Penunjukan"/>
   </Msg>
   <Msg id="light_signal">
     <de txt="Lichtsignal"/>
@@ -6984,6 +7284,7 @@
     <ca txt="Senyal lluminós"/>
     <em_AU txt="Light signal"/>
     <em_GB txt="Light signal"/>
+    <id txt="Sinyal cahaya"/>
   </Msg>
   <Msg id="semaphore_signal">
     <de txt="Formsignal"/>
@@ -7006,6 +7307,7 @@
     <ca txt="Semàfor"/>
     <em_AU txt="Semaphore signal"/>
     <em_GB txt="Semaphore signal"/>
+    <id txt="Sinyal semapor"/>
   </Msg>
   <Msg id="bus">
     <de txt="Bus"/>
@@ -7027,6 +7329,7 @@
     <ca txt="Bus"/>
     <em_AU txt="Bus"/>
     <em_GB txt="Bus"/>
+    <id txt="Bus"/>
   </Msg>
   <Msg id="free">
     <de txt="frei"/>
@@ -7049,6 +7352,7 @@
     <ca txt="lliure"/>
     <em_AU txt="free"/>
     <em_GB txt="free"/>
+    <id txt="bebas"/>
   </Msg>
   <Msg id="buffer">
     <de txt="Prellbock"/>
@@ -7070,6 +7374,7 @@
     <ca txt="Topall"/>
     <em_AU txt="Buffer"/>
     <em_GB txt="Buffer"/>
+    <id txt="Buffer"/>
   </Msg>
   <Msg id="decoupler">
     <de txt="Entkoppler"/>
@@ -7091,6 +7396,7 @@
     <ca txt="Desenganxador"/>
     <em_AU txt="Decoupler"/>
     <em_GB txt="Decoupler"/>
+    <id txt="Decoupler"/>
   </Msg>
   <Msg id="endpulse">
     <de txt="Endimpuls"/>
@@ -7112,6 +7418,7 @@
     <ca txt="Puls final"/>
     <em_AU txt="endpulse"/>
     <em_GB txt="endpulse"/>
+    <id txt="endpulse"/>
   </Msg>
   <Msg id="ghost">
     <de txt="Geist"/>
@@ -7133,6 +7440,7 @@
     <ca txt="fantasma"/>
     <em_AU txt="ghost"/>
     <em_GB txt="ghost"/>
+    <id txt="hantu"/>
   </Msg>
   <Msg id="text">
     <de txt="Text"/>
@@ -7155,6 +7463,7 @@
     <ca txt="Text"/>
     <em_AU txt="Text"/>
     <em_GB txt="Text"/>
+    <id txt="Teks"/>
   </Msg>
   <Msg id="deprecatedwirering">
     <de txt="Die neuen Events unter dem Fahrstraßenreiter sind vorzuziehen."/>
@@ -7176,6 +7485,7 @@
     <ca txt="Els esdeveniments de la taula de rutes són prioritaris."/>
     <em_AU txt="The new Events found at the Routes tab are prefered."/>
     <em_GB txt="The new Events found at the Routes tab are prefered."/>
+    <id txt="Even baru ditemukan di tab Rute lebih diutamakan."/>
   </Msg>
   <Msg id="notsaved">
     <de txt="Änderungen speichern?"/>
@@ -7198,6 +7508,7 @@
     <ca txt="Desar els canvis abans de sortir?"/>
     <em_AU txt="Save the changes before closing?"/>
     <em_GB txt="Save the changes before closing?"/>
+    <id txt="Simpan perubahan sebelum keluar?"/>
   </Msg>
   <Msg id="scheduletable" dialog="true" key="Ctrl-4">
     <de txt="Fahrpläne" tip="Fahrpläne"/>
@@ -7220,6 +7531,7 @@
     <nb txt="Rutetabell"/>
     <em_AU txt="Schedule table"/>
     <em_GB txt="Schedule table"/>
+    <id txt="Daftar jadwal"/>
   </Msg>
   <Msg id="schedule">
     <de txt="Fahrplan"/>
@@ -7242,6 +7554,7 @@
     <nb txt="Rutetabell"/>
     <em_AU txt="Schedule"/>
     <em_GB txt="Schedule"/>
+    <id txt="Jadwal"/>
   </Msg>
   <Msg id="hour">
     <de txt="Stunde"/>
@@ -7264,6 +7577,7 @@
     <ca txt="hora"/>
     <em_AU txt="hour"/>
     <em_GB txt="hour"/>
+    <id txt="jam"/>
   </Msg>
   <Msg id="minute">
     <de txt="Minute"/>
@@ -7286,6 +7600,7 @@
     <ca txt="minut"/>
     <em_AU txt="minute"/>
     <em_GB txt="minute"/>
+    <id txt="menit"/>
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaftsliste" tip="Ortschaften"/>
@@ -7307,6 +7622,7 @@
     <ca txt="Llocs"/>
     <em_AU txt="Location table"/>
     <em_GB txt="Location table"/>
+    <id txt="Daftar lokasi"/>
   </Msg>
   <Msg id="location">
     <de txt="Ortschaft"/>
@@ -7328,6 +7644,7 @@
     <ca txt="Ubicació"/>
     <em_AU txt="Locality"/>
     <em_GB txt="Locality"/>
+    <id txt="Lokalitas"/>
   </Msg>
   <Msg id="locations">
     <de txt="Ortschaften"/>
@@ -7349,6 +7666,7 @@
     <ca txt="Llocs"/>
     <em_AU txt="Localities"/>
     <em_GB txt="Localities"/>
+    <id txt="Lokal"/>
   </Msg>
   <Msg id="from">
     <de txt="von"/>
@@ -7372,6 +7690,7 @@
     <ca txt="des de"/>
     <em_AU txt="from"/>
     <em_GB txt="from"/>
+    <id txt="dari"/>
   </Msg>
   <Msg id="to">
     <de txt="nach"/>
@@ -7395,6 +7714,7 @@
     <ca txt="cap a"/>
     <em_AU txt="to"/>
     <em_GB txt="to"/>
+    <id txt="ke"/>
   </Msg>
   <Msg id="time">
     <de txt="Zeit"/>
@@ -7417,6 +7737,7 @@
     <ca txt="temps"/>
     <em_AU txt="time"/>
     <em_GB txt="time"/>
+    <id txt="waktu"/>
   </Msg>
   <Msg id="selectschedule" dialog="true">
     <de txt="Fahrplan auswählen"/>
@@ -7439,6 +7760,7 @@
     <nb txt="Velg rutetabell"/>
     <em_AU txt="Select schedule"/>
     <em_GB txt="Select schedule"/>
+    <id txt="Pilih jadwal"/>
   </Msg>
   <Msg id="modify">
     <de txt="Ändern"/>
@@ -7462,6 +7784,7 @@
     <pl txt="modyfikuj"/>
     <em_AU txt="modify"/>
     <em_GB txt="modify"/>
+    <id txt="mengubah"/>
   </Msg>
   <Msg id="refresh">
     <de txt="aktualisieren"/>
@@ -7485,6 +7808,7 @@
     <pl txt="odśwież"/>
     <em_AU txt="refresh"/>
     <em_GB txt="refresh"/>
+    <id txt="segarkan"/>
   </Msg>
   <Msg id="webclient">
     <de txt="WebClient"/>
@@ -7506,6 +7830,7 @@
     <ca txt="Cient Web"/>
     <em_AU txt="WebClient"/>
     <em_GB txt="WebClient"/>
+    <id txt="WebClient"/>
   </Msg>
   <Msg id="gomanual">
     <de txt="Halbautomatisch"/>
@@ -7529,6 +7854,7 @@
     <ca txt="Semiautomàtic"/>
     <em_AU txt="Half automatic"/>
     <em_GB txt="Half automatic"/>
+    <id txt="Semi-otomatis"/>
   </Msg>
   <Msg id="schedule2go">
     <de txt="Starte mit Fahrplan"/>
@@ -7549,6 +7875,7 @@
     <cs txt="Spusť podle harmonogramu"/>
     <nb txt="Schedule and Go"/>
     <pl txt="Schedule and Go"/>
+    <id txt="Pergi sesuai jadwal"/>
   </Msg>
   <Msg id="mic" dialog="true" key="Ctrl-M">
     <de txt="MIC" tip="Mouse Integrated Controller"/>
@@ -7570,6 +7897,7 @@
     <ca txt="MIC"/>
     <em_AU txt="MIC"/>
     <em_GB txt="MIC"/>
+    <id txt="MIC"/>
   </Msg>
   <Msg id="mode">
     <de txt="Modus"/>
@@ -7591,6 +7919,7 @@
     <ca txt="Mode"/>
     <em_AU txt="Mode"/>
     <em_GB txt="Mode"/>
+    <id txt="Mode"/>
   </Msg>
   <Msg id="path">
     <de txt="Dateipfad"/>
@@ -7613,6 +7942,7 @@
     <ca txt="Directori"/>
     <em_AU txt="Path"/>
     <em_GB txt="Path"/>
+    <id txt="Lokasi"/>
   </Msg>
   <Msg id="power">
     <de txt="Fahrstrom"/>
@@ -7635,6 +7965,7 @@
     <ca txt="Presència de voltatge"/>
     <em_AU txt="Power"/>
     <em_GB txt="Power"/>
+    <id txt="Daya"/>
   </Msg>
   <Msg id="repeat">
     <de txt="Wiederholrate"/>
@@ -7657,6 +7988,7 @@
     <ca txt="Repeteix"/>
     <em_AU txt="Repeat"/>
     <em_GB txt="Repeat"/>
+    <id txt="Ulangi"/>
   </Msg>
   <Msg id="use">
     <de txt="Benutze"/>
@@ -7679,6 +8011,7 @@
     <ca txt="Utilitza"/>
     <em_AU txt="Use"/>
     <em_GB txt="Use"/>
+    <id txt="Gunakan"/>
   </Msg>
   <Msg id="ric">
     <de txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -7700,6 +8033,7 @@
     <ca txt="RIC"/>
     <em_AU txt="RIC"/>
     <em_GB txt="RIC"/>
+    <id txt="RIC"/>
   </Msg>
   <Msg id="stoponexit">
     <de txt="Halt nach beenden"/>
@@ -7723,6 +8057,7 @@
     <ca txt="Parar al sortir"/>
     <em_AU txt="Stop on exit"/>
     <em_GB txt="Stop on exit"/>
+    <id txt="Berhenti saat keluar"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
     <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
@@ -7745,6 +8080,7 @@
     <ca txt="Propietats del Rocview"/>
     <em_AU txt="Rocview Properties"/>
     <em_GB txt="Rocview Properties"/>
+    <id txt="Properti Rocview"/>
   </Msg>
   <Msg id="bktext">
     <de txt="Blocktext Skalierung"/>
@@ -7766,6 +8102,7 @@
     <ca txt="Mida del text"/>
     <em_AU txt="Blocktext scaling"/>
     <em_GB txt="Blocktext scaling"/>
+    <id txt="Blocktext scaling"/>
   </Msg>
   <Msg id="gate">
     <de txt="Ausgang"/>
@@ -7787,6 +8124,7 @@
     <ca txt="Porta"/>
     <em_AU txt="Gate"/>
     <em_GB txt="Gate"/>
+    <id txt="Gerbang"/>
   </Msg>
   <Msg id="identifier">
     <de txt="Kennung"/>
@@ -10651,7 +10989,7 @@
     <em_GB txt="Thrown"/>
   </Msg>
   <Msg id="savepos">
-    <de txt="Position speichern"/>
+    <de txt="Sichere Weichenlage"/>
     <en txt="Save position"/>
     <nl txt="Terugstel positie"/>
     <sv txt="Spara position"/>
@@ -14995,6 +15333,7 @@
     <hu txt="Alaphelyzet"/>
     <pt txt="Reiniciar"/>
     <ru txt="Сброс"/>
+    <it txt="Reimposta"/>
   </Msg>
   <Msg id="recentworkspaces">
     <en txt="Recent Workspaces"/>
@@ -15041,20 +15380,31 @@
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
     <de txt="Seriennummer" tip="OpenDCC Seriennummer"/>
+    <cs txt="Sériové číslo"/>
+    <nl txt="Serienummer"/>
+    <ru txt="Серийный номер"/>
   </Msg>
   <Msg id="xpnfbmapping">
     <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
-    <de txt="XpressNet Abfragezuordnung" tip="OpenDCC Beschreibung lesen"/>
+    <de txt="Xpressnet-Rückmeldungen zuordnen" tip="OpenDCC Beschreibung lesen"/>
+    <cs txt="XpresNet mapování spětné"/>
+    <nl txt="xPressNett terugmelder indeling"/>
   </Msg>
   <Msg id="allowfollowup">
     <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
+    <cs txt="Povol sledování"/>
+    <nl txt="Achtervolging toestaan"/>
+    <de txt="Nachfolgende Züge erlauben"/>
   </Msg>
-  
   <Msg id="fiddleyard2go">
     <en txt="Goto FiddleYard"/>
+    <nl txt="Ga naar de FiddleYard"/>
+    <de txt="Fahre Zug in den Fiddleyard"/>
   </Msg>
   <Msg id="polarizationrelais">
     <en txt="Polarisationsrelais"/>
+    <nl txt="Polarisatie relais"/>
+    <de txt="Herzstückpolarisierung"/>
   </Msg>
   <Msg id="allowzerothrottleid">
     <en txt="Allow zero throttle ID"/>

@@ -68,6 +68,7 @@
     <const name="lang_polish" vt="string" val="pl"/>
     <const name="lang_norwegian" vt="string" val="nb"/>
     <const name="lang_chinese" vt="string" val="zh_TW"/>
+    <const name="lang_indonesian" vt="string" val="id"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
