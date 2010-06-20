@@ -5033,3 +5033,9 @@ msgstr ""
 msgid "Allow zero throttle ID"
 msgstr ""
 
+#. 
+# id="pre2in4enter"
+#, c-format
+msgid "Generate pre2in at enter"
+msgstr ""
+

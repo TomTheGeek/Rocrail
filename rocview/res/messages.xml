@@ -15409,4 +15409,7 @@
   <Msg id="allowzerothrottleid">
     <en txt="Allow zero throttle ID"/>
   </Msg>
+  <Msg id="pre2in4enter">
+    <en txt="Generate pre2in at enter"/>
+  </Msg>
 </Messages>
