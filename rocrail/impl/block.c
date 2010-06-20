@@ -428,6 +428,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       else
         LocOp.event( loc, manager, in_event, timing > 0 ? timing:1 );
     }
+    else if(evt == enter_event && wBlock.ispre2in4enter(data->props)) {
+      int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
+      LocOp.event( loc, manager, enter_event, 0 );
+      if( data->indelay > 0 )
+        LocOp.event( loc, manager, pre2in_event, data->indelay );
+      else
+        LocOp.event( loc, manager, pre2in_event, timing > 0 ? timing:1 );
+    }
     else if( evt == pre2in_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       LocOp.event( loc, manager, pre2in_event, timing );

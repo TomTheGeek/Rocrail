@@ -1221,6 +1221,7 @@
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
         <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
+        <var name="pre2in4enter" vt="bool" defval="false" remark="Generate after the enter event a pre2in event to be able to stop at enter."/>
 
         <const name="shortcut" vt="string" val="shortcut"/>
         <const name="shortcutcleared" vt="string" val="shortcutcleared"/>

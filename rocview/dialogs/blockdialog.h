@@ -394,6 +394,7 @@ public:
     wxTextCtrl* m_Timer;
     wxStaticText* m_labTimer2;
     wxTextCtrl* m_Timer2;
+    wxCheckBox* m_Pre2In4Enter;
     wxButton* m_RouteProps;
     wxButton* m_RouteTest;
     wxPanel* m_Interface;
