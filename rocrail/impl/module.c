@@ -231,8 +231,8 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
         }
         else if( wSwitch.getaccnr(item) == 40 ) {
           /* bridge */
-          *iCX = defOri ? 2:4;
-          *iCY = defOri ? 4:2;
+          *iCX = defOri ? 4:2;
+          *iCY = defOri ? 2:4;
         }
       }
     }
