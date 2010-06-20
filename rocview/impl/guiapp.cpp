@@ -118,6 +118,8 @@
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Turntable.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -1108,6 +1110,7 @@ const char* RocGui::findID( bool output, int addr ) {
           }
         }
       }
+
       iONode colist = wPlan.getcolist( m_Model );
       if( colist != NULL ) {
         int cnt = NodeOp.getChildCnt( colist );
@@ -1118,6 +1121,60 @@ const char* RocGui::findID( bool output, int addr ) {
           }
         }
       }
+
+      iONode ttlist = wPlan.getttlist( m_Model );
+      if( ttlist != NULL ) {
+        int cnt = NodeOp.getChildCnt( ttlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode tt = NodeOp.getChild( ttlist, i );
+          if( addr == wTurntable.getport0( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport1( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport2( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport3( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport4( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport5( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+          if( addr == wTurntable.getport6( tt ) ) {
+            return wTurntable.getid( tt );
+          }
+        }
+      }
+
+      iONode seltablist = wPlan.getseltablist( m_Model );
+      if( seltablist != NULL ) {
+        int cnt = NodeOp.getChildCnt( seltablist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode seltab = NodeOp.getChild( seltablist, i );
+          if( addr == wSelTab.getport0( seltab ) ) {
+            return wSelTab.getid( seltab );
+          }
+          if( addr == wSelTab.getport1( seltab ) ) {
+            return wSelTab.getid( seltab );
+          }
+          if( addr == wSelTab.getport2( seltab ) ) {
+            return wSelTab.getid( seltab );
+          }
+          if( addr == wSelTab.getport3( seltab ) ) {
+            return wSelTab.getid( seltab );
+          }
+          if( addr == wSelTab.getport4( seltab ) ) {
+            return wSelTab.getid( seltab );
+          }
+        }
+      }
+
+
     }
     else {
       iONode fblist = wPlan.getfblist( m_Model );
