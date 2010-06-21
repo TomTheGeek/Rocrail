@@ -193,6 +193,8 @@ static int _getEventCode( const char* evtname ) {
     return enter_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) )
     return enter2in_event;
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) )
+    return enter2pre_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) )
     return in_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.exit_event ) )
@@ -428,7 +430,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       else
         LocOp.event( loc, manager, in_event, timing > 0 ? timing:1 );
     }
-    else if(evt == enter_event && wBlock.ispre2in4enter(data->props)) {
+    else if(evt == enter2pre_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       LocOp.event( loc, manager, enter_event, 0 );
       if( data->indelay > 0 )

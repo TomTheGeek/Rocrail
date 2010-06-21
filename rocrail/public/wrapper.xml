@@ -1221,7 +1221,6 @@
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
         <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
-        <var name="pre2in4enter" vt="bool" defval="false" remark="Generate after the enter event a pre2in event to be able to stop at enter."/>
 
         <const name="shortcut" vt="string" val="shortcut"/>
         <const name="shortcutcleared" vt="string" val="shortcutcleared"/>
@@ -1285,11 +1284,12 @@
         <!-- New feedback handling: -->
         <fbevent cardinality="n" wrappername="FeedbackEvent">
           <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
-          <var name="action" vt="string" defval="" range="enter,enter2route,enter2in,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
+          <var name="action" vt="string" defval="" range="enter,enter2route,enter2pre,enter2in,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
           <const name="ident_event" vt="string" val="ident"/>
           <const name="enter_event" vt="string" val="enter"/>
           <const name="enter2route_event" vt="string" val="enter2route"/>
           <const name="enter2in_event" vt="string" val="enter2in"/>
+          <const name="enter2pre_event" vt="string" val="enter2pre"/>
           <const name="in_event" vt="string" val="in"/>
           <const name="shortin_event" vt="string" val="shortin"/>
           <const name="exit_event" vt="string" val="exit"/>
