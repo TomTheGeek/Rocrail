@@ -222,6 +222,7 @@ static Boolean _write( iORCon inst, char* cmdStr ) {
       return False;
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "server connection is broken; try to recover..." );
     /* Try to recover connection: */
     o->sh = SocketOp.inst( o->host, o->port, False, False, False );
     if( o->sh != NULL )
