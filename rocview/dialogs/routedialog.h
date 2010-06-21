@@ -264,6 +264,7 @@ public:
     wxRadioBox* m_PermType;
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
+    wxCheckBox* m_Commuter;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
