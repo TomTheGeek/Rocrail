@@ -264,6 +264,7 @@ static void __cmdReader( void* threadinst ) {
             if(StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) && StrOp.equals( wModelCmd.plan, wCommand.getcmd( nodeA ) ) ) {
               /* inform broadcaster */
               o->disablemonitor = wModelCmd.isdisablemonitor(nodeA);
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "monitoring for client is %s", o->disablemonitor?"off":"on" );
             }
 
             if( !o->readonly ||

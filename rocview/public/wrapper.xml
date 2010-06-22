@@ -84,6 +84,7 @@
     <var name="checkupdates" vt="bool" defval="true"/>
     <var name="tabalign" vt="int" defval="0" range="0-2" remark="0 default, 1 left, 2 multiline"/>
     <var name="restrictedit4auto" vt="bool" defval="true"/>
+    <var name="monitoring" vt="bool" defval="true"/>
     <var name="id" vt="string" defval="rocview" range="*" remark="rocview ID"/>
     <var name="lncvtab" vt="bool" defval="false"/>
     <var name="jssupport" vt="bool" defval="true"/>

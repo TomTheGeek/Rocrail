@@ -410,6 +410,7 @@ static void conThread( void* threadinst ) {
     // Initial connection.
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.plan );
+    wModelCmd.setdisablemonitor(cmd, wGui.ismonitoring(o->m_Ini) ? False:True);
     char* guiid = StrOp.fmt( "%s,%d,%d", wGui.getid(o->m_Ini),
         SocketOp.getMAC(NULL)!=NULL?SocketOp.getMAC(NULL):0, SystemOp.getpid() );
     wModelCmd.setcmdfrom( cmd, guiid );

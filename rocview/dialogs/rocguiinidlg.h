@@ -162,6 +162,7 @@ public:
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_DispatchMode;
     wxCheckBox* m_RestoreLcCtrl;
+    wxCheckBox* m_Monitoring;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
