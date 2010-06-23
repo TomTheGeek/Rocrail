@@ -1426,6 +1426,13 @@
         <var name="ctciid3" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus3" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr3" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <stcondition cardinality="n" wrappername="RouteCondition">
+          <var name="notprevbk" vt="bool" defval="false" remark="Not from previous block X."/>
+          <var name="prevbkid" vt="string" defval="" remark="Previous block ID."/>
+          <var name="chdir" vt="bool" defval="false" remark="Must change direction."/>
+          <var name="commuter" vt="bool" defval="false" remark="Commuter train."/>
+          <var name="type" vt="string" defval="" remark="Train type"/>
+        </stcondition>
       </st>
     </stlist>
     <tklist cardinality="1" remark="Track table" wrappername="TrackList">

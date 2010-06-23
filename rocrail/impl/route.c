@@ -42,6 +42,7 @@
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/RouteCondition.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
@@ -763,7 +764,7 @@ static Boolean __checkSensors( iORoute inst ) {
 }
 
 
-static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
+static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID, Boolean mustChDir ) {
   iORouteData data = Data(inst);
 
   const char* id = LocOp.getId( loc );
@@ -848,6 +849,68 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc ) {
     }
   }
 
+
+  /* Check conditions: Return True if one condition is OK or no conditions are specified. */
+  if( wRoute.getstcondition(data->props) != NULL )
+  {
+    iONode lc = LocOp.base.properties(loc);
+    iONode cond = wRoute.getstcondition(data->props);
+    while( cond != NULL ) {
+      const char* prevbkid = wRouteCondition.getprevbkid(cond);
+      Boolean notprevbk = wRouteCondition.isnotprevbk(cond);
+      const char* traintype = wRouteCondition.gettype(cond);
+
+      if( prevbkid != NULL && StrOp.len(prevbkid) > 0 ) {
+        if( prevBlockID != NULL && StrOp.equals(prevBlockID, prevbkid) && notprevbk ) {
+          cond = wRoute.nextstcondition(data->props, cond);
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                         "Condition does not match: equal blockID(%s), but should be unequal.", prevBlockID );
+          continue;
+        }
+        if( prevBlockID != NULL && !StrOp.equals(prevBlockID, prevbkid) && !notprevbk ) {
+          cond = wRoute.nextstcondition(data->props, cond);
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                         "Condition does not match: unequal blockIDs(%s!=%s), but should be equal.", prevbkid, prevBlockID );
+          continue;
+        }
+      }
+
+      if( wRouteCondition.iscommuter(data->props) && !wLoc.iscommuter(lc) ) {
+        cond = wRoute.nextstcondition(data->props, cond);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Condition does not match: must be a commuter train." );
+        continue;
+      }
+
+      if( wRouteCondition.ischdir(data->props) && !mustChDir ) {
+        cond = wRoute.nextstcondition(data->props, cond);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Condition does not match: must change direction for this route." );
+        continue;
+      }
+
+      if( !wRouteCondition.ischdir(data->props) && mustChDir ) {
+        cond = wRoute.nextstcondition(data->props, cond);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Condition does not match: should not change direction for this route." );
+        continue;
+      }
+
+      if( traintype != NULL && StrOp.len(traintype) > 0 ) {
+        const char* cargo    = wLoc.getcargo(lc);
+        if( !StrOp.equals( traintype, cargo)) {
+          cond = wRoute.nextstcondition(data->props, cond);
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                         "Condition does not match: train type must be %s but is %s.", traintype, cargo );
+          continue;
+        }
+      }
+
+      /**/
+      return True;
+    };
+    return suits_not;
+  }
 
   return True;
 

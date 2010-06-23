@@ -1062,6 +1062,8 @@
     <fun name="hasPermission" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="lc" vt="iOLoc" remark="Loco to check for permission."/>
+      <param name="prevBlockID" vt="const char*" remark="Previous block ID."/>
+      <param name="mustChDir" vt="Boolean" remark="Train must change direction to use this route."/>
     </fun>
     <fun name="isSetCrossingblockSignals" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
