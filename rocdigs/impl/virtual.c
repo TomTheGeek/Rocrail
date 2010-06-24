@@ -418,6 +418,7 @@ static void _shortcut(obj inst) {
 }
 
 
+/* Generate a fload of monitor messages to test the clients. */
 static void __stressRunner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOVirtual virt = (iOVirtual)ThreadOp.getParm( th );
