@@ -80,6 +80,10 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_ROUTES_SENSORS 10335
 #define ID_BUTTON_ROUTES_ADD_SENSOR 10355
 #define ID_BUTTON_ROUTES_DEL_SENSOR 10356
+#define ID_ROUTE_CONDITION_LIST 10387
+#define ID_ROUTE_CONDITION_ADD 10389
+#define ID_ROUTE_CONDITION_MODIFY 10390
+#define ID_ROUTE_CONDITION_DEL 10395
 #define ID_ROUTE_WIRING 10340
 #define SYMBOL_ROUTEDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ROUTEDIALOG_TITLE _("Routes")
@@ -179,6 +183,18 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ROUTES_DEL_SENSOR
     void OnButtonRoutesDelSensorClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_ROUTE_CONDITION_LIST
+    void OnRouteConditionListSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_ADD
+    void OnRouteConditionAddClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_MODIFY
+    void OnRouteConditionModifyClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_DEL
+    void OnRouteConditionDelClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
@@ -265,6 +281,16 @@ public:
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
     wxCheckBox* m_Commuter;
+    wxPanel* m_ConditionsPanel;
+    wxListBox* m_ConditionList;
+    wxCheckBox* m_CondNotFromBlock;
+    wxComboBox* m_CondFromBlock;
+    wxCheckBox* m_CondCommuter;
+    wxCheckBox* m_CondChangeDir;
+    wxComboBox* m_CondType;
+    wxButton* m_CondAdd;
+    wxButton* m_CondModify;
+    wxButton* m_CondDelete;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
