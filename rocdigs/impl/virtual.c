@@ -418,6 +418,28 @@ static void _shortcut(obj inst) {
 }
 
 
+static void __stressRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOVirtual virt = (iOVirtual)ThreadOp.getParm( th );
+  iOVirtualData data = Data(virt);
+  int cnt = 0;
+
+  ThreadOp.sleep(5000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual stress runner started." );
+
+  /* try to get the system status: */
+  while( data->run ) {
+    cnt++;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "stress with monitor messages, run %d", cnt);
+    ThreadOp.sleep(5);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual stress runner ended." );
+}
+
+
+
+
 /* VERSION: */
 static int vmajor = 1;
 static int vminor = 4;
@@ -450,6 +472,12 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->transactor = ThreadOp.inst( data->iid, &__transactor, __Virtual );
   ThreadOp.start( data->transactor );
+
+  if( wDigInt.isstress(ini) ) {
+    iOThread stressRunner = ThreadOp.inst( "virtstress", &__stressRunner, __Virtual );
+    ThreadOp.start( stressRunner );
+  }
+
 
   instCnt++;
   return __Virtual;
