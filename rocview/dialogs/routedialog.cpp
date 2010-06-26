@@ -737,6 +737,11 @@ void RouteDialog::initValues() {
   else
     m_ori->SetSelection( 3 );
   
+
+  // Conditions
+  initCondList();
+
+
   // Wiring
   m_CTCIID1->SetValue( wxString(wRoute.getctciid1(m_Props),wxConvUTF8));
   m_CTCIID2->SetValue( wxString(wRoute.getctciid2(m_Props),wxConvUTF8));
@@ -748,6 +753,32 @@ void RouteDialog::initValues() {
 
 
 }
+
+void RouteDialog::initCondList() {
+  // Conditions
+  m_ConditionList->Clear();
+  iONode cond = wRoute.getstcondition( m_Props );
+  while( cond != NULL ) {
+    // compose the list string
+    char* s = StrOp.fmt("%s %s, type=%s, commuter=%s, change direction=%s, allow schedules=%s",
+            wRouteCondition.isnotprevbk(cond) ? "Not from block":"From block",
+            wRouteCondition.getprevbkid(cond),
+            wRouteCondition.gettype(cond),
+            wRouteCondition.iscommuter(cond) ? "yes":"no",
+            wRouteCondition.ischdir(cond) ? "yes":"no",
+            wRouteCondition.isallowschedules(cond) ? "yes":"no"
+            );
+    m_ConditionList->Append( wxString(s,wxConvUTF8), cond );
+
+    StrOp.free(s);
+
+    cond = wRoute.nextstcondition( m_Props, cond );
+  };
+
+
+}
+
+
 
 void RouteDialog::initCommands() {
   m_Commands->Clear();
@@ -2066,10 +2097,16 @@ void RouteDialog::OnRouteVelocitySelected( wxCommandEvent& event )
 
 void RouteDialog::OnRouteConditionListSelected( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_ROUTE_CONDITION_LIST in RouteDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_ROUTE_CONDITION_LIST in RouteDialog. 
+  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
+  if( cond != NULL ) {
+    m_CondNotFromBlock->SetValue(wRouteCondition.isnotprevbk(cond) ?true:false);
+    m_CondFromBlock->SetValue( wxString(wRouteCondition.getprevbkid(cond),wxConvUTF8));
+    m_CondType->SetStringSelection( wxString(wRouteCondition.gettype(cond),wxConvUTF8));
+
+    m_CondCommuter->SetValue(wRouteCondition.iscommuter(cond) ?true:false);
+    m_CondChangeDir->SetValue(wRouteCondition.ischdir(cond) ?true:false);
+    m_CondAllowSchedules->SetValue(wRouteCondition.isallowschedules(cond) ?true:false);
+  }
 }
 
 
@@ -2088,18 +2125,7 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
   wRouteCondition.setallowschedules(cond, m_CondAllowSchedules->IsChecked() ? True:False);
   NodeOp.addChild( m_Props, cond);
 
-  // compose the list string
-  char* s = StrOp.fmt("%s %s, type=%s, commuter=%s, change direction=%s, allow schedules=%s",
-          wRouteCondition.isnotprevbk(cond) ? "Not from block":"From block",
-          wRouteCondition.getprevbkid(cond),
-          wRouteCondition.gettype(cond),
-          wRouteCondition.iscommuter(cond) ? "yes":"no",
-          wRouteCondition.ischdir(cond) ? "yes":"no",
-          wRouteCondition.isallowschedules(cond) ? "yes":"no"
-          );
-  m_ConditionList->Append( wxString(s,wxConvUTF8), cond );
-
-  StrOp.free(s);
+  initCondList();
 }
 
 
@@ -2109,10 +2135,16 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
 
 void RouteDialog::OnRouteConditionModifyClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_MODIFY in RouteDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_MODIFY in RouteDialog. 
+  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
+  if( cond != NULL ) {
+    wRouteCondition.setnotprevbk(cond, m_CondNotFromBlock->IsChecked() ?True:False);
+    wRouteCondition.setprevbkid(cond, m_CondFromBlock->GetStringSelection().mb_str(wxConvUTF8));
+    wRouteCondition.settype(cond, m_CondType->GetStringSelection().mb_str(wxConvUTF8));
+    wRouteCondition.setcommuter(cond, m_CondCommuter->IsChecked() ? True:False);
+    wRouteCondition.setchdir(cond, m_CondChangeDir->IsChecked() ? True:False);
+    wRouteCondition.setallowschedules(cond, m_CondAllowSchedules->IsChecked() ? True:False);
+    initCondList();
+  }
 }
 
 
@@ -2122,9 +2154,10 @@ void RouteDialog::OnRouteConditionModifyClick( wxCommandEvent& event )
 
 void RouteDialog::OnRouteConditionDelClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_DEL in RouteDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_DEL in RouteDialog. 
+  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
+  if( cond != NULL ) {
+    m_ConditionList->Delete( m_ConditionList->GetSelection() );
+    NodeOp.removeChild( m_Props, cond );
+  }
 }
 

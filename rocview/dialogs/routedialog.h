@@ -122,6 +122,7 @@ class RouteDialog: public wxDialog, public BaseDialog
   void initSwitchCombo();
   void initOutputCombo();
   void initLocPermissionList();
+  void initCondList();
 
 public:
     /// Constructors
