@@ -906,6 +906,13 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         }
       }
 
+      if( !wRouteCondition.isallowschedules(data->props) && (LocOp.getSchedule(loc) != NULL && StrOp.len(LocOp.getSchedule(loc)) > 0) ) {
+        cond = wRoute.nextstcondition(data->props, cond);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Condition does not match: running with schedule is not allowed for this route." );
+        continue;
+      }
+
       /**/
       return True;
     };
