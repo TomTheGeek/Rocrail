@@ -1620,7 +1620,10 @@ void LocoIO::event( iONode event ) {
   if( lowaddr == 80 ) {
     TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "not evaluating the LocoBuffer..." );
   }
-  else if( (m_iLowAddress == lowaddr && m_iSubAddress == subaddr) || m_iLowAddress == -1 || m_iSubAddress == -1 ) {
+  else if( (m_iLowAddress == lowaddr && m_iSubAddress == subaddr) ||
+          m_iLowAddress == -1 || m_iSubAddress == -1 ||
+          (lowaddr == -1 && subaddr == -1) )
+  {
     evaluateEvent( type, lowaddr, subaddr, cv, val, ver );
     if( m_SendedCmd != NULL && cv == wProgram.getcv (m_SendedCmd) ) {
       TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "reply matches the sended request");
@@ -2313,8 +2316,10 @@ void LocoIO::OnButtonEasyReadClick( wxCommandEvent& event )
             m_SV[sv] = val;
             // call event method...
             iONode event = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-            wProgram.setdecaddr(event, m_SV[1]);
-            wProgram.setmodid(event, m_SV[2]);
+            //wProgram.setdecaddr(event, m_SV[1]);
+            //wProgram.setmodid(event, m_SV[2]);
+            wProgram.setdecaddr(event, -1);
+            wProgram.setmodid(event, -1);
             wProgram.setcmd(event, wProgram.lncvget);
             wProgram.setcv (event, sv);
             wProgram.setvalue(event, val);
