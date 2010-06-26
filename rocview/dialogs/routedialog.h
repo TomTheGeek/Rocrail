@@ -285,9 +285,10 @@ public:
     wxListBox* m_ConditionList;
     wxCheckBox* m_CondNotFromBlock;
     wxComboBox* m_CondFromBlock;
+    wxComboBox* m_CondType;
     wxCheckBox* m_CondCommuter;
     wxCheckBox* m_CondChangeDir;
-    wxComboBox* m_CondType;
+    wxCheckBox* m_CondAllowSchedules;
     wxButton* m_CondAdd;
     wxButton* m_CondModify;
     wxButton* m_CondDelete;
