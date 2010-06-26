@@ -1432,6 +1432,7 @@
           <var name="chdir" vt="bool" defval="false" remark="Must change direction."/>
           <var name="commuter" vt="bool" defval="false" remark="Commuter train."/>
           <var name="type" vt="string" defval="" remark="Train type"/>
+          <var name="allowschedules" vt="bool" defval="true" remark="Allow schedules to use this route."/>
         </stcondition>
       </st>
     </stlist>
