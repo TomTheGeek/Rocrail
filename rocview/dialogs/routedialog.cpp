@@ -104,7 +104,7 @@ BEGIN_EVENT_TABLE( RouteDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_ROUTES_DEL_SENSOR, RouteDialog::OnButtonRoutesDelSensorClick )
 
-    EVT_LISTBOX( ID_ROUTE_CONDITION_LIST, RouteDialog::OnRouteConditionListSelected )
+    EVT_GRID_CELL_LEFT_CLICK( RouteDialog::OnCondCellLeftClick )
 
     EVT_BUTTON( ID_ROUTE_CONDITION_ADD, RouteDialog::OnRouteConditionAddClick )
 
@@ -155,6 +155,8 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
   m_TabAlign = wxGetApp().getTabAlign();
   Create(parent, -1, wxGetApp().getMsg("routes") );
   m_Props = p_Props;
+
+  m_CondNr = -1;
 
   initLabels();
 
@@ -301,14 +303,14 @@ void RouteDialog::initLabels() {
   m_labInclude->SetLabel( wxGetApp().getMsg( "include" ) );
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
 
-  m_PermType->SetString( 0, wxGetApp().getMsg( "all" ) );
-  m_PermType->SetString( 1, wxGetApp().getMsg( "none" ) );
-  m_PermType->SetString( 2, wxGetApp().getMsg( "goods" ) );
-  m_PermType->SetString( 3, wxGetApp().getMsg( "local" ) );
-  m_PermType->SetString( 4, wxGetApp().getMsg( "mixed" ) );
-  m_PermType->SetString( 5, wxGetApp().getMsg( "cleaning" ) );
-  m_PermType->SetString( 6, wxGetApp().getMsg( "ice" ) );
-  m_PermType->SetString( 7, wxGetApp().getMsg( "post" ) );
+  m_PermType->SetString( 0, wxGetApp().getMsg( wLoc.cargo_all ) );
+  m_PermType->SetString( 1, wxGetApp().getMsg( wLoc.cargo_none ) );
+  m_PermType->SetString( 2, wxGetApp().getMsg( wLoc.cargo_goods ) );
+  m_PermType->SetString( 3, wxGetApp().getMsg( wLoc.cargo_regional ) );
+  m_PermType->SetString( 4, wxGetApp().getMsg( wLoc.cargo_mixed ) );
+  m_PermType->SetString( 5, wxGetApp().getMsg( wLoc.cargo_cleaning ) );
+  m_PermType->SetString( 6, wxGetApp().getMsg( wLoc.cargo_ice ) );
+  m_PermType->SetString( 7, wxGetApp().getMsg( wLoc.cargo_post ) );
 
   // Initialize sorted Loco Permission List
   initLocPermissionList();
@@ -318,6 +320,21 @@ void RouteDialog::initLabels() {
 
 
   // Conditions
+
+  wxFont* font = new wxFont( m_CondGrid->GetDefaultCellFont() );
+  font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
+  m_CondGrid->SetDefaultCellFont( *font );
+  m_CondGrid->SetColLabelValue(0, wxGetApp().getMsg("not") );
+  m_CondGrid->SetColLabelValue(1, wxGetApp().getMsg("fromblock") );
+  m_CondGrid->SetColLabelValue(2, wxGetApp().getMsg("type") );
+  m_CondGrid->SetColLabelValue(3, wxGetApp().getMsg("commuter") );
+  m_CondGrid->SetColLabelValue(4, wxGetApp().getMsg("changedirection") );
+  m_CondGrid->SetColLabelValue(5, wxGetApp().getMsg("allowschedules") );
+  m_CondGrid->AutoSizeColumns();
+  m_CondGrid->AutoSizeRows();
+
+
+
   m_CondNotFromBlock->SetLabel( wxGetApp().getMsg( "notfromblock" ) );
   m_CondCommuter->SetLabel( wxGetApp().getMsg( "commuter" ) );
   m_CondChangeDir->SetLabel( wxGetApp().getMsg( "changedirection" ) );
@@ -756,24 +773,38 @@ void RouteDialog::initValues() {
 
 void RouteDialog::initCondList() {
   // Conditions
-  m_ConditionList->Clear();
+  m_CondGrid->DeleteRows(0,m_CondGrid->GetNumberRows());
   iONode cond = wRoute.getstcondition( m_Props );
   while( cond != NULL ) {
-    // compose the list string
-    char* s = StrOp.fmt("%s %s, type=%s, commuter=%s, change direction=%s, allow schedules=%s",
-            wRouteCondition.isnotprevbk(cond) ? "Not from block":"From block",
-            wRouteCondition.getprevbkid(cond),
-            wRouteCondition.gettype(cond),
-            wRouteCondition.iscommuter(cond) ? "yes":"no",
-            wRouteCondition.ischdir(cond) ? "yes":"no",
-            wRouteCondition.isallowschedules(cond) ? "yes":"no"
-            );
-    m_ConditionList->Append( wxString(s,wxConvUTF8), cond );
+    m_CondGrid->AppendRows();
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 0,
+        wRouteCondition.isnotprevbk(cond) ? wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 1, wxString(wRouteCondition.getprevbkid(cond),wxConvUTF8 ) );
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 2, wxGetApp().getMsg(wRouteCondition.gettype(cond) ) );
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 3,
+        wRouteCondition.iscommuter(cond) ? wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 4,
+        wRouteCondition.ischdir(cond) ? wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
+    m_CondGrid->SetCellValue(m_CondGrid->GetNumberRows()-1, 5,
+        wRouteCondition.isallowschedules(cond) ? wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
 
-    StrOp.free(s);
-
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 0, true );
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 1, true );
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 2, true );
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 3, true );
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 4, true );
+    m_CondGrid->SetReadOnly( m_CondGrid->GetNumberRows()-1, 5, true );
     cond = wRoute.nextstcondition( m_Props, cond );
   };
+
+  m_CondGrid->AutoSize();
+  m_CondGrid->FitInside();
+  m_CondGrid->UpdateDimensions();
+  m_ConditionsPanel->GetSizer()->Layout();
+
+  m_CondDelete->Enable( false );
+  m_CondModify->Enable( false );
+
 
 
 }
@@ -1009,7 +1040,7 @@ bool RouteDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_MaxLen = NULL;
     m_Commuter = NULL;
     m_ConditionsPanel = NULL;
-    m_ConditionList = NULL;
+    m_CondGrid = NULL;
     m_CondNotFromBlock = NULL;
     m_CondFromBlock = NULL;
     m_CondType = NULL;
@@ -1367,9 +1398,13 @@ void RouteDialog::CreateControls()
     wxBoxSizer* itemBoxSizer81 = new wxBoxSizer(wxVERTICAL);
     m_ConditionsPanel->SetSizer(itemBoxSizer81);
 
-    wxArrayString m_ConditionListStrings;
-    m_ConditionList = new wxListBox( m_ConditionsPanel, ID_ROUTE_CONDITION_LIST, wxDefaultPosition, wxDefaultSize, m_ConditionListStrings, wxLB_SINGLE );
-    itemBoxSizer81->Add(m_ConditionList, 1, wxGROW|wxALL, 5);
+    m_CondGrid = new wxGrid( m_ConditionsPanel, ID_COND_GRID, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
+    m_CondGrid->SetDefaultColSize(50);
+    m_CondGrid->SetDefaultRowSize(25);
+    m_CondGrid->SetColLabelSize(25);
+    m_CondGrid->SetRowLabelSize(0);
+    m_CondGrid->CreateGrid(1, 6, wxGrid::wxGridSelectCells);
+    itemBoxSizer81->Add(m_CondGrid, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer83 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer81->Add(itemFlexGridSizer83, 0, wxGROW|wxALL, 5);
@@ -2092,25 +2127,6 @@ void RouteDialog::OnRouteVelocitySelected( wxCommandEvent& event )
 
 
 /*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_ROUTE_CONDITION_LIST
- */
-
-void RouteDialog::OnRouteConditionListSelected( wxCommandEvent& event )
-{
-  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
-  if( cond != NULL ) {
-    m_CondNotFromBlock->SetValue(wRouteCondition.isnotprevbk(cond) ?true:false);
-    m_CondFromBlock->SetValue( wxString(wRouteCondition.getprevbkid(cond),wxConvUTF8));
-    m_CondType->SetStringSelection( wxString(wRouteCondition.gettype(cond),wxConvUTF8));
-
-    m_CondCommuter->SetValue(wRouteCondition.iscommuter(cond) ?true:false);
-    m_CondChangeDir->SetValue(wRouteCondition.ischdir(cond) ?true:false);
-    m_CondAllowSchedules->SetValue(wRouteCondition.isallowschedules(cond) ?true:false);
-  }
-}
-
-
-/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_CONDITION_ADD
  */
 
@@ -2119,7 +2135,18 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
   iONode cond = NodeOp.inst(wRouteCondition.name(), m_Props, ELEMENT_NODE);
   wRouteCondition.setnotprevbk(cond, m_CondNotFromBlock->IsChecked() ?True:False);
   wRouteCondition.setprevbkid(cond, m_CondFromBlock->GetStringSelection().mb_str(wxConvUTF8));
-  wRouteCondition.settype(cond, m_CondType->GetStringSelection().mb_str(wxConvUTF8));
+  int typesel = m_CondType->GetSelection();
+  switch(typesel) {
+  case 0: wRouteCondition.settype(cond, wLoc.cargo_all); break;
+  case 1: wRouteCondition.settype(cond, wLoc.cargo_none); break;
+  case 2: wRouteCondition.settype(cond, wLoc.cargo_goods); break;
+  case 3: wRouteCondition.settype(cond, wLoc.cargo_regional); break;
+  case 4: wRouteCondition.settype(cond, wLoc.cargo_mixed); break;
+  case 5: wRouteCondition.settype(cond, wLoc.cargo_cleaning); break;
+  case 6: wRouteCondition.settype(cond, wLoc.cargo_ice); break;
+  case 7: wRouteCondition.settype(cond, wLoc.cargo_post); break;
+  }
+
   wRouteCondition.setcommuter(cond, m_CondCommuter->IsChecked() ? True:False);
   wRouteCondition.setchdir(cond, m_CondChangeDir->IsChecked() ? True:False);
   wRouteCondition.setallowschedules(cond, m_CondAllowSchedules->IsChecked() ? True:False);
@@ -2135,11 +2162,32 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
 
 void RouteDialog::OnRouteConditionModifyClick( wxCommandEvent& event )
 {
-  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
+  if( m_Props == NULL )
+    return;
+
+  int idx = 0;
+  iONode cond = wRoute.getstcondition( m_Props );
+  while( cond != NULL ) {
+    if( m_CondNr == idx )
+      break;
+    idx++;
+    cond = wRoute.nextstcondition( m_Props, cond );
+  }
+
   if( cond != NULL ) {
     wRouteCondition.setnotprevbk(cond, m_CondNotFromBlock->IsChecked() ?True:False);
     wRouteCondition.setprevbkid(cond, m_CondFromBlock->GetStringSelection().mb_str(wxConvUTF8));
-    wRouteCondition.settype(cond, m_CondType->GetStringSelection().mb_str(wxConvUTF8));
+    int typesel = m_CondType->GetSelection();
+    switch(typesel) {
+    case 0: wRouteCondition.settype(cond, wLoc.cargo_all); break;
+    case 1: wRouteCondition.settype(cond, wLoc.cargo_none); break;
+    case 2: wRouteCondition.settype(cond, wLoc.cargo_goods); break;
+    case 3: wRouteCondition.settype(cond, wLoc.cargo_regional); break;
+    case 4: wRouteCondition.settype(cond, wLoc.cargo_mixed); break;
+    case 5: wRouteCondition.settype(cond, wLoc.cargo_cleaning); break;
+    case 6: wRouteCondition.settype(cond, wLoc.cargo_ice); break;
+    case 7: wRouteCondition.settype(cond, wLoc.cargo_post); break;
+    }
     wRouteCondition.setcommuter(cond, m_CondCommuter->IsChecked() ? True:False);
     wRouteCondition.setchdir(cond, m_CondChangeDir->IsChecked() ? True:False);
     wRouteCondition.setallowschedules(cond, m_CondAllowSchedules->IsChecked() ? True:False);
@@ -2154,10 +2202,56 @@ void RouteDialog::OnRouteConditionModifyClick( wxCommandEvent& event )
 
 void RouteDialog::OnRouteConditionDelClick( wxCommandEvent& event )
 {
-  iONode cond = (iONode)m_ConditionList->GetClientData( m_ConditionList->GetSelection() );
-  if( cond != NULL ) {
-    m_ConditionList->Delete( m_ConditionList->GetSelection() );
-    NodeOp.removeChild( m_Props, cond );
+  int idx = 0;
+  iONode cond = wRoute.getstcondition( m_Props );
+  while( cond != NULL ) {
+    if( m_CondNr == idx )
+      break;
+    idx++;
+    cond = wRoute.nextstcondition( m_Props, cond );
   }
+
+  if( cond != NULL ) {
+    NodeOp.removeChild( m_Props, cond );
+    NodeOp.base.del( cond );
+    initCondList();
+  }
+
+}
+
+
+/*!
+ * wxEVT_GRID_CELL_LEFT_CLICK event handler for ID_COND_GRID
+ */
+
+void RouteDialog::OnCondCellLeftClick( wxGridEvent& event )
+{
+  m_CondGrid->SelectRow(event.GetRow());
+  m_CondDelete->Enable( true );
+  m_CondModify->Enable( true );
+
+  wxString str = m_CondGrid->GetCellValue( event.GetRow(), 0 );
+  m_CondNr = event.GetRow();
+
+
+  int idx = 0;
+  iONode cond = wRoute.getstcondition( m_Props );
+  while( cond != NULL ) {
+    if( m_CondNr == idx )
+      break;
+    idx++;
+    cond = wRoute.nextstcondition( m_Props, cond );
+  }
+
+  if( cond != NULL ) {
+    m_CondNotFromBlock->SetValue(wRouteCondition.isnotprevbk(cond) ?true:false);
+    m_CondFromBlock->SetValue( wxString(wRouteCondition.getprevbkid(cond),wxConvUTF8));
+    m_CondType->SetStringSelection( wxGetApp().getMsg(wRouteCondition.gettype(cond)));
+
+    m_CondCommuter->SetValue(wRouteCondition.iscommuter(cond) ?true:false);
+    m_CondChangeDir->SetValue(wRouteCondition.ischdir(cond) ?true:false);
+    m_CondAllowSchedules->SetValue(wRouteCondition.isallowschedules(cond) ?true:false);
+  }
+
 }
 
