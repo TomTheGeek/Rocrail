@@ -602,6 +602,40 @@ static Boolean _readFile( iOFile inst, char* buffer, long size ) {
   }
 }
 
+static Boolean _readStr( iOFile inst, char* buffer ) {
+  iOFileData data = Data(inst);
+  data->readed = 0;
+  int idx = 0;
+  int rc = 0;
+  char c = '\0';
+
+  if( data->fh == NULL )
+    return False;
+
+  do {
+    rc = fread( &c, 1, 1, data->fh );
+    if( idx == 0 && rc != 1 )
+      return False;
+
+    if( idx > 0 && rc != 1 )
+      break;
+
+    if(c == '\n')
+      break;
+
+    buffer[idx] = c;
+    idx++;
+    buffer[idx] = '\0';
+  } while(rc == 1);
+
+  data->readed = idx;
+  data->rc = errno;
+  return idx > 0 ? True:False;
+
+}
+
+
+
 
 static Boolean _append( iOFile inst, const char* buffer, long size ) {
   iOFileData data = Data(inst);

@@ -317,6 +317,10 @@
       <param name="buffer" vt="char*" remark="Read buffer."/>
       <param name="size" vt="long" remark="Number of bytes to read."/>
     </fun>
+    <fun name="readStr" vt="Boolean" remark="Reads one line from file; True if successful.">
+      <param name="inst" vt="this" remark="File instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+    </fun>
     <fun name="write" implname="_writeFile" vt="Boolean" remark="Write to file; True if successful.">
       <param name="inst" vt="this" remark="File instance."/>
       <param name="buffer" vt="const char*" remark="Write buffer."/>
