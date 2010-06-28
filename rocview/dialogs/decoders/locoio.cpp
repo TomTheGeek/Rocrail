@@ -1965,7 +1965,7 @@ void LocoIO::evaluatePort( int sv, int val ) {
     // Reporting
     if( m_bReporting ) {
       // TODO: Lookup the Rocrail object ID.
-      const char* id = wxGetApp().findID(easyOutput[port]->GetValue(), easyPort[port]->GetValue());
+      const char* id = wxGetApp().findID(easyOutput[port]->GetValue()|easyPulse[port]->GetValue(), easyPort[port]->GetValue());
       TraceOp.trc("locoio", TRCLEVEL_INFO, __LINE__, 9999, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
           m_iLowAddress, m_iSubAddress, easyPort[port]->GetValue(), port, easyOutput[port]->GetValue()?"output":"input", id );
       FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
