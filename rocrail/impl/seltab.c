@@ -695,6 +695,7 @@ static struct OSelTab* _inst( iONode ini ) {
   data->muxLock = MutexOp.inst( NULL, True );
   data->fbEvents = MapOp.inst();
   data->lockedId = wSelTab.getlocid(ini);
+  data->lockedRouteList = ListOp.inst();
 
   NodeOp.removeAttrByName(data->props, "cmd");
 
@@ -908,10 +909,19 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
   }
 
   if( ok ) {
-    if( data->lockedId == NULL || StrOp.len(data->lockedId) == 0 || StrOp.equals(data->lockedId, id) ) {
+
+    if( data->lockedId != NULL && StrOp.equals(data->lockedId, id) ) {
+      ListOp.add( data->lockedRouteList, (obj)routeid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s] with %d routes, new is [%s].",
+          inst->base.id( inst ), data->lockedId, ListOp.size(data->lockedRouteList), routeid );
+    }
+    else if( data->lockedId == NULL || StrOp.len(data->lockedId) == 0 ) {
       data->lockedId = id;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s].",
-          inst->base.id( inst ), data->lockedId );
+      ListOp.clear( data->lockedRouteList );
+      ListOp.add( data->lockedRouteList, (obj)routeid );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s] with route [%s].",
+          inst->base.id( inst ), data->lockedId, routeid );
 
       /* goto position */
       if( manager ) {
@@ -1053,6 +1063,16 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
       id = data->lockedId;
   }
 
+  if( data->lockedId != NULL && StrOp.equals( id, data->lockedId ) ) {
+    if( ListOp.size( data->lockedRouteList ) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing one of %d lock for [%s]", ListOp.size( data->lockedRouteList ), id );
+      ListOp.remove(data->lockedRouteList, 0);
+    }
+    if( ListOp.size( data->lockedRouteList ) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d locks are still active for [%s]", ListOp.size( data->lockedRouteList ), id );
+      return True;
+    }
+  }
 
   if( data->lockedId == NULL || StrOp.equals( id, data->lockedId ) ) {
     data->lockedId = NULL;
