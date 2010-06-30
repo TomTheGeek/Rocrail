@@ -438,12 +438,31 @@ void Symbol::sizeToScale() {
   int x_off, y_off;
   m_PlanPanel->GetViewStart( &x_off, &y_off );
 
-  int x = wItem.getx( m_Props ) - x_off;
-  int y = wItem.gety( m_Props ) - y_off;
+  int x = 0;
+  int y = 0;
+
+  int mod_x = wItem.getx( m_Props );
+  int mod_y = wItem.gety( m_Props );
 
   int z = wItem.getz( m_Props );
 
   const char* name = NodeOp.getName( m_Props );
+
+  x = NodeOp.getInt(m_Props, "prev_x", mod_x);
+  y = NodeOp.getInt(m_Props, "prev_y", mod_y);
+
+  const char* mod_ori = wItem.getori(m_Props);
+  const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
+  if( wxGetApp().isModView() ) {
+    x = mod_x;
+    y = mod_y;
+    ori = mod_ori;
+  }
+
+  x -= x_off;
+  y -= y_off;
+
+
 
   if( m_Z != z ) {
     Show( false );
@@ -463,7 +482,7 @@ void Symbol::sizeToScale() {
   int cx = 1;
   int cy = 1;
   double c = getSize();
-  m_Renderer->sizeToScale( c, m_Scale, m_Bktext, &cx, &cy );
+  m_Renderer->sizeToScale( c, m_Scale, m_Bktext, &cx, &cy, ori );
   //updateLabel();
 
   SetSize( (int)(x*c), (int)(y*c), (int)(c*cx), (int)(c*cy) );
@@ -602,7 +621,14 @@ void Symbol::OnPaint(wxPaintEvent& event)
     wxPen pen = dc.GetPen();
     pen.SetWidth(1);
     dc.SetPen(pen);
-    m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), status );
+
+    const char* mod_ori = wItem.getori(m_Props);
+    const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
+    if( wxGetApp().isModView() ) {
+      ori = mod_ori;
+    }
+
+    m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
 
     /*
     if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )

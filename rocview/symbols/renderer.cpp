@@ -600,10 +600,9 @@ void SymbolRenderer::setLabel( const char* label, int occupied ) {
 /**
  * prepare symbol size
  */
-void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, int* cx, int* cy ) {
+void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, int* cx, int* cy, const char* ori ) {
   *cx = 1;
   *cy = 1;
-  const char* ori = wItem.getori(m_Props);
   m_fText = bktext;
   m_Scale = scale;
 
@@ -2112,10 +2111,9 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
 /**
  * Draw dispatcher
  */
-void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, int status ) {
+void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
   m_bShowID = showID;
   const char* nodeName = NodeOp.getName( m_Props );
-  const char* ori      = wItem.getori( m_Props );
 
   if( ori == NULL || StrOp.len( ori ) == 0 )
     ori = wItem.west;
