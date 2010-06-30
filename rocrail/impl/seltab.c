@@ -1018,6 +1018,7 @@ static void _reset( iIBlockBase inst ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset selectiontable [%s]", inst->base.id( inst ) );
   SelTabOp.unLock( inst, data->lockedId );
+  ListOp.clear( data->lockedRouteList );
 
   {
     iONode cmd = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
