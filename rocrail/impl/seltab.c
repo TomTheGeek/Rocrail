@@ -683,6 +683,32 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 }
 
 
+static Boolean __hasLockedRouteID(iOList list, const char* routeid) {
+  int cnt = ListOp.size(list);
+  int i = 0;
+  for( i = 0; i < cnt; i++ ) {
+    const char* id = (const char*)ListOp.get( list, i);
+    if( StrOp.equals(routeid, id))
+      return True;
+  }
+  return False;
+}
+
+
+static Boolean __removeLockedRouteID(iOList list, const char* routeid) {
+  int cnt = ListOp.size(list);
+  int i = 0;
+  for( i = 0; i < cnt; i++ ) {
+    const char* id = (const char*)ListOp.get( list, i);
+    if( StrOp.equals(routeid, id)) {
+      ListOp.remove(list, i);
+      return True;
+    }
+  }
+  return False;
+}
+
+
 /**  */
 static struct OSelTab* _inst( iONode ini ) {
   iOSelTab __SelTab = allocMem( sizeof( struct OSelTab ) );
@@ -911,14 +937,17 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
   if( ok ) {
 
     if( data->lockedId != NULL && StrOp.equals(data->lockedId, id) ) {
-      ListOp.add( data->lockedRouteList, (obj)routeid );
+      if( routeid != NULL && StrOp.len(routeid) > 0 && !__hasLockedRouteID(data->lockedRouteList, routeid) )
+        ListOp.add( data->lockedRouteList, (obj)routeid );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s] with %d routes, new is [%s].",
           inst->base.id( inst ), data->lockedId, ListOp.size(data->lockedRouteList), routeid );
     }
     else if( data->lockedId == NULL || StrOp.len(data->lockedId) == 0 ) {
       data->lockedId = id;
       ListOp.clear( data->lockedRouteList );
-      ListOp.add( data->lockedRouteList, (obj)routeid );
+
+      if( routeid != NULL && StrOp.len(routeid) > 0 && !__hasLockedRouteID(data->lockedRouteList, routeid) )
+        ListOp.add( data->lockedRouteList, (obj)routeid );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s] with route [%s].",
           inst->base.id( inst ), data->lockedId, routeid );

@@ -669,7 +669,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         if( !SelTabOp.lock( (iIBlockBase)iseltab,
                 locId,
                 SelTabOp.isManager( iseltab)?o->routeLockId:locId,
-            NULL,
+                wRoute.getid(o->props),
                 False,
                 False,
                 wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) ) {
