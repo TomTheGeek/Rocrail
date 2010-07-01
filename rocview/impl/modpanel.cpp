@@ -96,7 +96,8 @@ void ModPanel::OnPopup(wxMouseEvent& event) {
   menu.Append( ME_ModPlanProperties, wxGetApp().getMenu("properties") );
   menu.AppendSeparator();
   menu.Append( ME_ModPlanBackColor, wxGetApp().getMenu("background") + _T(" ") +wxGetApp().getMenu("color") );
-  PopupMenu(&menu, event.GetX(), event.GetY() );
+  SetFocusIgnoringChildren();
+  PopupMenu(&menu );
 }
 
 
