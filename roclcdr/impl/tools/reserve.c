@@ -192,7 +192,7 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
     }
 
     data->next2Block = NULL;
-    if( data->next2Route != NULL ) {
+    if( data->next2Route != NULL && data->next2Route != data->next1Route ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Route [%s]", data->next2Route->getId(data->next2Route) );
       data->next2Route->unLock(data->next2Route, data->loc->getId(data->loc), NULL, True);
       data->next2Route = NULL;
@@ -209,7 +209,7 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
     }
 
     data->next3Block = NULL;
-    if( data->next3Route != NULL ) {
+    if( data->next3Route != NULL && data->next3Route != data->next1Route ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next3Route [%s]", data->next3Route->getId(data->next3Route) );
       data->next3Route->unLock(data->next3Route, data->loc->getId(data->loc), NULL, True);
       data->next3Route = NULL;
