@@ -1400,6 +1400,12 @@ static const char* _getCurBlock( iOLoc inst ) {
 }
 
 
+static const char* _getDestination( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return data->destBlock;
+}
+
+
 static void _setCarCount( iOLoc inst, int carcount ) {
   iOLocData data = Data(inst);
   wLoc.setnrcars(data->props, carcount);

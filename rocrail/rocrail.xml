@@ -376,6 +376,9 @@
     <fun name="getCurBlock" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getDestination" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="setCurBlock" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="blockid" vt="const char*" remark="Block ID"/>
@@ -657,6 +660,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
     <fun name="getBlock" vt="iIBlockBase">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="BlocID to search for"/>
+    </fun>
+    <fun name="getBlockLocation" vt="const char*">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="BlocID to search for"/>
     </fun>

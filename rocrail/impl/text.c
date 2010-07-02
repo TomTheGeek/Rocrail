@@ -29,6 +29,7 @@
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Text.h"
+#include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 
 static int instCnt = 0;
@@ -127,10 +128,18 @@ static void* __event( void* inst, const void* evt ) {
         wText.getreflcid(node), wText.getrefbkid(node), wText.getformat(node) );
 
     if( lc != NULL && bk != NULL ) {
+      iONode lcprops = LocOp.base.properties(lc);
       char* msg = NULL;
       iOMap map = MapOp.inst();
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
+      MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
+      MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
+      MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
+
+      MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+      MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
+
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       MapOp.base.del(map);
       wText.settext(data->props, msg);
@@ -141,8 +150,11 @@ static void* __event( void* inst, const void* evt ) {
 
     /* Broadcast to clients. */
     {
-      iONode clone = (iONode)NodeOp.base.clone( data->props );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), clone );
+      iONode node = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
+      wText.setid( node, wText.getid( data->props ) );
+      wText.settext( node, wText.gettext( data->props ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast text [%s]", wText.gettext( data->props ));
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
     }
   }
 

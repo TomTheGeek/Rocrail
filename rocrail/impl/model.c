@@ -2745,6 +2745,21 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
 }
 
 
+static const char* _getBlockLocation(iOModel inst, const char* blockid) {
+  iOModelData data = Data(inst);
+  iONode locationlist = wPlan.getlocationlist(ModelOp.getModel(inst));
+  if( locationlist != NULL ) {
+    iONode location = wLocationList.getlocation(locationlist);
+    while(location != NULL) {
+      if( __isInLocation(inst, location, blockid) )
+        return wLocation.getid(location);
+      location = wLocationList.nextlocation(locationlist, location);
+    }
+  }
+  return "";
+}
+
+
 /**
  * Check if the schedule index matches the blockid.
  * If it does not match try to findout at what index it is.
