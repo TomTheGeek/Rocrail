@@ -314,7 +314,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       const char* cmdStr = wAction.getcmd( data->action );
       wText.setcmd( cmd, cmdStr );
       wText.setformat(cmd, wAction.getparam(data->action));
-      wText.setrefid(cmd, wActionCtrl.getlcid(actionctrl));
+      wText.setreflcid(cmd, wActionCtrl.getlcid(actionctrl));
+      wText.setrefbkid(cmd, wActionCtrl.getbkid(actionctrl));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting text [%s] to [%s]", id, cmdStr );
       TextOp.base.event( tx, cmd );
     }

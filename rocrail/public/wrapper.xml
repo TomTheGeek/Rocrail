@@ -842,6 +842,7 @@
     <var name="manual" vt="bool" defval="true" remark="Activate in manual mode."/>
     <var name="deact" vt="string" defval="none" range="none,enter,in" remark="Deactivation event."/>
     <var name="lcid" vt="string" defval="" range="*"/>
+    <var name="bkid" vt="string" defval="" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
       <var name="type" vt="string" defval="" range="co,sw,sg,fb" required="true"/>
@@ -1817,7 +1818,8 @@
         <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="update"/>
         <var name="format" vt="string" defval="NULL" range="*" remark="Format string."/>
-        <var name="refid" vt="string" defval="" range="*" remark="Reference ID."/>
+        <var name="reflcid" vt="string" defval="" range="*" remark="Reference ID."/>
+        <var name="refbkid" vt="string" defval="" range="*" remark="Reference ID."/>
       </tx>
     </txlist>
 

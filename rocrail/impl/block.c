@@ -117,6 +117,7 @@ static void __checkAction( iOBlock inst, const char* state ) {
 
       iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
       if( Action != NULL ) {
+        wActionCtrl.setbkid(action, data->id);
         wActionCtrl.setlcid(action, data->locId);
         ActionOp.exec(Action, action);
       }

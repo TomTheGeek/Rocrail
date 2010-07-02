@@ -17,10 +17,13 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+#include <string.h>
 
 #include "rocrail/impl/text_impl.h"
 
 #include "rocrail/public/app.h"
+#include "rocrail/public/loc.h"
+#include "rocrail/public/block.h"
 
 #include "rocs/public/mem.h"
 
@@ -34,14 +37,83 @@ static const char* __id( void* inst ) {
   return NULL;
 }
 
+
+/**
+ * TODO: Move to string object.
+ * All %varnames% are replaced with the values of the environment variables.
+ * SystemOp.getProperty() is used for getting the value.
+ */
+static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
+  static char delimiter = '%';
+  int strLen = StrOp.len(str);
+  int i = 0;
+  char* tmpStr = StrOp.dup(str);
+  char* resolvedStr = NULL;
+
+  char* startV = NULL;
+  char* endV = NULL;
+
+  do {
+
+    startV = strchr( tmpStr, delimiter );
+
+    if( startV != NULL ) {
+    tmpStr[startV-tmpStr] = '\0';
+    endV = strchr( startV + 1, delimiter );
+    }
+    else {
+      resolvedStr = StrOp.cat( resolvedStr, tmpStr );
+      break;
+    }
+
+
+    if( startV != NULL && endV != NULL ) {
+      /* hit */
+      tmpStr[endV-tmpStr] = '\0';
+      resolvedStr = StrOp.cat( resolvedStr, tmpStr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", startV+1);
+      resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
+      tmpStr = endV + 1;
+      startV = strchr( tmpStr, delimiter );
+
+      /* copy part between the endV and the new startV or end of string */
+      if( startV == NULL )
+        resolvedStr = StrOp.cat( resolvedStr, tmpStr );
+
+    }
+    else {
+      /* end of loop */
+      resolvedStr = StrOp.cat( resolvedStr, tmpStr );
+      startV = NULL;
+    }
+  } while( startV != NULL );
+  return resolvedStr;
+}
+
+
+
+
+
 static void* __event( void* inst, const void* evt ) {
   iOTextData data = Data(inst);
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
-    iOLoc lc = ModelOp.getLoc(AppOp.getModel(), wText.getrefid(node));
+    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node));
+    iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s][%s]", wText.getrefid(node), wText.getformat(node) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s-%s][%s]",
+        wText.getreflcid(node), wText.getrefbkid(node), wText.getformat(node) );
 
+    if( lc != NULL && bk != NULL ) {
+      char* msg = NULL;
+      iOMap map = MapOp.inst();
+      MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
+      MapOp.put(map, "bkid", (obj)bk->base.id(bk));
+      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      MapOp.base.del(map);
+      wText.settext(data->props, msg);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+    }
 
     /* Broadcast to clients. */
     {
