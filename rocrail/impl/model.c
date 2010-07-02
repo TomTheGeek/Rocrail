@@ -2235,6 +2235,12 @@ static iONode _getSchedule( iOModel inst, const char* id ) {
 }
 
 
+static iOText _getText( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  return (iOText)MapOp.get( o->textMap, id );
+}
+
+
 static long _getTime( iOModel inst ) {
   iOModelData o = Data(inst);
   return ControlOp.getTime( AppOp.getControl() );

@@ -24,6 +24,9 @@
 
 #include "rocs/public/mem.h"
 
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/Text.h"
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -32,6 +35,24 @@ static const char* __id( void* inst ) {
 }
 
 static void* __event( void* inst, const void* evt ) {
+  iOTextData data = Data(inst);
+  iONode node = (iONode)evt;
+  if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
+    iOLoc lc = ModelOp.getLoc(AppOp.getModel(), wText.getrefid(node));
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s][%s]", wText.getrefid(node), wText.getformat(node) );
+
+
+    /* Broadcast to clients. */
+    {
+      iONode clone = (iONode)NodeOp.base.clone( data->props );
+      ClntConOp.broadcastEvent( AppOp.getClntCon(), clone );
+    }
+  }
+
+  if( node != NULL )
+    NodeOp.base.del(node);
+
   return NULL;
 }
 

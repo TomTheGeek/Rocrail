@@ -25,6 +25,7 @@
 #include "rocrail/public/model.h"
 #include "rocrail/public/control.h"
 #include "rocrail/public/output.h"
+#include "rocrail/public/text.h"
 #include "rocrail/public/loc.h"
 
 #include "rocs/public/system.h"
@@ -49,6 +50,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Text.h"
 
 static int instCnt = 0;
 
@@ -300,6 +302,21 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wOutput.setcmd( cmd, cmdStr );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output [%s] to [%s]", id, cmdStr );
       OutputOp.cmd( co, cmd, True );
+    }
+  }
+
+  /* text action */
+  else if( StrOp.equals( wText.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getoid( data->action );
+    iOText tx = ModelOp.getText( model, id );
+    if( tx != NULL ) {
+      iONode cmd = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
+      const char* cmdStr = wAction.getcmd( data->action );
+      wText.setcmd( cmd, cmdStr );
+      wText.setformat(cmd, wAction.getparam(data->action));
+      wText.setrefid(cmd, wActionCtrl.getlcid(actionctrl));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting text [%s] to [%s]", id, cmdStr );
+      TextOp.base.event( tx, cmd );
     }
   }
 

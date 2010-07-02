@@ -1815,6 +1815,9 @@
         <var name="cx" vt="int" defval="3" range="1-*"/>
         <var name="cy" vt="int" defval="1" range="1-*"/>
         <var name="pointsize" vt="int" defval="0" range="0-*" remark=""/>
+        <var name="cmd" vt="string" defval="NULL" range="*" remark="update"/>
+        <var name="format" vt="string" defval="NULL" range="*" remark="Format string."/>
+        <var name="refid" vt="string" defval="" range="*" remark="Reference ID."/>
       </tx>
     </txlist>
 
@@ -1854,10 +1857,11 @@
         <const name="route_lock" vt="string" val="lock"/>
         <const name="route_lockset" vt="string" val="lockset"/>
         <const name="route_unlock" vt="string" val="unlock"/>
+        <const name="text_update" vt="string" val="update"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
-        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab" required="true" remark="type [ext] is an external program or script to be executed"/>
+        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab,tx" required="true" remark="type [ext] is an external program or script to be executed"/>
         <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
         <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
@@ -1867,6 +1871,7 @@
         <const name="test" vt="string" val="test" remark="Test this action unconditional."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="on, off or an external program or script to be executed"/>
         <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>
+        <var name="refid" vt="string" defval="" range="*" remark="Reference ID for getting more information for this action."/>
         <var name="actiontime" vt="int" defval="0" unit="s" remark="function activation time"/>
       </ac>
     </aclist>

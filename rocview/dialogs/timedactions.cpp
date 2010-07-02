@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -134,7 +135,7 @@ void TimedActions::initLabels() {
 
     m_ExecCmd->Enable(false);
 
-    // "co,ext,sw,st,sys,sg,bk,lc,fn,tt,seltab"
+    // "co,ext,sw,st,sys,sg,bk,lc,fn,tt,seltab,tx"
     m_Type->Append( wxGetApp().getMsg( "output" ) );
     m_Type->Append( wxGetApp().getMsg( "program" ) );
     m_Type->Append( wxGetApp().getMsg( "turnout" ) );
@@ -146,6 +147,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "function" ) );
     m_Type->Append( wxGetApp().getMsg( "turntable" ) );
     m_Type->Append( wxGetApp().getMsg( "seltab" ) );
+    m_Type->Append( wxGetApp().getMsg( "text" ) );
 }
 
 
@@ -185,6 +187,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(9);
   else if( StrOp.equals( wSelTab.name(), type ) )
     m_Type->SetSelection(10);
+  else if( StrOp.equals( wText.name(), type ) )
+    m_Type->SetSelection(11);
 
   initOutputList();
   initCommands();
@@ -291,6 +295,7 @@ bool TimedActions::evaluate() {
     case 8: wAction.settype(m_Props, wFunCmd.name()); break;
     case 9: wAction.settype(m_Props, wTurntable.name()); break;
     case 10: wAction.settype(m_Props, wSelTab.name()); break;
+    case 11: wAction.settype(m_Props, wText.name()); break;
   }
 
   return true;
@@ -330,6 +335,7 @@ void TimedActions::initOutputList() {
       case 8: colist = wPlan.getlclist( model ); break;
       case 9: colist = wPlan.getttlist( model ); break;
       case 10: colist = wPlan.getseltablist( model ); break;
+      case 11: colist = wPlan.gettxlist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -811,6 +817,9 @@ void TimedActions::initCommands()
       break;
     case 10: // fiddle yard
       m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
+      break;
+    case 11: // text
+      m_Command->Append(wxString( wAction.text_update, wxConvUTF8));
       break;
   }
 
