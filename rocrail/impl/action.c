@@ -326,8 +326,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     /* check for a external action */
     const char* extaction = wAction.getcmd( data->action );
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", extaction );
-      SystemOp.system( extaction, True, False );
+      if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
+        char* s = StrOp.fmt("%s \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+        SystemOp.system( s, True, False );
+        StrOp.free(s);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", extaction );
+        SystemOp.system( extaction, True, False );
+      }
     }
   }
 

@@ -61,6 +61,7 @@ class wxNotebook;
 #define ID_TEXTCTRL_TX_POINT 10161
 #define ID_BUTTON_TEXT_COLOR 10220
 #define ID_BUTTON_TEXT_BACKGROUND 10351
+#define ID_TEXT_ACTIONS 10387
 #define ID_PANEL1 10021
 #define ID_STATICTEXT_TEXT_X 10022
 #define ID_TEXTCTRL_TEXT_X 10023
@@ -123,6 +124,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TEXT_BACKGROUND
     void OnButtonTextBackgroundClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_TEXT_ACTIONS
+    void OnTextActionsClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -166,6 +170,7 @@ public:
     wxCheckBox* m_Italic;
     wxCheckBox* m_Transparent;
     wxRadioBox* m_Ori;
+    wxButton* m_Actions;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;

@@ -29,6 +29,7 @@
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Text.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 static int instCnt = 0;
 
@@ -91,6 +92,27 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
 }
 
 
+static void __checkAction( iOText inst, const char* msg ) {
+  iOTextData data   = Data(inst);
+  iOModel    model  = AppOp.getModel();
+  iONode     action = wText.getactionctrl( data->props );
+
+  /* loop over all actions */
+  while( action != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( action ));
+
+    {
+      iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+      if( Action != NULL ) {
+        wActionCtrl.setparam(action, msg);
+        ActionOp.exec(Action, action);
+      }
+    }
+
+    action = wText.nextactionctrl( data->props, action );
+  }
+}
+
 
 
 
@@ -113,6 +135,8 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.base.del(map);
       wText.settext(data->props, msg);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+      __checkAction(inst, msg);
+      StrOp.free(msg);
     }
 
     /* Broadcast to clients. */
@@ -230,6 +254,21 @@ static void _modify( struct OText* inst ,iONode props ) {
     const char* name  = AttrOp.getName( attr );
     const char* value = AttrOp.getVal( attr );
     NodeOp.setStr( o->props, name, value );
+  }
+
+  /* Leave the childs if no new are comming */
+  if( NodeOp.getChildCnt( props ) > 0 ) {
+    cnt = NodeOp.getChildCnt( o->props );
+    while( cnt > 0 ) {
+      iONode child = NodeOp.getChild( o->props, 0 );
+      NodeOp.removeChild( o->props, child );
+      cnt = NodeOp.getChildCnt( o->props );
+    }
+    cnt = NodeOp.getChildCnt( props );
+    for( i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild( props, i );
+      NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
+    }
   }
 
   /* Broadcast to clients. */
