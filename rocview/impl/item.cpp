@@ -2093,6 +2093,14 @@ void Symbol::modelEvent( iONode node ) {
         id, pending?"true":"false", state, m_locidStr );
 
   }
+  else if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) ) {
+    if( wText.gettext(node) != NULL ) {
+      wText.settext(m_Props, wText.gettext(node) );
+      m_Renderer->setLabel(wText.gettext(node), 0);
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "new text %s", wText.gettext(node) );
+      refresh = true;
+    }
+  }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     const char* state = wBlock.getstate( node );
