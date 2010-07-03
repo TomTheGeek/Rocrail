@@ -26,6 +26,7 @@
 #include "rocrail/public/block.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Text.h"
@@ -74,7 +75,11 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       tmpStr[endV-tmpStr] = '\0';
       resolvedStr = StrOp.cat( resolvedStr, tmpStr );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", startV+1);
-      resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
+      if( MapOp.haskey(map, startV+1) )
+        resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
+      else
+        resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
+
       tmpStr = endV + 1;
       startV = strchr( tmpStr, delimiter );
 
