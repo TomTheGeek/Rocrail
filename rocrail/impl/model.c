@@ -3534,7 +3534,7 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId );
     if( loc != NULL ) {
       wOccupation.setauto( occ, LocOp.isResumeAutomode(loc) );
-      wOccupation.setscid( occ, LocOp.getSchedule(loc) );
+      wOccupation.setscid( occ, LocOp.getSchedule(loc, NULL) );
     }
   }
 

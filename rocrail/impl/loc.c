@@ -1507,12 +1507,15 @@ static void _useSchedule( iOLoc inst, const char* id ) {
   }
 }
 
-static const char* _getSchedule( iOLoc inst ) {
+static const char* _getSchedule( iOLoc inst, int* scidx ) {
   iOLocData data = Data(inst);
   if( data->driver != NULL ) {
     const char* schedule = data->driver->getschedule( data->driver );
-    if( schedule != NULL )
+    if( schedule != NULL ) {
+      if( scidx != NULL )
+        *scidx = data->driver->getScheduleIdx(data->driver);
       return schedule;
+    }
   }
   return "";
 }

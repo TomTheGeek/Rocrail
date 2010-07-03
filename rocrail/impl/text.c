@@ -32,6 +32,7 @@
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/Block.h"
 
 static int instCnt = 0;
 
@@ -134,13 +135,20 @@ static void* __event( void* inst, const void* evt ) {
 
     if( lc != NULL && bk != NULL ) {
       iONode lcprops = LocOp.base.properties(lc);
+      iONode bkprops = bk->base.properties(bk);
       char* msg = NULL;
       iOMap map = MapOp.inst();
+      int scidx = 0;
+      const char* scid = LocOp.getSchedule(lc, &scidx);
+
+      iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
+
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
-      MapOp.put(map, "lcscid", (obj)LocOp.getSchedule(lc));
+      MapOp.put(map, "lcscid", (obj)scid);
       MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
+      MapOp.put(map, "bkdesc", (obj)wBlock.getdesc(bkprops));
       MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
 
       MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
