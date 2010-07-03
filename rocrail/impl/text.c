@@ -138,6 +138,7 @@ static void* __event( void* inst, const void* evt ) {
       iOMap map = MapOp.inst();
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
+      MapOp.put(map, "lcscid", (obj)LocOp.getSchedule(lc));
       MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
