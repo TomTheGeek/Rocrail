@@ -124,23 +124,20 @@ static void __checkAction( iOText inst, const char* msg ) {
 }
 
 
-static void __evaluateSchedule(iONode schedule, int scidx, iOMap map ) {
+static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour, char* min ) {
   if( schedule != NULL ) {
     int idx = 0;
 
     iONode entry = wSchedule.getscentry( schedule );
     while( entry != NULL ) {
       if( idx == scidx ) {
-        char* s = NULL;
         MapOp.put(map, "lcscbk", (obj)wScheduleEntry.getblock( entry ));
         MapOp.put(map, "lcscbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
 
-        s = StrOp.fmt("%d", wScheduleEntry.gethour( entry ));
-        MapOp.put(map, "lcschour", (obj)s);
-        StrOp.free(s);
-        s = StrOp.fmt("%d", wScheduleEntry.getminute( entry ));
-        MapOp.put(map, "lcscmin", (obj)s);
-        StrOp.free(s);
+        StrOp.fmtb(hour, "%d", wScheduleEntry.gethour( entry ));
+        MapOp.put(map, "lcschour", (obj)hour);
+        StrOp.fmtb(min, "%d", wScheduleEntry.getminute( entry ));
+        MapOp.put(map, "lcscmin", (obj)min);
 
         entry = wSchedule.nextscentry( schedule, entry );
         if( entry!= NULL ) {
@@ -179,7 +176,10 @@ static void* __event( void* inst, const void* evt ) {
       iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
       char* scidxStr = StrOp.fmt("%d", scidx);
 
-      __evaluateSchedule(sc, scidx, map);
+      char hour[8];
+      char min[8];
+
+      __evaluateSchedule(sc, scidx, map, hour, min);
 
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
