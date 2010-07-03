@@ -18,6 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <string.h>
+#include <stdlib.h>
 
 #include "rocrail/impl/text_impl.h"
 
@@ -33,6 +34,8 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/ScheduleEntry.h"
 
 static int instCnt = 0;
 
@@ -121,6 +124,38 @@ static void __checkAction( iOText inst, const char* msg ) {
 }
 
 
+static void __evaluateSchedule(iONode schedule, int scidx, iOMap map ) {
+  if( schedule != NULL ) {
+    int idx = 0;
+
+    iONode entry = wSchedule.getscentry( schedule );
+    while( entry != NULL ) {
+      if( idx == scidx ) {
+        char* s = NULL;
+        MapOp.put(map, "lcscbk", (obj)wScheduleEntry.getblock( entry ));
+        MapOp.put(map, "lcscbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+
+        s = StrOp.fmt("%d", wScheduleEntry.gethour( entry ));
+        MapOp.put(map, "lcschour", (obj)s);
+        StrOp.free(s);
+        s = StrOp.fmt("%d", wScheduleEntry.getminute( entry ));
+        MapOp.put(map, "lcscmin", (obj)s);
+        StrOp.free(s);
+
+        entry = wSchedule.nextscentry( schedule, entry );
+        if( entry!= NULL ) {
+          MapOp.put(map, "lcscnextbk", (obj)wScheduleEntry.getblock( entry ));
+          MapOp.put(map, "lcscnextbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+        }
+
+        break;
+      }
+
+      idx++;
+      entry = wSchedule.nextscentry( schedule, entry );
+    }
+  }
+}
 
 
 static void* __event( void* inst, const void* evt ) {
@@ -142,10 +177,14 @@ static void* __event( void* inst, const void* evt ) {
       const char* scid = LocOp.getSchedule(lc, &scidx);
 
       iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
+      char* scidxStr = StrOp.fmt("%d", scidx);
+
+      __evaluateSchedule(sc, scidx, map);
 
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
       MapOp.put(map, "lcscid", (obj)scid);
+      MapOp.put(map, "lcscidx", (obj)scidxStr);
       MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
       MapOp.put(map, "lcimg", (obj)wLoc.getimage(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
@@ -160,6 +199,8 @@ static void* __event( void* inst, const void* evt ) {
       wText.settext(data->props, msg);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
+
+      StrOp.free(scidxStr);
       StrOp.free(msg);
     }
     else if( bk != NULL ) {
