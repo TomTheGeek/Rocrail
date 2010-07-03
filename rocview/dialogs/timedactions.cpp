@@ -451,7 +451,7 @@ void TimedActions::CreateControls()
     m_TimedActions = new wxListBox( itemDialog1, ID_LB_TimedActions, wxDefaultPosition, wxSize(200, 100), m_TimedActionsStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer2->Add(m_TimedActions, 1, wxGROW|wxALL, 5);
 
-    m_ActionID = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_ActionID = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(m_ActionID, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -480,7 +480,7 @@ void TimedActions::CreateControls()
     itemFlexGridSizer6->Add(itemFlexGridSizer12, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
 
     wxArrayString m_CommandStrings;
-    m_Command = new wxComboBox( itemDialog1, ID_COMBOBOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CommandStrings, wxCB_DROPDOWN );
+    m_Command = new wxComboBox( itemDialog1, ID_COMBOBOX, _T(""), wxDefaultPosition, wxDefaultSize, m_CommandStrings, wxCB_DROPDOWN );
     itemFlexGridSizer12->Add(m_Command, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_ExecCmd = new wxButton( itemDialog1, ID_ACTIONS_EXEC_CMD, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -489,7 +489,7 @@ void TimedActions::CreateControls()
     m_labParam = new wxStaticText( itemDialog1, wxID_ANY, _("Parameter"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labParam, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Parameter = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Parameter = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxSize(-1, 80), wxTE_MULTILINE );
     itemFlexGridSizer6->Add(m_Parameter, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labDuration = new wxStaticText( itemDialog1, wxID_ANY, _("Duration"), wxDefaultPosition, wxDefaultSize, 0 );

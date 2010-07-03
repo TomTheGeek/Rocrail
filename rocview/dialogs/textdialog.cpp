@@ -305,18 +305,18 @@ void TextDialog::CreateControls()
     itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ID = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_ID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelText = new wxStaticText( m_GeneralPanel, ID_STATICTEXT_TEXT_TEXT, _("Text"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelText, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Text = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TEXT, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
+    m_Text = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TEXT_TEXT, _T(""), wxDefaultPosition, wxSize(-1, 80), wxTE_MULTILINE );
     itemFlexGridSizer6->Add(m_Text, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labImage = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Image"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labImage, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ImageButton = new wxButton( m_GeneralPanel, ID_BUTTON_TXT_IMAGE, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
+    m_ImageButton = new wxButton( m_GeneralPanel, ID_BUTTON_TXT_IMAGE, _("..."), wxDefaultPosition, wxSize(50, 25), 0 );
     itemFlexGridSizer6->Add(m_ImageButton, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_LabelTip = new wxStaticText( m_GeneralPanel, ID_STATICTEXT_TEXT_TIP, _("Tip"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -336,33 +336,33 @@ void TextDialog::CreateControls()
     m_labColor = new wxStaticText( m_GeneralPanel, wxID_ANY, _("color"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labColor, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Color = new wxButton( m_GeneralPanel, ID_BUTTON_TEXT_COLOR, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
+    m_Color = new wxButton( m_GeneralPanel, ID_BUTTON_TEXT_COLOR, _("..."), wxDefaultPosition, wxSize(50, 25), 0 );
     itemFlexGridSizer17->Add(m_Color, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBackColor = new wxStaticText( m_GeneralPanel, wxID_ANY, _("background"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_labBackColor, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Background = new wxButton( m_GeneralPanel, ID_BUTTON_TEXT_BACKGROUND, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
+    m_Background = new wxButton( m_GeneralPanel, ID_BUTTON_TEXT_BACKGROUND, _("..."), wxDefaultPosition, wxSize(50, 25), 0 );
     itemFlexGridSizer17->Add(m_Background, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_AttributesBox = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Attributes"));
-    wxStaticBoxSizer* itemStaticBoxSizer22 = new wxStaticBoxSizer(m_AttributesBox, wxVERTICAL);
+    wxStaticBoxSizer* itemStaticBoxSizer22 = new wxStaticBoxSizer(m_AttributesBox, wxHORIZONTAL);
     itemBoxSizer5->Add(itemStaticBoxSizer22, 0, wxGROW|wxALL, 5);
     m_Bold = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("bold"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Bold->SetValue(false);
-    itemStaticBoxSizer22->Add(m_Bold, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer22->Add(m_Bold, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Underlined = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("underlined"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Underlined->SetValue(false);
-    itemStaticBoxSizer22->Add(m_Underlined, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer22->Add(m_Underlined, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Italic = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("italic"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Italic->SetValue(false);
-    itemStaticBoxSizer22->Add(m_Italic, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer22->Add(m_Italic, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Transparent = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("transparent"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Transparent->SetValue(false);
-    itemStaticBoxSizer22->Add(m_Transparent, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer22->Add(m_Transparent, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_OriStrings;
     m_OriStrings.Add(_("&default"));

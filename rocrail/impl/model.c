@@ -2731,6 +2731,8 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
     if( location != NULL ) {
       /* iterrate location: */
       iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "check if block [%s] is in location [%s](%s)", blockid, wLocation.getid(location), wLocation.getblocks( location ));
       while( StrTokOp.hasMoreTokens( blocks ) ) {
         const char* locationBlock = StrTokOp.nextToken( blocks );
         if( StrOp.equals( blockid, locationBlock ) ) {
@@ -2750,8 +2752,9 @@ static const char* _getBlockLocation(iOModel inst, const char* blockid) {
   iONode locationlist = wPlan.getlocationlist(ModelOp.getModel(inst));
   if( locationlist != NULL ) {
     iONode location = wLocationList.getlocation(locationlist);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find location for block [%s]", blockid);
     while(location != NULL) {
-      if( __isInLocation(inst, location, blockid) )
+      if( __isInLocation(inst, wLocation.getid(location), blockid) )
         return wLocation.getid(location);
       location = wLocationList.nextlocation(locationlist, location);
     }

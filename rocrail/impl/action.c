@@ -325,16 +325,27 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   else if( StrOp.equals( "ext", wAction.gettype( data->action ) ) ) {
     /* check for a external action */
     const char* extaction = wAction.getcmd( data->action );
+    const char* extparam  = wAction.getparam( data->action );
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
       if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
-        char* s = StrOp.fmt("%s \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
+        char* s = NULL;
+        if( extparam != NULL && StrOp.len(extparam) > 0 )
+          s = StrOp.fmt("%s %s \"%s\"", extaction, extparam, wActionCtrl.getparam(actionctrl) );
+        else
+          s = StrOp.fmt("%s \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
         SystemOp.system( s, True, False );
         StrOp.free(s);
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", extaction );
-        SystemOp.system( extaction, True, False );
+        char* s = NULL;
+        if( extparam != NULL && StrOp.len(extparam) > 0 )
+          s = StrOp.fmt("%s %s", extaction, extparam );
+        else
+          s = StrOp.fmt("%s", extaction );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+        SystemOp.system( s, True, False );
+        StrOp.free(s);
       }
     }
   }
