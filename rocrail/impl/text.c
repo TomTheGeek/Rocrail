@@ -81,7 +81,7 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", startV+1);
       if( map != NULL && MapOp.haskey(map, startV+1) )
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
-      else
+      else if( SystemOp.getProperty(startV+1) != NULL )
         resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
 
       tmpStr = endV + 1;
