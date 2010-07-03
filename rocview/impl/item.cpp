@@ -453,7 +453,7 @@ void Symbol::sizeToScale() {
 
   const char* mod_ori = wItem.getori(m_Props);
   const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
-  if( wxGetApp().isModView() ) {
+  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
     x = mod_x;
     y = mod_y;
     ori = mod_ori;
