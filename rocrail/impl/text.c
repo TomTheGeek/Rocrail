@@ -75,7 +75,7 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       tmpStr[endV-tmpStr] = '\0';
       resolvedStr = StrOp.cat( resolvedStr, tmpStr );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", startV+1);
-      if( MapOp.haskey(map, startV+1) )
+      if( map != NULL && MapOp.haskey(map, startV+1) )
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
       else
         resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
@@ -152,6 +152,28 @@ static void* __event( void* inst, const void* evt ) {
       __checkAction(inst, msg);
       StrOp.free(msg);
     }
+    else if( bk != NULL ) {
+      char* msg = NULL;
+      iOMap map = MapOp.inst();
+      MapOp.put(map, "bkid", (obj)bk->base.id(bk));
+      MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+
+      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      MapOp.base.del(map);
+      wText.settext(data->props, msg);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+      __checkAction(inst, msg);
+      StrOp.free(msg);
+    }
+    else {
+      char* msg = NULL;
+      msg = _replaceAllSubstitutions(wText.getformat(node), NULL);
+      wText.settext(data->props, msg);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+      __checkAction(inst, msg);
+      StrOp.free(msg);
+    }
+
 
     /* Broadcast to clients. */
     {
