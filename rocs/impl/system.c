@@ -352,7 +352,7 @@ static int _systemExec( const char* cmdStr, Boolean async, Boolean minimized ) {
     execParam param = allocMem( sizeof( struct __execParam) );
     param->cmdStr = StrOp.dup(cmdStr);
     param->minimized = minimized;
-    iOThread th = ThreadOp.inst( name, __execRunner, (obj)param );
+    iOThread th = ThreadOp.inst( NULL, __execRunner, (obj)param );
     ThreadOp.start( th );
     return 0;
   }
