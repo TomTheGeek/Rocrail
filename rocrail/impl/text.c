@@ -129,6 +129,7 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
     int idx = 0;
 
     iONode entry = wSchedule.getscentry( schedule );
+    iONode preventry = NULL;
     while( entry != NULL ) {
       if( idx == scidx ) {
         MapOp.put(map, "lcscbk", (obj)wScheduleEntry.getblock( entry ));
@@ -145,9 +146,14 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
           MapOp.put(map, "lcscnextbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
         }
 
+        if( preventry != NULL ) {
+          MapOp.put(map, "lcscprevbk", (obj)wScheduleEntry.getblock( preventry ));
+          MapOp.put(map, "lcscprevbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )));
+        }
+
         break;
       }
-
+      preventry = entry;
       idx++;
       entry = wSchedule.nextscentry( schedule, entry );
     }
