@@ -168,6 +168,7 @@ static void* __event( void* inst, const void* evt ) {
     if( lc != NULL && bk != NULL ) {
       iONode lcprops = LocOp.base.properties(lc);
       iONode bkprops = bk->base.properties(bk);
+      iIBlockBase frombk = ModelOp.getBlock(AppOp.getModel(), bk->getFromBlockId(bk));
       char* msg = NULL;
       iOMap map = MapOp.inst();
       int scidx = 0;
@@ -190,6 +191,11 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkdesc", (obj)wBlock.getdesc(bkprops));
       MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
+
+      if( frombk != NULL ) {
+        iONode frombkprops = frombk->base.properties(frombk);
+        MapOp.put(map, "frombkdesc", (obj)wBlock.getdesc(frombkprops));
+      }
 
       MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
       MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
