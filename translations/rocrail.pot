@@ -5034,8 +5034,38 @@ msgid "Allow zero throttle ID"
 msgstr ""
 
 #. 
-# id="pre2in4enter"
+# id="monitoring"
 #, c-format
-msgid "Generate pre2in at enter"
+msgid "Monitoring"
+msgstr ""
+
+#. 
+# id="notfromblock"
+#, c-format
+msgid "Not from block"
+msgstr ""
+
+#. 
+# id="allowschedules"
+#, c-format
+msgid "Allow schedules"
+msgstr ""
+
+#. 
+# id="not"
+#, c-format
+msgid "Not"
+msgstr ""
+
+#. 
+# id="speak4block"
+#, c-format
+msgid "Speak for block"
+msgstr ""
+
+#. 
+# id="speakcmd"
+#, c-format
+msgid "Speak command"
 msgstr ""
 

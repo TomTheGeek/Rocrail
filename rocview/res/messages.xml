@@ -15421,4 +15421,10 @@
   <Msg id="not">
     <en txt="Not"/>
   </Msg>
+  <Msg id="speak4block">
+    <en txt="Speak for block"/>
+  </Msg>
+  <Msg id="speakcmd">
+    <en txt="Speak command"/>
+  </Msg>
 </Messages>
