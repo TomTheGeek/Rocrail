@@ -130,6 +130,8 @@ private:
   iOList m_sclist;
   iOList m_fylist;
 
+  void checkSpeakAction(iONode node);
+
   DECLARE_EVENT_TABLE()
 };
 

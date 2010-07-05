@@ -186,6 +186,10 @@ public:
     wxSpinCtrl* m_CXMod;
     wxStaticText* m_labCYMod;
     wxSpinCtrl* m_CYMod;
+    wxStaticText* m_labSpeak4Block;
+    wxTextCtrl* m_Speak4Block;
+    wxStaticText* m_labSpeakCmd;
+    wxTextCtrl* m_SpeakCmd;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

@@ -44,6 +44,7 @@
 #include "rocs/public/strtok.h"
 #include "rocs/public/trace.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/system.h"
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 #include "rocview/public/item.h"
@@ -343,6 +344,30 @@ void Symbol::setPanel(PlanPanel* panel){
   Reparent(panel);
   sizeToScale();
 
+}
+
+
+void Symbol::checkSpeakAction(iONode node) {
+  const char* bklist = wGui.getspeak4block(wxGetApp().getIni());
+
+  iOStrTok tok = StrTokOp.inst( bklist, ',' );
+  int idx = 0;
+  const char* bk = StrTokOp.nextToken(tok);
+
+  while( bk != NULL ) {
+    if( StrOp.equals( "*", bk ) || StrOp.equals( wText.getblock(node), bk ) ) {
+      const char* speak = wGui.getspeakcmd(wxGetApp().getIni());
+      if( speak != NULL && StrOp.len( speak ) > 0 ) {
+        char* s = StrOp.fmt("%s \"%s\"", speak, wText.gettext(node) );
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+        SystemOp.system( s, True, False );
+        StrOp.free(s);
+      }
+      break;
+    }
+    bk = StrTokOp.nextToken(tok);
+  };
+  StrTokOp.base.del( tok );
 }
 
 
@@ -2099,6 +2124,7 @@ void Symbol::modelEvent( iONode node ) {
       m_Renderer->setLabel(wText.gettext(node), 0);
       TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "new text %s", wText.gettext(node) );
       refresh = true;
+      checkSpeakAction(node);
     }
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
