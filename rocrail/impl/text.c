@@ -209,10 +209,15 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
-      MapOp.base.del(map);
       wText.settext(data->props, msg );
       wText.setblock(data->props, bk->base.id(bk) );
-      wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
+      if( MapOp.haskey(map, "frombkloc") )
+        wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
+      else
+        wText.setlocation(data->props, "" );
+
+      MapOp.base.del(map);
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
 
@@ -226,10 +231,13 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
-      MapOp.base.del(map);
       wText.setblock(data->props, bk->base.id(bk) );
-      wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
+      if( MapOp.haskey(map, "frombkloc") )
+        wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
+      else
+        wText.setlocation(data->props, "" );
       wText.settext(data->props, msg);
+      MapOp.base.del(map);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
       StrOp.free(msg);
@@ -248,6 +256,8 @@ static void* __event( void* inst, const void* evt ) {
     {
       iONode node = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
       wText.setid( node, wText.getid( data->props ) );
+      wText.setblock( node, wText.getblock( data->props ) );
+      wText.setlocation( node, wText.getlocation( data->props ) );
       wText.settext( node, wText.gettext( data->props ) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast text [%s]", wText.gettext( data->props ));
       ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
