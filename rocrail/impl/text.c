@@ -193,6 +193,7 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "lcscid", (obj)scid);
       MapOp.put(map, "lcscidx", (obj)scidxStr);
       MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
+      MapOp.put(map, "lcdesc", (obj)wLoc.getdesc(lcprops));
       MapOp.put(map, "lcimg", (obj)wLoc.getimage(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkdesc", (obj)wBlock.getdesc(bkprops));
