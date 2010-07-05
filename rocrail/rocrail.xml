@@ -510,6 +510,9 @@
     <fun name="getCarCount" vt="int">
       <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
+    <fun name="depart" vt="void">
+      <param name="inst" vt="this" remark="Loco instance"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>

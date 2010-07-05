@@ -106,6 +106,9 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OStage ----- */
 
+static void _depart(iIBlockBase inst) {
+}
+
 
 /**  */
 static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {

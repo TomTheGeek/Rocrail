@@ -384,6 +384,18 @@ static int __getVfromRaw(void* inst, iONode evtNode) {
 }
 
 
+static void _depart(iOLoc inst) {
+  iOLocData data = Data(inst);
+
+  if( data->curBlock != NULL ) {
+    iIBlockBase curblock  = ModelOp.getBlock( AppOp.getModel(), data->curBlock );
+    if( curblock != NULL ) {
+      curblock->depart(curblock);
+    }
+  }
+}
+
+
 static void* __event( void* inst, const void* evt ) {
   iOLocData data = Data(inst);
   iONode evtNode = (iONode)evt;

@@ -1800,6 +1800,8 @@
         <var name="text" vt="string" defval="" range="*" required="true" remark="Text or Image (if ending on .png) to be displayed."/>
         <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the table"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="block" vt="string" defval="" range="*" remark="Block ID from update event."/>
+        <var name="location" vt="string" defval="" range="*" remark="Location from update event."/>
         <var name="red" vt="int" defval="0" range="0-255"/>
         <var name="green" vt="int" defval="0" range="0-255"/>
         <var name="blue" vt="int" defval="0" range="0-255"/>

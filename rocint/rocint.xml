@@ -297,6 +297,9 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
     </fun>
+    <fun name="depart" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
 

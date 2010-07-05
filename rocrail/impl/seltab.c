@@ -127,6 +127,9 @@ static void* __properties( void* inst ) {
 /** ----- OSelTab ----- */
 
 
+static void _depart(iIBlockBase inst) {
+}
+
 static iIBlockBase __getActiveTrackBlock(iIBlockBase inst, const char* msg ) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();

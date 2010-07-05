@@ -104,6 +104,11 @@ static int __count(void) {
 /*
  ***** _Public functions.
  */
+
+static void _depart(iIBlockBase inst) {
+}
+
+
 /**
  * Checks for property changes.
  * todo: Range checking?

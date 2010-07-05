@@ -197,6 +197,8 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkdesc", (obj)wBlock.getdesc(bkprops));
       MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
+      MapOp.put(map, "lcdir", (obj)(LocOp.getDir(lc)?"fwd":"rev" ) );
+      MapOp.put(map, "lcplacing", (obj)(wLoc.isplacing(lcprops)?"norm":"swap" ) );
 
       if( frombk != NULL ) {
         iONode frombkprops = frombk->base.properties(frombk);
@@ -208,7 +210,9 @@ static void* __event( void* inst, const void* evt ) {
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       MapOp.base.del(map);
-      wText.settext(data->props, msg);
+      wText.settext(data->props, msg );
+      wText.setblock(data->props, bk->base.id(bk) );
+      wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
 
@@ -223,6 +227,8 @@ static void* __event( void* inst, const void* evt ) {
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       MapOp.base.del(map);
+      wText.setblock(data->props, bk->base.id(bk) );
+      wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
       wText.settext(data->props, msg);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);

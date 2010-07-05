@@ -54,6 +54,8 @@ void statusCheckRoute( iILcDriverInt inst ) {
     Boolean dir = data->next1Route->getDirection( data->next1Route,
         data->loc->getCurBlock( data->loc ), &data->next1RouteFromTo );
 
+    data->loc->depart(data->loc);
+
     semaphore = setSignals((iOLcDriver)inst, False);
 
 

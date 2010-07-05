@@ -1289,7 +1289,6 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       wBlock.setreserved( nodeD, True );
       wBlock.setlocid( nodeD, id );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-      __checkAction((iOBlock)inst, "reserved");
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -1304,6 +1303,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       data->reverse     = reverse;
       data->fromBlockId = blockid;
       data->byRouteId   = routeid;
+      __checkAction((iOBlock)inst, "reserved");
       if( reset )
         BlockOp.resetTrigs( inst );
     }
@@ -1546,6 +1546,11 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
     return ok;
   }
+}
+
+
+static void _depart(iIBlockBase inst) {
+  __checkAction((iOBlock)inst, "depart");
 }
 
 
