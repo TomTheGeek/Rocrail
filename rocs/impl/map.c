@@ -113,7 +113,7 @@ static void __addMapItem( iOMapData data, const char* k, obj o ) {
   /* remove object with the same key if exist */
   __findMapItem(data, k, &keyfound );
   if( keyfound ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "replace existing object with key [%s]", k );
+    TraceOp.println( "replace existing object with key [%s]", k );
     __removeMapItem(data, k);
   }
 

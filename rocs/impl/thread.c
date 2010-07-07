@@ -56,7 +56,7 @@ static void __addThread( iOThread o ) {
     MapOp.put( threadMap, Data(o)->tname, (obj)o );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "A named thread, [%s], already exist!", Data(o)->tname );
+    TraceOp.println( "A named thread, [%s], already exist!", Data(o)->tname );
   }
 
   MutexOp.post( threadMutex );
