@@ -1,0 +1,47 @@
+a {text-decoration: none}
+img {border-width: 0}
+
+
+#sddm
+{	margin: 0;
+	padding: 0;
+	z-index: 30}
+
+#sddm td
+{	margin: 0;
+	padding: 0}
+
+#sddm td a
+{	
+	color: black;
+	font: 14px arial;
+	text-decoration: none}
+
+#sddm td a:hover
+{	}
+
+#sddm div
+{	position: absolute;
+	visibility: hidden;
+	margin: 0;
+	padding: 0;
+	background: #EAEBD8;
+	border: 1px solid #5970B2}
+
+#sddm div a
+{	position: relative;
+	display: block;
+	margin: 0;
+	padding: 5px 10px;
+	width: auto;
+	white-space: nowrap;
+	text-decoration: none;
+	background: #EAEBD8;
+	color: #2875DE;
+	font: 14px arial}
+
+#sddm div a:hover
+{	background: #49A3FF;
+	color: #FFF}
+	
+	
