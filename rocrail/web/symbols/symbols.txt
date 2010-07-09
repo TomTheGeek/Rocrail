@@ -1,0 +1,2 @@
+The symbols used are the same as founf in the RocJ project:
+RocJ/res/raw
