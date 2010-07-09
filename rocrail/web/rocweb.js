@@ -30,11 +30,33 @@ function actionBlock(id) {
 }
 
 function processReqChange() {
-  // only if req shows "loaded"
-  if (req.readyState == 4) {
-    // only if "OK"
-    if (req.status == 200) {
-      // ...processing statements go here...
+// only if req shows "loaded"
+if (req.readyState == 4) {
+  // only if "OK"
+  //alert("response status = "+req.status);
+  if (req.status == 0) {
+    // fake it
+    //plan = "<plan><fblist><fb id=\"xy56\" state=\"true\"/></fblist></plan>";
+    //parser=new DOMParser();
+    //xmlDoc=parser.parseFromString(plan,"text/xml");
+    try {
+      xmlDoc = req.responseXML;
+      fblist = xmlDoc.getElementsByTagName("fb");
+      for (var i = 0; i < fblist.length; i++) {
+        if( "true" == fblist[i].getAttribute('state') )
+          document.getElementById("fb_"+fblist[i].getAttribute('id')).src = "sensor_on_1.png";
+        else
+          document.getElementById("fb_"+fblist[i].getAttribute('id')).src = "sensor_off_1.png";
+      }
+    }
+    catch(e) {
+      alert("exception: " + e);
+    }
+
+  }
+  if (req.status == 200) {
+    // ...processing statements go here...
+    alert("response received");
     }
   }
 }
