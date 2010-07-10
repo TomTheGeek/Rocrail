@@ -276,6 +276,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
 
     /* check for program commands which must be send to other than the default */
     if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+      const char* lciid = wRocRail.getlciid( AppOp.getIni() );
       const char* ptiid = wRocRail.getptiid( AppOp.getIni() );
       const char* sviid = wRocRail.getsviid( AppOp.getIni() );
       if( ( wProgram.getlntype(node) == wProgram.lntype_sv || wProgram.getlntype(node) == wProgram.lntype_cv ) &&
@@ -285,11 +286,17 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
         wCommand.setiid( node, sviid );
         iid = sviid;
       }
-      else if( ptiid != NULL && StrOp.len( ptiid ) > 0 ) {
+      else if( ptiid != NULL && StrOp.len( ptiid ) > 0 && !wProgram.ispom(node) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                      "setting iid=[%s] for programming", ptiid );
         wCommand.setiid( node, ptiid );
         iid = ptiid;
+      }
+      else if( lciid != NULL && StrOp.len( lciid ) > 0 && wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                     "setting iid=[%s] for programming", lciid );
+        wCommand.setiid( node, lciid );
+        iid = lciid;
       }
     }
 
