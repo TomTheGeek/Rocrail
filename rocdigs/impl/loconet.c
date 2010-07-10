@@ -207,6 +207,11 @@ static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writ
   int hopsa = (decaddr & 0x3F80) >> 7;
   int pcmd  = 0;
 
+  if( pom && decaddr == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM for address 0 is not supported" );
+    return 0;
+  }
+
   if( writeCV ) {
     pcmd = 0x43; /* LPE imples 0x40, but 0x43 is observed */
   }
