@@ -631,7 +631,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       if( wProgram.ispom(node) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
 
-        if( data->power ) {
+        if( data->power) {
           if (cv > 0) cv--;
 
           byte* outb = allocMem(32);
@@ -645,10 +645,12 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POM: 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X 0x%X",
               outb[0], outb[1], outb[2], outb[3], outb[4], outb[5], outb[6]);
 
-          if ( cv != 0 )
+          if ( cv != 0 && decaddr != 0)
             ThreadOp.post( data->transactor, (obj)outb );
+          else if (decaddr == 0)
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "We do not POM to address == 0!");
           else
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of adress!");
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of address!");
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: not processing; Power is OFF" );
