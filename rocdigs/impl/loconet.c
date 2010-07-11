@@ -472,6 +472,7 @@ static void __loconetSensorQuery( void* threadinst ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet Sensor Query ended." );
+  ThreadOp.base.del(th);
 }
 
 
@@ -992,7 +993,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       if( !data->didSensorQuery && data->doSensorQuery ) {
         iOThread t =  NULL;
         data->didSensorQuery = True;
-        t =  ThreadOp.inst( "loconetQuery", &__loconetSensorQuery, loconet );
+        t =  ThreadOp.inst( "lnqGPON", &__loconetSensorQuery, loconet );
         ThreadOp.start( t );
       }
       __post2SlotServer( loconet, rsp, 2 );
@@ -1261,7 +1262,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         if( (track & GTRK_POWER) && (!data->didSensorQuery) ) {
           iOThread t =  NULL;
           data->didSensorQuery = True;
-          t =  ThreadOp.inst( "loconetQuery", &__loconetSensorQuery, loconet );
+          t =  ThreadOp.inst( "lnqCNFG", &__loconetSensorQuery, loconet );
           ThreadOp.start( t );
         }
       }
@@ -1917,22 +1918,36 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         /* keep this value for the ping thread */
         data->slotV[slot] = V;
 
-        cmd[0] = OPC_LOCO_SPD;
+        {
+          cmd[0] = 4;
+          cmd[1] = OPC_LOCO_SPD;
+          cmd[2] = slot; /* slot number */
+          cmd[3] = V;
+          cmd[4] = LocoNetOp.checksum( cmd+1, 3 );
+
+          byte* bcmd = allocMem( 32 );
+          MemOp.copy( bcmd, cmd, 32 );
+          ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
+        }
+
+        {
+          cmd[0] = 4;
+          cmd[1] = OPC_LOCO_DIRF;
+          cmd[2] = slot; /* slot number */
+          cmd[3] = dirf;
+          cmd[4] = LocoNetOp.checksum( cmd+1, 3 );
+
+          byte* bcmd = allocMem( 32 );
+          MemOp.copy( bcmd, cmd, 32 );
+          ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
+        }
+
+        cmd[0] = OPC_LOCO_SND;
         cmd[1] = slot; /* slot number */
-        cmd[2] = V;
+        cmd[2] = snd;
         cmd[3] = LocoNetOp.checksum( cmd, 3 );
 
-        cmd[4] = OPC_LOCO_DIRF;
-        cmd[5] = slot; /* slot number */
-        cmd[6] = dirf;
-        cmd[7] = LocoNetOp.checksum( cmd+4, 3 );
-
-        cmd [8] = OPC_LOCO_SND;
-        cmd [9] = slot; /* slot number */
-        cmd[10] = snd;
-        cmd[11] = LocoNetOp.checksum( cmd+8, 3 );
-
-        size = 12;
+        size = 4;
       }
 
       /* Release the mutex. */
