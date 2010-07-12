@@ -2176,7 +2176,7 @@ int makereqDispatch(iOLocoNetData data, byte *msg, int slot, iONode node, int st
   msg[0] = OPC_MOVE_SLOTS;
   msg[1] = slot & 0x7F;
   msg[2] = 0;
-  msg[3] = LocoNetOp.checksum( msg+4, 3 );
+  msg[3] = LocoNetOp.checksum( msg, 3 );
 
 
   return 4;
