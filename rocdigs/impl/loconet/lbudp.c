@@ -38,10 +38,18 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( "lbudp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet UDP reader started." );
 
   do {
-    if( !data->udpPacketAvailable ) {
-      data->udpPacketSize = SocketOp.recvfrom( data->readUDP, data->udpPacket, 0x7F );
-      data->udpPacketAvailable = True;
-      TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)data->udpPacket, data->udpPacketSize );
+    byte packet[0x7F];
+
+    int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F );
+
+    if( MutexOp.wait( data->udpmux ) ) {
+      byte* p = allocMem(0x7F+1);
+      p[0] = packetSize;
+      MemOp.copy( p+1, packet, 0x7F);
+      QueueOp.post( data->udpQueue, (obj)p, normal);
+      MutexOp.post( data->udpmux );
+      TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)packet, packetSize );
+      ThreadOp.sleep(0);
     }
     else {
       ThreadOp.sleep(10);
@@ -62,7 +70,8 @@ Boolean lbUDPConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->udpPacketAvailable = False;
+  data->udpmux = MutexOp.inst(NULL, True);
+  data->udpQueue = QueueOp.inst(1000);
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
   SocketOp.bind(data->readUDP);
@@ -80,10 +89,16 @@ void  lbUDPDisconnect( obj inst ) {
 
 int lbUDPRead ( obj inst, unsigned char *msg ) {
   iOLocoNetData data = Data(inst);
-  if( data->udpPacketAvailable ) {
-    MemOp.copy( msg, data->udpPacket, data->udpPacketSize );
-    data->udpPacketAvailable = False;
-    return data->udpPacketSize;
+  if( !QueueOp.isEmpty(data->udpQueue) && MutexOp.trywait( data->udpmux, 100 ) ) {
+    byte* p = (byte*)QueueOp.get(data->udpQueue);
+    int size = p[0];
+    MemOp.copy( msg, &p[1], size );
+    freeMem(p);
+    MutexOp.post( data->udpmux );
+    return size;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "could not read queue %d", QueueOp.count(data->udpQueue)  );
   }
   return 0;
 }
@@ -95,5 +110,5 @@ Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
 
 Boolean lbUDPAvailable( obj inst ) {
   iOLocoNetData data = Data(inst);
-  return data->udpPacketAvailable;
+  return !QueueOp.isEmpty(data->udpQueue);
 }

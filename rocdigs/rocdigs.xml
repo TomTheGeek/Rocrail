@@ -513,7 +513,7 @@
   </object>
 
 
-  <object name="LocoNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,socket" include="$rocint/public/digint,#time">
+  <object name="LocoNet" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,socket,queue" include="$rocint/public/digint,#time">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
@@ -617,10 +617,9 @@
       <var name="cts" vt="Boolean"/>
       <var name="fcsync" vt="Boolean"/>
       <var name="powerison" vt="Boolean"/>
-      <var name="udpPacket[0x7F]" vt="byte"/>
-      <var name="udpPacketAvailable" vt="Boolean"/>
-      <var name="udpPacketSize" vt="int"/>
       <var name="udpReader" vt="iOThread"/>
+      <var name="udpmux" vt="iOMutex"/>
+      <var name="udpQueue" vt="iOQueue"/>
     </data>
   </object>
 
