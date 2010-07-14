@@ -1320,7 +1320,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_Type  , wxGetApp().getMenu("type") );
       }
     }
-    SetFocus();
+    //SetFocus();
     PopupMenu(&menu );
 }
 
