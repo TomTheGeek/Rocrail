@@ -1549,6 +1549,7 @@
         <var name="useshortid" vt="bool" defval="false" remark="Use short ID to send to throttle."/>
         <var name="roadname" vt="string" defval="" range="*"/>
         <var name="number" vt="string" defval="" range="*"/>
+        <var name="docu" vt="string" defval="" range="*"/>
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="throttleid" vt="char*" defval="" range="*" remark="Throttle ID to which this loco is dispatched."/>
         <var name="identifier" vt="long" defval="0" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>

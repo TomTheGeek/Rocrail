@@ -74,6 +74,7 @@ class wxGrid;
 #define ID_TEXTCTRL_LENGTH 10007
 #define wxID_STATIC_CATALOGNR 10020
 #define ID_TEXTCTRL_CATALOGNR 10008
+#define ID_BUTTON_SHOWDOC 10391
 #define wxID_STATIC_PURCHASED 10021
 #define ID_TEXTCTRL_PURCHASED 10009
 #define ID_STATICTEXT 10063
@@ -216,6 +217,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORTLOCOS
     void OnButtonImportlocosClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SHOWDOC
+    void OnButtonShowdocClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LC_SERVICED
     void OnLcServicedClick( wxCommandEvent& event );
 
@@ -318,6 +322,9 @@ public:
     wxSpinCtrl* m_NrCars;
     wxStaticText* m_Label_CatalogNr;
     wxTextCtrl* m_CatNr;
+    wxStaticText* m_labDocumentation;
+    wxTextCtrl* m_Documentation;
+    wxButton* m_ShowDoc;
     wxStaticText* m_Label_Purchased;
     wxTextCtrl* m_Purchased;
     wxStaticText* m_labShortID;
