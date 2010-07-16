@@ -388,7 +388,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       if( StrOp.equals( "unlock", wAction.getcmd( data->action ) ) ) {
         bl->unLock(bl, wAction.getparam( data->action ));
       }
-      else if( StrOp.equals( wAction.block_in, wAction.getcmd( data->action ) ) ) {
+      else if( StrOp.equals( wAction.block_event, wAction.getcmd( data->action ) ) ) {
         bl->event(bl, True, wAction.getparam( data->action ), 0, 0, NULL);
         bl->event(bl, False, wAction.getparam( data->action ), 0, 0, NULL);
       }
