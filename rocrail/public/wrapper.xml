@@ -1249,7 +1249,7 @@
         <const name="percent" vt="string" val="percent" remark="Blockspeed is set by percent."/>
         <var name="speed" vt="string" defval="cruise" range="*" remark="Block speed on arrive."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
-        <var name="stopspeed" vt="string" defval="mid" range="mid,min" remark="Block speed on arrive and stop."/>
+        <var name="stopspeed" vt="string" defval="mid" range="mid,min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
         <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>

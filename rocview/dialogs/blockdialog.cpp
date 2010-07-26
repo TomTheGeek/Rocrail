@@ -244,8 +244,8 @@ void BlockDialog::initSignalCombos() {
         const char* id = wSignal.getid( sg );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
-		}
-	  }
+    }
+    }
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -302,8 +302,8 @@ void BlockDialog::initLocPermissionList() {
         const char* id = wLoc.getid( lc );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
-		}
-	  }
+    }
+    }
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -400,6 +400,7 @@ void BlockDialog::initLabels() {
   m_StopSpeed->SetLabel( wxGetApp().getMsg( "stop" ) );
   m_StopSpeed->SetString( 0, wxGetApp().getMsg( "min" ) );
   m_StopSpeed->SetString( 1, wxGetApp().getMsg( "mid" ) );
+  m_StopSpeed->SetString( 2, _T("%") );
 
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
   m_Type->SetString( 0, wxGetApp().getMsg( "none" ) );
@@ -604,6 +605,8 @@ void BlockDialog::initValues() {
     speed = 0;
   else if( StrOp.equals( wBlock.mid, wBlock.getstopspeed( m_Props ) ) )
     speed = 1;
+  else if( StrOp.equals( wBlock.percent, wBlock.getstopspeed( m_Props ) ) )
+    speed = 2;
   m_StopSpeed->SetSelection( speed );
 
   speed = 0;
@@ -884,6 +887,10 @@ bool BlockDialog::evaluate() {
     wBlock.setstopspeed( m_Props, wBlock.min );
   else if( m_StopSpeed->GetSelection() == 1 )
     wBlock.setstopspeed( m_Props, wBlock.mid );
+  else if( m_StopSpeed->GetSelection() == 2 ) {
+    wBlock.setstopspeed( m_Props, wBlock.percent );
+    wBlock.setspeedpercent( m_Props, m_SpeedPercent->GetValue() );
+  }
 
   if( m_Type->GetSelection() == 0 )
     wBlock.settype( m_Props, wBlock.type_none );
@@ -1565,6 +1572,7 @@ void BlockDialog::CreateControls()
     wxArrayString m_StopSpeedStrings;
     m_StopSpeedStrings.Add(_("&min"));
     m_StopSpeedStrings.Add(_("&mid"));
+    m_StopSpeedStrings.Add(_("&%"));
     m_StopSpeed = new wxRadioBox( m_PanelDetails, wxID_ANY, _("stop"), wxDefaultPosition, wxDefaultSize, m_StopSpeedStrings, 1, wxRA_SPECIFY_ROWS );
     m_StopSpeed->SetSelection(0);
     itemFlexGridSizer99->Add(m_StopSpeed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
