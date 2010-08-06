@@ -46,7 +46,7 @@
  */
 Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean reverse, int indelay ) {
   iOLcDriverData data = Data(inst);
-  Boolean grouplocked = initializeGroup(inst, block);
+  Boolean grouplocked = initializeGroup(inst, block, curBlock);
 
   if( !grouplocked ) {
     return False;
@@ -118,22 +118,24 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
  * @param inst       LcDiver instance
  * @param block      destination block
  */
-Boolean initializeGroup( iOLcDriver inst, iIBlockBase block ) {
+Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBlock ) {
   iOLcDriverData data = Data(inst);
   Boolean grouplocked = False;
 
   /* check if this block belongs to a group: */
-  const char* group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  const char* group    = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  const char* curgroup = data->model->checkForBlockGroup( data->model, block->base.id(curBlock) );
 
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
-      group == NULL && data->blockgroup != NULL ) {
+      group == NULL && data->blockgroup != NULL && curgroup != data->blockgroup ) {
     /* unlock previous group; entering another one */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock previous blockgroup %s", data->blockgroup );
     unlockBlockGroup(inst, data->blockgroup );
     data->blockgroup = NULL;
   }
 
+  /* FollowUp in critical sections will only partly work if the next destination belongs to another group. */
   if( group != NULL ) {
     grouplocked = data->model->lockBlockGroup(data->model, group, block->base.id(block), data->loc->getId( data->loc ) );
 
