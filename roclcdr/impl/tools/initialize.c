@@ -123,8 +123,12 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBloc
   Boolean grouplocked = False;
 
   /* check if this block belongs to a group: */
-  const char* group    = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  const char* group    = NULL;
   const char* curgroup = data->model->checkForBlockGroup( data->model, block->base.id(curBlock) );
+
+  if( block != NULL ) {
+    group = data->model->checkForBlockGroup( data->model, block->base.id(block) );
+  }
 
   /* unlock only for init a next block */
   if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||

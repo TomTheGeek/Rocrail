@@ -125,6 +125,9 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
     block->inBlock( block, data->loc->getId( data->loc ) );
 
+    /* free the block group from the previous block */
+    initializeGroup(inst, NULL, block);
+
     {
       /*
        * unlock the previous route regarding reserved blocks
