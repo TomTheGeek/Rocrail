@@ -34,7 +34,7 @@ void resetNext2( iOLcDriver inst, Boolean unLock );
 
 
 Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute street, iIBlockBase curBlock, Boolean dir, int indelay );
-Boolean initializeGroup( iOLcDriver inst, iIBlockBase block );
+Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBlock );
 Boolean initializeSwap( iOLcDriver inst, iORoute route );
 const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street, Boolean reverse );
 
