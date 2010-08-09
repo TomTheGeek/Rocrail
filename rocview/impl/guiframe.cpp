@@ -2993,6 +2993,8 @@ void RocGuiFrame::OnAutoMode( wxCommandEvent& event ) {
   if( mi_automode == NULL )
     return;
 
+  OnDonKey(event);
+
   bool autoMode;
 
   autoMode = event.IsChecked();
