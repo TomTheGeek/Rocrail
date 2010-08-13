@@ -239,7 +239,7 @@ static Boolean _unlock( struct OBlockGroup* inst ,const char* LocoId ) {
       LocoId, wLink.getid(data->props));
 
 
-  if( MapOp.size(data->lockmap) == 0 && data->firstLoco != NULL && StrOp.equals(LocoId, data->firstLoco) ) {
+  if( MapOp.size(data->lockmap) == 0 && data->firstLoco != NULL ) {
     iOStrTok tok = StrTokOp.inst( wLink.getdst(data->props), ',' );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -256,6 +256,8 @@ static Boolean _unlock( struct OBlockGroup* inst ,const char* LocoId ) {
       }
     };
     StrTokOp.base.del(tok);
+
+    data->firstLoco = NULL;
   }
 
 
