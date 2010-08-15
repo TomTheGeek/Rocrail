@@ -77,8 +77,7 @@ Starting with block A:
 
 */
 
-#include "rocrail/impl/analyse_impl.h"
-#include "rocrail/public/app.h"
+#include "analyser/impl/analyse_impl.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/trace.h"
@@ -272,11 +271,10 @@ static void __analyseBlock(iOAnalyse inst, iONode block ) {
 
 static void _analyse(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  iOModel model = AppOp.getModel();
   iOList bklist = NULL;
   iONode block = NULL;
   int cx, cy;
-  iOList list = ModelOp.getLevelItems( model, 0, &cx, &cy, False);
+  iOList list = ModelOp.getLevelItems( data->model, 0, &cx, &cy, False);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, 
       "Trackplan: %d objects at level 0 and sizes %d x %d", ListOp.size(list), cx, cy );
   
@@ -297,21 +295,28 @@ static void _analyse(iOAnalyse inst) {
 
 
 /**  */
-static struct OAnalyse* _inst( iONode trackplan ) {
+static struct OAnalyse* _inst( iOModel model, iONode plan ) {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
   MemOp.basecpy( __Analyse, &AnalyseOp, 0, sizeof( struct OAnalyse ), data );
 
   /* Initialize data->xxx members... */
-  data->props = trackplan;
+  data->model = model;
+  data->plan  = plan;
   data->objectmap = MapOp.inst();
   
   instCnt++;
   return __Analyse;
 }
 
+/* Support for dynamic Loading */
+iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan )
+{
+  return (iOAnalyse)_inst( model, plan );
+}
+
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
-#include "rocrail/impl/analyse.fm"
+#include "analyser/impl/analyse.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 

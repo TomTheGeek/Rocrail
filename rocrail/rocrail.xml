@@ -1471,20 +1471,6 @@
   </object>
 
 
-  <object name="Analyse" use="node,map" remark="Track plan analyser.">
-    <fun name="inst" vt="this">
-      <param name="trackplan" vt="iONode" remark="Track plan"/>
-    </fun>
-    <fun name="analyse" vt="void">
-      <param name="inst" vt="this" remark="Analyse instance."/>
-    </fun>
-    <data>
-      <var name="props" vt="iONode"/>
-      <var name="objectmap" vt="iOMap"/>
-    </data>
-  </object>
-
-
   <object name="MVTrack" use="node" remark="Measure Velocity Track">
     <fun name="inst" vt="this">
       <param name="props" vt="iONode" remark="Settings"/>

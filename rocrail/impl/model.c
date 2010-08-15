@@ -38,7 +38,7 @@
 #include "rocrail/public/text.h"
 #include "rocrail/public/clntcon.h"
 #include "rocrail/public/app.h"
-#include "rocrail/public/analyse.h"
+#include "analyser/public/analyse.h"
 #include "rocrail/public/r2rnet.h"
 
 #include "rocs/public/doc.h"
@@ -2621,9 +2621,11 @@ static const char* _getTitle( iOModel inst ) {
 
 static void _analyse( iOModel inst ) {
   iOModelData data = Data(inst);
+  /* TODO: Load the analyzer shared library.
   iOAnalyse a = AnalyseOp.inst( data->model );
   AnalyseOp.analyse(a);
   AnalyseOp.base.del(a);
+  */
 }
 
 
