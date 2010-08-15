@@ -729,6 +729,13 @@ static Boolean __isElectricallyFree(iOBlock inst) {
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
+  if( data->acceptident) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Block \"%s\" is waiting for a new Ident.",
+                   data->id );
+    return False;
+  }
+
   if( wBlock.isremote(data->props) ) {
     iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
     if( r2rnet != NULL ) {
