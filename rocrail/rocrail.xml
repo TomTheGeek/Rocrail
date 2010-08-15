@@ -915,7 +915,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="listener" vt="obj" remark="listener object"/>
     </fun>
-    <data include="mvtrack,modplan">
+    <data include="mvtrack,modplan,$rocint/public/analyserint">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
       <var name="autoMode" vt="Boolean"/>
@@ -963,6 +963,7 @@
       <var name="pendinginitfield" vt="Boolean"/>
       <var name="pendingstartall" vt="Boolean"/>
       <var name="muxSysEvent" vt="iOMutex"/>
+      <var name="analyser" vt="iIAnalyserInt"/>
     </data>
     <struct name="LevelList" typedef="*iOLevelList">
       <var name="list" vt="iOList"/>

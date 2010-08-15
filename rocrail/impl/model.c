@@ -50,6 +50,8 @@
 #include "rocs/public/strtok.h"
 #include "rocs/public/file.h"
 #include "rocs/public/thread.h"
+#include "rocs/public/lib.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -2619,14 +2621,36 @@ static const char* _getTitle( iOModel inst ) {
   return o->title;
 }
 
+typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode );
 
 static void _analyse( iOModel inst ) {
   iOModelData data = Data(inst);
-  /* TODO: Load the analyzer shared library.
-  iOAnalyse a = AnalyseOp.inst( data->model );
-  AnalyseOp.analyse(a);
-  AnalyseOp.base.del(a);
-  */
+  /* Load the analyzer shared library. */
+
+  if( data->analyser == NULL ) {
+    iOLib    pLib = NULL;
+    /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
+    LPFNGETANALYSERINT pInitFun = (void *) NULL;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "load Analyser library..." );
+
+    char* libpath = StrOp.fmt( "%s%c%s", AppOp.getLibPath(), SystemOp.getFileSeparator(), "analyser" );
+    pLib = LibOp.inst( libpath );
+    StrOp.free( libpath );
+
+    if (pLib == NULL)
+      return;
+    pInitFun = (LPFNGETANALYSERINT)LibOp.getProc( pLib, "rocGetAnalyserInt" );
+    if (pInitFun == NULL)
+      return;
+
+    data->analyser = pInitFun( inst, data->model );
+  }
+
+  if( data->analyser != NULL ) {
+    data->analyser->analyse(data->analyser);
+  }
+
 }
 
 
