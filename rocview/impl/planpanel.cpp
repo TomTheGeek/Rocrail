@@ -1488,6 +1488,16 @@ bool PlanPanel::isBlockOccupied( const char* id ) {
   return false;
 }
 
+bool PlanPanel::isBlockReserved( const char* id ) {
+  char key[256];
+  itemKey( wBlock.name(), id, key );
+  Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
+  if( item != NULL ) {
+    return wBlock.isreserved( item->getProperties() )?true:false;
+  }
+  return false;
+}
+
 void PlanPanel::addItems( iONode node ) {
 
   if( node == NULL )

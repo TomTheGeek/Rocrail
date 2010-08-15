@@ -89,6 +89,7 @@ public:
   void OnRemovePanel(wxCommandEvent& event);
   const char* getZLevelTitle();
   bool isBlockOccupied( const char* id );
+  bool isBlockReserved( const char* id );
   void blockEvent( const char* id );
   int getZ() { return m_Z; }
   const char* getZID();
