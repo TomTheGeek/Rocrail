@@ -624,8 +624,15 @@ void Symbol::OnPaint(wxPaintEvent& event)
       {
       if( wTrack.getblockid( m_Props ) != NULL && StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
         occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
-        TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s is %s occupied by %s",
+        Boolean isReserved = wBlock.isreserved( m_Props );
+        if( occupied && !isReserved )
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s is %s occupied by %s",
             wItem.getid( m_Props ), occupied? "":"not", wItem.getblockid( m_Props ));
+        else if( isReserved ) {
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s is reserved by %s",
+            wItem.getid( m_Props ), wItem.getblockid( m_Props ));
+          occupied = false;
+        }
       }
 
     }
