@@ -808,7 +808,7 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
 
   /* check if last command was recieved, the cs answers: 1 4 5 */
   if( in[0] == 1 && in[1] == 4 && in[2] == 5 ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI: Command OK");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LI: Command OK [%s]", data->iid);
     rspReceived = True;
   }
   else if( in[0] == 1 && in[1] == 2 && in[2] == 3 ) {
@@ -984,7 +984,7 @@ static void __transactor( void* threadinst ) {
       }
       /* Track Power OFF */
       else if( in[0] == 0x61 && in[1] == 0x00) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power OFF [%s]", data->iid);
         data->power = False;
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
@@ -1002,7 +1002,7 @@ static void __transactor( void* threadinst ) {
       }
       /* Normal operation resumed */
       else if( in[0] == 0x61 && in[1] == 0x01) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power ON; Normal operation resumed.");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Track power ON; Normal operation resumed. [%s]", data->iid);
         data->power = True;
 
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
@@ -1020,17 +1020,17 @@ static void __transactor( void* threadinst ) {
       }
       /* Prog Mode*/
       else if (in[0] == 0x61 && in[1] == 0x02){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming mode entered");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming mode entered [%s]", data->iid);
         rspReceived = True;
       }
       /* Prog Mode*/
       else if (in[0] == 0x61 && in[1] == 0x11){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming Ready");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming Ready [%s]", data->iid);
         rspReceived = True;
       }
       /* transaction error, cs reported xor test failed */
       else if (in[0] == 0x61 && in[1] == 0x80){
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Transaction error; Resend.");
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Transaction error; Resend. [%s]", data->iid);
         rspReceived = True;
         reSend = True;
         ThreadOp.sleep(100);
@@ -1038,12 +1038,12 @@ static void __transactor( void* threadinst ) {
       /* CS busy*/
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy.");
-        if( !data->ignoreBusy ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy. [%s]", data->iid );
+        //if( !data->ignoreBusy ) {
           rspReceived = True;
           reSend = True;
           ThreadOp.sleep(10);
-        }
+        //}
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
@@ -1052,17 +1052,17 @@ static void __transactor( void* threadinst ) {
       }
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not available.");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command not available. [%s]", data->iid);
         rspReceived = True;
       }
       /* Shortcut*/
       else if (in[0] == 0x61 && in[1] == 0x12){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: Shortcut!");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: Shortcut! [%s]", data->iid);
         rspReceived = True;
       }
       /* No data*/
       else if (in[0] == 0x61 && in[1] == 0x13){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: No Data");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: No Data [%s]", data->iid);
         rspReceived = True;
       }
       /* cv answer*/
@@ -1072,8 +1072,8 @@ static void __transactor( void* threadinst ) {
       }
       /* Version of Interface*/
       else if (in[0] == 0x02){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Interface version: %1.1f-%d",
-            in[1]/10.0 , in[2] );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Interface version: %1.1f-%d [%s]",
+            in[1]/10.0 , in[2], data->iid );
         rspReceived = True;
         data->interfaceVersion = (int) in[1];
       }
@@ -1092,8 +1092,8 @@ static void __transactor( void* threadinst ) {
         else if( in[3] == 0x10 )
           csname = "S88XpressNetLi";
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %d.%d",
-            csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %d.%d [%s]",
+            csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F), data->iid);
         rspReceived = True;
       }
       /* xpressnet adress */
@@ -1274,6 +1274,9 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock      = %s", data->fastclock ? "yes":"no" );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = %s", data->iid );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* optional call */
