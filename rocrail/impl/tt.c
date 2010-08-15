@@ -1912,6 +1912,8 @@ static int _getOccTime( iIBlockBase inst ) {
 static void _setCarCount( iIBlockBase inst, int count ) {
 }
 
+static void _acceptIdent( iIBlockBase inst ) {
+}
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/tt.fm"

@@ -383,6 +383,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in block %s", LocOp.getId(identLoc), data->id );
             LocOp.cmd( identLoc, cmd );
             loc = identLoc;
+            data->acceptident = False;
           /*}*/
         }
       }
@@ -1936,6 +1937,11 @@ static void _reset( iIBlockBase inst ) {
   /*Unlock the occupying must be done manual */
   /*BlockOp.unLock(inst, data->locId);*/
   BlockOp.resetTrigs(inst);
+}
+
+static void _acceptIdent( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  data->acceptident = True;
 }
 
 

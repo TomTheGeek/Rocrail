@@ -149,6 +149,7 @@
       <var name="manager" vt="iIBlockBase"/>
       <var name="occtime" vt="long"/>
       <var name="ghost" vt="Boolean"/>
+      <var name="acceptident" vt="Boolean"/>
     </data>
   </object>
 

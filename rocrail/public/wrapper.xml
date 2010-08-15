@@ -1851,6 +1851,7 @@
         <const name="block_setloc" vt="string" val="setloco"/>
         <const name="block_schedule" vt="string" val="schedule"/>
         <const name="block_event" vt="string" val="event"/>
+        <const name="block_acceptident" vt="string" val="acceptident"/>
         <const name="loco_go" vt="string" val="go"/>
         <const name="loco_stop" vt="string" val="stop"/>
         <const name="loco_velocity" vt="string" val="velocity"/>

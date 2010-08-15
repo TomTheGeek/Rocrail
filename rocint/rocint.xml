@@ -300,6 +300,9 @@
     <fun name="depart" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="acceptIdent" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
   <interface name="AnalyserInt" use="node" remark="Interface for the analyser">
