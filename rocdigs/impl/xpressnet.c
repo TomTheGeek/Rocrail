@@ -1047,7 +1047,8 @@ static void __transactor( void* threadinst ) {
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "PT: Busy; Resend.");
+        //TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "PT: Busy; Resend.");
+        reSend = True;
       }
       /* Command not known*/
       else if (in[0] == 0x61 && in[1] == 0x82){
