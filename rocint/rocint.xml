@@ -302,5 +302,10 @@
     </fun>
   </interface>
 
+  <interface name="AnalyserInt" use="node" remark="Interface for the analyser">
+    <fun name="analyse" vt="void">
+      <param name="inst" vt="this" remark="Analyse instance."/>
+    </fun>
+  </interface>
 
 </Project>

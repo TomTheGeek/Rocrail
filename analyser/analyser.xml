@@ -20,12 +20,9 @@
 <Project name="Analyser" title="RocRail Plan Analyser" docname="analyserapi">
 
 
-  <object name="Analyse" use="node,map" include="$rocrail/public/model" remark="Track plan analyser.">
+  <object name="Analyse" interface="$../rocint/rocint.xml:AnalyserInt" use="node,map" include="$rocint/public/analyserint,$rocrail/public/model" remark="Track plan analyser.">
     <fun name="inst" vt="this">
       <param name="trackplan" vt="iONode" remark="Track plan"/>
-    </fun>
-    <fun name="analyse" vt="void">
-      <param name="inst" vt="this" remark="Analyse instance."/>
     </fun>
     <data>
       <var name="plan" vt="iONode"/>

@@ -38,8 +38,9 @@
 #include "rocrail/public/text.h"
 #include "rocrail/public/clntcon.h"
 #include "rocrail/public/app.h"
-#include "analyser/public/analyse.h"
 #include "rocrail/public/r2rnet.h"
+
+#include "rocint/public/analyserint.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"

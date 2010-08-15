@@ -274,7 +274,7 @@ static void _analyse(iOAnalyse inst) {
   iOList bklist = NULL;
   iONode block = NULL;
   int cx, cy;
-  iOList list = ModelOp.getLevelItems( data->model, 0, &cx, &cy, False);
+  iOList list = data->model->getLevelItems( data->model, 0, &cx, &cy, False);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, 
       "Trackplan: %d objects at level 0 and sizes %d x %d", ListOp.size(list), cx, cy );
   
