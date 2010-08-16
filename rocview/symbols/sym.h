@@ -347,6 +347,9 @@ namespace blocktype {
   static const char* block_ghost_s  = "block-ghost-s.svg";
   static const char* block_sc_s     = "block-sc-s.svg";
 
+  static const char* block_aident     = "block-aident.svg";
+  static const char* block_aident_s   = "block-aident-s.svg";
+
   static const char* road_block     = "road-block.svg";
   static const char* road_block_occ = "road-block-occ.svg";
   static const char* road_block_res = "road-block-res.svg";

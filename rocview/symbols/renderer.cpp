@@ -89,6 +89,8 @@ void SymbolRenderer::initSym() {
   m_SvgSym12 = NULL;
   m_SvgSym13 = NULL;
   m_SvgSym14 = NULL;
+  m_SvgSym15 = NULL;
+  m_SvgSym16 = NULL;
 
   const char* nodeName = NodeOp.getName( m_Props );
 
@@ -503,6 +505,7 @@ void SymbolRenderer::initSym() {
         m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed );
         m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost );
         m_SvgSym13 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_sc );
+        m_SvgSym15 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_aident );
 
         m_SvgSym7  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_s );
         m_SvgSym8  = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_occ_s );
@@ -511,6 +514,7 @@ void SymbolRenderer::initSym() {
         m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_closed_s );
         m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_ghost_s );
         m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_sc_s );
+        m_SvgSym16 = (svgSymbol*)MapOp.get( m_SymMap, blocktype::block_aident_s );
       }
     }
   }
@@ -1681,7 +1685,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
   int blocklen = m_bSmall ? 2:4;
 
-  svgSymbol* svgSym[8];
+  svgSymbol* svgSym[9];
 
   svgSym[1] = (m_bSmall && m_SvgSym7  != NULL)?m_SvgSym7:m_SvgSym1;
   svgSym[2] = (m_bSmall && m_SvgSym8  != NULL)?m_SvgSym8:m_SvgSym2;
@@ -1690,6 +1694,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   svgSym[5] = (m_bSmall && m_SvgSym11 != NULL)?m_SvgSym11:m_SvgSym5;
   svgSym[6] = (m_bSmall && m_SvgSym12 != NULL)?m_SvgSym12:m_SvgSym6;
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
+  svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
 
   if( StrOp.equals( ori, wItem.east ) )
     ori = wItem.west;
@@ -1724,6 +1729,10 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     /* shortcut */
     drawSvgSym(dc, svgSym[7], ori);
   }
+  else if( svgSym[8]!=NULL && m_iOccupied == 7 ) {
+     /* aident */
+     drawSvgSym(dc, svgSym[8], ori);
+   }
   else {
     dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );
   }
