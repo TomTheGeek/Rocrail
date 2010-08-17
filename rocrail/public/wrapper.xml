@@ -1234,6 +1234,7 @@
         <var name="manual" vt="bool" defval="false" remark="Block not chooseable for locs in auto-mode if set to true."/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
+        <var name="acceptident" vt="bool" defval="false" remark=""/>
         <var name="wait" vt="bool" defval="true" remark="Should the loc wait in this block?"/>
         <const name="wait_random" vt="string" val="random" remark="Generate a random wait time."/>
         <const name="wait_fixed" vt="string" val="fixed" remark="Wait a fixed period of time."/>

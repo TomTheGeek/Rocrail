@@ -2151,8 +2151,9 @@ void Symbol::modelEvent( iONode node ) {
 
     wBlock.setstate( m_Props, state );
     if( StrOp.equals( wBlock.open, state ) ) {
-      Boolean isReserved = wBlock.isreserved( node );
-      Boolean isEntering = wBlock.isentering( node );
+      Boolean isReserved    = wBlock.isreserved( node );
+      Boolean isEntering    = wBlock.isentering( node );
+      Boolean isAcceptIdent = wBlock.isacceptident( node );
 
       wBlock.setreserved( m_Props, isReserved );
       wBlock.setlocid( m_Props, locid );
@@ -2182,6 +2183,7 @@ void Symbol::modelEvent( iONode node ) {
         StrOp.free( tip );
         occupied = isReserved ? 2:1;
         occupied = isEntering ? 3:occupied;
+        occupied = isAcceptIdent ? 7:occupied;
         occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
       }
       else {

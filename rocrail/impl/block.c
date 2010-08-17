@@ -382,6 +382,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
             loc = identLoc;
 
             data->acceptident = False;
+            if( data->acceptident != wBlock.isacceptident(data->props) ) {
+              iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+              wBlock.setid( nodeD, data->id );
+              wBlock.setacceptident(nodeD, data->acceptident);
+              ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+
+              wBlock.setacceptident(data->props, data->acceptident);
+            }
           /*}*/
         }
       }
@@ -1943,6 +1951,15 @@ static void _acceptIdent( iIBlockBase inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                "ACCEPT IDENT [%s]", data->id );
+
+  if( data->acceptident != wBlock.isacceptident(data->props) ) {
+    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    wBlock.setid( nodeD, data->id );
+    wBlock.setacceptident(nodeD, data->acceptident);
+    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+
+    wBlock.setacceptident(data->props, data->acceptident);
+  }
 }
 
 
