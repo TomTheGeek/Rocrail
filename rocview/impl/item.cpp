@@ -2148,12 +2148,12 @@ void Symbol::modelEvent( iONode node ) {
       showID = wPlanPanel.isbktextid(planpanelIni);
     }
 
+    Boolean isAcceptIdent = wBlock.isacceptident( node );
 
     wBlock.setstate( m_Props, state );
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
-      Boolean isAcceptIdent = wBlock.isacceptident( node );
 
       wBlock.setreserved( m_Props, isReserved );
       wBlock.setlocid( m_Props, locid );
@@ -2193,7 +2193,11 @@ void Symbol::modelEvent( iONode node ) {
     }
     else {
       wBlock.setlocid( m_Props, locid );
-      if( StrOp.equals( wBlock.closed, state ) ) {
+      if(isAcceptIdent) {
+        l_locidStr = StrOp.fmt( "%s Accepting", wBlock.getid( node ) );
+        occupied = isAcceptIdent ? 7:occupied;
+      }
+      else if( StrOp.equals( wBlock.closed, state ) ) {
         l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
         occupied = 4;
       }
