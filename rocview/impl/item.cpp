@@ -2187,6 +2187,7 @@ void Symbol::modelEvent( iONode node ) {
         occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
       }
       else {
+        occupied = isAcceptIdent ? 7:occupied;
         SetToolTip( wxString(wBlock.getid( node ),wxConvUTF8) );
       }
     }
