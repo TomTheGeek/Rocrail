@@ -372,6 +372,18 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove loco %s from block %s", LocOp.getId(loc), data->id );
               inst->cmd(inst, cmd);
             }
+
+            data->acceptident = False;
+            /* broadcast end of acceptident */
+            if( data->acceptident != wBlock.isacceptident(data->props) ) {
+              iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+              wBlock.setid( nodeD, data->id );
+              wBlock.setacceptident(nodeD, data->acceptident);
+              ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+
+              wBlock.setacceptident(data->props, data->acceptident);
+            }
+
             /* Inform Rocrail... */
             cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
             wLoc.setid( cmd, LocOp.getId(identLoc) );
@@ -381,15 +393,6 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
             LocOp.cmd( identLoc, cmd );
             loc = identLoc;
 
-            data->acceptident = False;
-            if( data->acceptident != wBlock.isacceptident(data->props) ) {
-              iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-              wBlock.setid( nodeD, data->id );
-              wBlock.setacceptident(nodeD, data->acceptident);
-              ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
-
-              wBlock.setacceptident(data->props, data->acceptident);
-            }
           /*}*/
         }
       }
