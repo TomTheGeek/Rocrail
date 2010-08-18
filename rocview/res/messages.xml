@@ -15427,4 +15427,7 @@
   <Msg id="speakcmd">
     <en txt="Speak command"/>
   </Msg>
+  <Msg id="acceptident">
+    <en txt="Accept BiDi Loco"/>
+  </Msg>
 </Messages>

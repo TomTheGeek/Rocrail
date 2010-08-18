@@ -127,6 +127,7 @@ enum {
     ME_LocDeActivate,
     ME_CloseBlock,
     ME_OpenBlock,
+    ME_AcceptIdent,
     ME_Info,
     ME_Timer,
     ME_TTLightOn,
@@ -178,6 +179,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocDeActivate, Symbol::OnLocDeActivate  )
   EVT_MENU     (ME_CloseBlock, Symbol::OnCloseBlock)
   EVT_MENU     (ME_OpenBlock, Symbol::OnOpenBlock)
+  EVT_MENU     (ME_AcceptIdent, Symbol::OnAcceptIdent)
 
   EVT_MENU     (ME_CmdStraight, Symbol::OnCmdStraight )
   EVT_MENU     (ME_CmdTurnout, Symbol::OnCmdTurnout )
@@ -1193,6 +1195,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       }
       else if( StrOp.equals( wBlock.open, state ) ) {
         menu.Append( ME_Loc, wxGetApp().getMenu("setlocid") );
+        menu.Append( ME_AcceptIdent, wxGetApp().getMenu("acceptident") );
         menu.AppendSeparator();
       }
       else if( StrOp.equals( wBlock.ghost, state ) ) {
@@ -1559,6 +1562,15 @@ void Symbol::OnOpenBlock(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
   wBlock.setid( cmd, wBlock.getid( m_Props ) );
   wBlock.setstate( cmd, wBlock.open );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnAcceptIdent(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
+  wBlock.setid( cmd, wBlock.getid( m_Props ) );
+  wBlock.setacceptident( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

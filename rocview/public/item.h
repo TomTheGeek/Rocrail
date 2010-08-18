@@ -67,6 +67,7 @@ public:
   void OnLocReset(wxCommandEvent& event);
   void OnCloseBlock(wxCommandEvent& event);
   void OnOpenBlock(wxCommandEvent& event);
+  void OnAcceptIdent(wxCommandEvent& event);
   void OnInfo(wxCommandEvent& event);
   void OnLocMIC(wxCommandEvent& event);
   void OnLocActivate(wxCommandEvent& event);
