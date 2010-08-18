@@ -1663,6 +1663,9 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     wBlock.setlocid( data->props, locid );
     /* reset ghost flag */
     data->ghost = False;
+    /* reset acceptident flag */
+    data->acceptident = False;
+
     ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, False, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
