@@ -408,7 +408,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->setLocSchedule(bl, wAction.getparam( data->action ));
       }
       else if( StrOp.equals( wAction.block_acceptident, wAction.getcmd( data->action ) ) ) {
-        bl->acceptIdent(bl);
+        bl->acceptIdent(bl, True);
       }
       else if( StrOp.equals( wAction.block_setloc, wAction.getcmd( data->action ) ) ) {
         iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ));

@@ -302,6 +302,7 @@
     </fun>
     <fun name="acceptIdent" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
+      <param name="accept" vt="Boolean"/>
     </fun>
   </interface>
 

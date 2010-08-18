@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 
 
@@ -1651,7 +1652,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   const char* locid = wBlock.getlocid( nodeA );
   const char* state = wBlock.getstate( nodeA );
 
-  if( locid != NULL ) {
+  if( NodeOp.findAttr(nodeA, wAction.block_acceptident) != NULL ) {
+    inst->acceptIdent(inst, wBlock.isacceptident(nodeA));
+  }
+  else if( locid != NULL ) {
     if( StrOp.len(locid) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       /* inform loc */
       iOLoc loc = ModelOp.getLoc( model, data->locId );
@@ -1951,12 +1955,12 @@ static void _reset( iIBlockBase inst ) {
   BlockOp.resetTrigs(inst);
 }
 
-static void _acceptIdent( iIBlockBase inst ) {
+static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
   iOBlockData data = Data(inst);
-  data->acceptident = True;
+  data->acceptident = accept;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-               "ACCEPT IDENT [%s]", data->id );
+               "ACCEPT IDENT for block [%s] is %s", data->id, accept?"ON":"OFF" );
 
   if( data->acceptident != wBlock.isacceptident(data->props) ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
