@@ -319,6 +319,7 @@
       <!-- all -->
       <var name="fbmod" vt="int" defval="0" range="*" remark="Number of connected feedback modules of 8 inputs."/>
       <var name="fbpoll" vt="bool" defval="false" remark="Poll sensor events in p50x instead of xEvtSen."/>
+      <var name="fbreset" vt="bool" defval="false" range="*" remark="Reset sensors automatically to low."/>
       <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
       <var name="identdelay" vt="int" defval="2500" unit="ms" remark="Delay before sending a low sensor state for ident codes."/>

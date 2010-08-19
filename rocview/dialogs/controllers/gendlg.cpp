@@ -97,6 +97,7 @@ void GenericCtrlDlg::initLabels() {
   m_labFeedbackBox->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labFbMod->SetLabel( wxGetApp().getMsg( "number" ) );
   m_FbPoll->SetLabel( wxGetApp().getMsg( "poll" ) );
+  m_FbReset->SetLabel( wxGetApp().getMsg( "reset" ) );
   m_PTSupport->SetLabel( wxGetApp().getMsg( "pt" ) );
 }
 
@@ -112,6 +113,7 @@ void GenericCtrlDlg::initValues() {
   char* str = StrOp.fmt("%d",wDigInt.getfbmod( m_Props ));
   m_FbMod->SetValue( wxString( str, wxConvUTF8 ) ); StrOp.free(str);
   m_FbPoll->SetValue( wDigInt.isfbpoll( m_Props ) );
+  m_FbReset->SetValue( wDigInt.isfbreset( m_Props ) );
   m_PTSupport->SetValue( wDigInt.isptsupport( m_Props ) );
 
   // flow control
@@ -162,6 +164,7 @@ void GenericCtrlDlg::evaluate() {
 
   wDigInt.setfbmod( m_Props, atoi(m_FbMod->GetValue().mb_str(wxConvUTF8)) );
   wDigInt.setfbpoll( m_Props, m_FbPoll->IsChecked()?True:False );
+  wDigInt.setfbreset( m_Props, m_FbReset->IsChecked()?True:False );
   wDigInt.setptsupport( m_Props, m_PTSupport->IsChecked()?True:False );
 
   // flow control
@@ -218,6 +221,7 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_labFbMod = NULL;
     m_FbMod = NULL;
     m_FbPoll = NULL;
+    m_FbReset = NULL;
     m_PTSupport = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
@@ -262,19 +266,19 @@ void GenericCtrlDlg::CreateControls()
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT1, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labLib = new wxStaticText( itemPanel3, wxID_ANY, _("Library"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labLib, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Lib = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+    m_Lib = new wxTextCtrl( itemPanel3, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_Lib->Enable(false);
     itemFlexGridSizer5->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -328,25 +332,32 @@ void GenericCtrlDlg::CreateControls()
     m_FbMod = new wxTextCtrl( itemPanel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemBoxSizer20->Add(m_FbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
+    itemStaticBoxSizer19->Add(itemBoxSizer23, 0, wxGROW|wxALL, 5);
+
     m_FbPoll = new wxCheckBox( itemPanel3, wxID_ANY, _("Poll"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FbPoll->SetValue(false);
-    itemStaticBoxSizer19->Add(m_FbPoll, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer23->Add(m_FbPoll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    m_FbReset = new wxCheckBox( itemPanel3, wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FbReset->SetValue(false);
+    itemBoxSizer23->Add(m_FbReset, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_PTSupport = new wxCheckBox( itemPanel3, wxID_ANY, _("PT Support"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PTSupport->SetValue(false);
     itemBoxSizer4->Add(m_PTSupport, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer27 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer25->AddButton(m_OK);
+    itemStdDialogButtonSizer27->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer25->AddButton(m_Cancel);
+    itemStdDialogButtonSizer27->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer25->Realize();
+    itemStdDialogButtonSizer27->Realize();
 
 ////@end GenericCtrlDlg content construction
 }

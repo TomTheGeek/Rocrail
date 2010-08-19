@@ -596,7 +596,7 @@ static void __handleSystem(iOMassothData data, byte* in) {
   }
 }
 
-static void __handleContact(iOMassothData data, byte* in) {
+static void __handleSensor(iOMassothData data, byte* in) {
   iONode nodeC = NULL;
   iONode nodeD = NULL;
   Boolean state = in[3] & 0x01 ? True:False;
@@ -607,45 +607,21 @@ static void __handleContact(iOMassothData data, byte* in) {
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "contact report: addr=%d", addr );
   nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, True );
+  wFeedback.setstate( nodeC, data->fbreset?True:state );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
 
-  nodeD = (iONode)NodeOp.base.clone(nodeC);
+  if( data->fbreset && data->ticker != NULL)
+    nodeD = (iONode)NodeOp.base.clone(nodeC);
+
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-  NodeOp.setLong(nodeD, "tick", SystemOp.getTick() );
-  ThreadOp.post( data->ticker, (obj)(nodeD) );
-
+  if( data->fbreset && data->ticker != NULL) {
+    NodeOp.setLong(nodeD, "tick", SystemOp.getTick() );
+    ThreadOp.post( data->ticker, (obj)(nodeD) );
+  }
 }
 
-
-
-static void __handleSensor(iOMassothData data, byte* in) {
-  iONode nodeC = NULL;
-  Boolean state = in[3] & 0x01 ? True:False;
-  int addr = in[2] << 6;
-  addr += in[3] >> 2;
-  addr = addr * 2 - 1 + state;
-
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "feedback report: addr=%d", addr );
-  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, True );
-  if( data->iid != NULL )
-    wFeedback.setiid( nodeC, data->iid );
-
-  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-
-  ThreadOp.sleep(10);
-  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, False );
-  if( data->iid != NULL )
-    wFeedback.setiid( nodeC, data->iid );
-
-  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-}
 
 
 static void __evaluatePacket(iOMassothData data, byte* in) {
@@ -661,10 +637,7 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     break;
   case 0x4B:
     /* sensor report */
-    if( data->useSensor )
-      __handleSensor(data, in);
-    else
-      __handleContact(data, in);
+    __handleSensor(data, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
@@ -836,17 +809,17 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->device    = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid       = StrOp.dup( wDigInt.getiid( ini ) );
   data->dummyio   = wDigInt.isdummyio(ini);
-  data->useSensor = False;
+  data->fbreset   = wDigInt.isfbreset(ini);;
   data->useParallelFunctions = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Massoth %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate  = 57600 (fix)" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedback  = %s", data->useSensor ? "sensor":"contact" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "functions = %s", data->useParallelFunctions ? "parallel":"serial" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate      = 57600 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "functions     = %s", data->useParallelFunctions ? "parallel":"serial" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;
@@ -866,7 +839,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
     data->purger = ThreadOp.inst( "purger", &__purger, __Massoth );
     ThreadOp.start( data->purger );
 
-    if( !data->useSensor ) {
+    if( data->fbreset ) {
       char* thname = StrOp.fmt("massothtick%X", __Massoth);
       data->ticker = ThreadOp.inst( thname, &__ContactTicker, __Massoth );
       StrOp.free(thname),

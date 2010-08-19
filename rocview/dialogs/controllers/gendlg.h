@@ -131,6 +131,7 @@ public:
     wxStaticText* m_labFbMod;
     wxTextCtrl* m_FbMod;
     wxCheckBox* m_FbPoll;
+    wxCheckBox* m_FbReset;
     wxCheckBox* m_PTSupport;
     wxButton* m_OK;
     wxButton* m_Cancel;

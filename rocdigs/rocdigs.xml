@@ -1095,7 +1095,7 @@
       <var name="initialized" vt="Boolean"/>
       <var name="ticker" vt="iOThread"/>
       <var name="purger" vt="iOThread"/>
-      <var name="useSensor" vt="Boolean"/>
+      <var name="fbreset" vt="Boolean"/>
       <var name="useParallelFunctions" vt="Boolean"/>
     </data>
   </object>
