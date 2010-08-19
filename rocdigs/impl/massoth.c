@@ -219,6 +219,42 @@ static int __normalizeSteps(int insteps ) {
 }
 
 
+static void __configureVehicle(iOMassothData data, iONode node) {
+  /* configure vehicle */
+  byte cmd[32] = {0};
+  int steps  = wLoc.getspcnt(node);
+  int addr  = wLoc.getaddr(node);
+  int nsteps = __normalizeSteps(steps);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s not configured", wLoc.getid(node) );
+  cmd[0] = 0x85;
+  cmd[1] = 0; /*xor*/
+  cmd[2] = addr >> 8;
+  cmd[3] = addr & 0x00FF;
+  if( nsteps == 128 )
+    cmd[4] = 0x02;
+  else if( nsteps == 28 )
+    cmd[4] = 0x01;
+  else
+    cmd[4] = 0x00;
+  cmd[4] |= data->useParallelFunctions ? 0x04:0x00;
+  cmd[4] |= 0x80; /* store */
+  cmd[5] = wLoc.getimagenr(node);
+
+  if( __transact( data, cmd, NULL, 0, NULL ) ) {
+    iOSlot slot = allocMem( sizeof( struct slot) );
+    slot->addr = addr;
+    slot->steps = __normalizeSteps(steps);
+    slot->id = StrOp.dup(wLoc.getid(node));
+    slot->idle = SystemOp.getTick();
+    if( MutexOp.wait( data->lcmux ) ) {
+      MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+      MutexOp.post(data->lcmux);
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  }
+
+}
+
 static iOSlot __getSlot(iOMassothData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -241,59 +277,30 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   cmd[1] = 0; /*xor*/
   cmd[2] = addr >> 8;
   cmd[3] = addr & 0x00FF;
-  cmd[4] = 0x80;
+  cmd[4] = 0x90;
 
   if( __transact( data, cmd, rsp, 0x40, &gotid ) ) {
     if( gotid ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
-      slot = allocMem( sizeof( struct slot) );
-      slot->addr = addr;
 
       if( rsp[2] == 0x08 ) {
         /* address not in use */
+        __configureVehicle(data, node);
+      }
+      else {
+        slot = allocMem( sizeof( struct slot) );
+        slot->addr = addr;
         if( rsp[5] & 0x03 == 0x01 )
           slot->steps = 28;
         else if( rsp[5] & 0x03 == 0x10 )
           slot->steps = 128;
         else
           slot->steps = 14;
-      }
-      else {
         /* address in use */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %s in use...", wLoc.getid(node) );
         slot->steps = __normalizeSteps(steps);
-      }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
 
-      slot->id = StrOp.dup(wLoc.getid(node));
-      slot->idle = SystemOp.getTick();
-      if( MutexOp.wait( data->lcmux ) ) {
-        MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-        MutexOp.post(data->lcmux);
-      }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
-    }
-    else {
-      /* configure vehicle */
-      int nsteps = __normalizeSteps(steps);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: %s not configured", wLoc.getid(node) );
-      cmd[0] = 0x85;
-      cmd[1] = 0; /*xor*/
-      cmd[2] = addr >> 8;
-      cmd[3] = addr & 0x00FF;
-      if( nsteps == 128 )
-        cmd[4] = 0x02;
-      else if( nsteps == 28 )
-        cmd[4] = 0x01;
-      else
-        cmd[4] = 0x00;
-      cmd[4] |= data->useParallelFunctions ? 0x04:0x00;
-      cmd[5] = wLoc.getimagenr(node);
-
-      if( __transact( data, cmd, NULL, 0, NULL ) ) {
-        slot = allocMem( sizeof( struct slot) );
-        slot->addr = addr;
-        slot->steps = __normalizeSteps(steps);
         slot->id = StrOp.dup(wLoc.getid(node));
         slot->idle = SystemOp.getTick();
         if( MutexOp.wait( data->lcmux ) ) {
@@ -302,6 +309,10 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
       }
+    }
+    else {
+      /* configure vehicle */
+      __configureVehicle(data, node);
     }
   }
 
