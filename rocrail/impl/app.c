@@ -328,6 +328,18 @@ static int __logo( void ) {
   TraceOp.println( "       mac = %s", SocketOp.getMAC( NULL ) );
   TraceOp.println( "--------------------------------------------------" );
   /*TraceOp.printHeader();*/
+
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
+      StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+    TraceOp.println( "*******************************************************************" );
+    TraceOp.println( "* Rocrail runs entirely on volunteer labor.                       *");
+    TraceOp.println( "* However, Rocrail also needs contributions of money.             *");
+    TraceOp.println( "* Your continued support is vital for keeping Rocrail available.  *");
+    TraceOp.println( "* If you already did donate you can ask a key: donate@rocrail.net *");
+    TraceOp.println( "*******************************************************************" );
+  }
+
+
   return svn;
 }
 

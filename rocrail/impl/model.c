@@ -1678,6 +1678,13 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
     wPlan.setrocrailversion( data->model, version );
 
+    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
+        StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+      wPlan.setdonkey(data->model, True);
+    }
+    else
+      wPlan.setdonkey(data->model, False);
+
 
     wAutoCmd.setcmd( autoevent, ModelOp.isAuto(inst)?wAutoCmd.on:wAutoCmd.off );
     wState.setconsolemode( stateevent, AppOp.isConsoleMode() );

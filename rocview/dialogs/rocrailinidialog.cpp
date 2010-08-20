@@ -62,6 +62,8 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/R2RnetIni.h"
 
+#include "rocview/wrapper/public/Gui.h"
+
 #include "rocview/public/guiapp.h"
 
 ////@begin XPM images
@@ -1406,6 +1408,9 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
 void RocrailIniDialog::OnOkClick( wxCommandEvent& event )
 {
   evaluate();
+  /* set donation key */
+  wRocRail.setdonkey(m_Props, wGui.getdonkey(wxGetApp().getIni()));
+  wRocRail.setdoneml(m_Props, wGui.getdoneml(wxGetApp().getIni()));
   /* Notify RocRail. */
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.setini );
