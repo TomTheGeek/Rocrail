@@ -232,6 +232,8 @@ static void _setIni( iONode ini ) {
       wTrace.setautomatic( curtrace, wTrace.isautomatic( trace ) );
       wTrace.setbyte( curtrace, wTrace.isbyte( trace ) );
       wTrace.setdebug( curtrace, wTrace.isdebug( trace ) );
+      wRocRail.setdonkey(data->ini, wRocRail.getdonkey( ini ) );
+      wRocRail.setdoneml(data->ini, wRocRail.getdoneml( ini ) );
     }
 
     /* free up newini from previous setIni */
