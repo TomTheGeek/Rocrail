@@ -219,9 +219,10 @@ static int __normalizeSteps(int insteps ) {
 }
 
 
-static void __configureVehicle(iOMassothData data, iONode node) {
+static iOSlot __configureVehicle(iOMassothData data, iONode node) {
   /* configure vehicle */
   byte cmd[32] = {0};
+  iOSlot slot = NULL;
   int steps  = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
   int nsteps = __normalizeSteps(steps);
@@ -241,7 +242,7 @@ static void __configureVehicle(iOMassothData data, iONode node) {
   cmd[5] = wLoc.getimagenr(node);
 
   if( __transact( data, cmd, NULL, 0, NULL ) ) {
-    iOSlot slot = allocMem( sizeof( struct slot) );
+    slot = allocMem( sizeof( struct slot) );
     slot->addr = addr;
     slot->steps = __normalizeSteps(steps);
     slot->id = StrOp.dup(wLoc.getid(node));
@@ -252,6 +253,8 @@ static void __configureVehicle(iOMassothData data, iONode node) {
     }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   }
+
+  return slot;
 
 }
 
@@ -285,7 +288,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
 
       if( rsp[2] == 0x08 ) {
         /* address not in use */
-        __configureVehicle(data, node);
+        slot = __configureVehicle(data, node);
       }
       else {
         slot = allocMem( sizeof( struct slot) );
@@ -312,7 +315,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
     }
     else {
       /* configure vehicle */
-      __configureVehicle(data, node);
+      slot = __configureVehicle(data, node);
     }
   }
 
