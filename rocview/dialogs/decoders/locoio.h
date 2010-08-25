@@ -292,7 +292,7 @@ public:
     wxRadioButton* m_EasyBlock8;
     wxRadioButton* m_EasyOutput8;
     wxRadioButton* m_EasyPulse8;
-    wxCheckBox* m_EasyContact9;
+    wxCheckBox* m_EasyContact8;
     wxStaticText* m_labEasyPort2;
     wxStaticText* m_labEasyAddress2;
     wxStaticText* m_labEasyInput2;
@@ -304,7 +304,7 @@ public:
     wxRadioButton* m_EasyBlock9;
     wxRadioButton* m_EasyOutput9;
     wxRadioButton* m_EasyPulse9;
-    wxCheckBox* m_EasyContact8;
+    wxCheckBox* m_EasyContact9;
     wxSpinCtrl* m_EasyAddr10;
     wxRadioButton* m_EasyInput10;
     wxRadioButton* m_EasyBlock10;
