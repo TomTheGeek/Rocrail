@@ -610,7 +610,30 @@ static void __handleSystem(iOMassothData data, byte* in) {
   }
 }
 
+/*
+  feedback data :
+  Header     Xor       Data1     Data2
+  010 01 011 xxxx xxxx 00ss ssss ssss sssf
+ */
 static void __handleSensor(iOMassothData data, byte* in) {
+  iONode nodeC = NULL;
+  Boolean state = in[3] & 0x01 ? True:False;
+  int addr = in[2] << 7;
+  addr += in[3] >> 1;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report: addr=%d state=%s", addr, state?"occupied":"free" );
+  nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, state );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+}
+
+
+static void __handleContact(iOMassothData data, byte* in) {
   iONode nodeC = NULL;
   iONode nodeD = NULL;
   Boolean state = in[3] & 0x01 ? True:False;
@@ -625,15 +648,12 @@ static void __handleSensor(iOMassothData data, byte* in) {
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
 
-  if( data->fbreset && data->ticker != NULL)
-    nodeD = (iONode)NodeOp.base.clone(nodeC);
+  nodeD = (iONode)NodeOp.base.clone(nodeC);
 
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-  if( data->fbreset && data->ticker != NULL) {
-    NodeOp.setLong(nodeD, "tick", SystemOp.getTick() );
-    ThreadOp.post( data->ticker, (obj)(nodeD) );
-  }
+  NodeOp.setLong(nodeD, "tick", SystemOp.getTick() );
+  ThreadOp.post( data->ticker, (obj)(nodeD) );
 }
 
 
@@ -651,7 +671,10 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     break;
   case 0x4B:
     /* sensor report */
-    __handleSensor(data, in);
+    if( data->fbreset)
+      __handleContact(data, in);
+    else
+      __handleSensor(data, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
