@@ -387,32 +387,51 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
   data->state = LC_IDLE;
   data->loc->setMode(data->loc, wLoc.mode_idle);
   LcDriverOp.brake( inst );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "reset event for [%s], unlocking groups and routes...",
                  data->loc->getId( data->loc ) );
   /* unlock routes */
-  unlockBlockGroup( (iOLcDriver)inst, data->blockgroup );
-  if( data->next1Route != NULL )
+  if( data->blockgroup != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking blockgroup for %s...", data->loc->getId( data->loc ));
+    unlockBlockGroup( (iOLcDriver)inst, data->blockgroup );
+  }
+
+  if( data->next1Route != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next1Route for %s...", data->loc->getId( data->loc ));
     data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL, True );
-  if( data->next2Route != NULL )
+  }
+  if( data->next2Route != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next2Route for %s...", data->loc->getId( data->loc ));
     data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL, True );
-  if( data->next3Route != NULL )
+}
+  if( data->next3Route != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next3Route for %s...", data->loc->getId( data->loc ));
     data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL, True );
+  }
 
   if( data->curBlock == NULL ) {
-    data->curBlock  = data->model->getBlock( data->model, data->loc->getCurBlock( data->loc ) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "getting curBlock for %s...", data->loc->getId( data->loc ));
+    data->curBlock = data->model->getBlock( data->model, data->loc->getCurBlock( data->loc ) );
   }
 
 
-  if( data->prevBlock != NULL && data->prevBlock != data->curBlock )
+  if( data->prevBlock != NULL && data->prevBlock != data->curBlock ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking prevBlock for %s...", data->loc->getId( data->loc ));
     data->prevBlock->unLock( data->prevBlock, data->loc->getId( data->loc ) );
+  }
 
-  if( data->next1Block != NULL && data->next1Block != data->curBlock )
+  if( data->next1Block != NULL && data->next1Block != data->curBlock ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next1Block for %s...", data->loc->getId( data->loc ));
     data->next1Block->unLock( data->next1Block, data->loc->getId( data->loc ) );
-  if( data->next2Block != NULL && data->next2Block != data->curBlock )
+  }
+  if( data->next2Block != NULL && data->next2Block != data->curBlock ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next2Block for %s...", data->loc->getId( data->loc ));
     data->next2Block->unLock( data->next2Block, data->loc->getId( data->loc ) );
-  if( data->next3Block != NULL && data->next3Block != data->curBlock )
+  }
+  if( data->next3Block != NULL && data->next3Block != data->curBlock ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next3Block for %s...", data->loc->getId( data->loc ));
     data->next3Block->unLock( data->next3Block, data->loc->getId( data->loc ) );
+  }
 
   data->next1Route = NULL;
   data->next2Route = NULL;
@@ -423,6 +442,7 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
   data->next3Block = NULL;
 
   if( data->curBlock != NULL && !saveCurBlock ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking curBlock for %s...", data->loc->getId( data->loc ));
     data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
     data->curBlock = NULL;
     data->loc->setCurBlock( data->loc, NULL );

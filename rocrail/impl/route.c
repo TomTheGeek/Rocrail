@@ -1053,20 +1053,24 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
   }
 }
 
-static Boolean _unLock( iORoute inst, const char* id, const char** resblocks, Boolean unlockswitches ) {
+static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, Boolean unlockswitches ) {
   iORouteData o = Data(inst);
-  if( StrOp.equals( id, o->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), id );
+  if( StrOp.equals( lcid, o->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), lcid );
     if( unlockswitches )
-      __unlockSwitches( inst, id );
-    __unlockCrossingBlocks( inst, id, resblocks );
+      __unlockSwitches( inst, lcid );
+    __unlockCrossingBlocks( inst, lcid, resblocks );
     o->lockedId = NULL;
     __broadcast(inst);
     return True;
   }
+  else if(o->lockedId == NULL) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s; route %s because it is not locked",
+        lcid, RouteOp.getId(inst) );
+  }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s, route %s already locked by %s",
-        id, RouteOp.getId(inst), o->lockedId );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s; route %s already locked by %s",
+        lcid, RouteOp.getId(inst), o->lockedId );
   }
   return False;
 }
@@ -1159,9 +1163,11 @@ static char* _postForm( void* inst, const char* postdata ) {
 
 static void _reset( iORoute inst ) {
   iORouteData o = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-             "reset route [%s]", RouteOp.getId( inst ) );
-  RouteOp.unLock( inst, o->lockedId, NULL, True );
+  if( o->lockedId != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+               "reset route [%s]", RouteOp.getId( inst ) );
+    RouteOp.unLock( inst, o->lockedId, NULL, True );
+  }
 }
 
 
