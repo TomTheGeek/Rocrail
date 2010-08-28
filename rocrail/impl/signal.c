@@ -27,6 +27,8 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Ctrl.h"
 
+#include "rocint/public/blockbase.h"
+
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
@@ -612,6 +614,7 @@ static void __checkAction( iOSignal inst ) {
   iOSignalData data     = Data(inst);
   iOModel      model    = AppOp.getModel();
   iONode       sgaction = wSignal.getactionctrl( data->props );
+  iIBlockBase  bk       = NULL;
 
   while( sgaction != NULL) {
       if( StrOp.len( wActionCtrl.getstate(sgaction) ) == 0 ||
@@ -621,6 +624,13 @@ static void __checkAction( iOSignal inst ) {
         iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( sgaction ));
         if( action != NULL ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "signal action: %s", wActionCtrl.getid( sgaction ));
+          bk = ModelOp.getBlock4Signal(model, SignalOp.getId(inst));
+
+          if( bk != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "signal in block %s with loco %s", bk->base.id(bk), bk->getLoc(bk) );
+            wActionCtrl.setlcid(sgaction, bk->getLoc(bk) );
+          }
+
           ActionOp.exec(action, sgaction);
         }
       }

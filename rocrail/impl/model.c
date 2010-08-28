@@ -2145,6 +2145,24 @@ static iIBlockBase _getBlock( iOModel inst, const char* id ) {
   return (iIBlockBase)MapOp.get( o->blockMap, id );
 }
 
+static iIBlockBase _getBlock4Signal( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  iIBlockBase block = (iIBlockBase)MapOp.first( o->blockMap );
+  while( block != NULL ) {
+    iONode props = block->base.properties(block);
+    if( wBlock.getsignal(props) != NULL && StrOp.equals(wBlock.getsignal(props), id))
+      return (iIBlockBase)block;
+    if( wBlock.getwsignal(props) != NULL && StrOp.equals(wBlock.getwsignal(props), id))
+      return (iIBlockBase)block;
+    if( wBlock.getsignalR(props) != NULL && StrOp.equals(wBlock.getsignalR(props), id))
+      return (iIBlockBase)block;
+    if( wBlock.getwsignalR(props) != NULL && StrOp.equals(wBlock.getwsignalR(props), id))
+      return (iIBlockBase)block;
+    block = (iIBlockBase)MapOp.next( o->blockMap );
+  };
+  return NULL;
+}
+
 static iOFBack _getFBack( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   if( id == NULL || StrOp.len( id ) == 0 )
