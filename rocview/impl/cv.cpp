@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/CVByte.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/CVconf.h"
@@ -858,6 +859,17 @@ void CV::setLongAddress() {
       m_CVoperation = CVSET;
       doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
     }
+    if( m_LocProps != NULL ) {
+      wLoc.setaddr(m_LocProps, addr);
+      if( !wxGetApp().isStayOffline() ) {
+        /* Notify RocRail. */
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.modify );
+        NodeOp.addChild( cmd, (iONode)m_LocProps->base.clone( m_LocProps ) );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+    }
   }
 }
 
@@ -932,6 +944,17 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
   if( m_LocProps != NULL ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
+    if( index == 1) {
+      wLoc.setaddr(m_LocProps, value);
+      if( !wxGetApp().isStayOffline() ) {
+        /* Notify RocRail. */
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.modify );
+        NodeOp.addChild( cmd, (iONode)m_LocProps->base.clone( m_LocProps ) );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+    }
   }
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
       "sending program command for addr=%d cmd=%d index=%d value=%d...", addr, command, index, value );

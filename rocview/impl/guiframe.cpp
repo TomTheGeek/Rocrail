@@ -1004,6 +1004,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           }
         }
 
+        val = StrOp.fmt( "%d", wLoc.getaddr( node ) );
+        m_ActiveLocs->SetCellValue( i, LOC_COL_ADDR, wxString(val,wxConvUTF8) );
+        StrOp.free( val );
 
 
         int jsdev = m_JsSupport!= NULL ? m_JsSupport->getDev4ID(locid) : -1;
