@@ -807,6 +807,119 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
 
 
 
+/*
+ * Bitwertigkeit 0-7, Rückmeldung an die Ansteueradresse.
+ *
+ * Bit 7 = Startbit: 0 = Ruhelage bzw. Nothalt, wenn gesetzt war. 1 = Start.
+ * Bit 6 muss stets gesetzt sein. 0= Handsteuerung, 1= PC-Steuerung
+ * Bit 0 bis 5: Drehposition 0 bis 47, entsprechend Wertigkeit. 00 0000 = Stellung 0, 10 1111 = Stellung 47
+ * Nach Erreichen der Sollposition Rückmeldung der Istposition (= Sollposition) in Bit 0 bis 5 und Rücksetzen von Bit 7: 01xx xxxx
+ * Abfrage der Drehposition: Drehposition 48 = 11 0000, Start durch Bit 7 = 1.
+ * Rückmeldung. 01xx xxxx, wobei xx xxxx die Drehposition beinhaltet.
+ *
+ * the command type is wProgram.lntype_mp which must be implemented in the slx library(ies)
+ */
+static Boolean __cmd_slx815( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  iONode cmd = NULL;
+  int tracknr = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", cmdStr );
+
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    tracknr = __getNextTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    tracknr = __getPrevTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    tracknr = __getOppositeTrack( inst, data->tablepos );
+
+    if( tracknr == -1 ) {
+      if( data->tablepos <= 24 )
+        data->gotopos = data->tablepos + 24;
+      else
+        data->gotopos = data->tablepos - 24;
+      tracknr = data->gotopos;
+    }
+    else {
+      data->gotopos = tracknr;
+    }
+    data->skippos = -1;
+  }
+  else {
+    /* Tracknumber */
+    tracknr = atoi( cmdStr );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+
+    if( move ) {
+      data->gotopos = tracknr;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
+    }
+
+  }
+
+  if( cmd != NULL && control != NULL )
+  {
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wTurntable.setiid( cmd, iid );
+
+    tracknr = __getMappedTrack( inst, tracknr );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
+
+    /* pending move operation */
+    data->pending = True;
+
+    /* rename node to program */
+    NodeOp.setName( cmd, wProgram.name() );
+    /* set type to multiport */
+    wProgram.setlntype( cmd, wProgram.lntype_mp );
+    wProgram.setcmd( cmd, wProgram.lncvset );
+    wProgram.setaddr( cmd, wTurntable.getaddr(data->props) );
+    wProgram.setcv( cmd, 0x00FF ); /* mask */
+    wProgram.setvalue( cmd, tracknr | 0xC0 ); /* value */
+    ControlOp.cmd( control, cmd, NULL );
+
+
+    data->dir = ttdir;
+
+  }
+
+
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+
+
+  return ok;
+}
+
+
+
 static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   Boolean ok = True;
@@ -1012,6 +1125,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_f6915( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.muet ) )
     return __cmd_muet( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.slx815 ) )
+    return __cmd_slx815( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",

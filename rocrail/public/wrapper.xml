@@ -1520,6 +1520,7 @@
         <const name="multiport" vt="string" val="multiport" remark="Multiport step motor turntable."/>
         <const name="f6915" vt="string" val="f6915" remark="Fleischmann turn controller."/>
         <const name="muet" vt="string" val="muet" remark="Muet controller with stepper motor."/>
+        <const name="slx815" vt="string" val="slx815" remark="Rautenhaus controller."/>
         <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
         <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
