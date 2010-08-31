@@ -36,6 +36,10 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/BlockList.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/OutputList.h"
+#include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/FeedbackList.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/strtok.h"
@@ -82,6 +86,14 @@ void PowerManDlg::onSetPage(wxCommandEvent& event) {
 }
 
 
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
 void PowerManDlg::initLabels() {
   TraceOp.trc( "boosterdlg", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
   SetTitle(wxGetApp().getMsg( "boostertable" ));
@@ -115,6 +127,55 @@ void PowerManDlg::initLabels() {
       }
     }
   }
+
+  iOList list = ListOp.inst();
+  if( model != NULL ) {
+    iONode fblist = wPlan.getfblist( model );
+    if( fblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( fblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = NodeOp.getChild( fblist, i );
+        const char* id = wFeedback.getid( fb );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+      ListOp.sort(list, &__sortStr);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+        m_ShortcutSensor->Append( wxString(id,wxConvUTF8) );
+        m_PowerSensor->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+
+
+  list = ListOp.inst();
+  if( model != NULL ) {
+    iONode colist = wPlan.getcolist( model );
+    if( colist != NULL ) {
+      int cnt = NodeOp.getChildCnt( colist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode co = NodeOp.getChild( colist, i );
+        const char* id = wOutput.getid( co );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+      ListOp.sort(list, &__sortStr);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+        m_PowerOutput->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+
 
   // Options
   m_StopDistrictLocos->SetLabel( wxGetApp().getMsg( "scopt_stoplocos" ) );
@@ -213,6 +274,11 @@ void PowerManDlg::initValues() {
   m_ID->SetValue( wxString(wBooster.getid( m_Props ),wxConvUTF8) );
   m_District->SetValue( wxString(wBooster.getdistrict( m_Props ),wxConvUTF8) );
 
+  m_ShortcutSensor->SetStringSelection( wxString(wBooster.getscfb( m_Props ),wxConvUTF8) );
+  m_PowerSensor->SetStringSelection( wxString(wBooster.getpowerfb( m_Props ),wxConvUTF8) );
+  m_PowerOutput->SetStringSelection( wxString(wBooster.getpowersw( m_Props ),wxConvUTF8) );
+
+
   m_ModuleList->Clear();
   iOStrTok tok = StrTokOp.inst( wBooster.getmodids( m_Props ), ',' );
   while( StrTokOp.hasMoreTokens( tok ) )  {
@@ -256,6 +322,10 @@ bool PowerManDlg::evaluate() {
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wBooster.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wBooster.setdistrict( m_Props, m_District->GetValue().mb_str(wxConvUTF8) );
+  wBooster.setscfb( m_Props, m_ShortcutSensor->GetStringSelection().mb_str(wxConvUTF8) );
+  wBooster.setpowerfb( m_Props, m_PowerSensor->GetStringSelection().mb_str(wxConvUTF8) );
+  wBooster.setpowersw( m_Props, m_PowerOutput->GetStringSelection().mb_str(wxConvUTF8) );
+
 
   int cnt = m_ModuleList->GetCount();
   char* modids = NULL;
