@@ -140,6 +140,8 @@ void PowerManDlg::initLabels() {
           ListOp.add(list, (obj)id);
         }
       }
+      m_ShortcutSensor->Append( _T("-") );
+      m_PowerSensor->Append( _T("-") );
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -165,6 +167,7 @@ void PowerManDlg::initLabels() {
           ListOp.add(list, (obj)id);
         }
       }
+      m_PowerOutput->Append( _T("-") );
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -322,10 +325,21 @@ bool PowerManDlg::evaluate() {
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wBooster.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wBooster.setdistrict( m_Props, m_District->GetValue().mb_str(wxConvUTF8) );
-  wBooster.setscfb( m_Props, m_ShortcutSensor->GetStringSelection().mb_str(wxConvUTF8) );
-  wBooster.setpowerfb( m_Props, m_PowerSensor->GetStringSelection().mb_str(wxConvUTF8) );
-  wBooster.setpowersw( m_Props, m_PowerOutput->GetStringSelection().mb_str(wxConvUTF8) );
 
+  if( StrOp.equals( "-", m_ShortcutSensor->GetStringSelection().mb_str(wxConvUTF8) ) )
+    wBooster.setscfb( m_Props, "" );
+  else
+    wBooster.setscfb( m_Props, m_ShortcutSensor->GetStringSelection().mb_str(wxConvUTF8) );
+
+  if( StrOp.equals( "-", m_PowerSensor->GetStringSelection().mb_str(wxConvUTF8) ) )
+    wBooster.setpowerfb( m_Props, "" );
+  else
+    wBooster.setpowerfb( m_Props, m_PowerSensor->GetStringSelection().mb_str(wxConvUTF8) );
+
+  if( StrOp.equals( "-", m_PowerOutput->GetStringSelection().mb_str(wxConvUTF8) ) )
+    wBooster.setpowersw( m_Props, "" );
+  else
+    wBooster.setpowersw( m_Props, m_PowerOutput->GetStringSelection().mb_str(wxConvUTF8) );
 
   int cnt = m_ModuleList->GetCount();
   char* modids = NULL;
