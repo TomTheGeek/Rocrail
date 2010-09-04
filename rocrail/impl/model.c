@@ -3169,6 +3169,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "from route To side is [%s]", stToSide?"+":"-" );
     }
   }
+  else {
+    /* initial startup; use the saved ahead side */
+    stToSide = lcDir;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco ahead block side [%s]", stToSide?"+":"-" );
+  }
 
   fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
 
