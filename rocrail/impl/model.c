@@ -3162,6 +3162,8 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   Boolean destdir = False;
   Boolean samedir = False;
 
+  iIBlockBase fromBlock = ModelOp.getBlock( inst, fromBlockId );
+
   if( fromRouteId != NULL ) {
     iORoute fromRoute = ModelOp.getRoute( inst, fromRouteId );
     if( fromRoute != NULL ) {
@@ -3171,7 +3173,8 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   }
   else {
     /* initial startup; use the saved ahead side */
-    stToSide = lcDir;
+    if( fromBlock != NULL )
+      stToSide = !wLoc.isplacing(loc->base.properties(loc));
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco ahead block side [%s]", stToSide?"+":"-" );
   }
 
@@ -3187,7 +3190,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     int size = ListOp.size( o->routeList );
     int i = 0;
     Boolean allowChgDir = True;
-    iIBlockBase fromBlock = ModelOp.getBlock( inst, fromBlockId );
 
     if( fromBlock != NULL ) {
       allowChgDir = wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) );
