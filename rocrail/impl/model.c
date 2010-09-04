@@ -3152,16 +3152,22 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
   Boolean usemanualroutes  = wLoc.isusemanualroutes(LocOp.base.properties( loc ));
-  Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
   Boolean lcDir            = wLoc.islcdir( loc->base.properties(loc) );
-  Boolean stDir            = False;
+  Boolean stToSide         = False; /* the To side of the from route */
+  Boolean stFromSide       = True;  /* the From side of the new to route */
+
+  /* The use blockside option works only with one way type, so both directions will fail. */
+  Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
   Boolean destdir = False;
   Boolean samedir = False;
 
   if( fromRouteId != NULL ) {
     iORoute fromRoute = ModelOp.getRoute( inst, fromRouteId );
-    stDir = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+    if( fromRoute != NULL ) {
+      stToSide = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "from route To side is [%s]", stToSide?"+":"-" );
+    }
   }
 
   fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
@@ -3203,6 +3209,17 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         Boolean ismanual = RouteOp.isManual( route, &isset );
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
+
+        stFromSide = wRoute.isbkbside(route->base.properties(route));
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "to route From side is [%s]", stFromSide?"+":"-" );
+
+        if( useBlockSide && stFromSide == stToSide ) {
+          /* need to change direction */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring route [%s] because the from is equal to the To of previous route [%s]",
+              RouteOp.getId(route), stFromSide?"+":"-" );
+          continue;
+        }
+
 
         if( usemanualroutes ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
