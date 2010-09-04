@@ -3152,7 +3152,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
   Boolean usemanualroutes  = wLoc.isusemanualroutes(LocOp.base.properties( loc ));
-  Boolean lcDir            = wLoc.islcdir( loc->base.properties(loc) );
   Boolean stToSide         = False; /* the To side of the from route */
   Boolean stFromSide       = True;  /* the From side of the new to route */
 
@@ -3595,7 +3594,7 @@ static void _stop( iOModel inst ) {
 }
 
 
-static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean lcDir, Boolean closed, int placing ) {
+static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing ) {
   iOModelData data = Data(inst);
   iONode occ = NULL;
 
@@ -3614,7 +3613,6 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
 
   /* modify the node */
   wOccupation.setlcid( occ, LocId );
-  wOccupation.setlcdir( occ, lcDir );
   wOccupation.setauto( occ, False );
   wOccupation.setclosed( occ, closed );
 
@@ -3720,7 +3718,6 @@ static void _loadBlockOccupation( iOModel inst ) {
       int         placing  = wOccupation.getplacing( occ );
       Boolean     closed   = wOccupation.isclosed( occ );
       Boolean     automode = wOccupation.isauto( occ );
-      Boolean     lcdir    = wOccupation.islcdir( occ );
       iOLoc       loco     = ModelOp.getLoc( inst, LocoID );
 
       MapOp.put( data->occMap, BlockID, NodeOp.base.clone( occ ) );
@@ -3756,7 +3753,6 @@ static void _loadBlockOccupation( iOModel inst ) {
              occupation so all LocoID's are invalid.
           */
           wBlock.setlocid( props, StrOp.dup( LocoID ) );
-          wBlock.setlcdir( props, lcdir );
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
         }
 

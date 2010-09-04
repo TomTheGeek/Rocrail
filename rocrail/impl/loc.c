@@ -452,7 +452,6 @@ static void* __event( void* inst, const void* evt ) {
       iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( node, wLoc.getid( data->props ) );
       wLoc.setdir( node, wLoc.isdir( data->props ) );
-      wLoc.setlcdir( node, wLoc.islcdir( data->props ) );
       wLoc.setaddr( node, wLoc.getaddr( data->props ) );
       wLoc.setV( node, V );
       wLoc.setplacing( node, wLoc.isplacing( data->props ) );
@@ -1248,7 +1247,6 @@ static void __runner( void* threadinst ) {
       /* Broadcast to clients. */
       wLoc.setid( broadcast, wLoc.getid( data->props ) );
       wLoc.setdir( broadcast, wLoc.isdir( data->props ) );
-      wLoc.setlcdir( broadcast, wLoc.islcdir( data->props ) );
       wLoc.setaddr( broadcast, wLoc.getaddr( data->props ) );
       wLoc.setV( broadcast, data->drvSpeed );
       wLoc.setfn( broadcast, wLoc.isfn( data->props ) );
@@ -1453,7 +1451,6 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
     wLoc.setdir( node, wLoc.isdir( data->props ) );
-    wLoc.setlcdir( node, wLoc.islcdir( data->props ) );
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
@@ -1483,7 +1480,6 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setid( node, wLoc.getid( data->props ) );
   wLoc.setaddr( node, wLoc.getaddr( data->props ) );
   wLoc.setdir( node, wLoc.isdir( data->props ) );
-  wLoc.setlcdir( node, wLoc.islcdir( data->props ) );
   wLoc.setfn( node, wLoc.isfn( data->props ) );
   wLoc.setV( node, data->drvSpeed );
   wLoc.setplacing( node, wLoc.isplacing( data->props ) );
@@ -1548,7 +1544,6 @@ static void _setMode( iOLoc inst, const char* mode ) {
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
     wLoc.setdir( node, wLoc.isdir( data->props ) );
-    wLoc.setlcdir( node, wLoc.islcdir( data->props ) );
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
@@ -1910,7 +1905,6 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setid( nodeF, wLoc.getid( data->props ) );
       wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
       wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
-      wLoc.setlcdir( nodeF, wLoc.islcdir( data->props ) );
       wLoc.setV( nodeF, data->drvSpeed );
       wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
@@ -1942,7 +1936,6 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setid( nodeF, wLoc.getid( data->props ) );
   wLoc.setaddr( nodeF, wLoc.getaddr( data->props ) );
   wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
-  wLoc.setlcdir( nodeF, wLoc.islcdir( data->props ) );
   wLoc.setV( nodeF, data->drvSpeed );
   wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
   wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
@@ -2280,7 +2273,7 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
     wLoc.setplacing( data->props, !wLoc.isplacing( data->props ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
   /* inform model to keep this setting in the occupation file */
-  ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), wLoc.islcdir(data->props), False, wLoc.isplacing( data->props) ? 1:2 );
+  ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2 );
 
   if( !consist ) {
     /* only swap if this command did not come from a multiple unit loop */
@@ -2292,7 +2285,6 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setdir( node, wLoc.isdir( data->props ) );
-    wLoc.setlcdir( node, wLoc.islcdir( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setfn( node, wLoc.isfn( data->props ) );

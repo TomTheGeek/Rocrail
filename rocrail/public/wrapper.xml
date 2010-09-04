@@ -832,7 +832,6 @@
     <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
-      <var name="lcdir" vt="bool" defval="false" required="true"/>
       <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
@@ -1237,7 +1236,6 @@
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc which is actualy in the block or is comming or going."/>
-        <var name="lcdir" vt="bool" defval="false" remark="Running towards the plus-minus side of the block; true=+, false=-."/>
         <var name="manual" vt="bool" defval="false" remark="Block not chooseable for locs in auto-mode if set to true."/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
@@ -1614,7 +1612,6 @@
 
         <var name="mass" vt="int" defval="0" range="0-127" remark="Mass index for use with Dinamo."/>
         <var name="dir" vt="bool" defval="true" remark="Direction; true is forwards."/>
-        <var name="lcdir" vt="bool" defval="false" remark="Running direction in block; Default towards minus."/>
         <var name="placing" vt="bool" defval="true" remark="If loc is placed back to front this should be set to false."/>
         <var name="roaming" vt="bool" defval="true" remark="The roaming flag allows a loc traveling to other systems."/>
         <var name="trysamedir" vt="bool" defval="false" remark="Try find new destinations in the same direction as the loc is running now."/>

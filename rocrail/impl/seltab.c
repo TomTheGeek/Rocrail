@@ -655,7 +655,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
     }
     broadcastNode = cmd;
     wSelTab.setstate( data->props, state );
-    ModelOp.setBlockOccupation( AppOp.getModel(), wSelTab.getid(data->props), data->lockedId, data->lockedDir, StrOp.equals( wBlock.closed, state ), 0 );
+    ModelOp.setBlockOccupation( AppOp.getModel(), wSelTab.getid(data->props), data->lockedId, StrOp.equals( wBlock.closed, state ), 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
   }
   else {
