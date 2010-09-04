@@ -3173,7 +3173,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   else {
     /* initial startup; use the saved ahead side */
     if( fromBlock != NULL )
-      stToSide = LocOp.getDir(loc);
+      stToSide = !LocOp.getDir(loc);
       if( !wLoc.isplacing(loc->base.properties(loc)) ) {
         stToSide = !stToSide;
       }
