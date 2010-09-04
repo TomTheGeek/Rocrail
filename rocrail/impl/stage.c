@@ -135,7 +135,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
       data->closereq = False;
     }
     wStage.setstate( data->props, state );
-    /*ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0 );*/
+    /*ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, lcdir, StrOp.equals( wBlock.closed, state ), 0 );*/
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
   }
 

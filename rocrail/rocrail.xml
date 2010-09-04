@@ -117,6 +117,7 @@
     <data>
       <var name="id" vt="const char*"/>
       <var name="locId" vt="const char*"/>
+      <var name="lcDir" vt="Boolean"/>
       <var name="locIdGroup" vt="const char*"/>
       <var name="crossing" vt="Boolean"/>
       <var name="reverse" vt="Boolean"/>
@@ -867,6 +868,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="BlockId" vt="const char*" remark="Block ID to set."/>
       <param name="LocId" vt="const char*" remark="Loco ID which occupies this block."/>
+      <param name="lcDir" vt="Boolean" remark="Loco heading direction."/>
       <param name="closed" vt="Boolean" remark="Signal closed block."/>
       <param name="placing" vt="int" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
     </fun>
@@ -1519,6 +1521,7 @@
     </fun>
     <data include="fback">
       <var name="lockedId" vt="const char*"/>
+      <var name="lockedDir" vt="Boolean"/>
       <var name="lockedRouteList" vt="iOList"/>
       <var name="blockId" vt="const char*"/>
       <var name="props" vt="iONode"/>
