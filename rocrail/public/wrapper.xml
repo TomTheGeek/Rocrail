@@ -474,6 +474,7 @@
       <var name="blockinitpause" vt="int" defval="0" range="0-5000" unit="ms" remark="Pause between the block init commands."/>
       <var name="poweroffatreset" vt="bool" defval="true" remark="Power off at reset command."/>
       <var name="allowzerothrottleid" vt="bool" defval="false" remark="Allow broadcasting event coming from zero throttle IDs."/>
+      <var name="useblockside" vt="bool" defval="false" remark="Use the defined block sides in the routes to evaluate the running direction."/>
     </ctrl>
   </rocrail>
 
@@ -831,6 +832,7 @@
     <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
+      <var name="lcdir" vt="bool" defval="false" required="true"/>
       <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
@@ -1235,6 +1237,7 @@
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc which is actualy in the block or is comming or going."/>
+        <var name="lcdir" vt="bool" defval="false" remark="Running towards the plus-minus side of the block; true=+, false=-."/>
         <var name="manual" vt="bool" defval="false" remark="Block not chooseable for locs in auto-mode if set to true."/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
@@ -1381,7 +1384,9 @@
         <const name="point_s" vt="string" val="point-s" remark="for single track modules"/>
         <const name="point_e" vt="string" val="point-e" remark="for single track modules"/>
         <var name="bka" vt="string" defval="NULL" range="*" required="true" remark="From block ID: $ prefix is a NetRocrail ID."/>
+        <var name="bkaside" vt="bool" defval="false" remark="Block side connection; true=+, false=-"/>
         <var name="bkb" vt="string" defval="NULL" range="*" required="true" remark="To block ID: $ prefix is a NetRocrail ID."/>
+        <var name="bkbside" vt="bool" defval="true" remark="Block side connection; true=+, false=-"/>
         <var name="sga" vt="int" defval="0" remark="signal pair block a"/>
         <var name="sgb" vt="int" defval="0" remark="signal pair block b"/>
         <var name="bkc" vt="string" defval="NULL" range="*" required="false"

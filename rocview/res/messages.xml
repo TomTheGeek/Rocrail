@@ -15430,4 +15430,7 @@
   <Msg id="acceptident">
     <en txt="Accept BiDi Loco"/>
   </Msg>
+  <Msg id="useblockside">
+    <en txt="Use block side for routes"/>
+  </Msg>
 </Messages>
