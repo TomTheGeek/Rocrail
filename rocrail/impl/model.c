@@ -3173,7 +3173,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   else {
     /* initial startup; use the saved ahead side */
     if( fromBlock != NULL )
-      stToSide = !wLoc.isplacing(loc->base.properties(loc));
+      stToSide = LocOp.getDir(loc);
+      if( !wLoc.isplacing(loc->base.properties(loc)) ) {
+        stToSide = !stToSide;
+      }
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco ahead block side [%s]", stToSide?"+":"-" );
   }
 
