@@ -46,6 +46,7 @@ void statusFindDest( iILcDriverInt inst ) {
   /* Find a free destination. */
   if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
     data->next1Block = data->model->findDest( data->model, data->loc->getCurBlock( data->loc ),
+                                        NULL,
                                         data->loc, &data->next1Route, data->gotoBlock,
                                         wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                         wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),

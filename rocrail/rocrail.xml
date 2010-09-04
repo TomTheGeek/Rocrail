@@ -746,6 +746,7 @@
     <fun name="findDest" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="fromBlockId" vt="const char*" remark="Current blockid"/>
+      <param name="fromRouteId" vt="const char*" remark="Current routeid"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="routeRef" vt="iORoute*" remark="Route reference"/>
       <param name="gotoBlockId" vt="const char*" remark="Wanted blockid"/>

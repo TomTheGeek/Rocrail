@@ -71,7 +71,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
 
     if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
       nextRoute = NULL;
-      nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock),
+      nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock), fromRoute->base.id(fromRoute),
                                          data->loc, &nextRoute, gotoBlock, True, False, True, /* force same dir */
 		      			 fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route );
     }

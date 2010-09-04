@@ -3134,7 +3134,7 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
 }
 
 /* synchronized!!! */
-static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
+static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
                           Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
                           Boolean swapPlacingInPrevRoute) {
@@ -3152,8 +3152,17 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, iOLoc loc,
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
   Boolean usemanualroutes  = wLoc.isusemanualroutes(LocOp.base.properties( loc ));
+  Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
+  Boolean lcDir            = wLoc.islcdir( loc->base.properties(loc) );
+  Boolean stDir            = False;
+
   Boolean destdir = False;
   Boolean samedir = False;
+
+  if( fromRouteId != NULL ) {
+    iORoute fromRoute = ModelOp.getRoute( inst, fromRouteId );
+    stDir = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+  }
 
   fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
 

@@ -74,6 +74,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
       if( data->next2Block == NULL ) {
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
+                                              data->next1Route->base.id( data->next1Route ),
                                               data->loc, &data->next2Route, data->gotoBlock,
                                               wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                               wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
