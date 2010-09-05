@@ -5069,3 +5069,15 @@ msgstr ""
 msgid "Speak command"
 msgstr ""
 
+#. 
+# id="acceptident"
+#, c-format
+msgid "Accept BiDi Loco"
+msgstr ""
+
+#. 
+# id="useblockside"
+#, c-format
+msgid "Use block side for routes"
+msgstr ""
+
