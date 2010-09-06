@@ -377,6 +377,13 @@
     <fun name="getCurBlock" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getBlockEnterSide" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="setBlockEnterSide" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="enterside" vt="Boolean"/>
+    </fun>
     <fun name="getDestination" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
@@ -1024,6 +1031,9 @@
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="getToBlock" vt="const char*">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
+    <fun name="getToBlockSide" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
     <fun name="lock" vt="Boolean">

@@ -832,6 +832,7 @@
     <occ cardinality="n" remark="Occupation entry" wrappername="Occupation">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
+      <var name="blockenterside" vt="bool" defval="true" remark="Block enter side: true is plus."/>
       <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <var name="closed" vt="bool" defval="false" remark="Signal this block as closed: Out of order."/>
@@ -1701,6 +1702,7 @@
         <var name="usemanualroutes" vt="bool" defval="False" remark="Use manual set routes only."/>
         <var name="scidx" vt="int" defval="-1" range="*" remark="Schedule index"/>
         <var name="blockid" vt="string" defval="NULL" range="*" remark="Current block ID."/>
+        <var name="blockenterside" vt="bool" defval="true" remark="Block enter side."/>
         <var name="destblockid" vt="string" defval="NULL" range="*" remark="Destination block ID. (info only)"/>
         <var name="blockwaittime" vt="int" defval="10" unit="s" range="0-*" remark="Own wait time."/>
         <var name="lclib" vt="string" defval="./lcdriver" remark="LocDriver library"/>

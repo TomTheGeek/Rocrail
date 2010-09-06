@@ -3173,10 +3173,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   else {
     /* initial startup; use the saved ahead side */
     if( fromBlock != NULL )
-      stToSide = !LocOp.getDir(loc);
-      if( !wLoc.isplacing(loc->base.properties(loc)) ) {
-        stToSide = !stToSide;
-      }
+      stToSide = !LocOp.getBlockEnterSide(loc);
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco ahead block side [%s]", stToSide?"+":"-" );
   }
 
@@ -3597,7 +3594,7 @@ static void _stop( iOModel inst ) {
 }
 
 
-static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing ) {
+static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, Boolean enterside ) {
   iOModelData data = Data(inst);
   iONode occ = NULL;
 
@@ -3616,6 +3613,7 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
 
   /* modify the node */
   wOccupation.setlcid( occ, LocId );
+  wOccupation.setblockenterside( occ, enterside );
   wOccupation.setauto( occ, False );
   wOccupation.setclosed( occ, closed );
 
@@ -3719,6 +3717,7 @@ static void _loadBlockOccupation( iOModel inst ) {
       const char* LocoID   = wOccupation.getlcid( occ );
       const char* ScID     = wOccupation.getscid( occ );
       int         placing  = wOccupation.getplacing( occ );
+      Boolean     enterside= wOccupation.isblockenterside( occ );
       Boolean     closed   = wOccupation.isclosed( occ );
       Boolean     automode = wOccupation.isauto( occ );
       iOLoc       loco     = ModelOp.getLoc( inst, LocoID );
@@ -3729,6 +3728,7 @@ static void _loadBlockOccupation( iOModel inst ) {
       if( loco != NULL ) {
         iONode props = LocOp.base.properties(loco);
         wLoc.setresumeauto( props, automode );
+        wLoc.setblockenterside( props, enterside );
 
         if( ScID != NULL && StrOp.len(ScID) > 0) {
           LocOp.useSchedule(loco, ScID);

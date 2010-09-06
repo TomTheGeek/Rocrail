@@ -404,6 +404,11 @@ static const char* _getToBlock( iORoute inst ) {
   return wRoute.getbkb( o->props );
 }
 
+static Boolean _getToBlockSide( iORoute inst ) {
+  iORouteData o = Data(inst);
+  return wRoute.isbkbside( o->props );
+}
+
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
   Boolean lcdir = wRoute.islcdir( o->props );

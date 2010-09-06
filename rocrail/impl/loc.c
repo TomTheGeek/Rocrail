@@ -2404,6 +2404,18 @@ static int _getCarCount( iOLoc loc ) {
 }
 
 
+static Boolean _getBlockEnterSide( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.isblockenterside(data->props);
+}
+
+
+static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
+  iOLocData data = Data(loc);
+  wLoc.setblockenterside(data->props, enterside);
+}
+
+
 static Boolean _trySecondNextBlock( iOLoc inst ) {
   iOLocData data = Data(inst);
 

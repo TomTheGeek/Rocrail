@@ -42,6 +42,8 @@
 void statusIn( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
+  data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route));
+
   /* Signal of destination block. (_event) */
   if( data->next2Block == NULL ) {
     if( !data->gomanual ) {
