@@ -1918,6 +1918,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
       wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
+      if( StrOp.equals( wLoc.blockside, cmd ) && data->curBlock != NULL )
+        wLoc.setblockid( nodeF, data->curBlock );
       wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
       wLoc.setruntime( nodeF, wLoc.getruntime(data->props) );

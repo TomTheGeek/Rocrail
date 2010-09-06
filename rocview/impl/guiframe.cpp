@@ -811,7 +811,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         iONode bk = findBlock4Loc(id);
         if( bk != NULL ) {
           m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK,
-              wLoc.isblockenterside(lc)?_T("+"):_T("-") + wxString(wBlock.getid( bk ),wxConvUTF8) );
+              (wLoc.isblockenterside(lc)?_T("+"):_T("-")) + wxString(wBlock.getid( bk ),wxConvUTF8) );
         }
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
@@ -1029,7 +1029,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
             wLoc.isactive(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));
 
         if( wLoc.getblockid( node ) != NULL ) {
-          m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wLoc.isblockenterside(node)?_T("+"):_T("-") + wxString(wLoc.getblockid( node ),wxConvUTF8) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T("+"):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );
         }
 
         if( wLoc.getdestblockid( node ) != NULL ) {
@@ -3568,6 +3568,11 @@ void RocGuiFrame::OnLocSwapBlockSide(wxCommandEvent& event) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "event type = %d, %d", event.GetEventType(), event.GetId() );
 
   int i = m_iLcRowSelection;
+
+  m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("") );
+  m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, _T("") );
+  m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, _T("") );
+
 
   /* Inform RocRail... */
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
