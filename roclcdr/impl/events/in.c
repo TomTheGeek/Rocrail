@@ -144,6 +144,10 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True );
     }
 
+    if( data->next1Block != NULL ) {
+      data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route));
+    }
+
     data->next1Route = data->next2Route;
     data->next2Route = data->next3Route;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
