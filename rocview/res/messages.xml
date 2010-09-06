@@ -15433,4 +15433,7 @@
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
   </Msg>
+  <Msg id="swapblockenterside">
+    <en txt="Swap block enter side"/>
+  </Msg>
 </Messages>

@@ -455,6 +455,7 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setaddr( node, wLoc.getaddr( data->props ) );
       wLoc.setV( node, V );
       wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+      wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
       wLoc.setmode( node, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
       wLoc.setblockid( node, data->curBlock );
@@ -1251,6 +1252,7 @@ static void __runner( void* threadinst ) {
       wLoc.setV( broadcast, data->drvSpeed );
       wLoc.setfn( broadcast, wLoc.isfn( data->props ) );
       wLoc.setplacing( broadcast, wLoc.isplacing( data->props ) );
+      wLoc.setblockenterside( broadcast, wLoc.isblockenterside( data->props ) );
       wLoc.setmode( broadcast, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( broadcast, wLoc.isresumeauto(data->props) );
       wLoc.setruntime( broadcast, wLoc.getruntime(data->props) );
@@ -1454,6 +1456,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+    wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setblockid( node, data->curBlock );
@@ -1483,6 +1486,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setfn( node, wLoc.isfn( data->props ) );
   wLoc.setV( node, data->drvSpeed );
   wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+  wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
   wLoc.setmode( node, wLoc.getmode( data->props ) );
   wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
   wLoc.setdestblockid( node, destid );
@@ -1547,6 +1551,7 @@ static void _setMode( iOLoc inst, const char* mode ) {
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setV( node, data->drvSpeed );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+    wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setblockid( node, data->curBlock );
@@ -1839,6 +1844,10 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       LocOp.swapPlacing(inst, nodeA, False);
       broadcast = True;
     }
+    else if( StrOp.equals( wLoc.blockside, cmd ) ) {
+      LocOp.swapBlockEnterSide(inst);
+      broadcast = True;
+    }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
       _dispatch( inst );
     }
@@ -1908,6 +1917,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setV( nodeF, data->drvSpeed );
       wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
+      wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
       wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
       wLoc.setruntime( nodeF, wLoc.getruntime(data->props) );
@@ -1939,6 +1949,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setV( nodeF, data->drvSpeed );
   wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
   wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
+  wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
   wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
   wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
   wLoc.setruntime( nodeF, wLoc.getruntime(data->props) );
@@ -2289,6 +2300,7 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
     wLoc.setV( node, data->drvSpeed );
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+    wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setblockid( node, data->curBlock );
@@ -2412,7 +2424,17 @@ static Boolean _getBlockEnterSide( iOLoc loc ) {
 
 static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
   iOLocData data = Data(loc);
+  iONode broadcast = NULL;
   wLoc.setblockenterside(data->props, enterside);
+  /* Broadcast to clients. */
+  broadcast = (iONode)NodeOp.base.clone(data->props);
+  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+}
+
+
+static void _swapBlockEnterSide( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  wLoc.setblockenterside(data->props, !wLoc.isblockenterside(data->props) );
 }
 
 

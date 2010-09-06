@@ -331,6 +331,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU     (ME_GridLocStop    , RocGuiFrame::OnLocStop)
     EVT_MENU     (ME_GridLocReset   , RocGuiFrame::OnLocReset)
     EVT_MENU     (ME_GridLocSwap    , RocGuiFrame::OnLocSwap)
+    EVT_MENU     (ME_GridLocSwapBlockSide, RocGuiFrame::OnLocSwapBlockSide)
     EVT_MENU     (ME_GridLocDispatch, RocGuiFrame::OnLocDispatch)
     EVT_MENU     (ME_GridLocProps   , RocGuiFrame::OnLocProps)
     EVT_MENU     (ME_GridLocGoTo    , RocGuiFrame::OnLocGoTo)
@@ -810,7 +811,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         iONode bk = findBlock4Loc(id);
         if( bk != NULL ) {
           m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK,
-             wxString(wBlock.getid( bk ),wxConvUTF8) );
+              wLoc.isblockenterside(lc)?_T("+"):_T("-") + wxString(wBlock.getid( bk ),wxConvUTF8) );
         }
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
@@ -1028,7 +1029,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
             wLoc.isactive(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));
 
         if( wLoc.getblockid( node ) != NULL ) {
-          m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wxString(wLoc.getblockid( node ),wxConvUTF8) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wLoc.isblockenterside(node)?_T("+"):_T("-") + wxString(wLoc.getblockid( node ),wxConvUTF8) );
         }
 
         if( wLoc.getdestblockid( node ) != NULL ) {
@@ -3448,6 +3449,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     menu.AppendSeparator();
     menu.Append( ME_GridLocReset, wxGetApp().getMenu("softresetall"), wxGetApp().getTip("softresetall") );
     menu.Append( ME_GridLocSwap, wxGetApp().getMenu("swapplacing"), wxGetApp().getTip("swapplacing") );
+    menu.Append( ME_GridLocSwapBlockSide, wxGetApp().getMenu("swapblockenterside"), wxGetApp().getTip("swapblockenterside") );
     menu.AppendSeparator();
     menu.Append( ME_GridLocDispatch, wxGetApp().getMenu("dispatch"), wxGetApp().getTip("dispatch") );
     menu.AppendSeparator();
@@ -3556,6 +3558,21 @@ void RocGuiFrame::OnLocSwap(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, m_LocID );
   wLoc.setcmd( cmd, wLoc.swap );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnLocSwapBlockSide(wxCommandEvent& event) {
+
+
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "event type = %d, %d", event.GetEventType(), event.GetId() );
+
+  int i = m_iLcRowSelection;
+
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.blockside );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

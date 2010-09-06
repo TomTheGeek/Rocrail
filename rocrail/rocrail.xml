@@ -476,6 +476,9 @@
       <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
       <param name="consist" vt="Boolean" remark="Swap in context of a multiple unit."/>
     </fun>
+    <fun name="swapBlockEnterSide" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="informBlock" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="destblockid" vt="const char*" remark="Destination block ID"/>

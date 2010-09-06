@@ -1691,6 +1691,7 @@
         <const name="release" vt="string" val="release" remark="Release loco from throttle: The releasing throttle must provide the throttleid."/>
         <const name="reset" vt="string" val="reset" remark="Stop immidiately and go to idle mode."/>
         <const name="swap" vt="string" val="swap" remark="Swap placing."/>
+        <const name="blockside" vt="string" val="blockside" remark="Swap block enter side."/>
         <const name="velocity" vt="string" val="velocity" remark="Set direct velocity."/>
         <const name="direction" vt="string" val="direction" remark="Set direct direction."/>
         <const name="dirfun" vt="string" val="dirfun" remark="Set direct direction and function."/>
