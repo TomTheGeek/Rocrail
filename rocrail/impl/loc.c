@@ -2279,6 +2279,10 @@ static void _setCV( iOLoc loc, int nr, int value ) {
  */
 static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   iOLocData data = Data(loc);
+
+  /* swap the block enter side flag to be able to use other direction routes */
+  LocOp.swapBlockEnterSide(loc);
+
   if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
     wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
   }
