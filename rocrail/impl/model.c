@@ -3152,8 +3152,8 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
   Boolean usemanualroutes  = wLoc.isusemanualroutes(LocOp.base.properties( loc ));
-  Boolean stToSide         = False; /* the To side of the from route */
-  Boolean stFromSide       = True;  /* the From side of the new to route */
+  Boolean stEnterSide = False; /* the To side of the from route */
+  Boolean stExitSide  = True;  /* the From side of the new to route */
 
   /* The use blockside option works only with one way type, so both directions will fail. */
   Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
@@ -3166,15 +3166,15 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   if( fromRouteId != NULL ) {
     iORoute fromRoute = ModelOp.getRoute( inst, fromRouteId );
     if( fromRoute != NULL ) {
-      stToSide = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "from route To side is [%s]", stToSide?"+":"-" );
+      stEnterSide = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block enter side is [%s]", stEnterSide?"+":"-" );
     }
   }
   else {
     /* initial startup; use the saved ahead side */
     if( fromBlock != NULL )
-      stToSide = !LocOp.getBlockEnterSide(loc);
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco ahead block side [%s]", stToSide?"+":"-" );
+      stEnterSide = LocOp.getBlockEnterSide(loc);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "using saved loco enter block side [%s]", stEnterSide?"+":"-" );
   }
 
   fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
@@ -3216,13 +3216,14 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
 
-        stFromSide = wRoute.isbkbside(route->base.properties(route));
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "to route From side is [%s]", stFromSide?"+":"-" );
+        stExitSide = wRoute.isbkaside(route->base.properties(route));
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
 
-        if( useBlockSide && stFromSide == stToSide ) {
+        if( useBlockSide && stEnterSide == stExitSide ) {
           /* need to change direction */
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring route [%s] because the from is equal to the To of previous route [%s]",
-              RouteOp.getId(route), stFromSide?"+":"-" );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "ignoring route [%s] because the exit side is equal to the enter side [%s]",
+              RouteOp.getId(route), stEnterSide?"+":"-" );
           continue;
         }
 
