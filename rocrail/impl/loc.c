@@ -2432,6 +2432,8 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
   iOLocData data = Data(loc);
   iONode broadcast = NULL;
   wLoc.setblockenterside(data->props, enterside);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
+      wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
   /* Broadcast to clients. */
   broadcast = (iONode)NodeOp.base.clone(data->props);
   ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
@@ -2440,7 +2442,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
 
 static void _swapBlockEnterSide( iOLoc loc ) {
   iOLocData data = Data(loc);
-  wLoc.setblockenterside(data->props, !wLoc.isblockenterside(data->props) );
+  LocOp.setBlockEnterSide(loc, !wLoc.isblockenterside(data->props) );
 }
 
 
