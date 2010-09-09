@@ -289,9 +289,15 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
+  Boolean blockSide = False;
+  /* The use blockside option works only with one way type, so both directions will fail. */
+  Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) );
   char    key[256] = {'\0'};
 
   if( fbevt == NULL && data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
+    iORoute byRoute = ModelOp.getRoute( AppOp.getModel(), data->byRouteId );
+    blockSide = RouteOp.getToBlockSide(byRoute);
+
     StrOp.fmtb( key, "%s-%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"", data->byRouteId );
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%sfbevent found by key %s", fbevt != NULL ? "":"no ", key);
@@ -319,12 +325,19 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
     if ( ( data->reverse && !data->next1Route->isSwapPost( data->next1Route ) )
       || ( !data->reverse && data->next1Route->isSwapPost( data->next1Route ) ) ) {
 */
-    if ( data->reverse ) {
-      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
+    if( useBlockSide ) {
+      if ( blockSide )
+        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
+      else
+        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
     }
     else {
-      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
+      if ( data->reverse )
+        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
+      else
+        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
     }
+
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
