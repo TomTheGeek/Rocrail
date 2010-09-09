@@ -2016,6 +2016,8 @@ static void _modify( iOLoc inst, iONode props ) {
       wLoc.setcargo( data->props, wLoc.getcargo(props) );
     if(NodeOp.findAttr(props, "engine"))
       wLoc.setengine( data->props, wLoc.getengine(props) );
+    if(NodeOp.findAttr(props, "consist"))
+      wLoc.setconsist( data->props, wLoc.getconsist(props) );
   }
   else {
     int cnt = NodeOp.getAttrCnt( props );
