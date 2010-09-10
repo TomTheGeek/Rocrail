@@ -2343,11 +2343,11 @@ static void __initFieldRunner( void* threadinst ) {
 
   sg = (iOSignal)MapOp.first( o->signalMap );
   while( sg != NULL && !ThreadOp.isQuit(th) ) {
-    iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     const char* cmdStr = NULL;
     const char* state = NULL;
 
     if(sg->base.properties != NULL) {
+      iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
 
       state = SignalOp.getState(sg);
 

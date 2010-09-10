@@ -537,12 +537,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a function command */
   else if( StrOp.equals( wFunCmd.name(), wAction.gettype( data->action ) ) ) {
-    iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ));
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
       lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl) );
     }
     if( lc != NULL ) {
+      iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       int fnaction = atoi(wAction.getparam(data->action));
       Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
 

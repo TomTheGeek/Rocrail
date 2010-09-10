@@ -172,7 +172,6 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo, indelay ) &&
                initializeSwap( (iOLcDriver)inst, data->next2Route) )
       {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Found destination for \"%s\": \"%s\" (from %s)",
             data->loc->getId( data->loc ), data->next2Block->base.id( data->next2Block ),
@@ -189,6 +188,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
         if( !data->gomanual && !re_enter ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
               data->direction == LC_DIR_FORWARDS &&
               !wLoc.isregulated( data->loc->base.properties( data->loc ) ) ) {

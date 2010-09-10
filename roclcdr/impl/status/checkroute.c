@@ -50,7 +50,6 @@ void statusCheckRoute( iILcDriverInt inst ) {
   else {
     /* Start engine and roll. */
     Boolean semaphore = False;
-    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     Boolean dir = data->next1Route->getDirection( data->next1Route,
         data->loc->getCurBlock( data->loc ), &data->next1RouteFromTo );
 
@@ -60,6 +59,7 @@ void statusCheckRoute( iILcDriverInt inst ) {
 
 
     if( !data->gomanual ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       /* Send the second command to the loc: */
       wLoc.setdir( cmd, dir );
       wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, True, data->next1Route, !data->next1RouteFromTo ) );
