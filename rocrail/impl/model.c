@@ -3235,7 +3235,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           }
         }
 
-        if( useBlockSide || !RouteOp.getDir( route ) ) {
+        if( !RouteOp.getDir( route ) ) {
           /* route is useable for both directions */
           if( StrOp.equals( fromBlockId, stTo ) ) {
             stFrom = RouteOp.getToBlock( route );
