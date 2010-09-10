@@ -206,6 +206,39 @@ static void __broadcast(iORoute inst) {
 }
 
 
+static void __checkAction( iORoute inst, const char* state ) {
+  iORouteData data   = Data(inst);
+  iOModel     model  = AppOp.getModel();
+  iONode      action = wRoute.getactionctrl( data->props );
+
+  /* loop over all actions */
+  while( action != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( action ));
+
+    if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
+        StrOp.equals(state, wActionCtrl.getstate( action )) )
+    {
+
+      iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+      if( Action != NULL ) {
+        wActionCtrl.setlcid(action, data->lockedId);
+        ActionOp.exec(Action, action);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( action ), state );
+    }
+
+    action = wRoute.nextactionctrl( data->props, action );
+  }
+}
+
+
+
+
+
+
 /*
  ***** _Public functions.
  */
@@ -213,22 +246,12 @@ static Boolean _go( iORoute inst ) {
   iORouteData o = Data(inst);
   iOModel model = AppOp.getModel(  );
   iONode sw = wRoute.getswcmd( o->props );
-  iONode ac = wRoute.getactionctrl( o->props );
   int error = 0;
   int retry = 0;
   iONode sw_retry = NULL;
 
 
-  while( ac != NULL ) {
-    iOAction action = ModelOp.getAction( model, wActionCtrl.getid(ac) );
-    if( action != NULL ) {
-      if( wAction.getoid( ac) == NULL || StrOp.len(wAction.getoid( ac)) == 0 )
-        wActionCtrl.setlcid( ac, o->lockedId );
-      ActionOp.exec(action, ac);
-    }
-    ac = wRoute.nextactionctrl( o->props, ac );
-    ThreadOp.sleep( 10 );
-  }
+  __checkAction(inst, "go");
 
   while( sw != NULL ) {
     const char* swId  = wSwitchCmd.getid( sw );
@@ -1017,6 +1040,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     }
 
     o->lockedId = id;
+    __checkAction(inst, "lock");
 
     __broadcast(inst);
 
@@ -1066,7 +1090,8 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
 static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, Boolean unlockswitches ) {
   iORouteData o = Data(inst);
   if( StrOp.equals( lcid, o->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), lcid );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), lcid );
+    __checkAction(inst, "unlock");
     if( unlockswitches )
       __unlockSwitches( inst, lcid );
     __unlockCrossingBlocks( inst, lcid, resblocks );
