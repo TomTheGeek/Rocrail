@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# pac-mac.sh -- Copyright 2009 Rocrail.net.  See www.rocrail.net for license details
+# makemac.sh -- Copyright 2010 Rocrail.net.  See www.rocrail.net for license details
 #
 echo ""
 echo "*** Rocrail makemac.sh starting (see www.rocrail.net)..."
@@ -31,8 +31,6 @@ else
   echo ""
 fi
 
-# create the .apps
-#cd rocrail; make macapp; cd ..;
 cd rocview; make macapp; cd ..;
 
 echo "Getting Bazaar revision number..."
@@ -50,54 +48,46 @@ fi
 echo "Building rocrail-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.dmg"
 echo ""
 
-# Create an initial disk image (200 megs)
-hdiutil create -size 200m -fs HFS+ -volname "Rocrail" myimg.dmg
+TMP=tmp 
+DMG_FILE=rocrail.dmg
 
-# Mount the disk image
-hdiutil attach myimg.dmg
-
-# Obtain device information
-DEVS=$(hdiutil attach myimg.dmg | cut -f 1)
-DEV=$(echo $DEVS | cut -f 1 -d ' ')
-
-DEST=$(hdiutil attach myimg.dmg | cut -f 3 )
+rm -rf $TMP
+mkdir -p $TMP
 
 # copy the files
-mkdir -p $DEST/Rocrail/rocdata/
-mkdir -p $DEST/Rocrail/rocdata/trace/
+mkdir -p $TMP/Rocrail/rocdata/
+mkdir -p $TMP/Rocrail/rocdata/trace/
 
-cp -r rocrail/package/images $DEST/Rocrail/rocdata/
-
-cp -r unxbin/Rocrail.app $DEST/Rocrail
-
-cp rocrail/package/plan.xml $DEST/Rocrail/rocdata/
-#cp rocrail/package/rocrail.ini $DEST/Rocrail/rocdata/
-#cp rocrail/package/rocview.ini_dmg $DEST/Rocrail/rocdata/rocview.ini
-
-cp -r rocview/svg/themes $DEST/Rocrail/rocdata/
+cp -r rocrail/package/images $TMP/Rocrail/rocdata/
+cp -r unxbin/Rocrail.app $TMP/Rocrail
+cp rocrail/package/plan.xml $TMP/Rocrail/rocdata/
+cp -r rocview/svg/themes $TMP/Rocrail/rocdata/
 
 # pimp the dmg
-cp doc/rocrail-logo-dmg.png $DEST/background.png
-setFile -a V $DEST/background.png
-cp rocview/xpm/rocrail.icns $DEST/VolumeIcon.icns
-setFile -a V $DEST/VolumeIcon.icns
-cp rocview/_DS_Store $DEST/.DS_Store
-setFile -a V $DEST/.DS_Store
-#cp rocview/_DS_Store_Rocrail $DEST/Rocrail/.DS_Store
-#setFile -a V $DEST/Rocrail/.DS_Store
+cp doc/rocrail-logo-dmg.png $TMP/background.png
+setFile -a V $TMP/background.png
+cp rocview/xpm/VolumeIcon.icns $TMP/.VolumeIcon.icns
+SetFile -c icnC $TMP/.VolumeIcon.icns
+cp rocview/_DS_Store $TMP/.DS_Store
+setFile -a V $TMP/.DS_Store
 
-# Unmount the disk image
-hdiutil detach $DEV
+# Create an initial disk image
+hdiutil create -srcfolder $TMP -volname Rocrail -format UDRW -ov raw-$DMG_FILE
 
-# Convert the disk image to read-only
-hdiutil convert myimg.dmg -format UDZO -o rocrail.dmg
+rm -rf $TMP
+mkdir -p $TMP
+hdiutil attach raw-$DMG_FILE -mountpoint $TMP
 
-#clean up
-rm -f myimg.dmg
+SetFile -a C $TMP
+hdiutil detach $TMP
+rm -rf $TMP
+rm -f $DMG_FILE
+hdiutil convert raw-$DMG_FILE -format UDZO -o $DMG_FILE
+rm -f raw-$DMG_FILE
 
 if [ ! -e package ] ; then
 	echo "    package not found, creating it"
 	mkdir package
 fi
 
-mv rocrail.dmg package/rocrail-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.dmg
+mv $DMG_FILE package/rocrail-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.dmg
