@@ -640,8 +640,8 @@ static void __writer( void* threadinst ) {
 
 
 /* VERSION: */
-static int vmajor = 1;
-static int vminor = 4;
+static int vmajor = 2;
+static int vminor = 0;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOrocNetData data = Data(inst);

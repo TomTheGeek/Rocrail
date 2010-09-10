@@ -741,9 +741,9 @@ static void __reader( void* threadinst ) {
 
 
 /** vmajor*1000 + vminor*100 + patch */
-static int vmajor = 1;
-static int vminor = 4;
-static int patch  = 99;
+static int vmajor = 2;
+static int vminor = 0;
+static int patch  = 0;
 static int _version( obj inst ) {
   iOMassothData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
