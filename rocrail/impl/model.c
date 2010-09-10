@@ -3166,7 +3166,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   if( fromRouteId != NULL ) {
     iORoute fromRoute = ModelOp.getRoute( inst, fromRouteId );
     if( fromRoute != NULL ) {
-      stEnterSide = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+      if( StrOp.equals(fromBlockId, RouteOp.getFromBlock(fromRoute) ) )
+        stEnterSide = wRoute.isbkaside(fromRoute->base.properties(fromRoute));
+      else
+        stEnterSide = wRoute.isbkbside(fromRoute->base.properties(fromRoute));
+
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block enter side is [%s]", stEnterSide?"+":"-" );
     }
   }
@@ -3219,15 +3223,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         stExitSide = wRoute.isbkaside(route->base.properties(route));
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
 
-        if( useBlockSide && stEnterSide == stExitSide ) {
-          /* need to change direction */
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-              "ignoring route [%s] because the exit side is equal to the enter side [%s]",
-              RouteOp.getId(route), stEnterSide?"+":"-" );
-          continue;
-        }
-
-
         if( usemanualroutes ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
           if( !ismanual ) {
@@ -3240,13 +3235,27 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           }
         }
 
-        if( !RouteOp.getDir( route ) ) {
+        if( useBlockSide || !RouteOp.getDir( route ) ) {
           /* route is useable for both directions */
           if( StrOp.equals( fromBlockId, stTo ) ) {
             stFrom = RouteOp.getToBlock( route );
             stTo = RouteOp.getFromBlock( route );
+            stExitSide = wRoute.isbkbside(route->base.properties(route));
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "<-> route [%s] enter side [%s], exit side [%s]",
+                RouteOp.getId(route), stEnterSide?"+":"-", stExitSide?"+":"-");
           }
         }
+
+        if( useBlockSide && stEnterSide == stExitSide ) {
+          /* need to change direction */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "ignoring route [%s] because the exit side is equal to the enter side [%s]",
+              RouteOp.getId(route), stEnterSide?"+":"-" );
+          continue;
+        }
+
+
+
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "[%d] FromBlock [%s] ToBlock [%s]", i, stFrom, stTo );
 

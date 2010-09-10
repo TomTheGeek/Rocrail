@@ -409,6 +409,11 @@ static Boolean _getToBlockSide( iORoute inst ) {
   return wRoute.isbkbside( o->props );
 }
 
+static Boolean _getFromBlockSide( iORoute inst ) {
+  iORouteData o = Data(inst);
+  return wRoute.isbkaside( o->props );
+}
+
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
   Boolean lcdir = wRoute.islcdir( o->props );

@@ -1039,6 +1039,9 @@
     <fun name="getToBlockSide" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
+    <fun name="getFromBlockSide" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <fun name="lock" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="locid" vt="const char*" remark="Locking locid"/>
