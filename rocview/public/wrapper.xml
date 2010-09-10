@@ -38,7 +38,7 @@
   <gui structname="GUI" wrappername="Gui">
     <const name="productname" vt="string" val="Rocrail"/>
     <const name="releasename" vt="string" val="Sunrise"/>
-    <const name="releasesuffix" vt="string" val=""/>
+    <const name="releasesuffix" vt="string" val="snapshot"/>
     <const name="vmajor" vt="int" val="2"/>
     <const name="vminor" vt="int" val="0"/>
     <const name="patch" vt="int" val="999"/>
