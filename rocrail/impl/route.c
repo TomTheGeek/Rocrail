@@ -213,7 +213,6 @@ static void __checkAction( iORoute inst, const char* state ) {
 
   /* loop over all actions */
   while( action != NULL ) {
-    int counter = atoi(wActionCtrl.getstate( action ));
 
     if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
         StrOp.equals(state, wActionCtrl.getstate( action )) )
@@ -226,7 +225,7 @@ static void __checkAction( iORoute inst, const char* state ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
           wActionCtrl.getstate( action ), state );
     }
 

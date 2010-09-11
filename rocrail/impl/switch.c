@@ -639,6 +639,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock switch [%s]",
                  SwitchOp.getId( inst ) );
     SwitchOp.unLock( inst, o->lockedId, NULL );
+    NodeOp.base.del(nodeA);
     return True;
   }
 
@@ -646,11 +647,13 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   if( wSwitch.getaddr1( o->props ) == 0 && wSwitch.getport1( o->props ) == 0 ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Switch [%s] has no address.",
                    SwitchOp.getId( inst ) );
+    NodeOp.base.del(nodeA);
     return True;
   }
 
 
   if( !MutexOp.trywait( o->muxCmd, 100 ) ) {
+    NodeOp.base.del(nodeA);
     return False;
   }
 
