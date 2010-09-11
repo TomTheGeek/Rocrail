@@ -1696,8 +1696,8 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
   svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
 
-  if( StrOp.equals( ori, wItem.east ) )
-    ori = wItem.west;
+  //if( StrOp.equals( ori, wItem.east ) )
+    //ori = wItem.west;
 
   // SVG Symbol:
   if( svgSym[1]!=NULL && m_iOccupied == 0 ||
