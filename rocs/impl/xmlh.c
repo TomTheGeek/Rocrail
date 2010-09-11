@@ -44,7 +44,7 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iOXmlhData data = Data(inst);
 
-    freeMem( data->buffer );
+    freeIDMem( data->buffer, RocsXmlHID );
     ListOp.base.del( data->xmlList );
     ListOp.base.del( data->binList );
     NodeOp.base.del( data->xmlh );
@@ -55,8 +55,8 @@ static void __del( void* inst ) {
     StrOp.free( data->xmlh_begin );
     StrOp.free( data->xmlh_end );
 
-    freeMem( data );
-    freeMem( inst );
+    freeIDMem( data, RocsXmlHID );
+    freeIDMem( inst, RocsXmlHID );
     instCnt--;
   }
   else { /* NULL */
@@ -352,12 +352,12 @@ static int _hasXml( struct OXmlh* inst ) {
 static struct OXmlh* _inst( Boolean create ,const char* header_tagname ,const char* bin_tagname ) {
   TraceOp.trc( name, TRCLEVEL_METHOD, __LINE__, 9999, "_inst( void )" );
   {
-    iOXmlh __Xmlh = allocMem( sizeof( struct OXmlh ) );
-    iOXmlhData data = allocMem( sizeof( struct OXmlhData ) );
+    iOXmlh __Xmlh = allocIDMem( sizeof( struct OXmlh ), RocsXmlHID );
+    iOXmlhData data = allocIDMem( sizeof( struct OXmlhData ), RocsXmlHID );
 
     MemOp.basecpy( __Xmlh, &XmlhOp, 0, sizeof( struct OXmlh ), data );
 
-    data->buffer     = allocMem( XmlhOp.initAllocSize );
+    data->buffer     = allocIDMem( XmlhOp.initAllocSize, RocsXmlHID );
     data->bufferIdx  = 0;
     data->bufferSize = XmlhOp.initAllocSize;
     data->xmlList   = ListOp.inst();
@@ -406,8 +406,8 @@ static void _reset( struct OXmlh* inst ) {
   if( inst != NULL ) {
     iOXmlhData data = Data(inst);
 
-    freeMem( data->buffer );
-    data->buffer     = allocMem( XmlhOp.initAllocSize );
+    freeIDMem( data->buffer, RocsXmlHID );
+    data->buffer     = allocIDMem( XmlhOp.initAllocSize, RocsXmlHID );
     data->bufferIdx  = 0;
     data->bufferSize = XmlhOp.initAllocSize;
 

@@ -409,7 +409,7 @@ static iOAttr __parseAttribute( const char* s, int* pIdx, iODoc doc ) {
 
   /* check for value */
   
-  val = allocMem( MaxAttrValLen );
+  val = allocIDMem( MaxAttrValLen, RocsDocID );
   valAlloc = MaxAttrValLen;
   
   i = 0;
@@ -443,7 +443,7 @@ static iOAttr __parseAttribute( const char* s, int* pIdx, iODoc doc ) {
         /* Problem: this trace will be cut if (s[*pIdx] == 0) */
         /* solution: catch this case earlier */
         /* in any case: */
-        freeMem(val);
+        freeIDMem(val, RocsDocID);
         return NULL;
       }
       *pIdx+=1;
@@ -456,7 +456,7 @@ static iOAttr __parseAttribute( const char* s, int* pIdx, iODoc doc ) {
     char* decval = __decode( doc, val );
     iOAttr a = AttrOp.inst( attrName, decval );
     StrOp.free( decval );
-    freeMem(val);
+    freeIDMem(val, RocsDocID);
     return a;
   }
 }

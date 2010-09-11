@@ -584,7 +584,7 @@
 
   <object name="Mem" nobase="true" remark="Memory operation helper.">
     <typedef implh="true" def="enum {MEMTYPE_ALLOC=0,MEMTYPE_REALLOC,MEMTYPE_CHECK,MEMTYPE_FREE} memOpType" remark="Memory operation type."/>
-    <typedef def="enum {RocsAttrID=0, RocsCmdLnID, RocsDirID, RocsDocID, RocsEventID, RocsFileID, RocsLibID, RocsListID, RocsMapID, RocsMutexID, RocsNodeID, RocsQueueID, RocsSerialID, RocsSocketID, RocsStrID, RocsStringID, RocsSystemID, RocsThreadID, RocsTraceID, RocsEbcdicID, RocsMsgID, RocsStrTokID, RocsLASTID} RocsMemID" remark="For internal use only."/>
+    <typedef def="enum {RocsAttrID=0, RocsCmdLnID, RocsDirID, RocsDocID, RocsEventID, RocsFileID, RocsLibID, RocsListID, RocsMapID, RocsMutexID, RocsNodeID, RocsQueueID, RocsSerialID, RocsSocketID, RocsStrID, RocsStringID, RocsSystemID, RocsThreadID, RocsTraceID, RocsEbcdicID, RocsMsgID, RocsStrTokID, RocsXmlHID, RocsLASTID} RocsMemID" remark="For internal use only."/>
     <macro def="allocMem(size)MemOp.alloc(size,__FILE__,__LINE__)" remark="Macro for allocating memory."/>
     <macro def="reallocMem(p,size)MemOp.realloc(p,size,__FILE__,__LINE__)" remark="Macro for re-allocating memory."/>
     <macro def="freeMem(p)MemOp.free(p,__FILE__,__LINE__)" remark="Macro for freeing memory."/>

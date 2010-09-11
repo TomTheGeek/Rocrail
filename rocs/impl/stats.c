@@ -37,6 +37,7 @@
 #include "rocs/public/lib.h"
 #include "rocs/public/msg.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/xmlh.h"
 
 
 
@@ -53,6 +54,7 @@ void rocsStatistics(Boolean info) {
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", LibOp.base.name(), LibOp.base.count(), MemOp.getAllocCntID(RocsLibID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", ListOp.base.name(), ListOp.base.count(), MemOp.getAllocCntID(RocsListID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", MapOp.base.name(), MapOp.base.count(), MemOp.getAllocCntID(RocsMapID) );
+  TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", MsgOp.base.name(), MsgOp.base.count(), MemOp.getAllocCntID(RocsMsgID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", MutexOp.base.name(), MutexOp.base.count(), MemOp.getAllocCntID(RocsMutexID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", NodeOp.base.name(), NodeOp.base.count(), MemOp.getAllocCntID(RocsNodeID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", QueueOp.base.name(), QueueOp.base.count(), MemOp.getAllocCntID(RocsQueueID) );
@@ -62,7 +64,7 @@ void rocsStatistics(Boolean info) {
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", SystemOp.base.name(), SystemOp.base.count(), MemOp.getAllocCntID(RocsSystemID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", ThreadOp.base.name(), ThreadOp.base.count(), MemOp.getAllocCntID(RocsThreadID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", TraceOp.base.name(), TraceOp.base.count(), MemOp.getAllocCntID(RocsTraceID) );
-  TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", MsgOp.base.name(), MsgOp.base.count(), MemOp.getAllocCntID(RocsMsgID) );
+  TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", XmlhOp.base.name(), XmlhOp.base.count(), MemOp.getAllocCntID(RocsXmlHID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", StrTokOp.base.name(), StrTokOp.base.count(), MemOp.getAllocCntID(RocsStrTokID) );
   
   TraceOp.trc( name, level, __LINE__, 9999, "MemOp.getAllocCount = %ld", MemOp.getAllocCount() );
