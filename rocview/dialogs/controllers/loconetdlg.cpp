@@ -144,7 +144,9 @@ void LocoNetCtrlDlg::initValues() {
   else
     m_Baudrate->SetSelection(0);
 
-  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( m_Props ) ) )
+  if( StrOp.equals( wDigInt.sublib_socket, wDigInt.getsublib( m_Props ) ) )
+    m_SubLib->SetSelection(4);
+  else if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(3);
   else if( StrOp.equals( wDigInt.sublib_native, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(2);
@@ -264,6 +266,8 @@ void LocoNetCtrlDlg::evaluate() {
     wDigInt.setsublib( m_Props, wDigInt.sublib_native );
   else if( m_SubLib->GetSelection() == 3 )
     wDigInt.setsublib( m_Props, wDigInt.sublib_udp );
+  else if( m_SubLib->GetSelection() == 4 )
+    wDigInt.setsublib( m_Props, wDigInt.sublib_socket );
 
   /* loconet node */
   {
@@ -427,7 +431,8 @@ void LocoNetCtrlDlg::CreateControls()
     m_SubLibStrings.Add(_("&LocoBuffer"));
     m_SubLibStrings.Add(_("&LbServer"));
     m_SubLibStrings.Add(_("&MS100"));
-    m_SubLibStrings.Add(_("&LNUDP (MGV101)"));
+    m_SubLibStrings.Add(_("&LNUDP"));
+    m_SubLibStrings.Add(_("&LNTCP"));
     m_SubLib = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_COLS );
     m_SubLib->SetSelection(0);
     itemBoxSizer15->Add(m_SubLib, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
@@ -642,8 +647,8 @@ void LocoNetCtrlDlg::initSublib()
     m_Port->Enable(false);
     m_Flow->Enable(true);
   }
-  else if( m_SubLib->GetSelection() == 3 ) {
-    // UDP
+  else if( m_SubLib->GetSelection() == 3 || m_SubLib->GetSelection() == 4 ) {
+    // UDP or TCP
     m_Baudrate->Enable(false);
     m_Device->Enable(false);
     m_Host->SetValue( _T("224.0.0.1") );

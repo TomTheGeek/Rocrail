@@ -570,6 +570,7 @@
       <var name="dummyio" vt="Boolean"/>
       <var name="serial" vt="iOSerial"/>
       <var name="socket" vt="iOSocket"/>
+      <var name="rwTCP" vt="iOSocket"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="mux" vt="iOMutex"/>
