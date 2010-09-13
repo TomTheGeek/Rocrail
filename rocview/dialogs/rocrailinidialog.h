@@ -298,6 +298,7 @@ public:
     wxCheckBox* m_PowerOffAtReset;
     wxCheckBox* m_ZeroThrottleID;
     wxCheckBox* m_UseBlockSide;
+    wxCheckBox* m_StopNoneCommuter;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

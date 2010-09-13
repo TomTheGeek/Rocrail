@@ -86,6 +86,7 @@
       <var name="semaphoreWait" vt="int"/>
       <var name="signalWait" vt="int"/>
       <var name="indelay" vt="int"/>
+      <var name="stopnonecommuter" vt="Boolean"/>
     </data>
   </object>
 
