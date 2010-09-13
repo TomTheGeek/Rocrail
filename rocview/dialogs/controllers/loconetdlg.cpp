@@ -144,7 +144,7 @@ void LocoNetCtrlDlg::initValues() {
   else
     m_Baudrate->SetSelection(0);
 
-  if( StrOp.equals( wDigInt.sublib_socket, wDigInt.getsublib( m_Props ) ) )
+  if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(4);
   else if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(3);
@@ -267,7 +267,7 @@ void LocoNetCtrlDlg::evaluate() {
   else if( m_SubLib->GetSelection() == 3 )
     wDigInt.setsublib( m_Props, wDigInt.sublib_udp );
   else if( m_SubLib->GetSelection() == 4 )
-    wDigInt.setsublib( m_Props, wDigInt.sublib_socket );
+    wDigInt.setsublib( m_Props, wDigInt.sublib_tcp );
 
   /* loconet node */
   {

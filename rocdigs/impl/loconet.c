@@ -2415,7 +2415,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->lnWrite      = lbUDPWrite;
     data->lnAvailable  = lbUDPAvailable;
   }
-  else if( StrOp.equals( wDigInt.sublib_socket, wDigInt.getsublib( ini ) ) ) {
+  else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( ini ) ) ) {
     /* lbudp */
     data->lnConnect    = lbTCPConnect;
     data->lnDisconnect = lbTCPDisconnect;
