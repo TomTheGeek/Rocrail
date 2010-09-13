@@ -161,6 +161,15 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     if( data->curBlock->isTerminalStation( data->curBlock ) ) {
       /* only swap after the IN block event! */
       data->loc->swapPlacing( data->loc, NULL, False );
+
+       if( data->stopnonecommuter &&
+           !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {
+          /* Switch to manual mode: */
+          data->loc->stop( data->loc, False );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                             "stop in terminal for [%s] (not a commuter train)", data->loc->getId( data->loc ));
+       }
+
     }
 
   }
@@ -168,6 +177,5 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "unexpected IN event for [%s], state=[%d]",
                    data->loc->getId( data->loc ), data->state );
-
   }
 }
