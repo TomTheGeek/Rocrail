@@ -15436,4 +15436,7 @@
   <Msg id="swapblockenterside">
     <en txt="Swap block enter side"/>
   </Msg>
+  <Msg id="stopnonecommuter">
+    <en txt="Stop none commuter in terminal"/>
+  </Msg>
 </Messages>
