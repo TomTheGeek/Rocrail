@@ -132,6 +132,8 @@ Boolean lbTCPConnect( obj inst ) {
   data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
 
   if ( SocketOp.connect( data->rwTCP ) ) {
+    data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
+    ThreadOp.start( data->udpReader );
     return True;
   }
   else {
@@ -139,11 +141,6 @@ Boolean lbTCPConnect( obj inst ) {
     data->rwTCP = NULL;
     return False;
   }
-
-  data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
-  ThreadOp.start( data->udpReader );
-
-  return True;
 }
 
 void  lbTCPDisconnect( obj inst ) {
