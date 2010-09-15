@@ -261,7 +261,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco command for address %d", wLoc.getaddr( node ) );
 
-    if( MutexOp.wait( data->slotmux ) ) {
+    if( MutexOp.trywait( data->slotmux, 100 ) ) {
 
       slot =  __getLocoSlot( dcc232, node);
 
@@ -307,6 +307,9 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     /* Release the mutex. */
     MutexOp.post( data->slotmux );
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get the slot mutex" );
+    }
   }
 
   /* Function */
@@ -318,7 +321,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     byte dccpacket[64];
     byte* cmd = NULL;
 
-    if( MutexOp.wait( data->slotmux ) ) {
+    if( MutexOp.trywait( data->slotmux, 100 ) ) {
       int slot =  __getLocoSlot( dcc232, node);
 
       if( slot >= 0 ) {
@@ -372,6 +375,9 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       }
       /* Release the mutex. */
       MutexOp.post( data->slotmux );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get the slot mutex" );
     }
   }
 
@@ -460,13 +466,12 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
   byte idlestream[100];
   int idlestreamsize = 0;
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
-
   idlestreamsize = idlePacket(idlestream, longIdle);
 
   SerialOp.setSerialMode(data->serial,dcc);
 
   if( bitstreamsize > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
     if( rc )
       rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
@@ -476,6 +481,7 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
       rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", idlestreamsize );
     rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
   }
 
@@ -579,58 +585,71 @@ static void __dccWriter( void* threadinst ) {
           post = (byte*)ThreadOp.getPost( th );
         }
       }
-      else if( data->slots[slotidx].addr > 0 && MutexOp.trywait( data->slotmux, 5 ) ) {
-        int size = 0;
-        byte dccpacket[64];
-        char cmd[32] = {0};
-        char out[64] = {0};
-        char in [64] = {0};
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot[%d] refresh for %d", slotidx, data->slots[slotidx].addr );
+      else if( data->slots[slotidx].addr > 0 ) {
+        if( MutexOp.trywait( data->slotmux, 5 ) ) {
+          int size = 0;
+          byte dccpacket[64];
+          char cmd[32] = {0};
+          char out[64] = {0};
+          char in [64] = {0};
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot[%d] refresh for %d", slotidx, data->slots[slotidx].addr );
 
-        /* check if the slot should be purged */
-        if( data->slots[slotidx].V == data->slots[slotidx].V_prev && data->slots[slotidx].changedfgrp == 0 ) {
-          if( data->slots[slotidx].idle + 10000 < SystemOp.getTick() ) {
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-                "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
-            data->slots[slotidx].addr = 0;
-            data->slots[slotidx].idle = 0;
-            data->slots[slotidx].fgrp = 0;
-            data->slots[slotidx].changedfgrp = 0;
-            data->slots[slotidx].V_prev = 0;
-            data->slots[slotidx].V = 0;
-            MemOp.set( data->slots[slotidx].lcstream, 0, 64 );
-            MemOp.set( data->slots[slotidx].fnstream, 0, 64 );
-            slotidx++;
-            MutexOp.post( data->slotmux );
-            continue;
+          /* check if the slot should be purged */
+          if( data->slots[slotidx].V == 0 && data->slots[slotidx].changedfgrp == 0 ) {
+            if( data->slots[slotidx].idle + 10000 < SystemOp.getTick() ) {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                  "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
+              data->slots[slotidx].addr = 0;
+              data->slots[slotidx].idle = 0;
+              data->slots[slotidx].fgrp = 0;
+              data->slots[slotidx].changedfgrp = 0;
+              data->slots[slotidx].V_prev = 0;
+              data->slots[slotidx].V = 0;
+              MemOp.set( data->slots[slotidx].lcstream, 0, 64 );
+              MemOp.set( data->slots[slotidx].fnstream, 0, 64 );
+              slotidx++;
+              MutexOp.post( data->slotmux );
+              continue;
+            }
           }
+          else {
+            data->slots[slotidx].V_prev = data->slots[slotidx].V;
+            data->slots[slotidx].fgrp = data->slots[slotidx].changedfgrp;
+            data->slots[slotidx].changedfgrp = 0;
+            data->slots[slotidx].idle = SystemOp.getTick();
+          }
+
+
+          /* refresh speed packet */
+          __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
+
+          if( data->slots[slotidx].fgrp > 0 ) {
+            /* transmit big idle packet */
+            __transmit( dcc232, NULL, 0, True );
+          __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
+          }
+
+          MutexOp.post( data->slotmux );
+
         }
         else {
-          data->slots[slotidx].V_prev = data->slots[slotidx].V;
-          data->slots[slotidx].fgrp = data->slots[slotidx].changedfgrp;
-          data->slots[slotidx].changedfgrp = 0;
-          data->slots[slotidx].idle = SystemOp.getTick();
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get the slot mutex" );
         }
-
-
-        /* refresh speed packet */
-        __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
-
-        if( data->slots[slotidx].fgrp > 0 ) {
-          /* transmit big idle packet */
-          __transmit( dcc232, NULL, 0, True );
-        __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
-        }
-
-        MutexOp.post( data->slotmux );
-
-        slotidx++;
       }
-      else {
+      else if(slotidx < 127) {
+        slotidx++;
+        ThreadOp.sleep(0);
+        continue;
+      }
+
+      slotidx++;
+      if(slotidx >= 128) {
         slotidx = 0;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "recycle" );
       }
 
      /* transmit big idle packet */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "big idle packet..." );
       __transmit( dcc232, NULL, 0, True );
 
     }
