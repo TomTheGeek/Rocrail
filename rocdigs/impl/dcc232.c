@@ -101,7 +101,12 @@ static int __getLocoSlot(iODCC232 dcc232, iONode node) {
 
   /* lookup slot for address: */
   for( i = 0; i < 128; i++ ) {
-    if( data->slots[i].addr == addr || data->slots[i].addr == 0 ) {
+    if( data->slots[i].addr == addr ) {
+      return i;
+    }
+  }
+  for( i = 0; i < 128; i++ ) {
+    if( data->slots[i].addr == 0 ) {
       return i;
     }
   }
@@ -594,7 +599,7 @@ static void __dccWriter( void* threadinst ) {
 
           /* check if the slot should be purged */
           if( data->slots[slotidx].V == 0 && data->slots[slotidx].changedfgrp == 0 ) {
-            if( data->slots[slotidx].idle + 10000 < SystemOp.getTick() ) {
+            if( data->slots[slotidx].idle + 1000 < SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                   "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
               data->slots[slotidx].addr = 0;
