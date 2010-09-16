@@ -48,6 +48,9 @@ int compFunctionLongAddr(char* packetstream, int address, int group, Boolean f[]
 /* accessory decoder */
 int compAccessory(char* packetstream, int addr, int port, int gate, int activate);
 
+/* POM */
+int pomWrite(char* packetstream, int address, Boolean longaddr, int cvNum, int data);
+
 
 
 #endif

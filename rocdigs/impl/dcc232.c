@@ -238,15 +238,13 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     Boolean pom = wProgram.ispom( node );
     if( pom ) {
       if( wProgram.getcmd( node ) == wProgram.set ) {
-        /*
         byte dccpacket[64];
         byte* cmd = NULL;
-        int packetlen = opsCvWriteByte(dccpacket, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
+        int packetlen = pomWrite(dccpacket, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node));
         cmd = allocMem(64);
         cmd[0] = packetlen;
         MemOp.copy(cmd+1, dccpacket, packetlen );
         ThreadOp.post( data->writer, (obj)cmd );
-        */
       }
     }
   }

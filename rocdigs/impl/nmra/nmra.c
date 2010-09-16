@@ -1115,6 +1115,93 @@ int compSpeed128LongAddr(char* packetstream, int address, int direction, int spe
 }
 
 
+int pomWrite(char* packetstream, int address, Boolean longaddr, int cvNum, int data) {
+  int arg1 = 0xEC + (((cvNum-1)>>8)&0x03);
+  int arg2 = (cvNum-1)&0xFF;
+  int arg3 = data&0xFF;
+  int i = 0;
+
+	char addrbyte1[9];
+	char addrbyte2[9];
+	char arg1byte[9];
+	char arg2byte[9];
+	char arg3byte[18];
+	char errdbyte[9];
+	char dummy[9];
+	char bitstream[BUFFERSIZE];
+	
+	/* translate the arg bytes */
+  arg1byte[8] = 0;
+	for( i = 0; i < 8; i++ ) {
+	  if( arg1 & (0x01 << i) )  arg1byte[7-i] = '1';
+	  else                         arg1byte[7-i] = '0';
+	}
+  arg2byte[8] = 0;
+	for( i = 0; i < 8; i++ ) {
+	  if( arg2 & (0x01 << i) )  arg2byte[7-i] = '1';
+	  else                         arg2byte[7-i] = '0';
+	}
+  arg3byte[8] = 0;
+	for( i = 0; i < 8; i++ ) {
+	  if( arg3 & (0x01 << i) )  arg3byte[7-i] = '1';
+	  else                         arg3byte[7-i] = '0';
+	}
+  
+  if( longaddr ) {
+    calc_14bit_address_byte(addrbyte1, addrbyte2, address);
+    xor_two_bytes(errdbyte, addrbyte1, addrbyte2);
+    xor_two_bytes(dummy, errdbyte, arg1byte);
+    xor_two_bytes(errdbyte, dummy, arg2byte);
+    char tmp[9] = {0};
+    strcpy( tmp, errdbyte );
+    xor_two_bytes(errdbyte, tmp, arg3byte);
+
+		/* putting all together in a 'bitstream' (char array) */
+		memset(bitstream, 0, 100);
+		strcat(bitstream, preamble);
+		strcat(bitstream, "0");
+		strcat(bitstream, addrbyte1);
+		strcat(bitstream, "0");
+		strcat(bitstream, addrbyte2);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg1byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg2byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg3byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, errdbyte);
+		strcat(bitstream, "1");
+  }
+  else {
+    calc_7bit_address_byte(addrbyte1, address);
+    xor_two_bytes(dummy, addrbyte1, arg1byte);
+    xor_two_bytes(errdbyte, dummy, arg2byte);
+    char tmp[9] = {0};
+    strcpy( tmp, errdbyte );
+    xor_two_bytes(errdbyte, tmp, arg3byte);
+
+		/* putting all together in a 'bitstream' (char array) */
+		memset(bitstream, 0, 100);
+		strcat(bitstream, preamble);
+		strcat(bitstream, "0");
+		strcat(bitstream, addrbyte1);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg1byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg2byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, arg3byte);
+		strcat(bitstream, "0");
+		strcat(bitstream, errdbyte);
+		strcat(bitstream, "1");
+  }
+
+  return translateBitstream2Packetstream(bitstream, packetstream);
+}
+
+
+
 int compSpeed(char* packetstream, int address, Boolean longaddr, int direction, int speed, int steps) {
   if( longaddr && steps == 128 )
     return compSpeed128LongAddr( packetstream, address, direction, speed);
