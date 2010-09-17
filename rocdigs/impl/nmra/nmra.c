@@ -1117,6 +1117,20 @@ int compSpeed128LongAddr(char* packetstream, int address, int direction, int spe
 
 /*
  * NMRA Operation Mode Packet:
+ *
+ * 1110CCVV 0 VVVVVVVV 0 DDDDDDDD
+ *
+ * C = Instruction Type field
+ * V = CV Address Bit
+ * D = Data
+ *
+ * The defined values for Instruction type (CC) are:
+ *    CC=00 Reserved for future use
+ *    CC=01 Verify byte
+ *    CC=11 Write byte
+ *    CC=10 Bit manipulation
+ *
+ *
  * address=2225 cvNum=3 data=15
  * 111111111111111 0 11001000 0 10110001 0 11101100 0 00000010 0 00001111 0 10011000 1
  * preamble          address1   address2   agr1       arg2       arg3       errd
