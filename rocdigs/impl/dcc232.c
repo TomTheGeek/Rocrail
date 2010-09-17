@@ -599,7 +599,7 @@ static void __dccWriter( void* threadinst ) {
 
           /* check if the slot should be purged */
           if( data->slots[slotidx].V == 0 && data->slots[slotidx].changedfgrp == 0 ) {
-            if( data->slots[slotidx].idle + 1000 < SystemOp.getTick() ) {
+            if( data->slots[slotidx].idle + 6000 < SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                   "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
               data->slots[slotidx].addr = 0;
@@ -608,6 +608,7 @@ static void __dccWriter( void* threadinst ) {
               data->slots[slotidx].changedfgrp = 0;
               data->slots[slotidx].V_prev = 0;
               data->slots[slotidx].V = 0;
+              data->slots[slotidx].refreshcnt = 0;
               MemOp.set( data->slots[slotidx].lcstream, 0, 64 );
               MemOp.set( data->slots[slotidx].fnstream, 0, 64 );
               slotidx++;
@@ -625,11 +626,17 @@ static void __dccWriter( void* threadinst ) {
 
           /* refresh speed packet */
           __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
+          data->slots[slotidx].refreshcnt++;
 
-          if( data->slots[slotidx].fgrp > 0 ) {
-            /* transmit big idle packet */
-            __transmit( dcc232, NULL, 0, True );
-          __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
+          if( data->slots[slotidx].fgrp > 0 || data->slots[slotidx].refreshcnt > 10 ) {
+            if( data->slots[slotidx].fnstream[0] > 0 ) {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot[%d] refresh function for %d", slotidx, data->slots[slotidx].addr );
+              data->slots[slotidx].refreshcnt = 0;
+              /* transmit big idle packet */
+              __transmit( dcc232, NULL, 0, True );
+              /* transmit last function packet */
+              __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
+            }
           }
 
           MutexOp.post( data->slotmux );
