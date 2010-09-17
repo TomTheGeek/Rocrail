@@ -94,7 +94,7 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- ODCC232 ----- */
 
-static int __getLocoSlot(iODCC232 dcc232, iONode node) {
+static int __getLocoSlot(iODCC232 dcc232, iONode node, Boolean* isNew ) {
   iODCC232Data data = Data(dcc232);
   int i    = 0;
   int addr = wLoc.getaddr(node);
@@ -102,11 +102,13 @@ static int __getLocoSlot(iODCC232 dcc232, iONode node) {
   /* lookup slot for address: */
   for( i = 0; i < 128; i++ ) {
     if( data->slots[i].addr == addr ) {
+      *isNew = False;
       return i;
     }
   }
   for( i = 0; i < 128; i++ ) {
     if( data->slots[i].addr == 0 ) {
+      *isNew = True;
       return i;
     }
   }
@@ -264,8 +266,8 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco command for address %d", wLoc.getaddr( node ) );
 
     if( MutexOp.trywait( data->slotmux, 100 ) ) {
-
-      slot =  __getLocoSlot( dcc232, node);
+      Boolean isNew = False;
+      slot =  __getLocoSlot( dcc232, node, &isNew );
 
       if( slot >= 0 ) {
         int V = 0;
@@ -306,8 +308,26 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 
         size = 0;
       }
-    /* Release the mutex. */
-    MutexOp.post( data->slotmux );
+
+      if( isNew ) {
+        /* restore function group 1 for lights; the rocrail server is not informed if this loco was purged... */
+        data->slots[slot].changedfgrp = 1;
+        data->slots[slot].lights = wLoc.isfn( node );
+        data->slots[slot].fn[ 0] = wLoc.isfn( node );
+        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
+                                                     data->slots[slot].longaddr, data->slots[slot].changedfgrp, data->slots[slot].fn);
+
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "function group %d changed for loco %d", 1, data->slots[slot].addr );
+
+        cmd = allocMem(64);
+        MemOp.copy(cmd, data->slots[slot].fnstream, data->slots[slot].fnstream[0] + 1 );
+        ThreadOp.post( data->writer, (obj)cmd );
+      }
+
+      /* Release the mutex. */
+      MutexOp.post( data->slotmux );
+
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get the slot mutex" );
@@ -324,7 +344,8 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     byte* cmd = NULL;
 
     if( MutexOp.trywait( data->slotmux, 100 ) ) {
-      int slot =  __getLocoSlot( dcc232, node);
+      Boolean isNew = False;
+      int slot =  __getLocoSlot( dcc232, node, &isNew);
 
       if( slot >= 0 ) {
         if( data->slots[slot].addr == 0 ) {
@@ -365,7 +386,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].fn[28] = wFunCmd.isf28( node );
 
         data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
-                                                     data->slots[slot].longaddr, data->slots[slot].fgrp, data->slots[slot].fn);
+                                                     data->slots[slot].longaddr, data->slots[slot].changedfgrp, data->slots[slot].fn);
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "function group %d changed for loco %d", group, addr );
