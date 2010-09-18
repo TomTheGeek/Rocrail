@@ -5081,3 +5081,21 @@ msgstr ""
 msgid "Use block side for routes"
 msgstr ""
 
+#. 
+# id="swapblockenterside"
+#, c-format
+msgid "Swap block enter side"
+msgstr ""
+
+#. 
+# id="stopnonecommuter"
+#, c-format
+msgid "Stop none commuter in terminal"
+msgstr ""
+
+#. 
+# id="slotmanagement"
+#, c-format
+msgid "Slot management"
+msgstr ""
+

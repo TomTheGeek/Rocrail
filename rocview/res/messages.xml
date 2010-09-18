@@ -15439,4 +15439,7 @@
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
   </Msg>
+  <Msg id="slotmanagement">
+    <en txt="Slot management"/>
+  </Msg>
 </Messages>

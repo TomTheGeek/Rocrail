@@ -41,11 +41,11 @@ DCC232Dlg::DCC232Dlg( wxWindow* parent, iONode props )
 
 void DCC232Dlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_PortBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_PortBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "device" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labOffset->SetLabel( wxGetApp().getMsg( "portbase" ) );
 
-  m_SlotBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "refresh" ) );
+  m_SlotBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "slotmanagement" ) );
   m_AutoPurge->SetLabel( wxGetApp().getMsg( "purgeslots" ) );
   m_labPurgeTime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
 
