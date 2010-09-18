@@ -1157,12 +1157,14 @@
         <var name="carcount" vt="int" defval="0" remark="car counter (only for client info)"/>
         <var name="countedcars" vt="int" defval="0" remark="number of cars to count before firing the event. (only for client info)"/>
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
+        <var name="wheelcount" vt="int" defval="0" remark="counted wheels; sofar"/>
         <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
         <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>
         <const name="fbtype_transponder" vt="int" val="2" remark="transponder"/>
-        <const name="fbtype_barcode" vt="int" val="3" remark="railcom"/>
+        <const name="fbtype_barcode" vt="int" val="3" remark="barcode"/>
         <const name="fbtype_railcom" vt="int" val="4" remark="railcom"/>
-        <const name="fbtype_rfid" vt="int" val="5" remark="railcom"/>
+        <const name="fbtype_rfid" vt="int" val="5" remark="RFID"/>
+        <const name="fbtype_wheelcounter" vt="int" val="6" remark="wheel counter"/>
         <var name="fbtype" vt="int" defval="0" remark="feedback type reported by the device"/>
         <var name="info" vt="string" defval="" remark="extra information"/>
         <var name="direction" vt="bool" defval="true" remark="Loc identifier direction"/>

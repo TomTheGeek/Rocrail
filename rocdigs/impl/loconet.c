@@ -483,27 +483,34 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
   iOLocoNetData data   = Data(loconet);
 
   int         lissyaddr = msg[4] & 0x7F;
-  int         decaddr   = ( msg[6] & 0x7F ) + 128 * ( msg[5] & 0x7F );
+  int         sensdata  = ( msg[6] & 0x7F ) + 128 * ( msg[5] & 0x7F );
   Boolean     dir       = ( msg[3] & 0x20 ) ? True:False;
+  Boolean     wheelcnt  = ( msg[2] & 0x01 ) ? True:False;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lissy=%d ident=%d dir=%d", lissyaddr, decaddr, dir );
-  {
-    /* inform listener: Node3 */
-    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setaddr( nodeC, lissyaddr );
-    wFeedback.setbus( nodeC, 2 );
+  wFeedback.setaddr( nodeC, lissyaddr );
+  if( data->iid != NULL ) wFeedback.setiid( nodeC, data->iid );
+  wFeedback.setstate( nodeC, True );
+
+  if(wheelcnt) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wheelcounter=%d count=%d", lissyaddr, sensdata );
+    wFeedback.setbus( nodeC, wFeedback.fbtype_wheelcounter );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_wheelcounter );
+    wFeedback.setwheelcount( nodeC, sensdata );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lissy=%d ident=%d dir=%d", lissyaddr, sensdata, dir );
+
+    wFeedback.setbus( nodeC, wFeedback.fbtype_transponder );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
 
-    if( data->iid != NULL )
-      wFeedback.setiid( nodeC, data->iid );
-
-    wFeedback.setidentifier( nodeC, decaddr );
+    wFeedback.setidentifier( nodeC, sensdata );
     wFeedback.setdirection( nodeC, dir );
-    wFeedback.setstate( nodeC, True );
-
-    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
 
