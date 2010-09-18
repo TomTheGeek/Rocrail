@@ -26,7 +26,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_labIID->Wrap( -1 );
 	fgSizer2->Add( m_labIID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_IID = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_IID = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer2->Add( m_IID, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer1->Add( fgSizer2, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
@@ -43,15 +43,8 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_labDevice->Wrap( -1 );
 	fgSizer1->Add( m_labDevice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_Device = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
-	fgSizer1->Add( m_Device, 0, wxALL, 5 );
-	
-	m_labOffset = new wxStaticText( this, wxID_ANY, wxT("Offset"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labOffset->Wrap( -1 );
-	fgSizer1->Add( m_labOffset, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_Offset = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_Offset, 0, wxALL, 5 );
+	m_Device = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	fgSizer1->Add( m_Device, 0, wxALL|wxEXPAND, 5 );
 	
 	m_PortBox->Add( fgSizer1, 1, wxEXPAND, 5 );
 	

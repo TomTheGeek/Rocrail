@@ -38,8 +38,6 @@ class dcc232gen : public wxDialog
 		wxStaticBoxSizer* m_PortBox;
 		wxStaticText* m_labDevice;
 		wxTextCtrl* m_Device;
-		wxStaticText* m_labOffset;
-		wxTextCtrl* m_Offset;
 		wxStaticBoxSizer* m_SlotBox;
 		wxCheckBox* m_AutoPurge;
 		wxStaticText* m_labPurgeTime;

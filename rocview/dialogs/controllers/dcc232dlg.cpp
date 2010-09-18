@@ -36,6 +36,10 @@ DCC232Dlg::DCC232Dlg( wxWindow* parent, iONode props )
   m_Props = props;
   initLabels();
   initValues();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+  GetSizer()->Layout();
 }
 
 
@@ -43,7 +47,6 @@ void DCC232Dlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_PortBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "device" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
-  m_labOffset->SetLabel( wxGetApp().getMsg( "portbase" ) );
 
   m_SlotBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "slotmanagement" ) );
   m_AutoPurge->SetLabel( wxGetApp().getMsg( "purgeslots" ) );
@@ -69,7 +72,6 @@ void DCC232Dlg::initValues() {
   }
 
   m_Device->SetValue( wxString( wDCC232.getport( dcc232 ), wxConvUTF8 ) );
-  m_Offset->SetValue( wxString( wDCC232.getportbase( dcc232 ), wxConvUTF8 ) );
   m_AutoPurge->SetValue( wDCC232.ispurge( dcc232 ) ? true:false );
   m_PurgeTime->SetValue( wDCC232.getpurgetime( dcc232 ) );
   m_ShortcutDetection->SetValue( wDCC232.isshortcut( dcc232 ) ? true:false );
@@ -85,7 +87,6 @@ void DCC232Dlg::evaluate() {
 
   iONode dcc232 = wDigInt.getdcc232(m_Props);
   wDCC232.setport( dcc232, m_Device->GetValue().mb_str(wxConvUTF8) );
-  wDCC232.setportbase( dcc232, m_Offset->GetValue().mb_str(wxConvUTF8) );
 
   wDCC232.setpurge( dcc232, m_AutoPurge->IsChecked() ? True:False );
   wDCC232.setpurgetime( dcc232, m_PurgeTime->GetValue() );
