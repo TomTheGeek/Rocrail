@@ -406,6 +406,15 @@
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
       </rocnet>
 
+      <dcc232 remark="DCC232 options" wrappername="DCC232">
+        <var name="port" vt="string" defval="/dev/ttyS0" range="*"/>
+        <var name="portbase" vt="string" defval="0x0000" range="*"/>
+        <var name="purge" vt="bool" defval="true" remark="Activate purging."/>
+        <var name="purgetime" vt="int" defval="10" unit="s" range="0-*" remark="Idle time for purg a slot."/>
+        <var name="shortcutchecking" vt="bool" defval="true" remark="Use shortcut detection"/>
+        <var name="shortcutdelay" vt="int" defval="1000" unit="us" remark="Shortcut events shorter than this time is ignored"/>
+      </dcc232>  
+        
       <loconet remark="LocoNet options" wrappername="LocoNet">
         <var name="purgetime" vt="int" defval="200" unit="s" range="0-*" remark="set to zero if the command station does not purge"/>
         <var name="slots" vt="int" defval="22" range="0-*" remark="number of slots for loco's"/>

@@ -921,6 +921,7 @@
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="dcc232" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="device" vt="const char*"/>
       <var name="portbase" vt="int"/>
@@ -938,6 +939,10 @@
       <var name="slots[128]" vt="struct slot"/>
       <var name="power" vt="Boolean"/>
       <var name="watchdog" vt="iOThread"/>
+      <var name="purge" vt="Boolean"/>
+      <var name="purgetime" vt="int"/>
+      <var name="sccheck" vt="Boolean"/>
+      <var name="scdelaytime" vt="int"/>
     </data>
   </object>
 

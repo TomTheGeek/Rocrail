@@ -50,6 +50,11 @@ class dcc232gen : public wxDialog
 		wxStdDialogButtonSizer* m_DefaultButtons;
 		wxButton* m_DefaultButtonsOK;
 		wxButton* m_DefaultButtonsCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
+		
 	
 	public:
 		dcc232gen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DCC232"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );

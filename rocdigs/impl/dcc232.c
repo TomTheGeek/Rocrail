@@ -32,7 +32,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
-#include "rocrail/wrapper/public/DDX.h"
+#include "rocrail/wrapper/public/DCC232.h"
 
 #include "rocdigs/impl/common/fada.h"
 
@@ -706,9 +706,22 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->ini    = ini;
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
-  data->device = StrOp.dup( wDigInt.getdevice( ini ) );
+
+  data->dcc232 = wDigInt.getdcc232(ini);
+  if( data->dcc232 == NULL ) {
+    data->dcc232 = NodeOp.inst( wDCC232.name(), ini, ELEMENT_NODE );
+    NodeOp.addChild( ini, data->dcc232 );
+  }
+
+  data->purge = wDCC232.ispurge(data->dcc232);
+  data->purgetime = wDCC232.getpurgetime(data->dcc232);
+  data->sccheck = wDCC232.isshortcutchecking(data->dcc232);
+  data->scdelaytime = wDCC232.getshortcutdelay(data->dcc232);
+
+
+  data->device = StrOp.dup( wDCC232.getport( data->dcc232 ) );
   data->run    = True;
-  data->portbase = (int)strtol( wDDX.getportbase( ini ), (char**)NULL, 16 );
+  data->portbase = (int)strtol( wDCC232.getportbase( data->dcc232 ), (char**)NULL, 16 );
 
   MemOp.set( data->slots, 0, 128 * sizeof( struct slot ) );
 
@@ -717,10 +730,13 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc232 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = [%s]", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portbase = 0x%X", data->portbase );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout  = [%d]ms", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = [%s]", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = [%s]", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portbase        = 0x%X", data->portbase );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge           = [%s]", data->purge?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time = [%d]s", data->purgetime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]", data->sccheck?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms", data->scdelaytime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );

@@ -123,8 +123,15 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );
+	
+	// Connect Events
+	m_DefaultButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( dcc232gen::onCancel ), NULL, this );
+	m_DefaultButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( dcc232gen::onOK ), NULL, this );
 }
 
 dcc232gen::~dcc232gen()
 {
+	// Disconnect Events
+	m_DefaultButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( dcc232gen::onCancel ), NULL, this );
+	m_DefaultButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( dcc232gen::onOK ), NULL, this );
 }
