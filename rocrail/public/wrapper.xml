@@ -411,8 +411,8 @@
         <var name="portbase" vt="string" defval="0x0000" range="*"/>
         <var name="purge" vt="bool" defval="true" remark="Activate purging."/>
         <var name="purgetime" vt="int" defval="10" unit="s" range="0-*" remark="Idle time for purg a slot."/>
-        <var name="shortcutchecking" vt="bool" defval="true" remark="Use shortcut detection"/>
-        <var name="shortcutdelay" vt="int" defval="1000" unit="us" remark="Shortcut events shorter than this time is ignored"/>
+        <var name="shortcut" vt="bool" defval="true" remark="Use shortcut detection"/>
+        <var name="shortcutdelay" vt="int" defval="1000" unit="ms" remark="Shortcut events shorter than this time is ignored"/>
       </dcc232>  
         
       <loconet remark="LocoNet options" wrappername="LocoNet">

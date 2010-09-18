@@ -549,7 +549,7 @@ static void __watchDog( void* threadinst ) {
       if ( ( SerialOp.isDSR(data->serial) && !inversedsr ) ) {
         TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "shortcut detected" );
 
-        if( scdetected && scdelay > 10 ) {
+        if( scdetected && scdelay > (data->shortcutdelay / 100) ) {
           TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "shortcut detected!" );
           scdelay = 0;
           scdetected = False;
@@ -618,8 +618,8 @@ static void __dccWriter( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot[%d] refresh for %d", slotidx, data->slots[slotidx].addr );
 
           /* check if the slot should be purged */
-          if( data->slots[slotidx].V == 0 && data->slots[slotidx].changedfgrp == 0 ) {
-            if( data->slots[slotidx].idle + 6000 < SystemOp.getTick() ) {
+          if( data->purge && data->slots[slotidx].V == 0 && data->slots[slotidx].changedfgrp == 0 ) {
+            if( data->slots[slotidx].idle + (data->purgetime*100) < SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                   "slot %d purged for loco address %d", slotidx, data->slots[slotidx].addr );
               data->slots[slotidx].addr = 0;
@@ -715,8 +715,8 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->purge = wDCC232.ispurge(data->dcc232);
   data->purgetime = wDCC232.getpurgetime(data->dcc232);
-  data->sccheck = wDCC232.isshortcutchecking(data->dcc232);
-  data->scdelaytime = wDCC232.getshortcutdelay(data->dcc232);
+  data->shortcut = wDCC232.isshortcut(data->dcc232);
+  data->shortcutdelay = wDCC232.getshortcutdelay(data->dcc232);
 
 
   data->device = StrOp.dup( wDCC232.getport( data->dcc232 ) );
@@ -735,8 +735,8 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portbase        = 0x%X", data->portbase );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge           = [%s]", data->purge?"yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time = [%d]s", data->purgetime );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]", data->sccheck?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms", data->scdelaytime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]", data->shortcut?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms", data->shortcutdelay );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
@@ -751,8 +751,10 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
   SerialOp.setDTR(data->serial,False); /* disable booster output */
 
-  data->watchdog = ThreadOp.inst( "watchdog", &__watchDog, __DCC232 );
-  ThreadOp.start( data->watchdog );
+  if( data->shortcut ) {
+    data->watchdog = ThreadOp.inst( "watchdog", &__watchDog, __DCC232 );
+    ThreadOp.start( data->watchdog );
+  }
   data->writer = ThreadOp.inst( "dcc232tx", &__dccWriter, __DCC232 );
   ThreadOp.start( data->writer );
 

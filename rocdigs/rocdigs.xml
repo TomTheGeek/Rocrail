@@ -941,8 +941,8 @@
       <var name="watchdog" vt="iOThread"/>
       <var name="purge" vt="Boolean"/>
       <var name="purgetime" vt="int"/>
-      <var name="sccheck" vt="Boolean"/>
-      <var name="scdelaytime" vt="int"/>
+      <var name="shortcut" vt="Boolean"/>
+      <var name="shortcutdelay" vt="int"/>
     </data>
   </object>
 
