@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+ Copyright (C) 2002-2010 - Rob Versluis <r.j.versluis@rocrail.net>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
