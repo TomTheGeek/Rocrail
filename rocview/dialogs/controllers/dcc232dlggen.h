@@ -35,14 +35,16 @@ class dcc232gen : public wxDialog
 	protected:
 		wxStaticText* m_labIID;
 		wxTextCtrl* m_IID;
+		wxStaticBoxSizer* m_PortBox;
 		wxStaticText* m_labDevice;
 		wxTextCtrl* m_Device;
 		wxStaticText* m_labOffset;
 		wxTextCtrl* m_Offset;
+		wxStaticBoxSizer* m_SlotBox;
 		wxCheckBox* m_AutoPurge;
 		wxStaticText* m_labPurgeTime;
 		wxSpinCtrl* m_PurgeTime;
-		wxStaticText* m_labPurgetimeSec;
+		wxStaticBoxSizer* m_ShortCutBox;
 		wxCheckBox* m_ShortcutDetection;
 		wxStaticText* m_labShortcutDelay;
 		wxSpinCtrl* m_ShortcutDelay;

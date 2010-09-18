@@ -31,7 +31,6 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer1->Add( fgSizer2, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
-	wxStaticBoxSizer* m_PortBox;
 	m_PortBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Port") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer1;
@@ -58,7 +57,6 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	bSizer1->Add( m_PortBox, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	wxStaticBoxSizer* m_SlotBox;
 	m_SlotBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Slot Management") ), wxVERTICAL );
 	
 	m_AutoPurge = new wxCheckBox( this, wxID_ANY, wxT("Auto purging"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -66,7 +64,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_SlotBox->Add( m_AutoPurge, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer3;
-	fgSizer3 = new wxFlexGridSizer( 2, 3, 0, 0 );
+	fgSizer3 = new wxFlexGridSizer( 2, 2, 0, 0 );
 	fgSizer3->SetFlexibleDirection( wxBOTH );
 	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -77,15 +75,10 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_PurgeTime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 10 );
 	fgSizer3->Add( m_PurgeTime, 0, wxALL, 5 );
 	
-	m_labPurgetimeSec = new wxStaticText( this, wxID_ANY, wxT("seconds"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labPurgetimeSec->Wrap( -1 );
-	fgSizer3->Add( m_labPurgetimeSec, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
 	m_SlotBox->Add( fgSizer3, 1, wxEXPAND, 5 );
 	
 	bSizer1->Add( m_SlotBox, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	wxStaticBoxSizer* m_ShortCutBox;
 	m_ShortCutBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Shortcut detection") ), wxVERTICAL );
 	
 	m_ShortcutDetection = new wxCheckBox( this, wxID_ANY, wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
