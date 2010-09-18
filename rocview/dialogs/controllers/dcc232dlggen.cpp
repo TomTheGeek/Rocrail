@@ -29,7 +29,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_IID = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_IID, 0, wxALL|wxEXPAND, 5 );
 	
-	bSizer1->Add( fgSizer2, 1, wxEXPAND, 5 );
+	bSizer1->Add( fgSizer2, 1, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* m_PortBox;
 	m_PortBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Port") ), wxVERTICAL );
@@ -56,7 +56,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_PortBox->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( m_PortBox, 0, wxEXPAND|wxTOP, 5 );
+	bSizer1->Add( m_PortBox, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* m_SlotBox;
 	m_SlotBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Slot Management") ), wxVERTICAL );
@@ -83,7 +83,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_SlotBox->Add( fgSizer3, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( m_SlotBox, 0, wxEXPAND|wxTOP, 5 );
+	bSizer1->Add( m_SlotBox, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* m_ShortCutBox;
 	m_ShortCutBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Shortcut detection") ), wxVERTICAL );
@@ -110,7 +110,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_ShortCutBox->Add( fgSizer4, 1, wxEXPAND, 5 );
 	
-	bSizer1->Add( m_ShortCutBox, 0, wxEXPAND|wxTOP, 5 );
+	bSizer1->Add( m_ShortCutBox, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_DefaultButtons = new wxStdDialogButtonSizer();
 	m_DefaultButtonsOK = new wxButton( this, wxID_OK );
@@ -118,7 +118,7 @@ dcc232gen::dcc232gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DefaultButtonsCancel = new wxButton( this, wxID_CANCEL );
 	m_DefaultButtons->AddButton( m_DefaultButtonsCancel );
 	m_DefaultButtons->Realize();
-	bSizer1->Add( m_DefaultButtons, 1, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	bSizer1->Add( m_DefaultButtons, 1, wxEXPAND|wxALL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();

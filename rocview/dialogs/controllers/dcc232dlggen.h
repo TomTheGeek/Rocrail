@@ -52,7 +52,7 @@ class dcc232gen : public wxDialog
 		wxButton* m_DefaultButtonsCancel;
 	
 	public:
-		dcc232gen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		dcc232gen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("DCC232"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~dcc232gen();
 	
 };

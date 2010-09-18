@@ -46,6 +46,7 @@
 #include "rocview/dialogs/controllers/ecosdlg.h"
 #include "rocview/dialogs/controllers/opendcc.h"
 #include "rocview/dialogs/controllers/lenzdlg.h"
+#include "rocview/dialogs/controllers/dcc232dlg.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -1405,7 +1406,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.sprog, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.dcc232, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
+    m_CSDialog = new DCC232Dlg(this,m_Controller);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
 
