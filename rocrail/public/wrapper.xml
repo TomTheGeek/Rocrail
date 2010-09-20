@@ -277,6 +277,7 @@
       <const name="xpressnet" vt="string" val="xpressnet"/>
       <const name="rmx" vt="string" val="rmx"/>
       <const name="massoth" vt="string" val="massoth"/>
+      <const name="tamsmc" vt="string" val="tamsmc"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

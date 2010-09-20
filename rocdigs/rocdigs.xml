@@ -767,6 +767,22 @@
     </data>
   </object>
 
+  <object name="TamsMC" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,mutex,map" include="$rocint/public/digint" remark="ECoS object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode" remark="DigInt Ini"/>
+      <var name="trace" vt="iOTrace" remark="Trace pointer"/>
+      <var name="listenerObj" vt="obj" remark="Listener pointer"/>
+      <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
+      <var name="iid" vt="const char*" remark="Interface ID"/>
+      <var name="sublib" vt="iIDigInt" remark="Sub library p50x"/>
+      <var name="run" vt="Boolean"/>
+    </data>
+  </object>
+
   <object name="rocNet" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,serial,thread,mutex,map" include="$rocint/public/digint" remark="rocNet object">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
