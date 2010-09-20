@@ -153,7 +153,20 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   iONode response = NULL;
 
   if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) ) {
-    if(  wProgram.getcmd( cmd ) == wProgram.set ) {
+    if(  wProgram.getcmd( cmd ) == wProgram.set && wProgram.ispom( cmd )) {
+      iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* str = StrOp.fmt( "PD %d, %d, %d\r", wProgram.getaddr(cmd), wProgram.getcv(cmd), wProgram.getvalue(cmd) );
+      char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
+      wBinCmd.setoutlen( lccmd, StrOp.len(str) );
+      wBinCmd.setinlen( lccmd, 256 );
+      wBinCmd.setinendbyte( lccmd, '\r' );
+      wBinCmd.setout( lccmd, byteStr );
+      StrOp.free( byteStr );
+      StrOp.free( str );
+      response = data->sublib->cmd((obj)data->sublib, lccmd);
+    }
+    else if(  wProgram.getcmd( cmd ) == wProgram.set ) {
       iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
       char* str = StrOp.fmt( "PTWP %d, %d\r", wProgram.getcv(cmd), wProgram.getvalue(cmd) );
       char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
