@@ -250,6 +250,38 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                       "loco %s direction %s does not match [%s]", LocOp.getId(lc),
                       dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
                 }
+                else if( StrOp.startsWith( "fon", wActionCond.getstate(actionCond) ) || StrOp.startsWith( "foff", wActionCond.getstate(actionCond) ) ) {
+                  iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
+                  const char* fonoff = NULL;
+                  const char* fnumber = NULL;
+                  if(StrTokOp.hasMoreTokens(tok))
+                    fonoff = StrTokOp.nextToken(tok);
+                  if(StrTokOp.hasMoreTokens(tok))
+                    fnumber = StrTokOp.nextToken(tok);
+                  StrTokOp.base.del(tok);
+
+                  if( fonoff != NULL && fnumber != NULL ) {
+                    int nr = atoi(fnumber);
+                    int fx = wLoc.getfx(LocOp.base.properties(lc));
+                    if( StrOp.equals( "fon", fonoff ) ) {
+                      if( fx & (1 << nr) )
+                        rc = True;
+                    }
+                    else {
+                      if( !(fx & (1 << nr)) )
+                        rc = True;
+                    }
+
+                    if( !rc ) {
+                      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                          "loco %s function %d does not match state [%s]", LocOp.getId(lc), nr, fonoff );
+                    }
+
+                  }
+                  else {
+                    rc = False;
+                  }
+                }
               }
               else
                 rc = False;
