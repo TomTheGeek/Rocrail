@@ -250,7 +250,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                       "loco %s direction %s does not match [%s]", LocOp.getId(lc),
                       dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
                 }
-                else if( StrOp.startsWith( "fon", wActionCond.getstate(actionCond) ) || StrOp.startsWith( "foff", wActionCond.getstate(actionCond) ) ) {
+                else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
                   iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
                   const char* fonoff = NULL;
                   const char* fnumber = NULL;
@@ -260,21 +260,29 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                     fnumber = StrTokOp.nextToken(tok);
                   StrTokOp.base.del(tok);
 
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "checking function of loco %s", LocOp.getId(lc) );
+
                   if( fonoff != NULL && fnumber != NULL ) {
                     int nr = atoi(fnumber);
                     int fx = wLoc.getfx(LocOp.base.properties(lc));
+                    rc = False;
                     if( StrOp.equals( "fon", fonoff ) ) {
-                      if( fx & (1 << nr) )
+                      if( fx & (1 << (nr-1)) )
                         rc = True;
                     }
                     else {
-                      if( !(fx & (1 << nr)) )
+                      if( !(fx & (1 << (nr-1)) ) )
                         rc = True;
                     }
 
                     if( !rc ) {
                       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                           "loco %s function %d does not match state [%s]", LocOp.getId(lc), nr, fonoff );
+                    }
+                    else {
+                      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                          "loco %s function %d does match state [%s]", LocOp.getId(lc), nr, fonoff );
                     }
 
                   }
@@ -283,8 +291,11 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                   }
                 }
               }
-              else
+              else {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                    "loco id [%s] not found", wActionCtrl.getlcid(actionctrl) );
                 rc = False;
+              }
             }
             else
               rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );

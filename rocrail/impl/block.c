@@ -890,7 +890,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( wait != NULL )
     *wait = blockwait;
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                  "wait in block \"%s\" is %s",
                  data->id, blockwait?"true":"false" );
 
@@ -938,7 +938,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
     if( data->prevLocId != NULL ) {
       const char* locid = LocOp.getId( loc );
       if( StrOp.equals( data->prevLocId, locid ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                        "Block \"%s\" is last visited by \"%s\"",
                        data->id, locid );
         return suits_ok;
