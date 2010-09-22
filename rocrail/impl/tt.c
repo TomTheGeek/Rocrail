@@ -1252,7 +1252,7 @@ static int __getPrevTrack( iOTT inst, int tracknr ) {
 }
 
 
-static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
+static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
   /* TODO: evaluate position event */
@@ -1350,7 +1350,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 }
 
 
-static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
+static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
   iOTTData data = Data(inst);
   const char* event = NULL;
   Boolean state1 = wTurntable.isstate1( data->props );
@@ -1473,7 +1473,7 @@ static void __polarize(obj inst, int pos, Boolean polarization) {
 }
 
 
-static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, int val ) {
+static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, int val, int wheelcount ) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
   int prevpos = data->tablepos;
@@ -1813,7 +1813,7 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return "";
 }
 
-static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, int wheelcount, iONode fbevt ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
 }

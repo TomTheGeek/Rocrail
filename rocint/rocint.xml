@@ -275,6 +275,7 @@
       <param name="id" vt="const char*" remark="event(fb) ID"/>
       <param name="ident" vt="long" remark="ID of object which triggered the event. (barcode reader)"/>
       <param name="val" vt="int" remark="Value of object which triggered the event. (barcode reader)"/>
+      <param name="wheelcount" vt="int" remark="Number of wheels counted sofar."/>
       <param name="evtDescr" vt="iONode" remark="event description: optional"/>
     </fun>
     <fun name="reset" vt="void">

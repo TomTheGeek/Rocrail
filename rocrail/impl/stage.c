@@ -165,7 +165,7 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
 
 
 /**  */
-static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,int val ,iONode evtDescr ) {
+static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,int val, int wheelcount ,iONode evtDescr ) {
   iOStageData data = Data(inst);
   iONode section = (iONode)MapOp.get( data->fbMap, id );
 
@@ -180,8 +180,8 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
   return;
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
-  _event( (iIBlockBase)inst, puls, id, ident, val, NULL );
+static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
+  _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL );
 }
 
 

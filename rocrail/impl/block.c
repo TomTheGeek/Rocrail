@@ -285,7 +285,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
 /**
  * event listener callback for all fbevents
  */
-static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, int wheelcount, iONode fbevt ) {
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
@@ -573,8 +573,11 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   }
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
-  _event( (iIBlockBase)inst, puls, id, ident, val, NULL );
+static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
+  iOBlockData data = Data(inst);
+  if( wheelcount > 0 )
+    data->wheelcount = wheelcount;
+  _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL );
 }
 
 
@@ -1455,6 +1458,8 @@ static void _resetTrigs( iIBlockBase inst ) {
   data->trig_exit_mid   = False;
   data->trig_renter_mid = False;
   data->trig_rexit_mid  = False;
+
+  data->wheelcount = 0;
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "Block \"%s\" resetTrigs.",

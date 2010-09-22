@@ -444,7 +444,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int va
 
           /* dispatch */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatching [%s]", key);
-          block->event( block, state, id, ident, val, fbevt );
+          block->event( block, state, id, ident, val, 0, fbevt );
         }
         break;
       }
@@ -1166,7 +1166,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */
   if( block != NULL )
-    block->event( block, puls, id, ident, val, fbevt );
+    block->event( block, puls, id, ident, val, 0, fbevt );
 }
 
 

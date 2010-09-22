@@ -323,6 +323,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
       wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
       wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
+      wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) );
       ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
     }
     nodeC->base.del(nodeC);
@@ -344,7 +345,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
 
   /* Call listener. */
   if( data->listenerFun != NULL ) {
-    data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), wFeedback.getidentifier( nodeC ), wFeedback.getval( nodeC ) );
+    data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), wFeedback.getidentifier( nodeC ),
+        wFeedback.getval( nodeC ), wFeedback.getwheelcount( nodeC ) );
     hasListener = True;
   }
 

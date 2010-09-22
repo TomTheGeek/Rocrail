@@ -150,6 +150,7 @@
       <var name="occtime" vt="long"/>
       <var name="ghost" vt="Boolean"/>
       <var name="acceptident" vt="Boolean"/>
+      <var name="wheelcount" vt="int"/>
     </data>
   </object>
 
@@ -288,7 +289,7 @@
 
 
   <object name="FBack" interface="HtmlInt" use="node,list" include="htmlint" remark="Feedback object">
-    <typedef def="void (*fback_listener)(obj,Boolean,const char*,int,int)"/>
+    <typedef def="void (*fback_listener)(obj,Boolean,const char*,int,int,int)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Feedback node"/>
     </fun>
