@@ -264,6 +264,8 @@ static struct OTamsMC* _inst( const iONode ini ,const iOTrace trc ) {
   iOTamsMCData data = allocMem( sizeof( struct OTamsMCData ) );
   MemOp.basecpy( __TamsMC, &TamsMCOp, 0, sizeof( struct OTamsMC ), data );
 
+  TraceOp.set( trc );
+
   /* Initialize data->xxx members... */
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
   data->ini = (iONode)NodeOp.base.clone(ini);
