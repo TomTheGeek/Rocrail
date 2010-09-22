@@ -1337,6 +1337,11 @@ static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
   return block != NULL ? block->link( block, linkto ) : False;
 }
 
+static int _getWheelCount( iIBlockBase inst ) {
+  return 0;
+}
+
+
 static Boolean _unLink( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "unLink");

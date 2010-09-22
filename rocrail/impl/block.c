@@ -1467,6 +1467,12 @@ static void _resetTrigs( iIBlockBase inst ) {
 }
 
 
+static int _getWheelCount( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return data->wheelcount;
+}
+
+
 static Boolean _unLink( iIBlockBase inst ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);

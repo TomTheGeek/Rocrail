@@ -305,6 +305,9 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="accept" vt="Boolean"/>
     </fun>
+    <fun name="getWheelCount" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
   <interface name="AnalyserInt" use="node" remark="Interface for the analyser">

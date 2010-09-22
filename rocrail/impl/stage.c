@@ -219,6 +219,9 @@ static int _getOccTime( iIBlockBase inst ) {
   return 0;
 }
 
+static int _getWheelCount( iIBlockBase inst ) {
+  return 0;
+}
 
 /**  */
 static const char* _getState( iIBlockBase inst ) {

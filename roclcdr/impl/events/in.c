@@ -95,81 +95,107 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
                    data->loc->getId( data->loc ) );
     data->loc->setMode(data->loc, wLoc.mode_auto);
 
-    if ( data->next1Route->isSwapPost( data->next1Route ) ) {
-      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-
-      /* swap post route */
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
-      data->loc->swapPlacing( data->loc, NULL, False );
-
-      wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
-      data->loc->cmd( data->loc, cmd);
-    }
-
-    /* unlink-up after inblock event */
-    data->next1Block->unLink( data->next1Block );
-
-    if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
-      data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
-    }
-    else {
-      data->curBlock->resetTrigs( data->curBlock );
-    }
-    data->curBlock = data->next1Block;
-    data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
-
-    /**/
-    /*
-    data->loc->setCurBlock( data->loc, blockId );
-    */
-
-    block->inBlock( block, data->loc->getId( data->loc ) );
-
-    /* free the block group from the previous block */
-    initializeGroup(inst, NULL, block);
-
-    {
-      /*
-       * unlock the previous route regarding reserved blocks
-       */
-      const char* resblocks[4] = {NULL, NULL, NULL, NULL};
-      if( data->next1Block != NULL ) {
-        resblocks[0] = data->next1Block->base.id(data->next1Block);
-        if( data->next2Block != NULL ) {
-          resblocks[1] = data->next2Block->base.id(data->next2Block);
-          if( data->next3Block != NULL )
-            resblocks[2] = data->next3Block->base.id(data->next3Block);
-        }
+    /* Check wheel counters */
+    if( data->curBlock->getWheelCount(data->curBlock) > 0 && data->next1Block->getWheelCount(data->next1Block) > 0  ) {
+      if( data->curBlock->getWheelCount(data->curBlock) == data->next1Block->getWheelCount(data->next1Block) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wheel count match %s=%s [%d]",
+            data->curBlock->base.id( data->curBlock ), data->next1Block->base.id( data->next1Block ), data->curBlock->getWheelCount(data->curBlock) );
       }
-      data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True );
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "wheel count doe not match %s[%d] != %s[%d] ",
+            data->curBlock->base.id( data->curBlock ), data->curBlock->getWheelCount(data->curBlock),
+            data->next1Block->base.id( data->next1Block ), data->next1Block->getWheelCount(data->next1Block) );
+        data->state = LC_IDLE;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Setting state for \"%s\" to LC_IDLE.",
+                       data->loc->getId( data->loc ) );
+        data->loc->setMode(data->loc, wLoc.mode_idle);
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setV( cmd, 0 );
+        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+        data->loc->cmd( data->loc, cmd );
+      }
     }
 
-    if( data->next1Block != NULL ) {
-      if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
-        data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route));
-      else
-        data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route));
-    }
+    /* continue if not set to IDLE state */
+    if( data->state != LC_IDLE ) {
 
-    data->next1Route = data->next2Route;
-    data->next2Route = data->next3Route;
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" to LC_INBLOCK.",
-                   data->loc->getId( data->loc ) );
+      if ( data->next1Route->isSwapPost( data->next1Route ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
-    /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
-    if( data->curBlock->isTerminalStation( data->curBlock ) ) {
-      /* only swap after the IN block event! */
-      data->loc->swapPlacing( data->loc, NULL, False );
+        /* swap post route */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
+        data->loc->swapPlacing( data->loc, NULL, False );
 
-       if( data->stopnonecommuter &&
-           !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {
-          /* Switch to manual mode: */
-          data->loc->stop( data->loc, False );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                             "stop in terminal for [%s] (not a commuter train)", data->loc->getId( data->loc ));
-       }
+        wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
+        data->loc->cmd( data->loc, cmd);
+      }
 
+      /* unlink-up after inblock event */
+      data->next1Block->unLink( data->next1Block );
+
+      if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
+        data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
+      }
+      else {
+        data->curBlock->resetTrigs( data->curBlock );
+      }
+      data->curBlock = data->next1Block;
+      data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
+
+      /**/
+      /*
+      data->loc->setCurBlock( data->loc, blockId );
+      */
+
+      block->inBlock( block, data->loc->getId( data->loc ) );
+
+      /* free the block group from the previous block */
+      initializeGroup(inst, NULL, block);
+
+      {
+        /*
+         * unlock the previous route regarding reserved blocks
+         */
+        const char* resblocks[4] = {NULL, NULL, NULL, NULL};
+        if( data->next1Block != NULL ) {
+          resblocks[0] = data->next1Block->base.id(data->next1Block);
+          if( data->next2Block != NULL ) {
+            resblocks[1] = data->next2Block->base.id(data->next2Block);
+            if( data->next3Block != NULL )
+              resblocks[2] = data->next3Block->base.id(data->next3Block);
+          }
+        }
+        data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True );
+      }
+
+      if( data->next1Block != NULL ) {
+        if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
+          data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route));
+        else
+          data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route));
+      }
+
+      data->next1Route = data->next2Route;
+      data->next2Route = data->next3Route;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Setting state for \"%s\" to LC_INBLOCK.",
+                     data->loc->getId( data->loc ) );
+
+      /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
+      if( data->curBlock->isTerminalStation( data->curBlock ) ) {
+        /* only swap after the IN block event! */
+        data->loc->swapPlacing( data->loc, NULL, False );
+
+         if( data->stopnonecommuter &&
+             !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {
+            /* Switch to manual mode: */
+            data->loc->stop( data->loc, False );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                               "stop in terminal for [%s] (not a commuter train)", data->loc->getId( data->loc ));
+         }
+
+      }
     }
 
   }
