@@ -218,7 +218,31 @@ static int __normalizeSteps(int insteps ) {
   return 28;
 }
 
+/*
+2.030 command
+                        Header    Xor       Data1     Data2     Data3     Data4
+Vehicle configuration : 1000 0101 xxxx xxxx T0AA AAAA AAAA AAAA kkkk kkkk tttt tttt
+Delete Vehicle :        0100 0101 xxxx xxxx 00AA AAAA AAAA AAAA
+Configuration of announced vehicles
+packet size = 4 (6) - Header = 5
+packet size = 2 (4) - Header = 5
+A13 .. A0 = vehicle address (0..10239) –
+k7 [1] store vehilce config in non volatile memory, [0] temporaly in RAM –
+k6 = unused –
+k5 = unused –
+k4 = unused -
+k3 = vehicle address NMRA [0], Motorola [1] -
+k2 = Funktion parallel [1], serial [0] –
+k1..k0 = Speedsteps [00] = 14, [01] = 28, [10] = 128 -
+t7 .. t0 = picture of vehicle -
+T = [1] loko part of traction, [0] not part [future use, data ignored]
 
+Notes for handling the 'Delete Vehicle' command: The PC may only delete vehicle they:
+1st. actually announced by the PC itself or, 2nd not announced by another bus device.
+If the command is used, and the loko is occupied from the PC, the vehilce must be logged out before [use command 2.020].
+To recognize the vehilce announcement, the PC can monitor all the reflected commands which sent from the interface to PC.
+
+*/
 static iOSlot __configureVehicle(iOMassothData data, iONode node) {
   /* configure vehicle */
   byte cmd[32] = {0};
