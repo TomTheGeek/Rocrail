@@ -193,6 +193,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       StrOp.free( str );
       rsp = data->sublib->cmd((obj)data->sublib, lccmd);
 
+      if(rsp != NULL) {
       /* inform listener */
       response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setcv( response, wProgram.getcv(cmd) );
@@ -200,6 +201,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       wProgram.setcmd( response, wProgram.datarsp );
       if( data->iid != NULL )
         wProgram.setiid( response, data->iid );
+      }
 
     }
   }
