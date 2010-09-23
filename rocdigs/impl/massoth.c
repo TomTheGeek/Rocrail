@@ -526,6 +526,25 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
 
   }
 
+  /* Programming command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if(  wProgram.getcmd( node ) == wProgram.set && wProgram.ispom( node )) {
+      out[0] = 0xB5;
+      out[1] = 0; /*xor*/
+      /* CV */
+      out[2] = wProgram.getcv(node) >> 8;
+      out[3] = wProgram.getcv(node) & 0x00FF;
+      /* Value*/
+      out[4] = wProgram.getvalue(node);
+      /* Loco address */
+      out[5] = wProgram.getaddr(node) >> 8;
+      out[6] = wProgram.getaddr(node) & 0x00FF;
+    }
+    else if(  wProgram.getcmd( node ) == wProgram.set ) {
+    }
+    else if(  wProgram.getcmd( node ) == wProgram.get ) {
+    }
+  }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command [%s] not(jet) supported", NodeOp.getName( node ) );
 
