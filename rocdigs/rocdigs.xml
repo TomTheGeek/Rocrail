@@ -1120,6 +1120,8 @@
       <var name="purger" vt="iOThread"/>
       <var name="fbreset" vt="Boolean"/>
       <var name="useParallelFunctions" vt="Boolean"/>
+      <var name="ptcv" vt="int"/>
+      <var name="ptval" vt="int"/>
     </data>
   </object>
 

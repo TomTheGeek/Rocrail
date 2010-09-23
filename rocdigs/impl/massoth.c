@@ -528,6 +528,10 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
 
   /* Programming command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    /* save the cv and value because the write response does not provide them */
+    data->ptcv = wProgram.getcv(node);
+    data->ptval =wProgram.getvalue(node);
+
     if(  wProgram.getcmd( node ) == wProgram.set && wProgram.ispom( node )) {
       out[0] = 0xB5;
       out[1] = 0; /*xor*/
@@ -539,10 +543,25 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       /* Loco address */
       out[5] = wProgram.getaddr(node) >> 8;
       out[6] = wProgram.getaddr(node) & 0x00FF;
+      return True;
     }
     else if(  wProgram.getcmd( node ) == wProgram.set ) {
+      out[0] = 0x75;
+      out[1] = 0; /*xor*/
+      /* CV */
+      out[2] = wProgram.getcv(node) >> 8;
+      out[3] = wProgram.getcv(node) & 0x00FF;
+      /* Value*/
+      out[4] = wProgram.getvalue(node);
+      return True;
     }
     else if(  wProgram.getcmd( node ) == wProgram.get ) {
+      out[0] = 0x56;
+      out[1] = 0; /*xor*/
+      /* CV */
+      out[2] = wProgram.getcv(node) >> 8;
+      out[3] = wProgram.getcv(node) & 0x00FF;
+      return True;
     }
   }
 
@@ -614,7 +633,36 @@ static int _state( obj inst ) {
 
 /**  */
 static Boolean _supportPT( obj inst ) {
-  return 0;
+  return True;
+}
+
+static void __handlePT(iOMassothData data, byte* in) {
+  Boolean OK = ((in[3] & 0x1C) == 0x10 );
+
+  if( in[2] == 0x02 ) {
+    /* write feed back */
+    iONode response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( response, data->ptcv );
+    wProgram.setvalue( response, OK?data->ptval:-1 );
+    wProgram.setcmd( response, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( response, data->iid );
+
+    data->listenerFun( data->listenerObj, response, TRCLEVEL_INFO );
+  }
+  else if( in[2] == 0x04 ) {
+    /* read feed back */
+    int cv  = in[4] + ((in[3] & 0x03) << 8);
+    int val = in[5];
+    iONode response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( response, cv );
+    wProgram.setvalue( response, OK?val:-1 );
+    wProgram.setcmd( response, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( response, data->iid );
+
+    data->listenerFun( data->listenerObj, response, TRCLEVEL_INFO );
+  }
 }
 
 
@@ -709,7 +757,7 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     break;
   case 0x40:
   case 0x60:
-    /* system status */
+    /* vehicle report */
     __handleVehicle(data, in);
     break;
   case 0x4B:
@@ -718,6 +766,10 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
       __handleContact(data, in);
     else
       __handleSensor(data, in);
+    break;
+  case 0x80:
+    /* programming report */
+    __handlePT(data, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
