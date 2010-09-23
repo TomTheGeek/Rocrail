@@ -310,8 +310,8 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
     if( gotid ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
 
-      if( rsp[2] == 0x08 ) {
-        /* address not in use */
+      if( rsp[2] == 0x04 && rsp[3] == 0x81 ) {
+        /* address not in use 40 A4 04 81 00 05 64*/
         slot = __configureVehicle(data, node);
       }
       else {
