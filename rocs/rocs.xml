@@ -1404,6 +1404,11 @@
       <param name="charA" vt="char" remark="Char to replace"/>
       <param name="charB" vt="char" remark="Replacement"/>
     </fun>
+    <fun name="replaceAllSub" vt="char*" static="true" remark="Replace all substrings with the replacement.">
+      <param name="inputString" vt="char*" remark="Input string"/>
+      <param name="substring" vt="char*" remark="Substring to replace"/>
+      <param name="replacement" vt="char*" remark="Replacement"/>
+    </fun>
     <fun name="replaceAllSubstitutions" vt="char*" static="true" remark="Replace all environment variables with there current values.">
       <param name="str" vt="const char*" remark="Input string."/>
     </fun>

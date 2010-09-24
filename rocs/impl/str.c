@@ -344,6 +344,29 @@ static int _replaceAll( char* str, char charA, char charB ) {
 }
 
 
+static char* _replaceAllSub( const char* inputString, const char* substring, const char* replacement  ) {
+  char* newStr = StrOp.dup(inputString);
+  char* pSub   = StrOp.find( newStr, substring );
+  int   sublen = StrOp.len(substring);
+  int   replen = StrOp.len(replacement);
+
+  while( pSub != NULL ) {
+    char* tmp = newStr;
+    int offset = pSub - newStr;
+    *pSub = '\0';
+    newStr = StrOp.fmt("%s%s%s", newStr, replacement, pSub+sublen);
+    StrOp.free(tmp);
+    if( StrOp.len( newStr + offset) > sublen )
+      pSub = StrOp.find( newStr + offset + replen , substring );
+    else
+      pSub = NULL;
+  };
+
+  return newStr;
+}
+
+
+
 /**
  * All %varnames% are replaced with the values of the environment variables.
  * SystemOp.getProperty() is used for getting the value.
