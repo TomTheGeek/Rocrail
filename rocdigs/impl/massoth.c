@@ -536,8 +536,8 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       out[0] = 0xB5;
       out[1] = 0; /*xor*/
       /* CV */
-      out[2] = wProgram.getcv(node) >> 8;
-      out[3] = wProgram.getcv(node) & 0x00FF;
+      out[2] = (wProgram.getcv(node)-1) >> 8;
+      out[3] = (wProgram.getcv(node)-1) & 0x00FF;
       /* Value*/
       out[4] = wProgram.getvalue(node);
       /* Loco address */
@@ -549,8 +549,8 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       out[0] = 0x75;
       out[1] = 0; /*xor*/
       /* CV */
-      out[2] = wProgram.getcv(node) >> 8;
-      out[3] = wProgram.getcv(node) & 0x00FF;
+      out[2] = (wProgram.getcv(node)-1) >> 8;
+      out[3] = (wProgram.getcv(node)-1) & 0x00FF;
       /* Value*/
       out[4] = wProgram.getvalue(node);
       return True;
@@ -559,8 +559,8 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       out[0] = 0x56;
       out[1] = 0; /*xor*/
       /* CV */
-      out[2] = wProgram.getcv(node) >> 8;
-      out[3] = wProgram.getcv(node) & 0x00FF;
+      out[2] = (wProgram.getcv(node)-1) >> 8;
+      out[3] = (wProgram.getcv(node)-1) & 0x00FF;
       return True;
     }
   }
@@ -655,7 +655,7 @@ static void __handlePT(iOMassothData data, byte* in) {
     int cv  = in[4] + ((in[3] & 0x03) << 8);
     int val = in[5];
     iONode response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-    wProgram.setcv( response, cv );
+    wProgram.setcv( response, cv+1 );
     wProgram.setvalue( response, OK?val:-1 );
     wProgram.setcmd( response, wProgram.datarsp );
     if( data->iid != NULL )
