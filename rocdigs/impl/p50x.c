@@ -142,8 +142,8 @@ static Boolean __flushP50x( iOP50xData o ) {
 
 
 
-static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int insize, int inendbyte ) {
-  if( MutexOp.wait( o->mux ) ) {
+static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int insize, int inendbyte, int muxwait ) {
+  if( MutexOp.trywait( o->mux, muxwait ) ) {
     Boolean rc = False;
     p50state state = P50_OK;
 
@@ -593,7 +593,7 @@ static Boolean __getversion( iOP50x inst ) {
   out[0]= 'x';
   out[1]= 0xC4;
 
-  if( !data->dummyio && MutexOp.wait( data->mux ) ) {
+  if( !data->dummyio && MutexOp.trywait( data->mux, data->timeout ) ) {
 
     if( SerialOp.write( data->serial, (char*)out, 2 ) ) {
       if( !SerialOp.read( data->serial, (char*)in, 1 ) )
@@ -619,7 +619,7 @@ static Boolean __getversion( iOP50x inst ) {
   }
 
 
-  if( !data->dummyio && MutexOp.wait( data->mux ) ) {
+  if( !data->dummyio && MutexOp.trywait( data->mux, data->timeout ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Version info requested..." );
     out[0]= 'x';
     out[1]= 0xA0;
@@ -722,7 +722,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   if( nodeA != NULL ) {
     int size = __translate( o, nodeA, out, &insize, &inendbyte );
     /*TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );*/
-    if( __transact( o, (char*)out, size, (char*)in, insize, inendbyte ) ) {
+    if( __transact( o, (char*)out, size, (char*)in, insize, inendbyte, o->timeout ) ) {
       /* inform listener */
       if( insize > 0 ) {
         if( StrOp.equals( NodeOp.getName( nodeA ), wSwitch.name() ) ) {
@@ -764,7 +764,7 @@ static void _halt( obj inst, Boolean poweroff ) {
   data->run = False;
   if( poweroff ) {
     p50[0] = (unsigned char)97;
-    __transact( data, (char*)p50, 1, NULL, 0, -1 );
+    __transact( data, (char*)p50, 1, NULL, 0, -1, 10 );
   }
   SerialOp.close( data->serial );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
@@ -910,7 +910,7 @@ static void __PTeventReader( void* threadinst ) {
     out[0] = (byte)'x';
     out[1] = 0xCE;
 
-    if( !o->dummyio && MutexOp.wait( o->mux ) ) {
+    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       Boolean ptEvent = False;
       out[1] = 0xC8;
       state = __cts( o );
@@ -1098,7 +1098,7 @@ static void __statusReader( void* threadinst ) {
 
     ThreadOp.sleep( 250 );
 
-    if( !o->dummyio && MutexOp.wait( o->mux ) ) {
+    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
 
       if( !__flushP50x(o) ) {
         MutexOp.post( o->mux );
@@ -1238,7 +1238,7 @@ static void __feedbackReader( void* threadinst ) {
 
   out[0] = 'x';
   out[1] = 0x99;
-  __transact( o, (char*)out, 2, in, 1, -1 );
+  __transact( o, (char*)out, 2, in, 1, -1, o->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
   do {
 
@@ -1247,7 +1247,7 @@ static void __feedbackReader( void* threadinst ) {
     out[0] = (byte)'x';
     out[1] = 0xCB;
 
-    if( !o->dummyio && MutexOp.wait( o->mux ) ) {
+    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       if( o->tok)
         printf( "\n*****token!!! A\n\n" );
       o->tok = True;
@@ -1332,7 +1332,7 @@ static void __feedbackP50Reader( void* threadinst ) {
       continue;
 
     out[0] = (unsigned char)(128 + data->fbmod);
-    if( __transact( data, (char*)out, 1, (char*)in, data->fbmod * 2, -1 ) ) {
+    if( __transact( data, (char*)out, 1, (char*)in, data->fbmod * 2, -1, data->timeout ) ) {
       if( memcmp( fb, in, data->fbmod * 2 ) != 0 ) {
         /* inform listener */
         __evaluateState( data, fb, in, data->fbmod * 2);
