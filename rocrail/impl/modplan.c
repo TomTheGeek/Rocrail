@@ -168,6 +168,8 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
   NodeOp.setStr( toRoute, "tomodid", modid );
   wRoute.setbka( newRoute, wRoute.getbka( fromRoute ) );
   wRoute.setsga( newRoute, wRoute.getsga( fromRoute ) );
+  wRoute.setbkaside( newRoute, wRoute.isbkaside( fromRoute ) );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s](signal %d) to[%s](signal %d)",
       wRoute.getbka( newRoute ), wRoute.getsga( newRoute ),
       wRoute.getbkb( newRoute ), wRoute.getsgb( newRoute ));
