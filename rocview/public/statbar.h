@@ -50,6 +50,7 @@ enum {
   status_info = 0,
   status_rcon,
   status_digint,
+  status_load,
   status_controller,
   status_max
 };

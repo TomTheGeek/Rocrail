@@ -1491,6 +1491,7 @@ void RocGuiFrame::initFrame() {
   //CreateStatusBar(4);
   SetStatusText( _T("Welcome to Rocrail!"), status_info );
   SetStatusText( _T(""), status_digint );
+  SetStatusText( _T("0mA"), status_load );
 
 
   // Create tool bar
@@ -3262,6 +3263,7 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "new state 0x%04X %s", state, console?"(consolemode)":"" );
   m_StatusBar->Update( state );
+  SetStatusText( wxString::Format( _T("%d"), wState.getload( node )) + _T("mA"), status_load );
 
   // Cleanup node:
   node->base.del( node );

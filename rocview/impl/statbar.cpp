@@ -56,7 +56,8 @@ StatusBar::StatusBar(wxWindow *parent)
            : wxStatusBar(parent, wxID_ANY)
              
 {
-    static const int widths[status_max] = { -1, -1, -1, BITMAP_SIZE_X*5 };
+    static const int widths[status_max] = { -1, -1, -1, 100, BITMAP_SIZE_X*5 };
+
 
     SetFieldsCount(status_max);
     SetStatusWidths(status_max, widths);

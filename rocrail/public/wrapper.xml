@@ -575,6 +575,7 @@
     <var name="sensorbus" vt="bool" defval="false"/>
     <var name="accessorybus" vt="bool" defval="false"/>
     <var name="consolemode" vt="bool" defval="false"/>
+    <var name="load" vt="int" defval="0" remark="Load of CS in mA."/>
   </state>
 
   <response remark="Interface Response." wrappername="Response">

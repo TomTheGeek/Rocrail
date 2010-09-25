@@ -1122,6 +1122,8 @@
       <var name="useParallelFunctions" vt="Boolean"/>
       <var name="ptcv" vt="int"/>
       <var name="ptval" vt="int"/>
+      <var name="power" vt="Boolean"/>
+      <var name="load" vt="int"/>
     </data>
   </object>
 
