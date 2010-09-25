@@ -322,6 +322,8 @@ public:
     wxSpinCtrl* m_NrCars;
     wxStaticText* m_Label_CatalogNr;
     wxTextCtrl* m_CatNr;
+    wxStaticText* m_labDecType;
+    wxTextCtrl* m_DecoderType;
     wxStaticText* m_labDocumentation;
     wxTextCtrl* m_Documentation;
     wxButton* m_ShowDoc;

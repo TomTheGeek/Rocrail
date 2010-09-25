@@ -337,6 +337,7 @@ void CV::event( iONode event ) {
         if( cv == 8 ) {
           tc->SetToolTip(wxString( m_Manu[ivalue&0xFF],wxConvUTF8));
           TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Manu[ivalue&0xFF] );
+          wLoc.setdectype(m_LocProps, m_Manu[ivalue&0xFF] );
         }
       }
     }

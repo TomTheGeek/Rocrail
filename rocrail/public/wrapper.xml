@@ -1638,6 +1638,7 @@
         <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
         <var name="catnr" vt="string" defval="" range="*" remark="Catalog number."/>
+        <var name="dectype" vt="string" defval="" range="*" remark="Decoder type. (CV8)"/>
         <var name="prot" vt="string" defval="P" range="P,M,N,A,C"
              remark="P = protocol by server, M = Marklin, N = NMRA-DCC, L = NMRA-DCC long addresses, A = Analog, C= Car Decoder"/>
         <const name="prot_P" vt="string" val="P" remark="Protocol by server"/>

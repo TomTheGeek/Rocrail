@@ -15442,4 +15442,7 @@
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
   </Msg>
+  <Msg id="decodertype">
+    <en txt="Decoder type"/>
+  </Msg>
 </Messages>
