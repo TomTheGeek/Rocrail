@@ -124,7 +124,7 @@ mgv141gen::mgv141gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_StdButtonsCancel = new wxButton( this, wxID_CANCEL );
 	m_StdButtons->AddButton( m_StdButtonsCancel );
 	m_StdButtons->Realize();
-	bSizer1->Add( m_StdButtons, 1, wxEXPAND, 5 );
+	bSizer1->Add( m_StdButtons, 1, wxEXPAND|wxALL, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();

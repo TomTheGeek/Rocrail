@@ -1,8 +1,7 @@
 #include "mgv141dlg.h"
 
 MGV141Dlg::MGV141Dlg( wxWindow* parent )
-:
-mgv141gen( parent )
+    :mgv141gen( parent )
 {
 
 }

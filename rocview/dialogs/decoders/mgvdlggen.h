@@ -97,7 +97,7 @@ class mgvdlggen : public wxDialog
 		
 	
 	public:
-		mgvdlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MGV"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		mgvdlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MGV136 Servo"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~mgvdlggen();
 	
 };

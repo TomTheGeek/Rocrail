@@ -89,6 +89,7 @@
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
+#include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
 #include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
@@ -297,6 +298,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
     EVT_MENU( ME_LOCOIO         , RocGuiFrame::OnLocoIO)
     EVT_MENU( ME_MGV            , RocGuiFrame::OnMGV)
+    EVT_MENU( ME_MGV141         , RocGuiFrame::OnMGV141)
     EVT_MENU( ME_DTOpSw         , RocGuiFrame::OnDTOpSw)
 
     EVT_MENU( ME_LangEnglish    , RocGuiFrame::OnLangEnglish)
@@ -1416,7 +1418,8 @@ void RocGuiFrame::initFrame() {
   menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
 
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
-  menuProgramming->Append( ME_MGV, _T("MGV") + wxString(_T("...")), _T("MGV") );
+  menuProgramming->Append( ME_MGV, _T("MGV136") + wxString(_T("...")), _T("MGV136") );
+  menuProgramming->Append( ME_MGV141, _T("MGV141") + wxString(_T("...")), _T("MGV141") );
 
   //wxMenu *menuPTDCC = new wxMenu();
   //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
@@ -2710,6 +2713,15 @@ void RocGuiFrame::OnMGV( wxCommandEvent& event ) {
   }
   m_MGV->Destroy();
   m_MGV = NULL;
+}
+
+void RocGuiFrame::OnMGV141( wxCommandEvent& event ) {
+  m_MGV141 = new MGV141Dlg(this);
+  if( wxID_OK == m_MGV141->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  m_MGV141->Destroy();
+  m_MGV141 = NULL;
 }
 
 void RocGuiFrame::OnLocoIO( wxCommandEvent& event ) {
