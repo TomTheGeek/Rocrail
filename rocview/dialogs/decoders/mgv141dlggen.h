@@ -9,16 +9,21 @@
 #define __mgv141dlggen__
 
 #include <wx/string.h>
-#include <wx/stattext.h>
+#include <wx/listbox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/spinctrl.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/panel.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/stattext.h>
+#include <wx/spinctrl.h>
 #include <wx/statbox.h>
-#include <wx/statline.h>
+#include <wx/notebook.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -32,6 +37,11 @@ class mgv141gen : public wxDialog
 	private:
 	
 	protected:
+		wxNotebook* m_NoteBook;
+		wxPanel* m_QueryPanel;
+		wxListBox* m_List;
+		wxButton* m_Query;
+		wxPanel* m_SetupPanel;
 		wxStaticText* m_staticText1;
 		wxSpinCtrl* m_UnitHigh;
 		wxSpinCtrl* m_UnitLow;
@@ -54,16 +64,15 @@ class mgv141gen : public wxDialog
 		wxSpinCtrl* m_CounterAddress8;
 		wxButton* m_WriteAll;
 		wxButton* m_ReadAll;
-		wxStaticLine* m_staticline1;
 		wxStdDialogButtonSizer* m_StdButtons;
 		wxButton* m_StdButtonsOK;
-		wxButton* m_StdButtonsCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onUnitSelected( wxCommandEvent& event ){ event.Skip(); }
+		virtual void onQuery( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onUnitSet( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onWriteAll( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onReadAll( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onCancel( wxCommandEvent& event ){ event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ){ event.Skip(); }
 		
 	
