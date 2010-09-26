@@ -46,6 +46,7 @@ static int instCnt = 0;
 
 /* declarations */
 static void __evaluatePacket(iOMassothData data, byte* in);
+static void __handleSystem(iOMassothData data, byte* in);
 
 
 /** ----- OBase ----- */
@@ -397,6 +398,13 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       out[0] = 0x10;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      /* load test */
+      /*
+      {
+        byte tmp[32] = {0x00, 0x00, 0x05, 0x00, 0x03, 0x00, 0x00, 0x00};
+        __handleSystem(data, tmp);
+      }
+      */
       return True;
     }
   }
@@ -701,7 +709,8 @@ static void __handleSystem(iOMassothData data, byte* in) {
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
   else if( in[2] == 0x05 ) {
-    /* extended system info */
+    /* extended system info
+     * 0x00 0x00 0x05 0x00 0x03 0x00 0x00 0x00 */
     data->load = in[4] * 100; /* load in steps of 100mA */
 
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
@@ -713,7 +722,7 @@ static void __handleSystem(iOMassothData data, byte* in) {
     wState.setaccessorybus( node, data->power );
     wState.setload( node, data->load );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system status=0x%02X", in[3] );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system load=%dmA", data->load );
 
     if( data->listenerFun != NULL && data->listenerObj != NULL )
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
