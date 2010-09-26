@@ -195,12 +195,14 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
       if(rsp != NULL) {
       /* inform listener */
-      response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-      wProgram.setcv( response, wProgram.getcv(cmd) );
-      wProgram.setvalue( response, NodeOp.getInt(rsp, "data", 0 ) );
-      wProgram.setcmd( response, wProgram.datarsp );
-      if( data->iid != NULL )
-        wProgram.setiid( response, data->iid );
+        char* cvdata = (char*)StrOp.strToByte(NodeOp.getStr(rsp, "data", "" ));
+        response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcv( response, wProgram.getcv(cmd) );
+        wProgram.setvalue( response, atoi(cvdata );
+        wProgram.setcmd( response, wProgram.datarsp );
+        if( data->iid != NULL )
+          wProgram.setiid( response, data->iid );
+        freeMem(cvdata);
       }
 
     }
