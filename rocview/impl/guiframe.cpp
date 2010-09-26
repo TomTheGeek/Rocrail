@@ -943,6 +943,8 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
   if( wProgram.islncv(node) ) {
     if( m_LocoIO != NULL )
       m_LocoIO->event( node );
+    else if( m_MGV141 != NULL )
+      m_MGV141->event( node );
     else if( m_DTOpSw != NULL )
       m_DTOpSw->event( node );
     else if( m_Uhl68610 != NULL )

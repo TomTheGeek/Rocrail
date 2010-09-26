@@ -21,6 +21,7 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/statbox.h>
 #include <wx/notebook.h>
@@ -39,9 +40,11 @@ class mgv141gen : public wxDialog
 	protected:
 		wxNotebook* m_NoteBook;
 		wxPanel* m_QueryPanel;
-		wxListBox* m_List;
+		wxListBox* m_AddressList;
 		wxButton* m_Query;
 		wxPanel* m_SetupPanel;
+		wxStaticText* m_labIID;
+		wxTextCtrl* m_IID;
 		wxStaticText* m_staticText1;
 		wxSpinCtrl* m_UnitHigh;
 		wxSpinCtrl* m_UnitLow;

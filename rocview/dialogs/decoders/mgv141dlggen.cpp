@@ -21,8 +21,8 @@ mgv141gen::mgv141gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	m_List = new wxListBox( m_QueryPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer4->Add( m_List, 1, wxALL|wxEXPAND, 5 );
+	m_AddressList = new wxListBox( m_QueryPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer4->Add( m_AddressList, 1, wxALL|wxEXPAND, 5 );
 	
 	m_Query = new wxButton( m_QueryPanel, wxID_ANY, wxT("Query"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer4->Add( m_Query, 0, wxALL, 5 );
@@ -34,6 +34,21 @@ mgv141gen::mgv141gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_SetupPanel = new wxPanel( m_NoteBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer3;
+	fgSizer3 = new wxFlexGridSizer( 1, 2, 0, 0 );
+	fgSizer3->AddGrowableCol( 1 );
+	fgSizer3->SetFlexibleDirection( wxBOTH );
+	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_labIID = new wxStaticText( m_SetupPanel, wxID_ANY, wxT("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labIID->Wrap( -1 );
+	fgSizer3->Add( m_labIID, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_IID = new wxTextCtrl( m_SetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( m_IID, 0, wxALL|wxEXPAND, 5 );
+	
+	bSizer3->Add( fgSizer3, 0, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 2, 4, 0, 0 );
@@ -152,8 +167,8 @@ mgv141gen::mgv141gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer1->Fit( this );
 	
 	// Connect Events
-	m_List->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
-	m_List->Connect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
+	m_AddressList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
+	m_AddressList->Connect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
 	m_Query->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onQuery ), NULL, this );
 	m_UnitSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onUnitSet ), NULL, this );
 	m_WriteAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onWriteAll ), NULL, this );
@@ -164,8 +179,8 @@ mgv141gen::mgv141gen( wxWindow* parent, wxWindowID id, const wxString& title, co
 mgv141gen::~mgv141gen()
 {
 	// Disconnect Events
-	m_List->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
-	m_List->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
+	m_AddressList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
+	m_AddressList->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( mgv141gen::onUnitSelected ), NULL, this );
 	m_Query->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onQuery ), NULL, this );
 	m_UnitSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onUnitSet ), NULL, this );
 	m_WriteAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgv141gen::onWriteAll ), NULL, this );
