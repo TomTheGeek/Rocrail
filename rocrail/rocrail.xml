@@ -881,6 +881,7 @@
       <param name="LocId" vt="const char*" remark="Loco ID which occupies this block."/>
       <param name="closed" vt="Boolean" remark="Signal closed block."/>
       <param name="placing" vt="int" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
+      <param name="enterside" vt="int" remark="Block enter side: 0 = Not set, 1 = True, 2 = False"/>
     </fun>
     <fun name="saveBlockOccupation" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>

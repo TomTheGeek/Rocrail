@@ -3604,7 +3604,7 @@ static void _stop( iOModel inst ) {
 }
 
 
-static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, Boolean enterside ) {
+static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, int enterside ) {
   iOModelData data = Data(inst);
   iONode occ = NULL;
 
@@ -3623,7 +3623,6 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
 
   /* modify the node */
   wOccupation.setlcid( occ, LocId );
-  wOccupation.setblockenterside( occ, enterside );
   wOccupation.setauto( occ, False );
   wOccupation.setclosed( occ, closed );
 
@@ -3638,6 +3637,11 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
   if( placing > 0 ) {
     /* 0 = Not set, 1 = True, 2 = False*/
     wOccupation.setplacing( occ, placing );
+  }
+
+  if( enterside > 0 ) {
+    /* 0 = Not set, 1 = True, 2 = False*/
+    wOccupation.setblockenterside( occ, enterside );
   }
 
   if( LocId == NULL || StrOp.len(LocId) == 0 ) {
@@ -3727,7 +3731,7 @@ static void _loadBlockOccupation( iOModel inst ) {
       const char* LocoID   = wOccupation.getlcid( occ );
       const char* ScID     = wOccupation.getscid( occ );
       int         placing  = wOccupation.getplacing( occ );
-      Boolean     enterside= wOccupation.isblockenterside( occ );
+      int         enterside= wOccupation.getblockenterside( occ );
       Boolean     closed   = wOccupation.isclosed( occ );
       Boolean     automode = wOccupation.isauto( occ );
       iOLoc       loco     = ModelOp.getLoc( inst, LocoID );
@@ -3738,7 +3742,6 @@ static void _loadBlockOccupation( iOModel inst ) {
       if( loco != NULL ) {
         iONode props = LocOp.base.properties(loco);
         wLoc.setresumeauto( props, automode );
-        wLoc.setblockenterside( props, enterside );
 
         if( ScID != NULL && StrOp.len(ScID) > 0) {
           LocOp.useSchedule(loco, ScID);
@@ -3746,6 +3749,11 @@ static void _loadBlockOccupation( iOModel inst ) {
               ScID, LocOp.getId(loco));
         }
 
+        if( enterside > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set enterside to [%s] for [%s]",
+              placing == 1 ?"plus":"min", LocOp.getId(loco) );
+          wLoc.setblockenterside( props, enterside == 1 ? True:False );
+        }
         if( placing > 0 ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set placing to [%s] for [%s]",
               placing == 1 ?"default":"reverse", LocOp.getId(loco) );
