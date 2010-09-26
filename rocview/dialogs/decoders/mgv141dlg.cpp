@@ -52,17 +52,94 @@ void MGV141Dlg::initLabels() {
 
 void MGV141Dlg::onUnitSet( wxCommandEvent& event )
 {
-	// TODO: Implement onUnitSet
+  if( !QueueOp.isEmpty(m_Queue) ) {
+    TraceOp.trc( "mgv141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  //m_iLowAddress = m_LowAddr->GetValue();
+  //m_iSubAddress = m_SubAddr->GetValue();
+  wProgram.setlntype( cmd, wProgram.lntype_sv );
+  wProgram.setcmd( cmd, wProgram.lncvset );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setaddr( cmd, m_iLowAddress );
+  wProgram.setmodid( cmd, m_iSubAddress );
+
+  if( m_iLowAddress != m_UnitHigh->GetValue() ) {
+    // low address
+    cmd = (iONode)NodeOp.base.clone(cmd);
+    wProgram.setcv( cmd, 1 );
+    wProgram.setvalue( cmd, m_UnitHigh->GetValue() );
+    m_iLowAddress = -1;
+    QueueOp.post( m_Queue, (obj)cmd, normal );
+  }
+
+  if( m_iSubAddress != m_UnitLow->GetValue() ) {
+    // sub address
+    cmd = (iONode)NodeOp.base.clone(cmd);
+    wProgram.setaddr( cmd, m_iLowAddress ); // replace low address with new one
+    wProgram.setcv( cmd, 2 );
+    wProgram.setvalue( cmd, m_UnitLow->GetValue() );
+    m_iSubAddress = -1;
+    QueueOp.post( m_Queue, (obj)cmd, normal );
+  }
+
+  NodeOp.base.del(cmd);
+
+  sendPacket();
 }
 
 void MGV141Dlg::onWriteAll( wxCommandEvent& event )
 {
-	// TODO: Implement onWriteAll
+  wxSpinCtrl* CA[] = {NULL,m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
+                        m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
+
+  for( int i = 1; i <= 8; i++ ) {
+    int config = 0;
+    int val1 = CA[i]->GetValue();
+    makePacket( 3, i, val1, true, false);
+  }
+  sendPacket();
 }
+
+
+void MGV141Dlg::makePacket( int offset, int port, int val1, bool sv_set, bool sendnow )
+{
+  if( sendnow && !QueueOp.isEmpty(m_Queue) ) {
+    TraceOp.trc( "mgv141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    return;
+  }
+
+  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "%s lnsv program command for %d/%d %d",
+      sv_set?"set":"get", m_iLowAddress, m_iSubAddress, port );
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  m_iLowAddress = m_UnitHigh->GetValue();
+  m_iSubAddress = m_UnitLow->GetValue();
+
+  wProgram.setlntype( cmd, wProgram.lntype_sv );
+  wProgram.setcmd( cmd, sv_set ? wProgram.lncvset:wProgram.lncvget );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setaddr( cmd, m_iLowAddress );
+  wProgram.setmodid( cmd, m_iSubAddress );
+  wProgram.setcv( cmd, (port-1) + offset );
+  wProgram.setvalue( cmd, val1 );
+  QueueOp.post( m_Queue, (obj)cmd, normal );
+
+  if( sendnow )
+    sendPacket();
+
+}
+
+
 
 void MGV141Dlg::onReadAll( wxCommandEvent& event )
 {
-	// TODO: Implement onReadAll
+  for( int i = 1; i <= 8; i++ ) {
+    makePacket( 3, i, 0, false, false);
+  }
+  sendPacket();
 }
 
 void MGV141Dlg::onOK( wxCommandEvent& event )
@@ -188,5 +265,30 @@ void MGV141Dlg::event( iONode event ) {
 void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int ver ) {
   TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "evaluating sv%d=%d", sv, val );
 
+  if( sv == 0 ) {
+    // setup
+    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "setup" );
+  }
+  else if( sv == 1 ) {
+    // low address
+    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "low address %d", val );
+    m_iLowAddress = val;
+    m_UnitHigh->SetValue(m_iLowAddress);
+    SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
+  }
+  else if( sv == 2 ) {
+    // sub address
+    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "sub address %d", val );
+    m_iSubAddress = val;
+    m_UnitLow->SetValue(m_iSubAddress);
+    SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
+  }
+  else if( sv > 2 && sv < 12 ) {
+    int port = sv - 2;
+    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "counter %d address %d", port, val );
+    wxSpinCtrl* CA[] = {NULL,m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
+                          m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
+    CA[port]->SetValue(val);
+  }
 }
 
