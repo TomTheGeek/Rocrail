@@ -258,6 +258,7 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
       }
     }
     else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Read error; check the connection." );
       idx = 0;
       break;
     }
