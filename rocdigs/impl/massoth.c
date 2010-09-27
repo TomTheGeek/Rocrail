@@ -822,7 +822,7 @@ static void __reader( void* threadinst ) {
   /* sending the interface configuration: must be the first packet */
   out[0] = 0xB8;
   out[1] = 0x00; /* XOR */
-  out[2] = 0x00;
+  out[2] = 0x01; /* extended info */
   out[3] = 0x00;
   out[4] = 0x00;
   out[5] = 0x00;
