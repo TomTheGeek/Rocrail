@@ -36,7 +36,13 @@
 MGV141Dlg::MGV141Dlg( wxWindow* parent )
     :mgv141gen( parent )
 {
+  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "init dialog");
   m_TabAlign = wxGetApp().getTabAlign();
+  m_Queue = QueueOp.inst(100);
+  m_SendedCmd = NULL;
+  m_Timer = new wxTimer( this, ME_SVTimer );
+  m_iLowAddress = m_UnitHigh->GetValue();
+  m_iSubAddress = m_UnitLow->GetValue();
 
 }
 
