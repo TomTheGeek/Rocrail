@@ -91,10 +91,10 @@ static void __reader( void* threadinst ) {
         msglen = c;
         break;
     default:
-      TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+      TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
       msglen = 0;
     }
-    TraceOp.trc( "lbserial", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
+    TraceOp.trc( "lbtcp", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
     ok = SocketOp.read( data->rwTCP, &msg[index], msglen - index);
 
@@ -163,7 +163,7 @@ int lbTCPRead ( obj inst, unsigned char *msg ) {
     return size;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "could not read queue %d", QueueOp.count(data->udpQueue)  );
+    TraceOp.trc( "lbtcp", TRCLEVEL_DEBUG, __LINE__, 9999, "could not read queue %d", QueueOp.count(data->udpQueue)  );
   }
   return 0;
 }
