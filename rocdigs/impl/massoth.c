@@ -392,11 +392,13 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       out[0] = 0x11;
+      data->power = False;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       return True;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       out[0] = 0x10;
+      data->power = True;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       /* load test */
       /*
