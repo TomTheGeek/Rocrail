@@ -1042,13 +1042,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
             TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "--- ITEM --- BLOCK [%s]",
             wBlock.getid( block) );
             */
-
-            wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
-            // Make a copy of the node for using it out of this scope:
-            event.SetClientData( node->base.clone( block ) );
-            /*wxPostEvent( guiApp->getFrame(), event );*/
-
-            ((PlanPanel*)getPlanPanel())->updateItemCmd( event);
+            getPlanPanel()->modelEvent( block );
           }
 
         }
