@@ -1176,6 +1176,8 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
 
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update ITEM" );
+
   char key[256];
   char prevkey[256];
   itemKey( node, key, prevkey );
@@ -1183,7 +1185,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
 
   if( item == NULL ) {
-    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s at level %d not found!", key, wZLevel.getz(m_zLevel) );
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Item with id=%s at level %d not found!", key, wZLevel.getz(m_zLevel) );
   }
 
   if( node != NULL && StrOp.equals( wModelCmd.name(), NodeOp.getName(node) ) ) {
@@ -1192,7 +1194,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   }
   else if( item != NULL ) {
     item->modelEvent( node );
-    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s is informed", key );
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Item with id=%s is informed", key );
 
     if( wItem.getz(item->getProperties()) != this->m_Z ) {
       m_ChildTable->Delete(wxString(prevkey,wxConvUTF8));

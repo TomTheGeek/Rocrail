@@ -1902,8 +1902,8 @@ void Symbol::modelEvent( iONode node ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
 
-  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999,
-      "id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+      "Symbol::modelEvent id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
 
   if( StrOp.equals( NodeOp.getName( node ), NodeOp.getName( m_Props ) ) ) {
     int x = wItem.getx( node );
@@ -2177,16 +2177,32 @@ void Symbol::modelEvent( iONode node ) {
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
       }
       else if (locid!=NULL && StrOp.len(locid)>0) {
-        /*
-        iONode model = wxGetApp().getModel();
 
-        iONode loc = ModelOp.getLoc( model, locid );
-        Boolean dir = wLoc.isdir( loc );
+        /* START */
+        iONode loc = wxGetApp().getFrame()->findLoc( locid);
+        Boolean blockenterside = wLoc.isblockenterside( loc);
 
-        l_locidStr = StrOp.fmt( "%s%s", dir?">":"<", locid==NULL?"":locid );
+        const char* mod_ori = wItem.getori(m_Props);
+        const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
+        if( wxGetApp().isModView() ) {
+          ori = mod_ori;
+        }
 
-      } else { */
-        l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
+        occupied = isReserved ? 2:1;
+        occupied = isEntering ? 3:occupied;
+
+        if( occupied == 1) {
+        /* TODO: north an south ... */
+        if( StrOp.equals( ori, "west" ) ) {
+          l_locidStr = StrOp.fmt( "%s %s", blockenterside?">":"<", locid==NULL?"":locid );
+        } else if( StrOp.equals( ori, "east" )) {
+          l_locidStr = StrOp.fmt( "%s %s", blockenterside?"<":">", locid==NULL?"":locid );
+        }
+        } else {
+          l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
+        }
+
+        /* STOP */
       }
 
       if( locid != NULL && StrOp.len( locid ) > 0 ) {

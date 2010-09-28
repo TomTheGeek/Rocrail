@@ -1034,6 +1034,23 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T(""):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );
+
+          iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ));
+          if(block != NULL ) {
+
+            /*
+            TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "--- ITEM --- BLOCK [%s]",
+            wBlock.getid( block) );
+            */
+
+            wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
+            // Make a copy of the node for using it out of this scope:
+            event.SetClientData( node->base.clone( block ) );
+            /*wxPostEvent( guiApp->getFrame(), event );*/
+
+            ((PlanPanel*)getPlanPanel())->updateItemCmd( event);
+          }
+
         }
 
         if( wLoc.getdestblockid( node ) != NULL ) {
