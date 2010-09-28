@@ -825,8 +825,8 @@ static void __reader( void* threadinst ) {
   out[2] = 0x01; /* extended info */
   out[3] = 0x00;
   out[4] = 0x00;
-  out[5] = 0x00;
-  out[6] = 0x0C;
+  out[5] = 0x39;
+  out[6] = 0xF4;
 
   while( data->run ) {
     if( !data->initialized ) {
