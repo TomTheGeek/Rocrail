@@ -1178,16 +1178,12 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
 
 static void _inBlock( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
-  iOModel     model = AppOp.getModel();
-  iOLoc loc = ModelOp.getLoc( model, id );
   wBlock.setlocid( data->props, id );
   if( id != NULL ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
     wBlock.setreserved( nodeD, False );
     wBlock.setlocid( nodeD, id );
-    if( loc != NULL )
-      wLoc.setblockenterside( nodeD, LocOp.getBlockEnterSide(loc));
     ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
     __checkAction((iOBlock)inst, "occupied");
   }
