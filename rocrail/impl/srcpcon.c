@@ -43,6 +43,17 @@
 
 static int instCnt = 0;
 
+struct __OSrcpService {
+  iOSrcpCon     SrcpCon;
+  iOSocket      clntSocket;
+  Boolean       readonly;
+  Boolean       quit;
+  Boolean       disablemonitor;
+};
+typedef struct __OSrcpService* __iOSrcpService;
+
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -147,6 +158,25 @@ static void __broadcaster( void* threadinst ) {
 }
 
 
+static void __cmdReader( void* threadinst ) {
+  iOThread         th = (iOThread)threadinst;
+  __iOSrcpService   o = (__iOSrcpService)ThreadOp.getParm(th);
+  iOSrcpCon   srcpcon = o->SrcpCon;
+  char*         sname = NULL;
+  Boolean          ok = False;
+  iOThread infoWriter = NULL;
+
+  ThreadOp.setDescription( th, "SRCP Client command reader" );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader started for:%s.", SocketOp.getPeername(o->clntSocket) );
+
+  ThreadOp.sleep(1000);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader ended for:%s.", SocketOp.getPeername(o->clntSocket) );
+  ThreadOp.base.del( th );
+}
+
+
 static void __manager( void* threadinst ) {
   iOThread       th = (iOThread)threadinst;
   iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
@@ -160,17 +190,11 @@ static void __manager( void* threadinst ) {
     iOSocket    client = SocketOp.accept( Data(srcpcon)->srvrsocket );
 
     if( client != NULL ) {
-      /*
       char*      servername = NULL;
-      __iOClntService cargo = allocMem( sizeof( struct __OClntService ) );
-      cargo->ClntCon    = clntcon;
+      __iOSrcpService cargo = allocMem( sizeof( struct __OSrcpService ) );
+      cargo->SrcpCon    = srcpcon;
       cargo->clntSocket = client;
-      cargo->readonly   = wTcp.isonlyfirstmaster(data->ini);
       cargo->quit       = False;
-
-      if( cargo->readonly && MapOp.size( data->infoWriters ) == 0 ) {
-        cargo->readonly = False;
-      }
 
       servername        = StrOp.fmt( "cmdr%08X", client );
       cmdReader         = ThreadOp.inst( servername, __cmdReader, cargo );
@@ -178,7 +202,6 @@ static void __manager( void* threadinst ) {
 
       ThreadOp.start( cmdReader );
       StrOp.free( servername );
-      */
     }
     else
       break;
