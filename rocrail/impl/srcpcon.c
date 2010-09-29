@@ -123,15 +123,99 @@ static int _getClientPort( struct OSrcpCon* inst ) {
 }
 
 
+static void __broadcaster( void* threadinst ) {
+  iOThread       th = (iOThread)threadinst;
+  iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
+  iOSrcpConData data = Data(srcpcon);
+
+  ThreadOp.setDescription( th, "SRCP Client Broadcaster" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Broadcaster started." );
+
+  do {
+    obj post = ThreadOp.waitPost( th );
+    if( post != NULL ) {
+      iONode node = (iONode)post;
+      /*
+      __doBroadcast(clntcon, (iONode)post);
+      */
+    }
+    else
+      ThreadOp.sleep( 10 );
+
+    ThreadOp.sleep( 0 );
+  } while(True);
+}
+
+
+static void __manager( void* threadinst ) {
+  iOThread       th = (iOThread)threadinst;
+  iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
+  iOSrcpConData data = Data(srcpcon);
+
+  ThreadOp.setDescription( th, "SRCP Client Manager" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager started." );
+
+  do {
+    iOThread cmdReader = NULL;
+    iOSocket    client = SocketOp.accept( Data(srcpcon)->srvrsocket );
+
+    if( client != NULL ) {
+      /*
+      char*      servername = NULL;
+      __iOClntService cargo = allocMem( sizeof( struct __OClntService ) );
+      cargo->ClntCon    = clntcon;
+      cargo->clntSocket = client;
+      cargo->readonly   = wTcp.isonlyfirstmaster(data->ini);
+      cargo->quit       = False;
+
+      if( cargo->readonly && MapOp.size( data->infoWriters ) == 0 ) {
+        cargo->readonly = False;
+      }
+
+      servername        = StrOp.fmt( "cmdr%08X", client );
+      cmdReader         = ThreadOp.inst( servername, __cmdReader, cargo );
+      ThreadOp.setDescription( cmdReader, SocketOp.getPeername(client) );
+
+      ThreadOp.start( cmdReader );
+      StrOp.free( servername );
+      */
+    }
+    else
+      break;
+    ThreadOp.sleep( 10 );
+  } while( True );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager ended." );
+}
+
+
+
+
+
 /**  */
-static struct OSrcpCon* _inst( iONode ini, clntcon_callback callbackfun, obj callbackobj ) {
+static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj callbackobj ) {
   iOSrcpCon __SrcpCon = allocMem( sizeof( struct OSrcpCon ) );
   iOSrcpConData data = allocMem( sizeof( struct OSrcpConData ) );
   MemOp.basecpy( __SrcpCon, &SrcpConOp, 0, sizeof( struct OSrcpCon ), data );
 
   /* Initialize data->xxx members... */
+  data->ini         = ini;
+  data->port        = wSrcpCon.getport(ini);
+  data->srvrsocket  = SocketOp.inst( "localhost", data->port, False, False, False );
+  data->callback    = callbackfun;
+  data->callbackObj = callbackobj;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP ClientConnection started on port %d.", wSrcpCon.getport(ini) );
+  data->infoWriters = MapOp.inst();
+  data->muxMap      = MutexOp.inst( NULL, True );
+
+  instCnt++;
+
+  data->manager = ThreadOp.inst( "srcpmngr", __manager, __SrcpCon );
+  data->broadcaster = ThreadOp.inst( "srcpbrdcst", __broadcaster, __SrcpCon );
+  ThreadOp.start( data->manager );
+  ThreadOp.start( data->broadcaster );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Client connection started on port %d.", wSrcpCon.getport(ini) );
 
   instCnt++;
   return __SrcpCon;
