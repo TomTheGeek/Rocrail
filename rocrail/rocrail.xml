@@ -232,6 +232,52 @@
   </object>
 
 
+  <object name="SrcpCon" use="node,map,socket,thread,mutex" remark="SRCP Client connection.">
+    <typedef def="void(*clntcon_callback)(obj,iONode)"/>
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="Client connection setup"/>
+      <param name="port" vt="int"/>
+      <param name="callbackfun" vt="clntcon_callback"/>
+      <param name="callbackobj" vt="obj"/>
+    </fun>
+    <fun name="setCallback" vt="void">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+      <param name="callbackfun" vt="clntcon_callback"/>
+      <param name="callbackobj" vt="obj"/>
+    </fun>
+    <fun name="broadcastEvent" vt="void">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+      <param name="evt" vt="iONode"/>
+    </fun>
+    <fun name="postEvent" vt="void">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+      <param name="evt" vt="iONode"/>
+      <param name="iwname" vt="const char*" remark="InfoWriter thread name"/>
+    </fun>
+    <fun name="getClientCount" vt="int">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
+    <fun name="getClientPort" vt="int">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
+    <fun name="getClientHost" vt="const char*">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="callback" vt="clntcon_callback"/>
+      <var name="callbackObj" vt="obj"/>
+      <var name="srvrsocket" vt="iOSocket"/>
+      <var name="manager" vt="iOThread"/>
+      <var name="stress" vt="iOThread"/>
+      <var name="infoWriters" vt="iOMap"/>
+      <var name="muxMap" vt="iOMutex"/>
+      <var name="broadcaster" vt="iOThread"/>
+      <var name="port" vt="int"/>
+    </data>
+  </object>
+
+
   <object name="Control" use="node,map,thread" include="r2rnet,clntcon,powerman,$rocint/public/digint" remark="Control center for RocRail">
     <typedef def="enum {CMD_OK=0,CMD_RETRY,CMD_ERROR} cmd_state"/>
     <typedef def="void(*control_callback)(obj,iONode)"/>
