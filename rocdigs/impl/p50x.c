@@ -721,8 +721,15 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
 
   if( nodeA != NULL ) {
     int size = __translate( o, nodeA, out, &insize, &inendbyte );
-    /*TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );*/
-    if( __transact( o, (char*)out, size, (char*)in, insize, inendbyte, o->timeout ) ) {
+
+    if( StrOp.equals( NodeOp.getName( nodeA ), wSysCmd.name() ) && StrOp.equals( wSysCmd.getcmd( nodeA ), "stopio" ) ) {
+      o->stopio = True;
+    }
+    else if( StrOp.equals( NodeOp.getName( nodeA ), wSysCmd.name() ) && StrOp.equals( wSysCmd.getcmd( nodeA ), "startio" ) ) {
+      o->stopio = False;
+    }
+
+    else if( __transact( o, (char*)out, size, (char*)in, insize, inendbyte, o->timeout ) ) {
       /* inform listener */
       if( insize > 0 ) {
         if( StrOp.equals( NodeOp.getName( nodeA ), wSwitch.name() ) ) {
@@ -910,7 +917,7 @@ static void __PTeventReader( void* threadinst ) {
     out[0] = (byte)'x';
     out[1] = 0xCE;
 
-    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
+    if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       Boolean ptEvent = False;
       out[1] = 0xC8;
       state = __cts( o );
@@ -1098,7 +1105,7 @@ static void __statusReader( void* threadinst ) {
 
     ThreadOp.sleep( 250 );
 
-    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
+    if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
 
       if( !__flushP50x(o) ) {
         MutexOp.post( o->mux );
@@ -1247,7 +1254,7 @@ static void __feedbackReader( void* threadinst ) {
     out[0] = (byte)'x';
     out[1] = 0xCB;
 
-    if( !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
+    if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       if( o->tok)
         printf( "\n*****token!!! A\n\n" );
       o->tok = True;
@@ -1328,7 +1335,7 @@ static void __feedbackP50Reader( void* threadinst ) {
     unsigned char in [512];
 
     ThreadOp.sleep( 200 );
-    if( data->fbmod == 0 )
+    if( data->stopio || data->fbmod == 0 )
       continue;
 
     out[0] = (unsigned char)(128 + data->fbmod);

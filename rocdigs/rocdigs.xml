@@ -82,6 +82,7 @@
       <var name="swtime" vt="int"/>
       <var name="psleep" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
+      <var name="stopio" vt="Boolean"/>
       <var name="ctsretry" vt="int"/>
       <var name="state" vt="p50state"/>
       <var name="iid" vt="const char*"/>

@@ -27,6 +27,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/BinCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/lib.h"
@@ -205,6 +206,18 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         freeMem(cvdata);
       }
 
+    }
+    else if(  wProgram.getcmd( cmd ) == wProgram.pton ) {
+      iONode iocmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+      wSysCmd.setcmd( iocmd, "stopio");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
+      response = data->sublib->cmd((obj)data->sublib, iocmd);
+    }
+    else if( wProgram.getcmd( cmd ) == wProgram.ptoff ) {
+      iONode iocmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+      wSysCmd.setcmd( iocmd, "startio");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
+      response = data->sublib->cmd((obj)data->sublib, iocmd);
     }
   }
   else {
