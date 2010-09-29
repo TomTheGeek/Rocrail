@@ -5,6 +5,6 @@
     <path stroke="rgb(0,0,0)" fill="none" d="M 1,4 L 62,4 L 62,27 L 1,27 z " />
     <path stroke="rgb(255,255,200)" fill="rgb(160,160,255)" d="M 2,5 L 61,5 L 61,26 L 2,26 z " />
     <!--<path stroke="rgb(0,0,0)" fill="black" d="M 1,24 L 5,24 L 5,27 L 1,27 z " />-->
-<path stroke="rgb(0,0,0)" fill="black" d="M 3,16 L 6,19 L 6,13 z " />
+    <path stroke="rgb(0,0,0)" fill="black" d="M 3,15 L 6,18 L 6,12 z " />
   </g>
 </svg>
