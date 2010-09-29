@@ -2188,10 +2188,11 @@ void Symbol::modelEvent( iONode node ) {
           ori = mod_ori;
         }
 
-        occupied = isReserved ? 2:1;
-        occupied = isEntering ? 3:occupied;
+        int occupied_m = occupied;
+        occupied_m = isReserved ? 2:1;
+        occupied_m = isEntering ? 3:occupied_m;
 
-        if( occupied == 1) {
+        if( occupied_m == 1) {
         /* TODO: north an south ... */
         if( StrOp.equals( ori, "west" ) ) {
           l_locidStr = StrOp.fmt( "%s %s", blockenterside?">":"<", locid==NULL?"":locid );

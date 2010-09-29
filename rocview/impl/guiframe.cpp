@@ -1037,12 +1037,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
           iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ));
           if(block != NULL ) {
-
-            /*
-            TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "--- ITEM --- BLOCK [%s]",
-            wBlock.getid( block) );
-            */
-            getPlanPanel()->modelEvent( block );
+            if( m_ModPanel != NULL) {
+              m_ModPanel->modelEvent( block );
+            } else {
+              getPlanPanel()->modelEvent( block );
+            }
           }
 
         }
