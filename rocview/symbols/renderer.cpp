@@ -600,6 +600,14 @@ void SymbolRenderer::setLabel( const char* label, int occupied ) {
   m_bLabelChanged = true;
 }
 
+void SymbolRenderer::setLabel( const char* label, int occupied, bool rotate ) {
+  StrOp.free(m_Label);
+  m_Label = StrOp.dup(label);
+  m_iOccupied = occupied;
+  m_bLabelChanged = true;
+  m_rotate = rotate;
+}
+
 
 /**
  * prepare symbol size
@@ -1698,6 +1706,17 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
 
   //if( StrOp.equals( ori, wItem.east ) )
     //ori = wItem.west;
+
+  if( m_rotate) {
+    if( StrOp.equals(ori, wItem.west))
+        ori = wItem.east;
+    else if(StrOp.equals(ori, wItem.east))
+        ori = wItem.west;
+    else if(StrOp.equals(ori, wItem.north))
+        ori = wItem.south;
+    else if(StrOp.equals(ori, wItem.south))
+        ori = wItem.north;
+  }
 
   // SVG Symbol:
   if( svgSym[1]!=NULL && m_iOccupied == 0 ||

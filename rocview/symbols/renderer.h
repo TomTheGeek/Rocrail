@@ -59,6 +59,7 @@ class SymbolRenderer {
   double m_fText;
   double m_Scale;
   int m_iItemIDps;
+  bool m_rotate;
   svgSymbol* m_SvgSym1; // straight, red
   svgSymbol* m_SvgSym2; // occupied, thrown, thrownleft, yellow
   svgSymbol* m_SvgSym3; // thrownright, green
@@ -86,6 +87,7 @@ public:
   void drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status=0 );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy, const char* ori );
   void setLabel( const char* label, int occupied );
+  void setLabel( const char* label, int occupied, bool rotate );
   int getcx() {return m_cx;}
   int getcy() {return m_cy;}
   bool isRotateable() { return m_bRotateable; }

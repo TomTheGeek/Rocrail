@@ -1901,6 +1901,7 @@ void Symbol::OnTTTrack(wxCommandEvent& event) {
 void Symbol::modelEvent( iONode node ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
+  bool rotatesym = False;
 
   TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
       "Symbol::modelEvent id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
@@ -2170,13 +2171,29 @@ void Symbol::modelEvent( iONode node ) {
       wBlock.setreserved( m_Props, isReserved );
       wBlock.setlocid( m_Props, locid );
 
+
       if(showID) {
         if( wBlock.issmallsymbol(m_Props) && locid!=NULL && StrOp.len(locid)>0)
           l_locidStr = StrOp.fmt( "%s", locid );
         else
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
       }
-      else if (locid!=NULL && StrOp.len(locid)>0) {
+
+      if( locid != NULL && StrOp.len( locid ) > 0 ) {
+         char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
+         SetToolTip( wxString(wBlock.getid( node ),wxConvUTF8) + _T(": ") + wxString(tip,wxConvUTF8) );
+         StrOp.free( tip );
+         occupied = isReserved ? 2:1;
+         occupied = isEntering ? 3:occupied;
+         occupied = isAcceptIdent ? 7:occupied;
+         occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
+       }
+       else {
+         occupied = isAcceptIdent ? 7:occupied;
+         SetToolTip( wxString(wBlock.getid( node ),wxConvUTF8) );
+       }
+
+      if (locid!=NULL && StrOp.len(locid)>0) {
 
         /* START */
         iONode loc = wxGetApp().getFrame()->findLoc( locid);
@@ -2188,37 +2205,34 @@ void Symbol::modelEvent( iONode node ) {
           ori = mod_ori;
         }
 
+        //Boolean thisBlock = StrOp.equals( wLoc.getblockid( loc), wBlock.getid( node ));
+
+        /*
         int occupied_m = occupied;
         occupied_m = isReserved ? 2:1;
         occupied_m = isEntering ? 3:occupied_m;
+        */
 
-        if( occupied_m == 1) {
-        /* TODO: north an south ... */
-        if( StrOp.equals( ori, "west" ) ) {
-          l_locidStr = StrOp.fmt( "%s %s", blockenterside?">":"<", locid==NULL?"":locid );
-        } else if( StrOp.equals( ori, "east" )) {
-          l_locidStr = StrOp.fmt( "%s %s", blockenterside?"<":">", locid==NULL?"":locid );
-        }
-        } else {
+        l_locidStr = StrOp.fmt( "  %s", locid==NULL?"":locid );
+        if( (occupied == 1 || occupied == 3) ) {
+          /* TODO: north an south ...
+          if( StrOp.equals( ori, "west" ) ) {
+            l_locidStr = StrOp.fmt( "%s %s %s", showID?wBlock.getid( node ):"", blockenterside?">":"<", locid==NULL?"":locid);
+          } else if( StrOp.equals( ori, "east" )) {
+            l_locidStr = StrOp.fmt( "%s %s %s", showID?wBlock.getid( node ):"", blockenterside?"<":">", locid==NULL?"":locid);
+          } else {
+            l_locidStr = StrOp.fmt( " <> %s", locid==NULL?"":locid );
+          }*/
+
+          rotatesym = blockenterside;
+
+        } /*else {
           l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
         }
-
-        /* STOP */
+         STOP */
       }
 
-      if( locid != NULL && StrOp.len( locid ) > 0 ) {
-        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
-        SetToolTip( wxString(wBlock.getid( node ),wxConvUTF8) + _T(": ") + wxString(tip,wxConvUTF8) );
-        StrOp.free( tip );
-        occupied = isReserved ? 2:1;
-        occupied = isEntering ? 3:occupied;
-        occupied = isAcceptIdent ? 7:occupied;
-        occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
-      }
-      else {
-        occupied = isAcceptIdent ? 7:occupied;
-        SetToolTip( wxString(wBlock.getid( node ),wxConvUTF8) );
-      }
+
     }
     else {
       wBlock.setlocid( m_Props, locid );
@@ -2256,7 +2270,7 @@ void Symbol::modelEvent( iONode node ) {
         id, occupied, state, locid!=NULL?locid:"-" );
 
 
-    m_Renderer->setLabel( l_locidStr, occupied );
+    m_Renderer->setLabel( l_locidStr, occupied, rotatesym );
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
 
