@@ -52,7 +52,7 @@ struct __OSrcpService {
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-
+static const char* SRCPVERSION="SRCP 0.8.3";
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -169,8 +169,17 @@ static void __cmdReader( void* threadinst ) {
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader started for:%s.", SocketOp.getPeername(o->clntSocket) );
+  SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );
+  SocketOp.write( o->clntSocket, "\n", 1 );
 
-  ThreadOp.sleep(1000);
+  while( !o->quit ) {
+    char str[1025] = {'\0'};
+
+    SocketOp.readln(o->clntSocket, str);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
+    SocketOp.fmt(o->clntSocket, "202 OK\n");
+    ThreadOp.sleep(10);
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader ended for:%s.", SocketOp.getPeername(o->clntSocket) );
   ThreadOp.base.del( th );
