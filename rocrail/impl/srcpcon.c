@@ -20,7 +20,26 @@
 
 #include "rocrail/impl/srcpcon_impl.h"
 
+#include "rocrail/public/app.h"
+#include "rocrail/public/model.h"
+
+#include "rocs/public/doc.h"
+#include "rocs/public/node.h"
+#include "rocs/public/trace.h"
 #include "rocs/public/mem.h"
+#include "rocs/public/str.h"
+#include "rocs/public/xmlh.h"
+
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/AutoCmd.h"
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Tcp.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/Exception.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/SrcpCon.h"
+
 
 static int instCnt = 0;
 
@@ -105,12 +124,14 @@ static int _getClientPort( struct OSrcpCon* inst ) {
 
 
 /**  */
-static struct OSrcpCon* _inst( iONode ini ,int port ,clntcon_callback callbackfun ,obj callbackobj ) {
+static struct OSrcpCon* _inst( iONode ini, clntcon_callback callbackfun, obj callbackobj ) {
   iOSrcpCon __SrcpCon = allocMem( sizeof( struct OSrcpCon ) );
   iOSrcpConData data = allocMem( sizeof( struct OSrcpConData ) );
   MemOp.basecpy( __SrcpCon, &SrcpConOp, 0, sizeof( struct OSrcpCon ), data );
 
   /* Initialize data->xxx members... */
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP ClientConnection started on port %d.", wSrcpCon.getport(ini) );
 
   instCnt++;
   return __SrcpCon;

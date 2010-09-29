@@ -281,6 +281,14 @@ static iOClntCon _getClntCon( void ) {
   return NULL;
 }
 
+static iOSrcpCon _getSrcpCon( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    return data->srcpCon;
+  }
+  return NULL;
+}
+
 static int __logo( void ) {
   int svn = 0;
   /* Logo. */
@@ -745,6 +753,15 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
     iPort = port?atoi(port):wTcp.getport(tcp);
     data->clntCon = ClntConOp.inst( tcp, iPort, ControlOp.getCallback( data->control), (obj)data->control );
+  }
+
+  /* Client connection */
+  {
+    iONode srcpini = wRocRail.getsrcpcon(data->ini);
+    int iPort = 0;
+    if( srcpini != NULL ) {
+      data->srcpCon = SrcpConOp.inst( srcpini, ControlOp.getCallback( data->control), (obj)data->control );
+    }
   }
 
   /* Http (Optional)*/

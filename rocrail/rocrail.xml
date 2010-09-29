@@ -19,7 +19,7 @@
 -->
 <Project name="RocRail" title="RocRail API" docname="rocrailapi" source="$Source: /cvsroot/rojav/rocrail/rocrail.xml,v $" revision="$Revision: 1.56 $">
 
-  <object name="App" use="node" include="clntcon,control,model,http,display" remark="RocRail application">
+  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display" remark="RocRail application">
     <fun name="inst" vt="this">
     </fun>
     <fun name="Main" vt="int">
@@ -38,6 +38,7 @@
     <fun name="getModel" vt="iOModel"/>
     <fun name="getControl" vt="iOControl"/>
     <fun name="getClntCon" vt="iOClntCon"/>
+    <fun name="getSrcpCon" vt="iOSrcpCon"/>
     <fun name="shutdown" vt="Boolean"/>
     <fun name="saveIni" vt="void"/>
     <fun name="stop" vt="void"/>
@@ -60,6 +61,7 @@
       <var name="control" vt="iOControl" remark=""/>
       <var name="display" vt="iODisplay" remark=""/>
       <var name="clntCon" vt="iOClntCon" remark=""/>
+      <var name="srcpCon" vt="iOSrcpCon" remark=""/>
       <var name="appstartTime" vt="long"/>
       <var name="http" vt="iOHttp" remark=""/>
       <var name="consoleMode" vt="Boolean" remark=""/>
@@ -233,16 +235,15 @@
 
 
   <object name="SrcpCon" use="node,map,socket,thread,mutex" remark="SRCP Client connection.">
-    <typedef def="void(*clntcon_callback)(obj,iONode)"/>
+    <typedef def="void(*srcpcon_callback)(obj,iONode)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Client connection setup"/>
-      <param name="port" vt="int"/>
-      <param name="callbackfun" vt="clntcon_callback"/>
+      <param name="callbackfun" vt="srcpcon_callback"/>
       <param name="callbackobj" vt="obj"/>
     </fun>
     <fun name="setCallback" vt="void">
       <param name="inst" vt="this" remark="ClntCon instance"/>
-      <param name="callbackfun" vt="clntcon_callback"/>
+      <param name="callbackfun" vt="srcpcon_callback"/>
       <param name="callbackobj" vt="obj"/>
     </fun>
     <fun name="broadcastEvent" vt="void">
@@ -265,7 +266,7 @@
     </fun>
     <data>
       <var name="ini" vt="iONode"/>
-      <var name="callback" vt="clntcon_callback"/>
+      <var name="callback" vt="srcpcon_callback"/>
       <var name="callbackObj" vt="obj"/>
       <var name="srvrsocket" vt="iOSocket"/>
       <var name="manager" vt="iOThread"/>

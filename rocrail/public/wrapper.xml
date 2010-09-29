@@ -453,6 +453,10 @@
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
       <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
     </tcp>
+    <srcpcon remark="SRCP client service port." wrappername="SrcpCon">
+      <var name="port" vt="int" defval="4303" range="1-65535"/>
+      <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
+    </srcpcon>
     <ctrl wrappername="Ctrl">
       <var name="swtimeout" vt="int" defval="250" range="100-1000" unit="ms" remark="Switch activation time."/>
       <var name="initfieldpause" vt="int" defval="500" range="100-5000" unit="ms" remark="Pause between the switch commands."/>
