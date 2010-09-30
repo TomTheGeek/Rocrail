@@ -3,7 +3,7 @@
     <!-- Block -->
     <path stroke="rgb(0,0,0)" fill="none" d="M 0,5 L 63,5 L 63,26 L 0,26 z " />
     <path stroke="rgb(20,20,20)" fill="none" d="M 1,6 L 62,6 L 62,25 L 1,25 z " />
-    <path stroke="rgb(50,50,50)" fill="none" d="M 2,7 L 61,7 L 61,24 L 2,24 z " />
+    <path stroke="rgb(50,50,50)" fill="rgb(255,168,74)" d="M 2,7 L 61,7 L 61,24 L 2,24 z " />
     <!--<path stroke="rgb(0,0,0)" fill="black" d="M 1,24 L 5,24 L 5,27 L 1,27 z " />-->
     <path stroke="rgb(0,0,0)" fill="black" d="M 4,15 L 7,18 L 7,12 z " />
   </g>
