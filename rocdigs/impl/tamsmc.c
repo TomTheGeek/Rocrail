@@ -168,6 +168,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       response = data->sublib->cmd((obj)data->sublib, lccmd);
     }
     else if(  wProgram.getcmd( cmd ) == wProgram.set ) {
+      iONode rsp = NULL;
       iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
       char* str = StrOp.fmt( "XPTWD %d, %d\r", wProgram.getcv(cmd), wProgram.getvalue(cmd) );
       char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
@@ -178,7 +179,20 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       wBinCmd.setout( lccmd, byteStr );
       StrOp.free( byteStr );
       StrOp.free( str );
-      response = data->sublib->cmd((obj)data->sublib, lccmd);
+      rsp = data->sublib->cmd((obj)data->sublib, lccmd);
+
+      if(rsp != NULL) {
+      /* inform listener */
+        char* cvdata = (char*)StrOp.strToByte(NodeOp.getStr(rsp, "data", "" ));
+        response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcv( response, wProgram.getcv(cmd) );
+        wProgram.setvalue( response,  wProgram.getvalue(cmd) );
+        wProgram.setcmd( response, wProgram.datarsp );
+        if( data->iid != NULL )
+          wProgram.setiid( response, data->iid );
+        freeMem(cvdata);
+      }
+
     }
     else if(  wProgram.getcmd( cmd ) == wProgram.get ) {
       iONode rsp = NULL;
