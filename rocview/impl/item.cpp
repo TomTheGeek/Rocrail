@@ -2151,7 +2151,7 @@ void Symbol::modelEvent( iONode node ) {
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
-    Boolean updateEnterside = NodeOp.getBool(node, "updateenterside", False);
+    Boolean updateEnterside = wBlock.isupdateenterside(node);
     const char* state = wBlock.getstate( node );
     const char* locid = wBlock.getlocid( node );
     int occupied = 0;
@@ -2159,7 +2159,7 @@ void Symbol::modelEvent( iONode node ) {
 
     if( updateEnterside ) {
       // reset update flag
-      NodeOp.setBool(node, "updateenterside", False);
+      wBlock.setupdateenterside(node, False);
     }
 
 

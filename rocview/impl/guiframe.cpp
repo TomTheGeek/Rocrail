@@ -1037,7 +1037,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
           iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ));
           if(block != NULL ) {
-            NodeOp.setBool(block, "updateenterside", True);
+            wBlock.setupdateenterside(block, True);
             if( m_ModPanel != NULL) {
               m_ModPanel->modelEvent( block );
             } else {
