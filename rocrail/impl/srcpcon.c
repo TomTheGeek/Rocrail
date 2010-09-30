@@ -23,12 +23,14 @@
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
+#include "rocrail/public/loc.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/node.h"
 #include "rocs/public/trace.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 #include "rocs/public/xmlh.h"
 
 #include "rocrail/wrapper/public/Command.h"
@@ -41,6 +43,8 @@
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SrcpCon.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Switch.h"
 
 
 static int instCnt = 0;
@@ -146,8 +150,73 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OSrcpCon ----- */
 
 
+static char* __rr2srcp(iONode evt) {
+  char* str = NULL;
+
+  return str;
+}
+
+
+static iONode __srcp2rr(const char* req) {
+  iONode cmd = NULL;
+  iOModel model = AppOp.getModel();
+
+  if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "ON" ) ) {
+    cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.go );
+  }
+  else if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "OFF" ) ) {
+    cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.stop );
+  }
+  else if( StrOp.startsWithi( req, "SET" ) ) {
+    /* SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
+    if( StrOp.findi( req, "GL" ) ) {
+      int idx = 0;
+      const char* lcID = NULL;
+      Boolean dir = True;
+      int V = 0;
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 3: {
+          iOLoc loco = ModelOp.getLocByAddress(model, atoi(s));
+          if( loco != NULL ) {
+            lcID = LocOp.getId(loco);
+            dir = LocOp.getDir(loco);
+          }
+        }
+        break;
+        case 4:
+          if( s[0] == '0') dir = False;
+          if( s[0] == '1') dir = True;
+          break;
+        case 5:
+          V = atoi(s);
+          break;
+        }
+
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      if( lcID != NULL ) {
+        cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid(cmd, lcID);
+        wLoc.setdir(cmd, dir);
+        wLoc.setV(cmd, V);
+      }
+    }
+  }
+
+  return cmd;
+}
+
+
 /**  */
 static void _broadcastEvent( struct OSrcpCon* inst ,iONode evt ) {
+  iOSrcpConData data = Data(inst);
 
   NodeOp.base.del(evt);
   return;
@@ -331,19 +400,10 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
   else if( StrOp.startsWithi( req, "TERM 0" ) ) {
     SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
   }
-  else if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "ON" ) ) {
-    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd( cmd, wSysCmd.go );
-    Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
-  }
-  else if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "OFF" ) ) {
-    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd( cmd, wSysCmd.stop );
-    Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
-  }
   else {
+    iONode cmd = __srcp2rr(req);
+    if( cmd != NULL )
+      Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
     SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
   }
 }
