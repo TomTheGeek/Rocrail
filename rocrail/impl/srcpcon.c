@@ -207,6 +207,37 @@ static iONode __srcp2rr(const char* req) {
         wLoc.setdir(cmd, dir);
         wLoc.setV(cmd, V);
       }
+    } else if( StrOp.findi( req, "GA" ) ) {
+
+      const char* valStr = NULL;
+      iOStrTok tok = StrTokOp.inst( req, ' ' );
+      int i = 0;
+
+      /* currently NMRA-DCC style only! (as set inspdrs60)*/
+      int port = 0;
+      int state = 0;
+      int module = 0;
+      int pada = 0;
+
+      while( StrTokOp.hasMoreTokens( tok ) ) {
+        valStr = StrTokOp.nextToken( tok );
+
+        if( i == 3)
+          pada = atoi( valStr );
+        else if ( i == 4)
+          state = atoi( valStr );
+
+        i++;
+      }
+
+      module = (pada-1) / 4 + 1;
+      port   = (pada-1) % 4 + 1;
+      /* END currently NMRA-DCC style only! (as set inspdrs60)*/
+
+      cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setaddr1( cmd, module );
+      wSwitch.setport1( cmd, port );
+      wSwitch.setcmd( cmd, state?wSwitch.straight:wSwitch.turnout );
     }
   }
 
