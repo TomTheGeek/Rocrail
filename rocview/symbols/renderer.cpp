@@ -1783,12 +1783,17 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
 
     dc.SetTextForeground(wxColour(red,green,blue));
 
+    // center the blocktext
+    wxCoord width;
+    wxCoord height;
+    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0,font);
+
     if( StrOp.equals( ori, wItem.south ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
     else if( StrOp.equals( ori, wItem.north ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
     else
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 3, 5, 0.0 );
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), 8, 0.0 ); //5
 
     // restore previous color
     dc.SetTextForeground(tfc);
