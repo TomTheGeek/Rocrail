@@ -1793,7 +1793,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     else if( StrOp.equals( ori, wItem.north ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
     else
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), 8, 0.0 ); //5
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 ); //5
 
     // restore previous color
     dc.SetTextForeground(tfc);
