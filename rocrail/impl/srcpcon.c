@@ -17,6 +17,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+#include <sys/time.h>
 
 #include "rocrail/impl/srcpcon_impl.h"
 
@@ -32,6 +33,7 @@
 
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Tcp.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -43,16 +45,50 @@
 
 static int instCnt = 0;
 
+static int idCnt = 1;
 struct __OSrcpService {
   iOSrcpCon     SrcpCon;
   iOSocket      clntSocket;
   Boolean       readonly;
   Boolean       quit;
   Boolean       disablemonitor;
+  int           id;
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-static const char* SRCPVERSION="SRCP 0.8.3";
+static const char* SRCPVERSION="SRCP 0.8.3; Rocrail 2.0";
+
+/*
+200 OK <ID>
+201 OK PROTOCOL SRCP
+202 OK CONNECTIONMODEOK
+400 ERROR unsupported protocol
+401 ERROR unsupported connection mode
+402 ERROR unsufficient data
+500 ERROR out of ressources
+
+100 INFO <more data>
+101 INFO <more data>
+102 INFO <more data>
+200 OK
+410 ERROR unknown command
+411 ERROR unknown value
+412 ERROR wrong value
+414 ERROR device locked
+415 ERROR forbidden
+416 ERROR no data
+417 ERROR timeout
+418 ERROR list too long
+419 ERROR list too short
+420 ERROR unsupported device protocol
+421 ERROR unsupported device
+422 ERROR unsupported device group
+423 ERROR unsupported operation
+424 ERROR device reinitialized
+425 ERROR not supported
+499 ERROR unspecified error
+*/
+
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -157,8 +193,160 @@ static void __broadcaster( void* threadinst ) {
   } while(True);
 }
 
+static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int id)
+{
+    switch (errorcode) {
+        case 100:
+            sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 101:
+            sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 102:
+            sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 110:
+            sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 200:
+          if( id > 0 )
+            sprintf(msg, "%lu.%.3lu %d OK GO %d\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode, id);
+          else
+            sprintf(msg, "%lu.%.3lu %d OK\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
 
-static void __cmdReader( void* threadinst ) {
+            break;
+        case 202:
+            sprintf(msg, "%lu.%.3lu %d OK CONNECTIONMODE\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 201:
+            sprintf(msg, "%lu.%.3lu %d OK PROTOCOL SRCP\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 400:
+            sprintf(msg, "%lu.%.3lu %d ERROR unsupported protocol\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 401:
+            sprintf(msg,
+                    "%lu.%.3lu %d ERROR unsupported connection mode\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 402:
+            sprintf(msg, "%lu.%.3lu %d ERROR insufficient data\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 410:
+            sprintf(msg, "%lu.%.3lu %d ERROR unknown command\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 411:
+            sprintf(msg, "%lu.%.3lu %d ERROR unknown value\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 412:
+            sprintf(msg, "%lu.%.3lu %d ERROR wrong value\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 413:
+            sprintf(msg, "%lu.%.3lu %d ERROR temporarily prohibited\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 414:
+            sprintf(msg, "%lu.%.3lu %d ERROR device locked\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 415:
+            sprintf(msg, "%lu.%.3lu %d ERROR forbidden\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 416:
+            sprintf(msg, "%lu.%.3lu %d ERROR no data\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 417:
+            sprintf(msg, "%lu.%.3lu %d ERROR timeout\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 418:
+            sprintf(msg, "%lu.%.3lu %d ERROR list too long\n", time.tv_sec,
+                    time.tv_usec / 1000, errorcode);
+            break;
+        case 419:
+            sprintf(msg, "%lu.%.3lu %d ERROR list too short\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 420:
+            sprintf(msg,
+                    "%lu.%.3lu %d ERROR unsupported device protocol\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 421:
+            sprintf(msg, "%lu.%.3lu %d ERROR unsupported device\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 422:
+            sprintf(msg, "%lu.%.3lu %d ERROR unsupported device group\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 423:
+            sprintf(msg, "%lu.%.3lu %d ERROR unsupported operation\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 424:
+            sprintf(msg, "%lu.%.3lu %d ERROR device reinitialized\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        case 500:
+            sprintf(msg, "%lu.%.3lu %d ERROR out of resources\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+            break;
+        default:
+            sprintf(msg, "%lu.%.3lu 600 ERROR internal error %d, "
+                    "please report to srcpd-devel@srcpd.sorceforge.net\n",
+                    time.tv_sec, time.tv_usec / 1000, errorcode);
+    }
+    return msg;
+}
+
+static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req) {
+  char rsp[1025] = {'\0'};
+  struct timeval time;
+  gettimeofday(&time, NULL);
+
+  if( StrOp.startsWithi( req, "SET CONNECTIONMODE" ) ) {
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
+  }
+  else if( StrOp.startsWithi( req, "GO" ) ) {
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, o->id));
+  }
+  else if( StrOp.startsWithi( req, "TERM 0" ) ) {
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
+  }
+  else if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "ON" ) ) {
+    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.go );
+    Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
+  }
+  else if( StrOp.findi( req, "POWER" ) && StrOp.findi( req, "OFF" ) ) {
+    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.stop );
+    Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
+  }
+  else {
+    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
+  }
+}
+
+static void __SrcpService( void* threadinst ) {
   iOThread         th = (iOThread)threadinst;
   __iOSrcpService   o = (__iOSrcpService)ThreadOp.getParm(th);
   iOSrcpCon   srcpcon = o->SrcpCon;
@@ -168,20 +356,37 @@ static void __cmdReader( void* threadinst ) {
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader started for:%s.", SocketOp.getPeername(o->clntSocket) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
+      SocketOp.getPeername(o->clntSocket), o->id );
   SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );
   SocketOp.write( o->clntSocket, "\n", 1 );
 
-  while( !o->quit ) {
+  do {
     char str[1025] = {'\0'};
+
+    if( !SocketOp.peek( o->clntSocket, str, 1 ) ) {
+      if( SocketOp.isBroken( o->clntSocket ) ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                    "SRCP Service: Socket errno=%d", SocketOp.getRc( o->clntSocket ) );
+        break;
+      }
+      ThreadOp.sleep( 10 );
+      continue;
+    }
 
     SocketOp.readln(o->clntSocket, str);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
-    SocketOp.fmt(o->clntSocket, "202 OK\n");
+    __evalRequest( srcpcon, o, str);
     ThreadOp.sleep(10);
-  }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP cmdReader ended for:%s.", SocketOp.getPeername(o->clntSocket) );
+  } while( !o->quit );
+  /*} while( !o->quit && SocketOp.isConnected(o->clntSocket) && !SocketOp.isBroken(o->clntSocket));*/
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service ended for session [%d]", o->id );
+
+  SocketOp.base.del(o->clntSocket);
+  freeMem(o);
   ThreadOp.base.del( th );
 }
 
@@ -195,7 +400,7 @@ static void __manager( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager started." );
 
   do {
-    iOThread cmdReader = NULL;
+    iOThread SrcpService = NULL;
     iOSocket    client = SocketOp.accept( Data(srcpcon)->srvrsocket );
 
     if( client != NULL ) {
@@ -204,12 +409,14 @@ static void __manager( void* threadinst ) {
       cargo->SrcpCon    = srcpcon;
       cargo->clntSocket = client;
       cargo->quit       = False;
+      cargo->id         = idCnt;
+      idCnt++;
 
       servername        = StrOp.fmt( "cmdr%08X", client );
-      cmdReader         = ThreadOp.inst( servername, __cmdReader, cargo );
-      ThreadOp.setDescription( cmdReader, SocketOp.getPeername(client) );
+      SrcpService         = ThreadOp.inst( servername, __SrcpService, cargo );
+      ThreadOp.setDescription( SrcpService, SocketOp.getPeername(client) );
 
-      ThreadOp.start( cmdReader );
+      ThreadOp.start( SrcpService );
       StrOp.free( servername );
     }
     else
