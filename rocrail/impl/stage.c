@@ -142,7 +142,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
   StageOp.init( inst );
 
   /* Broadcast to clients. */
-  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), cmd );
+  AppOp.broadcastEvent( cmd );
 
   return True;
 }
@@ -158,7 +158,7 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
     wBlock.setid( nodeD, data->id );
     wBlock.setentering( nodeD, True );
     wBlock.setlocid( nodeD, id );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
   */
 }
@@ -627,7 +627,7 @@ static void _modify( iOStage inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
 
   props->base.del(props);

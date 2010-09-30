@@ -56,7 +56,7 @@ struct __OSrcpService {
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-static const char* SRCPVERSION="SRCP 0.8.3; Rocrail 2.0";
+static const char* SRCPVERSION="SRCP 0.8.3;Rocrail 2.0";
 
 /*
 200 OK <ID>
@@ -148,6 +148,8 @@ static void* __event( void* inst, const void* evt ) {
 
 /**  */
 static void _broadcastEvent( struct OSrcpCon* inst ,iONode evt ) {
+
+  NodeOp.base.del(evt);
   return;
 }
 

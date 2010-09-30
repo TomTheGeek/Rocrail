@@ -303,7 +303,7 @@ static void __evaluatePosition( obj inst ) {
     wSelTab.setpending( event, False );
     if( wSelTab.getiid( data->props ) != NULL )
       wSelTab.setiid( event, wSelTab.getiid( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+    AppOp.broadcastEvent( event );
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s].",
       SelTabOp.base.id( inst ), data->lockedId!=NULL?data->lockedId:"-" );
@@ -350,7 +350,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int va
     wSelTab.setpending( event, !state );
     if( wSelTab.getiid( data->props ) != NULL )
       wSelTab.setiid( event, wSelTab.getiid( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+    AppOp.broadcastEvent( event );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position sensor is %s", state?"high":"low" );
 
@@ -679,7 +679,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 
   if( broadcastNode != NULL ) {
     /* Broadcast to clients. */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), broadcastNode );
+    AppOp.broadcastEvent( broadcastNode );
   }
 
   return True;
@@ -974,7 +974,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
           wSelTab.setlocid( nodeF, data->lockedId );
         if( wSelTab.getiid( data->props ) != NULL )
           wSelTab.setiid( nodeF, wSelTab.getiid( data->props ) );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+        AppOp.broadcastEvent( nodeF );
       }
       ok = True;
     }
@@ -1037,7 +1037,7 @@ static void _modify( struct OSelTab* inst ,iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
   return;
@@ -1125,7 +1125,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
       wSelTab.setpos( nodeF, wSelTab.getpos( data->props) );
       if( wSelTab.getiid( data->props ) != NULL )
         wSelTab.setiid( nodeF, wSelTab.getiid( data->props ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
 
     data->unlockTick = SystemOp.getTick();

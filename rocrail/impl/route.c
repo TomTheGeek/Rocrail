@@ -191,14 +191,14 @@ static void __broadcast(iORoute inst) {
 
   if( aliases == NULL ) {
     wRoute.setid( nodeD, routeId );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
   else {
     int i = 0;
     for( i = 0; i < ListOp.size(aliases); i++ ) {
       iONode routeseg = (iONode)ListOp.get( aliases, i );
       wRoute.setid( nodeD, wRoute.getid(routeseg) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(nodeD) );
+      AppOp.broadcastEvent( (iONode)NodeOp.base.clone(nodeD) );
     }
     NodeOp.base.del(nodeD);
   }
@@ -1147,7 +1147,7 @@ static void _modify( iORoute inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }

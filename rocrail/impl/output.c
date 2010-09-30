@@ -231,7 +231,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
     wOutput.setstate( nodeF, wOutput.getstate( o->props ) );
     if( wOutput.getiid( o->props ) != NULL )
       wOutput.setiid( nodeF, wOutput.getiid( o->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+    AppOp.broadcastEvent( nodeF );
   }
 
   __checkActions(inst, state );
@@ -257,7 +257,7 @@ static void _event( iOOutput inst, iONode nodeC ) {
     wOutput.setstate( nodeD, wOutput.getstate( data->props) );
     wOutput.setaddr( nodeD, wOutput.getaddr( data->props ) );
     wOutput.setport( nodeD, wOutput.getport( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
 
 
@@ -344,7 +344,7 @@ static void _modify( struct OOutput* inst ,iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }

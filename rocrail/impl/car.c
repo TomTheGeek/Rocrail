@@ -142,7 +142,7 @@ static void _modify( struct OCar* inst ,iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }

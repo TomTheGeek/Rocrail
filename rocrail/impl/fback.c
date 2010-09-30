@@ -264,7 +264,7 @@ static void _setState( iOFBack inst, Boolean state ) {
     wFeedback.setid( nodeD, FBackOp.getId( inst ) );
     wFeedback.setstate( nodeD, data->state );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
 }
 
@@ -324,7 +324,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
       wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
       wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      AppOp.broadcastEvent( nodeD );
     }
     nodeC->base.del(nodeC);
     return;
@@ -379,7 +379,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
     wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
 
   /* Cleanup Node3 */
@@ -443,7 +443,7 @@ static void _modify( iOFBack inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }

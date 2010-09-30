@@ -181,7 +181,7 @@ static Boolean __acceptGhost( obj inst ) {
       iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( node, data->id );
       wBlock.setlocid( node, data->locId );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+      AppOp.broadcastEvent( node );
     }
     return True;
   }
@@ -393,7 +393,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
               iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
               wBlock.setid( nodeD, data->id );
               wBlock.setacceptident(nodeD, data->acceptident);
-              ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+              AppOp.broadcastEvent( nodeD );
 
               wBlock.setacceptident(data->props, data->acceptident);
             }
@@ -414,7 +414,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
         wBlock.setlocid( nodeD, puls ? identString:data->locId );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        AppOp.broadcastEvent( nodeD );
       }
     }
 
@@ -514,7 +514,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setid( nodeD, data->id );
           wBlock.setstate( nodeD, wBlock.ghost );
           wBlock.setlocid( nodeD, data->locId );
-          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          AppOp.broadcastEvent( nodeD );
           __checkAction((iOBlock)inst, "ghost");
         }
         tl = TRCLEVEL_EXCEPTION;
@@ -550,7 +550,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setid( nodeD, data->id );
           wBlock.setstate( nodeD, wBlock.getstate(data->props) );
           wBlock.setlocid( nodeD, data->locId );
-          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          AppOp.broadcastEvent( nodeD );
         }
       }
     }
@@ -1170,7 +1170,7 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     wBlock.setid( nodeD, data->id );
     wBlock.setentering( nodeD, True );
     wBlock.setlocid( nodeD, id );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "enter");
   }
 }
@@ -1184,7 +1184,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
     wBlock.setid( nodeD, data->id );
     wBlock.setreserved( nodeD, False );
     wBlock.setlocid( nodeD, id );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "occupied");
   }
 }
@@ -1319,7 +1319,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       wBlock.setid( nodeD, data->id );
       wBlock.setreserved( nodeD, True );
       wBlock.setlocid( nodeD, id );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      AppOp.broadcastEvent( nodeD );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -1399,7 +1399,7 @@ static Boolean _lockForGroup( iIBlockBase inst, const char* id ) {
     else
       wBlock.setreserved( nodeD, True );
     wBlock.setlocid( nodeD, id );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
   }
 
   if( !ok ) {
@@ -1563,7 +1563,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
             wBlock.setreserved( nodeD, True );
             __checkAction((iOBlock)inst, "reserved");
           }
-          ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+          AppOp.broadcastEvent( nodeD );
         }
         /* Set signal. */
 
@@ -1617,7 +1617,7 @@ static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
         wBlock.setlocid( nodeD, "" );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+        AppOp.broadcastEvent( nodeD );
       }
 
     }
@@ -1723,7 +1723,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   _init( inst );
 
   /* Broadcast to clients. */
-  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeA );
+  AppOp.broadcastEvent( nodeA );
 
   return True;
 }
@@ -1885,7 +1885,7 @@ static void _modify( iOBlock inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
 
   props->base.del(props);
@@ -1990,7 +1990,7 @@ static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
     wBlock.setacceptident(nodeD, data->acceptident);
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+    AppOp.broadcastEvent( nodeD );
 
     wBlock.setacceptident(data->props, data->acceptident);
   }

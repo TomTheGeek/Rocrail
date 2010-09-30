@@ -54,6 +54,9 @@
     <fun name="getrevno" vt="int"/>
     <fun name="isCreateModplan" vt="Boolean"/>
     <fun name="isRunAtStartup" vt="Boolean"/>
+    <fun name="broadcastEvent" vt="void">
+      <param name="evt" vt="iONode"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>

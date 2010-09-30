@@ -128,7 +128,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
         wBlock.setid( nodeD, blockid );
         wBlock.setlocid( nodeD, block->getLoc(block) );
         wBlock.setstate( nodeD, cleared?block->getState(block):wBlock.shortcut );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(), nodeD );
+        AppOp.broadcastEvent( nodeD );
       }
     };
     StrTokOp.base.del(tok);
@@ -145,7 +145,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
       wModule.setid( nodeD, modid );
       wModule.setcmd( nodeD, wModule.cmd_state );
       wModule.setstate( nodeD, cleared?wModule.state_normal:wModule.state_shortcut );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), nodeD );
+      AppOp.broadcastEvent( nodeD );
     };
     StrTokOp.base.del(tok);
 
@@ -203,7 +203,7 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, 
   }
 
   /* Broadcast to clients. */
-  ClntConOp.broadcastEvent( AppOp.getClntCon(), pwrevent );
+  AppOp.broadcastEvent( pwrevent );
 
 }
 

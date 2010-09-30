@@ -375,13 +375,13 @@ static void __stress( void* threadinst ) {
     iONode node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
     wException.settext(node, "STRESS!!!");
     wException.setlevel( node, TRCLEVEL_MONITOR );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+    AppOp.broadcastEvent( node );
 
     ThreadOp.sleep( 100 );
     node = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
     wException.settext(node, "Warning!!!");
     wException.setlevel( node, TRCLEVEL_WARNING );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+    AppOp.broadcastEvent( node );
 
     ThreadOp.sleep( 100 );
     node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -390,7 +390,7 @@ static void __stress( void* threadinst ) {
     wLoc.setdestblockid( node, "2");
     wLoc.setaddr(node, 4136);
     wLoc.setV(node, 3);
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+    AppOp.broadcastEvent( node );
 
     ThreadOp.sleep( 100 );
   } while( True );

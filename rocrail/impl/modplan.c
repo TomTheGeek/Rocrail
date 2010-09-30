@@ -596,7 +596,7 @@ static void __mergeList( const char* listname, iONode model, iONode module, int 
         wModelCmd.setcmd( cmd, wModelCmd.merge );
         iONode item = (iONode)NodeOp.base.clone( child );
         NodeOp.addChild( cmd, item );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+        AppOp.broadcastEvent( cmd );
       }
     }
   }
@@ -1298,7 +1298,7 @@ static Boolean _modify( iOModPlan inst, iONode item ) {
             wZLevel.setz(zlevel, level );
             wZLevel.setmodviewx( zlevel, wModule.getx(module));
             wZLevel.setmodviewy( zlevel, wModule.gety(module));
-            ClntConOp.broadcastEvent( AppOp.getClntCon(), zlevel );
+            AppOp.broadcastEvent( zlevel );
           }
         }
         else if( StrOp.equals(wModule.cmd_north, modcmd ) ) {
@@ -1352,7 +1352,7 @@ static void _addModule(iOModPlan inst, iONode module) {
 
       /* Add all item and broadcast to clients. */
       /* TODO: add all level related items and new routes... */
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), zlevelClone );
+      AppOp.broadcastEvent( zlevelClone );
     }
   }
 

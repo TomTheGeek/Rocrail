@@ -77,7 +77,7 @@ static void __exception( int level, char* msg ) {
     }
     wException.settext( e, msg );
     wException.setlevel( e, level );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), e );
+    AppOp.broadcastEvent( e );
 
     StrOp.free((char*)backtrace[0]);
     for( i = 0; i < 9; i++ ) {
@@ -420,7 +420,7 @@ static void __syscmd( const char* command ) {
     wSysCmd.setcmd( cmd, command );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SysCommand: %s", command );
     ControlOp.cmd( data->control, (iONode)NodeOp.base.clone(cmd), NULL );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+    AppOp.broadcastEvent( cmd );
   }
 }
 
@@ -893,7 +893,7 @@ static Boolean _shutdown( void ) {
       wSysCmd.setcmd( broadcast, wSysCmd.shutdown );
       wSysCmd.setinformall( broadcast, True );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing clients..." );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), broadcast );
+      AppOp.broadcastEvent( broadcast );
       ThreadOp.sleep(100);
     }
 
@@ -960,7 +960,7 @@ static void _stop( void ) {
     if( data->control != NULL )
       ControlOp.cmd( data->control, (iONode)NodeOp.base.clone(cmd), NULL );
     if( AppOp.getClntCon() != NULL )
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+      AppOp.broadcastEvent( cmd );
   }
 }
 
@@ -1011,6 +1011,22 @@ static Boolean _isStress( void ) {
     return False;
   }
 }
+
+
+static void _broadcastEvent( iONode event ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    if( data->clntCon != NULL )
+      ClntConOp.broadcastEvent(data->clntCon, (iONode)NodeOp.base.clone(event));
+    if( data->srcpCon != NULL )
+      SrcpConOp.broadcastEvent(data->srcpCon, (iONode)NodeOp.base.clone(event));
+
+    NodeOp.base.del(event);
+  }
+}
+
+
+
 
 static iOApp _inst(void) {
   if( __appinst == NULL ) {

@@ -432,7 +432,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int va
       wSwitch.setiid( nodeF, wSwitch.getiid( data->props ) );
     if( data->lockedId != NULL )
       wSwitch.setlocid( nodeF, data->lockedId );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+    AppOp.broadcastEvent( nodeF );
   }
 }
 
@@ -517,7 +517,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
       wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       if( data->lockedId != NULL )
         wSwitch.setlocid( nodeF, data->lockedId );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
     ok = True;
   }
@@ -540,7 +540,7 @@ static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
       wSwitch.setstate( nodeF, wSwitch.getstate( data->props ) );
       wSwitch.setswitched( nodeF, wSwitch.getswitched( data->props ) );
       wSwitch.setlocid( nodeF, wSwitch.unlocked );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
     return True;
   }
@@ -888,7 +888,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     if( o->lockedId != NULL )
       wSwitch.setlocid( nodeF, o->lockedId );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "broadcasting switch state [%s]", wSwitch.getstate( o->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+    AppOp.broadcastEvent( nodeF );
 
     __ctcActionLED(inst);
   }
@@ -1000,7 +1000,7 @@ static void _modify( iOSwitch inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }
@@ -1141,7 +1141,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       }
       if( data->lockedId != NULL )
         wSwitch.setlocid( nodeD, data->lockedId );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeD );
+      AppOp.broadcastEvent( nodeD );
     }
   }
 

@@ -145,7 +145,7 @@ static void _modify( iOTT inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }
@@ -289,7 +289,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
         wTurntable.setbridgepos( event, tracknr );
         if( wTurntable.getiid( data->props ) != NULL )
           wTurntable.setiid( event, wTurntable.getiid( data->props ) );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+        AppOp.broadcastEvent( event );
       }
 
       doDirCmd = True;
@@ -656,7 +656,7 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
       wTurntable.setbridgepos( event, rrtracknr );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( event, wTurntable.getiid( data->props ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+      AppOp.broadcastEvent( event );
     }
 
 
@@ -1276,7 +1276,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
       wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( event, wTurntable.getiid( data->props ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+      AppOp.broadcastEvent( event );
     }
 
 
@@ -1415,7 +1415,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
     wTurntable.setbridgepos( node, wTurntable.getbridgepos( data->props) );
     if( wTurntable.getiid( data->props ) != NULL )
       wTurntable.setiid( node, wTurntable.getiid( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+    AppOp.broadcastEvent( node );
   }
 
 }
@@ -1503,7 +1503,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
     wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
     if( wTurntable.getiid( data->props ) != NULL )
       wTurntable.setiid( event, wTurntable.getiid( data->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), event );
+    AppOp.broadcastEvent( event );
   }
 
   if( data->gotopos != -1 ) {
@@ -1680,7 +1680,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         wTurntable.setlocid( nodeF, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
     ok = True;
   }
@@ -1719,7 +1719,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       wTurntable.setstate2( nodeF, wTurntable.isstate2(data->props) );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
     data->triggerS1 = False;
     data->triggerS2 = False;

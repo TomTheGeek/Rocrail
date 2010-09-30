@@ -709,7 +709,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new item added %s %s", itemName, wItem.getid(item) );
     /* Broadcast to clients. */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), cmd );
+    AppOp.broadcastEvent( cmd );
   }
 
   return added;
@@ -1604,7 +1604,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       }
       data->autoMode = autoMode;
       /* Broadcast to clients. */
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), (iONode)NodeOp.base.clone( cmd ) );
+      AppOp.broadcastEvent( (iONode)NodeOp.base.clone( cmd ) );
     }
     else if( StrOp.equals( wAutoCmd.stop, cmdVal ) ) {
       __stopAllLocs( inst );
@@ -1668,7 +1668,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       _removeItem( inst, child );
     }
     /* Broadcast to clients. */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), (iONode)NodeOp.base.clone( cmd ) );
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone( cmd ) );
   }
   else if( StrOp.equals( wModelCmd.plan, cmdVal ) ) {
     /* Post AutoState and Model to client. */
@@ -1950,7 +1950,7 @@ static iOLoc _addNetLoc(iOModel inst, iONode lcprops) {
     NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( lcprops ) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "r2rnet loco added %s", wItem.getid(lcprops) );
     /* Broadcast to clients. */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+    AppOp.broadcastEvent( cmd );
   }
   return loc;
 }

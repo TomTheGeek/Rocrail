@@ -180,7 +180,7 @@ static Boolean __informDigInt( iOControl inst, iIDigInt pDi, iONode node, int* e
       if( StrOp.equals( NodeOp.getName( rsp ), wProgram.name() ) ) {
         /* Decoder programming response: */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Program event...value=%d", wProgram.getvalue( rsp ) );
-        ClntConOp.broadcastEvent( AppOp.getClntCon(  ), rsp );
+        AppOp.broadcastEvent( rsp );
       }
       else if( StrOp.equals( NodeOp.getName( rsp ), wFeedback.name() ) ) {
         /* sensor simulation response: */
@@ -421,7 +421,7 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.setcmd( tick, wClock.freeze );
           wClock.setdivider( tick, data->devider );
           wClock.settime( tick, data->time );
-          ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
+          AppOp.broadcastEvent( tick );
         }
         {
           iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
@@ -447,7 +447,7 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.setcmd( tick, wClock.go );
           wClock.setdivider( tick, data->devider );
           wClock.settime( tick, data->time );
-          ClntConOp.broadcastEvent( AppOp.getClntCon(), tick );
+          AppOp.broadcastEvent( tick );
         }
         {
           iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
@@ -782,7 +782,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   }
   else if( StrOp.equals( wDigInt.name(), NodeOp.getName( nodeC ) ) ) {
     /* Broadcast to clients. Node3 */
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeC );
+    AppOp.broadcastEvent( nodeC );
   }
   else if( StrOp.equals( wProgram.name(), NodeOp.getName( nodeC ) ) ) {
     /* check if it is a multiport event */
@@ -792,7 +792,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
 
     /* Broadcast to clients. Node3 */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Program event...value=%d", wProgram.getvalue( nodeC ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeC );
+    AppOp.broadcastEvent( nodeC );
   }
   else if( StrOp.equals( wState.name(), NodeOp.getName( nodeC ) ) ) {
     /* Broadcast to clients. Node3 */
@@ -811,7 +811,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     data->sensorbus    = wState.issensorbus( nodeC );
     data->accessorybus = wState.isaccessorybus( nodeC );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "State event from=%s", wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeC );
+    AppOp.broadcastEvent( nodeC );
   }
   else
     ModelOp.event( model, nodeC );
@@ -1073,7 +1073,7 @@ static void __clockticker( void* threadinst ) {
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
       wClock.setcmd( tick, firstsync ? wClock.set:wClock.sync );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(tick) );
+      AppOp.broadcastEvent( (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */
       ControlOp.cmd( control, tick, NULL );
     }

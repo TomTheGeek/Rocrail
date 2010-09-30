@@ -783,7 +783,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     wSignal.setmanual( nodeF, wSignal.ismanual( o->props ) );
     if( wSignal.getiid( o->props ) != NULL )
       wSignal.setiid( nodeF, wSignal.getiid( o->props ) );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+    AppOp.broadcastEvent( nodeF );
   }
 
   /* remove the signal command */
@@ -834,7 +834,7 @@ static void _modify( iOSignal inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }

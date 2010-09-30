@@ -421,7 +421,7 @@ static void __rotateList( iONode model, iONode module, int level, const char* db
           iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
           wModelCmd.setcmd( cmd, wModelCmd.modify );
           NodeOp.addChild( cmd, (iONode)NodeOp.base.clone(child));
-          ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+          AppOp.broadcastEvent( cmd );
         }
       }
     }
@@ -467,7 +467,7 @@ static void _rotateModule( iONode model, iONode module, int level, int rotation 
       wZLevel.setmodviewcx( zlevel, wModule.getcy(module));
       wZLevel.setmodviewcy( zlevel, wModule.getcx(module));
     }
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), cmd );
+    AppOp.broadcastEvent( cmd );
   }
 }
 

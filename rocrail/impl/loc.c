@@ -470,7 +470,7 @@ static void* __event( void* inst, const void* evt ) {
         wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
       }
 
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+      AppOp.broadcastEvent( node );
     }
 
   }
@@ -511,7 +511,7 @@ static void* __event( void* inst, const void* evt ) {
       __cpFn2Node(inst, node, -1);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting function command %d...", wFunCmd.isf0( node));
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+      AppOp.broadcastEvent( node );
     }
   }
   else if( StrOp.equals( wSysCmd.name(), NodeOp.getName(evtNode) ) ) {
@@ -1263,7 +1263,7 @@ static void __runner( void* threadinst ) {
       if( data->driver != NULL ) {
         wLoc.setscidx( broadcast, data->driver->getScheduleIdx( data->driver ) );
       }
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+      AppOp.broadcastEvent( broadcast );
     }
     else {
       /* call this function for updating velocity for unmanaged decoders */
@@ -1470,7 +1470,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     }
 
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+    AppOp.broadcastEvent( node );
   }
 }
 
@@ -1499,7 +1499,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   if( data->driver != NULL ) {
     wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
   }
-  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+  AppOp.broadcastEvent( node );
 }
 
 static void _gotoBlock( iOLoc inst, const char* id ) {
@@ -1564,7 +1564,7 @@ static void _setMode( iOLoc inst, const char* mode ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     }
 
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+    AppOp.broadcastEvent( node );
   }
 }
 
@@ -1630,7 +1630,7 @@ static void _stopNet( iOLoc inst ) {
     /* Broadcast to clients. */
     broadcast = (iONode)NodeOp.base.clone(data->props);
     wLoc.setV( broadcast, data->drvSpeed );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+    AppOp.broadcastEvent( broadcast );
   }
 }
 
@@ -1927,7 +1927,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setmint( nodeF, wLoc.getmint(data->props) );
       wLoc.setthrottleid( nodeF, wLoc.getthrottleid(data->props) );
       wLoc.setactive( nodeF, wLoc.isactive(data->props) );
-      ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+      AppOp.broadcastEvent( nodeF );
     }
 
     nodeA->base.del(nodeA);
@@ -1962,7 +1962,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   if( data->driver != NULL ) {
     wLoc.setscidx( nodeF, data->driver->getScheduleIdx( data->driver ) );
   }
-  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), nodeF );
+  AppOp.broadcastEvent( nodeF );
 
   return True;
 }
@@ -2052,7 +2052,7 @@ static void _modify( iOLoc inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }
@@ -2272,7 +2272,7 @@ static void _setCV( iOLoc loc, int nr, int value ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)data->props->base.clone( data->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(), clone );
+    AppOp.broadcastEvent( clone );
   }
 }
 
@@ -2321,7 +2321,7 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     }
 
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), node );
+    AppOp.broadcastEvent( node );
   }
 }
 
@@ -2438,7 +2438,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
   /* Broadcast to clients. */
   broadcast = (iONode)NodeOp.base.clone(data->props);
-  ClntConOp.broadcastEvent( AppOp.getClntCon(  ), broadcast );
+  AppOp.broadcastEvent( broadcast );
 }
 
 

@@ -261,7 +261,7 @@ static void* __event( void* inst, const void* evt ) {
       wText.setlocation( node, wText.getlocation( data->props ) );
       wText.settext( node, wText.gettext( data->props ) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast text [%s]", wText.gettext( data->props ));
-      ClntConOp.broadcastEvent( AppOp.getClntCon(), node );
+      AppOp.broadcastEvent( node );
     }
   }
 
@@ -393,7 +393,7 @@ static void _modify( struct OText* inst ,iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
-    ClntConOp.broadcastEvent( AppOp.getClntCon(  ), clone );
+    AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
 }
