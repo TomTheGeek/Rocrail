@@ -2151,10 +2151,17 @@ void Symbol::modelEvent( iONode node ) {
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
+    Boolean updateEnterside = NodeOp.getBool(node, "updateenterside", False);
     const char* state = wBlock.getstate( node );
     const char* locid = wBlock.getlocid( node );
     int occupied = 0;
     Boolean showID = True;
+
+    if( updateEnterside ) {
+      // reset update flag
+      NodeOp.setBool(node, "updateenterside", False);
+    }
+
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
     if( planpanelIni != NULL ) {
@@ -2270,7 +2277,7 @@ void Symbol::modelEvent( iONode node ) {
         id, occupied, state, locid!=NULL?locid:"-" );
 
 
-    m_Renderer->setLabel( l_locidStr, occupied, rotatesym );
+    m_Renderer->setLabel( l_locidStr, updateEnterside?-1:occupied, rotatesym );
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
 

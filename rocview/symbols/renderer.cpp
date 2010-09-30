@@ -603,7 +603,7 @@ void SymbolRenderer::setLabel( const char* label, int occupied ) {
 void SymbolRenderer::setLabel( const char* label, int occupied, bool rotate ) {
   StrOp.free(m_Label);
   m_Label = StrOp.dup(label);
-  m_iOccupied = occupied;
+  m_iOccupied = occupied == -1 ? m_iOccupied:occupied;
   m_bLabelChanged = true;
   m_rotate = rotate;
 }
