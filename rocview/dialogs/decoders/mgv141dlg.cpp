@@ -124,13 +124,19 @@ void MGV141Dlg::makePacket( int offset, int port, int val1, bool sv_set, bool se
   m_iLowAddress = m_UnitHigh->GetValue();
   m_iSubAddress = m_UnitLow->GetValue();
 
+
   wProgram.setlntype( cmd, wProgram.lntype_sv );
   wProgram.setcmd( cmd, sv_set ? wProgram.lncvset:wProgram.lncvget );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setaddr( cmd, m_iLowAddress );
   wProgram.setmodid( cmd, m_iSubAddress );
-  wProgram.setcv( cmd, (port-1) + offset );
-  wProgram.setvalue( cmd, val1 );
+  wProgram.setcv( cmd, (port-1)*2 + offset );
+  wProgram.setvalue( cmd, val1 % 256 );
+  QueueOp.post( m_Queue, (obj)cmd, normal );
+
+  cmd = (iONode)NodeOp.base.clone(cmd);
+  wProgram.setcv( cmd, (port-1) * 2 + offset+1 );
+  wProgram.setvalue( cmd, val1/256 );
   QueueOp.post( m_Queue, (obj)cmd, normal );
 
   if( sendnow )
@@ -289,12 +295,19 @@ void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int 
     m_UnitLow->SetValue(m_iSubAddress);
     SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
   }
-  else if( sv > 2 && sv < 12 ) {
-    int port = sv - 2;
+  else if( sv > 2 && sv < 20 ) {
+    int port = (sv - 3) / 2;
     TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "counter %d address %d", port, val );
-    wxSpinCtrl* CA[] = {NULL,m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
+    wxSpinCtrl* CA[] = {m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
                           m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
-    CA[port]->SetValue(val);
+    if( (sv-3) % 2 == 0 ) {
+      // high part
+      CA[port]->SetValue(val*256);
+    }
+    else {
+      // low part
+      CA[port]->SetValue(CA[port]->GetValue() + val);
+    }
   }
 }
 
