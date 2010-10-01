@@ -2003,6 +2003,40 @@ static iOOperator _getOperator( iOModel inst, const char* id ) {
   return (iOOperator)MapOp.get( o->operatorMap, id );
 }
 
+static iOSwitch _getSwByAddress( iOModel inst, int addr, int port ) {
+  iOModelData o = Data(inst);
+  iOSwitch sw = (iOSwitch)MapOp.first( o->switchMap );
+  while( sw != NULL ) {
+    if( wSwitch.getaddr1( SwitchOp.base.properties(sw)) == addr && wSwitch.getport1( SwitchOp.base.properties(sw)) == port )
+      return sw;
+    if( wSwitch.getaddr2( SwitchOp.base.properties(sw)) == addr && wSwitch.getport2( SwitchOp.base.properties(sw)) == port )
+      return sw;
+    sw = (iOSwitch)MapOp.next( o->switchMap );
+  };
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no switch found by address [%d,%d]", addr, port );
+  return NULL;
+}
+
+
+static iOSignal _getSgByAddress( iOModel inst, int addr, int port ) {
+  iOModelData o = Data(inst);
+  iOSignal sg = (iOSignal)MapOp.first( o->signalMap );
+  while( sg != NULL ) {
+    if( wSignal.getaddr( SignalOp.base.properties(sg)) == addr && wSignal.getport1( SignalOp.base.properties(sg)) == port )
+      return sg;
+    if( wSignal.getaddr2( SignalOp.base.properties(sg)) == addr && wSignal.getport2( SignalOp.base.properties(sg)) == port )
+      return sg;
+    if( wSignal.getaddr3( SignalOp.base.properties(sg)) == addr && wSignal.getport3( SignalOp.base.properties(sg)) == port )
+      return sg;
+    if( wSignal.getaddr4( SignalOp.base.properties(sg)) == addr && wSignal.getport4( SignalOp.base.properties(sg)) == port )
+      return sg;
+    sg = (iOSignal)MapOp.next( o->signalMap );
+  };
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no signal found by address [%d,%d]", addr, port );
+  return NULL;
+}
+
+
 static iOLoc _getLocByAddress( iOModel inst, int addr ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.first( o->locMap );

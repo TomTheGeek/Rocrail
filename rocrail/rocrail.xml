@@ -714,6 +714,16 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="Operator ID to search for"/>
     </fun>
+    <fun name="getSwByAddress" vt="iOSwitch">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="addr" vt="int" remark="Decoder address to search for"/>
+      <param name="port" vt="int" remark="Decoder port to search for"/>
+    </fun>
+    <fun name="getSgByAddress" vt="iOSignal">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="addr" vt="int" remark="Decoder address to search for"/>
+      <param name="port" vt="int" remark="Decoder port to search for"/>
+    </fun>
     <fun name="getLocByAddress" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="decaddr" vt="int" remark="Loc decoder address to search for"/>

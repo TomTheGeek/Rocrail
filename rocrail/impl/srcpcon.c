@@ -45,6 +45,8 @@
 #include "rocrail/wrapper/public/SrcpCon.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 
 static int instCnt = 0;
@@ -150,9 +152,22 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OSrcpCon ----- */
 
 
-static char* __rr2srcp(iONode evt) {
-  char* str = NULL;
+static char* __rr2srcp(iONode evt, char* str) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
 
+  if( StrOp.equals( wSwitch.name(), NodeOp.getName(evt))) {
+
+  }
+  else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
+    /*100 INFO <bus> FB <addr> <value>*/
+    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
+        time.tv_sec, time.tv_usec / 1000,
+        100, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+  }
+  else if( StrOp.equals( wLoc.name(), NodeOp.getName(evt))) {
+
+  }
   return str;
 }
 
@@ -170,6 +185,7 @@ static iONode __srcp2rr(const char* req) {
     wSysCmd.setcmd( cmd, wSysCmd.stop );
   }
   else if( StrOp.startsWithi( req, "SET" ) ) {
+
     /* SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
     if( StrOp.findi( req, "GL" ) ) {
       int idx = 0;
@@ -207,38 +223,38 @@ static iONode __srcp2rr(const char* req) {
         wLoc.setdir(cmd, dir);
         wLoc.setV(cmd, V);
       }
-    } else if( StrOp.findi( req, "GA" ) ) {
+    }
 
-      const char* valStr = NULL;
-      iOStrTok tok = StrTokOp.inst( req, ' ' );
-      int i = 0;
-
-      /* currently NMRA-DCC style only! (as set inspdrs60)*/
+    /* SET <bus> GA <addr> <port> <value> <delay> */
+    else if( StrOp.findi( req, "GA" ) ) {
+      int idx = 0;
+      const char* swID = NULL;
+      int addr = 0;
       int port = 0;
-      int state = 0;
-      int module = 0;
-      int pada = 0;
+      int action = 0;
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 3: addr = atoi(s); break;
+        case 4: port = atoi(s); break;
+        case 5: action = atoi(s); break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
 
-      while( StrTokOp.hasMoreTokens( tok ) ) {
-        valStr = StrTokOp.nextToken( tok );
-
-        if( i == 3)
-          pada = atoi( valStr );
-        else if ( i == 4)
-          state = atoi( valStr );
-
-        i++;
+      /* Find switch */
+      iOSwitch sw = ModelOp.getSwByAddress(model, addr, port);
+      if( sw != NULL ) {
+        cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+        wSwitch.setid( cmd, SwitchOp.getId(sw) );
+        wSwitch.setcmd( cmd, action?wSwitch.straight:wSwitch.turnout );
       }
 
-      module = (pada-1) / 4 + 1;
-      port   = (pada-1) % 4 + 1;
-      /* END currently NMRA-DCC style only! (as set inspdrs60)*/
-
-      cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setaddr1( cmd, module );
-      wSwitch.setport1( cmd, port );
-      wSwitch.setcmd( cmd, state?wSwitch.straight:wSwitch.turnout );
     }
+
+
   }
 
   return cmd;
@@ -248,8 +264,9 @@ static iONode __srcp2rr(const char* req) {
 /**  */
 static void _broadcastEvent( struct OSrcpCon* inst ,iONode evt ) {
   iOSrcpConData data = Data(inst);
-
-  NodeOp.base.del(evt);
+  if( !ThreadOp.post( data->broadcaster, (obj)evt ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event!" );
+  }
   return;
 }
 
@@ -272,6 +289,27 @@ static int _getClientPort( struct OSrcpCon* inst ) {
 }
 
 
+static void __doBroadcast( iOSrcpCon inst, iONode nodeDF ) {
+  if( inst != NULL && MutexOp.trywait( Data(inst)->muxMap, 1000 ) ) {
+    iOSrcpConData data = Data(inst);
+
+    MutexOp.trywait( data->muxMap, 100 );
+
+    iOThread iw = (iOThread)MapOp.first( data->infoWriters );
+    while( iw != NULL ) {
+      iONode clone = (iONode)nodeDF->base.clone( nodeDF );
+      ThreadOp.post( iw, (obj)clone );
+      ThreadOp.sleep( 0 );
+      iw = (iOThread)MapOp.next( data->infoWriters );
+    }
+    /* Unlock the semaphore: */
+    MutexOp.post( data->muxMap );
+  }
+
+  nodeDF->base.del(nodeDF);
+}
+
+
 static void __broadcaster( void* threadinst ) {
   iOThread       th = (iOThread)threadinst;
   iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
@@ -284,9 +322,9 @@ static void __broadcaster( void* threadinst ) {
     obj post = ThreadOp.waitPost( th );
     if( post != NULL ) {
       iONode node = (iONode)post;
-      /*
-      __doBroadcast(clntcon, (iONode)post);
-      */
+
+      __doBroadcast(srcpcon, node);
+
     }
     else
       ThreadOp.sleep( 10 );
@@ -454,8 +492,26 @@ static void __SrcpService( void* threadinst ) {
   SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );
   SocketOp.write( o->clntSocket, "\n", 1 );
 
+  sname = StrOp.fmt( "srcp%08X", o->clntSocket );
+
+  /* Lock the semaphore: */
+  MutexOp.trywait( Data(srcpcon)->muxMap, 1000 );
+  MapOp.put( Data(srcpcon)->infoWriters, sname, (obj)threadinst );
+  /* Unlock the semaphore: */
+  MutexOp.post( Data(srcpcon)->muxMap );
+
   do {
     char str[1025] = {'\0'};
+
+    obj post = ThreadOp.waitPost( th );
+    if( post != NULL ) {
+      iONode node = (iONode)post;
+      if( node != NULL ) {
+        __rr2srcp(node, str);
+        SocketOp.write( o->clntSocket, str, StrOp.len(str) );
+        NodeOp.base.del(node);
+      }
+    }
 
     if( !SocketOp.peek( o->clntSocket, str, 1 ) ) {
       if( SocketOp.isBroken( o->clntSocket ) ) {
@@ -477,6 +533,12 @@ static void __SrcpService( void* threadinst ) {
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service ended for session [%d]", o->id );
+
+  /* Lock the semaphore: */
+  MutexOp.trywait( Data(srcpcon)->muxMap, 1000 );
+  MapOp.remove( Data(srcpcon)->infoWriters, sname );
+  /* Unlock the semaphore: */
+  MutexOp.post( Data(srcpcon)->muxMap );
 
   SocketOp.base.del(o->clntSocket);
   freeMem(o);
