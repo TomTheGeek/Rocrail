@@ -1756,12 +1756,11 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );
   }
   // TODO: Blocktext scaling!!!
+  wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //wxFont* font = new wxFont( dc.GetFont() );
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
   //dc.SetFont(*font);
 #else
-  wxFont* font = new wxFont( dc.GetFont() );
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
   dc.SetFont(*font);
 #endif
@@ -1783,12 +1782,10 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
 
     dc.SetTextForeground(wxColour(red,green,blue));
 
-#ifndef __WIN32__
-    // center the blocktext
+    /* center the blocktext */
     wxCoord width;
     wxCoord height;
-    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0,font);
-#endif
+    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0, font);
 
     if( StrOp.equals( ori, wItem.south ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
@@ -1796,19 +1793,16 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
     else {
 #ifdef __WIN32__
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 3, 5, 0.0 );
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8, 0.0 );
 #else
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 ); //5
+      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 );
 #endif
     }
     // restore previous color
     dc.SetTextForeground(tfc);
   }
 
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-#else
   delete font;
-#endif
 }
 
 
