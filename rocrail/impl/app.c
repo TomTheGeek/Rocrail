@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/SvnLog.h"
 #include "rocrail/wrapper/public/SvnLogEntry.h"
+#include "rocrail/wrapper/public/SrcpCon.h"
 
 #include "common/version.h"
 
@@ -758,8 +759,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   /* Client connection */
   {
     iONode srcpini = wRocRail.getsrcpcon(data->ini);
-    int iPort = 0;
-    if( srcpini != NULL ) {
+    if( srcpini != NULL && wSrcpCon.getport(srcpini) > 0 ) {
       data->srcpCon = SrcpConOp.inst( srcpini, ControlOp.getCallback( data->control), (obj)data->control );
     }
   }
