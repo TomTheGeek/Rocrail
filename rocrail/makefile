@@ -51,6 +51,7 @@ endif
 
 
 PLATFORM=LINUX
+ARCH=
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lwinmm
 	DIRPREFIX=win
@@ -74,7 +75,9 @@ BINDIR=..$(FS)rocs$(FS)bin
 CPP=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
-CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(ANSI) -I$(INCL_PATH) -I$(GENDIR)
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(ARCH) $(DEBUG) $(ANSI) -I$(INCL_PATH) -I$(GENDIR)
+LNK_FLAGS=$(ARCH)
+AR_FLAGS=$(ARCH)
 RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)librocrail.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
