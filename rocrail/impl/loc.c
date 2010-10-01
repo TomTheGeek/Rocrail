@@ -2436,6 +2436,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
   wLoc.setblockenterside(data->props, enterside);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
+  ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
   /* Broadcast to clients. */
   broadcast = (iONode)NodeOp.base.clone(data->props);
   AppOp.broadcastEvent( broadcast );
