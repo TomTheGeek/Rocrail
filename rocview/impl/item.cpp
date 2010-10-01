@@ -2178,12 +2178,13 @@ void Symbol::modelEvent( iONode node ) {
       wBlock.setreserved( m_Props, isReserved );
       wBlock.setlocid( m_Props, locid );
 
-
       if(showID) {
         if( wBlock.issmallsymbol(m_Props) && locid!=NULL && StrOp.len(locid)>0)
           l_locidStr = StrOp.fmt( "%s", locid );
         else
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
+      } else if ( locid!=NULL && StrOp.len(locid)>0) {
+        l_locidStr = StrOp.fmt( "%s", locid );
       }
 
       if( locid != NULL && StrOp.len( locid ) > 0 ) {
@@ -2201,42 +2202,11 @@ void Symbol::modelEvent( iONode node ) {
        }
 
       if (locid!=NULL && StrOp.len(locid)>0) {
-
-        /* START */
         iONode loc = wxGetApp().getFrame()->findLoc( locid);
         Boolean blockenterside = wLoc.isblockenterside( loc);
-
-        const char* mod_ori = wItem.getori(m_Props);
-        const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
-        if( wxGetApp().isModView() ) {
-          ori = mod_ori;
-        }
-
-        //Boolean thisBlock = StrOp.equals( wLoc.getblockid( loc), wBlock.getid( node ));
-
-        /*
-        int occupied_m = occupied;
-        occupied_m = isReserved ? 2:1;
-        occupied_m = isEntering ? 3:occupied_m;
-        */
-
-        l_locidStr = StrOp.fmt( "  %s", locid==NULL?"":locid );
         if( (occupied == 1 || occupied == 3) ) {
-          /* TODO: north an south ...
-          if( StrOp.equals( ori, "west" ) ) {
-            l_locidStr = StrOp.fmt( "%s %s %s", showID?wBlock.getid( node ):"", blockenterside?">":"<", locid==NULL?"":locid);
-          } else if( StrOp.equals( ori, "east" )) {
-            l_locidStr = StrOp.fmt( "%s %s %s", showID?wBlock.getid( node ):"", blockenterside?"<":">", locid==NULL?"":locid);
-          } else {
-            l_locidStr = StrOp.fmt( " <> %s", locid==NULL?"":locid );
-          }*/
-
           rotatesym = blockenterside;
-
-        } /*else {
-          l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
         }
-         STOP */
       }
 
 
