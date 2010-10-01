@@ -86,11 +86,11 @@ CPP=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)gcc
 
 # --- compile flags ---
-CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(ARCH) $(DEBUG) $(OPENSSL) -I$(SRCMOUNTPOINT) -I$(GENMOUNTPOINT)
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(OPENSSL) -I$(SRCMOUNTPOINT) -I$(GENMOUNTPOINT)
 
 # --- link flags ---
-LNK_FLAGS=$(ARCH)
-AR_FLAGS=$(ARCH)
+LNK_FLAGS=
+AR_FLAGS=
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 
@@ -104,7 +104,7 @@ gen:
 	bin$(FS)ogen$(GENSUFFIX) rocs.xml
 
 $(OUTDIR)$(FS)librocs.a: $(OBJS) $(COREOBJS)
-	$(AR) $(AR_FLAGS) rcs $(OUTDIR)$(FS)librocs.a $(OBJS) $(COREOBJS)
+	$(AR) rcs $(OUTDIR)$(FS)librocs.a $(OBJS) $(COREOBJS)
 
 
 

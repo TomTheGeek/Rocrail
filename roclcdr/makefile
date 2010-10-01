@@ -61,7 +61,7 @@ else ifeq ($(PLATFORM),MACOSX)
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
-	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress $(ARCH)
+	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
 	LNK=gcc
 	SHAREDSUFFIX=.dylib
 else
@@ -83,7 +83,7 @@ BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
-CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(ARCH) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
+CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
 RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
