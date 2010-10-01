@@ -254,6 +254,9 @@ public:
     wxStaticText* m_LabelMaxCon;
     wxTextCtrl* m_MaxCon;
     wxCheckBox* m_OnlyFirstMaster;
+    wxStaticBox* m_SrcpService;
+    wxStaticText* m_labSrcpPort;
+    wxSpinCtrl* m_SrcpPort;
     wxPanel* m_AtomatPanel;
     wxStaticText* m_LabelSwTime;
     wxTextCtrl* m_SwTime;
