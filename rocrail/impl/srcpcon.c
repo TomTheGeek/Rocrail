@@ -156,6 +156,8 @@ static char* __rr2srcp(iONode evt, char* str) {
   struct timeval time;
   gettimeofday(&time, NULL);
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] broadcast event", NodeOp.getName(evt) );
+
   if( StrOp.equals( wSwitch.name(), NodeOp.getName(evt))) {
 
   }
@@ -237,8 +239,7 @@ static iONode __srcp2rr(const char* req) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
         case 3: addr = atoi(s); break;
-        case 4: port = atoi(s); break;
-        case 5: action = atoi(s); break;
+        case 4: action = atoi(s); break;
         }
         idx++;
       };
@@ -290,10 +291,9 @@ static int _getClientPort( struct OSrcpCon* inst ) {
 
 
 static void __doBroadcast( iOSrcpCon inst, iONode nodeDF ) {
-  if( inst != NULL && MutexOp.trywait( Data(inst)->muxMap, 1000 ) ) {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Broadcast received." );
+  if( inst != NULL && MutexOp.trywait( Data(inst)->muxMap, 100 ) ) {
     iOSrcpConData data = Data(inst);
-
-    MutexOp.trywait( data->muxMap, 100 );
 
     iOThread iw = (iOThread)MapOp.first( data->infoWriters );
     while( iw != NULL ) {
@@ -495,15 +495,16 @@ static void __SrcpService( void* threadinst ) {
   sname = StrOp.fmt( "srcp%08X", o->clntSocket );
 
   /* Lock the semaphore: */
-  MutexOp.trywait( Data(srcpcon)->muxMap, 1000 );
-  MapOp.put( Data(srcpcon)->infoWriters, sname, (obj)threadinst );
-  /* Unlock the semaphore: */
-  MutexOp.post( Data(srcpcon)->muxMap );
+  if( MutexOp.trywait( Data(srcpcon)->muxMap, 100 ) ) {
+    MapOp.put( Data(srcpcon)->infoWriters, sname, (obj)threadinst );
+    /* Unlock the semaphore: */
+    MutexOp.post( Data(srcpcon)->muxMap );
+  }
 
   do {
     char str[1025] = {'\0'};
 
-    obj post = ThreadOp.waitPost( th );
+    obj post = ThreadOp.getPost( th );
     if( post != NULL ) {
       iONode node = (iONode)post;
       if( node != NULL ) {
@@ -535,10 +536,11 @@ static void __SrcpService( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service ended for session [%d]", o->id );
 
   /* Lock the semaphore: */
-  MutexOp.trywait( Data(srcpcon)->muxMap, 1000 );
-  MapOp.remove( Data(srcpcon)->infoWriters, sname );
-  /* Unlock the semaphore: */
-  MutexOp.post( Data(srcpcon)->muxMap );
+  if( MutexOp.trywait( Data(srcpcon)->muxMap, 100 ) ) {
+    MapOp.remove( Data(srcpcon)->infoWriters, sname );
+    /* Unlock the semaphore: */
+    MutexOp.post( Data(srcpcon)->muxMap );
+  }
 
   SocketOp.base.del(o->clntSocket);
   freeMem(o);
