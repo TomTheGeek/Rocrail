@@ -301,5 +301,14 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->loc->cmd( data->loc, cmd );
   }
 
+  if( !re_enter ) {
+    if( data->next1Block != NULL ) {
+      if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
+        data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route));
+      else
+        data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route));
+    }
+  }
+
 
 }
