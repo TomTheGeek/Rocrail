@@ -233,24 +233,27 @@ static iONode __srcp2rr(const char* req) {
       const char* swID = NULL;
       int addr = 0;
       int port = 0;
-      int action = 0;
+      int gate = 0;
       iOStrTok tok = StrTokOp.inst(req, ' ');
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
         case 3: addr = atoi(s); break;
-        case 4: action = atoi(s); break;
+        case 4: gate = atoi(s); break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
       /* Find switch */
+      port = (addr-1) % 4 + 1;
+      addr = (addr-1) / 4 + 1;
+
       iOSwitch sw = ModelOp.getSwByAddress(model, addr, port);
       if( sw != NULL ) {
         cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setid( cmd, SwitchOp.getId(sw) );
-        wSwitch.setcmd( cmd, action?wSwitch.straight:wSwitch.turnout );
+        wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
       }
 
     }
