@@ -107,6 +107,9 @@ void MGV141Dlg::onWriteAll( wxCommandEvent& event )
     makePacket( 3, i, val1, true, false);
   }
   sendPacket();
+  m_UnitSet->Enable(false);
+  m_WriteAll->Enable(false);
+  m_ReadAll->Enable(false);
 }
 
 
@@ -152,6 +155,9 @@ void MGV141Dlg::onReadAll( wxCommandEvent& event )
     makePacket( 3, i, 0, false, false);
   }
   sendPacket();
+  m_UnitSet->Enable(false);
+  m_WriteAll->Enable(false);
+  m_ReadAll->Enable(false);
 }
 
 void MGV141Dlg::onOK( wxCommandEvent& event )
@@ -222,6 +228,9 @@ void MGV141Dlg::OnTimer(wxTimerEvent& event) {
       cmd = (iONode)QueueOp.get(m_Queue);
     }
   }
+  m_UnitSet->Enable(true);
+  m_WriteAll->Enable(true);
+  m_ReadAll->Enable(true);
 }
 
 void MGV141Dlg::event( iONode event ) {
@@ -272,6 +281,15 @@ void MGV141Dlg::event( iONode event ) {
 
   /* clean up event node */
   NodeOp.base.del(event);
+
+  if( !QueueOp.isEmpty(m_Queue) ) {
+    sendPacket();
+  }
+  else {
+    m_UnitSet->Enable(true);
+    m_WriteAll->Enable(true);
+    m_ReadAll->Enable(true);
+  }
 }
 
 void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int ver ) {
