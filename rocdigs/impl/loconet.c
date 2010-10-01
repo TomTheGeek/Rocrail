@@ -487,6 +487,10 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
   Boolean     dir       = ( msg[3] & 0x20 ) ? True:False;
   Boolean     wheelcnt  = ( msg[2] & 0x01 ) ? True:False;
 
+  if( wheelcnt )
+    lissyaddr = msg[4] & 0x7F + 128 * ( msg[3] & 0x7F );
+
+
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
