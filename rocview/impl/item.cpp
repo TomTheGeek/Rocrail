@@ -419,39 +419,40 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
       iONode cmd = NULL;
 
-      /* flash the block */
-      const char* blockstate = wBlock.getstate(m_Props);
-      const char* blockloc = wBlock.getlocid(m_Props);
+      if( wxGetApp().getFrame()->isAutoMode() ) {
+        /* flash the block */
+        const char* blockstate = wBlock.getstate(m_Props);
+        const char* blockloc = wBlock.getlocid(m_Props);
 
-      cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setid( cmd, wBlock.getid( m_Props ) );
-      wBlock.setstate( cmd, wBlock.shortcut);
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-      ThreadOp.sleep(500);
+        cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( cmd, wBlock.getid( m_Props ) );
+        wBlock.setstate( cmd, wBlock.shortcut);
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+        ThreadOp.sleep(500);
 
-      cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setid( cmd, wBlock.getid( m_Props ) );
-      wBlock.setstate( cmd, blockstate);
-      wBlock.setlocid( cmd, blockloc);
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
+        cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( cmd, wBlock.getid( m_Props ) );
+        wBlock.setstate( cmd, blockstate);
+        wBlock.setlocid( cmd, blockloc);
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
 
-      /* go to block */
-      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setid( cmd, dropid );
-      wLoc.setcmd( cmd, wLoc.gotoblock );
-      wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
+        /* go to block */
+        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, dropid );
+        wLoc.setcmd( cmd, wLoc.gotoblock );
+        wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
 
-      /* loco go */
-      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setid( cmd, dropid );
-      wLoc.setcmd( cmd, wLoc.go );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-
+        /* loco go */
+        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, dropid );
+        wLoc.setcmd( cmd, wLoc.go );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
       ok = true;
 
     }
