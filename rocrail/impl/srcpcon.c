@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/State.h"
 
 
 static int instCnt = 0;
@@ -170,6 +171,13 @@ static char* __rr2srcp(iONode evt, char* str) {
           time.tv_sec, time.tv_usec / 1000,
           100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
     }
+  }
+
+  else if( StrOp.equals( wState.name(), NodeOp.getName(evt))) {
+    /*100 INFO <bus> POWER ON/OFF <freetext>*/
+    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
+        time.tv_sec, time.tv_usec / 1000,
+        100, 1, wState.ispower(evt)?"ON":"OFF" );
   }
 
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
