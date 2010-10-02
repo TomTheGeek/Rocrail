@@ -77,6 +77,8 @@ Starting with block A:
 
 */
 
+/* sensitive code don't touch! */
+
 #include "analyser/impl/analyse_impl.h"
 
 #include "rocs/public/mem.h"
@@ -278,9 +280,9 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate) {
         }
       } else if( __getType(item) == typeSwitch) {
 
-
+        /*
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SWITCH" );
-        /*if( turnoutstate == 0)
+        if( turnoutstate == 0)
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  STATE: %d -> going straight", turnoutstate);
         else if( turnoutstate == 1)
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  STATE: %d -> going turnout", turnoutstate);
@@ -415,7 +417,7 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate) {
           return oriWest;
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -- no valid turnout for us! [%s]",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ---------- no valid turnout for us! [%s]",
                         wItem.getid(item) );
           return -1; /*end of the game*/
         }
@@ -441,7 +443,7 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate) {
   return -1;
 }
 
-static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int turnoutstate, int depth) {
+static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int turnoutstate, int depth, Boolean firstrun) {
   iOAnalyseData data = Data(inst);
   char key[32] = {'\0'};
   iONode item = NULL;
@@ -452,50 +454,43 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
       deep = StrOp.fmt( "%s - ", deep );
     }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s##########################################", deep);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sstart analysing turnout %s IN  travel: %d for state: %d", deep,
-        wSwitch.getid(turnout), travel, turnoutstate);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " " );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sstart analyzing turnout %s IN  travel: %d for state: %d firstrun: [%d]", deep,
+        wSwitch.getid(turnout), travel, turnoutstate, firstrun);
 
 
+  /* start again at the actual turnout */
   travel = __travel(turnout, turnout, travel, turnoutstate);
   if( travel > 100) {
     travel -= twoWayTurnout;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sstart analysing turnout %s IN travel1: %d for state: %d", deep,
-          wSwitch.getid(turnout), travel, turnoutstate);
-
-  if( True) { //__getOri(turnout) == oriWest ) {
+  if( True) {
     int xoffset = 0;
     int yoffset = 0;
-    //travel = __getOri(turnout);
 
     do {
-
-      //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
-      //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sHERE WE TRAVEL %d at (%d,%d)",deep, travel, xoffset, yoffset );
-
       if( travel >= 0) {
         switch(travel) {
         case oriWest:
           xoffset--;
           __createKey( key, turnout, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing west",deep );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing west",deep );
            break;
         case oriNorth:
           yoffset--;
           __createKey( key, turnout, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing north",deep );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing north",deep );
            break;
         case oriEast:
           xoffset++;
           __createKey( key, turnout, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing east",deep );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing east",deep );
            break;
         case oriSouth:
           yoffset++;
           __createKey( key, turnout, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing south", deep );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing south", deep );
            break;
         }
 
@@ -507,33 +502,49 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
           if( StrOp.equals(NodeOp.getName(item) , "bk" ) ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sWe found a Block! [%s]", deep, wItem.getid(item) );
             travel = -1;
-          } /*else if ( StrOp.equals(NodeOp.getName(item) , "sw" ) ) {
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "      We found another Turnout! [%s]", wItem.getid(item) );
-            travel = __travel(turnout, item, travel, 0);
-          }*/ else {
+          } else if (StrOp.equals(NodeOp.getName(item) , "sw" ) ) {
+
+              /* pre travel (check if the turnout interests us) */
+              int travel1 = __travel(turnout, item, travel, turnoutstate);
+
+              if( travel1) {
+                depth++;
+                __analyseTurnout(inst, item, travel, 0, depth, False);
+                __analyseTurnout(inst, item, travel, 1, depth, False);
+              } else {
+                //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sNot interesting us",deep);
+              }
 
 
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s[%s] item: [%s] id: [%s] type: [%d]", deep,
-                    wItem.getid(item), NodeOp.getName(item), wItem.getid(item),
-                         __getType(item) );
-
+          } else {
             travel = __travel(turnout, item, travel, turnoutstate);
           }
 
+          /*
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sitem: [%s] id: [%s] type: [%d] ori: [%s]", deep,
+                              NodeOp.getName(item), wItem.getid(item),
+                                   __getType(item), wItem.getori(item));
+                                   */
+
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sitem: [%s] id: [%s]", deep,
+                              NodeOp.getName(item), wItem.getid(item));
+
+
             if( travel > 100) {
               travel -= twoWayTurnout;
-
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> turnout TO: %d", deep, travel );
-
-
-              __analyseTurnout(inst, item, travel, 0, depth++);
-              __analyseTurnout(inst, item, travel, 1, depth++);
+              //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> turnout TO: %d", deep, travel );
+              depth++;
+              __analyseTurnout(inst, item, travel, 0, depth, False);
+              __analyseTurnout(inst, item, travel, 1, depth, False);
             }
 
 
         } else {
           travel = -1;
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%send of west direction (dead end)", deep );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%send of west direction (dead end) [%s]",
+              deep, wSwitch.getid(turnout));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " " );
         }
 
       } else {
@@ -563,7 +574,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
 
   Boolean weHaveOpenBranches = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "##########################################");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analysing block %s ",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block %s ",
       wBlock.getid(block));
   
   if( __getOri(block) == oriWest ) {
@@ -581,22 +592,22 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
         case oriWest:
           xoffset--;
           __createKey( key, block, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going west" );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going west" );
            break;
         case oriNorth:
           yoffset--;
           __createKey( key, block, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going north" );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going north" );
            break;
         case oriEast:
           xoffset++;
           __createKey( key, block, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going east" );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going east" );
            break;
         case oriSouth:
           yoffset++;
           __createKey( key, block, xoffset, yoffset, 0);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going south" );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going south" );
            break;
         }
 
@@ -609,25 +620,20 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
           if( StrOp.equals(NodeOp.getName(item) , "bk" ) ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "We found a Block! [%s]", wItem.getid(item) );
             travel = -1;
-          } else if ( StrOp.equals(NodeOp.getName(item) , "sw" ) ) {
-
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "We found a Turnout! [%s]", wItem.getid(item) );
-            travel = __travel(block, item, travel, 0);
-
           } else {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] item: [%s] id: [%s] type: [%d]",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "item: [%s] id: [%s] type: [%d]",
                                 wItem.getid(item), NodeOp.getName(item), wItem.getid(item),
                                      __getType(item) );
             travel = __travel(block, item, travel, 0);
           }
 
 
-            if( travel > 100) {
+            if( travel > 100) { /*two way turnout */
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> turnout" );
 
               travel -= twoWayTurnout;
-              __analyseTurnout(inst, item, travel, 0, 0);
-              __analyseTurnout(inst, item, travel, 1, 0);
+              __analyseTurnout(inst, item, travel, 0, 0, True);
+              __analyseTurnout(inst, item, travel, 1, 0, True);
 
               travel = -1;
 
@@ -643,28 +649,6 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
         break;
       }
     } while(item && travel != foundBlock );
-
-
-    if(turnouts > 0 && firstrun) {
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "there were %d turnouts in our path:", turnouts );
-
-      iONode node = (iONode)ListOp.first(turnoutids);
-      while(node) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw: %s", wItem.getid(node) );
-
-        node = (iONode)ListOp.next(turnoutids);
-      }
-      node = (iONode)ListOp.first(turnoutids);
-      while(node) {
-
-        __analyseBlock(inst,block,False, wItem.getid(node));
-
-        node = (iONode)ListOp.next(turnoutids);
-      }
-
-    }
-
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DONE travelling west" );
 
