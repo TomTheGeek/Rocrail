@@ -2158,6 +2158,15 @@ static iOList _getLevelItems( iOModel inst, int level, int* cx, int* cy, Boolean
       }
     }
 
+    itemlist = wPlan.getcolist( data->model );
+    if( itemlist != NULL ) {
+      item = wOutputList.getco( itemlist );
+      while( item != NULL ) {
+        __addLevelItem( list, item, level, cx, cy );
+        item =  wOutputList.nextco( itemlist, item );
+      }
+    }
+
     ListOp.sort( list, &__sortLocation );
     levellist->list = list;
     levellist->level = level;
