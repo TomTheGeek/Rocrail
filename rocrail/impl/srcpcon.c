@@ -155,21 +155,33 @@ static void* __event( void* inst, const void* evt ) {
 static char* __rr2srcp(iONode evt, char* str) {
   struct timeval time;
   gettimeofday(&time, NULL);
+  iOModel model = AppOp.getModel();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] broadcast event", NodeOp.getName(evt) );
 
   if( StrOp.equals( wSwitch.name(), NodeOp.getName(evt))) {
+    iOSwitch sw = ModelOp.getSwitch(model, wSwitch.getid(evt));
+    if( sw != NULL ) {
+      iONode swProps = SwitchOp.base.properties(sw);
+      int addr = ((wSwitch.getaddr1(swProps)-1) * 4) + wSwitch.getport1(swProps);
 
+      /*100 INFO <bus> GA <addr> <port> <value>*/
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+          time.tv_sec, time.tv_usec / 1000,
+          100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
+    }
   }
+
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
     /*100 INFO <bus> FB <addr> <value>*/
     StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
         time.tv_sec, time.tv_usec / 1000,
-        100, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+        100, 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName(evt))) {
 
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s]", str );
   return str;
 }
 
