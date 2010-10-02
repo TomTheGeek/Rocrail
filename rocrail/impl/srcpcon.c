@@ -18,6 +18,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <sys/time.h>
+#include <time.h>
 
 #include "rocrail/impl/srcpcon_impl.h"
 
@@ -48,6 +49,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 
 static int instCnt = 0;
@@ -178,6 +180,20 @@ static char* __rr2srcp(iONode evt, char* str) {
     StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
         time.tv_sec, time.tv_usec / 1000,
         100, 1, wState.ispower(evt)?"ON":"OFF" );
+  }
+
+  else if( StrOp.equals( wClock.name(), NodeOp.getName(evt)) ) {
+    long l_time = wClock.gettime(evt);
+    struct tm* lTime = localtime( &l_time );
+
+    int mins    = lTime->tm_min;
+    int hours   = lTime->tm_hour;
+    int day    = lTime->tm_mday;
+
+    /*100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second>*/
+    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d TIME %d %d %d %d\n",
+        time.tv_sec, time.tv_usec / 1000,
+        100, 1, day, hours, mins, 0 );
   }
 
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
