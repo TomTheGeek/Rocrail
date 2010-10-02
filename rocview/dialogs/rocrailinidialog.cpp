@@ -331,9 +331,9 @@ void RocrailIniDialog::initValues() {
   if( srcpcon == NULL ) {
     srcpcon = NodeOp.inst( wSrcpCon.name(), m_Props, ELEMENT_NODE );
     NodeOp.addChild( m_Props, srcpcon );
-    m_SrcpPort->SetValue(wSrcpCon.getport(srcpcon));
-    m_SrcpServiceActive->SetValue(wSrcpCon.isactive(srcpcon)?true:false);
   }
+  m_SrcpPort->SetValue(wSrcpCon.getport(srcpcon));
+  m_SrcpServiceActive->SetValue(wSrcpCon.isactive(srcpcon)?true:false);
 
 
   iONode http = wRocRail.gethttp( m_Props );
