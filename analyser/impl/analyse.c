@@ -278,9 +278,9 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate) {
         }
       } else if( __getType(item) == typeSwitch) {
 
-        /*
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SWITCH" );
-        if( turnoutstate == 0)
+        /*if( turnoutstate == 0)
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  STATE: %d -> going straight", turnoutstate);
         else if( turnoutstate == 1)
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  STATE: %d -> going turnout", turnoutstate);
@@ -434,6 +434,8 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate) {
           return travel;
         }
       }
+  } else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ITEM==NULL");
   }
 
   return -1;
@@ -455,10 +457,13 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
         wSwitch.getid(turnout), travel, turnoutstate);
 
 
-  int travel1 = __travel(turnout, item, travel, turnoutstate);
+  travel = __travel(turnout, turnout, travel, turnoutstate);
+  if( travel > 100) {
+    travel -= twoWayTurnout;
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sstart analysing turnout %s IN travel1: %d for state: %d", deep,
-          wSwitch.getid(turnout), travel1, turnoutstate);
+          wSwitch.getid(turnout), travel, turnoutstate);
 
   if( True) { //__getOri(turnout) == oriWest ) {
     int xoffset = 0;
@@ -496,6 +501,8 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
 
         //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sHERE KEY %s", deep, key );
         item = (iONode)MapOp.get( data->objectmap, key);
+
+
         if( item != NULL) {
           if( StrOp.equals(NodeOp.getName(item) , "bk" ) ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sWe found a Block! [%s]", deep, wItem.getid(item) );
