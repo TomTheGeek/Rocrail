@@ -454,6 +454,7 @@
       <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
     </tcp>
     <srcpcon remark="SRCP client service port." wrappername="SrcpCon">
+      <var name="active" vt="bool" defval="false" remark="Activate srcp service."/>
       <var name="port" vt="int" defval="4303" range="1-65535"/>
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
     </srcpcon>

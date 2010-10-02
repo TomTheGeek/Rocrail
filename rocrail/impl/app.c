@@ -759,7 +759,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   /* Client connection */
   {
     iONode srcpini = wRocRail.getsrcpcon(data->ini);
-    if( srcpini != NULL && wSrcpCon.getport(srcpini) > 0 ) {
+    if( srcpini != NULL && wSrcpCon.getport(srcpini) > 0 && wSrcpCon.isactive(srcpini) ) {
       data->srcpCon = SrcpConOp.inst( srcpini, ControlOp.getCallback( data->control), (obj)data->control );
     }
   }

@@ -257,6 +257,7 @@ public:
     wxStaticBox* m_SrcpService;
     wxStaticText* m_labSrcpPort;
     wxSpinCtrl* m_SrcpPort;
+    wxCheckBox* m_SrcpServiceActive;
     wxPanel* m_AtomatPanel;
     wxStaticText* m_LabelSwTime;
     wxTextCtrl* m_SwTime;
