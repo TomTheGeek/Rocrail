@@ -86,6 +86,7 @@ Starting with block A:
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Track.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 static int instCnt = 0;
 
@@ -192,42 +193,205 @@ static int __getOri(iONode item ) {
 static const int typeTrackStraight  = 0;
 static const int typeTrackCurve  = 1;
 static const int typeBlock  = 2;
+static const int typeSwitch  = 3;
 
 static int __getType(iONode item ) {
   const char* type = NodeOp.getName(item);
   const char* subtype = wItem.gettype(item);
-  if( StrOp.equals( wTrack.name() , type ) ) {
-    if( StrOp.equals( wTrack.straight, subtype ) ) return typeTrackStraight;
-    if( StrOp.equals( wTrack.curve   , subtype ) ) return typeTrackCurve;
-  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "      GETTYPE: %s %s",
+       type, wItem.gettype(item));
+
+  /*if( StrOp.equals( "tk" , type ) || StrOp.equals( wFeedback.name() , type ) ) {*/
+    if(        StrOp.equals( wTrack.curve, subtype ) ) {
+      return typeTrackCurve;
+    } else if( StrOp.equals( "sw", type ) ) {
+      return typeSwitch;
+    } else {
+      return typeTrackStraight;
+    }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "      --- GETTYPE: FAILED should not happen");
   return -1;
 }
 
 
 static const int foundBlock = 100;
 
-static int __travelWest( iONode block, iONode item ) {
+static int __travelWest( iONode block, iONode item, int travel ) {
   if( item ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "west of block %s is %s %s %s", 
-        wBlock.getid(block), NodeOp.getName(item), wItem.gettype(item), wItem.getori(item) );
-    if( __getType(item) == typeTrackStraight  && (__getOri(block) == oriWest || __getOri(block) == oriEast) ) {
-      /* traveling west */
-      return oriWest;
+
+    const char * itemori = wItem.getori(item);
+
+    /* missing default values */
+    if( itemori == NULL) {
+      itemori = "west";
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set default");
     }
-    else if( __getType(item) == typeTrackCurve && __getOri(block) == oriNorth ) {
-      /* traveling south */
-      return oriSouth;
-    }
-    else if( __getType(item) == typeTrackCurve && __getOri(block) == oriEast ) {
-      /* traveling north */
-      return oriNorth;
-    }
-    else if( __getType(item) == typeBlock && (__getOri(block) == oriWest || __getOri(block) == oriEast) ) {
-      /* found a block */
-      return foundBlock;
-    }
+
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block: [%s] item: [%s] id: [%s] ori: [%s] type: [%d]",
+        wBlock.getid(block), NodeOp.getName(item), wItem.getid(item),
+            itemori, __getType(item) );
+
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "   we travel -> %d",
+        travel );
+
+      /* curve -> change dir */
+      if( __getType(item) == typeTrackCurve) {
+        /* algebra of Rocrail directions */
+        if(        travel == 0 &&  StrOp.equals( itemori, "north" )) {
+          return oriSouth;
+        } else if( travel == 0 &&  StrOp.equals( itemori, "east" )) {
+          return oriNorth;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "west" )) {
+          return oriWest;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "north" )) {
+          return oriEast;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "west" )) {
+          return oriSouth;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "south" )) {
+          return oriNorth;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "east" )) {
+          return oriEast;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "west" )) {
+          return oriWest;
+        } else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -- no valid curve for us! [%s]",
+              wItem.getid(item) );
+          return -1; /*end of the game */
+        }
+      } else if( __getType(item) == typeSwitch) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Oh, a switch, what shall we do now?" );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  we will test if the switch does matter to us" );
+
+        /* coming from the points */
+        if(        travel == 0 &&  StrOp.equals( itemori, "east" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 0 &&  StrOp.equals( itemori, "west" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "north" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "east" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "south" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT - todo: the turnout line!" );
+          return travel;
+        }
+
+        /* coming from the frog -> straight line */
+        else if( travel == 0 &&  StrOp.equals( itemori, "west" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 0 &&  StrOp.equals( itemori, "east" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "north" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "east" )
+               && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
+               && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
+              && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "south" )
+              && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going STRAIGHT" );
+          return travel;
+        }
+
+        /* coming from the frog -> diverging line */
+        else if( travel == 0 &&  StrOp.equals( itemori, "north" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriSouth;
+        } else if( travel == 0 &&  StrOp.equals( itemori, "north" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriNorth;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
+                && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriWest;
+        } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
+                && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriEast;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
+               && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriNorth;
+        } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
+               && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriSouth;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
+              && StrOp.equals( wItem.gettype(item), "right" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriEast;
+        } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
+              && StrOp.equals( wItem.gettype(item), "left" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " going DIVERGE" );
+          return oriWest;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -- no valid turnout for us! [%s]",
+                        wItem.getid(item) );
+          return -1; /*end of the game*/
+        }
+
+      } else { /* elements which do not change travel direction */
+        /* is the item in our direction? */
+        if( !(((StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" ))
+                    && (travel == 1 || travel == 3)) ||
+            ((StrOp.equals( itemori, "east" ) || StrOp.equals( itemori, "west" ))
+                    && (travel == 0 || travel == 2))) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "    Item [%s] is not in our travel direction giving up",
+                    wItem.getid(item) );
+          return -1; /*puh*/
+        } else {
+          return travel;
+        }
+      }
   }
-      
+
   return -1;
 }
 
@@ -242,27 +406,56 @@ static void __analyseBlock(iOAnalyse inst, iONode block ) {
   
   if( __getOri(block) == oriWest ) {
     int xoffset = 0;
+    int yoffset = 0;
     travel = oriWest;
     /* creeping west */
     do {
-      xoffset--;
-      __createKey( key, block, xoffset, 0, 0);
-      item = (iONode)MapOp.get( data->objectmap, key);
-      
-      if( item ) {
-      
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HERE WE TRAVEL %d", travel );
+
+      if( travel >= 0) {
         switch(travel) {
         case oriWest:
-          travel = __travelWest(block, item);
-          break;
+          xoffset--;
+          __createKey( key, block, xoffset, 0, 0);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going west" );
+           break;
+        case oriNorth:
+          yoffset--;
+          __createKey( key, block, xoffset, yoffset, 0);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going north" );
+           break;
+        case oriEast:
+          xoffset++;
+          __createKey( key, block, xoffset, yoffset, 0);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going east" );
+           break;
+        case oriSouth:
+          yoffset++;
+          __createKey( key, block, xoffset, yoffset, 0);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going south" );
+           break;
         }
-      
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HERE KEY %s", key );
+        item = (iONode)MapOp.get( data->objectmap, key);
+
+        if( item ) {
+          travel = __travelWest(block, item, travel);
+        } else {
+          travel = -1;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BEEEEP --- end of west direction" );
+        }
+
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of west direction" ); 
         break;
       }
     } while(item && travel != foundBlock );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OUT --- end of the world" );
 
   }
 
