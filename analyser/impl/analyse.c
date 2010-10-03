@@ -277,6 +277,7 @@ static int __getType(iONode item ) {
 
 static const int foundBlock = 100;
 static const int twoWayTurnout = 200;
+static const int threeWayTurnout = 300;
 
 static int __travel( iONode block, iONode item, int travel, int turnoutstate, int * x, int * y, const char * key) {
   if( item ) {
@@ -514,6 +515,91 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
           }
         }
 
+        /* threeway */
+        else if( StrOp.equals( wItem.gettype(item), "threeway" ) ) {
+
+          if( StrOp.equals( itemori, "west" )) {
+            if( (travel == 0) ) {
+              if( turnoutstate == 0) { // center
+                return travel+threeWayTurnout;
+              } else if (turnoutstate == 1) { // left
+                return oriSouth+threeWayTurnout;
+              } else if (turnoutstate == 2) { // right
+                return oriNorth+threeWayTurnout;
+              }
+            }
+            else if ( travel == 1 ) {
+              return oriEast;
+            }
+            else if ( travel == 2 ) {
+              return travel;
+            }
+            else if ( travel == 3 ) {
+              return oriEast;
+            }
+          }
+          else if( StrOp.equals( itemori, "north" )) {
+            if( (travel == 0) ) {
+              return oriNorth;
+            }
+            else if ( travel == 1 ) {
+              return travel;
+            }
+            else if ( travel == 2 ) {
+              return oriNorth;
+            }
+            else if ( travel == 3 ) {
+              if( turnoutstate == 0) {
+                return travel+threeWayTurnout;
+              } else if (turnoutstate == 1) {
+                return oriEast+threeWayTurnout;
+              } else if (turnoutstate == 2) {
+                return oriWest+threeWayTurnout;
+              }
+            }
+          }
+          else if( StrOp.equals( itemori, "east" )) {
+            if( (travel == 0) ) {
+              return travel;
+            }
+            else if ( travel == 1 ) {
+              return oriWest;
+            }
+            else if ( travel == 2 ) {
+              if( turnoutstate == 0) {
+                return travel+threeWayTurnout;
+              } else if (turnoutstate == 1) {
+                return oriNorth+threeWayTurnout;
+              } else if (turnoutstate == 2) {
+                return oriSouth+threeWayTurnout;
+              }
+            }
+            else if ( travel == 3 ) {
+              return oriWest;
+            }
+          }
+          else if( StrOp.equals( itemori, "south" )) {
+            if( (travel == 0) ) {
+              return oriSouth;
+            }
+            else if ( travel == 1 ) {
+              return travel;
+            }
+            else if ( travel == 2 ) {
+              return oriSouth;
+            }
+            else if ( travel == 3 ) {
+              if( turnoutstate == 0) {
+                return travel+threeWayTurnout;
+              } else if (turnoutstate == 1) {
+                return oriWest+threeWayTurnout;
+              } else if (turnoutstate == 2) {
+                return oriEast+threeWayTurnout;
+              }
+            }
+          }
+        }
+
         /* turnout in wrong direction*/
         else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ---------- no valid turnout for us! [%s]",
@@ -565,8 +651,11 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
 
   /* start again at the currend turnout */
   travel = __travel(turnout, turnout, travel, turnoutstate, &x, &y, "");
-  if( travel > 100) {
+  if( travel >= 200 && travel < 300) {
     travel -= twoWayTurnout;
+  }
+  if( travel >= 300 && travel < 400) {
+    travel -= threeWayTurnout;
   }
 
 
@@ -658,6 +747,14 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
           depth++;
           __analyseTurnout(inst, item, prevtravel, 0, depth);
           __analyseTurnout(inst, item, prevtravel, 1, depth);
+        } else if( travel >= 300 && travel < 400) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  THREE  " );
+          travel -= threeWayTurnout;
+          depth++;
+          __analyseTurnout(inst, item, prevtravel, 0, depth);
+          __analyseTurnout(inst, item, prevtravel, 1, depth);
+          __analyseTurnout(inst, item, prevtravel, 2, depth);
         }
         /*TODO: 3-way, DKW ...*/
 
@@ -670,7 +767,7 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
       }
 
     } else { /*travel*/
-     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XXXXXXXXXXXXXXXX BLOCKLEFTCOUNTER: %d PANIC this line should not appear!", blockleftcounter );
+     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XXXXXXXXXXXXXXXX PANIC this line should not appear!" );
      break;
     }
   } while(foundBlock );
