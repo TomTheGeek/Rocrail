@@ -27,8 +27,7 @@
     <data>
       <var name="plan" vt="iONode"/>
       <var name="objectmap" vt="iOMap"/>
-      <var name="branchmap" vt="iOMap"/>
-      <var name="turnoutlist" vt="iOMap"/>
+      <var name="prelist" vt="iOList"/>
       <var name="model" vt="iOModel"/>
     </data>
   </object>
