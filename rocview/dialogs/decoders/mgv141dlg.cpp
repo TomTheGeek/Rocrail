@@ -74,21 +74,21 @@ void MGV141Dlg::onUnitSet( wxCommandEvent& event )
 
   if( m_iLowAddress != m_UnitHigh->GetValue() ) {
     // low address
-    cmd = (iONode)NodeOp.base.clone(cmd);
-    wProgram.setcv( cmd, 1 );
-    wProgram.setvalue( cmd, m_UnitHigh->GetValue() );
+    iONode cmdH = (iONode)NodeOp.base.clone(cmd);
+    wProgram.setcv( cmdH, 1 );
+    wProgram.setvalue( cmdH, m_UnitHigh->GetValue() );
     m_iLowAddress = -1;
-    QueueOp.post( m_Queue, (obj)cmd, normal );
+    QueueOp.post( m_Queue, (obj)cmdH, normal );
   }
 
   if( m_iSubAddress != m_UnitLow->GetValue() ) {
     // sub address
-    cmd = (iONode)NodeOp.base.clone(cmd);
-    wProgram.setaddr( cmd, m_iLowAddress ); // replace low address with new one
-    wProgram.setcv( cmd, 2 );
-    wProgram.setvalue( cmd, m_UnitLow->GetValue() );
+    iONode cmdL = (iONode)NodeOp.base.clone(cmd);
+    wProgram.setaddr( cmdL, m_iLowAddress ); // replace low address with new one
+    wProgram.setcv( cmdL, 2 );
+    wProgram.setvalue( cmdL, m_UnitLow->GetValue() );
     m_iSubAddress = -1;
-    QueueOp.post( m_Queue, (obj)cmd, normal );
+    QueueOp.post( m_Queue, (obj)cmdL, normal );
   }
 
   NodeOp.base.del(cmd);
@@ -162,6 +162,7 @@ void MGV141Dlg::onReadAll( wxCommandEvent& event )
 
 void MGV141Dlg::onOK( wxCommandEvent& event )
 {
+  m_Timer->Stop();
   EndModal( wxID_OK );
 }
 
@@ -318,7 +319,7 @@ void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int 
     TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "counter %d address %d", port, val );
     wxSpinCtrl* CA[] = {m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
                           m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
-    if( (sv-3) % 2 == 0 ) {
+    if( (sv-3) % 2 == 1 ) {
       // high part
       CA[port]->SetValue(val*256);
     }
