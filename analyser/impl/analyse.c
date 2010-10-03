@@ -714,7 +714,6 @@ static void _analyse(iOAnalyse inst) {
     block = (iONode)ListOp.next(bklist);
   }
   
-  ListOp.base.del(list);
   ListOp.base.del(bklist);
 }
 
