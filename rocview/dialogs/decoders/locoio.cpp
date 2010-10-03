@@ -2168,9 +2168,17 @@ void LocoIO::easyGetPort( int port, int* conf, int* val1, int* val2 )
   else if( easyPulse[port]->GetValue() ) {
     // pulse
     config = 140;
+    bool c2 = easyContact[port]->IsChecked();
+    if( flat ) {
+      addr = easyPort[port]->GetValue();
+      c2 = addr % 2 == 1 ? true:false;
+      addr = (addr-1) / 2;
+    }
+
     value1 = (addr & 0x007F);
     value2 = (addr & 0x0780) >> 7;
-    value2 |= easyContact[port]->IsChecked() ? 0x00:0x20;
+    value2 |= 0x10;
+    value2 |= c2 ? 0x20:0x00;
   }
   else if( easyInput[port]->GetValue() ) {
     // input
@@ -2691,12 +2699,35 @@ void LocoIO::OnLocoIOReport( wxCommandEvent& event )
 
 void LocoIO::OnFlatAddressing( wxCommandEvent& event )
 {
+  wxSpinCtrl* easyPort[] = {NULL,m_EasyAddr1,m_EasyAddr2,m_EasyAddr3,m_EasyAddr4,m_EasyAddr5,m_EasyAddr6,
+                            m_EasyAddr7,m_EasyAddr8,m_EasyAddr9,m_EasyAddr10,m_EasyAddr11,
+                            m_EasyAddr12,m_EasyAddr13,m_EasyAddr14,m_EasyAddr15,m_EasyAddr16};
+  wxRadioButton* easyOutput[] = {NULL,m_EasyOutput1,m_EasyOutput2,m_EasyOutput3,m_EasyOutput4,m_EasyOutput5,
+                                 m_EasyOutput6,m_EasyOutput7,m_EasyOutput8,m_EasyOutput9,m_EasyOutput10,
+                                 m_EasyOutput11,m_EasyOutput12,m_EasyOutput13,m_EasyOutput14,m_EasyOutput15,m_EasyOutput16};
+  wxRadioButton* easyPulse[] = {NULL,m_EasyPulse1,m_EasyPulse2,m_EasyPulse3,m_EasyPulse4,m_EasyPulse5,
+                                 m_EasyPulse6,m_EasyPulse7,m_EasyPulse8,m_EasyPulse9,m_EasyPulse10,
+                                 m_EasyPulse11,m_EasyPulse12,m_EasyPulse13,m_EasyPulse14,m_EasyPulse15,m_EasyPulse16};
   wxCheckBox* easyContact[] = {NULL,m_EasyContact1,m_EasyContact2,m_EasyContact3,m_EasyContact4,m_EasyContact5,
                                  m_EasyContact6,m_EasyContact7,m_EasyContact8,m_EasyContact9,m_EasyContact10,
                                  m_EasyContact11,m_EasyContact12,m_EasyContact13,m_EasyContact14,m_EasyContact15,m_EasyContact16};
+
   bool flat = m_Flat->IsChecked();
+
   for( int i = 1; i < 17; i++ ) {
     easyContact[i]->Enable(!flat);
+    if( easyOutput[i]->GetValue() || easyPulse[i]->GetValue() ) {
+      int addr = easyPort[i]->GetValue();
+      if( flat ) {
+        addr = addr * 2 + (easyContact[i]->IsChecked() ? 1:0);
+        easyPort[i]->SetValue(addr);
+      }
+      else {
+        easyContact[i]->SetValue( (addr % 2 == 1) ? true:false);
+        addr = (addr - (addr % 2)) / 2;
+        easyPort[i]->SetValue(addr);
+      }
+    }
   }
 }
 
