@@ -58,6 +58,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_EASY_SAVE 10009
 #define ID_BUTTON_EASY_READ 10010
 #define ID_LOCOIO_BOOSTER 10002
+#define ID_FLAT_ADDRESSING 10014
 #define ID_BUTTON_PORT_GET 10016
 #define ID_BUTTON_PORT_SET 10017
 #define ID_LOCOIO_TYPE 10022
@@ -157,6 +158,9 @@ public:
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOCOIO_BOOSTER
     void OnBoosterClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_FLAT_ADDRESSING
+    void OnFlatAddressing( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for wxID_ANY
     void OnAnyUpdated( wxSpinEvent& event );
@@ -352,6 +356,7 @@ public:
     wxButton* m_EasySaveAll;
     wxButton* m_EasyReadAll;
     wxCheckBox* m_Booster;
+    wxCheckBox* m_Flat;
     wxPanel* m_IOPanel;
     wxStaticText* m_labPort;
     wxSpinCtrl* m_Port;
