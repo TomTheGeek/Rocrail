@@ -149,6 +149,19 @@ static void* __properties( void* inst ) {
 /** ----- OAnalyse ----- */
 static const int BlockCX = 4;
 
+#define oriWest  0
+#define oriNorth 1
+#define oriEast  2
+#define oriSouth 3
+/* returns 0 for west, 1 for north, 2 for east and 3 for south */
+static int __getOri(iONode item ) {
+  const char* ori = wItem.getori(item);
+  if( StrOp.equals( wItem.west , ori ) ) return oriWest;
+  if( StrOp.equals( wItem.north, ori ) ) return oriNorth;
+  if( StrOp.equals( wItem.east , ori ) ) return oriEast;
+  if( StrOp.equals( wItem.south, ori ) ) return oriSouth;
+}
+
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
   return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, wItem.getz(node)+zoffset );
 }
@@ -185,20 +198,6 @@ static iOList __prepare(iOAnalyse inst, iOList list) {
     node = (iONode)ListOp.next( list );
   };
   return bklist;
-}
-
-
-#define oriWest  0
-#define oriNorth 1
-#define oriEast  2
-#define oriSouth 3
-/* returns 0 for west, 1 for north, 2 for east and 3 for south */
-static int __getOri(iONode item ) {
-  const char* ori = wItem.getori(item);
-  if( StrOp.equals( wItem.west , ori ) ) return oriWest;
-  if( StrOp.equals( wItem.north, ori ) ) return oriNorth;
-  if( StrOp.equals( wItem.east , ori ) ) return oriEast;
-  if( StrOp.equals( wItem.south, ori ) ) return oriSouth;
 }
 
 
@@ -558,11 +557,16 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
 
 }
 
-static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const char * turnoutid) {
+static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const char * inittravel) {
   iOAnalyseData data = Data(inst);
   char key[32] = {'\0'};
   iONode item = NULL;
-  int travel = -1;
+  int travel;
+
+  if( StrOp.equals( wItem.west , inittravel ) ) travel = oriWest;
+  if( StrOp.equals( wItem.north, inittravel ) ) travel = oriNorth;
+  if( StrOp.equals( wItem.east , inittravel ) ) travel = oriEast;
+  if( StrOp.equals( wItem.south, inittravel ) ) travel = oriSouth;
 
   int turnouts = 0;
 
@@ -573,15 +577,29 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
   }
 
   Boolean weHaveOpenBranches = False;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "##########################################");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block %s ",
-      wBlock.getid(block));
+  //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "##########################################");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----> start analyzing block %s in [%s] direction",
+      wBlock.getid(block), inittravel);
   
-  if( __getOri(block) == oriWest ) {
+  if( True ) {
     int xoffset = 0;
     int yoffset = 0;
-    travel = oriWest;
-    /* creeping west */
+    //travel = oriWest;
+
+
+    if( StrOp.equals( inittravel, "east" ) ) {
+      /* TODO: the real block length */
+      xoffset = 3;
+    }
+
+    if( StrOp.equals( inittravel, "south" ) ) {
+      /* TODO: the real block length */
+      yoffset = 3;
+    }
+
+
+
+    /* creeping ... */
     do {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
@@ -611,7 +629,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
            break;
         }
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HERE KEY %s", key );
+        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HERE KEY %s", key );
         item = (iONode)MapOp.get( data->objectmap, key);
 
 
@@ -641,16 +659,16 @@ static void __analyseBlock(iOAnalyse inst, iONode block, Boolean firstrun, const
 
         } else {
           travel = -1;
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of west direction 1 for: [%s]", wBlock.getid(block) );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of west direction 1 for: [%s]", wBlock.getid(block) );
         }
 
       } else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of west direction 2 for: [%s]", wBlock.getid(block) );
+        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of west direction 2 for: [%s]", wBlock.getid(block) );
         break;
       }
     } while(item && travel != foundBlock );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DONE travelling west" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DONE traveling %s", inittravel );
 
   }
 
@@ -673,7 +691,26 @@ static void _analyse(iOAnalyse inst) {
   
   block = (iONode)ListOp.first(bklist);
   while(block) {
-    __analyseBlock(inst,block,True,NULL);
+
+    const char * blockori = wItem.getori(block);
+    /*default*/
+    if(  blockori == NULL) {
+      blockori = "west";
+    }
+
+    if( StrOp.equals( blockori, "west" ) || StrOp.equals( blockori, "east" ) ) {
+      __analyseBlock(inst,block,True, "west");
+      __analyseBlock(inst,block,True, "east");
+    } else if( StrOp.equals( blockori, "north" ) || StrOp.equals( blockori, "south" ) ) {
+      __analyseBlock(inst,block,True, "north");
+      __analyseBlock(inst,block,True, "south");
+    }
+    /*
+     20101003.014541.074 r9999I main     OAnalyse 0666 DONE traveling 2
+     ../Rocrail/unxbin/rocrail: symbol lookup error: ../Rocrail/unxbin//analyser.so: undefined symbol: _getOri
+     *
+     */
+
     block = (iONode)ListOp.next(bklist);
   }
   
