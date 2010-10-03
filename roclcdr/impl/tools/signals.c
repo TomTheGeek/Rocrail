@@ -36,16 +36,20 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Link.h"
 
+static Boolean __checkSignalPair( iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair);
+
 
 void resetSignals(iOLcDriver inst ) {
   iOLcDriverData data = Data(inst);
   Boolean reverse = False;
+  Boolean signalpair = False; /* default false for the forwards signals */
+  __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair);
 
   /* signal current block */
   if( data->curBlock != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset signals of current block..." );
-    data->curBlock->red( data->curBlock, True, !data->next1RouteFromTo );
-    data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
+    data->curBlock->red( data->curBlock, True, signalpair );
+    data->curBlock->red( data->curBlock, False, signalpair );
   }
 }
 

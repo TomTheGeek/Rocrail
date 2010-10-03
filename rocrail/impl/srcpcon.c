@@ -330,7 +330,7 @@ static int _getClientPort( struct OSrcpCon* inst ) {
 
 
 static void __doBroadcast( iOSrcpCon inst, iONode nodeDF ) {
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Broadcast received." );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Broadcast received." );
   if( inst != NULL && MutexOp.trywait( Data(inst)->muxMap, 100 ) ) {
     iOSrcpConData data = Data(inst);
 
