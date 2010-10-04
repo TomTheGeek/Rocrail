@@ -2194,7 +2194,6 @@ void Symbol::modelEvent( iONode node ) {
          StrOp.free( tip );
          occupied = isReserved ? 2:1;
          occupied = isEntering ? 3:occupied;
-         occupied = isAcceptIdent ? 7:occupied;
          occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
        }
        else {

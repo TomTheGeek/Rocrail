@@ -181,6 +181,7 @@ static Boolean __acceptGhost( obj inst ) {
       iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( node, data->id );
       wBlock.setlocid( node, data->locId );
+      wBlock.setacceptident(node, data->acceptident);
       AppOp.broadcastEvent( node );
     }
     return True;
@@ -414,6 +415,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
         wBlock.setlocid( nodeD, puls ? identString:data->locId );
+        wBlock.setacceptident(nodeD, data->acceptident);
         AppOp.broadcastEvent( nodeD );
       }
     }
@@ -514,6 +516,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setid( nodeD, data->id );
           wBlock.setstate( nodeD, wBlock.ghost );
           wBlock.setlocid( nodeD, data->locId );
+          wBlock.setacceptident(nodeD, data->acceptident);
           AppOp.broadcastEvent( nodeD );
           __checkAction((iOBlock)inst, "ghost");
         }
@@ -550,6 +553,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
           wBlock.setid( nodeD, data->id );
           wBlock.setstate( nodeD, wBlock.getstate(data->props) );
           wBlock.setlocid( nodeD, data->locId );
+          wBlock.setacceptident(nodeD, data->acceptident);
           AppOp.broadcastEvent( nodeD );
         }
       }
@@ -1170,6 +1174,7 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     wBlock.setid( nodeD, data->id );
     wBlock.setentering( nodeD, True );
     wBlock.setlocid( nodeD, id );
+    wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "enter");
   }
@@ -1184,6 +1189,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
     wBlock.setid( nodeD, data->id );
     wBlock.setreserved( nodeD, False );
     wBlock.setlocid( nodeD, id );
+    wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "occupied");
   }
@@ -1319,6 +1325,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       wBlock.setid( nodeD, data->id );
       wBlock.setreserved( nodeD, True );
       wBlock.setlocid( nodeD, id );
+      wBlock.setacceptident(nodeD, data->acceptident);
       AppOp.broadcastEvent( nodeD );
     }
     else {
@@ -1399,6 +1406,7 @@ static Boolean _lockForGroup( iIBlockBase inst, const char* id ) {
     else
       wBlock.setreserved( nodeD, True );
     wBlock.setlocid( nodeD, id );
+    wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
   }
 
@@ -1563,6 +1571,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
             wBlock.setreserved( nodeD, True );
             __checkAction((iOBlock)inst, "reserved");
           }
+          wBlock.setacceptident(nodeD, data->acceptident);
           AppOp.broadcastEvent( nodeD );
         }
         /* Set signal. */
@@ -1617,6 +1626,7 @@ static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
         wBlock.setlocid( nodeD, "" );
+        wBlock.setacceptident(nodeD, data->acceptident);
         AppOp.broadcastEvent( nodeD );
       }
 
