@@ -304,7 +304,7 @@ bool WaybillDlg::evaluate(){
   wWaybill.setconsignee( m_Props, m_Consignee->GetValue().mb_str(wxConvUTF8) );
   wWaybill.setdestination( m_Props, m_Destination->GetStringSelection().mb_str(wxConvUTF8) );
   wWaybill.setcommodity( m_Props, m_Commodity->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setcartype( m_Props, (char*)m_Cartype->GetClientData( m_Cartype->GetSelection()) );
+  wWaybill.setcartype( m_Props, (char*)((wxItemContainer*)m_Cartype)->GetClientData( m_Cartype->GetSelection()) );
 
 
   if( m_Status->GetSelection() == 0 )

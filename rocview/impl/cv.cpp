@@ -172,7 +172,7 @@ void CV::initValues() {
   if( m_LcList->GetSelection() == wxNOT_FOUND )
     return;
   TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "initValues..." );
-  setLocProps((iONode)m_LcList->GetClientData(m_LcList->GetSelection()));
+  setLocProps((iONode)((wxItemContainer*)m_LcList)->GetClientData(m_LcList->GetSelection()));
 }
 
 void CV::initPresets( int nr, const char* val ) {

@@ -1742,7 +1742,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
 
     int swidx = m_SwitchId->FindString( wxString(wSwitchCmd.getid(swcmd),wxConvUTF8) );
     if( swidx != wxNOT_FOUND ) {
-      iONode sw = (iONode)m_SwitchId->GetClientData( swidx );
+      iONode sw = (iONode)((wxItemContainer*)m_SwitchId)->GetClientData( swidx );
       if( StrOp.equals( wSwitch.threeway, wSwitch.gettype( sw ) ) ) {
         m_SwitchCmd->Enable( 0, true );
         m_SwitchCmd->Enable( 2, true );
@@ -1978,7 +1978,7 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
 {
   int swidx = m_SwitchId->GetSelection();
   if( swidx != wxNOT_FOUND ) {
-    iONode sw = (iONode)m_SwitchId->GetClientData( swidx );
+    iONode sw = (iONode)((wxItemContainer*)m_SwitchId)->GetClientData( swidx );
     if( sw == NULL ) {
       m_Add->Enable( false );
       return;

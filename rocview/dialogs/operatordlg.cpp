@@ -483,7 +483,7 @@ void OperatorDlg::OnCopy( wxCommandEvent& event ){
 
 void OperatorDlg::onLocoImage( wxCommandEvent& event ) {
   if( m_LocoID->GetSelection() != wxNOT_FOUND ) {
-    iONode lc = (iONode)m_LocoID->GetClientData(m_LocoID->GetSelection());
+    iONode lc = (iONode)((wxItemContainer*)m_LocoID)->GetClientData(m_LocoID->GetSelection());
     if( lc != NULL ) {
       LocDialog* dlg = new LocDialog(this, lc, false );
       if( wxID_OK == dlg->ShowModal() ) {

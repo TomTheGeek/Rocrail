@@ -365,7 +365,7 @@ bool CarDlg::evaluate(){
   else
     wCar.settype( m_Props, wCar.cartype_passenger );
 
-  wCar.setsubtype( m_Props, (char*)m_SubType->GetClientData( m_SubType->GetSelection()) );
+  wCar.setsubtype( m_Props, (char*)((wxItemContainer*)m_SubType)->GetClientData( m_SubType->GetSelection()) );
   wCar.setlen( m_Props, m_Length->GetValue() );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
 
