@@ -212,6 +212,7 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       /* put keys for all covered fields */
       if( StrOp.equals( NodeOp.getName(node), "sw" ) ) {
         if( StrOp.equals( wItem.gettype(node), "crossing" ) ||
+            StrOp.equals( wItem.gettype(node), "dcrossing" ) ||
             StrOp.equals( wItem.gettype(node), "ccrossing" )) {
 
           if( StrOp.equals( ori, "east" ) || StrOp.equals( ori, "west" ) ) {
@@ -299,8 +300,9 @@ static int __getType(iONode item ) {
 static const int foundBlock = 100;
 static const int twoWayTurnout = 200;
 static const int threeWayTurnout = 300;
+static const int dcrossing = 400;
 
-static int __travel( iONode block, iONode item, int travel, int turnoutstate, int * x, int * y, const char * key) {
+static int __travel( iONode item, int travel, int * turnoutstate, int * x, int * y, const char * key) {
   if( item ) {
     const char * itemori = wItem.getori(item);
 
@@ -337,61 +339,84 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
               wItem.getid(item) );
           return -1; /*end of the game */
         }
-      } else if( __getType(item) == typeSwitch) {
+      }
+      /* block */
+      else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
+
+        int step = 3;
+        if( wBlock.issmallsymbol( item )) {
+          step = 1;
+        }
+
+        if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+          if( (travel == 2) ) {
+            *x = step;
+          }
+        }
+        else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+          if( (travel == 3) ) {
+            *y = step;
+          }
+        }
+        return travel;
+      }
+
+      /* switch */
+      else if( __getType(item) == typeSwitch) {
         /* coming from the points */
         if(        travel == 0 &&  StrOp.equals( itemori, "east" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriNorth+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 0 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriSouth+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 1 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriWest+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriEast+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriSouth+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 2 &&  StrOp.equals( itemori, "east" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriNorth+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 3 &&  StrOp.equals( itemori, "south" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriEast+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
-          if(turnoutstate == 1)
+          if(*turnoutstate == 1)
             return oriWest+twoWayTurnout;
 
           return travel+twoWayTurnout;
@@ -401,34 +426,42 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
         else if( travel == 0 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 0 &&  StrOp.equals( itemori, "east" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 1 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 2 &&  StrOp.equals( itemori, "east" )
                && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
                && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
               && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         } else if( travel == 3 &&  StrOp.equals( itemori, "south" )
               && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
+          *turnoutstate = 0;
           return travel;
         }
 
@@ -436,74 +469,94 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
         else if( travel == 0 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriSouth;
         } else if( travel == 0 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriNorth;
         } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriWest;
         } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriEast;
         } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
                && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriNorth;
         } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
                && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriSouth;
         } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
               && StrOp.equals( wItem.gettype(item), "right" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriEast;
         } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
               && StrOp.equals( wItem.gettype(item), "left" ) ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
+          *turnoutstate = 1;
           return oriWest;
         }
 
         /* crossing */
         else if( StrOp.equals( wItem.gettype(item), "crossing" ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
 
           if( !wSwitch.isdir(item)  ) { // left
 
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
-              if( (travel == 1) ) {
+              if( (travel == 1) || (travel == 2)) {
                 *x = 1;
+                return travel;
               } else if ( travel == 3 ) {
                 *x = -1;
+                return travel;
               }
+              return travel;
             }
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
               if( (travel == 0) ) {
                 *y = -1;
-              } else if ( travel == 2 ) {
+                return travel;
+              } else if ( (travel == 2) || (travel == 3) ) {
                 *y = 1;
+                return travel;
               }
+              return travel;
             }
           } else if( wSwitch.isdir(item) ) { // right
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
               if( (travel == 1) ) {
                 *x = -1;
-              } else if ( travel == 3 ) {
+                return travel;
+              } else if ( (travel == 3) || (travel == 2) ) {
                 *x = 1;
+                return travel;
               }
+              return travel;
             }
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
-              if( (travel == 0) ) {
+              if( (travel == 0) || (travel == 3) ) {
                 *y = 1;
+                return travel;
               } else if ( travel == 2 ) {
                 *y = -1;
+                return travel;
               }
+              return travel;
             }
           }
-          return travel;
+          return itemNotInDirection;
         }
         /* ccrossing */
         else if( StrOp.equals( wItem.gettype(item), "ccrossing" ) ) {
@@ -535,17 +588,82 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
             }
           }
         }
+        /* dcrossing */
+        else if( StrOp.equals( wItem.gettype(item), "dcrossing" ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " dcrossing travel: %d turnoutstate: %d", travel, turnoutstate );
 
+          if( !wSwitch.isdir(item)  ) { // left
+
+            if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+              if( (travel == 0) ) {
+                if ( *turnoutstate == 0) {
+                  *x = -1;
+                  return travel+dcrossing;
+                } else if( *turnoutstate == 2) {
+                  *x = -1;
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( *turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( *turnoutstate == 2) {
+                  *x = 1;
+                  return oriEast+dcrossing;
+                }
+              } else if ( travel == 2 ) {
+                if ( *turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( *turnoutstate == 3) {
+                  *x = 1;
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( *turnoutstate == 1) {
+                  *x = -1;
+                  return travel+dcrossing;
+                } else if( *turnoutstate == 3) {
+                  *x = -1;
+                  return oriWest+dcrossing;
+                }
+              }
+            }
+            else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+              if( (travel == 0) ) {
+
+              } else if ( travel == 2 ) {
+
+              }
+            }
+          } else if( wSwitch.isdir(item) ) { // right
+            if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+              if( (travel == 1) ) {
+
+              } else if ( travel == 3 ) {
+
+              }
+            }
+            else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+              if( (travel == 0) ) {
+
+              } else if ( travel == 2 ) {
+
+              }
+            }
+          }
+          return travel;
+        }
         /* threeway */
         else if( StrOp.equals( wItem.gettype(item), "threeway" ) ) {
 
           if( StrOp.equals( itemori, "west" )) {
             if( (travel == 0) ) {
-              if( turnoutstate == 0) { // center
+              if( *turnoutstate == 0) { // center
                 return travel+threeWayTurnout;
-              } else if (turnoutstate == 1) { // left
+              } else if (*turnoutstate == 1) { // left
                 return oriSouth+threeWayTurnout;
-              } else if (turnoutstate == 2) { // right
+              } else if (*turnoutstate == 2) { // right
                 return oriNorth+threeWayTurnout;
               }
             }
@@ -570,11 +688,11 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
               return oriNorth;
             }
             else if ( travel == 3 ) {
-              if( turnoutstate == 0) {
+              if( *turnoutstate == 0) {
                 return travel+threeWayTurnout;
-              } else if (turnoutstate == 1) {
+              } else if (*turnoutstate == 1) {
                 return oriEast+threeWayTurnout;
-              } else if (turnoutstate == 2) {
+              } else if (*turnoutstate == 2) {
                 return oriWest+threeWayTurnout;
               }
             }
@@ -587,11 +705,11 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
               return oriWest;
             }
             else if ( travel == 2 ) {
-              if( turnoutstate == 0) {
+              if( *turnoutstate == 0) {
                 return travel+threeWayTurnout;
-              } else if (turnoutstate == 1) {
+              } else if (*turnoutstate == 1) {
                 return oriNorth+threeWayTurnout;
-              } else if (turnoutstate == 2) {
+              } else if (*turnoutstate == 2) {
                 return oriSouth+threeWayTurnout;
               }
             }
@@ -610,11 +728,11 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
               return oriSouth;
             }
             else if ( travel == 3 ) {
-              if( turnoutstate == 0) {
+              if( *turnoutstate == 0) {
                 return travel+threeWayTurnout;
-              } else if (turnoutstate == 1) {
+              } else if (*turnoutstate == 1) {
                 return oriWest+threeWayTurnout;
-              } else if (turnoutstate == 2) {
+              } else if (*turnoutstate == 2) {
                 return oriEast+threeWayTurnout;
               }
             }
@@ -649,183 +767,138 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
   return itemNotInDirection;
 }
 
-static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int turnoutstate, int depth) {
+
+static void __analyseItem(iOAnalyse inst, iONode item, int travel, int turnoutstate, int depth) {
   iOAnalyseData data = Data(inst);
   char key[32] = {'\0'};
-  iONode item = NULL;
+  iONode nextitem = NULL;
   int blockleftcounter = 0;
-  int prevtravel = -1;
-  Boolean creep = False;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d]",
+      wItem.getid(item), travel, depth);
 
-  const char * prevItemId = " ";
+  /*security*/
+  if ( depth > 10)
+    return;
 
   int x = 0;
   int y = 0;
 
-  const char * deep = " - ";
-    int i;
-    for( i = 0; i<depth; i++) {
-      deep = StrOp.fmt( "%s - ", deep );
-    }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sstart analyzing item [%s] travel: %d for state: %d", deep,
-        wSwitch.getid(turnout), travel, turnoutstate);
+  int xoffset = 0;
+  int yoffset = 0;
 
 
+  /* get next item */
+  travel = __travel(item, travel, &turnoutstate, &x, &y, "");
 
-  if( StrOp.equals(NodeOp.getName(turnout) , "sw" ) ) {
-
-    if( StrOp.equals( wItem.gettype(turnout), "right" ) || StrOp.equals( wItem.gettype(turnout), "left" ) ) {
-      if( turnoutstate == 0)
-        wSwitch.setstate( turnout, "straight");
-      else if (turnoutstate == 1)
-        wSwitch.setstate( turnout, "turnout");
-    } else if( StrOp.equals( wItem.gettype(turnout), "threeway" ) ) {
-      if( turnoutstate == 0)
-        wSwitch.setstate( turnout, "center");
-      else if (turnoutstate == 1)
-        wSwitch.setstate( turnout, "left");
-      else if (turnoutstate == 2)
-        wSwitch.setstate( turnout, "right");
-    }
-  } else if(  StrOp.equals(NodeOp.getName(turnout) , "bk" )) {
-    wBlock.setstate( turnout, "start");
-  }
-  ListOp.add( data->prelist, (obj) NodeOp.base.clone(turnout) );
-
-  /* start again at the currend turnout */
-  travel = __travel(turnout, turnout, travel, turnoutstate, &x, &y, "");
   if( travel >= 200 && travel < 300) {
     travel -= twoWayTurnout;
   }
   if( travel >= 300 && travel < 400) {
     travel -= threeWayTurnout;
   }
+  if( travel >= 400 && travel < 500) {
+    travel -= dcrossing;
+  }
 
-  int xoffset = 0;
-  int yoffset = 0;
+  xoffset += x;
+  yoffset += y;
 
-  do {
-    if( travel >= 0) {
+  switch(travel) {
+    case oriWest:
+      xoffset--;
+      __createKey( key, item, xoffset, yoffset, 0);
+       break;
+    case oriNorth:
+      yoffset--;
+      __createKey( key, item, xoffset, yoffset, 0);
+       break;
+    case oriEast:
+      xoffset++;
+      __createKey( key, item, xoffset, yoffset, 0);
+       break;
+    case oriSouth:
+      yoffset++;
+      __createKey( key, item, xoffset, yoffset, 0);
+       break;
+    }
 
-      xoffset += x;
-      yoffset += y;
-
-      switch(travel) {
-      case oriWest:
-        xoffset--;
-        __createKey( key, turnout, xoffset, yoffset, 0);
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing west",deep );
-         break;
-      case oriNorth:
-        yoffset--;
-        __createKey( key, turnout, xoffset, yoffset, 0);
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing north",deep );
-         break;
-      case oriEast:
-        xoffset++;
-        __createKey( key, turnout, xoffset, yoffset, 0);
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing east",deep );
-         break;
-      case oriSouth:
-        yoffset++;
-        __createKey( key, turnout, xoffset, yoffset, 0);
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sgoing south", deep );
-         break;
-      }
-
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "key: %s", key);
-      item = (iONode)MapOp.get( data->objectmap, key);
+    //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next key: %s", key);
+    nextitem = (iONode)MapOp.get( data->objectmap, key);
 
 
-      if( item != NULL) {
+    if( nextitem != NULL) {
 
 
-        int pretravel = __travel(turnout, item, travel, turnoutstate, &x, &y, key);
-        /* found Item is not in our direction. done. */
-        if( pretravel == itemNotInDirection || pretravel < 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "%sitem [%s] is not in our travel direction. this branch ends here.", deep,
-                    wItem.getid(item) );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
-          break;
-        }
+      if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
+        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route: [[%s][%s]]", wItem.getid(item), wItem.getid(nextitem));
+        return;
+      } else if( StrOp.equals(NodeOp.getName(nextitem) , "sw" ) ) {
 
+        int travelp = __travel(nextitem, travel, &turnoutstate, &x, &y, "");
 
-        if( StrOp.equals( wItem.getid(item), prevItemId )) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "same item move on!");
-        } else {
-
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sitem: [%s] id: [%s] travel: [%d]", deep,
-                                            NodeOp.getName(item), wItem.getid(item), travel);
-
-
-          if( !(StrOp.equals(NodeOp.getName(item) , "bk")  ) ) {
-            wSwitch.setstate( item, "-");
-            ListOp.add( data->prelist, (obj)NodeOp.base.clone(item) );
-          }
-        }
-
-
-        if( StrOp.equals(NodeOp.getName(item) , "bk" ) ) {
-
-          if( StrOp.equals( wItem.getid(turnout), wItem.getid(item) )) {
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "same block move on!");
-          } else {
-
-            wSwitch.setstate( item, "-");
-            ListOp.add( data->prelist, (obj)NodeOp.base.clone(item) );
-
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sfound route: [[%s]->[%s]]", deep,
-                wItem.getid(turnout), wItem.getid(item) );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
-
-            travel = -1;
-          break; /*DONE*/
-          }
-
-        } else {
-          prevtravel = travel;
-          travel = __travel(turnout, item, travel, turnoutstate, &x, &y, key);
-        }
-
-
-
-        prevItemId = wItem.getid(item);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a switch: [%s] state: [%d]", wItem.getid(nextitem), turnoutstate);
 
         /* item is a turnout -> coming from the points: dive into branches */
-        if( travel >= 200 && travel < 300) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
-          travel -= twoWayTurnout;
+        if( travelp >= 200 && travelp < 300) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TWO WAY" );
+          travelp -= twoWayTurnout;
           depth++;
-          __analyseTurnout(inst, item, prevtravel, 0, depth);
-          __analyseTurnout(inst, item, prevtravel, 1, depth);
-          break;
-        } else if( travel >= 300 && travel < 400) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
+          __analyseItem(inst, nextitem, travel, 0, depth);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
+          __analyseItem(inst, nextitem, travel, 1, depth);
+          return;
+        } else if( travelp >= 300 && travelp < 400) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
-          travel -= threeWayTurnout;
+          travelp -= threeWayTurnout;
           depth++;
-          __analyseTurnout(inst, item, prevtravel, 0, depth);
-          __analyseTurnout(inst, item, prevtravel, 1, depth);
-          __analyseTurnout(inst, item, prevtravel, 2, depth);
-          break;
+          __analyseItem(inst, nextitem, travelp, 0, depth);
+          __analyseItem(inst, nextitem, travelp, 1, depth);
+          __analyseItem(inst, nextitem, travelp, 2, depth);
+          return;
+        } else if( travelp >= 400 && travelp < 500) {
+          travelp -= dcrossing;
+          depth++;
+
+          /*
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " travel: %d travelp: %d", travel, prevtravel );
+
+            if( prevtravel == 0) {
+              __analyseItem(inst, item, travelp, 0, depth);
+              __analyseItem(inst, item, travelp, 1, depth);
+            } else if ( prevtravel == 1) {
+              __analyseItem(inst, item, travelp, 1, depth);
+              __analyseItem(inst, item, travelp, 2, depth);
+            } else if ( prevtravel == 2) {
+              __analyseItem(inst, item, travelp, 0, depth);
+              __analyseItem(inst, item, travelp, 3, depth);
+            } else if ( prevtravel == 3) {
+              __analyseItem(inst, item, travelp, 1, depth);
+              __analyseItem(inst, item, travelp, 3, depth);
+            }
+*/
+          return;
         }
-        /*TODO: 3-way, DKW ...*/
+
+      } // if bk || sw
 
 
-      } else { /*item==NULL*/
+      int validdir = __travel(nextitem, travel, &turnoutstate, &x, &y, "");
 
-         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sthis branch ends here.",deep);
-         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
-         break;
+      if( validdir == itemNotInDirection || validdir == -1) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "STOP NOT IN DIR" );
+        return;
+      } else {
+        depth++;
+        __analyseItem(inst, nextitem, travel, turnoutstate, depth);
       }
 
-    } else { /*travel*/
-     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XXXXXXXXXXXXXXXX PANIC this line should not appear!" );
-     break;
-    }
-  } while(foundBlock );
 
-
+    } else { /*item==NULL*/
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
+      return;
+    } /*item?NULL*/
 
 }
 
@@ -844,7 +917,6 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block [%s] in [%s] direction",
       wBlock.getid(block), inittravel);
-  
 
     int xoffset = 0;
     int yoffset = 0;
@@ -859,9 +931,9 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
       yoffset = 3;
     }
 
-
     /* start the recursion */
-    __analyseTurnout(inst, block, travel, 0, 0);
+    //__analyseTurnout(inst, block, travel, 0, 0);
+    __analyseItem(inst, block, travel, 0, 0);
 
 }
 
