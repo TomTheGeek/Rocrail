@@ -227,7 +227,10 @@ static const iONode _getModel( iOModel inst ) {
 
 static const iONode _getModPlan( iOModel inst ) {
   iOModelData data = Data(inst);
-  return ModPlanOp.getModPlan( data->moduleplan );
+  if(data->moduleplan != NULL )
+    return ModPlanOp.getModPlan( data->moduleplan );
+
+  return NULL;
 }
 
 static const iONode _getModule( iOModel inst, const char* modid ) {
@@ -2702,7 +2705,7 @@ static void _analyse( iOModel inst ) {
     /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
     LPFNGETANALYSERINT pInitFun = (void *) NULL;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "load Analyser library..." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "load Analyzer library..." );
 
     char* libpath = StrOp.fmt( "%s%c%s", AppOp.getLibPath(), SystemOp.getFileSeparator(), "analyser" );
     pLib = LibOp.inst( libpath );

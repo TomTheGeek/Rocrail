@@ -89,6 +89,8 @@ Starting with block A:
 #include "rocrail/wrapper/public/Track.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/ModPlan.h"
+#include "rocrail/wrapper/public/Module.h"
 
 static int instCnt = 0;
 
@@ -107,6 +109,7 @@ static void __del( void* inst ) {
     /* Cleanup data->xxx members...*/
     MapOp.base.del(data->objectmap);
     MapOp.base.del(data->prelist);
+    MapOp.base.del(data->bklist);
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -169,20 +172,25 @@ static int __getOri(iONode item ) {
 }
 
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
-  return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, wItem.getz(node)+zoffset );
+  return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, 0 );
+  //return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, wItem.getz(node)+zoffset );
 }
 
-static iOList __prepare(iOAnalyse inst, iOList list) {
+static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
   iOAnalyseData data = Data(inst);
-  iOList bklist = ListOp.inst();
+  //iOList bklist = ListOp.inst();
   char key[32] = {'\0'};
-  iONode node = (iONode)ListOp.first( list );
-  
+  iONode node = (iONode)NodeOp.base.clone( (iONode)ListOp.first( list ));
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mod x: %d y: %d ",
+            modx, mody );
+
   while( node != NULL ) {
     if( StrOp.equals( wBlock.name(), NodeOp.getName(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  block %s with key %s", 
-          wBlock.getid(node), __createKey( key, node, 0, 0, 0) );
-      ListOp.add( bklist, (obj)node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  block %s with key (old) %s",
+          wBlock.getid(node), __createKey( key, node, 0+modx, 0+mody, 0) );
+
+      ListOp.add( data->bklist, (obj)node );
     }
     { /*blocks as well in the map!*/
       /* put the object in the map */
@@ -193,10 +201,13 @@ static iOList __prepare(iOAnalyse inst, iOList list) {
       }
 
       const char* type = wItem.gettype(node);
-      __createKey( key, node, 0, 0, 0);
+      __createKey( key, node, 0+modx, 0+mody, 0);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
           key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
       MapOp.put( data->objectmap, key, (obj)node);
+
+      wItem.setx( node, wItem.getx(node)+modx);
+      wItem.sety( node, wItem.gety(node)+mody);
 
       /* put keys for all covered fields */
       if( StrOp.equals( NodeOp.getName(node), "sw" ) ) {
@@ -207,12 +218,14 @@ static iOList __prepare(iOAnalyse inst, iOList list) {
             __createKey( key, node, 1, 0, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
             MapOp.put( data->objectmap, key, (obj)node);
           }
           if( StrOp.equals( ori, "north" ) || StrOp.equals( ori, "south" ) ) {
             __createKey( key, node, 0, 1, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
             MapOp.put( data->objectmap, key, (obj)node);
           }
         }
@@ -232,12 +245,14 @@ static iOList __prepare(iOAnalyse inst, iOList list) {
             __createKey( key, node, i, 0, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
             MapOp.put( data->objectmap, key, (obj)node);
           }
           if( StrOp.equals( ori, "north" ) || StrOp.equals( ori, "south" ) ) {
             __createKey( key, node, 0, i, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
             MapOp.put( data->objectmap, key, (obj)node);
           }
         }
@@ -245,9 +260,15 @@ static iOList __prepare(iOAnalyse inst, iOList list) {
 
 
     }
-    node = (iONode)ListOp.next( list );
+
+    iONode nextnode = (iONode)ListOp.next( list );
+    if( nextnode != NULL)
+      node = (iONode)NodeOp.base.clone( nextnode);
+    else
+      node = NULL;
+
   };
-  return bklist;
+  //return bklist;
 }
 
 
@@ -625,7 +646,7 @@ static int __travel( iONode block, iONode item, int travel, int turnoutstate, in
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ITEM==NULL");
   }
 
-  return -1;
+  return itemNotInDirection;
 }
 
 static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int turnoutstate, int depth) {
@@ -679,7 +700,6 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
   if( travel >= 300 && travel < 400) {
     travel -= threeWayTurnout;
   }
-
 
   int xoffset = 0;
   int yoffset = 0;
@@ -886,20 +906,45 @@ static void __analyseList(iOAnalyse inst) {
 
 static void _analyse(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  iOList bklist = NULL;
+  //iOList bklist = NULL;
   iONode block = NULL;
   int cx, cy;
-  iOList list = data->model->getLevelItems( data->model, 0, &cx, &cy, False);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, 
-      "Trackplan: %d objects at level 0 and sizes %d x %d", ListOp.size(list), cx, cy );
-  
+  int zlevel = 0;
+
   MapOp.clear(data->objectmap);
   ListOp.clear(data->prelist);
-  bklist = __prepare(inst, list);
+  ListOp.clear(data->bklist);
+
+  iONode modplan = data->model->getModPlan( data->model);
+  if( modplan == NULL) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "not a modplan" );
+
+    iOList list = data->model->getLevelItems( data->model, 0, &cx, &cy, True);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "Trackplan: %d objects at level 0 and sizes %d x %d", ListOp.size(list), cx, cy );
+
+    __prepare(inst, list, 0,0);
+  } else {
+    iONode mod = wModPlan.getmodule( modplan );
+    while( mod != NULL ) {
+
+      iOList list = data->model->getLevelItems( data->model, zlevel, &cx, &cy, True);
+
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+           "preparing module: %s", wModule.gettitle( mod) );
+      __prepare(inst, list, wModule.getx(mod), wModule.gety(mod));
+
+      zlevel++;
+      mod = wModPlan.nextmodule( modplan, mod );
+    };
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "  it contains %d blocks", ListOp.size(bklist) );
+      "  it contains %d blocks", ListOp.size(data->bklist) );
   
-  block = (iONode)ListOp.first(bklist);
+  block = (iONode)ListOp.first(data->bklist);
   while(block) {
 
     const char * blockori = wItem.getori(block);
@@ -907,6 +952,7 @@ static void _analyse(iOAnalyse inst) {
     if(  blockori == NULL) {
       blockori = "west";
     }
+
 
     if( StrOp.equals( blockori, "west" ) || StrOp.equals( blockori, "east" ) ) {
       __analyseBlock(inst,block, "west");
@@ -916,14 +962,12 @@ static void _analyse(iOAnalyse inst) {
       __analyseBlock(inst,block, "south");
     }
 
-    block = (iONode)ListOp.next(bklist);
+
+    block = (iONode)ListOp.next(data->bklist);
   }
-  
 
   __analyseList(inst);
 
-
-  ListOp.base.del(bklist);
 }
 
 
@@ -938,6 +982,7 @@ static struct OAnalyse* _inst( iOModel model, iONode plan ) {
   data->plan  = plan;
   data->objectmap = MapOp.inst();
   data->prelist = ListOp.inst();
+  data->bklist = ListOp.inst();
   instCnt++;
   return __Analyse;
 }
