@@ -719,6 +719,18 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
 
       if( item != NULL) {
 
+
+        int pretravel = __travel(turnout, item, travel, turnoutstate, &x, &y, key);
+        /* found Item is not in our direction. done. */
+        if( pretravel == itemNotInDirection || pretravel < 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "%sitem [%s] is not in our travel direction. this branch ends here.", deep,
+                    wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
+          break;
+        }
+
+
         if( StrOp.equals( wItem.getid(item), prevItemId )) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "same item move on!");
         } else {
@@ -743,8 +755,6 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
             wSwitch.setstate( item, "-");
             ListOp.add( data->prelist, (obj)NodeOp.base.clone(item) );
 
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%sWe found a Block! [%s]", deep, wItem.getid(item) );
-
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sfound route: [[%s]->[%s]]", deep,
                 wItem.getid(turnout), wItem.getid(item) );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
@@ -758,14 +768,7 @@ static void __analyseTurnout(iOAnalyse inst, iONode turnout, int travel, int tur
           travel = __travel(turnout, item, travel, turnoutstate, &x, &y, key);
         }
 
-        /* found Item is not in our direction. done. */
-        if( travel == itemNotInDirection) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "%sitem [%s] is not in our travel direction. this branch ends here.", deep,
-                    wItem.getid(item) );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
-          break;
-        }
+
 
         prevItemId = wItem.getid(item);
 
