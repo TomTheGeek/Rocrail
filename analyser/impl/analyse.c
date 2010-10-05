@@ -932,8 +932,8 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           travelp -= threeWayTurnout;
           depth++;
           __analyseItem(inst, nextitem, route, travelp, 0, depth);
-          __analyseItem(inst, nextitem, route, travelp, 1, depth);
-          __analyseItem(inst, nextitem, route, travelp, 2, depth);
+          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 1, depth);
+          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 2, depth);
           return;
         } else if( travelp >= 400 && travelp < 500) {
 
@@ -946,7 +946,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
             __analyseItem(inst, nextitem, route, travelp, 0, depth);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 2 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 2, depth);
+            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 2, depth);
             return;
           } else if ( travelp == 1) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
@@ -955,13 +955,13 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
             if( wSwitch.isdir(nextitem) ) // right
               branch = 3;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, branch, depth);
+            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, branch, depth);
             return;
           } else if ( travelp == 2) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
             __analyseItem(inst, nextitem, route, travelp, 0, depth);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 3 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 3, depth);
+            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 3, depth);
             return;
           } else if ( travelp == 3) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
@@ -970,7 +970,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
             if( wSwitch.isdir(nextitem)  ) // right
               branch = 2;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, branch, depth);
+            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, branch, depth);
             return;
           }
 
@@ -985,7 +985,8 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
 
     } else { /*item==NULL*/
 
-      /* TODO: delete route*/
+      /*delete route*/
+      RouteOp.base.del( route);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
       return;
