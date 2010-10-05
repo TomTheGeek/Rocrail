@@ -600,7 +600,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               wSwitch.isdir(item),itemori,travel, turnoutstate );*/
 
           if( !wSwitch.isdir(item)  ) { // left
-            if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+            if( StrOp.equals( itemori, "west" ) ) {
               if( (travel == 0) ) {
                 if ( turnoutstate == 0) {
                   return travel+dcrossing;
@@ -627,6 +627,37 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 if ( turnoutstate == 1) {
                   return travel+dcrossing;
                 } else if( turnoutstate == 3) {
+                  return oriWest+dcrossing;
+                }
+              }
+            }
+            if( StrOp.equals( itemori, "east" ) ) {
+              if( (travel == 0) ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriEast+dcrossing;
+                }
+              } else if ( travel == 2 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
                   return oriWest+dcrossing;
                 }
               }
@@ -639,7 +670,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               }
             }
           } else if( wSwitch.isdir(item) ) { // right
-            if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+            if( StrOp.equals( itemori, "west" )) {
               if( (travel == 0) ) {
                 if ( turnoutstate == 0) {
                   return travel+dcrossing;
@@ -669,6 +700,37 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                   return oriEast+dcrossing;
                 }
               }
+            }
+              if( StrOp.equals( itemori, "east" )) {
+               if( (travel == 0) ) {
+                 if ( turnoutstate == 0) {
+                   return travel+dcrossing;
+                 } else if( turnoutstate == 3) {
+                   return oriNorth+dcrossing;
+                 }
+               } else if ( travel == 1 ) {
+                 if ( turnoutstate == 1) {
+                   return travel+dcrossing;
+                 } else if( turnoutstate == 2) {
+                   return oriWest+dcrossing;
+                 }
+               } else if ( travel == 2 ) {
+                 if ( turnoutstate == 0) {
+                   *x = 1;
+                   return travel+dcrossing;
+                 } else if( turnoutstate == 2) {
+                   *x = 1;
+                   return oriSouth+dcrossing;
+                 }
+               } else if ( travel == 3 ) {
+                 if ( turnoutstate == 1) {
+                   *x = 1;
+                   return travel+dcrossing;
+                 } else if( turnoutstate == 3) {
+                   *x = 1;
+                   return oriEast+dcrossing;
+                 }
+               }
             }
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
               if( (travel == 0) ) {
@@ -810,11 +872,19 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
 
   const char * state = "-";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
-    if ( StrOp.equals(wItem.gettype(item), "right" ) || StrOp.equals(wItem.gettype(item), "left" )  ) {
+    if ( StrOp.equals(wItem.gettype(item), "right" ) || StrOp.equals(wItem.gettype(item), "left" ) ) {
     state = turnoutstate?"straight":"turnout";
+    } else if ( StrOp.equals(wItem.gettype(item), "dcrossing" )  ) {
+      if( turnoutstate == 0) state = "straight";
+      if( turnoutstate == 1) state = "thrown";
+      if( turnoutstate == 2) state = "left";
+      if( turnoutstate == 3) state = "right";
+    } else if ( StrOp.equals(wItem.gettype(item), "threeway" )  ) {
+      if( turnoutstate == 0) state = "center";
+      if( turnoutstate == 1) state = "left";
+      if( turnoutstate == 2) state = "right";
     }
   } else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
-
     state = "bka [-]";
     if( StrOp.equals( wItem.getori(item), "west" ) && travel == 0){
       state = "bka [+]";
@@ -963,38 +1033,32 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
 
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
 
-          if( travelp == 0) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 0, depth);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 2 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 2, depth);
-            return;
-          } else if ( travelp == 1) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 1, depth);
-            int branch = 2;
-            if( wSwitch.isdir(nextitem) ) // right
-              branch = 3;
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, branch, depth);
-            return;
-          } else if ( travelp == 2) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 0, depth);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 3 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 3, depth);
-            return;
-          } else if ( travelp == 3) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, route, travelp, 1, 0);
-            int branch = 3;
-            if( wSwitch.isdir(nextitem)  ) // right
-              branch = 2;
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
-            __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, branch, depth);
-            return;
+          const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
+                             {1,2},{0,3},{1,3},{0,1},
+                             {0,3},{1,3},{0,2},{1,2},
+                             {1,3},{0,2},{1,2},{0,3}};
+
+          const int right[16][2] = {{0,2},{1,3},{0,3},{1,2},
+                              {1,3},{0,3},{1,2},{0,2},
+                              {0,2},{1,2},{0,2},{1,3},
+                              {1,2},{0,2},{1,3},{0,3}};
+
+          int state1 = 0;
+          int state2 = 0;
+
+          if( !wSwitch.isdir(nextitem) ) {// left
+            state1 = left[__getOri(nextitem)*4+travelp][0];
+            state2 = left[__getOri(nextitem)*4+travelp][1];
+          } else if( wSwitch.isdir(nextitem) ) {// right
+            state1 = right[__getOri(nextitem)*4+travelp][0];
+            state2 = right[__getOri(nextitem)*4+travelp][1];
           }
 
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state1, wItem.getid(nextitem));
+          __analyseItem(inst, nextitem, route, travelp, state1, depth);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state2, wItem.getid(nextitem));
+          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, state2, depth);
+          return;
         }
 
       } // if bk || sw
