@@ -187,8 +187,13 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
   //iOList bklist = ListOp.inst();
   char key[32] = {'\0'};
 
+
+  iONode nodetmp = (iONode)ListOp.first( list );
+  iONode node = NULL;
+
   /* clone the node */
-  iONode node = (iONode)NodeOp.base.clone( (iONode)ListOp.first( list ));
+  if( nodetmp != NULL)
+    node = (iONode)NodeOp.base.clone( nodetmp);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mod x: %d y: %d ",
             modx, mody );
