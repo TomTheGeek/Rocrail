@@ -62,9 +62,16 @@ static int __count(void) {
 static void* __properties(void* inst) {
   return NULL;
 }
+
 static struct OBase* __clone( void* inst ) {
-  return NULL;
+  iOList list = ListOp.inst();
+  int i = 0;
+  for( i = 0; i < ListOp.size(inst); i++) {
+    ListOp.add(list, ListOp.get(inst, i));
+  }
+   return list;
 }
+
 static Boolean __equals( void* inst1, void* inst2 ) {
   return False;
 }
