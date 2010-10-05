@@ -77,6 +77,12 @@ Starting with block A:
 
 */
 
+/*
+For the Analyzer to work the Plan has to fullfill:
+- all items must be connected without space
+- only one item at one position
+ */
+
 /* sensitive code don't touch! */
 
 #include "analyser/impl/analyse_impl.h"
@@ -662,11 +668,66 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-            else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+            else if( StrOp.equals( itemori, "north" )) {
               if( (travel == 0) ) {
-
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriWest+dcrossing;
+                }
               } else if ( travel == 2 ) {
-
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 1) {
+                  return oriEast+dcrossing;
+                }
+              }
+            }
+            else if( StrOp.equals( itemori, "south" )) {
+              if( (travel == 0) ) {
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriWest+dcrossing;
+                }
+              } else if ( travel == 2 ) {
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriEast+dcrossing;
+                }
               }
             }
           } else if( wSwitch.isdir(item) ) { // right
@@ -732,11 +793,66 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                  }
                }
             }
-            else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+              else if( StrOp.equals( itemori, "north" )) {
               if( (travel == 0) ) {
-
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriEast+dcrossing;
+                }
               } else if ( travel == 2 ) {
-
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  return oriWest+dcrossing;
+                }
+              }
+            }
+            else if( StrOp.equals( itemori, "south" )) {
+              if( (travel == 0) ) {
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  return oriSouth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriEast+dcrossing;
+                }
+              } else if ( travel == 2 ) {
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 3 ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriWest+dcrossing;
+                }
               }
             }
           }
@@ -1022,9 +1138,14 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
           travelp -= threeWayTurnout;
           depth++;
+
+          /* clone before recursion! */
+          iOList listA = (iOList)ListOp.base.clone( route);
+          iOList listB = (iOList)ListOp.base.clone( route);
+
           __analyseItem(inst, nextitem, route, travelp, 0, depth);
-          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 1, depth);
-          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, 2, depth);
+          __analyseItem(inst, nextitem, listA, travelp, 1, depth);
+          __analyseItem(inst, nextitem, listB, travelp, 2, depth);
           return;
         } else if( travelp >= 400 && travelp < 500) {
 
@@ -1054,10 +1175,13 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
             state2 = right[__getOri(nextitem)*4+travelp][1];
           }
 
+          /* clone before recursion! */
+          iOList listA = (iOList)ListOp.base.clone( route);
+
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state1, wItem.getid(nextitem));
           __analyseItem(inst, nextitem, route, travelp, state1, depth);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state2, wItem.getid(nextitem));
-          __analyseItem(inst, nextitem, (iOList)ListOp.base.clone( route), travelp, state2, depth);
+          __analyseItem(inst, nextitem, listA, travelp, state2, depth);
           return;
         }
 
