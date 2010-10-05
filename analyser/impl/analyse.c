@@ -180,6 +180,8 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
   iOAnalyseData data = Data(inst);
   //iOList bklist = ListOp.inst();
   char key[32] = {'\0'};
+
+  /* clone the node */
   iONode node = (iONode)NodeOp.base.clone( (iONode)ListOp.first( list ));
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mod x: %d y: %d ",
@@ -217,14 +219,14 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
           if( StrOp.equals( ori, "east" ) || StrOp.equals( ori, "west" ) ) {
             __createKey( key, node, 1, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             MapOp.put( data->objectmap, key, (obj)node);
           }
           if( StrOp.equals( ori, "north" ) || StrOp.equals( ori, "south" ) ) {
             __createKey( key, node, 0, 1, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             MapOp.put( data->objectmap, key, (obj)node);
@@ -244,14 +246,14 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
           if( StrOp.equals( ori, "east" ) || StrOp.equals( ori, "west" ) ) {
             __createKey( key, node, i, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             MapOp.put( data->objectmap, key, (obj)node);
           }
           if( StrOp.equals( ori, "north" ) || StrOp.equals( ori, "south" ) ) {
             __createKey( key, node, 0, i, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding EXTRA key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             MapOp.put( data->objectmap, key, (obj)node);
@@ -267,7 +269,6 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       node = (iONode)NodeOp.base.clone( nextnode);
     else
       node = NULL;
-
   };
   //return bklist;
 }
@@ -352,14 +353,18 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
           if( (travel == 2) ) {
             *x = step;
-          }
+            return travel;
+          } else if ( travel == 0)
+            return travel;
         }
         else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
           if( (travel == 3) ) {
             *y = step;
-          }
+            return travel;
+          } else if ( travel == 1)
+            return travel;
         }
-        return travel;
+        return itemNotInDirection;
       }
 
       /* switch */
@@ -635,10 +640,34 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
             }
           } else if( wSwitch.isdir(item) ) { // right
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
-              if( (travel == 1) ) {
-
+              if( (travel == 0) ) {
+                if ( turnoutstate == 0) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  return oriNorth+dcrossing;
+                }
+              } else if ( travel == 1 ) {
+                if ( turnoutstate == 1) {
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  return oriWest+dcrossing;
+                }
+              } else if ( travel == 2 ) {
+                if ( turnoutstate == 0) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 3) {
+                  *x = 1;
+                  return oriSouth+dcrossing;
+                }
               } else if ( travel == 3 ) {
-
+                if ( turnoutstate == 1) {
+                  *x = 1;
+                  return travel+dcrossing;
+                } else if( turnoutstate == 2) {
+                  *x = 1;
+                  return oriEast+dcrossing;
+                }
               }
             }
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
@@ -772,11 +801,30 @@ static void __analyseItem(iOAnalyse inst, iONode item, int travel, int turnoutst
   iONode nextitem = NULL;
   int blockleftcounter = 0;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d]",
-      wItem.getid(item), travel, depth);
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d] tos: [%d]",
+      wItem.getid(item), travel, depth, turnoutstate);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d]",
+        wItem.getid(item), travel, depth, turnoutstate);
+
+
+  const char * state = "-";
+  if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
+    if ( StrOp.equals(wItem.gettype(item), "right" ) || StrOp.equals(wItem.gettype(item), "left" )  ) {
+    state = turnoutstate?"straight":"turnout";
+    }
+  } else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
+    state = "start";
+  }
+
+
+  /* LIST */
+  iONode itemA = (iONode)NodeOp.base.clone( item);
+  wItem.setstate(itemA, state);
+  ListOp.add( data->prelist, (obj)itemA );
 
   /*security*/
-  if ( depth > 10)
+  if ( depth > 100)
     return;
 
   int x = 0;
@@ -826,31 +874,52 @@ static void __analyseItem(iOAnalyse inst, iONode item, int travel, int turnoutst
     nextitem = (iONode)MapOp.get( data->objectmap, key);
 
 
+
     if( nextitem != NULL) {
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NEXT ITEM: %s", NodeOp.getName(nextitem) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "NEXT ITEM: %s TOS: [%d]",
+          NodeOp.getName(nextitem), turnoutstate_out );
+
+      int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
+      if( travelp == itemNotInDirection || travelp == -1) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "STOP NOT IN DIR" );
+        return;
+      }
+
 
       if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d]",
+                wItem.getid(nextitem), travel, depth, turnoutstate);
+
+        /* LIST */
+        iONode itemA = (iONode)NodeOp.base.clone( nextitem);
+        wItem.setstate(itemA, "stop");
+        ListOp.add( data->prelist, (obj)itemA );
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     ");
+
+
         //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route: [[%s][%s]]", wItem.getid(item), wItem.getid(nextitem));
         return;
       } else if( StrOp.equals(NodeOp.getName(nextitem) , "sw" ) ) {
 
-        int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a switch: [%s] state: [%d] travelp: [%d]",
+         /*int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, ""); */
+       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next is a switch: [%s] state: [%d] travelp: [%d]",
             wItem.getid(nextitem), turnoutstate_out, travelp);
+
+       turnoutstate = turnoutstate_out;
 
         /* item is a turnout -> coming from the points: dive into branches */
         if( travelp >= 200 && travelp < 300) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TWO WAY" );
           travelp -= twoWayTurnout;
           depth++;
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
           __analyseItem(inst, nextitem, travel, 0, depth);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
           __analyseItem(inst, nextitem, travel, 1, depth);
+
           return;
         } else if( travelp >= 300 && travelp < 400) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "THREE WAY");
@@ -866,45 +935,47 @@ static void __analyseItem(iOAnalyse inst, iONode item, int travel, int turnoutst
           travelp -= dcrossing;
           depth++;
 
-     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
 
-            if( travelp == 0) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into STAIGHT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 0, depth);
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into LEFT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 2, depth);
-            } else if ( travelp == 1) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into THROWN branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 1, depth);
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into LEFT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 2, depth);
-            } else if ( travelp == 2) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into STRAIGHT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 0, depth);
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into RIGHT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 3, depth);
-            } else if ( travelp == 3) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into THROWN branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 1, 0);
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into RIGHT branch [%s]", wItem.getid(nextitem));
-              __analyseItem(inst, nextitem, travelp, 3, 0);
-            }
+          if( travelp == 0) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 0, depth);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 2 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 2, depth);
+            return;
+          } else if ( travelp == 1) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 1, depth);
+            int branch = 2;
+            if( wSwitch.isdir(nextitem) ) // right
+              branch = 3;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, branch, depth);
+            return;
+          } else if ( travelp == 2) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 0 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 0, depth);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 3 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 3, depth);
+            return;
+          } else if ( travelp == 3) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into 1 branch [%s]", wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, 1, 0);
+            int branch = 3;
+            if( wSwitch.isdir(nextitem)  ) // right
+              branch = 2;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", branch, wItem.getid(nextitem));
+            __analyseItem(inst, nextitem, travelp, branch, depth);
+            return;
+          }
 
-          return;
         }
 
       } // if bk || sw
 
 
-      int validdir = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
-
-      if( validdir == itemNotInDirection || validdir == -1) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "STOP NOT IN DIR" );
-        return;
-      } else {
-        depth++;
-        __analyseItem(inst, nextitem, travel, turnoutstate, depth);
-      }
+      depth++;
+      __analyseItem(inst, nextitem, travel, turnoutstate, depth);
 
 
     } else { /*item==NULL*/
@@ -945,7 +1016,6 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
     }
 
     /* start the recursion */
-    //__analyseTurnout(inst, block, travel, 0, 0);
     __analyseItem(inst, block, travel, 0, 0);
 
 }
@@ -954,8 +1024,6 @@ static void __analyseList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
 
   const char * prevItemId = "";
-
-
 
   iONode item = (iONode)ListOp.first( data->prelist );
     while(item) {
@@ -968,16 +1036,15 @@ static void __analyseList(iOAnalyse inst) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Route:");
         }
 
-
-      } else if ( StrOp.equals(NodeOp.getName(item) , "sw" )) {
+      } /*else if ( StrOp.equals(NodeOp.getName(item) , "sw" )) {
         if ( !StrOp.equals(wSwitch.getstate(item) , "-" ) ) {
                   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     subroute: [%s] is [%s]", wItem.getid(item), wSwitch.getstate(item));
                 }
-      }
+      }*/
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          " [%s][%s]", NodeOp.getName(item),
-          wItem.getid(item) );
+          " [%s][%s][%s]", NodeOp.getName(item),
+          wItem.getid(item), wItem.getstate(item) );
 
 
       prevItemId = wItem.getid(item);
