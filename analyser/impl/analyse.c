@@ -989,7 +989,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
   const char * state = "-";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
     if ( StrOp.equals(wItem.gettype(item), "right" ) || StrOp.equals(wItem.gettype(item), "left" ) ) {
-    state = turnoutstate?"straight":"turnout";
+    state = turnoutstate?"turnout":"straight";
     } else if ( StrOp.equals(wItem.gettype(item), "dcrossing" )  ) {
       if( turnoutstate == 0) state = "straight";
       if( turnoutstate == 1) state = "thrown";
