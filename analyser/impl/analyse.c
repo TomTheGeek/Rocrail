@@ -1233,7 +1233,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     } else { /*item==NULL*/
 
       /*delete route (ended not at a block)*/
-      RouteOp.base.del( route);
+      NodeOp.base.del( route);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
       return;
@@ -1280,7 +1280,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 
 static void __analyseList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  iONode model = ModelOp.getModel( data->model);
+  iONode model = data->model->getModel( data->model);
   iONode stlist = wPlan.getstlist(model);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
@@ -1338,18 +1338,18 @@ static void __analyseList(iOAnalyse inst) {
         iONode tracknode = NULL;
 
         if( StrOp.equals( NodeOp.getName(item), "tk") ) {
-          iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
-          tracknode = TrackOp.base.properties(track);
+          iOTrack track = data->model->getTrack( data->model, wItem.getid(item) );
+          tracknode = track->base.properties(track);
         }
 
         if( StrOp.equals( NodeOp.getName(item), "fb") ) {
-          iOFBack track = ModelOp.getFBack( data->model, wItem.getid(item) );
-          tracknode = FBackOp.base.properties(track);
+          iOFBack track = data->model->getFBack( data->model, wItem.getid(item) );
+          tracknode = track->base.properties(track);
         }
 
         if( StrOp.equals( NodeOp.getName(item), "sg") ) {
-          iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
-          tracknode = SignalOp.base.properties(track);
+          iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
+          tracknode = track->base.properties(track);
         }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
