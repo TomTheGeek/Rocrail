@@ -1286,7 +1286,7 @@ static void __analyseList(iOAnalyse inst) {
   const char * bkbside = NULL;
 
   /* SET TO False -> the plan will not be modified!*/
-  Boolean doIt = False;
+  Boolean doIt = True;
 
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
