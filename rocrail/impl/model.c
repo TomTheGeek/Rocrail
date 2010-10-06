@@ -2317,6 +2317,12 @@ static iOText _getText( iOModel inst, const char* id ) {
 }
 
 
+static iOTrack _getTrack( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  return (iOTrack)MapOp.get( o->trackMap, id );
+}
+
+
 static long _getTime( iOModel inst ) {
   iOModelData o = Data(inst);
   return ControlOp.getTime( AppOp.getControl() );
@@ -2458,6 +2464,7 @@ static void _init( iOModel inst ) {
   __clearMap( o->stageMap );
   __clearMap( o->actionMap );
   __clearMap( o->textMap );
+  __clearMap( o->trackMap );
   __clearMap( o->locationMap );
   __clearMap( o->scheduleMap );
 
@@ -2482,6 +2489,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->blockMap   , wBlockList.name(), wBlock.name(), (item_inst)BlockOp.inst, NULL  );
   _createMap( o, o->blockGroupMap, wLinkList.name(), wLink.name(), (item_inst)BlockGroupOp.inst, NULL  );
   _createMap( o, o->textMap    , wTextList.name(), wText.name(), (item_inst)TextOp.inst, NULL  );
+  _createMap( o, o->trackMap   , wTrackList.name(), wTrack.name(), (item_inst)TrackOp.inst, NULL  );
   _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, NULL );
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
   _createMap( o, o->waybillMap , wWaybillList.name(), wWaybill.name(), NULL, NULL );

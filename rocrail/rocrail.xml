@@ -651,7 +651,7 @@
   </object>
 
 
-  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,operator,route,fback,switch,signal,tt,output,text,seltab,action,$rocint/public/blockbase" remark="The plan model">
+  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,operator,route,fback,switch,track,signal,tt,output,text,seltab,action,$rocint/public/blockbase" remark="The plan model">
     <typedef def="void (*model_listener)(obj,iONode)"/>
     <fun name="inst" vt="this">
       <param name="planfile" vt="const char*" remark="PLan filename"/>
@@ -738,6 +738,10 @@
     <fun name="getBlock" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="BlocID to search for"/>
+    </fun>
+    <fun name="getTrack" vt="iOTrack">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="TrackID to search for"/>
     </fun>
     <fun name="getBlock4Signal" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
