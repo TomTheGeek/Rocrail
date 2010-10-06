@@ -88,6 +88,7 @@ public:
   void OnMouse(wxMouseEvent& event);
   void OnClose(wxCloseEvent& event);
   void OnSave(wxCommandEvent& event);
+  void OnAnalyze(wxCommandEvent& event);
   void OnSaveAs(wxCommandEvent& event);
   void OnOpen(wxCommandEvent& event);
   void OnNew(wxCommandEvent& event);
@@ -370,6 +371,7 @@ enum
 {
     // menu items
     ME_Quit = 10000,
+    ME_Analyze,
     ME_Save,
     ME_SaveAs,
     ME_Upload,

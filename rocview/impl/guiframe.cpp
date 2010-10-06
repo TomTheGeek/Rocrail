@@ -212,6 +212,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_PowerEvent, RocGuiFrame::OnPowerEvent)
 
     EVT_MENU( wxID_EXIT         , RocGuiFrame::OnQuit)
+    EVT_MENU( ME_Analyze        , RocGuiFrame::OnAnalyze)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
@@ -1272,6 +1273,8 @@ void RocGuiFrame::initFrame() {
   menuFile->Append(ME_SaveAs, wxGetApp().getMenu("saveas"), wxGetApp().getTip("saveas") );
 
   menuFile->AppendSeparator();
+  menuFile->Append(ME_Analyze, wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  menuFile->AppendSeparator();
 
   wxMenuItem *upload_menuFile = new wxMenuItem(menuFile, ME_Upload, wxGetApp().getMenu("upload"), wxGetApp().getTip("upload") );
   upload_menuFile->SetBitmap(*_img_upload);
@@ -2022,6 +2025,16 @@ void RocGuiFrame::Save() {
   // TODO: why this? wxGetApp().setStayOffline( true );
   wxGetApp().setLocalModelModified(false);
 }
+
+void RocGuiFrame::OnAnalyze( wxCommandEvent& event ) {
+  if( !wxGetApp().isOffline() ) {
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.analyze );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
 
 void RocGuiFrame::OnSave( wxCommandEvent& event ) {
   if( wxGetApp().isOffline() ) {
@@ -2813,6 +2826,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
     //if( mi != NULL ) mi->Enable( l_bOffline );
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_Analyze);
+  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
   if( mi != NULL ) mi->Enable( (!l_bOffline && !wxGetApp().isConsoleMode()) );
   mi = menuBar->FindItem(ME_Quit);

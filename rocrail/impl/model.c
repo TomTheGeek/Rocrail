@@ -2707,6 +2707,12 @@ typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode );
 static void _analyse( iOModel inst ) {
   iOModelData data = Data(inst);
   /* Load the analyzer shared library. */
+  char* stamp = StrOp.createStampNoDots();
+  char* stampfile = StrOp.fmt("%s.%s.xml", data->fileName, stamp);
+  const char* filename = data->fileName;
+  StrOp.free(stamp);
+  ModelOp.saveAs(inst, stampfile);
+  data->fileName = filename;
 
   if( data->analyser == NULL ) {
     iOLib    pLib = NULL;

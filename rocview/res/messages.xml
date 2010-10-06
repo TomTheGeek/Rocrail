@@ -15445,4 +15445,7 @@
   <Msg id="decodertype">
     <en txt="Decoder type"/>
   </Msg>
+  <Msg id="analyze">
+    <en txt="Analyze" tip="Analyze track plan for generating routes."/>
+  </Msg>
 </Messages>

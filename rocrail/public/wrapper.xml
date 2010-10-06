@@ -628,6 +628,7 @@
     <const name="setmodplan" vt="string" val="setmodplan"/>
     <const name="getmodule" vt="string" val="getmodule"/>
     <const name="setmodule" vt="string" val="setmodule"/>
+    <const name="analyze" vt="string" val="analyze"/>
     <const name="analog" vt="string" val="analog"/>
     <const name="dcc" vt="string" val="dcc"/>
     <const name="reset" vt="string" val="reset"/>
