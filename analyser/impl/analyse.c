@@ -1288,13 +1288,10 @@ static void __analyseList(iOAnalyse inst) {
   /* SET TO False -> the plan will not be modified!*/
   Boolean doIt = False;
 
-  /* TODO: clear the stlist (how?)*/
-
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
 
     iONode newRoute = NodeOp.inst( "st", NULL, ELEMENT_NODE );
-
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route:");
     iONode item = (iONode)ListOp.first( routelist );
@@ -1370,9 +1367,20 @@ static void __analyseList(iOAnalyse inst) {
       item = (iONode)ListOp.next( routelist );
     }
 
+    /* merge into stlist */
     if( doIt) {
+      int childcnt = NodeOp.getChildCnt( stlist);
+      int i;
+      for( i = 0; i <childcnt; i++) {
+        iONode child = NodeOp.getChild( stlist, i);
+        if( StrOp.equals(wItem.getid( child), wItem.getid(newRoute) )) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                         "remove child [%s]", wItem.getid( child));
+          NodeOp.removeChild( stlist, child );
+        }
+      }
       NodeOp.addChild( stlist, newRoute );
-    }
+    } // doIt
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
     routelist = (iOList)ListOp.next( data->prelist );
