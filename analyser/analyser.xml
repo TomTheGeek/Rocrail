@@ -22,6 +22,7 @@
 
   <object name="Analyse" interface="$../rocint/rocint.xml:AnalyserInt" use="node,map" include="$rocint/public/analyserint,$rocrail/public/model" remark="Track plan analyser.">
     <fun name="inst" vt="this">
+      <param name="model" vt="iOModel" remark="Model object"/>
       <param name="trackplan" vt="iONode" remark="Track plan"/>
     </fun>
     <data>

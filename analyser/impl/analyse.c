@@ -100,6 +100,12 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
 
+#include "rocrail/public/track.h"
+#include "rocrail/public/switch.h"
+#include "rocrail/public/signal.h"
+#include "rocrail/public/fback.h"
+#include "rocrail/public/route.h"
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -1394,7 +1400,8 @@ static void __analyseList(iOAnalyse inst) {
 }
 
 
-static void _analyse(iOAnalyse inst) {
+static void _analyse(iIAnalyserInt o) {
+  iOAnalyse inst = (iOAnalyse)o;
   iOAnalyseData data = Data(inst);
   iONode block = NULL;
   int cx, cy;
