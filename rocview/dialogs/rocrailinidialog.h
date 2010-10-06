@@ -217,6 +217,8 @@ public:
     wxTextCtrl* m_DPIID;
     wxStaticText* m_labSVIID;
     wxTextCtrl* m_SVIID;
+    wxStaticText* m_labAnalyze;
+    wxCheckBox* m_Analyze;
     wxStaticBox* m_ScBox;
     wxStaticText* m_labScSensor;
     wxComboBox* m_ScSensor;

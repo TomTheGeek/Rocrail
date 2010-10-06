@@ -734,6 +734,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   data->model = ModelOp.inst( pf );
   ModelOp.init( data->model );
 
+  if( wRocRail.isanalyze(data->ini) ) {
+    ModelOp.analyse( data->model );
+  }
+
   MemOp.setDebug( False );
 
 

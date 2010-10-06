@@ -2736,6 +2736,7 @@ static void _analyse( iOModel inst ) {
 
   if( data->analyser != NULL ) {
     data->analyser->analyse(data->analyser);
+    /* TODO: re-initialize routes */
   }
 
 }
