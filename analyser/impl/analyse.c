@@ -1291,6 +1291,21 @@ static void __analyseList(iOAnalyse inst) {
     iONode item = (iONode)ListOp.first( routelist );
     bka = wItem.getid(item);
     bkaside = wItem.getstate(item);
+
+    /* go to the end -> bkb*/
+    while(item) {
+      bkb = wItem.getid(item);
+      bkbside = wItem.getstate(item);
+      item = (iONode)ListOp.next( routelist );
+    }
+
+    wRoute.setid( newRoute, StrOp.fmt( "[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
+    wRoute.setbka( newRoute, bka);
+    wRoute.setbkb( newRoute, bkb);
+    wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
+    wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
+
+    item = (iONode)ListOp.first( routelist );
     while(item) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -1304,17 +1319,20 @@ static void __analyseList(iOAnalyse inst) {
         NodeOp.addChild( newRoute, swcmd );
       }
 
+      if( StrOp.equals( NodeOp.getName(item), "tk") ) {
+
+        /* here the tk things */
+
+      }
+
       bkb = wItem.getid(item);
       bkbside = wItem.getstate(item);
       item = (iONode)ListOp.next( routelist );
     }
 
 
-    wRoute.setid( newRoute, StrOp.fmt( "[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
-    wRoute.setbka( newRoute, bka);
-    wRoute.setbkb( newRoute, bkb);
-    wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
-    wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
+
+
 
 
     /* COMMENT OUT
