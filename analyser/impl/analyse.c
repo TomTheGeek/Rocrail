@@ -83,8 +83,6 @@ For the Analyzer to work the Plan has to fullfill:
 - only one item at one position
  */
 
-/* sensitive code don't touch! */
-
 #include "analyser/impl/analyse_impl.h"
 
 #include "rocs/public/mem.h"
@@ -97,6 +95,9 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/ModPlan.h"
 #include "rocrail/wrapper/public/Module.h"
+#include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/RouteList.h"
+#include "rocrail/wrapper/public/Plan.h"
 
 static int instCnt = 0;
 
@@ -179,7 +180,6 @@ static int __getOri(iONode item ) {
 
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
   return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, 0 );
-  //return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, wItem.getz(node)+zoffset );
 }
 
 static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
@@ -318,6 +318,11 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
   if( item ) {
     const char * itemori = wItem.getori(item);
 
+    const char* type = NodeOp.getName(item);
+    const char* subtype = wItem.gettype(item);
+
+    int mori = __getOri(item);
+
     *turnoutstate_out = 0;
     *x = 0;
     *y = 0;
@@ -352,6 +357,17 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               wItem.getid(item) );
           return -1; /*end of the game */
         }
+      } else if (StrOp.equals( "tk" , type ) && StrOp.equals( subtype , "dir" ) ) {
+
+        if( travel == 1 && mori == 3 )
+          return travel;
+        else if( travel == 3 && mori == 1 )
+          return travel;
+        else if( travel == 0 && mori == 0 )
+          return travel;
+        else if( travel == 2 && mori == 2 )
+          return travel;
+        return itemNotInDirection;
       }
       /* block */
       else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
@@ -984,6 +1000,11 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
   iONode nextitem = NULL;
   int blockleftcounter = 0;
 
+  const char * itemori = wItem.getori(item);
+  if( itemori == NULL) {
+   itemori = "west";
+  }
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d] tos: [%d]",
       wItem.getid(item), travel, depth, turnoutstate);
 
@@ -991,7 +1012,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
         wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
 
 
-  const char * state = "-";
+  const char * state = " ";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
     if ( StrOp.equals(wItem.gettype(item), "right" ) || StrOp.equals(wItem.gettype(item), "left" ) ) {
     state = turnoutstate?"turnout":"straight";
@@ -1006,18 +1027,17 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
       if( turnoutstate == 2) state = "right";
     }
   } else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
-    state = "bka [-]";
-    if( StrOp.equals( wItem.getori(item), "west" ) && travel == 0){
-      state = "bka [+]";
-    } else if( StrOp.equals( wItem.getori(item), "north" ) && travel == 3){
-      state = "bka [+]";
-    } else if( StrOp.equals( wItem.getori(item), "east" ) && travel == 2){
-      state = "bka [+]";
-    } else if( StrOp.equals( wItem.getori(item), "south" ) && travel == 1){
-      state = "bka [+]";
+    state = "-";
+    if( StrOp.equals( itemori, "west" ) && travel == 0){
+      state = "+";
+    } else if( StrOp.equals( itemori, "north" ) && travel == 3){
+      state = "+";
+    } else if( StrOp.equals( itemori, "east" ) && travel == 2){
+      state = "+";
+    } else if( StrOp.equals( itemori, "south" ) && travel == 1){
+      state = "+";
     }
   }
-
 
   /* LIST */
   iONode itemA = (iONode)NodeOp.base.clone( item);
@@ -1081,7 +1101,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
 
       int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
       if( travelp == itemNotInDirection || travelp == -1) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "STOP NOT IN DIR" );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> stop item not in direction" );
         return;
       }
 
@@ -1092,15 +1112,19 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d]",
                 wItem.getid(nextitem), travel, depth, turnoutstate);
 
-        const char * state = "bkb [-]";
-        if( StrOp.equals( wItem.getori(nextitem), "west" ) && travel == 2){
-          state = "bkb [+]";
-        } else if( StrOp.equals( wItem.getori(nextitem), "north" ) && travel == 1){
-          state = "bkb [+]";
-        } else if( StrOp.equals( wItem.getori(nextitem), "east" ) && travel == 0){
-          state = "bkb [+]";
-        } else if( StrOp.equals( wItem.getori(nextitem), "south" ) && travel == 3){
-          state = "bkb [+]";
+        const char * nextitemori = wItem.getori(nextitem);
+        if( nextitemori == NULL) {
+          nextitemori = "west";
+        }
+        const char * state = "-";
+        if( StrOp.equals( nextitemori, "west" ) && travel == 2){
+          state = "+";
+        } else if( StrOp.equals( nextitemori, "north" ) && travel == 1){
+          state = "+";
+        } else if( StrOp.equals( nextitemori, "east" ) && travel == 0){
+          state = "+";
+        } else if( StrOp.equals( nextitemori, "south" ) && travel == 3){
+          state = "+";
         }
 
         /* LIST */
@@ -1139,8 +1163,8 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
 
           return;
         } else if( travelp >= 300 && travelp < 400) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "THREE WAY");
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "THREE WAY");
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "     " );
           travelp -= threeWayTurnout;
           depth++;
 
@@ -1247,22 +1271,56 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 
 static void __analyseList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
+  iONode model = ModelOp.getModel( data->model);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
 
+  const char * bka = NULL;
+  const char * bkb = NULL;
+  const char * bkaside = NULL;
+  const char * bkbside = NULL;
+
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
+
+    iONode newRoute = NodeOp.inst( "st", NULL, ELEMENT_NODE );
+
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route:");
     iONode item = (iONode)ListOp.first( routelist );
+    bka = wItem.getid(item);
+    bkaside = wItem.getstate(item);
     while(item) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         " [%s][%s][%s]", NodeOp.getName(item),
         wItem.getid(item), wItem.getstate(item) );
 
+      if( StrOp.equals( NodeOp.getName(item), "sw") ) {
+        iONode swcmd = NodeOp.inst( "swcmd", NULL, ELEMENT_NODE );
+        wItem.setid( swcmd, wItem.getid(item));
+        wSwitch.setcmd( swcmd, wItem.getstate(item));
+        NodeOp.addChild( newRoute, swcmd );
+      }
+
+      bkb = wItem.getid(item);
+      bkbside = wItem.getstate(item);
       item = (iONode)ListOp.next( routelist );
     }
+
+
+    wRoute.setid( newRoute, StrOp.fmt( "[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
+    wRoute.setbka( newRoute, bka);
+    wRoute.setbkb( newRoute, bkb);
+    wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
+    wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
+
+
+    /* COMMENT OUT
+    iONode stlist = wPlan.getstlist(model);
+    NodeOp.addChild( stlist, newRoute );*/
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
     routelist = (iOList)ListOp.next( data->prelist );
   }
