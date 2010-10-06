@@ -1326,7 +1326,8 @@ static void __analyseList(iOAnalyse inst) {
       }
 
       if( StrOp.equals( NodeOp.getName(item), "tk") ||
-          StrOp.equals( NodeOp.getName(item), "fb")) {
+          StrOp.equals( NodeOp.getName(item), "fb") ||
+          StrOp.equals( NodeOp.getName(item), "sg") ) {
 
         iONode tracknode = NULL;
 
@@ -1340,8 +1341,13 @@ static void __analyseList(iOAnalyse inst) {
           tracknode = FBackOp.base.properties(track);
         }
 
+        if( StrOp.equals( NodeOp.getName(item), "sg") ) {
+          iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
+          tracknode = SignalOp.base.properties(track);
+        }
+
         const char * prevrouteids = wItem.getrouteids(tracknode);
-        if( prevrouteids != NULL) {
+        if( prevrouteids != NULL || !StrOp.equals(prevrouteids, "")) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           // check if id is allready in the list
           Boolean isInList = False;
@@ -1390,7 +1396,6 @@ static void __analyseList(iOAnalyse inst) {
 
 static void _analyse(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  //iOList bklist = NULL;
   iONode block = NULL;
   int cx, cy;
   int zlevel = 0;
