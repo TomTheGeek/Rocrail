@@ -100,7 +100,6 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
 
-
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -1274,6 +1273,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 static void __analyseList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
   iONode model = ModelOp.getModel( data->model);
+  iONode stlist = wPlan.getstlist(model);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
@@ -1285,6 +1285,8 @@ static void __analyseList(iOAnalyse inst) {
 
   /* SET TO False -> the plan will not be modified!*/
   Boolean doIt = False;
+
+  /* TODO: clear the stlist (how?)*/
 
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
@@ -1324,15 +1326,25 @@ static void __analyseList(iOAnalyse inst) {
         NodeOp.addChild( newRoute, swcmd );
       }
 
-      if( StrOp.equals( NodeOp.getName(item), "tk") ) {
+      if( StrOp.equals( NodeOp.getName(item), "tk") ||
+          StrOp.equals( NodeOp.getName(item), "fb")) {
 
-        iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
-        iONode tracknode = TrackOp.base.properties(track);
+        iONode tracknode = NULL;
+
+        if( StrOp.equals( NodeOp.getName(item), "tk") ) {
+          iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
+          tracknode = TrackOp.base.properties(track);
+        }
+
+        if( StrOp.equals( NodeOp.getName(item), "fb") ) {
+          iOFBack track = ModelOp.getFBack( data->model, wItem.getid(item) );
+          tracknode = FBackOp.base.properties(track);
+        }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
         if( prevrouteids != NULL) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
-          /* check if id is allready in the list */
+          // check if id is allready in the list
           Boolean isInList = False;
           while ( StrTokOp.hasMoreTokens( tok )) {
             const char * token = StrTokOp.nextToken( tok );
@@ -1344,7 +1356,7 @@ static void __analyseList(iOAnalyse inst) {
           if( !isInList && doIt) {
             wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids,wRoute.getid( newRoute) ) );
           }
-        } else { // prevrouteids != NULL
+        } else  { // prevrouteids != NULL
           if( doIt) {
             wItem.setrouteids(tracknode, StrOp.fmt( "%s", wRoute.getid( newRoute) ) );
           }
@@ -1355,8 +1367,6 @@ static void __analyseList(iOAnalyse inst) {
       bkbside = wItem.getstate(item);
       item = (iONode)ListOp.next( routelist );
     }
-
-    iONode stlist = wPlan.getstlist(model);
 
     if( doIt) {
       NodeOp.addChild( stlist, newRoute );
