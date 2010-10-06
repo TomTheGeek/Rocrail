@@ -87,6 +87,7 @@ For the Analyzer to work the Plan has to fullfill:
 
 #include "rocs/public/mem.h"
 #include "rocs/public/trace.h"
+#include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -98,6 +99,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
+
 
 static int instCnt = 0;
 
@@ -1281,6 +1283,9 @@ static void __analyseList(iOAnalyse inst) {
   const char * bkaside = NULL;
   const char * bkbside = NULL;
 
+  /* SET TO False -> the plan will not be modified!*/
+  Boolean doIt = False;
+
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
 
@@ -1321,8 +1326,29 @@ static void __analyseList(iOAnalyse inst) {
 
       if( StrOp.equals( NodeOp.getName(item), "tk") ) {
 
-        /* here the tk things */
+        iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
+        iONode tracknode = TrackOp.base.properties(track);
 
+        const char * prevrouteids = wItem.getrouteids(tracknode);
+        if( prevrouteids != NULL) {
+          iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
+          /* check if id is allready in the list */
+          Boolean isInList = False;
+          while ( StrTokOp.hasMoreTokens( tok )) {
+            const char * token = StrTokOp.nextToken( tok );
+            if( StrOp.equals( token, wRoute.getid( newRoute))) {
+              isInList = True;
+            }
+          }
+
+          if( !isInList && doIt) {
+            wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids,wRoute.getid( newRoute) ) );
+          }
+        } else { // prevrouteids != NULL
+          if( doIt) {
+            wItem.setrouteids(tracknode, StrOp.fmt( "%s", wRoute.getid( newRoute) ) );
+          }
+        }
       }
 
       bkb = wItem.getid(item);
@@ -1330,14 +1356,11 @@ static void __analyseList(iOAnalyse inst) {
       item = (iONode)ListOp.next( routelist );
     }
 
-
-
-
-
-
-    /* COMMENT OUT
     iONode stlist = wPlan.getstlist(model);
-    NodeOp.addChild( stlist, newRoute );*/
+
+    if( doIt) {
+      NodeOp.addChild( stlist, newRoute );
+    }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
     routelist = (iOList)ListOp.next( data->prelist );
