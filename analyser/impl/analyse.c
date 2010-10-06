@@ -298,7 +298,9 @@ static int __getType(iONode item ) {
 
   /*if( StrOp.equals( "tk" , type ) || StrOp.equals( wFeedback.name() , type ) ) {*/
     if(        StrOp.equals( wTrack.curve, subtype ) ) {
+
       return typeTrackCurve;
+
     } else if( StrOp.equals( "sw", type ) ) {
       return typeSwitch;
     } else {
@@ -335,7 +337,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
     }
 
     /* curve -> change dir */
-      if( __getType(item) == typeTrackCurve) {
+      if( __getType(item) == typeTrackCurve  || (StrOp.equals( type , "fb" ) && wFeedback.iscurve( item))   ) {
         /* algebra of Rocrail directions */
         if(        travel == 0 &&  StrOp.equals( itemori, "north" )) {
           return oriSouth;
