@@ -2442,6 +2442,19 @@ static void _initField( iOModel inst ) {
   }
 }
 
+
+static void __reinitRoutes( iOModel inst ) {
+  iOModelData o = Data(inst);
+
+  __clearMap( o->routeMap );
+  ListOp.clear( o->routeList);
+  _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
+
+}
+
+
+
+
 static void _init( iOModel inst ) {
   iOModelData o = Data(inst);
 
@@ -2736,7 +2749,8 @@ static void _analyse( iOModel inst ) {
 
   if( data->analyser != NULL ) {
     data->analyser->analyse(data->analyser);
-    /* TODO: re-initialize routes */
+    /* re-initialize routes */
+    __reinitRoutes(inst);
   }
 
 }
