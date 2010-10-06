@@ -476,7 +476,10 @@ static __checkConsole( iOAppData data ) {
     __syscmd( wSysCmd.config );
   }
   else if( c == wConCmd.analyse ) {
-    ModelOp.analyse( data->model );
+    if( !SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
+          StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+      ModelOp.analyse( data->model );
+    }
   }
   else if( c == wConCmd.memory )
     rocsStatistics( True );
@@ -735,7 +738,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   ModelOp.init( data->model );
 
   if( wRocRail.isanalyze(data->ini) ) {
-    ModelOp.analyse( data->model );
+    if( !SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
+          StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+      ModelOp.analyse( data->model );
+    }
   }
 
   MemOp.setDebug( False );

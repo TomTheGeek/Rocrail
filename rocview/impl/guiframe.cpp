@@ -2813,6 +2813,7 @@ void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
+  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL);
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
   if( mi != NULL ) mi->Enable( l_bOffline );
@@ -2827,7 +2828,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_Analyze);
-  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
+  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode && !l_Expired );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
   if( mi != NULL ) mi->Enable( (!l_bOffline && !wxGetApp().isConsoleMode()) );
   mi = menuBar->FindItem(ME_Quit);
