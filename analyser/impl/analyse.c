@@ -1382,11 +1382,34 @@ static void __analyseList(iOAnalyse inst) {
               signaltype = "main";
 
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "   the signal [%s][%s] is the [%s] side %s signal for block [%s]", NodeOp.getName(item),
+            " -> the signal [%s][%s] is the [%s] side %s signal for block [%s]", NodeOp.getName(item),
             wItem.getid(item), bkaside, signaltype, bka );
 
-            /* TODO: add to the block ... */
+            /* add signals to the block ... */
+            iIBlockBase block = data->model->getBlock( data->model, bka );
+            iONode blocknode = block->base.properties(block);
 
+            if( !StrOp.equals( bkaside, "+") ) {
+              if( StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main") ) {
+                wBlock.setsignal(blocknode, wItem.getid(item));
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
+              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant") ) {
+                wBlock.setwsignal(blocknode, wItem.getid(item));
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
+              }
+            } else if( StrOp.equals( bkaside, "+") ) {
+              if( StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main") ) {
+                wBlock.setsignalR(blocknode, wItem.getid(item));
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
+              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant") ) {
+                wBlock.setwsignalR(blocknode, wItem.getid(item));
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
+              }
+            }
+
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                        "      block [%s] set [%s] %s signal [%s]", bka, bkaside, NodeOp.getStr( item, "signal", "distant"),
+                        wItem.getid(item) );
           }
 
         }
