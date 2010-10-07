@@ -115,6 +115,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/Exception.h"
 static int instCnt = 0;
 
 
@@ -2754,9 +2755,19 @@ static void _analyse( iOModel inst ) {
   }
 
   if( data->analyser != NULL ) {
+    iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+    int nrRoutesBefore = ListOp.size(data->routeList);
+    int nrRoutesAfter = 0;
+    char* msg = NULL;
     data->analyser->analyse(data->analyser);
     /* re-initialize routes */
     __reinitRoutes(inst);
+    nrRoutesAfter = ListOp.size(data->routeList);
+    /* Broadcast to clients. */
+    msg = StrOp.fmt("the analyzer created %d new routes", nrRoutesAfter-nrRoutesBefore);
+    wException.settext( e, msg );
+    wException.setlevel( e, TRCLEVEL_CALC );
+    AppOp.broadcastEvent( e );
   }
 
 }
