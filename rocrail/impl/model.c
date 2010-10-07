@@ -2451,6 +2451,7 @@ static void __reinitRoutes( iOModel inst ) {
   ListOp.clear( o->routeList);
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
 
+  ThreadOp.sleep(100);
   if(ListOp.size( o->routeList) > 0 ) {
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast add %d routes", ListOp.size( o->routeList) );
@@ -2461,7 +2462,7 @@ static void __reinitRoutes( iOModel inst ) {
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add route %s", RouteOp.getId(item) );
       AppOp.broadcastEvent( cmd );
-      ThreadOp.sleep(10);
+      ThreadOp.sleep(100);
     }
   }
 
@@ -2780,14 +2781,17 @@ static void _analyse( iOModel inst ) {
       iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
       wModelCmd.setcmd( cmd, wModelCmd.remove );
       for( i = 0; i < ListOp.size( data->routeList); i++ ) {
-      iORoute item = (iORoute)ListOp.get( data->routeList, i);
-      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
+        iORoute item = (iORoute)ListOp.get( data->routeList, i);
+        NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
       }
       AppOp.broadcastEvent( cmd );
+      ThreadOp.sleep(10);
     }
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
     data->analyser->analyse(data->analyser);
     /* re-initialize routes */
+    ThreadOp.sleep(100);
     __reinitRoutes(inst);
     nrRoutesAfter = ListOp.size(data->routeList);
     /* Broadcast to clients. */
