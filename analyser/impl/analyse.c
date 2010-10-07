@@ -322,6 +322,7 @@ static const int foundBlock = 100;
 static const int twoWayTurnout = 200;
 static const int threeWayTurnout = 300;
 static const int dcrossing = 400;
+static const int dcrossingAhead = 2000;
 
 static int __travel( iONode item, int travel, int turnoutstate, int * turnoutstate_out, int * x, int * y, const char * key) {
   if( item ) {
@@ -886,8 +887,10 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               }
             }
           }
-
-          return travel+dcrossing;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  "
+              "DCROSSING travel:%d- turnoutstate: %d itemori: %s id: %s dir: %d",
+              travel,turnoutstate, itemori,wItem.getid(item),wSwitch.isdir(item));
+          return dcrossingAhead + travel;
         }
         /* threeway */
         else if( StrOp.equals( wItem.gettype(item), "threeway" ) ) {
@@ -1027,7 +1030,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     state = turnoutstate?"turnout":"straight";
     } else if ( StrOp.equals(wItem.gettype(item), "dcrossing" )  ) {
       if( turnoutstate == 0) state = "straight";
-      if( turnoutstate == 1) state = "thrown";
+      if( turnoutstate == 1) state = "turnout";
       if( turnoutstate == 2) state = "left";
       if( turnoutstate == 3) state = "right";
     } else if ( StrOp.equals(wItem.gettype(item), "threeway" )  ) {
@@ -1109,7 +1112,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           NodeOp.getName(nextitem), turnoutstate_out );
 
       int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
-      if( travelp == itemNotInDirection || travelp == -1) {
+      if( (travelp == itemNotInDirection || travelp == -1) && travelp != dcrossingAhead) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> stop item not in direction" );
         return;
       }
@@ -1185,12 +1188,16 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           __analyseItem(inst, nextitem, listA, travelp, 1, depth);
           __analyseItem(inst, nextitem, listB, travelp, 2, depth);
           return;
-        } else if( travelp >= 400 && travelp < 500) {
+        } else if( (travelp >= 400 && travelp < 500) || travelp >= dcrossingAhead) {
 
-          travelp -= dcrossing;
+          if( travelp >= dcrossingAhead)
+            travelp -= dcrossingAhead;
+          else
+            travelp -= dcrossing;
+
           depth++;
 
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
 
           const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
                              {1,2},{0,3},{1,3},{0,1},
@@ -1233,7 +1240,7 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     } else { /*item==NULL*/
 
       /*delete route (ended not at a block)*/
-      NodeOp.base.del( route);
+      /*NodeOp.base.del( route);*/
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
       return;
