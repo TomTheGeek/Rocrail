@@ -1442,19 +1442,34 @@ static void __analyseList(iOAnalyse inst) {
     }
 
     /* merge into stlist */
-    if( doIt) {
-      int childcnt = NodeOp.getChildCnt( stlist);
-      int i;
-      for( i = 0; i <childcnt; i++) {
-        iONode child = NodeOp.getChild( stlist, i);
-        if( StrOp.equals(wItem.getid( child), wItem.getid(newRoute) )) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                         "remove child [%s]", wItem.getid( child));
-          NodeOp.removeChild( stlist, child );
-        }
+    Boolean addToList = True;
+    int childcnt = NodeOp.getChildCnt( stlist);
+    int i;
+    for( i = 0; i <childcnt; i++) {
+      iONode child = NodeOp.getChild( stlist, i);
+
+      if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
+          StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
+          !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "found an edited route: [%s] from [%s] to [%s] skip",
+          wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
+
+        addToList = False;
       }
+
+      if( StrOp.equals(wItem.getid( child), wItem.getid( newRoute) )) {
+         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                        "refresh route: [%s]", wItem.getid( child));
+         NodeOp.removeChild( stlist, child );
+       }
+
+    }
+
+    if( addToList)
       NodeOp.addChild( stlist, newRoute );
-    } // doIt
+
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
     routelist = (iOList)ListOp.next( data->prelist );
