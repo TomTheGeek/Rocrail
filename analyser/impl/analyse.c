@@ -1336,6 +1336,38 @@ static void __analyseList(iOAnalyse inst) {
     wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
     wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
 
+
+
+
+    iONode child = NULL;
+    Boolean addToList = True;
+    int childcnt = NodeOp.getChildCnt( stlist);
+    int i;
+    for( i = 0; i <childcnt; i++) {
+      child = NodeOp.getChild( stlist, i);
+
+      if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
+          StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
+          !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "found an edited route: [%s] from [%s] to [%s] skip",
+          wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
+
+        addToList = False;
+      }
+
+      if( StrOp.equals(wItem.getid( child), wItem.getid( newRoute) )) {
+         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                        "refresh route: [%s]", wItem.getid( child));
+         NodeOp.removeChild( stlist, child );
+       }
+
+    }
+
+
+
+
     item = (iONode)ListOp.first( routelist );
     while(item) {
 
@@ -1427,10 +1459,14 @@ static void __analyseList(iOAnalyse inst) {
           }
 
           if( !isInList && doIt) {
-            wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids,wRoute.getid( newRoute) ) );
+            if( addToList)
+              wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) ) );
+            else
+              wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( child) ) );
           }
-        } else  { // prevrouteids != NULL
-          if( doIt) {
+        } else  { // prevrouteids == NULL
+
+          if( addToList) {
             wItem.setrouteids(tracknode, StrOp.fmt( "%s", wRoute.getid( newRoute) ) );
           }
         }
@@ -1442,31 +1478,6 @@ static void __analyseList(iOAnalyse inst) {
     }
 
     /* merge into stlist */
-    Boolean addToList = True;
-    int childcnt = NodeOp.getChildCnt( stlist);
-    int i;
-    for( i = 0; i <childcnt; i++) {
-      iONode child = NodeOp.getChild( stlist, i);
-
-      if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
-          StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
-          !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "found an edited route: [%s] from [%s] to [%s] skip",
-          wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
-
-        addToList = False;
-      }
-
-      if( StrOp.equals(wItem.getid( child), wItem.getid( newRoute) )) {
-         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                        "refresh route: [%s]", wItem.getid( child));
-         NodeOp.removeChild( stlist, child );
-       }
-
-    }
-
     if( addToList)
       NodeOp.addChild( stlist, newRoute );
 
