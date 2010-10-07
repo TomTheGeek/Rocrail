@@ -2447,21 +2447,11 @@ static void _initField( iOModel inst ) {
 static void __reinitRoutes( iOModel inst ) {
   iOModelData o = Data(inst);
 
-  if(ListOp.size( o->routeList) > 0 ) {
-    int i = 0;
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.remove );
-    for( i = 0; i < ListOp.size( o->routeList); i++ ) {
-      iONode item = (iONode)ListOp.get( o->routeList, i);
-      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
-    }
-    AppOp.broadcastEvent( cmd );
-  }
-
   __clearMap( o->routeMap );
   ListOp.clear( o->routeList);
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
 
+  /*
   if(ListOp.size( o->routeList) > 0 ) {
     int i = 0;
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
@@ -2472,7 +2462,7 @@ static void __reinitRoutes( iOModel inst ) {
     }
     AppOp.broadcastEvent( cmd );
   }
-
+*/
 }
 
 
@@ -2781,6 +2771,21 @@ static void _analyse( iOModel inst ) {
     int nrRoutesBefore = ListOp.size(data->routeList);
     int nrRoutesAfter = 0;
     char* msg = NULL;
+
+    /*
+    if(ListOp.size( data->routeList) > 0 ) {
+      int i = 0;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast delete %d routes", ListOp.size( data->routeList) );
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.remove );
+      for( i = 0; i < ListOp.size( data->routeList); i++ ) {
+        iONode item = (iONode)ListOp.get( data->routeList, i);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delete route %d [0x%08X]", i, item );
+        NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+      }
+      AppOp.broadcastEvent( cmd );
+    }
+*/
     data->analyser->analyse(data->analyser);
     /* re-initialize routes */
     __reinitRoutes(inst);
