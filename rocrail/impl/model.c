@@ -2447,9 +2447,31 @@ static void _initField( iOModel inst ) {
 static void __reinitRoutes( iOModel inst ) {
   iOModelData o = Data(inst);
 
+  if(ListOp.size( o->routeList) > 0 ) {
+    int i = 0;
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.remove );
+    for( i = 0; i < ListOp.size( o->routeList); i++ ) {
+      iONode item = (iONode)ListOp.get( o->routeList, i);
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+    }
+    AppOp.broadcastEvent( cmd );
+  }
+
   __clearMap( o->routeMap );
   ListOp.clear( o->routeList);
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
+
+  if(ListOp.size( o->routeList) > 0 ) {
+    int i = 0;
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.add );
+    for( i = 0; i < ListOp.size( o->routeList); i++ ) {
+      iONode item = (iONode)ListOp.get( o->routeList, i);
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+    }
+    AppOp.broadcastEvent( cmd );
+  }
 
 }
 
