@@ -1355,6 +1355,7 @@ static void __analyseList(iOAnalyse inst) {
           wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
 
         addToList = False;
+        break;
       }
 
       if( StrOp.equals(wItem.getid( child), wItem.getid( newRoute) )) {
@@ -1447,6 +1448,8 @@ static void __analyseList(iOAnalyse inst) {
         }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
+
+
         if( prevrouteids != NULL || !StrOp.equals(prevrouteids, "")) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           // check if id is allready in the list
@@ -1461,8 +1464,9 @@ static void __analyseList(iOAnalyse inst) {
           if( !isInList && doIt) {
             if( addToList)
               wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) ) );
-            else
+            else {
               wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( child) ) );
+            }
           }
         } else  { // prevrouteids == NULL
 
