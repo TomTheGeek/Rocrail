@@ -2727,6 +2727,12 @@ static void _analyse( iOModel inst ) {
   ModelOp.saveAs(inst, stampfile);
   data->fileName = filename;
 
+  /* Make sure the route list is available before analyzing the track plan. */
+  if( wPlan.getstlist(data->model) == NULL ) {
+    iONode stlist = NodeOp.inst( wRouteList.name(), data->model, ELEMENT_NODE);
+    NodeOp.addChild( data->model, stlist );
+  }
+
   if( data->analyser == NULL ) {
     iOLib    pLib = NULL;
     /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
