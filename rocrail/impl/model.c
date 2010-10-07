@@ -2451,18 +2451,20 @@ static void __reinitRoutes( iOModel inst ) {
   ListOp.clear( o->routeList);
   _createMap( o, o->routeMap   , wRouteList.name(), wRoute.name(), (item_inst)RouteOp.inst, o->routeList );
 
-  /*
   if(ListOp.size( o->routeList) > 0 ) {
     int i = 0;
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.add );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast add %d routes", ListOp.size( o->routeList) );
     for( i = 0; i < ListOp.size( o->routeList); i++ ) {
-      iONode item = (iONode)ListOp.get( o->routeList, i);
-      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      iORoute item = (iORoute)ListOp.get( o->routeList, i);
+      wModelCmd.setcmd( cmd, wModelCmd.add );
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add route %s", RouteOp.getId(item) );
+      AppOp.broadcastEvent( cmd );
+      ThreadOp.sleep(10);
     }
-    AppOp.broadcastEvent( cmd );
   }
-*/
+
 }
 
 
@@ -2772,20 +2774,18 @@ static void _analyse( iOModel inst ) {
     int nrRoutesAfter = 0;
     char* msg = NULL;
 
-    /*
     if(ListOp.size( data->routeList) > 0 ) {
       int i = 0;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast delete %d routes", ListOp.size( data->routeList) );
       iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
       wModelCmd.setcmd( cmd, wModelCmd.remove );
       for( i = 0; i < ListOp.size( data->routeList); i++ ) {
-        iONode item = (iONode)ListOp.get( data->routeList, i);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delete route %d [0x%08X]", i, item );
-        NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( item ) );
+      iORoute item = (iORoute)ListOp.get( data->routeList, i);
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
       }
       AppOp.broadcastEvent( cmd );
     }
-*/
+
     data->analyser->analyse(data->analyser);
     /* re-initialize routes */
     __reinitRoutes(inst);
