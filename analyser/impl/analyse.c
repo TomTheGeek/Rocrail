@@ -99,6 +99,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Signal.h"
 
 #include "rocrail/public/track.h"
 #include "rocrail/public/switch.h"
@@ -1049,6 +1050,17 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     } else if( StrOp.equals( itemori, "south" ) && travel == 1){
       state = "+";
     }
+  } else if( StrOp.equals(NodeOp.getName(item) , "sg" ) ) {
+    /*is the signal in our direction ?*/
+    if( StrOp.equals( itemori, "west" ) && travel == 0){
+      state = "yes";
+    } else if( StrOp.equals( itemori, "north" ) && travel == 3){
+      state = "yes";
+    } else if( StrOp.equals( itemori, "east" ) && travel == 2){
+      state = "yes";
+    } else if( StrOp.equals( itemori, "south" ) && travel == 1){
+      state = "yes";
+    }
   }
 
   /* LIST */
@@ -1327,6 +1339,11 @@ static void __analyseList(iOAnalyse inst) {
     item = (iONode)ListOp.first( routelist );
     while(item) {
 
+      const char * itemori = wItem.getori(item);
+      if( itemori == NULL) {
+        itemori = "west";
+      }
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         " [%s][%s][%s]", NodeOp.getName(item),
         wItem.getid(item), wItem.getstate(item) );
@@ -1357,6 +1374,21 @@ static void __analyseList(iOAnalyse inst) {
         if( StrOp.equals( NodeOp.getName(item), "sg") ) {
           iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
           tracknode = track->base.properties(track);
+
+          if( StrOp.equals( wItem.getstate(item), "yes" ) ){
+
+            const char * signaltype = wSignal.getsignal( item);
+            if( signaltype == NULL)
+              signaltype = "main";
+
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "   the signal [%s][%s] is the [%s] side %s signal for block [%s]", NodeOp.getName(item),
+            wItem.getid(item), bkaside, signaltype, bka );
+
+            /* TODO: add to the block ... */
+
+          }
+
         }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
