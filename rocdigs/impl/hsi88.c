@@ -181,6 +181,8 @@ static Boolean __sendHSI88( iOHSI88 inst, char* out, int size ) {
   Boolean ok = True;
   int i = 0;
 
+  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, size );
+
   for( i = 0; i < size; i++ ) {
     if( CheckCTS(o) ) {
       int rc = 0;
@@ -225,36 +227,11 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
 
     if( OK ) {
       waitcounter = 0;
-      if( in[0] == 's' ) {
-        /* first byte s then read 3 bytes, second byte is number of modules */
-        idx++;
-        in[idx] = '\0';
-        if( idx == 3 ) {
-          if( in[idx-1] == '\r' ) {
-            break;
-          } else {
-            idx = 0;
-            break;
-          }
-        }
-      } else if( in[0] == 'V' ) {
-        /* first byte V then version info comes, length 41 bytes */
-        idx++;
-        in[idx] = '\0';
-        if( idx == 41 ) {
-          if( in[idx-1] == '\r' ) {
-            break;
-          } else {
-            idx = 0;
-            break;
-          }
-        }
-      } else {
-        idx++;
-        in[idx] = '\0';
-        if( in[idx-1] == '\r' ) {
-          break;
-        }
+      idx++;
+      in[idx] = '\0';
+      if( in[idx-1] == '\r' ) {
+        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx );
+        break;
       }
     }
     else {
@@ -448,7 +425,12 @@ static Boolean __flushHSI88( iOHSI88 inst, Boolean forcetrace ) {
     byte tmp[1000];
     int bAvail = 0;
 
-    bAvail = __availBytes(o);
+    if( o->usb ) {
+      bAvail = 0;
+    }
+    else {
+      bAvail = __availBytes(o);
+    }
 
     if (bAvail > 0 && bAvail < 1000) {
       char c;
@@ -523,6 +505,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "HSI-88 init");
   __flushHSI88(inst, True);
+
   if( __sendHSI88( inst, out, 5 ) )
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sent. Waiting for response...");
@@ -557,7 +540,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
 
   }
   else
-    TraceOp.trc( name, TRCLEVEL_ERROR, __LINE__, 9999, "Could not send init-sequence to HSI Device. retrying...");
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not send init-sequence to HSI Device. retrying...");
 
   return initOK;
 }
@@ -626,7 +609,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
         unsigned char lowbyte = 0;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading module data %d...", i);
         ok = __readBytes( o, (char*)buffer, 3 );
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "module data %d=0x%02X 0x%02X 0x%02X", i,
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "module data %d=0x%02X 0x%02X 0x%02X", i,
                      buffer[0], buffer[1], buffer[2] );
         modnr    = buffer[0];
         highbyte = buffer[1];
@@ -781,7 +764,7 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
     /*data->usbh = FileOp.inst( data->device, OPEN_R );*/
     data->devh = SystemOp.openDevice(data->device);
 
-    data->serialOK = data->devh != NULL ? True:False;
+    data->serialOK = (data->devh != 0 ? True:False);
   }
   else {
     data->serial = SerialOp.inst( data->device );
