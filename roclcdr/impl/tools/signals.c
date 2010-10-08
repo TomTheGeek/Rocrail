@@ -36,14 +36,14 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Link.h"
 
-static Boolean __checkSignalPair( iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair);
+static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair);
 
 
 void resetSignals(iOLcDriver inst ) {
   iOLcDriverData data = Data(inst);
   Boolean reverse = False;
   Boolean signalpair = False; /* default false for the forwards signals */
-  __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair);
+  __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair);
 
   /* signal current block */
   if( data->curBlock != NULL ) {
@@ -112,17 +112,29 @@ void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean
  * One value is revert; Revert signal pair if running fromto.
  *
  */
-static Boolean __checkSignalPair( iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair) {
+static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair) {
+  iOLcDriverData data = Data(inst);
   if( route != NULL && block != NULL ) {
     const char* blockid = block->base.id(block);
     int sgpair = 0;
-    if( StrOp.equals( route->getFromBlock(route), blockid ) )
-      sgpair = wRoute.getsga(route->base.properties(route));
-    else
-      sgpair = wRoute.getsgb(route->base.properties(route));
+    //Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
-    *signalpair = sgpair == 0 ? !fromTo:fromTo;
-    return sgpair == 2 ? False:True;
+    data->useblockside;
+    if( True) {
+
+      *signalpair = sgpair = route->getFromBlockSide(route);
+      return sgpair == 2 ? False:True;
+
+    } else {
+
+      if( StrOp.equals( route->getFromBlock(route), blockid ) )
+        sgpair = wRoute.getsga(route->base.properties(route));
+      else
+        sgpair = wRoute.getsgb(route->base.properties(route));
+
+      *signalpair = sgpair == 0 ? !fromTo:fromTo;
+      return sgpair == 2 ? False:True;
+    }
   }
 
   *signalpair = !fromTo;
@@ -144,7 +156,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   if( onEnter && data->curBlock != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock to default aspect" );
     if( data->next1Route != NULL ) {
-      if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
+      if( __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
         data->curBlock->setDefaultAspect( data->curBlock, signalpair );
         /* crossing blocks ... */
         setCrossingblockSignals( inst, data->next1Route, DEFAULT_ASPECT, signalpair );
@@ -164,7 +176,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "setting signals for curBlock to white: thrown switches in route [%s], reverse[%s]",
           data->next1Route->getId(data->next1Route), data->next1RouteFromTo?"false":"true" );
-      if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
+      if( __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
         semaphore |= data->curBlock->white( data->curBlock, True, signalpair );
         semaphore |= data->curBlock->white( data->curBlock, False, signalpair );
       }
@@ -175,14 +187,14 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       }
       if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next2Route) ) {
         /* Set the crossing block signals */
-        if( __checkSignalPair( data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) )
+        if( __checkSignalPair(inst, data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) )
           setCrossingblockSignals( inst, data->next2Route, WHITE_ASPECT, !data->next2RouteFromTo );
       }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "setting signals for curBlock to green, reverse[%s]", data->next1RouteFromTo?"false":"true");
-      if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
+      if( __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
         semaphore |= data->curBlock->green( data->curBlock, True, signalpair );
         semaphore |= data->curBlock->green( data->curBlock, False, signalpair );
       }
@@ -193,7 +205,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       }
       if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next2Route) ) {
         /* Set the crossing block signals */
-        if( __checkSignalPair( data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) )
+        if( __checkSignalPair(inst, data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) )
           setCrossingblockSignals( inst, data->next2Route, GREEN_ASPECT, signalpair );
       }
     }
@@ -203,7 +215,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   else if( data->curBlock != NULL && data->next1Block != NULL && data->next2Block == NULL &&
       data->curBlock != data->next1Block )
   {
-    if( __checkSignalPair( data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
+    if( __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "setting signalpair[%s] for curBlock", signalpair?"forwards":"reverse");
@@ -263,7 +275,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       data->next1Block != data->next2Block && data->next2Block != data->next3Block )
   {
     if( data->next2Route != NULL && data->next2Route->hasThrownSwitch(data->next2Route) ) {
-      if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
+      if( __checkSignalPair(inst, data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "setting signals for next1Block to white: thrown switches in route [%s]",
                    data->next2Route->getId(data->next2Route) );
@@ -276,7 +288,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       }
     }
     else {
-      if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
+      if( __checkSignalPair(inst, data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
         data->next1Block->green( data->next1Block, True, signalpair );
         data->next1Block->green( data->next1Block, False, signalpair );
         if( data->next2Route != NULL && data->next2Route->isSetCrossingblockSignals(data->next2Route) ) {
@@ -295,7 +307,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
       hasThrownSwitches = True;
     }
 
-    if( __checkSignalPair( data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
+    if( __checkSignalPair(inst, data->next2Route, data->next1Block, data->next2RouteFromTo, &signalpair) ) {
       if( hasThrownSwitches ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "setting signals for next1Block to white: thrown switches in route [%s]",
@@ -323,7 +335,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   }
   else if( data->next1Block != NULL )
   {
-    if( __checkSignalPair( data->next1Route, data->next1Block, data->next1RouteFromTo, &signalpair) ) {
+    if( __checkSignalPair(inst, data->next1Route, data->next1Block, data->next1RouteFromTo, &signalpair) ) {
       data->next1Block->red( data->next1Block, True, signalpair );
       data->next1Block->red( data->next1Block, False, signalpair );
     }
@@ -333,7 +345,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   if( data->next2Block != NULL && data->next3Block != NULL &&
       data->next2Block != data->next3Block )
   {
-    if( __checkSignalPair( data->next3Route, data->next2Block, data->next3RouteFromTo, &signalpair) ) {
+    if( __checkSignalPair(inst, data->next3Route, data->next2Block, data->next3RouteFromTo, &signalpair) ) {
       if( data->next3Route->hasThrownSwitch(data->next3Route) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "setting signals for next2Block to white: thrown switches in route [%s]",
@@ -353,7 +365,7 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   }
   else if( data->next2Block != NULL )
   {
-    if( __checkSignalPair( data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) ) {
+    if( __checkSignalPair(inst, data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) ) {
       data->next2Block->red( data->next2Block, True, signalpair );
       data->next2Block->red( data->next2Block, False, signalpair );
     }
