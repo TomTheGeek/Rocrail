@@ -87,6 +87,7 @@
       <var name="signalWait" vt="int"/>
       <var name="indelay" vt="int"/>
       <var name="stopnonecommuter" vt="Boolean"/>
+      <var name="useblockside" vt="Boolean"/>
     </data>
   </object>
 
