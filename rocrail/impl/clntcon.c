@@ -413,6 +413,7 @@ static void __doBroadcast( iOClntCon inst, iONode nodeDF ) {
       }
       else {
         iONode clone = (iONode)nodeDF->base.clone( nodeDF );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting %s...", NodeOp.getName(clone) );
         if( !ThreadOp.post( iw, (obj)clone ) ) {
           NodeOp.base.del(clone);
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event to %s; removing from list.", ThreadOp.getName(iw) );

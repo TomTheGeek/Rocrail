@@ -1312,7 +1312,7 @@ void PlanPanel::addItem( iONode child, bool add2list ) {
 
     if( add2list ) {
       /* add the node to the plan... */
-      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "PlanPanel::addItem() addtolist=%s", NodeOp.getName(child) );
+      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "PlanPanel::addItem() addtolist=%s", NodeOp.getName(child) );
       addItemInList( (iONode)NodeOp.base.clone(child));
     }
 
