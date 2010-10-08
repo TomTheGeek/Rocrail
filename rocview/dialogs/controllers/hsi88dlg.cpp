@@ -81,10 +81,12 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props )
   initLabels();
   initValues();
 
+  GetSizer()->Layout();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  GetSizer()->Layout();
+  Fit();
+
 }
 
 void Hsi88CntrlDlg::initLabels() {
