@@ -107,6 +107,8 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/ScheduleList.h"
+#include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/LinkList.h"
 #include "rocrail/wrapper/public/SvnLog.h"
 #include "rocrail/wrapper/public/SvnLogEntry.h"
@@ -756,8 +758,8 @@ static Boolean __hasIDinList(iONode list, const char* newid ) {
 static void rocrailCallback( obj me, iONode node ) {
   RocGui* guiApp = (RocGui*)me;
 
-  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s",
-               NodeOp.getName( node ) );
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s cmd=%s",
+               NodeOp.getName( node ), NodeOp.getStr(node, "cmd", "-") );
 
   /* Plan */
   if( StrOp.equals( wPlan.name(), NodeOp.getName( node ) ) ) {
@@ -982,37 +984,61 @@ static void rocrailCallback( obj me, iONode node ) {
       }
       else if( StrOp.equals( childName, wCar.name() ) ) {
         iONode carlist = wPlan.getcarlist( model );
-        if( carlist != NULL && !__hasIDinList(carlist, wItem.getid(child)) )
+        if( carlist == NULL ) {
+          carlist = NodeOp.inst( wCarList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, carlist );
+        }
+        if( !__hasIDinList(carlist, wItem.getid(child)) )
           NodeOp.addChild( carlist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wOperator.name() ) ) {
         iONode oplist = wPlan.getoperatorlist( model );
-        if( oplist != NULL && !__hasIDinList(oplist, wItem.getid(child)) )
+        if( oplist == NULL ) {
+          oplist = NodeOp.inst( wOperatorList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, oplist );
+        }
+        if( !__hasIDinList(oplist, wItem.getid(child)) )
           NodeOp.addChild( oplist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wRoute.name() ) ) {
         iONode stlist = wPlan.getstlist( model );
-        if( stlist != NULL && !__hasIDinList(stlist, wItem.getid(child)) )
+        if( stlist == NULL ) {
+          stlist = NodeOp.inst( wRouteList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, stlist );
+        }
+        if( !__hasIDinList(stlist, wItem.getid(child)) )
           NodeOp.addChild( stlist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wSchedule.name() ) ) {
         iONode sclist = wPlan.getsclist( model );
-        if( sclist != NULL && !__hasIDinList(sclist, wItem.getid(child))  )
+        if( sclist == NULL ) {
+          sclist = NodeOp.inst( wScheduleList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, sclist );
+        }
+        if( !__hasIDinList(sclist, wItem.getid(child))  )
           NodeOp.addChild( sclist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wLocation.name() ) ) {
         iONode locationlist = wPlan.getlocationlist( model );
-        if( locationlist != NULL && !__hasIDinList(locationlist, wItem.getid(child))  )
+        if( locationlist == NULL ) {
+          locationlist = NodeOp.inst( wLocationList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, locationlist );
+        }
+        if( !__hasIDinList(locationlist, wItem.getid(child))  )
           NodeOp.addChild( locationlist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wLinkList.name() ) ) {
         iONode linklist = wPlan.getlinklist( model );
-        if( linklist != NULL && !__hasIDinList(linklist, wItem.getid(child))  )
+        if( linklist == NULL ) {
+          linklist = NodeOp.inst( wLinkList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, linklist );
+        }
+        if( !__hasIDinList(linklist, wItem.getid(child))  )
           NodeOp.addChild( linklist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
