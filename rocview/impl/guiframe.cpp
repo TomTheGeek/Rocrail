@@ -2828,7 +2828,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_Analyze);
-  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode && !l_Expired );
+  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
   if( mi != NULL ) mi->Enable( (!l_bOffline && !wxGetApp().isConsoleMode()) );
   mi = menuBar->FindItem(ME_Quit);
