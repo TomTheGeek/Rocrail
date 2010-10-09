@@ -179,6 +179,7 @@ static const int BlockCX = 4;
 #define oriSouth2 7
 
 static const Boolean analyserStrict = False;
+static const Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 
@@ -1065,10 +1066,13 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     }
   }
 
-  /* ADD TO LIST */
-  iONode itemA = (iONode)NodeOp.base.clone( item);
-  wItem.setstate(itemA, state);
-  ListOp.add( route, (obj)itemA );
+  if( !StrOp.equals(NodeOp.getName(item) , "bk" )
+      || (depth == 0 && StrOp.equals(NodeOp.getName(item) , "bk" )) ) {
+    /* ADD TO LIST */
+    iONode itemA = (iONode)NodeOp.base.clone( item);
+    wItem.setstate(itemA, state);
+    ListOp.add( route, (obj)itemA );
+  }
 
   if( searchingSignal ) {
     iONode itemA = (iONode)NodeOp.base.clone( item);
@@ -1076,8 +1080,10 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     ListOp.add( occ, (obj)itemA );
   }
 
+  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d] ori: [%s]",
     wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
+    */
 
   /*security*/
   if ( depth > 100)
@@ -1178,12 +1184,13 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
 
 
-
         if( !analyserStrict)
           return True;
 
         /*shall we retun? no, there is something to do -> travel to the signal. if it is there by the user!*/
         behindABlock = True;
+        searchingSignal = True;
+        //return;
 
       } else if ( StrOp.equals(NodeOp.getName(nextitem) , "sw" ) ) {
 
@@ -1270,7 +1277,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
       } // if bk || sw
 
-      /* just the occitems no harm ...*/
+      /* occ */
       if( StrOp.equals(NodeOp.getName(item) , "sg" ) ) {
 
         /*is the signal in our direction ?*/
@@ -1288,8 +1295,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > frage? [%s] inOurTravel: %d",
                       wItem.getid(item), inOurTravel);
 
-        if( searchingSignal && StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main")
-            && inOurTravel) {
+        //!StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant")
+        if( searchingSignal && inOurTravel) {
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
               wItem.getid(item), searchingSignal);
@@ -1299,8 +1306,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           searchingSignal = False;
 
-          if( behindABlock)
+          if( behindABlock) {
             return;
+          }
         }
 
       } // if sg
@@ -1601,7 +1609,9 @@ static void __analyseList(iOAnalyse inst) {
           }
         } // else prevrouteids == NULL
 
-      } //
+        if( cleanrun)
+          wItem.setrouteids(tracknode, StrOp.fmt( "%s", "" ) );
+      } // tk || fb || sw
 
       bkb = wRoute.getbkb( newRoute); //wItem.getid(item);
       //bkbside = wItem.getstate(item);
@@ -1609,9 +1619,12 @@ static void __analyseList(iOAnalyse inst) {
     }
 
     /* merge into stlist */
-    if( addToList)
-      NodeOp.addChild( stlist, newRoute );
+    if( addToList) {
 
+      if( !cleanrun) {
+        NodeOp.addChild( stlist, newRoute );
+      }
+    }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
     routelist = (iOList)ListOp.next( data->prelist );
@@ -1685,6 +1698,11 @@ static void _analyse(iIAnalyserInt o) {
 
   if( analyserStrict)
     __analyseOccList(inst);
+
+
+
+
+
 }
 
 
