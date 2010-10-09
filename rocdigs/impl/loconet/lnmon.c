@@ -1482,7 +1482,7 @@ void traceLocoNet(byte* msg) {
           }
           else if( msg[2] == 0x01 ) {
             int wc = (msg[6]&0x7F)+128*(msg[5]&0x7F);
-            unit = msg[4] & 0x7F + 128 * ( msg[3] & 0x7F );
+            unit = (msg[4] & 0x7F) + (128 * ( msg[3] & 0x7F ));
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999,
                 "Wheel counter %d = [%d] ", unit, wc );
           }
