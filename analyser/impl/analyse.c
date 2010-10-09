@@ -125,6 +125,7 @@ static void __del( void* inst ) {
     MapOp.base.del(data->objectmap);
     MapOp.base.del(data->prelist);
     MapOp.base.del(data->bklist);
+    MapOp.base.del(data->bkoccitemlist);
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -176,6 +177,10 @@ static const int BlockCX = 4;
 #define oriNorth2 5
 #define oriEast2  6
 #define oriSouth2 7
+
+static const Boolean hardcore = False;
+
+static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 
 /* returns 0 for west, 1 for north, 2 for east and 3 for south */
 static int __getOri(iONode item ) {
@@ -1007,7 +1012,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 }
 
 
-static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel, int turnoutstate, int depth) {
+static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel, int turnoutstate, int depth, int searchingSignal) {
   iOAnalyseData data = Data(inst);
   char key[32] = {'\0'};
   iONode nextitem = NULL;
@@ -1018,12 +1023,8 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
    itemori = "west";
   }
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d] tos: [%d]",
-      wItem.getid(item), travel, depth, turnoutstate);
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d] ori: [%s]",
-        wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
-
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d] depth: [%d] tos: [%d] searchingSignal: [%d]",
+      wItem.getid(item), travel, depth, turnoutstate, searchingSignal);
 
   const char * state = " ";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
@@ -1063,14 +1064,23 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     }
   }
 
-  /* LIST */
+  /* ADD TO LIST */
   iONode itemA = (iONode)NodeOp.base.clone( item);
   wItem.setstate(itemA, state);
   ListOp.add( route, (obj)itemA );
 
+  if( searchingSignal ) {
+    iONode itemA = (iONode)NodeOp.base.clone( item);
+    wItem.setstate(itemA, state);
+    ListOp.add( occ, (obj)itemA );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d] ori: [%s]",
+    wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
+
   /*security*/
   if ( depth > 100)
-    return;
+    return False;
 
   int x = 0;
   int y = 0;
@@ -1126,14 +1136,15 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
       int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
       if( (travelp == itemNotInDirection || travelp == -1) && travelp != dcrossingAhead) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> stop item not in direction" );
-        return;
+        return False;
       }
 
 
       if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d]",
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: block [%s] travel: [%d] depth: [%d] tos: [%d]",
                 wItem.getid(nextitem), travel, depth, turnoutstate);
 
         const char * nextitemori = wItem.getori(nextitem);
@@ -1159,11 +1170,9 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
         /* add route to routelist */
         ListOp.add( data->prelist, (obj)route);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     ");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
+        return True;
 
-
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route: [[%s][%s]]", wItem.getid(item), wItem.getid(nextitem));
-        return;
       } else if( StrOp.equals(NodeOp.getName(nextitem) , "sw" ) ) {
 
          /*int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, ""); */
@@ -1181,11 +1190,11 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           iOList routecloneA = (iOList)ListOp.base.clone( route);
 
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
-          __analyseItem(inst, nextitem, route, travel, 0, depth);
+          __analyseItem(inst, nextitem, route, occ, travel, 0, depth, False);
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
-          __analyseItem(inst, nextitem, routecloneA, travel, 1, depth);
+          __analyseItem(inst, nextitem, routecloneA, occ, travel, 1, depth, False);
 
-          return;
+          return True;
         } else if( travelp >= 300 && travelp < 400) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "THREE WAY");
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "     " );
@@ -1196,10 +1205,10 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           iOList listA = (iOList)ListOp.base.clone( route);
           iOList listB = (iOList)ListOp.base.clone( route);
 
-          __analyseItem(inst, nextitem, route, travelp, 0, depth);
-          __analyseItem(inst, nextitem, listA, travelp, 1, depth);
-          __analyseItem(inst, nextitem, listB, travelp, 2, depth);
-          return;
+          __analyseItem(inst, nextitem, route, occ, travelp, 0, depth, False);
+          __analyseItem(inst, nextitem, listA, occ, travelp, 1, depth, False);
+          __analyseItem(inst, nextitem, listB, occ, travelp, 2, depth, False);
+          return True;
         } else if( (travelp >= 400 && travelp < 500) || travelp >= dcrossingAhead) {
 
           if( travelp >= dcrossingAhead)
@@ -1236,17 +1245,53 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
           iOList listA = (iOList)ListOp.base.clone( route);
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state1, wItem.getid(nextitem));
-          __analyseItem(inst, nextitem, route, travelp, state1, depth);
+          __analyseItem(inst, nextitem, route, occ, travelp, state1, depth, False);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > going into %d branch [%s]", state2, wItem.getid(nextitem));
-          __analyseItem(inst, nextitem, listA, travelp, state2, depth);
-          return;
+          __analyseItem(inst, nextitem, listA, occ, travelp, state2, depth, False);
+          return True;
         }
 
       } // if bk || sw
 
+      /* just the occitems no harm ...*/
+      if( StrOp.equals(NodeOp.getName(item) , "sg" ) ) {
+
+        /*is the signal in our direction ?*/
+        Boolean inOurTravel = False;
+        if( StrOp.equals( itemori, "west" ) && travel == 0){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "north" ) && travel == 3){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "east" ) && travel == 2){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "south" ) && travel == 1){
+          inOurTravel = True;
+        }
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > frage? [%s] inOurTravel: %d",
+                      wItem.getid(item), inOurTravel);
+
+        if( searchingSignal && StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main")
+            && inOurTravel) {
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
+              wItem.getid(item), searchingSignal);
+
+          /* LIST
+          iONode itemB = (iONode)NodeOp.base.clone( item);
+          ListOp.add( occ, (obj)itemB );*/
+
+          /* add route to occlist */
+          ListOp.add( data->bkoccitemlist, (obj)occ);
+
+          searchingSignal = False;
+        }
+
+      } // if sg
+
 
       depth++;
-      __analyseItem(inst, nextitem, route, travel, turnoutstate, depth);
+      __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal);
 
 
     } else { /*item==NULL*/
@@ -1255,9 +1300,11 @@ static void __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
       /*NodeOp.base.del( route);*/
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
-      return;
+      return False;
     } /*item?NULL*/
 
+
+    return True;
 }
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel) {
@@ -1274,26 +1321,53 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--------------------------------------------------");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block [%s] in [%s] direction",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block [%s] in [%s] direction ",
       wBlock.getid(block), inittravel);
 
     int xoffset = 0;
     int yoffset = 0;
 
+    int blocklenghth = 4;
+    if( wBlock.issmallsymbol( block))
+      blocklenghth = 2;
+
+
     if( StrOp.equals( inittravel, "east" ) ) {
-      /* TODO: the real block length */
-      xoffset = 3;
+      xoffset = blocklenghth-1;
     }
 
     if( StrOp.equals( inittravel, "south" ) ) {
-      /* TODO: the real block length */
-      yoffset = 3;
+      yoffset = blocklenghth-1;
     }
 
+
     iOList route = ListOp.inst();
+    iOList occ = ListOp.inst();
 
     /* start the recursion */
-    __analyseItem(inst, block, route, travel, 0, 0);
+    int ret = __analyseItem(inst, block, route, occ, travel, 0, 0, True);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end analyzing block [%s] in [%s] direction returned: %d",
+        wBlock.getid(block), inittravel, ret);
+
+}
+static void __analyseOccList(iOAnalyse inst) {
+  iOAnalyseData data = Data(inst);
+  iONode model = data->model->getModel( data->model);
+
+  iOList occlist = (iOList)ListOp.first( data->bkoccitemlist );
+  while(occlist) {
+
+    iONode item = (iONode)ListOp.first( occlist );
+    while(item) {
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] ", wItem.getid(item));
+      item = (iONode)ListOp.next( occlist );
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
+    occlist = (iOList)ListOp.next( data->bkoccitemlist );
+  }
 
 }
 
@@ -1323,10 +1397,17 @@ static void __analyseList(iOAnalyse inst) {
     bka = wItem.getid(item);
     bkaside = wItem.getstate(item);
 
-    /* go to the end -> bkb*/
+    /* presearch: go to the endblock -> bkb*/
+    Boolean reachedEndblock = False;
+    int count = 0;
     while(item) {
-      bkb = wItem.getid(item);
-      bkbside = wItem.getstate(item);
+
+      if( StrOp.equals(NodeOp.getName(item) , "bk" ) && count != 0) {
+        bkb = wItem.getid(item);
+        bkbside = wItem.getstate(item);
+        reachedEndblock = True;
+      }
+      count ++;
       item = (iONode)ListOp.next( routelist );
     }
 
@@ -1335,9 +1416,6 @@ static void __analyseList(iOAnalyse inst) {
     wRoute.setbkb( newRoute, bkb);
     wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
     wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
-
-
-
 
     iONode child = NULL;
     Boolean addToList = True;
@@ -1367,8 +1445,7 @@ static void __analyseList(iOAnalyse inst) {
     }
 
 
-
-
+    reachedEndblock = False;
     item = (iONode)ListOp.first( routelist );
     while(item) {
 
@@ -1380,6 +1457,13 @@ static void __analyseList(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         " [%s][%s][%s]", NodeOp.getName(item),
         wItem.getid(item), wItem.getstate(item) );
+
+
+
+      if( StrOp.equals(wItem.getid(item), bkb) ) {
+        reachedEndblock = True;
+      }
+
 
       if( StrOp.equals( NodeOp.getName(item), "sw") ) {
         iONode swcmd = NodeOp.inst( "swcmd", NULL, ELEMENT_NODE );
@@ -1408,7 +1492,7 @@ static void __analyseList(iOAnalyse inst) {
           iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
           tracknode = track->base.properties(track);
 
-          if( StrOp.equals( wItem.getstate(item), "yes" ) ){
+          if( StrOp.equals( wItem.getstate(item), "yes" ) && !reachedEndblock){
 
             const char * signaltype = wSignal.getsignal( item);
             if( signaltype == NULL)
@@ -1448,8 +1532,6 @@ static void __analyseList(iOAnalyse inst) {
         }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
-
-
         if( prevrouteids != NULL || !StrOp.equals(prevrouteids, "")) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           // check if id is allready in the list
@@ -1473,11 +1555,24 @@ static void __analyseList(iOAnalyse inst) {
           if( addToList) {
             wItem.setrouteids(tracknode, StrOp.fmt( "%s", wRoute.getid( newRoute) ) );
           }
-        }
-      }
+        } // else prevrouteids == NULL
 
-      bkb = wItem.getid(item);
-      bkbside = wItem.getstate(item);
+
+        /* Blockend Signal in Travel direction
+        if( reachedEndblock ) {
+          if( foundBlockendSignalInTravel) {
+            wItem.setblockid(tracknode, bkb);
+          }
+          if( foundBlockendSignalInTravel && foundBlockendSignalInReverse) {
+            wItem.setblockid(tracknode, bkb);
+          }
+
+        } // if( reachedEndblock )*/
+
+      } //
+
+      bkb = wRoute.getbkb( newRoute); //wItem.getid(item);
+      //bkbside = wItem.getstate(item);
       item = (iONode)ListOp.next( routelist );
     }
 
@@ -1502,6 +1597,7 @@ static void _analyse(iIAnalyserInt o) {
   MapOp.clear(data->objectmap);
   ListOp.clear(data->prelist);
   ListOp.clear(data->bklist);
+  ListOp.clear(data->bkoccitemlist);
 
   iONode modplan = data->model->getModPlan( data->model);
   if( modplan == NULL) {
@@ -1542,19 +1638,19 @@ static void _analyse(iIAnalyserInt o) {
     }
 
     if( StrOp.equals( blockori, "west" ) || StrOp.equals( blockori, "east" ) ) {
-      __analyseBlock(inst,block, "west");
-      __analyseBlock(inst,block, "east");
+      __analyseBlock(inst, block, "west");
+      __analyseBlock(inst, block, "east");
     } else if( StrOp.equals( blockori, "north" ) || StrOp.equals( blockori, "south" ) ) {
-      __analyseBlock(inst,block, "north");
-      __analyseBlock(inst,block, "south");
+      __analyseBlock(inst, block, "north");
+      __analyseBlock(inst, block, "south");
     }
-
 
     block = (iONode)ListOp.next(data->bklist);
   }
 
-  __analyseList(inst);
 
+  __analyseList(inst);
+  __analyseOccList(inst);
 }
 
 
@@ -1570,6 +1666,7 @@ static struct OAnalyse* _inst( iOModel model, iONode plan ) {
   data->objectmap = MapOp.inst();
   data->prelist = ListOp.inst();
   data->bklist = ListOp.inst();
+  data->bkoccitemlist = ListOp.inst();
   instCnt++;
   return __Analyse;
 }

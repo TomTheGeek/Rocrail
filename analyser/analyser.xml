@@ -30,6 +30,7 @@
       <var name="objectmap" vt="iOMap"/>
       <var name="prelist" vt="iOList"/>
       <var name="bklist" vt="iOList"/>
+      <var name="bkoccitemlist" vt="iOList"/>
       <var name="model" vt="iOModel"/>
     </data>
   </object>
