@@ -178,8 +178,6 @@ static const int BlockCX = 4;
 #define oriEast2  6
 #define oriSouth2 7
 
-static const Boolean hardcore = False;
-
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 
 /* returns 0 for west, 1 for north, 2 for east and 3 for south */
@@ -1277,10 +1275,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
               wItem.getid(item), searchingSignal);
 
-          /* LIST
-          iONode itemB = (iONode)NodeOp.base.clone( item);
-          ListOp.add( occ, (obj)itemB );*/
-
           /* add route to occlist */
           ListOp.add( data->bkoccitemlist, (obj)occ);
 
@@ -1351,6 +1345,8 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
         wBlock.getid(block), inittravel, ret);
 
 }
+
+static const Boolean analyserStrict = False;
 static void __analyseOccList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
   iONode model = data->model->getModel( data->model);
@@ -1358,8 +1354,38 @@ static void __analyseOccList(iOAnalyse inst) {
   iOList occlist = (iOList)ListOp.first( data->bkoccitemlist );
   while(occlist) {
 
+    const char * bk = NULL;
+
     iONode item = (iONode)ListOp.first( occlist );
     while(item) {
+
+      if( StrOp.equals( NodeOp.getName(item), "bk") ) {
+        bk = wItem.getid(item);
+      } else {
+
+        iONode node = NULL;
+        if( StrOp.equals( NodeOp.getName(item), "tk") ) {
+          iOTrack track = data->model->getTrack( data->model, wItem.getid(item) );
+          node = track->base.properties(track);
+        }
+        if( StrOp.equals( NodeOp.getName(item), "fb") ) {
+          iOFBack track = data->model->getFBack( data->model, wItem.getid(item) );
+          node = track->base.properties(track);
+        }
+        if( StrOp.equals( NodeOp.getName(item), "sg") ) {
+          iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
+          node = track->base.properties(track);
+        }
+        if( StrOp.equals( NodeOp.getName(item), "sw") ) {
+          iOSwitch track = data->model->getSwitch( data->model, wItem.getid(item) );
+          node = track->base.properties(track);
+        }
+
+        if( node != NULL) {
+          wItem.setblockid(node, bk);
+        }
+      }
+
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] ", wItem.getid(item));
       item = (iONode)ListOp.next( occlist );
@@ -1441,9 +1467,7 @@ static void __analyseList(iOAnalyse inst) {
                         "refresh route: [%s]", wItem.getid( child));
          NodeOp.removeChild( stlist, child );
        }
-
     }
-
 
     reachedEndblock = False;
     item = (iONode)ListOp.first( routelist );
@@ -1458,12 +1482,9 @@ static void __analyseList(iOAnalyse inst) {
         " [%s][%s][%s]", NodeOp.getName(item),
         wItem.getid(item), wItem.getstate(item) );
 
-
-
       if( StrOp.equals(wItem.getid(item), bkb) ) {
         reachedEndblock = True;
       }
-
 
       if( StrOp.equals( NodeOp.getName(item), "sw") ) {
         iONode swcmd = NodeOp.inst( "swcmd", NULL, ELEMENT_NODE );
@@ -1557,18 +1578,6 @@ static void __analyseList(iOAnalyse inst) {
           }
         } // else prevrouteids == NULL
 
-
-        /* Blockend Signal in Travel direction
-        if( reachedEndblock ) {
-          if( foundBlockendSignalInTravel) {
-            wItem.setblockid(tracknode, bkb);
-          }
-          if( foundBlockendSignalInTravel && foundBlockendSignalInReverse) {
-            wItem.setblockid(tracknode, bkb);
-          }
-
-        } // if( reachedEndblock )*/
-
       } //
 
       bkb = wRoute.getbkb( newRoute); //wItem.getid(item);
@@ -1650,7 +1659,9 @@ static void _analyse(iIAnalyserInt o) {
 
 
   __analyseList(inst);
-  __analyseOccList(inst);
+
+  if( analyserStrict)
+    __analyseOccList(inst);
 }
 
 
