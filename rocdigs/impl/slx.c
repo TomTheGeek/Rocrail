@@ -163,7 +163,7 @@ static iOSlot __getSlot(iOSLXData data, iONode node) {
     MutexOp.post(data->lcmux);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
-
+  return slot;
 }
 
 
