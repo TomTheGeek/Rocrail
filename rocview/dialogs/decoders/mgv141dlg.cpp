@@ -167,6 +167,22 @@ void MGV141Dlg::onOK( wxCommandEvent& event )
 }
 
 void MGV141Dlg::onUnitSelected( wxCommandEvent& event ) {
+  if( m_AddressList->GetSelection() == wxNOT_FOUND )
+    return;
+
+  // "%03d/%03d ver:%d"
+  char* s = StrOp.dup(m_AddressList->GetStringSelection().mb_str(wxConvUTF8));
+  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "Selected MGV141 = [%s]", s );
+  // 000/000
+  s[3] = '\0';
+  s[7] = '\0';
+  m_UnitHigh->SetValue( atoi(s) );
+  m_UnitLow->SetValue( atoi(s+4) );
+  StrOp.free(s);
+
+  m_iLowAddress = m_UnitHigh->GetValue();
+  m_iSubAddress = m_UnitLow->GetValue();
+  SetTitle( wxString::Format( _T("%s  %d-%d"), _T("MGV141"), m_iLowAddress , m_iSubAddress ) );
 
 }
 
@@ -321,11 +337,11 @@ void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int 
                           m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
     if( (sv-3) % 2 == 1 ) {
       // high part
-      CA[port]->SetValue(val*256);
+      CA[port]->SetValue(CA[port]->GetValue() + val*256);
     }
     else {
       // low part
-      CA[port]->SetValue(CA[port]->GetValue() + val);
+      CA[port]->SetValue(val);
     }
   }
 }
