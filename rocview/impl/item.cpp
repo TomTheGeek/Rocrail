@@ -661,7 +661,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     const char* mod_ori = wItem.getori(m_Props);
     const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
-    if( wxGetApp().isModView() ) {
+    if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
       ori = mod_ori;
     }
 
