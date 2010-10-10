@@ -151,6 +151,7 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
   m_Interface_Panel->GetSizer()->Layout();
   m_DetailsPanel->GetSizer()->Layout();
   m_FunctionPanel->GetSizer()->Layout();
+  m_CVPanel->GetSizer()->Layout();
 
   m_Notebook->Fit();
 
@@ -1690,7 +1691,7 @@ void LocDialog::CreateControls()
     wxBoxSizer* itemBoxSizer177 = new wxBoxSizer(wxVERTICAL);
     m_CVPanel->SetSizer(itemBoxSizer177);
 
-    m_CVList = new wxGrid( m_CVPanel, ID_GRID_LOC_CV, wxDefaultPosition, wxSize(200, 150), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
+    m_CVList = new wxGrid( m_CVPanel, ID_GRID_LOC_CV, wxDefaultPosition, wxSize(200, 150), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
     m_CVList->SetDefaultColSize(50);
     m_CVList->SetDefaultRowSize(25);
     m_CVList->SetColLabelSize(25);
@@ -1855,8 +1856,10 @@ void LocDialog::OnButtonF0Click( wxCommandEvent& event )
 void LocDialog::OnListboxSelected( wxCommandEvent& event )
 {
   m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
-  if( m_Props != NULL )
+  if( m_Props != NULL ) {
     InitValues();
+    m_CVPanel->GetSizer()->Layout();
+  }
   else
     TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
 }
