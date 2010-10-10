@@ -187,6 +187,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 /* returns 0 for west, 1 for north, 2 for east and 3 for south */
 static int __getOri(iONode item ) {
   const char* ori = wItem.getori(item);
+  if( ori == NULL ) return oriWest;
   if( StrOp.equals( wItem.west , ori ) ) return oriWest;
   if( StrOp.equals( wItem.north, ori ) ) return oriNorth;
   if( StrOp.equals( wItem.east , ori ) ) return oriEast;
@@ -1443,11 +1444,16 @@ static void __analyseOccList(iOAnalyse inst) {
   while(occlist) {
 
     const char * bk = NULL;
+    iONode block = NULL;
 
     iONode item = (iONode)ListOp.first( occlist );
     while(item) {
 
       if( StrOp.equals( NodeOp.getName(item), "bk") ) {
+
+        iIBlockBase blockb = data->model->getBlock( data->model, wItem.getid(item) );
+        block = blockb->base.properties( blockb);
+
         bk = wItem.getid(item);
       } else {
 
@@ -1467,7 +1473,32 @@ static void __analyseOccList(iOAnalyse inst) {
         if( StrOp.equals( NodeOp.getName(item), "sw") ) {
           iOSwitch track = data->model->getSwitch( data->model, wItem.getid(item) );
           node = track->base.properties(track);
-        }
+
+          const char * prev = wBlock.getturnoutstolock(block);
+          if( prev != NULL || !StrOp.equals(prev, "")) {
+            iOStrTok tok = StrTokOp.inst( prev, ',' );
+            Boolean isInList = False;
+            while ( StrTokOp.hasMoreTokens( tok )) {
+              const char * token = StrTokOp.nextToken( tok );
+              if( StrOp.equals( token, wItem.getid(item))) {
+                isInList = True;
+              }
+            }
+
+            if( !isInList ) {
+              char* newval = StrOp.fmt("%s,%s", wBlock.getturnoutstolock(block), wItem.getid(item));
+
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "    locked: [%s] for [%s] ", wItem.getid(item), wItem.getid(block));
+              wBlock.setturnoutstolock(block, newval);
+              StrOp.free( newval);
+            } else {
+              wBlock.setturnoutstolock(block, wItem.getid(item));
+            }
+
+          }
+
+        } // if sw
+
 
         if( node != NULL) {
           wItem.setblockid(node, bk);
@@ -1654,17 +1685,22 @@ static void __analyseList(iOAnalyse inst) {
           }
 
           if( !isInList && doIt) {
-            if( addToList)
-              wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) ) );
-            else {
-              wItem.setrouteids(tracknode, StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( child) ) );
+             if( addToList) {
+              char* newval = newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) );
+              wItem.setrouteids(tracknode, newval );
+              StrOp.free(newval);
+            } else {
+              char* newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( child) );
+              wItem.setrouteids(tracknode, newval);
+              StrOp.free(newval);
             }
           }
         } else  { // prevrouteids == NULL
 
           if( addToList) {
-            wItem.setrouteids(tracknode, StrOp.fmt( "%s", wRoute.getid( newRoute) ) );
+            wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
           }
+
         } // else prevrouteids == NULL
 
         if( cleanrun)
@@ -1756,10 +1792,6 @@ static void _analyse(iIAnalyserInt o) {
 
   if( analyserStrict)
     __analyseOccList(inst);
-
-
-
-
 
 }
 

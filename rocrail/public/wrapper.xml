@@ -1287,6 +1287,7 @@
         <var name="wsignalR" vt="string" defval="NULL" range="*" remark="Warning Signal ID for reverse direction. (sw)"/>
         <var name="electrified" vt="bool" defval="false" remark="Block is open for electric locs."/>
         <var name="station" vt="bool" defval="false" remark="Block has a station defined by type."/>
+        <var name="turnoutstolock" vt="string" defval="NULL" range="*" remark="comma separated list of turnouts to lock with the block"/>
         <const name="type_turntable" vt="string" val="turntable"/>
         <const name="type_lightgoods" vt="string" val="lightgoods"/>
         <const name="type_light" vt="string" val="light"/>
