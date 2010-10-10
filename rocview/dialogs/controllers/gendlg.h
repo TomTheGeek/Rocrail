@@ -116,6 +116,7 @@ public:
     static bool ShowToolTips();
 
 ////@begin GenericCtrlDlg member variables
+    wxPanel* m_Panel;
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;

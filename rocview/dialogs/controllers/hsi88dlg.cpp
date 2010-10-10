@@ -81,11 +81,13 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props )
   initLabels();
   initValues();
 
-  GetSizer()->Layout();
+  m_Panel->GetSizer()->Fit(this);
+  m_Panel->GetSizer()->SetSizeHints(this);
+  m_Panel->GetSizer()->Layout();
+
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
-
-  Fit();
+  GetSizer()->Layout();
 
 }
 
@@ -154,6 +156,7 @@ void Hsi88CntrlDlg::evaluate() {
 bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin Hsi88CntrlDlg member initialisation
+    m_Panel = NULL;
     m_labIID = NULL;
     m_IID = NULL;
     m_labDevice = NULL;
@@ -196,60 +199,60 @@ void Hsi88CntrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxPanel* itemPanel3 = new wxPanel( itemDialog1, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    m_Panel = new wxPanel( itemDialog1, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    itemBoxSizer2->Add(m_Panel, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
-    itemPanel3->SetSizer(itemBoxSizer4);
+    m_Panel->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(2, 2, 0, 0);
     itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
-    m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_HSI_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labDevice = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_DEVICE, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&RS232"));
     m_TypeStrings.Add(_("&USB"));
-    m_Type = new wxRadioBox( itemPanel3, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_ROWS );
+    m_Type = new wxRadioBox( m_Panel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_ROWS );
     m_Type->SetSelection(0);
     itemBoxSizer4->Add(m_Type, 0, wxGROW|wxALL, 5);
 
-    m_ChainBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Chains"));
+    m_ChainBox = new wxStaticBox(m_Panel, wxID_ANY, _("Chains"));
     wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer(m_ChainBox, wxVERTICAL);
     itemBoxSizer4->Add(itemStaticBoxSizer11, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(2, 3, 0, 0);
     itemStaticBoxSizer11->Add(itemFlexGridSizer12, 0, wxGROW, 5);
 
-    m_labLeft = new wxStaticText( itemPanel3, wxID_STATIC_HSI_LEFT, wxGetTranslation(wxString() + (wxChar) 0x013B + wxT("eft bus")), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labLeft, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_labLeft = new wxStaticText( m_Panel, wxID_STATIC_HSI_LEFT, wxGetTranslation(wxString() + (wxChar) 0x013B + wxT("eft bus")), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labLeft, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labMid = new wxStaticText( itemPanel3, wxID_STATIC_HSI_MID, _("Middle bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labMid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_labMid = new wxStaticText( m_Panel, wxID_STATIC_HSI_MID, _("Middle bus"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labMid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labRight = new wxStaticText( itemPanel3, wxID_STATIC_HSI_RIGHT, _("Right bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labRight, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_labRight = new wxStaticText( m_Panel, wxID_STATIC_HSI_RIGHT, _("Right bus"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer12->Add(m_labRight, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Left = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_LEFT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_Left = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_LEFT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Left->SetMaxLength(5);
     itemFlexGridSizer12->Add(m_Left, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Mid = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_MID, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_Mid = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_MID, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Mid->SetMaxLength(5);
     itemFlexGridSizer12->Add(m_Mid, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Right = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_HSI_RIGHT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_Right = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_RIGHT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Right->SetMaxLength(5);
     itemFlexGridSizer12->Add(m_Right, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 

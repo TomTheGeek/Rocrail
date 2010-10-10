@@ -120,6 +120,7 @@ public:
     static bool ShowToolTips();
 
 ////@begin Hsi88CntrlDlg member variables
+    wxPanel* m_Panel;
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;

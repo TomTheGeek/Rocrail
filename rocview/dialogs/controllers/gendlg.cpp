@@ -81,9 +81,12 @@ GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* cont
   initLabels();
   initValues();
 
+  m_Panel->GetSizer()->Fit(this);
+  m_Panel->GetSizer()->SetSizeHints(this);
+  m_Panel->GetSizer()->Layout();
+
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
-
   GetSizer()->Layout();
 
 }
@@ -206,6 +209,7 @@ void GenericCtrlDlg::evaluate() {
 bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin GenericCtrlDlg member initialisation
+    m_Panel = NULL;
     m_labIID = NULL;
     m_IID = NULL;
     m_labDevice = NULL;
@@ -253,32 +257,32 @@ void GenericCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxPanel* itemPanel3 = new wxPanel( itemDialog1, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxGROW|wxALL, 5);
+    m_Panel = new wxPanel( itemDialog1, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    itemBoxSizer2->Add(m_Panel, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
-    itemPanel3->SetSizer(itemBoxSizer4);
+    m_Panel->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(2, 2, 0, 0);
     itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
-    m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_Panel, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT1, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labDevice = new wxStaticText( m_Panel, ID_STATICTEXT1, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( m_Panel, ID_TEXTCTRL1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_labLib = new wxStaticText( itemPanel3, wxID_ANY, _("Library"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labLib = new wxStaticText( m_Panel, wxID_ANY, _("Library"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labLib, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Lib = new wxTextCtrl( itemPanel3, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+    m_Lib = new wxTextCtrl( m_Panel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_Lib->Enable(false);
     itemFlexGridSizer5->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -294,7 +298,7 @@ void GenericCtrlDlg::CreateControls()
     m_BaudrateStrings.Add(_("&57600"));
     m_BaudrateStrings.Add(_("&115200"));
     m_BaudrateStrings.Add(_("&230400"));
-    m_Baudrate = new wxRadioBox( itemPanel3, ID_RADIOBOX, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_COLS );
+    m_Baudrate = new wxRadioBox( m_Panel, ID_RADIOBOX, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_COLS );
     m_Baudrate->SetSelection(0);
     itemBoxSizer12->Add(m_Baudrate, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -303,47 +307,47 @@ void GenericCtrlDlg::CreateControls()
     m_HardwareFlowStrings.Add(_("&cts"));
     m_HardwareFlowStrings.Add(_("&dsr"));
     m_HardwareFlowStrings.Add(_("&xon"));
-    m_HardwareFlow = new wxRadioBox( itemPanel3, ID_RADIOBOX1, _("Hardware Flow"), wxDefaultPosition, wxDefaultSize, m_HardwareFlowStrings, 1, wxRA_SPECIFY_COLS );
+    m_HardwareFlow = new wxRadioBox( m_Panel, ID_RADIOBOX1, _("Hardware Flow"), wxDefaultPosition, wxDefaultSize, m_HardwareFlowStrings, 1, wxRA_SPECIFY_COLS );
     m_HardwareFlow->SetSelection(0);
     itemBoxSizer12->Add(m_HardwareFlow, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer15 = new wxFlexGridSizer(2, 3, 0, 0);
     itemBoxSizer4->Add(itemFlexGridSizer15, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_labTimeout = new wxStaticText( itemPanel3, wxID_ANY, _("Timeout"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labTimeout = new wxStaticText( m_Panel, wxID_ANY, _("Timeout"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_labTimeout, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Timeout = new wxTextCtrl( itemPanel3, wxID_ANY, _("1000"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_Timeout = new wxTextCtrl( m_Panel, wxID_ANY, _("1000"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer15->Add(m_Timeout, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labMS = new wxStaticText( itemPanel3, wxID_ANY, _("mS"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labMS = new wxStaticText( m_Panel, wxID_ANY, _("mS"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_labMS, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
-    m_labFeedbackBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Feedback"));
+    m_labFeedbackBox = new wxStaticBox(m_Panel, wxID_ANY, _("Feedback"));
     wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_labFeedbackBox, wxVERTICAL);
     itemBoxSizer4->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer19->Add(itemBoxSizer20, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
-    m_labFbMod = new wxStaticText( itemPanel3, wxID_STATIC, _("Number"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labFbMod = new wxStaticText( m_Panel, wxID_STATIC, _("Number"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer20->Add(m_labFbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_FbMod = new wxTextCtrl( itemPanel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_FbMod = new wxTextCtrl( m_Panel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemBoxSizer20->Add(m_FbMod, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer19->Add(itemBoxSizer23, 0, wxGROW|wxALL, 5);
 
-    m_FbPoll = new wxCheckBox( itemPanel3, wxID_ANY, _("Poll"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FbPoll = new wxCheckBox( m_Panel, wxID_ANY, _("Poll"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FbPoll->SetValue(false);
     itemBoxSizer23->Add(m_FbPoll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_FbReset = new wxCheckBox( itemPanel3, wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FbReset = new wxCheckBox( m_Panel, wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FbReset->SetValue(false);
     itemBoxSizer23->Add(m_FbReset, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_PTSupport = new wxCheckBox( itemPanel3, wxID_ANY, _("PT Support"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_PTSupport = new wxCheckBox( m_Panel, wxID_ANY, _("PT Support"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PTSupport->SetValue(false);
     itemBoxSizer4->Add(m_PTSupport, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
