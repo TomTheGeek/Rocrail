@@ -659,10 +659,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
     pen.SetWidth(1);
     dc.SetPen(pen);
 
-    const char* mod_ori = wItem.getori(m_Props);
-    const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
+    const char* ori = wItem.getori(m_Props);
     if( wxGetApp().isModView() ) {
-      ori = mod_ori;
+      ori = NodeOp.getStr(m_Props, "prev_ori", ori);
     }
 
     m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
@@ -2254,7 +2253,6 @@ void Symbol::modelEvent( iONode node ) {
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 
   }
-
   // In case of 2 or more panels we must refresh always because the state could be set already.
   //if( refresh )
     Refresh();
