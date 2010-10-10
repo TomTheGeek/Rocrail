@@ -1254,7 +1254,7 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
 
 bool PlanPanel::isRouteLocked(const char* id) {
   bool locked = MapOp.haskey( m_LockedRoutes, id );
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Q: route %s is %s", id, locked?"locked":"free" );
+  TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Q: route %s is %s", id, locked?"locked":"free" );
   return locked;
 }
 

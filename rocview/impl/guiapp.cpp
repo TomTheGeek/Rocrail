@@ -425,7 +425,6 @@ static void conThread( void* threadinst ) {
     evt->SetString(_T("Offline"));
     evt->SetExtraLong(status_rcon);
     wxPostEvent( o->m_Frame, *evt );
-    StrOp.free(val);
     o->m_Frame->setOnline(false);
     o->m_Frame->setOffline(true);
     o->m_bOffline = true;
