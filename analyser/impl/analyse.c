@@ -179,7 +179,7 @@ static const int BlockCX = 4;
 #define oriEast2  6
 #define oriSouth2 7
 
-static const Boolean analyserStrict = False;
+static const Boolean analyserStrict = True;
 static const Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
@@ -1081,8 +1081,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       */
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d]"
-        "",
-        wItem.getid(item), travel);
+        " sfs: [%d]",
+        wItem.getid(item), travel, searchingSignal);
 
   const char * state = " ";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
@@ -1195,6 +1195,42 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "NEXT ITEM: %s TOS: [%d]",
           NodeOp.getName(nextitem), turnoutstate_out );
+
+      /* occ */
+      if( StrOp.equals(NodeOp.getName(item) , "sg" ) ) {
+
+        /*is the signal in our direction ?*/
+        Boolean inOurTravel = False;
+        if( StrOp.equals( itemori, "west" ) && travel == 0){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "north" ) && travel == 3){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "east" ) && travel == 2){
+          inOurTravel = True;
+        } else if( StrOp.equals( itemori, "south" ) && travel == 1){
+          inOurTravel = True;
+        }
+
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "-- > is? [%s] inOurTravel: %d",
+                      wItem.getid(item), inOurTravel);
+
+        //!StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant")
+        if( searchingSignal && inOurTravel) {
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
+              wItem.getid(item), searchingSignal);
+
+          /* add route to occlist */
+          ListOp.add( data->bkoccitemlist, (obj)occ);
+
+          searchingSignal = False;
+
+          if( behindABlock) {
+            return;
+          }
+        }
+
+      } // if sg
 
       int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
       if( (travelp == itemNotInDirection || travelp == -1) && travelp != dcrossingAhead) {
@@ -1333,41 +1369,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
       } // if bk || sw
 
-      /* occ */
-      if( StrOp.equals(NodeOp.getName(item) , "sg" ) ) {
 
-        /*is the signal in our direction ?*/
-        Boolean inOurTravel = False;
-        if( StrOp.equals( itemori, "west" ) && travel == 0){
-          inOurTravel = True;
-        } else if( StrOp.equals( itemori, "north" ) && travel == 3){
-          inOurTravel = True;
-        } else if( StrOp.equals( itemori, "east" ) && travel == 2){
-          inOurTravel = True;
-        } else if( StrOp.equals( itemori, "south" ) && travel == 1){
-          inOurTravel = True;
-        }
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > frage? [%s] inOurTravel: %d",
-                      wItem.getid(item), inOurTravel);
-
-        //!StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant")
-        if( searchingSignal && inOurTravel) {
-
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
-              wItem.getid(item), searchingSignal);
-
-          /* add route to occlist */
-          ListOp.add( data->bkoccitemlist, (obj)occ);
-
-          searchingSignal = False;
-
-          if( behindABlock) {
-            return;
-          }
-        }
-
-      } // if sg
 
 
       depth++;
