@@ -661,7 +661,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     const char* ori = wItem.getori(m_Props);
     if( wxGetApp().isModView() ) {
-      ori = NodeOp.getStr(m_Props, "prev_ori", ori);
+      //ori = NodeOp.getStr(m_Props, "prev_ori", ori);
     }
 
     m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
