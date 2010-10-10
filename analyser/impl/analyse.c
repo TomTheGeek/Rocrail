@@ -100,6 +100,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/SelTab.h"
 
 #include "rocrail/public/track.h"
 #include "rocrail/public/switch.h"
@@ -213,8 +214,8 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             modx, mody );
 
   while( node != NULL ) {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  block %s with key (old) %s",
+    if( StrOp.equals( wBlock.name(), NodeOp.getName(node) ) || StrOp.equals( "seltab", NodeOp.getName(node) )) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ------>  block %s with key (old) %s",
           wBlock.getid(node), __createKey( key, node, 0+modx, 0+mody, 0) );
 
       ListOp.add( data->bklist, (obj)node );
@@ -265,6 +266,33 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
         if( wBlock.issmallsymbol(node) ) {
           fields = 2;
         }
+
+        int i;
+        for (i=1;i<fields;i++) {
+
+          if( StrOp.equals( ori, "east" ) || StrOp.equals( ori, "west" ) ) {
+            __createKey( key, node, i, 0, 0);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                      key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+            MapOp.put( data->objectmap, key, (obj)node);
+          }
+          if( StrOp.equals( ori, "north" ) || StrOp.equals( ori, "south" ) ) {
+            __createKey( key, node, 0, i, 0);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                      key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+            MapOp.put( data->objectmap, key, (obj)node);
+          }
+        }
+      }
+
+      if( StrOp.equals( NodeOp.getName(node), "seltab" ) ) {
+
+        int fields = wSelTab.getnrtracks( node);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SELTAB %d",
+            fields);
 
         int i;
         for (i=1;i<fields;i++) {
@@ -392,6 +420,28 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         if( wBlock.issmallsymbol( item )) {
           step = 1;
         }
+
+        if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
+          if( (travel == 2) ) {
+            *x = step;
+            return travel;
+          } else if ( travel == 0)
+            return travel;
+        }
+        else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
+          if( (travel == 3) ) {
+            *y = step;
+            return travel;
+          } else if ( travel == 1)
+            return travel;
+        }
+        return itemNotInDirection;
+      }
+
+      /* block */
+      else if( StrOp.equals( NodeOp.getName(item) , "seltab" )) {
+
+        int step = wSelTab.getnrtracks( item);
 
         if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
           if( (travel == 2) ) {
@@ -1024,9 +1074,15 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
    itemori = "west";
   }
 
+  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d] \n"
       "depth: [%d] tos: [%d] searchingSignal: [%d] behindablock: [%d]",
       wItem.getid(item), travel, depth, turnoutstate, searchingSignal, behindABlock);
+      */
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d]"
+        "",
+        wItem.getid(item), travel);
 
   const char * state = " ";
   if( StrOp.equals( NodeOp.getName(item) , "sw" ) ) {
@@ -1146,7 +1202,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         return False;
       }
 
-      if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) ) {
+      if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) || StrOp.equals( "seltab", NodeOp.getName(nextitem) )) {
 
         if( behindABlock) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BLOCK PANIC ####################################");
@@ -1458,7 +1514,7 @@ static void __analyseList(iOAnalyse inst) {
     int count = 0;
     while(item) {
 
-      if( StrOp.equals(NodeOp.getName(item) , "bk" ) && count != 0) {
+      if( (StrOp.equals(NodeOp.getName(item) , "bk" ) || StrOp.equals(NodeOp.getName(item) , "seltab" ) )&& count != 0) {
         bkb = wItem.getid(item);
         bkbside = wItem.getstate(item);
         reachedEndblock = True;

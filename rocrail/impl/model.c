@@ -116,6 +116,7 @@
 #include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Exception.h"
+
 static int instCnt = 0;
 
 
@@ -2168,6 +2169,15 @@ static iOList _getLevelItems( iOModel inst, int level, int* cx, int* cy, Boolean
       while( item != NULL ) {
         __addLevelItem( list, item, level, cx, cy );
         item =  wOutputList.nextco( itemlist, item );
+      }
+    }
+
+    itemlist = wPlan.getseltablist( data->model );
+    if( itemlist != NULL ) {
+      item = wSelTabList.getseltab( itemlist );
+      while( item != NULL ) {
+        __addLevelItem( list, item, level, cx, cy );
+        item =  wSelTabList.nextseltab( itemlist, item );
       }
     }
 
