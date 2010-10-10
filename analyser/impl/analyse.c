@@ -1098,7 +1098,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       if( turnoutstate == 1) state = "left";
       if( turnoutstate == 2) state = "right";
     }
-  } else if( StrOp.equals( NodeOp.getName(item) , "bk" )) {
+  } else if( StrOp.equals( NodeOp.getName(item) , "bk" ) || StrOp.equals( NodeOp.getName(item) , "seltab" )) {
     state = "-";
     if( StrOp.equals( itemori, "west" ) && travel == 0){
       state = "+";
