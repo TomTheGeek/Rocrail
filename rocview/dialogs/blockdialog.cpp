@@ -1035,6 +1035,7 @@ bool BlockDialog::evaluate() {
       }
     }
 
+    /*
     if( !hasRoute ) {
       char* msg = StrOp.fmt( wxGetApp().getMsg("unusedfbevent").mb_str(wxConvUTF8), wFeedbackEvent.getfrom( fb ) );
 
@@ -1046,6 +1047,7 @@ bool BlockDialog::evaluate() {
         ListOp.add( delList, (obj)fb );
       }
     }
+    */
 
     fb = wBlock.nextfbevent( m_Props, fb );
   };
