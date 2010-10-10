@@ -659,10 +659,12 @@ void Symbol::OnPaint(wxPaintEvent& event)
     pen.SetWidth(1);
     dc.SetPen(pen);
 
-    const char* ori = wItem.getori(m_Props);
+    const char* mod_ori = wItem.getori(m_Props);
+    const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
     if( wxGetApp().isModView() ) {
-      //ori = NodeOp.getStr(m_Props, "prev_ori", ori);
+      ori = mod_ori;
     }
+
 
     m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
 
