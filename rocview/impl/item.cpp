@@ -128,6 +128,7 @@ enum {
     ME_CloseBlock,
     ME_OpenBlock,
     ME_AcceptIdent,
+    ME_ResetWheelcounter,
     ME_Info,
     ME_Timer,
     ME_TTLightOn,
@@ -194,6 +195,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_CmdSignalWhite, Symbol::OnCmdSignalWhite )
 
   EVT_MENU     (ME_Info, Symbol::OnInfo)
+  EVT_MENU     (ME_ResetWheelcounter, Symbol::OnResetWheelcounter)
 
   EVT_MENU     (ME_FYGo+0, Symbol::OnFYGo)
   EVT_MENU     (ME_FYGo+1, Symbol::OnFYGo)
@@ -719,6 +721,14 @@ void Symbol::OnCmdRight(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.right );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnResetWheelcounter(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
+  wFeedback.setcmd( cmd, wFeedback.reset );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -1305,6 +1315,11 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
       }
       menu.AppendSeparator();
+    }
+    else if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
+      if( wFeedback.getbus(m_Props) == wFeedback.fbtype_wheelcounter ) {
+        menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("reset") );
+      }
     }
 
     //menu.AppendSeparator();

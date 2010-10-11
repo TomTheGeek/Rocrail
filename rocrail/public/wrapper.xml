@@ -1167,6 +1167,8 @@
         <var name="countedcars" vt="int" defval="0" remark="number of cars to count before firing the event. (only for client info)"/>
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
         <var name="wheelcount" vt="int" defval="0" remark="counted wheels; sofar"/>
+        <const name="reset" vt="string" val="reset"/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
         <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>
         <const name="fbtype_transponder" vt="int" val="2" remark="transponder"/>

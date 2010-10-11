@@ -241,7 +241,7 @@ static int _getCounter( iOFBack inst ) {
 static void _resetCounter( iOFBack inst ) {
   iOFBackData data = Data(inst);
   data->counter = 0;
-  if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter ) {
+  if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter ) {
     /* TODO: send switch command */
     iONode node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE);
     wSwitch.setport1( node, wFeedback.getaddr( data->props ) );
@@ -280,11 +280,16 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
   iOFBackData data = Data(inst);
   iOControl control = AppOp.getControl();
   int error = 0;
-  wFeedback.setiid( cmd, wFeedback.getiid( data->props ) );
-  wFeedback.setbus( cmd, wFeedback.getbus( data->props ) );
-  wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
-  wFeedback.setactivelow( cmd, wFeedback.isactivelow( data->props ) );
-  ControlOp.cmd( control, cmd, &error );
+  if( StrOp.equals(wFeedback.reset, wFeedback.getcmd(cmd))) {
+    FBackOp.resetCounter(inst);
+  }
+  else {
+    wFeedback.setiid( cmd, wFeedback.getiid( data->props ) );
+    wFeedback.setbus( cmd, wFeedback.getbus( data->props ) );
+    wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
+    wFeedback.setactivelow( cmd, wFeedback.isactivelow( data->props ) );
+    ControlOp.cmd( control, cmd, &error );
+  }
   return True;
 }
 
