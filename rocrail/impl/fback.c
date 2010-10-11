@@ -249,6 +249,18 @@ static void _resetCounter( iOFBack inst ) {
     wSwitch.setcmd( node, wSwitch.turnout );
     ControlOp.cmd( AppOp.getControl(), node, NULL );
   }
+  /* Broadcast to clients. Node4 */
+  {
+    iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setid( nodeD, FBackOp.getId( inst ) );
+    wFeedback.setstate( nodeD, data->state );
+    wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+    wFeedback.setcounter( data->props, data->counter );
+    wFeedback.setcarcount( nodeD, data->carcount );
+    wFeedback.setcountedcars( nodeD, data->countedcars );
+    wFeedback.setwheelcount( nodeD, data->wheelcount );
+    AppOp.broadcastEvent( nodeD );
+  }
 }
 
 static void _setCarCount( iOFBack inst, int count ) {
@@ -272,6 +284,7 @@ static void _setState( iOFBack inst, Boolean state ) {
     wFeedback.setid( nodeD, FBackOp.getId( inst ) );
     wFeedback.setstate( nodeD, data->state );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+    wFeedback.setcounter( data->props, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, data->wheelcount );
@@ -343,6 +356,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setid( nodeD, FBackOp.getId( inst ) );
+      wFeedback.setcounter( data->props, data->counter );
       wFeedback.setcarcount( nodeD, data->carcount );
       wFeedback.setcountedcars( nodeD, data->countedcars );
       wFeedback.setstate( nodeD, data->state );
@@ -405,7 +419,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
     wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
-
+    wFeedback.setcounter( data->props, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
