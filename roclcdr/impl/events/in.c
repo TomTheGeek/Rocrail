@@ -109,6 +109,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
             data->curBlock->base.id( data->curBlock ), data->curBlock->getWheelCount(data->curBlock),
             data->next1Block->base.id( data->next1Block ), data->next1Block->getWheelCount(data->next1Block) );
         data->state = LC_IDLE;
+        data->run = False;
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                        "Setting state for \"%s\" to LC_IDLE.",
                        data->loc->getId( data->loc ) );
