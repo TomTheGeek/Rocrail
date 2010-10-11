@@ -156,6 +156,7 @@
       <var name="ghost" vt="Boolean"/>
       <var name="acceptident" vt="Boolean"/>
       <var name="wheelcount" vt="int"/>
+      <var name="wheelcounterId" vt="const char*"/>
     </data>
   </object>
 

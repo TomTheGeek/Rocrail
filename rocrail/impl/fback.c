@@ -241,6 +241,13 @@ static int _getCounter( iOFBack inst ) {
 static void _resetCounter( iOFBack inst ) {
   iOFBackData data = Data(inst);
   data->counter = 0;
+  if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter ) {
+    /* TODO: send switch command */
+    iONode node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE);
+    wSwitch.setport1( node, wFeedback.getaddr( data->props ) );
+    wSwitch.setcmd( node, wSwitch.turnout );
+    ControlOp.cmd( AppOp.getControl(), node, NULL );
+  }
 }
 
 static void _setCarCount( iOFBack inst, int count ) {

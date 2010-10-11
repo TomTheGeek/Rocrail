@@ -484,6 +484,13 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       } else {
         LocOp.event( loc, manager, in_event, timing );
       }
+      /* reset wheel counter */
+      {
+        iOFBack fb = ModelOp.getFBack( AppOp.getModel(), data->wheelcounterId );
+        if( fb != NULL ) {
+          FBackOp.resetCounter(fb);
+        }
+      }
     }
     else
       LocOp.event( loc, manager, evt, 0 );
@@ -579,8 +586,10 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
 
 static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
   iOBlockData data = Data(inst);
-  if( wheelcount > 0 )
+  if( wheelcount > 0 ) {
     data->wheelcount = wheelcount;
+    data->wheelcounterId = id;
+  }
   _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL );
 }
 
