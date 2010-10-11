@@ -241,6 +241,7 @@ static int _getCounter( iOFBack inst ) {
 static void _resetCounter( iOFBack inst ) {
   iOFBackData data = Data(inst);
   data->counter = 0;
+  data->wheelcount = 0;
   if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter ) {
     /* TODO: send switch command */
     iONode node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE);
@@ -284,6 +285,9 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
     FBackOp.resetCounter(inst);
   }
   else {
+    if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter)
+      data->wheelcount++;
+
     wFeedback.setiid( cmd, wFeedback.getiid( data->props ) );
     wFeedback.setbus( cmd, wFeedback.getbus( data->props ) );
     wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
@@ -309,8 +313,15 @@ static void _event( iOFBack inst, iONode nodeC ) {
   if( wFeedback.isactivelow( data->props ) )
     data->state = !data->state;
 
+  if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] COUNTING WHEELS: countedwheels=%d",
+        FBackOp.getId(inst), wFeedback.getwheelcount(nodeC) + data->wheelcount );
+    /* the plus data->wheelcount is for simulation */
+  }
+
   if(data->state ) {
     data->counter++;
+
 
     if( data->carcount > 0 ) {
       data->countedcars++;

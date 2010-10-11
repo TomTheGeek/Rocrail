@@ -415,6 +415,7 @@
       <var name="counter" vt="int" remark="occupied counter"/>
       <var name="carcount" vt="int"/>
       <var name="countedcars" vt="int"/>
+      <var name="wheelcount" vt="int"/>
     </data>
   </object>
 
