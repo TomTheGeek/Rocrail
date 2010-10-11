@@ -78,6 +78,7 @@ static void __exception( int level, char* msg ) {
     }
     wException.settext( e, msg );
     wException.setlevel( e, level );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "broadcasting a message: %s", msg );
     AppOp.broadcastEvent( e );
 
     StrOp.free((char*)backtrace[0]);

@@ -164,6 +164,7 @@ static void rocrailCallback( obj me, iONode node );
 
 static void ExceptionCallback( int level, char* msg ) {
   /* Added check for VSC++ uninitialized pointer in debug mode */
+  TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", msg );
   if ( ( wxGetApp().getFrame() != NULL ) && ( wxGetApp().getFrame() != (RocGuiFrame *)0xcdcdcdcd )) {
     if( wxGetApp().getFrame()->isInitialized() ) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
@@ -791,7 +792,7 @@ static void rocrailCallback( obj me, iONode node ) {
   /* State */
   if( StrOp.equals( wState.name(), NodeOp.getName( node ) ) ) {
     wxGetApp().setConsoleMode( wState.isconsolemode( node )?true:false );
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "conole mode is %s", wxGetApp().isConsoleMode()?"on":"off" );
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "console mode is %s", wxGetApp().isConsoleMode()?"on":"off" );
     if(guiApp->isInit()) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, STATE_EVENT );
       // Make a copy of the node for using it out of this scope:
@@ -871,6 +872,7 @@ static void rocrailCallback( obj me, iONode node ) {
   }
   /* Exception */
   else if( StrOp.equals( wException.name(), NodeOp.getName( node ) ) ) {
+    TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback: got exception" );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ADDEXCEPTION_EVENT );
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );

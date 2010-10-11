@@ -1476,8 +1476,6 @@ static void _resetTrigs( iIBlockBase inst ) {
   data->trig_renter_mid = False;
   data->trig_rexit_mid  = False;
 
-  data->wheelcount = 0;
-
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "Block \"%s\" resetTrigs.",
                  data->id );
@@ -1600,6 +1598,9 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       /* Unlock the semaphore: */
       MutexOp.post( data->muxLock );
     }
+
+    if( ok )
+      data->wheelcount = 0;
 
     return ok;
   }

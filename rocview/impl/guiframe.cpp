@@ -1865,6 +1865,8 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   long      maxlen = 16 * 1024;
   int          len = StrOp.len(text);
 
+  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
+
   if( m_WarningPanel != NULL ) {
     long i = m_WarningPanel->GetLastPosition();
     if( i > maxlen )
