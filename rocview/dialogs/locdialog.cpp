@@ -358,6 +358,20 @@ static int __sortID(obj* _a, obj* _b)
 }
 
 
+static int __sortCV(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int nrA = wCVByte.getnr( a );
+    int nrB = wCVByte.getnr( b );
+    if( nrA == nrB )
+      return 0;
+    if( nrA > nrB )
+      return 1;
+    return -1;
+}
+
+
 void LocDialog::InitIndex() {
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
@@ -669,14 +683,24 @@ void LocDialog::InitValues() {
   StrTokOp.base.del( consist );
 
   // CV's
-  m_CVList->DeleteRows( 0, m_CVList->GetNumberRows() );
+  iOList list = ListOp.inst();
   iONode cv = wLoc.getcvbyte( m_Props );
   while( cv != NULL ) {
+    if( wCVByte.getnr( cv ) < 1 || wCVByte.getnr( cv ) > 1024 )
+      continue;
+    ListOp.add(list, (obj)cv);
+    cv = wLoc.nextcvbyte( m_Props, cv );
+  };
+
+
+  m_CVList->DeleteRows( 0, m_CVList->GetNumberRows() );
+  ListOp.sort(list, &__sortCV);
+  int cnt = ListOp.size( list );
+  for( int i = 0; i < cnt; i++ ) {
+    iONode cv = (iONode)ListOp.get( list, i );
     char* cvnr = StrOp.fmt( "%d", wCVByte.getnr( cv ) );
     char* cvval = StrOp.fmt( "%d", wCVByte.getvalue( cv ) );
     const char* cvdesc = wCVByte.getdesc(cv);
-    if( wCVByte.getnr( cv ) < 1 || wCVByte.getnr( cv ) > 256 )
-      continue;
     m_CVNodes[wCVByte.getnr( cv )] = cv;
     m_CVList->AppendRows();
     int row = m_CVList->GetNumberRows()-1;
@@ -691,9 +715,11 @@ void LocDialog::InitValues() {
     m_CVList->SetReadOnly( row, 2, true );
     StrOp.free( cvnr );
     StrOp.free( cvval );
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
 
-    cv = wLoc.nextcvbyte( m_Props, cv );
-  };
+
   m_CVList->AutoSize();
 
 
