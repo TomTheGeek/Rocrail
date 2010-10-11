@@ -134,8 +134,11 @@ static Boolean __transact( iOSLX slx, byte* out, int outsize, byte* in, int insi
     else
       ok = SerialOp.write( data->serial, (char*)out, outsize );
     if( ok && insize > 0 ) {
-      if( !data->dummyio )
+      if( !data->dummyio ) {
         ok = SerialOp.read( data->serial, (char*)in, insize );
+        if(ok)
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, insize );
+      }
     }
     /* Release the mutex. */
     MutexOp.post( data->mux );
