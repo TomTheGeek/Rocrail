@@ -111,7 +111,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         data->state = LC_IDLE;
         data->run = False;
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                       "Setting state for \"%s\" to LC_IDLE.",
+                       "Setting state for \"%s\" to LC_IDLE and stop running auto mode.",
                        data->loc->getId( data->loc ) );
         data->loc->setMode(data->loc, wLoc.mode_idle);
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
