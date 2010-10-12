@@ -830,7 +830,7 @@ void RocrailIniDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_GeneralPanel->SetSizer(itemBoxSizer5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_LabelPlanfile = new wxStaticText( m_GeneralPanel, wxID_STATIC_RR_PLANFILE, _("PlanFile"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -907,7 +907,7 @@ void RocrailIniDialog::CreateControls()
     m_ScBox = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Shortcut"));
     wxStaticBoxSizer* itemStaticBoxSizer29 = new wxStaticBoxSizer(m_ScBox, wxVERTICAL);
     itemBoxSizer5->Add(itemStaticBoxSizer29, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer30->AddGrowableCol(1);
     itemStaticBoxSizer29->Add(itemFlexGridSizer30, 0, wxGROW, 5);
     m_labScSensor = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Shortcut"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1027,7 +1027,7 @@ void RocrailIniDialog::CreateControls()
     wxStaticBox* itemStaticBoxSizer64Static = new wxStaticBox(m_ServicePanel, wxID_ANY, _("Client Service"));
     m_ClientBox = new wxStaticBoxSizer(itemStaticBoxSizer64Static, wxVERTICAL);
     itemBoxSizer46->Add(m_ClientBox, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer65 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer65 = new wxFlexGridSizer(0, 2, 0, 0);
     m_ClientBox->Add(itemFlexGridSizer65, 0, wxGROW|wxALL, 5);
     m_LabelClientPort = new wxStaticText( m_ServicePanel, wxID_STATIC_RR_CLIENTPORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer65->Add(m_LabelClientPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1043,7 +1043,7 @@ void RocrailIniDialog::CreateControls()
     m_MaxCon->SetMaxLength(2);
     itemFlexGridSizer65->Add(m_MaxCon, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer70 = new wxFlexGridSizer(2, 1, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer70 = new wxFlexGridSizer(0, 1, 0, 0);
     m_ClientBox->Add(itemFlexGridSizer70, 0, wxGROW|wxALL, 5);
     m_OnlyFirstMaster = new wxCheckBox( m_ServicePanel, wxID_ANY, _("Only first is master"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OnlyFirstMaster->SetValue(false);
@@ -1052,7 +1052,7 @@ void RocrailIniDialog::CreateControls()
     m_SrcpService = new wxStaticBox(m_ServicePanel, wxID_ANY, _("SRCP Service"));
     wxStaticBoxSizer* itemStaticBoxSizer72 = new wxStaticBoxSizer(m_SrcpService, wxVERTICAL);
     itemBoxSizer46->Add(itemStaticBoxSizer72, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer73 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer73 = new wxFlexGridSizer(0, 3, 0, 0);
     itemStaticBoxSizer72->Add(itemFlexGridSizer73, 0, wxGROW|wxALL, 5);
     m_labSrcpPort = new wxStaticText( m_ServicePanel, wxID_ANY, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer73->Add(m_labSrcpPort, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1070,7 +1070,7 @@ void RocrailIniDialog::CreateControls()
     wxBoxSizer* itemBoxSizer78 = new wxBoxSizer(wxHORIZONTAL);
     m_AtomatPanel->SetSizer(itemBoxSizer78);
 
-    wxFlexGridSizer* itemFlexGridSizer79 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer79 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer79->AddGrowableCol(1);
     itemBoxSizer78->Add(itemFlexGridSizer79, 0, wxALIGN_TOP, 5);
     m_LabelSwTime = new wxStaticText( m_AtomatPanel, wxID_STATIC_RR_SWTIME, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1161,7 +1161,7 @@ void RocrailIniDialog::CreateControls()
     wxStaticLine* itemStaticLine108 = new wxStaticLine( m_AtomatPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
     itemBoxSizer78->Add(itemStaticLine108, 0, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer109 = new wxFlexGridSizer(2, 1, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer109 = new wxFlexGridSizer(0, 1, 0, 0);
     itemBoxSizer78->Add(itemFlexGridSizer109, 0, wxALIGN_TOP, 5);
     m_Check2In = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Check for free destination until reaching IN"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Check2In->SetValue(false);
@@ -1279,7 +1279,7 @@ void RocrailIniDialog::CreateControls()
     wxBoxSizer* itemBoxSizer140 = new wxBoxSizer(wxVERTICAL);
     m_R2RnetPanel->SetSizer(itemBoxSizer140);
 
-    wxFlexGridSizer* itemFlexGridSizer141 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer141 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer141->AddGrowableCol(1);
     itemBoxSizer140->Add(itemFlexGridSizer141, 0, wxGROW|wxALL, 5);
     m_labR2RnetID = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1300,7 +1300,7 @@ void RocrailIniDialog::CreateControls()
     m_R2RnetPort = new wxSpinCtrl( m_R2RnetPanel, wxID_ANY, _T("1234"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 65535, 1234 );
     itemFlexGridSizer141->Add(m_R2RnetPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer148 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer148 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer148->AddGrowableCol(1);
     itemBoxSizer140->Add(itemFlexGridSizer148, 0, wxGROW|wxALL, 5);
     m_labR2RnetRoutes = new wxStaticText( m_R2RnetPanel, wxID_ANY, _("Routes file"), wxDefaultPosition, wxDefaultSize, 0 );

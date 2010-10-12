@@ -52,7 +52,7 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxDefaultSize, wxBORDER_NONE)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(100,100), wxBORDER_NONE)
 {
   start = true;
   run   = true;
@@ -76,6 +76,7 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
 	WxTimer = new wxTimer();
 	WxTimer->SetOwner(this, ID_WXTIMER);
 	WxTimer->Start(TIMER/devider);
+  TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock instantiated" );
 }
 
 int modulal(int val)
@@ -158,6 +159,7 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
   if(m_Plate && m_Plate->Ok())
   {
+    //TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock paint" );
 		wxPaintDC dc(this);
 		double c = clockpicwidth / 2;
 
