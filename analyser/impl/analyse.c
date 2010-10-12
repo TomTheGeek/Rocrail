@@ -1560,7 +1560,7 @@ static void __analyseList(iOAnalyse inst) {
       item = (iONode)ListOp.next( routelist );
     }
 
-    wRoute.setid( newRoute, StrOp.fmt( "[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
+    wRoute.setid( newRoute, StrOp.fmt( "autogen-[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
     wRoute.setbka( newRoute, bka);
     wRoute.setbkb( newRoute, bkb);
     wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
@@ -1585,11 +1585,17 @@ static void __analyseList(iOAnalyse inst) {
         break;
       }
 
-      if( StrOp.equals(wItem.getid( child), wItem.getid( newRoute) )) {
+      if( StrOp.equals( wItem.getid( child), wItem.getid( newRoute) ) ){
+          //|| StrOp.startsWith( wItem.getid( child), "autogen-" )) {
          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                        "refresh route: [%s]", wItem.getid( child));
+             "refresh route: [%s]", wItem.getid( child));
+
+         i = 0;
+         childcnt = NodeOp.getChildCnt( stlist);
+
          NodeOp.removeChild( stlist, child );
-       }
+
+      }
     }
 
     reachedEndblock = False;
