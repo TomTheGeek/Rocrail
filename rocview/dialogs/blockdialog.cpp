@@ -1245,7 +1245,7 @@ void BlockDialog::CreateControls()
     m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_BLOCKS, wxDefaultPosition, wxSize(-1, 400), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemBoxSizer5->Add(m_List, 0, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
     m_New = new wxButton( m_IndexPanel, ID_BUTTON_BLOCK_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1282,7 +1282,7 @@ void BlockDialog::CreateControls()
     m_Length = new wxTextCtrl( m_General_Panel, ID_TEXTCTRL_LENGTH_BLOCK, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer13->Add(m_Length, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer20 = new wxFlexGridSizer(1, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer20 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer20->AddGrowableCol(1);
     itemBoxSizer12->Add(itemFlexGridSizer20, 0, wxGROW|wxALL, 5);
     m_LabelLocID = new wxStaticText( m_General_Panel, wxID_STATIC_BK_LOCID, _("LocID:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1384,7 +1384,7 @@ void BlockDialog::CreateControls()
     m_Location = new wxStaticBox(m_LocationPanel, wxID_ANY, _("Location"));
     wxStaticBoxSizer* itemStaticBoxSizer48 = new wxStaticBoxSizer(m_Location, wxVERTICAL);
     itemBoxSizer46->Add(itemStaticBoxSizer48, 0, wxALIGN_TOP|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(2, 4, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer48->Add(itemFlexGridSizer49, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_ANY, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer49->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1419,7 +1419,7 @@ void BlockDialog::CreateControls()
     m_ForwardSignalsBox = new wxStaticBox(m_PanelWirering, wxID_ANY, _("Forward Signals"));
     wxStaticBoxSizer* itemStaticBoxSizer60 = new wxStaticBoxSizer(m_ForwardSignalsBox, wxVERTICAL);
     itemBoxSizer59->Add(itemStaticBoxSizer60, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer61 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer61 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer61->AddGrowableCol(1);
     itemStaticBoxSizer60->Add(itemFlexGridSizer61, 0, wxGROW|wxALL, 5);
     m_LabelSignal = new wxStaticText( m_PanelWirering, ID_STATICTEXT_BK_SIGNAL, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1445,7 +1445,7 @@ void BlockDialog::CreateControls()
     m_ReverseSignalsBox = new wxStaticBox(m_PanelWirering, wxID_ANY, _("Reverse Signals"));
     wxStaticBoxSizer* itemStaticBoxSizer68 = new wxStaticBoxSizer(m_ReverseSignalsBox, wxVERTICAL);
     itemBoxSizer59->Add(itemStaticBoxSizer68, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer69 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer69 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer69->AddGrowableCol(1);
     itemStaticBoxSizer68->Add(itemFlexGridSizer69, 0, wxGROW|wxALL, 5);
     m_LabelSignalR = new wxStaticText( m_PanelWirering, wxID_ANY, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1476,7 +1476,7 @@ void BlockDialog::CreateControls()
 
     wxBoxSizer* itemBoxSizer78 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer77->Add(itemBoxSizer78, 1, wxALIGN_TOP|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer79 = new wxFlexGridSizer(1, 4, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer79 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer78->Add(itemFlexGridSizer79, 0, wxGROW|wxALL, 5);
     wxArrayString m_InclineStrings;
     m_InclineStrings.Add(_("&none"));
@@ -1500,7 +1500,7 @@ void BlockDialog::CreateControls()
     wxStaticBox* itemStaticBoxSizer83Static = new wxStaticBox(m_PanelDetails, wxID_ANY, _("Wait details"));
     m_WaitDetails = new wxStaticBoxSizer(itemStaticBoxSizer83Static, wxHORIZONTAL);
     itemBoxSizer82->Add(m_WaitDetails, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer84 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer84 = new wxFlexGridSizer(0, 2, 0, 0);
     m_WaitDetails->Add(itemFlexGridSizer84, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     m_LabelRandomMin = new wxStaticText( m_PanelDetails, wxID_STATIC_BK_RANDOM_MIN, _("Radom min:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer84->Add(m_LabelRandomMin, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1523,7 +1523,7 @@ void BlockDialog::CreateControls()
     m_Measurement = new wxStaticBox(m_PanelDetails, wxID_ANY, _("Measurement"));
     wxStaticBoxSizer* itemStaticBoxSizer91 = new wxStaticBoxSizer(m_Measurement, wxVERTICAL);
     itemBoxSizer82->Add(itemStaticBoxSizer91, 0, wxALIGN_TOP|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer92 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer92 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer91->Add(itemFlexGridSizer92, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP, 5);
     m_labScale = new wxStaticText( m_PanelDetails, wxID_ANY, _("Scale"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer92->Add(m_labScale, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1544,7 +1544,7 @@ void BlockDialog::CreateControls()
     m_SpeedBox = new wxStaticBox(m_PanelDetails, wxID_ANY, _("Speed"));
     wxStaticBoxSizer* itemStaticBoxSizer98 = new wxStaticBoxSizer(m_SpeedBox, wxHORIZONTAL);
     itemBoxSizer78->Add(itemStaticBoxSizer98, 0, wxALIGN_LEFT|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer99 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer99 = new wxFlexGridSizer(0, 3, 0, 0);
     itemStaticBoxSizer98->Add(itemFlexGridSizer99, 0, wxGROW|wxALL, 5);
     wxArrayString m_SpeedStrings;
     m_SpeedStrings.Add(_("&min"));
@@ -1574,7 +1574,6 @@ void BlockDialog::CreateControls()
     wxArrayString m_StopSpeedStrings;
     m_StopSpeedStrings.Add(_("&min"));
     m_StopSpeedStrings.Add(_("&mid"));
-    m_StopSpeedStrings.Add(_("&%"));
     m_StopSpeed = new wxRadioBox( m_PanelDetails, wxID_ANY, _("stop"), wxDefaultPosition, wxDefaultSize, m_StopSpeedStrings, 1, wxRA_SPECIFY_ROWS );
     m_StopSpeed->SetSelection(0);
     itemFlexGridSizer99->Add(m_StopSpeed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -1607,7 +1606,7 @@ void BlockDialog::CreateControls()
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_STATIC_SENSORS_TITLE, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer107->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer110 = new wxFlexGridSizer(2, 5, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer110 = new wxFlexGridSizer(0, 5, 0, 0);
     itemFlexGridSizer110->AddGrowableCol(0);
     itemBoxSizer107->Add(itemFlexGridSizer110, 0, wxGROW|wxALL, 5);
     m_LabelSensorIDs = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSORID, _("Sensor ID:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1739,7 +1738,7 @@ void BlockDialog::CreateControls()
     wxStaticLine* itemStaticLine146 = new wxStaticLine( m_RoutesPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
     itemBoxSizer141->Add(itemStaticLine146, 0, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer147 = new wxFlexGridSizer(1, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer147 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer147->AddGrowableCol(0);
     itemBoxSizer107->Add(itemFlexGridSizer147, 0, wxGROW|wxALL, 5);
     m_RouteProps = new wxButton( m_RoutesPanel, ID_BUTTON1, _("Properties..."), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1751,7 +1750,7 @@ void BlockDialog::CreateControls()
     m_Notebook->AddPage(m_RoutesPanel, _("Routes"));
 
     m_Interface = new wxPanel( m_Notebook, ID_PANEL_BK_INTERFACE, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxFlexGridSizer* itemFlexGridSizer151 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer151 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer151->AddGrowableCol(1);
     m_Interface->SetSizer(itemFlexGridSizer151);
 

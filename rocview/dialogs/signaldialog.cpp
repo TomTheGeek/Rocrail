@@ -614,7 +614,7 @@ void SignalDialog::CreateControls()
     m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SG, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
     m_New = new wxButton( m_IndexPanel, ID_BUTTON_SG_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -631,7 +631,7 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxVERTICAL);
     m_GeneralPanel->SetSizer(itemBoxSizer12);
 
-    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer13->AddGrowableCol(1);
     itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_SG_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -666,7 +666,7 @@ void SignalDialog::CreateControls()
     m_State->Enable(false);
     itemFlexGridSizer13->Add(m_State, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer24, 0, wxGROW|wxALL, 5);
     m_Manual = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Manual"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Manual->SetValue(false);
@@ -685,7 +685,7 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
     m_LocationPanel->SetSizer(itemBoxSizer29);
 
-    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer29->Add(itemFlexGridSizer30, 0, wxALIGN_TOP|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_STATIC_SG_X, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer30->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -723,7 +723,7 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer40 = new wxBoxSizer(wxVERTICAL);
     m_InterfacePanel->SetSizer(itemBoxSizer40);
 
-    wxFlexGridSizer* itemFlexGridSizer41 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer41 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer41->AddGrowableCol(1);
     itemBoxSizer40->Add(itemFlexGridSizer41, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_InterfacePanel, wxID_STATIC_SG_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -751,7 +751,7 @@ void SignalDialog::CreateControls()
     m_RedBox = new wxStaticBox(m_InterfacePanel, wxID_ANY, _("Red"));
     wxStaticBoxSizer* itemStaticBoxSizer48 = new wxStaticBoxSizer(m_RedBox, wxHORIZONTAL);
     itemBoxSizer40->Add(itemStaticBoxSizer48, 0, wxGROW|wxLEFT|wxRIGHT, 5);
-    wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer48->Add(itemFlexGridSizer49, 0, wxGROW|wxBOTTOM, 5);
     m_labAddress = new wxStaticText( m_InterfacePanel, wxID_ANY, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer49->Add(m_labAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -820,7 +820,7 @@ void SignalDialog::CreateControls()
     m_Gate4->SetSelection(0);
     itemStaticBoxSizer63->Add(m_Gate4, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer67 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer67 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer40->Add(itemFlexGridSizer67, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
     m_Invert = new wxCheckBox( m_InterfacePanel, wxID_ANY, _("invert"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Invert->SetValue(false);
@@ -844,7 +844,7 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer73 = new wxBoxSizer(wxVERTICAL);
     m_PropsPanel->SetSizer(itemBoxSizer73);
 
-    wxFlexGridSizer* itemFlexGridSizer74 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer74 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer74->AddGrowableCol(0);
     itemFlexGridSizer74->AddGrowableCol(1);
     itemBoxSizer73->Add(itemFlexGridSizer74, 0, wxGROW|wxALL, 5);
@@ -881,7 +881,7 @@ void SignalDialog::CreateControls()
     wxStaticText* itemStaticText80 = new wxStaticText( m_PropsPanel, wxID_STATIC_SG_PATTERNS, _("Signal Patterns"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     itemBoxSizer73->Add(itemStaticText80, 0, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer81 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer81 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer73->Add(itemFlexGridSizer81, 0, wxGROW|wxALL, 5);
     m_labAspect = new wxStaticText( m_PropsPanel, wxID_ANY, _("Aspect:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer81->Add(m_labAspect, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);

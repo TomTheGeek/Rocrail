@@ -33,6 +33,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "feedbackdialog.h"
@@ -442,7 +443,7 @@ void FeedbackDialog::CreateControls()
     m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_FB, wxDefaultPosition, wxSize(350, -1), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
     m_New = new wxButton( m_IndexPanel, ID_BUTTON_FB_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -459,35 +460,35 @@ void FeedbackDialog::CreateControls()
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxVERTICAL);
     m_General->SetSizer(itemBoxSizer12);
 
-    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer13->AddGrowableCol(1);
     itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_General, wxID_STATIC_FB_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Id = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_ID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Id = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_Id, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBlockID = new wxStaticText( m_General, wxID_ANY, _("BlockID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_labBlockID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_BlockIDStrings;
-    m_BlockID = new wxComboBox( m_General, ID_COMBOBOX_FB_BLOCKID, _T(""), wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_READONLY );
+    m_BlockID = new wxComboBox( m_General, ID_COMBOBOX_FB_BLOCKID, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_READONLY );
     itemFlexGridSizer13->Add(m_BlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labRouteIDs = new wxStaticText( m_General, wxID_ANY, _("Route IDs"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_labRouteIDs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_RouteIDs = new wxTextCtrl( m_General, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RouteIDs = new wxTextCtrl( m_General, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_RouteIDs, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDescription = new wxStaticText( m_General, wxID_STATIC_FB_DESC, _("description"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_LabelDescription, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Description = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_DESC, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Description = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_Description, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(2, 4, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer22, 0, wxGROW|wxALL, 5);
     m_State = new wxCheckBox( m_General, ID_CHECKBOX_FB_STATE, _("state"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_State->SetValue(false);
@@ -515,7 +516,7 @@ void FeedbackDialog::CreateControls()
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
     m_LocationPanel->SetSizer(itemBoxSizer29);
 
-    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer29->Add(itemFlexGridSizer30, 0, wxALIGN_TOP|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_X, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer30->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -550,13 +551,13 @@ void FeedbackDialog::CreateControls()
     wxBoxSizer* itemBoxSizer39 = new wxBoxSizer(wxVERTICAL);
     m_Interface->SetSizer(itemBoxSizer39);
 
-    wxFlexGridSizer* itemFlexGridSizer40 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer40 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer40->AddGrowableCol(1);
     itemBoxSizer39->Add(itemFlexGridSizer40, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_FB_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer40->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer40->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -570,7 +571,7 @@ void FeedbackDialog::CreateControls()
     m_BusStrings.Add(_("&4 Railcom"));
     m_BusStrings.Add(_("&5 RFID"));
     m_BusStrings.Add(_("&6 Wheel counter"));
-    m_Bus = new wxRadioBox( m_Interface, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );
+    m_Bus = new wxRadioBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );
     m_Bus->SetSelection(0);
     itemFlexGridSizer40->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
@@ -591,12 +592,12 @@ void FeedbackDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer49 = new wxStaticBoxSizer(m_CTCBox, wxVERTICAL);
     m_Wiring->SetSizer(itemStaticBoxSizer49);
 
-    wxFlexGridSizer* itemFlexGridSizer50 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer50 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer49->Add(itemFlexGridSizer50, 0, wxGROW|wxALL, 5);
     m_labCTCIID = new wxStaticText( m_Wiring, wxID_STATIC, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer50->Add(m_labCTCIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_CTCIID = new wxTextCtrl( m_Wiring, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CTCIID = new wxTextCtrl( m_Wiring, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer50->Add(m_CTCIID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCTCAddr = new wxStaticText( m_Wiring, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -617,7 +618,7 @@ void FeedbackDialog::CreateControls()
     wxArrayString m_CTCGateStrings;
     m_CTCGateStrings.Add(_("&Red"));
     m_CTCGateStrings.Add(_("&Green"));
-    m_CTCGate = new wxRadioBox( m_Wiring, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_CTCGateStrings, 1, wxRA_SPECIFY_ROWS );
+    m_CTCGate = new wxRadioBox( m_Wiring, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CTCGateStrings, 1, wxRA_SPECIFY_ROWS );
     m_CTCGate->SetSelection(0);
     itemFlexGridSizer50->Add(m_CTCGate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
