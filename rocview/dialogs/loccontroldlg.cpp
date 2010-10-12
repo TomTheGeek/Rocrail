@@ -53,7 +53,6 @@
 
 #include "rocview/wrapper/public/Gui.h"
 
-#include "rocview/xpm/rocrail.xpm"
 #include "rocview/xpm/rocrail-forwards.xpm"
 #include "rocview/xpm/rocrail-reverse.xpm"
 
@@ -193,7 +192,7 @@ void LocControlDialog::initLabels() {
   m_F12->SetBackgroundColour( Base::getGreen() );
 
   m_bDir = true;
-  m_Dir->SetBitmapLabel( wxBitmap(rocrail_xpm) );
+  m_Dir->SetBitmapLabel( wxBitmap(rocrail_forwards_xpm) );
 }
 
 
@@ -467,23 +466,23 @@ void LocControlDialog::CreateControls()
     m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(240, 88), wxBU_AUTODRAW|wxBU_LEFT );
     itemBoxSizer2->Add(m_Image, 0, wxGROW|wxALL, 2);
 
-    wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer4->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer4, 0, wxGROW|wxALL, 0);
 
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW|wxADJUST_MINSIZE, 0);
+    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW, 0);
 
     m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 40), wxTE_READONLY|wxTE_CENTRE );
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
     m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxSize(-1, 100), wxSL_VERTICAL|wxSL_INVERSE );
-    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxADJUST_MINSIZE, 2);
+    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW, 0);
 
-    wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW, 5);
 
     m_F1 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F1, _("F1"), wxDefaultPosition, wxSize(50, -1), 0 );
@@ -522,7 +521,7 @@ void LocControlDialog::CreateControls()
     m_F12 = new wxButton( itemDialog1, ID_BUTTON_LCCTRL_F12, _("F12"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer9->Add(m_F12, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
-    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer22->AddGrowableCol(1);
     itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW, 5);
 
@@ -533,24 +532,24 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer22->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
-    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
+    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
     itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer26, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
+    itemBoxSizer2->Add(itemBoxSizer26, 0, wxGROW|wxALL, 0);
 
     m_Cancel = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Cancel->SetDefault();
-    itemBoxSizer26->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+    itemBoxSizer26->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     m_Stop = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_STOP, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer26->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+    itemBoxSizer26->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxALL, 0);
 
     m_Break = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_BREAK, _("BREAK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Break, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+    itemBoxSizer29->Add(m_Break, 1, wxGROW|wxALL, 2);
 
     // Connect events and objects
     itemDialog1->Connect(ID_LOCCONTROL, wxEVT_DESTROY, wxWindowDestroyEventHandler(LocControlDialog::OnDestroy), NULL, this);
@@ -625,6 +624,9 @@ void LocControlDialog::OnButtonLocctrlFnClick( wxCommandEvent& event )
 
 void LocControlDialog::speedCmd(bool sendCmd)
 {
+  if( m_LcList->GetSelection() == wxNOT_FOUND )
+    return;
+
   wxString value;
   value.Printf( _T("%d"), m_iSpeed );
   m_Speed->SetValue( value );
@@ -645,6 +647,8 @@ void LocControlDialog::speedCmd(bool sendCmd)
 
 void LocControlDialog::funCmd(int group)
 {
+  if( m_LcList->GetSelection() == wxNOT_FOUND )
+    return;
   wxString id = m_LcList->GetStringSelection();
 
   iONode lc = (iONode)MapOp.get( m_lcMap, id.mb_str(wxConvUTF8) );
@@ -761,6 +765,11 @@ void LocControlDialog::OnComboboxLocctrlLocSelected( wxCommandEvent& event )
 
 void LocControlDialog::OnButtonLocctrlCancelClick( wxCommandEvent& event )
 {
+  if( m_LcList->GetSelection() == wxNOT_FOUND ) {
+    Destroy();
+    return;
+  }
+
   int x,y;
   GetPosition(&x,&y);
 

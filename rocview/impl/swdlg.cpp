@@ -66,7 +66,7 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
 {
 
   wxBoxSizer  *sizer1 = new wxBoxSizer(wxVERTICAL);
-  wxGridSizer *sizer2 = new wxGridSizer(4,2,5,5);
+  wxGridSizer *sizer2 = new wxGridSizer(0,2,5,5);
 
   m_Pin1Green = new wxButton( this, -1, _T("1 ||") );
   m_Pin1Red   = new wxButton( this, -1, _T("1 //") );
