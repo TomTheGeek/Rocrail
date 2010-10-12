@@ -208,6 +208,9 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
     dc.SetPen(pen);
     dc.DrawPoint(50,50);
   }
+  else {
+    TraceOp.trc( "clock", TRCLEVEL_WARNING, __LINE__, 9999, "no valid plate" );
+  }
 }
 
 void Clock::stopTimer() {

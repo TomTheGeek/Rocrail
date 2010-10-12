@@ -1149,7 +1149,7 @@ void CV::CreateControls() {
   m_labLoc = new wxStaticText( m_ItemPanel, -1, _("Loc"), wxDefaultPosition, wxDefaultSize, 0 );
   m_LocBox->Add(m_labLoc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
   wxString* m_LcListStrings = NULL;
-  m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY|wxCB_SORT );
+  m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY );
   m_LocBox->Add(m_LcList, 3, wxGROW|wxALL, 1);
 
   m_loadFile = new wxButton( m_ItemPanel, -1, _("Import"), wxDefaultPosition, wxSize(60, 26), 0 );
@@ -1169,7 +1169,7 @@ void CV::CreateControls() {
   m_TableBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_TableBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_FlexGrid = new wxFlexGridSizer(2, 4, 0, 0);
+  m_FlexGrid = new wxFlexGridSizer(0, 4, 0, 0);
   m_TableBox->Add(m_FlexGrid, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
 

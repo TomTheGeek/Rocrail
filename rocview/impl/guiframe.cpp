@@ -599,7 +599,8 @@ void RocGuiFrame::CleanNotebook() {
   }
 
   m_PlanNotebook->DeleteAllPages();
-  m_ActiveLocs->DeleteRows( 0, m_ActiveLocs->GetNumberRows() );
+  if( m_ActiveLocs->GetNumberRows() > 0 )
+    m_ActiveLocs->DeleteRows( 0, m_ActiveLocs->GetNumberRows() );
 
   wxGetApp().cleanupOldModel();
   m_bInitialized = false;
@@ -764,7 +765,8 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   m_ActiveLocs->EnableEditing(false);
   m_ActiveLocs->EnableDragGridSize(false);
 
-  m_ActiveLocs->DeleteRows( 0, m_ActiveLocs->GetNumberRows() );
+  if( m_ActiveLocs->GetNumberRows() > 0 )
+    m_ActiveLocs->DeleteRows( 0, m_ActiveLocs->GetNumberRows() );
   m_ActiveLocs->Show( false );
   if( model != NULL ) {
     iONode lclist = wPlan.getlclist( model );
@@ -3386,7 +3388,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     if( event.GetCol() == LOC_COL_MODE && wGui.isdispatchmode( m_Ini )) {
       OnLocDispatch( event);
     }
-    else if( event.GetCol() == LOC_COL_ID ) {
+    else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED ) {
       wxTextDataObject my_data(_T("moveto:")+str);
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
