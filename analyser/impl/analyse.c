@@ -1535,6 +1535,20 @@ static void __analyseList(iOAnalyse inst) {
   /* SET TO False -> the plan will not be modified!*/
   Boolean doIt = True;
 
+  iONode child = NULL;
+  int childcnt = NodeOp.getChildCnt( stlist);
+  int i;
+  for( i = 0; i <childcnt; i++) {
+    child = NodeOp.getChild( stlist, i);
+
+    if( StrOp.startsWith( wItem.getid( child), "autogen-" )) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "refresh route: [%s]", wItem.getid( child));
+      NodeOp.removeChild( stlist, child );
+    }
+  }
+
+
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
 
@@ -1544,6 +1558,7 @@ static void __analyseList(iOAnalyse inst) {
     iONode item = (iONode)ListOp.first( routelist );
     bka = wItem.getid(item);
     bkaside = wItem.getstate(item);
+
 
     /* presearch: go to the endblock -> bkb*/
     Boolean reachedEndblock = False;
@@ -1566,10 +1581,8 @@ static void __analyseList(iOAnalyse inst) {
     wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
     wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
 
-    iONode child = NULL;
     Boolean addToList = True;
-    int childcnt = NodeOp.getChildCnt( stlist);
-    int i;
+    childcnt = NodeOp.getChildCnt( stlist);
     for( i = 0; i <childcnt; i++) {
       child = NodeOp.getChild( stlist, i);
 
@@ -1586,12 +1599,8 @@ static void __analyseList(iOAnalyse inst) {
       }
 
       if( StrOp.equals( wItem.getid( child), wItem.getid( newRoute) ) ){
-          //|| StrOp.startsWith( wItem.getid( child), "autogen-" )) {
          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
              "refresh route: [%s]", wItem.getid( child));
-
-         i = 0;
-         childcnt = NodeOp.getChildCnt( stlist);
 
          NodeOp.removeChild( stlist, child );
 
