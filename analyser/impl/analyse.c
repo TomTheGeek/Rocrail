@@ -460,7 +460,10 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         }
         return itemNotInDirection;
       }
-
+      /* decoupler */
+      else if( __getType(item) == typeSwitch && StrOp.equals( subtype, "decoupler")) {
+        return travel;
+      }
       /* switch */
       else if( __getType(item) == typeSwitch) {
         /* coming from the points */
