@@ -123,7 +123,32 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iOAnalyseData data = Data(inst);
     /* Cleanup data->xxx members...*/
+
+
+ /*
     MapOp.base.del(data->objectmap);
+
+    ListOp.base.del(data->bkoccitemlist);
+    ListOp.base.del( data->prelist);
+    ListOp.base.del(data->bklist);
+
+
+
+    int prelistsize = ListOp.size( data->prelist);
+    int i;
+    for (i = 0; i < ListOp.size( data->prelist); i++) {
+      iOList plist = (iOList)ListOp.get( data->prelist , i);
+      int j;
+      for (j = 0; j < ListOp.size( plist); j++) {
+        //j=0;
+        //NodeOp.base.del( (iOList)ListOp.get( plist , j));
+      }
+      //i=0;
+      //ListOp.base.del( plist );
+    }
+    ListOp.base.del( data->prelist);
+
+
 
     iOList plist = (iOList)ListOp.first( data->prelist );
     while(plist) {
@@ -135,7 +160,8 @@ static void __del( void* inst ) {
        ListOp.base.del( plist);
        plist = (iOList)ListOp.next( data->prelist );
      }
-    ListOp.base.del(data->prelist);
+    ListOp.base.del( data->prelist);
+
 
     iONode item = (iONode)ListOp.first( data->bklist );
     while(item) {
@@ -148,13 +174,16 @@ static void __del( void* inst ) {
     while(occlist) {
        iONode item = (iONode)ListOp.first( occlist );
        while(item) {
-         NodeOp.base.del( item);
+         //NodeOp.base.del( item);
          item = (iONode)ListOp.next( occlist );
        }
        ListOp.base.del( occlist);
        occlist = (iOList)ListOp.next( data->bkoccitemlist );
      }
+
+
      ListOp.base.del(data->bkoccitemlist);
+*/
 
     freeMem( data );
     freeMem( inst );
@@ -1856,11 +1885,11 @@ static void __analyseList(iOAnalyse inst) {
               char* newval = newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
-            } else {
-              char* newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( child) );
+            } /*else {
+              char* newval = StrOp.fmt( "%s", wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval);
               StrOp.free(newval);
-            }
+            }*/
           }
         } else  { // prevrouteids == NULL
 
