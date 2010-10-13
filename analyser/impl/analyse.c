@@ -204,10 +204,10 @@ static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int 
     itemx = wItem.getx(node);
     itemy = wItem.gety(node);
   }
-  return StrOp.fmtb( key, "%d-%d-%d", itemx+xoffset, itemy+yoffset, 0 );
+  return StrOp.fmtb( key, "%d-%d-%d", itemx+xoffset, itemy+yoffset, wItem.getz(node) );
 }
 
-static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
+static void __prepare(iOAnalyse inst, iOList list, int modx, int mody, Boolean modplan) {
   iOAnalyseData data = Data(inst);
   //iOList bklist = ListOp.inst();
   char key[32] = {'\0'};
@@ -237,6 +237,9 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       if( ori == NULL ) {
         ori = "west";
       }
+
+      if( modplan)
+        wItem.setz( node, 0);
 
       const char* type = wItem.gettype(node);
       __createKey( key, node, 0+modx, 0+mody, 0);
@@ -1467,12 +1470,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
       } // if bk || sw
 
-
-
-
       depth++;
       __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
-
 
     } else { /*item==NULL*/
 
@@ -1822,8 +1821,7 @@ static void __analyseList(iOAnalyse inst) {
         }
       } // tk || fb || sw
 
-      bkb = wRoute.getbkb( newRoute); //wItem.getid(item);
-      //bkbside = wItem.getstate(item);
+      bkb = wRoute.getbkb( newRoute);
       item = (iONode)ListOp.next( routelist );
     }
 
@@ -1858,11 +1856,19 @@ static void _analyse(iIAnalyserInt o) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "not a modplan" );
 
-    iOList list = data->model->getLevelItems( data->model, 0, &cx, &cy, True);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "Trackplan: %d objects at level 0 and sizes %d x %d", ListOp.size(list), cx, cy );
+    int i;
+    for( i = 0; i < 100; i++) { // ???
 
-    __prepare(inst, list, 0,0);
+    iOList list = data->model->getLevelItems( data->model, i, &cx, &cy, True);
+
+
+      if( ListOp.size(list) > 0) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                 "Trackplan: %d objects at level %d and sizes %d x %d", ListOp.size(list), i, cx, cy );
+        __prepare(inst, list, 0,0, False);
+      }
+    }
+
   } else {
     iONode mod = wModPlan.getmodule( modplan );
     while( mod != NULL ) {
@@ -1872,7 +1878,7 @@ static void _analyse(iIAnalyserInt o) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
            "preparing module: %s", wModule.gettitle( mod) );
-      __prepare(inst, list, wModule.getx(mod), wModule.gety(mod));
+      __prepare(inst, list, wModule.getx(mod), wModule.gety(mod), True);
 
       zlevel++;
       mod = wModPlan.nextmodule( modplan, mod );
