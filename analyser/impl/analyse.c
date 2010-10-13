@@ -1881,11 +1881,11 @@ static void __analyseList(iOAnalyse inst) {
           }
 
           if( !isInList && doIt) {
-             if( addToList) {
+             //if( addToList) {
               char* newval = newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
-            } /*else {
+             /*}else {
               char* newval = StrOp.fmt( "%s", wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval);
               StrOp.free(newval);
