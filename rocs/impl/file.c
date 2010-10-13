@@ -78,7 +78,12 @@ static void __del(void* inst) {
     StrOp.freeID( data->path, RocsFileID );
     freeIDMem( data, RocsFileID );
     freeIDMem( inst, RocsFileID );
-    instCnt--;
+    if( instCnt > 0 )
+      instCnt--;
+    else {
+      /*OOPS*/
+      printf("***** FileOp.base.del() instCnt can't be decreased...");
+    }
   }
 }
 static int __count(void) {
@@ -823,13 +828,11 @@ static iOFile _inst( const char* path, int openflag ) {
 
   data->openflag = openflag;
   data->path     = StrOp.dupID( path, RocsFileID );
+  instCnt++;
 
   if( !__openFile(data) ) {
     file->base.del( file );
     file = NULL;
-  }
-  else {
-    instCnt++;
   }
 
   return file;
