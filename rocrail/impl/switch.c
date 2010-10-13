@@ -549,6 +549,8 @@ static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
 
 static Boolean _isLocked( iOSwitch inst, const char* id ) {
   iOSwitchData data = Data(inst);
+  const char* blockid = wSwitch.getblockid(data->props);
+
   if( data->lockedId != NULL && id == NULL ) {
     return True;
   }
@@ -556,6 +558,14 @@ static Boolean _isLocked( iOSwitch inst, const char* id ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch \"%s\" is locked by \"%s\".",
                    SwitchOp.getId( inst ), data->lockedId );
     return True;
+  }
+  if( blockid != NULL && StrOp.len(blockid) > 0 ) {
+    iIBlockBase bk = ModelOp.getBlock( AppOp.getModel(), blockid);
+    if( bk != NULL && !bk->isFree(bk, id) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block [%s] is not free which occupies switch [%s].",
+                     blockid, SwitchOp.getId( inst ) );
+      return True;
+    }
   }
   return False;
 }
