@@ -183,6 +183,8 @@ static const Boolean analyserStrict = True;
 static const Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
+static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
+    int turnoutstate, int depth, int searchingSignal, Boolean behindABlock);
 
 /* returns 0 for west, 1 for north, 2 for east and 3 for south */
 static int __getOri(iONode item ) {
@@ -195,7 +197,14 @@ static int __getOri(iONode item ) {
 }
 
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
-  return StrOp.fmtb( key, "%d-%d-%d", wItem.getx(node)+xoffset, wItem.gety(node)+yoffset, 0 );
+
+  int itemx = 0;
+  int itemy = 0;
+  if( node != NULL) {
+    itemx = wItem.getx(node);
+    itemy = wItem.gety(node);
+  }
+  return StrOp.fmtb( key, "%d-%d-%d", itemx+xoffset, itemy+yoffset, 0 );
 }
 
 static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
@@ -1064,6 +1073,69 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 
   return itemNotInDirection;
 }
+static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
+    int turnoutstate, int depth, int searchingSignal, Boolean behindABlock) {
+  iOAnalyseData data = Data(inst);
+
+  wItem.getx(item);
+
+  int xoffset = 0;
+  int yoffset = 0;
+  char key[32] = {'\0'};
+
+  int i = 0;
+  for ( i = 0; i < 100; i++) {
+
+  switch(travel) {
+     case oriWest:
+       xoffset--;
+       __createKey( key, item, xoffset, yoffset, 0);
+        break;
+     case oriNorth:
+       yoffset--;
+       __createKey( key, item, xoffset, yoffset, 0);
+        break;
+     case oriEast:
+       xoffset++;
+       __createKey( key, item, xoffset, yoffset, 0);
+        break;
+     case oriSouth:
+       yoffset++;
+       __createKey( key, item, xoffset, yoffset, 0);
+        break;
+     }
+
+     //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next key: %s", key);
+     iONode nextitem = (iONode)MapOp.get( data->objectmap, key);
+
+     if( nextitem != NULL ) {
+       if( StrOp.equals(NodeOp.getName(nextitem) , "tk" ) && StrOp.equals(wItem.gettype(nextitem) , "connector" )) {
+
+
+         const char * nextitemori = NodeOp.getStr( nextitem, "ori", "west");
+         Boolean found = False;
+         if( StrOp.equals( nextitemori, "west" ) && travel == 0){
+           found = True;
+         } else if( StrOp.equals( nextitemori, "north" ) && travel == 3){
+           found = True;
+         } else if( StrOp.equals( nextitemori, "east" ) && travel == 2){
+           found = True;
+         } else if( StrOp.equals( nextitemori, "south" ) && travel == 1){
+           found = True;
+         }
+
+         if (found ) {
+           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found conterpart: [%s]", wItem.getid(nextitem));
+
+           __analyseItem(inst, nextitem, route, occ, travel, 0, depth, False, behindABlock );
+         }
+
+         return;
+       }
+     }
+  }
+
+}
 
 
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
@@ -1138,6 +1210,28 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     iONode itemA = (iONode)NodeOp.base.clone( item);
     wItem.setstate(itemA, state);
     ListOp.add( occ, (obj)itemA );
+  }
+
+  if( StrOp.equals(NodeOp.getName(item) , "tk" )
+      && StrOp.equals(wItem.gettype(item) , "connector" )) {
+
+    Boolean found = False;
+    if( StrOp.equals( itemori, "west" ) && travel == 2){
+      found = True;
+    } else if( StrOp.equals( itemori, "north" ) && travel == 1){
+      found = True;
+    } else if( StrOp.equals( itemori, "east" ) && travel == 0){
+      found = True;
+    } else if( StrOp.equals( itemori, "south" ) && travel == 3){
+      found = True;
+    }
+
+    if( found) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found connector: [%s] travel: [%d] ori: [%s]",
+              wItem.getid(item) , travel, itemori);
+      __analyseBehindConnector(inst, item, route, occ, travel, 0, depth, False, behindABlock );
+    }
+
   }
 
   /*
