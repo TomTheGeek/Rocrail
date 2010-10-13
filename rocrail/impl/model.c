@@ -2801,7 +2801,7 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
     data->analyser->analyse(data->analyser);
     /* clean up*/
-    data->analyser->base.del(data->analyser);
+    /*data->analyser->base.del(data->analyser);*/
 
     /* re-initialize routes */
     ThreadOp.sleep(100);
