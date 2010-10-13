@@ -277,6 +277,8 @@ bool TimedActions::evaluate() {
   wAction.setmin( m_Props, m_Min->GetValue() );
   wAction.setcmd( m_Props, m_Command->GetValue().mb_str(wxConvUTF8) );
   wAction.setoid( m_Props, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
+  if( StrOp.equals( " ", wAction.getoid( m_Props ) ) )
+    wAction.setoid( m_Props, "" );
   wAction.setactiontime( m_Props, m_ActTime->GetValue() );
   wAction.setparam( m_Props, m_Parameter->GetValue().mb_str(wxConvUTF8) );
   wAction.settimer( m_Props, m_Timer->GetValue() );
@@ -316,7 +318,7 @@ void TimedActions::initOutputList() {
   iOList list = ListOp.inst();
 
   m_ID->Clear();
-  m_ID->Append( _T("") );
+  m_ID->Append( _T(" ") );
 
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
