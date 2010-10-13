@@ -1490,6 +1490,7 @@
         <const name="dirall" vt="string" val="dirall"/>
         <const name="connector" vt="string" val="connector"/>
         <var name="type" vt="string" defval="straight" range="straight,curve,dir,dirall,buffer,connector"/>
+        <var name="counterpartid" vt="string" defval="NULL" range="*"/>
       </tk>
     </tklist>
     <ttlist cardinality="1" remark="Turntable" wrappername="TurntableList">
