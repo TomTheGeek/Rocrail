@@ -124,9 +124,38 @@ static void __del( void* inst ) {
     iOAnalyseData data = Data(inst);
     /* Cleanup data->xxx members...*/
     MapOp.base.del(data->objectmap);
+
+    iOList plist = (iOList)ListOp.first( data->prelist );
+    while(plist) {
+       iONode item = (iONode)ListOp.first( plist );
+       while(item) {
+         NodeOp.base.del( item);
+         item = (iONode)ListOp.next( plist );
+       }
+       ListOp.base.del( plist);
+       plist = (iOList)ListOp.next( data->prelist );
+     }
     ListOp.base.del(data->prelist);
+
+    iONode item = (iONode)ListOp.first( data->bklist );
+    while(item) {
+      NodeOp.base.del( item);
+      item = (iONode)ListOp.next( data->bklist );
+    }
     ListOp.base.del(data->bklist);
-    ListOp.base.del(data->bkoccitemlist);
+
+    iOList occlist = (iOList)ListOp.first( data->bkoccitemlist );
+    while(occlist) {
+       iONode item = (iONode)ListOp.first( occlist );
+       while(item) {
+         NodeOp.base.del( item);
+         item = (iONode)ListOp.next( occlist );
+       }
+       ListOp.base.del( occlist);
+       occlist = (iOList)ListOp.next( data->bkoccitemlist );
+     }
+     ListOp.base.del(data->bkoccitemlist);
+
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -1898,7 +1927,6 @@ static void _analyse(iIAnalyserInt o) {
     while( mod != NULL ) {
 
       iOList list = data->model->getLevelItems( data->model, zlevel, &cx, &cy, True);
-
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
            "preparing module: %s", wModule.gettitle( mod) );
