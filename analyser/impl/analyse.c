@@ -1240,10 +1240,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GOING ON AT COUNTERPART: [%s]",
                       wItem.getid(nextitem) );
 
-          //depth++;
-          //__analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
-
-          item = nextitem;
+          depth++;
+          __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
 
         }
 
@@ -1731,6 +1729,8 @@ static void __analyseList(iOAnalyse inst) {
         wItem.getid(item), wItem.getstate(item) );
 
       if( StrOp.equals(wItem.getid(item), bkb) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                     "REACHED ENDBLOCK");
         reachedEndblock = True;
       }
 
