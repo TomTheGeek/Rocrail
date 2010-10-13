@@ -246,43 +246,43 @@ void SRCPCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_Notebook = new wxNotebook( itemDialog1, ID_NOTEBOOK2, wxDefaultPosition, wxDefaultSize, wxNB_DEFAULT );
+    m_Notebook = new wxNotebook( itemDialog1, ID_NOTEBOOK2, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT );
 
     m_GenerelPanel = new wxPanel( m_Notebook, ID_PANEL_SRCP_GENEREL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_GenerelPanel->SetSizer(itemBoxSizer5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_SRCP_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labHost = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_SRCP_HOST, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Host = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_HOST, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer6->Add(m_Host, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCmdPort = new wxStaticText( m_GenerelPanel, wxID_STATIC_SRCP_CMDPORT, _("command port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labCmdPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labCmdPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CmdPort = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_CmdPort, _("12345"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_CmdPort->SetMaxLength(5);
     itemFlexGridSizer6->Add(m_CmdPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSensPort = new wxStaticText( m_GenerelPanel, wxID_STATIC_SRCP_SENSPORT, _("sensor port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labSensPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labSensPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_SensPort = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_SENSPORT, _("12346"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_SensPort->SetMaxLength(5);
     itemFlexGridSizer6->Add(m_SensPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labInfPort = new wxStaticText( m_GenerelPanel, wxID_STATIC_SRCP_INFPORT, _("info port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labInfPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labInfPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_InfPort = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_INFPORT, _("12347"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_InfPort->SetMaxLength(5);
@@ -295,7 +295,7 @@ void SRCPCtrlDlg::CreateControls()
     m_Notebook->AddPage(m_GenerelPanel, _("Generel"));
 
     m_BussesPanel = new wxPanel( m_Notebook, ID_PANEL_SRCP_BUSSES, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer19->AddGrowableCol(1);
     m_BussesPanel->SetSizer(itemFlexGridSizer19);
 

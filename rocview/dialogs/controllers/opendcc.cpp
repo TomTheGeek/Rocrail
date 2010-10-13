@@ -25,6 +25,7 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "opendcc.h"
@@ -871,36 +872,36 @@ void OpenDCCCtrlDlg::CreateControls()
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer5->Add(itemBoxSizer6, 1, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer7->AddGrowableCol(1);
     itemBoxSizer6->Add(itemFlexGridSizer7, 1, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
     m_labIID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_IID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_IID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Device = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer12->AddGrowableCol(2);
     itemBoxSizer6->Add(itemFlexGridSizer12, 0, wxGROW|wxALL, 5);
     m_labVersion = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_labVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 5);
 
-    m_Version = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxSize(60, -1), wxTE_READONLY|wxTE_CENTRE );
+    m_Version = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), wxTE_READONLY|wxTE_CENTRE );
     m_Version->Enable(false);
     itemFlexGridSizer12->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Mode = new wxTextCtrl( m_GeneralPanel, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1), wxTE_READONLY );
+    m_Mode = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, -1), wxTE_READONLY );
     m_Mode->Enable(false);
     itemFlexGridSizer12->Add(m_Mode, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer6->Add(itemFlexGridSizer16, 0, wxGROW|wxALL, 5);
     m_labSerialNumber = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Serial Number"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer16->Add(m_labSerialNumber, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -987,7 +988,7 @@ void OpenDCCCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer37 = new wxBoxSizer(wxVERTICAL);
     m_S88Panel->SetSizer(itemBoxSizer37);
 
-    wxFlexGridSizer* itemFlexGridSizer38 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer38 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer37->Add(itemFlexGridSizer38, 0, wxGROW|wxALL, 5);
     m_labS88Timing = new wxStaticText( m_S88Panel, wxID_ANY, _("Timing"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer38->Add(m_labS88Timing, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -1001,7 +1002,7 @@ void OpenDCCCtrlDlg::CreateControls()
     m_S88BusBox = new wxStaticBox(m_S88Panel, wxID_ANY, _("Modules"));
     wxStaticBoxSizer* itemStaticBoxSizer42 = new wxStaticBoxSizer(m_S88BusBox, wxVERTICAL);
     itemBoxSizer37->Add(itemStaticBoxSizer42, 0, wxGROW|wxLEFT|wxRIGHT, 5);
-    wxFlexGridSizer* itemFlexGridSizer43 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer43 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer42->Add(itemFlexGridSizer43, 0, wxGROW|wxALL, 5);
     m_labS88Bus1 = new wxStaticText( m_S88Panel, wxID_ANY, _("Bus 1"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer43->Add(m_labS88Bus1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1040,7 +1041,7 @@ void OpenDCCCtrlDlg::CreateControls()
     m_SwitchSensorMode->SetSelection(0);
     itemBoxSizer37->Add(m_SwitchSensorMode, 1, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer54 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer54 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer37->Add(itemFlexGridSizer54, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
     m_labSwitchSensorOffset = new wxStaticText( m_S88Panel, wxID_ANY, _("Switch sensor offset"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer54->Add(m_labSwitchSensorOffset, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1062,7 +1063,7 @@ void OpenDCCCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer59 = new wxBoxSizer(wxVERTICAL);
     m_ProgrammingTab->SetSizer(itemBoxSizer59);
 
-    wxFlexGridSizer* itemFlexGridSizer60 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer60 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer59->Add(itemFlexGridSizer60, 0, wxGROW|wxALL, 5);
     m_labPTResets = new wxStaticText( m_ProgrammingTab, wxID_ANY, _("Resets"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer60->Add(m_labPTResets, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1088,7 +1089,7 @@ void OpenDCCCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer68 = new wxBoxSizer(wxVERTICAL);
     m_SCDPanel->SetSizer(itemBoxSizer68);
 
-    wxFlexGridSizer* itemFlexGridSizer69 = new wxFlexGridSizer(2, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer69 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer68->Add(itemFlexGridSizer69, 0, wxGROW|wxALL, 5);
     m_LabSCtimeMain = new wxStaticText( m_SCDPanel, wxID_ANY, _("SCTime Main"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer69->Add(m_LabSCtimeMain, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1114,7 +1115,7 @@ void OpenDCCCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer77 = new wxBoxSizer(wxVERTICAL);
     m_SwitchPanel->SetSizer(itemBoxSizer77);
 
-    wxFlexGridSizer* itemFlexGridSizer78 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer78 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer78->AddGrowableCol(1);
     itemBoxSizer77->Add(itemFlexGridSizer78, 0, wxGROW|wxALL, 5);
     m_labSwitchCommands = new wxStaticText( m_SwitchPanel, wxID_ANY, _("Command repetitions"), wxDefaultPosition, wxDefaultSize, 0 );

@@ -281,7 +281,7 @@ void DDXCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_GenerelPanel->SetSizer(itemBoxSizer5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_DDL_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -308,7 +308,7 @@ void DDXCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer14 = new wxBoxSizer(wxVERTICAL);
     m_S88Panel->SetSizer(itemBoxSizer14);
 
-    wxFlexGridSizer* itemFlexGridSizer15 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer15 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer15->AddGrowableCol(1);
     itemBoxSizer14->Add(itemFlexGridSizer15, 0, wxGROW, 5);
     m_labPort = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_PORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );

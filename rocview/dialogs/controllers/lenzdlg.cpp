@@ -283,7 +283,7 @@ void LenzDlg::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer4->Add(itemBoxSizer5, 0, wxALIGN_TOP|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW, 5);
 
@@ -362,7 +362,7 @@ void LenzDlg::CreateControls()
     m_IgnoreBusy->SetValue(false);
     itemStaticBoxSizer19->Add(m_IgnoreBusy, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer24->AddGrowableRow(1);
     itemStaticBoxSizer19->Add(itemFlexGridSizer24, 0, wxALIGN_LEFT, 5);
 
