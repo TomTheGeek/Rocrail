@@ -2745,6 +2745,7 @@ typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode, Boole
 
 static void _analyse( iOModel inst, Boolean CleanRun ) {
   iOModelData data = Data(inst);
+  iOLib    pLib = NULL;
   /* Load the analyzer shared library. */
   char* stamp = StrOp.createStampNoDots();
   char* stampfile = StrOp.fmt("%s.%s.xml", data->fileName, stamp);
@@ -2760,7 +2761,6 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
   }
 
   if( data->analyser == NULL ) {
-    iOLib    pLib = NULL;
     /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
     LPFNGETANALYSERINT pInitFun = (void *) NULL;
 
@@ -2800,6 +2800,9 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
     data->analyser->analyse(data->analyser);
+    /* clean up*/
+    data->analyser->base.del(data->analyser);
+
     /* re-initialize routes */
     ThreadOp.sleep(100);
     __reinitRoutes(inst);
@@ -2810,6 +2813,10 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
     wException.setlevel( e, TRCLEVEL_CALC );
     AppOp.broadcastEvent( e );
   }
+
+  if (pLib != NULL)
+    LibOp.base.del(pLib);
+
 
 }
 

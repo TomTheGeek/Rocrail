@@ -124,9 +124,9 @@ static void __del( void* inst ) {
     iOAnalyseData data = Data(inst);
     /* Cleanup data->xxx members...*/
     MapOp.base.del(data->objectmap);
-    MapOp.base.del(data->prelist);
-    MapOp.base.del(data->bklist);
-    MapOp.base.del(data->bkoccitemlist);
+    ListOp.base.del(data->prelist);
+    ListOp.base.del(data->bklist);
+    ListOp.base.del(data->bkoccitemlist);
     freeMem( data );
     freeMem( inst );
     instCnt--;
