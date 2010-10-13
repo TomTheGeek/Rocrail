@@ -1668,6 +1668,7 @@ static void __analyseList(iOAnalyse inst) {
 
     /* presearch: go to the endblock -> bkb*/
     Boolean reachedEndblock = False;
+    Boolean endsonasignal = False;
     int count = 0;
     while(item) {
 
@@ -1675,6 +1676,12 @@ static void __analyseList(iOAnalyse inst) {
         bkb = wItem.getid(item);
         bkbside = wItem.getstate(item);
         reachedEndblock = True;
+      }
+
+      if( StrOp.equals(NodeOp.getName(item), "sg") && StrOp.equals(wItem.getstate(item), "yes" ) ) {
+        endsonasignal = True;
+      } else {
+        endsonasignal = False;
       }
 
       count ++;
@@ -1713,17 +1720,6 @@ static void __analyseList(iOAnalyse inst) {
          NodeOp.removeChild( stlist, child );
 
       }
-    }
-
-    Boolean endsonasignal = False;
-    item = (iONode)ListOp.first( routelist );
-    while(item) {
-      if( StrOp.equals(NodeOp.getName(item), "sg") && StrOp.equals(wItem.getstate(item), "yes" ) ) {
-        endsonasignal = True;
-      } else {
-        endsonasignal = False;
-      }
-      item = (iONode)ListOp.next( routelist );
     }
 
     reachedEndblock = False;
