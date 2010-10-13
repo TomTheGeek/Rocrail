@@ -1130,7 +1130,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
          if (found ) {
            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found conterpart: [%s]", wItem.getid(nextitem));
 
-           __analyseItem(inst, nextitem, route, occ, travel, 0, depth, False, behindABlock );
+           __analyseItem(inst, nextitem, route, occ, travel, 0, depth, searchingSignal, behindABlock );
          }
 
          return;
@@ -1228,22 +1228,27 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
               wItem.getid(item) , travel, itemori);
 
       if( wTrack.getcounterpartid(item) != NULL && !StrOp.equals( wTrack.getcounterpartid(item) , "") ){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found COUNTERPART for: [%s] counterpart: [%d]",
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found COUNTERPART for: [%s] counterpart: [%s]",
             wItem.getid(item),   wTrack.getcounterpartid(item) );
 
         iOTrack track = data->model->getTrack( data->model, wTrack.getcounterpartid(item) );
 
         /* go on at the connector */
         if( track != NULL) {
-        iONode nextitem = track->base.properties(track);
+          iONode nextitem = track->base.properties(track);
 
-        depth++;
-        __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
-        return;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GOING ON AT COUNTERPART: [%s]",
+                      wItem.getid(nextitem) );
+
+          //depth++;
+          //__analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
+
+          item = nextitem;
+
         }
 
       } else {
-        __analyseBehindConnector(inst, item, route, occ, travel, 0, depth, False, behindABlock );
+        __analyseBehindConnector(inst, item, route, occ, travel, 0, depth, searchingSignal, behindABlock );
       }
     }
 
@@ -1490,7 +1495,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       /*delete route (ended not at a block)*/
       /*NodeOp.base.del( route);*/
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "return");
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "return (nextitem==NULL)");
       return False;
     } /*item?NULL*/
 
@@ -1536,7 +1541,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
     iOList occ = ListOp.inst();
 
     /* start the recursion */
-    int ret = __analyseItem(inst, block, route, occ, travel, 0, 0, True, False);
+    int ret = __analyseItem(inst, block, route, occ, travel, 0, 0, False, False);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end analyzing block [%s] in [%s] direction returned: %d",
         wBlock.getid(block), inittravel, ret);
