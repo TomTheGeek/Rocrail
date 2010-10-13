@@ -806,6 +806,7 @@
     </fun>
     <fun name="analyse" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
+      <param name="cleanrun" vt="Boolean" remark="Clean"/>
     </fun>
     <fun name="addNetRoute" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>

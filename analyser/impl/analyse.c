@@ -180,7 +180,7 @@ static const int BlockCX = 4;
 #define oriSouth2 7
 
 static const Boolean analyserStrict = True;
-static const Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
+static Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
@@ -1669,7 +1669,9 @@ static void __analyseList(iOAnalyse inst) {
       item = (iONode)ListOp.next( routelist );
     }
 
-    wRoute.setid( newRoute, StrOp.fmt( "autogen-[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside ) );
+    char* autogenID = StrOp.fmt( "autogen-[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside );
+    wRoute.setid( newRoute, autogenID );
+    StrOp.free(autogenID);
     wRoute.setbka( newRoute, bka);
     wRoute.setbkb( newRoute, bkb);
     wRoute.setbkaside( newRoute, StrOp.equals( bkaside, "+" )?True:False );
@@ -1815,8 +1817,9 @@ static void __analyseList(iOAnalyse inst) {
 
         } // else prevrouteids == NULL
 
-        if( cleanrun)
-          wItem.setrouteids(tracknode, StrOp.fmt( "%s", "" ) );
+        if( cleanrun) {
+          wItem.setrouteids(tracknode, "" );
+        }
       } // tk || fb || sw
 
       bkb = wRoute.getbkb( newRoute); //wItem.getid(item);
@@ -1909,11 +1912,12 @@ static void _analyse(iIAnalyserInt o) {
 
 
 /**  */
-static struct OAnalyse* _inst( iOModel model, iONode plan ) {
+static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ) {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
   MemOp.basecpy( __Analyse, &AnalyseOp, 0, sizeof( struct OAnalyse ), data );
 
+  cleanrun = CleanRun;
   /* Initialize data->xxx members... */
   data->model = model;
   data->plan  = plan;
@@ -1926,9 +1930,9 @@ static struct OAnalyse* _inst( iOModel model, iONode plan ) {
 }
 
 /* Support for dynamic Loading */
-iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan )
+iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan, Boolean CleanRun )
 {
-  return (iOAnalyse)_inst( model, plan );
+  return (iOAnalyse)_inst( model, plan, CleanRun );
 }
 
 

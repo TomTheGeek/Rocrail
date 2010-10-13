@@ -684,7 +684,7 @@ static void __callback( obj inst, iONode nodeA ) {
       return;
     }
     else if( StrOp.equals( wSysCmd.analyze, wSysCmd.getcmd( nodeA ) ) ) {
-      ModelOp.analyse( AppOp.getModel() );
+      ModelOp.analyse( AppOp.getModel(), False );
       NodeOp.base.del( nodeA );
       return;
     }

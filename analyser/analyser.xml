@@ -24,6 +24,7 @@
     <fun name="inst" vt="this">
       <param name="model" vt="iOModel" remark="Model object"/>
       <param name="trackplan" vt="iONode" remark="Track plan"/>
+      <param name="cleanrun" vt="Boolean" remark="Clean"/>
     </fun>
     <data>
       <var name="plan" vt="iONode"/>

@@ -402,6 +402,7 @@ static void __conhelp() {
     TraceOp.println( " x - Read all slots" );
     TraceOp.println( " t - List all active threads" );
     TraceOp.println( " z - Analyse track plan" );
+    TraceOp.println( " l - Cleanup analyzed route info" );
 
     TraceOp.println( " i - Initfield" );
 
@@ -483,7 +484,10 @@ static __checkConsole( iOAppData data ) {
       ModelOp.analyse( data->model );
     }
     */
-    ModelOp.analyse( data->model );
+    ModelOp.analyse( data->model, False );
+  }
+  else if( c == wConCmd.analyseclean ) {
+    ModelOp.analyse( data->model, True );
   }
   else if( c == wConCmd.memory )
     rocsStatistics( True );
@@ -748,7 +752,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
       ModelOp.analyse( data->model );
     }
     */
-    ModelOp.analyse( data->model );
+    ModelOp.analyse( data->model, False );
   }
 
   MemOp.setDebug( False );

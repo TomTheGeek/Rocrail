@@ -2741,9 +2741,9 @@ static const char* _getTitle( iOModel inst ) {
   return o->title;
 }
 
-typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode );
+typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode, Boolean CleanRun );
 
-static void _analyse( iOModel inst ) {
+static void _analyse( iOModel inst, Boolean CleanRun ) {
   iOModelData data = Data(inst);
   /* Load the analyzer shared library. */
   char* stamp = StrOp.createStampNoDots();
@@ -2776,7 +2776,7 @@ static void _analyse( iOModel inst ) {
     if (pInitFun == NULL)
       return;
 
-    data->analyser = pInitFun( inst, data->model );
+    data->analyser = pInitFun( inst, data->model, CleanRun );
   }
 
   if( data->analyser != NULL ) {
