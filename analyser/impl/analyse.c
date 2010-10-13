@@ -1153,12 +1153,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
    itemori = "west";
   }
 
-  /*
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d] \n"
-      "depth: [%d] tos: [%d] searchingSignal: [%d] behindablock: [%d]",
-      wItem.getid(item), travel, depth, turnoutstate, searchingSignal, behindABlock);
-      */
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%s] travel: [%d]"
         " sfs: [%d]",
         wItem.getid(item), travel, searchingSignal);
@@ -1232,7 +1226,25 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     if( found) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found connector: [%s] travel: [%d] ori: [%s]",
               wItem.getid(item) , travel, itemori);
-      __analyseBehindConnector(inst, item, route, occ, travel, 0, depth, False, behindABlock );
+
+      if( wTrack.getcounterpartid(item) != NULL && !StrOp.equals( wTrack.getcounterpartid(item) , "") ){
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found COUNTERPART for: [%s] counterpart: [%d]",
+            wItem.getid(item),   wTrack.getcounterpartid(item) );
+
+        iOTrack track = data->model->getTrack( data->model, wTrack.getcounterpartid(item) );
+
+        /* go on at the connector */
+        if( track != NULL) {
+        iONode nextitem = track->base.properties(track);
+
+        depth++;
+        __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
+        return;
+        }
+
+      } else {
+        __analyseBehindConnector(inst, item, route, occ, travel, 0, depth, False, behindABlock );
+      }
     }
 
   }
@@ -1595,12 +1607,10 @@ static void __analyseOccList(iOAnalyse inst) {
 
         } // if sw
 
-
         if( node != NULL) {
           wItem.setblockid(node, bk);
         }
       }
-
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] ", wItem.getid(item));
       item = (iONode)ListOp.next( occlist );
@@ -1860,7 +1870,6 @@ static void _analyse(iIAnalyserInt o) {
     for( i = 0; i < 100; i++) { // ???
 
     iOList list = data->model->getLevelItems( data->model, i, &cx, &cy, True);
-
 
       if( ListOp.size(list) > 0) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
