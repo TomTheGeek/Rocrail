@@ -1195,8 +1195,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     }
   }
 
-  if( !StrOp.equals(NodeOp.getName(item) , "bk" )
-      || (depth == 0 && StrOp.equals(NodeOp.getName(item) , "bk" )) ) {
+  if( (!StrOp.equals(NodeOp.getName(item) , "bk" ) ) ||
+      (depth == 0 && StrOp.equals(NodeOp.getName(item) , "bk" )) ) {
     /* ADD TO LIST */
     iONode itemA = (iONode)NodeOp.base.clone( item);
     wItem.setstate(itemA, state);
@@ -1715,6 +1715,17 @@ static void __analyseList(iOAnalyse inst) {
       }
     }
 
+    Boolean endsonasignal = False;
+    item = (iONode)ListOp.first( routelist );
+    while(item) {
+      if( StrOp.equals(NodeOp.getName(item), "sg") && StrOp.equals(wItem.getstate(item), "yes" ) ) {
+        endsonasignal = True;
+      } else {
+        endsonasignal = False;
+      }
+      item = (iONode)ListOp.next( routelist );
+    }
+
     reachedEndblock = False;
     item = (iONode)ListOp.first( routelist );
     while(item) {
@@ -1729,9 +1740,12 @@ static void __analyseList(iOAnalyse inst) {
         wItem.getid(item), wItem.getstate(item) );
 
       if( StrOp.equals(wItem.getid(item), bkb) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                      "REACHED ENDBLOCK");
         reachedEndblock = True;
+
+        if( !endsonasignal)
+          break;
       }
 
       if( StrOp.equals( NodeOp.getName(item), "sw") ) {
