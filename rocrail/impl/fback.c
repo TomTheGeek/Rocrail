@@ -248,6 +248,8 @@ static void _resetCounter( iOFBack inst ) {
     wSwitch.setport1( node, wFeedback.getaddr( data->props ) );
     wSwitch.setcmd( node, wSwitch.turnout );
     ControlOp.cmd( AppOp.getControl(), node, NULL );
+
+    data->state = False;
   }
   /* Broadcast to clients. Node4 */
   {
