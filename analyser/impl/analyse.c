@@ -122,7 +122,7 @@ static void* __event( void* inst, const void* evt ) {
 static void __del( void* inst ) {
   if( inst != NULL ) {
     iOAnalyseData data = Data(inst);
-    printf("delete ANALYSER\n");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cleaning up the ANALYSER...");
 
     iOMap delMap = MapOp.inst();
     char delkey[32];
@@ -133,7 +133,7 @@ static void __del( void* inst ) {
       while (item != NULL) {
         StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
         if(!MapOp.haskey(delMap, delkey)) {
-          printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
           MapOp.put(delMap, delkey, (obj)delkey);
           NodeOp.base.del(item);
         }
@@ -141,7 +141,7 @@ static void __del( void* inst ) {
       }
       StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        printf("delete %s[0x%08X]\n", ((obj) plist)->name(), (unsigned int)plist);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) plist)->name(), (unsigned int)plist);
         MapOp.put(delMap, delkey, (obj)delkey);
         ListOp.base.del(plist);
       }
@@ -152,7 +152,7 @@ static void __del( void* inst ) {
     while (item != NULL) {
       StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
         MapOp.put(delMap, delkey, (obj)delkey);
         NodeOp.base.del(item);
       }
@@ -165,7 +165,7 @@ static void __del( void* inst ) {
       while (item) {
         StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
         if(!MapOp.haskey(delMap, delkey)) {
-          printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
           MapOp.put(delMap, delkey, (obj)delkey);
           NodeOp.base.del(item);
         }
@@ -173,7 +173,7 @@ static void __del( void* inst ) {
       }
       StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        printf("delete %s[0x%08X]\n", ((obj) occlist)->name(), (unsigned int)occlist);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) occlist)->name(), (unsigned int)occlist);
         MapOp.put(delMap, delkey, (obj)delkey);
         ListOp.base.del(occlist);
       }
@@ -186,6 +186,8 @@ static void __del( void* inst ) {
     ListOp.base.del(data->bkoccitemlist);
 
     MapOp.base.del(delMap);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ANALYSER is cleaned up");
 
     freeMem( data );
     freeMem( inst );
