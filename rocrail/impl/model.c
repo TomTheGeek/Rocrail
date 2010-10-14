@@ -2753,6 +2753,7 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
   StrOp.free(stamp);
   ModelOp.saveAs(inst, stampfile);
   data->fileName = filename;
+  data->analyser = NULL;
 
   /* Make sure the route list is available before analyzing the track plan. */
   if( wPlan.getstlist(data->model) == NULL ) {
