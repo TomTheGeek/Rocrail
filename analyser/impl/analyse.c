@@ -1916,7 +1916,7 @@ static void __analyseList(iOAnalyse inst) {
     if( addToList) {
 
       if( !cleanrun) {
-        NodeOp.addChild( stlist, newRoute );
+        NodeOp.addChild( stlist, (iONode)NodeOp.base.clone( newRoute ));
       }
     }
 
