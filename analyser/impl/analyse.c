@@ -1915,8 +1915,14 @@ static void __analyseList(iOAnalyse inst) {
     /* merge into stlist */
     if( addToList) {
 
-      if( !cleanrun) {
-        NodeOp.addChild( stlist, (iONode)NodeOp.base.clone( newRoute ));
+      if ( !(StrOp.equals( wRoute.getbka(newRoute), wRoute.getbkb(newRoute))) ) {
+
+        if( !cleanrun) {
+          NodeOp.addChild( stlist, (iONode)NodeOp.base.clone( newRoute ));
+        }
+      } else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"found looproute: [%s] -> check your plan!",
+            wRoute.getid(newRoute));
       }
     }
 
