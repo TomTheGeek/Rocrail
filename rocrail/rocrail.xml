@@ -401,6 +401,9 @@
     <fun name="resetCounter" vt="void">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="resetWheelCount" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
     <fun name="setCarCount" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>

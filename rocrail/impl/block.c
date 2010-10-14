@@ -1479,6 +1479,19 @@ static void _resetTrigs( iIBlockBase inst ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "Block \"%s\" resetTrigs.",
                  data->id );
+
+  /* reset wheel counters */
+  {
+    iONode fbevt = wBlock.getfbevent( data->props );
+
+    while( fbevt != NULL ) {
+      const char* fbid = wFeedbackEvent.getid( fbevt );
+      iOFBack fb = ModelOp.getFBack( AppOp.getModel(), fbid );
+      if(fb != NULL)
+        FBackOp.resetWheelCount(fb);
+      fbevt = wBlock.nextfbevent( data->props, fbevt );
+    };
+  }
 }
 
 

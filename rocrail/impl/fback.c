@@ -238,6 +238,14 @@ static int _getCounter( iOFBack inst ) {
   return data->counter;
 }
 
+static void _resetWheelCount( iOFBack inst ) {
+  iOFBackData data = Data(inst);
+  if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter ) {
+    FBackOp.resetCounter(inst);
+  }
+}
+
+
 static void _resetCounter( iOFBack inst ) {
   iOFBackData data = Data(inst);
   data->counter = 0;

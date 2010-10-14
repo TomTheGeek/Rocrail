@@ -410,7 +410,7 @@ static const char* __checkFbState( iOSwitch inst ) {
 }
 
 
-static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int val ) {
+static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
   iOSwitchData data = Data(inst);
   const char* strState = __checkFbState( (iOSwitch)inst );
   Boolean isSet = True;
