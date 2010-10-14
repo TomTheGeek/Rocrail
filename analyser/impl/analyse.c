@@ -122,68 +122,70 @@ static void* __event( void* inst, const void* evt ) {
 static void __del( void* inst ) {
   if( inst != NULL ) {
     iOAnalyseData data = Data(inst);
-    /* Cleanup data->xxx members...*/
+    printf("delete ANALYSER\n");
 
+    iOMap delMap = MapOp.inst();
+    char delkey[32];
 
- /*
-    MapOp.base.del(data->objectmap);
-
-    ListOp.base.del(data->bkoccitemlist);
-    ListOp.base.del( data->prelist);
-    ListOp.base.del(data->bklist);
-
-
-
-    int prelistsize = ListOp.size( data->prelist);
-    int i;
-    for (i = 0; i < ListOp.size( data->prelist); i++) {
-      iOList plist = (iOList)ListOp.get( data->prelist , i);
-      int j;
-      for (j = 0; j < ListOp.size( plist); j++) {
-        //j=0;
-        //NodeOp.base.del( (iOList)ListOp.get( plist , j));
+    iOList plist = (iOList) ListOp.first(data->prelist);
+    while (plist != NULL) {
+      iONode item = (iONode) ListOp.first(plist);
+      while (item != NULL) {
+        StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+        if(!MapOp.haskey(delMap, delkey)) {
+          printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+          MapOp.put(delMap, delkey, (obj)delkey);
+          NodeOp.base.del(item);
+        }
+        item = (iONode) ListOp.next(plist);
       }
-      //i=0;
-      //ListOp.base.del( plist );
+      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      if(!MapOp.haskey(delMap, delkey)) {
+        printf("delete %s[0x%08X]\n", ((obj) plist)->name(), (unsigned int)plist);
+        MapOp.put(delMap, delkey, (obj)delkey);
+        ListOp.base.del(plist);
+      }
+      plist = (iOList) ListOp.next(data->prelist);
     }
-    ListOp.base.del( data->prelist);
 
-
-
-    iOList plist = (iOList)ListOp.first( data->prelist );
-    while(plist) {
-       iONode item = (iONode)ListOp.first( plist );
-       while(item) {
-         NodeOp.base.del( item);
-         item = (iONode)ListOp.next( plist );
-       }
-       ListOp.base.del( plist);
-       plist = (iOList)ListOp.next( data->prelist );
-     }
-    ListOp.base.del( data->prelist);
-
-
-    iONode item = (iONode)ListOp.first( data->bklist );
-    while(item) {
-      NodeOp.base.del( item);
-      item = (iONode)ListOp.next( data->bklist );
+    iONode item = (iONode) ListOp.first(data->bklist);
+    while (item != NULL) {
+      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      if(!MapOp.haskey(delMap, delkey)) {
+        printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+        MapOp.put(delMap, delkey, (obj)delkey);
+        NodeOp.base.del(item);
+      }
+      item = (iONode) ListOp.next(data->bklist);
     }
+
+    iOList occlist = (iOList) ListOp.first(data->bkoccitemlist);
+    while (occlist) {
+      iONode item = (iONode) ListOp.first(occlist);
+      while (item) {
+        StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+        if(!MapOp.haskey(delMap, delkey)) {
+          printf("delete %s[0x%08X]\n", ((obj) item)->name(), (unsigned int)item);
+          MapOp.put(delMap, delkey, (obj)delkey);
+          NodeOp.base.del(item);
+        }
+        item = (iONode) ListOp.next(occlist);
+      }
+      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      if(!MapOp.haskey(delMap, delkey)) {
+        printf("delete %s[0x%08X]\n", ((obj) occlist)->name(), (unsigned int)occlist);
+        MapOp.put(delMap, delkey, (obj)delkey);
+        ListOp.base.del(occlist);
+      }
+      occlist = (iOList) ListOp.next(data->bkoccitemlist);
+    }
+
+    MapOp.base.del(data->objectmap);
     ListOp.base.del(data->bklist);
+    ListOp.base.del(data->prelist);
+    ListOp.base.del(data->bkoccitemlist);
 
-    iOList occlist = (iOList)ListOp.first( data->bkoccitemlist );
-    while(occlist) {
-       iONode item = (iONode)ListOp.first( occlist );
-       while(item) {
-         //NodeOp.base.del( item);
-         item = (iONode)ListOp.next( occlist );
-       }
-       ListOp.base.del( occlist);
-       occlist = (iOList)ListOp.next( data->bkoccitemlist );
-     }
-
-
-     ListOp.base.del(data->bkoccitemlist);
-*/
+    MapOp.base.del(delMap);
 
     freeMem( data );
     freeMem( inst );
