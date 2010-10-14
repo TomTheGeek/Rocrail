@@ -3388,7 +3388,11 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     if( event.GetCol() == LOC_COL_MODE && wGui.isdispatchmode( m_Ini )) {
       OnLocDispatch( event);
     }
-    else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED ) {
+    // TODO: Block if the event is not initiated from the mouse.
+    //else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED ) {
+    else if( event.GetCol() == LOC_COL_ID ) {
+      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "TODO: D&D eventtype [%d]", event.GetEventType() );
+
       wxTextDataObject my_data(_T("moveto:")+str);
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
