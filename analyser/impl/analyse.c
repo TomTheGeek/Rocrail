@@ -1717,6 +1717,9 @@ static void __analyseList(iOAnalyse inst) {
   }
 
 
+  int fbcount = 0;
+
+
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
 
@@ -1731,6 +1734,8 @@ static void __analyseList(iOAnalyse inst) {
     /* presearch: go to the endblock -> bkb*/
     Boolean reachedEndblock = False;
     Boolean endsonasignal = False;
+    Boolean signalreached = False;
+
     int count = 0;
     while(item) {
 
@@ -1813,6 +1818,28 @@ static void __analyseList(iOAnalyse inst) {
         NodeOp.addChild( newRoute, swcmd );
       }
 
+      if( StrOp.equals( NodeOp.getName(item), "fb") && endsonasignal) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                             "-------> fb: [%s]", wItem.getid( item));
+
+        if( !signalreached) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "is [%s] [%s] event for block [%s]",
+              wRoute.isbkaside( newRoute)?"all":"all-reverse", "ENTER",
+                  wRoute.getbka( newRoute));
+        }
+
+
+        if( reachedEndblock) {
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--EB---> %d", wRoute.isbkbside( newRoute));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "is [%s] [%s] event for block [%s]",
+                       wRoute.isbkbside( newRoute)?"all":"all-reverse", "IN",
+                           wRoute.getbkb( newRoute));
+        }
+
+
+
+      }
+
       if( StrOp.equals( NodeOp.getName(item), "tk") ||
           StrOp.equals( NodeOp.getName(item), "fb") ||
           StrOp.equals( NodeOp.getName(item), "sg") ) {
@@ -1842,6 +1869,8 @@ static void __analyseList(iOAnalyse inst) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             " -> the signal [%s][%s] is the [%s] side %s signal for block [%s]", NodeOp.getName(item),
             wItem.getid(item), bkaside, signaltype, bka );
+
+            signalreached = True;
 
             /* add signals to the block ... */
             iIBlockBase block = data->model->getBlock( data->model, bka );
@@ -1918,7 +1947,7 @@ static void __analyseList(iOAnalyse inst) {
       if ( !(StrOp.equals( wRoute.getbka(newRoute), wRoute.getbkb(newRoute))) ) {
 
         if( !cleanrun) {
-          NodeOp.addChild( stlist, (iONode)NodeOp.base.clone( newRoute ));
+          NodeOp.addChild( stlist, newRoute );
         }
       } else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"found looproute: [%s] -> check your plan!",
