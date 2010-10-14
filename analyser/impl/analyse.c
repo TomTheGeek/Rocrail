@@ -101,12 +101,15 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/FeedbackEvent.h"
+
 
 #include "rocrail/public/track.h"
 #include "rocrail/public/switch.h"
 #include "rocrail/public/signal.h"
 #include "rocrail/public/fback.h"
 #include "rocrail/public/route.h"
+
 
 static int instCnt = 0;
 
@@ -1736,6 +1739,9 @@ static void __analyseList(iOAnalyse inst) {
     Boolean endsonasignal = False;
     Boolean signalreached = False;
 
+    // Feedback generation
+    Boolean addFeedbacks = False;
+
     int count = 0;
     while(item) {
 
@@ -1818,22 +1824,39 @@ static void __analyseList(iOAnalyse inst) {
         NodeOp.addChild( newRoute, swcmd );
       }
 
-      if( StrOp.equals( NodeOp.getName(item), "fb") && endsonasignal) {
+      if( StrOp.equals( NodeOp.getName(item), "fb") && endsonasignal && addFeedbacks) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                              "-------> fb: [%s]", wItem.getid( item));
 
         if( !signalreached) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "is [%s] [%s] event for block [%s]",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     is [%s] [%s] event for block [%s]",
               wRoute.isbkaside( newRoute)?"all":"all-reverse", "ENTER",
                   wRoute.getbka( newRoute));
+
+          iONode fbevent = NodeOp.inst( "fbevent", NULL, ELEMENT_NODE );
+          wItem.setid( fbevent, wItem.getid(item));
+          wFeedbackEvent.setaction( fbevent, "enter");
+          wFeedbackEvent.setfrom( fbevent, wRoute.isbkaside( newRoute)?"all":"all-reverse");
+
+          iIBlockBase block = data->model->getBlock( data->model, wRoute.getbka( newRoute) );
+          iONode blocknode = block->base.properties(block);
+          NodeOp.addChild( blocknode, fbevent );
         }
 
 
         if( reachedEndblock) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--EB---> %d", wRoute.isbkbside( newRoute));
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "is [%s] [%s] event for block [%s]",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     is [%s] [%s] event for block [%s]",
                        wRoute.isbkbside( newRoute)?"all":"all-reverse", "IN",
                            wRoute.getbkb( newRoute));
+
+          iONode fbevent = NodeOp.inst( "fbevent", NULL, ELEMENT_NODE );
+          wItem.setid( fbevent, wItem.getid(item));
+          wFeedbackEvent.setaction( fbevent, "in");
+          wFeedbackEvent.setfrom( fbevent, wRoute.isbkbside( newRoute)?"all":"all-reverse");
+
+          iIBlockBase block = data->model->getBlock( data->model, wRoute.getbkb( newRoute) );
+          iONode blocknode = block->base.properties(block);
+          NodeOp.addChild( blocknode, fbevent );
         }
 
 
