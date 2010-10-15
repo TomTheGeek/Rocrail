@@ -820,12 +820,12 @@ Boolean rocs_socket_setNodelay( iOSocket inst, Boolean flag ) {
 #ifdef __ROCS_SOCKET__
   iOSocketData o = Data(inst);
   int rc   = 0;
+  int size = sizeof( flag );
   rc = setsockopt(o->sh,            /* socket affected */
                    IPPROTO_TCP,     /* set option at TCP level */
                    TCP_NODELAY,     /* name of option */
-                   (char *) &flag,  /* the cast is historical
-                                           cruft */
-                   sizeof(int));    /* length of option value */
+                   (void*) &flag,   /* the cast is historical cruft */
+                   size);           /* length of option value */
   if( rc != 0 ) {
     o->rc = errno;
     TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "setsockopt() failed" );
