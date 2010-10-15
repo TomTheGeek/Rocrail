@@ -541,7 +541,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
       if( isw != NULL ) {
-        if( lock && SwitchOp.isLocked( isw, id ) )
+        if( lock && SwitchOp.isLocked( isw, id, False ) )
           return False;
       }
       else {

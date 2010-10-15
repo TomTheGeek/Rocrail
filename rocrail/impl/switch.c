@@ -547,7 +547,7 @@ static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
   return False;
 }
 
-static Boolean _isLocked( iOSwitch inst, const char* id ) {
+static Boolean _isLocked( iOSwitch inst, const char* id, Boolean manual ) {
   iOSwitchData data = Data(inst);
   const char* blockid = wSwitch.getblockid(data->props);
 
@@ -559,7 +559,7 @@ static Boolean _isLocked( iOSwitch inst, const char* id ) {
                    SwitchOp.getId( inst ), data->lockedId );
     return True;
   }
-  if( blockid != NULL && StrOp.len(blockid) > 0 ) {
+  if( !manual && blockid != NULL && StrOp.len(blockid) > 0 ) {
     iIBlockBase bk = ModelOp.getBlock( AppOp.getModel(), blockid);
     if( bk != NULL && !bk->isFree(bk, id) ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block [%s] is not free which occupies switch [%s].",
@@ -634,7 +634,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
 
-  if( SwitchOp.isLocked(inst, NULL) ) {
+  if( SwitchOp.isLocked(inst, NULL, wSwitch.ismanualcmd( nodeA )) ) {
     if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
                    SwitchOp.getId( inst ), o->lockedId );

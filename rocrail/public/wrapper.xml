@@ -959,6 +959,7 @@
         <const name="flip" vt="string" val="flip" remark="Change current state."/>
         <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="manualcmd" vt="bool" defval="false" remark="Manual command issued from a client."/>
         <var name="activate" vt="bool" defval="true"/>
         <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this switch."/>

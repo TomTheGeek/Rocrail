@@ -700,6 +700,7 @@ void Symbol::OnCmdStraight(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.straight );
+  wSwitch.setmanualcmd( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -707,6 +708,7 @@ void Symbol::OnCmdTurnout(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.turnout );
+  wSwitch.setmanualcmd( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -714,6 +716,7 @@ void Symbol::OnCmdLeft(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.left );
+  wSwitch.setmanualcmd( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -721,6 +724,7 @@ void Symbol::OnCmdRight(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.right );
+  wSwitch.setmanualcmd( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -843,6 +847,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
       wSwitch.setcmd( cmd, wSwitch.flip );
+      wSwitch.setmanualcmd( cmd, True );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }

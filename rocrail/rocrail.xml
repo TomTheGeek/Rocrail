@@ -1223,6 +1223,7 @@
     <fun name="isLocked" vt="Boolean">
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="locid" vt="const char*" remark="Querying locid"/>
+      <param name="manual" vt="Boolean" remark="Manual command issued from a client."/>
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Switch instance"/>
