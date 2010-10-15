@@ -1165,6 +1165,10 @@
       <param name="inst" vt="this" remark="Socket instance."/>
       <param name="keepalive" vt="Boolean" remark=""/>
     </fun>
+    <fun name="setNodelay" implname="rocs_socket_setNodelay" vt="Boolean" remark="">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="flag" vt="Boolean" remark=""/>
+    </fun>
     <fun name="disConnect" vt="void" remark="Disconnect from remote peer.">
       <param name="inst" vt="this" remark="Socket instance."/>
     </fun>

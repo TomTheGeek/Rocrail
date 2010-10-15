@@ -66,6 +66,7 @@ Boolean rocs_socket_setSndTimeout( iOSocket inst, int timeout );
 Boolean rocs_socket_setRcvTimeout( iOSocket inst, int timeout );
 const char* rocs_socket_getPeername(iOSocket inst);
 Boolean rocs_socket_setKeepalive(iOSocket,Boolean);
+Boolean rocs_socket_setNodelay(iOSocket,Boolean);
 Boolean rocs_socket_peek( iOSocket inst, char* buf, int size );
 char* rocs_socket_mac( const char* device );
 Boolean rocs_socket_LoadCerts( iOSocket inst, const char *cFile, const char *kFile );

@@ -2274,7 +2274,7 @@ static void _halt( obj inst, Boolean poweroff ) {
     }
 
   }
-  /*data->lnDisconnect(inst);*/
+  data->lnDisconnect(inst);
   return;
 }
 

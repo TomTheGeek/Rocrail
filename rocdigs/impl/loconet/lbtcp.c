@@ -56,14 +56,15 @@ static void __reader( void* threadinst ) {
         bucket[garbage] = c;
         garbage++;
       }
-    } while (ok && data->run && c < 0x80 && garbage < 10);
+    } while (ok && data->run && c < 0x80 && garbage < 32);
 
     if( garbage > 0 ) {
        TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
-       TraceOp.dump ( "lbtcpl", TRCLEVEL_BYTE, (char*)bucket, garbage );
+       TraceOp.dump ( "lbtcp", TRCLEVEL_BYTE, (char*)bucket, garbage );
     }
 
     if( !data->comm ) {
+      TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "state changed" );
       data->comm = True;
       LocoNetOp.stateChanged((iOLocoNet)loconet);
     }
@@ -98,7 +99,7 @@ static void __reader( void* threadinst ) {
 
     ok = SocketOp.read( data->rwTCP, &msg[index], msglen - index);
 
-    if( ok && msglen > 0 && MutexOp.wait( data->udpmux ) ) {
+    if( ok && msglen > 0 && MutexOp.trywait( data->udpmux, 10 ) ) {
       byte* p = allocMem(msglen+1);
       p[0] = msglen;
       MemOp.copy( p+1, msg, msglen);
@@ -108,6 +109,7 @@ static void __reader( void* threadinst ) {
       ThreadOp.sleep(0);
     }
     else {
+      TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
       ThreadOp.sleep(10);
     }
 
@@ -132,6 +134,7 @@ Boolean lbTCPConnect( obj inst ) {
   data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
 
   if ( SocketOp.connect( data->rwTCP ) ) {
+    SocketOp.setNodelay(data->rwTCP, True);
     data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
     ThreadOp.start( data->udpReader );
     return True;
@@ -146,6 +149,9 @@ Boolean lbTCPConnect( obj inst ) {
 void  lbTCPDisconnect( obj inst ) {
   iOLocoNetData data = Data(inst);
   if( data->rwTCP != NULL ) {
+    data->run = False;
+    ThreadOp.sleep(10);
+    TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
     SocketOp.disConnect( data->rwTCP );
     SocketOp.base.del( data->rwTCP );
     data->rwTCP = NULL;
@@ -154,7 +160,7 @@ void  lbTCPDisconnect( obj inst ) {
 
 int lbTCPRead ( obj inst, unsigned char *msg ) {
   iOLocoNetData data = Data(inst);
-  if( !QueueOp.isEmpty(data->udpQueue) && MutexOp.trywait( data->udpmux, 100 ) ) {
+  if( !QueueOp.isEmpty(data->udpQueue) && MutexOp.trywait( data->udpmux, 10 ) ) {
     byte* p = (byte*)QueueOp.get(data->udpQueue);
     int size = p[0];
     MemOp.copy( msg, &p[1], size );

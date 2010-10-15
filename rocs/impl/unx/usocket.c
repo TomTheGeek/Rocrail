@@ -50,6 +50,7 @@
 #include <sys/ioctl.h>
 #include <sys/utsname.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
@@ -811,6 +812,29 @@ Boolean rocs_socket_setKeepalive( iOSocket inst, Boolean alive ) {
   return True;
 #else
   return False;
+#endif
+}
+
+
+Boolean rocs_socket_setNodelay( iOSocket inst, Boolean flag ) {
+#ifdef __ROCS_SOCKET__
+  iOSocketData o = Data(inst);
+  int rc   = 0;
+  rc = setsockopt(o->sh,            /* socket affected */
+                   IPPROTO_TCP,     /* set option at TCP level */
+                   TCP_NODELAY,     /* name of option */
+                   (char *) &flag,  /* the cast is historical
+                                           cruft */
+                   sizeof(int));    /* length of option value */
+  if( rc != 0 ) {
+    o->rc = errno;
+    TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "setsockopt() failed" );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_setNodelay() OK." );
+  return True;
+#else
+ return False;
 #endif
 }
 

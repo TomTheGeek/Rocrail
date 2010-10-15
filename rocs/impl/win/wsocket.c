@@ -692,6 +692,25 @@ Boolean rocs_socket_setKeepalive( iOSocket inst, Boolean alive ) {
   return True;
 }
 
+
+Boolean rocs_socket_setNodelay( iOSocket inst, Boolean flag ) {
+#ifdef __ROCS_SOCKET__
+  iOSocketData o = Data(inst);
+  int rc   = 0;
+  int size = sizeof( flag );
+  rc = setsockopt( o->sh, IPPROTO_TCP, TCP_NODELAY, (void*)&flag, size );
+
+  if( rc != 0 ) {
+    o->rc = WSAGetLastError();
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "rocs_socket_setKeepalive() failed [%d]", WSAGetLastError() );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_setKeepalive() OK." );
+#endif
+  return True;
+}
+
+
 Boolean rocs_socket_CreateCTX( iOSocket inst ) {
 #ifdef __OPENSSL__
   iOSocketData o = Data(inst);
