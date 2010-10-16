@@ -1574,6 +1574,7 @@ void BlockDialog::CreateControls()
     wxArrayString m_StopSpeedStrings;
     m_StopSpeedStrings.Add(_("&min"));
     m_StopSpeedStrings.Add(_("&mid"));
+    m_StopSpeedStrings.Add(_("&%"));
     m_StopSpeed = new wxRadioBox( m_PanelDetails, wxID_ANY, _("stop"), wxDefaultPosition, wxDefaultSize, m_StopSpeedStrings, 1, wxRA_SPECIFY_ROWS );
     m_StopSpeed->SetSelection(0);
     itemFlexGridSizer99->Add(m_StopSpeed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
