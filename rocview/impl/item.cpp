@@ -2269,9 +2269,15 @@ void Symbol::modelEvent( iONode node ) {
         id, occupied, state, locid!=NULL?locid:"-" );
 
 
-    m_Renderer->setLabel( l_locidStr, updateEnterside?-1:occupied, rotatesym );
-    StrOp.free( m_locidStr );
-    m_locidStr = l_locidStr;
+    if( updateEnterside ) {
+      m_Renderer->setLabel( m_locidStr, -1, rotatesym );
+      StrOp.free( l_locidStr );
+    }
+    else {
+      m_Renderer->setLabel( l_locidStr, occupied, rotatesym );
+      StrOp.free( m_locidStr );
+      m_locidStr = l_locidStr;
+    }
 
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 
