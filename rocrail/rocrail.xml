@@ -439,6 +439,7 @@
     <fun name="setBlockEnterSide" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="enterside" vt="Boolean"/>
+      <param name="blockId" vt="const char*"/>
     </fun>
     <fun name="getDestination" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
@@ -534,6 +535,7 @@
     </fun>
     <fun name="swapBlockEnterSide" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="blockId" vt="const char*"/>
     </fun>
     <fun name="informBlock" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>

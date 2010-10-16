@@ -1845,7 +1845,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.blockside, cmd ) ) {
-      LocOp.swapBlockEnterSide(inst);
+      LocOp.swapBlockEnterSide(inst, NULL);
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.dispatch, cmd ) ) {
@@ -2283,7 +2283,7 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   iOLocData data = Data(loc);
 
   /* swap the block enter side flag to be able to use other direction routes */
-  LocOp.swapBlockEnterSide(loc);
+  LocOp.swapBlockEnterSide(loc, NULL);
 
   if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
     wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
@@ -2430,22 +2430,26 @@ static Boolean _getBlockEnterSide( iOLoc loc ) {
 }
 
 
-static void _setBlockEnterSide( iOLoc loc, Boolean enterside ) {
+static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockId ) {
   iOLocData data = Data(loc);
   iONode broadcast = NULL;
+  iONode clone = NULL;
   wLoc.setblockenterside(data->props, enterside);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
   ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
   /* Broadcast to clients. */
-  broadcast = (iONode)NodeOp.base.clone(data->props);
+  clone = (iONode)NodeOp.base.clone(data->props);
+  if( blockId != NULL )
+    wLoc.setblockid(clone, blockId );
+  broadcast = clone;
   AppOp.broadcastEvent( broadcast );
 }
 
 
-static void _swapBlockEnterSide( iOLoc loc ) {
+static void _swapBlockEnterSide( iOLoc loc, const char* blockId ) {
   iOLocData data = Data(loc);
-  LocOp.setBlockEnterSide(loc, !wLoc.isblockenterside(data->props) );
+  LocOp.setBlockEnterSide(loc, !wLoc.isblockenterside(data->props), blockId );
 }
 
 
