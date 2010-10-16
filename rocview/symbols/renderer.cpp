@@ -1692,6 +1692,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   m_bRotateable = true;
   Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
   int blocklen = m_bSmall ? 2:4;
+  const char* textOri = ori;
 
   svgSymbol* svgSym[9];
 
@@ -1787,9 +1788,9 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
     wxCoord height;
     dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0, font);
 
-    if( StrOp.equals( ori, wItem.south ) )
+    if( StrOp.equals( textOri, wItem.south ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
-    else if( StrOp.equals( ori, wItem.north ) )
+    else if( StrOp.equals( textOri, wItem.north ) )
       dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
     else {
 #ifdef __WIN32__
