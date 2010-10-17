@@ -124,17 +124,6 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     /* continue if not set to IDLE state */
     if( data->state != LC_IDLE ) {
 
-      if ( !data->useblockside && data->next1Route->isSwapPost( data->next1Route ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-
-        /* swap post route */
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
-        data->loc->swapPlacing( data->loc, NULL, False );
-
-        wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
-        data->loc->cmd( data->loc, cmd);
-      }
-
       /* unlink-up after inblock event */
       data->next1Block->unLink( data->next1Block );
 
@@ -178,6 +167,17 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
           data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route), data->next1Route->getToBlock(data->next1Route) );
         else
           data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route) );
+      }
+
+      if ( data->next1Route->isSwapPost( data->next1Route ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+        /* swap post route */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
+        data->loc->swapPlacing( data->loc, NULL, False );
+
+        wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
+        data->loc->cmd( data->loc, cmd);
       }
 
       data->next1Route = data->next2Route;
