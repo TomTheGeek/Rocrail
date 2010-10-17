@@ -2464,16 +2464,15 @@ static void __reinitRoutes( iOModel inst ) {
   ThreadOp.sleep(100);
   if(ListOp.size( o->routeList) > 0 ) {
     int i = 0;
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.add );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast add %d routes", ListOp.size( o->routeList) );
     for( i = 0; i < ListOp.size( o->routeList); i++ ) {
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
       iORoute item = (iORoute)ListOp.get( o->routeList, i);
-      wModelCmd.setcmd( cmd, wModelCmd.add );
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add route %s", RouteOp.getId(item) );
-      AppOp.broadcastEvent( cmd );
-      ThreadOp.sleep(100);
     }
+    AppOp.broadcastEvent( cmd );
   }
 
 }
