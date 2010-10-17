@@ -124,7 +124,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     /* continue if not set to IDLE state */
     if( data->state != LC_IDLE ) {
 
-      if ( data->next1Route->isSwapPost( data->next1Route ) ) {
+      if ( !data->useblockside && data->next1Route->isSwapPost( data->next1Route ) ) {
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
         /* swap post route */
