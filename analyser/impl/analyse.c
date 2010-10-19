@@ -1710,6 +1710,7 @@ static void __analyseList(iOAnalyse inst) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   iONode child = NULL;
+  iOList delList = ListOp.inst();
   int childcnt = NodeOp.getChildCnt( stlist);
   int i;
   for( i = 0; i <childcnt; i++) {
@@ -1718,10 +1719,15 @@ static void __analyseList(iOAnalyse inst) {
     if( StrOp.startsWith( wItem.getid( child), "autogen-" )) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "removed autogen route: [%s]", wItem.getid( child));
-      NodeOp.removeChild( stlist, child );
-      i=0;
+      ListOp.add( delList, (obj)child );
     }
   }
+
+  childcnt = ListOp.size(delList);
+  for( i = 0; i <childcnt; i++) {
+    NodeOp.removeChild( stlist, (iONode)ListOp.get(delList, i) );
+  }
+  ListOp.base.del(delList);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
