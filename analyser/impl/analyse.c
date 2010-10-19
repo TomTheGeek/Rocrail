@@ -1323,7 +1323,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     */
 
   /*security*/
-  if ( depth > 100)
+  if ( depth > 1000)
     return False;
 
   int x = 0;
@@ -1630,6 +1630,8 @@ static void __analyseOccList(iOAnalyse inst) {
         iIBlockBase blockb = data->model->getBlock( data->model, wItem.getid(item) );
         block = blockb->base.properties( blockb);
 
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
+
         bk = wItem.getid(item);
       } else {
 
@@ -1650,6 +1652,7 @@ static void __analyseOccList(iOAnalyse inst) {
           iOSwitch track = data->model->getSwitch( data->model, wItem.getid(item) );
           node = track->base.properties(track);
 
+          /*
           const char * prev = wBlock.getturnoutstolock(block);
           if( prev != NULL || !StrOp.equals(prev, "")) {
             iOStrTok tok = StrTokOp.inst( prev, ',' );
@@ -1671,16 +1674,16 @@ static void __analyseOccList(iOAnalyse inst) {
               wBlock.setturnoutstolock(block, wItem.getid(item));
             }
 
-          }
+          }*/
 
         } // if sw
 
         if( node != NULL) {
           wItem.setblockid(node, bk);
         }
-      }
+      } // if bk
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] ", wItem.getid(item));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] for: [%s] ", wItem.getid(item), bk);
       item = (iONode)ListOp.next( occlist );
     }
 
@@ -1695,8 +1698,7 @@ static void __analyseList(iOAnalyse inst) {
   iONode model = data->model->getModel( data->model);
   iONode stlist = wPlan.getstlist(model);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
+
 
   const char * bka = NULL;
   const char * bkb = NULL;
@@ -1706,6 +1708,7 @@ static void __analyseList(iOAnalyse inst) {
   /* SET TO False -> the plan will not be modified!*/
   Boolean doIt = True;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   iONode child = NULL;
   int childcnt = NodeOp.getChildCnt( stlist);
   int i;
@@ -1714,14 +1717,16 @@ static void __analyseList(iOAnalyse inst) {
 
     if( StrOp.startsWith( wItem.getid( child), "autogen-" )) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "refresh route: [%s]", wItem.getid( child));
+          "removed autogen route: [%s]", wItem.getid( child));
       NodeOp.removeChild( stlist, child );
+      i=0;
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
 
   int fbcount = 0;
-
 
   iOList routelist = (iOList)ListOp.first( data->prelist );
   while(routelist) {
@@ -1770,12 +1775,14 @@ static void __analyseList(iOAnalyse inst) {
     wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
 
     Boolean addToList = True;
-    childcnt = NodeOp.getChildCnt( stlist);
-    for( i = 0; i <childcnt; i++) {
+    //childcnt = NodeOp.getChildCnt( stlist);
+    for( i = 0; i <NodeOp.getChildCnt( stlist); i++) {
       child = NodeOp.getChild( stlist, i);
 
       if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
           StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
+              wRoute.isbkaside( child) ==  wRoute.isbkaside( newRoute) &&
+              wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) &&
           !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -1786,13 +1793,14 @@ static void __analyseList(iOAnalyse inst) {
         break;
       }
 
+      /*
       if( StrOp.equals( wItem.getid( child), wItem.getid( newRoute) ) ){
          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-             "refresh route: [%s]", wItem.getid( child));
+             "xxx refresh route: [%s]", wItem.getid( child));
 
          NodeOp.removeChild( stlist, child );
-
-      }
+         i = 0;
+      }*/
     }
 
     reachedEndblock = False;
@@ -1889,7 +1897,7 @@ static void __analyseList(iOAnalyse inst) {
             if( signaltype == NULL)
               signaltype = "main";
 
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
             " -> the signal [%s][%s] is the [%s] side %s signal for block [%s]", NodeOp.getName(item),
             wItem.getid(item), bkaside, signaltype, bka );
 
@@ -1903,7 +1911,7 @@ static void __analyseList(iOAnalyse inst) {
               if( StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main") ) {
                 wBlock.setsignal(blocknode, wItem.getid(item));
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
-              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant") ) {
+              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "main") ) {
                 wBlock.setwsignal(blocknode, wItem.getid(item));
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
               }
@@ -1911,14 +1919,14 @@ static void __analyseList(iOAnalyse inst) {
               if( StrOp.equals( NodeOp.getStr( item, "signal", "main"), "main") ) {
                 wBlock.setsignalR(blocknode, wItem.getid(item));
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
-              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant") ) {
+              } else if (StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "main") ) {
                 wBlock.setwsignalR(blocknode, wItem.getid(item));
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"OK");
               }
             }
 
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                        "      block [%s] set [%s] %s signal [%s]", bka, bkaside, NodeOp.getStr( item, "signal", "distant"),
+                        "      block [%s] set [%s] %s signal [%s]", bka, bkaside, NodeOp.getStr( item, "signal", "main"),
                         wItem.getid(item) );
           }
 
