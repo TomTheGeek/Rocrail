@@ -145,7 +145,7 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
         rc = SerialOp.read( data->serial, in+offset, insize );
         if( rc ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
-          TraceOp.dump( name, TRCLEVEL_INFO, in, insize+offset );
+          TraceOp.dump( name, TRCLEVEL_BYTE, in, insize+offset );
         }
         else {
           /* error reading data */
