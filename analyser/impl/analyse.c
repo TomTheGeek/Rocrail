@@ -1939,7 +1939,7 @@ static void __analyseList(iOAnalyse inst) {
         }
 
         const char * prevrouteids = wItem.getrouteids(tracknode);
-        if( prevrouteids != NULL || !StrOp.equals(prevrouteids, "")) {
+        if( prevrouteids != NULL) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           // check if id is allready in the list
           Boolean isInList = False;
@@ -1951,23 +1951,11 @@ static void __analyseList(iOAnalyse inst) {
           }
 
           if( !isInList && doIt) {
-             //if( addToList) {
-              char* newval = newval = StrOp.fmt( "%s,%s", prevrouteids, wRoute.getid( newRoute) );
+              char* newval = StrOp.fmt( "%s%s%s", prevrouteids, StrOp.len(prevrouteids)>0?",":"", wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
-             /*}else {
-              char* newval = StrOp.fmt( "%s", wRoute.getid( newRoute) );
-              wItem.setrouteids(tracknode, newval);
-              StrOp.free(newval);
-            }*/
           }
-        } else  { // prevrouteids == NULL
-
-          if( addToList) {
-            wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
-          }
-
-        } // else prevrouteids == NULL
+        }
 
         if( cleanrun) {
           wItem.setrouteids(tracknode, "" );
