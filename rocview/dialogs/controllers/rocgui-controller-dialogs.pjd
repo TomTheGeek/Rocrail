@@ -12105,7 +12105,7 @@
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
                   <string name="proxy-AlignV">"Centre"</string>
-                  <long name="proxy-Stretch factor">1</long>
+                  <long name="proxy-Stretch factor">0</long>
                   <long name="proxy-Border">5</long>
                   <bool name="proxy-wxLEFT">1</bool>
                   <bool name="proxy-wxRIGHT">1</bool>
