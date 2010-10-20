@@ -327,6 +327,7 @@
       <var name="fbpoll" vt="bool" defval="false" remark="Poll sensor events in p50x instead of xEvtSen."/>
       <var name="fbreset" vt="bool" defval="false" range="*" remark="Reset sensors automatically to low."/>
       <var name="ptsupport" vt="bool" defval="true" remark="Check for PT events."/>
+      <var name="systeminfo" vt="bool" defval="true" remark="Activate system info if available."/>
       <var name="stress" vt="bool" defval="false" remark="send every 10ms a loconet packet to stress the network"/>
       <var name="identdelay" vt="int" defval="2500" unit="ms" remark="Delay before sending a low sensor state for ident codes."/>
       <var name="fastclock" vt="bool" defval="false" remark="send fast clock commands to the connected command station"/>

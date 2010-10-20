@@ -824,7 +824,7 @@ static void __reader( void* threadinst ) {
   /* sending the interface configuration: must be the first packet */
   out[0] = 0xB8;
   out[1] = 0x00; /* XOR */
-  out[2] = 0x01; /* extended info */
+  out[2] = data->systeminfo ? 0x01:0x00; /* extended info */
   out[3] = 0x00;
   out[4] = 0x00;
   out[5] = 0x39;
@@ -968,10 +968,11 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->lcmux   = MutexOp.inst( NULL, True );
   data->lcmap   = MapOp.inst();
 
-  data->device    = StrOp.dup( wDigInt.getdevice( ini ) );
-  data->iid       = StrOp.dup( wDigInt.getiid( ini ) );
-  data->dummyio   = wDigInt.isdummyio(ini);
-  data->fbreset   = wDigInt.isfbreset(ini);;
+  data->device     = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->iid        = StrOp.dup( wDigInt.getiid( ini ) );
+  data->dummyio    = wDigInt.isdummyio(ini);
+  data->fbreset    = wDigInt.isfbreset(ini);
+  data->systeminfo = wDigInt.issysteminfo(ini);
   data->useParallelFunctions = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -982,6 +983,8 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate      = 57600 (fix)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "functions     = %s", data->useParallelFunctions ? "parallel":"serial" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system info   = %s", data->systeminfo ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;

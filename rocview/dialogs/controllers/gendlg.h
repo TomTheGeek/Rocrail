@@ -30,6 +30,8 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -39,6 +41,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -126,14 +129,15 @@ public:
     wxRadioBox* m_Baudrate;
     wxRadioBox* m_HardwareFlow;
     wxStaticText* m_labTimeout;
-    wxTextCtrl* m_Timeout;
+    wxSpinCtrl* m_Timeout;
     wxStaticText* m_labMS;
     wxStaticBox* m_labFeedbackBox;
     wxStaticText* m_labFbMod;
-    wxTextCtrl* m_FbMod;
+    wxSpinCtrl* m_FbMod;
     wxCheckBox* m_FbPoll;
     wxCheckBox* m_FbReset;
     wxCheckBox* m_PTSupport;
+    wxCheckBox* m_SystemInfo;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end GenericCtrlDlg member variables
