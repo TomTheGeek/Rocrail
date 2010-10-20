@@ -265,7 +265,7 @@ void GenericCtrlDlg::CreateControls()
     m_Panel->SetSizer(itemBoxSizer4);
 
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer4->Add(itemBoxSizer5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer4->Add(itemBoxSizer5, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer6->AddGrowableCol(1);
@@ -331,11 +331,11 @@ void GenericCtrlDlg::CreateControls()
     itemBoxSizer4->Add(itemStaticLine20, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer21 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer4->Add(itemBoxSizer21, 0, wxGROW|wxALL, 5);
+    itemBoxSizer4->Add(itemBoxSizer21, 1, wxGROW|wxALL, 5);
 
     m_labFeedbackBox = new wxStaticBox(m_Panel, wxID_ANY, _("Feedback"));
     wxStaticBoxSizer* itemStaticBoxSizer22 = new wxStaticBoxSizer(m_labFeedbackBox, wxVERTICAL);
-    itemBoxSizer21->Add(itemStaticBoxSizer22, 0, wxGROW|wxALL, 5);
+    itemBoxSizer21->Add(itemStaticBoxSizer22, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer22->Add(itemBoxSizer23, 0, wxGROW|wxLEFT|wxRIGHT, 5);

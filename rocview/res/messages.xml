@@ -15448,4 +15448,7 @@
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
   </Msg>
+  <Msg id="systeminfo">
+    <en txt="System info" tip="Enable extra CS system info."/>
+  </Msg>
 </Messages>
