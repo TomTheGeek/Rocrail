@@ -88,7 +88,7 @@ class GenericCtrlDlg: public wxDialog
 public:
     /// Constructors
     GenericCtrlDlg( );
-    GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername );
+    GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername, int bps=0, const char* hs=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_GENERICCTRLDLG_IDNAME, const wxString& caption = SYMBOL_GENERICCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_GENERICCTRLDLG_POSITION, const wxSize& size = SYMBOL_GENERICCTRLDLG_SIZE, long style = SYMBOL_GENERICCTRLDLG_STYLE );

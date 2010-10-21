@@ -74,11 +74,20 @@ GenericCtrlDlg::GenericCtrlDlg( )
 {
 }
 
-GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername )
+GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername, int bps, const char* hs )
 {
   Create(parent, -1, wxGetApp().getMsg(controllername));
   m_Props = props;
   initLabels();
+
+  if( bps > 0 ) {
+    wDigInt.setbps( m_Props, bps );
+    m_Baudrate->Enable(false);
+  }
+  if( hs != NULL ) {
+    wDigInt.setflow( m_Props, hs );
+    m_HardwareFlow->Enable(false);
+  }
   initValues();
 
   m_Panel->GetSizer()->Fit(this);
