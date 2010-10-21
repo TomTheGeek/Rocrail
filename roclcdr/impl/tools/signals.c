@@ -117,10 +117,7 @@ static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase blo
   if( route != NULL && block != NULL ) {
     const char* blockid = block->base.id(block);
     int sgpair = 0;
-    //Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
-
-    data->useblockside;
-    if( True) {
+    if( data->useblockside) {
 
       *signalpair = sgpair = route->getFromBlockSide(route);
       return sgpair == 2 ? False:True;
