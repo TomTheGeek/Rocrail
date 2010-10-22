@@ -3360,6 +3360,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         Boolean ismanual = RouteOp.isManual( route, &isset );
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
+        Boolean swap4BlockSide = False;
 
         stExitSide = wRoute.isbkaside(route->base.properties(route));
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
@@ -3389,10 +3390,19 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
         if( useBlockSide && stEnterSide == stExitSide ) {
           /* need to change direction */
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-              "ignoring route [%s] because the exit side is equal to the enter side [%s]",
-              RouteOp.getId(route), stEnterSide?"+":"-" );
-          continue;
+          /* TODO: if commuter: allow and flag for swap. */
+          if( wLoc.iscommuter( LocOp.base.properties(loc) ) ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
+                RouteOp.getId(route), stEnterSide?"+":"-" );
+            swap4BlockSide = True;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "ignoring route [%s] because the exit side is equal to the enter side [%s]",
+                RouteOp.getId(route), stEnterSide?"+":"-" );
+            continue;
+          }
         }
 
 
@@ -3402,6 +3412,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
         destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
         samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
+
+        if( useBlockSide && swap4BlockSide ) {
+          samedir = False;
+        }
 
         /* Must match the fromBlock: */
         if( R2RnetOp.compare( fromBlockId, stFrom ) )
@@ -3613,6 +3627,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Block [%s] is suited for [%s] and picked random[%d,%d] from [%d] choices",
                      blockBest->base.id(blockBest), LocOp.getId( loc ), randChoice, randNumber, cnt );
+    }
+
+    if( useBlockSide ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loco [%s] must swap for this route.",
+                     LocOp.getId( loc ) );
+      LocOp.swapPlacing(loc, NULL, False);
     }
 
   } else {
