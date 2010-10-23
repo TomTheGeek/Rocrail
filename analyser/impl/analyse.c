@@ -1475,7 +1475,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         /*shall we retun? no, there is something to do -> travel to the signal. if it is there by the user!*/
         behindABlock = True;
         searchingSignal = True;
-        //return;
 
       } else if ( StrOp.equals(NodeOp.getName(nextitem) , "sw" ) ) {
 
@@ -1505,7 +1504,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           return True;
         } else if( travelp >= 300 && travelp < 400) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "THREE WAY");
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "### THREE WAY");
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "     " );
           travelp -= threeWayTurnout;
           depth++;
@@ -1514,9 +1513,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           iOList listA = (iOList)ListOp.base.clone( route);
           iOList listB = (iOList)ListOp.base.clone( route);
 
-          __analyseItem(inst, nextitem, route, occ, travelp, 0, depth, False, behindABlock);
-          __analyseItem(inst, nextitem, listA, occ, travelp, 1, depth, False, behindABlock);
-          __analyseItem(inst, nextitem, listB, occ, travelp, 2, depth, False, behindABlock);
+          __analyseItem(inst, nextitem, route, occ, travel, 0, depth, False, behindABlock);
+          __analyseItem(inst, nextitem, listA, occ, travel, 1, depth, False, behindABlock);
+          __analyseItem(inst, nextitem, listB, occ, travel, 2, depth, False, behindABlock);
           return True;
         } else if( (travelp >= 400 && travelp < 500) || travelp >= dcrossingAhead) {
 
@@ -1642,7 +1641,7 @@ static void __analyseOccList(iOAnalyse inst) {
         iIBlockBase blockb = data->model->getBlock( data->model, wItem.getid(item) );
         block = blockb->base.properties( blockb);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
+        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
 
         bk = wItem.getid(item);
       } else {
@@ -1695,11 +1694,11 @@ static void __analyseOccList(iOAnalyse inst) {
         }
       } // if bk
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " OCCITEM: [%s] for: [%s] ", wItem.getid(item), bk);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " OCCITEM: [%s] for: [%s] ", wItem.getid(item), bk);
       item = (iONode)ListOp.next( occlist );
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
+    //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
     occlist = (iOList)ListOp.next( data->bkoccitemlist );
   }
 
