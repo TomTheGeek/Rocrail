@@ -3344,7 +3344,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "flom block [%s] is not known in the model!!!", fromBlockId );
+                     "from block [%s] is not known in the model!!!", fromBlockId );
     }
 
 
@@ -3477,11 +3477,12 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                */
               if( suits == suits_well ) {
                 Boolean dirOK = True;
-                if( !samedir && !allowChgDir )
+                /* using blockside, in case of a commuter changing direction making sure that it is an alternative route */
+                if( (!samedir && !allowChgDir)  || (!samedir && useBlockSide) )
                   dirOK = False;
 
                 if( dirOK && (!trysamedir && !forceSameDir && !tryoppositedir) ) {
-                  /* normal case */
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found a BEST block [%s] for [%s]", blockId, LocOp.getId( loc ) );
                   blockBest = block;
                   routeBest = route;
                   ListOp.add( fitBlocks, (obj)block );
@@ -3498,7 +3499,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   ListOp.add( fitRoutes, (obj)route );
                 }
                 else if( !forceSameDir && allowChgDir ) {
-                  /* wrong direction */
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found a block [%s] for [%s] in the other direction", blockId, LocOp.getId( loc ) );
                   blockAlt = block;
                   routeAlt = route;
                   ListOp.add( altBlocks, (obj)block );
@@ -3629,7 +3630,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      blockBest->base.id(blockBest), LocOp.getId( loc ), randChoice, randNumber, cnt );
     }
 
-    if( useBlockSide ) {
+    /* when using blocksides the alternative route can be a mismatch between properties or, in case of commuter,
+       a destination in the other direction. For a commuter to change direction the block must allow change direction and
+       the loc must be swapped. In case of a mismatch the loc must not be swapped */
+    if( useBlockSide && wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
                      LocOp.getId( loc ) );
