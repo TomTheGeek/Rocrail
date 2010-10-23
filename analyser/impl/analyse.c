@@ -1043,23 +1043,29 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               }
             }
             else if ( travel == 1 ) {
+              *turnoutstate_out = 1;
               return oriEast;
             }
             else if ( travel == 2 ) {
+              *turnoutstate_out = 0;
               return travel;
             }
             else if ( travel == 3 ) {
+              *turnoutstate_out = 2;
               return oriEast;
             }
           }
           else if( StrOp.equals( itemori, "north" )) {
             if( (travel == 0) ) {
+              *turnoutstate_out = 1;
               return oriNorth;
             }
             else if ( travel == 1 ) {
+              *turnoutstate_out = 0;
               return travel;
             }
             else if ( travel == 2 ) {
+              *turnoutstate_out = 2;
               return oriNorth;
             }
             else if ( travel == 3 ) {
@@ -1074,9 +1080,11 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
           }
           else if( StrOp.equals( itemori, "east" )) {
             if( (travel == 0) ) {
+              *turnoutstate_out = 0;
               return travel;
             }
             else if ( travel == 1 ) {
+              *turnoutstate_out = 2;
               return oriWest;
             }
             else if ( travel == 2 ) {
@@ -1089,20 +1097,16 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               }
             }
             else if ( travel == 3 ) {
+              *turnoutstate_out = 1;
               return oriWest;
             }
           }
           else if( StrOp.equals( itemori, "south" )) {
             if( (travel == 0) ) {
+              *turnoutstate_out = 2;
               return oriSouth;
             }
             else if ( travel == 1 ) {
-              return travel;
-            }
-            else if ( travel == 2 ) {
-              return oriSouth;
-            }
-            else if ( travel == 3 ) {
               if( turnoutstate == 0) {
                 return travel+threeWayTurnout;
               } else if (turnoutstate == 1) {
@@ -1110,6 +1114,14 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               } else if (turnoutstate == 2) {
                 return oriEast+threeWayTurnout;
               }
+            }
+            else if ( travel == 2 ) {
+              *turnoutstate_out = 1;
+              return oriSouth;
+            }
+            else if ( travel == 3 ) {
+              *turnoutstate_out = 0;
+              return travel;
             }
           }
         }
@@ -1580,8 +1592,8 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "     " );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--------------------------------------------------");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block [%s] in [%s] direction ",
-      wBlock.getid(block), inittravel);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing block [%s] in [%s][%d] direction ",
+      wBlock.getid(block), inittravel, travel);
 
     int xoffset = 0;
     int yoffset = 0;
