@@ -3478,7 +3478,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               if( suits == suits_well ) {
                 Boolean dirOK = True;
                 /* using blockside, in case of a commuter changing direction making sure that it is an alternative route */
-                if( (!samedir && !allowChgDir)  || (!samedir && useBlockSide) )
+                if( (!samedir && !allowChgDir)  || (swap4BlockSide && useBlockSide) )
                   dirOK = False;
 
                 if( dirOK && (!trysamedir && !forceSameDir && !tryoppositedir) ) {
