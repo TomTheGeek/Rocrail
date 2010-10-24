@@ -110,7 +110,7 @@ void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean
  * The route has signal pair information stored in sga(from) and sgb(to).
  * Zero value is default; Forwards signal pair if running fromto.
  * One value is revert; Revert signal pair if running fromto.
- *
+ * Two value is no signal pair
  */
 static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase block, Boolean fromTo, Boolean *signalpair) {
   iOLcDriverData data = Data(inst);
@@ -119,7 +119,11 @@ static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase blo
     int sgpair = 0;
     if( data->useblockside) {
 
-      *signalpair = sgpair = route->getFromBlockSide(route);
+      *signalpair = route->getFromBlockSide(route);
+      if( *signalpair )
+        sgpair = wRoute.getsgb(route->base.properties(route));
+      else
+        sgpair = wRoute.getsga(route->base.properties(route));
       return sgpair == 2 ? False:True;
 
     } else {
