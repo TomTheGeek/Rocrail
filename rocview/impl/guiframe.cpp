@@ -1155,6 +1155,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_SymbolMap          = NULL;
   m_LocalPlan          = _T("");
   m_LocoIO             = NULL;
+  m_MGV141             = NULL;
   m_DTOpSw             = NULL;
   m_RocrailIniDlg      = NULL;
   m_Uhl68610           = NULL;
