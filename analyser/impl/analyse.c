@@ -590,7 +590,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
           if(turnoutstate == 1)
-            return oriEast+twoWayTurnout;
+            return oriWest+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
@@ -1497,9 +1497,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           /* clone the route */
           iOList routecloneA = (iOList)ListOp.base.clone( route);
 
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into STRAIGHT branch [%s]", wItem.getid(nextitem));
           __analyseItem(inst, nextitem, route, occ, travel, 0, depth, False, behindABlock);
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "going into TURNOUT branch [%s]", wItem.getid(nextitem));
           __analyseItem(inst, nextitem, routecloneA, occ, travel, 1, depth, False, behindABlock);
 
           return True;
