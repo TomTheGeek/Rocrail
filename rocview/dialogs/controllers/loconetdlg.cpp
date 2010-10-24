@@ -652,8 +652,8 @@ void LocoNetCtrlDlg::initSublib()
     // UDP or TCP
     m_Baudrate->Enable(false);
     m_Device->Enable(false);
-    m_Host->SetValue( _T("224.0.0.1") );
-    m_Port->SetValue( _T("1235") );
+    m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+    char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
     m_Host->Enable(true);
     m_Port->Enable(true);
     m_Flow->Enable(false);
