@@ -30,6 +30,40 @@
 #include "rocrail/wrapper/public/DigInt.h"
 
 
+static Boolean lbTCPReConnect( iOLocoNet inst ) {
+  iOLocoNetData data = Data(inst);
+  iOSocket s = data->rwTCP;
+
+  if( data->rwTCP == NULL ) {
+    TraceOp.trc( "lbtcp", TRCLEVEL_EXCEPTION, __LINE__, 9999, "Unable to reconnect with a not initialized socket..." );
+    return False;
+  }
+
+  TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "Try to reconnect..." );
+
+  data->rwTCP = NULL;
+  ThreadOp.sleep(100);
+  SocketOp.base.del( s );
+
+  data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+  if ( data->rwTCP != NULL ) {
+    SocketOp.setNodelay(data->rwTCP, True);
+    if ( SocketOp.connect( data->rwTCP ) ) {
+      return True;
+    }
+    else {
+      SocketOp.base.del( data->rwTCP );
+      data->rwTCP = NULL;
+      return False;
+    }
+  }
+  else {
+    return False;
+  }
+}
+
+
+
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
@@ -51,12 +85,23 @@ static void __reader( void* threadinst ) {
     do {
 
       ok = SocketOp.read( data->rwTCP, &c, 1 );
-      if(c < 0x80) {
+      if(ok && c < 0x80) {
         ThreadOp.sleep(10);
         bucket[garbage] = c;
         garbage++;
       }
     } while (ok && data->run && c < 0x80 && garbage < 32);
+
+    if( !ok && SocketOp.isBroken(data->rwTCP) ) {
+      /* recover */
+      iOSocket s = data->rwTCP;
+      data->rwTCP = NULL;
+      ThreadOp.sleep(100);
+      SocketOp.base.del( s );
+      lbTCPReConnect(loconet);
+      ThreadOp.sleep(10);
+      continue;
+    }
 
     if( garbage > 0 ) {
        TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
