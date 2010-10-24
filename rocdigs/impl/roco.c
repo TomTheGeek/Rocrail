@@ -765,6 +765,47 @@ static void __translate( iORoco roco, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "Signal commands are no longer supported at this level." );
   }
+
+
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() )  && StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short ID to the throttle" );
+    /*
+      Command to send:
+      Byte1 Info byte
+      Byte2 Header E+number of bytes
+      Byte3 F1
+      Byte4 Loc Address AH
+      Byte5 Loc Address AL
+      Byte6 MultiMaus listnumber, offset 00
+      Byte7 Total addresses to send
+      Byte8-xx loc Name 1 to 5 bytes
+      X-OR X-0r
+      Response 0x61 0x81 0xE0, CS busy
+                0x61 0x82 0xE3, Command unknown
+      On CS Busy, resend the command
+      On Command unknown, ignore because command is not for the CS but for the
+      MultiMaus.
+      Example of command(s) so send:
+      00 EA F1 00 0C 05 07 44 42 32 31 32 22 ..êñ....DB212"
+    */
+    const char* shortID = wLoc.getshortid(node);
+    byte* outa = allocMem(32);
+    outa[0]  = 12;
+    outa[1]  = 0x00;
+    outa[2]  = 0xEA;
+    outa[3]  = 0xF1;
+    outa[4]  = wLoc.getaddr(node)/256;
+    outa[5]  = wLoc.getaddr(node)%256;
+    outa[6]  = wLoc.getthrottlenr(node);
+    outa[7]  = 0x01;
+    outa[8]  = shortID[0];
+    outa[9]  = shortID[1];
+    outa[10] = shortID[2];
+    outa[11] = shortID[3];
+    outa[12] = shortID[4];
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
@@ -960,6 +1001,8 @@ static void __translate( iORoco roco, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       ThreadOp.post( data->transactor, (obj)outa );
     }
+
+
   }
 
     /* Program command. */

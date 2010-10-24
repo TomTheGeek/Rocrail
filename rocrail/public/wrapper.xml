@@ -1592,6 +1592,7 @@
         <var name="docu" vt="string" defval="" range="*"/>
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="throttleid" vt="char*" defval="" range="*" remark="Throttle ID to which this loco is dispatched."/>
+        <var name="throttlenr" vt="int" defval="0" range="0-255" remark="Throttle number for receiving the short id."/>
         <var name="identifier" vt="long" defval="0" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>
         <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the loc table"/>
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>

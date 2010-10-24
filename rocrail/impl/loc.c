@@ -1875,6 +1875,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
         wLoc.setid( cmdNode, wLoc.getid(data->props) );
         wLoc.setaddr( cmdNode, wLoc.getaddr(data->props) );
         wLoc.setshortid( cmdNode, wLoc.getshortid(data->props) );
+        wLoc.setthrottlenr( cmdNode, wLoc.getthrottlenr(data->props) );
         wLoc.setprot( cmdNode, wLoc.getprot( data->props ) );
         wLoc.setprotver( cmdNode, wLoc.getprotver( data->props ) );
         wLoc.setspcnt( cmdNode, wLoc.getspcnt( data->props ) );
