@@ -562,14 +562,14 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
 
           if(turnoutstate == 1)
-            return oriWest+twoWayTurnout;
+            return oriEast+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
           if(turnoutstate == 1)
-            return oriEast+twoWayTurnout;
+            return oriWest+twoWayTurnout;
 
           return travel+twoWayTurnout;
         } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
@@ -597,7 +597,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
 
           if(turnoutstate == 1)
-            return oriWest+twoWayTurnout;
+            return oriEast+twoWayTurnout;
 
           return travel+twoWayTurnout;
         }
