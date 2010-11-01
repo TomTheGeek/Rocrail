@@ -103,6 +103,7 @@ static void __ctcAction( void* inst, iONode evt ) {
     else {
       int error = 0;
       iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setmanualcmd( node, True);
       if( flip ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
         wSwitch.setcmd( node, wSwitch.flip );
@@ -124,6 +125,7 @@ static void __ctcAction( void* inst, iONode evt ) {
     else {
       int error = 0;
       iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setmanualcmd( node, True);
       if( flip ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CTC action: %s", wSwitch.flip);
         wSwitch.setcmd( node, wSwitch.flip );
