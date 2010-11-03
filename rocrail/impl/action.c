@@ -466,6 +466,19 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           LocOp.cmd(lc, cmd);
         }
       }
+      else if( StrOp.equals( wAction.loco_go, wAction.getcmd( data->action ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action: loco_go %s ",
+            bl->getLoc(bl));
+
+        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl));
+        if( lc != NULL ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setid( cmd, bl->getLoc(bl) );
+          wLoc.setcmd( cmd, wLoc.go );
+          LocOp.cmd(lc, cmd);
+        }
+
+      }
     }
   }
 
