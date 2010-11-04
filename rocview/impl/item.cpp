@@ -84,6 +84,9 @@
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/ZLevel.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/ScheduleEntry.h"
+#include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
@@ -1155,16 +1158,42 @@ void Symbol::OnPopup(wxMouseEvent& event)
         wxMenu* menuSchd2go = new wxMenu();
          m_sclist = ListOp.inst();
          //ListOp.clear(m_sclist);
+         Boolean addSc = False;
 
          if( model != NULL ) {
            iONode bklist = wPlan.getsclist( model );
            if( bklist != NULL ) {
              int cnt = NodeOp.getChildCnt( bklist );
              for( int i = 0; i < cnt; i++ ) {
-               iONode bk = NodeOp.getChild( bklist, i );
-               const char* id = wBlock.getid( bk );
-               if( id != NULL ) {
-                 ListOp.add(m_sclist, (obj)id);
+               iONode sc = NodeOp.getChild( bklist, i );
+               const char* id = wBlock.getid( sc );
+               addSc = False;
+               iONode entry = wSchedule.getscentry( sc );
+               while( entry != NULL ) {
+                 if( StrOp.equals(wScheduleEntry.getblock( entry ), wBlock.getid( m_Props ) )) {
+                   addSc = True;
+                 }
+                 if( wScheduleEntry.getblock( entry ) == NULL) {
+                   iONode locationlist = wPlan.getlocationlist( model );
+                   iONode location = wLocationList.getlocation( locationlist );
+                   while( location != NULL ) {
+                     if( StrOp.equals(wScheduleEntry.getlocation( entry ), wLocation.getid( location ))) {
+                       iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+                       while ( StrTokOp.hasMoreTokens( tok )) {
+                         const char * token = StrTokOp.nextToken( tok );
+                         if( StrOp.equals( token, wBlock.getid( m_Props ))) {
+                           addSc = True;
+                           break;
+                         }
+                       }
+                     }
+                     location = wLocationList.nextlocation( locationlist, location );
+                   }
+                 }
+                 entry = wSchedule.nextscentry( sc, entry );
+               }
+               if( id != NULL && addSc) {
+                ListOp.add(m_sclist, (obj)id);
                }
              }
              ListOp.sort(m_sclist, &__sortStr);
