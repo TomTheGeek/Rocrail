@@ -237,6 +237,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
               iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
               if( lc != NULL ) {
                 Boolean dir = LocOp.getDir(lc);
+                Boolean enterside = LocOp.getBlockEnterSide(lc);
                 rc = True;
                 if( StrOp.equals( "forwards", wActionCond.getstate(actionCond) ) && !dir ) {
                   rc = False;
@@ -249,6 +250,18 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                       "loco %s direction %s does not match [%s]", LocOp.getId(lc),
                       dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
+                }
+                else if(StrOp.equals( "+", wActionCond.getstate(actionCond) ) && !enterside ) {
+                  rc = False;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
+                      enterside?"+":"-", wActionCond.getstate(actionCond) );
+                }
+                else if(StrOp.equals( "-", wActionCond.getstate(actionCond) ) && enterside ) {
+                  rc = False;
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                      "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
+                      enterside?"+":"-", wActionCond.getstate(actionCond) );
                 }
                 else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
                   iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
