@@ -2047,6 +2047,7 @@ static iOBlock _inst( iONode props ) {
 
   wBlock.setreserved( data->props, False );
   wBlock.setentering( data->props, False );
+  wBlock.setupdateenterside( data->props, False );
 
   data->muxLock = MutexOp.inst( NULL, True );
 
