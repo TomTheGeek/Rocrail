@@ -279,15 +279,16 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                   if( fonoff != NULL && fnumber != NULL ) {
                     int nr = atoi(fnumber);
                     int fx = wLoc.getfx(LocOp.base.properties(lc));
+                    Boolean lights = wLoc.isfn(LocOp.base.properties(lc));
                     rc = False;
-                    if( StrOp.equals( "fon", fonoff ) ) {
-                      if( fx & (1 << (nr-1)) )
-                        rc = True;
-                    }
-                    else {
-                      if( !(fx & (1 << (nr-1)) ) )
-                        rc = True;
-                    }
+                    if( StrOp.equals( "fon", fonoff ) && nr == 0 )
+                      rc = lights;
+                    else if( StrOp.equals( "foff", fonoff ) && nr == 0 )
+                      rc = !lights;
+                    else if( StrOp.equals( "fon", fonoff ) && nr != 0 )
+                      rc = ( fx & (1 << (nr-1)) );
+                    else if( StrOp.equals( "foff", fonoff ) && nr != 0 )
+                      rc = ( !(fx & (1 << (nr-1)) ) );
 
                     if( !rc ) {
                       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
