@@ -158,16 +158,22 @@ static void __reader( void* threadinst ) {
 		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
 
     if( ok && msglen > 0 && MutexOp.trywait( data->subReadMux, 10 ) ) {
-      byte* p = allocMem(msglen+1);
-      p[0] = msglen;
-      MemOp.copy( p+1, msg, msglen);
-      QueueOp.post( data->subReadQueue, (obj)p, normal);
-      MutexOp.post( data->subReadMux );
-      TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
-      
+      Boolean echoCatched = False;
+
       if( !data->subSendEcho ) {
         data->subSendEcho = MemOp.cmp(data->subSendPacket, msg, data->subSendLen );
+        echoCatched = data->subSendEcho;
       }
+
+      if(!echoCatched) {
+        byte* p = allocMem(msglen+1);
+        p[0] = msglen;
+        MemOp.copy( p+1, msg, msglen);
+        QueueOp.post( data->subReadQueue, (obj)p, normal);
+        MutexOp.post( data->subReadMux );
+        TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
+      }
+
       ThreadOp.sleep(0);
     }
     else {
