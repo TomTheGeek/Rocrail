@@ -622,6 +622,15 @@
       <var name="udpReader" vt="iOThread"/>
       <var name="udpmux" vt="iOMutex"/>
       <var name="udpQueue" vt="iOQueue"/>
+      <var name="subReader" vt="iOThread"/>
+      <var name="subWriter" vt="iOThread"/>
+      <var name="subReadQueue" vt="iOQueue"/>
+      <var name="subWriteQueue" vt="iOQueue"/>
+      <var name="subReadMux" vt="iOMutex"/>
+      <var name="subWriteMux" vt="iOMutex"/>
+      <var name="subSendEcho" vt="Boolean"/>
+      <var name="subSendPacket[127]" vt="char"/>
+      <var name="subSendLen" vt="int"/>
     </data>
   </object>
 
@@ -1144,6 +1153,7 @@
       <var name="listenerFun" vt="digint_listener"/>
     </data>
   </object>
+
 
 
 

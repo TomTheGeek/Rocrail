@@ -290,6 +290,7 @@
       <const name="sublib_usb" vt="string" val="usb"/>
       <const name="sublib_udp" vt="string" val="udp"/>
       <const name="sublib_tcp" vt="string" val="tcp"/>
+      <const name="sublib_ulni" vt="string" val="ulni"/>
       <const name="sublib_native" vt="string" val="native"/>
       <const name="sublib_default" vt="string" val="default"/>
       <const name="sublib_lenz_elite" vt="string" val="elite"/>

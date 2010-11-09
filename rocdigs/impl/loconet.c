@@ -67,6 +67,7 @@
 #include "rocdigs/impl/loconet/lbserver.h"
 #include "rocdigs/impl/loconet/lbudp.h"
 #include "rocdigs/impl/loconet/lbtcp.h"
+#include "rocdigs/impl/loconet/ulni.h"
 #include "rocdigs/impl/loconet/lnmaster.h"
 #include "rocdigs/impl/loconet/lncv.h"
 #include "rocdigs/impl/loconet/locoio.h"
@@ -2433,6 +2434,14 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->lnRead       = lbTCPRead;
     data->lnWrite      = lbTCPWrite;
     data->lnAvailable  = lbTCPAvailable;
+  }
+  else if( StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( ini ) ) ) {
+    /* ulni */
+    data->lnConnect    = ulniConnect;
+    data->lnDisconnect = ulniDisconnect;
+    data->lnRead       = ulniRead;
+    data->lnWrite      = ulniWrite;
+    data->lnAvailable  = ulniAvailable;
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported sublib [%s], using default.", wDigInt.getsublib( ini ) );
