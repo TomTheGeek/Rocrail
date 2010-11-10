@@ -230,7 +230,7 @@ static void __writer( void* threadinst ) {
 		  }
 		}
 
-    if( !data->busy ) {
+    if( data->busy ) {
       busyTimer++;
       if( busyTimer >= 100 ) {
         TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "busy timer timed out" );
