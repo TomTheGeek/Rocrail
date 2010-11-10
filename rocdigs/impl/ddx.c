@@ -528,6 +528,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 static void _halt( obj inst, Boolean poweroff ) {
   iODDXData data = Data((iODDX)inst);
   stop_voltage(inst);
+  /* sleep to wait for cycle thread to do the power off */
+  ThreadOp.sleep(500);
   close_comport(inst);
   return;
 }

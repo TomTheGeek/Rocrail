@@ -157,15 +157,17 @@ static void __reader( void* threadinst ) {
 
 		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
 
-    if( ok && msglen > 0 && MutexOp.trywait( data->subReadMux, 10 ) ) {
+    if( ok && msglen > 0 ) {
       Boolean echoCatched = False;
+
+      data->busy = (msg[0]==0x81) ? True:False;
 
       if( !data->subSendEcho ) {
         data->subSendEcho = MemOp.cmp(data->subSendPacket, msg, data->subSendLen );
         echoCatched = data->subSendEcho;
       }
 
-      if(!echoCatched) {
+      if(!echoCatched && MutexOp.trywait( data->subReadMux, 10 )) {
         byte* p = allocMem(msglen+1);
         p[0] = msglen;
         MemOp.copy( p+1, msg, msglen);
@@ -193,15 +195,17 @@ static void __writer( void* threadinst ) {
   iOLocoNetData data    = Data(loconet);
   char ln[0x7F];
   int echoTimer = 0;
+  int busyTimer = 0;
 
   TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "ULNI writer started." );
   do {
     Boolean  ok = False;
 
     /* TODO: copy packet for the reader to compair */
-		if( data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) && MutexOp.trywait( data->subWriteMux, 10 ) ) {
+		if( !data->busy && data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) && MutexOp.trywait( data->subWriteMux, 10 ) ) {
 		  byte* p = (byte*)QueueOp.get(data->subWriteQueue);
 		  int size = p[0];
+		  busyTimer = 0;
 		  MemOp.copy( ln, &p[1], size );
 		  freeMem(p);
 		  MutexOp.post( data->subWriteMux );
@@ -220,11 +224,20 @@ static void __writer( void* threadinst ) {
 		if( !data->subSendEcho ) {
 		  echoTimer++;
 		  if( echoTimer >= 100 ) {
-  		  TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "echo timer timed out for OPCODE 0x%02X", data->subSendPacket[0]  );
+  		  TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "echo timer timed out for OPCODE 0x%02X", data->subSendPacket[0] & 0xFF  );
   		  echoTimer = 0;
   		  data->subSendEcho = True;
 		  }
 		}
+
+    if( !data->busy ) {
+      busyTimer++;
+      if( busyTimer >= 100 ) {
+        TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "busy timer timed out" );
+        busyTimer = 0;
+        data->busy = False;
+      }
+    }
 
     ThreadOp.sleep(10);
   } while( data->run );

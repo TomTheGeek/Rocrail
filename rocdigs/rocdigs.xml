@@ -631,6 +631,7 @@
       <var name="subSendEcho" vt="Boolean"/>
       <var name="subSendPacket[127]" vt="char"/>
       <var name="subSendLen" vt="int"/>
+      <var name="busy" vt="Boolean"/>
     </data>
   </object>
 
