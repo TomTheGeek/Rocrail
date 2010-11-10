@@ -87,7 +87,7 @@ static void __reader( void* threadinst ) {
     int garbage = 0;
     byte bucket[32];
     byte c;
-    Boolean  ok = False;
+    Boolean  ok = True;
 
   
     do {
@@ -115,7 +115,8 @@ static void __reader( void* threadinst ) {
 		if( !data->run || !ok ) {
 		  if( data->comm ) {
 		    data->comm = False;
-		    LocoNetOp.stateChanged(loconet);
+        TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "stateChanged: run=%d ok=%d", data->run, ok );
+        LocoNetOp.stateChanged(loconet);
 		  }
       ThreadOp.sleep(10);
 		  continue;
@@ -123,6 +124,7 @@ static void __reader( void* threadinst ) {
 
 		if( !data->comm ) {
 		  data->comm = True;
+      TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "stateChanged: comm=%d", data->comm );
 		  LocoNetOp.stateChanged(loconet);
 		}
 
