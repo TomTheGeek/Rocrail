@@ -86,7 +86,7 @@ static void __reader( void* threadinst ) {
     int   index = 0;
     int garbage = 0;
     byte bucket[32];
-    byte c;
+    byte c = 0;
     Boolean  ok = True;
 
   
@@ -169,13 +169,16 @@ static void __reader( void* threadinst ) {
         echoCatched = data->subSendEcho;
       }
 
-      if(!echoCatched && MutexOp.trywait( data->subReadMux, 10 )) {
+      if( msg[0]!=0x81 && !echoCatched && MutexOp.trywait( data->subReadMux, 10 )) {
         byte* p = allocMem(msglen+1);
         p[0] = msglen;
         MemOp.copy( p+1, msg, msglen);
         QueueOp.post( data->subReadQueue, (obj)p, normal);
         MutexOp.post( data->subReadMux );
         TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
+      }
+      else if( msg[0]==0x81 ) {
+        TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "CS busy" );
       }
 
       ThreadOp.sleep(0);
