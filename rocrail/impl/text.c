@@ -188,6 +188,10 @@ static void* __event( void* inst, const void* evt ) {
 
       __evaluateSchedule(sc, scidx, map, hour, min);
 
+      MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
+      MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
+      MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
+      MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
       MapOp.put(map, "lcscid", (obj)scid);

@@ -373,6 +373,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wText.setformat(cmd, wAction.getparam(data->action));
       wText.setreflcid(cmd, wActionCtrl.getlcid(actionctrl));
       wText.setrefbkid(cmd, wActionCtrl.getbkid(actionctrl));
+      wText.setcounter(cmd, wActionCtrl.getcounter(actionctrl));
+      wText.setcarcount(cmd, wActionCtrl.getcarcount(actionctrl));
+      wText.setcountedcars(cmd, wActionCtrl.getcountedcars(actionctrl));
+      wText.setwheelcount(cmd, wActionCtrl.getwheelcount(actionctrl));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting text [%s] to [%s]", id, cmdStr );
       TextOp.base.event( tx, cmd );
     }

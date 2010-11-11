@@ -871,6 +871,10 @@
     <var name="deact" vt="string" defval="none" range="none,enter,in" remark="Deactivation event."/>
     <var name="lcid" vt="string" defval="" range="*"/>
     <var name="bkid" vt="string" defval="" range="*"/>
+    <var name="counter" vt="int" defval="0" range="0-*"/>
+    <var name="countedcars" vt="int" defval="0" range="0-*"/>
+    <var name="carcount" vt="int" defval="0" range="0-*"/>
+    <var name="wheelcount" vt="int" defval="0" range="0-*"/>
     <var name="param" vt="string" defval="" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
@@ -1869,6 +1873,10 @@
         <var name="format" vt="string" defval="NULL" range="*" remark="Format string."/>
         <var name="reflcid" vt="string" defval="" range="*" remark="Reference ID."/>
         <var name="refbkid" vt="string" defval="" range="*" remark="Reference ID."/>
+        <var name="counter" vt="int" defval="0" range="0-*"/>
+        <var name="countedcars" vt="int" defval="0" range="0-*"/>
+        <var name="carcount" vt="int" defval="0" range="0-*"/>
+        <var name="wheelcount" vt="int" defval="0" range="0-*"/>
         <actionctrl cardinality="n"/>
       </tx>
     </txlist>

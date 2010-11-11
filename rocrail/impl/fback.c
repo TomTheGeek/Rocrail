@@ -152,6 +152,12 @@ static void __checkAction( iOFBack inst ) {
         /* reset counter */
         data->counter = 0;
       }
+      
+      wActionCtrl.setcounter(fbaction, data->counter );
+      wActionCtrl.setcarcount(fbaction, data->carcount );
+      wActionCtrl.setcountedcars(fbaction, data->countedcars );
+      wActionCtrl.setwheelcount(fbaction, data->wheelcount );
+      
 
       if( data->listenerObj != NULL ) {
         iIBlockBase bk = (iIBlockBase)data->listenerObj;
