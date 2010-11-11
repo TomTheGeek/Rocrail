@@ -95,6 +95,7 @@
     <var name="doneml" vt="string" defval=""/>
     <var name="speak4block" vt="string" defval=""/>
     <var name="speakcmd" vt="string" defval=""/>
+    <var name="showonlystartschedules" vt="bool" defval="false"/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>
     <workspaces cardinality="1" wrappername="WorkSpaces">

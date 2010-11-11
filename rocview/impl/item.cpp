@@ -1157,27 +1157,30 @@ void Symbol::OnPopup(wxMouseEvent& event)
         // Schedule 2 Go menu
         wxMenu* menuSchd2go = new wxMenu();
          m_sclist = ListOp.inst();
-         //ListOp.clear(m_sclist);
          Boolean addSc = False;
+         Boolean onlyStartWith = wGui.isshowonlystartschedules(wxGetApp().getIni());
 
          if( model != NULL ) {
-           iONode bklist = wPlan.getsclist( model );
-           if( bklist != NULL ) {
-             int cnt = NodeOp.getChildCnt( bklist );
+           iONode sclist = wPlan.getsclist( model );
+           if( sclist != NULL ) {
+             int cnt = NodeOp.getChildCnt( sclist );
              for( int i = 0; i < cnt; i++ ) {
-               iONode sc = NodeOp.getChild( bklist, i );
-               const char* id = wBlock.getid( sc );
+               iONode sc = NodeOp.getChild( sclist, i );
+               const char* id = wSchedule.getid( sc );
                addSc = False;
                iONode entry = wSchedule.getscentry( sc );
-               while( entry != NULL ) {
-                 if( StrOp.equals(wScheduleEntry.getblock( entry ), wBlock.getid( m_Props ) )) {
+               while( entry != NULL && !addSc ) {
+                 const char* blockID    = wScheduleEntry.getblock( entry );
+                 const char* locationID = wScheduleEntry.getlocation( entry );
+                 
+                 if( blockID != NULL && StrOp.equals(blockID, wBlock.getid( m_Props ) )) {
                    addSc = True;
                  }
-                 if( wScheduleEntry.getblock( entry ) == NULL) {
+                 else if( locationID != NULL ) {
                    iONode locationlist = wPlan.getlocationlist( model );
                    iONode location = wLocationList.getlocation( locationlist );
-                   while( location != NULL ) {
-                     if( StrOp.equals(wScheduleEntry.getlocation( entry ), wLocation.getid( location ))) {
+                   while( !addSc && location != NULL ) {
+                     if( StrOp.equals(locationID, wLocation.getid( location ))) {
                        iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
                        while ( StrTokOp.hasMoreTokens( tok )) {
                          const char * token = StrTokOp.nextToken( tok );
@@ -1186,15 +1189,18 @@ void Symbol::OnPopup(wxMouseEvent& event)
                            break;
                          }
                        }
+                       StrTokOp.base.del(tok);
                      }
                      location = wLocationList.nextlocation( locationlist, location );
                    }
                  }
-                 entry = wSchedule.nextscentry( sc, entry );
+                 entry = onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry );
                }
+               
                if( id != NULL && addSc) {
                 ListOp.add(m_sclist, (obj)id);
                }
+               
              }
              ListOp.sort(m_sclist, &__sortStr);
 
@@ -1209,6 +1215,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
              }
            }
          }
+         ListOp.base.del(m_sclist);
+
 
          menu.Append( ME_ScheduleGo, wxGetApp().getMenu("schedule2go"), menuSchd2go );
 

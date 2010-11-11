@@ -15451,4 +15451,7 @@
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
   </Msg>
+  <Msg id="showonlystartschedules">
+    <en txt="Show only start schedules"/>
+  </Msg>
 </Messages>
