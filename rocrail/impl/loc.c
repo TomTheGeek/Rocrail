@@ -692,8 +692,10 @@ static void __engine( iOLoc inst, iONode cmd ) {
         __cpFn2Node(inst, cmd, wFunCmd.getfnchanged(cmd));
       }
 
-      /* function timers */
-      if( !data->fn0 && wFunCmd.isf0( cmd ) )
+      /* function timers
+         when f0 is turned on, data->fn0 is set true above at informing the P50 interface, 
+         so if data->fn0 is true and f0changed is true, fn0 is turned on and we must check for the function timer */
+      if( data->fn0 && f0changed && wFunCmd.isf0( cmd ) )
         data->fxtimer[0] = __getFnTimer( inst, 0);
       if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
         fnchanged = 0;
