@@ -1178,20 +1178,22 @@ void Symbol::OnPopup(wxMouseEvent& event)
                  }
                  else if( locationID != NULL ) {
                    iONode locationlist = wPlan.getlocationlist( model );
-                   iONode location = wLocationList.getlocation( locationlist );
-                   while( !addSc && location != NULL ) {
-                     if( StrOp.equals(locationID, wLocation.getid( location ))) {
-                       iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
-                       while ( StrTokOp.hasMoreTokens( tok )) {
-                         const char * token = StrTokOp.nextToken( tok );
-                         if( StrOp.equals( token, wBlock.getid( m_Props ))) {
-                           addSc = True;
-                           break;
+                   if( locationlist != NULL ) {
+                     iONode location = wLocationList.getlocation( locationlist );
+                     while( !addSc && location != NULL ) {
+                       if( StrOp.equals(locationID, wLocation.getid( location ))) {
+                         iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+                         while ( StrTokOp.hasMoreTokens( tok )) {
+                           const char * token = StrTokOp.nextToken( tok );
+                           if( StrOp.equals( token, wBlock.getid( m_Props ))) {
+                             addSc = True;
+                             break;
+                           }
                          }
+                         StrTokOp.base.del(tok);
                        }
-                       StrTokOp.base.del(tok);
+                       location = wLocationList.nextlocation( locationlist, location );
                      }
-                     location = wLocationList.nextlocation( locationlist, location );
                    }
                  }
                  entry = onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry );
