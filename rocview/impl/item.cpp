@@ -1215,7 +1215,6 @@ void Symbol::OnPopup(wxMouseEvent& event)
              }
            }
          }
-         ListOp.base.del(m_sclist);
 
 
          menu.Append( ME_ScheduleGo, wxGetApp().getMenu("schedule2go"), menuSchd2go );
