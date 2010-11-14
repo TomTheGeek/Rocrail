@@ -73,7 +73,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       nextRoute = NULL;
       nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock), fromRoute->base.id(fromRoute),
                                          data->loc, &nextRoute, gotoBlock, True, False, True, /* force same dir */
-		      			 fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route );
+                 fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route );
     }
     else {
       /* find destination using schedule */
@@ -184,36 +184,36 @@ void resetNext2( iOLcDriver inst, Boolean unLock ) {
 
 
   if( data->next2Block != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block [%s]", data->next2Block->base.id(data->next2Block) );
 
     if( unLock ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block [%s]", data->next2Block->base.id(data->next2Block) );
       if(data->curBlock != data->next2Block && data->next1Block != data->next2Block )
         data->next2Block->unLock(data->next2Block, data->loc->getId(data->loc));
     }
-
     data->next2Block = NULL;
-    if( data->next2Route != NULL && data->next2Route != data->next1Route ) {
+    if( unLock ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Route [%s]", data->next2Route->getId(data->next2Route) );
-      data->next2Route->unLock(data->next2Route, data->loc->getId(data->loc), NULL, True);
-      data->next2Route = NULL;
-    }
+      if( data->next2Route != NULL && data->next2Route != data->next1Route )
+        data->next2Route->unLock(data->next2Route, data->loc->getId(data->loc), NULL, True);
+      }
+    data->next2Route = NULL;
   }
 
   /* most likely next3Block should be reseted too */
   if( data->next3Block != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next3Block [%s]", data->next3Block->base.id(data->next3Block) );
 
     if( unLock ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next3Block [%s]", data->next3Block->base.id(data->next3Block) );
       if( data->curBlock != data->next3Block && data->next1Block != data->next3Block )
         data->next3Block->unLock(data->next3Block, data->loc->getId(data->loc));
     }
-
     data->next3Block = NULL;
-    if( data->next3Route != NULL && data->next3Route != data->next1Route ) {
+    if( unLock ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next3Route [%s]", data->next3Route->getId(data->next3Route) );
-      data->next3Route->unLock(data->next3Route, data->loc->getId(data->loc), NULL, True);
-      data->next3Route = NULL;
+      if( data->next3Route != NULL && data->next3Route != data->next1Route )
+        data->next3Route->unLock(data->next3Route, data->loc->getId(data->loc), NULL, True);
     }
+    data->next3Route = NULL;
   }
 
 }
