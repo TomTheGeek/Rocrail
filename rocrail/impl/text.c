@@ -249,7 +249,15 @@ static void* __event( void* inst, const void* evt ) {
     }
     else {
       char* msg = NULL;
-      msg = _replaceAllSubstitutions(wText.getformat(node), NULL);
+      iOMap map = MapOp.inst();
+
+      MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
+      MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
+      MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
+      MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
+
+      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      MapOp.base.del(map);
       wText.settext(data->props, msg);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);

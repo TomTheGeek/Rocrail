@@ -166,6 +166,9 @@ static void __checkAction( iOFBack inst ) {
       iOAction action = ModelOp.getAction(model, wActionCtrl.getid( fbaction ));
       if( action != NULL )
         ActionOp.exec(action, fbaction);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action with counter=%d, carcount=%d, countedcars=%d, wheelcount=%d",
+          data->counter, data->carcount, data->countedcars, data->wheelcount );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
