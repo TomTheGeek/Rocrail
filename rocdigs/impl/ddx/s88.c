@@ -36,12 +36,6 @@
 #define S88_DATA3 0x20 // mask for data from S88 bus 3 (PEND)
 #define S88_DATA4 0x10 // mask for data from S88 bus 4 (SEL)
 
-// possible io-addresses for the parallel port
-static const unsigned long LPT_BASE[] = {
-                                          0x3BC, 0x378, 0x278
-                                        };
-// number of possible parallel ports
-static const unsigned int LPT_NUM = 3;
 // values of the bits in a byte
 static const char BIT_VALUES[] = {
                                    0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80
@@ -86,42 +80,34 @@ int s88init(obj inst) {
     TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "s88 port is disabled" );
     return 0;
   }
-  // test, whether S88DEV is a valid io-address for a parallel device
-  for (i=0;i<LPT_NUM;i++)
-    isin = isin || (data->s88port == LPT_BASE[i]);
-  if (isin) {
-    // test, whether we can access the port
-    if ( SystemOp.accessPort(data->s88port,3) ) {
-      // test, whether there is a real device on the S88DEV-port by writing and
-      // reading data to the port. If the written data is returned, a real port
-      // is there
-      SystemOp.writePort(data->s88port, 0x00);
-      isin = (SystemOp.readPort(data->s88port)==0);
-      SystemOp.writePort(data->s88port, 0xFF);
-      isin = (SystemOp.readPort(data->s88port)==0xFF) && isin;
-      if (isin) {
-        unsigned char reg = 0;
-        // initialize the S88 by doing a reset
-        // for ELEKTOR-Modul the reset must be on the load line
-        S88_WRITE(data->s88port,data->s88clockscale,S88_QUIET);
-        S88_WRITE(data->s88port,data->s88clockscale,(S88_RESET & S88_LOAD));
-        S88_WRITE(data->s88port,data->s88clockscale,S88_QUIET);
+  // test, whether we can access the port
+  if ( SystemOp.accessPort(data->s88port,3) ) {
+    // test, whether there is a real device on the S88DEV-port by writing and
+    // reading data to the port. If the written data is returned, a real port
+    // is there
+    SystemOp.writePort(data->s88port, 0x00);
+    isin = (SystemOp.readPort(data->s88port)==0);
+    SystemOp.writePort(data->s88port, 0xFF);
+    isin = (SystemOp.readPort(data->s88port)==0xFF) && isin;
+    if (isin) {
+      unsigned char reg = 0;
+      // initialize the S88 by doing a reset
+      // for ELEKTOR-Modul the reset must be on the load line
+      S88_WRITE(data->s88port,data->s88clockscale,S88_QUIET);
+      S88_WRITE(data->s88port,data->s88clockscale,(S88_RESET & S88_LOAD));
+      S88_WRITE(data->s88port,data->s88clockscale,S88_QUIET);
 
-        // Give power to hardware, set nInitialize high and set nSel and nStrobe low, as they are inverted, 
-        reg = SystemOp.readPort( data->s88port+2 );
-        SystemOp.writePort( data->s88port+2, ((reg & 0xF6) | 0x04) );
+      // Give power to hardware, set nInitialize high and set nSel and nStrobe low, as they are inverted, 
+      reg = SystemOp.readPort( data->s88port+2 );
+      SystemOp.writePort( data->s88port+2, ((reg & 0xF6) | 0x04) );
 
-      } else {
-        TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "There is no port for s88 at 0x%X.",data->s88port );
-        SystemOp.releasePort(data->s88port,3); // stopping access to port address
-        return 0;
-      }
     } else {
-      TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "Access to port 0x%X denied.",data->s88port );
+      TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "There is no port for s88 at 0x%X.",data->s88port );
+      SystemOp.releasePort(data->s88port,3); // stopping access to port address
       return 0;
     }
   } else {
-    TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "0x%X is not valid port adress for s88 device.",data->s88port );
+    TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "Access to port 0x%X denied.",data->s88port );
     return 0;
   }
 
