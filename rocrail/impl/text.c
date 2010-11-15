@@ -234,6 +234,10 @@ static void* __event( void* inst, const void* evt ) {
       iOMap map = MapOp.inst();
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+      MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
+      MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
+      MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
+      MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       wText.setblock(data->props, bk->base.id(bk) );
