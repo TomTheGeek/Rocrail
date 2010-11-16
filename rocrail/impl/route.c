@@ -1044,14 +1044,14 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     __broadcast(inst);
 
     if( reverse && StrOp.equals( wRoute.reverse, wRoute.getcountcars(o->props) ) ) {
-      iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbka( o->props ) );
+      iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbkb( o->props ) );
       lc = ModelOp.getLoc(model, o->lockedId );
       if( bk != NULL && lc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reverse CAR COUNT = %d", LocOp.getCarCount(lc) );
         bk->setCarCount( bk, LocOp.getCarCount(lc) );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s and or block %s undefined", o->lockedId, wRoute.getbka( o->props ) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s and or block %s undefined", o->lockedId, wRoute.getbkb( o->props ) );
       }
     }
     else if( !reverse && StrOp.equals( wRoute.forwards, wRoute.getcountcars(o->props) ) ) {

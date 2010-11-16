@@ -357,11 +357,11 @@ static void _event( iOFBack inst, iONode nodeC ) {
   if(data->state ) {
     data->counter++;
 
-
     if( data->carcount > 0 ) {
       data->countedcars++;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] COUNTING CARS: carcount=%d countedcars=%d",
           FBackOp.getId(inst), data->carcount, data->countedcars );
+      __checkAction( inst );
     }
   }
 
