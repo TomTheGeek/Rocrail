@@ -42,6 +42,11 @@
 void statusCheckRoute( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
 
+  if( data->next1Route == NULL ) {
+    ThreadOp.sleep(10);
+    return;
+  }
+
   if( !data->next1Route->isSet(data->next1Route) ) {
     /* not all switches are set; wait */
     ThreadOp.sleep(10);
