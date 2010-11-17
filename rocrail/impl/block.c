@@ -1836,7 +1836,7 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
     sgId = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
   else
     sgId = reverse ? wBlock.getsignalR( data->props ):wBlock.getsignal( data->props );
-
+    
   if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
     iOModel model = AppOp.getModel(  );
     iOSignal sg = ModelOp.getSignal( model, sgId );
@@ -1845,6 +1845,19 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
       semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
     }
   }
+
+  if( !distant ) {
+    const char* sgIdW = reverse ? wBlock.getwsignalR( data->props ):wBlock.getwsignal( data->props );
+    Boolean blank = reverse ? wBlock.isblankatredsignalR( data->props ):wBlock.isblankatredsignal( data->props );
+    if( sgIdW != NULL && blank ) {
+		  iOModel model = AppOp.getModel(  );
+		  iOSignal sg = ModelOp.getSignal( model, sgIdW );
+		  if( sg != NULL ) {
+		    SignalOp.blank( sg );
+		  }
+    }
+  }
+
   return semaphore;
 
 }

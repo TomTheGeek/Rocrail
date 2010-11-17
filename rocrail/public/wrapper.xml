@@ -1069,6 +1069,7 @@
         <const name="yellow" vt="string" val="yellow" remark="Signal yellow command."/>
         <const name="green" vt="string" val="green" remark="Signal green command."/>
         <const name="white" vt="string" val="white" remark="Signal white command."/>
+        <const name="blank" vt="string" val="blank" remark="Signal blank command."/>
         <const name="flip" vt="string" val="flip"/>
         <const name="manualoperated" vt="string" val="manualoperated"/>
         <const name="autooperated" vt="string" val="autooperated"/>
@@ -1293,8 +1294,10 @@
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
         <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>
+        <var name="blankatredsignal" vt="bool" defval="false" remark=""/>
         <var name="signalR" vt="string" defval="NULL" range="*" remark="Home Signal ID for reverse direction. (sw)"/>
         <var name="wsignalR" vt="string" defval="NULL" range="*" remark="Warning Signal ID for reverse direction. (sw)"/>
+        <var name="blankatredsignalR" vt="bool" defval="false" remark=""/>
         <var name="electrified" vt="bool" defval="false" remark="Block is open for electric locs."/>
         <var name="station" vt="bool" defval="false" remark="Block has a station defined by type."/>
         <var name="turnoutstolock" vt="string" defval="NULL" range="*" remark="comma separated list of turnouts to lock with the block"/>

@@ -15454,4 +15454,7 @@
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
   </Msg>
+  <Msg id="blankatredsignal">
+    <en txt="Blank warning at red main signal."/>
+  </Msg>
 </Messages>

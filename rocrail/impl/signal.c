@@ -156,6 +156,16 @@ static void _white( iOSignal inst ) {
   }
 }
 
+static void _blank( iOSignal inst ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
+    iOSignalData data = Data(inst);
+    iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+    wSignal.setcmd( node, wSignal.blank );
+    wSignal.setid( node, SignalOp.getId( inst ) );
+    SignalOp.cmd( inst, node, True );
+  }
+}
+
 
 static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean invert ) {
   iOSignalData o = Data(inst);
@@ -421,7 +431,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setport( cmd, wSignal.getport2( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   }
-  else {
+  else if( !StrOp.equals( wSignal.blank, state ) ) {
     wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
     wOutput.setport( cmd, wSignal.getport1( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
@@ -497,7 +507,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setport( cmd, wSignal.getport2( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   }
-  else {
+  else if( !StrOp.equals( wSignal.blank, state ) ) {
     wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
     wOutput.setport( cmd, wSignal.getport1( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
@@ -556,7 +566,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setport( cmd, wSignal.getport2( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   }
-  else {
+  else if( !StrOp.equals( wSignal.blank, state ) ) {
     wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
     wOutput.setport( cmd, wSignal.getport1( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
@@ -679,6 +689,9 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     }
     else if( StrOp.equals( savedState, wSignal.white ) ) {
       state = wSignal.yellow;
+    }
+    else if( StrOp.equals( savedState, wSignal.blank ) ) {
+      state = wSignal.blank;
     }
     else {
       state = wSignal.green;

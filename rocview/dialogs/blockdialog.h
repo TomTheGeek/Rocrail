@@ -88,6 +88,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_BK_WSIGNAL 10207
 #define ID_BUTTON_BK_SIGNAL_R 10012
 #define ID_BUTTON_BK_WSIGNAL_R 10015
+#define ID_CHECKBOX1 10392
 #define ID_PANEL_BK_DETAILS 10065
 #define ID_RADIOBOX_BK_INCLINE 10074
 #define ID_RADIOBOX_BK_WAIT 10075
@@ -328,6 +329,7 @@ public:
     wxStaticText* m_LabelWSignal;
     wxComboBox* m_WSignal;
     wxButton* m_WSignalProps;
+    wxCheckBox* m_BlankAtRedSignal;
     wxStaticBox* m_ReverseSignalsBox;
     wxStaticText* m_LabelSignalR;
     wxComboBox* m_SignalR;
@@ -335,6 +337,7 @@ public:
     wxStaticText* m_LabelWSignalR;
     wxComboBox* m_WSignalR;
     wxButton* m_WSignalPropsR;
+    wxCheckBox* m_BlankAtRedSignalR;
     wxPanel* m_PanelDetails;
     wxRadioBox* m_Incline;
     wxRadioBox* m_Wait;

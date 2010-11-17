@@ -1328,6 +1328,9 @@
     <fun name="white" vt="void">
       <param name="inst" vt="this" remark="Signal instance"/>
     </fun>
+    <fun name="blank" vt="void">
+      <param name="inst" vt="this" remark="Signal instance"/>
+    </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Signal instance"/>
       <param name="cmd" vt="iONode" remark="Command node"/>
