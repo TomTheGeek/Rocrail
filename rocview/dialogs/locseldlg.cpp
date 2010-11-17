@@ -253,11 +253,11 @@ void LocSelDlg::CreateControls()
     itemDialog1->SetSizer(itemFlexGridSizer2);
 
     m_LocImageIndex = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_SEL_LOC, wxNullBitmap, wxDefaultPosition, wxSize(300, 80), wxBU_AUTODRAW );
-    itemFlexGridSizer2->Add(m_LocImageIndex, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer2->Add(m_LocImageIndex, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( itemDialog1, ID_LISTBOX_SEL_LOC, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
-    itemFlexGridSizer2->Add(m_List, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    m_List = new wxListBox( itemDialog1, ID_LISTBOX_SEL_LOC, wxDefaultPosition, wxSize(-1, 200), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    itemFlexGridSizer2->Add(m_List, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end LocSelDlg content construction
 }
@@ -420,6 +420,7 @@ void LocSelDlg::OnSpeed(wxMouseEvent& event) {
 void LocSelDlg::OnListboxSelLocDoubleClicked( wxCommandEvent& event )
 {
   OnListboxSelLocSelected(event);
+  event.Skip(false);
   EndModal(wxID_OK);
 }
 
