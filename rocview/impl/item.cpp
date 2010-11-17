@@ -920,6 +920,8 @@ void Symbol::OnRightDown(wxMouseEvent& event) {
 void Symbol::OnLeftDown(wxMouseEvent& event) {
   int x;
   int y;
+  
+  SetFocus();
 
   if( !StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) )
     Raise();
