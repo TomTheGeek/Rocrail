@@ -1947,6 +1947,24 @@ void RouteDialog::OnButtonTurnoutModifyClick( wxCommandEvent& event )
         wSwitchCmd.setcmd( swcmd, wSwitchCmd.cmd_track );
         wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
         break;
+      case 5:
+        wSwitchCmd.setcmd( swcmd, wSignal.red );
+        break;
+      case 6:
+        wSwitchCmd.setcmd( swcmd, wSignal.green );
+        break;
+      case 7:
+        wSwitchCmd.setcmd( swcmd, wSignal.yellow );
+        break;
+      case 8:
+        wSwitchCmd.setcmd( swcmd, wSignal.white );
+        break;
+      case 9:
+        wSwitchCmd.setcmd( swcmd, wOutput.on );
+        break;
+      case 10:
+        wSwitchCmd.setcmd( swcmd, wOutput.off );
+        break;
     }
 
     initCommands();
