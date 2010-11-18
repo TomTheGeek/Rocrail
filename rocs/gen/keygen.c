@@ -29,7 +29,7 @@
 #include "rocs/public/system.h"
 #include "rocs/public/str.h"
 #include "rocs/public/cmdln.h"
-
+#include "rocs/public/strtok.h"
 
 /**Function to encode a string (vigenere-encoding)
  * @param the string to encode
@@ -63,7 +63,7 @@ int main( int argc, const char* argv[] ) {
   Boolean enc = False;
   Boolean dec = False;
 
-  iOTrace trc = TraceOp.inst( TRCLEVEL_INFO, "keygen", True );
+  iOTrace trc = TraceOp.inst( TRCLEVEL_INFO, NULL, True );
   TraceOp.setAppID( trc, "k" );
 
   /* Enable coredump for Linux platforms. */
@@ -95,7 +95,7 @@ int main( int argc, const char* argv[] ) {
   if( keyfile == NULL )
     keyfile = "lic.dat";
 
-  if( email == NULL ) {
+  if( enc && email == NULL ) {
     rc = -1;
     TraceOp.println( "-email <address> is missing" );
   }
@@ -125,7 +125,11 @@ int main( int argc, const char* argv[] ) {
     MemOp.set( bs, 0, len+1 );
     FileOp.read( f, bs, len );
     FileOp.base.del(f);
-    b = StrOp.strToByte(bs);
+    iOStrTok tok = StrTokOp.inst( bs, ';' );
+    email = StrTokOp.nextToken( tok );
+    const char* bk = StrTokOp.nextToken( tok );
+    b = StrOp.strToByte(bk);
+    len = StrOp.len(bk);
     s = SystemOp.decode(b, len/2, email);
     TraceOp.println( s );
 
@@ -136,7 +140,7 @@ int main( int argc, const char* argv[] ) {
 
     if( rc == 0 ) {
       Boolean expired = SystemOp.isExpired(s, NULL);
-      TraceOp.println( "license is %s", expired ? "expired":"valid" );
+      TraceOp.println( "license of %s is %s ", email, expired ? "expired":"valid" );
     }
 
   }
