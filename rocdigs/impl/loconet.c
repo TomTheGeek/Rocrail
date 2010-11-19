@@ -2386,6 +2386,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->mux = MutexOp.inst( NULL, True );
   data->slotmux = MutexOp.inst( NULL, True );
+  data->initPacket[0] = 0;
 
   __initLocoSlots(__LocoNet);
 
@@ -2483,6 +2484,12 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
       ThreadOp.start( data->slotServer );
     }
 
+    if( data->initPacket[0] > 0 ) {
+      byte* bcmd = allocMem( 128 );
+      MemOp.copy( bcmd, data->initPacket, data->initPacket[0] );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Send %d byte init packet", data->initPacket[0] & 0xFF );
+      ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
+    }
 
   }
   else {

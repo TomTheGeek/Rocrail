@@ -74,14 +74,14 @@ Boolean lbserialConnect( obj inst ) {
     SerialOp.setDTR(data->serial, True);   // pin 1 in DIN8; on main connector, this is DTR
 
     /* set PR2 mode
-    LocoNetMessage msg = new LocoNetMessage( 6 ) ;
-    msg.setOpCode( 0xD3 );
-    msg.setElement( 1, 0x10 );
-    msg.setElement( 2, 1 );
-    msg.setElement( 3, 0 );
-    msg.setElement( 4, 0 );
-    packets.sendLocoNetMessage(msg);
     */
+    data->initPacket[0] = 6;
+    data->initPacket[1] = 0xD3;
+    data->initPacket[2] = 0x10;
+    data->initPacket[3] = 0x01; /* PR2 mode */
+    data->initPacket[4] = 0x00;
+    data->initPacket[5] = 0x00;
+    data->initPacket[6] = LocoNetOp.checksum( data->initPacket+1, 5 );
   }
   else {
     SerialOp.setFlow( data->serial, data->cts? cts:none );
@@ -89,8 +89,9 @@ Boolean lbserialConnect( obj inst ) {
   }
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
-  if( SerialOp.open( data->serial ) )
+  if( SerialOp.open( data->serial ) ) {
     return True;
+  }
   else {
     SerialOp.base.del( data->serial );
     return False;

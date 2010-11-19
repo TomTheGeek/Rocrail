@@ -588,6 +588,7 @@
       <var name="run" vt="Boolean"/>
       <var name="commOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
+      <var name="initPacket[127]" vt="byte"/>
       <var name="slots" vt="int"/>
       <var name="opsw[10]" vt="byte"/>
       <var name="opswreaded" vt="Boolean"/>
