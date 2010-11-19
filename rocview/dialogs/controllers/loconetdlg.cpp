@@ -145,7 +145,9 @@ void LocoNetCtrlDlg::initValues() {
   else
     m_Baudrate->SetSelection(0);
 
-  if( StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( m_Props ) ) )
+  if( StrOp.equals( wDigInt.sublib_digitrax_pr3, wDigInt.getsublib( m_Props ) ) )
+    m_SubLib->SetSelection(6);
+  else if( StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(5);
   else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(4);
@@ -273,6 +275,8 @@ void LocoNetCtrlDlg::evaluate() {
     wDigInt.setsublib( m_Props, wDigInt.sublib_tcp );
   else if( m_SubLib->GetSelection() == 5 )
     wDigInt.setsublib( m_Props, wDigInt.sublib_ulni );
+  else if( m_SubLib->GetSelection() == 6 )
+    wDigInt.setsublib( m_Props, wDigInt.sublib_digitrax_pr3 );
 
   /* loconet node */
   {
@@ -439,7 +443,8 @@ void LocoNetCtrlDlg::CreateControls()
     m_SubLibStrings.Add(_("&LNUDP"));
     m_SubLibStrings.Add(_("&LNTCP"));
     m_SubLibStrings.Add(_("&ULNI"));
-    m_SubLib = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_COLS );
+    m_SubLibStrings.Add(_("&PR3"));
+    m_SubLib = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 2, wxRA_SPECIFY_COLS );
     m_SubLib->SetSelection(0);
     itemBoxSizer15->Add(m_SubLib, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
 
@@ -626,7 +631,7 @@ void LocoNetCtrlDlg::OnSublibSelected( wxCommandEvent& event )
 
 void LocoNetCtrlDlg::initSublib()
 {
-  if( m_SubLib->GetSelection() == 0 ) {
+  if( m_SubLib->GetSelection() == 0 || m_SubLib->GetSelection() == 6 ) {
     // LocoBuffer
     m_Baudrate->Enable(true);
     m_Device->Enable(true);

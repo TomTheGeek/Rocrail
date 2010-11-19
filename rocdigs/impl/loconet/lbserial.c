@@ -38,6 +38,7 @@ Boolean lbserialConnect( obj inst ) {
   iOLocoNetData data = Data(inst);
 
   Boolean native = StrOp.equals( wDigInt.sublib_native, wDigInt.getsublib( data->ini ) );
+  Boolean pr3    = StrOp.equals( wDigInt.sublib_digitrax_pr3, wDigInt.getsublib( data->ini ) );
 
   data->cts      = StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) );
   data->ctsretry = wDigInt.getctsretry( data->ini );
@@ -64,6 +65,23 @@ Boolean lbserialConnect( obj inst ) {
     // set RTS high, DTR low to power the MS100
     SerialOp.setRTS(data->serial, True);    // not connected in some serial ports and adapters
     SerialOp.setDTR(data->serial, False);   // pin 1 in DIN8; on main connector, this is DTR
+  }
+  else if( pr3 ) {
+    /* PR3 bps=57600 Always use flow control. */
+    SerialOp.setFlow( data->serial, data->cts? cts:none );
+    SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+    SerialOp.setRTS(data->serial, True);    // not connected in some serial ports and adapters
+    SerialOp.setDTR(data->serial, True);   // pin 1 in DIN8; on main connector, this is DTR
+
+    /* set PR2 mode
+    LocoNetMessage msg = new LocoNetMessage( 6 ) ;
+    msg.setOpCode( 0xD3 );
+    msg.setElement( 1, 0x10 );
+    msg.setElement( 2, 1 );
+    msg.setElement( 3, 0 );
+    msg.setElement( 4, 0 );
+    packets.sendLocoNetMessage(msg);
+    */
   }
   else {
     SerialOp.setFlow( data->serial, data->cts? cts:none );

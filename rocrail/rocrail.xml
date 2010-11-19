@@ -1454,9 +1454,10 @@
     <fun name="getRunDir" vt="Boolean" remark="true if the run direction is forwards">
       <param name="inst" vt="this" remark="TT instance"/>
     </fun>
-    <data include="fback">
+    <data include="fback,block">
       <var name="lockedId" vt="const char*"/>
       <var name="props" vt="iONode"/>
+      <var name="ttBlock" vt="iOBlock"/>
       <var name="dir" vt="Boolean"/>
       <var name="lcdir" vt="Boolean"/>
       <var name="light" vt="Boolean"/>

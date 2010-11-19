@@ -2410,6 +2410,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->lnAvailable  = lbserverAvailable;
   }
   else if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ||
+           StrOp.equals( wDigInt.sublib_digitrax_pr3, wDigInt.getsublib( ini ) ) ||
            StrOp.equals( wDigInt.sublib_native, wDigInt.getsublib( ini ) ) ||
            StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
     /* lbserial */

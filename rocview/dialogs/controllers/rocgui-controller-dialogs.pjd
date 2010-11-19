@@ -18918,8 +18918,8 @@
                     <string name="proxy-Header filename">""</string>
                     <string name="proxy-Member variable name">"m_SubLib"</string>
                     <string name="proxy-Label">"Type"</string>
-                    <long name="proxy-Major dimension count">1</long>
-                    <string name="proxy-Items">"&amp;LocoBuffer|&amp;LbServer|&amp;MS100|&amp;LNUDP|&amp;LNTCP|&amp;ULNI"</string>
+                    <long name="proxy-Major dimension count">2</long>
+                    <string name="proxy-Items">"&amp;LocoBuffer|&amp;LbServer|&amp;MS100|&amp;LNUDP|&amp;LNTCP|&amp;ULNI|&amp;PR3"</string>
                     <long name="proxy-Initial value">0</long>
                     <string name="proxy-Help text">""</string>
                     <string name="proxy-Tooltip text">""</string>

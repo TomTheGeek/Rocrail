@@ -420,7 +420,7 @@ void LocSelDlg::OnSpeed(wxMouseEvent& event) {
 void LocSelDlg::OnListboxSelLocDoubleClicked( wxCommandEvent& event )
 {
   OnListboxSelLocSelected(event);
-  event.Skip(false);
-  EndModal(wxID_OK);
+  wxCommandEvent l_Event( wxEVT_COMMAND_BUTTON_CLICKED, ID_BITMAPBUTTON_SEL_LOC );
+  wxPostEvent( this, l_Event );
 }
 
