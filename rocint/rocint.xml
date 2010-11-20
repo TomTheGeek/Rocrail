@@ -117,6 +117,10 @@
     <fun name="init" vt="void">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="isDepartureAllowed" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
     <fun name="isReady" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>

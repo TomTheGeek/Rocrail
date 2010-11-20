@@ -61,7 +61,8 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
  ***** OBase functions.
  */
 static const char* __id( void* inst ) {
-  return NULL;
+  iOLocData data     = Data(inst);
+  return wLoc.getid( data->props );
 }
 
 static void __checkAction( iOLoc inst, const char* state ) {

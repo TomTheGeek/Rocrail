@@ -2920,19 +2920,16 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
 }
 
 
-static const char* _getBlockLocation(iOModel inst, const char* blockid) {
+static iOLocation _getBlockLocation(iOModel inst, const char* blockid) {
   iOModelData data = Data(inst);
-  iONode locationlist = wPlan.getlocationlist(ModelOp.getModel(inst));
-  if( locationlist != NULL ) {
-    iONode location = wLocationList.getlocation(locationlist);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find location for block [%s]", blockid);
-    while(location != NULL) {
-      if( __isInLocation(inst, wLocation.getid(location), blockid) )
-        return wLocation.getid(location);
-      location = wLocationList.nextlocation(locationlist, location);
-    }
+  iOLocation location = (iOLocation)MapOp.first(data->locationMap);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find location for block [%s]", blockid);
+  while(location != NULL) {
+    if( LocationOp.hasBlock(location, blockid) )
+      return location;
+    location = (iOLocation)MapOp.next(data->locationMap);
   }
-  return "";
+  return NULL;
 }
 
 
@@ -3913,12 +3910,18 @@ static void _loadBlockOccupation( iOModel inst ) {
         iIBlockBase block = ModelOp.getBlock( inst, BlockID );
         if( block != NULL ) {
           iONode props = block->base.properties(block);
+          iOLocation location = ModelOp.getBlockLocation( inst, BlockID);
           /* quick and dirty solution to fix the problem of being locked by something strange...
              the block expects a const char*, but the parsed xml is freed up after setting the
              occupation so all LocoID's are invalid.
           */
           wBlock.setlocid( props, StrOp.dup( LocoID ) );
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
+
+          if( location != NULL && loco != NULL ) {
+            LocationOp.locoDidArrive(location, LocoID);
+          }
+
         }
 
       }

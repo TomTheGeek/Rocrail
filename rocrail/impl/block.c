@@ -29,6 +29,7 @@
 #include "rocrail/public/control.h"
 #include "rocrail/public/modplan.h"
 #include "rocrail/public/action.h"
+#include "rocrail/public/location.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -1194,6 +1195,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
   wBlock.setlocid( data->props, id );
   if( id != NULL ) {
+    iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
     wBlock.setreserved( nodeD, False );
@@ -1201,6 +1203,10 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
     wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "occupied");
+
+    if( location != NULL ) {
+      LocationOp.locoDidArrive(location, id);
+    }
   }
 }
 
@@ -1537,6 +1543,16 @@ static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
   return ok;
 }
 
+static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
+  iOBlockData data = Data(inst);
+  iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
+
+  if( location != NULL ) {
+    return LocationOp.isDepartureAllowed( location, id );
+  }
+  return True;
+}
+
 static Boolean _unLock( iIBlockBase inst, const char* id ) {
   if( inst != NULL && id != NULL ) {
     iOBlockData data = Data(inst);
@@ -1557,11 +1573,17 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       }
 
       if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
+        iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
+
         data->locId = NULL;
         data->fromBlockId = NULL;
         BlockOp.resetTrigs( inst );
         wBlock.setlocid(data->props, "");
         data->crossing = False;
+
+        if( location != NULL && id != NULL ) {
+          LocationOp.locoDidDepart(location, id);
+        }
 
         if( data->closereq ) {
           wBlock.setstate( data->props, wBlock.closed );

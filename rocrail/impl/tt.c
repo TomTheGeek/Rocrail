@@ -2035,6 +2035,10 @@ static void _setCarCount( iIBlockBase inst, int count ) {
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 }
 
+static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
+  return True;
+}
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/tt.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

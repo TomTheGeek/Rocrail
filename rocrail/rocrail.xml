@@ -754,7 +754,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="signal ID"/>
     </fun>
-    <fun name="getBlockLocation" vt="const char*">
+    <fun name="getBlockLocation" vt="iOLocation">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="BlocID to search for"/>
     </fun>

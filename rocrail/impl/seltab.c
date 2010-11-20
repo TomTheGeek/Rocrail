@@ -1387,6 +1387,10 @@ static void _setCarCount( iIBlockBase inst, int count ) {
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 }
 
+static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
+  return True;
+}
+
 
 
 static void _init( iIBlockBase inst ) {
