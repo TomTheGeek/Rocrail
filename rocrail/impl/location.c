@@ -21,6 +21,8 @@
 #include "rocrail/impl/location_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/strtok.h"
+
 #include "rocrail/wrapper/public/Location.h"
 
 static int instCnt = 0;
@@ -67,7 +69,8 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 }
 
 static void* __properties( void* inst ) {
-  return NULL;
+  iOLocationData data = Data(inst);
+  return data->props;
 }
 
 static const char* __id( void* inst ) {
@@ -163,7 +166,7 @@ static void _modify( struct OLocation* inst ,iONode mod ) {
   iOLocationData data = Data(inst);
   data->minocc = wLocation.getminocc(mod);
   data->fifo   = wLocation.isfifo(mod);
-  return;
+  NodeOp.mergeNode( data->props, mod, True, True, True );
 }
 
 
@@ -173,6 +176,28 @@ static void _reset( struct OLocation* inst ) {
   ListOp.clear(data->arriveList);
   return;
 }
+
+
+
+static Boolean _hasBlock( iOLocation inst, const char* blockid ) {
+  iOLocationData data = Data(inst);
+  /* iterrate location: */
+  iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "check if block [%s] is in location [%s](%s)", blockid, wLocation.getid(data->props), wLocation.getblocks( data->props ));
+  while( StrTokOp.hasMoreTokens( blocks ) ) {
+    const char* locationBlock = StrTokOp.nextToken( blocks );
+    if( StrOp.equals( blockid, locationBlock ) ) {
+      StrTokOp.base.del( blocks );
+      return True;
+    }
+  }
+  StrTokOp.base.del( blocks );
+  return False;
+}
+
+
+
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

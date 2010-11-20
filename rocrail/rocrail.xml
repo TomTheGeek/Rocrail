@@ -658,7 +658,7 @@
   </object>
 
 
-  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,operator,route,fback,switch,track,signal,tt,output,text,seltab,action,$rocint/public/blockbase" remark="The plan model">
+  <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,operator,route,fback,switch,track,signal,tt,output,text,seltab,action,location,$rocint/public/blockbase" remark="The plan model">
     <typedef def="void (*model_listener)(obj,iONode)"/>
     <fun name="inst" vt="this">
       <param name="planfile" vt="const char*" remark="PLan filename"/>
@@ -790,7 +790,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="ActionID to search for"/>
     </fun>
-    <fun name="getLocation" vt="iONode">
+    <fun name="getLocation" vt="iOLocation">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="LocationID to search for"/>
     </fun>
@@ -1993,6 +1993,10 @@
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="hasBlock" vt="Boolean">
+      <param name="inst" vt="this" remark="Location instance"/>
+      <param name="BlockId" vt="const char*"/>
     </fun>
     <fun name="isDepartureAllowed" vt="Boolean">
       <param name="inst" vt="this" remark="Location instance"/>

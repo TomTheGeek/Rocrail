@@ -39,6 +39,7 @@
 #include "rocrail/public/clntcon.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/r2rnet.h"
+#include "rocrail/public/location.h"
 
 #include "rocint/public/analyserint.h"
 
@@ -676,12 +677,13 @@ static Boolean _addItem( iOModel inst, iONode item ) {
   else if( StrOp.equals( wLocation.name(), itemName ) ) {
     iONode locationlist = wPlan.getlocationlist( data->model );
     iONode clone = (iONode)item->base.clone( item );
+    iOLocation location = LocationOp.inst( clone );
     if( locationlist == NULL ) {
       locationlist = NodeOp.inst( wLocationList.name(), data->model, ELEMENT_NODE );
       NodeOp.addChild( data->model, locationlist );
     }
     NodeOp.addChild( locationlist, clone );
-    MapOp.put( data->locationMap, wLocation.getid(clone), (obj)clone );
+    MapOp.put( data->locationMap, wLocation.getid(clone), (obj)location );
     added = True;
   }
   else if( StrOp.equals( wWaybill.name(), itemName ) ) {
@@ -1028,29 +1030,21 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
   }
   else if( StrOp.equals( wLocation.name(), name ) ) {
     /* modify location... */
-    iONode location = NULL;
-    iONode locationlist = wPlan.getlocationlist( data->model );
-    if( locationlist != NULL ) {
-      iONode node = wLocationList.getlocation( locationlist );
-      while( node != NULL ) {
-        Boolean prev_id_matched = StrOp.equals( prev_id, wSchedule.getid( node ) );
-        if( StrOp.equals( wLocation.getid( item ), wLocation.getid( node ) ) || prev_id_matched ) {
-          NodeOp.mergeNode( node, item, True, True, False );
-          location = node;
-
-          /* update location map */
-          if( prev_id_matched ) {
-            MapOp.remove( data->locationMap, prev_id );
-            MapOp.put( data->locationMap, id, (obj)node );
-          }
-          break;
-        }
-        node = wLocationList.nextlocation( locationlist, node );
-      }
+    iOLocation location = (iOLocation)MapOp.get( data->locationMap, wLocation.getid( item ) );
+    if( location != NULL ) {
+      LocationOp.modify( location, (iONode)NodeOp.base.clone( item ) );
+      modified = True;
     }
-    if( location == NULL && wLocation.getid( item ) != NULL && StrOp.len( wLocation.getid( item ) ) > 0 ) {
+    else if( StrOp.len(prev_id) > 0 && (location = (iOLocation)MapOp.get( data->locationMap, prev_id ) ) ) {
+      LocationOp.modify( location, (iONode)NodeOp.base.clone( item ) );
+      MapOp.remove( data->locationMap, prev_id );
+      MapOp.put( data->locationMap, id, (obj)location );
+      modified = True;
+    }
+    else if( wLocation.getid( item ) != NULL && StrOp.len( wLocation.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
+
   }
   else if( StrOp.equals( wWaybill.name(), name ) ) {
     /* modify waybill... */
@@ -1356,20 +1350,15 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     };
   }
   else if( StrOp.equals( wLocation.name(), name ) ) {
-    iONode location = NULL;
-    iONode locationlist = wPlan.getlocationlist( o->model );
-    if( locationlist != NULL ) {
-      iONode node = wLocationList.getlocation( locationlist );
-      while( node != NULL ) {
-        if( StrOp.equals( wLocation.getid( item ), wLocation.getid( node ) ) ) {
-          NodeOp.removeChild( locationlist, node );
-          MapOp.remove( o->locationMap, wLocation.getid( item ) );
-          node->base.del( node );
-          removed = True;
-          break;
-        }
-        node = wLocationList.nextlocation( locationlist, node );
-      };
+    iOLocation location = (iOLocation)MapOp.get( o->locationMap, wLocation.getid( item ) );
+    if( location != NULL ) {
+      iONode props = LocationOp.base.properties( location );
+      MapOp.remove( o->locationMap, wLocation.getid( item ) );
+      /* Remove item from list: */
+      __removeItemFromList( o, wLocationList.name(), props );
+      location->base.del( location );
+      props->base.del( props );
+      removed = True;
     }
   }
   else if( StrOp.equals( wWaybill.name(), name ) ) {
@@ -2310,9 +2299,9 @@ static iOAction _getAction( iOModel inst, const char* id ) {
 }
 
 
-static iONode _getLocation( iOModel inst, const char* id ) {
+static iOLocation _getLocation( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
-  return (iONode)MapOp.get( o->locationMap, id );
+  return (iOLocation)MapOp.get( o->locationMap, id );
 }
 
 
@@ -2532,7 +2521,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
   _createMap( o, o->waybillMap , wWaybillList.name(), wWaybill.name(), NULL, NULL );
   _createMap( o, o->operatorMap, wOperatorList.name(), wOperator.name(), (item_inst)OperatorOp.inst, NULL );
-  _createMap( o, o->locationMap, wLocationList.name(), wLocation.name(), NULL, NULL );
+  _createMap( o, o->locationMap, wLocationList.name(), wLocation.name(), (item_inst)LocationOp.inst, NULL );
   _createMap( o, o->scheduleMap, wScheduleList.name(), wSchedule.name(), NULL, NULL );
 
 
@@ -2922,20 +2911,9 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
 static Boolean __isInLocation( iOModel inst, const char* entryLocation, const char* blockid ) {
   if( entryLocation != NULL ) {
     /* look in location for the wanted block: */
-    iONode location = _getLocation( inst, entryLocation );
+    iOLocation location = _getLocation( inst, entryLocation );
     if( location != NULL ) {
-      /* iterrate location: */
-      iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "check if block [%s] is in location [%s](%s)", blockid, wLocation.getid(location), wLocation.getblocks( location ));
-      while( StrTokOp.hasMoreTokens( blocks ) ) {
-        const char* locationBlock = StrTokOp.nextToken( blocks );
-        if( StrOp.equals( blockid, locationBlock ) ) {
-          StrTokOp.base.del( blocks );
-          return True;
-        }
-      }
-      StrTokOp.base.del( blocks );
+      return LocationOp.hasBlock(location, blockid);
     }
   }
   return False;
@@ -3115,7 +3093,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId, const char* toLocationId,
                              const char* toBlockId, iOLoc loc, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
-  iONode location = NULL;
+  iOLocation location = NULL;
   iORoute street = NULL;
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "currentBlock \"%s\" ", currBlockId );
@@ -3126,7 +3104,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
   }
 
   if( toLocationId != NULL && StrOp.len( toLocationId ) > 0 ) {
-    location = (iONode)MapOp.get( data->locationMap, toLocationId );
+    location = (iOLocation)MapOp.get( data->locationMap, toLocationId );
     if( location == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "location \"%s\" not found.", toLocationId );
     }
@@ -3142,7 +3120,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     Boolean samedir = False;
 
     if( toBlockId == NULL || StrOp.len(toBlockId) == 0 ) {
-      iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+      iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( LocationOp.base.properties(location) ), ',' );
       const char* id = NULL;
       while( StrTokOp.hasMoreTokens( blocks ) ) {
         id = StrTokOp.nextToken( blocks );
