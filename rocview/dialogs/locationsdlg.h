@@ -29,6 +29,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 #include "rocs/public/node.h"
 
@@ -37,6 +38,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -153,6 +155,10 @@ public:
     wxComboBox* m_BlockCombo;
     wxButton* m_AddBlock;
     wxButton* m_DeleteBlock;
+    wxStaticBox* m_OptionsBox;
+    wxStaticText* m_labMinOcc;
+    wxSpinCtrl* m_MinOcc;
+    wxCheckBox* m_Fifo;
     wxButton* m_New;
     wxButton* m_Modify;
     wxButton* m_Delete;

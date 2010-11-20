@@ -129,6 +129,7 @@ void LocationsDialog::initLabels() {
 
   m_AddBlock->SetLabel( wxGetApp().getMsg( "add" ) );
   m_DeleteBlock->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_labMinOcc->SetLabel( wxGetApp().getMsg( "minocc" ) );
 
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -188,6 +189,9 @@ void LocationsDialog::initValues() {
 
   m_Name->SetValue( m_LocationList->GetStringSelection() );
 
+  m_MinOcc->SetValue(wLocation.getminocc( m_Props ));
+  m_Fifo->SetValue(wLocation.isfifo( m_Props ));
+
   // Listbox
   m_BlockList->Clear();
 
@@ -212,6 +216,9 @@ bool LocationsDialog::evaluate() {
     return false;
   }
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+
+  wLocation.setminocc( m_Props, m_MinOcc->GetValue() );
+  wLocation.setfifo(m_Props, m_Fifo->IsChecked()?True:False);
 
   int cnt = m_BlockList->GetCount();
   if( cnt > 0 ) {
@@ -252,6 +259,10 @@ bool LocationsDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_BlockCombo = NULL;
     m_AddBlock = NULL;
     m_DeleteBlock = NULL;
+    m_OptionsBox = NULL;
+    m_labMinOcc = NULL;
+    m_MinOcc = NULL;
+    m_Fifo = NULL;
     m_New = NULL;
     m_Modify = NULL;
     m_Delete = NULL;
@@ -293,67 +304,84 @@ void LocationsDialog::CreateControls()
     itemBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
 
     m_LabLocations = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_LOCATIONS, _("Locations"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer4->Add(m_LabLocations, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemBoxSizer4->Add(m_LabLocations, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_LocationListStrings;
-    m_LocationList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_LOCATIONS, wxDefaultPosition, wxSize(160, -1), m_LocationListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_LocationList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_LOCATIONS, wxDefaultPosition, wxSize(200, -1), m_LocationListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemBoxSizer4->Add(m_LocationList, 1, wxGROW|wxALL, 5);
 
     m_LabName = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_NAME, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer4->Add(m_LabName, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemBoxSizer4->Add(m_LabName, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    m_Name = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCATION_NAME, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Name = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCATION_NAME, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer4->Add(m_Name, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxBoxSizer* itemBoxSizer9 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer3->Add(itemBoxSizer9, 1, wxGROW|wxALL, 5);
 
     m_LabBlocks = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_BLOCKS, _("Blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer9->Add(m_LabBlocks, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemBoxSizer9->Add(m_LabBlocks, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_BlockListStrings;
-    m_BlockList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_BLOCKS, wxDefaultPosition, wxSize(-1, 120), m_BlockListStrings, wxLB_SINGLE );
+    m_BlockList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_BLOCKS, wxDefaultPosition, wxSize(200, 120), m_BlockListStrings, wxLB_SINGLE );
     itemBoxSizer9->Add(m_BlockList, 1, wxGROW|wxALL, 5);
 
     wxArrayString m_BlockComboStrings;
-    m_BlockCombo = new wxComboBox( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, m_BlockComboStrings, wxCB_DROPDOWN );
+    m_BlockCombo = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockComboStrings, wxCB_DROPDOWN );
     itemBoxSizer9->Add(m_BlockCombo, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer9->Add(itemBoxSizer13, 0, wxGROW|wxTOP, 5);
 
     m_AddBlock = new wxButton( itemDialog1, ID__LOCATIONS_BLOCK_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer13->Add(m_AddBlock, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer13->Add(m_AddBlock, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_DeleteBlock = new wxButton( itemDialog1, ID__LOCATIONS_BLOCK_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer13->Add(m_DeleteBlock, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer13->Add(m_DeleteBlock, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer16, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    m_OptionsBox = new wxStaticBox(itemDialog1, wxID_ANY, _("Options"));
+    wxStaticBoxSizer* itemStaticBoxSizer16 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
+    itemBoxSizer9->Add(itemStaticBoxSizer16, 0, wxGROW|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer16->Add(itemFlexGridSizer17, 0, wxGROW, 5);
+
+    m_labMinOcc = new wxStaticText( itemDialog1, wxID_ANY, _("MinOcc"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer17->Add(m_labMinOcc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_MinOcc = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemFlexGridSizer17->Add(m_MinOcc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Fifo = new wxCheckBox( itemDialog1, wxID_ANY, _("Fifo"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Fifo->SetValue(false);
+    itemFlexGridSizer17->Add(m_Fifo, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxBoxSizer* itemBoxSizer21 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer21, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     m_New = new wxButton( itemDialog1, ID_BUTTON_LOCATIONS_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer16->Add(m_New, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer21->Add(m_New, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Modify = new wxButton( itemDialog1, ID_BUTTON_LOCATIONS_MODIFY, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer16->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer21->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Delete = new wxButton( itemDialog1, ID_BUTTON_LOCATIONS_DELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer16->Add(m_Delete, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer21->Add(m_Delete, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer20 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer20, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer20->AddButton(m_OK);
+    itemStdDialogButtonSizer25->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer20->AddButton(m_Cancel);
+    itemStdDialogButtonSizer25->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer20->AddButton(m_Apply);
+    itemStdDialogButtonSizer25->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer20->Realize();
+    itemStdDialogButtonSizer25->Realize();
 
 ////@end LocationsDialog content construction
 }
