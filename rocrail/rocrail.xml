@@ -1986,5 +1986,38 @@
 
 
 
+  <object name="Location" use="node,map,list" remark="Location object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="Location definition"/>
+    </fun>
+    <fun name="modify" vt="void">
+      <param name="inst" vt="this" remark="instance"/>
+      <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="isDepartureAllowed" vt="Boolean">
+      <param name="inst" vt="this" remark="Location instance"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <fun name="locoDidArrive" vt="void">
+      <param name="inst" vt="this" remark="Location instance"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <fun name="locoDidDepart" vt="void">
+      <param name="inst" vt="this" remark="Location instance"/>
+      <param name="LocoId" vt="const char*"/>
+    </fun>
+    <fun name="reset" vt="void">
+      <param name="inst" vt="this" remark="Location instance"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
+      <var name="minocc" vt="int"/>
+      <var name="fifo" vt="Boolean"/>
+      <var name="arriveList" vt="iOList"/>
+    </data>
+  </object>
+
+
+
 
 </Project>
