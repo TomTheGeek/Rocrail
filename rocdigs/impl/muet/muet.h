@@ -146,7 +146,7 @@ Kommentar by rpa - Lok mit Adresse 22 auf Block 13 mit Adresse 66 Port 5 und Zug
 
  ************************************************************
  * Kommentar by rpa
- * Lok mit Adresse 22 von Block 13 mit Adresse 66 Port 5 und Zugerkennung Adresse 67 Port 5 entfernt */
+ * Lok mit Adresse 22 von Block 13 mit Adresse 66 Port 5 und Zugerkennung Adresse 67 Port 5 entfernt
 [01:24:455] - Read data
 127 128 128 067 036
 
@@ -183,3 +183,35 @@ Kommentar by rpa - Lok mit Adresse 22 auf Block 13 mit Adresse 66 Port 5 und Zug
 
 
 */
+#ifndef MUET_H_
+#define MUET_H_
+
+#define SX_GET_BUS 126
+#define SX_SET_BUS0 240
+#define SX_SET_BUS1 241
+#define SX_SET_BUS2 242
+#define SX_SET_BUS3 243
+#define SX_SET_BUS4 244
+#define SX_SET_BUS5 245
+#define SX_SET_BUS6 246
+#define SX_SET_BUS7 247
+#define SX_SET_BUS8 248
+#define SX_SET_BUS9 249
+
+#define CS_SET_STATUS 255
+#define CS_GET_STATUS 127
+#define CS_ON 128
+#define CS_OFF 0
+
+#define BIT_MOD 112
+#define BIT_LOW 0
+#define BIT_HIGH 8
+#define BIT_INV 16
+
+#define MONITORING 113
+#define MONITORING_OFF 0
+#define MONITORING_ON 1
+#define MONITORING_ADD 2
+#define MONITORING_DEL 3
+
+#endif

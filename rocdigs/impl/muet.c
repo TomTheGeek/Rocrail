@@ -25,6 +25,9 @@
 
 #include "rocs/public/mem.h"
 
+#include "rocdigs/impl/muet/muet.h"
+
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */

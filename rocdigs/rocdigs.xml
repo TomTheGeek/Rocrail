@@ -1158,7 +1158,6 @@
 
 
   <object name="Muet" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex,map" include="$rocint/public/digint">
-    <typedef def="enum {SLX_OK=1, SLX_ERROR, SLX_SNDERR, SLX_RCVERR} slxstate"/>
     <typedef def="enum {WRITE_FLAG=0x80, DATA_MASK=0x7F} __slxheader"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
