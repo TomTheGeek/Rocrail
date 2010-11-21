@@ -468,6 +468,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.massoth, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mcs2, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mttmfcc, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.muet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.nce, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.om32, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.opendcc, wxConvUTF8 ) );
