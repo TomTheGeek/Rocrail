@@ -1187,7 +1187,6 @@
       <var name="timeout" vt="int"/>
       <var name="swtime" vt="int"/>
       <var name="psleep" vt="int"/>
-      <var name="state" vt="slxstate"/>
       <var name="iid" vt="const char*"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
