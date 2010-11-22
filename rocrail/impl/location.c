@@ -95,6 +95,8 @@ static struct OLocation* _inst( iONode ini ) {
   data->minocc = wLocation.getminocc(ini);
   data->fifo   = wLocation.isfifo(ini);
   data->arriveList = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+      "location %s: MinOcc=%d Fifo=%d", wLocation.getid(ini), data->minocc, data->fifo );
 
   instCnt++;
   return __Location;
@@ -107,9 +109,14 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
   int i = 0;
   if( data->minocc > 0 ) {
     for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
-      if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
+      const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list", arrLoco, i );
+      if( StrOp.equals( LocoId, arrLoco ) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list", LocoId, i );
+
         if( ListOp.size(data->arriveList) >= data->minocc ) {
           if( data->fifo && i == 0 ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
             ListOp.remove( data->arriveList, i);
             return True;
           }
@@ -118,6 +125,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
             return False;
           }
           else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
             ListOp.remove( data->arriveList, i);
             return True;
           }
@@ -130,6 +138,8 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
       }
     }
   }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location [%s] has no flow management [%d,%d]",
+      wLocation.getid(data->props), data->minocc, data->fifo );
   return True;
 }
 
@@ -141,9 +151,11 @@ static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
   for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
     if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
       /* already in the list */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is already in the list", LocoId );
       return;
     }
   }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is added in the list[%d]", LocoId, ListOp.size( data->arriveList) );
   ListOp.add( data->arriveList, (obj)LocoId);
 }
 
@@ -154,6 +166,7 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
   int i = 0;
   for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
     if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "departing loco %s is removed from the list", LocoId );
       ListOp.remove( data->arriveList, i);
       return;
     }
@@ -164,6 +177,7 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
 /**  */
 static void _modify( struct OLocation* inst ,iONode mod ) {
   iOLocationData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modify location %s", wLocation.getid(data->props) );
   data->minocc = wLocation.getminocc(mod);
   data->fifo   = wLocation.isfifo(mod);
   NodeOp.mergeNode( data->props, mod, True, True, True );
@@ -183,12 +197,13 @@ static Boolean _hasBlock( iOLocation inst, const char* blockid ) {
   iOLocationData data = Data(inst);
   /* iterrate location: */
   iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
       "check if block [%s] is in location [%s](%s)", blockid, wLocation.getid(data->props), wLocation.getblocks( data->props ));
   while( StrTokOp.hasMoreTokens( blocks ) ) {
     const char* locationBlock = StrTokOp.nextToken( blocks );
     if( StrOp.equals( blockid, locationBlock ) ) {
       StrTokOp.base.del( blocks );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] is in location [%s]", blockid, wLocation.getid(data->props));
       return True;
     }
   }

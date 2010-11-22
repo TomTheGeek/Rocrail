@@ -2923,7 +2923,7 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
 static iOLocation _getBlockLocation(iOModel inst, const char* blockid) {
   iOModelData data = Data(inst);
   iOLocation location = (iOLocation)MapOp.first(data->locationMap);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find location for block [%s]", blockid);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "try to find location for block [%s]", blockid);
   while(location != NULL) {
     if( LocationOp.hasBlock(location, blockid) )
       return location;
@@ -3919,7 +3919,7 @@ static void _loadBlockOccupation( iOModel inst ) {
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
 
           if( location != NULL && loco != NULL ) {
-            LocationOp.locoDidArrive(location, LocoID);
+            LocationOp.locoDidArrive(location, LocOp.getId(loco));
           }
 
         }

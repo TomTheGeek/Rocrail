@@ -67,6 +67,11 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
         data->loc->getId( data->loc ), data->loc->getCurBlock( data->loc ) );
   }
   else if( data->run && data->reqstop ) {
+    if( !data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) ) {
+      data->state = LC_WAITBLOCK;
+      data->prevState = LC_IDLE;
+      data->loc->setMode(data->loc, wLoc.mode_wait);
+    }
     if( data->reqstop ) {
       data->reqstop = False;
       data->run = False;
