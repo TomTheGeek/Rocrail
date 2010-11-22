@@ -39,7 +39,6 @@ GENSUFFIX=
 MKDIR=mkdir -p
 WXSUBINCL=/wx-2.8
 WXMSVCINCL=
-PACKWX=Y
 wxversion=2.8
 LINKTOOL=c++
 
@@ -197,9 +196,7 @@ macapp:
 	cp ../unxbin/rocrail Rocrail.app/Contents/MacOS/rocrail
 	cp ../unxbin/*.dylib Rocrail.app/Contents/MacOS
 	cp Run Rocrail.app/Contents/MacOS/
-ifeq ($(PACKWX),Y)
 	cp /usr/lib/libwx* Rocrail.app/Contents/MacOS/
-endif
 	rm -rf ../unxbin/Rocrail.app
 	mv -f Rocrail.app ../unxbin
 	
