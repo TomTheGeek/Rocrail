@@ -1179,7 +1179,8 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="lcmux" vt="iOMutex"/>
-      <var name="feedbackReader" vt="iOThread"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
       <var name="swTimeWatcher" vt="iOThread"/>
       <var name="lastSwCmd" vt="unsigned long"/>
       <var name="device" vt="const char*"/>

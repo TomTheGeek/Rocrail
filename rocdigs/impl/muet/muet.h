@@ -187,16 +187,16 @@ Kommentar by rpa - Lok mit Adresse 22 auf Block 13 mit Adresse 66 Port 5 und Zug
 #define MUET_H_
 
 #define SX_GET_BUS 126
-#define SX_SET_BUS0 240
-#define SX_SET_BUS1 241
-#define SX_SET_BUS2 242
-#define SX_SET_BUS3 243
-#define SX_SET_BUS4 244
-#define SX_SET_BUS5 245
-#define SX_SET_BUS6 246
-#define SX_SET_BUS7 247
-#define SX_SET_BUS8 248
-#define SX_SET_BUS9 249
+#define SX_BUS0 240
+#define SX_BUS1 241
+#define SX_BUS2 242
+#define SX_BUS3 243
+#define SX_BUS4 244
+#define SX_BUS5 245
+#define SX_BUS6 246
+#define SX_BUS7 247
+#define SX_BUS8 248
+#define SX_BUS9 249
 
 #define CS_SET_STATUS 255
 #define CS_GET_STATUS 127

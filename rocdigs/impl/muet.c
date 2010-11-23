@@ -231,7 +231,17 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 static void _halt( obj inst ,Boolean poweroff ) {
   iOMuetData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+
+  /* CS off */
+  byte* cmd = allocMem(32);
+  cmd[0] = 0;
+  cmd[1] = 2;
+  cmd[2] = CS_SET_STATUS;
+  cmd[3] = CS_OFF;
+  ThreadOp.post(data->writer, (obj)cmd);
+  ThreadOp.sleep(500);
   data->run = False;
+  ThreadOp.sleep(100);
   SerialOp.close( data->serial );
 }
 
@@ -269,6 +279,70 @@ static int patch  = 0;
 static int _version( obj inst ) {
   iOMuetData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
+}
+
+
+static void __writer( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOMuet muet = (iOMuet)ThreadOp.getParm( th );
+  iOMuetData data = Data(muet);
+  byte* cmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
+
+  /* monitoring off and query active bus */
+  cmd = allocMem(32);
+  cmd[0] = 0;
+  cmd[1] = 3;
+  cmd[2] = MONITORING;
+  cmd[3] = MONITORING_OFF;
+  cmd[4] = SX_GET_BUS;
+  ThreadOp.post(th, (obj)cmd);
+
+  /* CS on */
+  cmd = allocMem(32);
+  cmd[0] = 0;
+  cmd[1] = 2;
+  cmd[2] = CS_SET_STATUS;
+  cmd[3] = CS_ON;
+  ThreadOp.post(th, (obj)cmd);
+
+  /* monitoring bus 0 */
+  cmd = allocMem(32);
+  cmd[0] = 0;
+  cmd[1] = 3;
+  cmd[2] = MONITORING;
+  cmd[3] = MONITORING_ON;
+  cmd[4] = SX_BUS0;
+  ThreadOp.post(th, (obj)cmd);
+
+
+
+  while( data->run ) {
+    byte * post = NULL;
+    int len = 0;
+    int bus = 0;
+    byte out[64] = {0};
+
+    ThreadOp.sleep(10);
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      bus = post[0];
+      len = post[1];
+      MemOp.copy( out, post+2, len);
+      freeMem( post);
+    }
+    else {
+      continue;
+    }
+    if( !__transact( muet, out, len, NULL, 0, bus ) ) {
+      /* sleep and send it again? */
+    }
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
 }
 
 
@@ -336,8 +410,10 @@ static struct OMuet* _inst( const iONode ini ,const iOTrace trc ) {
 
   if( data->serialOK ) {
 
-    data->feedbackReader = ThreadOp.inst( "muetreader", &__reader, __Muet );
-    ThreadOp.start( data->feedbackReader );
+    data->reader = ThreadOp.inst( "muetreader", &__reader, __Muet );
+    ThreadOp.start( data->reader );
+    data->writer = ThreadOp.inst( "muetwriter", &__writer, __Muet );
+    ThreadOp.start( data->writer );
 
   }
   else {
