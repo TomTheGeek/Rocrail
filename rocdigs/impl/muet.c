@@ -169,32 +169,6 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
 
 
 
-static Boolean __transact( iOMuet muet, byte* out, int outsize, byte* in, int insize, int bus ) {
-  iOMuetData data = Data(muet);
-  Boolean     ok = False;
-
-  if( MutexOp.wait( data->mux ) ) {
-    //ok = __setActiveBus( slx, bus );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outsize );
-    if( data->dummyio )
-      ok = True;
-    else
-      ok = SerialOp.write( data->serial, (char*)out, outsize );
-    if( ok && insize > 0 ) {
-      if( !data->dummyio ) {
-        ok = SerialOp.read( data->serial, (char*)in, insize );
-        if(ok)
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, insize );
-      }
-    }
-    /* Release the mutex. */
-    MutexOp.post( data->mux );
-  }
-
-  return ok;
-}
-
-
 static int __translate( iOMuet muet, iONode node, byte* cmd, int* bus ) {
   iOMuetData data = Data(muet);
   *bus = 0;
@@ -337,7 +311,8 @@ static void __writer( void* threadinst ) {
     else {
       continue;
     }
-    if( !__transact( muet, out, len, NULL, 0, bus ) ) {
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+    if( !SerialOp.write( data->serial, (char*)out, len ) ) {
       /* sleep and send it again? */
     }
   }
@@ -355,9 +330,17 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
   
   while( data->run ) {
-    int i, n = 0;
-
-    ThreadOp.sleep( 100 );
+    byte c = 0;
+    if( SerialOp.available(data->serial) ) {
+      if( SerialOp.read(data->serial, &c, 1) ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)&c, 1 );
+        if(c == 128 ) {
+        }
+      }
+    }
+    else {
+      ThreadOp.sleep(10);
+    }
   }
   
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader ended." );
