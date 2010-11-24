@@ -3264,6 +3264,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   iOList        fitRoutes = ListOp.inst();
   iOList        altBlocks = ListOp.inst();
   iOList        altRoutes = ListOp.inst();
+  iOMap         swapRoutes= MapOp.inst();
 
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
@@ -3496,7 +3497,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      dirOK,   locdir,   destdir,   samedir,   allowChgDir,   trysamedir,   tryoppositedir,   forceSameDir,   swapPlacingInPrevRoute);
 
                 if( blockBest == NULL ) {
-                  if( (dirOK && ( trysamedir || forceSameDir) && samedir) || (dirOK && tryoppositedir && !samedir) ) {
+                  if( (dirOK && ( trysamedir | forceSameDir | useBlockSide ) && samedir) || (dirOK && tryoppositedir && !samedir) ) {
                     /* direction flags fits */
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                    "found an ALT block [%s] for [%s] in the wanted direction",
@@ -3515,6 +3516,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                     routeAlt = route;
                     ListOp.add( altBlocks, (obj)block );
                     ListOp.add( altRoutes, (obj)route );
+                    MapOp.put( swapRoutes, route->base.id(route), (obj)route );
                   }
                   else {
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -3608,7 +3610,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     /* when using blocksides the alternative route can be a mismatch between properties or, in case of commuter,
        a destination in the other direction. For a commuter to change direction the block must allow change direction and
        the loc must be swapped. In case of a mismatch the loc must not be swapped */
-    if( useBlockSide && wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) ) {
+    if( useBlockSide &&
+        wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) &&
+        MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
+    {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
                      LocOp.getId( loc ) );
@@ -3624,6 +3629,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   ListOp.base.del( fitRoutes );
   ListOp.base.del( altBlocks );
   ListOp.base.del( altRoutes );
+  MapOp.base.del(swapRoutes);
 
   /* Unlock the semaphore: */
   MutexOp.post( o->muxFindDest );
