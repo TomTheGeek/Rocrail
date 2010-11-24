@@ -52,7 +52,11 @@ void statusInitDest( iILcDriverInt inst ) {
     Boolean dir = data->next1Route->getDirection( data->next1Route,
                               data->loc->getCurBlock( data->loc ),
                               &data->next1RouteFromTo );
-    Boolean swapDir = data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo;
+    Boolean swapDir = False;
+    if( data->next1RouteFromTo )
+      swapDir = data->next1Route->isSwapPost( data->next1Route ) ? data->next1RouteFromTo : !data->next1RouteFromTo;
+    else
+      swapDir = data->next1Route->isSwapPost( data->next1Route ) ? !data->next1RouteFromTo : data->next1RouteFromTo;
     swapDir = dir ? swapDir:!swapDir;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "loco direction for [%s] is [%s], route direction [%s], swappost[%s]",

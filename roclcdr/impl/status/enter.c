@@ -149,7 +149,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       Boolean dir = data->next2Route->getDirection( data->next2Route,
                         data->next1Block->base.id(data->next1Block),
                 &data->next2RouteFromTo );
-      Boolean swapDir = data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo;
+      Boolean swapDir = False;
+      if( data->next2RouteFromTo )
+        swapDir = data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo;
+      else
+        swapDir = data->next2Route->isSwapPost( data->next2Route ) ? !data->next2RouteFromTo : data->next2RouteFromTo;
       swapDir = dir ? swapDir:!swapDir;
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "loco direction for [%s] is [%s], route direction [%s]",
