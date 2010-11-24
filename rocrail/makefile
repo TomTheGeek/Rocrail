@@ -172,9 +172,8 @@ install_all:
 	-cp -pu package$(FS)plan.xml $(DESTDIR)
 	-cp -p package$(FS)rocrail.sh $(DESTDIR)
 	-cp -p package$(FS)rocview.sh $(DESTDIR)
-	-chmod +x, u+s $(DESTDIR)$(FS)rocrail.sh
-	-chmod +x, u+s $(DESTDIR)$(FS)rocview.sh
-	-chmod u+s $(DESTDIR)$(FS)rocrail 
+	-chmod +x $(DESTDIR)$(FS)rocrail.sh
+	-chmod +x $(DESTDIR)$(FS)rocview.sh
 	-cp -p package$(FS)Rocrail.desktop $(FS)usr$(FS)local$(FS)share$(FS)applications
 	-cp -p package$(FS)Rocview.desktop $(FS)usr$(FS)local$(FS)share$(FS)applications
 	-cp -p package$(FS)Rocrail.directory $(FS)usr$(FS)local$(FS)share$(FS)desktop-directories
