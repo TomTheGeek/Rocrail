@@ -190,8 +190,6 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
     int bus = 0;
     int outsize = __translate( (iOMuet)inst, nodeA, cmd, &bus );
     /*TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );*/
-    if( outsize > 0 )
-      __transact( (iOMuet)inst, cmd, outsize, NULL, 0, bus );
 
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
