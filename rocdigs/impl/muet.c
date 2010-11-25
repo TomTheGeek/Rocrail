@@ -145,6 +145,8 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
   MemOp.set( data->fbmodcnt, 0, 2 * sizeof(int) );
   MemOp.set( data->fbmods, 0, 2*256 );
 
+  MapOp.clear(data->fbmap);
+
   for( i = 0; i < cnt; i++ ) {
     iONode fbmods = NodeOp.getChild( fbInfo, i );
     const char* mods = wFbMods.getmodules( fbmods );
@@ -154,8 +156,27 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
       iOStrTok tok = StrTokOp.inst( mods, ',' );
       int idx = 0;
       while( StrTokOp.hasMoreTokens( tok ) ) {
+        byte *cmd = NULL;
+        char key[32] = {'\0'};
         int addr = atoi( StrTokOp.nextToken(tok) );
         data->fbmods[bus][idx] = addr & 0x7f;
+
+        /* create key */
+        StrOp.fmtb(key, "%d_%d", bus, addr );
+        MapOp.put( data->fbmap, key, (obj)&data->fbmods[bus][idx]); /* dummy object */
+        /* control register for ident */
+        StrOp.fmtb(key, "%d_%d", bus, addr+1 );
+        MapOp.put( data->identmap, key, (obj)&data->fbmods[bus][idx]); /* dummy object */
+
+        /* activate monitoring for the unit */
+        cmd = allocMem(32);
+        cmd[0] = bus;
+        cmd[1] = 3;
+        cmd[2] = MONITORING;
+        cmd[3] = MONITORING_ADD;
+        cmd[4] = addr & 0x7F;
+        ThreadOp.post(data->writer, (obj)cmd);
+
         idx++;
       };
       data->fbmodcnt[bus] = idx;
@@ -305,14 +326,13 @@ static void __writer( void* threadinst ) {
       len = post[1];
       MemOp.copy( out, post+2, len);
       freeMem( post);
+
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      if( !SerialOp.write( data->serial, (char*)out, len ) ) {
+        /* sleep and send it again? */
+      }
     }
-    else {
-      continue;
-    }
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-    if( !SerialOp.write( data->serial, (char*)out, len ) ) {
-      /* sleep and send it again? */
-    }
+
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
@@ -323,7 +343,6 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMuet muet = (iOMuet)ThreadOp.getParm( th );
   iOMuetData data = Data(muet);
-  unsigned char* fb = allocMem(256);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
   
@@ -332,7 +351,46 @@ static void __reader( void* threadinst ) {
     if( SerialOp.available(data->serial) ) {
       if( SerialOp.read(data->serial, &c, 1) ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)&c, 1 );
-        if(c == 128 ) {
+        if(c == 126 ) {
+          if( SerialOp.read(data->serial, &c, 1) ) {
+            data->activebus = c;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "active bus=%d.", data->activebus );
+          }
+        }
+        else if(c >= 128 && c <= 128 + 31 ) {
+          byte tmp[4];
+          if( SerialOp.read(data->serial, tmp, 2) ) {
+            char key[32] = {'\0'};
+            int bus = (c-128)&0x7F;
+            int addr = tmp[0] & 0x7F;
+            int val = tmp[1] & 0xFF;
+
+            StrOp.fmtb(key, "%d_%d", bus, addr );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "monitor event: bus=%d, addr=%d val=%d key=%s.", bus, addr, val, key );
+
+            if( MapOp.haskey( data->identmap, key) ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "key=%s is a ident sensor unit.", key );
+              /* get the loco number */
+              byte *cmd = allocMem(32);
+              cmd[0] = bus;
+              cmd[1] = 1;
+              cmd[2] = addr+1;
+              ThreadOp.post(data->writer, (obj)cmd);
+            }
+
+          }
+        }
+        else if(c < 126 ) {
+          int addr = c & 0x7F;
+          if( SerialOp.read(data->serial, &c, 1) ) {
+            char key[32] = {'\0'};
+            int lcaddr = c & 0x7F;
+            StrOp.fmtb(key, "%d_%d", data->activebus, addr-1 );
+            if( MapOp.haskey( data->identmap, key) ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d is %d", addr, lcaddr );
+            }
+          }
         }
       }
     }
@@ -373,6 +431,8 @@ static struct OMuet* _inst( const iONode ini ,const iOTrace trc ) {
   data->mux = MutexOp.inst( StrOp.fmt( "serialMux%08X", data ), True );
   data->lcmux   = MutexOp.inst( NULL, True );
   data->lcmap   = MapOp.inst();
+  data->fbmap   = MapOp.inst();
+  data->identmap= MapOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "muet %d.%d.%d", vmajor, vminor, patch );

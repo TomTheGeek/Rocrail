@@ -1174,6 +1174,8 @@
     </struct>
     <data>
       <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
+      <var name="fbmap" vt="iOMap" remark="key=bus_addr, value=fbbyte"/>
+      <var name="identmap" vt="iOMap" remark="key=bus_addr, value=fbbyte"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="serial" vt="iOSerial"/>
