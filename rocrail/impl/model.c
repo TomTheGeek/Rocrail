@@ -2735,10 +2735,14 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
   iOModelData data = Data(inst);
   iOLib    pLib = NULL;
   /* Load the analyzer shared library. */
+  /*
   char* stamp = StrOp.createStampNoDots();
   char* stampfile = StrOp.fmt("%s.%s.xml", data->fileName, stamp);
   const char* filename = data->fileName;
   StrOp.free(stamp);
+  */
+  char* stampfile = StrOp.fmt("%s.anabak", data->fileName);
+  const char* filename = data->fileName;
   ModelOp.saveAs(inst, stampfile);
   data->fileName = filename;
   data->analyser = NULL;
