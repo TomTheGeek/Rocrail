@@ -168,13 +168,22 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
         StrOp.fmtb(key, "%d_%d", bus, addr+1 );
         MapOp.put( data->identmap, key, (obj)&data->fbmods[bus][idx]); /* dummy object */
 
-        /* activate monitoring for the unit */
+        /* activate monitoring for the unit occupation */
         cmd = allocMem(32);
         cmd[0] = bus;
         cmd[1] = 3;
         cmd[2] = MONITORING;
         cmd[3] = MONITORING_ADD;
         cmd[4] = addr & 0x7F;
+        ThreadOp.post(data->writer, (obj)cmd);
+
+        /* activate monitoring for the unit control register */
+        cmd = allocMem(32);
+        cmd[0] = bus;
+        cmd[1] = 3;
+        cmd[2] = MONITORING;
+        cmd[3] = MONITORING_ADD;
+        cmd[4] = (addr+1) & 0x7F;
         ThreadOp.post(data->writer, (obj)cmd);
 
         idx++;
@@ -367,7 +376,7 @@ static void __reader( void* threadinst ) {
 
             StrOp.fmtb(key, "%d_%d", bus, addr );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "monitor event: bus=%d, addr=%d val=%d key=%s.", bus, addr, val, key );
+                "monitor event: bus=%d, addr=%d val=%02X key=%s.", bus, addr, val, key );
 
             if( MapOp.haskey( data->identmap, key) ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "key=%s is a ident sensor unit.", key );
@@ -385,10 +394,16 @@ static void __reader( void* threadinst ) {
           int addr = c & 0x7F;
           if( SerialOp.read(data->serial, &c, 1) ) {
             char key[32] = {'\0'};
-            int lcaddr = c & 0x7F;
+            int val = c & 0x7F;
             StrOp.fmtb(key, "%d_%d", data->activebus, addr-1 );
             if( MapOp.haskey( data->identmap, key) ) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d is %d", addr, lcaddr );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d is %d", addr, val );
+            }
+            else {
+              StrOp.fmtb(key, "%d_%d", data->activebus, addr );
+              if( MapOp.haskey( data->fbmap, key) ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
+              }
             }
           }
         }
