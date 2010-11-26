@@ -713,21 +713,23 @@ static void __handleSystem(iOMassothData data, byte* in) {
   else if( in[2] == 0x05 ) {
     /* extended system info
      * 0x00 0x00 0x05 0x00 0x03 0x00 0x00 0x00 */
-    data->load = in[4] * 100; /* load in steps of 100mA */
+    if( data->load != in[4] * 100 ) {
+      data->load = in[4] * 100; /* load in steps of 100mA */
 
-    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wState.setiid( node, data->iid );
-    wState.setpower( node, data->power );
-    wState.settrackbus( node, data->power );
-    wState.setsensorbus( node, data->power );
-    wState.setaccessorybus( node, data->power );
-    wState.setload( node, data->load );
+      iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wState.setiid( node, data->iid );
+      wState.setpower( node, data->power );
+      wState.settrackbus( node, data->power );
+      wState.setsensorbus( node, data->power );
+      wState.setaccessorybus( node, data->power );
+      wState.setload( node, data->load );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system load=%dmA", data->load );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system load=%dmA", data->load );
 
-    if( data->listenerFun != NULL && data->listenerObj != NULL )
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
   }
 }
 
