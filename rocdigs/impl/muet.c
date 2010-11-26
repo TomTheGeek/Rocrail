@@ -636,6 +636,49 @@ static void __reader( void* threadinst ) {
               cmd[2] = addr+1;
               ThreadOp.post(data->writer, (obj)cmd);
             }
+            else if( MapOp.haskey( data->fbmap, key) ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
+              __evaluateFB( muet, val, addr, data->activebus );
+            }
+            else {
+              /* Loco */
+              iOSlot slot = __getSlotByAddr( data, addr );
+              if( slot != NULL ) {
+                Boolean vdfChanged = False;
+                Boolean funChanged = False;
+
+                if( __updateSlot(data, slot, &vdfChanged, &funChanged) ) {
+                  iONode nodeC = NULL;
+                  if( vdfChanged ) {
+                    nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+                    if( data->iid != NULL )
+                      wLoc.setiid( nodeC, data->iid );
+                    wLoc.setid( nodeC, slot->id );
+                    wLoc.setaddr( nodeC, slot->addr );
+                    wLoc.setV_raw( nodeC, slot->speed );
+                    wLoc.setV_rawMax( nodeC, 31 );
+                    wLoc.setfn( nodeC, slot->lights);
+                    wLoc.setdir( nodeC, slot->dir );
+                    wLoc.setcmd( nodeC, wLoc.direction );
+                    wLoc.setthrottleid( nodeC, "slx" );
+                    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+                  }
+
+                  if( funChanged ) {
+                    nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+                    if( data->iid != NULL )
+                      wLoc.setiid( nodeC, data->iid );
+                    wFunCmd.setid( nodeC, slot->id );
+                    wFunCmd.setaddr( nodeC, slot->addr );
+                    wFunCmd.setf0( nodeC, slot->lights );
+                    wFunCmd.setf1( nodeC, slot->fn );
+
+                    wLoc.setthrottleid( nodeC, "slx" );
+                    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+                  }
+                }
+              }
+            }
 
           }
         }
@@ -664,53 +707,6 @@ static void __reader( void* threadinst ) {
                 wFeedback.setiid( evt, data->iid );
 
               data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
-            }
-            else {
-              StrOp.fmtb(key, "%d_%d", data->activebus, addr );
-              if( MapOp.haskey( data->fbmap, key) ) {
-                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
-                __evaluateFB( muet, val, addr, data->activebus );
-              }
-              else {
-                /* Loco */
-                iOSlot slot = __getSlotByAddr( data, addr );
-                if( slot != NULL ) {
-                  Boolean vdfChanged = False;
-                  Boolean funChanged = False;
-
-                  if( __updateSlot(data, slot, &vdfChanged, &funChanged) ) {
-                    iONode nodeC = NULL;
-                    if( vdfChanged ) {
-                      nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-                      if( data->iid != NULL )
-                        wLoc.setiid( nodeC, data->iid );
-                      wLoc.setid( nodeC, slot->id );
-                      wLoc.setaddr( nodeC, slot->addr );
-                      wLoc.setV_raw( nodeC, slot->speed );
-                      wLoc.setV_rawMax( nodeC, 31 );
-                      wLoc.setfn( nodeC, slot->lights);
-                      wLoc.setdir( nodeC, slot->dir );
-                      wLoc.setcmd( nodeC, wLoc.direction );
-                      wLoc.setthrottleid( nodeC, "slx" );
-                      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-                    }
-
-                    if( funChanged ) {
-                      nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-                      if( data->iid != NULL )
-                        wLoc.setiid( nodeC, data->iid );
-                      wFunCmd.setid( nodeC, slot->id );
-                      wFunCmd.setaddr( nodeC, slot->addr );
-                      wFunCmd.setf0( nodeC, slot->lights );
-                      wFunCmd.setf1( nodeC, slot->fn );
-
-                      wLoc.setthrottleid( nodeC, "slx" );
-                      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-                    }
-                  }
-
-                }
-              }
             }
           }
         }
