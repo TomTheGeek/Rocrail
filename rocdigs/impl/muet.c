@@ -348,6 +348,36 @@ static void __writer( void* threadinst ) {
 }
 
 
+static __evaluateFB( iOMuet muet, byte in, int addr, int bus ) {
+  iOMuetData data = Data(muet);
+
+  if( in != data->fbstate[bus][addr] ) {
+    int n = 0;
+    int pin = 0;
+    int state = 0;
+    for( n = 0; n < 8; n++ ) {
+      if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
+        pin = n;
+        state = (in & (0x01 << n)) ? 1:0;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+pin+1, state );
+        {
+          /* inform listener: Node3 */
+          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setaddr( nodeC, addr*8+pin+1 );
+          wFeedback.setbus( nodeC, bus );
+          wFeedback.setstate( nodeC, state?True:False );
+          if( data->iid != NULL )
+            wFeedback.setiid( nodeC, data->iid );
+
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+    }
+    data->fbstate[bus][addr] = in;
+  }
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMuet muet = (iOMuet)ThreadOp.getParm( th );
@@ -356,23 +386,23 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
   
   while( data->run ) {
-    byte c = 0;
+    byte in[8] = {0};
     if( SerialOp.available(data->serial) ) {
-      if( SerialOp.read(data->serial, &c, 1) ) {
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)&c, 1 );
-        if(c == 126 ) {
-          if( SerialOp.read(data->serial, &c, 1) ) {
-            data->activebus = c;
+      if( SerialOp.read(data->serial, in, 1) ) {
+        if(in[0] == 126 ) {
+          if( SerialOp.read(data->serial, in+1, 1) ) {
+            TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 2 );
+            data->activebus = in[1] & 0x7F;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "active bus=%d.", data->activebus );
           }
         }
-        else if(c >= 128 && c <= 128 + 31 ) {
-          byte tmp[4];
-          if( SerialOp.read(data->serial, tmp, 2) ) {
+        else if(in[0] >= 128 && in[0] <= (128 + 31) ) {
+          if( SerialOp.read(data->serial, in+1, 2) ) {
             char key[32] = {'\0'};
-            int bus = (c-128)&0x7F;
-            int addr = tmp[0] & 0x7F;
-            int val = tmp[1] & 0xFF;
+            int bus  = (in[0]-128) & 0x7F;
+            int addr = in[1] & 0x7F;
+            int val  = in[2] & 0xFF;
+            TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 3 );
 
             StrOp.fmtb(key, "%d_%d", bus, addr );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -380,6 +410,7 @@ static void __reader( void* threadinst ) {
 
             if( MapOp.haskey( data->identmap, key) ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "key=%s is a ident sensor unit.", key );
+              data->fbstate[bus][addr] = val;
               /* get the loco number */
               byte *cmd = allocMem(32);
               cmd[0] = bus;
@@ -390,19 +421,36 @@ static void __reader( void* threadinst ) {
 
           }
         }
-        else if(c < 126 ) {
-          int addr = c & 0x7F;
-          if( SerialOp.read(data->serial, &c, 1) ) {
+        else if(in[0] < 126 ) {
+          int addr = in[0] & 0x7F;
+          if( SerialOp.read(data->serial, in+1, 1) ) {
             char key[32] = {'\0'};
-            int val = c & 0x7F;
+            int val = in[1] & 0x7F;
+            TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 2 );
+
             StrOp.fmtb(key, "%d_%d", data->activebus, addr-1 );
             if( MapOp.haskey( data->identmap, key) ) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d is %d", addr, val );
+              byte val = data->fbstate[data->activebus][addr-1];
+              int port = val & 0x07;
+              Boolean arrived = (val & 0x08) ? True:False;
+              iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d:%d is %d", addr, port, val );
+
+              wFeedback.setstate( evt, arrived );
+              wFeedback.setaddr( evt, addr*8+port+1 );
+              wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+              wFeedback.setidentifier( evt, val );
+              if( data->iid != NULL )
+                wFeedback.setiid( evt, data->iid );
+
+              data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
             }
             else {
               StrOp.fmtb(key, "%d_%d", data->activebus, addr );
               if( MapOp.haskey( data->fbmap, key) ) {
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
+                __evaluateFB( muet, val, addr, data->activebus );
               }
             }
           }
