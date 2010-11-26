@@ -145,7 +145,7 @@ static iOSlot __getSlot(iOMuetData data, iONode node) {
   cmd[1] = 3;
   cmd[2] = MONITORING;
   cmd[3] = MONITORING_ADD;
-  cmd[4] = slot->addr;
+  cmd[4] = slot->addr & 0x7F;
   ThreadOp.post(data->writer, (obj)cmd);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add monitoring for loco addr %d on bus %d", slot->addr, slot->bus );
 
@@ -267,7 +267,7 @@ static void __translate( iOMuet muet, iONode node ) {
     byte *cmd = allocMem(32);
     cmd[0] = bus;
     cmd[1] = 2;
-    cmd[2] = wSwitch.getaddr1( node );
+    cmd[2] = wSwitch.getaddr1( node ) & 0x7F;
     cmd[3] = 0x01 << ( wSwitch.getport1( node ) - 1 );
     cmd[2] |= WRITE_FLAG;
 
@@ -294,7 +294,7 @@ static void __translate( iOMuet muet, iONode node ) {
     byte *cmd = allocMem(32);
     cmd[0] = bus;
     cmd[1] = 2;
-    cmd[2] = addr;
+    cmd[2] = addr & 0x7F;
     cmd[2] |= WRITE_FLAG;
     /* reset pin to 0: */
     cmd[3] = data->swstate[bus][cmd[2]] & mask;
@@ -331,7 +331,7 @@ static void __translate( iOMuet muet, iONode node ) {
     cmd[0] = slot->bus;
     cmd[1] = 2;
 
-    cmd[2] = addr;
+    cmd[2] = addr & 0x7F;
     cmd[2] |= WRITE_FLAG;
     cmd[3] = speed & 0x1F;
     cmd[3] |= dir ? 0x00:0x20;
@@ -361,7 +361,7 @@ static void __translate( iOMuet muet, iONode node ) {
     cmd[0] = slot->bus;
     cmd[1] = 2;
 
-    cmd[2] = addr;
+    cmd[2] = addr & 0x7F;
     cmd[2] |= WRITE_FLAG;
     cmd[3] = slot->speed;
     cmd[3] |= slot->dir ? 0x00:0x20;
@@ -633,7 +633,7 @@ static void __reader( void* threadinst ) {
               byte *cmd = allocMem(32);
               cmd[0] = bus;
               cmd[1] = 1;
-              cmd[2] = addr+1;
+              cmd[2] = (addr+1) & 0x7F;
               ThreadOp.post(data->writer, (obj)cmd);
             }
             else if( MapOp.haskey( data->fbmap, key) ) {
