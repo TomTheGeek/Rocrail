@@ -147,6 +147,7 @@ static iOSlot __getSlot(iOMuetData data, iONode node) {
   cmd[3] = MONITORING_ADD;
   cmd[4] = slot->addr;
   ThreadOp.post(data->writer, (obj)cmd);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add monitoring for loco addr %d on bus %d", slot->addr, slot->bus );
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
@@ -201,6 +202,7 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
         cmd[3] = MONITORING_ADD;
         cmd[4] = addr & 0x7F;
         ThreadOp.post(data->writer, (obj)cmd);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add monitoring for occ addr %d on bus %d", addr, bus );
 
         /* activate monitoring for the unit control register */
         cmd = allocMem(32);
@@ -210,6 +212,7 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
         cmd[3] = MONITORING_ADD;
         cmd[4] = (addr+1) & 0x7F;
         ThreadOp.post(data->writer, (obj)cmd);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add monitoring for ctrl addr %d on bus %d", addr+1, bus );
 
         idx++;
       };
@@ -650,7 +653,8 @@ static void __reader( void* threadinst ) {
               Boolean arrived = (val & 0x08) ? True:False;
               iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d:%d is %d", addr, port, val );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                  "loco address for unit %d:%d is %d and did %s", addr, port, val, arrived?"arrive":"depart" );
 
               wFeedback.setstate( evt, arrived );
               wFeedback.setaddr( evt, addr*8+port+1 );
