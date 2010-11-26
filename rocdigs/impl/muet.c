@@ -105,6 +105,20 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OMuet ----- */
 
+static iOSlot __getSlotByAddr(iOMuetData data, int lcaddr) {
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == lcaddr )
+        return slot;
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return NULL;
+}
+
 
 static iOSlot __getSlot(iOMuetData data, iONode node) {
   int addr  = wLoc.getaddr(node);
@@ -124,6 +138,17 @@ static iOSlot __getSlot(iOMuetData data, iONode node) {
     MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
     MutexOp.post(data->lcmux);
   }
+
+  /* activate monitoring for the loco */
+  byte* cmd = allocMem(32);
+  cmd[0] = slot->bus;
+  cmd[1] = 3;
+  cmd[2] = MONITORING;
+  cmd[3] = MONITORING_ADD;
+  cmd[4] = slot->addr;
+  ThreadOp.post(data->writer, (obj)cmd);
+
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   return slot;
 }
@@ -199,32 +224,47 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
 
 
 
-static int __translate( iOMuet muet, iONode node, byte* cmd, int* bus ) {
+static void __translate( iOMuet muet, iONode node ) {
   iOMuetData data = Data(muet);
-  *bus = 0;
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
     __updateFB( muet, node );
   }
   
-  return 0;
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte pin = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    byte mask = ~pin;
+    int bus = wSwitch.getbus( node ) & 0x1F;
+    byte *cmd = allocMem(32);
+    cmd[0] = bus;
+    cmd[1] = 2;
+    cmd[2] = wSwitch.getaddr1( node );
+    cmd[3] = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    cmd[2] |= WRITE_FLAG;
+
+    /* reset pin to 0: */
+    cmd[3] = data->swstate[bus][cmd[2]] & mask;
+
+    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+      cmd[3] |= pin;
+    /* save new state: */
+    data->swstate[bus][cmd[0]] = cmd[3];
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
 }
 
 
 /**  */
 static iONode _cmd( obj inst ,const iONode nodeA ) {
   iOMuetData data = Data(inst);
-  byte cmd[32];
 
   if( nodeA != NULL ) {
     int bus = 0;
-    int outsize = __translate( (iOMuet)inst, nodeA, cmd, &bus );
-    /*TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );*/
-
-    /* Cleanup Node1 */
+    __translate( (iOMuet)inst, nodeA );
     nodeA->base.del(nodeA);
   }
-
   return NULL;
 }
 
@@ -378,6 +418,63 @@ static __evaluateFB( iOMuet muet, byte in, int addr, int bus ) {
 }
 
 
+static Boolean __updateSlot(iOMuetData data, iOSlot slot, Boolean* vdfChanged, Boolean* funChanged) {
+  Boolean changed = False;
+  int     speed   = 0;
+  Boolean dir     = True;
+  Boolean lights  = False;
+  Boolean fn      = False;
+
+  /* SX1 */
+  byte sx1 = data->sx1[slot->bus&0x01][slot->addr&0x7F];
+  speed  = sx1 & 0x1F;
+  dir    = (sx1 & 0x20) ? False:True;
+  lights = (sx1 & 0x40) ? False:True;
+  fn     = (sx1 & 0x80) ? True:False;
+
+  if( slot->speed != speed ) {
+    /* trace speed changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "speed change event from %d to %d for %s", slot->speed, speed, slot->id );
+    slot->speed = speed;
+    *vdfChanged = True;
+    changed = True;
+  }
+  if( slot->dir != dir ) {
+    /* trace dir changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "direction change event from %s to %s for %s", slot->dir?"reverse":"forwards", dir?"reverse":"forwards", slot->id );
+    slot->dir = dir;
+    *vdfChanged = True;
+    changed = True;
+  }
+  if( slot->lights != lights ) {
+    /* trace lights changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "lights change event from %s to %s for %s", slot->lights?"on":"off", lights?"on":"off", slot->id );
+    slot->lights = lights;
+    *vdfChanged = True;
+    *funChanged = True;
+    changed = True;
+  }
+  if( slot->fn != fn ) {
+    /* trace functions changed */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "function change event from %s to %s for %s", slot->fn?"on":"off", fn?"on":"off", slot->id );
+    slot->fn = fn;
+    *funChanged = True;
+    changed = True;
+  }
+
+  return changed;
+}
+
+
+
+
+
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMuet muet = (iOMuet)ThreadOp.getParm( th );
@@ -451,6 +548,46 @@ static void __reader( void* threadinst ) {
               if( MapOp.haskey( data->fbmap, key) ) {
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
                 __evaluateFB( muet, val, addr, data->activebus );
+              }
+              else {
+                /* Loco */
+                iOSlot slot = __getSlotByAddr( data, addr );
+                if( slot != NULL ) {
+                  Boolean vdfChanged = False;
+                  Boolean funChanged = False;
+
+                  if( __updateSlot(data, slot, &vdfChanged, &funChanged) ) {
+                    iONode nodeC = NULL;
+                    if( vdfChanged ) {
+                      nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+                      if( data->iid != NULL )
+                        wLoc.setiid( nodeC, data->iid );
+                      wLoc.setid( nodeC, slot->id );
+                      wLoc.setaddr( nodeC, slot->addr );
+                      wLoc.setV_raw( nodeC, slot->speed );
+                      wLoc.setV_rawMax( nodeC, 31 );
+                      wLoc.setfn( nodeC, slot->lights);
+                      wLoc.setdir( nodeC, slot->dir );
+                      wLoc.setcmd( nodeC, wLoc.direction );
+                      wLoc.setthrottleid( nodeC, "slx" );
+                      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+                    }
+
+                    if( funChanged ) {
+                      nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+                      if( data->iid != NULL )
+                        wLoc.setiid( nodeC, data->iid );
+                      wFunCmd.setid( nodeC, slot->id );
+                      wFunCmd.setaddr( nodeC, slot->addr );
+                      wFunCmd.setf0( nodeC, slot->lights );
+                      wFunCmd.setf1( nodeC, slot->fn );
+
+                      wLoc.setthrottleid( nodeC, "slx" );
+                      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+                    }
+                  }
+
+                }
               }
             }
           }
