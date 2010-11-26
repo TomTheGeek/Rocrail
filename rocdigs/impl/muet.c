@@ -231,6 +231,31 @@ static void __translate( iOMuet muet, iONode node ) {
     __updateFB( muet, node );
   }
   
+  /* System command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      /* CS on */
+      byte* cmd = allocMem(32);
+      cmd[0] = 0;
+      cmd[1] = 2;
+      cmd[2] = CS_SET_STATUS;
+      cmd[3] = CS_OFF;
+      ThreadOp.post(data->writer, (obj)cmd);
+
+    }
+    if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS on */
+      byte* cmd = allocMem(32);
+      cmd[0] = 0;
+      cmd[1] = 2;
+      cmd[2] = CS_SET_STATUS;
+      cmd[3] = CS_ON;
+      ThreadOp.post(data->writer, (obj)cmd);
+
+    }
+  }
+
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     byte pin = 0x01 << ( wSwitch.getport1( node ) - 1 );
@@ -252,6 +277,99 @@ static void __translate( iOMuet muet, iONode node ) {
     data->swstate[bus][cmd[0]] = cmd[3];
     ThreadOp.post(data->writer, (obj)cmd);
   }
+
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    byte pin = 0x01 << ( port - 1 );
+    byte mask = ~pin;
+
+    int bus = wOutput.getbus(node);
+    byte *cmd = allocMem(32);
+    cmd[0] = bus;
+    cmd[1] = 2;
+    cmd[2] = addr;
+    cmd[2] |= WRITE_FLAG;
+    /* reset pin to 0: */
+    cmd[3] = data->swstate[bus][cmd[2]] & mask;
+
+    if( action )
+      cmd[3] |= pin;
+    /* save new state: */
+    data->swstate[bus][cmd[2]] = cmd[3];
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+    Boolean fn  = wLoc.isfn( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return;
+    }
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * 31) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * 31) / wLoc.getV_max( node );
+    }
+
+    byte *cmd = allocMem(32);
+    cmd[0] = slot->bus;
+    cmd[1] = 2;
+
+    cmd[2] = addr;
+    cmd[2] |= WRITE_FLAG;
+    cmd[3] = speed & 0x1F;
+    cmd[3] |= dir ? 0x00:0x20;
+    cmd[3] |= fn  ? 0x00:0x40;
+    cmd[3] |= slot->fn ? 0x80:0x00;
+
+    slot->speed = speed;
+    slot->dir = wLoc.isdir(node);
+    slot->lights = wLoc.isfn(node);
+
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int   addr = wFunCmd.getaddr( node );
+    Boolean f1 = wFunCmd.isf1( node );
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return;
+    }
+
+    byte *cmd = allocMem(32);
+    cmd[0] = slot->bus;
+    cmd[1] = 2;
+
+    cmd[2] = addr;
+    cmd[2] |= WRITE_FLAG;
+    cmd[3] = slot->speed;
+    cmd[3] |= slot->dir ? 0x00:0x20;
+    cmd[3] |= slot->lights  ? 0x00:0x40;
+    cmd[3] |= f1 ? 0x80:0x00;
+
+    slot->fn = f1;
+
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
 
 }
 
