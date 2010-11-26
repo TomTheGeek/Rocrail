@@ -244,8 +244,8 @@ static void __translate( iOMuet muet, iONode node ) {
       cmd[1] = 2;
       cmd[2] = CS_SET_STATUS;
       cmd[3] = CS_OFF;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power OFF" );
       ThreadOp.post(data->writer, (obj)cmd);
-
     }
     if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS on */
@@ -254,8 +254,8 @@ static void __translate( iOMuet muet, iONode node ) {
       cmd[1] = 2;
       cmd[2] = CS_SET_STATUS;
       cmd[3] = CS_ON;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power ON" );
       ThreadOp.post(data->writer, (obj)cmd);
-
     }
   }
 
@@ -278,6 +278,7 @@ static void __translate( iOMuet muet, iONode node ) {
       cmd[3] |= pin;
     /* save new state: */
     data->swstate[bus][cmd[0]] = cmd[3];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: switch %d", wSwitch.getaddr1( node ) );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -303,6 +304,7 @@ static void __translate( iOMuet muet, iONode node ) {
       cmd[3] |= pin;
     /* save new state: */
     data->swstate[bus][cmd[2]] = cmd[3];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: output %d, %d", wOutput.getaddr( node ), wOutput.getport( node ) );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -342,6 +344,7 @@ static void __translate( iOMuet muet, iONode node ) {
     slot->dir = wLoc.isdir(node);
     slot->lights = wLoc.isfn(node);
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: loco %d", addr );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -370,6 +373,7 @@ static void __translate( iOMuet muet, iONode node ) {
 
     slot->fn = f1;
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: function %d", addr );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -460,6 +464,7 @@ static void __writer( void* threadinst ) {
   cmd[2] = MONITORING;
   cmd[3] = MONITORING_OFF;
   cmd[4] = SX_GET_BUS;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: monitoring OFF and get active bus" );
   ThreadOp.post(th, (obj)cmd);
 
   /* CS on */
@@ -468,6 +473,7 @@ static void __writer( void* threadinst ) {
   cmd[1] = 2;
   cmd[2] = CS_SET_STATUS;
   cmd[3] = CS_ON;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power ON" );
   ThreadOp.post(th, (obj)cmd);
 
   /* monitoring bus 0 */
@@ -477,6 +483,7 @@ static void __writer( void* threadinst ) {
   cmd[2] = MONITORING;
   cmd[3] = MONITORING_ON;
   cmd[4] = SX_BUS0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: monitoring ON" );
   ThreadOp.post(th, (obj)cmd);
 
 
@@ -634,6 +641,7 @@ static void __reader( void* threadinst ) {
               cmd[0] = bus;
               cmd[1] = 1;
               cmd[2] = (addr+1) & 0x7F;
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: get loco number for unit %d", addr );
               ThreadOp.post(data->writer, (obj)cmd);
             }
             else if( MapOp.haskey( data->fbmap, key) ) {
