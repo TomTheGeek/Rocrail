@@ -769,7 +769,7 @@ static struct OMuet* _inst( const iONode ini ,const iOTrace trc ) {
         data->device, data->bps, data->timeout );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, -1 );
+  SerialOp.setFlow( data->serial, cts );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
