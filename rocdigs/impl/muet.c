@@ -701,15 +701,16 @@ static void __reader( void* threadinst ) {
             if( val > 0 && MapOp.haskey( data->identmap, key) ) {
               byte ctrl = data->fbstate[data->activebus][addr-1];
               int port = ctrl & 0x07;
+              int rraddr = addr*8+port+1;
               Boolean arrived = (ctrl & 0x08) ? True:False;
               iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
               port++; /* port is zero based offset */
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                  "loco address for unit %d:%d is %d and did %s", addr, port, val, arrived?"arrive":"depart" );
+                  "loco address for unit %d:%d(%d) is %d and did %s", addr, port, rraddr, val, arrived?"arrive":"depart" );
 
               wFeedback.setstate( evt, arrived );
-              wFeedback.setaddr( evt, addr*8+port+1 );
+              wFeedback.setaddr( evt, rraddr );
               wFeedback.setbus( evt, wFeedback.fbtype_lissy );
               wFeedback.setidentifier( evt, val );
               if( data->iid != NULL )
