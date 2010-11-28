@@ -519,6 +519,11 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
       return 0;
     }
 
+    if( fnchanged == -1 ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "invalid function %d command for %s", fnchanged, wLoc.getid(node) );
+      return False;
+    }
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function %d command for %s", fnchanged, wLoc.getid(node) );
 
     slot->idle = SystemOp.getTick();
