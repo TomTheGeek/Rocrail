@@ -699,9 +699,9 @@ static void __reader( void* threadinst ) {
 
             StrOp.fmtb(key, "%d_%d", data->activebus, addr-1 );
             if( MapOp.haskey( data->identmap, key) ) {
-              byte val = data->fbstate[data->activebus][addr-1];
-              int port = val & 0x07;
-              Boolean arrived = (val & 0x08) ? True:False;
+              byte ctrl = data->fbstate[data->activebus][addr-1];
+              int port = ctrl & 0x07;
+              Boolean arrived = (ctrl & 0x08) ? True:False;
               iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
