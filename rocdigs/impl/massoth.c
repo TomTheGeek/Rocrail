@@ -580,7 +580,7 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     }
   }
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command [%s] not(jet) supported", NodeOp.getName( node ) );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command [%s] not supported", NodeOp.getName( node ) );
 
 
   return False;
@@ -710,7 +710,7 @@ static void __handleSystem(iOMassothData data, byte* in) {
     wState.setaccessorybus( node, data->power );
     wState.setload( node, data->load );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system status=0x%02X", in[3] );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "system status=0x%02X", in[3] );
 
     if( data->listenerFun != NULL && data->listenerObj != NULL )
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -730,7 +730,7 @@ static void __handleSystem(iOMassothData data, byte* in) {
       wState.setaccessorybus( node, data->power );
       wState.setload( node, data->load );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system load=%dmA", data->load );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "system load=%dmA", data->load );
 
       if( data->listenerFun != NULL && data->listenerObj != NULL )
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
