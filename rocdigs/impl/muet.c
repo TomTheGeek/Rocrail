@@ -698,12 +698,13 @@ static void __reader( void* threadinst ) {
             TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 2 );
 
             StrOp.fmtb(key, "%d_%d", data->activebus, addr-1 );
-            if( MapOp.haskey( data->identmap, key) ) {
+            if( val > 0 && MapOp.haskey( data->identmap, key) ) {
               byte ctrl = data->fbstate[data->activebus][addr-1];
               int port = ctrl & 0x07;
               Boolean arrived = (ctrl & 0x08) ? True:False;
               iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
+              port++; /* port is zero based offset */
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                   "loco address for unit %d:%d is %d and did %s", addr, port, val, arrived?"arrive":"depart" );
 
