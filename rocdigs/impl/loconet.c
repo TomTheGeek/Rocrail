@@ -1579,11 +1579,11 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
 
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Could not get slot for loco addr=%d. (un expected response 0x%02X...)", addr, rsp[0] );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Could not get slot for loco addr=%d. (un expected response 0x%02X...)", addr, rsp[0] );
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Could not get slot for loco addr=%d. (no response...)", addr );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not get slot for loco addr=%d. (no response...)", addr );
     }
   }
   else {
