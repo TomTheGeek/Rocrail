@@ -1518,7 +1518,7 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
   }
 
   /* check slot if it could be purged by the command station: */
-  if( slot != 0 && ( currtime - data->slotaccessed[slot] ) >= data->purgetime ) {
+  if( slot != 0 && data->purgetime != 0 && ( currtime - data->slotaccessed[slot] ) >= data->purgetime ) {
     data->locoslot[slot] = 0;
     data->slotV[slot] = 0;
     data->slotaccessed[slot] = 0;
