@@ -110,13 +110,15 @@ static iOSlot __getSlotByAddr(iOMuetData data, int lcaddr) {
   if( MutexOp.wait( data->lcmux ) ) {
     slot = (iOSlot)MapOp.first( data->lcmap);
     while( slot != NULL ) {
-      if( slot->addr == lcaddr )
-        return slot;
+      if( slot->addr == lcaddr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+        break;
+      }
       slot = (iOSlot)MapOp.next( data->lcmap);
     };
     MutexOp.post(data->lcmux);
   }
-  return NULL;
+  return slot;
 }
 
 
