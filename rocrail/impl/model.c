@@ -3376,6 +3376,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                 "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
                 RouteOp.getId(route), stEnterSide?"+":"-" );
             swap4BlockSide = True;
+            MapOp.put( swapRoutes, route->base.id(route), (obj)route );
           }
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
