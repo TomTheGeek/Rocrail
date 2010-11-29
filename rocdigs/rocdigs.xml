@@ -1171,6 +1171,7 @@
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
       <var name="fn" vt="Boolean"/>
+      <var name="lastcmd" vt="long"/>
     </struct>
     <data>
       <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>

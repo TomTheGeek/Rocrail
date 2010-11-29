@@ -345,6 +345,7 @@ static void __translate( iOMuet muet, iONode node ) {
     slot->speed = speed;
     slot->dir = wLoc.isdir(node);
     slot->lights = wLoc.isfn(node);
+    slot->lastcmd = SystemOp.getTick();
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: loco %d", addr );
     ThreadOp.post(data->writer, (obj)cmd);
@@ -374,6 +375,7 @@ static void __translate( iOMuet muet, iONode node ) {
     cmd[3] |= f1 ? 0x80:0x00;
 
     slot->fn = f1;
+    slot->lastcmd = SystemOp.getTick();
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: function %d", addr );
     ThreadOp.post(data->writer, (obj)cmd);
@@ -653,7 +655,8 @@ static void __reader( void* threadinst ) {
             else {
               /* Loco */
               iOSlot slot = __getSlotByAddr( data, addr );
-              if( slot != NULL ) {
+              /* this is considerred as an echo if the last command was not longer ago then 1 second */
+              if( slot != NULL && ( SystemOp.getTick() - slot->lastcmd > 100 ) ) {
                 Boolean vdfChanged = False;
                 Boolean funChanged = False;
 
@@ -670,7 +673,7 @@ static void __reader( void* threadinst ) {
                     wLoc.setfn( nodeC, slot->lights);
                     wLoc.setdir( nodeC, slot->dir );
                     wLoc.setcmd( nodeC, wLoc.direction );
-                    wLoc.setthrottleid( nodeC, "slx" );
+                    wLoc.setthrottleid( nodeC, "slx-bus" );
                     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
                   }
 
@@ -683,7 +686,7 @@ static void __reader( void* threadinst ) {
                     wFunCmd.setf0( nodeC, slot->lights );
                     wFunCmd.setf1( nodeC, slot->fn );
 
-                    wLoc.setthrottleid( nodeC, "slx" );
+                    wLoc.setthrottleid( nodeC, "slx-bus" );
                     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
                   }
                 }
@@ -740,6 +743,7 @@ static struct OMuet* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.basecpy( __Muet, &MuetOp, 0, sizeof( struct OMuet ), data );
 
   TraceOp.set( trc );
+  SystemOp.inst();
   /* Initialize data->xxx members... */
 
   /* Evaluate attributes. */
