@@ -1173,8 +1173,17 @@
       <var name="fn" vt="Boolean"/>
       <var name="lastcmd" vt="long"/>
     </struct>
+    <struct name="point" typedef="*iOPoint">
+      <var name="id" vt="char*"/>
+      <var name="bus" vt="int"/>
+      <var name="addr" vt="int"/>
+      <var name="port" vt="int"/>
+      <var name="type" vt="int"/>
+      <var name="lastcmd" vt="long"/>
+    </struct>
     <data>
       <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
+      <var name="pointmap" vt="iOMap" remark="key=ID, value=point"/>
       <var name="fbmap" vt="iOMap" remark="key=bus_addr, value=fbbyte"/>
       <var name="identmap" vt="iOMap" remark="key=bus_addr, value=fbbyte"/>
       <var name="listenerObj" vt="obj"/>
@@ -1182,15 +1191,13 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="lcmux" vt="iOMutex"/>
+      <var name="pointmux" vt="iOMutex"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
-      <var name="swTimeWatcher" vt="iOThread"/>
-      <var name="lastSwCmd" vt="unsigned long"/>
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
       <var name="timeout" vt="int"/>
       <var name="swtime" vt="int"/>
-      <var name="psleep" vt="int"/>
       <var name="iid" vt="const char*"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
