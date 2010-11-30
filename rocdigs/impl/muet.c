@@ -332,6 +332,9 @@ static void __translate( iOMuet muet, iONode node ) {
     int bus = wSwitch.getbus( node ) & 0x1F;
 
     iOPoint point = __getPoint(data, node);
+    if( point != NULL ) {
+      point->lastcmd = SystemOp.getTick();
+    }
 
     byte *cmd = allocMem(32);
     cmd[0] = bus;
@@ -346,7 +349,7 @@ static void __translate( iOMuet muet, iONode node ) {
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
       cmd[3] |= pin;
     /* save new state: */
-    data->swstate[bus][cmd[0]] = cmd[3];
+    data->swstate[bus][cmd[2]] = cmd[3];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: switch %d", wSwitch.getaddr1( node ) );
     ThreadOp.post(data->writer, (obj)cmd);
   }
@@ -767,23 +770,13 @@ static void __reader( void* threadinst ) {
                     int newval = val & (0x01 << i);
                     if( oldval != newval ) {
                       iOPoint point = __getPointByAddr( data, bus, addr, i+1 );
-                      if( point != NULL ) {
+                      if( point != NULL  && ( SystemOp.getTick() - point->lastcmd > 100 )  ) {
                         iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
                         if( data->iid != NULL )
                           wSwitch.setiid( nodeC, data->iid );
                         wSwitch.setid( nodeC, point->id );
                         wSwitch.setstate( nodeC, newval?"straight":"turnout" );
                         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %s", point->id );
-                        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-                      }
-                      else {
-                        iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-                        if( data->iid != NULL )
-                          wSwitch.setiid( nodeC, data->iid );
-                        wSwitch.setaddr1( nodeC, addr );
-                        wSwitch.setport1( nodeC, i + 1 );
-                        wSwitch.setstate( nodeC, newval?"straight":"turnout" );
-                        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %d.%d", addr, i+1 );
                         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
                       }
                     }
