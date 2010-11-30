@@ -175,9 +175,10 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         /* swap post route */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
         data->loc->swapPlacing( data->loc, NULL, False );
-
-        wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
-        data->loc->cmd( data->loc, cmd);
+        if( !data->useblockside ) {
+          wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
+          data->loc->cmd( data->loc, cmd);
+        }
       }
 
       data->next1Route = data->next2Route;
