@@ -377,8 +377,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       if( ident > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
         iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
-        if( (identLoc != NULL && data->acceptident ) ||
-            !ModelOp.isAuto(model) ) {
+        if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
             if( loc != NULL ) {
               iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
