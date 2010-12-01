@@ -811,7 +811,8 @@ static void __reader( void* threadinst ) {
 
               wFeedback.setstate( evt, arrived );
               wFeedback.setaddr( evt, rraddr );
-              wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+              wFeedback.setbus( evt, data->activebus );
+              wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
               wFeedback.setidentifier( evt, val );
               if( data->iid != NULL )
                 wFeedback.setiid( evt, data->iid );
