@@ -5099,3 +5099,51 @@ msgstr ""
 msgid "Slot management"
 msgstr ""
 
+#. 
+# id="decodertype"
+#, c-format
+msgid "Decoder type"
+msgstr ""
+
+#. 
+# id="analyze"
+#, c-format
+msgid "Analyze"
+msgstr ""
+
+#. 
+# id="analyze"
+#, c-format
+msgid "Analyze track plan for generating routes."
+msgstr ""
+
+#. 
+# id="systeminfo"
+#, c-format
+msgid "System info"
+msgstr ""
+
+#. 
+# id="systeminfo"
+#, c-format
+msgid "Enable extra CS system info."
+msgstr ""
+
+#. 
+# id="showonlystartschedules"
+#, c-format
+msgid "Show only start schedules"
+msgstr ""
+
+#. 
+# id="blankatredsignal"
+#, c-format
+msgid "Blank warning at red main signal."
+msgstr ""
+
+#. 
+# id="overwriteall"
+#, c-format
+msgid "Overwrite all settings?"
+msgstr ""
+
