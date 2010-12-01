@@ -140,7 +140,7 @@
         <long name="locked">0</long>
         <string name="template-name">""</string>
         <bool name="dirty">1</bool>
-        <long name="makefile-last-written">0</long>
+        <long name="makefile-last-written">-8519680</long>
         <string name="Compiler name">""</string>
         <string name="Build mode">"Debug"</string>
         <string name="Unicode mode">"ANSI"</string>
@@ -859,7 +859,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">80</long>
+                        <long name="proxy-Width">100</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Left"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -925,9 +925,9 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">50</long>
-                        <long name="proxy-Height">25</long>
-                        <string name="proxy-AlignH">"Centre"</string>
+                        <long name="proxy-Width">80</long>
+                        <long name="proxy-Height">-1</long>
+                        <string name="proxy-AlignH">"Left"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
                         <long name="proxy-Border">5</long>
@@ -991,9 +991,9 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">50</long>
-                        <long name="proxy-Height">25</long>
-                        <string name="proxy-AlignH">"Centre"</string>
+                        <long name="proxy-Width">80</long>
+                        <long name="proxy-Height">-1</long>
+                        <string name="proxy-AlignH">"Left"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
                         <long name="proxy-Border">5</long>
@@ -1131,7 +1131,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">80</long>
+                        <long name="proxy-Width">100</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Left"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -1197,9 +1197,9 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">50</long>
+                        <long name="proxy-Width">80</long>
                         <long name="proxy-Height">25</long>
-                        <string name="proxy-AlignH">"Centre"</string>
+                        <string name="proxy-AlignH">"Left"</string>
                         <string name="proxy-AlignV">"Centre"</string>
                         <long name="proxy-Stretch factor">0</long>
                         <long name="proxy-Border">5</long>
@@ -1682,7 +1682,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">80</long>
+                        <long name="proxy-Width">100</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -10831,8 +10831,8 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">60</long>
-                      <long name="proxy-Height">25</long>
+                      <long name="proxy-Width">80</long>
+                      <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
                       <long name="proxy-Stretch factor">0</long>
@@ -10897,8 +10897,8 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">60</long>
-                      <long name="proxy-Height">25</long>
+                      <long name="proxy-Width">80</long>
+                      <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
                       <long name="proxy-Stretch factor">0</long>
@@ -10963,8 +10963,8 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">60</long>
-                      <long name="proxy-Height">25</long>
+                      <long name="proxy-Width">80</long>
+                      <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
                       <long name="proxy-Stretch factor">0</long>
@@ -11029,8 +11029,8 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">60</long>
-                      <long name="proxy-Height">25</long>
+                      <long name="proxy-Width">80</long>
+                      <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
                       <long name="proxy-Stretch factor">0</long>
@@ -11521,7 +11521,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">50</long>
+                        <long name="proxy-Width">60</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -11587,7 +11587,7 @@
                         <string name="proxy-Custom styles">""</string>
                         <long name="proxy-X">-1</long>
                         <long name="proxy-Y">-1</long>
-                        <long name="proxy-Width">50</long>
+                        <long name="proxy-Width">60</long>
                         <long name="proxy-Height">-1</long>
                         <string name="proxy-AlignH">"Centre"</string>
                         <string name="proxy-AlignV">"Centre"</string>
@@ -14004,7 +14004,7 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">50</long>
+                      <long name="proxy-Width">60</long>
                       <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
@@ -14070,7 +14070,7 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">50</long>
+                      <long name="proxy-Width">60</long>
                       <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
@@ -17269,7 +17269,7 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">50</long>
+                      <long name="proxy-Width">60</long>
                       <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>
@@ -17335,7 +17335,7 @@
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">50</long>
+                      <long name="proxy-Width">60</long>
                       <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Centre"</string>
                       <string name="proxy-AlignV">"Centre"</string>

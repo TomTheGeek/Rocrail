@@ -498,24 +498,24 @@ void LocoIO::CreateControls()
     m_labLowAddr = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Low"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer10->Add(m_labLowAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_LowAddr = new wxSpinCtrl( m_GeneralPanel, wxID_LOCOIO_LOW_ADDR, _T("81"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 127, 81 );
+    m_LowAddr = new wxSpinCtrl( m_GeneralPanel, wxID_LOCOIO_LOW_ADDR, _T("81"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 1, 127, 81 );
     itemFlexGridSizer10->Add(m_LowAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_GetGen = new wxButton( m_GeneralPanel, ID_BUTTON_GET_GEN, _("Get"), wxDefaultPosition, wxSize(50, 25), 0 );
-    itemFlexGridSizer10->Add(m_GetGen, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_GetGen = new wxButton( m_GeneralPanel, ID_BUTTON_GET_GEN, _("Get"), wxDefaultPosition, wxSize(80, -1), 0 );
+    itemFlexGridSizer10->Add(m_GetGen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_SetGen = new wxButton( m_GeneralPanel, ID_BUTTON_SET_GEN, _("Set"), wxDefaultPosition, wxSize(50, 25), 0 );
-    itemFlexGridSizer10->Add(m_SetGen, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_SetGen = new wxButton( m_GeneralPanel, ID_BUTTON_SET_GEN, _("Set"), wxDefaultPosition, wxSize(80, -1), 0 );
+    itemFlexGridSizer10->Add(m_SetGen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labSubAddr = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Sub"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer10->Add(m_labSubAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_SubAddr = new wxSpinCtrl( m_GeneralPanel, wxID_LOCOIO_SUB_ADDR, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 126, 1 );
+    m_SubAddr = new wxSpinCtrl( m_GeneralPanel, wxID_LOCOIO_SUB_ADDR, _T("1"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 1, 126, 1 );
     itemFlexGridSizer10->Add(m_SubAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxButton* itemButton17 = new wxButton( m_GeneralPanel, ID_BUTTON_RESET_LOCOIO, _("Reset"), wxDefaultPosition, wxSize(50, 25), 0 );
+    wxButton* itemButton17 = new wxButton( m_GeneralPanel, ID_BUTTON_RESET_LOCOIO, _("Reset"), wxDefaultPosition, wxSize(80, 25), 0 );
     itemButton17->SetBackgroundColour(wxColour(255, 186, 186));
-    itemFlexGridSizer10->Add(itemButton17, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer10->Add(itemButton17, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_SetupBox = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Setup"));
     wxStaticBoxSizer* itemStaticBoxSizer18 = new wxStaticBoxSizer(m_SetupBox, wxVERTICAL);
@@ -543,7 +543,7 @@ void LocoIO::CreateControls()
     m_labFlashFreq = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Flash freq."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer24->Add(m_labFlashFreq, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_FlashFreq = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 15, 0 );
+    m_FlashFreq = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 15, 0 );
     itemFlexGridSizer24->Add(m_FlashFreq, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_VersionBox = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Registers"));
@@ -1058,16 +1058,16 @@ void LocoIO::CreateControls()
 
     wxBoxSizer* itemBoxSizer171 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer40->Add(itemBoxSizer171, 0, wxGROW, 5);
-    m_EasyGetAll = new wxButton( m_EasyPanel, ID_EASYGETALL, _("Get All"), wxDefaultPosition, wxSize(60, 25), 0 );
+    m_EasyGetAll = new wxButton( m_EasyPanel, ID_EASYGETALL, _("Get All"), wxDefaultPosition, wxSize(80, -1), 0 );
     itemBoxSizer171->Add(m_EasyGetAll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5);
 
-    m_EasySetAll = new wxButton( m_EasyPanel, ID_EASYSETALL, _("Set All"), wxDefaultPosition, wxSize(60, 25), 0 );
+    m_EasySetAll = new wxButton( m_EasyPanel, ID_EASYSETALL, _("Set All"), wxDefaultPosition, wxSize(80, -1), 0 );
     itemBoxSizer171->Add(m_EasySetAll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5);
 
-    m_EasySaveAll = new wxButton( m_EasyPanel, ID_BUTTON_EASY_SAVE, _("Save..."), wxDefaultPosition, wxSize(60, 25), 0 );
+    m_EasySaveAll = new wxButton( m_EasyPanel, ID_BUTTON_EASY_SAVE, _("Save..."), wxDefaultPosition, wxSize(80, -1), 0 );
     itemBoxSizer171->Add(m_EasySaveAll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5);
 
-    m_EasyReadAll = new wxButton( m_EasyPanel, ID_BUTTON_EASY_READ, _("Read..."), wxDefaultPosition, wxSize(60, 25), 0 );
+    m_EasyReadAll = new wxButton( m_EasyPanel, ID_BUTTON_EASY_READ, _("Read..."), wxDefaultPosition, wxSize(80, -1), 0 );
     itemBoxSizer171->Add(m_EasyReadAll, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5);
 
     m_Booster = new wxCheckBox( m_EasyPanel, ID_LOCOIO_BOOSTER, _("Booster"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1094,10 +1094,10 @@ void LocoIO::CreateControls()
     m_Port = new wxSpinCtrl( m_IOPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 16, 1 );
     itemFlexGridSizer181->Add(m_Port, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_PortGet = new wxButton( m_IOPanel, ID_BUTTON_PORT_GET, _("Get"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_PortGet = new wxButton( m_IOPanel, ID_BUTTON_PORT_GET, _("Get"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer181->Add(m_PortGet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_PortSet = new wxButton( m_IOPanel, ID_BUTTON_PORT_SET, _("Set"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_PortSet = new wxButton( m_IOPanel, ID_BUTTON_PORT_SET, _("Set"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer181->Add(m_PortSet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxStaticLine* itemStaticLine186 = new wxStaticLine( m_IOPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -1248,10 +1248,10 @@ void LocoIO::CreateControls()
     m_OPCPort = new wxSpinCtrl( m_OPCPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 16, 1 );
     itemFlexGridSizer223->Add(m_OPCPort, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_OPCGet = new wxButton( m_OPCPanel, ID_BUTTON_OPC_GET, _("Get"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_OPCGet = new wxButton( m_OPCPanel, ID_BUTTON_OPC_GET, _("Get"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer223->Add(m_OPCGet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_OPCSet = new wxButton( m_OPCPanel, ID_BUTTON_OPC_SET, _("Set"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_OPCSet = new wxButton( m_OPCPanel, ID_BUTTON_OPC_SET, _("Set"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer223->Add(m_OPCSet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxFlexGridSizer* itemFlexGridSizer228 = new wxFlexGridSizer(0, 2, 0, 0);
@@ -1416,10 +1416,10 @@ void LocoIO::CreateControls()
     m_ServoPort = new wxSpinCtrl( itemPanel273, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 8, 1 );
     itemFlexGridSizer275->Add(m_ServoPort, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_ServoPortGet = new wxButton( itemPanel273, ID_BUTTON_SERVO_PORT_GET, _("Get"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_ServoPortGet = new wxButton( itemPanel273, ID_BUTTON_SERVO_PORT_GET, _("Get"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer275->Add(m_ServoPortGet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_ServoPortSet = new wxButton( itemPanel273, ID_BUTTON_SERVO_PORT_SET, _("Set"), wxDefaultPosition, wxSize(50, -1), 0 );
+    m_ServoPortSet = new wxButton( itemPanel273, ID_BUTTON_SERVO_PORT_SET, _("Set"), wxDefaultPosition, wxSize(60, -1), 0 );
     itemFlexGridSizer275->Add(m_ServoPortSet, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_ServoBox = new wxStaticBox(itemPanel273, wxID_ANY, _("Servo"));
@@ -2208,6 +2208,11 @@ void LocoIO::easyGetPort( int port, int* conf, int* val1, int* val2 )
 
 void LocoIO::OnEasysetallClick( wxCommandEvent& event )
 {
+  int rc = wxMessageDialog( this, wxGetApp().getMsg("overwriteall"),
+      wxString("LocoIO",wxConvUTF8), wxYES_NO | wxICON_QUESTION ).ShowModal();
+  if( rc == wxID_NO ) {
+    return;
+  }
 
   for( int i = 1; i <= 16; i++ ) {
     int config = 0;

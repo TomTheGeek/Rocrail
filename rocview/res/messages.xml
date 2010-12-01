@@ -15457,4 +15457,7 @@
   <Msg id="blankatredsignal">
     <en txt="Blank warning at red main signal."/>
   </Msg>
+  <Msg id="overwriteall">
+    <en txt="Overwrite all settings?"/>
+  </Msg>
 </Messages>
