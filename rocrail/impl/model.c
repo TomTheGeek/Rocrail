@@ -2045,14 +2045,17 @@ static iOLoc _getLocByAddress( iOModel inst, int addr ) {
 
 static iOLoc _getLocByIdent( iOModel inst, long ident ) {
   iOModelData o = Data(inst);
+  iOLoc locAddr = NULL;
   iOLoc loc = (iOLoc)MapOp.first( o->locMap );
   while( loc != NULL ) {
     if( LocOp.getIdent(loc) == ident )
       return loc;
+    else if( LocOp.getAddress(loc) == ident )
+      locAddr = loc;
     loc = (iOLoc)MapOp.next( o->locMap );
   };
 
-  return NULL;
+  return locAddr;
 }
 
 static iOList _getLocIDs( iOModel inst ) {
