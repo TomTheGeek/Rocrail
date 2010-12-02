@@ -2940,6 +2940,43 @@ static iOLocation _getBlockLocation(iOModel inst, const char* blockid) {
 }
 
 
+
+static Boolean _isScheduleFree( iOModel inst, const char* id , const char* locoId) {
+  iOModelData data = Data(inst);
+  Boolean isFree = True;
+  iONode sc = ModelOp.getSchedule( inst, id );
+
+  if( sc != NULL ) {
+    iONode entry = wSchedule.getscentry(sc);
+    while( entry != NULL ) {
+
+      if( wScheduleEntry.isfree2go(entry) ) {
+        /* entry must be free before use */
+        const char* blockid = wScheduleEntry.getblock(entry);
+        const char* locationid = wScheduleEntry.getlocation(entry);
+
+        if( blockid != NULL && StrOp.len( blockid ) > 0 ) {
+          iIBlockBase block = ModelOp.getBlock( inst, blockid );
+          if( block != NULL && !block->isFree(block, locoId) ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule entry [%s] is not free2go", wScheduleEntry.getblock(entry));
+            return False;
+          }
+        }
+        else if( locationid != NULL && StrOp.len( locationid ) > 0 ) {
+          /* TODO: check for a free block in the location */
+        }
+      }
+
+      entry = wSchedule.nextscentry(sc, entry);
+    }
+  }
+
+  return isFree;
+}
+
+
+
+
 /**
  * Check if the schedule index matches the blockid.
  * If it does not match try to findout at what index it is.

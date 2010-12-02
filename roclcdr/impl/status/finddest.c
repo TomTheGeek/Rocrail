@@ -56,8 +56,12 @@ void statusFindDest( iILcDriverInt inst ) {
   else {
     Boolean wait = False;
 
+    if( scheduleIdx == 0 && !data->model->isScheduleFree(data->model, data->schedule, data->loc->getId(data->loc)) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"schedule[%d] is not free2go", data->schedule);
+      wait = True;
+    }
     /* evaluate departure time */
-    if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
+    else if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
         !checkScheduleTime( inst, data->schedule, data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx ) ){
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"Waiting for schedule[%d]", data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx);
       wait = True;

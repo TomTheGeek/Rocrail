@@ -1005,6 +1005,11 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="listener" vt="obj" remark="listener object"/>
     </fun>
+    <fun name="isScheduleFree" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="scid" vt="const char*" remark="schedule ID"/>
+      <param name="lcid" vt="const char*" remark="loco ID"/>
+    </fun>
     <data include="mvtrack,modplan,$rocint/public/analyserint">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>

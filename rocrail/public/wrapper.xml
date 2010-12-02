@@ -1227,6 +1227,7 @@
           <var name="hour" vt="int" defval="0" remark="Departure hour"/>
           <var name="minute" vt="int" defval="0" remark="Departure minute"/>
           <actionctrl cardinality="n"/>
+          <var name="free2go" vt="bool" defval="false" remark="Block or location must be free before the schedule can start."/>
           <var name="swap" vt="bool" defval="false" remark="swap the loc placing before traveling to this destination"/>
           <var name="indelay" vt="int" defval="0" remark="in event delay timer"/>
         </scentry>
