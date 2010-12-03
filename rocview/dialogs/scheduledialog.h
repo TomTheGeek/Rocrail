@@ -243,9 +243,6 @@ public:
     wxComboBox* m_Block;
     wxButton* m_AddLocation;
     wxButton* m_AddBlock;
-    wxButton* m_RemoveDestination;
-    wxButton* m_ModifyDestination;
-    wxButton* m_EntryActions;
     wxStaticText* m_labDeparture;
     wxStaticText* m_labHour;
     wxStaticText* m_labMinute;
@@ -256,6 +253,9 @@ public:
     wxCheckBox* m_Free2Go;
     wxStaticText* m_labInDelay;
     wxSpinCtrl* m_InDelay;
+    wxButton* m_RemoveDestination;
+    wxButton* m_ModifyDestination;
+    wxButton* m_EntryActions;
     wxPanel* m_ScheduleActions;
     wxStaticBox* m_ScheduleBox;
     wxComboBox* m_ScheduleAction;
