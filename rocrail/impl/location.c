@@ -23,6 +23,10 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/strtok.h"
 
+#include "rocrail/public/app.h"
+#include "rocrail/public/model.h"
+#include "rocint/public/blockbase.h"
+
 #include "rocrail/wrapper/public/Location.h"
 
 static int instCnt = 0;
@@ -211,6 +215,26 @@ static Boolean _hasBlock( iOLocation inst, const char* blockid ) {
   return False;
 }
 
+
+
+static Boolean _hasFreeBlock( iOLocation inst, const char* locoId ) {
+  iOLocationData data = Data(inst);
+  /* iterrate location: */
+  iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
+
+  while( StrTokOp.hasMoreTokens( blocks ) ) {
+    const char* locationBlock = StrTokOp.nextToken( blocks );
+    iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
+
+    if( block != NULL && block->isFree(block, locoId) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location[%s] has a free block[%s]", wLocation.getid(data->props), block->base.id(block));
+      StrTokOp.base.del( blocks );
+      return True;
+    }
+  }
+  StrTokOp.base.del( blocks );
+  return False;
+}
 
 
 

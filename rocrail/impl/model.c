@@ -2958,12 +2958,17 @@ static Boolean _isScheduleFree( iOModel inst, const char* id , const char* locoI
         if( blockid != NULL && StrOp.len( blockid ) > 0 ) {
           iIBlockBase block = ModelOp.getBlock( inst, blockid );
           if( block != NULL && !block->isFree(block, locoId) ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule entry [%s] is not free2go", wScheduleEntry.getblock(entry));
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule block entry [%s] is not free2go", blockid );
             return False;
           }
         }
         else if( locationid != NULL && StrOp.len( locationid ) > 0 ) {
-          /* TODO: check for a free block in the location */
+          /* check for a free block in the location */
+          iOLocation location = ModelOp.getLocation(inst, locationid);
+          if( location != NULL && !LocationOp.hasFreeBlock(location, locoId) ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule location entry [%s] is not free2go", locationid );
+            return False;
+          }
         }
       }
 

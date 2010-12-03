@@ -2003,6 +2003,10 @@
       <param name="inst" vt="this" remark="Location instance"/>
       <param name="BlockId" vt="const char*"/>
     </fun>
+    <fun name="hasFreeBlock" vt="Boolean">
+      <param name="inst" vt="this" remark="Location instance"/>
+      <param name="locoId" vt="const char*"/>
+    </fun>
     <fun name="isDepartureAllowed" vt="Boolean">
       <param name="inst" vt="this" remark="Location instance"/>
       <param name="LocoId" vt="const char*"/>
