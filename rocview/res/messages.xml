@@ -15460,4 +15460,7 @@
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
   </Msg>
+  <Msg id="free2go">
+    <en txt="Free before start"/>
+  </Msg>
 </Messages>

@@ -5147,3 +5147,9 @@ msgstr ""
 msgid "Overwrite all settings?"
 msgstr ""
 
+#. 
+# id="free2go"
+#, c-format
+msgid "Free before start"
+msgstr ""
+
