@@ -130,6 +130,8 @@ public:
     wxSpinCtrl* m_OppTrackNr;
     wxStaticText* m_LabelDesc;
     wxTextCtrl* m_Desc;
+    wxStaticText* m_labBlockID;
+    wxComboBox* m_BlockID;
     wxStaticText* m_LabelPosFB;
     wxComboBox* m_PosFB;
     wxCheckBox* m_Polarization;

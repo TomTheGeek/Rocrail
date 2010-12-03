@@ -1542,6 +1542,7 @@
 
         <var name="invpos" vt="bool" defval="false" remark="invert position commands"/>
         <var name="invnew" vt="bool" defval="false" remark="invert position set flag command"/>
+        <var name="manager" vt="bool" defval="false" remark="Manager mode: Act like a block and manage all sub blocks.(Tracks)"/>
 
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="Protocol to use."/>
@@ -1584,6 +1585,7 @@
           <var name="posfb" vt="string" defval="" range="*" required="true" remark="Feedback ID for positioning the TT."/>
           <var name="nr" vt="int" defval="0" range="0-48*" required="true" remark="Track number."/>
           <var name="decnr" vt="int" defval="-1" range="*" required="false" remark="Decoder track number."/>
+          <var name="bkid" vt="string" defval="NULL" range="*" remark="block id"/>
           <var name="oppositetrack" vt="int" defval="-1" range="*" required="false" remark="Opposite track to do a 180 degree turn."/>
           <var name="state" vt="bool" defval="false" remark="pos feedback state."/>
           <var name="desc" vt="string" defval="" range="*" remark="description"/>

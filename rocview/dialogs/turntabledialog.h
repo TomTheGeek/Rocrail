@@ -182,6 +182,8 @@ public:
     wxTextCtrl* m_ID;
     wxStaticText* m_LabelDesc;
     wxTextCtrl* m_Desc;
+    wxStaticBoxSizer* m_OptionsBox;
+    wxCheckBox* m_Manager;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
