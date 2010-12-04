@@ -1881,7 +1881,6 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
       wTurntable.setentering( nodeD, True );
       wTurntable.setlocid( nodeD, id );
       AppOp.broadcastEvent( nodeD );
-      __checkAction((iOBlock)inst, "enter");
     }
   }
 }
@@ -1954,7 +1953,6 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
       wTurntable.setentering( nodeD, False );
       wTurntable.setlocid( nodeD, id );
       AppOp.broadcastEvent( nodeD );
-      __checkAction((iOBlock)inst, "enter");
     }
   }
 }
