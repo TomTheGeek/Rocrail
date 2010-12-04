@@ -1985,7 +1985,25 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
 
 static void _init( iIBlockBase inst ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  iOModel model = AppOp.getModel();
+
+  if( wTurntable.isembeddedblock(data->props) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init tt %s", wTurntable.getid(data->props) );
+    /* this string pointer is not persistent! */
+    data->lockedId = wTurntable.getlocid( data->props );
+
+    if( data->lockedId != NULL && StrOp.len( data->lockedId ) > 0 ) {
+      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+      if( loc != NULL ) {
+        LocOp.setCurBlock( loc, wTurntable.getid(data->props) );
+        /* overwrite data->locId with the static id from the loc object: */
+        data->lockedId = LocOp.getId( loc );
+
+      }
+      else
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "init() unknown locId: %s", data->lockedId );
+    }
+  }
 }
 
 

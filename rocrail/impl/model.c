@@ -2552,6 +2552,11 @@ static void _init( iOModel inst ) {
       block->init( block );
       block = (iIBlockBase)MapOp.next( o->stageMap );
     };
+    block = (iIBlockBase)MapOp.first( o->ttMap );
+    while( block != NULL ) {
+      block->init( block );
+      block = (iIBlockBase)MapOp.next( o->ttMap );
+    };
   }
 
   if( o->moduleplan != NULL ) {
@@ -3466,6 +3471,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           if( block == NULL ) {
             /* id could be a seltab: */
             block = (iIBlockBase)MapOp.get( o->seltabMap, stTo );
+          }
+          if( block == NULL ) {
+            /* id could be a tt: */
+            block = (iIBlockBase)MapOp.get( o->ttMap, stTo );
           }
           if( block == NULL ) {
             /* id could be a stage block: */
