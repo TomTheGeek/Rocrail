@@ -225,6 +225,7 @@ void TurntableDialog::initLabels() {
   m_LabelDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_Manager->SetLabel( wxGetApp().getMsg( "managetrackblocks" ) );
   m_EmbeddedBlock->SetLabel( wxGetApp().getMsg( "embeddedblock" ) );
+  m_Manager->Enable(false);
 
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );

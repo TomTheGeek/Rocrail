@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Block.h"
 
 static int instCnt = 0;
 
@@ -1872,13 +1873,22 @@ static void _setGroup( iIBlockBase inst, const char* group ) {
 
 static void _enterBlock( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  if( wTurntable.isembeddedblock(data->props) ) {
+    wTurntable.setlocid( data->props, id );
+    if( id != NULL ) {
+      iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+      wTurntable.setid( nodeD, wTurntable.getid(data->props) );
+      wTurntable.setentering( nodeD, True );
+      wTurntable.setlocid( nodeD, id );
+      AppOp.broadcastEvent( nodeD );
+      __checkAction((iOBlock)inst, "enter");
+    }
+  }
 }
 
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
-  return "";
+  return wBlock.min;
 }
 
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
@@ -1936,7 +1946,17 @@ static Boolean _hasPre2In( iIBlockBase inst, const char* fromBlockID ) {
 
 static void _inBlock( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  if( wTurntable.isembeddedblock(data->props) ) {
+    wTurntable.setlocid( data->props, id );
+    if( id != NULL ) {
+      iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+      wTurntable.setid( nodeD, wTurntable.getid(data->props) );
+      wTurntable.setentering( nodeD, False );
+      wTurntable.setlocid( nodeD, id );
+      AppOp.broadcastEvent( nodeD );
+      __checkAction((iOBlock)inst, "enter");
+    }
+  }
 }
 
 static Boolean _isTerminalStation( iIBlockBase inst ) {
@@ -1947,38 +1967,139 @@ static Boolean _isTerminalStation( iIBlockBase inst ) {
 
 static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "link not supported" );
   return False;
 }
 
 static Boolean _unLink( iIBlockBase inst ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unlink not supported" );
   return False;
 }
 
 
 static Boolean _lockForGroup( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
-  return False;
+  Boolean ok = False;
+  Boolean broadcast = False;
+
+  if( wTurntable.isembeddedblock(data->props) ) {
+
+    if( !inst->isFree( inst, id ) ) {
+      return False;
+    }
+
+    if( data->locIdGroup == NULL || StrOp.len( data->locIdGroup ) == 0 || StrOp.equals( "(null)", data->locIdGroup ) ) {
+      if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( id, data->lockedId ) ) {
+        data->locIdGroup = id;
+        ok = True;
+        broadcast = True;
+      }
+    }
+    else if( StrOp.equals( id, data->locIdGroup ) ) {
+      ok = True;
+      broadcast = False;
+    }
+
+
+    /* Broadcast to clients. */
+    if( ok && broadcast ) {
+      iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+      wTurntable.setid( nodeD, wTurntable.getid(data->props) );
+      if( data->lockedId != NULL && StrOp.equals( id, data->lockedId ) )
+        wTurntable.setreserved( nodeD, False );
+      else
+        wTurntable.setreserved( nodeD, True );
+      wTurntable.setlocid( nodeD, id );
+      AppOp.broadcastEvent( nodeD );
+    }
+  }
+
+  return ok;
 }
+
 
 static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
-  return False;
+  Boolean ok = False;
+
+  if( wTurntable.isembeddedblock(data->props) ) {
+    if( StrOp.equals( id, data->locIdGroup ) ) {
+      data->locIdGroup = NULL;
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                 "Turntable [%s] unlockForGroup [%s].",
+                 wTurntable.getid(data->props), id );
+
+      ok = True;
+      /* Broadcast to clients only if the block is not locked. */
+      if( data->lockedId == NULL || StrOp.len(data->lockedId) == 0 ) {
+        iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+        wTurntable.setid( nodeD, wTurntable.getid(data->props) );
+        wTurntable.setlocid( nodeD, "" );
+        AppOp.broadcastEvent( nodeD );
+      }
+
+    }
+  }
+  else
+    ok = True;
+
+  return ok;
 }
 
 
 static void _resetTrigs( iIBlockBase inst ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+  iOModel model = AppOp.getModel();
+  data->triggerS1 = False;
+  data->triggerS2 = False;
+
+  if( wTurntable.ismanager(data->props) ) {
+    /* dispatch to all track blocks */
+    iONode pos = wTurntable.gettrack( data->props );
+    while( pos != NULL ) {
+      iIBlockBase block = ModelOp.getBlock( model, wTTTrack.getbkid(pos) );
+      if( block != NULL ) {
+        block->resetTrigs(block);
+      }
+      pos = wTurntable.nexttrack( data->props, pos );
+    };
+  }
 }
+
+
+
+
+
+static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
+  iOTTData data = Data(inst);
+  iOModel model = AppOp.getModel();
+
+  iONode pos = wTurntable.gettrack( data->props );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "get block for locid %s...", locid );
+  while( pos != NULL ) {
+    iIBlockBase block = ModelOp.getBlock( model, wTTTrack.getbkid(pos) );
+    if( block != NULL && StrOp.equals( locid, block->getLoc(block) ) ) {
+      return block;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", locid );
+    }
+    pos = wTurntable.nexttrack( data->props, pos );
+  };
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no block found for [%s].", locid );
+  return NULL;
+}
+
 
 static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
+
+  if( wTurntable.ismanager(data->props) ) {
+    iIBlockBase block = __getBlock4Loc(inst, LocOp.getId(loc));
+    return block != NULL ? block->wait( block, loc, reverse ) : False;
+  }
   return False;
 }
 
@@ -2003,6 +2124,10 @@ static void _init( iIBlockBase inst ) {
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "init() unknown locId: %s", data->lockedId );
     }
+  }
+
+  if( wTurntable.ismanager(data->props) ) {
+    /* TODO: init all track blocks */
   }
 }
 
