@@ -15463,4 +15463,7 @@
   <Msg id="free2go">
     <en txt="Free before start"/>
   </Msg>
+  <Msg id="embeddedblock">
+    <en txt="Embedded block"/>
+  </Msg>
 </Messages>
