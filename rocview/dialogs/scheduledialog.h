@@ -243,7 +243,7 @@ public:
     wxComboBox* m_Block;
     wxButton* m_AddLocation;
     wxButton* m_AddBlock;
-    wxStaticText* m_labDeparture;
+    wxStaticBox* m_labDeparture;
     wxStaticText* m_labHour;
     wxStaticText* m_labMinute;
     wxSpinCtrl* m_Hour;

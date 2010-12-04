@@ -55,6 +55,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Turntable.h"
 
 #include "rocs/public/strtok.h"
 
@@ -190,6 +191,18 @@ void ScheduleDialog::initBlockCombo() {
         iONode fy = NodeOp.getChild( seltablist, i );
         const char* id = wSelTab.getid( fy );
         if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+    iONode ttlist = wPlan.getttlist( model );
+    if( ttlist != NULL ) {
+      int cnt = NodeOp.getChildCnt( ttlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode tt = NodeOp.getChild( ttlist, i );
+        const char* id = wTurntable.getid( tt );
+        if( id != NULL && wTurntable.isembeddedblock(tt) ) {
           ListOp.add(list, (obj)id);
         }
       }
@@ -728,7 +741,7 @@ void ScheduleDialog::CreateControls()
     itemBoxSizer16->Add(itemStaticLine30, 0, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer31 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer16->Add(itemBoxSizer31, 0, wxGROW|wxALL, 5);
+    itemBoxSizer16->Add(itemBoxSizer31, 0, wxGROW|wxLEFT|wxRIGHT, 5);
     m_Entries = new wxGrid( m_Destinations, ID_GRID_SCHEDULE, wxDefaultPosition, wxSize(-1, 200), wxSUNKEN_BORDER|wxVSCROLL );
     m_Entries->SetDefaultColSize(50);
     m_Entries->SetDefaultRowSize(25);
@@ -738,12 +751,14 @@ void ScheduleDialog::CreateControls()
     itemBoxSizer31->Add(m_Entries, 2, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer33 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer33->AddGrowableCol(0);
+    itemFlexGridSizer33->AddGrowableCol(1);
     itemBoxSizer31->Add(itemFlexGridSizer33, 0, wxGROW|wxALL, 5);
     m_LabelLocation = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_FROM, _("Location"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer33->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_LabelBlock = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_TO, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer33->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_LocationStrings;
     m_Location = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_FROM_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LocationStrings, wxCB_READONLY );
@@ -762,17 +777,17 @@ void ScheduleDialog::CreateControls()
     wxBoxSizer* itemBoxSizer40 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer31->Add(itemBoxSizer40, 0, wxGROW, 5);
     wxFlexGridSizer* itemFlexGridSizer41 = new wxFlexGridSizer(0, 1, 0, 0);
-    itemBoxSizer40->Add(itemFlexGridSizer41, 0, wxALIGN_TOP|wxALL, 5);
-    m_labDeparture = new wxStaticText( m_Destinations, wxID_ANY, _("Departure"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer41->Add(m_labDeparture, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
-
+    itemBoxSizer40->Add(itemFlexGridSizer41, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
+    m_labDeparture = new wxStaticBox(m_Destinations, wxID_ANY, _("Departure"));
+    wxStaticBoxSizer* itemStaticBoxSizer42 = new wxStaticBoxSizer(m_labDeparture, wxVERTICAL);
+    itemFlexGridSizer41->Add(itemStaticBoxSizer42, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
     wxFlexGridSizer* itemFlexGridSizer43 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer41->Add(itemFlexGridSizer43, 0, wxALIGN_LEFT|wxALIGN_TOP, 5);
+    itemStaticBoxSizer42->Add(itemFlexGridSizer43, 0, wxGROW, 5);
     m_labHour = new wxStaticText( m_Destinations, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer43->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_labMinute = new wxStaticText( m_Destinations, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer43->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer43->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -782,7 +797,7 @@ void ScheduleDialog::CreateControls()
 
     m_EntryDetails = new wxStaticBox(m_Destinations, wxID_ANY, _("Details"));
     wxStaticBoxSizer* itemStaticBoxSizer48 = new wxStaticBoxSizer(m_EntryDetails, wxVERTICAL);
-    itemBoxSizer40->Add(itemStaticBoxSizer48, 0, wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer40->Add(itemStaticBoxSizer48, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
     m_EntrySwap = new wxCheckBox( m_Destinations, wxID_ANY, _("Swap placing"), wxDefaultPosition, wxDefaultSize, 0 );
     m_EntrySwap->SetValue(false);
     itemStaticBoxSizer48->Add(m_EntrySwap, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);

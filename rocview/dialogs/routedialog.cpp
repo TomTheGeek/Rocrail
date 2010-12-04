@@ -453,6 +453,8 @@ void RouteDialog::initBlockCombos() {
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
     iONode seltablist = wPlan.getseltablist( model );
+    iONode ttlist = wPlan.getttlist( model );
+
     if( bklist != NULL ) {
       int cnt = NodeOp.getChildCnt( bklist );
       for( int i = 0; i < cnt; i++ ) {
@@ -469,6 +471,17 @@ void RouteDialog::initBlockCombos() {
           iONode seltab = NodeOp.getChild( seltablist, i );
           const char* id = wSelTab.getid( seltab );
           if( id != NULL ) {
+            ListOp.add(list, (obj)id);
+          }
+        }
+      }
+
+      if(ttlist != NULL) {
+        cnt = NodeOp.getChildCnt( ttlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode tt = NodeOp.getChild( ttlist, i );
+          const char* id = wTurntable.getid( tt );
+          if( id != NULL && wTurntable.isembeddedblock(tt) ) {
             ListOp.add(list, (obj)id);
           }
         }

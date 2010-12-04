@@ -1398,7 +1398,15 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
     }
   }
 
-  if( event != NULL && data->listenerFun != NULL ) {
+  if(wTurntable.isembeddedblock(data->props)) {
+    if( data->lockedId != NULL && StrOp.len( data->lockedId ) > 0 ) {
+      iOModel model = AppOp.getModel();
+      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+      if( loc != NULL )
+        LocOp.event( loc, inst, BlockOp.getEventCode(event), 0 );
+    }
+  }
+  else if( event != NULL && data->listenerFun != NULL ) {
     /* Call listener. */
     data->listenerFun( data->listenerObj, event, inst->id(inst) );
   }
