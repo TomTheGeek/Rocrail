@@ -1468,6 +1468,7 @@
       <var name="light" vt="Boolean"/>
       <var name="triggerS1" vt="Boolean"/>
       <var name="triggerS2" vt="Boolean"/>
+      <var name="triggerSmid" vt="Boolean"/>
       <var name="tablepos" vt="int"/>
       <var name="gotopos" vt="int"/>
       <var name="delaytick" vt="unsigned long"/>

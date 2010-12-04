@@ -281,14 +281,14 @@ void TTTrackDialog::CreateControls()
     itemFlexGridSizer3->Add(m_labBlockID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_BlockIDStrings;
-    m_BlockID = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_DROPDOWN );
+    m_BlockID = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_READONLY );
     itemFlexGridSizer3->Add(m_BlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPosFB = new wxStaticText( itemDialog1, wxID_STATIC_TTT_POSFB, _("PosFB"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelPosFB, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_PosFBStrings;
-    m_PosFB = new wxComboBox( itemDialog1, ID_COMBOBOX_TTT_POSFB, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PosFBStrings, wxCB_DROPDOWN );
+    m_PosFB = new wxComboBox( itemDialog1, ID_COMBOBOX_TTT_POSFB, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PosFBStrings, wxCB_READONLY );
     itemFlexGridSizer3->Add(m_PosFB, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Polarization = new wxCheckBox( itemDialog1, wxID_ANY, _("Flip bridge polarization"), wxDefaultPosition, wxDefaultSize, 0 );

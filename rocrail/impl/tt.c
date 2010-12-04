@@ -1607,6 +1607,7 @@ static void __initCallback( iOTT inst ) {
 
   const char* s1   = wTurntable.gets1( data->props );
   const char* s2   = wTurntable.gets2( data->props );
+  const char* sMid = wTurntable.getsMid( data->props );
   const char* psen = wTurntable.getpsen( data->props );
 
 
@@ -1628,6 +1629,16 @@ static void __initCallback( iOTT inst ) {
     }
     else
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "bridge s2 [%s] not found!", s2 );
+  }
+
+  if( sMid != NULL && StrOp.len( sMid ) > 0 ) {
+    iOFBack bridgefb = ModelOp.getFBack( model, sMid );
+    if( bridgefb != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Setting bridge listener [%s]", sMid );
+      FBackOp.setListener( bridgefb, (obj)inst, &__fbBridgeEvent );
+    }
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "bridge sMid [%s] not found!", sMid );
   }
 
   if( psen != NULL && StrOp.len( psen ) > 0 ) {
@@ -2052,6 +2063,7 @@ static void _resetTrigs( iIBlockBase inst ) {
   iOModel model = AppOp.getModel();
   data->triggerS1 = False;
   data->triggerS2 = False;
+  data->triggerSmid = False;
 
   if( wTurntable.ismanager(data->props) ) {
     /* dispatch to all track blocks */

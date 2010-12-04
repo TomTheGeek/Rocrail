@@ -220,6 +220,8 @@ public:
     wxComboBox* m_BridgeSensor1;
     wxStaticText* m_labBridgeSensor2;
     wxComboBox* m_BridgeSensor2;
+    wxStaticText* m_labBridgeSensorMid;
+    wxComboBox* m_BridgeSensorMid;
     wxStaticText* m_labPSen;
     wxComboBox* m_PSen;
     wxCheckBox* m_SwapRotation;

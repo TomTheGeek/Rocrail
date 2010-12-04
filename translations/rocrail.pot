@@ -5153,3 +5153,9 @@ msgstr ""
 msgid "Free before start"
 msgstr ""
 
+#. 
+# id="embeddedblock"
+#, c-format
+msgid "Embedded block"
+msgstr ""
+
