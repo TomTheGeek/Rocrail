@@ -2163,7 +2163,7 @@ void Symbol::modelEvent( iONode node ) {
       refresh = true;
     }
   }
-  else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
+  else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) || StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
     char*  l_locidStr = NULL;
     const char* locId = wSelTab.getlocid( node );
     const char* state = wSelTab.getstate( node );

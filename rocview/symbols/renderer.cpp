@@ -2078,6 +2078,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
 
   wxPen* pen = (wxPen*)wxLIGHT_GREY_PEN;
   pen->SetStyle(wxSHORT_DASH);
+  pen->SetWidth(1);
+
   dc.SetPen( *pen );
 
   dc.DrawCircle( 79, 79, 79 );
@@ -2138,6 +2140,24 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
   dc.SetBrush( b );
   if( yellow != NULL )
     delete yellow;
+
+  // TODO: Blocktext scaling!!!
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+  //wxFont* font = new wxFont( dc.GetFont() );
+  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  //dc.SetFont(*font);
+#else
+  wxFont* font = new wxFont( dc.GetFont() );
+  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  dc.SetFont(*font);
+#endif
+
+  dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, 5, 0.0 );
+
+#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+#else
+  delete font;
+#endif
 
 }
 
