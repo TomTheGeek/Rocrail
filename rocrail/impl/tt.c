@@ -1111,23 +1111,34 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   const char* locid = wTurntable.getlocid( nodeA );
 
 
-  if( wTurntable.isembeddedblock(data->props) && locid != NULL ) {
-    if( StrOp.len(locid) == 0 && data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
-      /* inform loc */
-      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
-      if( loc != NULL ) {
-        LocOp.setCurBlock( loc, NULL );
+  if( wTurntable.isembeddedblock(data->props) ) {
+    if( locid != NULL ) {
+      if( StrOp.len(locid) == 0 && data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
+        /* inform loc */
+        iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+        if( loc != NULL ) {
+          LocOp.setCurBlock( loc, NULL );
+        }
       }
+      wTurntable.setlocid( data->props, locid );
+      ModelOp.setBlockOccupation( AppOp.getModel(), wTurntable.getid(data->props), locid, False, 0, 0 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
+
     }
-    wTurntable.setlocid( data->props, locid );
-    ModelOp.setBlockOccupation( AppOp.getModel(), wTurntable.getid(data->props), locid, False, 0, 0 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
+
+    if( StrOp.equals( wTurntable.getcmd(nodeA), wBlock.open ) ) {
+      wTurntable.setstate( data->props, wBlock.open );
+    }
+    else if( StrOp.equals( wTurntable.getcmd(nodeA), wBlock.closed ) ) {
+      wTurntable.setstate( data->props, wBlock.closed );
+    }
 
     /* Broadcast to clients. */
     NodeOp.setName(nodeA, wTurntable.name());
     AppOp.broadcastEvent( nodeA );
   }
+
 
   if( wTurntable.getcmd(nodeA) == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
@@ -1770,7 +1781,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       iONode nodeF = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeF, inst->base.id(inst) );
       wTurntable.setbridgepos( nodeF, wTurntable.getbridgepos( data->props) );
-      wTurntable.setlocid( nodeF, wTurntable.unlocked );
+      wTurntable.setlocid( nodeF, NULL );
       wTurntable.setstate1( nodeF, wTurntable.isstate1(data->props) );
       wTurntable.setstate2( nodeF, wTurntable.isstate2(data->props) );
       if( wTurntable.getiid( data->props ) != NULL )
@@ -1779,6 +1790,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
     }
     data->triggerS1 = False;
     data->triggerS2 = False;
+    data->triggerSmid = False;
     return True;
   }
   return False;

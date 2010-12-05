@@ -1307,6 +1307,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
       const char* locId = wTurntable.getlocid( m_Props );
+      const char* state = wTurntable.getstate( m_Props );
       Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
       if( wTurntable.isembeddedblock(m_Props) && hasLoc ) {
         menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
@@ -1339,7 +1340,12 @@ void Symbol::OnPopup(wxMouseEvent& event)
       menu.Append( -1, wxGetApp().getMenu("gototrack"), trackmenu);
       menu.AppendSeparator();
       menu.Append( ME_Info, wxGetApp().getMenu("info") );
-      menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
+      if( !wTurntable.isembeddedblock(m_Props) )
+        menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
+      if( StrOp.equals( wBlock.open, state ) )
+        menu.Append( ME_CloseBlock, wxGetApp().getMenu("outoforder") );
+      else
+        menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
       menu.AppendSeparator();
     }
     else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
@@ -1459,6 +1465,7 @@ void Symbol::OnUnLoc(wxCommandEvent& event) {
   else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
     iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
     wTurntable.setid( cmd, wTurntable.getid( m_Props ) );
+    wTurntable.setlocid( cmd, "" );
     wTurntable.setcmd( cmd, wSwitch.unlock );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
@@ -2032,6 +2039,8 @@ void Symbol::modelEvent( iONode node ) {
     wTurntable.setbridgepos(m_Props, pos );
     wTurntable.setstate1(m_Props, wTurntable.isstate1( node ) );
     wTurntable.setstate2(m_Props, wTurntable.isstate2( node ) );
+    wTurntable.setstateMid(m_Props, wTurntable.isstateMid( node ) );
+    wTurntable.setlocid(m_Props, wTurntable.getlocid( node ) );
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "bridgepos=%d", pos );
     {
       iONode track = wTurntable.gettrack( m_Props );

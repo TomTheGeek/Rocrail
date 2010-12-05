@@ -1546,6 +1546,7 @@
         <var name="embeddedblock" vt="bool" defval="false" remark="TT is block."/>
         <var name="reserved" vt="bool" defval="false"/>
         <var name="entering" vt="bool" defval="false"/>
+        <var name="state" vt="string" defval="open" range="open,closed"/>
 
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="Protocol to use."/>
