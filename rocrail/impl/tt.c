@@ -1356,11 +1356,13 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
   const char* event = NULL;
   Boolean state1 = wTurntable.isstate1( data->props );
   Boolean state2 = wTurntable.isstate2( data->props );
+  Boolean stateMid = wTurntable.isstateMid( data->props );
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Turntable:%s: fbid=%s state=%s ident=%d",
                  inst->id(inst), id, puls?"true":"false", ident );
 
   /* send event to the turntable owner block */
+  /* s1 */
   if( StrOp.equals( id, wTurntable.gets1( data->props ) ) ) {
     state1 = puls;
     if( data->triggerS1 && data->triggerS2 ) {
@@ -1382,6 +1384,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
       event = wFeedbackEvent.in_event;
     }
   }
+  /* s2 */
   else if( StrOp.equals( id, wTurntable.gets2( data->props ) ) ) {
     state2 = puls;
     if( data->triggerS1 && data->triggerS2 ) {
@@ -1396,6 +1399,16 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
       /* in event */
       data->triggerS2 = True;
       event = wFeedbackEvent.in_event;
+    }
+  }
+
+  /* sMid */
+  else if( StrOp.equals( id, wTurntable.getsMid( data->props ) ) ) {
+    stateMid = puls;
+    if( !data->triggerSmid ) {
+      /* enter event */
+      data->triggerSmid = True;
+      event = wFeedbackEvent.pre2in_event;
     }
   }
 
