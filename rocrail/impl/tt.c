@@ -1110,11 +1110,6 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
   const char* locid = wTurntable.getlocid( nodeA );
 
-  if( wTurntable.getcmd(nodeA) == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
-    return False;
-  }
-
 
   if( wTurntable.isembeddedblock(data->props) && locid != NULL ) {
     if( StrOp.len(locid) == 0 && data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
@@ -1134,7 +1129,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     AppOp.broadcastEvent( nodeA );
   }
 
-
+  if( wTurntable.getcmd(nodeA) == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
+    return False;
+  }
 
   if( StrOp.equals( wTurntable.getcmd(nodeA), wSwitch.unlock ) ) {
     TTOp.unLock( inst, data->lockedId );

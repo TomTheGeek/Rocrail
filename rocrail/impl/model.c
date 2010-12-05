@@ -2554,6 +2554,9 @@ static void _init( iOModel inst ) {
     block = (iIBlockBase)MapOp.first( o->ttMap );
     while( block != NULL ) {
       block->init( block );
+      if( wTurntable.isembeddedblock(block->base.properties(block) ) ) {
+        MapOp.put( o->blockMap, block->base.id(block), (obj)block );
+      }
       block = (iIBlockBase)MapOp.next( o->ttMap );
     };
   }
