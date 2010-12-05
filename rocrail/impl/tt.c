@@ -1106,10 +1106,35 @@ static Boolean _setListener( iOTT inst, obj listenerObj, const tt_listener liste
 
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOTTData data = Data(inst);
+  iOModel model = AppOp.getModel();
+
+  const char* locid = wTurntable.getlocid( nodeA );
+
   if( wTurntable.getcmd(nodeA) == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
     return False;
   }
+
+
+  if( wTurntable.isembeddedblock(data->props) && locid != NULL ) {
+    if( StrOp.len(locid) == 0 && data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
+      /* inform loc */
+      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+      if( loc != NULL ) {
+        LocOp.setCurBlock( loc, NULL );
+      }
+    }
+    wTurntable.setlocid( data->props, locid );
+    ModelOp.setBlockOccupation( AppOp.getModel(), wTurntable.getid(data->props), locid, False, 0, 0 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
+
+    /* Broadcast to clients. */
+    NodeOp.setName(nodeA, wTurntable.name());
+    AppOp.broadcastEvent( nodeA );
+  }
+
+
 
   if( StrOp.equals( wTurntable.getcmd(nodeA), wSwitch.unlock ) ) {
     TTOp.unLock( inst, data->lockedId );

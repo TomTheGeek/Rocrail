@@ -1306,6 +1306,18 @@ void Symbol::OnPopup(wxMouseEvent& event)
       menu.Append( -1, wxGetApp().getMenu("command"), menuSgCmd );
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
+      const char* locId = wTurntable.getlocid( m_Props );
+      Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
+      if( wTurntable.isembeddedblock(m_Props) && hasLoc ) {
+        menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
+        menu.Append( ME_LocGo, wxGetApp().getMenu("startloc") );
+        menu.Append( ME_LocStop, wxGetApp().getMenu("stoploc") );
+        menu.AppendSeparator();
+      }
+      else if( wTurntable.isembeddedblock(m_Props) ) {
+        menu.Append( ME_Loc, wxGetApp().getMenu("setlocid") );
+        menu.AppendSeparator();
+      }
       menu.Append( ME_TTLightOn, wxGetApp().getMenu("lights") + _T(" ") + wxGetApp().getMenu("on") );
       menu.Append( ME_TTLightOff, wxGetApp().getMenu("lights") + _T(" ") + wxGetApp().getMenu("off") );
       menu.Append( ME_TTNext, wxGetApp().getMenu("nexttrack") );
