@@ -719,6 +719,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
         wLoc.setprot( cmdFn, wLoc.getprot( data->props ) );
         wLoc.setprotver( cmdFn, wLoc.getprotver( data->props ) );
         wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
+        wFunCmd.setfnchanged(cmdFn, wFunCmd.getfnchanged(cmd));
         f0changed = False;
       }
 
@@ -862,6 +863,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( (!data->fn28 && wFunCmd.isf28( cmd ) ) || (data->fn28 && !wFunCmd.isf28( cmd ) ) )
         fnchanged = 28;
 
+      if( fnchanged == -1 && wFunCmd.getfnchanged(cmd) != -1 )
+        fnchanged = wFunCmd.getfnchanged(cmd);
+
       wFunCmd.setfnchanged(cmd, fnchanged);
 
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0) {
@@ -890,8 +894,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
       __cpNode2Fn(inst, cmd);
       __saveFxState(inst);
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
-          wLoc.getid( data->props ),
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s(%d) lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+          wLoc.getid( data->props ), fnchanged,
           data->fn0  ? "on":"off",
           data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
           data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",

@@ -521,6 +521,7 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     int addr      = wFunCmd.getaddr(node);
     Boolean fon   = False;
 
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "function %d command for %s", fnchanged, wLoc.getid(node) );
     iOSlot slot = __getSlot(data, node );
 
     if( slot == NULL ) {
