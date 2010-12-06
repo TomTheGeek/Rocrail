@@ -1753,10 +1753,6 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     ok = True;
   }
 
-  data->triggerS1 = False;
-  data->triggerS2 = False;
-  data->triggerSmid = False;
-
   /* Unlock the semaphore: */
   MutexOp.post( data->muxLock );
 
