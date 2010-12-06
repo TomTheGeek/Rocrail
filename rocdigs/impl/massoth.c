@@ -467,6 +467,15 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
 
     spcnt = slot->steps;
 
+    /* Wegen eines Problems bei Lenz Zentralen haben wir bei uns nur einen Regelbereich von 0-126!
+     * Den Wert 127 gibt es nicht.
+     * Denn bei 100% auf dem Regler bleibt die Lok dann stehen.
+     */
+    if( spcnt > 126 ) {
+      /* correction */
+      spcnt = 126;
+    }
+
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
         speed = (wLoc.getV( node ) * spcnt) / 100;
