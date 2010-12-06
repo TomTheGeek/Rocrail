@@ -1109,6 +1109,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOModel model = AppOp.getModel();
 
   const char* locid = wTurntable.getlocid( nodeA );
+  const char* state = wTurntable.getstate( nodeA );
 
 
   if( wTurntable.isembeddedblock(data->props) ) {
@@ -1127,21 +1128,20 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
     }
 
-    if( StrOp.equals( wTurntable.getcmd(nodeA), wBlock.open ) ) {
-      wTurntable.setstate( data->props, wBlock.open );
-    }
-    else if( StrOp.equals( wTurntable.getcmd(nodeA), wBlock.closed ) ) {
-      wTurntable.setstate( data->props, wBlock.closed );
+    if( state != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set state to [%s]", state);
+      wTurntable.setstate( data->props, state );
     }
 
     /* Broadcast to clients. */
     NodeOp.setName(nodeA, wTurntable.name());
-    AppOp.broadcastEvent( nodeA );
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone(nodeA) );
   }
 
 
   if( wTurntable.getcmd(nodeA) == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "command not set");
+    NodeOp.base.del(nodeA);
     return False;
   }
 
@@ -1167,6 +1167,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
                  "Unknown turntable type [%s] for [%s]",
                  wTurntable.gettype( data->props ),
                  wTurntable.getid( data->props ) );
+    NodeOp.base.del(nodeA);
   }
   return False;
 }
@@ -1734,7 +1735,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     return False;
   }
 
-  if( data->lockedId == NULL || StrOp.equals( id, data->lockedId ) ) {
+  if( data->lockedId == NULL || StrOp.len(data->lockedId ) == 0 || StrOp.equals( id, data->lockedId ) ) {
     data->lockedId = id;
     /* Broadcast to clients. Node6 */
     {
@@ -1754,6 +1755,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
   data->triggerS1 = False;
   data->triggerS2 = False;
+  data->triggerSmid = False;
 
   /* Unlock the semaphore: */
   MutexOp.post( data->muxLock );
@@ -1798,8 +1800,12 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
 static Boolean _isLocked( iOTT inst, const char* id ) {
   iOTTData data = Data(inst);
-  if( data->lockedId != NULL && !StrOp.equals( id, data->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Turntable \"%s\" is locked by \"%s\".",
+  if( data->lockedId == NULL || StrOp.len(data->lockedId) == 0 ) {
+    return False;
+  }
+
+  if( !StrOp.equals( id, data->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Turntable %s is locked by [%s].",
         inst->base.id(inst), data->lockedId );
     return True;
   }
@@ -2182,6 +2188,9 @@ static void _init( iIBlockBase inst ) {
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "init() unknown locId: %s", data->lockedId );
     }
+
+    inst->resetTrigs(inst);
+
   }
 
   if( wTurntable.ismanager(data->props) ) {
@@ -2215,6 +2224,9 @@ static iIBlockBase _getManager( iIBlockBase inst ) {
 
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOTTData data = Data(inst);
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) )
+    return True;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "turntable is locked by [%s]", data->lockedId );
   return False;
 }
 

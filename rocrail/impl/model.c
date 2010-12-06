@@ -3280,16 +3280,20 @@ static Boolean _lockBlockGroup(iOModel inst, const char* group, const char* Bloc
 
 static Boolean _unlockBlockGroup(iOModel inst, const char* group, const char* LocoId) {
   iOModelData data = Data(inst);
-  iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
 
-  if( bg != NULL ) {
-    return BlockGroupOp.unlock(bg, LocoId );
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "blockgroup %s not defined", group);
-    return False;
-  }
+  if( group != NULL ) {
+    iOBlockGroup bg = (iOBlockGroup)MapOp.get( data->blockGroupMap, group );
 
+    if( bg != NULL ) {
+      return BlockGroupOp.unlock(bg, LocoId );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "blockgroup %s not defined", group);
+      return False;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "blockgroup ID is not set for unlock");
+  return True;
 }
 
 
