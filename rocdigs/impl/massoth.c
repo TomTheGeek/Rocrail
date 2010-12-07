@@ -309,25 +309,42 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
 
   if( __transact( data, cmd, rsp, 0x40, &gotid ) ) {
     if( gotid ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for %s", wLoc.getid(node) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "announcement response for addr %d [%s]", addr, wLoc.getid(node) );
 
       if( rsp[2] == 0x04 && rsp[3] == 0x81 ) {
-        /* address not in use 40 A4 04 81 00 05 64*/
+        /* 3.110 address unknown */
+        int rspAddr = (rsp[4] << 8) + rsp[5];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %d [%s] unknown...", rspAddr, wLoc.getid(node) );
         slot = __configureVehicle(data, node);
       }
-      else {
+      else if( rsp[2] == 0x04 && rsp[3] == 0x82 ) {
+        /* 3.110 address in use */
+        int rspAddr = (rsp[4] << 8) + rsp[5];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %d [%s] in use, delete...", rspAddr, wLoc.getid(node) );
+        cmd[0] = 0x45;
+        cmd[1] = 0; /*xor*/
+        cmd[2] = addr >> 8;
+        cmd[3] = addr & 0x00FF;
+				if( __transact( data, cmd, NULL, 0, NULL ) ) {
+          slot = __configureVehicle(data, node);
+        }
+      }
+      else if( rsp[2] == 0x08 ) {
+        /* 3.100 */
+        /* 64 C7 00 33 90 */
+        /* 40 1A 08 00 33 85 00 80 00 00 64 */
+        int rspAddr = (rsp[3] << 8) + rsp[4];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "answer for vehicle announcement %d [%s]", rspAddr, wLoc.getid(node) );
         slot = allocMem( sizeof( struct slot) );
         slot->addr = addr;
-        if( rsp[5] & 0x03 == 0x01 )
+        if( (rsp[5] & 0x03) == 0x01 )
           slot->steps = 28;
-        else if( rsp[5] & 0x03 == 0x10 )
+        else if( (rsp[5] & 0x03) == 0x02 )
           slot->steps = 128;
         else
           slot->steps = 14;
         /* address in use */
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "vehicle %s in use...", wLoc.getid(node) );
-        slot->steps = __normalizeSteps(steps);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d speed steps for %s", slot->steps, wLoc.getid(node) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using %d reported speed steps for %d [%s]", slot->steps, rspAddr, wLoc.getid(node) );
 
         slot->id = StrOp.dup(wLoc.getid(node));
         slot->idle = SystemOp.getTick();
@@ -336,6 +353,10 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
           MutexOp.post(data->lcmux);
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown response for loco %s", wLoc.getid(node) );
+        TraceOp.dump( name, TRCLEVEL_INFO, rsp, 3 + rsp[2] );
       }
     }
     else {
@@ -707,6 +728,13 @@ static void __handleVehicle(iOMassothData data, byte* in) {
 }
 
 
+static void __handleError(iOMassothData data, byte* in) {
+  if( in[2] == 0x01 && in[3] == 0xFF ) {
+    /* XOR error in transmission */
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "XOR error in transmission" );
+  }
+}
+
 static void __handleSystem(iOMassothData data, byte* in) {
   if( in[2] == 0x01 ) {
     data->power = (in[3] & 0x03) == 0x02 ? True:False;
@@ -801,6 +829,10 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
   case 0x00:
     /* system status */
     __handleSystem(data, in);
+    break;
+  case 0x20:
+    /* error */
+    __handleError(data, in);
     break;
   case 0x40:
   case 0x60:
