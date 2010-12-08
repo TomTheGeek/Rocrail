@@ -2198,7 +2198,7 @@ static void _init( iIBlockBase inst ) {
 
 static Boolean _isReady( iIBlockBase inst ) {
   iOTTData data = Data(inst);
-  return True;
+  return !data->pending;
 }
 
 
