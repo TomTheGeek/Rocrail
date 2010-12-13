@@ -187,6 +187,14 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   m_bSave = save;
   initLabels();
 
+  initIndex();
+  if( m_Props != NULL ) {
+    initValues();
+    //m_Notebook->SetSelection( 1 );
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
+    wxPostEvent( this, event );
+  }
+
   m_IndexPanel->GetSizer()->Layout();
   m_General_Panel->GetSizer()->Layout();
   m_LocationPanel->GetSizer()->Layout();
@@ -204,13 +212,6 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
     m_RoutesPanel->Enable(False);
   }
 
-  initIndex();
-  if( m_Props != NULL ) {
-    initValues();
-    //m_Notebook->SetSelection( 1 );
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
-    wxPostEvent( this, event );
-  }
 
 }
 
@@ -1254,7 +1255,7 @@ void BlockDialog::CreateControls()
 
     wxArrayString m_ListStrings;
     m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_BLOCKS, wxDefaultPosition, wxSize(-1, 400), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
-    itemBoxSizer5->Add(m_List, 0, wxGROW|wxALL, 5);
+    itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
