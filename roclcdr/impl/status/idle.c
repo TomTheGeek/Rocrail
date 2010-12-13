@@ -66,7 +66,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
         "Finding destination for \"%s\", current block \"%s\"...",
         data->loc->getId( data->loc ), data->loc->getCurBlock( data->loc ) );
   }
-  else if( data->run && data->reqstop ) {
+  else if( data->run && data->reqstop && data->curBlock != NULL ) {
     if( !data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) ) {
       data->state = LC_WAITBLOCK;
       data->prevState = LC_IDLE;
