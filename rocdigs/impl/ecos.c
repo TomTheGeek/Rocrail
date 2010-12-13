@@ -872,6 +872,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       int from  = 0;
       int to    = 28;
       int group = wFunCmd.getgroup( node );
+      int fnchanged = wFunCmd.getfnchanged(node);
 
       int fn[ 28 ];
 
@@ -904,23 +905,24 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       fn[ 26] = ( int )wFunCmd.isf27( node );
       fn[ 27] = ( int )wFunCmd.isf28( node );
 
-      StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "request(%s, control, force)\n",
-          oid );
+      StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "request(%s, control, force)\n", oid );
 
-      if( group > 0 && group < 8 ) {
-        from = ( group - 1 ) * 4;
-        to   = ( group - 1 ) * 4 + 4;
+      if( fnchanged != -1 && fnchanged > 0 ) {
+        StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "set(%s, func[%d, %d])\n", oid, fnchanged, fn[ fnchanged-1 ] );
+      }
+      else {
+        if( group > 0 && group < 8 ) {
+          from = ( group - 1 ) * 4;
+          to   = ( group - 1 ) * 4 + 4;
+        }
+        for ( i = from; i < to; i++ ) {
+          StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "set(%s, func[%d, %d])\n", oid, i + 1, fn[ i ] );
+        }
       }
 
-      for ( i = from; i < to; i++ ) {
-        StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "set(%s, func[%d, %d])\n",
-            oid, i + 1, fn[ i ] );
-      }
 
 
-
-      StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "release(%s, control)\n",
-        oid );
+      StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "release(%s, control)\n", oid );
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Sending [%s]", ecosCmd );
 
