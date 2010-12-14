@@ -44,6 +44,8 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/Item.h"
 
 static int instCnt = 0;
 
@@ -1648,6 +1650,27 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int identifier, i
 }
 
 
+/* Initialize a managed track.
+ *   Add a generated route from the track block to the TT.
+ */
+static void __initTTTrack(iOTT inst, iONode track) {
+  iOModel model = AppOp.getModel();
+  iONode route = NodeOp.inst(wRoute.name(), NULL, ELEMENT_NODE);
+  wItem.setgenerated( route, True );
+
+  wRoute.setbka( route, wTTTrack.getbkid(track) );
+  wRoute.setbkb( route, TTOp.base.id(inst) );
+  wRoute.setspeed( route, wBlock.min );
+  wRoute.setdesc( route, "TT Manager generated route.");
+
+  char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]", wRoute.getbka(route), "+", wRoute.getbkb(route), "-" );
+  wRoute.setid(route, routeId );
+  StrOp.free(routeId);
+
+  ModelOp.addItem(model, route);
+}
+
+
 static void __initCallback( iOTT inst ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
@@ -1700,9 +1723,6 @@ static void __initCallback( iOTT inst ) {
   }
 
 
-
-
-
   if( track == NULL )
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No tracks defined for TT [%s]", inst->base.id(inst)  );
 
@@ -1719,6 +1739,11 @@ static void __initCallback( iOTT inst ) {
       }
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "posfb [%s] not found!", posfbid );
+    }
+
+    /* TT manager */
+    if( wTurntable.ismanager(data->props ) && wTTTrack.getbkid(track) != NULL ) {
+      __initTTTrack(inst, track);
     }
 
     track = wTurntable.nexttrack( data->props, track );

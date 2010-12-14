@@ -825,6 +825,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="bkprops" vt="iONode" remark="Block node"/>
     </fun>
+    <fun name="addItem" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="props" vt="iONode" remark="Item node"/>
+    </fun>
     <fun name="findDest" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="fromBlockId" vt="const char*" remark="Current blockid"/>
