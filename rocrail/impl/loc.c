@@ -863,8 +863,10 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( (!data->fn28 && wFunCmd.isf28( cmd ) ) || (data->fn28 && !wFunCmd.isf28( cmd ) ) )
         fnchanged = 28;
 
-      if( fnchanged == -1 && wFunCmd.getfnchanged(cmd) != -1 )
+      if( wFunCmd.getfnchanged(cmd) != -1 ) {
+        /* use the fnchanged send from client */
         fnchanged = wFunCmd.getfnchanged(cmd);
+      }
 
       wFunCmd.setfnchanged(cmd, fnchanged);
 
