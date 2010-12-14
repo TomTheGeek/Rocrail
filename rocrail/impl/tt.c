@@ -1449,12 +1449,20 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
     }
   }
 
+  /* check for embedded block */
   if(wTurntable.isembeddedblock(data->props)) {
     if( data->lockedId != NULL && StrOp.len( data->lockedId ) > 0 ) {
       iOModel model = AppOp.getModel();
       iOLoc loc = ModelOp.getLoc( model, data->lockedId );
-      if( loc != NULL )
-        LocOp.event( loc, inst, BlockOp.getEventCode(event), 0 );
+      if( loc != NULL ) {
+        /* check managed TT */
+        if( wTurntable.ismanager(data->props) ) {
+          /* TODO: V_min for enter and V_0 for in */
+        }
+        else {
+          LocOp.event( loc, inst, BlockOp.getEventCode(event), 0 );
+        }
+      }
     }
   }
   else if( event != NULL && data->listenerFun != NULL ) {
@@ -2245,8 +2253,27 @@ static iIBlockBase _getManager( iIBlockBase inst ) {
 
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOTTData data = Data(inst);
-  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) )
-    return True;
+  iOModel model = AppOp.getModel();
+
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) ) {
+    Boolean ttFree = True;
+    if( wTurntable.ismanager(data->props) ) {
+      /* TODO: check if a track block is available */
+      iONode track = wTurntable.gettrack( data->props );
+      ttFree = False;
+      while( track != NULL ) {
+        const char* bkid = wTTTrack.getbkid( track );
+        iIBlockBase block = ModelOp.getBlock(model, bkid );
+        if( block->isFree(block, locId ) ) {
+          ttFree = True;
+          break;
+        }
+        track = wTurntable.nexttrack( data->props, track );
+      }
+    }
+    return ttFree;
+  }
+
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "turntable is locked by [%s]", data->lockedId );
   return False;
 }
