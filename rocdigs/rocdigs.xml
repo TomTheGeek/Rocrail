@@ -990,6 +990,7 @@
       <var name="listenerFun" vt="digint_listener"/>
       <var name="poller" vt="iOThread"/>
       <var name="aiucnt" vt="int"/>
+      <var name="aiuaddr" vt="int"/>
     </data>
   </object>
 

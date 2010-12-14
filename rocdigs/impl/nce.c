@@ -99,8 +99,8 @@ static void* __event( void* inst, const void* evt ) {
 
 static void __handleAIU( iONCEData data, int aiu, byte* rsp ) {
   int offset = aiu * 16;
-  int sens = rsp[1] + (rsp[0] * 16);
-  int mask = rsp[3] + (rsp[2] * 16);
+  int sens = rsp[1] + (rsp[0] * 256);
+  int mask = rsp[3] + (rsp[2] * 256);
   Boolean state = False;
   int i = 0;
   for( i = 0; i < 14; i++ ) {
@@ -531,10 +531,10 @@ static void __pollerThread( void* threadinst ) {
     for( i = 0; i < data->aiucnt; i++ ) {
 
       out[0] = 0x8A;
-      out[1] = i;
+      out[1] = i + data->aiuaddr;
       if( __transact( data, out, 2, in, 4 ) ) {
         /* inform listener */
-        __handleAIU( data, i, in);
+        __handleAIU( data, i + data->aiuaddr, in);
       }
       ThreadOp.sleep( 0 );
     }
@@ -559,12 +559,12 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   data->mux     = MutexOp.inst( NULL, True );
 
-  data->ini    = ini;
-  data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
-  data->device = StrOp.dup( wDigInt.getdevice( ini ) );
-  data->aiucnt = wDigInt.getfbmod( ini );
-
-  data->run    = True;
+  data->ini     = ini;
+  data->iid     = StrOp.dup( wDigInt.getiid( ini ) );
+  data->device  = StrOp.dup( wDigInt.getdevice( ini ) );
+  data->aiucnt  = wDigInt.getfbmod( ini );
+  data->aiuaddr = wDigInt.getfboffset( ini );
+  data->run     = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "nce %d.%d.%d", vmajor, vminor, patch );
