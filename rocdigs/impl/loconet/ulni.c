@@ -148,14 +148,14 @@ static void __reader( void* threadinst ) {
 		    SerialOp.read(data->serial, &c, 1);
 		    msg[1] = c;
 		    index = 2;
-		    msglen = c;
+		    msglen = (c & 0x7F);
 		    break;
 		default:
 		  TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
       ThreadOp.sleep(10);
 		  continue;
 		}
-		TraceOp.trc( "ulni", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
+		TraceOp.trc( "ulni", TRCLEVEL_BYTE, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
 		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
 
@@ -185,6 +185,9 @@ static void __reader( void* threadinst ) {
     }
     else {
       TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
+      if( msglen > 0 ) {
+		   TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
+      }
       ThreadOp.sleep(10);
     }
 
