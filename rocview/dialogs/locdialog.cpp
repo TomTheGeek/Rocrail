@@ -147,18 +147,6 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
   initLabels();
   initCVDesc();
 
-  m_IndexPanel->GetSizer()->Layout();
-  m_General_Panel->GetSizer()->Layout();
-  m_Interface_Panel->GetSizer()->Layout();
-  m_DetailsPanel->GetSizer()->Layout();
-  m_FunctionPanel->GetSizer()->Layout();
-  m_CVPanel->GetSizer()->Layout();
-
-  m_Notebook->Fit();
-
-  GetSizer()->Fit(this);
-  GetSizer()->SetSizeHints(this);
-
   InitIndex();
 
   if( m_Props != NULL ) {
@@ -171,6 +159,17 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
     //m_List->Select( 0 );
   }
 
+  m_IndexPanel->GetSizer()->Layout();
+  m_General_Panel->GetSizer()->Layout();
+  m_Interface_Panel->GetSizer()->Layout();
+  m_DetailsPanel->GetSizer()->Layout();
+  m_FunctionPanel->GetSizer()->Layout();
+  m_CVPanel->GetSizer()->Layout();
+
+  m_Notebook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
 
   m_List->SetFocus();
 }
