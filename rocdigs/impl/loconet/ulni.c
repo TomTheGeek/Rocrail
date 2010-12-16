@@ -88,6 +88,7 @@ static void __reader( void* threadinst ) {
     byte bucket[32];
     byte c = 0;
     Boolean  ok = True;
+    Boolean  ignore = False;
 
   
     do {
@@ -129,37 +130,47 @@ static void __reader( void* threadinst ) {
 		}
 
 		msg[0] = c;
+    ignore = False;
 
-		switch (c & 0xf0) {
-		case 0x80:
-		    msglen = 2;
-		    index = 1;
-		    break;
-		case 0xa0:
-		case 0xb0:
-		    msglen = 4;
-		    index = 1;
-		    break;
-		case 0xc0:
-		    msglen = 6;
-		    index = 1;
-		    break;
-		case 0xe0:
-		    SerialOp.read(data->serial, &c, 1);
-		    msg[1] = c;
-		    index = 2;
-		    msglen = (c & 0x7F);
-		    break;
-		default:
-		  TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
-      ThreadOp.sleep(10);
-		  continue;
+
+		if( c == 0xE0 ) {
+		  /* Uhli exceptions */
+      msglen = 8;
+      index = 1;
+      ignore = True;
+		}
+		else {
+      switch (c & 0xf0) {
+      case 0x80:
+          msglen = 2;
+          index = 1;
+          break;
+      case 0xa0:
+      case 0xb0:
+          msglen = 4;
+          index = 1;
+          break;
+      case 0xc0:
+          msglen = 6;
+          index = 1;
+          break;
+      case 0xe0:
+          SerialOp.read(data->serial, &c, 1);
+          msg[1] = c;
+          index = 2;
+          msglen = (c & 0x7F);
+          break;
+      default:
+        TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+        ThreadOp.sleep(10);
+        continue;
+      }
 		}
 		TraceOp.trc( "ulni", TRCLEVEL_BYTE, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
 		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
 
-    if( ok && msglen > 0 ) {
+    if( ok && msglen > 0 && !ignore ) {
       Boolean echoCatched = False;
 
       data->busy = (msg[0]==0x81) ? True:False;
@@ -184,7 +195,7 @@ static void __reader( void* threadinst ) {
       ThreadOp.sleep(0);
     }
     else {
-      TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
+      TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, ignore ? "ignoring unknown packet":"could not read rest of packet" );
       if( msglen > 0 ) {
 		   TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
       }
