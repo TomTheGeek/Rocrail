@@ -135,9 +135,9 @@ static void __reader( void* threadinst ) {
 
 		if( c == 0xE0 ) {
 		  /* Uhli exceptions */
-      msglen = 8;
-      index = 1;
-      ignore = True;
+      TraceOp.trc( "ulni", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+      ThreadOp.sleep(0);
+      continue;
 		}
 		else {
       switch (c & 0xf0) {
