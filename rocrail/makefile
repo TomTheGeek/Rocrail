@@ -174,16 +174,16 @@ install_all:
 	-cp -p package$(FS)rocview.sh $(DESTDIR)
 	-chmod +x $(DESTDIR)$(FS)rocrail.sh
 	-chmod +x $(DESTDIR)$(FS)rocview.sh
-	-cp -p package$(FS)Rocrail.desktop $(FS)usr$(FS)local$(FS)share$(FS)applications
-	-cp -p package$(FS)Rocview.desktop $(FS)usr$(FS)local$(FS)share$(FS)applications
-	-cp -p package$(FS)Rocrail.directory $(FS)usr$(FS)local$(FS)share$(FS)desktop-directories
+	-cp -p package$(FS)Rocrail.desktop $(FS)usr$(FS)share$(FS)applications
+	-cp -p package$(FS)Rocview.desktop $(FS)usr$(FS)share$(FS)applications
+	-cp -p package$(FS)Rocrail.directory $(FS)usr$(FS)share$(FS)desktop-directories
 #	-chmod -R go+rw ~$(FS)rocrail
 
 uninstall_all:
 	-$(REMOVE) -Rf $(DESTDIR)
-	-$(REMOVE) $(FS)usr$(FS)local$(FS)share$(FS)applications$(FS)Rocrail.desktop
-	-$(REMOVE) $(FS)usr$(FS)local$(FS)share$(FS)applications$(FS)Rocview.desktop
-	-$(REMOVE) $(FS)usr$(FS)local$(FS)share$(FS)desktop-directories$(FS)Rocrail.directory
+	-$(REMOVE) $(FS)usr$(FS)share$(FS)applications$(FS)Rocrail.desktop
+	-$(REMOVE) $(FS)usr$(FS)share$(FS)applications$(FS)Rocview.desktop
+	-$(REMOVE) $(FS)usr$(FS)share$(FS)desktop-directories$(FS)Rocrail.directory
 
 install:
 	-$(COPY) -p $(OUTDIR)$(FS)rocrail$(BINSUFFIX) $(DESTDIR)
