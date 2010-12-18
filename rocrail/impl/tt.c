@@ -1759,6 +1759,28 @@ static void __initCallback( iOTT inst ) {
 }
 
 
+/**
+ * Search free track.
+ *
+ */
+static iONode __findFreeTrack(iIBlockBase inst, const char* locId) {
+  iOTTData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    const char* bkid = wTTTrack.getbkid( track );
+    iIBlockBase block = ModelOp.getBlock(model, bkid );
+    if( block->isFree(block, locId ) ) {
+      return track;
+    }
+    track = wTurntable.nexttrack( data->props, track );
+  }
+  return NULL;
+}
+
+/**
+ * Lock the bridge block and also lock a free track block in case the manager option is activated.
+ */
 static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse, int indelay ) {
   iOTTData data = Data(inst);
   Boolean ok = False;
@@ -1770,8 +1792,30 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
   if( data->lockedId == NULL || StrOp.len(data->lockedId ) == 0 || StrOp.equals( id, data->lockedId ) ) {
     data->lockedId = id;
+    ok = True;
+
+    data->selectedTrack = NULL;
+
+    if( wTurntable.ismanager( data->props ) ) {
+      /* find a free track block */
+      iOModel model = AppOp.getModel();
+      iONode track = __findFreeTrack(inst, id);
+      if( track != NULL ) {
+        iIBlockBase block = ModelOp.getBlock(model, wTTTrack.getbkid(track));
+        if( block != NULL ) {
+          ok = block->lock( block, id, blockid, routeid, crossing, reset, reverse, indelay);
+          if( ok ) {
+            data->selectedTrack = track;
+          }
+        }
+      }
+      else {
+        ok = False;
+      }
+    }
+
     /* Broadcast to clients. Node6 */
-    {
+    if( ok ) {
       iONode nodeF = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeF, inst->base.id(inst) );
       wTurntable.setbridgepos( nodeF, wTurntable.getbridgepos( data->props) );
@@ -1783,7 +1827,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeF );
     }
-    ok = True;
+
   }
 
   /* Unlock the semaphore: */
@@ -2251,27 +2295,18 @@ static iIBlockBase _getManager( iIBlockBase inst ) {
 }
 
 
+/*
+ * Check for a free track block in case of an activated manager.
+ */
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
 
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) ) {
-    Boolean ttFree = True;
     if( wTurntable.ismanager(data->props) ) {
-      /* TODO: check if a track block is available */
-      iONode track = wTurntable.gettrack( data->props );
-      ttFree = False;
-      while( track != NULL ) {
-        const char* bkid = wTTTrack.getbkid( track );
-        iIBlockBase block = ModelOp.getBlock(model, bkid );
-        if( block->isFree(block, locId ) ) {
-          ttFree = True;
-          break;
-        }
-        track = wTurntable.nexttrack( data->props, track );
-      }
+      /* check if a track block is available */
+      return __findFreeTrack(inst, locId) != NULL ? True:False ;
     }
-    return ttFree;
   }
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "turntable is locked by [%s]", data->lockedId );

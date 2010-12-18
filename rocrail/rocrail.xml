@@ -1482,6 +1482,7 @@
       <var name="listenerObj" vt="obj" remark="Turntable listener object"/>
       <var name="listenerFun" vt="tt_listener" remark="Turntable listener function"/>
       <var name="locIdGroup" vt="const char*"/>
+      <var name="selectedTrack" vt="iONode"/>
     </data>
   </object>
 
