@@ -1458,6 +1458,9 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
         /* check managed TT */
         if( wTurntable.ismanager(data->props) ) {
           /* TODO: V_min for enter and V_0 for in */
+
+
+
         }
         else {
           LocOp.event( loc, inst, BlockOp.getEventCode(event), 0 );
@@ -1770,7 +1773,9 @@ static iONode __findFreeTrack(iIBlockBase inst, const char* locId) {
   while( track != NULL ) {
     const char* bkid = wTTTrack.getbkid( track );
     iIBlockBase block = ModelOp.getBlock(model, bkid );
-    if( block->isFree(block, locId ) ) {
+    if( block != NULL && block->isFree(block, locId ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "free track[%d], block[%s], found for %s", wTTTrack.getnr(track), bkid , locId );
       return track;
     }
     track = wTurntable.nexttrack( data->props, track );
