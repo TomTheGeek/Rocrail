@@ -134,8 +134,11 @@ public:
     wxStaticBox* m_labFeedbackBox;
     wxStaticText* m_labFbMod;
     wxSpinCtrl* m_FbMod;
+    wxStaticText* m_labFbOffset;
+    wxSpinCtrl* m_FbOffset;
     wxCheckBox* m_FbPoll;
     wxCheckBox* m_FbReset;
+    wxStaticBox* m_OptionsBox;
     wxCheckBox* m_PTSupport;
     wxCheckBox* m_SystemInfo;
     wxButton* m_OK;
