@@ -233,7 +233,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
-            if( StrOp.equals("*", id ) ) {
+            if( StrOp.equals("*", id ) || StrOp.equals( wActionCtrl.getlcid(actionctrl), id ) ) {
               iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
               if( lc != NULL ) {
                 Boolean dir = LocOp.getDir(lc);
