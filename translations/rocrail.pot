@@ -5159,3 +5159,9 @@ msgstr ""
 msgid "Embedded block"
 msgstr ""
 
+#. 
+# id="setupsvgtheme"
+#, c-format
+msgid "No SVG Theme was found; Check the Rocview SVG settings."
+msgstr ""
+
