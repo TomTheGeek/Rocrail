@@ -15466,4 +15466,8 @@
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
   </Msg>
+  <Msg id="setupsvgtheme">
+    <en txt="No SVG Theme was found; Check the Rocview SVG settings."/>
+  </Msg>
+
 </Messages>
