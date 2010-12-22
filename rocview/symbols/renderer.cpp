@@ -49,7 +49,7 @@
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
 
-#include "staticsymbols.h"
+//#include "staticsymbols.h"
 
 
 static double PI25DT = 3.141592653589793238462643;
@@ -813,56 +813,6 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool ac
     return;
   }
 
-  // Static Symbol:
-  switch( m_iSymSubType ) {
-    case tracktype::i_curve:
-      if( fill )
-        dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori ) );
-      break;
-
-    case tracktype::i_buffer:
-      if( fill )
-        dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-      dc.DrawPolygon( buffer_size, rotateShape( tk_buffer, buffer_size, ori ) );
-      break;
-
-    case tracktype::i_connector:
-      if( fill )
-        dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-      dc.DrawPolygon( connector_size, rotateShape( tk_connector, connector_size, ori ) );
-      break;
-
-    case tracktype::i_dir:
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-      dc.DrawPolygon( 4, rotateShape( tk_dir_1, 4, ori ) );
-      break;
-
-    case tracktype::i_dirall:
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-      dc.DrawPolygon( 4, rotateShape( tk_dir_1, 4, ori ) );
-      dc.DrawPolygon( 4, rotateShape( tk_dir_2, 4, ori ) );
-      break;
-
-    case tracktype::i_straight:
-      if( occupied ) {
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_fill_size, rotateShape( tk_straight_fill, track_fill_size, ori ) );
-      }
-      else if( fill ) {
-        dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      }
-      else {
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      }
-      break;
-  }
-
-  dc.SetBrush( b );
 }
 
 
@@ -912,52 +862,6 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, cons
       drawSvgSym(dc, m_SvgSym4, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
-  }
-  else {
-
-
-    const char* ori2 = ori;
-    const char* ori3 = ori;
-    if( StrOp.equals( ori, wItem.north ) ) {
-      ori2 = wItem.east;
-      ori3 = wItem.south;
-    }
-    else if( StrOp.equals( ori, wItem.south ) ) {
-      ori2 = wItem.west;
-      ori3 = wItem.north;
-    }
-    else if( StrOp.equals( ori, wItem.east ) ) {
-      ori2 = wItem.south;
-      ori3 = wItem.west;
-    }
-    else if( StrOp.equals( ori, wItem.west ) ) {
-      ori2 = wItem.north;
-      ori3 = wItem.east;
-    }
-
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori2 ) );
-    if( hasUnit ) {
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ) );
-    }
-
-    if( hasUnit ) {
-      if( StrOp.equals( state, wSwitch.straight ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori2 ) );
-        dc.SetBrush( b );
-      }
-      else if( StrOp.equals( state, wSwitch.turnout ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-        dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ) );
-        dc.SetBrush( b );
-      }
-    }
   }
 
 
@@ -1041,118 +945,6 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, con
       drawSvgSym(dc, m_SvgSym1, ori);
   }
 
-  else {
-    m_bRotateable = false;
-    ori = wItem.west; // not rotateable.
-    const char* ori2 = ori;
-    const char* ori3 = ori;
-    if( StrOp.equals( ori, wItem.north ) ) {
-      ori2 = wItem.east;
-      ori3 = wItem.south;
-    }
-    else if( StrOp.equals( ori, wItem.south ) ) {
-      ori2 = wItem.west;
-      ori3 = wItem.north;
-    }
-    else if( StrOp.equals( ori, wItem.east ) ) {
-      ori2 = wItem.south;
-      ori3 = wItem.west;
-    }
-    else if( StrOp.equals( ori, wItem.west ) ) {
-      ori2 = wItem.north;
-      ori3 = wItem.east;
-    }
-
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ), 32 );
-
-    if( wSwitch.isdir( m_Props ) ) {
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori2 ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori ), 32 );
-    }
-    else {
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori2 ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ), 32 );
-    }
-
-    if( has2Units ) {
-      if( StrOp.equals( state, wSwitch.straight ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ), 32 );
-        dc.SetBrush( b );
-      }
-      else if( StrOp.equals( state, wSwitch.turnout ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        if( wSwitch.isdir( m_Props ) ) {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori2 ) );
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori ), 32 );
-        }
-        else {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori2 ) );
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ), 32 );
-        }
-        dc.SetBrush( b );
-      }
-      else if( StrOp.equals( state, wSwitch.left ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-        if( wSwitch.isdir( m_Props ) ) {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori ), 32 );
-        }
-        else {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ), 32 );
-        }
-        dc.SetBrush( b );
-      }
-      else if( StrOp.equals( state, wSwitch.right ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ), 32 );
-        if( wSwitch.isdir( m_Props ) ) {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori2 ) );
-        }
-        else {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori2 ) );
-        }
-        dc.SetBrush( b );
-      }
-    }
-    else {
-      if( StrOp.equals( state, wSwitch.straight ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-        dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ), 32 );
-        if( wSwitch.isdir( m_Props ) ) {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori2 ) );
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori ), 32 );
-        }
-        else {
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori2 ) );
-          dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori3 ), 32 );
-        }
-        dc.SetBrush( b );
-      }
-      else if( StrOp.equals( state, wSwitch.turnout ) ) {
-        const wxBrush& b = dc.GetBrush();
-        dc.SetBrush( *wxBLACK_BRUSH );
-        if( wSwitch.isdir( m_Props ) ) {
-          dc.DrawPolygon( crossingcurve_size, rotateShape( tk_crossingcurve, crossingcurve_size, ori ) );
-          dc.DrawPolygon( crossingcurve_size, rotateShape( tk_crossingcurve, crossingcurve_size, ori3 ), 32 );
-        }
-        else {
-          dc.DrawPolygon( crossingcurve_size, rotateShape( tk_crossingcurveL, crossingcurve_size, ori ) );
-          dc.DrawPolygon( crossingcurve_size, rotateShape( tk_crossingcurveL, crossingcurve_size, ori3 ), 32 );
-        }
-        dc.SetBrush( b );
-      }
-    }
-
-  }
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
@@ -1210,42 +1002,6 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, cons
       drawSvgSym(dc, m_SvgSym4, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
-  }
-  else {
-    const char* ori3w = ori;
-    if( StrOp.equals( ori, wItem.north ) )
-      ori3w = wItem.south;
-    else if( StrOp.equals( ori, wItem.south ) )
-      ori3w = wItem.north;
-    else if( StrOp.equals( ori, wItem.east ) )
-      ori3w = wItem.west;
-    else if( StrOp.equals( ori, wItem.west ) )
-      ori3w = wItem.east;
-
-    if( StrOp.equals( state, wSwitch.left ) ) {
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-      dc.SetBrush( b );
-    }
-    else if( StrOp.equals( state, wSwitch.right ) ) {
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-      dc.SetBrush( b );
-    }
-    else {
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveL, curve_size, ori3w ) );
-      dc.DrawPolygon( curve_size, rotateShape( tk_curveR, curve_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.SetBrush( b );
-    }
   }
 
   if( m_bShowID ) {
@@ -1314,40 +1070,6 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
-  else {
-  if( m_iSymSubType == switchtype::i_turnoutleft ) {
-    if( StrOp.equals( state, wSwitch.turnout ) ) {
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( curve_size, rotateShape( raster?tk_curveSWR:tk_curveR, curve_size, ori ) );
-      dc.SetBrush( b );
-    }
-    else {
-      dc.DrawPolygon( curve_size, rotateShape( raster?tk_curveSWR:tk_curveR, curve_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.SetBrush( b );
-    }
-  }
-  else {
-    if( StrOp.equals( state, wSwitch.turnout ) ) {
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( curve_size, rotateShape( raster?tk_curveSWL:tk_curveL, curve_size, ori ) );
-      dc.SetBrush( b );
-    }
-    else {
-      dc.DrawPolygon( curve_size, rotateShape( raster?tk_curveSWL:tk_curveL, curve_size, ori ) );
-      const wxBrush& b = dc.GetBrush();
-      dc.SetBrush( *wxBLACK_BRUSH );
-      dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-      dc.SetBrush( b );
-    }
-  }
-  }
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
@@ -1404,13 +1126,6 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, const 
           drawSvgSym(dc, m_SvgSym1, ori);
         return;
       }
-      dc.DrawPolygon( decoupler2_size, rotateShape( decoupler2, decoupler2_size, ori ) );
-      dc.DrawPolygon( decoupler1_size, rotateShape( decoupler1, decoupler1_size, ori ) );
-//      const wxBrush& b = dc.GetBrush();
-//      if( StrOp.equals( state, wSwitch.turnout ) )
-//        dc.SetBrush( *wxBLACK_BRUSH );
-//      dc.DrawPolygon( decoupler2_size, rotateShape( decoupler2, decoupler2_size, ori ) );
-//      dc.SetBrush( b );
       break;
 
     case switchtype::i_ccrossing:
@@ -1494,61 +1209,6 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym9, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
-  }
-  else {
-
-
-  if( occupied ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.SetBrush( *wxBLACK_BRUSH );
-    dc.DrawPolygon( track_fill_size, rotateShape( tk_straight_fill, track_fill_size, ori ) );
-    dc.SetBrush( b );
-  }
-  else if( fill ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-    dc.SetBrush( b );
-  }
-  else {
-    dc.DrawPolygon( track_size, rotateShape( tk_straight, track_size, ori ) );
-  }
-
-  dc.DrawPolygon( 4, rotateShape( sg2, 4, ori ) );
-  if( StrOp.equals( state, wSignal.red ) ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxRED_BRUSH );
-    dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
-    dc.SetBrush( b );
-  }
-  else if( StrOp.equals( state, wSignal.yellow ) ) {
-    const wxBrush& b = dc.GetBrush();
-    wxBrush* yellow = new wxBrush( _T("yellow"), wxSOLID );
-
-    dc.SetBrush( *yellow );
-    dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
-    dc.SetBrush( b );
-    delete yellow;
-  }
-  else if( StrOp.equals( state, wSignal.green ) ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxGREEN_BRUSH );
-    dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
-    dc.SetBrush( b );
-  }
-  else if( StrOp.equals( state, wSignal.white ) ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxWHITE_BRUSH );
-    dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
-    dc.SetBrush( b );
-  }
-  else {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxRED_BRUSH );
-    dc.DrawPolygon( 8, rotateShape( sg1, 8, ori ) );
-    dc.SetBrush( b );
-  }
   }
 
   if( m_bShowID ) {
@@ -1753,9 +1413,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
      /* aident */
      drawSvgSym(dc, svgSym[8], ori);
    }
-  else {
-    dc.DrawPolygon( 4, rotateShape( bk, 4, ori ) );
-  }
   // TODO: Blocktext scaling!!!
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
@@ -2006,14 +1663,6 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym3, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
-  }
-  else {
-    dc.DrawPolygon( 16, rotateShape( fb1, 16, ori )  );
-    // Show state.
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( wFeedback.isstate( m_Props )?*wxRED_BRUSH:*wxGREEN_BRUSH );
-    dc.DrawPolygon( 4, rotateShape( fb2, 4, ori ) );
-    dc.SetBrush( b );
   }
 
   if( m_bShowID ) {
