@@ -49,6 +49,7 @@
     <const name="lang_english" vt="string" val="en"/>
     <const name="lang_englishAU" vt="string" val="en_AU"/>
     <const name="lang_englishGB" vt="string" val="en_GB"/>
+    <const name="lang_englishCA" vt="string" val="en_CA"/>
     <const name="lang_german" vt="string" val="de"/>
     <const name="lang_dutch" vt="string" val="nl"/>
     <const name="lang_swedisch" vt="string" val="sv"/>
@@ -69,6 +70,8 @@
     <const name="lang_norwegian" vt="string" val="nb"/>
     <const name="lang_chinese" vt="string" val="zh_TW"/>
     <const name="lang_indonesian" vt="string" val="id"/>
+    <const name="lang_japanese" vt="string" val="ja"/>
+    <const name="lang_romanian" vt="string" val="ro"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
