@@ -1,0 +1,9 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Cross -->
+    <path stroke-width="1" stroke="rgb(0,0,0)" fill="none" d="M 0,15 L 2,13 L 29,13 L 31,15 L 31,16 L 29,18 L 2,18 L 0,16 z " />
+    <path stroke-width="1" stroke="rgb(0,0,0)" fill="none" d="M 15,0 L 16,0 L 18,2 L 18,29 L 16,31 L 15,31 L 13,29 L 13,2 L 15,0 z " />
+  </g>
+</svg>
+
+

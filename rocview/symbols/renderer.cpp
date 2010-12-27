@@ -191,11 +191,16 @@ void SymbolRenderer::initSym() {
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing_t );
         }
         else {
-          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft : switchtype::crossingright );
-          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t : switchtype::crossingright_t );
-          m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
-          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_occ : switchtype::crossingright_occ );
-          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t_occ : switchtype::crossingright_t_occ );
+          if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing );
+          }
+          else {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft : switchtype::crossingright );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t : switchtype::crossingright_t );
+            m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
+            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_occ : switchtype::crossingright_occ );
+            m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t_occ : switchtype::crossingright_t_occ );
+          }
         }
       }
     }
@@ -1412,6 +1417,9 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
   else if( svgSym[8]!=NULL && m_iOccupied == 7 ) {
      /* aident */
      drawSvgSym(dc, svgSym[8], ori);
+   }
+  else if( svgSym[1]!=NULL ) {
+     drawSvgSym(dc, svgSym[1], ori);
    }
   // TODO: Blocktext scaling!!!
   wxFont* font = new wxFont( dc.GetFont() );
