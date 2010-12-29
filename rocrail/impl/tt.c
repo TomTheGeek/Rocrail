@@ -1383,6 +1383,22 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
       ControlOp.cmd( control, swcmd, NULL );
     }
 
+    /* check managed TT */
+    if( wTurntable.ismanager(data->props) && data->lockedId != NULL) {
+      /* check if the loco is on the bridge and let it roll to the selected block. */
+      if( data->locoOnBridge ) {
+        iOModel model = AppOp.getModel();
+        iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+        if( loc != NULL ) {
+          /* V_min: TODO: The block must inform the TT when the loco is IN. */
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setV_hint( cmd, wBlock.min );
+          wLoc.setdir( cmd, LocOp.getDir( loc) );
+          LocOp.cmd( loc, cmd );
+        }
+      }
+    }
+
   }
 
 }
@@ -1457,9 +1473,31 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
       if( loc != NULL ) {
         /* check managed TT */
         if( wTurntable.ismanager(data->props) ) {
-          /* TODO: V_min for enter and V_0 for in */
+          /* V_min for enter and V_0 for in */
+          if( event == wFeedbackEvent.enter_event ) {
+            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            wLoc.setV_hint( cmd, wBlock.min );
+            wLoc.setdir( cmd, LocOp.getDir( loc) );
+            LocOp.cmd( loc, cmd );
+          }
+          else if( event == wFeedbackEvent.in_event ||
+              event == wFeedbackEvent.pre2in_event && wLoc.isinatpre2in(LocOp.base.properties(loc)))
+          {
+            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            wLoc.setV( cmd, 0 );
+            wLoc.setdir( cmd, LocOp.getDir( loc) );
+            LocOp.cmd( loc, cmd );
 
+            data->locoOnBridge = True;
 
+            /* Bring the bridge into place for the selected track block. */
+            if( data->selectedTrack != NULL ) {
+              int pos = wTTTrack.getnr(data->selectedTrack);
+              iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+              wTurntable.setcmd( cmd, NodeOp.getStr(data->selectedTrack, "nr", "0"));
+              TTOp.cmd( (iIBlockBase)inst, cmd);
+            }
+          }
 
         }
         else {
@@ -1871,6 +1909,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
     data->triggerS1 = False;
     data->triggerS2 = False;
     data->triggerSmid = False;
+    data->locoOnBridge = False;
     return True;
   }
   return False;

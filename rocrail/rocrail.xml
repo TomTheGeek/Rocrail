@@ -1483,6 +1483,7 @@
       <var name="listenerFun" vt="tt_listener" remark="Turntable listener function"/>
       <var name="locIdGroup" vt="const char*"/>
       <var name="selectedTrack" vt="iONode"/>
+      <var name="locoOnBridge" vt="Boolean"/>
     </data>
   </object>
 
