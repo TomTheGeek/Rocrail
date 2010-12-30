@@ -1385,15 +1385,19 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, int ident
 
     /* check managed TT */
     if( wTurntable.ismanager(data->props) && data->lockedId != NULL) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle bridge in position event on managed TT %s", TTOp.base.id(inst) );
       /* check if the loco is on the bridge and let it roll to the selected block. */
       if( data->locoOnBridge ) {
         iOModel model = AppOp.getModel();
         iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s in on the bridge of managed TT %s", data->lockedId, TTOp.base.id(inst) );
         if( loc != NULL ) {
           /* V_min: TODO: The block must inform the TT when the loco is IN. */
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           wLoc.setV_hint( cmd, wBlock.min );
           wLoc.setdir( cmd, LocOp.getDir( loc) );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "run loco %s to block %s from managed TT %s",
+              data->lockedId, wTTTrack.getbkid(data->selectedTrack), TTOp.base.id(inst) );
           LocOp.cmd( loc, cmd );
         }
       }
@@ -1473,11 +1477,13 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
       if( loc != NULL ) {
         /* check managed TT */
         if( wTurntable.ismanager(data->props) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle bridge event on managed TT %s", TTOp.base.id(inst) );
           /* V_min for enter and V_0 for in */
           if( event == wFeedbackEvent.enter_event ) {
             iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
             wLoc.setV_hint( cmd, wBlock.min );
             wLoc.setdir( cmd, LocOp.getDir( loc) );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "enter bridge event on managed TT %s", TTOp.base.id(inst) );
             LocOp.cmd( loc, cmd );
           }
           else if( event == wFeedbackEvent.in_event ||
@@ -1486,6 +1492,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
             iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
             wLoc.setV( cmd, 0 );
             wLoc.setdir( cmd, LocOp.getDir( loc) );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "in bridge event on managed TT %s", TTOp.base.id(inst) );
             LocOp.cmd( loc, cmd );
 
             data->locoOnBridge = True;
@@ -1494,6 +1501,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
             if( data->selectedTrack != NULL ) {
               int pos = wTTTrack.getnr(data->selectedTrack);
               iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "command the bridge to track %s %d", wTTTrack.getdesc(data->selectedTrack), pos );
               wTurntable.setcmd( cmd, NodeOp.getStr(data->selectedTrack, "nr", "0"));
               TTOp.cmd( (iIBlockBase)inst, cmd);
             }
@@ -1715,6 +1723,7 @@ static void __initTTTrack(iOTT inst, iONode track) {
   char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]", wRoute.getbka(route), "+", wRoute.getbkb(route), "-" );
   wRoute.setid(route, routeId );
   StrOp.free(routeId);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
 
   ModelOp.addItem(model, route);
 }
