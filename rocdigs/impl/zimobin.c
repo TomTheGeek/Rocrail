@@ -610,7 +610,7 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   data->dummyio = wDigInt.isdummyio( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoBin %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoBin %d.%d.%d - 003", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
