@@ -367,18 +367,17 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
     byte* outa = allocMem(256);
 
-    outa[0] = 4; /* packet length */
-    outa[1] = 0;
-    outa[2] = 0x0A;
-    outa[3] = 0x00;
+    outa[0] = 3;    /* packet length */
+    outa[1] = 0x10; /* command station instruction */
+    outa[2] = 2;    /* track control */
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      outa[4] = 0x01;
+      outa[3] = 1; /* switch track voltage OFF */
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      outa[4] = 0x02;
+      outa[3] = 2; /* switch track voltage ON */
     }
     ThreadOp.post( data->transactor, (obj)outa );
 
@@ -485,6 +484,7 @@ static void __transactor( void* threadinst ) {
 
   byte out[256];
   obj post = NULL;
+  int esqid = 0;
 
   ThreadOp.setDescription( th, "Transactor for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
@@ -495,14 +495,19 @@ static void __transactor( void* threadinst ) {
       post = ThreadOp.getPost( th );
       if (post != NULL) {
         int packetlen = ((byte*) post)[0] & 0xFF;
-        MemOp.copy( out, (byte*) post+1, packetlen);
+        esqid++;
+        if( esqid > 255 )
+          esqid = 1;
+
+        /* sequence byte */
+        out[0] = esqid;
+        MemOp.copy( out+1, (byte*) post+1, packetlen);
+        packetlen++; /* add one for the sequence byte */
         freeMem( post);
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
+
         out[packetlen] = __checkSum(out, packetlen);
         packetlen++;
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         packetlen = __escapePacket(out, packetlen);
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         packetlen = __controlPacket(out, packetlen);
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         SerialOp.write( data->serial, (char*) out, packetlen );
@@ -519,7 +524,18 @@ static void __transactor( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Read from port failed." );
           break;
         }
-
+        /*
+         * Escape control bytes:
+         * SOH -> DLE, SOH^0x20
+         * EOT -> DLE, EOT^0x20
+         * DLE -> DLE, DLE^0x20
+        #define SOH 0x01
+        #define EOT 0x17
+        #define DLE 0x10
+        --------------------------------------------------------- |----------------|
+        00000000: 01 01 00 0A 00 02 3D 17                         |......=.        |
+        20101231.154747.106 r9999c transact OZimoBin 0524 No valid start sequence: idx=1 in=0A
+        */
         if( inIdx == 1  && inbuf[inIdx] != SOH  && inbuf[inIdx-1] != SOH  ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "No valid start sequence: idx=%d in=%02X", inIdx, inbuf[inIdx] );
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx+1 );
@@ -551,10 +567,7 @@ static void __transactor( void* threadinst ) {
       if( packetReceived ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
         inIdx = __unescapePacket(inbuf, inIdx);
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
         inIdx = __uncontrolPacket(inbuf, inIdx);
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
-
         __evaluatePacket(zimobin, inbuf, inIdx);
       }
       else if(inIdx > 0) {
@@ -605,8 +618,7 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-  /**SerialOp.setFlow( data->serial, cts );*/
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, cts );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
