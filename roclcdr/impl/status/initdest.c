@@ -105,8 +105,10 @@ void statusInitDest( iILcDriverInt inst ) {
         /* pause between the turnout commands and the new loco command: */
         if( wLoc.getdirpause( data->loc->base.properties( data->loc ) ) > 0 ) {
           int dirpause = wLoc.getdirpause( data->loc->base.properties( data->loc ) );
+          /*
           if( dirpause > 100 )
             dirpause = 100;
+          */
            ThreadOp.sleep( dirpause );
         }
       }
