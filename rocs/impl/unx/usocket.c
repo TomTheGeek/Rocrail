@@ -98,7 +98,7 @@ Boolean rocs_socket_resolveHost( iOSocketData o ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_resolveHost: inet_addr(%s)", o->host );
   addr->s_addr = inet_addr( o->host );
 
-  if( addr->s_addr == -1 ) {
+  if( addr->s_addr == INADDR_NONE ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_resolveHost: gethostbyname()" );
     host = gethostbyname( o->host );
     if( host == NULL ) {

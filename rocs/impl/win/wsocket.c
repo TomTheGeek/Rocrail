@@ -135,7 +135,7 @@ Boolean rocs_socket_resolveHost( iOSocketData o ) {
 
   addr->S_un.S_addr = inet_addr( o->host );
 
-  if( addr->S_un.S_addr == -1 ) {
+  if( addr->S_un.S_addr == INADDR_NONE ) {
     host = gethostbyname( o->host );
     if( host == NULL ) {
       o->rc = WSAGetLastError();
@@ -153,7 +153,7 @@ Boolean rocs_socket_resolveHost( iOSocketData o ) {
 /* OS dependent */
 Boolean rocs_socket_create( iOSocketData o ) {
 #ifdef __ROCS_SOCKET__
-  o->sh = socket( AF_INET, o->udp ? SOCK_DGRAM:SOCK_STREAM, 0 );
+  o->sh = socket( AF_INET, o->udp ? SOCK_DGRAM:SOCK_STREAM, o->udp ? IPPROTO_UDP:IPPROTO_TCP );
   if( o->sh < 0 ) {
     o->rc = WSAGetLastError();
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "socket() failed [%d]", WSAGetLastError() );
