@@ -669,6 +669,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     return False;
   }
 
+  /* flip */
   if( StrOp.equals( wSwitch.flip, wSwitch.getcmd( nodeA ) ) ) {
     const char* savedState = wSwitch.getstate( o->props );
 
@@ -720,6 +721,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   wSwitch.setprot( nodeA, wSwitch.getprot( o->props ) );
   wSwitch.setbus( nodeA, wSwitch.getbus( o->props ) );
 
+  /* three way */
   if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.threeway ) ) {
     const char* state1 = NULL;
     const char* state2 = NULL;
@@ -779,6 +781,9 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       return False;
     }
 
+    /* sleep the route switch time */
+    ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
+
     wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
@@ -789,6 +794,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       return False;
     }
   }
+
+  /* double crossing */
   else if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.dcrossing ) ) {
     const char* state1 = NULL;
     const char* state2 = NULL;
@@ -831,6 +838,9 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     }
 
     if( has2Units ) {
+      /* sleep the route switch time */
+      ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
+
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
       wSwitch.setgate1( nodeA2, wSwitch.getgate2( o->props ) );
@@ -847,6 +857,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     }
 
   }
+
+  /* normal switch */
   else {
 
     if( inv1 && StrOp.equals( wSwitch.straight, state ) )
