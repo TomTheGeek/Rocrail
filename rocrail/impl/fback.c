@@ -274,6 +274,7 @@ static void _resetCounter( iOFBack inst ) {
     wFeedback.setid( nodeD, FBackOp.getId( inst ) );
     wFeedback.setstate( nodeD, data->state );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+    wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
     wFeedback.setcounter( data->props, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
@@ -303,6 +304,7 @@ static void _setState( iOFBack inst, Boolean state ) {
     wFeedback.setid( nodeD, FBackOp.getId( inst ) );
     wFeedback.setstate( nodeD, data->state );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+    wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
     wFeedback.setcounter( data->props, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
@@ -381,6 +383,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       wFeedback.setstate( nodeD, data->state );
       wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
       wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+      wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
       wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
       wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
       AppOp.broadcastEvent( nodeD );
@@ -437,6 +440,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setstate( nodeD, data->state );
     wFeedback.setval( nodeD, wFeedback.getval( nodeC ) );
     wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+    wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
     wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
     wFeedback.setcounter( data->props, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );

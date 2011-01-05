@@ -200,7 +200,7 @@ static char* __rr2srcp(iONode evt, char* str) {
     /*100 INFO <bus> FB <addr> <value>*/
     StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
         time.tv_sec, time.tv_usec / 1000,
-        100, 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+        100, wFeedback.getbus(evt) + 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName(evt))) {
 
