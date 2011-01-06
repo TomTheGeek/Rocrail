@@ -781,8 +781,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       return False;
     }
 
-    /* sleep the route switch time */
-    ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
+    /* sleep the switch delay time */
+    ThreadOp.sleep( wSwitch.getdelay( o->props ) );
 
     wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
@@ -838,8 +838,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     }
 
     if( has2Units ) {
-      /* sleep the route switch time */
-      ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
+      /* sleep the switch delay time */
+      ThreadOp.sleep( wSwitch.getdelay( o->props ) );
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
