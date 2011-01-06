@@ -34,32 +34,33 @@ static Boolean lbTCPReConnect( iOLocoNet inst ) {
   iOLocoNetData data = Data(inst);
   iOSocket s = data->rwTCP;
 
+  if( data->rwTCP != NULL ) {
+    TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "reconnecting to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
+
+    data->comm = False;
+    ThreadOp.sleep(100);
+    data->rwTCP = NULL;
+    SocketOp.base.del( s );
+  }
+
   if( data->rwTCP == NULL ) {
-    TraceOp.trc( "lbtcp", TRCLEVEL_EXCEPTION, __LINE__, 9999, "Unable to reconnect with a not initialized socket..." );
-    return False;
-  }
-
-  TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "Try to reconnect..." );
-
-  data->rwTCP = NULL;
-  ThreadOp.sleep(100);
-  SocketOp.base.del( s );
-
-  data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-  if ( data->rwTCP != NULL ) {
-    SocketOp.setNodelay(data->rwTCP, True);
-    if ( SocketOp.connect( data->rwTCP ) ) {
-      return True;
-    }
-    else {
-      SocketOp.base.del( data->rwTCP );
-      data->rwTCP = NULL;
-      return False;
+    data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+    if( data->rwTCP != NULL ) {
+      SocketOp.setNodelay(data->rwTCP, True);
+  
+      while( data->run ) {
+        TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+        if ( SocketOp.connect( data->rwTCP ) ) {
+          data->comm = True;
+          TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
+          return True;
+        }
+        ThreadOp.sleep(1000);
+      }
     }
   }
-  else {
-    return False;
-  }
+
+	return False;
 }
 
 
@@ -71,8 +72,10 @@ static void __reader( void* threadinst ) {
   char ln[0x7F];
 
   TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader started." );
+  
+  data->comm = lbTCPReConnect(loconet);
 
-  do {
+  while( data->run  && data->rwTCP != NULL && data->comm ) {
     byte msg[0x7F];
 
     int  msglen = 0;
@@ -94,11 +97,7 @@ static void __reader( void* threadinst ) {
 
     if( !ok && SocketOp.isBroken(data->rwTCP) ) {
       /* recover */
-      iOSocket s = data->rwTCP;
-      data->rwTCP = NULL;
-      ThreadOp.sleep(100);
-      SocketOp.base.del( s );
-      lbTCPReConnect(loconet);
+      data->comm = lbTCPReConnect(loconet);
       ThreadOp.sleep(10);
       continue;
     }
@@ -158,7 +157,7 @@ static void __reader( void* threadinst ) {
       ThreadOp.sleep(10);
     }
 
-  } while( data->run );
+  }
 
   TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader stopped." );
 }
@@ -176,32 +175,20 @@ Boolean lbTCPConnect( obj inst ) {
   data->udpmux = MutexOp.inst(NULL, True);
   data->udpQueue = QueueOp.inst(1000);
 
-  data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-  if ( data->rwTCP != NULL ) {
-    SocketOp.setNodelay(data->rwTCP, True);
-    if ( SocketOp.connect( data->rwTCP ) ) {
-      data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
-      ThreadOp.start( data->udpReader );
-      return True;
-    }
-    else {
-      SocketOp.base.del( data->rwTCP );
-      data->rwTCP = NULL;
-      return False;
-    }
-  }
-  else {
-    return False;
-  }
+  data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
+  ThreadOp.start( data->udpReader );
+  return True;
 }
 
 void  lbTCPDisconnect( obj inst ) {
   iOLocoNetData data = Data(inst);
   if( data->rwTCP != NULL ) {
-    data->run = False;
-    ThreadOp.sleep(10);
     TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
+    data->run = False;
+    data->comm = False;
+    ThreadOp.sleep(100);
     SocketOp.disConnect( data->rwTCP );
+    ThreadOp.sleep(100);
     SocketOp.base.del( data->rwTCP );
     data->rwTCP = NULL;
   }
@@ -225,7 +212,7 @@ int lbTCPRead ( obj inst, unsigned char *msg ) {
 
 Boolean lbTCPWrite( obj inst, unsigned char *msg, int len ) {
   iOLocoNetData data = Data(inst);
-  if( data->rwTCP != NULL ) {
+  if( data->rwTCP != NULL && data->comm ) {
     return SocketOp.write( data->rwTCP, msg, len );
   }
 
