@@ -64,6 +64,33 @@ static Boolean lbTCPReConnect( iOLocoNet inst ) {
 }
 
 
+static void __writer( void* threadinst ) {
+  iOThread      th      = (iOThread)threadinst;
+  iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
+  iOLocoNetData data    = Data(loconet);
+
+  TraceOp.trc( "lbtcpw", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP writer started." );
+
+  while( data->run ) {
+    Boolean ok = False;
+    if( data->rwTCP != NULL && data->comm ) {
+      byte* post = (byte*)ThreadOp.getPost( th );
+      if (post != NULL) {
+        byte out[128];
+        int outlen = post[0];
+        MemOp.copy(out, post+1, outlen);
+        freeMem( post);
+
+        TraceOp.dump ( "lbtcpw", TRCLEVEL_BYTE, (char*)out, outlen );
+        ok = SocketOp.write( data->rwTCP, out, outlen );
+      }
+    }
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( "lbtcpw", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP writer stopped." );
+}
+
 
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
@@ -71,7 +98,7 @@ static void __reader( void* threadinst ) {
   iOLocoNetData data    = Data(loconet);
   char ln[0x7F];
 
-  TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader started." );
+  TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader started." );
   
   data->comm = lbTCPReConnect(loconet);
 
@@ -84,6 +111,7 @@ static void __reader( void* threadinst ) {
     byte bucket[32];
     byte c;
     Boolean  ok = False;
+
 
     do {
 
@@ -103,12 +131,12 @@ static void __reader( void* threadinst ) {
     }
 
     if( garbage > 0 ) {
-       TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
-       TraceOp.dump ( "lbtcp", TRCLEVEL_BYTE, (char*)bucket, garbage );
+       TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
+       TraceOp.dump ( "lbtcpr", TRCLEVEL_BYTE, (char*)bucket, garbage );
     }
 
     if( !data->comm ) {
-      TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "state changed" );
+      TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "state changed" );
       data->comm = True;
       LocoNetOp.stateChanged((iOLocoNet)loconet);
     }
@@ -136,10 +164,10 @@ static void __reader( void* threadinst ) {
         msglen = c;
         break;
     default:
-      TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+      TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
       msglen = 0;
     }
-    TraceOp.trc( "lbtcp", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
+    TraceOp.trc( "lbtcpr", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
     ok = SocketOp.read( data->rwTCP, &msg[index], msglen - index);
 
@@ -153,13 +181,13 @@ static void __reader( void* threadinst ) {
       ThreadOp.sleep(0);
     }
     else {
-      TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
+      TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
       ThreadOp.sleep(10);
     }
 
   }
 
-  TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader stopped." );
+  TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader stopped." );
 }
 
 
@@ -175,8 +203,11 @@ Boolean lbTCPConnect( obj inst ) {
   data->udpmux = MutexOp.inst(NULL, True);
   data->udpQueue = QueueOp.inst(1000);
 
-  data->udpReader = ThreadOp.inst( "lntcpreader", &__reader, inst );
-  ThreadOp.start( data->udpReader );
+  data->subReader = ThreadOp.inst( "lntcpr", &__reader, inst );
+  ThreadOp.start( data->subReader );
+  data->subWriter = ThreadOp.inst( "lntcpw", &__writer, inst );
+  ThreadOp.start( data->subWriter );
+
   return True;
 }
 
@@ -212,8 +243,13 @@ int lbTCPRead ( obj inst, unsigned char *msg ) {
 
 Boolean lbTCPWrite( obj inst, unsigned char *msg, int len ) {
   iOLocoNetData data = Data(inst);
-  if( data->rwTCP != NULL && data->comm ) {
-    return SocketOp.write( data->rwTCP, msg, len );
+
+  /* put packet in the write queue */
+  if( data->subWriter != NULL ) {
+    byte* p = allocMem(len+1);
+    p[0] = len;
+    MemOp.copy( p+1, msg, len);
+    return ThreadOp.post( data->subWriter, (obj)p);
   }
 
   return False;
