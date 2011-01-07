@@ -348,6 +348,7 @@ static void __restoreFx( void* threadinst ) {
       ThreadOp.sleep(500);
     }
   }
+  ThreadOp.base.del(th);
 }
 
 
