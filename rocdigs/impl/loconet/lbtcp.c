@@ -42,6 +42,7 @@ static Boolean lbTCPReConnect( iOLocoNet inst ) {
     data->rwTCP = NULL;
     SocketOp.base.del( s );
   }
+  LocoNetOp.stateChanged(inst);
 
   if( data->rwTCP == NULL ) {
     data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
@@ -53,6 +54,7 @@ static Boolean lbTCPReConnect( iOLocoNet inst ) {
         if ( SocketOp.connect( data->rwTCP ) ) {
           data->comm = True;
           TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
+          LocoNetOp.stateChanged(inst);
           return True;
         }
         ThreadOp.sleep(1000);
@@ -108,7 +110,7 @@ static void __reader( void* threadinst ) {
     int  msglen = 0;
     int   index = 0;
     int garbage = 0;
-    byte bucket[32];
+    byte bucket[128];
     byte c;
     Boolean  ok = False;
 
@@ -121,7 +123,12 @@ static void __reader( void* threadinst ) {
         bucket[garbage] = c;
         garbage++;
       }
-    } while (ok && data->run && c < 0x80 && garbage < 32);
+    } while (ok && data->run && c < 0x80 && garbage < 128);
+
+    if( garbage > 0 ) {
+       TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
+       TraceOp.dump ( "lbtcpr", TRCLEVEL_BYTE, (char*)bucket, garbage );
+    }
 
     if( !ok && SocketOp.isBroken(data->rwTCP) ) {
       /* recover */
@@ -130,61 +137,59 @@ static void __reader( void* threadinst ) {
       continue;
     }
 
-    if( garbage > 0 ) {
-       TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
-       TraceOp.dump ( "lbtcpr", TRCLEVEL_BYTE, (char*)bucket, garbage );
+    if( ok ) {
+
+      msg[0] = c;
+
+      switch (c & 0xf0) {
+      case 0x80:
+          msglen = 2;
+          index = 1;
+          break;
+      case 0xa0:
+      case 0xb0:
+          msglen = 4;
+          index = 1;
+          break;
+      case 0xc0:
+          msglen = 6;
+          index = 1;
+          break;
+      case 0xe0:
+        SocketOp.read( data->rwTCP, &c, 1);
+          msg[1] = c;
+          index = 2;
+          msglen = c;
+          break;
+      default:
+        TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+        msglen = 0;
+        ThreadOp.sleep(10);
+        continue;
+      }
+
+      TraceOp.trc( "lbtcpr", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
+
+      ok = SocketOp.read( data->rwTCP, &msg[index], msglen - index);
+
+      if( ok ) {
+        if( MutexOp.trywait( data->udpmux, 10 ) ) {
+          byte* p = allocMem(msglen+1);
+          p[0] = msglen;
+          MemOp.copy( p+1, msg, msglen);
+          QueueOp.post( data->udpQueue, (obj)p, normal);
+          MutexOp.post( data->udpmux );
+          TraceOp.dump ( "lbtcp", TRCLEVEL_BYTE, (char*)msg, msglen );
+        }
+      }
+      else {
+        TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
+        ThreadOp.sleep(10);
+      }
+
     }
 
-    if( !data->comm ) {
-      TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "state changed" );
-      data->comm = True;
-      LocoNetOp.stateChanged((iOLocoNet)loconet);
-    }
-
-    msg[0] = c;
-
-    switch (c & 0xf0) {
-    case 0x80:
-        msglen = 2;
-        index = 1;
-        break;
-    case 0xa0:
-    case 0xb0:
-        msglen = 4;
-        index = 1;
-        break;
-    case 0xc0:
-        msglen = 6;
-        index = 1;
-        break;
-    case 0xe0:
-      SocketOp.read( data->rwTCP, &c, 1);
-        msg[1] = c;
-        index = 2;
-        msglen = c;
-        break;
-    default:
-      TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
-      msglen = 0;
-    }
-    TraceOp.trc( "lbtcpr", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
-
-    ok = SocketOp.read( data->rwTCP, &msg[index], msglen - index);
-
-    if( ok && msglen > 0 && MutexOp.trywait( data->udpmux, 10 ) ) {
-      byte* p = allocMem(msglen+1);
-      p[0] = msglen;
-      MemOp.copy( p+1, msg, msglen);
-      QueueOp.post( data->udpQueue, (obj)p, normal);
-      MutexOp.post( data->udpmux );
-      TraceOp.dump ( "lbtcp", TRCLEVEL_BYTE, (char*)msg, msglen );
-      ThreadOp.sleep(0);
-    }
-    else {
-      TraceOp.trc( "lbtcpr", TRCLEVEL_WARNING, __LINE__, 9999, "could not read rest of packet" );
-      ThreadOp.sleep(10);
-    }
-
+    ThreadOp.sleep(0);
   }
 
   TraceOp.trc( "lbtcpr", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet TCP reader stopped." );
