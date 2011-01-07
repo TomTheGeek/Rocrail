@@ -751,8 +751,8 @@ static Boolean __isElectricallyFree(iOBlock inst) {
   while( fbevt != NULL ) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
     if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block \"%s\" is electrically occupied. %s",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 5001,
+                     "Block [%s] is electrically occupied. %s",
                      data->id, shunting ? "(ignored for shunting)":"" );
 
       if( !shunting )
@@ -1109,8 +1109,8 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   }
 
   if( wLoc.getaddr( loc->base.properties( loc ) ) == 0 && !wBlock.istd( data->props ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "Block \"%s\" does not support analog locs like \"%s\". (%d, %d)",
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 5002,
+                   "Block [%s] does not support analog locos like [%s]. (%d, %d)",
                    data->id, LocOp.getId( loc ), bklen, lclen );
     return suits_not;
   }
