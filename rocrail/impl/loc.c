@@ -286,26 +286,32 @@ static void __cpNode2Fn(iOLoc inst, iONode cmd) {
 }
 
 
-static void __restoreFx(obj inst) {
-  iOLocData data = Data(inst);
+
+static void __restoreFx( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOLoc loc = (iOLoc)ThreadOp.getParm( th );
+  iOLocData data = Data(loc);
+
   int fx = wLoc.getfx(data->props);
   int i = 0;
+
+  ThreadOp.sleep(100);
+
   /* Test for restoring the lights function. */
-  iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights" );
-  wLoc.setV( vcmd, 0 );
-  wLoc.setfn( vcmd, wLoc.isfn(data->props) );
-  LocOp.cmd((iOLoc)inst, vcmd);
-  ThreadOp.sleep(10);
-
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring functions" );
+  if( wLoc.isfn(data->props) ) {
+    iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
+    wLoc.setV( vcmd, 0 );
+    wLoc.setfn( vcmd, wLoc.isfn(data->props) );
+    LocOp.cmd(loc, vcmd);
+    ThreadOp.sleep(500);
+  }
 
   for( i = 0; i < 28; i++ ) {
-    int f = 1 << i;
+    int f = (1 << i);
     if( fx & f ) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring function %d for %s", i+1, wLoc.getid(data->props) );
       wFunCmd.setf0 ( fcmd, wLoc.isfn(data->props));
       wFunCmd.setfnchanged( fcmd, i + 1);
       switch( i ) {
@@ -338,8 +344,8 @@ static void __restoreFx(obj inst) {
         case 26: wFunCmd.setf27( fcmd, True); break;
         case 27: wFunCmd.setf28( fcmd, True); break;
       }
-      LocOp.cmd((iOLoc)inst, fcmd);
-      ThreadOp.sleep(10);
+      LocOp.cmd(loc, fcmd);
+      ThreadOp.sleep(500);
     }
   }
 }
@@ -352,8 +358,10 @@ static void __sysEvent( obj inst, const char* cmd ) {
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
     data->fxrestored = True;
-    if( wLoc.isrestorefx(data->props))
-      __restoreFx(inst);
+    if( wLoc.isrestorefx(data->props)) {
+      iOThread th = ThreadOp.inst( NULL, &__restoreFx, inst );
+      ThreadOp.start(th);
+    }
   }
 }
 
