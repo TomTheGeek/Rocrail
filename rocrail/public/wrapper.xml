@@ -420,6 +420,7 @@
         <var name="purgetime" vt="int" defval="10" unit="s" range="0-*" remark="Idle time for purg a slot."/>
         <var name="shortcut" vt="bool" defval="true" remark="Use shortcut detection"/>
         <var name="shortcutdelay" vt="int" defval="1000" unit="ms" remark="Shortcut events shorter than this time is ignored"/>
+        <var name="inversedsr" vt="bool" defval="false"/>
       </dcc232>  
         
       <loconet remark="LocoNet options" wrappername="LocoNet">

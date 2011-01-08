@@ -536,7 +536,8 @@ static void __watchDog( void* threadinst ) {
 
   int scdelay = 0;
   Boolean scdetected = False;
-  Boolean inversedsr = False;
+  Boolean inversedsr = wDCC232.isinversedsr(data->dcc232);
+;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 watchdog started." );
 

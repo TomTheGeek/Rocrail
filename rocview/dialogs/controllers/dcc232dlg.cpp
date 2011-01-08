@@ -54,6 +54,7 @@ void DCC232Dlg::initLabels() {
 
   m_ShortCutBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "shortcutchecking" ) );
   m_ShortcutDetection->SetLabel( wxGetApp().getMsg( "activate" ) );
+  m_InverseDSR->SetLabel( wxGetApp().getMsg( "inversedsr" ) );
   m_labShortcutDelay->SetLabel( wxGetApp().getMsg( "delay" ) );
   m_labShortcutDelayMs->SetLabel( wxGetApp().getMsg( "ms" ) );
 }
@@ -75,6 +76,7 @@ void DCC232Dlg::initValues() {
   m_AutoPurge->SetValue( wDCC232.ispurge( dcc232 ) ? true:false );
   m_PurgeTime->SetValue( wDCC232.getpurgetime( dcc232 ) );
   m_ShortcutDetection->SetValue( wDCC232.isshortcut( dcc232 ) ? true:false );
+  m_InverseDSR->SetValue( wDCC232.isinversedsr( dcc232 ) ? true:false );
   m_ShortcutDelay->SetValue( wDCC232.getshortcutdelay( dcc232 ) );
 }
 
@@ -91,6 +93,7 @@ void DCC232Dlg::evaluate() {
   wDCC232.setpurge( dcc232, m_AutoPurge->IsChecked() ? True:False );
   wDCC232.setpurgetime( dcc232, m_PurgeTime->GetValue() );
   wDCC232.setshortcut( dcc232, m_ShortcutDetection->IsChecked() ? True:False );
+  wDCC232.setinversedsr( dcc232, m_InverseDSR->IsChecked() ? True:False );
   wDCC232.setshortcutdelay( dcc232, m_ShortcutDelay->GetValue() );
 }
 
