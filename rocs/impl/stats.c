@@ -38,6 +38,7 @@
 #include "rocs/public/msg.h"
 #include "rocs/public/strtok.h"
 #include "rocs/public/xmlh.h"
+#include "rocs/public/msg.h"
 
 
 
@@ -66,7 +67,8 @@ void rocsStatistics(Boolean info) {
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", TraceOp.base.name(), TraceOp.base.count(), MemOp.getAllocCntID(RocsTraceID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", XmlhOp.base.name(), XmlhOp.base.count(), MemOp.getAllocCntID(RocsXmlHID) );
   TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", StrTokOp.base.name(), StrTokOp.base.count(), MemOp.getAllocCntID(RocsStrTokID) );
-  
+  TraceOp.trc( name, level, __LINE__, 9999, "%-12.12s instCnt = %u(%ld)", MsgOp.base.name(), MsgOp.base.count(), MemOp.getAllocCntID(RocsMsgID) );
+
   TraceOp.trc( name, level, __LINE__, 9999, "MemOp.getAllocCount = %ld", MemOp.getAllocCount() );
   TraceOp.trc( name, level, __LINE__, 9999, "MemOp.getAllocSize  = %ld", MemOp.getAllocSize() );
   
