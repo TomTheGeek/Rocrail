@@ -204,6 +204,7 @@ static void __cmdReader( void* threadinst ) {
   Boolean          ok = False;
   iOThread infoWriter = NULL;
   iOXmlh         xmlh = XmlhOp.inst( False, NULL, NULL );
+  char*           cmd = NULL;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmdReader started for:%s.", SocketOp.getPeername(o->clntSocket) );
 
@@ -222,7 +223,6 @@ static void __cmdReader( void* threadinst ) {
 
   ThreadOp.sleep( 1000 );
   do {
-    char* cmd = NULL;
     char b;
     if( o->clntSocket == NULL ) {
       /* not jet initialized */
@@ -291,10 +291,13 @@ static void __cmdReader( void* threadinst ) {
       break;
     }
     freeMem( cmd );
+    cmd = NULL;
     ThreadOp.sleep( 10 );
   } while( !o->quit );
 
   /* Cleanup. */
+  if( cmd != NULL )
+    freeMem(cmd);
   /* Lock the semaphore: */
   MutexOp.trywait( Data(clntcon)->muxMap, 1000 );
   {
