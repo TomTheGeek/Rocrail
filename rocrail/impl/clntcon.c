@@ -101,7 +101,6 @@ static void __infoWriter( void* threadinst ) {
   __iOClntService o = (__iOClntService)ThreadOp.getParm(th);
   Boolean        ok = True;
 
-  ThreadOp.setDescription( th, SocketOp.getPeername(o->clntSocket) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "infoWriter started for:%s.", SocketOp.getPeername(o->clntSocket) );
 
   do {
@@ -172,6 +171,7 @@ static void __infoWriter( void* threadinst ) {
     SocketOp.base.del( s );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "InfoService ended." );
     ThreadOp.base.del( th );
+    freeMem(o);
   }
 }
 
@@ -204,8 +204,6 @@ static void __cmdReader( void* threadinst ) {
   Boolean          ok = False;
   iOThread infoWriter = NULL;
   iOXmlh         xmlh = XmlhOp.inst( False, NULL, NULL );
-
-  ThreadOp.setDescription( th, "ClientCon command reader" );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmdReader started for:%s.", SocketOp.getPeername(o->clntSocket) );
 
