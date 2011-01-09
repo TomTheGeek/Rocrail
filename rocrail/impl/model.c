@@ -1671,6 +1671,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
     char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
     wPlan.setrocrailversion( data->model, version );
+    StrOp.free(version);
 
     if( !SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
         StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
@@ -1915,6 +1916,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
     char* xml = NULL;
     char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
     wPlan.setrocrailversion( o->model, version );
+    StrOp.free(version);
     /* Serialize plan. */
     xml = o->model->base.toString( o->model );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serialized Plan=%d", StrOp.len( xml ) );
