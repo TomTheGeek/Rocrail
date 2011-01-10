@@ -169,7 +169,7 @@ static void __portmanager( void* threadinst ) {
       break;
     }
 
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( 100 );
   } while( !ThreadOp.isQuit( th ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager ended for %d.", data->port );

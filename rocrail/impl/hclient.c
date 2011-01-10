@@ -51,11 +51,12 @@ static void __del( void* inst ) {
   if( inst != NULL ) {
     iOHClientData data = Data(inst);
     /* Cleanup data->xxx members...*/
+
+    if( data->socket != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER2, __LINE__, 9999, "delete client socket %s...", data->cid );
+      SocketOp.base.del( data->socket );
+    }
     StrOp.free( data->cid );
-
-    if( data->socket != NULL )
-      data->socket->base.del( data->socket );
-
 
     freeMem( data );
     freeMem( inst );
@@ -269,12 +270,15 @@ static void __getHome( iOHClient inst ) {
       long t = AppOp.getStartTime();
       SocketOp.fmt( data->socket, "<tr><td>started at</td><td>%s</td></tr>\n", ctime( &t ) );
     }
+
+    char* pwd = FileOp.pwd();
     SocketOp.fmt( data->socket, "<tr><td>console mode     </td><td>%s    </td></tr>\n", AppOp.isConsoleMode()?"yes":"no" );
-    SocketOp.fmt( data->socket, "<tr><td>working directory</td><td>%s    </td></tr>\n", FileOp.pwd() );
+    SocketOp.fmt( data->socket, "<tr><td>working directory</td><td>%s    </td></tr>\n", pwd );
     SocketOp.fmt( data->socket, "<tr><td>allocated memory </td><td>%ld KB</td></tr>\n", MemOp.getAllocSize() / 1024 );
     SocketOp.fmt( data->socket, "<tr><td>clients          </td><td>%d    </td></tr>\n", ClntConOp.getClientCount( AppOp.getClntCon() ) );
-    SocketOp.fmt( data->socket, "<tr><td>locs             </td><td>%d    </td></tr>\n", LocOp.base.count() );
-
+    SocketOp.fmt( data->socket, "<tr><td>connections      </td><td>%d    </td></tr>\n", ClntConOp.getConCount( AppOp.getClntCon() ) );
+    SocketOp.fmt( data->socket, "<tr><td>locos            </td><td>%d    </td></tr>\n", LocOp.base.count() );
+    StrOp.free(pwd);
     {
       iOList thList = ThreadOp.getAll();
       int i = 0;

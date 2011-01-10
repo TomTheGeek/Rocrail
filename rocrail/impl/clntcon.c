@@ -509,6 +509,11 @@ static int _getClientCount( iOClntCon inst ) {
   return MapOp.size( data->infoWriters );
 }
 
+static int _getConCount( iOClntCon inst ) {
+  iOClntConData data = Data(inst);
+  return data->concount;
+}
+
 static int _getClientPort( iOClntCon inst ) {
   iOClntConData data = Data(inst);
   return data->port;

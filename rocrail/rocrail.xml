@@ -217,6 +217,9 @@
     <fun name="getClientCount" vt="int">
       <param name="inst" vt="this" remark="ClntCon instance"/>
     </fun>
+    <fun name="getConCount" vt="int">
+      <param name="inst" vt="this" remark="ClntCon instance"/>
+    </fun>
     <fun name="getClientPort" vt="int">
       <param name="inst" vt="this" remark="ClntCon instance"/>
     </fun>
