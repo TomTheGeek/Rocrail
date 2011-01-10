@@ -347,6 +347,9 @@ static void __manager( void* threadinst ) {
         cargo->readonly = False;
       }
 
+      data->concount++;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connect count: %d", data->concount );
+
       servername        = StrOp.fmt( "cmdr%08X", client );
       cmdReader         = ThreadOp.inst( servername, __cmdReader, cargo );
       ThreadOp.setDescription( cmdReader, SocketOp.getPeername(client) );

@@ -234,6 +234,7 @@
       <var name="muxMap" vt="iOMutex"/>
       <var name="broadcaster" vt="iOThread"/>
       <var name="port" vt="int"/>
+      <var name="concount" vt="int"/>
     </data>
   </object>
 
