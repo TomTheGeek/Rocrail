@@ -1970,8 +1970,8 @@ static iOLoc _getLoc( iOModel inst, const char* id ) {
   iOLoc loc = (iOLoc)MapOp.get( o->locMap, id );
   if( loc == NULL ) {
     int addr = atoi(id);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
     if( addr > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
       loc = ModelOp.getLocByAddress(inst, addr);
       if( loc != NULL )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
@@ -1987,6 +1987,9 @@ static iOLoc _getLoc( iOModel inst, const char* id ) {
         _addItem(inst, lc);
         loc = (iOLoc)MapOp.get( o->locMap, id );
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "undefined loco [%s]", id );
     }
   }
   return loc;
