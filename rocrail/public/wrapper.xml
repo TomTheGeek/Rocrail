@@ -231,6 +231,7 @@
       <var name="monitor" vt="bool" defval="true" remark="Activates monitor tracelevel."/>
       <var name="parse" vt="bool" defval="false" remark="Activates parse tracelevel."/>
       <var name="info" vt="bool" defval="true" range="*" remark="Activates info trace level."/>
+      <var name="meminfo" vt="bool" defval="false" range="*" remark="Activates memory info trace level."/>
       <var name="calc" vt="bool" defval="true" range="*" remark="Activates calculation trace level."/>
       <var name="protpath" vt="string" defval="NULL" range="*" remark="Protocol path; Where to write the trace files. (Use relative only if using http service.) Path is relative to pwd!"/>
       <var name="unique" vt="bool" defval="false" range="*" remark="Create a unique trace filename at startup."/>

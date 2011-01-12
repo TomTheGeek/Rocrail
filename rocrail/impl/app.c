@@ -825,6 +825,8 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     int cnt2 = MemOp.getAllocCount();
     if( cnt2 > cnt1 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "memory allocations old=%u new=%u", cnt1, cnt2 );
+      if(wTrace.ismeminfo( wRocRail.gettrace( data->ini ) ))
+        rocsStatistics( True );
     }
     cnt1 = cnt2;
     ThreadOp.sleep( 1000 );

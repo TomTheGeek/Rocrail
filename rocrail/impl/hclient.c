@@ -274,7 +274,8 @@ static void __getHome( iOHClient inst ) {
     char* pwd = FileOp.pwd();
     SocketOp.fmt( data->socket, "<tr><td>console mode     </td><td>%s    </td></tr>\n", AppOp.isConsoleMode()?"yes":"no" );
     SocketOp.fmt( data->socket, "<tr><td>working directory</td><td>%s    </td></tr>\n", pwd );
-    SocketOp.fmt( data->socket, "<tr><td>allocated memory </td><td>%ld KB</td></tr>\n", MemOp.getAllocSize() / 1024 );
+    SocketOp.fmt( data->socket, "<tr><td>allocation count </td><td>%u    </td></tr>\n", MemOp.getAllocCount() );
+    SocketOp.fmt( data->socket, "<tr><td>allocated memory </td><td>%ld MB</td></tr>\n", MemOp.getAllocSize() / (1024*1024) );
     SocketOp.fmt( data->socket, "<tr><td>clients          </td><td>%d    </td></tr>\n", ClntConOp.getClientCount( AppOp.getClntCon() ) );
     SocketOp.fmt( data->socket, "<tr><td>connections      </td><td>%d    </td></tr>\n", ClntConOp.getConCount( AppOp.getClntCon() ) );
     SocketOp.fmt( data->socket, "<tr><td>locos            </td><td>%d    </td></tr>\n", LocOp.base.count() );
