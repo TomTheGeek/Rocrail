@@ -3954,7 +3954,11 @@ static void _loadBlockOccupation( iOModel inst ) {
       int         enterside= wOccupation.getblockenterside( occ );
       Boolean     closed   = wOccupation.isclosed( occ );
       Boolean     automode = wOccupation.isauto( occ );
-      iOLoc       loco     = ModelOp.getLoc( inst, LocoID );
+      iOLoc       loco     = NULL;
+
+      if( StrOp.len(LocoID) > 0 ) {
+        loco = ModelOp.getLoc( inst, LocoID );
+      }
 
       MapOp.put( data->occMap, BlockID, NodeOp.base.clone( occ ) );
 
@@ -3994,8 +3998,10 @@ static void _loadBlockOccupation( iOModel inst ) {
              the block expects a const char*, but the parsed xml is freed up after setting the
              occupation so all LocoID's are invalid.
           */
-          wBlock.setlocid( props, StrOp.dup( LocoID ) );
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
+
+          if( loco != NULL )
+            wBlock.setlocid( props, StrOp.dup( LocoID ) );
 
           if( location != NULL && loco != NULL ) {
             LocationOp.locoDidArrive(location, LocOp.getId(loco));
