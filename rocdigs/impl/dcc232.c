@@ -476,7 +476,7 @@ static Boolean _supportPT( obj inst ) {
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
 static int vminor = 0;
-static int patch  = 99;
+static int patch  = 0;
 static int _version( obj inst ) {
   iODCC232Data data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
@@ -604,7 +604,7 @@ static void __dccWriter( void* threadinst ) {
         while (post != NULL) {
           MemOp.copy( dccpacket, post, 64);
           freeMem( post);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
           __transmit( dcc232, dccpacket+1, dccpacket[0], False );
           post = (byte*)ThreadOp.getPost( th );
         }
@@ -722,7 +722,6 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->device = StrOp.dup( wDCC232.getport( data->dcc232 ) );
   data->run    = True;
-  data->portbase = (int)strtol( wDCC232.getportbase( data->dcc232 ), (char**)NULL, 16 );
 
   MemOp.set( data->slots, 0, 128 * sizeof( struct slot ) );
 
@@ -731,17 +730,16 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc232 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = [%s]", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portbase        = 0x%X", data->portbase );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge           = [%s]", data->purge?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time = [%d]s", data->purgetime );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]", data->shortcut?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms", data->shortcutdelay );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = [%s]"    , data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = [%s]"    , data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge           = [%s]"    , data->purge?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time = [%d]s"   , data->purgetime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]"    , data->shortcut?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms"  , data->shortcutdelay );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invert DSR      = [%s]"    , wDCC232.isinversedsr(data->dcc232)?"yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setPortBase( data->serial, data->portbase );
   SerialOp.setBlocking( data->serial, False );
   SerialOp.setLine( data->serial, 19200, 8, 0, 0, True );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
