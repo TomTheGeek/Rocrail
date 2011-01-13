@@ -80,6 +80,9 @@ int comp_maerklin_1(int address, int direction, int speed, int func)
         return 1;
     }
 
+   if (speed > 0)
+        speed++;              /* speed  1 is direction change */
+
    if (direction!=get_maerklin_direction(address)) { 
       speed=1;
       TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "Speed = 1");
@@ -145,6 +148,9 @@ int comp_maerklin_2(int address, int direction,
     int adr = 0;
     int mspeed;
 
+    if (speed > 0)
+        speed++;              /* speed  1 is obsolete */
+
     adr = address;
     if (direction == 0)
         direction = -1;
@@ -185,8 +191,6 @@ int comp_maerklin_2(int address, int direction,
     speed = abs(speed);
     mspeed = speed;
 
-    if (speed == 1)
-        speed = 0;              /* speed  1 is obsolete */
     for (i = 5; i < 9; i++) {
         j = speed % 2;
         speed = speed / 2;
@@ -340,7 +344,7 @@ int comp_maerklin_3(int address, int direction,
     speed_halfstep = !(abs(speed) % 2);
     if (speed > 0)
         speed = ((speed + 1) / 2) + 1;
-    else
+    if (speed < 0)
         speed = ((speed - 1) / 2) - 1;
 
     /* compute func trit and speed half step */
@@ -366,8 +370,6 @@ int comp_maerklin_3(int address, int direction,
     speed = abs(speed);
     mspeed = speed;
 
-    if (speed == 1)
-        speed = 0;              /* speed  1 is obsolete */
     for (i = 5; i < 9; i++) {
         j = speed % 2;
         speed = speed / 2;
@@ -493,6 +495,8 @@ int comp_maerklin_4(int address, int direction,
     int i, j;
     int adr = 0;
     int mspeed;
+    if (speed > 0)
+        speed++;              /* speed  1 is obsolete */
 
     adr = address;
     if (direction == 0)
