@@ -579,7 +579,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint ) {
   int V_mid = wLoc.getV_mid( data->props );
   int V_min = wLoc.getV_min( data->props );
 
-  if( !wLoc.isdir(data->props) ){
+  if( !wLoc.isdir(data->props) || (wLoc.isdir(data->props) && !wLoc.isplacing( data->props ) ) ){
     if( wLoc.getV_Rmax( data->props ) > 0 ) {
       V_max = wLoc.getV_Rmax( data->props );
     }
