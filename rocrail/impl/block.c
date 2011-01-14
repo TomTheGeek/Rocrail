@@ -772,6 +772,11 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
       return True;
   }
 
+  if( StrOp.equals( "!free", state ) ) {
+    if( data->locId != NULL && StrOp.len( data->locId ) > 0 )
+      return True;
+  }
+
   if( StrOp.equals( wBlock.closed, state ) ) {
       return StrOp.equals( wBlock.closed, wBlock.getstate( data->props ) );
   }
