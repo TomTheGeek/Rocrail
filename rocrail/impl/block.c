@@ -772,7 +772,7 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
       return True;
   }
 
-  if( StrOp.equals( "!free", state ) ) {
+  if( StrOp.equals( "!free", state ) || StrOp.equals( "occupied", state ) ) {
     if( data->locId != NULL && StrOp.len( data->locId ) > 0 )
       return True;
   }
