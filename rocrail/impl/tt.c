@@ -2348,6 +2348,10 @@ static iIBlockBase _getManager( iIBlockBase inst ) {
 }
 
 
+static Boolean _isState( iIBlockBase inst, const char* state ) {
+  return False;
+}
+
 /*
  * Check for a free track block in case of an activated manager.
  */

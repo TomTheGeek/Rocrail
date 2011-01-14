@@ -765,6 +765,24 @@ static Boolean __isElectricallyFree(iOBlock inst) {
 }
 
 
+static Boolean _isState( iIBlockBase inst, const char* state ) {
+  iOBlockData data = Data(inst);
+  if( StrOp.equals( "free", state ) ) {
+    if( data->locId == NULL || StrOp.len( data->locId ) == 0 )
+      return True;
+  }
+
+  if( StrOp.equals( wBlock.closed, state ) ) {
+      return StrOp.equals( wBlock.closed, wBlock.getstate( data->props ) );
+  }
+
+  if( StrOp.equals( wBlock.open, state ) ) {
+      return StrOp.equals( wBlock.open, wBlock.getstate( data->props ) );
+  }
+
+  return False;
+}
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 

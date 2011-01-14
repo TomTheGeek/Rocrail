@@ -355,6 +355,10 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid) {
   return fit;
 }
 
+static Boolean _isState( iIBlockBase inst, const char* state ) {
+  return False;
+}
+
 /**
  * Check the train length if it will fit in the available section(s).
  */

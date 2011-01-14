@@ -878,6 +878,10 @@ static iIBlockBase __getFreeTrackBlock(iIBlockBase inst, const char* locId, int*
   return NULL;
 }
 
+static Boolean _isState( iIBlockBase inst, const char* state ) {
+  return False;
+}
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = NULL;
@@ -1161,7 +1165,7 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return block != NULL ? block->getInLoc( block ) : "";
 }
 
-static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, int wheelcount, iONode fbevt ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */

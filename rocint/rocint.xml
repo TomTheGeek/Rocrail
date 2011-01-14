@@ -135,6 +135,10 @@
       <param name="inst" vt="this"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
     </fun>
+    <fun name="isState" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="state" vt="const char*" remark="State to compare with."/>
+    </fun>
     <fun name="getVisitCnt" vt="int">
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*"/>

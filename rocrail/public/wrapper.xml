@@ -881,7 +881,7 @@
     <var name="param" vt="string" defval="" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
-      <var name="type" vt="string" defval="" range="co,sw,sg,fb" required="true"/>
+      <var name="type" vt="string" defval="" range="co,sw,sg,fb,lc,bk" required="true"/>
       <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
     </actioncond>
   </actionctrl>

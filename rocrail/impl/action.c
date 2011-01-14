@@ -126,15 +126,29 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             wActionCond.getid(actionCond),
             wActionCond.getstate(actionCond) );
 
-        if( StrOp.equals( wOutput.name(), wActionCond.gettype(actionCond) ) ) {
+        /* Block */
+        if( StrOp.equals( wBlock.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOBlock bk = ModelOp.getBlock( model, id );
+          if( bk != NULL ) {
+            rc = BlockOp.isState(bk, wActionCond.getstate(actionCond) );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block not found [%s]", id );
+        }
+
+        /* Output */
+        else if( StrOp.equals( wOutput.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           iOOutput co = ModelOp.getOutput( model, id );
           if( co != NULL ) {
             rc = OutputOp.isState(co, wActionCond.getstate(actionCond) );
           }
           else
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "output not found [%s]", id );
         }
+
+        /* Switch */
         else if( StrOp.equals( wSwitch.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           iOSwitch sw = ModelOp.getSwitch( model, id );
