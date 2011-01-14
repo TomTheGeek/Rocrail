@@ -1760,6 +1760,7 @@
         <var name="blockenterside" vt="bool" defval="true" remark="Block enter side."/>
         <var name="destblockid" vt="string" defval="NULL" range="*" remark="Destination block ID. (info only)"/>
         <var name="blockwaittime" vt="int" defval="10" unit="s" range="0-*" remark="Own wait time."/>
+        <var name="useownwaittime" vt="bool" defval="false" remark="Overwrites block wait settings."/>
         <var name="lclib" vt="string" defval="./lcdriver" remark="LocDriver library"/>
         <var name="ttlib" vt="string" defval="./ttdriver" remark="TurntableDriver library"/>
         <var name="purchased" vt="string" defval="" remark="Date of purchase"/>

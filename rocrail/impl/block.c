@@ -867,6 +867,9 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return 0;
   }
+  else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
+    return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
+  }
   else if( StrOp.equals( wBlock.wait_random, wBlock.getwaitmode( data->props ) ) ) {
     /* Random between 1 and 30. */
     int min = wBlock.getminwaittime( data->props );

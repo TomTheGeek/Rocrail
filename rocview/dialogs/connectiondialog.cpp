@@ -190,15 +190,15 @@ void ConnectionDialog::CreateControls()
     itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
     m_LabelHost = new wxStaticText( itemDialog1, wxID_STATIC_CON_HOST, _("Hostname"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_LabelHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_LabelHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_HostStrings;
-    m_Host = new wxComboBox( itemDialog1, ID_COMBOBOX_CONN_HOST, _("localhost"), wxDefaultPosition, wxDefaultSize, m_HostStrings, wxCB_DROPDOWN );
+    m_Host = new wxComboBox( itemDialog1, ID_COMBOBOX_CONN_HOST, _("localhost"), wxDefaultPosition, wxSize(200, -1), m_HostStrings, wxCB_DROPDOWN );
     m_Host->SetStringSelection(_("localhost"));
     itemFlexGridSizer3->Add(m_Host, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPort = new wxStaticText( itemDialog1, wxID_STATIC_CONN_PORT, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Port = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_CONN_PORT, _("62842"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Port->SetMaxLength(5);

@@ -17077,4 +17077,7 @@
     <em_GB txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <em_AU txt="No SVG Theme was found; Check the Rocview SVG settings."/>
   </Msg>
+  <Msg id="useownwaittime">
+    <en txt="Use own wait time in blocks"/>
+  </Msg>
 </Messages>
