@@ -1968,7 +1968,7 @@ static iIBlockBase _addNetBlock(iOModel inst, iONode bkprops) {
 static iOLoc _getLoc( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.get( o->locMap, id );
-  if( loc == NULL ) {
+  if( loc == NULL && id != NULL && StrOp.len(id) > 0 ) {
     int addr = atoi(id);
     if( addr > 0 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
@@ -1989,7 +1989,7 @@ static iOLoc _getLoc( iOModel inst, const char* id ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "undefined loco [%s]", id );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "undefined loco [%s]", id );
     }
   }
   return loc;
