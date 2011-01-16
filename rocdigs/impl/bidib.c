@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/Program.h"
 
+#include "rocdigs/impl/bidib/bidib.h"
 
 static int instCnt = 0;
 
@@ -103,6 +104,36 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OBiDiB ----- */
+
+/*
+Ein serielles Paket ist prinzipiell wie folgt aufgebaut:
+  PAKET ::= MAGIC MESSAGE_SEQ CRC [MAGIC]
+  MESSAGE_SEQ ::= MESSAGE MESSAGE_SEQ
+
+Ein serielles PAKET beginnt immer mit speziellen Zeichen ([MAGIC]=0xFE) und kann eine oder mehrere Nachrichten (MESSAGE) enthalten.
+Das ganze Paket ist mit einer CRC (Cyclic Redundancy Check) abgesichert, um Datenfehler bei der Übertragung erkennen zu können.
+MAGIC-Zeichen, welche innerhalb von Nachrichten auftauchen, werden 'Escaped'. Hierzu wird ein ESCAPE Zeichen (=0xFD) eingefügt und
+das nachfolgende Zeichen mit 0x20 xor-verknüpft. Auch das ESCAPE-Zeichen selbst wird innerhalb der Nachricht Escaped.
+Das heißt: Anstelle des MAGIC wird ein ESCAPE-Zeichen (=0xFD), gefolgt von MAGIC ^ 0x20 = 0xDE gesendet.
+Anstelle des ESCAPE-Zeichen wird 0xFD + 0xDD gesendet. Das Escapen erfolgt auf dem fertig kodierten PAKET inkl.
+*/
+static void __escapeMessage(byte* msg) {
+}
+
+
+/*
+CRC (d.h. die CRC wird über die Nachricht(en) ohne MAGIC, ohne ESCAPE gebildet).
+Die MESSAGE ist vom Host an einen bestimmten Knoten adressiert. In einem Paket können MESSAGES auch an verschiedene Knoten
+adressiert sein.
+
+CRC bezeichnet das CRC8-Byte; Auf der Senderseite wird das gemäß Polynom x8 + x5 + x4 + 1 über die Nachricht gebildet,
+beginnend beim ersten Byte der Nachricht, Init=0, nicht invertiert. Empfängerseitig wird die CRC mit dem gleichen Polynom über
+die gesamte Nachricht inkl. CRC gebildet, das Ergebnis muß 0 sein.
+Nach den Paket schließt sich ein MAGIC an, dies kann auch gleichzeitig der Beginn des nächsten Paketes sein.
+Wenn kein weiteres Paket zum Senden bereit ist, so wird trotzdem die MAGIC übertragen.
+*/
+static void __crcMessage(byte* msg) {
+}
 
 
 /**  */
@@ -172,6 +203,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->mux      = MutexOp.inst( NULL, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout         = %d", wDigInt.gettimeout( ini ) );
