@@ -282,6 +282,7 @@
       <const name="massoth" vt="string" val="massoth"/>
       <const name="tamsmc" vt="string" val="tamsmc"/>
       <const name="muet" vt="string" val="muet"/>
+      <const name="bidib" vt="string" val="bidib"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

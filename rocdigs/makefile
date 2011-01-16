@@ -104,7 +104,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(OUTDIR)$(FS)barjut$(SHAREDSUFFIX) $(OUTDIR)$(FS)loconet$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimobin$(SHAREDSUFFIX) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(OUTDIR)$(FS)io8255$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX)  $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -176,6 +176,8 @@ $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)tamsmc.o $(COMMONOBJS) $(R
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)tamsmc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)muet$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)muet.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)muet.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)bidib$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)bidib.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)bidib.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -258,6 +260,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
@@ -294,6 +297,7 @@ install:
 	-cp -p $(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) $(DESTDIR)

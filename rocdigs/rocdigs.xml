@@ -1214,6 +1214,27 @@
   </object>
 
 
+  <object name="BiDiB" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex" include="$rocint/public/digint" remark="bidib.org">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="device" vt="const char*"/>
+      <var name="run" vt="Boolean"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="serialOK" vt="Boolean"/>
+      <var name="initOK" vt="Boolean"/>
+    </data>
+  </object>
+
+
+
 
 
 </Project>
