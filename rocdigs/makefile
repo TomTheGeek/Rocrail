@@ -97,6 +97,7 @@ NMRAOBJS=$(patsubst impl/nmra/%.c,$(TMPOUTDIR)/nmra/%.o,$(wildcard impl/nmra/*.c
 ROCNETOBJS=$(patsubst impl/rocnet/%.c,$(TMPOUTDIR)/rocnet/%.o,$(wildcard impl/rocnet/*.c))
 OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl/opendcc/*.c))
 XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcard impl/xpressnet/*.c))
+BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
@@ -176,8 +177,8 @@ $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)tamsmc.o $(COMMONOBJS) $(R
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)tamsmc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)muet$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)muet.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)muet.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)$(FS)bidib$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)bidib.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)bidib.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)bidib$(SHAREDSUFFIX):  $(BIDIBOBJS) $(TMPOUTDIR)$(FS)bidib.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)bidib.o $(BIDIBOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -209,6 +210,9 @@ $(TMPOUTDIR)/opendcc/%.o: impl/opendcc/%.c
 $(TMPOUTDIR)/xpressnet/%.o: impl/xpressnet/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 
+$(TMPOUTDIR)/bidib/%.o: impl/bidib/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+	
 clean:
 	-$(MKDIR) $(OUTDIR)
 	-$(MKDIR) $(TMPOUTDIR)$(FS)ddx
@@ -219,6 +223,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)nmra
 	-$(MKDIR) $(TMPOUTDIR)$(FS)opendcc
 	-$(MKDIR) $(TMPOUTDIR)$(FS)xpressnet
+	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -228,6 +233,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)common$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)opendcc$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)xpressnet$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)bidib$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)
