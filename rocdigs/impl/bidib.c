@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/Program.h"
 
 #include "rocdigs/impl/bidib/bidib.h"
+#include "rocdigs/impl/bidib/serial.h"
 
 static int instCnt = 0;
 
@@ -192,32 +193,43 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
 
   data->ini      = ini;
-  data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
 
   data->run      = True;
 
-  data->serialOK = False;
-  data->initOK   = False;
+  data->commOK = False;
 
   data->mux      = MutexOp.inst( NULL, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = %s", wDigInt.getdevice( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout         = %d", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, cts );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
-  data->serialOK = SerialOp.open( data->serial );
+  /* choose interface: */
+  if( StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
+    /* serial */
+    data->subConnect    = serialConnect;
+    data->subDisconnect = serialDisconnect;
+    data->subRead       = serialRead;
+    data->subWrite      = serialWrite;
+    data->subAvailable  = serialAvailable;
+  }
+  else if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ) {
+    /* serial */
+    data->subConnect    = serialConnect;
+    data->subDisconnect = serialDisconnect;
+    data->subRead       = serialRead;
+    data->subWrite      = serialWrite;
+    data->subAvailable  = serialAvailable;
+  }
 
-  if( data->serialOK ) {
+
+  data->commOK = data->subConnect((obj)__BiDiB);
+
+  if( data->commOK ) {
   }
 
   instCnt++;
