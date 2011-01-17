@@ -44,6 +44,7 @@
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SrcpCon.h"
+#include "rocrail/wrapper/public/SrcpConOffset.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
@@ -155,7 +156,7 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OSrcpCon ----- */
 
 
-static char* __rr2srcp(iONode evt, char* str) {
+static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
   struct timeval time;
   gettimeofday(&time, NULL);
   iOModel model = AppOp.getModel();
@@ -166,12 +167,105 @@ static char* __rr2srcp(iONode evt, char* str) {
     iOSwitch sw = ModelOp.getSwitch(model, wSwitch.getid(evt));
     if( sw != NULL ) {
       iONode swProps = SwitchOp.base.properties(sw);
-      int addr = ((wSwitch.getaddr1(swProps)-1) * 4) + wSwitch.getport1(swProps);
+      int addr  = ((wSwitch.getaddr1(swProps)-1) * 4) + wSwitch.getport1(swProps);
+      int addr2 = ((wSwitch.getaddr2(swProps)-1) * 4) + wSwitch.getport2(swProps);
+
+      if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
+        /*100 INFO <bus> GA <addr> <port> <value>*/
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+            time.tv_sec, time.tv_usec / 1000,
+            100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
+      }
+      else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway) 
+            || StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing)) {
+        if( StrOp.equals( wSwitch.getstate(evt), wSwitch.straight)) {
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
+            time.tv_sec, time.tv_usec / 1000,
+            100, 1, addr, 0,
+            time.tv_sec, time.tv_usec / 1000,
+            100, 1, addr2, 0);
+        }
+        else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.left)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr2, 0,
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr, 1);
+        }
+        else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.right)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr, 0,
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr2, 1);
+        }
+        else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.turnout)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr, 1,
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr2, 1);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED swEvent type %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSwitch.gettype(swProps) , addr, addr2, wSwitch.getstate(evt), wSwitch.getstate(swProps));
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED swDevice typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSwitch.gettype(swProps) , addr, addr2, wSwitch.getstate(evt), wSwitch.getstate(swProps));
+      }
+    }
+  }
+
+  else if( StrOp.equals( wSignal.name(), NodeOp.getName(evt))) {
+    iOSignal sg = ModelOp.getSignal(model, wSignal.getid(evt));
+    if( sg != NULL ) {
+      iONode sgProps = SignalOp.base.properties(sg);
+      int addr = ((wSignal.getaddr(sgProps)-1) * 4) + wSignal.getport1(sgProps);
+      int aspects = wSignal.getaspects( sgProps );
 
       /*100 INFO <bus> GA <addr> <port> <value>*/
-      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-          time.tv_sec, time.tv_usec / 1000,
-          100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
+      if( aspects == 2 ) {
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+            time.tv_sec, time.tv_usec / 1000,
+            100, 1, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1);
+      }else if( aspects > 2 ) {
+        int addr2 = ((wSignal.getaddr2(sgProps)-1) * 4) + wSignal.getport2(sgProps);
+        int addr3 = ((wSignal.getaddr3(sgProps)-1) * 4) + wSignal.getport3(sgProps);
+        int addr4 = ((wSignal.getaddr4(sgProps)-1) * 4) + wSignal.getport4(sgProps);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sgEvent typeP %s, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, addr3, addr4, wSignal.getstate(evt), wSignal.getstate(sgProps));
+
+        if( StrOp.equals( wSignal.getstate(evt), wSignal.red)) {
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+            time.tv_sec, time.tv_usec / 1000,
+            100, 1, addr, 0);
+        }
+        else if( StrOp.equals( wSignal.getstate(evt), wSignal.green)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr2, 1);
+        }
+        else if( StrOp.equals( wSignal.getstate(evt), wSignal.yellow)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr3, 0);
+        }
+        else if( StrOp.equals( wSignal.getstate(evt), wSignal.white)) {
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
+              time.tv_sec, time.tv_usec / 1000,
+              100, 1, addr4, 1);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
+        }
+      }else {
+        int addr2 = ((wSignal.getaddr2(sgProps)-1) * 4) + wSignal.getport2(sgProps);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
+      }
     }
   }
 
@@ -197,13 +291,29 @@ static char* __rr2srcp(iONode evt, char* str) {
   }
 
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
-    /*100 INFO <bus> FB <addr> <value>*/
-    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
-        time.tv_sec, time.tv_usec / 1000,
-        100, wFeedback.getbus(evt) + 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+
+    iOFBack fb = ModelOp.getFBack(model, wFeedback.getid(evt));
+    if( fb != NULL ) {
+      int s88busOffset = 0;
+      iONode fbProps = FBackOp.base.properties(fb);
+
+      iONode srcpconoffset = wSrcpCon.getsrcpconoffset(data->ini);
+      while( srcpconoffset != NULL ) {
+        if( StrOp.equals( wFeedback.getiid(fbProps), wSrcpConOffset.getiid( srcpconoffset ) ) ) {
+          s88busOffset = wSrcpConOffset.getoffset( srcpconoffset );
+          break;
+        }
+        srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
+      }
+
+      /*100 INFO <bus> FB <addr> <value>*/
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
+          time.tv_sec, time.tv_usec / 1000,
+          100, wFeedback.getbus(evt) + s88busOffset + 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+    }
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName(evt))) {
-
+    /* */
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s]", str );
   return str;
@@ -267,36 +377,224 @@ static iONode __srcp2rr(const char* req) {
     else if( StrOp.findi( req, "GA" ) ) {
       int idx = 0;
       const char* swID = NULL;
+      int addrGA = 0;
       int addr = 0;
       int port = 0;
       int gate = 0;
+      int value = 0;
+      iOSwitch sw;
+      iOSignal sg;
       iOStrTok tok = StrTokOp.inst(req, ' ');
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 3: addr = atoi(s); break;
+        case 3: addrGA = atoi(s); break;
         case 4: gate = atoi(s); break;
+        case 5: value = atoi(s); break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
       /* Find switch */
-      port = (addr-1) % 4 + 1;
-      addr = (addr-1) / 4 + 1;
+      port = (addrGA-1) % 4 + 1;
+      addr = (addrGA-1) / 4 + 1;
 
-      iOSwitch sw = ModelOp.getSwByAddress(model, addr, port);
+      sw = ModelOp.getSwByAddress(model, addr, port);
       if( sw != NULL ) {
-        cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-        wSwitch.setid( cmd, SwitchOp.getId(sw) );
-        wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
+        iONode swProps = SwitchOp.base.properties(sw);
+        int addr1 = ((wSwitch.getaddr1(swProps)-1) * 4) + wSwitch.getport1(swProps);
+        int addr2 = ((wSwitch.getaddr2(swProps)-1) * 4) + wSwitch.getport2(swProps);
+        int gate1 = wSwitch.getgate1(swProps);
+        int gate2 = wSwitch.getgate2(swProps);
+
+        if(( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left))
+        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.right))
+        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing))
+        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) ) {
+          cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+          wSwitch.setid( cmd, SwitchOp.getId(sw) );
+          wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
+        }
+        else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway)) {
+          /* straight left right */
+          char *currState = wSwitch.getstate(swProps);
+
+          if( ( addr1 == addrGA ) && ( gate == 0 ) ) {
+            if( StrOp.equals( currState, wSwitch.left) ) {
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, wSwitch.straight );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", addrGA, gate, wSwitch.threeway, currState ) ;
+            }
+          }else if( ( addr1 == addrGA ) && ( gate == 1 ) ) {
+            if( StrOp.equals( currState, wSwitch.straight) || StrOp.equals( currState, wSwitch.right) ) {
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, wSwitch.left );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to left", addrGA, gate, wSwitch.threeway, currState ) ;
+            }
+          }else if( ( addr2 == addrGA ) && ( gate == 0 ) ) {
+            if( StrOp.equals( currState, wSwitch.right) ) {
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, wSwitch.straight );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", addrGA, gate, wSwitch.threeway, currState ) ;
+            }
+          }else if( ( addr2 == addrGA ) && ( gate == 1 ) ) {
+            if( StrOp.equals( currState, wSwitch.straight) || StrOp.equals( currState, wSwitch.left) ) {
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, wSwitch.right );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to right", addrGA, gate, wSwitch.threeway, currState ) ;
+            }
+          }
+        }
+        else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing)) {
+          /* straight right left turnout */
+
+          char *currState = wSwitch.getstate(swProps);
+          char *nextState ;
+
+          if( ( addr1 == addrGA ) && ( 0 == value ) ) {
+            if( StrOp.equals( currState, wSwitch.turnout) ) {
+              nextState = wSwitch.right;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }else if( StrOp.equals( currState, wSwitch.left) ) {
+              nextState = wSwitch.straight;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }
+          }else if( ( addr1 == addrGA ) && ( 1 == value ) ) {
+            if( StrOp.equals( currState, wSwitch.straight) ) {
+              nextState = wSwitch.left;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }else if( StrOp.equals( currState, wSwitch.right) ) {
+              nextState = wSwitch.turnout;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }
+          }else if( ( addr2 == addrGA ) && ( 0 == value ) ) {
+            if( StrOp.equals( currState, wSwitch.right) ) {
+              nextState = wSwitch.straight;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }else if( StrOp.equals( currState, wSwitch.turnout) ) {
+              nextState = wSwitch.left;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }
+          }else if( ( addr2 == addrGA ) && ( 1 == value ) ) {
+            if( StrOp.equals( currState, wSwitch.straight) ) {
+              nextState = wSwitch.right;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }else if( StrOp.equals( currState, wSwitch.left) ) {
+              nextState = wSwitch.turnout;
+              cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
+              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setcmd( cmd, nextState );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+            }
+          }else{
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW NO COMBO FOR addr/gate/value found aGA %d a %d p %d gate %d value %d : type %s a1 %d a2 %d g1 %d g2 %d REQ %s", addrGA, addr, port, gate, value, wSwitch.gettype(swProps), addr1, addr2, gate1, gate2, req );
+          }
+        }
       }
+      
+      sg = ModelOp.getSgByAddress(model, addr, port);
+      if( sg != NULL ) {
+        iONode sgProps = SignalOp.base.properties(sg);
+        int aspects = wSignal.getaspects( sgProps );
+        int addr1 = ((wSignal.getaddr (sgProps)-1) * 4) + wSignal.getport1(sgProps);
+        int addr2 = ((wSignal.getaddr2(sgProps)-1) * 4) + wSignal.getport2(sgProps);
+        int addr3 = ((wSignal.getaddr3(sgProps)-1) * 4) + wSignal.getport3(sgProps);
+        int addr4 = ((wSignal.getaddr4(sgProps)-1) * 4) + wSignal.getport4(sgProps);
+        int gate1 = wSignal.getgate1(sgProps);
+        int gate2 = wSignal.getgate2(sgProps);
+        int gate3 = wSignal.getgate3(sgProps);
+        int gate4 = wSignal.getgate4(sgProps);
 
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SG aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+
+        cmd = NodeOp.inst(wSignal.name(), NULL, ELEMENT_NODE );
+        wSignal.setid( cmd, SignalOp.getId(sg) );
+
+        if( ( addr1 == addrGA ) && ( gate1 == gate ) ) {
+          wSignal.setcmd( cmd, wSignal.red );
+        }else if( ( addr2 == addrGA ) && ( gate2 == gate ) ) {
+          wSignal.setcmd( cmd, wSignal.green );
+        }else if( ( aspects >= 3 ) && ( addr3 == addrGA ) && ( gate3 == gate ) ) {
+          wSignal.setcmd( cmd, wSignal.yellow );
+        }else if( ( aspects >= 4 ) && ( addr4 == addrGA ) && ( gate4 == gate ) ) {
+          wSignal.setcmd( cmd, wSignal.white );
+        }else{
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "for SG NO COMOBO FOR addr/gate found aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+        }
+      }
     }
-
-
   }
 
+  else if( StrOp.startsWithi( req, "GET" ) ) {
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s", req );
+
+  /* GET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
+  if( StrOp.findi( req, "GL" ) ) {
+    int idx = 0;
+    const char* lcID = NULL;
+    Boolean dir = True;
+    int V = 0;
+    iOStrTok tok = StrTokOp.inst(req, ' ');
+    while( StrTokOp.hasMoreTokens(tok)) {
+      const char* s = StrTokOp.nextToken(tok);
+      switch(idx) {
+        case 3: {
+          iOLoc loco = ModelOp.getLocByAddress(model, atoi(s));
+          if( loco != NULL ) {
+            lcID = LocOp.getId(loco);
+            dir = LocOp.getDir(loco);
+            V = LocOp.getV(loco);
+
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> lcID %d dir %d speed %d", req, lcID, dir, V );
+            /* TODO: Send back Loco Info */
+          }
+          else{
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> locoID for %d not found", req, atoi(s) );
+          }
+        }
+        break;
+        case 4:
+          /* too many arguments ; 418 ERROR list too long */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
+/*        TODO: send back cmd = "418 ERROR list too long"; */
+          break;
+        }
+
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+    }
+  }
+  else{
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED GET req: %s", req );
+  }
   return cmd;
 }
 
@@ -510,8 +808,12 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
   }
   else {
     iONode cmd = __srcp2rr(req);
-    if( cmd != NULL )
+    if( cmd != NULL ){
       Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+    }
+    else{
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__srcp2rr( REQ ) returned with CMD == NULL", cmd );
+    }
     SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, 0));
   }
 }
@@ -520,6 +822,7 @@ static void __SrcpService( void* threadinst ) {
   iOThread         th = (iOThread)threadinst;
   __iOSrcpService   o = (__iOSrcpService)ThreadOp.getParm(th);
   iOSrcpCon   srcpcon = o->SrcpCon;
+  iOSrcpConData data = Data(srcpcon);
   char*         sname = NULL;
   Boolean          ok = False;
   iOThread infoWriter = NULL;
@@ -547,7 +850,7 @@ static void __SrcpService( void* threadinst ) {
     if( post != NULL ) {
       iONode node = (iONode)post;
       if( node != NULL ) {
-        __rr2srcp(node, str);
+        __rr2srcp(data, node, str);
         SocketOp.write( o->clntSocket, str, StrOp.len(str) );
         NodeOp.base.del(node);
       }
@@ -564,6 +867,11 @@ static void __SrcpService( void* threadinst ) {
     }
 
     SocketOp.readln(o->clntSocket, str);
+    /* Strip trailing "\n", makes debug output more readable
+    if( ( strlen( str ) != 0 ) && ( str[strlen(str)-1] == '\n' ) ) {
+      str[strlen(str)-1] = 0;
+    }
+    */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
     __evalRequest( srcpcon, o, str);
     ThreadOp.sleep(10);
