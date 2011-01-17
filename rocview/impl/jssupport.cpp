@@ -127,6 +127,22 @@ JsSupport::JsSupport( iONode ini ) {
   m_Selected[1] = NULL;
   m_Selected[2] = NULL;
   m_Selected[3] = NULL;
+
+  for( int i = 0; i < 4; i++ ) {
+    m_bF1[i] = False;
+    m_bF2[i] = False;
+    m_bF3[i] = False;
+    m_bF4[i] = False;
+    m_bF5[i] = False;
+    m_bF6[i] = False;
+    m_bF7[i] = False;
+    m_bF8[i] = False;
+    m_bF9[i] = False;
+    m_bF10[i] = False;
+    m_bF11[i] = False;
+    m_bF12[i] = False;
+  }
+
   m_Ini = ini;
   initJS();
 }
