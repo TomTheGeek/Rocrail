@@ -205,7 +205,7 @@ static void __RFIReader( void* threadinst ) {
         /* create a key: */
         char* key = StrOp.fmt( "%d_%d", reader, ident );
 
-        /* check if key is already in map: every read cycle is the occupation send */
+        /* check if key is already in map: every read cycle is the occupancy send */
         if( MapOp.get( map, key ) == NULL ) {
           iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
           MapOp.put( map, key, (obj)"RFI" );

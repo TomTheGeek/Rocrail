@@ -260,7 +260,7 @@ static void __updateFB( iOMuet muet, iONode fbInfo ) {
         StrOp.fmtb(key, "%d_%d", bus, addr+1 );
         MapOp.put( data->identmap, key, (obj)&data->fbmods[bus][idx]); /* dummy object */
 
-        /* activate monitoring for the unit occupation */
+        /* activate monitoring for the unit occupancy */
         cmd = allocMem(32);
         cmd[0] = bus;
         cmd[1] = 3;
@@ -719,7 +719,7 @@ static void __reader( void* threadinst ) {
               ThreadOp.post(data->writer, (obj)cmd);
             }
             else if( MapOp.haskey( data->fbmap, key) ) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupation for unit %d is %02X", addr, val );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupancy for unit %d is %02X", addr, val );
               __evaluateFB( muet, val, addr, data->activebus );
             }
             else {

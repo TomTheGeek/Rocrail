@@ -2310,8 +2310,8 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   else
     wLoc.setplacing( data->props, !wLoc.isplacing( data->props ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
-  /* inform model to keep this setting in the occupation file */
-  ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+  /* inform model to keep this setting in the occupancy file */
+  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
 
   if( !consist ) {
     /* only swap if this command did not come from a multiple unit loop */
@@ -2456,7 +2456,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
   wLoc.setblockenterside(data->props, enterside);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
-  ModelOp.setBlockOccupation( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
   /* Broadcast to clients. */
   clone = (iONode)NodeOp.base.clone(data->props);
   if( blockId != NULL )

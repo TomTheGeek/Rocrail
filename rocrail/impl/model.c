@@ -106,7 +106,7 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/ModOcc.h"
-#include "rocrail/wrapper/public/Occupation.h"
+#include "rocrail/wrapper/public/Occupancy.h"
 #include "rocrail/wrapper/public/MVTrack.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionList.h"
@@ -1455,9 +1455,9 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
-  /* save the cleaned occupation */
+  /* save the cleaned occupancy */
   if( saveCurBlock )
-    ModelOp.saveBlockOccupation(inst);
+    ModelOp.saveBlockOccupancy(inst);
 
 }
 
@@ -1926,7 +1926,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
     StrOp.free( xml );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Plan Saved." );
   }
-  ModelOp.saveBlockOccupation(inst);
+  ModelOp.saveBlockOccupancy(inst);
 }
 
 static void _saveAs( iOModel inst, const char* fileName ) {
@@ -2540,7 +2540,7 @@ static void _init( iOModel inst ) {
   _createCoAddrMap( o );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init blockInit..." );
-  ModelOp.loadBlockOccupation(inst);
+  ModelOp.loadBlockOccupancy(inst);
   {
     iIBlockBase block = (iIBlockBase)MapOp.first( o->blockMap );
     while( block != NULL ) {
@@ -3824,7 +3824,7 @@ static void _stop( iOModel inst ) {
 }
 
 
-static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, int enterside ) {
+static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, int enterside ) {
   iOModelData data = Data(inst);
   iONode occ = NULL;
 
@@ -3836,36 +3836,36 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
 
   if( occ == NULL ) {
     /* create a node */
-    occ = NodeOp.inst( wOccupation.name(), NULL, ELEMENT_NODE );
-    wOccupation.setbkid( occ, BlockId );
+    occ = NodeOp.inst( wOccupancy.name(), NULL, ELEMENT_NODE );
+    wOccupancy.setbkid( occ, BlockId );
     MapOp.put( data->occMap, BlockId, (obj)occ );
   }
 
   /* modify the node */
-  wOccupation.setlcid( occ, LocId );
-  wOccupation.setauto( occ, False );
-  wOccupation.setclosed( occ, closed );
+  wOccupancy.setlcid( occ, LocId );
+  wOccupancy.setauto( occ, False );
+  wOccupancy.setclosed( occ, closed );
 
   if( LocId != NULL ) {
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId );
     if( loc != NULL ) {
-      wOccupation.setauto( occ, LocOp.isResumeAutomode(loc) );
-      wOccupation.setscid( occ, LocOp.getSchedule(loc, NULL) );
+      wOccupancy.setauto( occ, LocOp.isResumeAutomode(loc) );
+      wOccupancy.setscid( occ, LocOp.getSchedule(loc, NULL) );
     }
   }
 
   if( placing > 0 ) {
     /* 0 = Not set, 1 = True, 2 = False*/
-    wOccupation.setplacing( occ, placing );
+    wOccupancy.setplacing( occ, placing );
   }
 
   if( enterside > 0 ) {
     /* 0 = Not set, 1 = True, 2 = False*/
-    wOccupation.setblockenterside( occ, enterside );
+    wOccupancy.setblockenterside( occ, enterside );
   }
 
   if( LocId == NULL || StrOp.len(LocId) == 0 ) {
-    wOccupation.setplacing( occ, 0 );
+    wOccupancy.setplacing( occ, 0 );
   }
 
   /* Unlock the semaphore: */
@@ -3873,7 +3873,7 @@ static void _setBlockOccupation( iOModel inst, const char* BlockId, const char* 
 }
 
 
-static void _saveBlockOccupation( iOModel inst ) {
+static void _saveBlockOccupancy( iOModel inst ) {
   iOModelData data = Data(inst);
   iONode modocc = NodeOp.inst( wModOcc.name(), NULL, ELEMENT_NODE );
   iONode occ = NULL;
@@ -3895,8 +3895,8 @@ static void _saveBlockOccupation( iOModel inst ) {
     iOFile f = NULL;
 
     /* file name */
-    const char* occFileName =  wRocRail.getoccupation( AppOp.getIni() );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing occupation file [%s]", occFileName );
+    const char* occFileName =  wRocRail.getoccupancy( AppOp.getIni() );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing occupancy file [%s]", occFileName );
 
     f = FileOp.inst( occFileName, OPEN_WRITE );
     FileOp.write( f, modoccStr, StrOp.len(modoccStr) );
@@ -3909,7 +3909,7 @@ static void _saveBlockOccupation( iOModel inst ) {
 }
 
 
-static void _loadBlockOccupation( iOModel inst ) {
+static void _loadBlockOccupancy( iOModel inst ) {
   iOModelData data = Data(inst);
   iONode modocc = NULL;
   iONode occ = NULL;
@@ -3923,9 +3923,9 @@ static void _loadBlockOccupation( iOModel inst ) {
     iOFile f = NULL;
 
     /* file name */
-    const char* occFileName =  wRocRail.getoccupation( AppOp.getIni() );
+    const char* occFileName =  wRocRail.getoccupancy( AppOp.getIni() );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loading occupation file [%s]", occFileName );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loading occupancy file [%s]", occFileName );
 
     f = FileOp.inst( occFileName, OPEN_READONLY );
     if( f != NULL ) {
@@ -3947,13 +3947,13 @@ static void _loadBlockOccupation( iOModel inst ) {
     int i = 0;
     for( i = 0; i < cnt; i++ ) {
       iONode occ = NodeOp.getChild( modocc, i );
-      const char* BlockID  = wOccupation.getbkid( occ );
-      const char* LocoID   = wOccupation.getlcid( occ );
-      const char* ScID     = wOccupation.getscid( occ );
-      int         placing  = wOccupation.getplacing( occ );
-      int         enterside= wOccupation.getblockenterside( occ );
-      Boolean     closed   = wOccupation.isclosed( occ );
-      Boolean     automode = wOccupation.isauto( occ );
+      const char* BlockID  = wOccupancy.getbkid( occ );
+      const char* LocoID   = wOccupancy.getlcid( occ );
+      const char* ScID     = wOccupancy.getscid( occ );
+      int         placing  = wOccupancy.getplacing( occ );
+      int         enterside= wOccupancy.getblockenterside( occ );
+      Boolean     closed   = wOccupancy.isclosed( occ );
+      Boolean     automode = wOccupancy.isauto( occ );
       iOLoc       loco     = NULL;
 
       if( StrOp.len(LocoID) > 0 ) {
@@ -3996,7 +3996,7 @@ static void _loadBlockOccupation( iOModel inst ) {
           iOLocation location = ModelOp.getBlockLocation( inst, BlockID);
           /* quick and dirty solution to fix the problem of being locked by something strange...
              the block expects a const char*, but the parsed xml is freed up after setting the
-             occupation so all LocoID's are invalid.
+             occupancy so all LocoID's are invalid.
           */
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
 
@@ -4092,7 +4092,7 @@ static iOModel _inst( const char* fileName ) {
 
   data->muxSysEvent = MutexOp.inst( "muxSysEvent", True );
 
-  /* occupation map */
+  /* occupancy map */
   data->occMap      = MapOp.inst();
   data->occMux      = MutexOp.inst( NULL, True );
 

@@ -497,7 +497,7 @@
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
-      <param name="saveCurBlock" vt="Boolean" remark="save current block occupation"/>
+      <param name="saveCurBlock" vt="Boolean" remark="save current block occupancy"/>
     </fun>
     <fun name="getLen" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
@@ -955,7 +955,7 @@
     <fun name="isEnableSwFb" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
-    <fun name="setBlockOccupation" vt="void">
+    <fun name="setBlockOccupancy" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="BlockId" vt="const char*" remark="Block ID to set."/>
       <param name="LocId" vt="const char*" remark="Loco ID which occupies this block."/>
@@ -963,10 +963,10 @@
       <param name="placing" vt="int" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>
       <param name="enterside" vt="int" remark="Block enter side: 0 = Not set, 1 = True, 2 = False"/>
     </fun>
-    <fun name="saveBlockOccupation" vt="void">
+    <fun name="saveBlockOccupancy" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
-    <fun name="loadBlockOccupation" vt="void">
+    <fun name="loadBlockOccupancy" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
     <fun name="removeFbKey" vt="void">

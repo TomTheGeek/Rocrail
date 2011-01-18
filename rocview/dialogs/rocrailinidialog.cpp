@@ -156,7 +156,7 @@ void RocrailIniDialog::initLabels() {
 
   // General
   m_LabelPlanfile->SetLabel( wxGetApp().getMsg( "planfile" ) );
-  m_labOccFile->SetLabel( wxGetApp().getMsg( "blockoccupation" ) );
+  m_labOccFile->SetLabel( wxGetApp().getMsg( "blockoccupancy" ) );
   m_labPlanType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_LabelLibPath->SetLabel( wxGetApp().getMsg( "libpath" ) );
   m_labImgPath->SetLabel( wxGetApp().getMsg( "imagepath" ) );
@@ -291,7 +291,7 @@ void RocrailIniDialog::initLabels() {
 void RocrailIniDialog::initValues() {
   // General
   m_PlanFile->SetValue( wxString(wRocRail.getplanfile( m_Props ),wxConvUTF8) );
-  m_OccFile->SetValue( wxString( wRocRail.getoccupation( m_Props ),wxConvUTF8 ) );
+  m_OccFile->SetValue( wxString( wRocRail.getoccupancy( m_Props ),wxConvUTF8 ) );
   m_LibPath->SetValue( wxString(wRocRail.getlibpath( m_Props ),wxConvUTF8) );
   m_ImgPath->SetValue( wxString(wRocRail.getimgpath( m_Props ),wxConvUTF8) );
   iONode trace = wRocRail.gettrace( m_Props );
@@ -539,7 +539,7 @@ void RocrailIniDialog::evaluate() {
     return;
   // General
   wRocRail.setplanfile( m_Props, m_PlanFile->GetValue().mb_str(wxConvUTF8) );
-  wRocRail.setoccupation( m_Props, m_OccFile->GetValue().mb_str(wxConvUTF8) );
+  wRocRail.setoccupancy( m_Props, m_OccFile->GetValue().mb_str(wxConvUTF8) );
   wRocRail.setlibpath( m_Props, m_LibPath->GetValue().mb_str(wxConvUTF8) );
   wRocRail.setimgpath( m_Props, m_ImgPath->GetValue().mb_str(wxConvUTF8) );
   iONode trace = wRocRail.gettrace( m_Props );
@@ -841,7 +841,7 @@ void RocrailIniDialog::CreateControls()
     m_PlanFile = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_RR_PLANFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_PlanFile, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labOccFile = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Occupation file"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_labOccFile = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Occupancy file"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labOccFile, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_OccFile = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );

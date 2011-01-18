@@ -689,7 +689,7 @@ __getBarjutData(
 								key = StrOp.fmt( "%d_%d", address, barcode );
 
 								/*
-								   check if key is already in map: every read cycle is the occupation send
+								   check if key is already in map: every read cycle is the occupancy send
 								 */
 								//           if( MapOp.get( map, key ) == NULL )
 								{

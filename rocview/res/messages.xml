@@ -1079,7 +1079,7 @@
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen; außer Blockbelegung" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
-    <en txt="Soft reset" tip="Reset automat but save current block occupation."/>
+    <en txt="Soft reset" tip="Reset automat but save current block occupancy."/>
     <nl txt="Reset" tip="Reset automaat mode met behoud van blok bezettingen."/>
     <sv txt="Återställ" tip="Återställ"/>
     <fr txt="Réinitialisation logiciel" tip="Remise à zéro de toutes les machines."/>
@@ -1103,8 +1103,8 @@
     <en_CA txt="Soft reset"/>
     <en_GB txt="Soft reset"/>
     <ro txt="Rsetare program"/>
-    <em_GB txt="Soft reset" tip="Reset automat but save current block occupation."/>
-    <em_AU txt="Soft reset" tip="Reset automat but save current block occupation."/>
+    <em_GB txt="Soft reset" tip="Reset automat but save current block occupancy."/>
+    <em_AU txt="Soft reset" tip="Reset automat but save current block occupancy."/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -12798,14 +12798,14 @@
     <en_GB txt="Add Module"/>
     <ro txt="Adaugă modul"/>
   </Msg>
-  <Msg id="blockoccupation">
+  <Msg id="blockoccupancy">
     <de txt="Blockbelegung"/>
-    <en txt="Block occupation"/>
+    <en txt="Block occupancy"/>
     <nl txt="Blok bezetting"/>
-    <sv txt="Block occupation"/>
+    <sv txt="Block occupancy"/>
     <fr txt="Occupation de bloc"/>
-    <tr txt="Block occupation"/>
-    <es txt="Block occupation"/>
+    <tr txt="Block occupancy"/>
+    <es txt="Block occupancy"/>
     <it txt="Occupazione blocco"/>
     <da txt="Block besættelse"/>
     <bg txt="Блокиране на професията"/>
@@ -12814,9 +12814,9 @@
     <pt txt="Ocupação do bloco"/>
     <cs txt="Blok obsazení"/>
     <ru txt="Занятость блока"/>
-    <en_AU txt="Block occupation"/>
-    <en_CA txt="Block occupation"/>
-    <en_GB txt="Block occupation"/>
+    <en_AU txt="Block occupancy"/>
+    <en_CA txt="Block occupancy"/>
+    <en_GB txt="Block occupancy"/>
     <ro txt="Ocupare bloc"/>
   </Msg>
   <Msg id="modproperties" dialog="true">

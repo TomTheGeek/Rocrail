@@ -1341,7 +1341,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       data->locId = id;
       data->crossing = crossing;
       ok = True;
-      ModelOp.setBlockOccupation( AppOp.getModel(), data->id, data->locId, False, 0, 0 );
+      ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0 );
     }
     else if( StrOp.equals( id, data->locId ) ) {
       data->locId = id;
@@ -1387,7 +1387,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     }
 
     if( ok ) {
-      /* reset occupation ticker */
+      /* reset occupancy ticker */
       data->occtime = SystemOp.getTick();
       data->indelay = indelay;
     }
@@ -1617,7 +1617,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
           __checkAction((iOBlock)inst, "closed");
         }
 
-        ModelOp.setBlockOccupation( AppOp.getModel(), data->id, "", False, 0, 0 );
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0 );
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Block \"%s\" unlock %s, group lock=[%s]",
@@ -1774,7 +1774,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     /* reset acceptident flag */
     data->acceptident = False;
 
-    ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, False, 0, 0 );
+    ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
   }
@@ -1796,7 +1796,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       __checkAction((iOBlock)inst, "closed");
     }
     wBlock.setstate( data->props, state );
-    ModelOp.setBlockOccupation( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0, 0 );
+    ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
   }
 
