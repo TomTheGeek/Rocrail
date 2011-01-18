@@ -86,9 +86,13 @@ int JsSupport::getDev4ID( const char* locID) {
 }
 
 
-void JsSupport::funCmd( int device )
+void JsSupport::funCmd( int device, int fnchanged )
 {
+  int fgroup = (fnchanged-1)/4 +1;
+
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setfnchanged( cmd, fnchanged );
+  wFunCmd.setgroup(cmd, fgroup);
   wFunCmd.setid( cmd, wLoc.getid(m_Selected[device]) );
   wFunCmd.setf0( cmd, wLoc.isfn(m_Selected[device]) );
   wFunCmd.setf1( cmd, m_bF1[device]?True:False );
@@ -243,7 +247,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f1" );
             // f1
             m_bF1[device] = ! m_bF1[device];
-            funCmd( device );
+            funCmd( device, 1 );
           }
       }
       else if( number == wJsMap.getf2( ini ) ) {
@@ -251,7 +255,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f2" );
             // f2
             m_bF2[device] = ! m_bF2[device];
-            funCmd( device );
+            funCmd( device, 2 );
           }
       }
       else if( number == wJsMap.getf3( ini ) ) {
@@ -259,7 +263,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f3" );
             // f3
             m_bF3[device] = ! m_bF3[device];
-            funCmd( device );
+            funCmd( device, 3 );
           }
       }
       else if( number == wJsMap.getf4( ini ) ) {
@@ -267,7 +271,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f4" );
             // f4
             m_bF4[device] = ! m_bF4[device];
-            funCmd( device );
+            funCmd( device, 4 );
           }
       }
       else if( number == wJsMap.getf5( ini ) ) {
@@ -275,7 +279,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f5" );
             // f5
             m_bF5[device] = ! m_bF5[device];
-            funCmd( device );
+            funCmd( device, 5 );
           }
       }
       else if( number == wJsMap.getf6( ini ) ) {
@@ -283,7 +287,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f6" );
             // f6
             m_bF6[device] = ! m_bF6[device];
-            funCmd( device );
+            funCmd( device, 6 );
           }
       }
       else if( number == wJsMap.getf7( ini ) ) {
@@ -291,7 +295,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f7" );
             // f7
             m_bF7[device] = ! m_bF7[device];
-            funCmd( device );
+            funCmd( device, 7 );
           }
       }
       else if( number == wJsMap.getf8( ini ) ) {
@@ -299,7 +303,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f8" );
             // f8
             m_bF8[device] = ! m_bF8[device];
-            funCmd( device );
+            funCmd( device, 8 );
           }
       }
       else if( number == wJsMap.getf9( ini ) ) {
@@ -307,7 +311,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f9" );
             // f9
             m_bF9[device] = ! m_bF9[device];
-            funCmd( device );
+            funCmd( device, 9 );
           }
       }
       else if( number == wJsMap.getf10( ini ) ) {
@@ -315,7 +319,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f10" );
             // f10
             m_bF10[device] = ! m_bF10[device];
-            funCmd( device );
+            funCmd( device, 10 );
           }
       }
       else if( number == wJsMap.getf11( ini ) ) {
@@ -323,7 +327,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f11" );
             // f11
             m_bF11[device] = ! m_bF11[device];
-            funCmd( device );
+            funCmd( device, 11 );
           }
       }
       else if( number == wJsMap.getf12( ini ) ) {
@@ -331,7 +335,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
             TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999, "f12" );
             // f12
             m_bF12[device] = ! m_bF12[device];
-            funCmd( device );
+            funCmd( device, 12 );
           }
       }
       else if( number == wJsMap.getreverse( ini ) ) {

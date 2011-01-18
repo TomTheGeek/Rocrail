@@ -45,7 +45,7 @@ public:
 private:
   JsSupport( iONode ini );
   void speedCmd( int device );
-  void funCmd( int device );
+  void funCmd( int device, int fnchanged );
   LocSelDlg* m_LocDialog[4];
   bool m_bF1[4];
   bool m_bF2[4];
