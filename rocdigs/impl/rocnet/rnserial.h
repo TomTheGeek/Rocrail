@@ -17,3 +17,16 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+#ifndef RN_SERIAL_H_
+#define RN_SERIAL_H_
+
+Boolean rnSerialConnect( obj inst );
+void  rnSerialDisconnect( obj inst );
+
+int rnSerialRead ( obj inst, unsigned char *msg );
+Boolean rnSerialWrite( obj inst, unsigned char *msg, int len );
+Boolean rnSerialAvailable( obj inst );
+
+
+#endif /* RN_SERIAL_H_ */

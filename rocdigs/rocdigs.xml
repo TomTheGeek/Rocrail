@@ -813,6 +813,7 @@
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
       <var name="iid" vt="const char*" remark="Interface ID"/>
       <var name="run" vt="Boolean"/>
+      <var name="connected" vt="Boolean"/>
       <var name="rnConnect" vt="sublib_connect"/>
       <var name="rnDisconnect" vt="sublib_disconnect"/>
       <var name="rnRead" vt="sublib_read"/>
@@ -821,6 +822,8 @@
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="serialCon" vt="iOSerial"/>
+      <var name="cts" vt="Boolean"/>
+      <var name="ctsretry" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
     </data>

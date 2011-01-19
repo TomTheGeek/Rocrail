@@ -17,3 +17,15 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+#ifndef RN_UDP_H_
+#define RN_UDP_H_
+
+Boolean rnUDPConnect( obj inst );
+void  rnUDPDisconnect( obj inst );
+
+int rnUDPRead ( obj inst, unsigned char *msg );
+Boolean rnUDPWrite( obj inst, unsigned char *msg, int len );
+Boolean rnUDPAvailable( obj inst );
+
+#endif /* RN_UDP_H_ */

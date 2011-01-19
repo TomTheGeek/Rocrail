@@ -22,6 +22,8 @@
 #include "rocdigs/impl/rocnet/rocnet-const.h"
 #include "rocdigs/impl/rocnet/rocnet-parser.h"
 #include "rocdigs/impl/rocnet/rn-utils.h"
+#include "rocdigs/impl/rocnet/rnserial.h"
+#include "rocdigs/impl/rocnet/rnudp.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
@@ -366,17 +368,23 @@ static void _halt( obj inst, Boolean poweroff ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
     ThreadOp.post( data->writer, (obj)rn );
     /* grab some time to process the request */
-    ThreadOp.sleep(100);
+    ThreadOp.sleep(500);
   }
 
   data->run = False;
+  data->connected = False;
+  ThreadOp.sleep(500);
+  data->rnDisconnect(inst);
   return;
 }
 
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iOrocNetData data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  return True;
 }
 
 
@@ -395,7 +403,7 @@ static void _shortcut(obj inst) {
 
 /**  */
 static Boolean _supportPT( obj inst ) {
-  return 0;
+  return True;
 }
 
 
@@ -499,8 +507,21 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_SENSOR_REPORT:
+  {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report" );
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( evt, sndr );
+    wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
+
+    if( data->iid != NULL )
+      wFeedback.setiid( evt, data->iid );
+
+    wFeedback.setstate( evt, rn[RN_PACKET_DATA+2]?True:False );
+
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
     break;
+  }
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
     break;
@@ -590,17 +611,31 @@ static void __reader( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started." );
 
-  do {
+  /* Connect with the sublib. */
+  while( !data->connected && data->run ) {
+    data->connected = data->rnConnect((obj)rocnet);
+    ThreadOp.sleep(2500);
+  };
+
+
+  while( data->connected && data->run ) {
     int extended = False;
-    int event   = False;
+    int event    = False;
+    int insize   = 0;
 
-    SocketOp.recvfrom( data->readUDP, rn, 0x7F );
-    if( rnCheckPacket(rn, &extended, &event) )
-      __evaluateRN( rocnet, rn );
-    else
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reject invalid packet" );
+    if( data->rnAvailable((obj)rocnet) ) {
+      insize = data->rnRead( (obj)rocnet, rn );
 
-  } while( data->run );
+      if( rnCheckPacket(rn, &extended, &event) )
+        __evaluateRN( rocnet, rn );
+      else
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reject invalid packet" );
+    }
+    else {
+      ThreadOp.sleep(10);
+    }
+
+  };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader stopped." );
 }
@@ -613,22 +648,30 @@ static void __writer( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet writer started." );
 
+  /* give the sublib time to connect */
+  ThreadOp.sleep(1000);
+
+
   do {
-    byte* rnRequest = (byte*)ThreadOp.getPost( th );
-    if (rnRequest != NULL) {
-      int extended = False;
-      int event    = False;
-      int plen     = 0;
+    if( data->connected ) {
+      byte* rnRequest = (byte*)ThreadOp.getPost( th );
+      if (rnRequest != NULL) {
+        int extended = False;
+        int event    = False;
+        int plen     = 0;
+        Boolean ok   = False;
 
-      plen = 8 + rnRequest[RN_PACKET_LEN];
+        plen = 8 + rnRequest[RN_PACKET_LEN];
 
-      if( rnCheckPacket(rnRequest, &extended, &event) ) {
-        char* str = StrOp.byteToStr(rnRequest, plen);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write request from queue: [%s]", str );
-        StrOp.free(str);
-        SocketOp.sendto( data->writeUDP, rnRequest, plen );
+        if( rnCheckPacket(rnRequest, &extended, &event) ) {
+          char* str = StrOp.byteToStr(rnRequest, plen);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write request from queue: [%s]", str );
+          StrOp.free(str);
+          ok = data->rnWrite( (obj)rocnet, rnRequest, plen );
+
+        }
+        freeMem( rnRequest);
       }
-      freeMem( rnRequest);
     }
 
     ThreadOp.sleep(10);
@@ -669,23 +712,44 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNET %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wRocNet.getaddr(data->rnini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", wRocNet.getport(data->rnini) );
-  data->readUDP = SocketOp.inst( wRocNet.getaddr(data->rnini), wRocNet.getport(data->rnini), False, True, True );
-  SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( wRocNet.getaddr(data->rnini), wRocNet.getport(data->rnini), False, True, True );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->run = True;
+
+  /* choose interface: */
+  if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ) {
+    /* rnserial */
+    data->rnConnect    = rnSerialConnect;
+    data->rnDisconnect = rnSerialDisconnect;
+    data->rnRead       = rnSerialRead;
+    data->rnWrite      = rnSerialWrite;
+    data->rnAvailable  = rnSerialAvailable;
+    data->run = True;
+  }
+  else if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( ini ) ) ||
+           StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
+    /* rnudp */
+    data->rnConnect    = rnUDPConnect;
+    data->rnDisconnect = rnUDPDisconnect;
+    data->rnRead       = rnUDPRead;
+    data->rnWrite      = rnUDPWrite;
+    data->rnAvailable  = rnUDPAvailable;
+    data->run = True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib [%s] is not supported", wDigInt.getsublib( ini ) );
+  }
 
 
-  data->reader = ThreadOp.inst( "rnreader", &__reader, __rocNet );
-  ThreadOp.start( data->reader );
 
-  data->writer = ThreadOp.inst( "rnwriter", &__writer, __rocNet );
-  ThreadOp.start( data->writer );
+  if( data->run == True ) {
+    data->reader = ThreadOp.inst( "rnreader", &__reader, __rocNet );
+    ThreadOp.start( data->reader );
 
+    data->writer = ThreadOp.inst( "rnwriter", &__writer, __rocNet );
+    ThreadOp.start( data->writer );
+  }
 
   instCnt++;
   return __rocNet;
