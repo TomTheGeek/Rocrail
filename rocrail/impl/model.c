@@ -1835,13 +1835,17 @@ static void _removeFbKey(iOModel inst, const char* key, obj fb) {
 
 static void _addFbKey(iOModel inst, const char* key, obj fb) {
   iOModelData data = Data(inst);
+  Boolean multiple = False;
   iOList list = (iOList)MapOp.get( data->fbAddrMap, key );
   if( list == NULL ) {
     list = ListOp.inst();
     MapOp.put( data->fbAddrMap, key, (obj)list );
   }
+  else {
+    multiple = True;
+  }
   ListOp.add( list, fb );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey: size=%d.", MapOp.size(data->fbAddrMap) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey %s%s: size=%d.", key, multiple?"(**multiple**)":"", MapOp.size(data->fbAddrMap) );
 }
 
 static void _createFbAddrMap( iOModel inst ) {
