@@ -23,10 +23,10 @@
 
 int rnCheckPacket(unsigned char* rn, int* extended, int* event);
 
-int rnSenderAddrFromPacket(unsigned char* rn);
-int rnReceipientAddrFromPacket(unsigned char* rn);
-void rnSenderAddresToPacket( int addr, unsigned char* rn );
-void rnReceipientAddresToPacket( int addr, unsigned char* rn );
+int rnSenderAddrFromPacket(unsigned char* rn, int seven);
+int rnReceipientAddrFromPacket(unsigned char* rn, int seven);
+void rnSenderAddresToPacket( int addr, unsigned char* rn, int seven );
+void rnReceipientAddresToPacket( int addr, unsigned char* rn, int seven );
 const char* rnActionTypeString(unsigned char* rn);
 int rnActionFromPacket(unsigned char* rn);
 int rnActionTypeFromPacket(unsigned char* rn);

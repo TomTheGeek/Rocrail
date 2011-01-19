@@ -39,22 +39,22 @@ int rnActionTypeFromPacket(unsigned char* rn) {
 }
 
 
-int rnSenderAddrFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_SNDRL] + rn[RN_PACKET_SNDRH] * 128;
+int rnSenderAddrFromPacket(unsigned char* rn, int seven) {
+  return rn[RN_PACKET_SNDRL] + rn[RN_PACKET_SNDRH] * (seven?128:256);
 }
 
-int rnReceipientAddrFromPacket(unsigned char* rn) {
-  return rn[RN_PACKET_RCPTL] + rn[RN_PACKET_RCPTH] * 128;
+int rnReceipientAddrFromPacket(unsigned char* rn, int seven) {
+  return rn[RN_PACKET_RCPTL] + rn[RN_PACKET_RCPTH] * (seven?128:256);
 }
 
-void rnSenderAddresToPacket( int addr, unsigned char* rn ) {
-  rn[RN_PACKET_SNDRL] = addr % 128;
-  rn[RN_PACKET_SNDRH] = addr / 128;
+void rnSenderAddresToPacket( int addr, unsigned char* rn, int seven ) {
+  rn[RN_PACKET_SNDRL] = addr % (seven?128:256);
+  rn[RN_PACKET_SNDRH] = addr / (seven?128:256);
 }
 
-void rnReceipientAddresToPacket( int addr, unsigned char* rn ) {
-  rn[RN_PACKET_RCPTL] = addr % 128;
-  rn[RN_PACKET_RCPTH] = addr / 128;
+void rnReceipientAddresToPacket( int addr, unsigned char* rn, int seven ) {
+  rn[RN_PACKET_RCPTL] = addr % (seven?128:256);
+  rn[RN_PACKET_RCPTH] = addr / (seven?128:256);
 }
 
 const char* rnActionTypeString(unsigned char* rn) {
@@ -66,8 +66,6 @@ const char* rnActionTypeString(unsigned char* rn) {
       return "event";
     case RN_ACTIONTYPE_REPLY:
       return "reply";
-    case RN_ACTIONTYPE_REPLYEXP:
-      return "request, reply expected";
     default:
       return "unsupported";
   }

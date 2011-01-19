@@ -43,7 +43,7 @@ const char* rocnetGetProtocolStr(byte prot) {
 
 Boolean rocnetIsThis( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
-  int          sndr       = rnSenderAddrFromPacket(rn);
+  int          sndr       = rnSenderAddrFromPacket(rn, data->seven);
   return (sndr == wRocNet.getid(data->rnini));
 }
 
@@ -58,8 +58,8 @@ byte* rocnetParseMobile( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   case RN_MOBILE_VELOCITY:
@@ -108,8 +108,8 @@ byte* rocnetParseGeneral( iOrocNet rocnet, byte* rn ) {
 
   static Boolean selfTest = True;
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
     case RN_CS_NOP:
@@ -152,8 +152,8 @@ byte* rocnetParseOutput( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   case RN_OUTPUT_SWITCH:

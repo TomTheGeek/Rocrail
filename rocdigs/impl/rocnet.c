@@ -128,7 +128,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   rn[0] = 0; /* network ID 0=ALL */
 
-  rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn );
+  rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
 
 
   /* BinCmd command. */
@@ -213,7 +213,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn, data->seven );
     rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH_MULTI;
     rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = 0;
@@ -258,7 +258,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn, data->seven );
     rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
     rn[RN_PACKET_LEN] = 1;
     rn[RN_PACKET_DATA + 0] = cmd;
@@ -284,7 +284,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         addr, V, fn?"on":"off", dir?"forwards":"reverse" );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnReceipientAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn, data->seven );
     rn[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
     rn[RN_PACKET_LEN] = 2;
     rn[RN_PACKET_DATA + 0] = V;
@@ -320,7 +320,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         fn9?"on":"off", fn10?"on":"off", fn11?"on":"off", fn12?"on":"off" );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnReceipientAddresToPacket( addr, rn );
+    rnReceipientAddresToPacket( addr, rn, data->seven );
     rn[RN_PACKET_ACTION] = RN_MOBILE_FUNCTIONS;
     rn[RN_PACKET_LEN] = 3;
     rn[RN_PACKET_DATA + 0] = (fn1?0x01:0x00) | (fn2?0x02:0x00) | (fn3?0x04:0x00) | (fn4?0x08:0x00) | (fn5?0x10:0x00) | (fn6?0x20:0x00) | (fn?0x40:0x00) ;
@@ -416,8 +416,8 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   default:
@@ -436,8 +436,8 @@ static void __evaluatePTMobile( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   default:
@@ -456,8 +456,8 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   default:
@@ -476,8 +476,8 @@ static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   case RN_CLOCK_SET:
@@ -502,8 +502,8 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   case RN_SENSOR_REPORT:
@@ -538,8 +538,8 @@ static void __evaluateInput( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
 
-  rcpt = rnReceipientAddrFromPacket(rn);
-  sndr = rnSenderAddrFromPacket(rn);
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
   default:
@@ -725,6 +725,7 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->rnRead       = rnSerialRead;
     data->rnWrite      = rnSerialWrite;
     data->rnAvailable  = rnSerialAvailable;
+    data->seven = True;
     data->run = True;
   }
   else if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( ini ) ) ||

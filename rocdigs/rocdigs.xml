@@ -826,6 +826,7 @@
       <var name="ctsretry" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="seven" vt="Boolean"/>
     </data>
   </object>
 
