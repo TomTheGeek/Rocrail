@@ -21,6 +21,8 @@
 #ifndef RNUTILS_H_
 #define RNUTILS_H_
 
+unsigned char rnChecksum(const unsigned char *b, int len);
+
 int rnCheckPacket(unsigned char* rn, int* extended, int* event);
 
 int rnSenderAddrFromPacket(unsigned char* rn, int seven);

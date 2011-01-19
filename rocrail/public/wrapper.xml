@@ -413,6 +413,7 @@
         <var name="id" vt="int" defval="1" range="0-*" remark="rocNet sender ID, 1 is default for rocrail."/>
         <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
+        <var name="crc" vt="bool" defval="false"/>
       </rocnet>
 
       <dcc232 remark="DCC232 options" wrappername="DCC232">

@@ -26,6 +26,17 @@
 
 static const char* name = "rnutils";
 
+
+unsigned char rnChecksum(const unsigned char *b, int len) {
+  unsigned char chksum = 0xff;
+  int i;
+  for (i = 0; i < len; i++) {
+    chksum ^= b[i];
+  }
+  return chksum;
+}
+
+
 int rnCheckPacket(unsigned char* rn, int* extended, int* event) {
   return True;
 }

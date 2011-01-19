@@ -827,6 +827,7 @@
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="seven" vt="Boolean"/>
+      <var name="crc" vt="Boolean"/>
     </data>
   </object>
 

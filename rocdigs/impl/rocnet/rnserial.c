@@ -87,14 +87,30 @@ int rnSerialRead ( obj inst, unsigned char *msg ) {
   }
 
   if( ok && ( c & 0x80 ) ) {
+    int dataLen = 0;
     msg[0] = c;
     ok = SerialOp.read(data->serialCon, msg+1, 7);
-    if( ok && msg[7] > 0 ) {
-      ok = SerialOp.read(data->serialCon, msg+8, msg[7]);
+    if( !ok ) {
+      return 0;
+    }
+    dataLen = msg[7];
+    if( ok && dataLen > 0 ) {
+      ok = SerialOp.read(data->serialCon, msg+8, dataLen);
+    }
+    if( ok && data->crc ) {
+      byte crc = 0;
+      ok = SerialOp.read(data->serialCon, &crc, 1);
+      if( ok && crc != rnChecksum(msg, 8 + dataLen) ) {
+        /* checksum error */
+        TraceOp.trc( "rnserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "checksum error; 0x%02X expected, got 0x%02X", rnChecksum(msg, 8 + dataLen), crc );
+        TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, 8 + dataLen );
+        return 0;
+      }
+      msg[8 + dataLen] = crc;
     }
     if(ok) {
-      TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, 8 + msg[7] );
-      return 8 + msg[7];
+      TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, 8 + dataLen + (data->crc ? 1:0));
+      return 8 + dataLen;
     }
   }
 
@@ -134,6 +150,10 @@ Boolean rnSerialWrite( obj inst, unsigned char *msg, int len ) {
 
   /* set 7 bit flag */
   msg[0] |= 0x80;
+  if( data->crc ) {
+    msg[len] = rnChecksum(msg, len);
+    len++;
+  }
   TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, len );
   ok = SerialOp.write( data->serialCon, msg, len );
 
