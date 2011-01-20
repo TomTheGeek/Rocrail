@@ -54,6 +54,9 @@
 
 static int instCnt = 0;
 
+static Boolean __unregisterCallback( iOSwitch inst );
+
+
 /*
  ***** OBase functions.
  */
@@ -246,6 +249,7 @@ static void __del(void* inst) {
     ThreadOp.sleep(1000);
     data->accctrl = NULL;
   }
+  __unregisterCallback(inst);
   freeMem( data );
   freeMem( inst );
   instCnt--;
@@ -331,7 +335,6 @@ static char* _createAddrKey( int bus, int addr, int port, const char* iid ) {
 
   return StrOp.fmt( "%d_%d_%d_%s", bus, l_addr, l_port, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
 }
-
 
 static const char* __checkFbState( iOSwitch inst ) {
   iOSwitchData data = Data(inst);
@@ -435,6 +438,28 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, int ident, int va
     if( data->lockedId != NULL )
       wSwitch.setlocid( nodeF, data->lockedId );
     AppOp.broadcastEvent( nodeF );
+  }
+}
+
+
+static Boolean __unregisterCallback( iOSwitch inst ) {
+  iOSwitchData data = Data(inst);
+  iOModel model = AppOp.getModel(  );
+  iOFBack  fbR = ModelOp.getFBack( model, wSwitch.getfbR( data->props ) );
+  iOFBack  fbG = ModelOp.getFBack( model, wSwitch.getfbG( data->props ) );
+  iOFBack fb2R = ModelOp.getFBack( model, wSwitch.getfb2R( data->props ) );
+  iOFBack fb2G = ModelOp.getFBack( model, wSwitch.getfb2G( data->props ) );
+  if( fbR != NULL ) {
+    FBackOp.setListener( fbR, (obj)NULL, NULL );
+  }
+  if( fbG != NULL ) {
+    FBackOp.setListener( fbG, (obj)NULL, NULL );
+  }
+  if( fb2R != NULL ) {
+    FBackOp.setListener( fb2R, (obj)NULL, NULL );
+  }
+  if( fb2G != NULL ) {
+    FBackOp.setListener( fb2G, (obj)NULL, NULL );
   }
 }
 
@@ -936,6 +961,7 @@ static void _modify( iOSwitch inst, iONode props ) {
   int i = 0;
 
   __initCTC(inst, True);
+  __unregisterCallback(inst);
 
   for( i = 0; i < cnt; i++ ) {
     iOAttr attr = NodeOp.getAttr( props, i );
@@ -1170,7 +1196,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
   }
 
   /* Cleanup Node3 */
-  nodeC->base.del(nodeC);
+  if( nodeC != NULL )
+    NodeOp.base.del(nodeC);
 
 }
 

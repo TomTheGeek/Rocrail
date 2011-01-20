@@ -161,7 +161,8 @@ static void __checkAction( iOFBack inst ) {
 
       if( data->listenerObj != NULL ) {
         iIBlockBase bk = (iIBlockBase)data->listenerObj;
-        wActionCtrl.setlcid(fbaction, bk->getLoc(bk) );
+        if( StrOp.equals( BlockOp.base.name(), data->listenerObj->name() ) )
+          wActionCtrl.setlcid(fbaction, bk->getLoc(bk) );
       }
       iOAction action = ModelOp.getAction(model, wActionCtrl.getid( fbaction ));
       if( action != NULL )
@@ -186,9 +187,11 @@ static Boolean _setListener( iOFBack inst, obj listenerObj, const fback_listener
   iOFBackData data = Data(inst);
   data->listenerObj = listenerObj;
   data->listenerFun = listenerFun;
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s listener set for %s",
-    FBackOp.getId( inst ),
-    listenerObj->toString(listenerObj) );
+  if( listenerObj != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s listener set for %s",
+      FBackOp.getId( inst ),
+      listenerObj->toString(listenerObj) );
+  }
   return True;
 }
 
