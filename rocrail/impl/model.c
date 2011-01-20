@@ -1744,6 +1744,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       fstat = (iONode)ListOp.next( fstats );
       ThreadOp.sleep( 0 );
     };
+    ListOp.base.del(fstats);
   }
 
   cmd->base.del(cmd);
