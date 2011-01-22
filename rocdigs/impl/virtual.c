@@ -141,6 +141,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   TraceOp.println( cmdStr );
   StrOp.free(cmdStr);
   */
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "translate: %s", NodeOp.getName( node ));
+
 
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
@@ -312,6 +314,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   }
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program command: %d", wProgram.getcmd( node ) );
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
@@ -361,6 +364,13 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MultiPort addr=%d mask=0x%04X value=%d", addr, cv, value);
       }
     }
+
+    else if( wProgram.getcmd( node ) == wProgram.lncvget ) {
+      int cv = wProgram.getcv( node );
+      int addr = wProgram.getaddr( node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lncvget addr=%d cv=%d", addr, cv);
+    }
+
 
   }
   return rsp;

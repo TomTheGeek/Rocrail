@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/SvnLog.h"
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 #include "rocrail/wrapper/public/SrcpCon.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include "common/version.h"
 
@@ -400,6 +401,7 @@ static void __conhelp() {
     TraceOp.println( " p - Power ON" );
     TraceOp.println( " y - Power OFF" );
     TraceOp.println( " x - Read all slots" );
+    TraceOp.println( " 5 - Query LocoIO" );
     TraceOp.println( " t - List all active threads" );
     TraceOp.println( " z - Analyse track plan" );
     TraceOp.println( " l - Cleanup analyzed route info" );
@@ -426,6 +428,20 @@ static void __syscmd( const char* command ) {
     AppOp.broadcastEvent( cmd );
   }
 }
+
+
+static void __queryLocoIO() {
+  iOAppData data = Data(__appinst);
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setlntype( cmd, wProgram.lntype_sv );
+  wProgram.setcmd( cmd, wProgram.lncvget );
+  wProgram.setaddr( cmd, 0 );
+  wProgram.setmodid( cmd, 0 );
+  wProgram.setcv( cmd, 0 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Query LocoIO..." );
+  ControlOp.cmd( data->control, cmd, NULL );
+}
+
 
 
 static __checkConsole( iOAppData data ) {
@@ -473,6 +489,9 @@ static __checkConsole( iOAppData data ) {
   }
   else if( c == wConCmd.slots ) {
     __syscmd( wSysCmd.slots );
+  }
+  else if( c == '5' ) {
+    __queryLocoIO();
   }
   else if( c == wConCmd.config ) {
     __syscmd( wSysCmd.config );
