@@ -43,7 +43,7 @@ static iOMap descMap = NULL;
 
 static const char* lang = NULL;
 
-static void __addlang( iONode xml, const char* newlang, Boolean empty );
+static void __addlang( iONode xml, const char* newlang, Boolean empty, Boolean remove );
 
 /** ------------------------------------------------------------
   * public main()
@@ -59,6 +59,7 @@ int main( int argc, const char* argv[] ) {
   const char* infile = NULL;
   const char* newlang = NULL;
   Boolean empty = False;
+  Boolean remove = False;
 
   iOTrace trc = TraceOp.inst( TRCLEVEL_INFO, "addlang", True );
   TraceOp.setAppID( trc, "a" );
@@ -83,6 +84,7 @@ int main( int argc, const char* argv[] ) {
   newlang = CmdLnOp.getStrDef( arg, "-l", NULL );
   infile = CmdLnOp.getStrDef( arg, "-i", NULL );
   empty = CmdLnOp.hasKey( arg, "-empty" );
+  remove = CmdLnOp.hasKey( arg, "-remove" );
   
   /* Read const.xml */
   if( infile != NULL && FileOp.exist(infile) && newlang != NULL ) {
@@ -103,7 +105,7 @@ int main( int argc, const char* argv[] ) {
       freeMem( xmlStr );
       root = DocOp.getRootNode( doc );
 
-      __addlang( root, newlang, empty );
+      __addlang( root, newlang, empty, remove );
       {
         char* backupname = StrOp.fmt( "%s.bak", infile );
         TraceOp.println( "Renaming %s to %s", infile, backupname );
@@ -141,7 +143,7 @@ int main( int argc, const char* argv[] ) {
 </Messages>
 */
 
-static void __addlang( iONode xml, const char* newlang, Boolean empty ) {
+static void __addlang( iONode xml, const char* newlang, Boolean empty, Boolean remove ) {
   int cnt = 0;
   iONode msg = NodeOp.findNode( xml, "Msg" );
   
@@ -150,7 +152,10 @@ static void __addlang( iONode xml, const char* newlang, Boolean empty ) {
     iONode en   = NodeOp.findNode( msg, "en" );
     iONode lang = NodeOp.findNode( msg, newlang );
     
-    if( all == NULL ) {
+    if( remove && lang != NULL ) {
+      NodeOp.removeChild( msg, lang );
+    }
+    else if( all == NULL ) {
       /* not adding a line in case a global text is wanted */
     
       if( lang == NULL && en == NULL || lang == NULL && empty) {
