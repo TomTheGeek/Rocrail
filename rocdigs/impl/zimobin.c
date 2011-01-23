@@ -331,7 +331,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
   }
 
   /* Loc command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr = wLoc.getaddr( node );
     int V = 0;
     int steps = wLoc.getspcnt( node );
@@ -343,25 +343,6 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       else if( wLoc.getV_max( node ) > 0 )
         V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
     }
-
-
-    outa[0] = 6;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 3;    /* loco control */
-    outa[3] = addr / 256 | 0x80; /* force dcc */
-    outa[4] = addr % 256;
-    outa[5] = V;
-    outa[6] = (wLoc.isdir( node )?0x00:0x20) | (wLoc.isfn( node )?0x10:0x00) | __dccSteps(steps);
-
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, fn=%s",
-        V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
-    ThreadOp.post( data->transactor, (obj)outa );
-  }
-
-  /* Function command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    int addr  = wFunCmd.getaddr( node );
-    int group = wFunCmd.getgroup( node );
 
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
@@ -376,36 +357,32 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     Boolean f10 = wFunCmd.isf10( node );
     Boolean f11 = wFunCmd.isf11( node );
     Boolean f12 = wFunCmd.isf12( node );
-    Boolean f13 = wFunCmd.isf13( node );
-    Boolean f14 = wFunCmd.isf14( node );
-    Boolean f15 = wFunCmd.isf15( node );
-    Boolean f16 = wFunCmd.isf16( node );
-    Boolean f17 = wFunCmd.isf17( node );
-    Boolean f18 = wFunCmd.isf18( node );
-    Boolean f19 = wFunCmd.isf19( node );
-    Boolean f20 = wFunCmd.isf20( node );
-    Boolean f21 = wFunCmd.isf21( node );
-    Boolean f22 = wFunCmd.isf22( node );
-    Boolean f23 = wFunCmd.isf23( node );
-    Boolean f24 = wFunCmd.isf24( node );
-    Boolean f25 = wFunCmd.isf25( node );
-    Boolean f26 = wFunCmd.isf26( node );
-    Boolean f27 = wFunCmd.isf27( node );
-    Boolean f28 = wFunCmd.isf28( node );
 
-    byte functions1 = (f1 ?0x01:0) + (f2 ?0x02:0) + (f3 ?0x04:0) + (f4 ?0x08:0) + (f0 ?0x10:0);
-    byte functions2 = (f5 ?0x01:0) + (f6 ?0x02:0) + (f7 ?0x04:0) + (f8 ?0x08:0);
-    byte functions3 = (f9 ?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
-    byte functions4 = (f13?0x01:0) + (f14?0x02:0) + (f15?0x04:0) + (f16?0x08:0) + (f17?0x10:0) + (f18?0x20:0) + (f19?0x40:0) + (f20?0x80:0);
-    byte functions5 = (f21?0x01:0) + (f22?0x02:0) + (f23?0x04:0) + (f24?0x08:0) + (f25?0x10:0) + (f26?0x20:0) + (f27?0x40:0) + (f28?0x80:0);
+    byte functions1 = (f1 ?0x01:0) + (f2 ?0x02:0) + (f3 ?0x04:0) + (f4 ?0x08:0) +
+                      (f5 ?0x10:0) + (f6 ?0x20:0) + (f7 ?0x40:0) + (f8 ?0x80:0);
+    byte functions2 = (f9 ?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
 
+
+    outa[0] = 8;    /* packet length */
+    outa[1] = 0x10; /* command station instruction */
+    outa[2] = 3;    /* loco control */
+    outa[3] = addr / 256 | 0x80; /* force dcc */
+    outa[4] = addr % 256;
+    outa[5] = V;
+    outa[6] = (wLoc.isdir( node )?0x00:0x20) | (wLoc.isfn( node )?0x10:0x00) | __dccSteps(steps);
+    outa[7] = functions1;
+    outa[8] = functions2;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s",
+        V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "function %d light=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, (f0?"ON":"OFF"), (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
+        "f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
+        (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
-
+    ThreadOp.post( data->transactor, (obj)outa );
   }
+
 
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
