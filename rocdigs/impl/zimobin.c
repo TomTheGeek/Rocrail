@@ -217,7 +217,7 @@ static int __unescapePacket(byte* packet, int inlen) {
   for( i = 0; i < inlen; i++ ) {
     if(  packet[i] == DLE ) {
       i++;
-      buf[idx] = packet[i] ^ 0xDF;
+      buf[idx] = packet[i] ^ 0x20;
       idx++;
     }
     else {
