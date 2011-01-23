@@ -19,6 +19,27 @@
  */
 
 
+/*
+Example of a reset message:
+
+[22/01/2011 16:32:05] - Written data
+soh soh  seq dle pc^0x20 msg dle crc8^0x20 eot
+01  01   21  10  30      00  10  21        17
+
+seq  = 0x21
+info = 0x10 -> message sent by pc
+msg  = 0x00 -> reset
+crc8 = 0x01
+
+
+Reply:
+
+[22/01/2011 16:32:10] - Read data
+soh soh seq ack pri seq crc8 eot
+01  01  80  40  00  21  7e   17
+*/
+
+
 #include "rocdigs/impl/zimobin_impl.h"
 
 #include "rocs/public/trace.h"
