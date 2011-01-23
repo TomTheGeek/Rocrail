@@ -507,6 +507,23 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static void __handleTrackSection(iOZimoBin zimobin, byte* packet) {
+  iOZimoBinData data = Data(zimobin);
+  int addr = packet[3] * 8 + packet[4];
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: addr=%d, section=%d, status=0x%02X", packet[3], packet[4], packet[5] );
+
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, (packet[5]&0x18)?True:False );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
   iOZimoBinData data    = Data(zimobin);
   Boolean ok = True;
@@ -515,6 +532,10 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
 
   switch( packet[1] ) {
   case 0x0A: /* command station instruction */
+    break;
+  case 0x02: /* MX9 track section */
+    if( packet[2] == 255 )
+      __handleTrackSection(zimobin, packet);
     break;
   }
 
