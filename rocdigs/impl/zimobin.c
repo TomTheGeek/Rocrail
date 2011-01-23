@@ -188,7 +188,7 @@ static int __escapePacket(byte* packet, int inlen) {
   int idx = 0;
 
   for( i = 0; i < inlen; i++ ) {
-    if(  packet[i] == SOH || packet[i] == SOH || packet[i] == SOH ) {
+    if(  packet[i] == SOH || packet[i] == EOT || packet[i] == DLE ) {
       buf[idx] = DLE;
       idx++;
       buf[idx] = packet[i] ^ 0x20;
@@ -505,10 +505,22 @@ static void __transactor( void* threadinst ) {
 
   byte out[256];
   obj post = NULL;
-  int esqid = 0;
+  int esqid = 0x20;
 
   ThreadOp.setDescription( th, "Transactor for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
+
+  /* send reset packet */
+  {
+    byte* outa = allocMem(32);
+
+    outa[0] = 2;    /* packet length */
+    outa[1] = 0x10; /* command station instruction */
+    outa[2] = 0;    /* track control */
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
+
+
   do {
     /* get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
@@ -528,7 +540,9 @@ static void __transactor( void* threadinst ) {
 
         out[packetlen] = __checkSum(out, packetlen);
         packetlen++;
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         packetlen = __escapePacket(out, packetlen);
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         packetlen = __controlPacket(out, packetlen);
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
         SerialOp.write( data->serial, (char*) out, packetlen );
