@@ -260,6 +260,13 @@ static int __uncontrolPacket(byte* packet, int inlen) {
 }
 
 
+static int __dccSteps(int steps) {
+  if( steps < 28 )
+    return 0x04;
+  if( steps > 28 )
+    return 0x0C;
+  return 0x08;
+}
 
 
 static iONode __translate( iOZimoBin zimobin, iONode node ) {
@@ -325,13 +332,30 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    int   addr = wLoc.getaddr( node );
-    int  speed = 0;
-    int  lenzspeed = 0;
-    Boolean fn = wLoc.isfn( node );
-    int    dir = wLoc.isdir( node );
-    int  spcnt = wLoc.getspcnt( node );
+    int addr = wLoc.getaddr( node );
+    int V = 0;
+    int steps = wLoc.getspcnt( node );
+    byte* outa = allocMem(32);
 
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        V = (wLoc.getV( node ) * steps) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
+    }
+
+
+    outa[0] = 6;    /* packet length */
+    outa[1] = 0x10; /* command station instruction */
+    outa[2] = 3;    /* loco control */
+    outa[3] = addr / 256 | 0x80; /* force dcc */
+    outa[4] = addr % 256;
+    outa[5] = V;
+    outa[6] = (wLoc.isdir( node )?0x00:0x20) | (wLoc.isfn( node )?0x10:0x00) | __dccSteps(steps);
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, fn=%s",
+        V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
+    ThreadOp.post( data->transactor, (obj)outa );
   }
 
   /* Function command. */
