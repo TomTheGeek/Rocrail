@@ -1178,6 +1178,9 @@ void Symbol::OnPopup(wxMouseEvent& event)
                  if( blockID != NULL && StrOp.equals(blockID, wBlock.getid( m_Props ) )) {
                    addSc = True;
                  }
+                 else if( blockID != NULL && StrOp.equals(blockID, wBlock.getmanagerid( m_Props ) )) {
+                   addSc = True;
+                 }
                  else if( locationID != NULL ) {
                    iONode locationlist = wPlan.getlocationlist( model );
                    if( locationlist != NULL ) {
@@ -1187,7 +1190,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
                          iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
                          while ( StrTokOp.hasMoreTokens( tok )) {
                            const char * token = StrTokOp.nextToken( tok );
-                           if( StrOp.equals( token, wBlock.getid( m_Props ))) {
+                           if( StrOp.equals( token, wBlock.getid( m_Props )) || StrOp.equals( token, wBlock.getmanagerid( m_Props )) ) {
                              addSc = True;
                              break;
                            }

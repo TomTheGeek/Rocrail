@@ -1246,6 +1246,7 @@
     <bklist cardinality="1" remark="Block table" wrappername="BlockList">
       <bk cardinality="n" wrappername="Block">
         <var name="id" vt="string" defval="?" range="*" required="true"/>
+        <var name="managerid" vt="string" defval="" range="*" required="false" remark="ID of the manager object like FY or TT."/>
         <var name="desc" vt="string" defval="" range="*" remark="Description of block."/>
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>

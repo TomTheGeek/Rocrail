@@ -719,6 +719,10 @@ static Boolean _setManual( iOBlock inst, Boolean manual ) {
 static void _setManager( iIBlockBase inst, iIBlockBase manager ) {
   iOBlockData data = Data(inst);
   data->manager = manager;
+  if( manager != NULL )
+    wBlock.setmanagerid( data->props, manager->base.id(manager) );
+  else
+    wBlock.setmanagerid( data->props, "" );
 }
 
 
@@ -2108,6 +2112,7 @@ static iOBlock _inst( iONode props ) {
   wBlock.setreserved( data->props, False );
   wBlock.setentering( data->props, False );
   wBlock.setupdateenterside( data->props, False );
+  wBlock.setmanagerid( data->props, "" );
 
   data->muxLock = MutexOp.inst( NULL, True );
 
