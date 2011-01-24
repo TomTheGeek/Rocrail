@@ -3119,7 +3119,17 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     return NULL;
   }
 
+  /* https://bugs.launchpad.net/rocrail/+bug/706593
+   * TODO: Evaluate the block enterside using ModelOp.findDest(...gotoBlock...) or
+   *   ModelOp.calcRoute() within the __findScheduleEntry() function.
+   *
+   * Needed info:
+   *   wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) )
+   *   LocOp.getBlockEnterSide(loc)
+   */
   entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+
+
   if( entry == NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "in schedule [%s] no entry found with blockid [%s]: routing to first entry...", scheduleid, curblockid );
     /* take first schedule entry: */
