@@ -3127,11 +3127,66 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
    *   wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) )
    *   LocOp.getBlockEnterSide(loc)
    */
+
+  if( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+
+    while( entry != NULL ) {
+      /* entry found, get the next destination... */
+      entry = wSchedule.nextscentry( schedule, entry );
+      *scheduleIdx += 1;
+
+      if( entry != NULL ) {
+        const char* nextlocation = wScheduleEntry.getlocation( entry );
+        const char* nextblock    = wScheduleEntry.getblock( entry );
+
+        if( (nextlocation == NULL || StrOp.len(nextlocation) == 0 ) && (nextblock == NULL || StrOp.len(nextblock) == 0) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "entry in schedule [%s] is undefined.", scheduleid );
+          return NULL;
+        }
+
+        *indelay = wScheduleEntry.getindelay( entry );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
+        iORoute route = ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
+        if( route != NULL ) {
+          iORoute routeref = NULL;
+          const char* gotoBlock = NULL;
+          /* check if findDest with gotoBlock will return positively */
+          if( StrOp.equals( curblockid, RouteOp.getFromBlock(route) ) )
+            gotoBlock = RouteOp.getToBlock(route);
+          else
+            gotoBlock = RouteOp.getFromBlock(route);
+
+
+          iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, NULL, loc, &routeref, gotoBlock,
+                                    False, False, forceSameDir, swapPlacingInPrevRoute);
+
+          if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
+            return route;
+          }
+
+
+        }
+
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry in schedule [%s] is reached.", scheduleid );
+        return NULL;
+      }
+
+      entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+    };
+
+  }
+
+
+  /* for none blockside only */
+
   entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
 
 
   if( entry == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "in schedule [%s] no entry found with blockid [%s]: routing to first entry...", scheduleid, curblockid );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "in schedule [%s] no fitting entry found with blockid [%s]: routing to first entry...", scheduleid, curblockid );
     /* take first schedule entry: */
     entry = wSchedule.getscentry( schedule );
     *scheduleIdx = 0;
