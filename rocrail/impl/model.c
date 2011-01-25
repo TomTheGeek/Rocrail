@@ -3006,25 +3006,29 @@ static Boolean _isScheduleFree( iOModel inst, const char* id , const char* locoI
  * Check if the schedule index matches the blockid.
  * If it does not match try to findout at what index it is.
  */
-static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleIdx, const char* blockid ) {
+static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleIdx, const char* blockid, Boolean doNotRewind ) {
   int idx = 0;
   iONode entry = wSchedule.getscentry( schedule );
   iONode preventry = NULL;
   iIBlockBase block = ModelOp.getBlock( inst, blockid);
+  Boolean idxChecked = False;
 
   blockid = ModelOp.getManagedID(inst, blockid);
 
   /* check if the schedule index is correct: */
   while( entry != NULL ) {
-    if( idx == *scheduleIdx ) {
+    if( idx == *scheduleIdx || idxChecked ) {
       const char* entryBlock = wScheduleEntry.getblock( entry );
       const char* entryLocation = wScheduleEntry.getlocation( entry );
+      
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "checking schedule index[%d] prev=0x%08X...", *scheduleIdx, preventry );
       if( entryBlock != NULL && StrOp.len(entryBlock) > 0 ) {
         if( StrOp.equals( blockid, entryBlock ) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
               "schedule index[%d] matches block %s", *scheduleIdx, blockid );
+          if( idxChecked )
+            *scheduleIdx = idx;
           return entry;
         }
       }
@@ -3032,6 +3036,8 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
       if( __isInLocation( inst, entryLocation, blockid ) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "schedule index[%d] matches location %s for block %s", *scheduleIdx, entryLocation, blockid );
+        if( idxChecked )
+          *scheduleIdx = idx;
         return entry;
       }
 
@@ -3056,6 +3062,9 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
           return preventry;
         }
       }
+      
+      if( doNotRewind )
+        idxChecked = True;
     }
     idx++;
     preventry = entry;
@@ -3064,6 +3073,10 @@ static iONode __findScheduleEntry( iOModel inst, iONode schedule, int* scheduleI
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
       "schedule index[%d] does not match for block %s", *scheduleIdx, blockid );
+      
+  if( doNotRewind ) {
+    return NULL;
+  }
 
   idx = 0;
   entry = wSchedule.getscentry( schedule );
@@ -3113,6 +3126,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
                                         Boolean forceSameDir, Boolean swapPlacingInPrevRoute, int *indelay ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
+  int maxLoop = 0;
 
   if( schedule == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "schedule [%s] not found!", scheduleid );
@@ -3129,12 +3143,14 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
    */
 
   if( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+    curblockid = ModelOp.getManagedID(inst, curblockid);
+    entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid, False );
 
-    while( entry != NULL ) {
+    while( entry != NULL && maxLoop < 2 ) {
       /* entry found, get the next destination... */
       entry = wSchedule.nextscentry( schedule, entry );
       *scheduleIdx += 1;
+      maxLoop++;
 
       if( entry != NULL ) {
         const char* nextlocation = wScheduleEntry.getlocation( entry );
@@ -3157,12 +3173,16 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
           else
             gotoBlock = RouteOp.getFromBlock(route);
 
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
 
           iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, NULL, loc, &routeref, gotoBlock,
                                     False, False, forceSameDir, swapPlacingInPrevRoute);
 
           if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
-            return route;
+            return routeref;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable", RouteOp.getId(route), gotoBlock );
           }
 
 
@@ -3174,15 +3194,18 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
         return NULL;
       }
 
-      entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+      *scheduleIdx += 1;
+      entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid, True );
     };
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no fitting entry in schedule [%s] found.", scheduleid );
+		return NULL;
   }
 
 
   /* for none blockside only */
 
-  entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid );
+  entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid, False );
 
 
   if( entry == NULL ) {
