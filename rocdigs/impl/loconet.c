@@ -2263,10 +2263,11 @@ static void _halt( obj inst, Boolean poweroff ) {
   }
   else {
     if( wDigInt.ispoweroffexit(data->ini) || poweroff ) {
-      byte cmd[2];
-      cmd[0] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
-      cmd[1] = LocoNetOp.checksum( cmd, 1 );
-      LocoNetOp.transact( (iOLocoNet)inst, cmd, 2, NULL, NULL, 0, 0, False );
+      byte* bcmd = allocMem(32);
+      bcmd[0] = 2;
+      bcmd[1] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
+      bcmd[2] = LocoNetOp.checksum( bcmd+1, 1 );
+      ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
     }
 
     if( data->activeSlotServer ) {
