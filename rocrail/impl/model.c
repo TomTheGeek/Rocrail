@@ -1149,9 +1149,9 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
   Boolean removed = False;
 
   if( StrOp.equals( wBlock.name(), name ) ) {
-    iOBlock bk = (iOBlock)MapOp.get( o->blockMap, wBlock.getid( item ) );
+    iIBlockBase bk = (iIBlockBase)MapOp.get( o->blockMap, wBlock.getid( item ) );
     if( bk != NULL ) {
-      iONode props = BlockOp.base.properties( bk );
+      iONode props = bk->base.properties( bk );
       MapOp.remove( o->blockMap, wBlock.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wBlockList.name(), props );
