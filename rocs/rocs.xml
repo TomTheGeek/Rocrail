@@ -767,7 +767,7 @@
       <param name="inst" vt="this" remark="Node instance."/>
       <param name="child" vt="this" remark="Child node."/>
     </fun>
-    <fun name="removeChild" vt="void" remark="Remove a child node.">
+    <fun name="removeChild" vt="this" remark="Remove a child node.">
       <param name="inst" vt="this" remark="Node instance."/>
       <param name="child" vt="this" remark="Child node."/>
     </fun>

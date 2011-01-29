@@ -164,7 +164,7 @@ static void _addChild( iONode inst, iONode child ) {
   data->childCnt++;
 }
 
-static void _removeChild( iONode inst, iONode child ) {
+static iONode _removeChild( iONode inst, iONode child ) {
   iONodeData data = Data(inst);
   int i = 0;
   int cnt = data->childCnt;
@@ -174,9 +174,10 @@ static void _removeChild( iONode inst, iONode child ) {
       memcpy( &data->childs[i], &data->childs[i+1], ( data->childCnt - (i + 1) )* sizeof( iONode ) );
       data->childCnt--;
       data->childs = reallocMem( data->childs, (data->childCnt+1) * sizeof( iONode ) );
-      break;
+      return child;
     }
   }
+  return NULL;
 }
 
 static void _addAttr( iONode inst, iOAttr attr ) {

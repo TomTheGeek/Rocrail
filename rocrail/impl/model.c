@@ -406,11 +406,31 @@ static void __addItemInList( iOModelData o, const char* dbkey, iONode node ) {
   NodeOp.addChild( db, node );
 }
 
-static void __removeItemFromList( iOModelData o, const char* dbkey, iONode node ) {
+static Boolean __removeItemFromList( iOModelData o, const char* dbkey, iONode node ) {
   iONode db = NodeOp.findNode( o->model, dbkey );
   if( db != NULL ) {
-    NodeOp.removeChild( db, node );
+    if( NodeOp.removeChild( db, node ) != NULL ) {
+      return True;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node [%s] not found in list [%s]; try by id...", wItem.getid(node), dbkey );
+      int cnt = NodeOp.getChildCnt(db);
+      int i = 0;
+      for( i = 0; i < cnt; i++ ) {
+        iONode child = NodeOp.getChild( db, i );
+        if( StrOp.equals( wItem.getid(child), wItem.getid(node) ) ) {
+          if( NodeOp.removeChild( db, child ) != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node [%s] removed by id from list [%s]", wItem.getid(node), dbkey );
+            return True;
+          }
+        }
+      }
+    }
   }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "list [%s] not found", dbkey );
+  }
+  return False;
 }
 
 
