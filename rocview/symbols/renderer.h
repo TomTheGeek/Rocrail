@@ -97,7 +97,7 @@ public:
   wxBrush* getBrush( const char* fill, wxPaintDC& dc );
 
   void drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawSwitch( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
+  void drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
   void drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
   void drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );

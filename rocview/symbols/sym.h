@@ -140,6 +140,10 @@ namespace switchtype {
   static const char* decoupler_on     = "decoupler-on.svg";
   static const char* decoupler_occ    = "decoupler-occ.svg";
   static const char* decoupler_on_occ = "decoupler-on-occ.svg";
+  static const char* decoupler_route        = "decoupler-route.svg";
+  static const char* decoupler_on_route     = "decoupler-on-route.svg";
+  static const char* decoupler_occ_route    = "decoupler-occ-route.svg";
+  static const char* decoupler_on_occ_route = "decoupler-on-occ-route.svg";
 
   static const char* vturnout    = "vturnout.svg";
   static const char* vturnout_t  = "vturnout-t.svg";

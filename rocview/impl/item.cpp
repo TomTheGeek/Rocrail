@@ -607,6 +607,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
+        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.decoupler, wSwitch.gettype(m_Props) ) ||
         StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ))
     {
       iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );

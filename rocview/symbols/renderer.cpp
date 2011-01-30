@@ -248,6 +248,10 @@ void SymbolRenderer::initSym() {
         m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ );
         m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on );
         m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ );
+        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_route );
+        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_route );
+        m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ_route );
+        m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ_route );
       }
     }
     else if( StrOp.equals( wSwitch.threeway, wSwitch.gettype( m_Props ) ) ) {
@@ -1109,25 +1113,44 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const
 /**
  * Switch object
  */
-void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s", wSwitch.getid( m_Props ), state );
 
+  /*
+        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler );
+        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ );
+        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on );
+        m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ );
+        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_route );
+        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_route );
+        m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ_route );
+        m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ_route );
+
+   */
   switch( m_iSymSubType ) {
     case switchtype::i_decoupler:
       // SVG Symbol:
       if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.straight ) ) {
-        if( occupied && m_SvgSym4 != NULL )
+        if( occupied && !actroute && m_SvgSym4 != NULL )
           drawSvgSym(dc, m_SvgSym4, ori);
-        else
+        else if( occupied && actroute && m_SvgSym7 != NULL )
+          drawSvgSym(dc, m_SvgSym7, ori);
+        else if( !occupied && actroute && m_SvgSym6 != NULL )
+          drawSvgSym(dc, m_SvgSym6, ori);
+        else if( m_SvgSym3 != NULL )
           drawSvgSym(dc, m_SvgSym3, ori);
         return;
       }
       else if( m_SvgSym1!=NULL ) {
-        if( occupied && m_SvgSym2 != NULL )
+        if( occupied && !actroute && m_SvgSym2 != NULL )
           drawSvgSym(dc, m_SvgSym2, ori);
-        else
+        else if( occupied && actroute && m_SvgSym8 != NULL )
+          drawSvgSym(dc, m_SvgSym8, ori);
+        else if( !occupied && actroute && m_SvgSym5 != NULL )
+          drawSvgSym(dc, m_SvgSym5, ori);
+        else if( m_SvgSym1 != NULL )
           drawSvgSym(dc, m_SvgSym1, ori);
         return;
       }
@@ -1836,7 +1859,7 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
       drawTrack( dc, fill, occupied, actroute, ori );
       break;
     case symtype::i_switch:
-      drawSwitch( dc, fill, occupied, ori );
+      drawSwitch( dc, fill, occupied, actroute, ori );
       break;
     case symtype::i_signal:
       drawSignal( dc, fill, occupied, actroute, ori );
