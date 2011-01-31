@@ -2105,6 +2105,7 @@ void Symbol::modelEvent( iONode node ) {
     wFeedback.setstate( m_Props, state );
     wFeedback.setcarcount( m_Props, carcount );
     wFeedback.setcountedcars( m_Props, countedcars );
+    m_PlanPanel->blockEvent( wFeedback.getid( m_Props ) );
     refresh = true;
   }
   else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
