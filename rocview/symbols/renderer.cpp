@@ -1137,6 +1137,8 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool a
           drawSvgSym(dc, m_SvgSym4, ori);
         else if( occupied && actroute && m_SvgSym7 != NULL )
           drawSvgSym(dc, m_SvgSym7, ori);
+        else if( occupied && actroute && m_SvgSym4 != NULL )
+          drawSvgSym(dc, m_SvgSym4, ori);
         else if( !occupied && actroute && m_SvgSym6 != NULL )
           drawSvgSym(dc, m_SvgSym6, ori);
         else if( m_SvgSym3 != NULL )
@@ -1148,6 +1150,8 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool a
           drawSvgSym(dc, m_SvgSym2, ori);
         else if( occupied && actroute && m_SvgSym8 != NULL )
           drawSvgSym(dc, m_SvgSym8, ori);
+        else if( occupied && actroute && m_SvgSym2 != NULL )
+          drawSvgSym(dc, m_SvgSym2, ori);
         else if( !occupied && actroute && m_SvgSym5 != NULL )
           drawSvgSym(dc, m_SvgSym5, ori);
         else if( m_SvgSym1 != NULL )
