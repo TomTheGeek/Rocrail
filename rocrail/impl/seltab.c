@@ -1169,7 +1169,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */
-  if( block != NULL )
+  if( block != NULL && !data->pending )
     block->event( block, puls, id, ident, val, 0, fbevt );
 }
 
