@@ -286,7 +286,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
 
-    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x08:0x00;
+    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
 
     if( port == 0 ) {
       fromFADA( addr, &addr, &port, &gate );
@@ -295,13 +295,16 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       fromPADA( port, &addr, &port );
     }
 
+    if( port > 0 )
+      port--;
+
     byte* outa = allocMem(32);
     outa[0] = 5;    /* packet length */
     outa[1] = 0x10; /* command station instruction */
     outa[2] = 7;    /* accessory command */
     outa[3] = addr / 256 | 0x80;
     outa[4] = addr % 256;
-    outa[5] = port | state;
+    outa[5] = (port+state) | 0x08; /* TODO: Reset thge other gate? */
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d, %s", addr, port, state?"on":"off");
 
@@ -317,12 +320,15 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int port   = wOutput.getport( node );
     int gate   = wOutput.getgate( node );
 
-    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
+    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x08:0x00;
 
     if( port == 0 )
       fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
       fromPADA( port, &addr, &port );
+
+    if( port > 0 )
+      port--;
 
     byte* outa = allocMem(32);
     outa[0] = 5;    /* packet length */
@@ -330,7 +336,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[2] = 7;    /* accessory command */
     outa[3] = addr / 256 | 0x80;
     outa[4] = addr % 256;
-    outa[5] = port | state;
+    outa[5] = (port+gate) | state;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d, %s", addr, port, state?"on":"off");
 
