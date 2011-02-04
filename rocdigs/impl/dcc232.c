@@ -253,6 +253,24 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       MemOp.copy(cmd+1, dccpacket, packetlen );
       ThreadOp.post( data->writer, (obj)cmd );
     }
+    else {
+      if(  wProgram.getcmd( node ) == wProgram.pton ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
+        data->ptflag = True;
+        SerialOp.setRTS(data->serial, True);
+      }
+      else if(  wProgram.getcmd( node ) == wProgram.ptoff ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
+        data->ptflag = False;
+        SerialOp.setRTS(data->serial, False);
+      }
+      else if( wProgram.getcmd( node ) == wProgram.get && data->ptflag ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Read" );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.set && data->ptflag ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Write" );
+      }
+    }
   }
 
   /* Loc command. */

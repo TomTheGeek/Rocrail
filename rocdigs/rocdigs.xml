@@ -976,6 +976,7 @@
       <var name="purgetime" vt="int"/>
       <var name="shortcut" vt="Boolean"/>
       <var name="shortcutdelay" vt="int"/>
+      <var name="ptflag" vt="Boolean"/>
     </data>
   </object>
 
