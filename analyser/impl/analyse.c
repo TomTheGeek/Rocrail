@@ -1334,9 +1334,14 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
     */
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "depth: [%d]",
+      depth );
+
   /*security*/
-  if ( depth > 1000)
+  if ( depth > 100)
     return False;
+
+
 
   int x = 0;
   int y = 0;
