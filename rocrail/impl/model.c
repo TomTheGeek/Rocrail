@@ -335,6 +335,61 @@ static Boolean _createEmptyPlan( iOModelData o ) {
 
 }
 
+
+static Boolean __checkPlanHealth(iOModelData data) {
+  char key[64] = {'\0'};
+  Boolean healthy = True;
+  iOMap xyzMap = MapOp.inst();
+  int dbs = NodeOp.getChildCnt(data->model);
+  int i = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
+
+  for( i = 0; i < dbs; i++ ) {
+    iOMap idMap = MapOp.inst();
+    iONode db = NodeOp.getChild( data->model, i );
+    int items = NodeOp.getChildCnt(db);
+    int n = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
+    for( n = 0; n < items; n++ ) {
+      iONode item = NodeOp.getChild( db, n );
+      StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
+
+      if( MapOp.haskey(idMap, wItem.getid(item)) ) {
+        iONode firstItem = (iONode)MapOp.get(idMap, wItem.getid(item));
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "object [%s] with id [%s] at [%d,%d,%d] already exist at [%d,%d,%d]",
+            NodeOp.getName(item), wItem.getid(item),
+            wItem.getx(item), wItem.gety(item), wItem.getz(item),
+            wItem.getx(firstItem), wItem.gety(firstItem), wItem.getz(firstItem));
+        healthy = False;
+      }
+      else {
+        MapOp.put(idMap, wItem.getid(item), (obj)item );
+      }
+
+      if( MapOp.haskey(xyzMap, key) ) {
+        iONode firstItem = (iONode)MapOp.get(xyzMap, key);
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
+            NodeOp.getName(item), wItem.getid(item),
+            wItem.getx(item), wItem.gety(item), wItem.getz(item),
+            NodeOp.getName(firstItem), wItem.getid(firstItem));
+        healthy = False;
+      }
+      else if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
+        MapOp.put(xyzMap, key, (obj)item );
+      }
+
+    }
+    MapOp.base.del(idMap);
+  }
+
+  MapOp.base.del(xyzMap);
+  return healthy;
+}
+
+
 static Boolean _parsePlan( iOModelData o ) {
   if( o->planFile != NULL ) {
     FileOp.close( o->planFile );
@@ -370,6 +425,16 @@ static Boolean _parsePlan( iOModelData o ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unsupported Plan: %s", NodeOp.getName(root) );
             return False;
           }
+
+          /* check for multiple xyz positions and ID's */
+          if( !__checkPlanHealth(o) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " ***** This plan is not healthy! *****" );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " One or more double ID's and or overlapping symbols are found." );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Check the trace and correct the exceptions before using it." );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
+          }
+
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid Plan!" );
