@@ -425,7 +425,7 @@ static int __getType(iONode item ) {
       return typeTrackStraight;
     }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "      --- GETTYPE: FAILED should not happen");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  --- GETTYPE: FAILED should not happen");
   return -1;
 }
 
@@ -1301,11 +1301,11 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     }
 
     if( found) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found connector: [%s] travel: [%d] ori: [%s]",
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found connector: [%s] travel: [%d] ori: [%s]",
               wItem.getid(item) , travel, itemori);
 
       if( wTrack.getcounterpartid(item) != NULL && !StrOp.equals( wTrack.getcounterpartid(item) , "") ){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found COUNTERPART for: [%s] counterpart: [%s]",
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart for: [%s] counterpart: [%s]",
             wItem.getid(item),   wTrack.getcounterpartid(item) );
 
         iOTrack track = data->model->getTrack( data->model, wTrack.getcounterpartid(item) );
@@ -1314,7 +1314,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         if( track != NULL) {
           iONode nextitem = track->base.properties(track);
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GOING ON AT COUNTERPART: [%s]",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "continue at counterpart: [%s]",
                       wItem.getid(nextitem) );
 
           depth++;
@@ -1329,19 +1329,30 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
   }
 
-  /*
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> LIST: item [%s] travel: [%d] depth: [%d] tos: [%d] ori: [%s]",
-    wItem.getid(item), travel, depth, turnoutstate,wItem.getori(item) );
-    */
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "depth: [%d]",
       depth );
 
+  Boolean theEnd = False;
   /*security*/
-  if ( depth > 100)
+  iONode listitem = (iONode)ListOp.first( occ );
+  while(listitem) {
+    if( !behindABlock
+        && StrOp.equals(  wItem.getid(item),  wItem.getid(listitem) )
+        && StrOp.equals(  NodeOp.getName(item),  NodeOp.getName(listitem) )
+        && !StrOp.equals(NodeOp.getName(item) , "sw" )
+        && !StrOp.equals(NodeOp.getName(item) , "bk" )) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evil loop on [%s] [%s]",
+          wItem.getid(item), NodeOp.getName(item));
+      theEnd = True;
+      break;
+    }
+    listitem = (iONode)ListOp.next( occ );
+  }
+
+  if ( depth > 1000 || theEnd) {
     return False;
-
-
+  }
 
   int x = 0;
   int y = 0;
@@ -1391,7 +1402,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
     if( nextitem != NULL) {
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "NEXT ITEM: %s TOS: [%d]",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next itrm: %s tos: [%d]",
           NodeOp.getName(nextitem), turnoutstate_out );
 
       /* occ */
@@ -1412,10 +1423,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "-- > is? [%s] inOurTravel: %d",
                       wItem.getid(item), inOurTravel);
 
-        //!StrOp.equals( NodeOp.getStr( item, "signal", "distant"), "distant")
         if( searchingSignal && inOurTravel) {
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "-- > SIGNAL [%s] -> %d",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "signal [%s] -> %d",
               wItem.getid(item), searchingSignal);
 
           /* add route to occlist */
@@ -1439,7 +1449,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       if( StrOp.equals(NodeOp.getName(nextitem) , "bk" ) || StrOp.equals( "seltab", NodeOp.getName(nextitem) )) {
 
         if( behindABlock) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BLOCK PANIC ####################################");
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "behind a block");
 
           return;
         }
@@ -1473,7 +1483,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
 
-
         if( !analyserStrict)
           return True;
 
@@ -1490,7 +1499,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
          turnoutstate = turnoutstate_out;
 
         if( travelp > 10 && behindABlock){
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " SWITCH PANIC: %s ####################################", wItem.getid(nextitem));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " found a turnout [%s] behind the end block: return", wItem.getid(nextitem));
           return;
         }
 
@@ -1509,7 +1518,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           return True;
         } else if( travelp >= 300 && travelp < 400) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "### THREE WAY");
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "three way turnout");
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "     " );
           travelp -= threeWayTurnout;
           depth++;
@@ -1531,7 +1540,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           depth++;
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCROSSING travel: %d travelp: %d", travel, travelp );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "dcrossing travel: %d travelp: %d", travel, travelp );
 
           const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
                              {1,2},{0,3},{1,3},{0,1},
@@ -1570,9 +1579,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
 
     } else { /*item==NULL*/
-
-      /*delete route (ended not at a block)*/
-      /*NodeOp.base.del( route);*/
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "return (nextitem==NULL)");
       return False;
@@ -1626,7 +1632,6 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
         wBlock.getid(block), inittravel, ret);
 
 }
-
 
 static void __analyseOccList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
