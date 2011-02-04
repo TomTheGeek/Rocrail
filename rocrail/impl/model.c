@@ -385,6 +385,34 @@ static Boolean __checkPlanHealth(iOModelData data) {
     MapOp.base.del(idMap);
   }
 
+  /* check for very lonely objects */
+  if( MapOp.size(xyzMap) > 0 ) {
+    int items = MapOp.size(xyzMap);
+    int maxX = 0;
+    int maxY = 0;
+    iONode lonelyItem = NULL;
+    iONode item = (iONode)MapOp.first(xyzMap);
+    while( item != NULL ) {
+      if( maxX < wItem.getx(item) ) {
+        maxX = wItem.getx(item);
+        lonelyItem = item;
+      }
+      if( maxY < wItem.gety(item) ) {
+        maxY = wItem.gety(item);
+        lonelyItem = item;
+      }
+
+      item = (iONode)MapOp.next(xyzMap);
+    }
+
+    if( lonelyItem != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
+          NodeOp.getName(lonelyItem), wItem.getid(lonelyItem),
+          wItem.getx(lonelyItem), wItem.gety(lonelyItem), wItem.getz(lonelyItem));
+    }
+  }
+
   MapOp.base.del(xyzMap);
   return healthy;
 }
