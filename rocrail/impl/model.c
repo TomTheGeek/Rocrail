@@ -353,6 +353,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
     for( n = 0; n < items; n++ ) {
       iONode item = NodeOp.getChild( db, n );
+
       StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
       if( MapOp.haskey(idMap, wItem.getid(item)) ) {
@@ -368,17 +369,19 @@ static Boolean __checkPlanHealth(iOModelData data) {
         MapOp.put(idMap, wItem.getid(item), (obj)item );
       }
 
-      if( MapOp.haskey(xyzMap, key) ) {
-        iONode firstItem = (iONode)MapOp.get(xyzMap, key);
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-            "object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
-            NodeOp.getName(item), wItem.getid(item),
-            wItem.getx(item), wItem.gety(item), wItem.getz(item),
-            NodeOp.getName(firstItem), wItem.getid(firstItem));
-        healthy = False;
-      }
-      else if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
-        MapOp.put(xyzMap, key, (obj)item );
+      if( wItem.isshow(item) ) {
+        if( MapOp.haskey(xyzMap, key) ) {
+          iONode firstItem = (iONode)MapOp.get(xyzMap, key);
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
+              NodeOp.getName(item), wItem.getid(item),
+              wItem.getx(item), wItem.gety(item), wItem.getz(item),
+              NodeOp.getName(firstItem), wItem.getid(firstItem));
+          healthy = False;
+        }
+        else if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
+          MapOp.put(xyzMap, key, (obj)item );
+        }
       }
 
     }
