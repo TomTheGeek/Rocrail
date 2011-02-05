@@ -345,6 +345,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
+  /* checking ID's */
   for( i = 0; i < dbs; i++ ) {
     iOMap idMap = MapOp.inst();
     iONode db = NodeOp.getChild( data->model, i );
@@ -369,6 +370,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
         MapOp.put(idMap, wItem.getid(item), (obj)item );
       }
 
+      /* checking overlapping */
       if( wItem.isshow(item) ) {
         if( MapOp.haskey(xyzMap, key) ) {
           iONode firstItem = (iONode)MapOp.get(xyzMap, key);
@@ -380,7 +382,14 @@ static Boolean __checkPlanHealth(iOModelData data) {
           healthy = False;
         }
         else if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
-          MapOp.put(xyzMap, key, (obj)item );
+          if( wItem.getx(item) < -1 || wItem.gety(item) < -1 ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+                NodeOp.getName(item), wItem.getid(item),
+                wItem.getx(item), wItem.gety(item), wItem.getz(item));
+          }
+          else
+            MapOp.put(xyzMap, key, (obj)item );
         }
       }
 
