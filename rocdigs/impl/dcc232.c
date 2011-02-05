@@ -40,6 +40,7 @@
 static int instCnt = 0;
 
 static int __getcvbyte(iODCC232 inst, int cv);
+static Boolean __setcvbyte(iODCC232 inst, int cv, int val);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -268,9 +269,15 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
       }
       else if( wProgram.getcmd( node ) == wProgram.get && data->ptflag ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Read" );
+        int value = __getcvbyte( dcc232, wProgram.getcv( node ) - 1);
+        wProgram.setvalue( rsp, value );
+
       }
       else if( wProgram.getcmd( node ) == wProgram.set && data->ptflag ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Write" );
+        Boolean ack = __setcvbyte(dcc232, wProgram.getcv( node ) - 1, wProgram.getvalue( node ));
+
+        wProgram.setvalue( rsp, ack ? wProgram.getvalue( node ):-1 );
       }
     }
   }
@@ -615,7 +622,7 @@ static void __dccWriter( void* threadinst ) {
 
   while(data->run) {
 
-    if( data->power ) {
+    if( data->power && !data->ptflag ) {
       byte * post = NULL;
       byte dccpacket[64] = {0};
       post = (byte*)ThreadOp.getPost( th );
@@ -811,6 +818,32 @@ static int __getcvbyte(iODCC232 inst, int cv) {
    return value;
 }
 
+static Boolean __setcvbyte(iODCC232 inst, int cv, int val) {
+   /* direct cv access */
+  iODCC232Data data = Data(inst);
+  Boolean ack = False;
+  char SendStream[2048];
+
+  TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvset for %d=%d", cv, val);
+
+  int sendsize = createCVsetpacket(cv, val, SendStream, True);
+
+
+  SerialOp.flush(data->serial);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: sending %d bytes setting cv %d to value %d...", sendsize, cv, val);
+  SerialOp.write(data->serial,SendStream,sendsize);
+
+  ack = scanACK(data->serial);
+  int i = 0;
+  for( i = 0; i < (data->fastcvget ? 5:120) && !ack; i++ ) {
+    ack = scanACK(data->serial);
+    if( !data->fastcvget )
+      SerialOp.waitMM(data->serial,5000,100);
+  }
+  TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
+
+  return ack;
+}
 
 
 

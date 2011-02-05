@@ -53,6 +53,7 @@ int dccPOM(char* packetstream, int address, Boolean longaddr, int cvNum, int dat
 
 /* PT */
 int createCVgetpacket(int cv, int value, char* SendStream, int start);
+int createCVsetpacket(int cv, int value, char* SendStream, int verify);
 char* getResetStream(int *rsSize);
 
 

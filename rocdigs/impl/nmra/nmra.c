@@ -1375,3 +1375,102 @@ int createCVgetpacket(int cv, int value, char* SendStream, int start) {
 }
 
 
+
+int createCVsetpacket(int cv, int value, char* SendStream, int verify) {
+   /* direct cv access */
+
+   char byte2[9];
+   char byte3[9];
+   char byte4[9];
+   char byte5[9];
+   char bitstream[100];
+   char packetstream[PKTSIZE];
+
+   int i,j,l,ack1,ack2;
+   int ack = 0;
+
+   /* no special error handling, it's job of the clients */
+   if (cv<0 || cv>1024 || value<0 || value>255) return;
+
+   if (!smInitialized)
+     smInit();
+
+   /* calculating byte3: AAAAAAAA (rest of CV#) */
+   memset(byte3, 0, 9);
+   for (i=7; i>=0; i--) {
+      j=cv%2;
+      cv=cv/2;
+      switch (j) {
+         case 0: byte3[i]='0'; break;
+         case 1: byte3[i]='1'; break;
+      }
+   }
+
+   /* calculating byte2: 011111AA (instruction byte1) */
+   memset(byte2, 0, 9);
+   if (verify)
+      strcpy(byte2, "01110100");
+   else
+      strcpy(byte2, "01111100");
+   for (i=7; i>=6; i--) {
+      j=cv%2;
+      cv=cv/2;
+      switch (j) {
+         case 0: byte2[i]='0'; break;
+         case 1: byte2[i]='1'; break;
+      }
+   }
+
+   /* calculating byte4: DDDDDDDD (data) */
+   memset(byte4, 0, 9);
+   for (i=7; i>=0; i--) {
+      j=value%2;
+      value=value/2;
+      switch (j) {
+         case 0: byte4[i]='0'; break;
+         case 1: byte4[i]='1'; break;
+      }
+   }
+
+   /* calculating byte5: EEEEEEEE (error detection byte) */
+   memset(byte5, 0, 9);
+   for (i=0; i<8; i++) {
+      if (byte2[i]==byte3[i]) byte5[i]='0'; else byte5[i]='1';
+      if (byte4[i]==byte5[i]) byte5[i]='0'; else byte5[i]='1';
+   }
+
+   /* putting all together in a 'bitstream' (char array) */
+   memset(bitstream, 0, 100);
+   strcat(bitstream, longpreamble);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte2);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte3);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte4);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte5);
+   strcat(bitstream, "1");
+
+   j=translateBitstream2Packetstream(bitstream, packetstream);
+
+   memset(SendStream,0,2048);
+
+   if (!verify) {
+      for (l=0; l<50; l++) strcat(SendStream, idlestream);
+      for (l=0; l<15; l++) strcat(SendStream, resetstream);
+      for (l=0; l<20; l++) strcat(SendStream, packetstream);
+      l=50*is_size+15*rs_size+20*j;
+   }
+   else {
+      for (l=0; l<15; l++) strcat(SendStream, idlestream);
+      for (l=0; l<5; l++) strcat(SendStream, resetstream);
+      for (l=0; l<11; l++) strcat(SendStream, packetstream);
+      l=15*is_size+5*rs_size+11*j;
+   }
+
+
+   return l;
+}
+
+
