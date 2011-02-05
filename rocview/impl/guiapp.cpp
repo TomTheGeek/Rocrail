@@ -702,6 +702,11 @@ bool RocGui::OnInit() {
   int iWidth  = wWindow.getcx( wGui.getwindow( m_Ini ) );
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
+  if( iX < 0 )
+    iX = 0;
+  if( iY < 0 )
+    iY = 0;
+
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
       wxDefaultSize, m_Ini, theme, sp, tp );
   m_Frame->SetSize(wxSize(iWidth, iHeight));
