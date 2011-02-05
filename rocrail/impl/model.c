@@ -387,6 +387,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
                 "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
                 NodeOp.getName(item), wItem.getid(item),
                 wItem.getx(item), wItem.gety(item), wItem.getz(item));
+            healthy = False;
           }
           else
             MapOp.put(xyzMap, key, (obj)item );
