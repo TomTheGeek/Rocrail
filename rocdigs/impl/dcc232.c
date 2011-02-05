@@ -39,6 +39,8 @@
 
 static int instCnt = 0;
 
+static int __getcvbyte(iODCC232 inst, int cv);
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -711,6 +713,107 @@ static void __dccWriter( void* threadinst ) {
 }
 
 
+static Boolean scanACK(iOSerial serial) {
+  Boolean ack = SerialOp.isRI(serial);
+  if( ack ) {
+    TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "PT: ACK detected.");
+  }
+
+  return ack;
+}
+
+static int __getcvbyte(iODCC232 inst, int cv) {
+   /* direct cv access */
+  iODCC232Data data = Data(inst);
+   char SendStream[2048];
+
+   int ack;
+   int start, i;
+   int value = 0;
+   int sendsize = 0;
+   int fastcvget = data->fastcvget;
+
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvget for %d", cv);
+
+   /* no special error handling, it's job of the clients */
+   if (cv<0 || cv>1024) {
+     TraceOp.trc( __FILE__, TRCLEVEL_EXCEPTION, __LINE__, 9999, "PT: CV[%d] out of range", cv);
+     return;
+   }
+
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: enable booster output");
+   /* enable booster output */
+   SerialOp.setDTR(data->serial,True);
+
+   /**
+    * NMRA RP 9.2.3 section E
+    * Power On Cycle -  Upon applying power to the track, the Command Station/Programmer must
+    * transmit at least 20 valid packets to the Digital Decoder to allow it time to stabilize
+    * internal operation before any Service Mode operations are initiated.
+    */
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: power on cycle");
+
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: start polling...");
+
+   start = 1;
+   do {
+     SerialOp.flush(data->serial);
+     sendsize = createCVgetpacket(cv, value, SendStream, start);
+     if( value % 10 == 0 || !fastcvget )
+       TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: sending %d bytes checking value %d...", sendsize, value);
+     SerialOp.write(data->serial,SendStream,sendsize);
+     if (start)
+       ThreadOp.sleep(240);
+     else if( !fastcvget )
+       ThreadOp.sleep(40);
+     ack = 0;
+     /* wait for UART: */
+     ack = scanACK(data->serial);
+     for( i = 0; i < (fastcvget ? 5:120) && !ack; i++ ) {
+       ack = scanACK(data->serial);
+       /* Some USB2Serial adapter dont give a chance to detect uart empty
+        * We use waitMM as a fix for this. If detection is impossible,
+        * first wait argument is used, else second wait argument is used.
+        * This will cause pauses between values, where output will drain.
+        * For real Uart, this will not happen.
+        *ACK is 6-8ms long, poll att least every 6ms*/
+       if( !fastcvget )
+         SerialOp.waitMM(data->serial,5000,100);
+     }
+
+
+     /* init for next loop: */
+     start = 0;
+     if(ack==0) {
+       value++;
+     }
+     else {
+       /* 1 or more Reset Packets if an acknowledgement is detected */
+       int rsSize = 0;
+       char* resetstream = getResetStream(&rsSize);
+       for( i = 0; i < 3; i++ ) {
+         SerialOp.write( data->serial, resetstream, rsSize);
+       }
+     }
+
+     TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "PT: next value %d...", value);
+   } while( !ack && value < 256);
+
+
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
+
+   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: disable booster output");
+   /* disable booster output */
+   SerialOp.setDTR(data->serial,False);
+
+   if( ack == 0 )
+     value = -1;
+   return value;
+}
+
+
+
+
 /**  */
 static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   iODCC232 __DCC232 = allocMem( sizeof( struct ODCC232 ) );
@@ -736,7 +839,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   data->purgetime = wDCC232.getpurgetime(data->dcc232);
   data->shortcut = wDCC232.isshortcut(data->dcc232);
   data->shortcutdelay = wDCC232.getshortcutdelay(data->dcc232);
-
+  data->fastcvget = wDCC232.isfastcvget(data->dcc232);
 
   data->device = StrOp.dup( wDCC232.getport( data->dcc232 ) );
   data->run    = True;

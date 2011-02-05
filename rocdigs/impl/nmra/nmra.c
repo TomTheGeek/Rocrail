@@ -1243,3 +1243,135 @@ int compFunction(char* packetstream, int address, Boolean longaddr, int group, B
   else
     return compFunctionShortAddr( packetstream, address, group, f);
 }
+
+
+
+/* PT */
+static int smInitialized = False;
+static char resetstream[PKTSIZE];
+static int  rs_size = 0;
+static char *longpreamble  = "111111111111111111111111111111";
+static char reset_packet[] = "11111111111111111111111111111100000000000000000000000000010";
+static char page_preset_packet[] = "11111111111111111111111111111100111110100000000100111110010";
+static char idle_packet[] = "11111111111111111111111111111101111111100000000001111111110";
+static char idlestream[PKTSIZE];
+static int  is_size = 0;
+static char pagepresetstream[PKTSIZE];
+static int  ps_size = 0;
+
+
+static void smInit() {
+   memset(resetstream, 0, PKTSIZE);
+   rs_size=translateBitstream2Packetstream(reset_packet, resetstream);
+   memset(idlestream, 0, PKTSIZE);
+   is_size=translateBitstream2Packetstream(idle_packet, idlestream);
+   memset(pagepresetstream, 0, PKTSIZE);
+   ps_size=translateBitstream2Packetstream(page_preset_packet,pagepresetstream);
+   smInitialized = True;
+}
+
+char* getResetStream(int *rsSize) {
+  if (!smInitialized)
+    smInit();
+  *rsSize = rs_size;
+  return resetstream;
+}
+
+
+
+/**
+  * NMRA RP 9.2.3 section E
+  * Long Preamble - In Service Mode the Command Station/Programmer will increase the preamble
+  * of the packet from the minimum (per S-9.2) to at least 20 bits to allow extra time for
+  * the Digital Decoder to process the packets.  This is designated as "long-preamble"
+  * in the packet descriptions within this RP.
+  */
+int createCVgetpacket(int cv, int value, char* SendStream, int start) {
+   /* direct cv access */
+
+   char byte2[9];
+   char byte3[9];
+   char byte4[9];
+   char byte5[9];
+   char bitstream[100];
+   char packetstream[PKTSIZE];
+
+   int i, j, l, packetsize, sendsize;
+   int rc = 0;
+
+   if (!smInitialized)
+     smInit();
+
+   /* calculating byte3: AAAAAAAA (rest of CV#) */
+   memset(byte3, 0, 9);
+   for (i=7; i>=0; i--) {
+      j=cv%2;
+      cv=cv/2;
+      switch (j) {
+         case 0: byte3[i]='0'; break;
+         case 1: byte3[i]='1'; break;
+      }
+   }
+
+   /* calculating byte2: 011111AA (instruction byte1) */
+   memset(byte2, 0, 9);
+   strcpy(byte2, "01110100");
+   for (i=7; i>=6; i--) {
+      j=cv%2;
+      cv=cv/2;
+      switch (j) {
+         case 0: byte2[i]='0'; break;
+         case 1: byte2[i]='1'; break;
+      }
+   }
+
+   /* calculating byte4: DDDDDDDD (data) */
+   memset(byte4, 0, 9);
+   for (i=7; i>=0; i--) {
+      j=value%2;
+      value=value/2;
+      switch (j) {
+         case 0: byte4[i]='0'; break;
+         case 1: byte4[i]='1'; break;
+      }
+   }
+
+   /* calculating byte5: EEEEEEEE (error detection byte) */
+   memset(byte5, 0, 9);
+   for (i=0; i<8; i++) {
+      if (byte2[i]==byte3[i]) byte5[i]='0'; else byte5[i]='1';
+      if (byte4[i]==byte5[i]) byte5[i]='0'; else byte5[i]='1';
+   }
+
+   /* putting all together in a 'bitstream' (char array) */
+   memset(bitstream, 0, 100);
+   strcat(bitstream, longpreamble);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte2);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte3);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte4);
+   strcat(bitstream, "0");
+   strcat(bitstream, byte5);
+   strcat(bitstream, "1");
+
+   packetsize = translateBitstream2Packetstream(bitstream, packetstream);
+
+   memset(SendStream,0,2048);
+
+   if (start) {
+      for (l=0; l<20; l++) strcat(SendStream, idlestream);
+      for (l=0; l<5; l++) strcat(SendStream, resetstream);
+      for (l=0; l<11; l++) strcat(SendStream, packetstream);
+      sendsize=20*is_size+5*rs_size+11*packetsize;
+   }
+   else {
+      for (l=0; l<4; l++) strcat(SendStream, resetstream);
+      for (l=0; l<6; l++) strcat(SendStream, packetstream);
+      sendsize=4*rs_size+6*packetsize;
+   }
+  return sendsize;
+}
+
+

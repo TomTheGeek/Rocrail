@@ -51,6 +51,9 @@ int compAccessory(char* packetstream, int addr, int port, int gate, int activate
 /* POM */
 int dccPOM(char* packetstream, int address, Boolean longaddr, int cvNum, int data, Boolean verify);
 
+/* PT */
+int createCVgetpacket(int cv, int value, char* SendStream, int start);
+char* getResetStream(int *rsSize);
 
 
 #endif

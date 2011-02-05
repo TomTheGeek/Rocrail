@@ -57,6 +57,8 @@ void DCC232Dlg::initLabels() {
   m_InverseDSR->SetLabel( wxGetApp().getMsg( "inversedsr" ) );
   m_labShortcutDelay->SetLabel( wxGetApp().getMsg( "delay" ) );
   m_labShortcutDelayMs->SetLabel( wxGetApp().getMsg( "ms" ) );
+
+  m_FastCvGet->SetLabel( wxGetApp().getMsg( "fastcvget" ) );
 }
 
 
@@ -78,6 +80,8 @@ void DCC232Dlg::initValues() {
   m_ShortcutDetection->SetValue( wDCC232.isshortcut( dcc232 ) ? true:false );
   m_InverseDSR->SetValue( wDCC232.isinversedsr( dcc232 ) ? true:false );
   m_ShortcutDelay->SetValue( wDCC232.getshortcutdelay( dcc232 ) );
+
+  m_FastCvGet->SetValue( wDCC232.isfastcvget( dcc232 ) ? true:false );
 }
 
 
@@ -95,6 +99,8 @@ void DCC232Dlg::evaluate() {
   wDCC232.setshortcut( dcc232, m_ShortcutDetection->IsChecked() ? True:False );
   wDCC232.setinversedsr( dcc232, m_InverseDSR->IsChecked() ? True:False );
   wDCC232.setshortcutdelay( dcc232, m_ShortcutDelay->GetValue() );
+
+  wDCC232.setfastcvget( dcc232, m_FastCvGet->IsChecked() ? True:False );
 }
 
 

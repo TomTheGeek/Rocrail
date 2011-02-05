@@ -977,6 +977,7 @@
       <var name="shortcut" vt="Boolean"/>
       <var name="shortcutdelay" vt="int"/>
       <var name="ptflag" vt="Boolean"/>
+      <var name="fastcvget" vt="Boolean"/>
     </data>
   </object>
 
