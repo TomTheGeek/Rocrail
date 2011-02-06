@@ -244,7 +244,7 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
 }
 
 static char* makeThemePath(const char* path, const char* themespath) {
-  if( !FileOp.isAbsolute(path) ) {
+  if( !FileOp.isAbsolute(path) && themespath != NULL) {
     char* newpath = StrOp.fmt( "%s%c%s", themespath, SystemOp.getFileSeparator(), path );
     return newpath;
   }
