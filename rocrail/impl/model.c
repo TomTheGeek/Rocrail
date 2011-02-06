@@ -3736,7 +3736,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               }
 
               suits = block->isSuited( block, loc );
-              if( !route->hasPermission( route, loc, fromBlockId, samedir ) ) {
+              if( !route->hasPermission( route, loc, fromBlockId, !samedir ) ) {
                 suits = suits_not;
               }
 
