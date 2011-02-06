@@ -348,7 +348,7 @@ void RouteDialog::initLabels() {
   m_CondType->Append( _T(""), (void*)NULL );
   m_CondType->Append( wxGetApp().getMsg( "none" ) );
   m_CondType->Append( wxGetApp().getMsg( "goods" ) );
-  m_CondType->Append( wxGetApp().getMsg( "local" ) );
+  m_CondType->Append( wxGetApp().getMsg( "regional" ) );
   m_CondType->Append( wxGetApp().getMsg( "mixed" ) );
   m_CondType->Append( wxGetApp().getMsg( "cleaning" ) );
   m_CondType->Append( wxGetApp().getMsg( "ice" ) );
@@ -2193,6 +2193,7 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
   wRouteCondition.setnotprevbk(cond, m_CondNotFromBlock->IsChecked() ?True:False);
   wRouteCondition.setprevbkid(cond, m_CondFromBlock->GetStringSelection().mb_str(wxConvUTF8));
   int typesel = m_CondType->GetSelection();
+
   switch(typesel) {
   case 0: wRouteCondition.settype(cond, wLoc.cargo_all); break;
   case 1: wRouteCondition.settype(cond, wLoc.cargo_none); break;
