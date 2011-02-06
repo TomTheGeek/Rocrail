@@ -268,12 +268,22 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         SerialOp.setRTS(data->serial, False);
       }
       else if( wProgram.getcmd( node ) == wProgram.get && data->ptflag ) {
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        if( data->iid != NULL )
+          wProgram.setiid( rsp, data->iid );
+        wProgram.setcmd( rsp, wProgram.datarsp );
+        wProgram.setcv( rsp, wProgram.getcv( node ) );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Read" );
         int value = __getcvbyte( dcc232, wProgram.getcv( node ) - 1);
         wProgram.setvalue( rsp, value );
 
       }
       else if( wProgram.getcmd( node ) == wProgram.set && data->ptflag ) {
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        if( data->iid != NULL )
+          wProgram.setiid( rsp, data->iid );
+        wProgram.setcmd( rsp, wProgram.datarsp );
+        wProgram.setcv( rsp, wProgram.getcv( node ) );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV Write" );
         Boolean ack = __setcvbyte(dcc232, wProgram.getcv( node ) - 1, wProgram.getvalue( node ));
 
@@ -440,15 +450,16 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
 /**  */
 static iONode _cmd( obj inst ,const iONode nodeA ) {
   iODCC232Data data = Data(inst);
+  iONode rsp = NULL;
 
   char outa[100] = {'\0'};
 
   if( nodeA != NULL ) {
-    __translate( (iODCC232)inst, nodeA, outa );
+    rsp = __translate( (iODCC232)inst, nodeA, outa );
     nodeA->base.del(nodeA);
   }
 
-  return NULL;
+  return rsp;
 }
 
 
@@ -723,7 +734,7 @@ static void __dccWriter( void* threadinst ) {
 static Boolean scanACK(iOSerial serial) {
   Boolean ack = SerialOp.isRI(serial);
   if( ack ) {
-    TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "PT: ACK detected.");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: ACK detected.");
   }
 
   return ack;
@@ -740,15 +751,15 @@ static int __getcvbyte(iODCC232 inst, int cv) {
    int sendsize = 0;
    int fastcvget = data->fastcvget;
 
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvget for %d", cv);
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvget for %d", cv);
 
    /* no special error handling, it's job of the clients */
    if (cv<0 || cv>1024) {
-     TraceOp.trc( __FILE__, TRCLEVEL_EXCEPTION, __LINE__, 9999, "PT: CV[%d] out of range", cv);
+     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "PT: CV[%d] out of range", cv);
      return;
    }
 
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: enable booster output");
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: enable booster output");
    /* enable booster output */
    SerialOp.setDTR(data->serial,True);
 
@@ -758,16 +769,16 @@ static int __getcvbyte(iODCC232 inst, int cv) {
     * transmit at least 20 valid packets to the Digital Decoder to allow it time to stabilize
     * internal operation before any Service Mode operations are initiated.
     */
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: power on cycle");
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: power on cycle");
 
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: start polling...");
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: start polling...");
 
    start = 1;
    do {
      SerialOp.flush(data->serial);
      sendsize = createCVgetpacket(cv, value, SendStream, start);
      if( value % 10 == 0 || !fastcvget )
-       TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: sending %d bytes checking value %d...", sendsize, value);
+       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: sending %d bytes checking value %d...", sendsize, value);
      SerialOp.write(data->serial,SendStream,sendsize);
      if (start)
        ThreadOp.sleep(240);
@@ -803,13 +814,13 @@ static int __getcvbyte(iODCC232 inst, int cv) {
        }
      }
 
-     TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "PT: next value %d...", value);
+     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "PT: next value %d...", value);
    } while( !ack && value < 256);
 
 
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
 
-   TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: disable booster output");
+   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: disable booster output");
    /* disable booster output */
    SerialOp.setDTR(data->serial,False);
 
