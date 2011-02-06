@@ -3,4 +3,4 @@
 mypath=`dirname "$0"`
 echo $mypath
 export DYLD_LIBRARY_PATH=$mypath
-$mypath/rocview -i $mypath/../../../rocdata/rocview.ini -t $mypath/../../../rocdata/trace/rocview.trace -sp $mypath
+$mypath/rocview -i rocdata/rocview.ini -t $mypath/../../../rocdata/trace/rocview.trace -sp $mypath

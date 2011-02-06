@@ -62,6 +62,7 @@ cp -r rocrail/package/images $TMP/Rocrail/rocdata/
 cp -r unxbin/Rocrail.app $TMP/Rocrail
 cp rocrail/package/plan.xml $TMP/Rocrail/rocdata/
 cp -r rocview/svg/themes $TMP/Rocrail/rocdata/
+cp rocview/mac_default_rocview.ini $TMP/Rocrail/rocdata/rocview.ini
 
 # pimp the dmg
 cp doc/rocrail-logo-dmg.png $TMP/background.png
