@@ -835,7 +835,7 @@ static Boolean __setcvbyte(iODCC232 inst, int cv, int val) {
   Boolean ack = False;
   char SendStream[2048];
 
-  TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvset for %d=%d", cv, val);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvset for %d=%d", cv, val);
 
   int sendsize = createCVsetpacket(cv, val, SendStream, True);
 
@@ -851,7 +851,7 @@ static Boolean __setcvbyte(iODCC232 inst, int cv, int val) {
     if( !data->fastcvget )
       SerialOp.waitMM(data->serial,5000,100);
   }
-  TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: ack = %d", ack);
 
   return ack;
 }
