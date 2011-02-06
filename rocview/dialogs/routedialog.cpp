@@ -344,6 +344,7 @@ void RouteDialog::initLabels() {
   m_CondDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_CondAllowSchedules->SetLabel( wxGetApp().getMsg( "allowschedules" ) );
 
+
   m_CondType->Clear();
   m_CondType->Append( _T(""), (void*)NULL );
   m_CondType->Append( wxGetApp().getMsg( "none" ) );
@@ -353,6 +354,9 @@ void RouteDialog::initLabels() {
   m_CondType->Append( wxGetApp().getMsg( "cleaning" ) );
   m_CondType->Append( wxGetApp().getMsg( "ice" ) );
   m_CondType->Append( wxGetApp().getMsg( "post" ) );
+  m_CondType->Append( wxGetApp().getMsg( "local" ) );
+  m_CondType->Append( wxGetApp().getMsg( "light" ) );
+  m_CondType->Append( wxGetApp().getMsg( "lightgoods" ) );
 
 
   // Location
@@ -2203,6 +2207,9 @@ void RouteDialog::OnRouteConditionAddClick( wxCommandEvent& event )
   case 5: wRouteCondition.settype(cond, wLoc.cargo_cleaning); break;
   case 6: wRouteCondition.settype(cond, wLoc.cargo_ice); break;
   case 7: wRouteCondition.settype(cond, wLoc.cargo_post); break;
+  case 8: wRouteCondition.settype(cond, wLoc.cargo_person); break;
+  case 9: wRouteCondition.settype(cond, wLoc.cargo_light); break;
+  case 10: wRouteCondition.settype(cond, wLoc.cargo_lightgoods); break;
   }
 
   wRouteCondition.setcommuter(cond, m_CondCommuter->IsChecked() ? True:False);
