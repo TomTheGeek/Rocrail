@@ -2252,6 +2252,9 @@ void RouteDialog::OnRouteConditionModifyClick( wxCommandEvent& event )
     case 5: wRouteCondition.settype(cond, wLoc.cargo_cleaning); break;
     case 6: wRouteCondition.settype(cond, wLoc.cargo_ice); break;
     case 7: wRouteCondition.settype(cond, wLoc.cargo_post); break;
+    case 8: wRouteCondition.settype(cond, wLoc.cargo_person); break;
+    case 9: wRouteCondition.settype(cond, wLoc.cargo_light); break;
+    case 10: wRouteCondition.settype(cond, wLoc.cargo_lightgoods); break;
     }
     wRouteCondition.setcommuter(cond, m_CondCommuter->IsChecked() ? True:False);
     wRouteCondition.setchdir(cond, m_CondChangeDir->IsChecked() ? True:False);
