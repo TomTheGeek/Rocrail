@@ -1612,10 +1612,6 @@ void RocGuiFrame::initFrame() {
   m_SymbolMap = svg->readSvgSymbols( wPlanPanel.getsvgpath5( wGui.getplanpanel(m_Ini) ), m_SymbolMap, m_ThemesPath );
   delete svg;
 
-  if( m_SymbolMap == NULL || MapOp.size(m_SymbolMap) == 0 ) {
-    wxMessageDialog( this, wxGetApp().getMsg("setupsvgtheme"), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
-  }
-
   // check for theme properties:
   char* propPath = NULL;
 
@@ -2811,6 +2807,9 @@ void RocGuiFrame::setOnline( bool online ) {
 
 
 void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
+  if( m_SymbolMap == NULL || MapOp.size(m_SymbolMap) == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("setupsvgtheme"), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
+  }
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL) ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     if( wxID_OK == dlg->ShowModal() ) {
