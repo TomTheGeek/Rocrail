@@ -312,6 +312,9 @@ void RouteDialog::initLabels() {
   m_PermType->SetString( 5, wxGetApp().getMsg( wLoc.cargo_cleaning ) );
   m_PermType->SetString( 6, wxGetApp().getMsg( wLoc.cargo_ice ) );
   m_PermType->SetString( 7, wxGetApp().getMsg( wLoc.cargo_post ) );
+  m_PermType->SetString( 8, wxGetApp().getMsg( wLoc.cargo_person ) );
+  m_PermType->SetString( 9, wxGetApp().getMsg( wLoc.cargo_light ) );
+  m_PermType->SetString( 10, wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
 
   // Initialize sorted Loco Permission List
   initLocPermissionList();
@@ -347,16 +350,16 @@ void RouteDialog::initLabels() {
 
   m_CondType->Clear();
   m_CondType->Append( _T(""), (void*)NULL );
-  m_CondType->Append( wxGetApp().getMsg( "none" ) );
-  m_CondType->Append( wxGetApp().getMsg( "goods" ) );
-  m_CondType->Append( wxGetApp().getMsg( "regional" ) );
-  m_CondType->Append( wxGetApp().getMsg( "mixed" ) );
-  m_CondType->Append( wxGetApp().getMsg( "cleaning" ) );
-  m_CondType->Append( wxGetApp().getMsg( "ice" ) );
-  m_CondType->Append( wxGetApp().getMsg( "post" ) );
-  m_CondType->Append( wxGetApp().getMsg( "local" ) );
-  m_CondType->Append( wxGetApp().getMsg( "light" ) );
-  m_CondType->Append( wxGetApp().getMsg( "lightgoods" ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_none ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_goods ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_regional ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_mixed ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_cleaning ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_ice ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_post ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_person ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_light ) );
+  m_CondType->Append( wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
 
 
   // Location
@@ -755,6 +758,12 @@ void RouteDialog::initValues() {
     cargo = 6;
   else if( StrOp.equals( wLoc.cargo_post, wRoute.gettypeperm( m_Props ) ) )
     cargo = 7;
+  else if( StrOp.equals( wLoc.cargo_person, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 8;
+  else if( StrOp.equals( wLoc.cargo_light, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 9;
+  else if( StrOp.equals( wLoc.cargo_lightgoods, wRoute.gettypeperm( m_Props ) ) )
+    cargo = 10;
   m_PermType->SetSelection( cargo );
 
   m_MaxLen->SetValue(wRoute.getmaxlen(m_Props));
@@ -968,6 +977,12 @@ bool RouteDialog::evaluate() {
     wRoute.settypeperm( m_Props, wLoc.cargo_ice );
   else if( cargo == 7 )
     wRoute.settypeperm( m_Props, wLoc.cargo_post );
+  else if( cargo == 8 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_person );
+  else if( cargo == 9 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_light );
+  else if( cargo == 10 )
+    wRoute.settypeperm( m_Props, wLoc.cargo_lightgoods );
 
   wRoute.setmaxlen(m_Props,m_MaxLen->GetValue());
   wRoute.setcommuter(m_Props,m_Commuter->IsChecked()?True:False);
@@ -1418,6 +1433,9 @@ void RouteDialog::CreateControls()
     m_PermTypeStrings.Add(_("&Cleaning"));
     m_PermTypeStrings.Add(_("&ICE"));
     m_PermTypeStrings.Add(_("&Post"));
+    m_PermTypeStrings.Add(_("&Person"));
+    m_PermTypeStrings.Add(_("&Light"));
+    m_PermTypeStrings.Add(_("&Light goods"));
     m_PermType = new wxRadioBox( m_PermissionsPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_PermTypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_PermType->SetSelection(0);
     itemBoxSizer75->Add(m_PermType, 0, wxGROW|wxALL, 5);
