@@ -4503,6 +4503,32 @@
     <en_CA txt="Local"/>
     <en_GB txt="Local"/>
   </Msg>
+  <Msg id="person">
+    <de txt="Nahverkehr"/>
+    <en txt="Local"/>
+    <nl txt="Stoptrein"/>
+    <sv txt="Lokaltåg"/>
+    <fr txt="Local"/>
+    <tr txt="Yerel"/>
+    <es txt="Cercanias"/>
+    <it txt="Locale"/>
+    <da txt="Lokaltog"/>
+    <bs txt="Lokalno"/>
+    <cs txt="Místní"/>
+    <bg txt="Местни"/>
+    <el txt="Τοπικά"/>
+    <hu txt="Személy"/>
+    <ru txt="Местный"/>
+    <pt txt="Local"/>
+    <nb txt="Lokal"/>
+    <ca txt="Rodalies"/>
+    <zh_TW txt="區間車"/>
+    <pl txt="Lokalny"/>
+    <id txt="Lokal"/>
+    <en_AU txt="Local"/>
+    <en_CA txt="Local"/>
+    <en_GB txt="Local"/>
+  </Msg>
   <Msg id="ice">
     <de txt="Fernverkehr"/>
     <en txt="Intercity"/>
