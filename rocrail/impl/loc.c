@@ -1405,7 +1405,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   const char* blockid = block->base.id( block );
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
   MsgOp.setTimer( msg, timer );
-  MsgOp.setUsrData( msg, NULL, 1000);
+  MsgOp.setUsrData( msg, NULL, forcewait ? 1000:0 );
   ThreadOp.post( data->runner, (obj)msg );
   __funEvent(inst, blockid, evt, timer);
 }
