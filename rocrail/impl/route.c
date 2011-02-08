@@ -887,19 +887,27 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   {
     iONode lc = LocOp.base.properties(loc);
     iONode cond = wRoute.getstcondition(data->props);
+    const char* curBlockID = LocOp.getCurBlock(loc);
     while( cond != NULL ) {
       const char* prevbkid = wRouteCondition.getprevbkid(cond);
       Boolean notprevbk = wRouteCondition.isnotprevbk(cond);
       const char* traintype = wRouteCondition.gettype(cond);
 
+      if( curBlockID != NULL && StrOp.len(curBlockID) > 0 ) {
+        if( StrOp.equals(curBlockID, wRoute.getbka(data->props) ) || StrOp.equals(curBlockID, wRoute.getbkb(data->props) ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "current block is in this route; skip conditions" );
+          return True;
+        }
+      }
+
       if( prevbkid != NULL && StrOp.len(prevbkid) > 0 ) {
-        if( prevBlockID != NULL && StrOp.equals(prevBlockID, prevbkid) && notprevbk ) {
+        if( curBlockID != NULL && StrOp.equals(curBlockID, prevbkid) && notprevbk ) {
           cond = wRoute.nextstcondition(data->props, cond);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                          "Condition does not match: equal blockID(%s), but should be unequal.", prevBlockID );
           continue;
         }
-        if( prevBlockID != NULL && !StrOp.equals(prevBlockID, prevbkid) && !notprevbk ) {
+        if( curBlockID != NULL && !StrOp.equals(curBlockID, prevbkid) && !notprevbk ) {
           cond = wRoute.nextstcondition(data->props, cond);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                          "Condition does not match: unequal blockIDs(%s!=%s), but should be equal.", prevbkid, prevBlockID );
