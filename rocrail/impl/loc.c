@@ -1179,17 +1179,19 @@ static void __runner( void* threadinst ) {
     int   i     = 0;
     int   event = -1;
     int   timer = 0;
+    int   type  = 0;
 
     if( msg != NULL ) {
       emitter = MsgOp.getSender( msg );
       event   = MsgOp.getEvent( msg );
       timer   = MsgOp.getTimer( msg );
+      type    = MsgOp.getUsrDataType( msg );
       msg->base.del( msg );
     }
 
     if( data->driver != NULL ) {
       if( timer > 0 ) {
-        if( wLoc.getevttimer(data->props) > 0 ) {
+        if( type == 0 && wLoc.getevttimer(data->props) > 0 ) {
           timer = wLoc.getevttimer(data->props);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
         } else if( event == in_event ) {
@@ -1395,7 +1397,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
   }
 }
 
-static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
+static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewait ) {
   iOLocData data = Data(inst);
 
   iOMsg msg = MsgOp.inst( emitter, evt );
@@ -1403,6 +1405,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer ) {
   const char* blockid = block->base.id( block );
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
   MsgOp.setTimer( msg, timer );
+  MsgOp.setUsrData( msg, NULL, 1000);
   ThreadOp.post( data->runner, (obj)msg );
   __funEvent(inst, blockid, evt, timer);
 }

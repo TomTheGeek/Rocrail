@@ -157,6 +157,7 @@
       <var name="acceptident" vt="Boolean"/>
       <var name="wheelcount" vt="int"/>
       <var name="wheelcounterId" vt="const char*"/>
+      <var name="forceblocktimer" vt="Boolean"/>
     </data>
   </object>
 
@@ -494,6 +495,7 @@
       <param name="emiter" vt="obj" remark="Sender of event"/>
       <param name="event" vt="int" remark="Event code"/>
       <param name="wait" vt="int" units="ms" remark="wait time before processing the event"/>
+      <param name="forcewait" vt="Boolean" remark="Force to use this wait time instead of the optional loco event wait."/>
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>

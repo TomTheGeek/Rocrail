@@ -1509,7 +1509,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 
         }
         else {
-          LocOp.event( loc, inst, BlockOp.getEventCode(event), 0 );
+          LocOp.event( loc, inst, BlockOp.getEventCode(event), 0, False );
         }
       }
     }

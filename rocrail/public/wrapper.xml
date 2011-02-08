@@ -1257,6 +1257,7 @@
         <var name="gomanual" vt="bool" defval="true" remark="allow half-automatic mode"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
         <var name="evttimer2" vt="int" defval="0" range="0-*" unit="ms" remark="event timer reverse direction; loc should wait this time before processing the event"/>
+        <var name="forceblocktimer" vt="bool" defval="false" remark="Force the block event timer to overrule the optional loco event timer."/>
         <var name="acceptghost" vt="bool" defval="false" remark="accept a ghosttrain and signal the block occupied."/>
         <var name="terminalstation" vt="bool" defval="false" remark="swap placing of an incomming loc to get another default direction.(terminal station)"/>
         <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>

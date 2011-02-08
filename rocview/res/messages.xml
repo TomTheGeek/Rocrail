@@ -17106,4 +17106,7 @@
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
   </Msg>
+  <Msg id="forceblocktimer">
+    <en txt="Force block timer"/>
+  </Msg>
 </Messages>
