@@ -900,7 +900,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         if( locoPrevBlockID != NULL && StrOp.equals(locoPrevBlockID, prevbkid) && notprevbk ) {
           cond = wRoute.nextstcondition(data->props, cond);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                         "Condition does not match: equal blockID(%s), but should be unequal.", prevBlockID );
+                         "Condition does not match: equal blockID(%s), but should be unequal.", locoPrevBlockID );
           continue;
         }
         if( locoPrevBlockID != NULL && !StrOp.equals(locoPrevBlockID, prevbkid) && !notprevbk ) {
