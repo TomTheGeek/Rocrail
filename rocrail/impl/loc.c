@@ -1435,6 +1435,12 @@ static const char* _getCurBlock( iOLoc inst ) {
 }
 
 
+static const char* _getPrevBlock( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return data->prevBlock;
+}
+
+
 static const char* _getDestination( iOLoc inst ) {
   iOLocData data = Data(inst);
   return data->destBlock;
@@ -1446,6 +1452,11 @@ static void _setCarCount( iOLoc inst, int carcount ) {
   wLoc.setnrcars(data->props, carcount);
 }
 
+
+static void _resetPrevBlock( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  data->prevBlock = NULL;
+}
 
 /* CRjBlock calls this function.
  * Loc can't go in automatic when curBlock in not set.
@@ -1463,6 +1474,10 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     }
   }
 
+  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && !StrOp.equals(id, data->curBlock) || data->prevBlock == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set previous block to [%s]", data->curBlock == NULL ? "":data->curBlock );
+    data->prevBlock = data->curBlock;
+  }
   data->curBlock = id;
 
   if( data->driver != NULL )
@@ -1560,6 +1575,10 @@ static const char* _getSchedule( iOLoc inst, int* scidx ) {
 
 static void _setMode( iOLoc inst, const char* mode ) {
   iOLocData data = Data(inst);
+  
+  if( StrOp.equals( wLoc.mode_wait, mode ) ) {
+    LocOp.resetPrevBlock(inst);
+  }
 
   /* Only take over the new mode if it is different; Broadcast to clients. */
   if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {

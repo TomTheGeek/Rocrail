@@ -438,6 +438,12 @@
     <fun name="getCurBlock" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getPrevBlock" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="resetPrevBlock" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="getBlockEnterSide" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
@@ -598,6 +604,7 @@
       <var name="goNet" vt="Boolean"/>
       <var name="brake" vt="Boolean"/>
       <var name="curGroup" vt="const char*"/>
+      <var name="prevBlock" vt="const char*"/>
       <var name="curBlock" vt="const char*"/>
       <var name="destBlock" vt="const char*"/>
       <var name="gotoBlock" vt="const char*" remark="goto this block if found"/>
