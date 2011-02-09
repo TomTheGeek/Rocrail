@@ -133,7 +133,7 @@ static void __reader( void* threadinst ) {
     if( !ok && SocketOp.isBroken(data->rwTCP) ) {
       /* recover */
       data->comm = lbTCPReConnect(loconet);
-      ThreadOp.sleep(10);
+      ThreadOp.sleep(data->comm?10:1000);
       continue;
     }
 
