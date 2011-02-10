@@ -934,7 +934,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
 
       if( traintype != NULL && StrOp.len(traintype) > 0 ) {
         const char* cargo    = wLoc.getcargo(lc);
-        if( !StrOp.equals( traintype, cargo)) {
+        if( !StrOp.equals( traintype, cargo) && !StrOp.equals( traintype, "all") && !StrOp.equals( traintype, "none") && !StrOp.equals( cargo, "cleaning")) {
           cond = wRoute.nextstcondition(data->props, cond);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                          "Condition does not match: train type must be %s but is %s.", traintype, cargo );
