@@ -1576,10 +1576,6 @@ static const char* _getSchedule( iOLoc inst, int* scidx ) {
 
 static void _setMode( iOLoc inst, const char* mode ) {
   iOLocData data = Data(inst);
-  
-  if( StrOp.equals( wLoc.mode_idle, mode ) ) {
-    LocOp.resetPrevBlock(inst);
-  }
 
   /* Only take over the new mode if it is different; Broadcast to clients. */
   if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {
@@ -1854,6 +1850,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       }
       else if( StrOp.equals( wLoc.stopgo, cmd ) ) {
         __stopgo( inst );
+        LocOp.resetPrevBlock(inst);
       }
     }
     else {
@@ -1869,9 +1866,11 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
 
     if( StrOp.equals( wLoc.stop, cmd ) ) {
       _stop( inst, False );
+      LocOp.resetPrevBlock(inst);
     }
     else if( StrOp.equals( wLoc.reset, cmd ) ) {
       _reset( inst, False );
+      LocOp.resetPrevBlock(inst);
     }
     else if( StrOp.equals( wLoc.activate, cmd ) ) {
       wLoc.setactive(data->props, True);
