@@ -38,6 +38,24 @@
 #include "rocrail/wrapper/public/Link.h"
 
 
+static Boolean __isScheduleEnd( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  iONode sc = data->model->getSchedule( data->model, data->schedule );
+  if( sc != NULL ) {
+    int nrEntries = 0;
+    iONode scEntry = wSchedule.getscentry(sc);
+    while( scEntry != NULL ) {
+      nrEntries++;
+      scEntry = wSchedule.nextscentry(sc, scEntry);
+    };
+    if( data->scheduleIdx >= nrEntries ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "end of schedule[%s] detected; entries=%d index=%d", data->schedule, nrEntries, data->scheduleIdx);
+      return True;
+    }
+  }
+  return False;
+}
 
 void statusFindDest( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
@@ -57,7 +75,7 @@ void statusFindDest( iILcDriverInt inst ) {
     Boolean wait = False;
 
     if( scheduleIdx == 0 && !data->model->isScheduleFree(data->model, data->schedule, data->loc->getId(data->loc)) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"schedule[%d] is not free2go", data->schedule);
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"schedule[%s] is not free2go", data->schedule);
       wait = True;
     }
     /* evaluate departure time */
@@ -96,13 +114,15 @@ void statusFindDest( iILcDriverInt inst ) {
       data->next1Block = NULL;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
-      if( checkScheduleEntryActions(inst, scheduleIdx) ) {
-        /* wait in block if we have to swap placing... */
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-        data->loc->swapPlacing( data->loc, NULL, False );
+      if( __isScheduleEnd(inst) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
+        if( checkScheduleEntryActions(inst, scheduleIdx) ) {
+          /* wait in block if we have to swap placing... */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
+          data->loc->swapPlacing( data->loc, NULL, False );
+        }
+        checkScheduleActions(inst, LC_FINDDEST);
       }
-      checkScheduleActions(inst, LC_FINDDEST);
     }
   }
 
