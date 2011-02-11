@@ -40,6 +40,7 @@
 #include "rocs/public/lib.h"
 #include "rocs/public/system.h"
 
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Ctrl.h"
@@ -2093,6 +2094,7 @@ static void _modify( iOLoc inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
+    wLoc.setcmd(clone, wModelCmd.modify );
     AppOp.broadcastEvent( clone );
   }
   props->base.del(props);

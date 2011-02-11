@@ -726,7 +726,7 @@ void RocGuiFrame::modifyLoc( iONode props ) {
       NodeOp.setStr( loc, name, value );
     }
 
-    /* Leave the childs if no new are comming */
+    /* Leave the childs if no new are coming */
     if( NodeOp.getChildCnt( props ) > 0 ) {
       cnt = NodeOp.getChildCnt( loc );
       while( cnt > 0 ) {
@@ -993,7 +993,10 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       dlg->modelEvent(node);
     }
 
-    modifyLoc( node );
+    if( StrOp.equals( wModelCmd.modify, wLoc.getcmd(node) ) ) {
+      modifyLoc( node );
+    }
+
 
     m_LC->updateLoc( node );
 
