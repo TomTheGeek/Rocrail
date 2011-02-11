@@ -1576,7 +1576,7 @@ static const char* _getSchedule( iOLoc inst, int* scidx ) {
 static void _setMode( iOLoc inst, const char* mode ) {
   iOLocData data = Data(inst);
   
-  if( StrOp.equals( wLoc.mode_wait, mode ) ) {
+  if( StrOp.equals( wLoc.mode_idle, mode ) ) {
     LocOp.resetPrevBlock(inst);
   }
 
