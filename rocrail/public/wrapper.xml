@@ -66,6 +66,7 @@
     <const name="config" vt="char" val="c" remark="Read config slots."/>
     <const name="analyse" vt="char" val="z" remark="Analyse track plan."/>
     <const name="analyseclean" vt="char" val="l" remark="Clean all generated route info."/>
+    <const name="stopautomode" vt="char" val="s" remark="Stop automode."/>
   </ConCmd>
 
   <Global structname="GC" remark="For internal use only.">

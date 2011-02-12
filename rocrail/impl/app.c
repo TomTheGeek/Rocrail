@@ -407,6 +407,7 @@ static void __conhelp() {
     TraceOp.println( " l - Cleanup analyzed route info" );
 
     TraceOp.println( " i - Initfield" );
+    TraceOp.println( " s - Stop auto mode" );
 
     TraceOp.println( " m - Shows memory(object) use" );
     TraceOp.println( " d - Toggle debug tracelevel" );
@@ -492,6 +493,13 @@ static __checkConsole( iOAppData data ) {
   }
   else if( c == '5' ) {
     __queryLocoIO();
+  }
+  else if( c == wConCmd.stopautomode ) {
+    iONode cmd = NULL;
+    clntcon_callback pfun = ControlOp.getCallback(data->control);
+    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+    wAutoCmd.setcmd( cmd, wAutoCmd.off );
+    pfun( (obj)AppOp.getControl(), cmd );
   }
   else if( c == wConCmd.config ) {
     __syscmd( wSysCmd.config );
