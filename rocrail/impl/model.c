@@ -3252,6 +3252,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
                                         Boolean forceSameDir, Boolean swapPlacingInPrevRoute, int *indelay ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
+  int entryIndex = *scheduleIdx;
   int maxLoop = 0;
 
   if( schedule == NULL ) {
@@ -3271,6 +3272,11 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
   if( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
     curblockid = ModelOp.getManagedID(inst, curblockid);
     entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid, False );
+
+    if( entry != NULL ) {
+      /* save real index */
+      entryIndex = *scheduleIdx;
+    }
 
     while( entry != NULL && maxLoop < 2 ) {
       /* entry found, get the next destination... */
@@ -3323,6 +3329,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
       *scheduleIdx += 1;
       entry = __findScheduleEntry( inst, schedule, scheduleIdx, curblockid, True );
     };
+
+    *scheduleIdx = entryIndex;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no fitting entry in schedule [%s] found.", scheduleid );
 		return NULL;
