@@ -45,20 +45,23 @@ static Boolean lbTCPReConnect( iOLocoNet inst ) {
   LocoNetOp.stateChanged(inst);
 
   if( data->rwTCP == NULL ) {
-    data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-    if( data->rwTCP != NULL ) {
-      SocketOp.setNodelay(data->rwTCP, True);
-  
-      while( data->run ) {
-        TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+    while( data->run ) {
+      TraceOp.trc( "lbtcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+      data->rwTCP = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+      if( data->rwTCP != NULL ) {
+        SocketOp.setNodelay(data->rwTCP, True);
         if ( SocketOp.connect( data->rwTCP ) ) {
           data->comm = True;
           TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
           LocoNetOp.stateChanged(inst);
           return True;
         }
-        ThreadOp.sleep(1000);
       }
+      if( data->rwTCP != NULL ) {
+        SocketOp.base.del( data->rwTCP );
+        data->rwTCP = NULL;
+      }
+      ThreadOp.sleep(1000);
     }
   }
 
@@ -218,7 +221,7 @@ Boolean lbTCPConnect( obj inst ) {
 
 void  lbTCPDisconnect( obj inst ) {
   iOLocoNetData data = Data(inst);
-  if( data->rwTCP != NULL ) {
+  if( data->comm && data->rwTCP != NULL ) {
     TraceOp.trc( "lbtcp", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
     data->run = False;
     data->comm = False;
