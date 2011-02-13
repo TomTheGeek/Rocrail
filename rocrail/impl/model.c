@@ -1690,7 +1690,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
-  if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) ) {
+  if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) && !StrOp.equals( wSysCmd.loccnfg, cmdVal ) ) {
     /* inform objects of a power on/off */
     if( MutexOp.trywait(data->muxSysEvent, 0) ) {
       obj listener = ListOp.first( data->sysEventListeners );

@@ -1159,7 +1159,7 @@ static void __runner( void* threadinst ) {
   iOLoc loc = (iOLoc)ThreadOp.getParm( th );
   iOLocData data = Data(loc);
   int   tick = 0;
-  Boolean sendedcnfg = False;
+  Boolean cnfgsend = False;
   Boolean loccnfg = wCtrl.isloccnfg( AppOp.getIniNode( wCtrl.name() ) );
 
   ThreadOp.setDescription( th, wLoc.getdesc( data->props ) );
@@ -1209,7 +1209,7 @@ static void __runner( void* threadinst ) {
       data->driver->drive( data->driver, emitter, event );
     }
 
-    if( !sendedcnfg && loccnfg ) {
+    if( !cnfgsend && loccnfg ) {
       iOControl control = AppOp.getControl();
       if( control != NULL ) {
         iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
@@ -1231,7 +1231,7 @@ static void __runner( void* threadinst ) {
           wSysCmd.setvalA( cmd, 2 );
         wSysCmd.setvalB( cmd, wLoc.getspcnt(data->props) );
         ControlOp.cmd( control, cmd, NULL );
-        sendedcnfg = True;
+        cnfgsend = True;
       }
     }
 
