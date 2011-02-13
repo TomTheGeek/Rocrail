@@ -46,3 +46,4 @@ void checkScheduleActions( iILcDriverInt inst, int state);
 Boolean checkScheduleEntryActions( iILcDriverInt inst, int index );
 
 Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int scheduleIdx );
+Boolean isScheduleEnd( iILcDriverInt inst );

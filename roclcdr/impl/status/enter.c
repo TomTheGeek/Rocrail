@@ -138,9 +138,16 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         resetNext2( (iOLcDriver)inst, True );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
-        checkScheduleEntryActions(inst, -1);
-        checkScheduleActions(inst, LC_ENTERBLOCK);
+        if( isScheduleEnd(inst) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
+          checkScheduleEntryActions(inst, -1);
+          checkScheduleActions(inst, LC_ENTERBLOCK);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
+          resetNext2( (iOLcDriver)inst, True );
+        }
+
       }
     }
 

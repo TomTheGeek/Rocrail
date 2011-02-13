@@ -292,5 +292,24 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
   return go;
 }
 
+Boolean isScheduleEnd( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  iONode sc = data->model->getSchedule( data->model, data->schedule );
+  if( sc != NULL ) {
+    int nrEntries = 0;
+    iONode scEntry = wSchedule.getscentry(sc);
+    while( scEntry != NULL ) {
+      nrEntries++;
+      scEntry = wSchedule.nextscentry(sc, scEntry);
+    };
+    if( data->scheduleIdx >= nrEntries ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "end of schedule[%s] detected; entries=%d index=%d", data->schedule, nrEntries, data->scheduleIdx);
+      return True;
+    }
+  }
+  return False;
+}
+
 
 

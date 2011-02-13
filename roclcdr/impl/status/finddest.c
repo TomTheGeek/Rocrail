@@ -38,25 +38,6 @@
 #include "rocrail/wrapper/public/Link.h"
 
 
-static Boolean __isScheduleEnd( iILcDriverInt inst ) {
-  iOLcDriverData data = Data(inst);
-  iONode sc = data->model->getSchedule( data->model, data->schedule );
-  if( sc != NULL ) {
-    int nrEntries = 0;
-    iONode scEntry = wSchedule.getscentry(sc);
-    while( scEntry != NULL ) {
-      nrEntries++;
-      scEntry = wSchedule.nextscentry(sc, scEntry);
-    };
-    if( data->scheduleIdx >= nrEntries ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "end of schedule[%s] detected; entries=%d index=%d", data->schedule, nrEntries, data->scheduleIdx);
-      return True;
-    }
-  }
-  return False;
-}
-
 void statusFindDest( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   int scheduleIdx = data->scheduleIdx;
@@ -114,7 +95,7 @@ void statusFindDest( iILcDriverInt inst ) {
       data->next1Block = NULL;
     }
     else {
-      if( __isScheduleEnd(inst) ) {
+      if( isScheduleEnd(inst) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
         if( checkScheduleEntryActions(inst, scheduleIdx) ) {
           /* wait in block if we have to swap placing... */
