@@ -1688,7 +1688,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   const char* cmdName = NodeOp.getName( cmd );
   const char* cmdVal  = wCommand.getcmd( cmd );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) && !StrOp.equals( wSysCmd.loccnfg, cmdVal ) ) {
     /* inform objects of a power on/off */
