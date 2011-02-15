@@ -199,14 +199,17 @@ namespace signaltype {
   static const char* signalmain_y = "signalmain-y.svg";
   static const char* signalmain_g = "signalmain-g.svg";
   static const char* signalmain_w = "signalmain-w.svg";
+  static const char* signalmain_b = "signalmain-b.svg";
   static const char* signalmain_r_occ = "signalmain-r-occ.svg";
   static const char* signalmain_y_occ = "signalmain-y-occ.svg";
   static const char* signalmain_g_occ = "signalmain-g-occ.svg";
   static const char* signalmain_w_occ = "signalmain-w-occ.svg";
+  static const char* signalmain_b_occ = "signalmain-b-occ.svg";
   static const char* signalmain_r_route = "signalmain-r-route.svg";
   static const char* signalmain_y_route = "signalmain-y-route.svg";
   static const char* signalmain_g_route = "signalmain-g-route.svg";
   static const char* signalmain_w_route = "signalmain-w-route.svg";
+  static const char* signalmain_b_route = "signalmain-b-route.svg";
 
   static const char* road_signalmain_r = "road-signalmain-r.svg";
   static const char* road_signalmain_y = "road-signalmain-y.svg";
@@ -232,14 +235,17 @@ namespace signaltype {
   static const char* signaldistant_y = "signaldistant-y.svg";
   static const char* signaldistant_g = "signaldistant-g.svg";
   static const char* signaldistant_w = "signaldistant-w.svg";
+  static const char* signaldistant_b = "signaldistant-b.svg";
   static const char* signaldistant_r_occ = "signaldistant-r-occ.svg";
   static const char* signaldistant_y_occ = "signaldistant-y-occ.svg";
   static const char* signaldistant_g_occ = "signaldistant-g-occ.svg";
   static const char* signaldistant_w_occ = "signaldistant-w-occ.svg";
+  static const char* signaldistant_b_occ = "signaldistant-b-occ.svg";
   static const char* signaldistant_r_route = "signaldistant-r-route.svg";
   static const char* signaldistant_y_route = "signaldistant-y-route.svg";
   static const char* signaldistant_g_route = "signaldistant-g-route.svg";
   static const char* signaldistant_w_route = "signaldistant-w-route.svg";
+  static const char* signaldistant_b_route = "signaldistant-b-route.svg";
 
   static const char* semaphoremain_r = "semaphoremain-r.svg";
   static const char* semaphoremain_y = "semaphoremain-y.svg";

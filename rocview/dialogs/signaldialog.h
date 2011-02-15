@@ -270,6 +270,9 @@ public:
     wxStaticText* m_labWhite;
     wxRadioBox* m_White1;
     wxRadioBox* m_White2;
+    wxStaticText* m_labBlank;
+    wxRadioBox* m_Blank1;
+    wxRadioBox* m_Blank2;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

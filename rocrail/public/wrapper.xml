@@ -1110,6 +1110,7 @@
         <var name="red" vt="int" defval="0" range="0-3" remark="pattern for red"/>
         <var name="yellow" vt="int" defval="0" range="0-3" remark="pattern for yellow"/>
         <var name="white" vt="int" defval="0" range="0-3" remark="pattern for white"/>
+        <var name="blank" vt="int" defval="0" range="0-3" remark="pattern for blank"/>
 
         <actionctrl cardinality="n"/>
       </sg>

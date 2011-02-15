@@ -280,6 +280,10 @@ static Boolean __processPatternCmd( iOSignal inst, const char* state ) {
     pattern1 = wSignal.getwhite( o->props ) & 0x0F;
     pattern2 = (wSignal.getwhite( o->props ) & 0xF0) >> 4;
   }
+  else if( StrOp.equals( state, wSignal.blank ) ) {
+    pattern1 = wSignal.getblank( o->props ) & 0x0F;
+    pattern2 = (wSignal.getblank( o->props ) & 0xF0) >> 4;
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "pattern [%d][%d]", pattern1, pattern2 );

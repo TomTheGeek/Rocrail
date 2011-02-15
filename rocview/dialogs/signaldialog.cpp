@@ -394,7 +394,8 @@ void SignalDialog::initValues() {
   m_White1->SetSelection( wSignal.getwhite( m_Props ) & 0x0F );
   m_White2->SetSelection( (wSignal.getwhite( m_Props ) & 0xF0) >> 4 );
 
-
+  m_Blank1->SetSelection( wSignal.getblank( m_Props ) & 0x0F );
+  m_Blank2->SetSelection( (wSignal.getblank( m_Props ) & 0xF0) >> 4 );
 
 }
 
@@ -482,6 +483,7 @@ bool SignalDialog::evaluate() {
   wSignal.setred   ( m_Props, m_Red1->GetSelection()    + (m_Red2->GetSelection()    << 4) );
   wSignal.setyellow( m_Props, m_Yellow1->GetSelection() + (m_Yellow2->GetSelection() << 4) );
   wSignal.setwhite ( m_Props, m_White1->GetSelection()  + (m_White2->GetSelection()  << 4) );
+  wSignal.setblank ( m_Props, m_Blank1->GetSelection()  + (m_Blank2->GetSelection()  << 4) );
 
   return true;
 }
@@ -573,6 +575,9 @@ bool SignalDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_labWhite = NULL;
     m_White1 = NULL;
     m_White2 = NULL;
+    m_labBlank = NULL;
+    m_Blank1 = NULL;
+    m_Blank2 = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -968,24 +973,43 @@ void SignalDialog::CreateControls()
     m_White2->SetSelection(0);
     itemFlexGridSizer81->Add(m_White2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    m_labBlank = new wxStaticText( m_PropsPanel, wxID_ANY, _("Blank"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer81->Add(m_labBlank, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxArrayString m_Blank1Strings;
+    m_Blank1Strings.Add(_("&R1"));
+    m_Blank1Strings.Add(_("&G1"));
+    m_Blank1Strings.Add(_("&N"));
+    m_Blank1 = new wxRadioBox( m_PropsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Blank1Strings, 1, wxRA_SPECIFY_ROWS );
+    m_Blank1->SetSelection(0);
+    itemFlexGridSizer81->Add(m_Blank1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    wxArrayString m_Blank2Strings;
+    m_Blank2Strings.Add(_("&R1"));
+    m_Blank2Strings.Add(_("&G1"));
+    m_Blank2Strings.Add(_("&N"));
+    m_Blank2 = new wxRadioBox( m_PropsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Blank2Strings, 1, wxRA_SPECIFY_ROWS );
+    m_Blank2->SetSelection(0);
+    itemFlexGridSizer81->Add(m_Blank2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
     m_Notebook->AddPage(m_PropsPanel, _("Properties"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer97 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer100 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer97, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer100, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer97->AddButton(m_Cancel);
+    itemStdDialogButtonSizer100->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer97->AddButton(m_OK);
+    itemStdDialogButtonSizer100->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer97->AddButton(m_Apply);
+    itemStdDialogButtonSizer100->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer97->Realize();
+    itemStdDialogButtonSizer100->Realize();
 
 ////@end SignalDialog content construction
 }

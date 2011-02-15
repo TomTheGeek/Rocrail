@@ -426,6 +426,9 @@ void SymbolRenderer::initSym() {
             m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_y_occ:signaltype::signalmain_y_route );
             m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_g_occ:signaltype::signalmain_g_route );
             m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_w_route );
+            m_SvgSym13 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w:signaltype::signalmain_b );
+            m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_b_occ );
+            m_SvgSym15 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_b_route );
           }
         }
       }
@@ -453,6 +456,9 @@ void SymbolRenderer::initSym() {
             m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_y_route );
             m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_g_route );
             m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_w_route );
+            m_SvgSym13 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_b );
+            m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_b_occ );
+            m_SvgSym15 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signaldistant_b_route );
           }
         }
       }
@@ -1224,6 +1230,14 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
       drawSvgSym(dc, m_SvgSym12, ori);
     else
       drawSvgSym(dc, m_SvgSym7, ori);
+  }
+  else if( m_SvgSym13!=NULL && StrOp.equals( state, wSignal.blank ) ) {
+    if( occupied && m_SvgSym14 != NULL)
+      drawSvgSym(dc, m_SvgSym14, ori);
+    else if( actroute && m_SvgSym15 != NULL)
+      drawSvgSym(dc, m_SvgSym15, ori);
+    else
+      drawSvgSym(dc, m_SvgSym13, ori);
   }
   else if( m_SvgSym2!=NULL && ( StrOp.equals( state, wSignal.green ) || StrOp.equals( state, wSignal.white ) ) && aspects == 2 ) {
     /* default to yellow aspect */
