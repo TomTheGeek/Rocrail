@@ -296,7 +296,7 @@ public:
 private:
   void Save();
   void initJS();
-  void modifyLoc( iONode props );
+  void modifyLoc( iONode props, bool soft );
 
   wxToolBar *       m_ToolBar;
   BitmapButton*     m_LocImage;

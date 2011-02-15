@@ -2324,9 +2324,6 @@ static void _setCV( iOLoc loc, int nr, int value ) {
 static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   iOLocData data = Data(loc);
 
-  /* swap the block enter side flag to be able to use other direction routes */
-  LocOp.swapBlockEnterSide(loc, NULL);
-
   if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
     wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
   }
@@ -2336,35 +2333,15 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   /* inform model to keep this setting in the occupancy file */
   ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
 
+  /* swap the block enter side flag to be able to use other direction routes */
+  LocOp.swapBlockEnterSide(loc, NULL);
+
   if( !consist ) {
     /* only swap if this command did not come from a multiple unit loop */
     __swapConsist(loc, cmd);
   }
 
-  /* Broadcast to clients. */
-  {
-    iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setid( node, wLoc.getid( data->props ) );
-    wLoc.setdir( node, wLoc.isdir( data->props ) );
-    wLoc.setaddr( node, wLoc.getaddr( data->props ) );
-    wLoc.setV( node, data->drvSpeed );
-    wLoc.setfn( node, wLoc.isfn( data->props ) );
-    wLoc.setplacing( node, wLoc.isplacing( data->props ) );
-    wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
-    wLoc.setmode( node, wLoc.getmode( data->props ) );
-    wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
-    wLoc.setblockid( node, data->curBlock );
-    wLoc.setruntime( node, wLoc.getruntime(data->props) );
-    wLoc.setmtime( node, wLoc.getmtime(data->props) );
-    wLoc.setmint( node, wLoc.getmint(data->props) );
-    wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
-    wLoc.setactive( node, wLoc.isactive(data->props) );
-    if( data->driver != NULL ) {
-      wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
-    }
-
-    AppOp.broadcastEvent( node );
-  }
+  /* Broadcast to clients is done in function swapBlockEnterSide. */
 }
 
 
@@ -2474,18 +2451,39 @@ static Boolean _getBlockEnterSide( iOLoc loc ) {
 
 static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockId ) {
   iOLocData data = Data(loc);
-  iONode broadcast = NULL;
-  iONode clone = NULL;
+
   wLoc.setblockenterside(data->props, enterside);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
   ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+
   /* Broadcast to clients. */
-  clone = (iONode)NodeOp.base.clone(data->props);
-  if( blockId != NULL )
-    wLoc.setblockid(clone, blockId );
-  broadcast = clone;
-  AppOp.broadcastEvent( broadcast );
+  {
+    iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( node, wLoc.getid( data->props ) );
+    wLoc.setdir( node, wLoc.isdir( data->props ) );
+    wLoc.setaddr( node, wLoc.getaddr( data->props ) );
+    wLoc.setV( node, data->drvSpeed );
+    wLoc.setfn( node, wLoc.isfn( data->props ) );
+    wLoc.setplacing( node, wLoc.isplacing( data->props ) );
+    wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
+    wLoc.setmode( node, wLoc.getmode( data->props ) );
+    wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
+    if( blockId != NULL )
+      wLoc.setblockid(node, blockId );
+    else
+      wLoc.setblockid( node, data->curBlock );
+    wLoc.setruntime( node, wLoc.getruntime(data->props) );
+    wLoc.setmtime( node, wLoc.getmtime(data->props) );
+    wLoc.setmint( node, wLoc.getmint(data->props) );
+    wLoc.setthrottleid( node, wLoc.getthrottleid(data->props) );
+    wLoc.setactive( node, wLoc.isactive(data->props) );
+    if( data->driver != NULL ) {
+      wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+    }
+
+    AppOp.broadcastEvent( node );
+  }
 }
 
 

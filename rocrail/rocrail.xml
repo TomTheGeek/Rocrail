@@ -441,7 +441,7 @@
     <fun name="getPrevBlock" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
-    <fun name="resetPrevBlock" vt="const char*">
+    <fun name="resetPrevBlock" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="getBlockEnterSide" vt="Boolean">

@@ -695,7 +695,7 @@ static int locComparator(obj* o1, obj* o2) {
 }
 
 
-void RocGuiFrame::modifyLoc( iONode props ) {
+void RocGuiFrame::modifyLoc( iONode props, bool soft ) {
   iONode model = wxGetApp().getModel();
   iONode loc = NULL;
   int i = 0;
@@ -723,11 +723,16 @@ void RocGuiFrame::modifyLoc( iONode props ) {
       iOAttr attr = NodeOp.getAttr( props, i );
       const char* name  = AttrOp.getName( attr );
       const char* value = AttrOp.getVal( attr );
-      NodeOp.setStr( loc, name, value );
+      if( soft && ( StrOp.equals("id", name) || StrOp.equals("addr", name) ) ) {
+        ; // skip
+      }
+      else {
+        NodeOp.setStr( loc, name, value );
+      }
     }
 
     /* Leave the childs if no new are coming */
-    if( NodeOp.getChildCnt( props ) > 0 ) {
+    if( !soft && NodeOp.getChildCnt( props ) > 0 ) {
       cnt = NodeOp.getChildCnt( loc );
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( loc, 0 );
@@ -993,10 +998,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       dlg->modelEvent(node);
     }
 
-    if( StrOp.equals( wModelCmd.modify, wLoc.getcmd(node) ) ) {
-      modifyLoc( node );
-    }
-
+    modifyLoc( node, !StrOp.equals( wModelCmd.modify, wLoc.getcmd(node) ) );
 
     m_LC->updateLoc( node );
 
