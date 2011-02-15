@@ -3322,7 +3322,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry in schedule [%s] is reached.", scheduleid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry[%d] in schedule [%s] is reached.", *scheduleIdx, scheduleid );
+        *scheduleIdx += 1;
         return NULL;
       }
 
@@ -3352,7 +3353,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     /* take next schedule entry: */
     entry = wSchedule.nextscentry( schedule, entry );
     if( entry == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry in schedule [%s] is reached.", scheduleid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry[%d] in schedule [%s] is reached.", *scheduleIdx, scheduleid );
+      *scheduleIdx += 1;
       return NULL;
     }
     *scheduleIdx += 1;
