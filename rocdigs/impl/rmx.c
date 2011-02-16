@@ -40,8 +40,6 @@
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
 
-#include "rocdigs/impl/common/fada.h"
-
 static int instCnt = 0;
 
 #define PCKT          0x7D

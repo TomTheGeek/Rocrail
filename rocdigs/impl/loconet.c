@@ -73,7 +73,7 @@
 #include "rocdigs/impl/loconet/locoio.h"
 #include "rocdigs/impl/loconet/ibcom-cv.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 static int instCnt = 0;
 
@@ -775,9 +775,9 @@ static void __swReset( void* threadinst ) {
         int action = 0;
 
         if( port == 0 )
-          fromFADA( addr, &addr, &port, &gate );
+          AddrOp.fromFADA( addr, &addr, &port, &gate );
         else if( addr == 0 && port > 0 )
-          fromPADA( port, &addr, &port );
+          AddrOp.fromPADA( port, &addr, &port );
 
         addr = (addr-1) * 4 + (port-1);
 
@@ -1802,9 +1802,9 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     int action = 1;
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     addr = (addr-1) * 4 + (port-1);
 
@@ -1846,9 +1846,9 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     addr = (addr-1) * 4 + (port-1);
 

@@ -222,7 +222,7 @@ unlock bit of the Mode Word.
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 static int instCnt = 0;
 
@@ -381,17 +381,17 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
 
     if( port == 0 ) {
       fada = addr;
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     }
     else if( addr == 0 && port > 0 ) {
       pada = port;
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
     }
 
     if( fada == 0 )
-      fada = toFADA( addr, port, gate );
+      fada = AddrOp.toFADA( addr, port, gate );
     if( pada == 0 )
-      pada = toPADA( addr, port );
+      pada = AddrOp.toPADA( addr, port );
 
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
       dir = 0; /* thrown */
@@ -428,17 +428,17 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
 
     if( port == 0 ) {
       fada = addr;
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     }
     else if( addr == 0 && port > 0 ) {
       pada = port;
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
     }
 
     if( fada == 0 )
-      fada = toFADA( addr, port, gate );
+      fada = AddrOp.toFADA( addr, port, gate );
     if( pada == 0 )
-      pada = toPADA( addr, port );
+      pada = AddrOp.toPADA( addr, port );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );

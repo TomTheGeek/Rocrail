@@ -58,7 +58,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 
 static int instCnt = 0;
@@ -205,7 +205,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int gate = wSwitch.getgate1( node );
     Boolean dccswitch = StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N );
     if( port == 0 )
-      fromFADA( module, &module, &port, &gate );
+      AddrOp.fromFADA( module, &module, &port, &gate );
 
     long address = (( module - 1 ) * 4 ) + port - 1 + (dccswitch?0x3800:0x3000);
     /* cs 2 uses lineair addressing, address range 0x3000-0x33ff is for accessory decoders MM, 0x3800 for DCC, CS2 first address is 0, Rocrail's first is 1 */
@@ -233,7 +233,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int gate = wOutput.getgate( node );
     Boolean dccoutput = StrOp.equals( wOutput.getprot( node ), wOutput.prot_N );
     if( port == 0 )    //fada used convert to address, port
-      fromFADA( module, &module, &port, &gate );
+      AddrOp.fromFADA( module, &module, &port, &gate );
 
     long address = (( module - 1 ) * 4 ) + port -1 + (dccoutput?0x3800:0x3000);
 
@@ -265,15 +265,15 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
       addroffset = 0xC000;
       /* DCC loc adress range start */
-      strcpy(prot,"dcc");
+      StrOp.copy(prot,"dcc");
     } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
       addroffset = 0x4000;
       /* MFX loc address range start */
-      strcpy(prot,"mfx");
+      StrOp.copy(prot,"mfx");
     } else {
       addroffset = 0x0000;
       /* MM loc address range start */
-      strcpy(prot,"mm");
+      StrOp.copy(prot,"mm");
     }
     long address = addr + addroffset;
 
@@ -314,15 +314,15 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
       addroffset = 0xC000;
       /* DCC loc adress range start */
-      strcpy(prot,"dcc");
+      StrOp.copy(prot,"dcc");
     } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
       addroffset = 0x4000;
       /* MFX loc address range start */
-      strcpy(prot,"mfx");
+      StrOp.copy(prot,"mfx");
     } else {
       addroffset = 0x0000;
       /* MM loc address range start */
-      strcpy(prot,"mm");
+      StrOp.copy(prot,"mm");
     }
     long address = addr + addroffset;
 
@@ -535,7 +535,7 @@ static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
     addr1 = addr1 - 8;
     /* address range start 0x3000 for MM, range start for DCC is 0x3800, so MM 0x3000 or DCC 0x3800 is Rocrail address 1, port 1 */
   addr2 = addr2 + (addr1 << 8) + 1;
-  fromPADA( addr2, &addr, &port );
+  AddrOp.fromPADA( addr2, &addr, &port );
 
   iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   if( mcs2->iid != NULL )

@@ -1,0 +1,47 @@
+<!--
+ Rocbase - Base utility C library
+
+ Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public License
+ as published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="rocutils" title="RocUtils API" tolower="true" docname="rocutilsapi">
+
+  <object name="Addr" remark="Addresing converter">
+    <fun name="toFADA" vt="int">
+      <param name="module" vt="int"/>
+      <param name="port" vt="int"/>
+      <param name="gate" vt="int"/>
+    </fun>
+    <fun name="fromFADA" vt="void">
+      <param name="fada" vt="int"/>
+      <param name="module" vt="int*"/>
+      <param name="port" vt="int*"/>
+      <param name="gate" vt="int*"/>
+    </fun>
+    <fun name="toPADA" vt="int">
+      <param name="module" vt="int"/>
+      <param name="port" vt="int"/>
+    </fun>
+    <fun name="fromPADA" vt="void">
+      <param name="pada" vt="int"/>
+      <param name="module" vt="int*"/>
+      <param name="port" vt="int*"/>
+    </fun>
+  </object>
+
+
+</Project>
+
+

@@ -51,7 +51,7 @@
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 static int instCnt = 0;
 
@@ -219,10 +219,10 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
 
     if( port == 0 ) {
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     }
     else if( addr == 0 && port > 0 ) {
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
     }
 
     /* Rocrail starts at address 1, port 1, Lenz at address 0, port 0 */
@@ -287,9 +287,9 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;

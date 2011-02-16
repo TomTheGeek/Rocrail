@@ -43,7 +43,7 @@
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 
 static int instCnt = 0;
@@ -197,9 +197,9 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     byte mask  = single ? 0x01:0x03;
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     addr = (addr-1) * 4 + port;
 
@@ -247,9 +247,9 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     byte cmd   = RN_OUTPUT_ON;
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     addr = (addr-1) * 4 + port;
 

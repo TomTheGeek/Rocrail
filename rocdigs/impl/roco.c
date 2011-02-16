@@ -34,7 +34,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 static int instCnt = 0;
 int sensorstate[256];
@@ -688,9 +688,9 @@ static void __translate( iORoco roco, iONode node ) {
     int gate = wSwitch.getgate1( node );
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;
@@ -739,9 +739,9 @@ static void __translate( iORoco roco, iONode node ) {
     int gate   = wOutput.getgate( node );
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     if( port > 0 ) port--;
     if( addr > 0 ) addr--;

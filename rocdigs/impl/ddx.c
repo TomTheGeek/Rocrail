@@ -39,7 +39,7 @@
 #include "rocdigs/impl/ddx/s88.h"
 #include "rocdigs/impl/ddx/nmra.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 /**
  * ddx attributes:
@@ -172,9 +172,9 @@ static iONode __translate( obj inst, const iONode node ) {
     int gate = wOutput.getgate( node );
 
     if( port == 0 )
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "co addr=%d port=%d gate=%d action=%d", addr, port, gate, action );
     __accessory(inst, addr, port, gate, action, wOutput.getprot( node ));
@@ -203,18 +203,18 @@ static iONode __translate( obj inst, const iONode node ) {
 
     if( port == 0 ) {
       int l_addr = addr;
-      fromFADA( addr, &addr, &port, &gate );
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "sw FADA addr=%d converted to addr=%d port=%d gate=%d", l_addr, addr, port, gate );
     }
     else if( addr == 0 && port > 0 ) {
       int l_port = port;
-      fromPADA( port, &addr, &port );
+      AddrOp.fromPADA( port, &addr, &port );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "sw PADA port=%d converted to addr=%d port=%d gate=%d", l_port, addr, port, gate );
     }
     else {
-      int l_addr = toFADA( addr, port, gate );
+      int l_addr = AddrOp.toFADA( addr, port, gate );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "sw FADA would be addr=%d or addr=%d", l_addr, l_addr+1 );
     }

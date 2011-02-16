@@ -44,7 +44,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 
 static int instCnt = 0;
@@ -304,9 +304,9 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     int gate = wSwitch.getgate1( node );
 
     if( pin == 0 )
-      fromFADA( mod, &mod, &pin, &gate );
+      AddrOp.fromFADA( mod, &mod, &pin, &gate );
     else if( mod == 0 && pin > 0 )
-      fromPADA( pin, &mod, &pin );
+      AddrOp.fromPADA( pin, &mod, &pin );
 
     addr = (mod-1) * 4 + pin;
 
@@ -344,9 +344,9 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     const char* cmdstr = NULL;
 
     if( pin == 0 )
-      fromFADA( mod, &mod, &pin, &gate );
+      AddrOp.fromFADA( mod, &mod, &pin, &gate );
     else if( mod == 0 && pin > 0 )
-      fromPADA( pin, &mod, &pin );
+      AddrOp.fromPADA( pin, &mod, &pin );
 
     action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x40:0x00;
     cmd = gate==0?0x00:0x80;
@@ -987,7 +987,7 @@ static void __handleSwitch(iOP50x p50x, int pada, int state) {
   if( state == 0x80) value = 1;
   else value = 0;
 
-  fromPADA( pada, &addr, &port );
+  AddrOp.fromPADA( pada, &addr, &port );
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sw %d %d = %s", addr, port, value?"straight":"thrown" );
 

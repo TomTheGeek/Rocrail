@@ -34,6 +34,8 @@
 #include "rocs/public/strtok.h"
 #include "rocs/public/xmlh.h"
 
+#include "rocutils/public/addr.h"
+
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -53,9 +55,6 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Clock.h"
 
-#include "rocdigs/impl/common/fada.h"
-/* Lothar: I know, it is no good idea to include sourcecode, but I want to use toPADA and fromPADA because it is already implemented but only available for rocdigs ... */
-#include "rocdigs/impl/common/fada.c"
 
 static int instCnt = 0;
 
@@ -171,8 +170,8 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     iOSwitch sw = ModelOp.getSwitch(model, wSwitch.getid(evt));
     if( sw != NULL ) {
       iONode swProps = SwitchOp.base.properties(sw);
-      int addr  = toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
-      int addr2 = toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
+      int addr  = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
+      int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
 
       if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
@@ -239,7 +238,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     iOSignal sg = ModelOp.getSignal(model, wSignal.getid(evt));
     if( sg != NULL ) {
       iONode sgProps = SignalOp.base.properties(sg);
-      int addr = toPADA( wSignal.getaddr(sgProps), wSignal.getport1(sgProps) );
+      int addr = AddrOp.toPADA( wSignal.getaddr(sgProps), wSignal.getport1(sgProps) );
       int aspects = wSignal.getaspects( sgProps );
 
       /*100 INFO <bus> GA <addr> <port> <value>*/
@@ -248,9 +247,9 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
             time.tv_sec, time.tv_usec / 1000,
             100, 1, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1);
       }else if( aspects > 2 ) {
-        int addr2 = toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
-        int addr3 = toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
-        int addr4 = toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+        int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+        int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
 
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sgEvent typeP %s, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, addr3, addr4, wSignal.getstate(evt), wSignal.getstate(sgProps));
 
@@ -278,7 +277,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
         }
       }else {
-        int addr2 = toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
       }
@@ -476,7 +475,7 @@ static iONode __srcp2rr(const char* req, int *reqRespCode, iONode *cmd2) {
       iOSwitch sw;
       iOSignal sg;
 
-      fromPADA( addrGA, &addr, &port );
+      AddrOp.fromPADA( addrGA, &addr, &port );
       sw = ModelOp.getSwByAddress(model, addr, port);
       sg = ModelOp.getSgByAddress(model, addr, port);
 
@@ -664,13 +663,13 @@ static iONode __srcp2rr(const char* req, int *reqRespCode, iONode *cmd2) {
       StrTokOp.base.del(tok);
 
       /* Find switch */
-      fromPADA( addrGA, &addr, &port );
+      AddrOp.fromPADA( addrGA, &addr, &port );
 
       sw = ModelOp.getSwByAddress(model, addr, port);
       if( sw != NULL ) {
         iONode swProps = SwitchOp.base.properties(sw);
-        int addr1 = toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
-        int addr2 = toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
+        int addr1 = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
+        int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
         int gate1 = wSwitch.getgate1(swProps);
         int gate2 = wSwitch.getgate2(swProps);
 
@@ -829,10 +828,10 @@ static iONode __srcp2rr(const char* req, int *reqRespCode, iONode *cmd2) {
       if( sg != NULL ) {
         iONode sgProps = SignalOp.base.properties(sg);
         int aspects = wSignal.getaspects( sgProps );
-        int addr1 = toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
-        int addr2 = toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
-        int addr3 = toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
-        int addr4 = toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+        int addr1 = AddrOp.toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
+        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+        int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+        int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
         int gate1 = wSignal.getgate1(sgProps);
         int gate2 = wSignal.getgate2(sgProps);
         int gate3 = wSignal.getgate3(sgProps);

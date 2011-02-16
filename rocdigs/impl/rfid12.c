@@ -104,8 +104,6 @@ with a concentrator.
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
 
-#include "rocdigs/impl/common/fada.h"
-
 
 
 static int instCnt = 0;

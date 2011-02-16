@@ -37,7 +37,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
-#include "rocdigs/impl/common/fada.h"
+#include "rocutils/public/addr.h"
 
 
 static int instCnt = 0;
@@ -243,9 +243,9 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
     int gate = wSwitch.getgate1( node );
 
     if( pin == 0 )
-      fromFADA( mod, &mod, &pin, &gate );
+      AddrOp.fromFADA( mod, &mod, &pin, &gate );
     else if( mod == 0 && pin > 0 )
-      fromPADA( pin, &mod, &pin );
+      AddrOp.fromPADA( pin, &mod, &pin );
 
     addr = (mod-1) * 4 + pin;
 
