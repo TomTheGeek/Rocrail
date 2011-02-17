@@ -3888,6 +3888,18 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      "Block [%s] is well suited for [%s] and picked random[%d,%d] from [%d] choices",
                      blockBest->base.id(blockBest), LocOp.getId( loc ), randChoice, randNumber, cnt );
     }
+    /* when using blocksides the best route can be, in case of commuter,
+       a destination in the other direction. For a commuter to change direction
+       the block must allow change direction and the loc must be swapped. */
+    if( useBlockSide &&
+        wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) &&
+        MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
+    {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loco [%s] must swap for this route.",
+                     LocOp.getId( loc ) );
+      LocOp.swapPlacing(loc, NULL, False);
+    }
   }
   else if( ListOp.size( altBlocks ) > 0 ) {
     int cnt = ListOp.size( altBlocks );
