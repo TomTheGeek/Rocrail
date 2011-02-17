@@ -188,6 +188,8 @@ public:
     wxTextCtrl* m_RouteIDs;
     wxStaticText* m_LabelDescription;
     wxTextCtrl* m_Description;
+    wxStaticText* m_labAccNr;
+    wxSpinCtrl* m_AccNr;
     wxCheckBox* m_State;
     wxCheckBox* m_Road;
     wxCheckBox* m_Show;

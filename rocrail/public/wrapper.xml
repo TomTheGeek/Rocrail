@@ -1183,6 +1183,7 @@
         <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
+        <var name="accnr" vt="int" defval="0" range="0-*" required="false" remark="Accessory number."/>
         <var name="identifier" vt="long" defval="0" remark="Loc identifier"/>
         <var name="counter" vt="int" defval="0" remark="occupied counter"/>
         <var name="carcount" vt="int" defval="0" remark="car counter (only for client info)"/>

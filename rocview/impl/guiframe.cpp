@@ -695,7 +695,7 @@ static int locComparator(obj* o1, obj* o2) {
 }
 
 
-void RocGuiFrame::modifyLoc( iONode props, bool soft ) {
+void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
   iONode model = wxGetApp().getModel();
   iONode loc = NULL;
   int i = 0;
@@ -717,13 +717,13 @@ void RocGuiFrame::modifyLoc( iONode props, bool soft ) {
   }
 
   if( loc != NULL ) {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "merge loc [%s]", wLoc.getid(loc) );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "%s loc [%s]", deep?"merge":"update", wLoc.getid(loc) );
     int cnt = NodeOp.getAttrCnt( props );
     for( i = 0; i < cnt; i++ ) {
       iOAttr attr = NodeOp.getAttr( props, i );
       const char* name  = AttrOp.getName( attr );
       const char* value = AttrOp.getVal( attr );
-      if( soft && ( StrOp.equals("id", name) || StrOp.equals("addr", name) ) ) {
+      if( !deep && ( StrOp.equals("id", name) || StrOp.equals("addr", name) ) ) {
         ; // skip
       }
       else {
@@ -732,8 +732,9 @@ void RocGuiFrame::modifyLoc( iONode props, bool soft ) {
     }
 
     /* Leave the childs if no new are coming */
-    if( !soft && NodeOp.getChildCnt( props ) > 0 ) {
+    if( deep && NodeOp.getChildCnt( props ) > 0 ) {
       cnt = NodeOp.getChildCnt( loc );
+      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "remove %d child nodes from loco[%s]", cnt, wLoc.getid(loc) );
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( loc, 0 );
         NodeOp.removeChild( loc, child );
@@ -741,6 +742,7 @@ void RocGuiFrame::modifyLoc( iONode props, bool soft ) {
         cnt = NodeOp.getChildCnt( loc );
       }
       cnt = NodeOp.getChildCnt( props );
+      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "add %d child nodes to loco[%s]", cnt, wLoc.getid(loc) );
       for( i = 0; i < cnt; i++ ) {
         iONode child = NodeOp.getChild( props, i );
         NodeOp.addChild( loc, (iONode)NodeOp.base.clone(child) );
@@ -998,7 +1000,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       dlg->modelEvent(node);
     }
 
-    modifyLoc( node, !StrOp.equals( wModelCmd.modify, wLoc.getcmd(node) ) );
+    modifyLoc( node, StrOp.equals( wModelCmd.modify, wLoc.getcmd(node) ) ? true:false );
 
     m_LC->updateLoc( node );
 

@@ -152,6 +152,7 @@ void FeedbackDialog::initLabels() {
   m_LabelId->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labBlockID->SetLabel( wxGetApp().getMsg( "blockid" ) );
   m_LabelDescription->SetLabel( wxGetApp().getMsg( "description" ) );
+  m_labAccNr->SetLabel( wxGetApp().getMsg( "accnr" ) );
   m_State->SetLabel( wxGetApp().getMsg( "state" ) );
   m_Show->SetLabel( wxGetApp().getMsg( "show" ) );
   m_Road->SetLabel( wxGetApp().getMsg( "road" ) );
@@ -256,6 +257,7 @@ void FeedbackDialog::initValues() {
   m_BlockID->SetStringSelection( wFeedback.getblockid( m_Props ) == NULL ?
                                 _T(""):wxString(wFeedback.getblockid( m_Props ),wxConvUTF8)  );
   m_RouteIDs->SetValue( wxString(wItem.getrouteids( m_Props ),wxConvUTF8) );
+  m_AccNr->SetValue(wFeedback.getaccnr( m_Props ));
 
   // Location
   char* val = StrOp.fmt( "%d", wFeedback.getx( m_Props ) );
@@ -313,6 +315,7 @@ bool FeedbackDialog::evaluate() {
   wFeedback.setcurve( m_Props, m_Curved->IsChecked()?True:False );
   wFeedback.setblockid( m_Props, m_BlockID->GetStringSelection().mb_str(wxConvUTF8) );
   wItem.setrouteids( m_Props, m_RouteIDs->GetValue().mb_str(wxConvUTF8) );
+  wFeedback.setaccnr( m_Props, m_AccNr->GetValue() );
 
   // Location
   wFeedback.setx( m_Props, atoi( m_x->GetValue().mb_str(wxConvUTF8) ) );
@@ -370,6 +373,8 @@ bool FeedbackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_RouteIDs = NULL;
     m_LabelDescription = NULL;
     m_Description = NULL;
+    m_labAccNr = NULL;
+    m_AccNr = NULL;
     m_State = NULL;
     m_Road = NULL;
     m_Show = NULL;
@@ -488,24 +493,30 @@ void FeedbackDialog::CreateControls()
     m_Description = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_Description, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 4, 0, 0);
-    itemBoxSizer12->Add(itemFlexGridSizer22, 0, wxGROW|wxALL, 5);
+    m_labAccNr = new wxStaticText( m_General, wxID_ANY, _("accnr"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labAccNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_AccNr = new wxSpinCtrl( m_General, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
+    itemFlexGridSizer13->Add(m_AccNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 4, 0, 0);
+    itemBoxSizer12->Add(itemFlexGridSizer24, 0, wxGROW|wxALL, 5);
     m_State = new wxCheckBox( m_General, ID_CHECKBOX_FB_STATE, _("state"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_State->SetValue(false);
     m_State->Enable(false);
-    itemFlexGridSizer22->Add(m_State, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer24->Add(m_State, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Road = new wxCheckBox( m_General, wxID_ANY, _("Road"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Road->SetValue(false);
-    itemFlexGridSizer22->Add(m_Road, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer24->Add(m_Road, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Show = new wxCheckBox( m_General, ID_CHECKBOX_FB_SHOW, _("show"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_Show->SetValue(false);
-    itemFlexGridSizer22->Add(m_Show, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer24->Add(m_Show, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Curved = new wxCheckBox( m_General, wxID_ANY, _("curved"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Curved->SetValue(false);
-    itemFlexGridSizer22->Add(m_Curved, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer24->Add(m_Curved, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_General, ID_FEEDBACK_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
@@ -513,28 +524,28 @@ void FeedbackDialog::CreateControls()
     m_Notebook->AddPage(m_General, _("General"));
 
     m_LocationPanel = new wxPanel( m_Notebook, ID_PANEL_FB_LOCATION, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
-    m_LocationPanel->SetSizer(itemBoxSizer29);
+    wxBoxSizer* itemBoxSizer31 = new wxBoxSizer(wxHORIZONTAL);
+    m_LocationPanel->SetSizer(itemBoxSizer31);
 
-    wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemBoxSizer29->Add(itemFlexGridSizer30, 0, wxALIGN_TOP|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer32 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemBoxSizer31->Add(itemFlexGridSizer32, 0, wxALIGN_TOP|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_X, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer30->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_x = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_X, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer30->Add(m_x, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_x, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelY = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_Y, _("y"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer30->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_y = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_Y, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer30->Add(m_y, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_y, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelZ = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_Z, _("z"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer30->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_z = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_Z, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer30->Add(m_z, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer32->Add(m_z, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_oriStrings;
     m_oriStrings.Add(_("&north"));
@@ -543,25 +554,25 @@ void FeedbackDialog::CreateControls()
     m_oriStrings.Add(_("&west"));
     m_ori = new wxRadioBox( m_LocationPanel, ID_RADIOBOX_FB_ORI, _("Orientation"), wxDefaultPosition, wxDefaultSize, m_oriStrings, 1, wxRA_SPECIFY_COLS );
     m_ori->SetSelection(0);
-    itemBoxSizer29->Add(m_ori, 0, wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer31->Add(m_ori, 0, wxALIGN_TOP|wxALL, 5);
 
     m_Notebook->AddPage(m_LocationPanel, _("Location"));
 
     m_Interface = new wxPanel( m_Notebook, ID_PANEL_FB_INTERFACE, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer39 = new wxBoxSizer(wxVERTICAL);
-    m_Interface->SetSizer(itemBoxSizer39);
+    wxBoxSizer* itemBoxSizer41 = new wxBoxSizer(wxVERTICAL);
+    m_Interface->SetSizer(itemBoxSizer41);
 
-    wxFlexGridSizer* itemFlexGridSizer40 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer40->AddGrowableCol(1);
-    itemBoxSizer39->Add(itemFlexGridSizer40, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer42 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer42->AddGrowableCol(1);
+    itemBoxSizer41->Add(itemFlexGridSizer42, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_FB_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer42->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer42->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_TOP|wxALL, 5);
+    itemFlexGridSizer42->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_TOP|wxALL, 5);
 
     wxArrayString m_BusStrings;
     m_BusStrings.Add(_("&0 Sensor"));
@@ -573,77 +584,77 @@ void FeedbackDialog::CreateControls()
     m_BusStrings.Add(_("&6 Wheel counter"));
     m_Bus = new wxRadioBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );
     m_Bus->SetSelection(0);
-    itemFlexGridSizer40->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer42->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_FB_ADDRESS1, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer42->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_ADDRESS1, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer40->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer42->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ActiveLow = new wxCheckBox( m_Interface, wxID_ANY, _("Active low"), wxDefaultPosition, wxDefaultSize, 0 );
     m_ActiveLow->SetValue(false);
-    itemBoxSizer39->Add(m_ActiveLow, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer41->Add(m_ActiveLow, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_Notebook->AddPage(m_Interface, _("Interface"));
 
     m_Wiring = new wxPanel( m_Notebook, ID_PANEL_FB_WIRING, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     m_CTCBox = new wxStaticBox(m_Wiring, wxID_ANY, _("CTC"));
-    wxStaticBoxSizer* itemStaticBoxSizer49 = new wxStaticBoxSizer(m_CTCBox, wxVERTICAL);
-    m_Wiring->SetSizer(itemStaticBoxSizer49);
+    wxStaticBoxSizer* itemStaticBoxSizer51 = new wxStaticBoxSizer(m_CTCBox, wxVERTICAL);
+    m_Wiring->SetSizer(itemStaticBoxSizer51);
 
-    wxFlexGridSizer* itemFlexGridSizer50 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer49->Add(itemFlexGridSizer50, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer52 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer51->Add(itemFlexGridSizer52, 0, wxGROW|wxALL, 5);
     m_labCTCIID = new wxStaticText( m_Wiring, wxID_STATIC, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer50->Add(m_labCTCIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_labCTCIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CTCIID = new wxTextCtrl( m_Wiring, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer50->Add(m_CTCIID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_CTCIID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCTCAddr = new wxStaticText( m_Wiring, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer50->Add(m_labCTCAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_labCTCAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CTCAddr = new wxSpinCtrl( m_Wiring, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer50->Add(m_CTCAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_CTCAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCTCPort = new wxStaticText( m_Wiring, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer50->Add(m_labCTCPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_labCTCPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CTCPort = new wxSpinCtrl( m_Wiring, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer50->Add(m_CTCPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_CTCPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCTCGate = new wxStaticText( m_Wiring, wxID_ANY, _("Gate"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer50->Add(m_labCTCGate, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_labCTCGate, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_CTCGateStrings;
     m_CTCGateStrings.Add(_("&Red"));
     m_CTCGateStrings.Add(_("&Green"));
     m_CTCGate = new wxRadioBox( m_Wiring, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CTCGateStrings, 1, wxRA_SPECIFY_ROWS );
     m_CTCGate->SetSelection(0);
-    itemFlexGridSizer50->Add(m_CTCGate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer52->Add(m_CTCGate, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_AsSwitch = new wxCheckBox( m_Wiring, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
     m_AsSwitch->SetValue(false);
-    itemStaticBoxSizer49->Add(m_AsSwitch, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer51->Add(m_AsSwitch, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_Notebook->AddPage(m_Wiring, _("Wiring"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer60 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer62 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer60, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer62, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer60->AddButton(m_Cancel);
+    itemStdDialogButtonSizer62->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer60->AddButton(m_OK);
+    itemStdDialogButtonSizer62->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer60->AddButton(m_Apply);
+    itemStdDialogButtonSizer62->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer60->Realize();
+    itemStdDialogButtonSizer62->Realize();
 
 ////@end FeedbackDialog content construction
 }
