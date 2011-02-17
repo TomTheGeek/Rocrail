@@ -544,6 +544,7 @@ bool RocGui::OnInit() {
 
   tracelevel  debug   = CmdLnOp.hasKey( m_CmdLn, wCmdline.debug ) ? TRCLEVEL_DEBUG:(tracelevel)0;
   tracelevel  parse   = CmdLnOp.hasKey( m_CmdLn, wCmdline.parse ) ? TRCLEVEL_PARSE:(tracelevel)0;
+  tracelevel  info    = CmdLnOp.hasKey( m_CmdLn, wCmdline.info  ) ? TRCLEVEL_INFO:(tracelevel)0;
   const char* tf      = CmdLnOp.getStr( m_CmdLn, wCmdline.trcfile );
   const char* theme   = CmdLnOp.getStr( m_CmdLn, wCmdline.theme );
   const char* sp      = CmdLnOp.getStr( m_CmdLn, wCmdline.serverpath );
@@ -555,7 +556,7 @@ bool RocGui::OnInit() {
   readArgs(lang);
 
   // create a trace object:
-  m_Trace = TraceOp.inst( (tracelevel)(debug | TRCLEVEL_INFO | TRCLEVEL_WARNING), tf, True );
+  m_Trace = TraceOp.inst( (tracelevel)(debug | info | TRCLEVEL_WARNING), tf, True );
   TraceOp.setAppID( m_Trace, "g" );
 
   // check for alternative ini file:
@@ -644,6 +645,8 @@ bool RocGui::OnInit() {
     TraceOp.setLevel( m_Trace, (tracelevel)(TraceOp.getLevel( m_Trace ) | TRCLEVEL_DEBUG) );
   if( wTrace.isparse( trace ) || parse )
     TraceOp.setLevel( m_Trace, (tracelevel)(TraceOp.getLevel( m_Trace ) | TRCLEVEL_PARSE) );
+  if( wTrace.isinfo( trace ) || info )
+    TraceOp.setLevel( m_Trace, (tracelevel)(TraceOp.getLevel( m_Trace ) | TRCLEVEL_INFO) );
 
   if( tf == NULL )
     TraceOp.setFilename( m_Trace, wTrace.getgfile( trace ) );

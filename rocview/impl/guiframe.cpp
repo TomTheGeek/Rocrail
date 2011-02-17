@@ -724,7 +724,8 @@ void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
       const char* name  = AttrOp.getName( attr );
       const char* value = AttrOp.getVal( attr );
       if( !deep && ( StrOp.equals("id", name) || StrOp.equals("addr", name) ) ) {
-        ; // skip
+        // skip
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "skip attribute [%s] for loc [%s]", name, wLoc.getid(loc) );
       }
       else {
         NodeOp.setStr( loc, name, value );

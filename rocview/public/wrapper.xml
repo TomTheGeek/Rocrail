@@ -23,6 +23,7 @@
     <const name="offline" vt="string" val="-offline" defval="false" range="*" remark="Starts Gui in offline mode."/>
     <const name="debug" vt="string" val="-debug" defval="false" range="*" remark="Set tracelevel debug."/>
     <const name="parse" vt="string" val="-parse" defval="false" remark="Activates parse tracelevel."/>
+    <const name="info" vt="string" val="-info" defval="false" remark="Activates info tracelevel."/>
     <const name="inifile" vt="string" val="-i" defval="*" range="*" remark="Specifies which Inifile to use: -i [file]"/>
     <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
     <const name="host" vt="string" val="-h" defval="*" range="*" remark="Specifies target daemon: -h [hostname]"/>

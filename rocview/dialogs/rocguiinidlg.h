@@ -194,6 +194,7 @@ public:
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;
+    wxCheckBox* m_Info;
     wxStaticBoxSizer* m_TraceFileBox;
     wxTextCtrl* m_TraceFile;
     wxPanel* m_PTpanel;
