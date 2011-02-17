@@ -2068,6 +2068,10 @@ static void _modify( iOLoc inst, iONode props ) {
       iOAttr attr = NodeOp.getAttr( props, i );
       const char* name  = AttrOp.getName( attr );
       const char* value = AttrOp.getVal( attr );
+
+      if( StrOp.equals("id", name) && StrOp.equals( value, wLoc.getid(data->props) ) )
+        continue; /* skip to avoid making invalid pointers */
+
       if( !StrOp.equals( "runtime", name ) )
         NodeOp.setStr( data->props, name, value );
     }
@@ -2314,6 +2318,7 @@ static void _setCV( iOLoc loc, int nr, int value ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)data->props->base.clone( data->props );
+    wLoc.setcmd( clone, wModelCmd.modify );
     AppOp.broadcastEvent( clone );
   }
 }

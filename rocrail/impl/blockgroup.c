@@ -196,6 +196,10 @@ static void _modify( struct OBlockGroup* inst ,iONode props ) {
     iOAttr attr = NodeOp.getAttr( props, i );
     const char* name  = AttrOp.getName( attr );
     const char* value = AttrOp.getVal( attr );
+
+    if( StrOp.equals("id", name) && StrOp.equals( value, wLink.getid(data->props) ) )
+      continue; /* skip to avoid making invalid pointers */
+
     NodeOp.setStr( data->props, name, value );
   }
 

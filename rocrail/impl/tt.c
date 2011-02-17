@@ -125,6 +125,10 @@ static void _modify( iOTT inst, iONode props ) {
     iOAttr attr = NodeOp.getAttr( props, i );
     const char* name  = AttrOp.getName( attr );
     const char* value = AttrOp.getVal( attr );
+
+    if( StrOp.equals("id", name) && StrOp.equals( value, wTurntable.getid(o->props) ) )
+      continue; /* skip to avoid making invalid pointers */
+
     NodeOp.setStr( o->props, name, value );
   }
 
