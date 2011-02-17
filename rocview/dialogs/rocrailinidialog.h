@@ -230,6 +230,7 @@ public:
     wxCheckBox* m_Monitor;
     wxStaticBox* m_DevTraceLevel;
     wxCheckBox* m_Byte;
+    wxCheckBox* m_Info;
     wxCheckBox* m_Debug;
     wxCheckBox* m_SendAllTraces;
     wxPanel* m_ServicePanel;

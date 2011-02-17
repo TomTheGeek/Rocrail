@@ -567,7 +567,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     FileOp.cd( wd );
   }
 
-  trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+  trc = TraceOp.inst( debug | dump | monitor | parse | info | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
   TraceOp.setAppID( trc, "r" );
 
   data->consoleMode = console;
