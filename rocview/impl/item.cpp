@@ -1130,7 +1130,6 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_LocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
 
         // FY to Go menu
-        wxMenu* menuFy2go = new wxMenu();
         iONode model = wxGetApp().getModel();
 
          m_fylist = ListOp.inst();
@@ -1139,34 +1138,34 @@ void Symbol::OnPopup(wxMouseEvent& event)
            iONode fylist = wPlan.getseltablist( model );
            if( fylist != NULL ) {
              int cnt = NodeOp.getChildCnt( fylist );
-             for( int i = 0; i < cnt; i++ ) {
-               iONode fy = NodeOp.getChild( fylist, i );
-               const char* id = wSelTab.getid( fy );
-               if( id != NULL ) {
-                 ListOp.add(m_fylist, (obj)id);
+             if( cnt > 0 ) {
+               wxMenu* menuFy2go = new wxMenu();
+               for( int i = 0; i < cnt; i++ ) {
+                 iONode fy = NodeOp.getChild( fylist, i );
+                 const char* id = wSelTab.getid( fy );
+                 if( id != NULL ) {
+                   ListOp.add(m_fylist, (obj)id);
+                 }
                }
-             }
-             ListOp.sort(m_fylist, &__sortStr);
+               ListOp.sort(m_fylist, &__sortStr);
 
-             cnt = ListOp.size( m_fylist );
+               cnt = ListOp.size( m_fylist );
 
-             if(cnt > 4) // MAX 4!
-               cnt = 4;
+               if(cnt > 4) // MAX 4!
+                 cnt = 4;
 
-             for( int i = 0; i < cnt; i++ ) {
-               const char* id = (const char*)ListOp.get( m_fylist, i );
-               menuFy2go->Append( ME_FYGo+i, wxString(id,wxConvUTF8) );
+               for( int i = 0; i < cnt; i++ ) {
+                 const char* id = (const char*)ListOp.get( m_fylist, i );
+                 menuFy2go->Append( ME_FYGo+i, wxString(id,wxConvUTF8) );
+               }
+               menu.Append( ME_FYGo, wxGetApp().getMenu("fiddleyard2go"), menuFy2go );
              }
            }
          }
 
-         if( ListOp.size( m_fylist ) > 0 )
-           menu.Append( ME_FYGo, wxGetApp().getMenu("fiddleyard2go"), menuFy2go );
-
 
 
         // Schedule 2 Go menu
-        wxMenu* menuSchd2go = new wxMenu();
          m_sclist = ListOp.inst();
          Boolean addSc = False;
          Boolean onlyStartWith = wGui.isshowonlystartschedules(wxGetApp().getIni());
@@ -1175,65 +1174,68 @@ void Symbol::OnPopup(wxMouseEvent& event)
            iONode sclist = wPlan.getsclist( model );
            if( sclist != NULL ) {
              int cnt = NodeOp.getChildCnt( sclist );
-             for( int i = 0; i < cnt; i++ ) {
-               iONode sc = NodeOp.getChild( sclist, i );
-               const char* id = wSchedule.getid( sc );
-               addSc = False;
-               iONode entry = wSchedule.getscentry( sc );
-               while( entry != NULL && !addSc ) {
-                 const char* blockID    = wScheduleEntry.getblock( entry );
-                 const char* locationID = wScheduleEntry.getlocation( entry );
-                 
-                 if( blockID != NULL && StrOp.equals(blockID, wBlock.getid( m_Props ) )) {
-                   addSc = True;
-                 }
-                 else if( blockID != NULL && StrOp.equals(blockID, wBlock.getmanagerid( m_Props ) )) {
-                   addSc = True;
-                 }
-                 else if( locationID != NULL ) {
-                   iONode locationlist = wPlan.getlocationlist( model );
-                   if( locationlist != NULL ) {
-                     iONode location = wLocationList.getlocation( locationlist );
-                     while( !addSc && location != NULL ) {
-                       if( StrOp.equals(locationID, wLocation.getid( location ))) {
-                         iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
-                         while ( StrTokOp.hasMoreTokens( tok )) {
-                           const char * token = StrTokOp.nextToken( tok );
-                           if( StrOp.equals( token, wBlock.getid( m_Props )) || StrOp.equals( token, wBlock.getmanagerid( m_Props )) ) {
-                             addSc = True;
-                             break;
+             if( cnt > 0 ) {
+               wxMenu* menuSchd2go = new wxMenu();
+
+               for( int i = 0; i < cnt; i++ ) {
+                 iONode sc = NodeOp.getChild( sclist, i );
+                 const char* id = wSchedule.getid( sc );
+                 addSc = False;
+                 iONode entry = wSchedule.getscentry( sc );
+                 while( entry != NULL && !addSc ) {
+                   const char* blockID    = wScheduleEntry.getblock( entry );
+                   const char* locationID = wScheduleEntry.getlocation( entry );
+
+                   if( blockID != NULL && StrOp.equals(blockID, wBlock.getid( m_Props ) )) {
+                     addSc = True;
+                   }
+                   else if( blockID != NULL && StrOp.equals(blockID, wBlock.getmanagerid( m_Props ) )) {
+                     addSc = True;
+                   }
+                   else if( locationID != NULL ) {
+                     iONode locationlist = wPlan.getlocationlist( model );
+                     if( locationlist != NULL ) {
+                       iONode location = wLocationList.getlocation( locationlist );
+                       while( !addSc && location != NULL ) {
+                         if( StrOp.equals(locationID, wLocation.getid( location ))) {
+                           iOStrTok tok = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+                           while ( StrTokOp.hasMoreTokens( tok )) {
+                             const char * token = StrTokOp.nextToken( tok );
+                             if( StrOp.equals( token, wBlock.getid( m_Props )) || StrOp.equals( token, wBlock.getmanagerid( m_Props )) ) {
+                               addSc = True;
+                               break;
+                             }
                            }
+                           StrTokOp.base.del(tok);
                          }
-                         StrTokOp.base.del(tok);
+                         location = wLocationList.nextlocation( locationlist, location );
                        }
-                       location = wLocationList.nextlocation( locationlist, location );
                      }
                    }
+                   entry = onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry );
                  }
-                 entry = onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry );
+
+                 if( id != NULL && addSc) {
+                  ListOp.add(m_sclist, (obj)id);
+                 }
+
                }
-               
-               if( id != NULL && addSc) {
-                ListOp.add(m_sclist, (obj)id);
+               ListOp.sort(m_sclist, &__sortStr);
+
+               cnt = ListOp.size( m_sclist );
+
+               if(cnt > 20) // MAX 20!
+                 cnt = 20;
+
+               for( int i = 0; i < cnt; i++ ) {
+                 const char* id = (const char*)ListOp.get( m_sclist, i );
+                 menuSchd2go->Append( ME_ScheduleGo+i, wxString(id,wxConvUTF8) );
                }
-               
-             }
-             ListOp.sort(m_sclist, &__sortStr);
-
-             cnt = ListOp.size( m_sclist );
-
-             if(cnt > 20) // MAX 20!
-               cnt = 20;
-
-             for( int i = 0; i < cnt; i++ ) {
-               const char* id = (const char*)ListOp.get( m_sclist, i );
-               menuSchd2go->Append( ME_ScheduleGo+i, wxString(id,wxConvUTF8) );
+               menu.Append( ME_ScheduleGo, wxGetApp().getMenu("schedule2go"), menuSchd2go );
              }
            }
          }
 
-
-         menu.Append( ME_ScheduleGo, wxGetApp().getMenu("schedule2go"), menuSchd2go );
 
         wxMenuItem *mi = menu.FindItem( ME_LocGo );
         if( !wxGetApp().getFrame()->isAutoMode() )
@@ -1242,10 +1244,10 @@ void Symbol::OnPopup(wxMouseEvent& event)
         if( !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_ScheduleGo );
-        if( !wxGetApp().getFrame()->isAutoMode() )
+        if( mi != NULL && !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_FYGo );
-        if( !wxGetApp().getFrame()->isAutoMode() )
+        if( mi != NULL && !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_UnLoc );
         //if( wxGetApp().getFrame()->isAutoMode() )
