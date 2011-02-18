@@ -87,8 +87,8 @@ void statusIn( iILcDriverInt inst ) {
     data->state = LC_CHECKROUTE;
 
     data->loc->setMode(data->loc, wLoc.mode_auto);
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "Setting state for [%s] from LC_INBLOCK to LC_CHECKROUTE.",
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   "Waiting for route, setting state for [%s] from LC_INBLOCK to LC_CHECKROUTE.",
                    data->loc->getId( data->loc ) );
 
 
