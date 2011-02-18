@@ -189,6 +189,7 @@ void LocoIO::sendPacket() {
 }
 void LocoIO::OnTimer(wxTimerEvent& event) {
   TraceOp.trc( "locoio", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on reply...");
+  this->SetCursor(wxCURSOR_ARROW);
   if( m_SendedCmd != NULL ) {
 
     NodeOp.base.del(m_SendedCmd);
