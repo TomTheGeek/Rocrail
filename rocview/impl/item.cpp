@@ -1160,7 +1160,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
            }
          }
 
-         menu.Append( ME_FYGo, wxGetApp().getMenu("fiddleyard2go"), menuFy2go );
+         if( ListOp.size( m_fylist ) > 0 )
+           menu.Append( ME_FYGo, wxGetApp().getMenu("fiddleyard2go"), menuFy2go );
 
 
 
