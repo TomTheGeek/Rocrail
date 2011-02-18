@@ -60,6 +60,8 @@ public:
   void OnLocGoTo(wxCommandEvent& event);
   void OnLocSchedule(wxCommandEvent& event);
   void OnLocGo(wxCommandEvent& event);
+  void OnLocSwap(wxCommandEvent& event);
+  void OnLocSwapBlockSide(wxCommandEvent& event);
   void OnScheduleGo(wxCommandEvent& event);
   void OnFYGo(wxCommandEvent& event);
   void OnLocGoManual(wxCommandEvent& event);

@@ -122,6 +122,8 @@ enum {
     ME_LocGoTo,
     ME_LocSchedule,
     ME_LocGo,
+    ME_LocSwap,
+    ME_LocSwapBlockSide,
     ME_LocGoManual,
     ME_LocStop,
     ME_LocReset,
@@ -173,6 +175,8 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocGoTo, Symbol::OnLocGoTo)
   EVT_MENU     (ME_LocSchedule, Symbol::OnLocSchedule)
   EVT_MENU     (ME_LocGo  , Symbol::OnLocGo  )
+  EVT_MENU     (ME_LocSwap  , Symbol::OnLocSwap  )
+  EVT_MENU     (ME_LocSwapBlockSide  , Symbol::OnLocSwapBlockSide  )
   EVT_MENU     (ME_ScheduleGo, Symbol::OnScheduleGo)
   EVT_MENU     (ME_FYGo, Symbol::OnFYGo)
   EVT_MENU     (ME_LocGoManual  , Symbol::OnLocGoManual  )
@@ -1119,6 +1123,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_LocGo, wxGetApp().getMenu("startloc") );
         menu.Append( ME_LocGoManual, wxGetApp().getMenu("gomanual") );
         menu.Append( ME_LocStop, wxGetApp().getMenu("stoploc") );
+        menu.Append( ME_LocSwap, wxGetApp().getMenu("swapplacing"), wxGetApp().getTip("swapplacing") );
+        menu.Append( ME_LocSwapBlockSide, wxGetApp().getMenu("swapblockenterside"), wxGetApp().getTip("swapblockenterside") );
         menu.Append( ME_LocMIC, wxGetApp().getMenu("mic") );
         menu.Append( ME_LocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
         menu.Append( ME_LocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
@@ -1609,6 +1615,26 @@ void Symbol::OnLocGoManual(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
+
+
+void Symbol::OnLocSwapBlockSide(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.blockside );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnLocSwap(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.swap );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 
 void Symbol::OnLocStop(wxCommandEvent& event) {
   /* Inform RocRail... */
