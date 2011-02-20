@@ -169,7 +169,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
 
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
       rn[RN_PACKET_LEN] = 1;

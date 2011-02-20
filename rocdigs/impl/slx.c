@@ -328,7 +328,7 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
   /* TODO: bus. System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       cmd[0] = 127;
       cmd[0] |= WRITE_FLAG;
       cmd[1] = 0x00;

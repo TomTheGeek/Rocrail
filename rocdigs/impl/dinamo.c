@@ -166,7 +166,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int cmdval = wSysCmd.getval( node );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "translating: cmd=%s", cmdstr );
 
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
       data->header |= FAULT_FLAG;
       datagram[0] = 0x00 | data->header;
       datagram[1] = (byte)__generateChecksum( datagram );

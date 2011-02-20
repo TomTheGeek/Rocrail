@@ -268,7 +268,7 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       p50[0] = (unsigned char)97;
       return 1;
     }

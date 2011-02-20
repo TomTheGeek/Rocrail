@@ -227,7 +227,7 @@ static iONode __translate( iOSRCP07Data o, iONode node, char* srcp )
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) )
   {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) )
+    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) )
     {
       sprintf(tmpCommand,"SET POWER OFF\n");
       __srcpSendCommand(o,False,tmpCommand,NULL);

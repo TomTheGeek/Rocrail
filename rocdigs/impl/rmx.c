@@ -398,7 +398,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       out[0] = PCKT;
       out[1] = 6;
       out[2] = OPC_MODE;

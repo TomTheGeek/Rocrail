@@ -943,7 +943,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     const char* cmdstr  = wSysCmd.getcmd( node );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SysCmd %s", cmdstr );
 
-    if ( StrOp.equals( cmdstr, wSysCmd.stop )) {
+    if ( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
 
       StrOp.fmtb( ecosCmd, "set(%d, stop)\n", OID_ECOS );
 

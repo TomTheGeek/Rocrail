@@ -479,7 +479,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
   */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       out[0] = 0x00;
       out[1] = 0xFF;
       out[2] = 0x00;

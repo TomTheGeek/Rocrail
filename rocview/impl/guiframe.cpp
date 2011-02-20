@@ -1346,6 +1346,7 @@ void RocGuiFrame::initFrame() {
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
+  menuControl->Append(ME_EmergencyBreak, wxGetApp().getMenu("break"), wxGetApp().getTip("break") );
   menuControl->Append(ME_CtrlBoosters, wxGetApp().getMenu("powerctrl"), wxGetApp().getTip("powerctrl") );
 
   menuControl->AppendSeparator();
@@ -2364,7 +2365,7 @@ void RocGuiFrame::OnEmergencyBreak( wxCommandEvent& event ) {
   if( m_bAutoMode ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EmergencyBreak" );
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd( cmd, wSysCmd.stop );
+    wSysCmd.setcmd( cmd, wSysCmd.ebreak );
     wSysCmd.setinformall( cmd, True );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
@@ -2863,6 +2864,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Go);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_Stop);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_EmergencyBreak);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_InitField);
   if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );

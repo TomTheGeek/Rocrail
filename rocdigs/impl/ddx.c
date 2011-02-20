@@ -150,7 +150,7 @@ static iONode __translate( obj inst, const iONode node ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "translating: cmd=%s", cmdstr );
 
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
       stop_voltage(inst);
     }
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
