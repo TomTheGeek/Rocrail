@@ -180,9 +180,15 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System STOP" );
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0);
+      ThreadOp.post( data->writer, (obj)out );
+      return rsp;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System HALT" );
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_HALT, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
