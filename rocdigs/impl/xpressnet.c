@@ -576,6 +576,12 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       ThreadOp.post( data->transactor, (obj)outa );
     }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      outa[0] = 0x80;
+      outa[1] = 0x80;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
 
 
   }

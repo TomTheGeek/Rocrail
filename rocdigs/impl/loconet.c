@@ -1999,6 +1999,12 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
         return 0;
       }
     }
+    if( StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "emergency break for [%s]", data->iid );
+      cmd[0] = OPC_IDLE;
+      cmd[1] = LocoNetOp.checksum( cmd, 1 );
+      return 2;
+    }
     if( StrOp.equals( cmdstr, wSysCmd.slots ) ) {
       __getSlots(loconet_inst);
       return 0;

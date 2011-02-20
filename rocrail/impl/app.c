@@ -408,6 +408,7 @@ static void __conhelp() {
 
     TraceOp.println( " i - Initfield" );
     TraceOp.println( " s - Stop auto mode" );
+    TraceOp.println( " e - Emergency break" );
 
     TraceOp.println( " m - Shows memory(object) use" );
     TraceOp.println( " d - Toggle debug tracelevel" );
@@ -499,6 +500,13 @@ static __checkConsole( iOAppData data ) {
     clntcon_callback pfun = ControlOp.getCallback(data->control);
     cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
     wAutoCmd.setcmd( cmd, wAutoCmd.off );
+    pfun( (obj)AppOp.getControl(), cmd );
+  }
+  else if( c == wConCmd.ebreak ) {
+    iONode cmd = NULL;
+    clntcon_callback pfun = ControlOp.getCallback(data->control);
+    cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.ebreak );
     pfun( (obj)AppOp.getControl(), cmd );
   }
   else if( c == wConCmd.config ) {

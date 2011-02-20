@@ -307,6 +307,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       data->power = True;
       __inform(virtual);
     }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+    }
     else if( StrOp.equals( cmd, wSysCmd.txshortids ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short IDs to the throttle" );
     }

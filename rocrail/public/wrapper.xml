@@ -67,6 +67,7 @@
     <const name="analyse" vt="char" val="z" remark="Analyse track plan."/>
     <const name="analyseclean" vt="char" val="l" remark="Clean all generated route info."/>
     <const name="stopautomode" vt="char" val="s" remark="Stop automode."/>
+    <const name="ebreak" vt="char" val="e" remark="Broadcast emergency break."/>
   </ConCmd>
 
   <Global structname="GC" remark="For internal use only.">
@@ -660,6 +661,7 @@
     <const name="analyse" vt="string" val="analyse"/>
     <const name="txshortids" vt="string" val="txshortids"/>
     <const name="clearshortids" vt="string" val="clearshortids"/>
+    <const name="ebreak" vt="string" val="ebreak"/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <var name="informall" vt="bool" defval="false" remark="send command to all interfaces"/>
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
