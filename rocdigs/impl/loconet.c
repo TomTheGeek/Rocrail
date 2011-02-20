@@ -2276,6 +2276,7 @@ static void _halt( obj inst, Boolean poweroff ) {
     }
 
   }
+  ThreadOp.sleep(500); /* time for the last commands to send */
   data->lnDisconnect(inst);
   return;
 }
