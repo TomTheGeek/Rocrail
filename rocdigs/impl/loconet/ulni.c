@@ -180,12 +180,11 @@ static void __reader( void* threadinst ) {
         echoCatched = data->subSendEcho;
       }
 
-      if( msg[0]!=0x81 && !echoCatched && MutexOp.trywait( data->subReadMux, 10 )) {
+      if( msg[0]!=0x81 && !echoCatched) {
         byte* p = allocMem(msglen+1);
         p[0] = msglen;
         MemOp.copy( p+1, msg, msglen);
         QueueOp.post( data->subReadQueue, (obj)p, normal);
-        MutexOp.post( data->subReadMux );
         TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
       }
       else if( msg[0]==0x81 ) {
@@ -221,13 +220,12 @@ static void __writer( void* threadinst ) {
     Boolean  ok = False;
 
     /* TODO: copy packet for the reader to compair */
-		if( !data->busy && data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) && MutexOp.trywait( data->subWriteMux, 10 ) ) {
+		if( !data->busy && data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) ) {
 		  byte* p = (byte*)QueueOp.get(data->subWriteQueue);
 		  int size = p[0];
 		  busyTimer = 0;
 		  MemOp.copy( ln, &p[1], size );
 		  freeMem(p);
-		  MutexOp.post( data->subWriteMux );
       ok = SerialOp.write( data->serial, (char*)ln, size );
       if(ok) {
         echoTimer = 0;
@@ -283,8 +281,6 @@ Boolean ulniConnect( obj inst ) {
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
-    data->subReadMux = MutexOp.inst(NULL, True);
-    data->subWriteMux = MutexOp.inst(NULL, True);
     data->subReadQueue = QueueOp.inst(1000);
     data->subWriteQueue = QueueOp.inst(1000);
     data->run = True;
@@ -314,12 +310,11 @@ void ulniDisconnect( obj inst ) {
 
 int ulniRead ( obj inst, unsigned char *msg ) {
   iOLocoNetData data = Data(inst);
-  if( !QueueOp.isEmpty(data->subReadQueue) && MutexOp.trywait( data->subReadMux, 10 ) ) {
+  if( !QueueOp.isEmpty(data->subReadQueue) ) {
     byte* p = (byte*)QueueOp.get(data->subReadQueue);
     int size = p[0];
     MemOp.copy( msg, &p[1], size );
     freeMem(p);
-    MutexOp.post( data->subReadMux );
     return size;
   }
   else {
@@ -331,12 +326,11 @@ int ulniRead ( obj inst, unsigned char *msg ) {
 Boolean ulniWrite( obj inst, unsigned char *msg, int len ) {
   iOLocoNetData data = Data(inst);
   /* put packet in the write queue */
-  if( len > 0 && MutexOp.trywait( data->subWriteMux, 10 ) ) {
+  if( len > 0 ) {
     byte* p = allocMem(len+1);
     p[0] = len;
     MemOp.copy( p+1, msg, len);
     QueueOp.post( data->subWriteQueue, (obj)p, normal);
-    MutexOp.post( data->subWriteMux );
     TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, len );
     return True;
   }
