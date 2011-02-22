@@ -3664,7 +3664,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         if( useBlockSide && stEnterSide == stExitSide ) {
           /* need to change direction */
           /* if commuter: allow and flag for swap. */
-          if( wLoc.iscommuter( LocOp.base.properties(loc) ) ) {
+          if( LocOp.getV(loc) == 0 &&  wLoc.iscommuter( LocOp.base.properties(loc) ) ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
                 RouteOp.getId(route), stEnterSide?"+":"-" );
