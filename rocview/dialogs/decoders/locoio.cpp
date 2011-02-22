@@ -1956,8 +1956,11 @@ void LocoIO::evaluatePort( int sv, int val ) {
     if( m_PortType->GetSelection() == 0 ) {
 
       bool c2 = val&0x20 ? true:false;
+
+      /* False re-engineered?
       if( m_PulseContact->IsChecked() )
         c2 = !c2;
+      */
       easyContact[port]->SetValue(c2);
 
       // output address
