@@ -244,8 +244,12 @@ static int __translate( iOZimo zimo, iONode node, char* out, int* insize ) {
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       sprintf( out, "SA\r" );
+      return StrOp.len(out);
+    }
+    if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      sprintf( out, "SS\r" );
       return StrOp.len(out);
     }
     if( StrOp.equals( cmd, wSysCmd.go ) ) {
