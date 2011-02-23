@@ -985,12 +985,20 @@ static void __translate( iORoco roco, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
 
     byte* outa = allocMem(256);
-    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       outa[0] = 3;
       outa[1] = 0x00;
       outa[2] = 0x21;
       outa[3] = 0x80;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      outa[0] = 3;
+      outa[1] = 0x00;
+      outa[2] = 0x80;
+      outa[3] = 0x80;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
