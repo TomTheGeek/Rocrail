@@ -144,7 +144,7 @@ public:
     wxTextCtrl* m_PortBase;
     wxPanel* m_S88Panel;
     wxStaticText* m_labPort;
-    wxChoice* m_Port;
+    wxTextCtrl* m_Port;
     wxStaticText* m_labBusses;
     wxSpinCtrl* m_Busses;
     wxStaticText* m_labBus0;

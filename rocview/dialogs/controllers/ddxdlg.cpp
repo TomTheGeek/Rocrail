@@ -127,15 +127,6 @@ void DDXCtrlDlg::initLabels() {
   m_labBus2->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 2") );
   m_labBus3->SetLabel( wxGetApp().getMsg( "chain" ) + _T(" 3") );
 
-  /*
-  LPT1           378
-  LPT2           278
-  LPT3           3BC
-  */
-  m_Port->Append(_T("0x378"));
-  m_Port->Append(_T("0x278"));
-  m_Port->Append(_T("0x3BC"));
-  m_Port->Append(_T("0"));
 }
 
 void DDXCtrlDlg::initValues() {
@@ -147,7 +138,7 @@ void DDXCtrlDlg::initValues() {
   m_Device->SetValue( wxString( wDDX.getport( m_SubProps ), wxConvUTF8 ) );
   m_PortBase->SetValue( wxString( wDDX.getportbase( m_SubProps ), wxConvUTF8 ) );
 
-  m_Port->SetStringSelection( wxString( wDDX.gets88port( m_SubProps ), wxConvUTF8 ) );
+  m_Port->SetValue( wxString( wDDX.gets88port( m_SubProps ), wxConvUTF8 ) );
 
   m_Busses->SetValue( wDDX.gets88busses( m_SubProps ) );
   m_Bus0->SetValue( wDDX.gets88b0modcnt( m_SubProps ) );
@@ -183,7 +174,7 @@ void DDXCtrlDlg::evaluate() {
 
   wDDX.setport( m_SubProps, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDDX.setportbase( m_SubProps, m_PortBase->GetValue().mb_str(wxConvUTF8) );
-  wDDX.sets88port( m_SubProps, m_Port->GetStringSelection().mb_str(wxConvUTF8) );
+  wDDX.sets88port( m_SubProps, m_Port->GetValue().mb_str(wxConvUTF8) );
 
   wDDX.sets88busses( m_SubProps, m_Busses->GetValue() );
   wDDX.sets88b0modcnt( m_SubProps, m_Bus0->GetValue() );
@@ -314,14 +305,13 @@ void DDXCtrlDlg::CreateControls()
     m_labPort = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_PORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxArrayString m_PortStrings;
-    m_Port = new wxChoice( m_S88Panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_PortStrings, 0 );
-    itemFlexGridSizer15->Add(m_Port, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Port = new wxTextCtrl( m_S88Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer15->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBusses = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUSSES, _("busses"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_labBusses, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Busses = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 4, 0 );
+    m_Busses = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 4, 0 );
     itemFlexGridSizer15->Add(m_Busses, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBus0 = new wxStaticText( m_S88Panel, ID_STATICTEXT_DDL_BUS0, _("bus0 modules"), wxDefaultPosition, wxDefaultSize, 0 );
