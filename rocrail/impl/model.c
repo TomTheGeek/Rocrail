@@ -1692,11 +1692,14 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) && !StrOp.equals( wSysCmd.loccnfg, cmdVal ) ) {
     /* inform objects of a power on/off */
-    if( MutexOp.trywait(data->muxSysEvent, 0) ) {
+    if( MutexOp.trywait(data->muxSysEvent, 10) ) {
+      int idx = 0;
       obj listener = ListOp.first( data->sysEventListeners );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
       while( listener != NULL ) {
+        idx++;
+        wSysCmd.setval(cmd, idx);
         listener->event(listener, cmd);
         listener = ListOp.next( data->sysEventListeners );
       };

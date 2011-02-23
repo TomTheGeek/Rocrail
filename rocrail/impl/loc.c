@@ -296,7 +296,7 @@ static void __restoreFx( void* threadinst ) {
   int fx = wLoc.getfx(data->props);
   int i = 0;
 
-  ThreadOp.sleep(100);
+  ThreadOp.sleep(100 + 200 * data->fxsleep );
 
   /* Test for restoring the lights function. */
   if( wLoc.isfn(data->props) ) {
@@ -353,13 +353,16 @@ static void __restoreFx( void* threadinst ) {
 }
 
 
-static void __sysEvent( obj inst, const char* cmd ) {
+static void __sysEvent( obj inst, iONode evtNode ) {
   iOLocData data = Data(inst);
+  const char* cmd = wSysCmd.getcmd(evtNode);
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sysEvent [%s] for [%s]...", cmd, LocOp.getId((iOLoc)inst) );
 
   if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
     data->fxrestored = True;
+    data->fxsleep = wSysCmd.getval(evtNode);
     if( wLoc.isrestorefx(data->props)) {
       iOThread th = ThreadOp.inst( NULL, &__restoreFx, inst );
       ThreadOp.start(th);
@@ -526,7 +529,7 @@ static void* __event( void* inst, const void* evt ) {
     }
   }
   else if( StrOp.equals( wSysCmd.name(), NodeOp.getName(evtNode) ) ) {
-    __sysEvent( inst ,wSysCmd.getcmd(evtNode) );
+    __sysEvent( inst, evtNode );
   }
 
   return NULL;
