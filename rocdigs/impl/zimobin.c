@@ -422,13 +422,17 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[1] = 0x10; /* command station instruction */
     outa[2] = 2;    /* track control */
 
-    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       outa[3] = 1; /* switch track voltage OFF */
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       outa[3] = 2; /* switch track voltage ON */
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      outa[3] = 0; /* stop broadcast */
     }
     ThreadOp.post( data->transactor, (obj)outa );
 
