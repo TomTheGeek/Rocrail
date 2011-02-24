@@ -185,7 +185,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Index</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -627,7 +627,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND|wxTOP|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxEXPAND|wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -682,7 +682,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxALIGN_RIGHT</property>
+                                                <property name="flag">wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxStaticText" expanded="1">
                                                     <property name="bg"></property>
@@ -733,7 +733,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxEXPAND</property>
+                                                <property name="flag">wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -839,7 +839,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND</property>
+                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxComboBox" expanded="1">
                                                     <property name="bg"></property>
@@ -944,7 +944,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND|wxTOP|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxEXPAND|wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -1050,7 +1050,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -1368,7 +1368,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxEXPAND</property>
+                                                <property name="flag">wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -1532,7 +1532,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Details</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -1703,7 +1703,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxEXPAND</property>
+                                                <property name="flag">wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxComboBox" expanded="1">
                                                     <property name="bg"></property>
@@ -1808,7 +1808,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxSpinCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -1863,7 +1863,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxALIGN_RIGHT|wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxStaticText" expanded="1">
                                                     <property name="bg"></property>
@@ -1914,7 +1914,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
