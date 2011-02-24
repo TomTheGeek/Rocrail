@@ -1822,6 +1822,7 @@
         <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
         <var name="number" vt="string" defval="" range="*"/>
+        <var name="manuid" vt="string" defval="" range="*"/>
         <var name="era" vt="int" defval="0" range="0-*"/>
         <var name="roadname" vt="string" defval="" range="*"/>
         <var name="owner" vt="string" defval="" range="*"/>
