@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+ Copyright (C) 2002-2011 - Rob Versluis <r.j.versluis@rocrail.net>, Jean-Michel Fischer <jmf@polygonpunkt.de>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -23,7 +23,6 @@
 
 ==Preface==
 Goal of the analyser is to find routes between blocks by checking all surrounded objects.
-**Missing symbol is a z-level connector.** "-()"
 
 ==Preparation==
 create object map with xyz key's
@@ -75,9 +74,6 @@ Starting with block A:
 - following the west side will end up to a dead end.
 - the east side will lead to block B following the tracks and switch
 
-*/
-
-/*
 For the Analyzer to work the Plan has to fullfill:
 - all items must be connected without space
 - only one item at one position
