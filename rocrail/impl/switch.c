@@ -778,7 +778,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
-      wSwitch.setgate1( nodeA2, wSwitch.getgate1( o->props ) );
+      wSwitch.setgate1( nodeA2, wSwitch.getgate2( o->props ) );
       wSwitch.setcmd( nodeA2, state2 );
     }
     else {
