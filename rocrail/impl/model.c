@@ -3634,7 +3634,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         Boolean fromTo = True;
         Boolean isset = False;
         Boolean ismanual = RouteOp.isManual( route, &isset );
-        Boolean isfree = RouteOp.isFree( route, RouteOp.getId(route) );
+        Boolean isfree = RouteOp.isFree( route, LocOp.getId(loc) );
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
         Boolean swap4BlockSide = False;
