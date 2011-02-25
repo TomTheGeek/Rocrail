@@ -765,6 +765,8 @@ void LocControlDialog::OnComboboxLocctrlLocSelected( wxCommandEvent& event )
 
 void LocControlDialog::OnButtonLocctrlCancelClick( wxCommandEvent& event )
 {
+  ListOp.removeObj( m_DlgList, (obj)this );
+
   if( m_LcList->GetSelection() == wxNOT_FOUND ) {
     Destroy();
     return;
@@ -790,7 +792,6 @@ void LocControlDialog::OnButtonLocctrlCancelClick( wxCommandEvent& event )
 
   StrOp.free(LocID);
 
-  ListOp.removeObj( m_DlgList, (obj)this );
   Destroy();
 }
 
