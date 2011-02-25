@@ -250,22 +250,28 @@ namespace signaltype {
   static const char* semaphoremain_r = "semaphoremain-r.svg";
   static const char* semaphoremain_y = "semaphoremain-y.svg";
   static const char* semaphoremain_g = "semaphoremain-g.svg";
+  static const char* semaphoremain_w = "semaphoremain-w.svg";
   static const char* semaphoremain_r_occ = "semaphoremain-r-occ.svg";
   static const char* semaphoremain_y_occ = "semaphoremain-y-occ.svg";
   static const char* semaphoremain_g_occ = "semaphoremain-g-occ.svg";
+  static const char* semaphoremain_w_occ = "semaphoremain-w-occ.svg";
   static const char* semaphoremain_r_route = "semaphoremain-r-route.svg";
   static const char* semaphoremain_y_route = "semaphoremain-y-route.svg";
   static const char* semaphoremain_g_route = "semaphoremain-g-route.svg";
+  static const char* semaphoremain_w_route = "semaphoremain-w-route.svg";
 
   static const char* semaphoredistant_r = "semaphoredistant-r.svg";
   static const char* semaphoredistant_y = "semaphoredistant-y.svg";
   static const char* semaphoredistant_g = "semaphoredistant-g.svg";
+  static const char* semaphoredistant_w = "semaphoredistant-w.svg";
   static const char* semaphoredistant_r_occ = "semaphoredistant-r-occ.svg";
   static const char* semaphoredistant_y_occ = "semaphoredistant-y-occ.svg";
   static const char* semaphoredistant_g_occ = "semaphoredistant-g-occ.svg";
+  static const char* semaphoredistant_w_occ = "semaphoredistant-w-occ.svg";
   static const char* semaphoredistant_r_route = "semaphoredistant-r-route.svg";
   static const char* semaphoredistant_y_route = "semaphoredistant-y-route.svg";
   static const char* semaphoredistant_g_route = "semaphoredistant-g-route.svg";
+  static const char* semaphoredistant_w_route = "semaphoredistant-w-route.svg";
 
   // two aspects
   static const char* signalmain_2_r = "signalmain-2-r.svg";

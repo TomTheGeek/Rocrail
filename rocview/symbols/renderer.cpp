@@ -362,6 +362,9 @@ void SymbolRenderer::initSym() {
             m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_r_route );
             m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_y_route );
             m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_g_route );
+            m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_w );
+            m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_w_occ );
+            m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoremain_w_route );
           }
         }
       }
@@ -386,6 +389,9 @@ void SymbolRenderer::initSym() {
             m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_r_route );
             m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_y_route );
             m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_g_route );
+            m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_w );
+            m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_w_occ );
+            m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoredistant_w_route );
           }
         }
       }
