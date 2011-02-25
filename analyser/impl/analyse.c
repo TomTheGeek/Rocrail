@@ -832,7 +832,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-            else if( StrOp.equals( itemori, "north" )) {
+            else if( StrOp.equals( itemori, "north" )) { // left north
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
                   return travel+dcrossing;
@@ -841,24 +841,24 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               } else if ( travel == 1 ) {
                 if ( turnoutstate == 0) {
-                  *x = 1;
                   return travel+dcrossing;
                 } else if( turnoutstate == 3) {
-                  *x = 1;
                   return oriWest+dcrossing;
                 }
               } else if ( travel == 2 ) {
                 if ( turnoutstate == 1) {
-                  *x = 1;
+                  *y = 1;
                   return travel+dcrossing;
                 } else if( turnoutstate == 3) {
-                  *x = 1;
+                  *y = 1;
                   return oriSouth+dcrossing;
                 }
               } else if ( travel == 3 ) {
                 if ( turnoutstate == 0) {
+                  *y = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 1) {
+                } else if( turnoutstate == 2) {
+                  *y = 1;
                   return oriEast+dcrossing;
                 }
               }
@@ -872,24 +872,24 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               } else if ( travel == 1 ) {
                 if ( turnoutstate == 0) {
-                  *x = 1;
                   return travel+dcrossing;
                 } else if( turnoutstate == 2) {
-                  *x = 1;
                   return oriWest+dcrossing;
                 }
               } else if ( travel == 2 ) {
                 if ( turnoutstate == 1) {
-                  *x = 1;
+                  *y = 1;
                   return travel+dcrossing;
                 } else if( turnoutstate == 2) {
-                  *x = 1;
+                  *y = 1;
                   return oriSouth+dcrossing;
                 }
               } else if ( travel == 3 ) {
                 if ( turnoutstate == 0) {
+                  *y = 1;
                   return travel+dcrossing;
                 } else if( turnoutstate == 3) {
+                  *y = 1;
                   return oriEast+dcrossing;
                 }
               }
@@ -899,20 +899,20 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               if( (travel == 0) ) {
                 if ( turnoutstate == 0) {
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
+                } else if( turnoutstate == 3) {
                   return oriNorth+dcrossing;
                 }
               } else if ( travel == 1 ) {
                 if ( turnoutstate == 1) {
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
+                } else if( turnoutstate == 2) {
                   return oriWest+dcrossing;
                 }
               } else if ( travel == 2 ) {
                 if ( turnoutstate == 0) {
                   *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
+                } else if( turnoutstate == 2) {
                   *x = 1;
                   return oriSouth+dcrossing;
                 }
@@ -920,30 +920,30 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 if ( turnoutstate == 1) {
                   *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
+                } else if( turnoutstate == 3) {
                   *x = 1;
                   return oriEast+dcrossing;
                 }
               }
             }
-              if( StrOp.equals( itemori, "east" )) {
+              if( StrOp.equals( itemori, "east" )) { // right east
                if( (travel == 0) ) {
                  if ( turnoutstate == 0) {
                    return travel+dcrossing;
-                 } else if( turnoutstate == 3) {
+                 } else if( turnoutstate == 2) {
                    return oriNorth+dcrossing;
                  }
                } else if ( travel == 1 ) {
                  if ( turnoutstate == 1) {
                    return travel+dcrossing;
-                 } else if( turnoutstate == 2) {
+                 } else if( turnoutstate == 3) {
                    return oriWest+dcrossing;
                  }
                } else if ( travel == 2 ) {
                  if ( turnoutstate == 0) {
                    *x = 1;
                    return travel+dcrossing;
-                 } else if( turnoutstate == 2) {
+                 } else if( turnoutstate == 3) {
                    *x = 1;
                    return oriSouth+dcrossing;
                  }
@@ -951,70 +951,70 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                  if ( turnoutstate == 1) {
                    *x = 1;
                    return travel+dcrossing;
-                 } else if( turnoutstate == 3) {
+                 } else if( turnoutstate == 2) {
                    *x = 1;
                    return oriEast+dcrossing;
                  }
                }
             }
-              else if( StrOp.equals( itemori, "north" )) {
+              else if( StrOp.equals( itemori, "north" )) { // right north
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
+                  *y = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
+                } else if( turnoutstate == 2) {
+                  *y = 1;
                   return oriSouth+dcrossing;
                 }
               } else if ( travel == 1 ) {
                 if ( turnoutstate == 0) {
-                  *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
-                  *x = 1;
+                } else if( turnoutstate == 2) {
                   return oriEast+dcrossing;
                 }
               } else if ( travel == 2 ) {
                 if ( turnoutstate == 1) {
-                  *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
-                  *x = 1;
+                } else if( turnoutstate == 3) {
                   return oriNorth+dcrossing;
                 }
               } else if ( travel == 3 ) {
                 if ( turnoutstate == 0) {
+                  *y = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
+                } else if( turnoutstate == 3) {
+                  *y = 1;
                   return oriWest+dcrossing;
                 }
               }
             }
-            else if( StrOp.equals( itemori, "south" )) {
+            else if( StrOp.equals( itemori, "south" )) { // right south
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
+                  *y = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
+                } else if( turnoutstate == 3) {
+                  *y = 1;
                   return oriSouth+dcrossing;
                 }
               } else if ( travel == 1 ) {
                 if ( turnoutstate == 0) {
-                  *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 2) {
-                  *x = 1;
+                } else if( turnoutstate == 3) {
                   return oriEast+dcrossing;
                 }
               } else if ( travel == 2 ) {
                 if ( turnoutstate == 1) {
-                  *x = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
-                  *x = 1;
+                } else if( turnoutstate == 2) {
                   return oriNorth+dcrossing;
                 }
               } else if ( travel == 3 ) {
                 if ( turnoutstate == 0) {
+                  *y = 1;
                   return travel+dcrossing;
-                } else if( turnoutstate == 3) {
+                } else if( turnoutstate == 2) {
+                  *y = 1;
                   return oriWest+dcrossing;
                 }
               }
@@ -1326,7 +1326,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
   }
 
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "depth: [%d]",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "depth: [%d]",
       depth );
 
   Boolean theEnd = False;
@@ -1398,7 +1398,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
     if( nextitem != NULL) {
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next itrm: %s tos: [%d]",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "next item: %s tos: [%d]",
           NodeOp.getName(nextitem), turnoutstate_out );
 
       /* occ */
@@ -1538,15 +1538,18 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "dcrossing travel: %d travelp: %d", travel, travelp );
 
-          const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
-                             {1,2},{0,3},{1,3},{0,1},
-                             {0,3},{1,3},{0,2},{1,2},
-                             {1,3},{0,2},{1,2},{0,3}};
+          // rows: travel
+          // cols: itemori
 
-          const int right[16][2] = {{0,2},{1,3},{0,3},{1,2},
-                              {1,3},{0,3},{1,2},{0,2},
-                              {0,2},{1,2},{0,2},{1,3},
-                              {1,2},{0,2},{1,3},{0,3}};
+          const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
+                                   {1,2},{0,3},{1,3},{0,2},
+                                   {0,3},{1,3},{0,2},{1,2},
+                                   {1,3},{0,2},{1,2},{0,3}};
+
+          const int right[16][2] = {{0,3},{1,2},{0,2},{1,3},
+                                    {1,2},{0,2},{1,3},{0,3},
+                                    {0,2},{1,3},{0,3},{1,2},
+                                    {1,3},{0,3},{1,2},{0,2}};
 
           int state1 = 0;
           int state2 = 0;
