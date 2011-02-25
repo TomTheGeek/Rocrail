@@ -3634,6 +3634,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         Boolean fromTo = True;
         Boolean isset = False;
         Boolean ismanual = RouteOp.isManual( route, &isset );
+        Boolean isfree = RouteOp.isFree( route, RouteOp.getId(route) );
         const char* stFrom = RouteOp.getFromBlock( route );
         const char* stTo = RouteOp.getToBlock( route );
         Boolean swap4BlockSide = False;
@@ -3651,6 +3652,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip manual route [%s] because it is not set free to use.", RouteOp.getId(route));
             continue;
           }
+        }
+
+        if( !isfree ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "ignoring route [%s] because it is not free",
+                RouteOp.getId(route) );
+          continue;
         }
 
         if( !RouteOp.getDir( route ) ) {
