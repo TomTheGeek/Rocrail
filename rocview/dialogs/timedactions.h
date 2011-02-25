@@ -154,6 +154,7 @@ public:
     wxSpinCtrl* m_Hour;
     wxStaticText* m_labMin;
     wxSpinCtrl* m_Min;
+    wxCheckBox* m_Random;
     wxButton* m_Add;
     wxButton* m_Del;
     wxButton* m_Modify;

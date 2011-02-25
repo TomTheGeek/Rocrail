@@ -1798,6 +1798,8 @@
       <var name="action" vt="iONode"/>
       <var name="timerthread" vt="iOThread"/>
       <var name="actionctrl" vt="iONode"/>
+      <var name="hour" vt="int"/>
+      <var name="min" vt="int"/>
     </data>
   </object>
 

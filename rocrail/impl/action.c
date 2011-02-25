@@ -129,9 +129,9 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         /* Block */
         if( StrOp.equals( wBlock.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
-          iOBlock bk = ModelOp.getBlock( model, id );
+          iIBlockBase bk = ModelOp.getBlock( model, id );
           if( bk != NULL ) {
-            rc = BlockOp.isState(bk, wActionCond.getstate(actionCond) );
+            rc = bk->isState(bk, wActionCond.getstate(actionCond) );
           }
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block not found [%s]", id );
@@ -749,8 +749,14 @@ static void _tick( iOAction inst ) {
   long l_time = ControlOp.getTime(control);
   struct tm* lTime = localtime( &l_time );
 
-  if( wAction.istimed(data->action) && wAction.gethour(data->action) == lTime->tm_hour && wAction.getmin(data->action) == lTime->tm_min ) {
-    _exec( inst, NULL );
+  if( wAction.istimed(data->action) ) {
+    if( lTime->tm_hour == data->hour && lTime->tm_min == data->min ) {
+      _exec( inst, NULL );
+      if( wAction.israndom(data->action) ) {
+        data->hour = rand() % 23;
+        data->min  = rand() % 59;
+      }
+    }
   }
 
 }
@@ -771,6 +777,15 @@ static struct OAction* _inst( iONode ini ) {
 
   /* Initialize data->xxx members... */
   data->action = ini;
+
+  if( wAction.israndom(data->action) ) {
+    data->hour = rand() % 23;
+    data->min  = rand() % 59;
+  }
+  else {
+    data->hour = wAction.gethour(data->action);
+    data->min  = wAction.getmin(data->action);
+  }
 
   instCnt++;
   return __Action;

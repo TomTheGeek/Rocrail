@@ -1962,6 +1962,7 @@
         <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
         <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
+        <var name="random" vt="bool" defval="false" remark="Use time for random activation."/>
         <var name="timed" vt="bool" defval="false" remark="Use time for activation."/>
         <var name="timer" vt="int" defval="0" remark="Timer in ms before activation this action."/>
         <var name="oid" vt="string" defval="NULL" range="*" remark="output id"/>
