@@ -27,33 +27,63 @@
 #include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
-
+#include "rocrail/wrapper/public/LocoNet.h"
+#include "rocdigs/impl/loconet/lnconst.h"
 
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
   iOLocoNetData data    = Data(loconet);
+  Boolean       seqStarted = False;
   char ln[0x7F];
+
 
   TraceOp.trc( "lbudp", TRCLEVEL_INFO, __LINE__, 9999, "LocoNet UDP reader started." );
 
   do {
     byte packet[0x7F];
+    MemOp.set( packet, 0, 0x7F);
 
     int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F );
 
-    if( MutexOp.wait( data->udpmux ) ) {
+    if( packetSize > 0 ) {
       byte* p = allocMem(0x7F+1);
-      p[0] = packetSize;
-      MemOp.copy( p+1, packet, 0x7F);
+
+      if( data->useseq ) {
+        byte inseq = packet[0];
+
+        if( seqStarted ) {
+          if( data->inseq + 1 != packet[0] ) {
+            /* packet lost! */
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                "packet loss detected: expected seq=%d, received seq=%d", data->inseq + 1, packet[0] );
+            {
+              byte* bcmd = allocMem(32);
+              bcmd[0] = OPC_GPOFF;
+              bcmd[1] = LocoNetOp.checksum( bcmd, 1 );
+              lbUDPWrite((obj)loconet, bcmd, 2);
+            }
+          }
+        }
+        else {
+          seqStarted = True;
+        }
+
+        data->inseq = packet[0];
+        p[0] = packetSize - 1;
+        MemOp.copy( p+1, packet+1, packetSize - 1);
+      }
+      else {
+        p[0] = packetSize;
+        MemOp.copy( p+1, packet, packetSize);
+      }
+
       QueueOp.post( data->udpQueue, (obj)p, normal);
-      MutexOp.post( data->udpmux );
       TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)packet, packetSize );
       ThreadOp.sleep(0);
     }
-    else {
+    else
       ThreadOp.sleep(10);
-    }
 
   } while( data->run );
 
@@ -65,13 +95,14 @@ static void __reader( void* threadinst ) {
 
 Boolean lbUDPConnect( obj inst ) {
   iOLocoNetData data = Data(inst);
+  iONode loconet = wDigInt.getloconet( data->ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast address [%s]", wDigInt.gethost( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->udpmux = MutexOp.inst(NULL, True);
   data->udpQueue = QueueOp.inst(1000);
+  data->useseq   = loconet != NULL ? wLocoNet.isuseseq(loconet):False;
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
   SocketOp.bind(data->readUDP);
@@ -89,12 +120,11 @@ void  lbUDPDisconnect( obj inst ) {
 
 int lbUDPRead ( obj inst, unsigned char *msg ) {
   iOLocoNetData data = Data(inst);
-  if( !QueueOp.isEmpty(data->udpQueue) && MutexOp.trywait( data->udpmux, 100 ) ) {
+  if( !QueueOp.isEmpty(data->udpQueue) ) {
     byte* p = (byte*)QueueOp.get(data->udpQueue);
     int size = p[0];
     MemOp.copy( msg, &p[1], size );
     freeMem(p);
-    MutexOp.post( data->udpmux );
     return size;
   }
   else {
@@ -105,7 +135,15 @@ int lbUDPRead ( obj inst, unsigned char *msg ) {
 
 Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
   iOLocoNetData data = Data(inst);
-  return SocketOp.sendto( data->writeUDP, msg, len );
+  byte out[256];
+  if( data->useseq ) {
+    out[0] = data->outseq;
+    data->outseq++;
+    MemOp.copy( out+1, msg, len);
+    return SocketOp.sendto( data->writeUDP, out, len+1 );
+  }
+  else
+    return SocketOp.sendto( data->writeUDP, msg, len );
 }
 
 Boolean lbUDPAvailable( obj inst ) {

@@ -17109,4 +17109,7 @@
   <Msg id="forceblocktimer">
     <en txt="Force block timer"/>
   </Msg>
+  <Msg id="useseq">
+    <en txt="Use sequence check"/>
+  </Msg>
 </Messages>

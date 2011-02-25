@@ -633,6 +633,9 @@
       <var name="subSendPacket[127]" vt="char"/>
       <var name="subSendLen" vt="int"/>
       <var name="busy" vt="Boolean"/>
+      <var name="useseq" vt="Boolean"/>
+      <var name="inseq" vt="byte"/>
+      <var name="outseq" vt="byte"/>
     </data>
   </object>
 
