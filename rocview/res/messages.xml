@@ -17112,4 +17112,7 @@
   <Msg id="useseq">
     <en txt="Use sequence check"/>
   </Msg>
+  <Msg id="usedouble">
+    <en txt="Use double packets"/>
+  </Msg>
 </Messages>

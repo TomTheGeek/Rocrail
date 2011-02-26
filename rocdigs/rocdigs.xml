@@ -636,6 +636,10 @@
       <var name="useseq" vt="Boolean"/>
       <var name="inseq" vt="byte"/>
       <var name="outseq" vt="byte"/>
+      <var name="prevPacket[127]" vt="byte"/>
+      <var name="usedouble" vt="Boolean"/>
+      <var name="expectdouble" vt="Boolean"/>
+      <var name="packetloss" vt="int"/>
     </data>
   </object>
 

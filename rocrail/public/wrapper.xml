@@ -445,6 +445,7 @@
         <var name="syncfc" vt="bool" defval="false" remark="synchronize fast clock"/>
         <var name="ignorepowercmds" vt="bool" defval="false" remark="Ignore subsequetial power commands."/>
         <var name="useseq" vt="bool" defval="false" remark="Use sequence counter for lnudp."/>
+        <var name="usedouble" vt="bool" defval="false" remark="Use double packets for lnudp."/>
         <options wrappername="CSOptions">
           <var name="store" vt="bool" defval="false" remark="set by client to signal to store the options in the command station"/>
           <var name="opsw" vt="string" defval="" range="*" remark="zero based options list 0=open 1=set"/>

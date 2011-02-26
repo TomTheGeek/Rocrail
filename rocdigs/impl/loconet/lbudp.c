@@ -47,40 +47,53 @@ static void __reader( void* threadinst ) {
     int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F );
 
     if( packetSize > 0 ) {
-      byte* p = allocMem(0x7F+1);
-
-      if( data->useseq ) {
-        byte inseq = packet[0];
-
-        if( seqStarted ) {
-          if( data->inseq + 1 != packet[0] ) {
-            /* packet lost! */
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-                "packet loss detected: expected seq=%d, received seq=%d", data->inseq + 1, packet[0] );
-            {
-              byte* bcmd = allocMem(32);
-              bcmd[0] = OPC_GPOFF;
-              bcmd[1] = LocoNetOp.checksum( bcmd, 1 );
-              lbUDPWrite((obj)loconet, bcmd, 2);
-            }
-          }
-        }
-        else {
-          seqStarted = True;
-        }
-
-        data->inseq = packet[0];
-        p[0] = packetSize - 1;
-        MemOp.copy( p+1, packet+1, packetSize - 1);
+      if( data->usedouble && MemOp.cmp( data->prevPacket, packet, packetSize ) ) {
+        /* reject double packet */
+        MemOp.set(data->prevPacket, 0, 0x7F );
+        data->expectdouble = False;
       }
       else {
-        p[0] = packetSize;
-        MemOp.copy( p+1, packet, packetSize);
-      }
+        byte* p = allocMem(0x7F+1);
+        MemOp.copy( data->prevPacket, packet, packetSize );
+        if( data->expectdouble ) {
+          data->packetloss++;
+          TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "packet loss [%d]" );
+        }
+        data->expectdouble = True;
 
-      QueueOp.post( data->udpQueue, (obj)p, normal);
-      TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)packet, packetSize );
-      ThreadOp.sleep(0);
+        if( data->useseq ) {
+          byte inseq = packet[0];
+
+          if( seqStarted ) {
+            if( data->inseq + 1 != packet[0] ) {
+              /* packet lost! */
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                  "packet loss detected: expected seq=%d, received seq=%d", data->inseq + 1, packet[0] );
+              {
+                byte* bcmd = allocMem(32);
+                bcmd[0] = OPC_GPOFF;
+                bcmd[1] = LocoNetOp.checksum( bcmd, 1 );
+                lbUDPWrite((obj)loconet, bcmd, 2);
+              }
+            }
+          }
+          else {
+            seqStarted = True;
+          }
+
+          data->inseq = packet[0];
+          p[0] = packetSize - 1;
+          MemOp.copy( p+1, packet+1, packetSize - 1);
+        }
+        else {
+          p[0] = packetSize;
+          MemOp.copy( p+1, packet, packetSize);
+        }
+
+        QueueOp.post( data->udpQueue, (obj)p, normal);
+        TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)packet, packetSize );
+        ThreadOp.sleep(0);
+      }
     }
     else
       ThreadOp.sleep(10);
@@ -101,8 +114,9 @@ Boolean lbUDPConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->udpQueue = QueueOp.inst(1000);
-  data->useseq   = loconet != NULL ? wLocoNet.isuseseq(loconet):False;
+  data->udpQueue  = QueueOp.inst(1000);
+  data->useseq    = loconet != NULL ? wLocoNet.isuseseq(loconet):False;
+  data->usedouble = loconet != NULL ? wLocoNet.isusedouble(loconet):False;
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
   SocketOp.bind(data->readUDP);
@@ -142,8 +156,13 @@ Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
     MemOp.copy( out+1, msg, len);
     return SocketOp.sendto( data->writeUDP, out, len+1 );
   }
-  else
+  else {
+    if( data->usedouble ) {
+      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len );
+      ThreadOp.sleep(1);
+    }
     return SocketOp.sendto( data->writeUDP, msg, len );
+  }
 }
 
 Boolean lbUDPAvailable( obj inst ) {

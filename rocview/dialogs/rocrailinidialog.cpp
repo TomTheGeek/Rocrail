@@ -222,7 +222,7 @@ void RocrailIniDialog::initLabels() {
   m_LabServiceRefresh->SetLabel( wxGetApp().getMsg( "refresh" ) );
   m_OnlyFirstMaster->SetLabel( wxGetApp().getMsg( "onlyfirstmaster" ) );
   m_labSrcpPort->SetLabel( wxGetApp().getMsg( "port" ) );
-  m_SrcpServiceActive->SetLabel( wxGetApp().getMsg( "active" ) );
+  m_SrcpServiceActive->SetLabel( wxGetApp().getMsg( "enable" ) );
 
   // WebService
   m_WebServiceBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "webclient" ) );
