@@ -3298,6 +3298,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
         *indelay = wScheduleEntry.getindelay( entry );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
+        if( nextlocation != NULL && StrOp.len(nextlocation) > 0 )
+          nextblock = NULL;
         iORoute route = ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
         if( route != NULL ) {
           iORoute routeref = NULL;
@@ -3337,7 +3339,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     *scheduleIdx = entryIndex;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no fitting entry in schedule [%s] found.", scheduleid );
-		return NULL;
+    return NULL;
   }
 
 
@@ -3421,7 +3423,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
           ListOp.clear( stlist );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", id );
         street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
-        if( street == NULL ) {
+        if( street == NULL || !RouteOp.isFree( street, LocOp.getId(loc) )) {
           continue;
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Got a route to block \"%s\".", id );
