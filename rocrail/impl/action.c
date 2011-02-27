@@ -760,6 +760,8 @@ static void _tick( iOAction inst ) {
         int mins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
         if( mins < 1 ) mins = 1;
         data->randommins = rand() % mins;
+        if( data->randommins < 1 )
+          data->randommins = 1;
         data->ticker = 0;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale minutes=%d.",
             wAction.getid(data->action), data->randommins );
@@ -794,10 +796,11 @@ static struct OAction* _inst( iONode ini ) {
     int mins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
     if( mins < 1 ) mins = 1;
     data->randommins = rand() % mins;
+    if( data->randommins < 1 )
+      data->randommins = 1;
     data->ticker = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale minutes=%d.",
         wAction.getid(data->action), data->randommins );
-    data->ticker = 0;
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] %02d:%02d.",
