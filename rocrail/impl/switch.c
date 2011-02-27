@@ -724,6 +724,16 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
         wSwitch.setstate( o->props, wSwitch.left );
       }
     }
+    else if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.dcrossing ) && wSwitch.getaddr2( o->props ) == 0 && wSwitch.getport2( o->props ) == 0 ) {
+      if( StrOp.equals( wSwitch.straight, savedState ) )
+        state = wSwitch.left;
+      else if( StrOp.equals( wSwitch.turnout, savedState ) )
+        state = wSwitch.straight;
+      else {
+        state = wSwitch.straight;
+        wSwitch.setstate( o->props, wSwitch.left );
+      }
+    }
     else {
       if( StrOp.equals( wSwitch.straight, savedState ) )
         state = wSwitch.turnout;
