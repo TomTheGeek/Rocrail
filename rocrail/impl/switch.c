@@ -828,25 +828,29 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     iONode nodeA2 = NULL;
 
     /* NodeA is cleaned up by the digint so we need a copy for the second unit. */
-    if( has2Units )
+    if( has2Units ) {
       nodeA2 = (iONode)nodeA->base.clone( nodeA );
-
-    if( StrOp.equals( state, wSwitch.left ) ) {
-      state1 = inv1?wSwitch.straight:wSwitch.turnout;
-      state2 = inv2?wSwitch.turnout:wSwitch.straight;
-    }
-    else if( StrOp.equals( state, wSwitch.right ) ) {
-      state1 = inv1?wSwitch.turnout:wSwitch.straight;
-      state2 = inv2?wSwitch.straight:wSwitch.turnout;
-    }
-    else if( StrOp.equals( state, wSwitch.turnout ) ) {
-      state1 = inv1?wSwitch.straight:wSwitch.turnout;
-      state2 = inv2?wSwitch.straight:wSwitch.turnout;
-    }
-    else if( StrOp.equals( state, wSwitch.straight ) ) {
-      state1 = inv1?wSwitch.turnout:wSwitch.straight;
-      state2 = inv2?wSwitch.turnout:wSwitch.straight;
-    }
+      if( StrOp.equals( state, wSwitch.left ) ) {
+        state1 = inv1?wSwitch.straight:wSwitch.turnout;
+        state2 = inv2?wSwitch.turnout:wSwitch.straight;
+      }
+      else if( StrOp.equals( state, wSwitch.right ) ) {
+        state1 = inv1?wSwitch.turnout:wSwitch.straight;
+        state2 = inv2?wSwitch.straight:wSwitch.turnout;
+      }
+      else if( StrOp.equals( state, wSwitch.turnout ) ) {
+        state1 = inv1?wSwitch.straight:wSwitch.turnout;
+        state2 = inv2?wSwitch.straight:wSwitch.turnout;
+      }
+      else if( StrOp.equals( state, wSwitch.straight ) ) {
+        state1 = inv1?wSwitch.turnout:wSwitch.straight;
+        state2 = inv2?wSwitch.turnout:wSwitch.straight;
+      }
+    } else
+      if( StrOp.equals( state, wSwitch.left ) || StrOp.equals( state, wSwitch.right ) )
+        state1 = inv1?wSwitch.straight:wSwitch.turnout;
+      else
+        state1 = inv1?wSwitch.turnout:wSwitch.straight;
 
     wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
     wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
