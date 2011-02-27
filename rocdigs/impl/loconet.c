@@ -1533,7 +1533,7 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
     cmd[3] = LocoNetOp.checksum( cmd, 3 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Trying to get slot for loco addr=%d.", addr );
 
-    ok = LocoNetOp.transact( loconet, cmd, 4, rsp, &insize, OPC_SL_RD_DATA, 0, True );
+    ok = LocoNetOp.transact( loconet, cmd, 4, rsp, &insize, OPC_SL_RD_DATA, OPC_LONG_ACK, True );
     if( ok && insize > 0 ) {
       if( rsp[0] == OPC_SL_RD_DATA ) {
         slot = rsp[2];
@@ -1577,6 +1577,9 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
           LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
         }
 
+      }
+      else if(rsp[0] == OPC_LONG_ACK) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No free slot available for loco addr=%d.", addr );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Could not get slot for loco addr=%d. (un expected response 0x%02X...)", addr, rsp[0] );
