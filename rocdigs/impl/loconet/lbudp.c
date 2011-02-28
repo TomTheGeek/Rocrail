@@ -155,6 +155,10 @@ Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
     out[0] = data->outseq;
     data->outseq++;
     MemOp.copy( out+1, msg, len);
+    if( data->usedouble ) {
+      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len+1 );
+      ThreadOp.sleep(1);
+    }
     return SocketOp.sendto( data->writeUDP, out, len+1 );
   }
   else {
