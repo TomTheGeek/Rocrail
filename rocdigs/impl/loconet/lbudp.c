@@ -92,11 +92,12 @@ static void __reader( void* threadinst ) {
 
         QueueOp.post( data->udpQueue, (obj)p, normal);
         TraceOp.dump ( "lbudp", TRCLEVEL_BYTE, (char*)packet, packetSize );
-        ThreadOp.sleep(0);
       }
     }
-    else
+    else {
+      TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received" );
       ThreadOp.sleep(10);
+    }
 
   } while( data->run );
 
