@@ -725,14 +725,9 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       }
     }
     else if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.dcrossing ) && wSwitch.getaddr2( o->props ) == 0 && wSwitch.getport2( o->props ) == 0 ) {
-      if( StrOp.equals( wSwitch.straight, savedState ) )
-        state = wSwitch.left;
-      else if( StrOp.equals( wSwitch.turnout, savedState ) )
-        state = wSwitch.straight;
-      else {
-        state = wSwitch.straight;
-        wSwitch.setstate( o->props, wSwitch.left );
-      }
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double crossing with one motor \"%s\" is not supported!",
+                         SwitchOp.getId( inst ) );
+      return False;
     }
     else {
       if( StrOp.equals( wSwitch.straight, savedState ) )
@@ -856,27 +851,20 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
         state1 = inv1?wSwitch.turnout:wSwitch.straight;
         state2 = inv2?wSwitch.turnout:wSwitch.straight;
       }
-    } else
-      if( StrOp.equals( state, wSwitch.left ) || StrOp.equals( state, wSwitch.right ) )
-        state1 = inv1?wSwitch.straight:wSwitch.turnout;
-      else
-        state1 = inv1?wSwitch.turnout:wSwitch.straight;
 
-    wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
-    wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
-    wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
-    wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
-    wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
-    wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
-    wSwitch.setcmd( nodeA, state1 );
-    if( !ControlOp.cmd( control, nodeA, error ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",
-                     SwitchOp.getId( inst ) );
-      MutexOp.post( o->muxCmd );
-      return False;
-    }
-
-    if( has2Units ) {
+      wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
+      wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
+      wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
+      wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
+      wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
+      wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
+      wSwitch.setcmd( nodeA, state1 );
+      if( !ControlOp.cmd( control, nodeA, error ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",
+                       SwitchOp.getId( inst ) );
+        MutexOp.post( o->muxCmd );
+        return False;
+      }
       /* sleep the switch delay time */
       ThreadOp.sleep( wSwitch.getdelay( o->props ) );
 
@@ -893,6 +881,10 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
         MutexOp.post( o->muxCmd );
         return False;
       }
+    } else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double crossing with one motor \"%s\" is not supported!",
+                     SwitchOp.getId( inst ) );
+      return False;
     }
 
   }
