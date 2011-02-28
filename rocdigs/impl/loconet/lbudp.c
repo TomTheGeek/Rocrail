@@ -57,7 +57,7 @@ static void __reader( void* threadinst ) {
         MemOp.copy( data->prevPacket, packet, packetSize );
         if( data->expectdouble ) {
           data->packetloss++;
-          TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "packet loss [%d]" );
+          TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "packet loss [0x%02X] of %d total losses", data->prevPacket[0], data->packetloss );
         }
         data->expectdouble = True;
 
