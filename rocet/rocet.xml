@@ -1,0 +1,42 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2009 - Rob Versluis <r.j.versluis@rocrail.net>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="Rocet" title="Rocet API" docname="rocetapi">
+
+  <object name="Rocet" use="node,thread" include="$rocint/public/digint" remark="Rocet application">
+    <typedef def="enum {CMD_OK=0,CMD_RETRY,CMD_ERROR} cmd_state"/>
+    <typedef def="void(*control_callback)(obj,iONode)"/>
+    <fun name="inst" vt="this">
+    </fun>
+    <fun name="Main" vt="int">
+      <param name="inst" vt="this" remark="App instance"/>
+      <param name="argc" vt="int" remark="Commandline argument count"/>
+      <param name="argv" vt="char**" remark="Commandline arguments"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode" remark="RocRail ini"/>
+      <var name="run" vt="Boolean"/>
+      <var name="pDi" vt="iIDigInt" remark="Interface"/>
+      <var name="sendThread" vt="iOThread"/>
+      <var name="recvThread" vt="iOThread"/>
+    </data>
+  </object>
+
+
+</Project>
