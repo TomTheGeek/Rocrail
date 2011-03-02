@@ -685,7 +685,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         }
 
         /* crossing */
-        else if( StrOp.equals( wItem.gettype(item), "crossing" ) ) {
+        else if( StrOp.equals( wItem.gettype(item), "crossing" ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
           //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
 
           if( !wSwitch.isdir(item)  ) { // left
@@ -765,7 +765,9 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
           }
         }
         /* dcrossing */
-        else if( StrOp.equals( wItem.gettype(item), "dcrossing" ) ) {
+        else if( StrOp.equals( wItem.gettype(item), "dcrossing" ) ||
+                 StrOp.equals( wItem.gettype(item), "crossing" ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
+        {
           /*TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " +++++++%d+itemori:[%s]+++++++ dcrossing travel: %d turnoutstate: %d",
               wSwitch.isdir(item),itemori,travel, turnoutstate );*/
 
@@ -1240,7 +1242,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       if( turnoutstate == 2) state = "left";
       if( turnoutstate == 3) state = "right";
     } else if ( StrOp.equals(wItem.gettype(item), "threeway" )  ) {
-      if( turnoutstate == 0) state = "center";
+      if( turnoutstate == 0) state = "straight";
       if( turnoutstate == 1) state = "left";
       if( turnoutstate == 2) state = "right";
     }
