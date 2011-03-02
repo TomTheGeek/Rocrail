@@ -205,7 +205,7 @@ static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
 }
 
 
-/**
+/** DIGITALBAHN
  * function offset  red      green
  * -------- ------- -------- --------
  * lights   0       off      on
@@ -408,6 +408,201 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
   nodeA->base.del(nodeA);
   return ok;
 }
+
+
+
+/** TTDEC
+ * function offset  red      green
+ * -------- ------- -------- --------
+ * End/Input  0     End      Input
+ * Clear/Turn 1     Clear    Turn
+ * Step       2     right    left
+ * dir        3     CW       CCW
+ * pos        4     #1       #2
+ * pos        5     #3       #4
+ * pos        6     #5       #6
+ * pos        7     #7       #8
+ * pos        8     #9       #10
+ * pos        9     #11      #12
+ * pos       10     #13      #14
+ * pos       11     #15      #16
+ * pos       12     #17      #18
+ * pos       13     #19      #20
+ * pos       14     #21      #22
+ * pos       15     #23      #24
+ */
+static const int TTDEC_STEP = 2;
+static const int TTDEC_TURN = 1;
+static const int TTDEC_DIR  = 3;
+static const int TTDEC_POS  = 4;
+static const char* TTDEC_DIR_CW  = "turnout";
+static const char* TTDEC_DIR_CCW = "straight";
+
+static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  Boolean doDirCmd = False;
+  int port = 0;
+  const char* cmdstr = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TT command = [%s]", cmdStr );
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    port = TTDEC_STEP;
+    cmdstr = wSwitch.straight;
+    data->pending = True;
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    port = TTDEC_STEP;
+    cmdstr = wSwitch.turnout;
+    data->pending = True;
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    port = TTDEC_TURN;
+    cmdstr = wSwitch.straight;
+    data->pending = True;
+  }
+  else {
+    /* Tracknumber */
+    int tracknr = atoi( cmdStr );
+    /* DA Save tracknumber for 180 degrees turn */
+    int orig_tracknr = tracknr;
+
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+
+    if( move ) {
+      /* check for a mapping of the track number */
+      data->gotopos = tracknr;
+      tracknr = __getMappedTrack( inst, tracknr );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Goto decoder track [%d] in direction [%s]", tracknr, ttdir ? "CCW":"CW" );
+      data->pending = True;
+
+      /* Broadcast to clients. */
+      {
+        iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+        wTurntable.setid( event, wTurntable.getid( data->props ) );
+        wTurntable.setbridgepos( event, tracknr );
+        if( wTurntable.getiid( data->props ) != NULL )
+          wTurntable.setiid( event, wTurntable.getiid( data->props ) );
+        AppOp.broadcastEvent( event );
+      }
+
+      doDirCmd = True;
+
+      port = TTDEC_POS + ((tracknr-1)/2);
+      if( (tracknr-1) % 2 == 0 )
+        cmdstr = wSwitch.turnout;
+      else
+        cmdstr = wSwitch.straight;
+
+      /* DA check whether 180 degrees turn is required */
+      if( (data->tablepos-orig_tracknr) == 24)
+      {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
+        port   = TTDEC_TURN;
+        cmdstr = wSwitch.straight;
+      }
+      else if( (data->tablepos-orig_tracknr) == -24)
+      {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
+        port   = TTDEC_TURN;
+        cmdstr = wSwitch.straight;
+      }
+      /* DA check whether 180 degrees turn is required */
+
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
+    }
+  }
+
+  if( cmdstr != NULL && control != NULL )
+  {
+    /* Direction */
+    if( doDirCmd ) {
+      iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+      int addr = wTurntable.getaddr( data->props );
+      const char* iid = wTurntable.getiid( data->props );
+      if( iid != NULL )
+        wSwitch.setiid( cmd, iid );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set direction address=%d, port=%d, gate=%s",
+          addr, TTDEC_DIR, ttdir ? TTDEC_DIR_CCW:TTDEC_DIR_CW );
+      int addrCmd = (addr + TTDEC_DIR) / 4 + 1;
+      int portCmd = (addr + TTDEC_DIR) % 4 + 1;
+      wSwitch.setaddr1( cmd, addrCmd );
+      wSwitch.setport1( cmd, portCmd );
+      wSwitch.setcmd  ( cmd, ttdir ? TTDEC_DIR_CCW:TTDEC_DIR_CW );
+      wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d,%s]...",
+                   addrCmd, portCmd, ttdir ? TTDEC_DIR_CCW:TTDEC_DIR_CW);
+
+      ControlOp.cmd( control, cmd, NULL );
+      /* give the decoder some time to think... */
+      ThreadOp.sleep( wTurntable.getpause( data->props ) * 1000 );
+    }
+
+
+    /* Command */
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+    int addr = wTurntable.getaddr( data->props );
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wSwitch.setiid( cmd, iid );
+
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set position address=%d, port=%d, gate=%s",
+        addr, port, cmdstr );
+
+    int addrCmd = (addr + port) / 4 + 1;
+    int portCmd = (addr + port) % 4 + 1;
+    wSwitch.setaddr1( cmd, addrCmd );
+    wSwitch.setport1( cmd, portCmd );
+    wSwitch.setcmd  ( cmd, cmdstr );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d]...", addrCmd, portCmd );
+
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+    ControlOp.cmd( control, cmd, NULL );
+    /* give the decoder some time to think... */
+    ThreadOp.sleep(100);
+
+    /* set tablepos optimistic predicted, if fb is not defined for destination track */
+    iONode track = wTurntable.gettrack( data->props );
+    while ( track != NULL ) {
+      if ( ( wTTTrack.getnr( track ) == data->gotopos)
+        && ( ( wTTTrack.getposfb( track) == NULL) || StrOp.equals( wTTTrack.getposfb( track), "\0"))) {
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set optimistic tablepos %d", data->tablepos );
+
+        data->tablepos = data->gotopos;
+        wTurntable.setbridgepos( data->props, data->tablepos );
+      }
+      track = wTurntable.nexttrack( data->props, track );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no command sent" );
+  }
+
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+  return ok;
+}
+
 
 
 static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
@@ -1168,6 +1363,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_muet( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.slx815 ) )
     return __cmd_slx815( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.ttdec ) )
+    return __cmd_ttdec( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",
