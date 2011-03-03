@@ -21,6 +21,7 @@
 
   <interface name="DigInt" use="node">
     <typedef def="void (*digint_listener)(obj,iONode,int)"/>
+    <typedef def="void (*digint_rawlistener)(obj,byte*,int)"/>
     <typedef def="iONode(*queryProperties)(obj,const char*,const char*)"/>
     <fun name="setListener" vt="Boolean">
       <param name="inst" vt="obj"/>
@@ -46,6 +47,15 @@
     </fun>
     <fun name="shortcut" vt="void" remark="external shortcut event">
       <param name="inst" vt="obj"/>
+    </fun>
+    <fun name="setRawListener" vt="Boolean">
+      <param name="inst" vt="obj"/>
+      <param name="listenerObj" vt="obj"/>
+      <param name="listenerRawFun" vt="const digint_rawlistener"/>
+    </fun>
+    <fun name="cmdRaw" vt="byte*">
+      <param name="inst" vt="obj"/>
+      <param name="cmd" vt="const byte*"/>
     </fun>
   </interface>
 

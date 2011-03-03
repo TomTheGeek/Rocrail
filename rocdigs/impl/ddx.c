@@ -543,6 +543,14 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
   return True;
 }
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
 void rocrail_ddxStateChanged( obj inst ) {
     iODDXData data = Data(inst);
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );

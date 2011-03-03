@@ -154,6 +154,16 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
   return 0;
 }
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
+
+
 
 /** external shortcut event */
 static void _shortcut( obj inst ) {

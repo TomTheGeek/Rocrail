@@ -121,6 +121,14 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
 }
 
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
 /**  */
 static Boolean _supportPT( obj inst ) {
   iOInter10Data data = Data(inst);

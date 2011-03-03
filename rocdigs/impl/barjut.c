@@ -167,11 +167,7 @@ __properties(
 
 
 /**  */
-static          iONode
-_cmd(
-	obj inst,
-	const iONode cmd )
-{
+static iONode _cmd(	obj inst,	const iONode cmd ) {
 	return 0;
 }
 
@@ -207,6 +203,16 @@ _setListener(
 	data->listenerObj = listenerObj;
 	data->listenerFun = listenerFun;
 	return True;
+}
+
+
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  iOBarjutData    data = Data( inst );
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
 }
 
 

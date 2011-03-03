@@ -126,6 +126,14 @@ static Boolean _setListener( obj inst, obj listenerObj, const digint_listener li
 }
 
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
 static iONode _cmd( obj inst, const iONode nodeA )
 {
   iOSRCPData o = Data( inst );

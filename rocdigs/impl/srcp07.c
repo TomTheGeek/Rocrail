@@ -102,6 +102,14 @@ static Boolean _setListener( obj inst, obj listenerObj,
   return True;
 }
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
 static int ACKok(iOSocket sckt) {
    char buf[20];
    int  ack;

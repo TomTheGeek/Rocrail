@@ -124,6 +124,15 @@ static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener li
   return True;
 }
 
+static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
+  return True;
+}
+
+static byte* _cmdRaw( obj inst, const byte* cmd ) {
+  return NULL;
+}
+
+
 
 /** bit0=power, bit1=programming, bit2=connection */
 static int _state( obj inst ) {
