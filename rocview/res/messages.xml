@@ -17115,4 +17115,7 @@
   <Msg id="usedouble">
     <en txt="Use double packets"/>
   </Msg>
+  <Msg id="rectangular">
+    <en txt="rectangular"/>
+  </Msg>
 </Messages>

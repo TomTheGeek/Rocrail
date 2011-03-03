@@ -1005,6 +1005,7 @@
         <const name="swtype_raster" vt="string" val="raster"/>
         <var name="swtype" vt="string" defval="default" range="default,raster"/>
         <var name="dir" vt="bool" defval="false" remark="false=left, true=right"/>
+        <var name="rectcrossing" vt="bool" defval="true" remark="Crossing without motor as rectangular crossing."/>
         <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
              remark="Protocol to use for this output."/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>

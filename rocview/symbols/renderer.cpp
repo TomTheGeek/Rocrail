@@ -191,7 +191,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing_t );
         }
         else {
-          if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
+          if( wSwitch.isrectcrossing(m_Props) && wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing );
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_occ );
           }
