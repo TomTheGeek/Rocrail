@@ -1241,6 +1241,11 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
       if( turnoutstate == 1) state = "turnout";
       if( turnoutstate == 2) state = "left";
       if( turnoutstate == 3) state = "right";
+    } else if ( StrOp.equals(wItem.gettype(item), "crossing" ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 )  ) {
+      if( turnoutstate == 0) state = "straight";
+      if( turnoutstate == 1) state = "straight";
+      if( turnoutstate == 2) state = "turnout";
+      if( turnoutstate == 3) state = "turnout";
     } else if ( StrOp.equals(wItem.gettype(item), "threeway" )  ) {
       if( turnoutstate == 0) state = "straight";
       if( turnoutstate == 1) state = "left";
