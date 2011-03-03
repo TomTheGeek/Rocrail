@@ -2550,6 +2550,20 @@ static void __initFieldRunner( void* threadinst ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg \"%s\"", SignalOp.getId( sg ) );
 
+      if( StrOp.equals( wSignal.semaphore, wSignal.gettype(sg) ) ) {
+        iONode semcmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+        if( state != NULL && StrOp.len(state) > 0 ) {
+          if( StrOp.equals( wSignal.green, state ) )
+            wSignal.setcmd( semcmd, wSignal.red );
+        }
+        else
+          wSignal.setcmd( semcmd, wSignal.green );
+
+        NodeOp.setBool( semcmd, "force", True );
+        SignalOp.cmd( sg, semcmd, True );
+        ThreadOp.sleep( pause );
+      }
+
       /* Set the signal to its last known state. */
       if( state != NULL && StrOp.len(state) > 0 ) {
         wSignal.setcmd( cmd, state );
