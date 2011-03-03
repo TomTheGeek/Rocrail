@@ -876,26 +876,15 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, con
  */
 void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
-  Boolean hasUnit = wSwitch.getaddr1( m_Props ) > 0 ? True:False;
-
-  if( wSwitch.getaddr1( m_Props ) > 0 || wSwitch.getport1( m_Props ) > 0 )
-    hasUnit = True;
-
 
   // SVG Symbol:
-  if( !hasUnit && m_SvgSym1!=NULL ) {
-    if( occupied && m_SvgSym4 != NULL )
-      drawSvgSym(dc, m_SvgSym4, ori);
-    else
-      drawSvgSym(dc, m_SvgSym1, ori);
-  }
-  else if( hasUnit && m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
+  if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
     if( occupied && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
-  else if( hasUnit && m_SvgSym1!=NULL ) {
+  else if( m_SvgSym1!=NULL ) {
     if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else
