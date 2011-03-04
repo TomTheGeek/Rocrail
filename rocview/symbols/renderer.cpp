@@ -195,6 +195,11 @@ void SymbolRenderer::initSym() {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing );
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_occ );
           }
+          else if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m : switchtype::crossingright0m );
+            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m_occ : switchtype::crossingright0m_occ );
+            m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
+          }
           else {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft : switchtype::crossingright );
             m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t : switchtype::crossingright_t );
