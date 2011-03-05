@@ -1815,15 +1815,20 @@ static void __analyseList(iOAnalyse inst) {
       if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
           StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
               wRoute.isbkaside( child) ==  wRoute.isbkaside( newRoute) &&
-              wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) &&
-          !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+              wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) ) {
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "found an edited route: [%s] from [%s] to [%s] skip",
-          wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
-
-        addToList = False;
-        break;
+        if( !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "found an edited route: [%s] from [%s] to [%s] skip",
+            wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
+          addToList = False;
+          break;
+        } else {
+          /* second route between two identical blocks found, make unique ID */
+          char* extID = StrOp.fmt( "%s-%d", wRoute.getid( newRoute ), i );
+          wRoute.setid( newRoute, extID );
+          StrOp.free( extID );
+        }
       }
 
       /*
