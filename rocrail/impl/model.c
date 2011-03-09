@@ -2545,12 +2545,12 @@ static void __initFieldRunner( void* threadinst ) {
 
     if(sg->base.properties != NULL) {
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
-
+      iONode sgProps = SignalOp.base.properties(sg);
       state = SignalOp.getState(sg);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg \"%s\"", SignalOp.getId( sg ) );
 
-      if( StrOp.equals( wSignal.semaphore, wSignal.gettype(sg) ) ) {
+      if( StrOp.equals( wSignal.semaphore, wSignal.gettype(sgProps) ) ) {
         iONode semcmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
         if( state != NULL && StrOp.len(state) > 0 ) {
           if( StrOp.equals( wSignal.green, state ) )
