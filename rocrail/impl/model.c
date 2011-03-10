@@ -2895,7 +2895,7 @@ static const char* _getTitle( iOModel inst ) {
   return o->title;
 }
 
-typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode, Boolean CleanRun );
+typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode, Boolean CleanRun, const iOTrace trc );
 
 static void _analyse( iOModel inst, Boolean CleanRun ) {
   iOModelData data = Data(inst);
@@ -2935,7 +2935,7 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
     if (pInitFun == NULL)
       return;
 
-    data->analyser = pInitFun( inst, data->model, CleanRun );
+    data->analyser = pInitFun( inst, data->model, CleanRun, TraceOp.get() );
   }
 
   if( data->analyser != NULL ) {

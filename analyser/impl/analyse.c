@@ -2095,10 +2095,12 @@ static void _analyse(iIAnalyserInt o) {
 
 
 /**  */
-static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ) {
+static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ,const iOTrace trc ) {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
   MemOp.basecpy( __Analyse, &AnalyseOp, 0, sizeof( struct OAnalyse ), data );
+
+  TraceOp.set( trc );
 
   cleanrun = CleanRun;
   /* Initialize data->xxx members... */
@@ -2113,9 +2115,9 @@ static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ) {
 }
 
 /* Support for dynamic Loading */
-iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan, Boolean CleanRun )
+iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan, Boolean CleanRun ,const iOTrace trc )
 {
-  return (iOAnalyse)_inst( model, plan, CleanRun );
+  return (iOAnalyse)_inst( model, plan, CleanRun, trc );
 }
 
 
