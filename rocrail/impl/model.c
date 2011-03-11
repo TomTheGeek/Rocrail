@@ -2519,7 +2519,7 @@ static void __initFieldRunner( void* threadinst ) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     const char* cmdStr = NULL;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sw \"%s\"", SwitchOp.getId( sw ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sw [%s]", SwitchOp.getId( sw ) );
 
     /* Flip the switch. */
     wSwitch.setcmd( cmd, wSwitch.flip );
@@ -2538,6 +2538,9 @@ static void __initFieldRunner( void* threadinst ) {
 
   ThreadOp.sleep( pause );
 
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init [%d] signals", MapOp.size( o->signalMap ) );
+
   sg = (iOSignal)MapOp.first( o->signalMap );
   while( sg != NULL && !ThreadOp.isQuit(th) ) {
     const char* cmdStr = NULL;
@@ -2548,18 +2551,12 @@ static void __initFieldRunner( void* threadinst ) {
       iONode sgProps = SignalOp.base.properties(sg);
       state = SignalOp.getState(sg);
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg \"%s\"", SignalOp.getId( sg ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg [%s]", SignalOp.getId( sg ) );
 
       if( StrOp.equals( wSignal.semaphore, wSignal.gettype(sgProps) ) ) {
         iONode semcmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
-        if( state != NULL && StrOp.len(state) > 0 ) {
-          if( StrOp.equals( wSignal.green, state ) )
-            wSignal.setcmd( semcmd, wSignal.red );
-        }
-        else
-          wSignal.setcmd( semcmd, wSignal.green );
-
         NodeOp.setBool( semcmd, "force", True );
+        wSignal.setcmd( semcmd, wSignal.flip );
         SignalOp.cmd( sg, semcmd, True );
         ThreadOp.sleep( pause );
       }
