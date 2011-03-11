@@ -435,8 +435,8 @@ static const int TTDEC_STEP = 2;
 static const int TTDEC_TURN = 1;
 static const int TTDEC_DIR  = 3;
 static const int TTDEC_POS  = 4;
-static const char* TTDEC_DIR_CW  = "turnout";
-static const char* TTDEC_DIR_CCW = "straight";
+static const char* TTDEC_DIR_CW  = "straight";
+static const char* TTDEC_DIR_CCW = "turnout";
 
 static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
@@ -461,7 +461,7 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = TTDEC_TURN;
-    cmdstr = wSwitch.straight;
+    cmdstr = wSwitch.turnout;
     data->pending = True;
   }
   else {
@@ -497,9 +497,9 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
 
       port = TTDEC_POS + ((tracknr-1)/2);
       if( (tracknr-1) % 2 == 0 )
-        cmdstr = wSwitch.turnout;
-      else
         cmdstr = wSwitch.straight;
+      else
+        cmdstr = wSwitch.turnout;
 
       /* DA check whether 180 degrees turn is required */
       if( (data->tablepos-orig_tracknr) == 24)
@@ -507,14 +507,14 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.straight;
+        cmdstr = wSwitch.turnout;
       }
       else if( (data->tablepos-orig_tracknr) == -24)
       {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.straight;
+        cmdstr = wSwitch.turnout;
       }
       /* DA check whether 180 degrees turn is required */
 
