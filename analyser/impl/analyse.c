@@ -1982,7 +1982,7 @@ static void __analyseList(iOAnalyse inst) {
             }
           }
 
-          if( !isInList && doIt) {
+          if( !isInList && doIt && StrOp.len(prevrouteids) < 4000 ) {
               char* newval = StrOp.fmt( "%s%s%s", prevrouteids, StrOp.len(prevrouteids)>0?",":"", wRoute.getid( newRoute) );
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
