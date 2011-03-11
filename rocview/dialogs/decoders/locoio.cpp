@@ -2182,7 +2182,6 @@ void LocoIO::easyGetPort( int port, int* conf, int* val1, int* val2 )
 
     value1 = (addr & 0x007F);
     value2 = (addr & 0x0780) >> 7;
-    value2 |= 0x10;
     value2 |= c2 ? 0x20:0x00;
   }
   else if( easyInput[port]->GetValue() ) {
