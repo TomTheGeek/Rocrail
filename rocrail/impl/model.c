@@ -3262,7 +3262,7 @@ static iORoute _findRoute( iOModel inst, const char* scheduleid,
  * lookup the current block in the schedule and calculate the route to the next destination
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
-                                        int* scheduleIdx, const char* curblockid, iOLoc loc,
+                                        int* scheduleIdx, const char* curblockid, const char* currouteid, iOLoc loc,
                                         Boolean forceSameDir, Boolean swapPlacingInPrevRoute, int *indelay ) {
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   iONode entry = NULL;
@@ -3323,7 +3323,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
 
-          iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, NULL, loc, &routeref, gotoBlock,
+          iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, currouteid, loc, &routeref, gotoBlock,
                                     False, False, forceSameDir, swapPlacingInPrevRoute);
 
           if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {

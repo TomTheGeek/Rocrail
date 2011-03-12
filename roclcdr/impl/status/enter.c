@@ -93,6 +93,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL,
                                                                data->schedule, &data->scheduleIdx,
                                                                data->next1Block->base.id( data->next1Block ),
+                                                               data->next1Route != NULL ? data->next1Route->base.id( data->next1Route ):NULL,
                                                                data->loc, False,
                                                                data->next1Route->isSwapPost( data->next1Route ),
                                                                &indelay);

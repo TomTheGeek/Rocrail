@@ -75,7 +75,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->prewaitScheduleIdx = -1;
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), data->loc, False, False, &data->indelay );
+                                                      data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
     }
 
     if( !wait && data->next1Route != NULL ) {

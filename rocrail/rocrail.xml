@@ -868,6 +868,7 @@
       <param name="scheduleid" vt="const char*" remark="scheduleid"/>
       <param name="scheduleIdx" vt="int*" remark="schedule index"/>
       <param name="curblockid" vt="const char*" remark="current blockid"/>
+      <param name="currouteid" vt="const char*" remark="current routeid"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="forceSameDir" vt="Boolean" remark="Force same direction."/>
       <param name="swapPlacingInPrevRoute" vt="Boolean" remark="Force same direction."/>
