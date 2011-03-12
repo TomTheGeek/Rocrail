@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="85px" height="30px" viewBox="0 0 340 120" preserveAspectRatio="xMinYMin">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="6800px" height="3200px" viewBox="0 0 340 160" preserveAspectRatio="xMinYMin">
 
 <defs>
 <font id="Rocrail embedded" horiz-adv-x="2048">
@@ -72,7 +72,15 @@
     x="140px" y="85px"
     >&#169;rocrail.net</text>
 
+    <text fill="gray" style="font-size:60px;font-family:Rocrail embedded"
+    x="113px" y="153px">Team</text>
+    <text style="font-size:60px;font-family:Rocrail embedded"
+    x="110px" y="150px">Team</text>
+
     <rect x="5px" y="63px" width="320px" height="4px" fill="black" stroke="black" stroke-width="1px" />
     
-    <path stroke="black" fill="black" d="M 300 55 L 335 65 L 300 75 z" />   </g>
+    <path stroke="black" fill="black" d="M 300 55 L 335 65 L 300 75 z" />   
+    
+    
+    </g>
 </svg>
