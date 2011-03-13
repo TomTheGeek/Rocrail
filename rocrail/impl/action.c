@@ -614,6 +614,17 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wLoc.setV( cmd, v );
         LocOp.cmd(lc, cmd);
       }
+      else if( StrOp.equals(wAction.loco_percent, wAction.getcmd(data->action) ) ) {
+        int v = atoi(wAction.getparam(data->action));
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        if( v<0 ) {
+            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+            v = abs( v );
+        }
+        v = v * LocOp.getV( lc ) /100;
+        wLoc.setV( cmd, v );
+        LocOp.cmd(lc, cmd);
+      }
       else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
         LocOp.dispatch(lc);
       }

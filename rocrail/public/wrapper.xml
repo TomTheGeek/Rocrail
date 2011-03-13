@@ -1949,6 +1949,7 @@
         <const name="loco_dispatch" vt="string" val="dispatch"/>
         <const name="loco_swap" vt="string" val="swap"/>
         <const name="loco_carcount" vt="string" val="carcount"/>
+        <const name="loco_percent" vt="string" val="percent"/>
         <const name="fun_on" vt="string" val="on"/>
         <const name="fun_off" vt="string" val="off"/>
         <const name="tt_goto" vt="string" val="goto"/>
