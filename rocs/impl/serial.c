@@ -35,7 +35,7 @@ Boolean rocs_serial_open( iOSerial inst );
 Boolean rocs_serial_close( iOSerial inst );
 Boolean rocs_serial_write( iOSerial inst, const char* buf, int size );
 Boolean rocs_serial_read( iOSerial inst, char* buf, int size );
-Boolean rocs_serial_avail( iOSerial inst );
+int rocs_serial_avail( iOSerial inst );
 Boolean rocs_serial_isCTS( iOSerial inst );
 Boolean rocs_serial_isDSR( iOSerial inst );
 Boolean rocs_serial_isRI( iOSerial inst );

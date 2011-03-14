@@ -110,7 +110,15 @@ void lbserialDisconnect( obj inst ) {
 
 Boolean lbserialAvailable ( obj inst ) {
   iOLocoNetData data = Data(inst);
-  return SerialOp.available(data->serial);
+  if( data->comm ) {
+    int rc = SerialOp.available(data->serial);
+    if( rc == -1 ) {
+      data->comm = False;
+      LocoNetOp.stateChanged((iOLocoNet)inst);
+    }
+    return rc >= 0;
+  }
+  return False;
 }
 
 
