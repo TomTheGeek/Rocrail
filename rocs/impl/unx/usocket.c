@@ -674,8 +674,12 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       }
       */
       if( o->rc != EAGAIN )
-        if( o->rc == EWOULDBLOCK || o->rc == ESHUTDOWN || o->rc == EPIPE || o->rc == ENOTSOCK || o->rc == ETIMEDOUT || o->rc == ECONNRESET )
+        if( o->rc == EWOULDBLOCK || o->rc == ESHUTDOWN || o->rc == EPIPE || o->rc == ENOTSOCK || o->rc == ETIMEDOUT || o->rc == ECONNRESET ) {
+          TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 8035, o->rc, "closing socket..." );
+          if( o->rc == ECONNRESET )
+            o->broken = True;
           rocs_socket_close(o);
+        }
 
       if( o->ssl ) {
       #ifdef __OPENSSL__
