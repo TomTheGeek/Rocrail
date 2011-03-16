@@ -31,6 +31,7 @@ Boolean xntcpConnect(obj xpressnet) {
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
   data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+  SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
 
   if ( SocketOp.connect( data->socket ) ) {
     return True;
@@ -54,6 +55,9 @@ void xntcpDisConnect(obj xpressnet) {
 Boolean xntcpAvail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   char msgStr[32];
+  if( SocketOp.isBroken(data->socket) ) {
+    return False;
+  }
   return SocketOp.peek( data->socket, msgStr, 1 );
 }
 
@@ -62,9 +66,10 @@ void xntcpInit(obj xpressnet) {
 }
 int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
-  if( SocketOp.read( data->socket, buffer, 1 ) ) {
+  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 1 ) ) {
     int len = (buffer[0] & 0x0F) + 1;
     if( SocketOp.read( data->socket, buffer+1, len ) )
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       return len;
   }
   return 0;
@@ -76,8 +81,12 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   int i = 0;
   Boolean rc = False;
   byte bXor = 0;
+  
+  if( SocketOp.isBroken(data->socket) ) {
+    return False;
+  }
 
-  *rspexpected = 1; /* XnTcp or CS will confirm every command? */
+  *rspexpected = True; /* XnTcp or CS will confirm every command? */
 
   len = out[0] & 0x0f;
   len++; /* header */
@@ -93,6 +102,7 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   len++; /* checksum */
 
   if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
     MutexOp.post( data->serialmux );
   }
