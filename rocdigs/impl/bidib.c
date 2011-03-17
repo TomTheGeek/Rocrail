@@ -118,8 +118,29 @@ das nachfolgende Zeichen mit 0x20 xor-verknüpft. Auch das ESCAPE-Zeichen selbst
 Das heißt: Anstelle des MAGIC wird ein ESCAPE-Zeichen (=0xFD), gefolgt von MAGIC ^ 0x20 = 0xDE gesendet.
 Anstelle des ESCAPE-Zeichen wird 0xFD + 0xDD gesendet. Das Escapen erfolgt auf dem fertig kodierten PAKET inkl.
 */
-static void __escapeMessage(byte* msg) {
+static void __escapeMessage(byte* msg, int* newLen, int inLen) {
+  int outLen = 0;
+  int i = 0;
+  byte buffer[256];
+
+  for( i = 0; i < inLen; i++ ) {
+    if( (msg[i] == BIDIB_PKT_MAGIC) || (msg[i] == BIDIB_PKT_ESCAPE) )
+    {
+      buffer[outLen] = BIDIB_PKT_ESCAPE;        // escape this char
+      outLen++;
+      buffer[outLen] = msg[i] ^ 0x20;           // 'veraendern'
+      outLen++;
+    }
+    else {
+      buffer[outLen] = msg[i];
+      outLen++;
+    }
+  }
+
+  *newLen = outLen;
+  MemOp.copy( msg, buffer, outLen );
 }
+
 
 
 /*
@@ -133,8 +154,44 @@ die gesamte Nachricht inkl. CRC gebildet, das Ergebnis muß 0 sein.
 Nach den Paket schließt sich ein MAGIC an, dies kann auch gleichzeitig der Beginn des nächsten Paketes sein.
 Wenn kein weiteres Paket zum Senden bereit ist, so wird trotzdem die MAGIC übertragen.
 */
-static void __crcMessage(byte* msg) {
+/* Update 8-bit CRC value
+   using polynomial X^8 + X^5 + X^4 + 1 */
+#define POLYVAL 0x8C
+static void __updateCRC(byte new, byte* crc)
+{
+  int i;
+  byte c = *crc;
+  for (i = 0; i < 8; i++) {
+    if ((c ^ new) & 1)
+      c = (c >> 1 ) ^ POLYVAL;
+    else
+      c >>= 1;
+    new >>= 1;
+  }
+  *crc = c;
 }
+
+/*
+CRC-8-Dallas/Maxim
+x8 + x5 + x4 + 1 (1-Wire bus)
+
+Representations: normal / **reversed** / reverse of reciprocal
+0x31 / 0x8C / 0x98
+
+Initialized with 0x00
+
+ */
+static byte __checkSum(byte* packet, int len) {
+  byte checksum = 0x00;
+  int i = 0;
+  for( i = 0; i < len; i++ ) {
+    __updateCRC(packet[i], &checksum);
+  }
+
+  return checksum;
+}
+
+
 
 
 /**  */
@@ -145,6 +202,12 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
+  iOBiDiBData data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "halt BiDiB..." );
+  data->run = False;
+  ThreadOp.sleep(500);
+  data->subDisconnect(inst);
   return;
 }
 
@@ -180,6 +243,75 @@ static int _state( obj inst ) {
 /**  */
 static Boolean _supportPT( obj inst ) {
   return 0;
+}
+
+static int __makeMessage(byte* msg, int inLen) {
+  int outLen = 0;
+  byte buffer[256];
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy( buffer + 1, msg, inLen );
+  outLen += inLen;
+  buffer[outLen] = __checkSum(buffer+1, outLen-1 );
+  outLen++;
+  __escapeMessage(buffer+1, &outLen, outLen-1);
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy(msg, buffer, outLen);
+  return outLen;
+}
+
+
+static void __bidibReader( void* threadinst ) {
+  iOThread    th    = (iOThread)threadinst;
+  iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
+  iOBiDiBData data  = Data(bidib);
+  byte msg[256];
+  int size = 0;
+  int addr = 0;
+  int value = 0;
+  int port = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB reader started." );
+
+  ThreadOp.sleep(100); /* resume some time to get it all being setup */
+
+  msg[0] = 4; // length
+  msg[1] = 0; // address
+  msg[2] = 1; // sequence number 1...255
+  msg[3] = MSG_DSTRM; // type
+  msg[4] = MSG_SYS_GET_P_VERSION; //data
+
+  size = __makeMessage(msg, 5);
+  data->subWrite((obj)bidib, msg, size);
+
+  while( data->run ) {
+    int available = data->subAvailable( (obj)bidib);
+    if( available == -1 ) {
+      /* device error */
+      data->run = False;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+      continue;
+    }
+
+    if( available == 0 ) {
+      ThreadOp.sleep( 10 );
+      continue;
+    }
+    else {
+      // give up rest of timeslice
+      ThreadOp.sleep( 0 );
+    }
+
+    size = data->subRead( (obj)bidib, msg );
+
+    if( size > 0 ) {
+      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+    }
+
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB reader ended." );
 }
 
 
@@ -240,6 +372,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->commOK = data->subConnect((obj)__BiDiB);
 
   if( data->commOK ) {
+    data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
+    ThreadOp.start( data->reader );
   }
 
   instCnt++;

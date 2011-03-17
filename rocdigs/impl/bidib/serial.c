@@ -53,20 +53,65 @@ Boolean serialConnect( obj inst ) {
 
 
 void serialDisconnect( obj inst ) {
+  iOBiDiBData data = Data(inst);
+
+  if( data->serial != NULL ) {
+    data->commOK = False;
+    SerialOp.close( data->serial );
+    SerialOp.base.del( data->serial );
+    data->serial = NULL;
+  }
 }
 
 
 int serialRead ( obj inst, unsigned char *msg ) {
+  iOBiDiBData data = Data(inst);
+
+  int  msglen = 0;
+  int  index  = 0;
+  byte c;
+  Boolean ok = False;
+
+  do {
+    if( !SerialOp.available(data->serial) )
+      return 0;
+
+    ok = SerialOp.read(data->serial, &c, 1);
+    if(ok) {
+      msg[index] = c;
+      index++;
+    }
+  } while (data->commOK && ok && data->run);
+
+  if( index > 0 ) {
+     TraceOp.dump ( "bidibserial", TRCLEVEL_BYTE, (char*)msg, index );
+  }
+
   return 0;
 }
 
 
 Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
-  return True;
+  iOBiDiBData data = Data(inst);
+
+  TraceOp.dump ( "bidibserial", TRCLEVEL_BYTE, (char*)msg, len );
+  Boolean ok = SerialOp.write( data->serial, (char*)msg, len );
+
+  return ok;
 }
 
 
 Boolean serialAvailable( obj inst ) {
-  return True;
+  iOBiDiBData data = Data(inst);
+
+  if( data->commOK ) {
+    int rc = SerialOp.available(data->serial);
+    if( rc == -1 ) {
+      data->commOK = False;
+      //BiDiBOp.stateChanged((iOBiDiB)inst);
+    }
+    return rc >= 0;
+  }
+  return False;
 }
 

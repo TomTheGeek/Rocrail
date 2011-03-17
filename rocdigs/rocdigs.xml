@@ -1248,6 +1248,8 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="commOK" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
       <var name="subConnect" vt="sublib_connect"/>
       <var name="subDisconnect" vt="sublib_disconnect"/>
       <var name="subRead" vt="sublib_read"/>
