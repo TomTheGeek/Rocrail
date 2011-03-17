@@ -64,6 +64,13 @@ else ifeq ($(PLATFORM),MACOSX)
 	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
 	LNK=gcc
 	SHAREDSUFFIX=.dylib
+else ifeq ($(PLATFORM),OPENBSD)
+	LIBS=-pthread
+	DIRPREFIX=unx
+	CC_EXTRA_FLAGS=-fPIC
+	LNK_FLAGS=-shared
+	LNK=gcc
+	SHAREDSUFFIX=.so
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx

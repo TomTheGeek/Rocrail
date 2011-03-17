@@ -26,7 +26,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
   /*#include </Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/architecture/i386/io.h>*/
 #else
   #include <sys/io.h>
@@ -105,7 +105,7 @@ Boolean rocs_system_setadmin() {
 }
 
 Boolean rocs_system_accessPort( int from, int num ) {
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
   return False;
 #else
 	return ioperm(from, num, 1) == 0 ? True:False;
@@ -113,7 +113,7 @@ Boolean rocs_system_accessPort( int from, int num ) {
 }
 
 Boolean rocs_system_releasePort( int from, int num ) {
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
   return False;
 #else
   return ioperm(from, num, 0) == 0 ? True:False;
@@ -121,7 +121,7 @@ Boolean rocs_system_releasePort( int from, int num ) {
 }
 
 void rocs_system_writePort( int port, byte val ) {
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
   return;
 #else
   outb(val,port);
@@ -129,7 +129,7 @@ void rocs_system_writePort( int port, byte val ) {
 }
 
 byte rocs_system_readPort( int port ) {
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
   return 0;
 #else
   return inb(port);

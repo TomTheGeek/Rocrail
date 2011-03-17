@@ -80,6 +80,13 @@ ifeq ($(PLATFORM),WIN32)
 	LIBSUFFIX=-i586-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)\rocview_rc.o
 	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
+else ifeq ($(PLATFORM),OPENBSD)
+	LIBS=-pthread
+	DIRPREFIX=unx
+	CC_EXTRA_FLAGS=-fPIC
+	BINSUFFIX=
+	LNK_FLAGS=`wx-config --libs`
+	WX_FLAGS=`wx-config --cflags`
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx

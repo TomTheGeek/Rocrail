@@ -71,6 +71,9 @@ endif
 ifeq ($(PLATFORM),SOLARIS)
 	LIBS=-lsocket -lnsl -lpthread -ldl
 endif
+ifeq ($(PLATFORM),OPENBSD)
+	LIBS=-pthread
+endif
 
 TOOLPREFIX=
 SRCMOUNTPOINT=..

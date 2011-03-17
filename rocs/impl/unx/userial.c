@@ -38,7 +38,7 @@
 
 /*#define __USE_MISC*/
 
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
 #include <sys/ioctl.h>
 #include <paths.h>
 #include <termios.h>
@@ -156,7 +156,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
       o->portbase = 0x2E8;
   }
 
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
     o->directIO=False;
 #else
   if( o->portbase > 0 && ioperm(o->portbase, 8, 1) == 0 ) {
@@ -184,7 +184,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
     struct termios tio;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "blocking[%d] directIO[%d]", o->blocking, o->directIO);
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
 #else
     if( o->divisor > 0 ) {
       struct serial_struct serial;
@@ -301,7 +301,7 @@ static void __printmsr(int msr) {
 static int __last_val = 0;
 static Boolean __printport(iOSerial inst, int* richg) {
   iOSerialData o = Data(inst);
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
     return True;
 #else
   if( ioperm(o->portbase, 7, 1) == 0 ) {
@@ -521,7 +521,7 @@ int rocs_serial_getWaiting( iOSerial inst ) {
 Boolean rocs_serial_isUartEmpty( iOSerial inst, Boolean soft ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
-#if defined __APPLE__
+#if defined __APPLE__ || defined __OpenBSD__
     return True;
 #else
 

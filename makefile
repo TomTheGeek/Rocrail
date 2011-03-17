@@ -28,6 +28,7 @@ COPY=cp
 REMOVE=rm -f
 GENSUFFIX=
 QUOT="
+MAKE ?= make
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -44,26 +45,26 @@ PLATFORM=LINUX
 ARCH=
 
 offlineall: version
-	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) $(MAKE) rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 all: version
-	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) $(MAKE) rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 fromtar: version
-	cd rocrail$(CS) make fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
+	cd rocrail$(CS) $(MAKE) fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 release: version
-	cd rocrail$(CS) make rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
+	cd rocrail$(CS) $(MAKE) rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) DEBUG=
 	
 install:
-	cd rocrail$(CS) make install_all
+	cd rocrail$(CS) $(MAKE) install_all
 
 uninstall:
-	cd rocrail$(CS) make uninstall_all
+	cd rocrail$(CS) $(MAKE) uninstall_all
 
 
 version:
 	echo $(QUOT)const int bzr = $(QUOT) > common$(FS)version.h
-	bzr revno >> common$(FS)version.h
+	echo $(QUOT)2.0$(QUOT) >> common$(FS)version.h
 	echo $(QUOT);$(QUOT) >> common$(FS)version.h
 
