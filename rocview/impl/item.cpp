@@ -1187,9 +1187,15 @@ void Symbol::OnPopup(wxMouseEvent& event)
                    const char* locationID = wScheduleEntry.getlocation( entry );
 
                    if( blockID != NULL && StrOp.equals(blockID, wBlock.getid( m_Props ) )) {
+                     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "schedule %s found for %s", 
+                         id, wBlock.getid( m_Props ));
                      addSc = True;
                    }
-                   else if( blockID != NULL && StrOp.equals(blockID, wBlock.getmanagerid( m_Props ) )) {
+                   else if( blockID != NULL && wBlock.getmanagerid( m_Props ) != NULL && 
+                            StrOp.len(wBlock.getmanagerid( m_Props )) > 0 && StrOp.equals(blockID, wBlock.getmanagerid( m_Props ) )) 
+                   {
+                     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "schedule %s found for %s", 
+                         id, wBlock.getmanagerid( m_Props ));
                      addSc = True;
                    }
                    else if( locationID != NULL ) {
@@ -1202,6 +1208,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
                            while ( StrTokOp.hasMoreTokens( tok )) {
                              const char * token = StrTokOp.nextToken( tok );
                              if( StrOp.equals( token, wBlock.getid( m_Props )) || StrOp.equals( token, wBlock.getmanagerid( m_Props )) ) {
+                               TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "location %s found for %s(%s)", 
+                                   wLocation.getid( location ), wBlock.getid( m_Props ), wBlock.getmanagerid( m_Props ));
                                addSc = True;
                                break;
                              }
@@ -1212,7 +1220,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
                        }
                      }
                    }
-                   entry = onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry );
+                   entry = (onlyStartWith ? NULL:wSchedule.nextscentry( sc, entry ));
                  }
 
                  if( id != NULL && addSc) {
