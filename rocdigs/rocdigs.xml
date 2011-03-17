@@ -1233,7 +1233,7 @@
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
     <typedef def="Boolean(*sublib_write)(obj,byte*,int)"/>
-    <typedef def="Boolean(*sublib_available)(obj)"/>
+    <typedef def="int(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>

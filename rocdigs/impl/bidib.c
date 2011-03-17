@@ -139,6 +139,7 @@ static void __escapeMessage(byte* msg, int* newLen, int inLen) {
 
   *newLen = outLen;
   MemOp.copy( msg, buffer, outLen );
+  TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, outLen );
 }
 
 
@@ -255,6 +256,7 @@ static int __makeMessage(byte* msg, int inLen) {
   buffer[outLen] = __checkSum(buffer+1, outLen-1 );
   outLen++;
   __escapeMessage(buffer+1, &outLen, outLen-1);
+  outLen++;
   buffer[outLen] = BIDIB_PKT_MAGIC;
   outLen++;
   MemOp.copy(msg, buffer, outLen);
@@ -276,13 +278,12 @@ static void __bidibReader( void* threadinst ) {
 
   ThreadOp.sleep(100); /* resume some time to get it all being setup */
 
-  msg[0] = 4; // length
+  msg[0] = 3; // length
   msg[1] = 0; // address
-  msg[2] = 1; // sequence number 1...255
-  msg[3] = MSG_DSTRM; // type
-  msg[4] = MSG_SYS_GET_P_VERSION; //data
+  msg[2] = 0; // sequence number 1...255
+  msg[3] = MSG_SYS_GET_MAGIC; //data
 
-  size = __makeMessage(msg, 5);
+  size = __makeMessage(msg, 4);
   data->subWrite((obj)bidib, msg, size);
 
   while( data->run ) {
@@ -300,13 +301,21 @@ static void __bidibReader( void* threadinst ) {
     }
     else {
       // give up rest of timeslice
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes available", available );
       ThreadOp.sleep( 0 );
     }
 
     size = data->subRead( (obj)bidib, msg );
-
     if( size > 0 ) {
       TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+      ThreadOp.sleep(1000); // TEST
+      msg[0] = 3; // length
+      msg[1] = 0; // address
+      msg[2] = 0; // sequence number 1...255
+      msg[3] = MSG_SYS_GET_MAGIC; //data
+
+      size = __makeMessage(msg, 4);
+      data->subWrite((obj)bidib, msg, size);
     }
 
   };

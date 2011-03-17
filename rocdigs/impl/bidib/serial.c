@@ -40,6 +40,7 @@ Boolean serialConnect( obj inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "line    = 8N1 (fix)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
@@ -73,13 +74,14 @@ int serialRead ( obj inst, unsigned char *msg ) {
   Boolean ok = False;
 
   do {
-    if( !SerialOp.available(data->serial) )
-      return 0;
+    if( serialAvailable(inst) <= 0 )
+      break;
 
     ok = SerialOp.read(data->serial, &c, 1);
     if(ok) {
       msg[index] = c;
       index++;
+      TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
     }
   } while (data->commOK && ok && data->run);
 
@@ -87,7 +89,7 @@ int serialRead ( obj inst, unsigned char *msg ) {
      TraceOp.dump ( "bidibserial", TRCLEVEL_BYTE, (char*)msg, index );
   }
 
-  return 0;
+  return index;
 }
 
 
@@ -101,7 +103,7 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 }
 
 
-Boolean serialAvailable( obj inst ) {
+int serialAvailable( obj inst ) {
   iOBiDiBData data = Data(inst);
 
   if( data->commOK ) {
@@ -110,8 +112,8 @@ Boolean serialAvailable( obj inst ) {
       data->commOK = False;
       //BiDiBOp.stateChanged((iOBiDiB)inst);
     }
-    return rc >= 0;
+    return rc;
   }
-  return False;
+  return 0;
 }
 

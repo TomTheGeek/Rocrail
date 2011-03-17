@@ -25,6 +25,6 @@ void  serialDisconnect( obj inst );
 
 int serialRead ( obj inst, unsigned char *msg );
 Boolean serialWrite( obj inst, unsigned char *msg, int len );
-Boolean serialAvailable( obj inst );
+int serialAvailable( obj inst );
 
 #endif /*BIDIBSERIAL_H_*/
