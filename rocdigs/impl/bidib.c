@@ -303,7 +303,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   switch( Type ) {
   case MSG_SYS_MAGIC:
-  {
+  { // len = 5
     int Magic = (msg[5]<<8)+msg[4];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_SYS_MAGIC, addr=%d seq=%d magic=0x%04X", Addr, Seq, Magic );
@@ -321,9 +321,58 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   case MSG_SYS_SW_VERSION:
-  {
+  { // len = 6
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_SYS_SW_VERSION, addr=%d seq=%d version=%d.%d", Addr, Seq, msg[5], msg[4] );
+        "MSG_SYS_SW_VERSION, addr=%d seq=%d version=%d.%d.%d", Addr, Seq, msg[4], msg[5], msg[6] );
+    // query MSG_SYS_ENABLE
+    msg[0] = 3; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_SYS_ENABLE; //data
+
+    size = __makeMessage(msg, 4);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+
+    // MSG_BM_GET_RANGE
+    msg[0] = 5; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_BM_GET_RANGE; //data
+    msg[4] = 0; // address range
+    msg[5] = 0; // address range
+
+    size = __makeMessage(msg, 6);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+
+    break;
+  }
+
+  /*
+   * 04 00 02 A0 00 BE MSG_BM_OCC
+   * 04 00 03 A0 10 88
+   * 04 00 04 A1 00 AB MSG_BM_FREE
+   * 04 00 05 A0 10 59
+   */
+  case MSG_BM_OCC:
+  { // len = 4
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_OCC, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
+    break;
+  }
+
+  case MSG_BM_FREE:
+  { // len = 4
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_FREE, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
+    break;
+  }
+
+  case MSG_BM_MULTIPLE:
+  { // 06 00 02 A2 00 08 01 8B
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_MULTIPLE, addr=%d seq=%d local-addr=%d nr-occ=%d, occ=0x%02X", Addr, Seq, msg[4], msg[5], msg[6] );
     break;
   }
 
