@@ -32,7 +32,67 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
+#include "rocdigs/impl/bidib/bidib.h"
 
+
+
+static void __writer( void* threadinst ) {
+  iOThread    th    = (iOThread)threadinst;
+  iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
+  iOBiDiBData data  = Data(bidib);
+  char msg[256];
+
+  TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub writer started." );
+
+  do {
+    ThreadOp.sleep(10);
+  } while( data->run );
+
+  TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub writer stopped." );
+}
+
+
+static void __reader( void* threadinst ) {
+  iOThread    th    = (iOThread)threadinst;
+  iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
+  iOBiDiBData data  = Data(bidib);
+  byte msg[256];
+  byte c;
+  int index = 0;
+
+  TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub reader started." );
+
+  do {
+
+    if( SerialOp.available(data->serial) > 0 ) {
+
+      if(SerialOp.read(data->serial, &c, 1) ) {
+        TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "byte read: 0x%02X", c );
+
+        if( c == BIDIB_PKT_MAGIC ) {
+          if( index > 0 ) {
+            byte* p = allocMem(index+1);
+            p[0] = index;
+            MemOp.copy( p+1, msg, index);
+            QueueOp.post( data->subReadQueue, (obj)p, normal);
+            TraceOp.dump ( "bidibserial", TRCLEVEL_BYTE, (char*)msg, index );
+            index = 0;
+          }
+        }
+        else {
+          msg[index] = c;
+          index++;
+          TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
+        }
+      }
+
+    }
+
+    ThreadOp.sleep(10);
+  } while( data->run );
+
+  TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub reader stopped." );
+}
 
 
 Boolean serialConnect( obj inst ) {
@@ -41,6 +101,7 @@ Boolean serialConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "line    = 8N1 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow    = CTS (fix)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
@@ -49,7 +110,17 @@ Boolean serialConnect( obj inst ) {
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
-  return SerialOp.open( data->serial );
+  if( SerialOp.open( data->serial ) ) {
+    data->subReadQueue  = QueueOp.inst(1000);
+    data->subWriteQueue = QueueOp.inst(1000);
+    data->subReader = ThreadOp.inst( "bidibsubreader", &__reader, inst );
+    ThreadOp.start( data->subReader );
+    data->subWriter = ThreadOp.inst( "bidibsubwriter", &__writer, inst );
+    ThreadOp.start( data->subWriter );
+    return True;
+  }
+
+  return False;
 }
 
 
@@ -68,28 +139,17 @@ void serialDisconnect( obj inst ) {
 int serialRead ( obj inst, unsigned char *msg ) {
   iOBiDiBData data = Data(inst);
 
-  int  msglen = 0;
-  int  index  = 0;
-  byte c;
-  Boolean ok = False;
-
-  do {
-    if( serialAvailable(inst) <= 0 )
-      break;
-
-    ok = SerialOp.read(data->serial, &c, 1);
-    if(ok) {
-      msg[index] = c;
-      index++;
-      TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
-    }
-  } while (data->commOK && ok && data->run);
-
-  if( index > 0 ) {
-     TraceOp.dump ( "bidibserial", TRCLEVEL_BYTE, (char*)msg, index );
+  if( !QueueOp.isEmpty(data->subReadQueue) ) {
+    byte* p = (byte*)QueueOp.get(data->subReadQueue);
+    int size = p[0];
+    MemOp.copy( msg, &p[1], size );
+    freeMem(p);
+    return size;
   }
-
-  return index;
+  else {
+    TraceOp.trc( "bidibserial", TRCLEVEL_DEBUG, __LINE__, 9999, "could not read queue %d", QueueOp.count(data->subReadQueue)  );
+  }
+  return 0;
 }
 
 
@@ -105,15 +165,6 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 
 int serialAvailable( obj inst ) {
   iOBiDiBData data = Data(inst);
-
-  if( data->commOK ) {
-    int rc = SerialOp.available(data->serial);
-    if( rc == -1 ) {
-      data->commOK = False;
-      //BiDiBOp.stateChanged((iOBiDiB)inst);
-    }
-    return rc;
-  }
-  return 0;
+  return !QueueOp.isEmpty(data->subReadQueue);
 }
 

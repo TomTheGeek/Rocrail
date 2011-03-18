@@ -269,6 +269,7 @@ static void __bidibReader( void* threadinst ) {
   iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
   iOBiDiBData data  = Data(bidib);
   byte msg[256];
+  byte seq = 0;
   int size = 0;
   int addr = 0;
   int value = 0;
@@ -280,11 +281,12 @@ static void __bidibReader( void* threadinst ) {
 
   msg[0] = 3; // length
   msg[1] = 0; // address
-  msg[2] = 0; // sequence number 1...255
+  msg[2] = seq; // sequence number 1...255
   msg[3] = MSG_SYS_GET_MAGIC; //data
 
   size = __makeMessage(msg, 4);
   data->subWrite((obj)bidib, msg, size);
+  seq++;
 
   while( data->run ) {
     int available = data->subAvailable( (obj)bidib);
@@ -300,22 +302,21 @@ static void __bidibReader( void* threadinst ) {
       continue;
     }
     else {
-      // give up rest of timeslice
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes available", available );
-      ThreadOp.sleep( 0 );
     }
 
     size = data->subRead( (obj)bidib, msg );
     if( size > 0 ) {
-      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
-      ThreadOp.sleep(1000); // TEST
+      TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, size );
+      ThreadOp.sleep(2500); // TEST
       msg[0] = 3; // length
       msg[1] = 0; // address
-      msg[2] = 0; // sequence number 1...255
+      msg[2] = seq; // sequence number 1...255
       msg[3] = MSG_SYS_GET_MAGIC; //data
 
       size = __makeMessage(msg, 4);
       data->subWrite((obj)bidib, msg, size);
+      seq++;
     }
 
   };

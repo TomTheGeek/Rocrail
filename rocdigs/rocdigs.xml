@@ -1255,6 +1255,10 @@
       <var name="subRead" vt="sublib_read"/>
       <var name="subWrite" vt="sublib_write"/>
       <var name="subAvailable" vt="sublib_available"/>
+      <var name="subReader" vt="iOThread"/>
+      <var name="subWriter" vt="iOThread"/>
+      <var name="subReadQueue" vt="iOQueue"/>
+      <var name="subWriteQueue" vt="iOQueue"/>
     </data>
   </object>
 
