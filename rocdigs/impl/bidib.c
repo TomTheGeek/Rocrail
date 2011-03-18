@@ -50,6 +50,7 @@
 #include "rocdigs/impl/bidib/serial.h"
 
 static int instCnt = 0;
+static Boolean TEST = False;
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -140,6 +141,30 @@ static void __escapeMessage(byte* msg, int* newLen, int inLen) {
   *newLen = outLen;
   MemOp.copy( msg, buffer, outLen );
   TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, outLen );
+}
+
+
+static int __deEscapeMessage(byte* msg, int inLen) {
+  int outLen = 0;
+  int i = 0;
+  byte buffer[256];
+  Boolean escape = False;
+
+  for( i = 0; i < inLen; i++ ) {
+    if( msg[i] == BIDIB_PKT_ESCAPE ) {
+      escape = True;
+    }
+    else {
+      buffer[outLen] = (escape ? msg[i]^0x20:msg[i]);
+      outLen++;
+      escape = False;
+    }
+  }
+
+  MemOp.copy( msg, buffer, outLen );
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "message de-escaped" );
+  TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, outLen );
+  return outLen;
 }
 
 
@@ -264,12 +289,53 @@ static int __makeMessage(byte* msg, int inLen) {
 }
 
 
+/**
+ * len addr seq type data  crc
+ * 05  00   00  81   FE AF 89
+ */
+static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing bidib message..." );
+
+  int Addr = msg[1];
+  int  Seq = msg[2];
+  int Type = msg[3]; // MSG_SYS_MAGIC
+
+  switch( Type ) {
+  case MSG_SYS_MAGIC:
+  {
+    int Magic = (msg[5]<<8)+msg[4];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_SYS_MAGIC, addr=%d seq=%d magic=0x%04X", Addr, Seq, Magic );
+    data->upSeq = msg[2];
+    // query MSG_SYS_GET_P_VERSION
+    msg[0] = 3; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_SYS_GET_P_VERSION; //data
+
+    size = __makeMessage(msg, 4);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+    break;
+  }
+
+  case MSG_SYS_SW_VERSION:
+  {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_SYS_SW_VERSION, addr=%d seq=%d version=%d.%d", Addr, Seq, msg[5], msg[4] );
+    break;
+  }
+
+  }
+}
+
+
 static void __bidibReader( void* threadinst ) {
   iOThread    th    = (iOThread)threadinst;
   iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
   iOBiDiBData data  = Data(bidib);
   byte msg[256];
-  byte seq = 0;
   int size = 0;
   int addr = 0;
   int value = 0;
@@ -281,42 +347,48 @@ static void __bidibReader( void* threadinst ) {
 
   msg[0] = 3; // length
   msg[1] = 0; // address
-  msg[2] = seq; // sequence number 1...255
+  msg[2] = data->downSeq; // sequence number 1...255
   msg[3] = MSG_SYS_GET_MAGIC; //data
 
   size = __makeMessage(msg, 4);
   data->subWrite((obj)bidib, msg, size);
-  seq++;
+  data->downSeq++;
 
   while( data->run ) {
-    int available = data->subAvailable( (obj)bidib);
-    if( available == -1 ) {
-      /* device error */
-      data->run = False;
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
-      continue;
-    }
 
-    if( available == 0 ) {
+    if( !data->subAvailable( (obj)bidib) ) {
       ThreadOp.sleep( 10 );
       continue;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes available", available );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bidib message available" );
     }
 
     size = data->subRead( (obj)bidib, msg );
     if( size > 0 ) {
       TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, size );
-      ThreadOp.sleep(2500); // TEST
-      msg[0] = 3; // length
-      msg[1] = 0; // address
-      msg[2] = seq; // sequence number 1...255
-      msg[3] = MSG_SYS_GET_MAGIC; //data
 
-      size = __makeMessage(msg, 4);
-      data->subWrite((obj)bidib, msg, size);
-      seq++;
+      size = __deEscapeMessage(msg, size);
+      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+      byte crc = __checkSum(msg, size );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "crc=0x%02X", crc );
+
+      if( crc == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "valid message received; processing" );
+        __processBidiMsg(bidib, msg, size);
+      }
+
+      if( TEST ) {
+        ThreadOp.sleep(2500); // TEST
+        msg[0] = 3; // length
+        msg[1] = 0; // address
+        msg[2] = data->downSeq; // sequence number 1...255
+        msg[3] = MSG_SYS_GET_MAGIC; //data
+
+        size = __makeMessage(msg, 4);
+        data->subWrite((obj)bidib, msg, size);
+        data->downSeq++;
+      }
     }
 
   };

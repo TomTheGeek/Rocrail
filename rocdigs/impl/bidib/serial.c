@@ -63,8 +63,8 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub reader started." );
 
   do {
-
-    if( SerialOp.available(data->serial) > 0 ) {
+    int available = SerialOp.available(data->serial);
+    if( available > 0 ) {
 
       if(SerialOp.read(data->serial, &c, 1) ) {
         TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "byte read: 0x%02X", c );
@@ -86,6 +86,11 @@ static void __reader( void* threadinst ) {
         }
       }
 
+    }
+    else if( available == -1 ) {
+      /* device error */
+      data->run = False;
+      TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
     }
 
     ThreadOp.sleep(10);
@@ -163,7 +168,7 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 }
 
 
-int serialAvailable( obj inst ) {
+Boolean serialAvailable( obj inst ) {
   iOBiDiBData data = Data(inst);
   return !QueueOp.isEmpty(data->subReadQueue);
 }
