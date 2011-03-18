@@ -319,6 +319,8 @@ static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr 
 
 
 static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+
   // 06 00 02 A2 00 08 01 8B
   int baseAddr = msg[4] * 16;
   int cnt = msg[5] / 8;
@@ -334,6 +336,25 @@ static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
 
 }
 
+
+static void __handleCV(iOBiDiB bidib, int addr, int cv, int val) {
+  iOBiDiBData data = Data(bidib);
+
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV response" );
+
+  wProgram.setvalue( node, val );
+  wProgram.setcmd( node, wProgram.datarsp );
+  wProgram.setcv( node, cv );
+  wProgram.setdecaddr( node, addr );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+}
 
 
 /**
@@ -447,9 +468,10 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_ADDRESS:
   { //             MNUM, ADDRL, ADDRH
     // 06 00 0C A3 04    5E     13 C4
-    int locoAddr = msg[6] * 256 + msg[5];
+    int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
+    int type = msg[6] >> 6;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_BM_ADDRESS, addr=%d seq=%d local-addr=%d loco-addr=%d", Addr, Seq, msg[4], locoAddr );
+        "MSG_BM_ADDRESS, addr=%d seq=%d local-addr=%d loco-addr=%d type=%d", Addr, Seq, msg[4], locoAddr, type );
     __handleSensor(bidib, Addr*16+msg[4]+1, locoAddr > 0, locoAddr );
     break;
   }
@@ -461,6 +483,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int cv       = msg[7] * 256 + msg[6];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_CV, addr=%d seq=%d loco-addr=%d cv=%d val=%d", Addr, Seq, locoAddr, cv, msg[8] );
+    __handleCV(bidib, locoAddr, cv, msg[8]);
     break;
   }
 
