@@ -296,7 +296,7 @@ static int __makeMessage(byte* msg, int inLen) {
 }
 
 
-static void __handleSensor(iOBiDiB bidib, int addr, Boolean state) {
+static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr ) {
   iOBiDiBData data = Data(bidib);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor=%d state=%s", addr, state?"occ":"free" );
@@ -311,6 +311,7 @@ static void __handleSensor(iOBiDiB bidib, int addr, Boolean state) {
       wFeedback.setiid( nodeC, data->iid );
 
     wFeedback.setstate( nodeC, state );
+    wFeedback.setidentifier( nodeC, locoAddr);
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
@@ -327,7 +328,7 @@ static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
     int addr = baseAddr + (i / 2) + 1;
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit));
+      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0);
     }
   }
 
@@ -416,7 +417,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_OCC, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, True);
+    __handleSensor(bidib, Addr*16+msg[4]+1, True, 0);
     break;
   }
 
@@ -424,7 +425,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_FREE, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, False);
+    __handleSensor(bidib, Addr*16+msg[4]+1, False, 0);
     break;
   }
 
@@ -440,9 +441,29 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // 05 00 02 90 08 01 EC
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_FEATURE, addr=%d seq=%d feature=%d value=%d", Addr, Seq, msg[4], msg[5] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, False);
     break;
   }
+
+  case MSG_BM_ADDRESS:
+  { //             MNUM, ADDRL, ADDRH
+    // 06 00 0C A3 04    5E     13 C4
+    int locoAddr = msg[6] * 256 + msg[5];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_ADDRESS, addr=%d seq=%d local-addr=%d loco-addr=%d", Addr, Seq, msg[4], locoAddr );
+    __handleSensor(bidib, Addr*16+msg[4]+1, locoAddr > 0, locoAddr );
+    break;
+  }
+
+  case MSG_BM_CV:
+  { //             ADDRL, ADDRH, CVL, CVH, DAT
+    // 08 00 0D A5 5E     13     06   00   02 38
+    int locoAddr = (msg[5]&0x3F) * 256 + msg[4];
+    int cv       = msg[7] * 256 + msg[6];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_CV, addr=%d seq=%d loco-addr=%d cv=%d val=%d", Addr, Seq, locoAddr, cv, msg[8] );
+    break;
+  }
+
 
   }
 }
