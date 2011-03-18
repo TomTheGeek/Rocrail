@@ -380,6 +380,17 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
 
+    // MSG_FEATURE_GET
+    msg[0] = 4; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_FEATURE_GET; //data
+    msg[4] = 8; // feature
+
+    size = __makeMessage(msg, 5);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+
     // MSG_BM_GET_RANGE
     msg[0] = 5; // length
     msg[1] = 0; // address
@@ -422,6 +433,14 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_MULTIPLE, addr=%d seq=%d local-addr=%d nr-occ=%d, occ=0x%02X", Addr, Seq, msg[4], msg[5], msg[6] );
     __handleMultipleSensors(bidib, msg, size);
+    break;
+  }
+
+  case MSG_FEATURE:
+  { // 05 00 02 90 08 01 EC
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_FEATURE, addr=%d seq=%d feature=%d value=%d", Addr, Seq, msg[4], msg[5] );
+    __handleSensor(bidib, Addr*16+msg[4]+1, False);
     break;
   }
 
