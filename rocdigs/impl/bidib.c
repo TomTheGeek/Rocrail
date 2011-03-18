@@ -222,7 +222,11 @@ static byte __checkSum(byte* packet, int len) {
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  iOBiDiBData data = Data(inst);
+  if( cmd != NULL ) {
+    cmd->base.del(cmd);
+  }
+  return NULL;
 }
 
 
@@ -240,7 +244,10 @@ static void _halt( obj inst ,Boolean poweroff ) {
 
 /**  */
 static Boolean _setListener( obj inst ,obj listenerObj ,const digint_listener listenerFun ) {
-  return 0;
+  iOBiDiBData data = Data(inst);
+  data->listenerObj = listenerObj;
+  data->listenerFun = listenerFun;
+  return True;
 }
 
 static Boolean _setRawListener(obj inst, obj listenerObj, const digint_rawlistener listenerFun ) {
@@ -287,6 +294,45 @@ static int __makeMessage(byte* msg, int inLen) {
   MemOp.copy(msg, buffer, outLen);
   return outLen;
 }
+
+
+static void __handleSensor(iOBiDiB bidib, int addr, Boolean state) {
+  iOBiDiBData data = Data(bidib);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor=%d state=%s", addr, state?"occ":"free" );
+  {
+    /* inform listener: Node3 */
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
+
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    wFeedback.setstate( nodeC, state );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
+
+static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
+  // 06 00 02 A2 00 08 01 8B
+  int baseAddr = msg[4] * 16;
+  int cnt = msg[5] / 8;
+  int i = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor-base=%d cnt=%d", baseAddr, cnt );
+  for( i = 0; i < cnt; i++ ) {
+    int addr = baseAddr + (i / 2) + 1;
+    int bit = 0;
+    for( bit = 0; bit < 8; bit++ ) {
+      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit));
+    }
+  }
+
+}
+
 
 
 /**
@@ -359,6 +405,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_OCC, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
+    __handleSensor(bidib, Addr*16+msg[4]+1, True);
     break;
   }
 
@@ -366,6 +413,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_FREE, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
+    __handleSensor(bidib, Addr*16+msg[4]+1, False);
     break;
   }
 
@@ -373,6 +421,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // 06 00 02 A2 00 08 01 8B
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_MULTIPLE, addr=%d seq=%d local-addr=%d nr-occ=%d, occ=0x%02X", Addr, Seq, msg[4], msg[5], msg[6] );
+    __handleMultipleSensors(bidib, msg, size);
     break;
   }
 
