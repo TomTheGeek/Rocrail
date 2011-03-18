@@ -458,7 +458,7 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     out[2] = (addr >> 6);
     out[3] = (addr << 2) & 0xFC;
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.on ) )
-      out[3] |= 1;
+      out[3] |= 0x02;
     out[3] |= gate;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
