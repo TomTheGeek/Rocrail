@@ -1248,6 +1248,7 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="commOK" vt="Boolean"/>
+      <var name="seqAck" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="downSeq" vt="byte"/>

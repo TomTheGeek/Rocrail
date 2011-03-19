@@ -107,6 +107,32 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OBiDiB ----- */
 
+
+/*
+ */
+static const char* __getFeatureName(int feature) {
+  if( feature ==  0 ) return "number of sensors";
+  if( feature ==  1 ) return "activated sensors events";
+  if( feature ==  2 ) return "secure-ACK available";
+  if( feature ==  3 ) return "secure-ACK interval";
+  if( feature ==  4 ) return "current measurement available";
+  if( feature ==  5 ) return "current measurement interval";
+  if( feature ==  6 ) return "replacement detection available";
+  if( feature ==  7 ) return "replacement detection enabled";
+  if( feature ==  8 ) return "address detection available";
+  if( feature ==  9 ) return "address detection enabled";
+  if( feature == 10 ) return "direction available";
+  if( feature == 11 ) return "dcc-speed available";
+  if( feature == 12 ) return "dcc-speed enabled";
+  if( feature == 13 ) return "cv-messages available";
+  if( feature == 14 ) return "cv-messages enabled";
+  if( feature == 15 ) return "adjustable output voltage";
+  if( feature == 16 ) return "output voltage value in V";
+  if( feature == 17 ) return "cutout available";
+  if( feature == 18 ) return "cutout enabled";
+  return "*** unknown feature ***";
+}
+
 /*
 Ein serielles Paket ist prinzipiell wie folgt aufgebaut:
   PAKET ::= MAGIC MESSAGE_SEQ CRC [MAGIC]
@@ -296,11 +322,22 @@ static int __makeMessage(byte* msg, int inLen) {
 }
 
 
-static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr ) {
+/*
+ * Type:
+ * Bit 15,14  Bits 13...0
+ * 00  Lokadresse, Fahrtrichtung vorwärts
+ * 10  Lokadresse, Fahrtrichtung rückwärts
+ * 01  Accessory-Adresse
+ * 11  Extended Accessory
+ */
+static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr, int type ) {
   iOBiDiBData data = Data(bidib);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor=%d state=%s", addr, state?"occ":"free" );
-  {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "sensor=%d state=%s addr=%d type=%d", addr, state?"occ":"free", locoAddr, type );
+
+  if( type == -1 || type == 0 || type == 2 ) {
+    /* occ event */
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
@@ -312,8 +349,14 @@ static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr 
 
     wFeedback.setstate( nodeC, state );
     wFeedback.setidentifier( nodeC, locoAddr);
+    if( type == 0 || type == 2 )
+      wFeedback.setdirection( nodeC, type == 0 ? True:False );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else if( type == 1 || type == 3 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "accessory events not jet supported" );
   }
 }
 
@@ -330,7 +373,7 @@ static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
     int addr = baseAddr + (i / 2) + 1;
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0);
+      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1);
     }
   }
 
@@ -402,14 +445,13 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
 
-    // MSG_FEATURE_GET
-    msg[0] = 4; // length
+    // MSG_FEATURE_GETALL
+    msg[0] = 3; // length
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = MSG_FEATURE_GET; //data
-    msg[4] = 8; // feature
+    msg[3] = MSG_FEATURE_GETALL; //data
 
-    size = __makeMessage(msg, 5);
+    size = __makeMessage(msg, 4);
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
 
@@ -438,7 +480,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_OCC, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, True, 0);
+    __handleSensor(bidib, Addr*16+msg[4]+1, True, 0, -1);
     break;
   }
 
@@ -446,7 +488,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_FREE, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, False, 0);
+    __handleSensor(bidib, Addr*16+msg[4]+1, False, 0, -1);
     break;
   }
 
@@ -461,7 +503,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_FEATURE:
   { // 05 00 02 90 08 01 EC
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_FEATURE, addr=%d seq=%d feature=%d value=%d", Addr, Seq, msg[4], msg[5] );
+        "MSG_FEATURE, addr=%d seq=%d feature=(%d) %s value=%d", Addr, Seq, msg[4], __getFeatureName(msg[4]), msg[5] );
     break;
   }
 
@@ -472,7 +514,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int type = msg[6] >> 6;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_ADDRESS, addr=%d seq=%d local-addr=%d loco-addr=%d type=%d", Addr, Seq, msg[4], locoAddr, type );
-    __handleSensor(bidib, Addr*16+msg[4]+1, locoAddr > 0, locoAddr );
+    __handleSensor(bidib, Addr*16+msg[4]+1, locoAddr > 0, locoAddr, type );
     break;
   }
 
@@ -484,6 +526,26 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_CV, addr=%d seq=%d loco-addr=%d cv=%d val=%d", Addr, Seq, locoAddr, cv, msg[8] );
     __handleCV(bidib, locoAddr, cv, msg[8]);
+    break;
+  }
+
+
+  case MSG_BM_SPEED:
+  { //             ADDRL, ADDRH, DAT
+    // 08 00 0D A6 5E     13     02
+    int locoAddr = (msg[5]&0x3F) * 256 + msg[4];
+    int speed    = msg[6];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_SPEED, addr=%d seq=%d loco-addr=%d dcc-speed=%d", Addr, Seq, locoAddr, speed );
+    break;
+  }
+
+
+  case MSG_BM_CURRENT:
+  { //             MNUM, DAT
+    // 08 00 0D A7 00    00
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_BM_CURRENT, addr=%d seq=%d current=%d", Addr, Seq, msg[5] );
     break;
   }
 
@@ -587,6 +649,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->mux      = MutexOp.inst( NULL, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.bidib.org/" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  = %s", wDigInt.getsublib( ini ) );
