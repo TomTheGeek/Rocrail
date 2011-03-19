@@ -375,7 +375,14 @@
         <var name="secAckInt" vt="int" defval="20" remark="Secure acknowledge interval in 10ms units."/>
         <bidibnode cardinality="n" remark="BiDiB options" wrappername="BiDiBnode">
           <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>
+          <const name="class_interface" vt="int" val="128"/>
           <const name="class_sensor" vt="int" val="64"/>
+          <const name="class_mmi" vt="int" val="32"/>
+          <const name="class_dcc_loco" vt="int" val="16"/>
+          <const name="class_dcc_acc" vt="int" val="8"/>
+          <const name="class_dcc_pt" vt="int" val="4"/>
+          <const name="class_dcc_boost" vt="int" val="2"/>
+          <const name="class_dcc_switch" vt="int" val="1"/>
           <var name="class" vt="int" defval="0" remark="Class ID."/>
           <var name="offset" vt="int" defval="1" remark="Rocrail addressing offset."/>
         </bidibnode>
