@@ -34,6 +34,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/BiDiB.h"
+#include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
@@ -515,6 +516,44 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
+static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+  //                                 UID
+  //             ver len start locaddr class res vid productid   crc
+  // 0E 00 04 89 01  01  00    00      40    00  0D  65 00 01 00 E1
+  int Addr     = msg[1];
+  int  Seq     = msg[2];
+  data->tabver = msg[4];
+  int entries  = msg[5];
+  int entry    = 0;
+  int offset   = 7;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "MSG_NODE_TAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
+
+  for( entry = 0; entry < entries; entry++ ) {
+    char localKey[32];
+    char uidKey[32];
+    int uid = msg[offset+4+entry*8] + (msg[offset+5+entry*8] << 8) + (msg[offset+6+entry*8] << 16) + (msg[offset+7+entry*8] << 24);
+    StrOp.fmtb( localKey, "%d", msg[offset+0+entry*8] );
+    StrOp.fmtb( uidKey, "%d", uid );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "entry=%d local=%s class=0x%02X vid=%d uid=%s", entry,
+        localKey, msg[offset+1+entry*8], msg[offset+3+entry*8], uidKey);
+
+    iONode node = (iONode)MapOp.get( data->nodemap, uidKey );
+    if( node != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "mapping product ID [%s] with local [%s] to offset [%d]", uidKey, localKey, wBiDiBnode.getoffset(node) );
+      MapOp.put( data->localmap, localKey, (obj)node);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]", uidKey );
+    }
+  }
+}
+
+
 /**
  * len addr seq type data  crc
  * 05  00   00  81   FE AF 89
@@ -633,20 +672,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_NODE_TAB:
   {
-    //                                 UID
-    //             ver len start locaddr class res vid productid   crc
-    // 0E 00 04 89 01  01  00    00      40    00  0D  65 00 01 00 E1
-    data->tabver = msg[4];
-    int entries  = msg[5];
-    int entry    = 0;
-    int offset   = 7;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_NODE_TAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
-
-    int uid = msg[offset+4+entry*8] + (msg[offset+5+entry*8] << 8) + (msg[offset+6+entry*8] << 16) + (msg[offset+7+entry*8] << 24);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "entry=%d local=%d class=0x%02X vid=%d uid=%d", entry,
-        msg[offset+0+entry*8], msg[offset+1+entry*8], msg[offset+3+entry*8], uid);
+    __handleNodeTab(bidib, msg, size);
     break;
   }
 
@@ -827,6 +853,21 @@ static int _version( obj inst ) {
 }
 
 
+static void __initNodeMap(iOBiDiB bidib) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = wBiDiB.getbidibnode(data->bidibini);
+
+  while( node != NULL ) {
+    char uid[256];
+    StrOp.fmtb( uid, "%d", wBiDiBnode.getuid(node) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mapping node %s, offset=%d", uid, wBiDiBnode.getoffset(node) );
+    MapOp.put( data->nodemap, uid, (obj)node );
+    node = wBiDiB.nextbidibnode(data->bidibini, node);
+  }
+
+}
+
+
 /**  */
 static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   iOBiDiB __BiDiB = allocMem( sizeof( struct OBiDiB ) );
@@ -846,6 +887,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->commOK = False;
 
   data->mux      = MutexOp.inst( NULL, True );
+  data->nodemap  = MapOp.inst();
+  data->localmap = MapOp.inst();
 
   if( data->bidibini == NULL ) {
     data->bidibini = NodeOp.inst( wBiDiB.name(), data->ini, ELEMENT_NODE);
@@ -865,6 +908,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
       wBiDiB.issecAck( data->bidibini ) ? "enabled":"disabled", wBiDiB.getsecAckInt(data->bidibini) * 10 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  __initNodeMap(__BiDiB);
 
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
