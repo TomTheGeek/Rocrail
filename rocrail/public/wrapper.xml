@@ -373,6 +373,12 @@
       <bidib remark="BiDiB options" wrappername="BiDiB">
         <var name="secAck" vt="bool" defval="false" remark="Enable secure acknowledge."/>
         <var name="secAckInt" vt="int" defval="20" remark="Secure acknowledge interval in 10ms units."/>
+        <bidibnode cardinality="n" remark="BiDiB options" wrappername="BiDiBnode">
+          <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>
+          <const name="class_sensor" vt="int" val="64"/>
+          <var name="class" vt="int" defval="0" remark="Class ID."/>
+          <var name="offset" vt="int" defval="1" remark="Rocrail addressing offset."/>
+        </bidibnode>
       </bidib>
 
       <srcp remark="SRCP init" wrappername="SRCP">

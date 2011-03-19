@@ -1245,6 +1245,7 @@
       <var name="device" vt="const char*"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
+      <var name="tabver" vt="int"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="serial" vt="iOSerial"/>

@@ -594,6 +594,18 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       data->downSeq++;
     }
 
+    // MSG_GET_NODE_TAB
+    msg[0] = 4; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_GET_NODE_TAB; //data
+    msg[4] = 0; // start index
+
+    size = __makeMessage(msg, 5);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+
+
     // MSG_FEATURE_GETALL
     msg[0] = 3; // length
     msg[1] = 0; // address
@@ -616,6 +628,25 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
 
+    break;
+  }
+
+  case MSG_NODE_TAB:
+  {
+    //                                 UID
+    //             ver len start locaddr class res vid productid   crc
+    // 0E 00 04 89 01  01  00    00      40    00  0D  65 00 01 00 E1
+    data->tabver = msg[4];
+    int entries  = msg[5];
+    int entry    = 0;
+    int offset   = 7;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_NODE_TAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
+
+    int uid = msg[offset+4+entry*8] + (msg[offset+5+entry*8] << 8) + (msg[offset+6+entry*8] << 16) + (msg[offset+7+entry*8] << 24);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "entry=%d local=%d class=0x%02X vid=%d uid=%d", entry,
+        msg[offset+0+entry*8], msg[offset+1+entry*8], msg[offset+3+entry*8], uid);
     break;
   }
 
