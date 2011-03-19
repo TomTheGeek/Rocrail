@@ -393,6 +393,20 @@ static Boolean _supportPT( obj inst ) {
   return 0;
 }
 
+
+static int __getOffset4LocalAddr(iOBiDiB bidib, int local) {
+  iOBiDiBData data = Data(bidib);
+  char key[32];
+  StrOp.fmtb( key, "%d", local );
+  iONode node = (iONode)MapOp.get(data->localmap, key );
+  if( node != NULL )
+    return wBiDiBnode.getoffset(node);
+
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for local addr [%s]", key );
+  return 1;
+}
+
+
 /*
  * Type:
  * Bit 15,14  Bits 13...0
@@ -401,8 +415,9 @@ static Boolean _supportPT( obj inst ) {
  * 01  Accessory-Adresse
  * 11  Extended Accessory
  */
-static void __handleSensor(iOBiDiB bidib, int addr, Boolean state, int locoAddr, int type ) {
+static void __handleSensor(iOBiDiB bidib, int localAddr, int port, Boolean state, int locoAddr, int type ) {
   iOBiDiBData data = Data(bidib);
+  int addr = __getOffset4LocalAddr(bidib, localAddr) + port;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "sensor=%d state=%s addr=%d type=%d", addr, state?"occ":"free", locoAddr, type );
@@ -436,15 +451,15 @@ static void __handleMultipleSensors(iOBiDiB bidib, const byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
 
   // 06 00 02 A2 00 08 01 8B
-  int baseAddr = msg[4] * 16;
+  int baseAddr = msg[4];
   int cnt = msg[5] / 8;
   int i = 0;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor-base=%d cnt=%d", baseAddr, cnt );
   for( i = 0; i < cnt; i++ ) {
-    int addr = baseAddr + (i / 2) + 1;
+    int addr = baseAddr + (i / 2);
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, addr+bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1);
+      __handleSensor(bidib, addr, bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1);
     }
   }
 
@@ -686,7 +701,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_BM_OCC, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, True, 0, -1);
+    __handleSensor(bidib, Addr, msg[4], True, 0, -1);
     __seqAck(bidib, msg, size);
     break;
   }
@@ -695,7 +710,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_BM_FREE, addr=%d seq=%d local-addr=%d", Addr, Seq, msg[4] );
-    __handleSensor(bidib, Addr*16+msg[4]+1, False, 0, -1);
+    __handleSensor(bidib, Addr, msg[4], False, 0, -1);
     __seqAck(bidib, msg, size);
     break;
   }
@@ -723,7 +738,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int type = msg[6] >> 6;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_BM_ADDRESS, addr=%d seq=%d local-addr=%d loco-addr=%d type=%d", Addr, Seq, msg[4], locoAddr, type );
-    __handleSensor(bidib, Addr*16+msg[4]+1, locoAddr > 0, locoAddr, type );
+    __handleSensor(bidib, Addr, msg[4], locoAddr > 0, locoAddr, type );
     break;
   }
 
