@@ -1240,6 +1240,7 @@
     </fun>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="bidibini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="device" vt="const char*"/>
       <var name="run" vt="Boolean"/>
@@ -1248,7 +1249,8 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="commOK" vt="Boolean"/>
-      <var name="seqAck" vt="Boolean"/>
+      <var name="secAck" vt="Boolean"/>
+      <var name="secAckInt" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="downSeq" vt="byte"/>

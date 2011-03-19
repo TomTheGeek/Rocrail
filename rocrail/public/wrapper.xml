@@ -370,6 +370,11 @@
         <var name="fastclock" vt="bool" defval="false" remark="Fast clock flag read from SO 2."/>
       </opendcc>
 
+      <bidib remark="BiDiB options" wrappername="BiDiB">
+        <var name="secAck" vt="bool" defval="false" remark="Enable secure acknowledge."/>
+        <var name="secAckInt" vt="int" defval="20" remark="Secure acknowledge interval in 10ms units."/>
+      </bidib>
+
       <srcp remark="SRCP init" wrappername="SRCP">
         <var name="udp" vt="bool" defval="false" remark="Use UDP"/>
         <var name="cmdport" vt="int" defval="4303" remark="SRCP command port."/>
