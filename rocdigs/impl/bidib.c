@@ -404,7 +404,12 @@ static void __seqAck(iOBiDiB bidib, byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
 
   if( data->secAck && data->secAckInt > 0 ) {
+    size--; // strip crc
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "seqAck for addr=%d seq=%d...", msg[1], msg[2] );
+    TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+    msg[2] = data->downSeq; // sequence number 1...255
     size = __makeMessage(msg, size);
+    TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
   }
