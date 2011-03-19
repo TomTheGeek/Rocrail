@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
 
 #include "rocdigs/impl/bidib/bidib.h"
 #include "rocdigs/impl/bidib/serial.h"
@@ -109,24 +110,33 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OBiDiB ----- */
 
 
+static void __inform( iOBiDiB inst ) {
+  iOBiDiBData data = Data(inst);
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+  wState.setiid( node, wDigInt.getiid( data->ini ) );
+  wState.setpower( node, data->power );
+  data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
 /*
  */
 static const char* __getFeatureName(int feature) {
-  if( feature ==  0 ) return "number of sensors";
-  if( feature ==  1 ) return "activated sensors events";
-  if( feature ==  2 ) return "secure-ACK available";
-  if( feature ==  3 ) return "secure-ACK interval";
-  if( feature ==  4 ) return "current measurement available";
-  if( feature ==  5 ) return "current measurement interval";
-  if( feature ==  6 ) return "replacement detection available";
-  if( feature ==  7 ) return "replacement detection enabled";
-  if( feature ==  8 ) return "address detection available";
-  if( feature ==  9 ) return "address detection enabled";
-  if( feature == 10 ) return "direction available";
-  if( feature == 11 ) return "dcc-speed available";
-  if( feature == 12 ) return "dcc-speed enabled";
-  if( feature == 13 ) return "cv-messages available";
-  if( feature == 14 ) return "cv-messages enabled";
+  if( feature == FEATURE_BM_SIZE ) return "number of sensors";
+  if( feature == FEATURE_BM_ON ) return "activated sensors events";
+  if( feature == FEATURE_BM_SECACK_AVAILABLE ) return "secure-ACK available";
+  if( feature == FEATURE_BM_SECACK_ON ) return "secure-ACK interval";
+  if( feature == FEATURE_BM_CURMEAS_AVAILABLE ) return "current measurement available";
+  if( feature == FEATURE_BM_CURMEAS_INTERVAL ) return "current measurement interval";
+  if( feature == FEATURE_BM_DC_MEAS_AVAILABLE ) return "replacement detection available";
+  if( feature == FEATURE_BM_DC_MEAS_ON ) return "replacement detection enabled";
+  if( feature == FEATURE_BM_ADDR_DETECT_AVAILABLE ) return "address detection available";
+  if( feature == FEATURE_BM_ADDR_DETECT_ON ) return "address detection enabled";
+  if( feature == FEATURE_BM_ADDR_AND_DIR ) return "direction available";
+  if( feature == FEATURE_BM_ISTSPEED_AVAILABLE ) return "dcc-speed available";
+  if( feature == FEATURE_BM_ISTSPEED_ON ) return "dcc-speed enabled";
+  if( feature == FEATURE_BM_CV_AVAILABLE ) return "cv-messages available";
+  if( feature == FEATURE_BM_CV_ON ) return "cv-messages enabled";
   if( feature == 15 ) return "adjustable output voltage";
   if( feature == 16 ) return "output voltage value in V";
   if( feature == 17 ) return "cutout available";
@@ -244,16 +254,93 @@ static byte __checkSum(byte* packet, int len) {
   return checksum;
 }
 
+static int __makeMessage(byte* msg, int inLen) {
+  int outLen = 0;
+  byte buffer[256];
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy( buffer + 1, msg, inLen );
+  outLen += inLen;
+  buffer[outLen] = __checkSum(buffer+1, outLen-1 );
+  outLen++;
+  __escapeMessage(buffer+1, &outLen, outLen-1);
+  outLen++;
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy(msg, buffer, outLen);
+  return outLen;
+}
 
+
+
+
+static iONode __translate( iOBiDiB inst, iONode node ) {
+  iOBiDiBData data = Data(inst);
+  iONode rsp = NULL;
+  byte msg[256];
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmd = wSysCmd.getcmd( node );
+
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      msg[0] = 3; // length
+      msg[1] = 0; // address
+      msg[2] = data->downSeq; // sequence number 1...255
+      msg[3] = MSG_BOOST_OFF; //data
+      int size = __makeMessage(msg, 4);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+      data->power = False;
+      __inform(inst);
+    }
+    else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      msg[0] = 3; // length
+      msg[1] = 0; // address
+      msg[2] = data->downSeq; // sequence number 1...255
+      msg[3] = MSG_BOOST_ON; //data
+      int size = __makeMessage(msg, 4);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+      data->power = True;
+      __inform(inst);
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+    }
+  }
+
+  /* Sensor command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    if( wFeedback.isactivelow(node) )
+      wFeedback.setstate( node, !state);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    rsp = (iONode)NodeOp.base.clone( node );
+  }
+
+
+  return rsp;
+}
 
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOBiDiBData data = Data(inst);
+  iONode rsp = NULL;
+
   if( cmd != NULL ) {
+    rsp = __translate((iOBiDiB)inst, cmd);
     cmd->base.del(cmd);
   }
-  return NULL;
+  return rsp;
 }
 
 
@@ -304,24 +391,6 @@ static int _state( obj inst ) {
 static Boolean _supportPT( obj inst ) {
   return 0;
 }
-
-static int __makeMessage(byte* msg, int inLen) {
-  int outLen = 0;
-  byte buffer[256];
-  buffer[outLen] = BIDIB_PKT_MAGIC;
-  outLen++;
-  MemOp.copy( buffer + 1, msg, inLen );
-  outLen += inLen;
-  buffer[outLen] = __checkSum(buffer+1, outLen-1 );
-  outLen++;
-  __escapeMessage(buffer+1, &outLen, outLen-1);
-  outLen++;
-  buffer[outLen] = BIDIB_PKT_MAGIC;
-  outLen++;
-  MemOp.copy(msg, buffer, outLen);
-  return outLen;
-}
-
 
 /*
  * Type:
@@ -412,6 +481,35 @@ static void __seqAck(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
+  }
+}
+
+
+static void __handleError(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+
+  switch( msg[4] ) {
+  case BIDIB_ERR_TXT: // Txt
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error message" );
+    break;
+  case BIDIB_ERR_CRC: // CRC
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "CRC error" );
+    break;
+  case BIDIB_ERR_SIZE: // Size
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Size error" );
+    break;
+  case BIDIB_ERR_SEQUENCE: // Sequence
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sequence error" );
+    break;
+  case BIDIB_ERR_PARAMETER: // Parameter
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Parameter error" );
+    break;
+  case BIDIB_ERR_BUS: // Bus fault
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Bus fault: %d", msg[5] );
+    break;
+  case BIDIB_ERR_HW: // Hardware error
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", msg[5] );
+    break;
   }
 }
 
@@ -606,6 +704,7 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // MSG_SYS_ERROR
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "MSG_SYS_ERROR, addr=%d seq=%d error=%d", Addr, Seq, msg[4] );
+    __handleError(bidib, msg, size);
     break;
   }
 

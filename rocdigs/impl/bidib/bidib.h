@@ -77,6 +77,11 @@
 #define MSG_BM_MIRROR           (MSG_DSTRM + MSG_DBM + 0x01)
 #define MSG_BM_ADDR_GET_RANGE   (MSG_DSTRM + MSG_DBM + 0x02)
 
+//-- booster messages
+#define MSG_BOOST                0x30
+#define MSG_BOOST_ON            (MSG_DSTRM + MSG_BOOST + 0x00)
+#define MSG_BOOST_OFF           (MSG_DSTRM + MSG_BOOST + 0x01)
+
 //===============================================================================
 //
 // 2. Defines for upstream messages
