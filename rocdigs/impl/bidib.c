@@ -420,7 +420,7 @@ static void __handleSensor(iOBiDiB bidib, int localAddr, int port, Boolean state
   int addr = __getOffset4LocalAddr(bidib, localAddr) + port;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "sensor=%d state=%s addr=%d type=%d", addr, state?"occ":"free", locoAddr, type );
+      "sensor-addr=%d state=%s ident=%d type=%d", addr, state?"occ":"free", locoAddr, type );
 
   if( type == -1 || type == 0 || type == 2 ) {
     /* occ event */
