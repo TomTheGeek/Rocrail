@@ -42,6 +42,8 @@ class bidibdlggen : public wxDialog
 	protected:
 		wxNotebook* m_Notebook;
 		wxPanel* m_General;
+		wxStaticText* m_labIID;
+		wxTextCtrl* m_IID;
 		wxStaticText* m_labDevice;
 		wxTextCtrl* m_Device;
 		wxRadioBox* m_BPS;

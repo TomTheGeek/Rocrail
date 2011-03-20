@@ -27,12 +27,19 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
+	m_labIID = new wxStaticText( m_General, wxID_ANY, wxT("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labIID->Wrap( -1 );
+	fgSizer5->Add( m_labIID, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_IID = new wxTextCtrl( m_General, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( m_IID, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
 	m_labDevice = new wxStaticText( m_General, wxID_ANY, wxT("Device"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labDevice->Wrap( -1 );
 	fgSizer5->Add( m_labDevice, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
 	m_Device = new wxTextCtrl( m_General, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
-	fgSizer5->Add( m_Device, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer5->Add( m_Device, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	bSizer6->Add( fgSizer5, 0, wxEXPAND, 5 );
 	
