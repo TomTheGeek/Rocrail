@@ -39,16 +39,43 @@ BidibDlg::BidibDlg( wxWindow* parent, iONode props )
   initLabels();
   initValues();
 
+  m_General->GetSizer()->Layout();
+  m_Options->GetSizer()->Layout();
+  m_Nodes->GetSizer()->Layout();
+
+  m_Notebook->Fit();
+
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
-  GetSizer()->Layout();
 
 }
 
 
 void BidibDlg::initLabels() {
+  // Tabs
+  m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "options" ) );
+  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "nodes" ) );
+
+  // General
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_BPS->SetLabel(wxGetApp().getMsg( "bps" ));
+  m_SubLib->SetLabel(wxGetApp().getMsg( "sublib" ));
+
+  // Options
+  m_SecAck->SetLabel(wxGetApp().getMsg( "enable" ));
+  m_labSecAckInt->SetLabel(wxGetApp().getMsg( "interval" ));
+
+  // Nodes
+  m_AddNode->SetLabel(wxGetApp().getMsg( "add" ));
+  m_ModifyNode->SetLabel(wxGetApp().getMsg( "modify" ));
+  m_DeleteNode->SetLabel(wxGetApp().getMsg( "delete" ));
+
+  // Buttons
+  m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
+  m_StdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
+
 }
 
 
@@ -56,15 +83,28 @@ void BidibDlg::initValues() {
   if( m_Props == NULL )
     return;
 
+  // General
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
+  m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 
+  if( wDigInt.getbps( m_Props ) == 19200 )
+    m_BPS->SetSelection(0);
+  else if( wDigInt.getbps( m_Props ) == 1048576 )
+    m_BPS->SetSelection(2);
+  else
+    m_BPS->SetSelection(1);
+
+  m_SubLib->SetSelection(0);
+
+  // Options
   iONode bidib = wDigInt.getbidib(m_Props);
   if( bidib == NULL ) {
     bidib = NodeOp.inst( wBiDiB.name(), m_Props, ELEMENT_NODE );
     NodeOp.addChild( m_Props, bidib );
   }
+  m_SecAck->SetValue( wBiDiB.issecAck( bidib ) ? true:false );
+  m_SecAckInt->SetValue( wBiDiB.getsecAckInt( bidib ) );
 
-  m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 }
 
 
@@ -72,10 +112,23 @@ void BidibDlg::evaluate() {
   if( m_Props == NULL )
     return;
 
+  // General
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
-
-  iONode bidib = wDigInt.getbidib(m_Props);
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
+
+  if( m_BPS->GetSelection() == 0 )
+    wDigInt.setbps( m_Props, 19200 );
+  else if( m_BPS->GetSelection() == 1 )
+    wDigInt.setbps( m_Props, 115200 );
+  else
+    wDigInt.setbps( m_Props, 1048576 );
+
+  wDigInt.setsublib( m_Props, wDigInt.sublib_serial);
+
+  // Options
+  iONode bidib = wDigInt.getbidib(m_Props);
+  wBiDiB.setsecAck( bidib, m_SecAck->IsChecked() ? True:False );
+  wBiDiB.setsecAckInt( bidib, m_SecAckInt->GetValue() );
 }
 
 

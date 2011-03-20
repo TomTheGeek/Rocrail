@@ -17118,4 +17118,10 @@
   <Msg id="rectangular">
     <en txt="Rectangular"/>
   </Msg>
+  <Msg id="sublib">
+    <en txt="Sub-Library"/>
+  </Msg>
+  <Msg id="nodes">
+    <en txt="Nodes"/>
+  </Msg>
 </Messages>
