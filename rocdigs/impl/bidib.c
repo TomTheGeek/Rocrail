@@ -419,8 +419,19 @@ static void __handleSensor(iOBiDiB bidib, int localAddr, int port, Boolean state
   iOBiDiBData data = Data(bidib);
   int addr = __getOffset4LocalAddr(bidib, localAddr) + port;
 
+  /* Type:
+    00  Lokadresse, Fahrtrichtung vorwärts
+    10  Lokadresse, Fahrtrichtung rückwärts
+    01  Accessory-Adresse
+    11  Extended Accessory
+  */
+
+  char* sType = "loco-addr-fwd";
+  if( type == 2 ) sType = "loco-addr-rev";
+  if( type == 1 ) sType = "accessory-addr";
+  if( type == 3 ) sType = "ext-accessory";
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "sensor-addr=%d state=%s ident=%d type=%d", addr, state?"occ":"free", locoAddr, type );
+      "sensor-addr=%d state=%s ident=%d type=%s", addr, state?"occ":"free", locoAddr, sType );
 
   if( type == -1 || type == 0 || type == 2 ) {
     /* occ event */
@@ -531,6 +542,34 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
+static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
+  iOBiDiBData data = Data(bidib);
+
+  //                                 UID
+  // locaddr class res vid productid   crc
+  // 00      40    00  0D  65 00 01 00 E1
+  char localKey[32];
+  char uidKey[32];
+  int uid = msg[4] + (msg[5] << 8) + (msg[6] << 16) + (msg[7] << 24);
+  StrOp.fmtb( localKey, "%d", msg[0] );
+  StrOp.fmtb( uidKey, "%d", uid );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "entry=%d local=%s class=0x%02X vid=%d uid=%s", entry,
+      localKey, msg[1], msg[3], uidKey);
+
+  iONode node = (iONode)MapOp.get( data->nodemap, uidKey );
+  if( node != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "mapping product ID [%s] with local [%s] to offset [%d]", uidKey, localKey, wBiDiBnode.getoffset(node) );
+    MapOp.put( data->localmap, localKey, (obj)node);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]", uidKey );
+  }
+}
+
+
 static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
   //                                 UID
@@ -546,6 +585,8 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
       "MSG_NODE_TAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
 
   for( entry = 0; entry < entries; entry++ ) {
+    __addNode(bidib, msg+offset+entry*8, entry );
+    /*
     char localKey[32];
     char uidKey[32];
     int uid = msg[offset+4+entry*8] + (msg[offset+5+entry*8] << 8) + (msg[offset+6+entry*8] << 16) + (msg[offset+7+entry*8] << 24);
@@ -565,7 +606,27 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]", uidKey );
     }
+    */
   }
+}
+
+
+static void __handleNewNode(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+  int Addr     = msg[1];
+  int  Seq     = msg[2];
+  data->tabver = msg[4];
+  __addNode(bidib, msg+5, 0);
+}
+
+
+static void __handleLostNode(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+  int Addr      = msg[1];
+  int Seq       = msg[2];
+  int localAddr = msg[4];
+  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+      "MSG_NODE_LOST, addr=%d seq=%d local-addr=%d TODO: POWER OFF", Addr, Seq, localAddr );
 }
 
 
@@ -691,6 +752,20 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
+  case MSG_NODE_NEW:
+  {
+    __handleNewNode(bidib, msg, size);
+    __seqAck(bidib, msg, size);
+    break;
+  }
+
+  case MSG_NODE_LOST:
+  {
+    __handleLostNode(bidib, msg, size);
+    __seqAck(bidib, msg, size);
+    break;
+  }
+
   /*
    * 04 00 02 A0 00 BE MSG_BM_OCC
    * 04 00 03 A0 10 88
@@ -721,6 +796,13 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         "MSG_BM_MULTIPLE, addr=%d seq=%d local-addr=%d nr-occ=%d, occ=0x%02X", Addr, Seq, msg[4], msg[5], msg[6] );
     __handleMultipleSensors(bidib, msg, size);
     __seqAck(bidib, msg, size);
+    break;
+  }
+
+  case MSG_FEATURE_COUNT:
+  {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_FEATURE_COUNT, addr=%d seq=%d features=%d", Addr, Seq, msg[4] );
     break;
   }
 
@@ -786,6 +868,13 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "MSG_NODE_NA, addr=%d seq=%d na-node=%d", Addr, Seq, msg[4] );
+    break;
+  }
+
+  default:
+  {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "UNSUPPORTED: msg=0x%02X, addr=%d seq=%d", Type, Addr, Seq );
     break;
   }
 
