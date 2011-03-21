@@ -4505,7 +4505,7 @@
   </Msg>
   <Msg id="person">
     <de txt="Nahverkehr"/>
-    <en txt="Local"/>
+    <en txt="Suburban"/>
     <nl txt="Stoptrein"/>
     <sv txt="Lokaltåg"/>
     <fr txt="Local"/>

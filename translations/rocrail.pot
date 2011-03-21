@@ -380,7 +380,7 @@ msgstr ""
 #. 
 # id="softresetall"
 #, c-format
-msgid "Reset automat but save current block occupation."
+msgid "Reset automat but save current block occupancy."
 msgstr ""
 
 #. 
@@ -1221,6 +1221,12 @@ msgstr ""
 # id="local"
 #, c-format
 msgid "Local"
+msgstr ""
+
+#. 
+# id="person"
+#, c-format
+msgid "Suburban"
 msgstr ""
 
 #. 
@@ -3600,9 +3606,9 @@ msgid "Add Module"
 msgstr ""
 
 #. 
-# id="blockoccupation"
+# id="blockoccupancy"
 #, c-format
-msgid "Block occupation"
+msgid "Block occupancy"
 msgstr ""
 
 #. 
@@ -5163,5 +5169,47 @@ msgstr ""
 # id="setupsvgtheme"
 #, c-format
 msgid "No SVG Theme was found; Check the Rocview SVG settings."
+msgstr ""
+
+#. 
+# id="useownwaittime"
+#, c-format
+msgid "Use own wait time in blocks"
+msgstr ""
+
+#. 
+# id="forceblocktimer"
+#, c-format
+msgid "Force block timer"
+msgstr ""
+
+#. 
+# id="useseq"
+#, c-format
+msgid "Use sequence check"
+msgstr ""
+
+#. 
+# id="usedouble"
+#, c-format
+msgid "Use double packets"
+msgstr ""
+
+#. 
+# id="rectangular"
+#, c-format
+msgid "Rectangular"
+msgstr ""
+
+#. 
+# id="sublib"
+#, c-format
+msgid "Sub-Library"
+msgstr ""
+
+#. 
+# id="nodes"
+#, c-format
+msgid "Nodes"
 msgstr ""
 
