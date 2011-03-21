@@ -125,6 +125,11 @@ void BidibDlg::initNodes() {
     m_NodeList->Append( wxString(uid,wxConvUTF8), node );
     node = wBiDiB.nextbidibnode(bidib, node);
   }
+  m_ModifyNode->Enable(false);
+  m_DeleteNode->Enable(false);
+  m_UID->SetValue( wxString( "", wxConvUTF8 ) );
+  m_Offset->SetValue( 0 );
+
 }
 
 
@@ -164,6 +169,8 @@ void BidibDlg::OnNodeList( wxCommandEvent& event ) {
 			m_UID->SetValue( wxString( val, wxConvUTF8 ) );
 			StrOp.free( val );
       m_Offset->SetValue( wBiDiBnode.getoffset( node ) );
+      m_ModifyNode->Enable(true);
+      m_DeleteNode->Enable(true);
     }
     else
       TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
