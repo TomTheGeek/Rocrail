@@ -98,8 +98,8 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listBox1 = new wxListBox( m_Nodes, wxID_ANY, wxDefaultPosition, wxSize( -1,140 ), 0, NULL, 0 ); 
-	bSizer8->Add( m_listBox1, 0, wxALL|wxEXPAND, 5 );
+	m_NodeList = new wxListBox( m_Nodes, wxID_ANY, wxDefaultPosition, wxSize( -1,140 ), 0, NULL, wxLB_SINGLE ); 
+	bSizer8->Add( m_NodeList, 0, wxALL|wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer7;
 	fgSizer7 = new wxFlexGridSizer( 2, 2, 0, 0 );
@@ -156,6 +156,7 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	bSizer5->Fit( this );
 	
 	// Connect Events
+	m_NodeList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( bidibdlggen::OnNodeList ), NULL, this );
 	m_AddNode->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnAddNode ), NULL, this );
 	m_ModifyNode->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnModifyNode ), NULL, this );
 	m_DeleteNode->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnDeleteNode ), NULL, this );
@@ -166,6 +167,7 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 bidibdlggen::~bidibdlggen()
 {
 	// Disconnect Events
+	m_NodeList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( bidibdlggen::OnNodeList ), NULL, this );
 	m_AddNode->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnAddNode ), NULL, this );
 	m_ModifyNode->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnModifyNode ), NULL, this );
 	m_DeleteNode->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( bidibdlggen::OnDeleteNode ), NULL, this );

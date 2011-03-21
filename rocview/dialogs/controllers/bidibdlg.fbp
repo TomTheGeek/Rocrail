@@ -878,11 +878,11 @@
                                             <property name="id">wxID_ANY</property>
                                             <property name="maximum_size"></property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">m_listBox1</property>
+                                            <property name="name">m_NodeList</property>
                                             <property name="permission">protected</property>
                                             <property name="pos"></property>
                                             <property name="size">-1,140</property>
-                                            <property name="style"></property>
+                                            <property name="style">wxLB_SINGLE</property>
                                             <property name="subclass"></property>
                                             <property name="tooltip"></property>
                                             <property name="window_extra_style"></property>
@@ -898,7 +898,7 @@
                                             <event name="OnLeftDClick"></event>
                                             <event name="OnLeftDown"></event>
                                             <event name="OnLeftUp"></event>
-                                            <event name="OnListBox"></event>
+                                            <event name="OnListBox">OnNodeList</event>
                                             <event name="OnListBoxDClick"></event>
                                             <event name="OnMiddleDClick"></event>
                                             <event name="OnMiddleDown"></event>

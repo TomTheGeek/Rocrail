@@ -54,7 +54,7 @@ class bidibdlggen : public wxDialog
 		wxSpinCtrl* m_SecAckInt;
 		wxStaticText* m_labMs10;
 		wxPanel* m_Nodes;
-		wxListBox* m_listBox1;
+		wxListBox* m_NodeList;
 		wxStaticText* m_labUID;
 		wxTextCtrl* m_UID;
 		wxStaticText* m_labOffset;
@@ -67,6 +67,7 @@ class bidibdlggen : public wxDialog
 		wxButton* m_StdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnNodeList( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAddNode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnModifyNode( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnDeleteNode( wxCommandEvent& event ){ event.Skip(); }

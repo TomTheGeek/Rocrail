@@ -35,6 +35,7 @@ class BidibDlg : public bidibdlggen
 {
 protected:
 	// Handlers for bidibdlggen events.
+	void OnNodeList( wxCommandEvent& event );
 	void OnAddNode( wxCommandEvent& event );
 	void OnModifyNode( wxCommandEvent& event );
 	void OnDeleteNode( wxCommandEvent& event );
@@ -43,6 +44,7 @@ protected:
 	
   void initLabels();
   void initValues();
+  void initNodes();
   void evaluate();
   iONode m_Props;
 
