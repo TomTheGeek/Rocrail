@@ -542,6 +542,10 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
+static const char* __getClass(int classid ) {
+  return wBiDiBnode.class_sensor;
+}
+
 static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
   iOBiDiBData data = Data(bidib);
 
@@ -565,7 +569,12 @@ static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
     MapOp.put( data->localmap, localKey, (obj)node);
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]", uidKey );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]; adding to list", uidKey );
+    node = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
+    wBiDiBnode.setuid(node, uid);
+    wBiDiBnode.setclass(node, __getClass(msg[1]));
+    wBiDiBnode.setvendor(node, msg[3]);
+    NodeOp.addChild(data->bidibini, node);
   }
 }
 

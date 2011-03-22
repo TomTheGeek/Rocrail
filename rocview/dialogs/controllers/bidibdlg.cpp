@@ -32,10 +32,13 @@
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
 
+#include "rocutils/public/vendors.h"
+
 BidibDlg::BidibDlg( wxWindow* parent, iONode props )
   :bidibdlggen( parent )
 {
   m_Props = props;
+  __initVendors();
   initLabels();
   initValues();
 
@@ -120,8 +123,10 @@ void BidibDlg::initNodes() {
   m_NodeList->Clear();
   iONode node = wBiDiB.getbidibnode(bidib);
   while( node != NULL ) {
-    char uid[32];
-    StrOp.fmtb( uid, "%d %s %d", wBiDiBnode.getuid(node), wBiDiBnode.getclass(node), wBiDiBnode.getoffset(node) );
+    char uid[256];
+    StrOp.fmtb( uid, "%d, %s, %d, %s",
+        wBiDiBnode.getuid(node), wBiDiBnode.getclass(node), wBiDiBnode.getoffset(node), m_Vendor[wBiDiBnode.getvendor(node)] );
+
     m_NodeList->Append( wxString(uid,wxConvUTF8), node );
     node = wBiDiB.nextbidibnode(bidib, node);
   }
