@@ -385,6 +385,7 @@
           <const name="class_dcc_switch" vt="string" val="switch"/>
           <var name="class" vt="string" defval="sensor" remark="Class ID."/>
           <var name="offset" vt="int" defval="1" remark="Rocrail addressing offset."/>
+          <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
         </bidibnode>
       </bidib>
 
