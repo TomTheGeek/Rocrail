@@ -265,6 +265,11 @@ static int _getVisitCnt( iIBlockBase inst ,const char* locid ) {
 }
 
 
+static int _getMaxKmh( iIBlockBase inst ) {
+  return 0;
+}
+
+
 /**  */
 static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
   iOStageData data = Data(inst);

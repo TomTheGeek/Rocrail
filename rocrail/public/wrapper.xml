@@ -1334,6 +1334,7 @@
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
         <var name="stopspeed" vt="string" defval="mid" range="mid,min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
+        <var name="maxkmh" vt="int" defval="0" range="0-*" remark="Block max. speed in km/h or mph."/>
         <var name="signal" vt="string" defval="NULL" range="*" remark="Home Signal ID. (sw)"/>
         <var name="wsignal" vt="string" defval="NULL" range="*" remark="Warning Signal ID. (sw)"/>
         <var name="blankatredsignal" vt="bool" defval="false" remark=""/>
@@ -1700,6 +1701,7 @@
              remark="Time between next decoder speed.(used only incase of V_mode_percent)"/>
         <var name="V_hint" vt="string" defval="NULL" range="min,mid,max,cruise,climb"
              remark="Loc speed in word hints."/>
+        <var name="V_maxkmh" vt="int" defval="0" range="0-*" unit="kmh" remark="Maximal block speed in kmh"/>
 
         <var name="mass" vt="int" defval="0" range="0-127" remark="Mass index for use with Dinamo."/>
         <var name="dir" vt="bool" defval="true" remark="Direction; true is forwards."/>

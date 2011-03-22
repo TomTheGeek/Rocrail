@@ -182,7 +182,7 @@ Boolean initializeSwap( iOLcDriver inst, iORoute route ) {
  * create a block speed hint
  *
  */
-const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street, Boolean reverse ) {
+const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street, Boolean reverse, int* maxkmh ) {
   iOLcDriverData data = Data(inst);
   int percent = 0;
 
@@ -204,6 +204,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }
+  *maxkmh = block->getMaxKmh(block);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] V_hint [%s] (%s)", block->base.id(block), data->V_hint, onexit?"on exit":"on enter" );
   return data->V_hint;
 }

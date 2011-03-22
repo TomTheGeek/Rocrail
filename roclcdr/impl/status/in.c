@@ -97,7 +97,9 @@ void statusIn( iILcDriverInt inst ) {
     /* set the block departure velocity: */
     if( !data->gomanual ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, True, data->next1Route, !data->next1RouteFromTo ) );
+      int maxkmh = 0;
+      wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, True, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
+      wLoc.setV_maxkmh(cmd, maxkmh);
 
       /* check for thrown switches in route */
       if( !StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) && data->next1Route->hasThrownSwitch(data->next1Route) ) {

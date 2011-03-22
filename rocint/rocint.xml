@@ -261,6 +261,9 @@
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="reverse" vt="Boolean" remark="reverse signal"/>
     </fun>
+    <fun name="getMaxKmh" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
     <fun name="getVelocity" vt="const char*">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="percent" vt="int*" remark="Speed percent"/>

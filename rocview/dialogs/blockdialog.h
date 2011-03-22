@@ -359,6 +359,8 @@ public:
     wxSpinCtrl* m_SpeedPercent;
     wxRadioBox* m_ExitSpeed;
     wxRadioBox* m_StopSpeed;
+    wxStaticText* m_labMaxKmH;
+    wxSpinCtrl* m_MaxKmH;
     wxRadioBox* m_Type;
     wxPanel* m_RoutesPanel;
     wxListBox* m_Routes;

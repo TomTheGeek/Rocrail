@@ -1249,6 +1249,11 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
   return block != NULL ? block->getVelocity( block, percent, onexit, reverse, onstop ) : "";
 }
 
+static int _getMaxKmh( iIBlockBase inst ) {
+  return 0;
+}
+
+
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getWait");

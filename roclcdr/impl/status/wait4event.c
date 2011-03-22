@@ -74,8 +74,10 @@ void statusWait4Event( iILcDriverInt inst ) {
         if( !data->gomanual ) {
           /* set the velocity back */
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route, !data->next1RouteFromTo ) );
+          int maxkmh = 0;
+          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+          wLoc.setV_maxkmh(cmd, maxkmh);
           data->loc->cmd( data->loc, cmd );
           data->slowdown4route = False;
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

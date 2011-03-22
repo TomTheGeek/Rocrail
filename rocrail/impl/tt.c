@@ -2282,6 +2282,12 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
   return wBlock.min;
 }
 
+
+static int _getMaxKmh( iIBlockBase inst ) {
+  return 0;
+}
+
+
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */

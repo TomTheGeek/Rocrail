@@ -209,7 +209,9 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
             wLoc.setV_hint( cmd, wLoc.climb );
           }
           else {
-            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo ) );
+            int maxkmh = 0;
+            wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
+            wLoc.setV_maxkmh(cmd, maxkmh);
           }
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );
@@ -238,9 +240,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     else {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       /* set V_mid only if it is lower than the current velocity */
-      const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo );
+      int maxkmh = 0;
+      const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo, &maxkmh );
       if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
         wLoc.setV_hint( cmd, blockV_hint );
+        wLoc.setV_maxkmh(cmd, maxkmh);
 
       if( StrOp.equals(blockV_hint, wBlock.cruise) || StrOp.equals(blockV_hint, wBlock.max) ) {
         if( data->loc->compareVhint( data->loc, wBlock.mid) == -1 )
@@ -260,9 +264,12 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         if( wBlock.getincline( destbkprops ) == wBlock.incline_up &&
             data->direction == LC_DIR_FORWARDS )
         {
-          const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo );
-          if( data->loc->compareVhint( data->loc, blockV_hint) == -1 )
+          int maxkmh = 0;
+          const char* blockV_hint = getBlockV_hint(inst, data->next1Block, False, NULL, !data->next1RouteFromTo, &maxkmh );
+          if( data->loc->compareVhint( data->loc, blockV_hint) == -1 ) {
             wLoc.setV_hint( cmd, blockV_hint );
+            wLoc.setV_maxkmh(cmd, maxkmh);
+          }
         }
       }
       else
@@ -311,7 +318,9 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
   if( re_enter && data->next2Block != NULL ) {
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo ) );
+    int maxkmh = 0;
+    wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
+    wLoc.setV_maxkmh(cmd, maxkmh);
     data->loc->cmd( data->loc, cmd );
   }
 

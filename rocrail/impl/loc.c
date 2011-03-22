@@ -575,7 +575,7 @@ static int __count(void) {
 }
 
 
-static int __translateVhint(iOLoc inst, const char* V_hint ) {
+static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
   iOLocData data = Data(inst);
   int       V_new  = -1;
 
@@ -621,6 +621,13 @@ static int __translateVhint(iOLoc inst, const char* V_hint ) {
     if( percent == 0 )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "V_hint: \"%s\" = %d", V_hint, V_new );
   }
+  
+  if(StrOp.equals( wLoc.V_mode_kmh, wLoc.getV_mode(data->props) ) && V_maxkmh > 0 ) {
+    if( V_new > V_maxkmh ) {
+      V_new = V_maxkmh;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reduce max. speed from %dKmh to %dKmh", V_new, V_maxkmh );
+    }
+  }
 
   return V_new;
 }
@@ -628,7 +635,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint ) {
 /*return equal=0, lower=-1, higher=1*/
 int _compareVhint(iOLoc inst, const char* V_hint) {
   iOLocData data  = Data(inst);
-  int       V_new = __translateVhint( inst, V_hint );
+  int       V_new = __translateVhint( inst, V_hint, 0 );
 
   if( V_new == data->drvSpeed )
     return 0;
@@ -665,6 +672,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
   iOControl control = AppOp.getControl();
 
   const char* V_hint = NULL;
+  int         V_maxkmh = 0;
   int         V_new  = -1;
   int         V_old  = wLoc.getV(data->props);
   iONode      cmdTD  = NULL;
@@ -673,8 +681,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
   if( cmd != NULL )
   {
-    V_new  = wLoc.getV( cmd );
-    V_hint = wLoc.getV_hint( cmd );
+    V_new    = wLoc.getV( cmd );
+    V_hint   = wLoc.getV_hint( cmd );
+    V_maxkmh = wLoc.getV_maxkmh( cmd );
 
     if( NodeOp.findAttr(cmd,"dir") && wLoc.isdir(cmd) != wLoc.isdir( data->props ) ) {
       /* Informing the P50 interface. */
@@ -931,10 +940,10 @@ static void __engine( iOLoc inst, iONode cmd ) {
   /* New speed attributes: */
   if( V_hint != NULL ) {
     __checkAction(inst, V_hint);
-    V_new = __translateVhint( inst, V_hint );
+    V_new = __translateVhint( inst, V_hint, V_maxkmh );
 
     if( data->drvSpeed != V_new || StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "V_hint: \"%s\" = %d", V_hint, V_new );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "V_hint: [%s][%d maxkmh] = %d", V_hint, V_maxkmh, V_new );
       data->drvSpeed = V_new;
       wLoc.setV( data->props, V_new);
       if( cmd == NULL )
