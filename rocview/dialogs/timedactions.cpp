@@ -772,6 +772,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.output_on, wxConvUTF8));
       m_Command->Append(wxString( wAction.output_off, wxConvUTF8));
       m_Command->Append(wxString( wAction.output_active, wxConvUTF8));
+      m_Command->Append(wxString( wOutput.flip, wxConvUTF8));
       break;
     case 1: // external command
       break;
