@@ -177,6 +177,7 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
       index = 1;
       break;
   case 0xc0:
+  case 0xd0:
       msglen = 6;
       index = 1;
       break;
