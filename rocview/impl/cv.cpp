@@ -54,6 +54,8 @@
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/CVconf.h"
 
+#include "rocutils/public/vendors.h"
+
 /*!
  * Programming type definition
  */
@@ -88,7 +90,8 @@ CV::CV( wxScrolledWindow* parent, iONode cvconf, wxWindow* frame ) {
   m_Timer = new wxTimer( frame, ME_CVTimer );
   m_Progress = NULL;
 
-  initManus();
+  __initVendors();
+
 }
 
 
@@ -181,7 +184,7 @@ void CV::initPresets( int nr, const char* val ) {
     if( tc != NULL ) {
       tc->SetValue( wxString( val,wxConvUTF8) );
       if( nr == 8 )
-        tc->SetToolTip(wxString( m_Manu[atoi(val)&0xFF],wxConvUTF8));
+        tc->SetToolTip(wxString( m_Vendor[atoi(val)&0xFF],wxConvUTF8));
     }
   }
 }
@@ -199,7 +202,7 @@ void CV::reset() {
   m_CVVmid->SetValue( _T("0") );
   m_CVversion->SetValue( _T("0") );
   m_CVmanufacturedID->SetValue( _T("0") );
-  m_CVmanufacturedID->SetToolTip(wxString( m_Manu[0],wxConvUTF8));
+  m_CVmanufacturedID->SetToolTip(wxString( m_Vendor[0],wxConvUTF8));
 
 }
 
@@ -335,9 +338,9 @@ void CV::event( iONode event ) {
       if( tc != NULL ) {
         tc->SetValue( wxString( val,wxConvUTF8) );
         if( cv == 8 ) {
-          tc->SetToolTip(wxString( m_Manu[ivalue&0xFF],wxConvUTF8));
-          TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Manu[ivalue&0xFF] );
-          wLoc.setdectype(m_LocProps, m_Manu[ivalue&0xFF] );
+          tc->SetToolTip(wxString( m_Vendor[ivalue&0xFF],wxConvUTF8));
+          TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Vendor[ivalue&0xFF] );
+          wLoc.setdectype(m_LocProps, m_Vendor[ivalue&0xFF] );
         }
       }
     }
@@ -1400,94 +1403,6 @@ void CV::CreateControls() {
   buttonSizer2->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   buttonSizer2->Add(m_CopyFrom, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
-
-}
-
-
-void CV::initManus() {
-  for( int i = 0; i < 256; i++ )
-    m_Manu[i] = "Unknown";
-
-  m_Manu[  1]  = "CML Electronics Limited";
-  m_Manu[  2]  = "Train Technology";
-  m_Manu[ 11] = "NCE Corporation";
-  m_Manu[ 12] = "Wangrow";
-  m_Manu[ 13] = "Public Domain & Do-It-Yourself Decoders";
-  m_Manu[ 14] = "PSI - Dynatrol";
-  m_Manu[ 15] = "Ramfixx Technologies (Wangrow)";
-  m_Manu[ 17] = "Advanced IC Engineering, Inc.";
-  m_Manu[ 18] = "JMRI";
-  m_Manu[ 19] = "AMW";
-  m_Manu[ 20] = "T4T - Technology for Trains GmbH";
-  m_Manu[ 21] = "Kreischer Datentechnik";
-  m_Manu[ 22] = "KAM Industries";
-  m_Manu[ 23] = "S Helper Service";
-  m_Manu[ 24] = "MoBaTron.de";
-  m_Manu[ 25] = "Team Digital, LLC";
-  m_Manu[ 26] = "MBTronik - PiN GITmBH";
-  m_Manu[ 27] = "MTH Electric Trains, Inc.";
-  m_Manu[ 28] = "Heljan A/S";
-  m_Manu[ 29] = "Mistral Train Models";
-  m_Manu[ 30] = "Digsight";
-  m_Manu[ 31] = "Brelec";
-  m_Manu[ 32] = "Regal Way Co. Ltd";
-  m_Manu[ 34] = "Aristo-Craft";
-  m_Manu[ 35] = "Elektronik & Modell Produktion";
-  m_Manu[ 36] = "DCCConcepts";
-  m_Manu[ 37] = "NAC Services, Inc.";
-  m_Manu[ 38] = "Broadway Limited Imports, LLC";
-  m_Manu[ 39] = "Educational Computer, Inc (DCCdevices.com)";
-  m_Manu[ 40] = "KATO Precision Models";
-  m_Manu[ 41] = "Passmann Modellbahnzubehoer";
-  m_Manu[ 42] = "Digirails";
-  m_Manu[ 43] = "Ngineering";
-  m_Manu[ 44] = "SPROG-DCC";
-  m_Manu[ 45] = "ANE Model Co., LTD.";
-  m_Manu[ 62] = "Tams Elektronik GmbH";
-  m_Manu[ 66] = "Railnet Solutions, LLC";
-  m_Manu[ 68] = "MAWE Elektronik";
-  m_Manu[ 71] = "New York Byano Limited";
-  m_Manu[ 73] = "The Electric Railroad Company";
-  m_Manu[ 85] = "Uhlenbrock Elektronik GmbH";
-  m_Manu[ 87] = "RR-CirKits";
-  m_Manu[ 95] = "Sanda Kan Industrial (1981) Ltd.";
-  m_Manu[ 97] = "Doehler & Haas";
-  m_Manu[ 99] = "Lenz Elektronik GmbH";
-  m_Manu[101] = "Bachmann Trains";
-  m_Manu[103] = "Nagasue System Design Office";
-  m_Manu[105] = "Computer Dialysis France";
-  m_Manu[109] = "Viessmann Modellspielwaren GmbH";
-  m_Manu[111] = "Haber & Koenig Electronics GmbH";
-  m_Manu[113] = "QS Industries115: Dietz Modellbahntechnik";
-  m_Manu[117] = "cT Elektronik";
-  m_Manu[119] = "W. S. Ataras Engineering";
-  m_Manu[123] = "Massoth Elektronik, GmbH";
-  m_Manu[125] = "ProfiLok Modellbahntechnik GmbH";
-  m_Manu[127] = "Atlas Model Railroad Co., Inc.";
-  m_Manu[129] = "Digitrax";
-  m_Manu[131] = "Trix Modelleisenbahn";
-  m_Manu[132] = "ZTC Controls Ltd.";
-  m_Manu[133] = "Intelligent Command Control";
-  m_Manu[135] = "CVP Products";
-  m_Manu[139] = "RealRail Effects";
-  m_Manu[141] = "Throttle-Up (Soundtraxx)";
-  m_Manu[143] = "Model Rectifier Corp.";
-  m_Manu[145] = "Zimo Elektronik";
-  m_Manu[147] = "Umelec Ing. Buero";
-  m_Manu[149] = "Rock Junction Controls";
-  m_Manu[151] = "Electronic Solutions Ulm GmbH & Co KG";
-  m_Manu[153] = "Train Control Systems";
-  m_Manu[155] = "Gebr. Fleischmann GmbH & Co.";
-  m_Manu[157] = "Kuehn Ing.";
-  m_Manu[159] = "LGB (Ernst Paul Lehmann Patentwerk)";
-  m_Manu[161] = "Modelleisenbahn GmbH (formerly Roco)";
-  m_Manu[163] = "WP Railshops";
-  m_Manu[165] = "Model Electronic Railway Group";
-  m_Manu[170] = "AuroTrains";
-  m_Manu[173] = "Arnold - Rivarossi";
-  m_Manu[186] = "BRAWA Modellspielwaren GmbH & Co.";
-  m_Manu[204] = "Con-Com GmBH";
-  m_Manu[238] = "NMRA reserved";
 
 }
 

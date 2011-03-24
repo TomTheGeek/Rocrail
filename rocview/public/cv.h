@@ -104,7 +104,6 @@ private:
     /// Creation
     bool Create();
     void initValues();
-    void initManus();
     void initPresets( int nr, const char* val );
     void readAll();
     void writeAll();
@@ -153,7 +152,6 @@ private:
     bool m_bFX;
     bool m_bLongAddress;
 
-    const char* m_Manu[256];
     wxWindow* m_Frame;
 
     wxTimer* m_Timer;
