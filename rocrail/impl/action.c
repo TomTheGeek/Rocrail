@@ -625,6 +625,13 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wLoc.setV( cmd, v );
         LocOp.cmd(lc, cmd);
       }
+      else if( StrOp.equals(wLoc.min, wAction.getcmd(data->action) )    || StrOp.equals(wLoc.mid, wAction.getcmd(data->action) ) ||
+               StrOp.equals(wLoc.cruise, wAction.getcmd(data->action) ) || StrOp.equals(wLoc.max, wAction.getcmd(data->action) )) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setV_hint( cmd, wAction.getcmd(data->action) );
+        wLoc.setdir( cmd, LocOp.getDir(lc) );
+        LocOp.cmd(lc, cmd);
+      }
       else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
         LocOp.dispatch(lc);
       }
