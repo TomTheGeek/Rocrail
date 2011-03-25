@@ -1632,7 +1632,8 @@ static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
 
   if( data->driver != NULL && data->driver->isRun( data->driver ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is already running in auto mode", LocOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] is already running in auto mode; reset wait.", LocOp.getId(inst) );
+    data->driver->gogo(data->driver);
     return False;
   }
 

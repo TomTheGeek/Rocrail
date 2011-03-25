@@ -321,6 +321,15 @@ static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goNet: curblock=%s nextblock=%s nextroute=%s", curblock, nextblock, nextroute );
 }
 
+
+static void _gogo( iILcDriverInt inst, Boolean gomanual ) {
+  iOLcDriverData data = Data(inst);
+  if( data->timer > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset wait timer from %d to 0", data->timer );
+    data->timer = 0;
+  }
+}
+
 static void _go( iILcDriverInt inst, Boolean gomanual ) {
   iOLcDriverData data = Data(inst);
   data->gomanual = gomanual;
