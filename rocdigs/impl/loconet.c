@@ -1201,7 +1201,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
     }
-    if( isLNCV(rsp) ) {
+    else if( isLNCV(rsp) ) {
       int modid, addr, cv, val;
       Boolean lncvset = evaluateLNCV(rsp, &modid, &addr, &cv, &val);
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
