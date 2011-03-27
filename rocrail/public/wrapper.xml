@@ -1794,6 +1794,7 @@
         <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>
         <var name="usescheduletime" vt="bool" defval="False" remark="Use departure time in schedules."/>
         <var name="usemanualroutes" vt="bool" defval="False" remark="Use manual set routes only."/>
+        <var name="manual" vt="bool" defval="false" remark="Half auto mode flag."/>
         <var name="scidx" vt="int" defval="-1" range="*" remark="Schedule index"/>
         <var name="blockid" vt="string" defval="NULL" range="*" remark="Current block ID."/>
         <var name="blockenterside" vt="bool" defval="true" remark="Block enter side."/>

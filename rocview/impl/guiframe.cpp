@@ -1039,6 +1039,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.getthrottleid( node ), wxConvUTF8) );
         else if(!wLoc.isactive(node))
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T("hold") );
+        else if( wLoc.ismanual(node))
+          m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, _T(">") + wxString(wLoc.getmode( node ),wxConvUTF8) );
         else
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.isresumeauto( node ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( node ),wxConvUTF8) );
 
