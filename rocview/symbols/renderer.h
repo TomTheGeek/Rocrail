@@ -84,7 +84,7 @@ class SymbolRenderer {
 public:
   void initSym();
   SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps );
-  void drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status=0 );
+  void drawShape( wxPaintDC& dc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status=0 );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy, const char* ori );
   void setLabel( const char* label, int occupied );
   void setLabel( const char* label, int occupied, bool rotate );
@@ -96,23 +96,23 @@ public:
   wxPen* getPen( const char* stroke );
   wxBrush* getBrush( const char* fill, wxPaintDC& dc );
 
-  void drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawThreeway( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori );
-  void drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status );
-  void drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawStage( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawText( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
-  void drawTurntable( wxPaintDC& dc, bool fill, bool occupied, double* bridgepos, const char* ori );
-  void drawAccessory( wxPaintDC& dc, bool fill, bool occupied, const char* ori );
+  void drawTrack( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawTurnout( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawCrossing( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawCCrossing( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawThreeway( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawSignal( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawOutput( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawSensor( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawRoute( wxPaintDC& dc, bool occupied, const char* ori, int status );
+  void drawBlock( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawStage( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawSelTab( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawText( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori );
+  void drawAccessory( wxPaintDC& dc, bool occupied, const char* ori );
 
 };
 

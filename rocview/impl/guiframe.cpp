@@ -290,7 +290,6 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
     EVT_MENU( ME_Zoom100        , RocGuiFrame::OnZoom100)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
-    EVT_MENU( ME_Fill           , RocGuiFrame::OnFill)
     EVT_MENU( ME_ShowID         , RocGuiFrame::OnShowID)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
@@ -1439,7 +1438,6 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
   menuView->AppendSeparator();
-  menuView->AppendCheckItem( ME_Fill, wxGetApp().getMenu("fill"), wxGetApp().getTip("fill") );
   menuView->AppendCheckItem( ME_ShowID, wxGetApp().getMenu("showid"), wxGetApp().getTip("showid") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
   menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
@@ -1709,7 +1707,6 @@ void RocGuiFrame::create() {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanPanel..." );
   m_Scale = wPlanPanel.getscale( wGui.getplanpanel( m_Ini ) );
   m_Bktext = wPlanPanel.getbktext( wGui.getplanpanel( m_Ini ) );
-  m_bFill = (wPlanPanel.isfill( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bShowID = (wPlanPanel.isshowid( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bRaster = (wPlanPanel.israster( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bLocoBook = (wPlanPanel.islocobook( wGui.getplanpanel( m_Ini ) ) ? true:false);
@@ -2495,18 +2492,6 @@ void RocGuiFrame::Zoom( int zoom ) {
 }
 
 
-void RocGuiFrame::OnFill( wxCommandEvent& event ) {
-  wxMenuItem* mi_fill = menuBar->FindItem(ME_Fill);
-  m_bFill = mi_fill->IsChecked();
-
-  int pages = m_PlanNotebook->GetPageCount();
-  for( int i = 0; i < pages; i++ ) {
-    BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
-    p->reScale( m_Scale );
-  }
-}
-
-
 void RocGuiFrame::OnShowID( wxCommandEvent& event ) {
   wxMenuItem* mi_showid = menuBar->FindItem(ME_ShowID);
   m_bShowID = mi_showid->IsChecked();
@@ -3068,8 +3053,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   wxMenuItem* mi_locobook  = menuBar->FindItem(ME_LocoBook);
   mi_locobook->Check( m_bLocoBook );
-  wxMenuItem* mi_fill  = menuBar->FindItem(ME_Fill);
-  mi_fill->Check( m_bFill );
   wxMenuItem* mi_showid  = menuBar->FindItem(ME_ShowID);
   mi_showid->Check( m_bShowID );
   wxMenuItem* mi_raster  = menuBar->FindItem(ME_Raster);

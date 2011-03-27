@@ -825,7 +825,7 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
 /**
  * Track object
  */
-void SymbolRenderer::drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const wxBrush& b = dc.GetBrush();
 
   // SVG Symbol:
@@ -859,7 +859,7 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool fill, bool occupied, bool ac
 }
 
 
-void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean hasUnit = wSwitch.getaddr1( m_Props ) > 0 ? True:False;
 
@@ -879,7 +879,7 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool fill, bool occupied, con
 /**
  * Crossing Switch object
  */
-void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
   // SVG Symbol:
@@ -931,7 +931,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool fill, bool occupied, cons
 /**
  * DoubleCrossing Switch object
  */
-void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean has2Units = ( wSwitch.getaddr2( m_Props ) > 0 || wSwitch.getport2( m_Props ) > 0 )  ? True:False;
 
@@ -1013,7 +1013,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool fill, bool occupied, con
 /**
  * Threeway Switch object
  */
-void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
   // SVG Symbol:
@@ -1063,7 +1063,7 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool fill, bool occupied, cons
 /**
  * Accessory Switch object
  */
-void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
   // SVG Symbol:
@@ -1085,7 +1085,7 @@ void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool fill, bool occupied, con
 /**
  * Turnout Switch object
  */
-void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
@@ -1136,7 +1136,7 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool fill, bool occupied, const
 /**
  * Switch object
  */
-void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s", wSwitch.getid( m_Props ), state );
@@ -1184,31 +1184,31 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool a
       break;
 
     case switchtype::i_ccrossing:
-      drawCCrossing( dc, fill, occupied, ori );
+      drawCCrossing( dc, occupied, ori );
       break;
 
     case switchtype::i_crossing:
     case switchtype::i_crossingleft:
     case switchtype::i_crossingright:
-      drawCrossing( dc, fill, occupied, ori );
+      drawCrossing( dc, occupied, ori );
       break;
 
     case switchtype::i_dcrossingleft:
     case switchtype::i_dcrossingright:
-      drawDCrossing( dc, fill, occupied, ori );
+      drawDCrossing( dc, occupied, ori );
       break;
 
     case switchtype::i_threeway:
-      drawThreeway( dc, fill, occupied, ori );
+      drawThreeway( dc, occupied, ori );
       break;
 
     case switchtype::i_accessory:
-      drawAccessory( dc, fill, occupied, ori );
+      drawAccessory( dc, occupied, ori );
       break;
 
     case switchtype::i_turnoutleft:
     case switchtype::i_turnoutright:
-      drawTurnout( dc, fill, occupied, ori );
+      drawTurnout( dc, occupied, ori );
       break;
 
   }
@@ -1218,7 +1218,7 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool fill, bool occupied, bool a
 /**
  * Signal object
  */
-void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSignal.getstate( m_Props );
   int aspects = wSignal.getaspects( m_Props );
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s", wSignal.getid( m_Props ), state );
@@ -1296,7 +1296,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool fill, bool occupied, bool a
 /**
  * Output object
  */
-void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wOutput.getstate( m_Props );
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s", wSignal.getid( m_Props ), state );
 
@@ -1354,7 +1354,7 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool fill, bool occupied, bool a
 /**
  * Stage object
  */
-void SymbolRenderer::drawStage( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
   int len = 4;
 
@@ -1411,7 +1411,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool fill, bool occupied, const c
 /**
  * Block object
  */
-void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
   Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
   int blocklen = m_bSmall ? 2:4;
@@ -1533,7 +1533,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool fill, bool occupied, const c
 /**
  * SelTab object
  */
-void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
   int nrtracks = wSelTab.getnrtracks(m_Props);
 
@@ -1592,7 +1592,7 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool fill, bool occupied, const 
 /**
  * Text object
  */
-void SymbolRenderer::drawText( wxPaintDC& dc, bool fill, bool occupied, const char* ori ) {
+void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
 
   if( StrOp.endsWithi(m_Label, ".png") ) {
@@ -1697,7 +1697,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool fill, bool occupied, const ch
 /**
  *
  */
-void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool actroute, const char* ori ) {
+void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   bool cnt = false;
 
   if(wFeedback.getcountedcars( m_Props ) != wFeedback.getcarcount( m_Props )) {
@@ -1749,7 +1749,7 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool fill, bool occupied, bool a
 }
 
 
-void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const char* ori, int status ) {
+void SymbolRenderer::drawRoute( wxPaintDC& dc, bool occupied, const char* ori, int status ) {
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "set route %s to %d", wRoute.getid( m_Props ), status );
 
   // SVG Symbol:
@@ -1787,7 +1787,7 @@ void SymbolRenderer::drawRoute( wxPaintDC& dc, bool fill, bool occupied, const c
 /**
  * Turntable object
  */
-void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, double* bridgepos, const char* ori ) {
+void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori ) {
 
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "turntable with bridge pos=%f", *bridgepos );
 
@@ -1880,7 +1880,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool fill, bool occupied, dou
 /**
  * Draw dispatcher
  */
-void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
+void SymbolRenderer::drawShape( wxPaintDC& dc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
   m_bShowID = showID;
   const char* nodeName = NodeOp.getName( m_Props );
 
@@ -1891,37 +1891,37 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, bool fill, bool occupied, bool ac
 
   switch( m_iSymType ) {
     case symtype::i_track:
-      drawTrack( dc, fill, occupied, actroute, ori );
+      drawTrack( dc, occupied, actroute, ori );
       break;
     case symtype::i_switch:
-      drawSwitch( dc, fill, occupied, actroute, ori );
+      drawSwitch( dc, occupied, actroute, ori );
       break;
     case symtype::i_signal:
-      drawSignal( dc, fill, occupied, actroute, ori );
+      drawSignal( dc, occupied, actroute, ori );
       break;
     case symtype::i_output:
-      drawOutput( dc, fill, occupied, actroute, ori );
+      drawOutput( dc, occupied, actroute, ori );
       break;
     case symtype::i_block:
-      drawBlock( dc, fill, occupied, ori );
+      drawBlock( dc, occupied, ori );
       break;
     case symtype::i_stage:
-      drawStage( dc, fill, occupied, ori );
+      drawStage( dc, occupied, ori );
       break;
     case symtype::i_text:
-      drawText( dc, fill, occupied, ori );
+      drawText( dc, occupied, ori );
       break;
     case symtype::i_feedback:
-      drawSensor( dc, fill, occupied, actroute, ori );
+      drawSensor( dc, occupied, actroute, ori );
       break;
     case symtype::i_turntable:
-      drawTurntable( dc, fill, occupied, bridgepos, ori );
+      drawTurntable( dc, occupied, bridgepos, ori );
       break;
     case symtype::i_selecttable:
-      drawSelTab( dc, fill, occupied, ori );
+      drawSelTab( dc, occupied, ori );
       break;
     case symtype::i_route:
-      drawRoute( dc, fill, occupied, ori, status );
+      drawRoute( dc, occupied, ori, status );
       break;
   }
 }

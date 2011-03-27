@@ -677,14 +677,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
 
-    m_Renderer->drawShape( dc, wxGetApp().getFrame()->isFill(), occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
-
-    /*
-    if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) && StrOp.endsWithi(wText.gettext(m_Props), ".png") )
-      Lower();
-    else
-      Raise();
-    */
+    m_Renderer->drawShape( dc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
   }
   else {
     Show( false );

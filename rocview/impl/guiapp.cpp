@@ -229,7 +229,6 @@ int RocGui::OnExit() {
 
     wPlanPanel.setlocobook( wGui.getplanpanel( m_Ini ), m_Frame->isLocoBook() ? True:False );
     wPlanPanel.setscale( wGui.getplanpanel( m_Ini ), m_Frame->getScale() );
-    wPlanPanel.setfill( wGui.getplanpanel( m_Ini ), m_Frame->isFill() ? True:False );
     wPlanPanel.setshowid( wGui.getplanpanel( m_Ini ), m_Frame->isShowID() ? True:False );
     wPlanPanel.setraster( wGui.getplanpanel( m_Ini ), m_Frame->isRaster() ? True:False );
 

@@ -232,7 +232,6 @@ public:
   void OnZoom100(wxCommandEvent& event);
 
   void OnLocoBook(wxCommandEvent& event);
-  void OnFill(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
@@ -259,7 +258,6 @@ public:
   void setEditModPlan( bool editmodplan ) { m_bEditModPlan = editmodplan; }
   bool isAutoMode() { return m_bAutoMode; }
   bool isLocoBook() { return m_bLocoBook; }
-  bool isFill() { return m_bFill; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
   bool isInitialized() { return m_bInitialized; }
@@ -339,7 +337,6 @@ private:
   const char* m_ThemesPath;
 
   bool  m_bLocoBook;
-  bool  m_bFill;
   bool  m_bShowID;
   bool  m_bRaster;
   bool  m_bServerConsoleMode;
@@ -483,7 +480,6 @@ enum
     ME_Zoom75,
     ME_Zoom100,
     ME_LocoBook,
-    ME_Fill,
     ME_ShowID,
     ME_FullScreen,
     ME_Raster,

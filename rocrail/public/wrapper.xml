@@ -145,7 +145,6 @@
     <var name="poweroffonexit" vt="bool" defval="true" remark="Turn track power off on server exit."/>
     <var name="donkey" vt="string" defval=""/>
     <var name="doneml" vt="string" defval=""/>
-    <var name="analyze" vt="bool" defval="false" remark="Auto analyze track plan at startup."/>
 
     <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
       <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>
