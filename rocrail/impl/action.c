@@ -467,6 +467,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->event(bl, True, wAction.getparam( data->action ), 0, 0, 0, NULL);
         bl->event(bl, False, wAction.getparam( data->action ), 0, 0, 0, NULL);
       }
+      else if( StrOp.equals( wBlock.closed, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setstate( cmd, wBlock.closed );
+        bl->cmd(bl, cmd);
+      }
+      else if( StrOp.equals( wBlock.open, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setstate( cmd, wBlock.open );
+        bl->cmd(bl, cmd);
+      }
       else if( StrOp.equals( wSignal.white, wAction.getcmd( data->action ) ) ) {
         bl->white(bl, False, False);
       }
