@@ -696,12 +696,13 @@ static struct OStage* _inst( iONode props ) {
   MemOp.basecpy( __Stage, &StageOp, 0, sizeof( struct OStage ), data );
 
   /* Initialize data->xxx members... */
-  data->props       = props;
-  data->id          = wStage.getid( props );
-  data->fbMap       = MapOp.inst();
-  data->lcMap       = MapOp.inst();
-  data->sectionList = ListOp.inst();
+  data->props         = props;
+  data->id            = wStage.getid( props );
+  data->fbMap         = MapOp.inst();
+  data->lcMap         = MapOp.inst();
+  data->sectionList   = ListOp.inst();
   data->sectionLength = wStage.getslen(props);
+  data->trainGap      = wStage.getgap(props);
 
   __initSensors(__Stage);
 

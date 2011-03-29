@@ -1400,14 +1400,15 @@
       </bk>
     </bklist>
 
-    <sblist cardinality="1" remark="Stage Block Table" wrappername="StageList">
+    <sblist cardinality="1" remark="Staging Yard Table" wrappername="StageList">
       <sb cardinality="n" wrappername="Stage">
         <var name="id" vt="string" defval="?" range="*" required="true"/>
         <var name="desc" vt="string" defval="" range="*" remark="Description of stage block."/>
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
         <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
-        <var name="slen" vt="int" defval="0" range="0-*" unit="cm" remark="Section length."/>
+        <var name="slen" vt="int" defval="30" range="0-*" unit="cm" remark="Section length."/>
+        <var name="gap" vt="int" defval="5" range="0-*" unit="cm" remark="Train gap."/>
         <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
         <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>

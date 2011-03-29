@@ -178,6 +178,7 @@
       <var name="sectionCount" vt="int"/>
       <var name="freeSections" vt="int"/>
       <var name="sectionLength" vt="int"/>
+      <var name="trainGap" vt="int"/>
       <var name="linkto" vt="iIBlockBase"/>
       <var name="closereq" vt="Boolean"/>
       <var name="fromBlockId" vt="const char*"/>
