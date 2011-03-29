@@ -277,6 +277,19 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                       "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
                       enterside?"+":"-", wActionCond.getstate(actionCond) );
                 }
+                else if( StrOp.equals( wActionCond.getstate(actionCond), wLoc.min ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.mid )
+                      || StrOp.equals( wActionCond.getstate(actionCond), wLoc.cruise ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.max ) ) {
+                  if( !StrOp.equals( wActionCond.getstate(actionCond), LocOp.getV_hint(lc) ) ) {
+                    rc = False;
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                        "loco %s speed %s does not match [%s]", LocOp.getId(lc),
+                        LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
+                  } else {
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                        "loco %s speed %s matches [%s]", LocOp.getId(lc),
+                        LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
+                  }
+                }
                 else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
                   iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
                   const char* fonoff = NULL;

@@ -570,6 +570,9 @@
     <fun name="getV" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getV_hint" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="getFunctionStatus" vt="iONode">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="funcmd" vt="iONode" remark="function command node"/>

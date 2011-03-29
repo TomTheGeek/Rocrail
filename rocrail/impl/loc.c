@@ -947,6 +947,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "V_hint: [%s][%d maxkmh] = %d", V_hint, V_maxkmh, V_new );
       data->drvSpeed = V_new;
       wLoc.setV( data->props, V_new);
+      wLoc.setV_hint( data->props, V_hint );
       if( cmd == NULL )
         cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setV( cmd, V_new );
@@ -2399,6 +2400,12 @@ static Boolean _getPlacing( iOLoc loc ) {
 static int _getV( iOLoc loc ) {
   iOLocData data = Data(loc);
   return data->drvSpeed;
+}
+
+
+static const char* _getV_hint( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.getV_hint( data->props );
 }
 
 
