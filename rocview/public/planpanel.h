@@ -164,6 +164,7 @@ enum {
   ME_AddSignal,
   ME_AddOutput,
   ME_AddBlock,
+  ME_AddStage,
   ME_AddFBack,
   ME_AddRoute,
   ME_AddTT,

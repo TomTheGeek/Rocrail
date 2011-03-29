@@ -134,6 +134,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddSignal , PlanPanel::addSignal)
   EVT_MENU( ME_AddOutput , PlanPanel::addOutput)
   EVT_MENU( ME_AddBlock  , PlanPanel::addBlock )
+  EVT_MENU( ME_AddStage  , PlanPanel::addStage )
   EVT_MENU( ME_AddFBack  , PlanPanel::addFBack )
   EVT_MENU( ME_AddRoute  , PlanPanel::addRoute )
   EVT_MENU( ME_AddTT     , PlanPanel::addTT    )
@@ -726,6 +727,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( ME_AddSignal, wxGetApp().getMenu("signal")  );
       menu.Append( ME_AddOutput, wxGetApp().getMenu("output")  );
       menu.Append( ME_AddBlock , wxGetApp().getMenu("block") );
+      menu.Append( ME_AddStage , wxGetApp().getMenu("stagingyard") );
       menu.Append( ME_AddFBack , wxGetApp().getMenu("sensor") );
       menu.Append( ME_AddRoute , wxGetApp().getMenu("route") );
       menu.Append( ME_AddTT    , wxGetApp().getMenu("turntable") );

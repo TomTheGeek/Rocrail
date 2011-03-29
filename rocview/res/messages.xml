@@ -17124,4 +17124,7 @@
   <Msg id="nodes">
     <en txt="Nodes"/>
   </Msg>
+  <Msg id="stagingyard">
+    <en txt="Staging yard"/>
+  </Msg>
 </Messages>
