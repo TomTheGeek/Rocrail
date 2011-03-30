@@ -582,7 +582,7 @@ static Boolean _isLocked( iOSwitch inst, const char* id, Boolean manual ) {
     return True;
   }
   if( data->lockedId != NULL && !StrOp.equals( id, data->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch \"%s\" is locked by \"%s\".",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Switch \"%s\" is locked by \"%s\".",
                    SwitchOp.getId( inst ), data->lockedId );
     return True;
   }

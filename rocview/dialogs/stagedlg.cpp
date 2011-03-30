@@ -33,6 +33,16 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
   TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "stagedlg" );
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props = p_Props;
+  initLabels();
+  initIndex();
+
+  m_General->GetSizer()->Layout();
+  m_Sections->GetSizer()->Layout();
+
+  m_Notebook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
 
   m_Notebook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( StageDlg::OnSetPage ), NULL, this );
   m_SetPage = 0;
