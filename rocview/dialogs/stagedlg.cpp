@@ -34,7 +34,6 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props = p_Props;
   initLabels();
-  initIndex();
 
   m_General->GetSizer()->Layout();
   m_Sections->GetSizer()->Layout();

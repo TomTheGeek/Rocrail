@@ -508,7 +508,7 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lissy=%d ident=%d dir=%d", lissyaddr, sensdata, dir );
 
-    wFeedback.setbus( nodeC, wFeedback.fbtype_transponder );
+    wFeedback.setbus( nodeC, wFeedback.fbtype_lissy );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
 
     wFeedback.setidentifier( nodeC, sensdata );
@@ -593,7 +593,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( nodeC, addr );
-    wFeedback.setbus( nodeC, 1 );
+    wFeedback.setbus( nodeC, wFeedback.fbtype_transponder );
     wFeedback.setzone( nodeC, zone );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_transponder );
 
