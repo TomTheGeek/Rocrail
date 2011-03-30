@@ -62,6 +62,7 @@
 #include "rocview/dialogs/locseldlg.h"
 #include "rocview/dialogs/seltabdlg.h"
 #include "rocview/dialogs/routedialog.h"
+#include "rocview/dialogs/stagedlg.h"
 
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -1837,8 +1838,21 @@ void Symbol::OnProps(wxCommandEvent& event) {
     ttDlg->Destroy();
   }
   else if( StrOp.equals( wSelTab.name(), name ) ) {
-    /* TODO: dialog for selection table */
+    /* dialog for selection table */
     SelTabDialog* dlg = new SelTabDialog( this, m_Props );
+    if( wxID_OK == dlg->ShowModal() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+    Refresh();
+    dlg->Destroy();
+  }
+  else if( StrOp.equals( wStage.name(), name ) ) {
+    StageDlg* dlg = new StageDlg( this, m_Props );
     if( wxID_OK == dlg->ShowModal() ) {
       /* Notify RocRail. */
       iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
