@@ -558,6 +558,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   Boolean enter    = (msg[1] & 0x20) != 0 ? True:False;
 
   boardaddr++;
+  addr++;
 
   if      ((msg[2]&0x0F) == 0x00) zone = "A";
   else if ((msg[2]&0x0F) == 0x02) zone = "B";
