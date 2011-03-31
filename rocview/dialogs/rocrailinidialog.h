@@ -260,6 +260,9 @@ public:
     wxStaticText* m_labSrcpPort;
     wxSpinCtrl* m_SrcpPort;
     wxCheckBox* m_SrcpServiceActive;
+    wxStaticText* m_labSnmpPort;
+    wxSpinCtrl* m_SnmpPort;
+    wxCheckBox* m_SnmpServiceActive;
     wxPanel* m_AtomatPanel;
     wxStaticText* m_LabelSwTime;
     wxTextCtrl* m_SwTime;

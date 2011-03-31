@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/SvnLogEntry.h"
 #include "rocrail/wrapper/public/SrcpCon.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/SnmpService.h"
 
 #include "common/version.h"
 
@@ -821,7 +822,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   /* Snmp (Optional)*/
   {
     iONode snmp = wRocRail.getSnmpService( data->ini );
-    if( snmp != NULL )
+    if( snmp != NULL && wSnmpService.isactive(snmp) )
       data->snmp = SNMPOp.inst( snmp );
   }
 

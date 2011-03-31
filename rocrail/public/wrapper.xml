@@ -195,6 +195,7 @@
       <var name="cmd" vt="string" defval="" range="*"/>
     </clock>
     <SnmpService cardinality="1">
+      <var name="active" vt="bool" defval="false" remark="Activate snmp service."/>
       <var name="port" vt="int" defval="161" range="0-65535" remark="Port number for server socket."/>
     </SnmpService>
     <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
