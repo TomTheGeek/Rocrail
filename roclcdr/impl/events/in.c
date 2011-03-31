@@ -204,6 +204,22 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     }
 
   }
+  else if(newInEvent && dstBlockEvent && data->state == LC_GO) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                   "unexpected IN event for [%s], state=[%d] (missing enter event)",
+                   data->loc->getId( data->loc ), data->state );
+
+    data->state = LC_IDLE;
+    data->run = False;
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                   "Setting state for \"%s\" to LC_IDLE and stop running auto mode.",
+                   data->loc->getId( data->loc ) );
+    data->loc->setMode(data->loc, wLoc.mode_idle);
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setV( cmd, 0 );
+    wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+    data->loc->cmd( data->loc, cmd );
+  }
   else {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "unexpected IN event for [%s], state=[%d]",
