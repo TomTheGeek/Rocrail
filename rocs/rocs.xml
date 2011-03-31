@@ -1127,11 +1127,15 @@
       <param name="inst" vt="this" remark="Socket instance."/>
       <param name="buffer" vt="char*" remark="Read buffer."/>
       <param name="size" vt="int" remark="Size of buffer."/>
+      <param name="client" vt="char*" remark="Cleint address."/>
+      <param name="port" vt="int*" remark="Client port."/>
     </fun>
     <fun name="sendto" implname="rocs_socket_sendto" vt="Boolean" remark="Send udp message.">
       <param name="inst" vt="this" remark="Socket instance."/>
       <param name="buffer" vt="char*" remark="Write buffer."/>
       <param name="size" vt="int" remark="Size of buffer."/>
+      <param name="client" vt="char*" remark="Cleint address."/>
+      <param name="port" vt="int" remark="Client port."/>
     </fun>
     <fun name="readc" implname="_readcSocket" vt="char" remark="Read one character.">
       <param name="inst" vt="this" remark="Socket instance."/>

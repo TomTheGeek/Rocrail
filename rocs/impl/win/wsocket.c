@@ -586,7 +586,7 @@ Boolean rocs_socket_peek( iOSocket inst, char* buf, int size ) {
 }
 
 
-int rocs_socket_recvfrom( iOSocket inst, char* buf, int size ) {
+int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int* port ) {
   iOSocketData o = Data(inst);
   int rc = 0;
   SOCKADDR_IN remoteAddr;
@@ -599,21 +599,23 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recvfrom() failed[%d]", o->rc );
     return 0;
   }
-
+  StrOp.copy( client, inet_ntoa(remoteAddr.sin_addr));
+  *port = ntohs(remoteAddr.sin_port);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d bytes readed from %s:%d", rc, client, *port );
   return rc;
 }
 
 
 
-Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size ) {
+Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size, char* client, int port ) {
   iOSocketData o = Data(inst);
   int rc = 0;
   SOCKADDR_IN addr;
 
   memset (&addr, 0, sizeof (addr));
   addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = inet_addr (o->host);
-  addr.sin_port = htons (o->port);
+  addr.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);
+  addr.sin_port = htons (port > 0 ? port:o->port);
 
   o->rc = 0;
   rc = sendto( o->sh, buf, size, 0, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN) );

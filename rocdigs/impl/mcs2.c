@@ -575,7 +575,7 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-    SocketOp.recvfrom( data->readUDP, in, 13 );
+    SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -619,7 +619,7 @@ static void __writer( void* threadinst ) {
     cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
-      SocketOp.sendto( data->writeUDP, cmd, 13 );
+      SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
       freeMem( cmd );
     }
 

@@ -703,7 +703,7 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
 }
 
 
-int rocs_socket_recvfrom( iOSocket inst, char* buf, int size ) {
+int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int* port ) {
   iOSocketData o = Data(inst);
   struct sockaddr_in sin;
   int sin_len = sizeof(sin);
@@ -713,20 +713,25 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size ) {
     TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "recvfrom() failed" );
     return 0;
   }
+  if( client != NULL && port != NULL ) {
+		StrOp.copy( client, inet_ntoa(sin.sin_addr));
+		*port = ntohs(sin.sin_port);
+		TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d bytes readed from %s:%d", rc, client, *port );
+  }
   return rc;
 }
 
 
 
-Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size ) {
+Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size, char* client, int port ) {
   iOSocketData o = Data(inst);
   struct sockaddr_in address;
   int rc = 0;
 
   memset (&address, 0, sizeof (address));
   address.sin_family = AF_INET;
-  address.sin_addr.s_addr = inet_addr (o->host);
-  address.sin_port = htons (o->port);
+  address.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);
+  address.sin_port = htons (port > 0 ? port:o->port);
 
   rc = sendto ( o->sh, buf, size, 0, (struct sockaddr *) &address, sizeof(address));
   o->rc = errno;
@@ -736,7 +741,6 @@ Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size ) {
   }
   return True;
 }
-
 
 
 Boolean rocs_socket_read( iOSocket inst, char* buf, int size ) {

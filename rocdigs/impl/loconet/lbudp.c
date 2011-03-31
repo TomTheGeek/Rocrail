@@ -44,7 +44,7 @@ static void __reader( void* threadinst ) {
     byte packet[0x7F];
     MemOp.set( packet, 0, 0x7F);
 
-    int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F );
+    int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F, NULL, NULL );
 
     if( packetSize > 0 ) {
       if( data->usedouble && MemOp.cmp( data->prevPacket, packet, packetSize ) ) {
@@ -156,17 +156,17 @@ Boolean lbUDPWrite( obj inst, unsigned char *msg, int len ) {
     data->outseq++;
     MemOp.copy( out+1, msg, len);
     if( data->usedouble ) {
-      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len+1 );
+      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len+1, NULL, 0 );
       ThreadOp.sleep(1);
     }
-    return SocketOp.sendto( data->writeUDP, out, len+1 );
+    return SocketOp.sendto( data->writeUDP, out, len+1, NULL, 0 );
   }
   else {
     if( data->usedouble ) {
-      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len );
+      Boolean rc = SocketOp.sendto( data->writeUDP, msg, len, NULL, 0 );
       ThreadOp.sleep(1);
     }
-    return SocketOp.sendto( data->writeUDP, msg, len );
+    return SocketOp.sendto( data->writeUDP, msg, len, NULL, 0 );
   }
 }
 

@@ -457,7 +457,7 @@ static void __reader( void* threadinst ) {
 
     MemOp.set( msg, 0, MSGSIZE );
 
-    SocketOp.recvfrom( data->readUDP, msg, MSGSIZE );
+    SocketOp.recvfrom( data->readUDP, msg, MSGSIZE, NULL, NULL );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "msg:\n%s", msg );
     __evaluateMessage(r2rnet, msg);
 
@@ -483,7 +483,7 @@ static void __writer( void* threadinst ) {
       int plen     = 0;
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write request from queue:\n%s", req );
-      SocketOp.sendto( data->writeUDP, req, StrOp.len(req) );
+      SocketOp.sendto( data->writeUDP, req, StrOp.len(req), NULL, 0 );
       StrOp.free(req);
     }
 
@@ -495,7 +495,7 @@ static void __writer( void* threadinst ) {
         wNetReq.setlocalid( req, wR2RnetIni.getid(data->props) );
         wNetReq.setremoteid( req, "*" );
         s = NodeOp.base.toString(req);
-        SocketOp.sendto( data->writeUDP, s, StrOp.len(s) );
+        SocketOp.sendto( data->writeUDP, s, StrOp.len(s), NULL, 0 );
         StrOp.free(s);
         NodeOp.base.del(req);
         retryGetNetRoutes = 0;
