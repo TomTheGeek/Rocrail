@@ -194,6 +194,9 @@
       <const name="sync" vt="string" val="sync"/>
       <var name="cmd" vt="string" defval="" range="*"/>
     </clock>
+    <SnmpService cardinality="1">
+      <var name="port" vt="int" defval="161" range="0-65535" remark="Port number for server socket."/>
+    </SnmpService>
     <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
       <var name="port" vt="int" defval="53701" range="0-65535" remark="Port number for server socket. Deactivated when 0."/>
       <var name="path" vt="string" defval="." range="*" remark="Path where to look for external HTML documents."/>

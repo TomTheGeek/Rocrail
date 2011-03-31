@@ -39,6 +39,7 @@
 #include "rocrail/public/control.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/http.h"
+#include "rocrail/public/snmp.h"
 
 #include "rocrail/wrapper/public/Cmdline.h"
 #include "rocrail/wrapper/public/ConCmd.h"
@@ -816,6 +817,14 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     if( http != NULL )
       data->http = HttpOp.inst( http );
   }
+
+  /* Snmp (Optional)*/
+  {
+    iONode snmp = wRocRail.getSnmpService( data->ini );
+    if( snmp != NULL )
+      data->snmp = SNMPOp.inst( snmp );
+  }
+
 
   if( initfield )
     ModelOp.initField( data->model );

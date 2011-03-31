@@ -19,7 +19,7 @@
 -->
 <Project name="RocRail" title="RocRail API" docname="rocrailapi" source="$Source: /cvsroot/rojav/rocrail/rocrail.xml,v $" revision="$Revision: 1.56 $">
 
-  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display" remark="RocRail application">
+  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display,snmp" remark="RocRail application">
     <fun name="inst" vt="this">
     </fun>
     <fun name="Main" vt="int">
@@ -67,6 +67,7 @@
       <var name="srcpCon" vt="iOSrcpCon" remark=""/>
       <var name="appstartTime" vt="long"/>
       <var name="http" vt="iOHttp" remark=""/>
+      <var name="snmp" vt="iOSNMP" remark=""/>
       <var name="consoleMode" vt="Boolean" remark=""/>
       <var name="szIniFile" vt="const char*"/>
       <var name="szLibPath" vt="const char*"/>
@@ -2059,6 +2060,40 @@
     </data>
   </object>
 
+  <object name="SNMP" use="socket,node,thread,map" remark="SNMP Support">
+    <typedef def="enum {PDU_GETREQ=0xa0,PDU_GETNEXTREQ=0xa1,PDU_GETRSP=0xa2,PDU_SETREQ=0xa3,PDU_TRAP=0xa4,PDU_BULKREQ=0xa5} pdutype"/>
+    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5} vartype"/>
+    <fun name="inst" vt="this" remark="">
+      <param name="ini" vt="iONode" remark="Initialization node."/>
+    </fun>
+    <fun name="shutdown" vt="void">
+      <param name="inst" vt="this" remark="Shutdown SNMP support."/>
+    </fun>
+    <struct name="SnmpVar" typedef="*iOSnmpVar">
+      <var name="oid[128]" vt="char"/>
+      <var name="vartype" vt="int"/>
+      <var name="vars[128]" vt="char"/>
+      <var name="vari" vt="int"/>
+    </struct>
+    <struct name="SnmpHdr" typedef="*iOSnmpHdr">
+      <var name="seqlen" vt="int"/>
+      <var name="version" vt="int"/>
+      <var name="community[128]" vt="char"/>
+      <var name="request" vt="int"/>
+      <var name="reqID" vt="int"/>
+      <var name="errstatus" vt="int"/>
+      <var name="errindex" vt="int"/>
+      <var name="oids" vt="int"/>
+      <var name="oid[32]" vt="struct SnmpVar"/>
+    </struct>
+    <data>
+      <var name="snmpSock" vt="iOSocket"/>
+      <var name="server" vt="iOThread" remark=""/>
+      <var name="run" vt="Boolean" remark=""/>
+      <var name="mibDB" vt="iOMap" remark=""/>
+      <var name="mibMap" vt="iOMap" remark=""/>
+    </data>
+  </object>
 
 
 
