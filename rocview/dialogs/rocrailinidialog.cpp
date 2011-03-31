@@ -346,8 +346,8 @@ void RocrailIniDialog::initValues() {
     snmp = NodeOp.inst( wSnmpService.name(), m_Props, ELEMENT_NODE );
     NodeOp.addChild( m_Props, snmp );
   }
-  m_SnmpPort->SetValue(wSnmpService.getport(srcpcon));
-  m_SnmpServiceActive->SetValue(wSnmpService.isactive(srcpcon)?true:false);
+  m_SnmpPort->SetValue(wSnmpService.getport(snmp));
+  m_SnmpServiceActive->SetValue(wSnmpService.isactive(snmp)?true:false);
 
 
   iONode http = wRocRail.gethttp( m_Props );
