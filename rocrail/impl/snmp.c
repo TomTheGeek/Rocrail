@@ -19,13 +19,17 @@
 */
 
 #include "rocrail/impl/snmp_impl.h"
+#include "rocrail/public/app.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/trace.h"
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/system.h"
 
+#include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/SnmpService.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 static int instCnt = 0;
 
@@ -577,12 +581,23 @@ static void __initMibDB(iOSNMP snmp) {
     * 1.3.6.1.2.1.1.6 - sysLocation
     * 1.3.6.1.2.1.1.7 - sysServices
    */
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)"Model railroad control system");
+
+  char* descr = StrOp.fmt( "%s %d.%d.%d %s", wGlobal.productname,
+                            wGlobal.vmajor,
+                            wGlobal.vminor,
+                            AppOp.getrevno(),
+                            wGlobal.releasename );
+
+  const char* location = FileOp.ripPath(wRocRail.getplanfile(AppOp.getIni()));
+
+  char* uptime = StrOp.fmt("%ld", SystemOp.getTick());
+
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)descr);
   /*MapOp.put( data->mibDB, "1.3.6.1.2.1.1.2.0", (obj)"4.7.1.1"); */
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)"0");
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)uptime);
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.4.0", (obj)"support@rocrail.net");
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)"Rocrail Sunrise");
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)"Home");
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)"Rocrail server");
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)location);
 
   iOList systemList = ListOp.inst();
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.1.0" );
@@ -620,6 +635,9 @@ static void __server( void* threadinst ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP received from %s:%d", client, port );
 
     if( inlen > 0 ) {
+      char* uptime = StrOp.fmt("%ld", SystemOp.getTick());
+      MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)uptime);
+
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
       int outlen =  __handleRequest(snmp, in, inlen, out);
       if( outlen > 0 ) {
