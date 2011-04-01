@@ -151,16 +151,15 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 /**  */
 static void _enterBlock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  /*
-  wBlock.setlocid( data->props, id );
-  if( id != NULL ) {
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entered by loco [%s]", locid );
+
+  if( locid != NULL ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
     wBlock.setentering( nodeD, True );
-    wBlock.setlocid( nodeD, id );
+    wBlock.setlocid( nodeD, locid );
     AppOp.broadcastEvent( nodeD );
   }
-  */
 }
 
 
@@ -315,6 +314,14 @@ static Boolean _hasPre2In( iIBlockBase inst ,const char* fromBlockId ) {
 /**  */
 static void _inBlock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco [%s] is in", locid );
+  if( locid != NULL ) {
+    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    wBlock.setid( nodeD, data->id );
+    wBlock.setreserved( nodeD, False );
+    wBlock.setlocid( nodeD, locid );
+    AppOp.broadcastEvent( nodeD );
+  }
   return;
 }
 
@@ -322,6 +329,7 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
 /**  */
 static void _init( iIBlockBase inst ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "init block [%s]", data->id );
   return;
 }
 
@@ -420,6 +428,7 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 /**  */
 static Boolean _lockForGroup( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock not groupable" );
   return False;
 }
 
@@ -476,6 +485,7 @@ static void _setDefaultAspect( iIBlockBase inst ,Boolean signalpair ) {
 /**  */
 static void _setGroup( iIBlockBase inst ,const char* group ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock not groupable" );
   return;
 }
 
@@ -483,6 +493,7 @@ static void _setGroup( iIBlockBase inst ,const char* group ) {
 /**  */
 static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco schedule %s", scid );
   return False;
 }
 
@@ -490,6 +501,7 @@ static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
 /**  */
 static void _setManager( iIBlockBase inst ,iIBlockBase manager ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock not managable" );
   return;
 }
 
@@ -562,6 +574,7 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
 static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
   Boolean unlocked = False;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock for loco %d", locid );
   if( MapOp.get( data->lcMap, locid) != NULL ) {
     unlocked = __freeSections(inst, locid);
   }
@@ -572,6 +585,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
 /**  */
 static Boolean _unLockForGroup( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock not groupable" );
   return 0;
 }
 
