@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 17 2008)
+// C++ code generated with wxFormBuilder (version Dec 21 2009)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -62,7 +62,6 @@ class mgvdlggen : public wxDialog
 		wxSpinCtrl* m_Port4;
 		wxStaticLine* m_staticline3;
 		wxStaticText* m_labProgramming;
-		wxButton* m_ResetBits;
 		wxButton* m_ProgrammingOn;
 		wxButton* m_ProgrammingOff;
 		wxPanel* m_Servo;
@@ -82,21 +81,21 @@ class mgvdlggen : public wxDialog
 		wxButton* m_StdButtonOK;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnResetBits( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnProgrammingOn( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnProgrammingOff( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnServoSelect( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnServoLeftAngle( wxScrollEvent& event ){ event.Skip(); }
-		virtual void OnServoRightAngle( wxScrollEvent& event ){ event.Skip(); }
-		virtual void OnServoSpeed( wxScrollEvent& event ){ event.Skip(); }
-		virtual void onSetLeftAngle( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onSetRightAngle( wxCommandEvent& event ){ event.Skip(); }
-		virtual void onSetSpeed( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnServoRelay( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnProgrammingOn( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnProgrammingOff( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnServoSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnServoLeftAngle( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnServoRightAngle( wxScrollEvent& event ) { event.Skip(); }
+		virtual void OnServoSpeed( wxScrollEvent& event ) { event.Skip(); }
+		virtual void onSetLeftAngle( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSetRightAngle( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSetSpeed( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnServoRelay( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
+		
 		mgvdlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("MGV136 Servo"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~mgvdlggen();
 	

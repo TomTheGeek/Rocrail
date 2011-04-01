@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 17 2008)
+// C++ code generated with wxFormBuilder (version Dec 21 2009)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -110,9 +110,6 @@ mgvdlggen::mgvdlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_ResetBits = new wxButton( m_Setup, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_ResetBits, 0, wxALL, 5 );
-	
 	m_ProgrammingOn = new wxButton( m_Setup, wxID_ANY, wxT("ON"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_ProgrammingOn, 0, wxALL, 5 );
 	
@@ -124,7 +121,7 @@ mgvdlggen::mgvdlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Setup->SetSizer( bSizer7 );
 	m_Setup->Layout();
 	bSizer7->Fit( m_Setup );
-	m_MGVBook->AddPage( m_Setup, wxT("Setup"), false );
+	m_MGVBook->AddPage( m_Setup, wxT("Setup"), true );
 	m_Servo = new wxPanel( m_MGVBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
@@ -180,7 +177,6 @@ mgvdlggen::mgvdlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer11->Add( m_staticline4, 0, wxEXPAND | wxALL, 5 );
 	
 	m_ServoRelay = new wxCheckBox( m_Servo, wxID_ANY, wxT("Polarisation relay"), wxDefaultPosition, wxDefaultSize, 0 );
-	
 	bSizer11->Add( m_ServoRelay, 0, wxALL, 5 );
 	
 	bSizer8->Add( bSizer11, 1, wxEXPAND, 5 );
@@ -205,7 +201,6 @@ mgvdlggen::mgvdlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	m_ResetBits->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnResetBits ), NULL, this );
 	m_ProgrammingOn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnProgrammingOn ), NULL, this );
 	m_ProgrammingOff->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnProgrammingOff ), NULL, this );
 	m_ServoSelection->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( mgvdlggen::OnServoSelect ), NULL, this );
@@ -222,7 +217,6 @@ mgvdlggen::mgvdlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 mgvdlggen::~mgvdlggen()
 {
 	// Disconnect Events
-	m_ResetBits->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnResetBits ), NULL, this );
 	m_ProgrammingOn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnProgrammingOn ), NULL, this );
 	m_ProgrammingOff->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( mgvdlggen::OnProgrammingOff ), NULL, this );
 	m_ServoSelection->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( mgvdlggen::OnServoSelect ), NULL, this );
