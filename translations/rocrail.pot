@@ -5213,3 +5213,39 @@ msgstr ""
 msgid "Nodes"
 msgstr ""
 
+#. 
+# id="stagingyard"
+#, c-format
+msgid "Staging yard"
+msgstr ""
+
+#. 
+# id="stagingblock"
+#, c-format
+msgid "Staging block"
+msgstr ""
+
+#. 
+# id="sections"
+#, c-format
+msgid "Sections"
+msgstr ""
+
+#. 
+# id="section"
+#, c-format
+msgid "Section"
+msgstr ""
+
+#. 
+# id="train"
+#, c-format
+msgid "Train"
+msgstr ""
+
+#. 
+# id="gap"
+#, c-format
+msgid "gap"
+msgstr ""
+
