@@ -60,9 +60,9 @@ class stagedlggen : public wxDialog
 		wxButton* m_AddSection;
 		wxButton* m_ModifySection;
 		wxButton* m_DeleteSection;
-		wxStdDialogButtonSizer* m_sdbSizer2;
-		wxButton* m_sdbSizer2OK;
-		wxButton* m_sdbSizer2Cancel;
+		wxStdDialogButtonSizer* m_stdButton;
+		wxButton* m_stdButtonOK;
+		wxButton* m_stdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnSectionList( wxCommandEvent& event ) { event.Skip(); }
@@ -75,7 +75,7 @@ class stagedlggen : public wxDialog
 	
 	public:
 		
-		stagedlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Staging Yard"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		stagedlggen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Staging Block"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~stagedlggen();
 	
 };

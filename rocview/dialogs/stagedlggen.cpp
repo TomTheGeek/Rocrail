@@ -120,13 +120,13 @@ stagedlggen::stagedlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	
 	bSizer6->Add( m_Notebook, 1, wxEXPAND | wxALL, 5 );
 	
-	m_sdbSizer2 = new wxStdDialogButtonSizer();
-	m_sdbSizer2OK = new wxButton( this, wxID_OK );
-	m_sdbSizer2->AddButton( m_sdbSizer2OK );
-	m_sdbSizer2Cancel = new wxButton( this, wxID_CANCEL );
-	m_sdbSizer2->AddButton( m_sdbSizer2Cancel );
-	m_sdbSizer2->Realize();
-	bSizer6->Add( m_sdbSizer2, 0, wxEXPAND|wxALL, 5 );
+	m_stdButton = new wxStdDialogButtonSizer();
+	m_stdButtonOK = new wxButton( this, wxID_OK );
+	m_stdButton->AddButton( m_stdButtonOK );
+	m_stdButtonCancel = new wxButton( this, wxID_CANCEL );
+	m_stdButton->AddButton( m_stdButtonCancel );
+	m_stdButton->Realize();
+	bSizer6->Add( m_stdButton, 0, wxEXPAND|wxALL, 5 );
 	
 	this->SetSizer( bSizer6 );
 	this->Layout();
@@ -137,8 +137,8 @@ stagedlggen::stagedlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	m_AddSection->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionAdd ), NULL, this );
 	m_ModifySection->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionModify ), NULL, this );
 	m_DeleteSection->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionDelete ), NULL, this );
-	m_sdbSizer2Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnCancel ), NULL, this );
-	m_sdbSizer2OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnOK ), NULL, this );
+	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnCancel ), NULL, this );
+	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnOK ), NULL, this );
 }
 
 stagedlggen::~stagedlggen()
@@ -148,6 +148,6 @@ stagedlggen::~stagedlggen()
 	m_AddSection->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionAdd ), NULL, this );
 	m_ModifySection->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionModify ), NULL, this );
 	m_DeleteSection->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnSectionDelete ), NULL, this );
-	m_sdbSizer2Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnCancel ), NULL, this );
-	m_sdbSizer2OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnOK ), NULL, this );
+	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnCancel ), NULL, this );
+	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( stagedlggen::OnOK ), NULL, this );
 }

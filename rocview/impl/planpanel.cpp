@@ -727,7 +727,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( ME_AddSignal, wxGetApp().getMenu("signal")  );
       menu.Append( ME_AddOutput, wxGetApp().getMenu("output")  );
       menu.Append( ME_AddBlock , wxGetApp().getMenu("block") );
-      menu.Append( ME_AddStage , wxGetApp().getMenu("stagingyard") );
+      menu.Append( ME_AddStage , wxGetApp().getMenu("stagingblock") );
       menu.Append( ME_AddFBack , wxGetApp().getMenu("sensor") );
       menu.Append( ME_AddRoute , wxGetApp().getMenu("route") );
       menu.Append( ME_AddTT    , wxGetApp().getMenu("turntable") );

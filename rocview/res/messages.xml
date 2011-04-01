@@ -17127,4 +17127,19 @@
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
   </Msg>
+  <Msg id="stagingblock">
+    <en txt="Staging block"/>
+  </Msg>
+  <Msg id="sections">
+    <en txt="Sections"/>
+  </Msg>
+  <Msg id="section">
+    <en txt="Section"/>
+  </Msg>
+  <Msg id="train">
+    <en txt="Train"/>
+  </Msg>
+  <Msg id="gap">
+    <en txt="gap"/>
+  </Msg>
 </Messages>

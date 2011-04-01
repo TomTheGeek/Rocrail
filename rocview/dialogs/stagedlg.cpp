@@ -28,11 +28,18 @@
 
 #include "rocview/public/guiapp.h"
 
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageSection.h"
+#include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Feedback.h"
+
 StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 {
   TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "stagedlg" );
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props = p_Props;
+  m_Section = NULL;
   initLabels();
 
   m_General->GetSizer()->Layout();
@@ -62,45 +69,182 @@ void StageDlg::OnSetPage(wxCommandEvent& event) {
 }
 
 
-void StageDlg::initLabels() {
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
 
+void StageDlg::initLabels() {
+  SetTitle(wxGetApp().getMsg( "stagingblock" ));
+  m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "sections" ) );
+
+  // General
+  m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labDescription->SetLabel( wxGetApp().getMsg( "description" ) );
+  m_labSectionLength->SetLabel( wxGetApp().getMsg( "section" ) + _T(" ") + wxGetApp().getMsg( "length" ) );
+  m_labTrainGap->SetLabel( wxGetApp().getMsg( "train" ) + _T(" ") + wxGetApp().getMsg( "gap" ) );
+
+  // Sections
+  m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labSectionSensor->SetLabel( wxGetApp().getMsg( "sensor" ) );
+  m_AddSection->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_ModifySection->SetLabel( wxGetApp().getMsg( "modify" ) );
+  m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
+
+  m_SectionSensor->Append( _T("") );
+
+  iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
+
+  if( model != NULL ) {
+    iONode fblist = wPlan.getfblist( model );
+    if( fblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( fblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = NodeOp.getChild( fblist, i );
+        ListOp.add(list, (obj)wFeedback.getid( fb ));
+      }
+    }
+
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_SectionSensor->Append( wxString(id,wxConvUTF8) );
+    }
+
+  }
+
+  ListOp.base.del(list);
+
+  // Buttons
+  m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
+  m_stdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
 }
 
 bool StageDlg::evaluate() {
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wStage.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+  // evaluate General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+  wStage.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  wStage.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
+  wStage.setslen( m_Props, m_SectionLength->GetValue() );
+  wStage.setgap( m_Props, m_TrainGap->GetValue() );
 
 }
 
 void StageDlg::initSections() {
+  // init Sections
+  m_SectionList->Clear();
+  iONode section = wStage.getsection(m_Props);
+  while( section != NULL ) {
+    const char* id = wStageSection.getid(section);
+    m_SectionList->Append( wxString(id,wxConvUTF8), section );
+    section = wStage.nextsection(m_Props, section);
+  }
+  m_ModifySection->Enable(false);
+  m_DeleteSection->Enable(false);
 
 }
 
 void StageDlg::initValues() {
+  if( m_Props == NULL ) {
+    TraceOp.trc( "stagedlg", TRCLEVEL_DEBUG, __LINE__, 9999, "no stage selected" );
+    return;
+  }
+
+  char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("stagingblock").mb_str(wxConvUTF8), wStage.getid( m_Props ) );
+  SetTitle( wxString(title,wxConvUTF8) );
+  StrOp.free( title );
+
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for stage [%s]", wStage.getid( m_Props ) );
+
+  // init General
+  m_ID->SetValue( wxString(wStage.getid( m_Props ),wxConvUTF8) );
+  m_Description->SetValue( wxString(wStage.getdesc( m_Props ),wxConvUTF8) );
+  m_SectionLength->SetValue( wStage.getslen( m_Props ) );
+  m_TrainGap->SetValue( wStage.getgap( m_Props ) );
+
+  initSections();
 
 }
 
 
 void StageDlg::OnSectionList( wxCommandEvent& event )
 {
-	// TODO: Implement OnSectionList
+  if( m_SectionList->GetSelection() != wxNOT_FOUND ) {
+    m_Section = (iONode)m_SectionList->GetClientData(m_SectionList->GetSelection());
+    if( m_Section != NULL ) {
+      m_SectionID->SetValue( wxString(wStageSection.getid( m_Section ),wxConvUTF8) );
+      m_SectionSensor->SetStringSelection( wStageSection.getfbid( m_Section ) == NULL ?
+          _T(""):wxString(wStageSection.getfbid( m_Section ),wxConvUTF8) );
+      m_ModifySection->Enable(true);
+      m_DeleteSection->Enable(true);
+    }
+    else
+      TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
 }
 
 void StageDlg::OnSectionAdd( wxCommandEvent& event )
 {
-	// TODO: Implement OnSectionAdd
+  if( m_Props == NULL )
+    return;
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "add node..." );
+
+  iONode node = NodeOp.inst(wStageSection.name(), m_Props, ELEMENT_NODE);
+  wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
+  wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
+  NodeOp.addChild( m_Props, node );
+  initSections();
 }
 
 void StageDlg::OnSectionModify( wxCommandEvent& event )
 {
-	// TODO: Implement OnSectionModify
+  if( m_Props == NULL )
+    return;
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "modify node..." );
+
+  if( m_SectionList->GetSelection() != wxNOT_FOUND ) {
+    iONode node = (iONode)m_SectionList->GetClientData(m_SectionList->GetSelection());
+    if( node != NULL ) {
+      wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
+      wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
+      initSections();
+    }
+    else
+      TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
 }
 
 void StageDlg::OnSectionDelete( wxCommandEvent& event )
 {
-	// TODO: Implement OnSectionDelete
+  if( m_Props == NULL )
+    return;
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "delete node..." );
+
+  if( m_SectionList->GetSelection() != wxNOT_FOUND ) {
+    iONode node = (iONode)m_SectionList->GetClientData(m_SectionList->GetSelection());
+    if( node != NULL ) {
+      NodeOp.removeChild( m_Props, node );
+      initSections();
+    }
+    else
+      TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
 }
 
 void StageDlg::OnOK( wxCommandEvent& event )
 {
+  evaluate();
   EndModal( wxID_OK );
 }
 void StageDlg::OnCancel( wxCommandEvent& event )
