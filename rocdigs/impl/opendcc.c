@@ -24,6 +24,7 @@
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
@@ -31,6 +32,8 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/lib.h"
 #include "rocs/public/system.h"
+
+#include "rocutils/public/addr.h"
 
 #include <time.h>
 
@@ -101,6 +104,7 @@ static int __normalizeSteps(int insteps ) {
     return 126;
   return 28;
 }
+
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
@@ -364,6 +368,96 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       NodeOp.base.del(cmdoff);
     }
   }
+
+
+  /* TODO: Extended DCC accessory command.
+   *
+    OpenDCC from V0.23 on supports the extended accessory command of DCC.
+    This allows for a easier control of signals with more than two aspects.
+    For access, please use the following command extensions to p50x:
+
+    XTrntX (0x91)- length = 1+2 bytes
+
+    Bytes:
+    0: 0x91 XTrntX
+    1: LSB decoderaddress (A7 ... A0)
+    2: MSB decoderadress and signal aspect
+    bit# 7 6 5 4 3 2 1 0
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    | B4 | B3 | B2 | B1 | B0 | A10 | A9 | A8 |
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    A10..A0: Addr of Decoder
+    B4..B0: Aspect
+
+    XpressNet:
+
+    0x13 0x01 B+AddrH AddrL
+
+    DCC extended accessory command request. (compact form)
+    AddrH (bit A10..A8) and AddrL (bit A7..A0) form a 11-bit decoder address, B (=B4..B0) form the desired aspect.
+    All bits B4..B0 equal 0 define the 'stop'-aspect.
+    The command station shall issue a DCC extended accessory command as defined in NMRA 9.2.1.
+
+   */
+  else if( StrOp.equals( NodeOp.getName( cmd ), wSignal.name() ) ) {
+    int mod = wSignal.getaddr( cmd );
+    int pin = wSignal.getport1( cmd );
+    int addr = 0;
+    int gate = wSignal.getgate1( cmd );
+
+    if( pin == 0 )
+      AddrOp.fromFADA( mod, &mod, &pin, &gate );
+    else if( mod == 0 && pin > 0 )
+      AddrOp.fromPADA( pin, &mod, &pin );
+
+    addr = (mod-1) * 4 + pin;
+
+    if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+      /* p50x sublib */
+      iONode sgcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* byteStr = NULL;
+      byte outBytes[6];
+      outBytes[0] = (byte)'x';
+      outBytes[1] = 0x91; /* XTrntX */
+      outBytes[2] = addr % 256;
+      outBytes[3] = addr / 256;
+      outBytes[3] |= wSignal.getaspect(cmd) << 3;
+
+      byteStr = StrOp.byteToStr( outBytes, 4 );
+      wBinCmd.setoutlen( sgcmd, 4 );
+      wBinCmd.setinlen( sgcmd, 1 ); /* ? */
+      wBinCmd.setout( sgcmd, byteStr );
+      StrOp.free( byteStr );
+      data->sublib->cmd((obj)data->sublib, sgcmd);
+    }
+    else {
+      /* lenz sublib */
+      iONode sgcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* byteStr = NULL;
+      byte outBytes[5];
+      outBytes[0] = 0x13;
+      outBytes[1] = 0x01;
+      outBytes[2] = addr / 256;
+      outBytes[2] |= wSignal.getaspect(cmd) << 3;
+      outBytes[3] = addr % 256;
+
+      byte bXor = 0;
+      int i = 0;
+      for( i = 0; i < 4; i++ ) {
+        bXor ^= outBytes[ i ];
+      }
+      outBytes[4] = bXor;
+
+      byteStr = StrOp.byteToStr( outBytes, 5 );
+      wBinCmd.setoutlen( sgcmd, 5 );
+      wBinCmd.setinlen( sgcmd, 0 ); /* ? */
+      wBinCmd.setout( sgcmd, byteStr );
+      StrOp.free( byteStr );
+      data->sublib->cmd((obj)data->sublib, sgcmd);
+    }
+  }
+
+
   else if( StrOp.equals( NodeOp.getName( cmd ), wLoc.name() ) ) {
     if( StrOp.equals( wLoc.shortid, wLoc.getcmd(cmd) ) ) {
       /* send short ID to OpenDCC */
