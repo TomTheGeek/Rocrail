@@ -2062,7 +2062,7 @@
 
   <object name="SNMP" use="socket,node,thread,map" remark="SNMP Support">
     <typedef def="enum {PDU_GETREQ=0xa0,PDU_GETNEXTREQ=0xa1,PDU_GETRSP=0xa2,PDU_SETREQ=0xa3,PDU_TRAP=0xa4,PDU_BULKREQ=0xa5} pdutype"/>
-    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5} vartype"/>
+    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5,VAR_TIMETICK=67} vartype"/>
     <fun name="inst" vt="this" remark="">
       <param name="ini" vt="iONode" remark="Initialization node."/>
     </fun>

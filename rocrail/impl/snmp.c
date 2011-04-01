@@ -155,6 +155,12 @@ static int __setInt(byte* out, int val) {
 }
 
 
+static int __setTimetick(byte* out, int val) {
+  int len = __setInt(out, val );
+  out[0] = VAR_TIMETICK;
+  return len;
+}
+
 /* --------------------------------------------------------------------------------
  * Convert a string from a char array into a byte sequence.
  */
@@ -321,6 +327,28 @@ static int __makeStringVariable(byte* out, const char* oid, const char* val) {
 
 
 /* --------------------------------------------------------------------------------
+ * Create a sequence with OID and string variable.
+ */
+static int __makeTimetickVariable(byte* out, const char* oid, int val) {
+  int offset = 0;
+
+  out[offset] = VAR_SEQUENCE;
+  offset++;
+  byte* VarLen = out + offset;
+  offset++;
+
+  offset += __setOID(out+offset, oid);
+
+  offset += __setTimetick( out+offset, val);
+
+  /* calculate the seq len */
+  *VarLen = offset - (VarLen - out) - 1;
+
+  return offset;
+}
+
+
+/* --------------------------------------------------------------------------------
  * Read a variable into a SnmpVar structure from a sequence.
  */
 static Boolean __readVar(byte* in, iOSnmpVar snmpvar, int* offset) {
@@ -471,8 +499,12 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
     int i = 0;
     for( i = 0; i < hdr->oids; i++ ) {
       const char* val = (const char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
-      if( val != NULL )
-        offset += __makeStringVariable(out+offset, hdr->oid[i].oid, val);
+      if( val != NULL ) {
+        if( StrOp.equals("1.3.6.1.2.1.1.3.0", hdr->oid[i].oid ) )
+          offset += __makeTimetickVariable(out+offset, hdr->oid[i].oid, atoi(val));
+        else
+          offset += __makeStringVariable(out+offset, hdr->oid[i].oid, val);
+      }
     }
   }
 
