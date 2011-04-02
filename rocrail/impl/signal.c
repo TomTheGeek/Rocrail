@@ -590,6 +590,54 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
 
 
 
+static Boolean __processAspectNrCmd( iOSignal inst, const char* state ) {
+  iOSignalData o = Data(inst);
+  iOControl control = AppOp.getControl(  );
+  const char* iid = wSignal.getiid( o->props );
+  int aspect = 0;
+
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "aspect number processing for signal [%s][%s]...", wSignal.getid( o->props ), state );
+
+  if( StrOp.equals( wSignal.green, state ) )
+    aspect = wSignal.getgreennr(o->props);
+  else if( StrOp.equals( wSignal.red, state ) )
+    aspect = wSignal.getrednr(o->props);
+  else if( StrOp.equals( wSignal.yellow, state ) )
+    aspect = wSignal.getyellownr(o->props);
+  else if( StrOp.equals( wSignal.white, state ) )
+    aspect = wSignal.getwhitenr(o->props);
+  else if( StrOp.equals( wSignal.blank, state ) )
+    aspect = wSignal.getblanknr(o->props);
+
+  /* reset all outputs */
+  if( iid != NULL )
+    wSignal.setiid( cmd, iid );
+
+  wSignal.setbus( cmd, wSignal.getbus( o->props ) );
+
+  wSignal.setprot( cmd, wSignal.getprot( o->props ) );
+  wSignal.setcmd( cmd, wSignal.aspect );
+  wSignal.setaspect( cmd, aspect );
+  wSignal.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wSignal.setport1( cmd, wSignal.getport1( o->props ) );
+  wSignal.setgate1( cmd, wSignal.getgate1( o->props ) );
+
+  /* invoke the command by calling the control */
+  if( !ControlOp.cmd( control, cmd, NULL ) ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+    return False;
+  }
+
+  return True;
+}
+
+
+
+
 static Boolean __process2AspectsAsSwitchCmd( iOSignal inst, const char* state ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -739,9 +787,21 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
                    wSignal.getid( o->props ), state );
     }
 
+    /* check using patterns previous type (backwards compatibility) */
+    if( NodeOp.getBool( o->props, "usepatterns", False ) ) {
+      wSignal.setusepatterns( o->props, wSignal.use_patterns );
+    }
+
     /* check using patterns */
-    if( hasAddr && wSignal.isusepatterns( o->props ) ) {
+    if( hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_patterns ) {
       if( !__processPatternCmd( inst, state ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else if( hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_aspectnrs ) {
+      if( !__processAspectNrCmd( inst, state ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
         ok = False;

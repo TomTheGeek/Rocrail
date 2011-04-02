@@ -1134,12 +1134,19 @@
         <var name="dwarf" vt="bool" defval="false"/>
 
         <!-- patterns -->
-        <var name="usepatterns" vt="bool" defval="false"/>
+        <const name="use_patterns" vt="int" val="1"/>
+        <const name="use_aspectnrs" vt="int" val="2"/>
+        <var name="usepatterns" vt="int" defval="0" remark="0=no, 1=patterns, 2=aspectnrs"/>
         <var name="green" vt="int" defval="0" range="0-3" remark="pattern for green"/>
         <var name="red" vt="int" defval="0" range="0-3" remark="pattern for red"/>
         <var name="yellow" vt="int" defval="0" range="0-3" remark="pattern for yellow"/>
         <var name="white" vt="int" defval="0" range="0-3" remark="pattern for white"/>
         <var name="blank" vt="int" defval="0" range="0-3" remark="pattern for blank"/>
+        <var name="greennr" vt="int" defval="0" range="0-31" remark="pattern for green"/>
+        <var name="rednr" vt="int" defval="0" range="0-31" remark="pattern for red"/>
+        <var name="yellownr" vt="int" defval="0" range="0-31" remark="pattern for yellow"/>
+        <var name="whitenr" vt="int" defval="0" range="0-31" remark="pattern for white"/>
+        <var name="blanknr" vt="int" defval="0" range="0-31" remark="pattern for blank"/>
 
         <actionctrl cardinality="n"/>
       </sg>

@@ -240,7 +240,12 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   }
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+    if( StrOp.equals( wSignal.aspect, wSignal.getcmd(node) ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "setting signal aspect to %d", wSignal.getaspect(node) );
+    }
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "Signal commands are no longer supported at this level." );
   }
 

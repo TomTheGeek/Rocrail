@@ -31,6 +31,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/statline.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "basedlg.h"
@@ -43,6 +44,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -83,8 +85,8 @@ class wxNotebook;
 #define ID_TEXTCTRL_SG_BUS 10257
 #define wxID_STATIC_SG_PROT 10184
 #define ID_CHOICE_SG_PROT 10183
-#define ID_CHECKBOX_SG_USEPATTERNS 10318
 #define ID_CHECKBOX_SG_PAIRGATES 10418
+#define ID_SIGNALCONTROL 10393
 #define ID_PANEL_SG_PROPS 10208
 #define ID_RADIOBOX_SG_TYPE 10215
 #define ID_RADIOBOX_SG_SGTYPE 10216
@@ -160,11 +162,11 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SIGNAL_ACTIONS
     void OnSignalActionsClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SG_USEPATTERNS
-    void OnCheckboxSgUsepatternsClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SG_PAIRGATES
     void OnCheckboxSgPairgatesClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SIGNALCONTROL
+    void OnSignalcontrolSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
@@ -247,9 +249,9 @@ public:
     wxTextCtrl* m_Port4;
     wxRadioBox* m_Gate4;
     wxCheckBox* m_Invert;
-    wxCheckBox* m_UsePatterns;
     wxCheckBox* m_PairGates;
     wxCheckBox* m_AsSwitch;
+    wxRadioBox* m_SignalControl;
     wxPanel* m_PropsPanel;
     wxRadioBox* m_Type;
     wxRadioBox* m_Signal;
@@ -261,18 +263,23 @@ public:
     wxStaticText* m_labGreen;
     wxRadioBox* m_Green1;
     wxRadioBox* m_Green2;
+    wxSpinCtrl* m_GreenNr;
     wxStaticText* m_labRed;
     wxRadioBox* m_Red1;
     wxRadioBox* m_Red2;
+    wxSpinCtrl* m_RedNr;
     wxStaticText* m_labYellow;
     wxRadioBox* m_Yellow1;
     wxRadioBox* m_Yellow2;
+    wxSpinCtrl* m_YellowNr;
     wxStaticText* m_labWhite;
     wxRadioBox* m_White1;
     wxRadioBox* m_White2;
+    wxSpinCtrl* m_WhiteNr;
     wxStaticText* m_labBlank;
     wxRadioBox* m_Blank1;
     wxRadioBox* m_Blank2;
+    wxSpinCtrl* m_BlankNr;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

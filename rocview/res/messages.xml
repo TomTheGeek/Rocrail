@@ -17142,4 +17142,10 @@
   <Msg id="gap">
     <en txt="gap"/>
   </Msg>
+  <Msg id="patterns">
+    <en txt="Patterns"/>
+  </Msg>
+  <Msg id="aspectnr">
+    <en txt="Aspect numbers"/>
+  </Msg>
 </Messages>
