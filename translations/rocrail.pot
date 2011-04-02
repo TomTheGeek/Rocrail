@@ -5249,3 +5249,15 @@ msgstr ""
 msgid "gap"
 msgstr ""
 
+#. 
+# id="patterns"
+#, c-format
+msgid "Patterns"
+msgstr ""
+
+#. 
+# id="aspectnr"
+#, c-format
+msgid "Aspect numbers"
+msgstr ""
+
