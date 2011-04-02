@@ -251,6 +251,7 @@ void SignalDialog::initLabels() {
   m_labAspect->SetLabel( wxGetApp().getMsg( "aspect" ) + _T(":") );
   m_labPatternAddr1->SetLabel( wxGetApp().getMsg( "red" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
   m_labPatternAddr2->SetLabel( wxGetApp().getMsg( "yellow" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
+  m_labAspectNr->SetLabel( wxGetApp().getMsg( "number" ) + _T(":") );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -586,6 +587,7 @@ bool SignalDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_labAspect = NULL;
     m_labPatternAddr1 = NULL;
     m_labPatternAddr2 = NULL;
+    m_labAspectNr = NULL;
     m_labGreen = NULL;
     m_Green1 = NULL;
     m_Green2 = NULL;
@@ -929,8 +931,8 @@ void SignalDialog::CreateControls()
     m_labPatternAddr2 = new wxStaticText( m_PropsPanel, wxID_ANY, _("Yellow address gate:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer81->Add(m_labPatternAddr2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticText* itemStaticText85 = new wxStaticText( m_PropsPanel, wxID_ANY, _("Nr."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer81->Add(itemStaticText85, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_labAspectNr = new wxStaticText( m_PropsPanel, wxID_ANY, _("Nr."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer81->Add(m_labAspectNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labGreen = new wxStaticText( m_PropsPanel, ID_STATICTEXT_SG_GREEN, _("Green"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer81->Add(m_labGreen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);

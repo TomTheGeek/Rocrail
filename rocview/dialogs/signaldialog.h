@@ -260,6 +260,7 @@ public:
     wxStaticText* m_labAspect;
     wxStaticText* m_labPatternAddr1;
     wxStaticText* m_labPatternAddr2;
+    wxStaticText* m_labAspectNr;
     wxStaticText* m_labGreen;
     wxRadioBox* m_Green1;
     wxRadioBox* m_Green2;
