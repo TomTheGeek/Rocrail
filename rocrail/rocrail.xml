@@ -965,6 +965,15 @@
     <fun name="getSwitchMap" vt="iOMap">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
+    <fun name="getSignalMap" vt="iOMap">
+      <param name="inst" vt="this" remark="Control instance"/>
+    </fun>
+    <fun name="getFeedbackMap" vt="iOMap">
+      <param name="inst" vt="this" remark="Control instance"/>
+    </fun>
+    <fun name="getLocoMap" vt="iOMap">
+      <param name="inst" vt="this" remark="Control instance"/>
+    </fun>
     <fun name="isCheck2In" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>

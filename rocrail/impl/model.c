@@ -2388,6 +2388,21 @@ static iOMap _getSwitchMap( iOModel inst ) {
   return o->switchMap;
 }
 
+static iOMap _getSignalMap( iOModel inst ) {
+  iOModelData o = Data(inst);
+  return o->signalMap;
+}
+
+static iOMap _getFeedbackMap( iOModel inst ) {
+  iOModelData o = Data(inst);
+  return o->feedbackMap;
+}
+
+static iOMap _getLocoMap( iOModel inst ) {
+  iOModelData o = Data(inst);
+  return o->locMap;
+}
+
 static iOSignal _getSignal( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOSignal)MapOp.get( o->signalMap, id );
