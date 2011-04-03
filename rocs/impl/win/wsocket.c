@@ -599,9 +599,11 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int*
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recvfrom() failed[%d]", o->rc );
     return 0;
   }
-  StrOp.copy( client, inet_ntoa(remoteAddr.sin_addr));
-  *port = ntohs(remoteAddr.sin_port);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d bytes readed from %s:%d", rc, client, *port );
+  if( client != NULL && port != NULL ) {
+    StrOp.copy( client, inet_ntoa(remoteAddr.sin_addr));
+    *port = ntohs(remoteAddr.sin_port);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d bytes readed from %s:%d", rc, client, *port );
+  }
   return rc;
 }
 
