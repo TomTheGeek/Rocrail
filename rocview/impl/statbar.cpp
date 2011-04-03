@@ -37,6 +37,7 @@
     #include "wx/event.h"
 #endif
 
+#include "rocview/public/guiapp.h"
 #include "rocview/public/statbar.h"
 
 #include "rocview/xpm/on.xpm"
@@ -56,17 +57,23 @@ StatusBar::StatusBar(wxWindow *parent)
            : wxStatusBar(parent, wxID_ANY)
              
 {
-    static const int widths[status_max] = { -1, -1, -1, 100, BITMAP_SIZE_X*5 };
+    static const int widths[status_max] = { -1, -1, -1, 100, BITMAP_SIZE_X*6 };
 
 
     SetFieldsCount(status_max);
     SetStatusWidths(status_max, widths);
 
+    m_statbmpH = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpP = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpT = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpS = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpA = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
 
+    m_statbmpH->SetToolTip(wxGetApp().getMsg("planhealth"));
+    m_statbmpP->SetToolTip(wxGetApp().getMsg("power"));
+    m_statbmpT->SetToolTip(wxGetApp().getMsg("communication"));
+    m_statbmpS->SetToolTip(wxGetApp().getMsg("sensors"));
+    m_statbmpA->SetToolTip(wxGetApp().getMsg("accessory"));
     SetMinHeight(BITMAP_SIZE_Y);
 
 }
@@ -80,15 +87,17 @@ void StatusBar::OnSize(wxSizeEvent& event)
 {
     wxRect rect;
     GetFieldRect(status_controller, rect);
-    wxSize size = m_statbmpP->GetSize();
+    wxSize size = m_statbmpH->GetSize();
 
-    m_statbmpP->Move(rect.x + (rect.width - size.x*4) / 2,
+    m_statbmpH->Move(rect.x + (rect.width - size.x*5) / 2,
                     rect.y + (rect.height - size.y) / 2);
-    m_statbmpT->Move(rect.x + size.x+ 1 + (rect.width - size.x*4) / 2,
+    m_statbmpP->Move(rect.x + size.x+ 1 + (rect.width - size.x*5) / 2,
                     rect.y + (rect.height - size.y) / 2);
-    m_statbmpS->Move(rect.x + size.x*2+2+ (rect.width - size.x*4) / 2,
+    m_statbmpT->Move(rect.x + size.x*2+2+ (rect.width - size.x*5) / 2,
                     rect.y + (rect.height - size.y) / 2);
-    m_statbmpA->Move(rect.x + size.x*3+ 3+(rect.width - size.x*4) / 2,
+    m_statbmpS->Move(rect.x + size.x*3+ 3+(rect.width - size.x*5) / 2,
+                    rect.y + (rect.height - size.y) / 2);
+    m_statbmpA->Move(rect.x + size.x*4+ 4+(rect.width - size.x*5) / 2,
                     rect.y + (rect.height - size.y) / 2);
 
     event.Skip();
@@ -100,4 +109,9 @@ void StatusBar::Update( int flags)
     m_statbmpT->SetIcon(flags&0x02?wxIcon(on_xpm):wxIcon(off_xpm));
     m_statbmpS->SetIcon(flags&0x04?wxIcon(on_xpm):wxIcon(off_xpm));
     m_statbmpA->SetIcon(flags&0x08?wxIcon(on_xpm):wxIcon(off_xpm));
+}
+
+void StatusBar::Health( bool health)
+{
+    m_statbmpH->SetIcon(health?wxIcon(on_xpm):wxIcon(off_xpm));
 }

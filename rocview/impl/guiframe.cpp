@@ -620,6 +620,8 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
     wWorkSpace.settitle(m_WorkSpace, wPlan.gettitle(wxGetApp().getModel()));
   }
 
+  m_StatusBar->Health( wPlan.ishealthy(wxGetApp().getModel()) );
+
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
 
   int idx = 0;

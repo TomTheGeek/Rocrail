@@ -100,6 +100,7 @@ static void __inform( iOVirtual inst ) {
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setiid( node, wDigInt.getiid( data->ini ) );
   wState.setpower( node, data->power );
+  wState.settrackbus( node, True );
   data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 

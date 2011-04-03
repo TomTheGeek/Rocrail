@@ -427,6 +427,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
   }
 
   MapOp.base.del(xyzMap);
+  data->healthy = healthy;
   return healthy;
 }
 
@@ -1592,6 +1593,11 @@ static Boolean _isAuto( iOModel inst ) {
   return data->autoMode;
 }
 
+static Boolean _isHealthy( iOModel inst ) {
+  iOModelData data = Data(inst);
+  return data->healthy;
+}
+
 static Boolean _isCheck2In( iOModel inst ) {
   iOModelData data = Data(inst);
   return data->check2in;
@@ -1814,6 +1820,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
     wAutoCmd.setcmd( autoevent, ModelOp.isAuto(inst)?wAutoCmd.on:wAutoCmd.off );
     wState.setconsolemode( stateevent, AppOp.isConsoleMode() );
+    wPlan.sethealthy( data->model, ModelOp.isHealthy(inst) );
     ClntConOp.postEvent( AppOp.getClntCon(), autoevent, wCommand.getserver( cmd ) );
     ClntConOp.postEvent( AppOp.getClntCon(), stateevent, wCommand.getserver( cmd ) );
     ClntConOp.postEvent( AppOp.getClntCon(), data->model, wCommand.getserver( cmd ) );

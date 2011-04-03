@@ -690,6 +690,9 @@
       <param name="listenerfun" vt="model_listener" remark="Listener function"/>
       <param name="cargo" vt="obj" remark="Listeners cargo"/>
     </fun>
+    <fun name="isHealthy" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+    </fun>
     <fun name="getModel" vt="const iONode">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
@@ -1046,6 +1049,7 @@
     <data include="mvtrack,modplan,$rocint/public/analyserint">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
+      <var name="healthy" vt="Boolean"/>
       <var name="autoMode" vt="Boolean"/>
       <var name="fileName" vt="const char*"/>
       <var name="title" vt="const char*"/>

@@ -17148,4 +17148,10 @@
   <Msg id="aspectnr">
     <en txt="Aspect numbers"/>
   </Msg>
+  <Msg id="planhealth">
+    <en txt="Plan health"/>
+  </Msg>
+  <Msg id="communication">
+    <en txt="Communication"/>
+  </Msg>
 </Messages>

@@ -35,9 +35,11 @@ public:
 
     void OnSize(wxSizeEvent& event);
     void Update(int flags);
+    void Health(bool health);
 
 private:
 
+    wxStaticBitmap *m_statbmpH;
     wxStaticBitmap *m_statbmpP;
     wxStaticBitmap *m_statbmpT;
     wxStaticBitmap *m_statbmpS;
