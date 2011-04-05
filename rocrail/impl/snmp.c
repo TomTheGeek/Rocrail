@@ -63,7 +63,7 @@ static void __deserialize( void* inst,unsigned char* bytestream ) {
   return;
 }
 
-static char* __toString(void* inst, Boolean html, Boolean header) {
+static char* __toString(void* inst) {
   return NULL;
 }
 
@@ -87,7 +87,7 @@ static void __modify( void* inst, void* props ) {
   return;
 }
 
-static void* __event( void* inst, void* event ) {
+static void* __event( void* inst, const void* event ) {
   return NULL;
 }
 
@@ -997,7 +997,8 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   iOSNMPData data = Data(inst);
   char sCnt[32];
   byte out[256];
-  StrOp.fmtb( sCnt, "%d", count );
+  data->linkup += up ?1:-1;
+  StrOp.fmtb( sCnt, "currently=%d, total=%d", data->linkup, count );
   int outlen = __makeTrap(inst, out, up?TRAP_LINKUP:TRAP_LINKDOWN, "1.3.6.1.6.3.1.1.5.2", sCnt );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {

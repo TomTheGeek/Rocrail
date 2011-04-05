@@ -2119,6 +2119,7 @@
       <var name="mibDB" vt="iOMap" remark=""/>
       <var name="mibMap" vt="iOMap" remark=""/>
       <var name="seqnr" vt="int" remark=""/>
+      <var name="linkup" vt="int" remark=""/>
     </data>
   </object>
 
