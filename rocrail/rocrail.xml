@@ -57,6 +57,10 @@
     <fun name="broadcastEvent" vt="void">
       <param name="evt" vt="iONode"/>
     </fun>
+    <fun name="link" vt="void">
+      <param name="count" vt="int" remark="Link count."/>
+      <param name="up" vt="Boolean" remark="upLink."/>
+    </fun>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>
@@ -2082,6 +2086,11 @@
     </fun>
     <fun name="shutdown" vt="void">
       <param name="inst" vt="this" remark="Shutdown SNMP support."/>
+    </fun>
+    <fun name="link" vt="void">
+      <param name="inst" vt="this" remark="Shutdown SNMP support."/>
+      <param name="count" vt="int" remark="Link count."/>
+      <param name="up" vt="Boolean" remark="upLink."/>
     </fun>
     <struct name="SnmpVar" typedef="*iOSnmpVar">
       <var name="oid[128]" vt="char"/>

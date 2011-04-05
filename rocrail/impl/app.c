@@ -1086,6 +1086,14 @@ static void _broadcastEvent( iONode event ) {
   }
 }
 
+static void _link( int count, Boolean up ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    if( data->snmp != NULL ) {
+      SNMPOp.link(data->snmp, count, up);
+    }
+  }
+}
 
 
 

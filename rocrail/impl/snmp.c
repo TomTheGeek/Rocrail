@@ -993,6 +993,19 @@ static void _shutdown( struct OSNMP* inst ) {
 }
 
 
+static void _link( struct OSNMP* inst, int count, Boolean up ) {
+  iOSNMPData data = Data(inst);
+  char sCnt[32];
+  byte out[256];
+  StrOp.fmtb( sCnt, "%d", count );
+  int outlen = __makeTrap(inst, out, up?TRAP_LINKUP:TRAP_LINKDOWN, "1.3.6.1.6.3.1.1.5.2", sCnt );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
+  }
+}
+
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/snmp.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

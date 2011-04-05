@@ -295,6 +295,8 @@ static void __cmdReader( void* threadinst ) {
     ThreadOp.sleep( 10 );
   } while( !o->quit );
 
+  AppOp.link(Data(clntcon)->concount, False);
+
   /* Cleanup. */
   if( cmd != NULL )
     freeMem(cmd);
@@ -348,6 +350,7 @@ static void __manager( void* threadinst ) {
       }
 
       data->concount++;
+      AppOp.link(data->concount, True);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client connect count: %d", data->concount );
 
       servername        = StrOp.fmt( "cmdr%08X", client );
