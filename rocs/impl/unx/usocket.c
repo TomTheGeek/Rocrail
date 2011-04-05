@@ -85,7 +85,7 @@ Boolean rocs_socket_init( iOSocketData o ) {
 }
 
 /* OS dependent */
-Boolean rocs_socket_resolveHost( iOSocketData o ) {
+static Boolean __resolveHost( iOSocketData o, const char* hostname ) {
 #ifdef __ROCS_SOCKET__
   struct hostent* host = NULL;
   struct in_addr* addr = o->hostaddr;
@@ -95,23 +95,31 @@ Boolean rocs_socket_resolveHost( iOSocketData o ) {
     addr = o->hostaddr;
   }
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_resolveHost: inet_addr(%s)", o->host );
-  addr->s_addr = inet_addr( o->host );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__resolveHost: inet_addr(%s)", o->host );
+  addr->s_addr = inet_addr( hostname );
 
   if( addr->s_addr == INADDR_NONE ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_resolveHost: gethostbyname()" );
-    host = gethostbyname( o->host );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__resolveHost: gethostbyname()" );
+    host = gethostbyname( hostname );
     if( host == NULL ) {
       o->rc = errno;
       TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 8005, o->rc, "gethostbyname(%s) failed [%d]", o->host );
       return False;
     }
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rocs_socket_resolveHost: memcpy()" );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__resolveHost: memcpy()" );
     memcpy (o->hostaddr, host->h_addr, host->h_length);
   }
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "HostAddr: %ld", addr->s_addr );
   return True;
+#else
+  return False;
+#endif
+}
+
+Boolean rocs_socket_resolveHost( iOSocketData o ) {
+#ifdef __ROCS_SOCKET__
+  return __resolveHost(o, o->host);
 #else
   return False;
 #endif
@@ -727,10 +735,17 @@ Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size, char* client, in
   iOSocketData o = Data(inst);
   struct sockaddr_in address;
   int rc = 0;
+  struct in_addr* addr = o->hostaddr;
+
+  if( !__resolveHost(o, client == NULL ? o->host:client) ) {
+    return False;
+  }
+  addr = o->hostaddr;
 
   memset (&address, 0, sizeof (address));
   address.sin_family = AF_INET;
-  address.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);
+  /*address.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);*/
+  address.sin_addr = *addr;
   address.sin_port = htons (port > 0 ? port:o->port);
 
   rc = sendto ( o->sh, buf, size, 0, (struct sockaddr *) &address, sizeof(address));
