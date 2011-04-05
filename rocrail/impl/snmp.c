@@ -855,9 +855,9 @@ static void __initMibDB(iOSNMP snmp) {
     * 1.3.6.1.2.1.1.6 - sysLocation
     * 1.3.6.1.2.1.1.7 - sysServices
    */
-  char* sysName = StrOp.fmt("%s %s %d.%d.%d.%d",
+  char* sysName = StrOp.fmt("%s %s %d.%d.%d",
       wGlobal.productname, wGlobal.releasename, wGlobal.vmajor,
-      wGlobal.vminor, wGlobal.patch, AppOp.getrevno());
+      wGlobal.vminor, AppOp.getrevno());
 
   char* sysObjectID = StrOp.fmt("1.3.6.1.4.1.%d.%d.%d",
       wSnmpService.getenterprise(data->ini), wSnmpService.getfamily(data->ini), wSnmpService.getproduct(data->ini));
