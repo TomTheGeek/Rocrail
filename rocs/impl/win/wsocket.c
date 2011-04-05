@@ -128,24 +128,31 @@ Boolean rocs_socket_init( iOSocketData o ) {
 }
 
 /* OS dependent */
-Boolean rocs_socket_resolveHost( iOSocketData o ) {
+static Boolean __resolveHost( iOSocketData o, const char* hostname ) {
 #ifdef __ROCS_SOCKET__
   struct hostent* host = NULL;
   struct in_addr* addr = o->hostaddr;
 
-  addr->S_un.S_addr = inet_addr( o->host );
+  addr->S_un.S_addr = inet_addr( hostname );
 
   if( addr->S_un.S_addr == INADDR_NONE ) {
-    host = gethostbyname( o->host );
+    host = gethostbyname( hostname );
     if( host == NULL ) {
       o->rc = WSAGetLastError();
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "%d %s (rc=%d)", __LINE__, "Error looking up host.", WSAGetLastError() );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Error looking up host. (rc=%d)", WSAGetLastError() );
       return False;
     }
     memcpy (o->hostaddr, host->h_addr, host->h_length);
   }
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "HostAddr: %d", addr->S_un.S_addr );
+#endif
+  return True;
+}
+
+Boolean rocs_socket_resolveHost( iOSocketData o ) {
+#ifdef __ROCS_SOCKET__
+  return __resolveHost(o, o->host);
 #endif
   return True;
 }
@@ -612,15 +619,22 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int*
 Boolean rocs_socket_sendto( iOSocket inst, char* buf, int size, char* client, int port ) {
   iOSocketData o = Data(inst);
   int rc = 0;
-  SOCKADDR_IN addr;
+  struct in_addr* addr = o->hostaddr;
+  SOCKADDR_IN address;
 
-  memset (&addr, 0, sizeof (addr));
-  addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);
-  addr.sin_port = htons (port > 0 ? port:o->port);
+  if( !__resolveHost( o, client == NULL ? o->host:client ) )
+    return False;
+
+  addr = o->hostaddr;
+
+  memset (&address, 0, sizeof (address));
+  address.sin_family = AF_INET;
+  /*address.sin_addr.s_addr = inet_addr (client == NULL ? o->host:client);*/
+  address.sin_addr   = *addr;
+  address.sin_port = htons (port > 0 ? port:o->port);
 
   o->rc = 0;
-  rc = sendto( o->sh, buf, size, 0, (SOCKADDR*)&addr, sizeof(SOCKADDR_IN) );
+  rc = sendto( o->sh, buf, size, 0, (SOCKADDR*)&address, sizeof(SOCKADDR_IN) );
   if( rc == SOCKET_ERROR) {
     o->rc = WSAGetLastError();
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "sendto() failed[%d]", o->rc );
