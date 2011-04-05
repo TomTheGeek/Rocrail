@@ -263,6 +263,11 @@ public:
     wxStaticText* m_labSnmpPort;
     wxSpinCtrl* m_SnmpPort;
     wxCheckBox* m_SnmpServiceActive;
+    wxStaticBox* m_SNMPTrapBox;
+    wxStaticText* m_labSnmpTrapHost;
+    wxTextCtrl* m_SnmpTrapHost;
+    wxStaticText* m_labSnmpTrapPort;
+    wxSpinCtrl* m_SnmpTrapPort;
     wxPanel* m_AtomatPanel;
     wxStaticText* m_LabelSwTime;
     wxTextCtrl* m_SwTime;
