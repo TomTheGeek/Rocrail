@@ -2075,7 +2075,8 @@
 
   <object name="SNMP" use="socket,node,thread,map" remark="SNMP Support">
     <typedef def="enum {PDU_GETREQ=0xa0,PDU_GETNEXTREQ=0xa1,PDU_GETRSP=0xa2,PDU_SETREQ=0xa3,PDU_TRAP=0xa4,PDU_BULKREQ=0xa5} pdutype"/>
-    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5,VAR_TIMETICK=67} vartype"/>
+    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5,VAR_TIMETICK=67,VAR_IP=64,VAR_COUNTER32=65,VAR_GAUGE32=66,VAR_OPAQUE=68,VAR_COUNTER64=70,VAR_UINT=71} vartype"/>
+    <typedef def="enum {TRAP_COLDSTART=0,TRAP_WARMSTART=1,TRAP_LINKDOWN=2,TRAP_LINKUP=3,TRAP_USER=7} traptype"/>
     <fun name="inst" vt="this" remark="">
       <param name="ini" vt="iONode" remark="Initialization node."/>
     </fun>
@@ -2100,11 +2101,15 @@
       <var name="oid[32]" vt="struct SnmpVar"/>
     </struct>
     <data>
+      <var name="ini" vt="iONode"/>
       <var name="snmpSock" vt="iOSocket"/>
+      <var name="snmpTrapSock" vt="iOSocket"/>
       <var name="server" vt="iOThread" remark=""/>
+      <var name="trap" vt="Boolean" remark=""/>
       <var name="run" vt="Boolean" remark=""/>
       <var name="mibDB" vt="iOMap" remark=""/>
       <var name="mibMap" vt="iOMap" remark=""/>
+      <var name="seqnr" vt="int" remark=""/>
     </data>
   </object>
 

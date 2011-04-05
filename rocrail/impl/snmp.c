@@ -33,6 +33,11 @@
 
 static int instCnt = 0;
 
+/** ----- Declarations ----- */
+static void __makeSignedInt(byte* b, int val);
+static int __setSignedInt(byte* b, int val);
+static int __setTimetick(byte* out, int val);
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -155,6 +160,9 @@ static int __setInt(byte* out, int val) {
 }
 
 
+/* --------------------------------------------------------------------------------
+ * Convert a timetick from integer into a byte sequence.
+ */
 static int __setTimetick(byte* out, int val) {
   int len = __setInt(out, val );
   out[0] = VAR_TIMETICK;
@@ -226,15 +234,44 @@ static int __setOID(byte* out, const char* oid) {
     else if( i > 1 ) {
       int val = atoi(s);
       if( val > 127 ) {
-        out[offset] = val-0x7F;
-        offset++;
-        out[offset] = 0x7F;
-        offset++;
+        printf("oid val = %d\n", val);
+        offset += __setSignedInt(out+offset, val);
       }
       else {
         out[offset] = val;
         offset++;
       }
+    }
+    i++;
+  }
+
+  *VarLen = offset - (VarLen - out) - 1;
+
+  return offset;
+}
+
+
+static int __setIP(byte* out, const char* ip) {
+  int offset = 0;
+  int i = 0;
+
+  out[offset] = VAR_IP; /* object int */
+  offset++;
+  byte* VarLen = out + offset;
+  offset++;
+
+  iOStrTok tok = StrTokOp.inst(ip, '.');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* s = StrTokOp.nextToken(tok);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "IP substr = [%s] i=%d", s, i );
+    int val = atoi(s);
+    if( val > 127 ) {
+      printf("oid val = %d\n", val);
+      offset += __setSignedInt(out+offset, val);
+    }
+    else {
+      out[offset] = val;
+      offset++;
     }
     i++;
   }
@@ -349,6 +386,50 @@ static int __makeTimetickVariable(byte* out, const char* oid, int val) {
 
 
 /* --------------------------------------------------------------------------------
+ * Create a sequence with OID and string variable.
+ */
+static int __makeOIDVariable(byte* out, const char* oid, const char* val) {
+  int offset = 0;
+
+  out[offset] = VAR_SEQUENCE;
+  offset++;
+  byte* VarLen = out + offset;
+  offset++;
+
+  offset += __setOID(out+offset, oid);
+
+  offset += __setOID( out+offset, val);
+
+  /* calculate the seq len */
+  *VarLen = offset - (VarLen - out) - 1;
+
+  return offset;
+}
+
+
+/* --------------------------------------------------------------------------------
+ * Create a sequence with OID and string variable.
+ */
+static int __makeIntegerVariable(byte* out, const char* oid, int val) {
+  int offset = 0;
+
+  out[offset] = VAR_SEQUENCE;
+  offset++;
+  byte* VarLen = out + offset;
+  offset++;
+
+  offset += __setOID(out+offset, oid);
+
+  offset += __setInt( out+offset, val);
+
+  /* calculate the seq len */
+  *VarLen = offset - (VarLen - out) - 1;
+
+  return offset;
+}
+
+
+/* --------------------------------------------------------------------------------
  * Read a variable into a SnmpVar structure from a sequence.
  */
 static Boolean __readVar(byte* in, iOSnmpVar snmpvar, int* offset) {
@@ -411,7 +492,7 @@ static Boolean __evaluateHeader(iOSnmpHdr hdr, byte* in, int* offset) {
     hdr->errstatus = __getInt(in+*offset, offset);
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "error status=%d", hdr->errstatus );
     hdr->errindex = __getInt(in+*offset, offset);
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "error index=%d", hdr->errindex );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "error index=%d", hdr->errindex ); /* expected number of returned OIDs in case of bulk */
 
     hasOID = (in[*offset+1] > 0) ? True:False;
 
@@ -435,6 +516,25 @@ static void __makeSignedInt(byte* b, int val) {
   b[0] = 0x80 | (val / 0x7F);
   b[1] = val & 0xFF;
 }
+
+static int __setSignedInt(byte* b, int val) {
+  if( val > 0x3FFF ) {
+    b[0] = 0x80 | ((val >> 14 ) & 0x7F);
+    b[1] = 0x80 | ((val >> 7 ) & 0x7F);
+    b[2] = val & 0x7F;
+    return 3;
+  }
+  else if( val > 0x7F ) {
+    b[0] = 0x80 | ((val >> 7 ) & 0x7F);
+    b[1] = val & 0x7F;
+    return 2;
+  }
+  else {
+    b[0] = val;
+    return 1;
+  }
+}
+
 
 
 /* --------------------------------------------------------------------------------
@@ -479,13 +579,29 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
   offset++;
 
   if( bulk ) {
+    int max = 0;
     iOList list = (iOList)MapOp.first(data->mibMap);
-    while( list != NULL ) {
+    while( list != NULL && max < hdr->errindex ) {
       const char* oid = (const char*)ListOp.first(list);
-      while( oid != NULL ) {
+      while( oid != NULL && max < hdr->errindex ) {
         const char* val = (const char*)MapOp.get(data->mibDB, oid);
         if( val != NULL )
-          offset += __makeStringVariable(out+offset, oid, val);
+          if( StrOp.equals("1.3.6.1.2.1.1.3.0", oid ) ) {
+            offset += __makeTimetickVariable(out+offset, oid, atoi(val));
+            max++;
+          }
+          else if( StrOp.equals("1.3.6.1.2.1.1.2.0", oid ) ) {
+            offset += __makeOIDVariable(out+offset, oid, val);
+            max++;
+          }
+          else if( StrOp.equals("1.3.6.1.2.1.1.7.0", oid ) ) {
+            offset += __makeIntegerVariable(out+offset, oid, atoi(val));
+            max++;
+          }
+          else {
+            offset += __makeStringVariable(out+offset, oid, val);
+            max++;
+          }
         else
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "oid[%s] not in DB", oid );
 
@@ -502,6 +618,10 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
       if( val != NULL ) {
         if( StrOp.equals("1.3.6.1.2.1.1.3.0", hdr->oid[i].oid ) )
           offset += __makeTimetickVariable(out+offset, hdr->oid[i].oid, atoi(val));
+        else if( StrOp.equals("1.3.6.1.2.1.1.2.0", hdr->oid[i].oid ) )
+          offset += __makeOIDVariable(out+offset, hdr->oid[i].oid, val);
+        else if( StrOp.equals("1.3.6.1.2.1.1.7.0", hdr->oid[i].oid ) )
+          offset += __makeIntegerVariable(out+offset, hdr->oid[i].oid, atoi(val));
         else
           offset += __makeStringVariable(out+offset, hdr->oid[i].oid, val);
       }
@@ -551,6 +671,128 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
 
 }
 
+
+
+/*
+The SNMP message with PDU type 4 (trap) consists of:
+
+   1. PDU type
+   2. Enterprise - The agents OBJECT IDENTIFIER or system objects ID. Falls under a node in the MIB tree.
+   3. agent addr - The IP address of the agent.
+   4. Trap type - Identifies the type of event being reported.
+      Trap Type Name  Description
+      0 cold start  Agent is booting
+      1 warm start  Agent is rebooting
+      2 link down An interface has gone down
+      3 link up An interface has come up
+      4 authentification failure  An invalid community (password) was received in a message.
+      5 egp neighbor loss An EGP peer has gone down.
+      6 enterprise specific Look in the enterprise code for information on the trap
+   5. Specific code - Must be 0.
+   6. Time stamp - The time in 1/100ths of seconds since the agent initialized.
+   7. name
+   8. Value
+   9. Any other names and values
+
+ +--------+---------+--------+----+---------+--------+----------------+
+ |version |community|PDU type|OID |Agent IP |trap ID |trap specific ID|..
+ ---------+---------+--------+----+---------+--------+----------------+
+
+ +-----------+-----------....----+
+ |Time stamp |VarBindList ....   |
+ +-----------+-------------------+
+
+
+ */
+static int __makeTrap(iOSNMP snmp, byte* out, int trapid, const char* oid, const char* val) {
+  iOSNMPData data = Data(snmp);
+  int outlen = 0;
+  int offset = 0;
+
+  /* Start sequence */
+  out[offset] = VAR_SEQUENCE;
+  offset++;
+  byte* TotalMsgLen = out + offset;
+  offset++;
+
+  /* Version */
+  offset += __setInt( out+offset, wSnmpService.getversion(data->ini));
+
+  /* Community */
+  offset += __setString( out+offset, wSnmpService.getcommunity(data->ini));
+
+  /* Response */
+  out[offset] = PDU_TRAP;
+  offset++;
+  byte* RspMsgLen = out + offset;
+  offset++;
+
+  /* OID */
+  offset += __setOID( out+offset, (const char*)MapOp.get( data->mibDB, "1.3.6.1.2.1.1.2.0") );
+
+  /* VAR_IP */
+  offset += __setIP( out+offset, SocketOp.gethostaddr() );
+
+  /* trap ID */
+  offset += __setInt( out+offset, trapid );
+
+  /* specific code */
+  offset += __setInt( out+offset, 0);
+
+  /* timetick */
+  offset += __setTimetick(out+offset, SystemOp.getTick() );
+
+
+  /* Var container */
+  out[offset] = VAR_SEQUENCE; /* int */
+  offset++;
+  byte* VarContLen = out + offset;
+  offset++;
+
+  offset += __makeStringVariable(out+offset, oid, val);
+
+  /* Calculate length fields */
+  int varContLen  = offset - (VarContLen  - out) - 1;
+  if( varContLen > 127 ) {
+    byte* m = allocMem(varContLen+1);
+    MemOp.copy( m, VarContLen+1, varContLen);
+    __makeSignedInt(VarContLen, varContLen);
+    offset++;
+    MemOp.copy( VarContLen+2, m, varContLen);
+    freeMem(m);
+  }
+  else
+    *VarContLen  = varContLen;
+
+
+  int rspMsgLen   = offset - (RspMsgLen   - out) - 1;
+  if( rspMsgLen > 127 ) {
+    byte* m = allocMem(rspMsgLen+1);
+    MemOp.copy( m, RspMsgLen+1, rspMsgLen);
+    __makeSignedInt(RspMsgLen, rspMsgLen);
+    offset++;
+    MemOp.copy( RspMsgLen+2, m, rspMsgLen);
+    freeMem(m);
+  }
+  else
+    *RspMsgLen  = rspMsgLen;
+
+  int totalMsgLen = offset - (TotalMsgLen - out) - 1;
+  if( totalMsgLen > 127 ) {
+    byte* m = allocMem(totalMsgLen+1);
+    MemOp.copy( m, TotalMsgLen+1, totalMsgLen);
+    __makeSignedInt(TotalMsgLen, totalMsgLen);
+    offset++;
+    MemOp.copy( TotalMsgLen+2, m, totalMsgLen);
+    freeMem(m);
+    return totalMsgLen + 3;
+  }
+  else {
+    *TotalMsgLen  = totalMsgLen;
+    return totalMsgLen + 2;
+  }
+
+}
 
 /* --------------------------------------------------------------------------------
  * Check request type and call the fitting handler.
@@ -613,31 +855,29 @@ static void __initMibDB(iOSNMP snmp) {
     * 1.3.6.1.2.1.1.6 - sysLocation
     * 1.3.6.1.2.1.1.7 - sysServices
    */
+  char* sysName = StrOp.fmt("%s %s %d.%d.%d.%d",
+      wGlobal.productname, wGlobal.releasename, wGlobal.vmajor,
+      wGlobal.vminor, wGlobal.patch, AppOp.getrevno());
 
-  char* descr = StrOp.fmt( "%s %d.%d.%d %s", wGlobal.productname,
-                            wGlobal.vmajor,
-                            wGlobal.vminor,
-                            AppOp.getrevno(),
-                            wGlobal.releasename );
+  char* sysObjectID = StrOp.fmt("1.3.6.1.4.1.%d.%d.%d",
+      wSnmpService.getenterprise(data->ini), wSnmpService.getfamily(data->ini), wSnmpService.getproduct(data->ini));
 
-  const char* location = FileOp.ripPath(wRocRail.getplanfile(AppOp.getIni()));
-
-  char* uptime = StrOp.fmt("%ld", SystemOp.getTick());
-
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)descr);
-  /*MapOp.put( data->mibDB, "1.3.6.1.2.1.1.2.0", (obj)"4.7.1.1"); */
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)uptime);
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.4.0", (obj)"support@rocrail.net");
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)"Rocrail server");
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)location);
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)wSnmpService.getdescription(data->ini));
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.2.0", (obj)sysObjectID);
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)"0");
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.4.0", (obj)wSnmpService.getcontact(data->ini));
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)sysName);
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)wSnmpService.getlocation(data->ini));
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.7.0", (obj)"72");
 
   iOList systemList = ListOp.inst();
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.1.0" );
-  /*ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.2.0" ); */
+  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.2.0" );
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.3.0" );
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.4.0" );
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.5.0" );
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.6.0" );
+  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.7.0" );
 
   MapOp.put( data->mibMap, "1.3.6.1.2.1.1", (obj)systemList);
 
@@ -656,9 +896,7 @@ static void __server( void* threadinst ) {
   char client[256];
   int port = 0;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP service started" );
-
-  __initMibDB(snmp);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP service started on port %d", wSnmpService.getport(data->ini) );
 
   do {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP waiting..." );
@@ -701,12 +939,33 @@ static struct OSNMP* _inst( iONode ini ) {
   MemOp.basecpy( RocsOgen_SNMP, &SNMPOp, 0, sizeof( struct OSNMP ), data );
 
   /* Initialize data->xxx members... */
+  data->ini = ini;
   data->mibDB = MapOp.inst();
   data->mibMap = MapOp.inst();
 
-  data->snmpSock = SocketOp.inst( "localhost", wSnmpService.getport(ini), False, True, False );
+  __initMibDB(RocsOgen_SNMP);
+
+
+  data->snmpSock = SocketOp.inst( "localhost", wSnmpService.getport(data->ini), False, True, False );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP bind" );
   SocketOp.bind(data->snmpSock);
+
+  if( wSnmpService.gettrapport(data->ini) > 0 ) {
+    data->snmpTrapSock = SocketOp.inst( wSnmpService.gettraphost(data->ini), wSnmpService.gettrapport(data->ini), False, True, False );
+    if( data->snmpTrapSock != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP Trap activated op port %d", wSnmpService.gettrapport(data->ini) );
+      data->trap = True;
+      byte out[256];
+      int outlen = __makeTrap(RocsOgen_SNMP, out, TRAP_COLDSTART, "1.3.6.1.6.3.1.1.5.1", "Help!" );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
+      if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
+      }
+    }
+  }
+
+  /* activate the ticker */
+  SystemOp.inst();
 
   if( data->snmpSock != NULL ) {
     data->run = True;
@@ -725,6 +984,12 @@ static struct OSNMP* _inst( iONode ini ) {
 static void _shutdown( struct OSNMP* inst ) {
   iOSNMPData data = Data(inst);
   data->run = False;
+  byte out[256];
+  int outlen = __makeTrap(inst, out, TRAP_WARMSTART, "1.3.6.1.6.3.1.1.5.1", "Shutdown" );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
+  }
 }
 
 
