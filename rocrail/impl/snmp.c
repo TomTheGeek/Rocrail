@@ -985,7 +985,7 @@ static void _shutdown( struct OSNMP* inst ) {
   iOSNMPData data = Data(inst);
   data->run = False;
   byte out[256];
-  int outlen = __makeTrap(inst, out, TRAP_WARMSTART, "1.3.6.1.6.3.1.1.5.1", "Shutdown" );
+  int outlen = __makeTrap(inst, out, TRAP_USER, "1.3.6.1.6.3.1.1.5.1", "Shutdown server" );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );

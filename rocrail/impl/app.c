@@ -955,6 +955,9 @@ static Boolean _shutdown( void ) {
       ThreadOp.sleep(100);
     }
 
+    if( data->snmp != NULL )
+      SNMPOp.shutdown( data->snmp );
+
     /* Inform Model. */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing model..." );
     if( data->model != NULL ) {
