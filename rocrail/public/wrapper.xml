@@ -206,7 +206,7 @@
       <var name="product" vt="int" defval="1" range="0-65535" remark="Product; Default Server=1."/>
       <var name="contact" vt="string" defval="support@rocrail.net" range="*" remark="Contact address."/>
       <var name="location" vt="string" defval="local" range="*" remark="Rocrail physical location."/>
-      <var name="description" vt="string" defval="Document uploader" range="*" remark="Rocrail server description."/>
+      <var name="description" vt="string" defval="Model Railroad Control System" range="*" remark="Rocrail server description."/>
     </SnmpService>
     <http wrappername="HttpService" cardinality="1" remark="Http interface for configure the xspooler.">
       <var name="port" vt="int" defval="53701" range="0-65535" remark="Port number for server socket. Deactivated when 0."/>
