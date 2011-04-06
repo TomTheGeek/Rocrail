@@ -82,6 +82,7 @@ Source: "..\..\winbin\muet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\bidib.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "rocrail.mib"; DestDir: "{userdocs}\Rocrail";
 Source: "rocraild.ico"; DestDir: "{app}"
 Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"

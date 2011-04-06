@@ -90,6 +90,13 @@ static void __exception( int level, char* msg ) {
     }
     backtrace[9] = StrOp.dup( msg );
 
+    if( __appinst != NULL ) {
+      iOAppData data = Data(__appinst);
+      if( level == TRCLEVEL_EXCEPTION && data->snmp != NULL ) {
+        SNMPOp.exception( data->snmp, msg);
+      }
+    }
+
     /* Release the mux. */
     MutexOp.post( __exceptionMutex );
   }

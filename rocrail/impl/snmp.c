@@ -37,6 +37,8 @@ static int instCnt = 0;
 static void __makeSignedInt(byte* b, int val);
 static int __setSignedInt(byte* b, int val);
 static int __setTimetick(byte* out, int val);
+static int __getSignedInt(byte* b, int* offset);
+static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, Boolean bulk);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -203,7 +205,8 @@ static char* __getString(byte* in, int* offset, char* val) {
     return val;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "string type expected: %d", in[0] );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "string type expected: %d,%d", in[0], *offset );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 32 );
     return val;
   }
 }
@@ -234,7 +237,6 @@ static int __setOID(byte* out, const char* oid) {
     else if( i > 1 ) {
       int val = atoi(s);
       if( val > 127 ) {
-        printf("oid val = %d\n", val);
         offset += __setSignedInt(out+offset, val);
       }
       else {
@@ -284,6 +286,10 @@ static int __setIP(byte* out, const char* ip) {
 
 /* --------------------------------------------------------------------------------
  * Convert the Object ID from byte to string representation.
+ * 2B 06 01 04 01 81 A2 31 14 03 01 00 05 00
+ * 1.3.6.1.4.1.20785.20.3.1.0
+ *
+ * 81 A2 31 = 20785
  */
 static int __getOID(byte* in, char* oid ) {
   int offset = 0;
@@ -306,17 +312,20 @@ static int __getOID(byte* in, char* oid ) {
       else {
         int val = 0;
         int validx = 0;
+        int vallen = 0;
         char sval[32];
 
+        val = __getSignedInt(&in[2+i], &vallen);
+        i += vallen-1;
+        /*
         if( in[2+i] & 0x80 ) {
-          /* the value > 127; use two bytes */
           val = in[2+i+1] + ((in[2+i] & 0x7F) << 7);
           i++;
         }
         else {
           val = in[2+i];
         }
-
+        */
         StrOp.fmtb(sval, ".%d", val );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "objectID subval=%s i=%d idx=%d", sval, i, idx );
 
@@ -446,11 +455,13 @@ static Boolean __readVar(byte* in, iOSnmpVar snmpvar, int* offset) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "value=NULL" );
         break;
       case VAR_INT:
-        snmpvar->vari = __getInt(in+*offset, offset);
+        snmpvar->vartype = VAR_INT;
+        snmpvar->vari = __getInt(in+2+oidlen, offset);
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "value=%d", snmpvar->vari );
         break;
       case VAR_STRING:
-        __getString(in+*offset, offset, snmpvar->vars);
+        snmpvar->vartype = VAR_STRING;
+        __getString(in+2+oidlen, offset, snmpvar->vars);
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "value=%s", snmpvar->vars );
         break;
       default:
@@ -535,7 +546,54 @@ static int __setSignedInt(byte* b, int val) {
   }
 }
 
+/* 81 A2 31 = 20785 */
+static int __getSignedInt(byte* b, int* offset) {
+  int val = 0;
+  int len = 1;
+  int i   = 0;
+  for(i = 0; i < 4; i++ ) {
+    if( b[i] & 0x80 )
+      len++;
+    else
+      break;
+  }
+  for( i = 0; i < len; i++ ) {
+    int tmp = b[i] & 0x7F;
+    val += (tmp << ((len-1-i)*7));
+  }
+  *offset += len;
+  return val;
+}
 
+
+/* --------------------------------------------------------------------------------
+ * GetRequest handler: Create a sequence for every wanted OID.
+ */
+static int __handleSetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out) {
+  iOSNMPData data = Data(snmp);
+
+  /* Loop over all requested OID's. */
+  int i = 0;
+  for( i = 0; i < hdr->oids; i++ ) {
+    switch( hdr->oid[i].vartype ) {
+      case VAR_STRING: {
+        char* val = (char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
+        if( val != NULL ) StrOp.free(val);
+        MapOp.put( data->mibDB, hdr->oid[i].oid, (obj)StrOp.dup(hdr->oid[i].vars) );
+        break;
+      }
+      case VAR_INT: {
+        char* val = (char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
+        if( val != NULL ) StrOp.free(val);
+        val = StrOp.fmt( "%d", hdr->oid[i].vari);
+        MapOp.put( data->mibDB, hdr->oid[i].oid, (obj)val );
+        break;
+      }
+    }
+  }
+
+  return __handleGetRequest(snmp, hdr, in, out, False);
+}
 
 /* --------------------------------------------------------------------------------
  * GetRequest handler: Create a sequence for every wanted OID.
@@ -818,8 +876,8 @@ static int __handleRequest(iOSNMP snmp, byte* in, int inlen, byte* out) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GetResponse (not supported)" );
       break;
     case PDU_SETREQ:
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SetRequest (not supported)" );
-      break;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SetRequest" );
+      return __handleSetRequest(snmp, &hdr, in, out);
     case PDU_TRAP:
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Trap (not supported)" );
       break;
@@ -854,6 +912,10 @@ static void __initMibDB(iOSNMP snmp) {
     * 1.3.6.1.2.1.1.5 - sysName
     * 1.3.6.1.2.1.1.6 - sysLocation
     * 1.3.6.1.2.1.1.7 - sysServices
+    *
+    * Private:
+    * 1.3.6.1.4.1.55555.1.1.0 - Build time
+    * 1.3.6.1.4.1.55555.1.2.0 - Connection count
    */
   char* sysName = StrOp.fmt("%s %s %d.%d.%d",
       wGlobal.productname, wGlobal.releasename, wGlobal.vmajor,
@@ -861,14 +923,17 @@ static void __initMibDB(iOSNMP snmp) {
 
   char* sysObjectID = StrOp.fmt("1.3.6.1.4.1.%d.%d.%d",
       wSnmpService.getenterprise(data->ini), wSnmpService.getfamily(data->ini), wSnmpService.getproduct(data->ini));
+  char* buildTime = StrOp.fmt("%s %s", wGlobal.buildDate, wGlobal.buildTime);
 
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)wSnmpService.getdescription(data->ini));
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.2.0", (obj)sysObjectID);
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)"0");
+  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)StrOp.dup("0"));
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.4.0", (obj)wSnmpService.getcontact(data->ini));
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)sysName);
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)wSnmpService.getlocation(data->ini));
   MapOp.put( data->mibDB, "1.3.6.1.2.1.1.7.0", (obj)"72");
+  MapOp.put( data->mibDB, "1.3.6.1.4.1.55555.1.1.0", (obj)buildTime);
+  MapOp.put( data->mibDB, "1.3.6.1.4.1.55555.1.2.0", (obj)StrOp.dup("0"));
 
   iOList systemList = ListOp.inst();
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.1.0" );
@@ -879,7 +944,12 @@ static void __initMibDB(iOSNMP snmp) {
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.6.0" );
   ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.7.0" );
 
+  iOList enterpriseList = ListOp.inst();
+  ListOp.add( enterpriseList, (obj) "1.3.6.1.4.1.55555.1.1.0" ); /* build time */
+  ListOp.add( enterpriseList, (obj) "1.3.6.1.4.1.55555.1.2.0" ); /* thread count */
+
   MapOp.put( data->mibMap, "1.3.6.1.2.1.1", (obj)systemList);
+  MapOp.put( data->mibMap, "1.3.6.1.4.1.55555.1", (obj)enterpriseList);
 
 }
 
@@ -905,8 +975,15 @@ static void __server( void* threadinst ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP received from %s:%d", client, port );
 
     if( inlen > 0 ) {
-      char* uptime = StrOp.fmt("%ld", SystemOp.getTick());
+      char* uptime = (char*)MapOp.get( data->mibDB, "1.3.6.1.2.1.1.3.0" );
+      if( uptime != NULL ) StrOp.free(uptime);
+      uptime = StrOp.fmt("%ld", SystemOp.getTick());
       MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)uptime);
+
+      char* cnt = (char*)MapOp.get( data->mibDB, "1.3.6.1.4.1.55555.1.2.0" );
+      if( cnt != NULL ) StrOp.free(cnt);
+      cnt = StrOp.fmt("%d", ListOp.size(ThreadOp.getAll()));
+      MapOp.put( data->mibDB, "1.3.6.1.4.1.55555.1.2.0", (obj)cnt);
 
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
       int outlen =  __handleRequest(snmp, in, inlen, out);
@@ -946,17 +1023,13 @@ static struct OSNMP* _inst( iONode ini ) {
   __initMibDB(RocsOgen_SNMP);
 
 
-  data->snmpSock = SocketOp.inst( "localhost", wSnmpService.getport(data->ini), False, True, False );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP bind" );
-  SocketOp.bind(data->snmpSock);
-
   if( wSnmpService.gettrapport(data->ini) > 0 ) {
     data->snmpTrapSock = SocketOp.inst( wSnmpService.gettraphost(data->ini), wSnmpService.gettrapport(data->ini), False, True, False );
     if( data->snmpTrapSock != NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP Trap activated op port %d", wSnmpService.gettrapport(data->ini) );
       data->trap = True;
       byte out[256];
-      int outlen = __makeTrap(RocsOgen_SNMP, out, TRAP_COLDSTART, "1.3.6.1.6.3.1.1.5.1", "Help!" );
+      int outlen = __makeTrap(RocsOgen_SNMP, out, TRAP_COLDSTART, "1.3.6.1.6.3.1.1.5.1", "Normal startup." );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
       if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
@@ -967,10 +1040,16 @@ static struct OSNMP* _inst( iONode ini ) {
   /* activate the ticker */
   SystemOp.inst();
 
-  if( data->snmpSock != NULL ) {
+  data->snmpSock = SocketOp.inst( "localhost", wSnmpService.getport(data->ini), False, True, False );
+  if( data->snmpSock != NULL && SocketOp.bind(data->snmpSock) ) {
     data->run = True;
     data->server = ThreadOp.inst( "snmpsrvr", &__server, RocsOgen_SNMP );
     ThreadOp.start( data->server );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cannot use port %d for the SNMP-Agent. It may be caused by:",  wSnmpService.getport(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "- Address or port already in use." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "- On Unix, only root user can open port between O and 1024." );
   }
 
   instCnt++;
@@ -1006,6 +1085,15 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   }
 }
 
+static void _exception( struct OSNMP* inst, const char* msg ) {
+  iOSNMPData data = Data(inst);
+  byte out[256];
+  int outlen = __makeTrap(inst, out, TRAP_USER, "1.3.6.1.4.1.55555.1.10.1.1.0", msg );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
+  }
+}
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/snmp.fm"

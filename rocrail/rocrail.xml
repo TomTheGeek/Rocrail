@@ -2092,6 +2092,10 @@
       <param name="count" vt="int" remark="Link count."/>
       <param name="up" vt="Boolean" remark="upLink."/>
     </fun>
+    <fun name="exception" vt="void">
+      <param name="inst" vt="this" remark="Shutdown SNMP support."/>
+      <param name="msg" vt="const char*" remark="Exception message."/>
+    </fun>
     <struct name="SnmpVar" typedef="*iOSnmpVar">
       <var name="oid[128]" vt="char"/>
       <var name="vartype" vt="int"/>
