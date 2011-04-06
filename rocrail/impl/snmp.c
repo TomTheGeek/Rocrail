@@ -580,6 +580,9 @@ static int __handleSetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out) {
         char* val = (char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
         if( val != NULL ) StrOp.free(val);
         MapOp.put( data->mibDB, hdr->oid[i].oid, (obj)StrOp.dup(hdr->oid[i].vars) );
+        if( StrOp.equals( "1.3.6.1.2.1.1.6.0", hdr->oid[i].oid ) ) {
+          wSnmpService.setlocation(data->ini, hdr->oid[i].vars);
+        }
         break;
       }
       case VAR_INT: {
