@@ -15,7 +15,7 @@ IMPORTS
 
 system        OBJECT IDENTIFIER ::= {mib-2 1}
 
-rocrail     OBJECT IDENTIFIER ::= {enterprises 55555}
+rocrail     OBJECT IDENTIFIER ::= {enterprises 37707}
 server      OBJECT IDENTIFIER ::= {rocrail 1}
 
 sysDescr OBJECT-TYPE
