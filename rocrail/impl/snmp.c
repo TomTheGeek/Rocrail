@@ -580,7 +580,7 @@ static int __handleSetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out) {
         char* val = (char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
         if( val != NULL ) StrOp.free(val);
         MapOp.put( data->mibDB, hdr->oid[i].oid, (obj)StrOp.dup(hdr->oid[i].vars) );
-        if( StrOp.equals( "1.3.6.1.2.1.1.6.0", hdr->oid[i].oid ) ) {
+        if( StrOp.equals( wSnmpService.sysLocation, hdr->oid[i].oid ) ) {
           wSnmpService.setlocation(data->ini, hdr->oid[i].vars);
         }
         break;
@@ -647,15 +647,15 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
       while( oid != NULL && max < hdr->errindex ) {
         const char* val = (const char*)MapOp.get(data->mibDB, oid);
         if( val != NULL )
-          if( StrOp.equals("1.3.6.1.2.1.1.3.0", oid ) ) {
+          if( StrOp.equals(wSnmpService.sysUpTime, oid ) ) {
             offset += __makeTimetickVariable(out+offset, oid, atoi(val));
             max++;
           }
-          else if( StrOp.equals("1.3.6.1.2.1.1.2.0", oid ) ) {
+          else if( StrOp.equals(wSnmpService.sysObjectID, oid ) ) {
             offset += __makeOIDVariable(out+offset, oid, val);
             max++;
           }
-          else if( StrOp.equals("1.3.6.1.2.1.1.7.0", oid ) ) {
+          else if( StrOp.equals(wSnmpService.sysServices, oid ) ) {
             offset += __makeIntegerVariable(out+offset, oid, atoi(val));
             max++;
           }
@@ -677,11 +677,11 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, B
     for( i = 0; i < hdr->oids; i++ ) {
       const char* val = (const char*)MapOp.get( data->mibDB, hdr->oid[i].oid );
       if( val != NULL ) {
-        if( StrOp.equals("1.3.6.1.2.1.1.3.0", hdr->oid[i].oid ) )
+        if( StrOp.equals(wSnmpService.sysUpTime, hdr->oid[i].oid ) )
           offset += __makeTimetickVariable(out+offset, hdr->oid[i].oid, atoi(val));
-        else if( StrOp.equals("1.3.6.1.2.1.1.2.0", hdr->oid[i].oid ) )
+        else if( StrOp.equals(wSnmpService.sysObjectID, hdr->oid[i].oid ) )
           offset += __makeOIDVariable(out+offset, hdr->oid[i].oid, val);
-        else if( StrOp.equals("1.3.6.1.2.1.1.7.0", hdr->oid[i].oid ) )
+        else if( StrOp.equals(wSnmpService.sysServices, hdr->oid[i].oid ) )
           offset += __makeIntegerVariable(out+offset, hdr->oid[i].oid, atoi(val));
         else
           offset += __makeStringVariable(out+offset, hdr->oid[i].oid, val);
@@ -789,7 +789,7 @@ static int __makeTrap(iOSNMP snmp, byte* out, int trapid, const char* oid, const
   offset++;
 
   /* OID */
-  offset += __setOID( out+offset, (const char*)MapOp.get( data->mibDB, "1.3.6.1.2.1.1.2.0") );
+  offset += __setOID( out+offset, (const char*)MapOp.get( data->mibDB, wSnmpService.sysObjectID) );
 
   /* VAR_IP */
   offset += __setIP( out+offset, SocketOp.gethostaddr() );
@@ -928,32 +928,35 @@ static void __initMibDB(iOSNMP snmp) {
       wSnmpService.getenterprise(data->ini), wSnmpService.getfamily(data->ini), wSnmpService.getproduct(data->ini));
   char* buildTime = StrOp.fmt("%s %s", wGlobal.buildDate, wGlobal.buildTime);
 
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.1.0", (obj)wSnmpService.getdescription(data->ini));
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.2.0", (obj)sysObjectID);
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)StrOp.dup("0"));
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.4.0", (obj)wSnmpService.getcontact(data->ini));
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.5.0", (obj)sysName);
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.6.0", (obj)wSnmpService.getlocation(data->ini));
-  MapOp.put( data->mibDB, "1.3.6.1.2.1.1.7.0", (obj)"72");
-  MapOp.put( data->mibDB, "1.3.6.1.4.1.37707.1.1.0", (obj)buildTime);
-  MapOp.put( data->mibDB, "1.3.6.1.4.1.37707.1.2.0", (obj)StrOp.dup("0"));
+  /* Map the system values */
+  MapOp.put( data->mibDB, wSnmpService.sysDescr   , (obj)wSnmpService.getdescription(data->ini));
+  MapOp.put( data->mibDB, wSnmpService.sysObjectID, (obj)sysObjectID);
+  MapOp.put( data->mibDB, wSnmpService.sysUpTime  , (obj)StrOp.dup("0"));
+  MapOp.put( data->mibDB, wSnmpService.sysContact , (obj)wSnmpService.getcontact(data->ini));
+  MapOp.put( data->mibDB, wSnmpService.sysName    , (obj)sysName);
+  MapOp.put( data->mibDB, wSnmpService.sysLocation, (obj)wSnmpService.getlocation(data->ini));
+  MapOp.put( data->mibDB, wSnmpService.sysServices, (obj)"72");
 
+  /* Map the private values */
+  MapOp.put( data->mibDB, wSnmpService.privBuildTime, (obj)buildTime);
+  MapOp.put( data->mibDB, wSnmpService.privThreadCnt, (obj)StrOp.dup("0"));
+
+  /* Map the lists for the bulk request */
   iOList systemList = ListOp.inst();
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.1.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.2.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.3.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.4.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.5.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.6.0" );
-  ListOp.add( systemList, (obj) "1.3.6.1.2.1.1.7.0" );
+  ListOp.add( systemList, (obj) wSnmpService.sysDescr    );
+  ListOp.add( systemList, (obj) wSnmpService.sysObjectID );
+  ListOp.add( systemList, (obj) wSnmpService.sysUpTime   );
+  ListOp.add( systemList, (obj) wSnmpService.sysContact  );
+  ListOp.add( systemList, (obj) wSnmpService.sysName     );
+  ListOp.add( systemList, (obj) wSnmpService.sysLocation );
+  ListOp.add( systemList, (obj) wSnmpService.sysServices );
 
   iOList enterpriseList = ListOp.inst();
-  ListOp.add( enterpriseList, (obj) "1.3.6.1.4.1.37707.1.1.0" ); /* build time */
-  ListOp.add( enterpriseList, (obj) "1.3.6.1.4.1.37707.1.2.0" ); /* thread count */
+  ListOp.add( enterpriseList, (obj) wSnmpService.privBuildTime ); /* build time */
+  ListOp.add( enterpriseList, (obj) wSnmpService.privThreadCnt ); /* thread count */
 
-  MapOp.put( data->mibMap, "1.3.6.1.2.1.1", (obj)systemList);
-  MapOp.put( data->mibMap, "1.3.6.1.4.1.37707.1", (obj)enterpriseList);
-
+  MapOp.put( data->mibMap, wSnmpService.systemList , (obj)systemList);
+  MapOp.put( data->mibMap, wSnmpService.privateList, (obj)enterpriseList);
 }
 
 
@@ -978,15 +981,15 @@ static void __server( void* threadinst ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP received from %s:%d", client, port );
 
     if( inlen > 0 ) {
-      char* uptime = (char*)MapOp.get( data->mibDB, "1.3.6.1.2.1.1.3.0" );
+      char* uptime = (char*)MapOp.get( data->mibDB, wSnmpService.sysUpTime );
       if( uptime != NULL ) StrOp.free(uptime);
       uptime = StrOp.fmt("%ld", SystemOp.getTick());
-      MapOp.put( data->mibDB, "1.3.6.1.2.1.1.3.0", (obj)uptime);
+      MapOp.put( data->mibDB, wSnmpService.sysUpTime, (obj)uptime);
 
-      char* cnt = (char*)MapOp.get( data->mibDB, "1.3.6.1.4.1.37707.1.2.0" );
+      char* cnt = (char*)MapOp.get( data->mibDB, wSnmpService.privThreadCnt );
       if( cnt != NULL ) StrOp.free(cnt);
       cnt = StrOp.fmt("%d", ListOp.size(ThreadOp.getAll()));
-      MapOp.put( data->mibDB, "1.3.6.1.4.1.37707.1.2.0", (obj)cnt);
+      MapOp.put( data->mibDB, wSnmpService.privThreadCnt, (obj)cnt);
 
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
       int outlen =  __handleRequest(snmp, in, inlen, out);
@@ -1032,7 +1035,7 @@ static struct OSNMP* _inst( iONode ini ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP Trap activated op port %d", wSnmpService.gettrapport(data->ini) );
       data->trap = True;
       byte out[256];
-      int outlen = __makeTrap(RocsOgen_SNMP, out, TRAP_COLDSTART, "1.3.6.1.6.3.1.1.5.1", "Normal startup." );
+      int outlen = __makeTrap(RocsOgen_SNMP, out, TRAP_COLDSTART, wSnmpService.trapColdStart, "Normal startup." );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
       if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
@@ -1067,7 +1070,7 @@ static void _shutdown( struct OSNMP* inst ) {
   iOSNMPData data = Data(inst);
   data->run = False;
   byte out[256];
-  int outlen = __makeTrap(inst, out, TRAP_USER, "1.3.6.1.6.3.1.1.5.1", "Shutdown server" );
+  int outlen = __makeTrap(inst, out, TRAP_USER, wSnmpService.privTrapShutDown, "Shutdown" );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
@@ -1081,7 +1084,7 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   byte out[256];
   data->linkup += up ?1:-1;
   StrOp.fmtb( sCnt, "currently=%d, total=%d", data->linkup, count );
-  int outlen = __makeTrap(inst, out, up?TRAP_LINKUP:TRAP_LINKDOWN, "1.3.6.1.6.3.1.1.5.2", sCnt );
+  int outlen = __makeTrap(inst, out, up?TRAP_LINKUP:TRAP_LINKDOWN, up?wSnmpService.trapLinkUp:wSnmpService.trapLinkDown, sCnt );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
@@ -1091,7 +1094,7 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
 static void _exception( struct OSNMP* inst, const char* msg ) {
   iOSNMPData data = Data(inst);
   byte out[256];
-  int outlen = __makeTrap(inst, out, TRAP_USER, "1.3.6.1.4.1.37707.1.10.1.1.0", msg );
+  int outlen = __makeTrap(inst, out, TRAP_USER, wSnmpService.privTrapException, msg );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
