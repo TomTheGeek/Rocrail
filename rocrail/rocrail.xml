@@ -2124,6 +2124,7 @@
       <var name="mibMap" vt="iOMap" remark=""/>
       <var name="seqnr" vt="int" remark=""/>
       <var name="linkup" vt="int" remark=""/>
+      <var name="linkcnt" vt="int" remark=""/>
     </data>
   </object>
 

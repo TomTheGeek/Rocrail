@@ -268,7 +268,6 @@ static int __setIP(byte* out, const char* ip) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "IP substr = [%s] i=%d", s, i );
     int val = atoi(s);
     if( val > 127 ) {
-      printf("oid val = %d\n", val);
       offset += __setSignedInt(out+offset, val);
     }
     else {
@@ -923,7 +922,6 @@ static void __initMibDB(iOSNMP snmp) {
   char* sysName = StrOp.fmt("%s %s %d.%d.%d",
       wGlobal.productname, wGlobal.releasename, wGlobal.vmajor,
       wGlobal.vminor, AppOp.getrevno());
-
   char* sysObjectID = StrOp.fmt("1.3.6.1.4.1.%d.%d.%d",
       wSnmpService.getenterprise(data->ini), wSnmpService.getfamily(data->ini), wSnmpService.getproduct(data->ini));
   char* buildTime = StrOp.fmt("%s %s", wGlobal.buildDate, wGlobal.buildTime);
@@ -938,8 +936,9 @@ static void __initMibDB(iOSNMP snmp) {
   MapOp.put( data->mibDB, wSnmpService.sysServices, (obj)"72");
 
   /* Map the private values */
-  MapOp.put( data->mibDB, wSnmpService.privBuildTime, (obj)buildTime);
-  MapOp.put( data->mibDB, wSnmpService.privThreadCnt, (obj)StrOp.dup("0"));
+  MapOp.put( data->mibDB, wSnmpService.privBuildTime    , (obj)buildTime);
+  MapOp.put( data->mibDB, wSnmpService.privThreadCnt    , (obj)StrOp.dup("0"));
+  MapOp.put( data->mibDB, wSnmpService.privConnectionCnt, (obj)StrOp.dup("0"));
 
   /* Map the lists for the bulk request */
   iOList systemList = ListOp.inst();
@@ -954,6 +953,7 @@ static void __initMibDB(iOSNMP snmp) {
   iOList enterpriseList = ListOp.inst();
   ListOp.add( enterpriseList, (obj) wSnmpService.privBuildTime ); /* build time */
   ListOp.add( enterpriseList, (obj) wSnmpService.privThreadCnt ); /* thread count */
+  ListOp.add( enterpriseList, (obj) wSnmpService.privConnectionCnt ); /* thread count */
 
   MapOp.put( data->mibMap, wSnmpService.systemList , (obj)systemList);
   MapOp.put( data->mibMap, wSnmpService.privateList, (obj)enterpriseList);
@@ -990,6 +990,11 @@ static void __server( void* threadinst ) {
       if( cnt != NULL ) StrOp.free(cnt);
       cnt = StrOp.fmt("%d", ListOp.size(ThreadOp.getAll()));
       MapOp.put( data->mibDB, wSnmpService.privThreadCnt, (obj)cnt);
+
+      char* conn = (char*)MapOp.get( data->mibDB, wSnmpService.privConnectionCnt );
+      if( conn != NULL ) StrOp.free(conn);
+      conn = StrOp.fmt("currently=%d, total=%d", data->linkup, data->linkcnt);
+      MapOp.put( data->mibDB, wSnmpService.privConnectionCnt, (obj)conn);
 
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
       int outlen =  __handleRequest(snmp, in, inlen, out);
@@ -1083,6 +1088,7 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   char sCnt[32];
   byte out[256];
   data->linkup += up ?1:-1;
+  data->linkcnt += up ?1:0;
   StrOp.fmtb( sCnt, "currently=%d, total=%d", data->linkup, count );
   int outlen = __makeTrap(inst, out, up?TRAP_LINKUP:TRAP_LINKDOWN, up?wSnmpService.trapLinkUp:wSnmpService.trapLinkDown, sCnt );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );

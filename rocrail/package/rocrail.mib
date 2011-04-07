@@ -13,7 +13,7 @@ IMPORTS
         DisplayString
                 FROM RFC-1213;
 
-system        OBJECT IDENTIFIER ::= {mib-2 1}
+system      OBJECT IDENTIFIER ::= {mib-2 1}
 
 rocrail     OBJECT IDENTIFIER ::= {enterprises 37707}
 server      OBJECT IDENTIFIER ::= {rocrail 1}
@@ -121,12 +121,12 @@ sysServices OBJECT-TYPE
 
               
 buildTime OBJECT-TYPE
-              SYNTAX  DisplayString (SIZE (0..255))
-              ACCESS  read-only
-              STATUS  mandatory
-              DESCRIPTION
-                      "The build-time of the Rocrail server"
-              ::= { server 1 }
+   SYNTAX  DisplayString (SIZE (0..255))
+   ACCESS  read-only
+   STATUS  mandatory
+   DESCRIPTION
+           "The build-time of the Rocrail server"
+   ::= { server 1 }
 
 threadNumber OBJECT-TYPE
     SYNTAX  DisplayString (SIZE (0..255))
@@ -136,6 +136,13 @@ threadNumber OBJECT-TYPE
             "The number of threads."
     ::= { server 2 }
 
+connectionNumber OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..255))
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The number of connections."
+    ::= { server 3 }
    
 rocrailNotificationPrefix   OBJECT IDENTIFIER ::= { server 10 }
    
