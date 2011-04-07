@@ -873,7 +873,7 @@ static int __handleRequest(iOSNMP snmp, byte* in, int inlen, byte* out) {
       return __handleGetRequest(snmp, &hdr, in, out, False);
     case PDU_GETNEXTREQ:
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GetNextRequest (not supported)" );
-      break;
+      return __handleGetRequest(snmp, &hdr, in, out, False);
     case PDU_GETRSP:
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GetResponse (not supported)" );
       break;
