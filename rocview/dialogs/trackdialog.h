@@ -30,6 +30,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -40,6 +41,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -143,6 +145,8 @@ public:
     wxTextCtrl* m_RouteIDs;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
+    wxStaticText* m_labTrackNr;
+    wxSpinCtrl* m_TrackNr;
     wxCheckBox* m_Road;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;

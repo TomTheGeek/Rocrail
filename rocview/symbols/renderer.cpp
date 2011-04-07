@@ -152,6 +152,16 @@ void SymbolRenderer::initSym() {
         m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall_route );
       }
     }
+    else if( StrOp.equals( wTrack.tracknr, wTrack.gettype( m_Props ) ) ) {
+      char key[256];
+      m_iSymSubType = tracktype::i_tracknr;
+      StrOp.fmtb( key, tracktype::tracknr, wTrack.gettknr( m_Props ) );
+      m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, tracktype::tracknr_occ, wTrack.gettknr( m_Props ) );
+      m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
+      StrOp.fmtb( key, tracktype::tracknr_route, wTrack.gettknr( m_Props ) );
+      m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
+    }
     else {
       m_iSymSubType = tracktype::i_straight;
       if( m_SymMap != NULL ) {

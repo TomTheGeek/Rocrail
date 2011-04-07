@@ -1587,8 +1587,10 @@
         <const name="curve" vt="string" val="curve"/>
         <const name="dir" vt="string" val="dir"/>
         <const name="dirall" vt="string" val="dirall"/>
+        <const name="tracknr" vt="string" val="tracknr"/>
         <const name="connector" vt="string" val="connector"/>
         <var name="type" vt="string" defval="straight" range="straight,curve,dir,dirall,buffer,connector"/>
+        <var name="tknr" vt="int" defval="1" range="0-*" required="false" remark="Track number."/>
         <var name="counterpartid" vt="string" defval="NULL" range="*"/>
       </tk>
     </tklist>

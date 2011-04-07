@@ -64,12 +64,17 @@ namespace tracktype {
   static const char* road_dir           = "road-dir.svg";
   static const char* road_dir_occ       = "road-dir-occ.svg";
 
+  static const char* tracknr       = "track-%d.svg";
+  static const char* tracknr_occ   = "track-%d-occ.svg";
+  static const char* tracknr_route = "track-%d-route.svg";
+
   static const int i_straight    = 1;
   static const int i_curve       = 2;
   static const int i_buffer      = 3;
   static const int i_dir         = 4;
   static const int i_dirall      = 5;
   static const int i_connector   = 6;
+  static const int i_tracknr     = 7;
 }
 
 namespace switchtype {
