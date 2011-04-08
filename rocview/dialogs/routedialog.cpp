@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/RouteCondition.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 /*!
  * RouteDialog type definition
@@ -461,6 +462,7 @@ void RouteDialog::initBlockCombos() {
     iONode bklist = wPlan.getbklist( model );
     iONode seltablist = wPlan.getseltablist( model );
     iONode ttlist = wPlan.getttlist( model );
+    iONode sblist = wPlan.getsblist( model );
 
     if( bklist != NULL ) {
       int cnt = NodeOp.getChildCnt( bklist );
@@ -469,6 +471,17 @@ void RouteDialog::initBlockCombos() {
         const char* id = wBlock.getid( bk );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
+        }
+      }
+
+      if(sblist != NULL) {
+        cnt = NodeOp.getChildCnt( sblist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode stage = NodeOp.getChild( sblist, i );
+          const char* id = wStage.getid( stage );
+          if( id != NULL ) {
+            ListOp.add(list, (obj)id);
+          }
         }
       }
 
