@@ -171,6 +171,10 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
   if( section != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
         id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
+
+    if( wStageSection.getnr(section) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
+    }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown sensors [%s] for stage [%s]...", id, data->id );
@@ -421,7 +425,9 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
     return False;
   }
 
-  return 0;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s locks stageblock", locid );
+  data->locId = locid;
+  return True;
 }
 
 
@@ -666,6 +672,7 @@ static void __initSensors( iOStage inst ) {
   int sectionNr = 0;
   iONode section = wStage.getsection( data->props );
 
+  data->freeSections = 0;
   MapOp.clear( data->fbMap );
   ListOp.clear( data->sectionList );
 
@@ -681,6 +688,9 @@ static void __initSensors( iOStage inst ) {
       if( fb != NULL ) {
         FBackOp.setListener( fb, (obj)inst, &_fbEvent );
         MapOp.put( data->fbMap, fbid, (obj)section);
+        if( wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0 ) {
+          data->freeSections++;
+        }
       }
     }
     ListOp.add( data->sectionList, (obj)section );
