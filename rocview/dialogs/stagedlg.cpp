@@ -87,6 +87,7 @@ void StageDlg::initLabels() {
   m_labDescription->SetLabel( wxGetApp().getMsg( "description" ) );
   m_labSectionLength->SetLabel( wxGetApp().getMsg( "section" ) + _T(" ") + wxGetApp().getMsg( "length" ) );
   m_labTrainGap->SetLabel( wxGetApp().getMsg( "train" ) + _T(" ") + wxGetApp().getMsg( "gap" ) );
+  m_labEnterSensor->SetLabel( wxGetApp().getMsg( "enter" ) );
 
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -95,6 +96,7 @@ void StageDlg::initLabels() {
   m_ModifySection->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
 
+  m_EnterSensor->Append( _T("") );
   m_SectionSensor->Append( _T("") );
 
   iONode model = wxGetApp().getModel();
@@ -114,6 +116,7 @@ void StageDlg::initLabels() {
     int cnt = ListOp.size( list );
     for( int i = 0; i < cnt; i++ ) {
       const char* id = (const char*)ListOp.get( list, i );
+      m_EnterSensor->Append( wxString(id,wxConvUTF8) );
       m_SectionSensor->Append( wxString(id,wxConvUTF8) );
     }
 
@@ -138,6 +141,7 @@ bool StageDlg::evaluate() {
   wStage.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
   wStage.setslen( m_Props, m_SectionLength->GetValue() );
   wStage.setgap( m_Props, m_TrainGap->GetValue() );
+  wStage.setfbenterid( m_Props, m_EnterSensor->GetStringSelection().mb_str(wxConvUTF8) );
 
 }
 
@@ -172,6 +176,8 @@ void StageDlg::initValues() {
   m_Description->SetValue( wxString(wStage.getdesc( m_Props ),wxConvUTF8) );
   m_SectionLength->SetValue( wStage.getslen( m_Props ) );
   m_TrainGap->SetValue( wStage.getgap( m_Props ) );
+  m_EnterSensor->SetStringSelection( wStage.getfbenterid( m_Props ) == NULL ?
+      _T(""):wxString(wStage.getfbenterid( m_Props ),wxConvUTF8) );
 
   initSections();
 

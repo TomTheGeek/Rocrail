@@ -168,14 +168,18 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
   iOStageData data = Data(inst);
   iONode section = (iONode)MapOp.get( data->fbMap, id );
 
-  if( section != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
-        id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
-
-    if( wStageSection.getnr(section) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
+  if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
+    if( data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
     }
   }
+
+  else if( section != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
+        id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
+
+  }
+
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown sensors [%s] for stage [%s]...", id, data->id );
   }
@@ -678,12 +682,21 @@ static void __initSensors( iOStage inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init sensors for stage %s...", data->id );
 
+  iOFBack fb = ModelOp.getFBack( model, wStage.getfbenterid(data->props) );
+  if( fb != NULL ) {
+    FBackOp.setListener( fb, (obj)inst, &_fbEvent );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "enter sensors for stage %s is not defined", data->id );
+  }
+
+
   while( section != NULL ) {
     const char* fbid = wStageSection.getfbid( section );
     wStageSection.setnr(section, sectionNr);
 
     if( StrOp.len( fbid ) > 0 ) {
-    iOFBack fb = ModelOp.getFBack( model, fbid );
+    fb = ModelOp.getFBack( model, fbid );
 
       if( fb != NULL ) {
         FBackOp.setListener( fb, (obj)inst, &_fbEvent );

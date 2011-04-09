@@ -1459,6 +1459,7 @@
         <var name="state" vt="string" defval="open" range="open,closed"/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
+        <var name="fbenterid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
         <section cardinality="n" wrappername="StageSection">
           <var name="id" vt="string" defval="?" range="*" required="true"/>
           <var name="lcid" vt="string" defval="NULL" range="*" remark=""/>

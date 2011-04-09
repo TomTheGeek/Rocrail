@@ -143,6 +143,17 @@ static void __blockEvent( iOLcDriver inst, obj emitter, int event ) {
 
   switch( event ) {
 
+  /*---------- TAKEOVER ----------*/
+  case takeover_event:
+    data->state = LC_MANAGED;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "switch into managed mode");
+    break;
+  case release_event:
+    data->state = LC_IDLE;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "released from managed mode");
+    break;
+
+
   /*---------- ENTER ----------*/
   case enter_event:
     eventEnter( inst, blockId, curBlockEvent, dstBlockEvent );
