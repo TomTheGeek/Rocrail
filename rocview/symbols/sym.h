@@ -385,6 +385,9 @@ namespace blocktype {
 
 namespace stagetype {
   static const char* stage     = "stage.svg";
+  static const char* stage_occ = "stage-occ.svg";
+  static const char* stage_res = "stage-res.svg";
+  static const char* stage_ent = "stage-ent.svg";
 
   static const int i_stage = 1;
 }

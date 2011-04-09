@@ -560,6 +560,9 @@ void SymbolRenderer::initSym() {
     m_iSymSubType = stagetype::i_stage;
     if( m_SymMap != NULL ) {
       m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage );
+      m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_occ );
+      m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_res );
+      m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_ent );
     }
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
@@ -1368,9 +1371,20 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
   m_bRotateable = true;
   int len = 4;
 
-  if( m_SvgSym1 != NULL )
+  if( m_SvgSym1 != NULL && m_iOccupied == 0 )
   {
     drawSvgSym(dc, m_SvgSym1, ori);
+  }
+  else if( m_SvgSym2!=NULL && m_iOccupied == 1 ) {
+    drawSvgSym(dc, m_SvgSym2, ori);
+  }
+  else if( m_SvgSym3!=NULL && m_iOccupied == 2 || m_SvgSym3!=NULL && m_SvgSym4==NULL && m_iOccupied == 3 ) {
+    /* reserved state */
+    drawSvgSym(dc, m_SvgSym3, ori);
+  }
+  else if( m_SvgSym4!=NULL && m_iOccupied == 3 ) {
+    /* reserved state */
+    drawSvgSym(dc, m_SvgSym4, ori);
   }
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
