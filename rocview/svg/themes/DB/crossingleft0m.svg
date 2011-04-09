@@ -1,0 +1,21 @@
+<svg width="64" height="32">
+  <g>
+    <!-- linke gerade -->
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 0,15 L 2,13 L 8,13 L 8,18 L 2,18 L 0,16 z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 23,13 L 29,13 L 31,15 L 31,16 L 29,18 L 23,18 z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 8,13 L 23,13 L 23,18 L 8,18 z " />
+    <!-- rechte gerade -->
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 32,15 L 34,13 L 40,13 L 40,18 L 34,18 L 32,16 z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 55,13 L 61,13 L 63,15 L 63,16 L 61,18 L 55,18 z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 40,13 L 55,13 L 55,18 L 40,18 z " />
+    <!-- Abzweig oben links -->
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 16,0 L 16,3 L 19,6 L 22,3 L 19,0 L 16,0 z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 25,12 L 28,15 L 31,15 L 31,12 L 28,9 L 25,12 z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 19,6 L 25,12 L 28,9 L 22,3 L 19,6 z " />
+    <!-- Abzweig unten rechts -->
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 32,16 L 35,16 L 38,19 L 35,22 L 32,19 L 32,16 z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 41,28 L 44,31 L 47,31 L 47,28 L 44,25 L 41,28 z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 35,22 L 41,28 L 44,25 L 38,19 L 35,22 z " />
+    
+  </g>
+</svg>
