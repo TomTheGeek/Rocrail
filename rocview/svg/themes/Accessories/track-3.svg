@@ -1,0 +1,14 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- down cross -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 12,0 L 12,6 L 19,6 L 19,0 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 12,31 L 12,25 L 19,25 L 19,31 z " />
+    <!-- bridge -->
+    <path stroke="rgb(0,0,0)" fill="rgb(255,255,255)" d="M 0,0 L 0,10 L 31,10 L 31,0 L30,0 L 22,6 L 9,6 L 1,0 L 0,0 M 1,1 L 1,9 L 30,9 L 30,1 L 22,7 L 9,7 L 1,1 z " /> 
+    <path stroke="rgb(0,0,0)" fill="rgb(255,255,255)" d="M 0,31 L 0,21 L 31,21 L 31,31 L30,31 L 22,25 L 9,25 L 1,31 L 0,31 M 1,30 L 1,22 L 30,22 L 30,30 L 22, 24 L 9,24 L 1,30 z " /> 
+    <!-- illum normal-->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+  </g>
+</svg>
