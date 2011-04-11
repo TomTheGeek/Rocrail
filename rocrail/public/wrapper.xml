@@ -1467,6 +1467,7 @@
           <var name="fbid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
           <var name="action" vt="string" defval=""/>
           <var name="nr" vt="int" defval="0"/>
+          <var name="idx" vt="int" defval="0"/>
         </section>
       </sb>
     </sblist>

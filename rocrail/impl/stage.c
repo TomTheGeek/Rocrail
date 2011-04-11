@@ -171,12 +171,19 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
   if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
     if( data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
-      if( id != NULL ) {
+      if( data->locId != NULL ) {
+        iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
         iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
         wStage.setid( nodeD, data->id );
         wStage.setentering( nodeD, True );
-        wStage.setlocid( nodeD, id );
+        wStage.setlocid( nodeD, data->locId );
         AppOp.broadcastEvent( nodeD );
+
+        if( loc != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
+          LocOp.event( loc, (obj)inst, enter_event, 0, True );
+        }
+
       }
     }
   }
@@ -185,6 +192,20 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
         id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
 
+    if( wStageSection.getidx(section) == data->targetSection ) {
+      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
+      iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+      wStage.setid( nodeD, data->id );
+      wStage.setlocid( nodeD, data->locId );
+      AppOp.broadcastEvent( nodeD );
+
+      if( loc != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of IN event", data->locId );
+        LocOp.event( loc, (obj)inst, in_event, 0, True );
+        /* stop loco */
+        LocOp.stop(loc, False);
+      }
+    }
   }
 
   else {
@@ -351,11 +372,31 @@ static void _init( iIBlockBase inst ) {
 /**
  * calculate if the train will fit in the free sections
  */
-static Boolean __willLocoFit(iIBlockBase inst ,const char* locid) {
+static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, int* targetSection) {
   iOStageData data = Data(inst);
   iOModel model = AppOp.getModel();
   iOLoc loco = ModelOp.getLoc( model, locid );
   Boolean fit = False;
+
+  int sections = ListOp.size( data->sectionList );
+  int i = 0;
+  *targetSection = -1;
+  /* check the sections */
+  data->freeSections = 0;
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0 ) {
+      /* free section */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is free", i );
+      data->freeSections++;
+      *targetSection = i;
+    }
+    else {
+      break;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%d free sections, target section is %d", data->freeSections, *targetSection );
+
 
   if( data->freeSections > 1 ) {
 
@@ -392,7 +433,8 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
  */
 static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  return __willLocoFit(inst, locid);
+  int targetSection = 0;
+  return __willLocoFit(inst, locid, &targetSection);
 }
 
 
@@ -411,7 +453,8 @@ static Boolean _isReady( iIBlockBase inst ) {
 
 /**  */
 static int _isSuited( iIBlockBase inst ,iOLoc loc ) {
-  return __willLocoFit(inst, LocOp.getId(loc)) ? suits_ok:suits_not;
+  int targetSection = 0;
+  return __willLocoFit(inst, LocOp.getId(loc), &targetSection) ? suits_ok:suits_not;
 }
 
 
@@ -432,12 +475,14 @@ static Boolean _link( iIBlockBase inst ,iIBlockBase linkto ) {
 /**  */
 static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,const char* routeid ,Boolean crossing ,Boolean reset ,Boolean reverse ,int indelay ) {
   iOStageData data = Data(inst);
-  if( !__willLocoFit(inst, locid) ) {
+  int targetSection = 0;
+  if( !__willLocoFit(inst, locid, &targetSection) ) {
     return False;
   }
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s locks stageblock", locid );
   data->locId = locid;
+  data->targetSection = targetSection;
   {
     iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
     wStage.setid( nodeD, data->id );
@@ -720,6 +765,7 @@ static void __initSensors( iOStage inst ) {
         }
       }
     }
+    wStageSection.setidx(section, sectionNr);
     ListOp.add( data->sectionList, (obj)section );
     sectionNr++;
     section = wStage.nextsection( data->props, section );
