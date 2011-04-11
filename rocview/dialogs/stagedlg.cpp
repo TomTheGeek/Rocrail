@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 {
@@ -124,6 +125,35 @@ void StageDlg::initLabels() {
 
   ListOp.base.del(list);
 
+
+  // init loco combo
+  m_SectionLocoId->Append( _T("") );
+
+  list = ListOp.inst();
+
+  if( model != NULL ) {
+    iONode lclist = wPlan.getlclist( model );
+    if( lclist != NULL ) {
+      int cnt = NodeOp.getChildCnt( lclist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode lc = NodeOp.getChild( lclist, i );
+        ListOp.add(list, (obj)wLoc.getid( lc ));
+      }
+    }
+
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_SectionLocoId->Append( wxString(id,wxConvUTF8) );
+    }
+
+  }
+
+  ListOp.base.del(list);
+
+
+
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_stdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -151,7 +181,8 @@ void StageDlg::initSections() {
   iONode section = wStage.getsection(m_Props);
   while( section != NULL ) {
     const char* id = wStageSection.getid(section);
-    m_SectionList->Append( wxString(id,wxConvUTF8), section );
+    const char* lcid = wStageSection.getlcid(section);
+    m_SectionList->Append( wxString(id,wxConvUTF8) + _T(" (") + wxString(lcid!=NULL?lcid:"free",wxConvUTF8) + _T(")"), section );
     section = wStage.nextsection(m_Props, section);
   }
   m_ModifySection->Enable(false);
@@ -192,6 +223,8 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
       m_SectionID->SetValue( wxString(wStageSection.getid( m_Section ),wxConvUTF8) );
       m_SectionSensor->SetStringSelection( wStageSection.getfbid( m_Section ) == NULL ?
           _T(""):wxString(wStageSection.getfbid( m_Section ),wxConvUTF8) );
+      m_SectionLocoId->SetStringSelection( wStageSection.getlcid( m_Section ) == NULL ?
+          _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
       m_ModifySection->Enable(true);
       m_DeleteSection->Enable(true);
     }
@@ -224,6 +257,7 @@ void StageDlg::OnSectionModify( wxCommandEvent& event )
     if( node != NULL ) {
       wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
       wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
+      wStageSection.setlcid( node, m_SectionLocoId->GetStringSelection().mb_str(wxConvUTF8) );
       initSections();
     }
     else
