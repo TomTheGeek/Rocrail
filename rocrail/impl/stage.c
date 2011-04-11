@@ -171,6 +171,13 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
   if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
     if( data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
+      if( id != NULL ) {
+        iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setid( nodeD, data->id );
+        wStage.setentering( nodeD, True );
+        wStage.setlocid( nodeD, id );
+        AppOp.broadcastEvent( nodeD );
+      }
     }
   }
 
@@ -431,6 +438,13 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s locks stageblock", locid );
   data->locId = locid;
+  {
+    iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+    wStage.setid( nodeD, data->id );
+    wStage.setreserved( nodeD, True );
+    wStage.setlocid( nodeD, locid );
+    AppOp.broadcastEvent( nodeD );
+  }
   return True;
 }
 

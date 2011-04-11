@@ -1376,6 +1376,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     drawSvgSym(dc, m_SvgSym1, ori);
   }
   else if( m_SvgSym2!=NULL && m_iOccupied == 1 ) {
+    // occupied
     drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym3!=NULL && m_iOccupied == 2 || m_SvgSym3!=NULL && m_SvgSym4==NULL && m_iOccupied == 3 ) {
@@ -1383,7 +1384,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     drawSvgSym(dc, m_SvgSym3, ori);
   }
   else if( m_SvgSym4!=NULL && m_iOccupied == 3 ) {
-    /* reserved state */
+    /* enter state */
     drawSvgSym(dc, m_SvgSym4, ori);
   }
 

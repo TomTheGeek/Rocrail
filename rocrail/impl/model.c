@@ -2724,6 +2724,7 @@ static void _init( iOModel inst ) {
     block = (iIBlockBase)MapOp.first( o->stageMap );
     while( block != NULL ) {
       block->init( block );
+      MapOp.put( o->blockMap, block->base.id( block ), (obj)block );
       block = (iIBlockBase)MapOp.next( o->stageMap );
     };
     block = (iIBlockBase)MapOp.first( o->ttMap );

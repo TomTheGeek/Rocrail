@@ -2283,6 +2283,27 @@ void Symbol::modelEvent( iONode node ) {
       checkSpeakAction(node);
     }
   }
+
+  else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
+    char* l_locidStr = NULL;
+    const char* locid = wStage.getlocid( node );
+    int occupied = 0;
+    Boolean isReserved    = wStage.isreserved( node );
+    Boolean isEntering    = wStage.isentering( node );
+
+    wStage.setreserved( m_Props, isReserved );
+    wStage.setlocid( m_Props, locid );
+
+    occupied = isReserved ? 2:1;
+    occupied = isEntering ? 3:occupied;
+
+    l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid==NULL?"":locid );
+    m_Renderer->setLabel( l_locidStr, occupied, false );
+    StrOp.free( m_locidStr );
+    m_locidStr = l_locidStr;
+
+  }
+
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     Boolean updateEnterside = wBlock.isupdateenterside(node);
@@ -2317,7 +2338,8 @@ void Symbol::modelEvent( iONode node ) {
           l_locidStr = StrOp.fmt( "%s", locid );
         else
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
-      } else if ( locid!=NULL && StrOp.len(locid)>0) {
+      }
+      else if ( locid!=NULL && StrOp.len(locid)>0) {
         l_locidStr = StrOp.fmt( "%s", locid );
       }
 
