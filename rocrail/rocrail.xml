@@ -181,7 +181,6 @@
       <var name="props" vt="iONode" remark="Stage properties"/>
       <var name="sectionList" vt="iOList"/>
       <var name="fbMap" vt="iOMap"/>
-      <var name="lcMap" vt="iOMap"/>
       <var name="sectionCount" vt="int"/>
       <var name="freeSections" vt="int"/>
       <var name="sectionLength" vt="int"/>
