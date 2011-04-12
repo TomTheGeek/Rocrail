@@ -144,6 +144,22 @@ connectionNumber OBJECT-TYPE
     DESCRIPTION
             "The number of connections."
     ::= { server 3 }
+
+memoryStatistics OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..255))
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The number of connections."
+    ::= { server 4 }
+
+lastException OBJECT-TYPE
+    SYNTAX  DisplayString (SIZE (0..255))
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The number of connections."
+    ::= { server 5 }
    
 rocrailNotificationPrefix   OBJECT IDENTIFIER ::= { server 10 }
    

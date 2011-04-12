@@ -2124,9 +2124,11 @@
       <var name="run" vt="Boolean" remark=""/>
       <var name="mibDB" vt="iOMap" remark=""/>
       <var name="mibMap" vt="iOMap" remark=""/>
+      <var name="oidList" vt="iOList" remark=""/>
       <var name="seqnr" vt="int" remark=""/>
       <var name="linkup" vt="int" remark=""/>
       <var name="linkcnt" vt="int" remark=""/>
+      <var name="lastexc" vt="char*" remark=""/>
     </data>
   </object>
 
