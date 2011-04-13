@@ -1237,6 +1237,7 @@ static void _shutdown( struct OSNMP* inst ) {
   iOSNMPData data = Data(inst);
   data->run = False;
   byte out[256];
+  if(data->snmpTrapSock == NULL) return;
   int outlen = __makeTrap(inst, out, SNMPOp.trap_USER, wSnmpService.privTrapShutDown, "Shutdown" );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
@@ -1251,6 +1252,7 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   byte out[256];
   data->linkup += up ?1:-1;
   data->linkcnt += up ?1:0;
+  if(data->snmpTrapSock == NULL) return;
   StrOp.fmtb( sCnt, "currently=%d, total=%d", data->linkup, count );
   int outlen = __makeTrap(inst, out, up?SNMPOp.trap_LINKUP:SNMPOp.trap_LINKDOWN, up?wSnmpService.trapLinkUp:wSnmpService.trapLinkDown, sCnt );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
@@ -1262,6 +1264,7 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
 static void _exception( struct OSNMP* inst, const char* msg ) {
   iOSNMPData data = Data(inst);
   byte out[256];
+  if(data->snmpTrapSock == NULL) return;
   int outlen = __makeTrap(inst, out, SNMPOp.trap_USER, wSnmpService.privTrapException, msg );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
   if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
