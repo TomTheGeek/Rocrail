@@ -2079,9 +2079,35 @@
   </object>
 
   <object name="SNMP" use="socket,node,thread,map" remark="SNMP Support">
-    <typedef def="enum {PDU_GETREQ=0xa0,PDU_GETNEXTREQ=0xa1,PDU_GETRSP=0xa2,PDU_SETREQ=0xa3,PDU_TRAP=0xa4,PDU_BULKREQ=0xa5} pdutype"/>
-    <typedef def="enum {VAR_INT=2,VAR_STRING=4,VAR_OBJECTID=6,VAR_SEQUENCE=0x30,VAR_NULL=5,VAR_TIMETICK=67,VAR_IP=64,VAR_COUNTER32=65,VAR_GAUGE32=66,VAR_OPAQUE=68,VAR_COUNTER64=70,VAR_UINT=71} vartype"/>
-    <typedef def="enum {TRAP_COLDSTART=0,TRAP_WARMSTART=1,TRAP_LINKDOWN=2,TRAP_LINKUP=3,TRAP_USER=7} traptype"/>
+    <const name="pdu_SEQUENCE"   vt="int" val="0x30"/>
+    <const name="pdu_GETREQ"     vt="int" val="0xA0"/>
+    <const name="pdu_GETNEXTREQ" vt="int" val="0xA1"/>
+    <const name="pdu_GETRSP"     vt="int" val="0xA2"/>
+    <const name="pdu_SETREQ"     vt="int" val="0xA3"/>
+    <const name="pdu_TRAP"       vt="int" val="0xA4"/>
+    <const name="pdu_BULKREQ"    vt="int" val="0xA5"/>
+
+    <const name="var_INT"      vt="int" val="2"/>
+    <const name="var_STRING"   vt="int" val="4"/>
+    <const name="var_OBJECTID" vt="int" val="6"/>
+    <const name="var_NULL"     vt="int" val="5"/>
+    <const name="var_TIMETICK" vt="int" val="67"/>
+    <const name="var_IP"       vt="int" val="64"/>
+    <const name="var_EOFMIB"   vt="int" val="130"/>
+
+    <const name="trap_COLDSTART" vt="int" val="0"/>
+    <const name="trap_WARMSTART" vt="int" val="1"/>
+    <const name="trap_LINKDOWN"  vt="int" val="2"/>
+    <const name="trap_LINKUP"    vt="int" val="3"/>
+    <const name="trap_USER"      vt="int" val="7"/>
+    
+    <const name="err_OK"         vt="int" val="0"/>
+    <const name="err_tooBig"     vt="int" val="1"/>
+    <const name="err_noSuchName" vt="int" val="2"/>
+    <const name="err_badValue"   vt="int" val="3"/>
+    <const name="err_readOnly"   vt="int" val="4"/>
+    <const name="err_genErr"     vt="int" val="5"/>
+    
     <fun name="inst" vt="this" remark="">
       <param name="ini" vt="iONode" remark="Initialization node."/>
     </fun>
@@ -2123,6 +2149,7 @@
       <var name="run" vt="Boolean" remark=""/>
       <var name="mibDB" vt="iOMap" remark=""/>
       <var name="mibMap" vt="iOMap" remark=""/>
+      <var name="mibRW" vt="iOMap" remark=""/>
       <var name="oidList" vt="iOList" remark=""/>
       <var name="seqnr" vt="int" remark=""/>
       <var name="linkup" vt="int" remark=""/>
