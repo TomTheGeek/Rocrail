@@ -19,6 +19,7 @@ int DecConfigDlg::getConfig() {
   m_Config |= m_DCOperation->IsChecked() ? 0x04:0x00;
   m_Config |= m_UserSpeedCurve->IsChecked() ? 0x10:0x00;
   m_Config |= m_ExtAddressing->IsChecked() ? 0x20:0x00;
+  m_Config |= m_RailCom->IsChecked() ? 0x08:0x00;
   return m_Config;
 }
 
@@ -36,7 +37,7 @@ void DecConfigDlg::initValues() {
   m_DCOperation->SetValue( (m_Config & 0x04) ? true:false );
   m_UserSpeedCurve->SetValue( (m_Config & 0x10) ? true:false );
   m_ExtAddressing->SetValue( (m_Config & 0x20) ? true:false );
-
+  m_RailCom->SetValue( (m_Config & 0x08) ? true:false );
 }
 
 
