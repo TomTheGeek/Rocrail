@@ -387,6 +387,7 @@
       <var name="fbState[128*8]" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="cvval[1024]" vt="byte"/>
     </data>
   </object>
 

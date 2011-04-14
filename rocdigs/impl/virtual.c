@@ -342,13 +342,14 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
       rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setcv( rsp, cv );
-      wProgram.setvalue( rsp, 77 );
+      wProgram.setvalue( rsp, data->cvval[cv] );
       wProgram.setcmd( rsp, wProgram.datarsp );
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       int cv = wProgram.getcv( node );
       int value = wProgram.getvalue( node );
       int decaddr = wProgram.getdecaddr( node );
+      data->cvval[cv] = value;
 
       // POM ?
       if( wProgram.ispom(node) ) {
