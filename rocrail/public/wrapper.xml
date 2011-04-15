@@ -1862,6 +1862,7 @@
         <var name="mint" vt="int" defval="0" remark="maintenance interval in hours"/>
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
         <var name="ent2incorr" vt="int" defval="100" range="1-*" unit="%" remark="Correction percentage for enter2in block timer"/>
+        <var name="swaptimer" vt="int" defval="0" range="0-*" unit="ms" remark="Swap placing timer; Loco should wait this time before processing the swap."/>
 
         <const name="mode_idle" vt="string" val="idle"/>
         <const name="mode_wait" vt="string" val="wait"/>

@@ -17154,4 +17154,7 @@
   <Msg id="communication">
     <en txt="Communication"/>
   </Msg>
+  <Msg id="swaptimer">
+    <en txt="Swap timer"/>
+  </Msg>
 </Messages>

@@ -57,6 +57,7 @@ static int instCnt = 0;
 static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function);
 static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent );
 static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
+static void __swapConsist( iOLoc inst, iONode cmd );
 
 /*
  ***** OBase functions.
@@ -1205,23 +1206,52 @@ static void __runner( void* threadinst ) {
     }
 
     if( data->driver != NULL ) {
-      if( timer > 0 ) {
-        if( type == 0 && wLoc.getevttimer(data->props) > 0 ) {
-          timer = wLoc.getevttimer(data->props);
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
-        } else if( event == in_event ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms * %d %%", timer, wLoc.getent2incorr(data->props) );
-          timer = timer * wLoc.getent2incorr(data->props) / 100;
-          if( timer < 1 )
-            timer = 1;
-        } else {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+      if( event == swap_event ) {
+        iONode  cmd     = MsgOp.getUsrData(msg);
+        Boolean swap    = (type & 0x01 ? True:False);
+        Boolean consist = (type & 0x02 ? True:False);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event %d ms", timer );
+
+        /* The swap timer. */
+        if( timer > 0 )
+          ThreadOp.sleep( timer );
+
+        /* The swap: */
+        wLoc.setplacing( data->props, swap );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
+        /* inform model to keep this setting in the occupancy file */
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+
+        /* swap the block enter side flag to be able to use other direction routes */
+        LocOp.swapBlockEnterSide(loc, NULL);
+
+        if( !consist ) {
+          /* only swap if this command did not come from a multiple unit loop */
+          __swapConsist(loc, cmd);
         }
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
-        ThreadOp.sleep( timer );
       }
-      data->driver->drive( data->driver, emitter, event );
+      else {
+        if( timer > 0 ) {
+          if( type == 0 && wLoc.getevttimer(data->props) > 0 ) {
+            timer = wLoc.getevttimer(data->props);
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+          }
+          else if( event == in_event ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms * %d %%", timer, wLoc.getent2incorr(data->props) );
+            timer = timer * wLoc.getent2incorr(data->props) / 100;
+            if( timer < 1 )
+              timer = 1;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+          }
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
+          ThreadOp.sleep( timer );
+        }
+        data->driver->drive( data->driver, emitter, event );
+      }
     }
+
 
     if( !cnfgsend && loccnfg ) {
       iOControl control = AppOp.getControl();
@@ -2350,24 +2380,16 @@ static void _setCV( iOLoc loc, int nr, int value ) {
 static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   iOLocData data = Data(loc);
 
-  if( cmd != NULL && NodeOp.findAttr(cmd, "placing")) {
-    wLoc.setplacing( data->props, wLoc.isplacing( cmd ) );
-  }
-  else
-    wLoc.setplacing( data->props, !wLoc.isplacing( data->props ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
-  /* inform model to keep this setting in the occupancy file */
-  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+  Boolean swap = wLoc.isplacing( cmd );
 
-  /* swap the block enter side flag to be able to use other direction routes */
-  LocOp.swapBlockEnterSide(loc, NULL);
+  iOMsg msg = MsgOp.inst( NULL, swap_event );
+  MsgOp.setTimer( msg, wLoc.getswaptimer(data->props) );
+  MsgOp.setEvent( msg, swap_event );
+  if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
+    swap = !wLoc.isplacing( data->props );
+  MsgOp.setUsrData(msg, cmd, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+  ThreadOp.post( data->runner, (obj)msg );
 
-  if( !consist ) {
-    /* only swap if this command did not come from a multiple unit loop */
-    __swapConsist(loc, cmd);
-  }
-
-  /* Broadcast to clients is done in function swapBlockEnterSide. */
 }
 
 
