@@ -5261,3 +5261,21 @@ msgstr ""
 msgid "Aspect numbers"
 msgstr ""
 
+#. 
+# id="planhealth"
+#, c-format
+msgid "Plan health"
+msgstr ""
+
+#. 
+# id="communication"
+#, c-format
+msgid "Communication"
+msgstr ""
+
+#. 
+# id="swaptimer"
+#, c-format
+msgid "Swap timer"
+msgstr ""
+
