@@ -164,6 +164,7 @@ public:
     wxCheckBox* m_RestoreLcCtrl;
     wxCheckBox* m_Monitoring;
     wxCheckBox* m_ShowOnlyStartSchedules;
+    wxCheckBox* m_ShowBlockID;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
