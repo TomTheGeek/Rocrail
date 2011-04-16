@@ -2339,8 +2339,11 @@ void Symbol::modelEvent( iONode node ) {
         else
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
       }
-      else if ( locid!=NULL && StrOp.len(locid)>0) {
-        l_locidStr = StrOp.fmt( "%s", locid );
+      else {
+        if ( locid!=NULL && StrOp.len(locid) > 0 )
+          l_locidStr = StrOp.fmt( "%s", locid );
+        else if( !wBlock.issmallsymbol(m_Props) )
+          l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
       }
 
       if( locid != NULL && StrOp.len( locid ) > 0 ) {
