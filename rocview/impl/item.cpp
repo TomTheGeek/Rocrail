@@ -2387,7 +2387,7 @@ void Symbol::modelEvent( iONode node ) {
         if(showID)
           l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
         else
-          l_locidStr = StrOp.fmt( "%s", locid==NULL?"":locid );
+          l_locidStr = StrOp.fmt( "%s", locid==NULL?wBlock.getid( node ):locid );
         occupied = 6;
       }
       else
