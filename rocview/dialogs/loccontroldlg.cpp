@@ -111,6 +111,8 @@ BEGIN_EVENT_TABLE( LocControlDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_LOCCTRL_FN, LocControlDialog::OnButtonLocctrlFnClick )
 
+    EVT_BUTTON( ID_FG, LocControlDialog::OnFgClick )
+
     EVT_BUTTON( ID_BITMAPBUTTON_LOCCTRL_DIR, LocControlDialog::OnBitmapbuttonLocctrlDirClick )
 
     EVT_COMBOBOX( ID_COMBOBOX_LOCCTRL_LOC, LocControlDialog::OnComboboxLocctrlLocSelected )
@@ -137,12 +139,14 @@ LocControlDialog::LocControlDialog( wxWindow* parent, iOList list, iOMap map, co
 {
     Create(parent, -1, wxGetApp().getMsg( "locctrl" ));
 
-  initLabels();
-
   m_iSpeed = 0;
   m_SpeedCtrl->SetRange( 0, 100 );
   m_SpeedCtrl->SetValue(0);
   initLocMap(locid);
+  m_iFnGroup = 0;
+
+  initLabels();
+  setFLabels();
 
   m_DlgList = list;
   m_DlgMap  = map;
@@ -164,19 +168,11 @@ void LocControlDialog::initLabels() {
   m_Speed->SetFont( font2 );
   m_Speed->SetBackgroundColour( Base::getBlue() );
 
+  for( int i = 0; i < 36; i++ ) {
+    m_bFx[i] = false;;
+  }
+
   m_bFn = false;
-  m_bF1 = false;
-  m_bF2 = false;
-  m_bF3 = false;
-  m_bF4 = false;
-  m_bF5 = false;
-  m_bF6 = false;
-  m_bF7 = false;
-  m_bF8 = false;
-  m_bF9 = false;
-  m_bF10 = false;
-  m_bF11 = false;
-  m_bF12 = false;
   m_Fn->SetBackgroundColour( Base::getGreen() );
   m_F1->SetBackgroundColour( Base::getGreen() );
   m_F2->SetBackgroundColour( Base::getGreen() );
@@ -193,6 +189,116 @@ void LocControlDialog::initLabels() {
 
   m_bDir = true;
   m_Dir->SetBitmapLabel( wxBitmap(rocrail_forwards_xpm) );
+}
+
+
+void LocControlDialog::setFLabels() {
+  if( m_iFnGroup == 0 ) {
+    m_F1->SetLabel( _T("F1") );
+    m_F2->SetLabel( _T("F2") );
+    m_F3->SetLabel( _T("F3") );
+    m_F4->SetLabel( _T("F4") );
+    m_F5->SetLabel( _T("F5") );
+    m_F6->SetLabel( _T("F6") );
+    m_F7->SetLabel( _T("F7") );
+    m_F8->SetLabel( _T("F8") );
+    m_F9->SetLabel( _T("F9") );
+    m_F10->SetLabel( _T("F10") );
+    m_F11->SetLabel( _T("F11") );
+    m_F12->SetLabel( _T("F12") );
+  }
+  else if( m_iFnGroup == 1 ) {
+    m_F1->SetLabel( _T("F13") );
+    m_F2->SetLabel( _T("F14") );
+    m_F3->SetLabel( _T("F15") );
+    m_F4->SetLabel( _T("F16") );
+    m_F5->SetLabel( _T("F17") );
+    m_F6->SetLabel( _T("F18") );
+    m_F7->SetLabel( _T("F19") );
+    m_F8->SetLabel( _T("F20") );
+    m_F9->SetLabel( _T("F21") );
+    m_F10->SetLabel( _T("F22") );
+    m_F11->SetLabel( _T("F23") );
+    m_F12->SetLabel( _T("F24") );
+  }
+
+  if( m_LcList->GetSelection() == wxNOT_FOUND )
+    return;
+  wxString id = m_LcList->GetStringSelection();
+
+  iONode lc = (iONode)MapOp.get( m_lcMap, id.mb_str(wxConvUTF8) );
+  if(lc != NULL) {
+    int fx = wLoc.getfx(lc);
+    fx = fx >> (m_iFnGroup * 12 );
+    m_bFx[0 +m_iFnGroup * 12] = setButtonColor( m_F1 , (fx & 0x001)?false:true );
+    m_bFx[1 +m_iFnGroup * 12] = setButtonColor( m_F2 , (fx & 0x002)?false:true );
+    m_bFx[2 +m_iFnGroup * 12] = setButtonColor( m_F3 , (fx & 0x004)?false:true );
+    m_bFx[3 +m_iFnGroup * 12] = setButtonColor( m_F4 , (fx & 0x008)?false:true );
+    m_bFx[4 +m_iFnGroup * 12] = setButtonColor( m_F5 , (fx & 0x010)?false:true );
+    m_bFx[5 +m_iFnGroup * 12] = setButtonColor( m_F6 , (fx & 0x020)?false:true );
+    m_bFx[6 +m_iFnGroup * 12] = setButtonColor( m_F7 , (fx & 0x040)?false:true );
+    m_bFx[7 +m_iFnGroup * 12] = setButtonColor( m_F8 , (fx & 0x080)?false:true );
+    m_bFx[8 +m_iFnGroup * 12] = setButtonColor( m_F9 , (fx & 0x100)?false:true );
+    m_bFx[9 +m_iFnGroup * 12] = setButtonColor( m_F10, (fx & 0x200)?false:true );
+    m_bFx[10+m_iFnGroup * 12] = setButtonColor( m_F11, (fx & 0x400)?false:true );
+    m_bFx[11+m_iFnGroup * 12] = setButtonColor( m_F12, (fx & 0x800)?false:true );
+
+    m_F1 ->SetToolTip( wxString::Format(_T("F%d"), 1  + (m_iFnGroup * 12 ) ));
+    m_F2 ->SetToolTip( wxString::Format(_T("F%d"), 2  + (m_iFnGroup * 12 ) ));
+    m_F3 ->SetToolTip( wxString::Format(_T("F%d"), 3  + (m_iFnGroup * 12 ) ));
+    m_F4 ->SetToolTip( wxString::Format(_T("F%d"), 4  + (m_iFnGroup * 12 ) ));
+    m_F5 ->SetToolTip( wxString::Format(_T("F%d"), 5  + (m_iFnGroup * 12 ) ));
+    m_F6 ->SetToolTip( wxString::Format(_T("F%d"), 6  + (m_iFnGroup * 12 ) ));
+    m_F7 ->SetToolTip( wxString::Format(_T("F%d"), 7  + (m_iFnGroup * 12 ) ));
+    m_F8 ->SetToolTip( wxString::Format(_T("F%d"), 8  + (m_iFnGroup * 12 ) ));
+    m_F9 ->SetToolTip( wxString::Format(_T("F%d"), 9  + (m_iFnGroup * 12 ) ));
+    m_F10->SetToolTip( wxString::Format(_T("F%d"), 10 + (m_iFnGroup * 12 ) ));
+    m_F11->SetToolTip( wxString::Format(_T("F%d"), 11 + (m_iFnGroup * 12 ) ));
+    m_F12->SetToolTip( wxString::Format(_T("F%d"), 12 + (m_iFnGroup * 12 ) ));
+
+    iONode fundef = wLoc.getfundef( lc );
+    while( fundef != NULL ) {
+      wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
+      if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 12 )) {
+        m_F1->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 2 + (m_iFnGroup * 12 ) ) {
+        m_F2->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 3 + (m_iFnGroup * 12 ) ) {
+        m_F3->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 4 + (m_iFnGroup * 12 ) ) {
+        m_F4->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 5 + (m_iFnGroup * 12 ) ) {
+        m_F5->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 6 + (m_iFnGroup * 12 ) ) {
+        m_F6->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 7 + (m_iFnGroup * 12 ) ) {
+        m_F7->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 8 + (m_iFnGroup * 12 ) ) {
+        m_F8->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 9 + (m_iFnGroup * 12 ) ) {
+        m_F9->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 10 + (m_iFnGroup * 12 ) ) {
+        m_F10->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 11 + (m_iFnGroup * 12 ) ) {
+        m_F11->SetToolTip( fntxt );
+      }
+      else if( wFunDef.getfn( fundef ) == 12 + (m_iFnGroup * 12 ) ) {
+        m_F12->SetToolTip( fntxt );
+      }
+      fundef = wLoc.nextfundef( lc, fundef );
+    }
+  }
+
 }
 
 
@@ -224,23 +330,45 @@ void LocControlDialog::modelEvent( iONode evt ) {
       /* update function "n" */
       m_bFn = wFunCmd.isf0( evt)?true:false;
       setButtonColor( m_Fn, !m_bFn);
-
+      setFLabels();
       /* update further functions */
+      int fx = wLoc.getfx(evt);
+      TraceOp.trc( "lcdlg", TRCLEVEL_INFO, __LINE__, 9999, "function update %s", wLoc.getid( evt ) );
+      iONode node = evt;
       wLoc.setfx(lc,
-          (wFunCmd.isf1 (evt)?0x0001:0x00) |
-          (wFunCmd.isf2 (evt)?0x0002:0x00) |
-          (wFunCmd.isf3 (evt)?0x0004:0x00) |
-          (wFunCmd.isf4 (evt)?0x0008:0x00) |
-          (wFunCmd.isf5 (evt)?0x0010:0x00) |
-          (wFunCmd.isf6 (evt)?0x0020:0x00) |
-          (wFunCmd.isf7 (evt)?0x0040:0x00) |
-          (wFunCmd.isf8 (evt)?0x0080:0x00) |
-          (wFunCmd.isf9 (evt)?0x0100:0x00) |
-          (wFunCmd.isf10(evt)?0x0200:0x00) |
-          (wFunCmd.isf11(evt)?0x0400:0x00) |
-          (wFunCmd.isf12(evt)?0x0800:0x00)
+          (NodeOp.getBool(node, "f1",  fx&0x0001?True:False)?0x0001:0x00) |
+          (NodeOp.getBool(node, "f2",  fx&0x0002?True:False)?0x0002:0x00) |
+          (NodeOp.getBool(node, "f3",  fx&0x0004?True:False)?0x0004:0x00) |
+          (NodeOp.getBool(node, "f4",  fx&0x0008?True:False)?0x0008:0x00) |
+          (NodeOp.getBool(node, "f5",  fx&0x0010?True:False)?0x0010:0x00) |
+          (NodeOp.getBool(node, "f6",  fx&0x0020?True:False)?0x0020:0x00) |
+          (NodeOp.getBool(node, "f7",  fx&0x0040?True:False)?0x0040:0x00) |
+          (NodeOp.getBool(node, "f8",  fx&0x0080?True:False)?0x0080:0x00) |
+
+          (NodeOp.getBool(node, "f9" ,  fx&0x0100?True:False)?0x0100:0x00) |
+          (NodeOp.getBool(node, "f10",  fx&0x0200?True:False)?0x0200:0x00) |
+          (NodeOp.getBool(node, "f11",  fx&0x0400?True:False)?0x0400:0x00) |
+          (NodeOp.getBool(node, "f12",  fx&0x0800?True:False)?0x0800:0x00) |
+          (NodeOp.getBool(node, "f13",  fx&0x1000?True:False)?0x1000:0x00) |
+          (NodeOp.getBool(node, "f14",  fx&0x2000?True:False)?0x2000:0x00) |
+          (NodeOp.getBool(node, "f15",  fx&0x4000?True:False)?0x4000:0x00) |
+          (NodeOp.getBool(node, "f16",  fx&0x8000?True:False)?0x8000:0x00) |
+
+          (NodeOp.getBool(node, "f17",  fx&0x010000?True:False)?0x010000:0x00) |
+          (NodeOp.getBool(node, "f18",  fx&0x020000?True:False)?0x020000:0x00) |
+          (NodeOp.getBool(node, "f19",  fx&0x040000?True:False)?0x040000:0x00) |
+          (NodeOp.getBool(node, "f20",  fx&0x080000?True:False)?0x080000:0x00) |
+          (NodeOp.getBool(node, "f21",  fx&0x100000?True:False)?0x100000:0x00) |
+          (NodeOp.getBool(node, "f22",  fx&0x200000?True:False)?0x200000:0x00) |
+          (NodeOp.getBool(node, "f23",  fx&0x400000?True:False)?0x400000:0x00) |
+          (NodeOp.getBool(node, "f24",  fx&0x800000?True:False)?0x800000:0x00) |
+
+          (NodeOp.getBool(node, "f25",  fx&0x01000000?True:False)?0x01000000:0x00) |
+          (NodeOp.getBool(node, "f26",  fx&0x02000000?True:False)?0x02000000:0x00) |
+          (NodeOp.getBool(node, "f27",  fx&0x04000000?True:False)?0x04000000:0x00) |
+          (NodeOp.getBool(node, "f28",  fx&0x08000000?True:False)?0x08000000:0x00)
           );
-      initFx(lc);
+      setFLabels();
     }
   }
 }
@@ -289,7 +417,7 @@ void LocControlDialog::initValues() {
   m_Dir->SetToolTip( m_bDir? wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
   m_Dir->Refresh();
 
-  initFx(lc);
+  setFLabels();
 
   m_bFn = wLoc.isfn( lc )?true:false;
   setButtonColor( m_Fn, !m_bFn );
@@ -304,22 +432,6 @@ void LocControlDialog::initValues() {
 
 
 void LocControlDialog::initFx(iONode lc) {
-  if( lc != NULL ) {
-    int fx = wLoc.getfx(lc);
-    m_bF1 = setButtonColor( m_F1, (fx & 0x01)?false:true );
-    m_bF2 = setButtonColor( m_F2, (fx & 0x02)?false:true );
-    m_bF3 = setButtonColor( m_F3, (fx & 0x04)?false:true );
-    m_bF4 = setButtonColor( m_F4, (fx & 0x08)?false:true );
-    m_bF5 = setButtonColor( m_F5, (fx & 0x10)?false:true );
-    m_bF6 = setButtonColor( m_F6, (fx & 0x20)?false:true );
-    m_bF7 = setButtonColor( m_F7, (fx & 0x40)?false:true );
-    m_bF8 = setButtonColor( m_F8, (fx & 0x80)?false:true );
-    m_bF9  = setButtonColor( m_F9 , (fx & 0x0100)?false:true );
-    m_bF10 = setButtonColor( m_F10, (fx & 0x0200)?false:true );
-    m_bF11 = setButtonColor( m_F11, (fx & 0x0400)?false:true );
-    m_bF12 = setButtonColor( m_F12, (fx & 0x0800)?false:true );
-  }
-
 }
 
 
@@ -430,6 +542,7 @@ bool LocControlDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_F11 = NULL;
     m_F12 = NULL;
     m_Fn = NULL;
+    m_FG = NULL;
     m_Dir = NULL;
     m_LcList = NULL;
     m_Cancel = NULL;
@@ -483,7 +596,7 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW, 0);
 
     wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW|wxRIGHT, 5);
 
     m_F1 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F1, _("F1"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer9->Add(m_F1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
@@ -523,33 +636,36 @@ void LocControlDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer22->AddGrowableCol(1);
-    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW|wxRIGHT, 5);
 
     m_Fn = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_FN, _("Fn"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_TOP|wxBOTTOM, 2);
 
-    m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    itemFlexGridSizer22->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
+    m_FG = new wxButton( itemDialog1, ID_FG, _("FG"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 5);
+
+    m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, wxNullBitmap, wxDefaultPosition, wxSize(-1, 32), wxBU_AUTODRAW );
+    itemBoxSizer8->Add(m_Dir, 1, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
     itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
 
-    wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer26, 0, wxGROW|wxALL, 0);
+    wxBoxSizer* itemBoxSizer27 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer27, 0, wxGROW|wxALL, 0);
 
     m_Cancel = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Cancel->SetDefault();
-    itemBoxSizer26->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+    itemBoxSizer27->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
     m_Stop = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_STOP, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer26->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+    itemBoxSizer27->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxALL, 0);
+    wxBoxSizer* itemBoxSizer30 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer30, 0, wxGROW|wxALL, 0);
 
     m_Break = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_BREAK, _("BREAK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Break, 1, wxGROW|wxALL, 2);
+    itemBoxSizer30->Add(m_Break, 1, wxGROW|wxALL, 2);
 
     // Connect events and objects
     itemDialog1->Connect(ID_LOCCONTROL, wxEVT_DESTROY, wxWindowDestroyEventHandler(LocControlDialog::OnDestroy), NULL, this);
@@ -653,40 +769,53 @@ void LocControlDialog::funCmd(int group)
 
   iONode lc = (iONode)MapOp.get( m_lcMap, id.mb_str(wxConvUTF8) );
   if(lc != NULL) {
-    int fx = 0;
-    fx |= m_bF1?0x01:0x00;
-    fx |= m_bF2?0x02:0x00;
-    fx |= m_bF3?0x04:0x00;
-    fx |= m_bF4?0x08:0x00;
-    fx |= m_bF5?0x10:0x00;
-    fx |= m_bF6?0x20:0x00;
-    fx |= m_bF7?0x40:0x00;
-    fx |= m_bF8?0x80:0x00;
-    fx |= m_bF9 ?0x0100:0x00;
-    fx |= m_bF10?0x0200:0x00;
-    fx |= m_bF11?0x0400:0x00;
-    fx |= m_bF12?0x0800:0x00;
-    wLoc.setfx(lc, fx );
-  }
+    wLoc.setfx(lc,
+        (m_bFx[ 0]?0x0001:0x00) | (m_bFx[ 1]?0x0002:0x00) | (m_bFx[ 2]?0x0004:0x00) | (m_bFx[ 3]?0x0008:0x00) |
+        (m_bFx[ 4]?0x0010:0x00) | (m_bFx[ 5]?0x0020:0x00) | (m_bFx[ 6]?0x0040:0x00) | (m_bFx[ 7]?0x0080:0x00) |
+        (m_bFx[ 8]?0x0100:0x00) | (m_bFx[ 9]?0x0200:0x00) | (m_bFx[10]?0x0400:0x00) | (m_bFx[11]?0x0800:0x00) |
 
-  iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-  wFunCmd.setgroup ( cmd, group+1 );
-  wFunCmd.setid( cmd, id.mb_str(wxConvUTF8) );
-  wFunCmd.setf0( cmd, m_bFn?True:False );
-  wFunCmd.setf1( cmd, m_bF1?True:False );
-  wFunCmd.setf2( cmd, m_bF2?True:False );
-  wFunCmd.setf3( cmd, m_bF3?True:False );
-  wFunCmd.setf4( cmd, m_bF4?True:False );
-  wFunCmd.setf5( cmd, m_bF5?True:False );
-  wFunCmd.setf6( cmd, m_bF6?True:False );
-  wFunCmd.setf7( cmd, m_bF7?True:False );
-  wFunCmd.setf8( cmd, m_bF8?True:False );
-  wFunCmd.setf9( cmd, m_bF9?True:False );
-  wFunCmd.setf10( cmd, m_bF10?True:False );
-  wFunCmd.setf11( cmd, m_bF11?True:False );
-  wFunCmd.setf12( cmd, m_bF12?True:False );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del(cmd);
+        (m_bFx[12]?0x00001000:0x00) | (m_bFx[13]?0x00002000:0x00) | (m_bFx[14]?0x00004000:0x00) | (m_bFx[15]?0x00008000:0x00) |
+        (m_bFx[16]?0x00010000:0x00) | (m_bFx[17]?0x00020000:0x00) | (m_bFx[18]?0x00040000:0x00) | (m_bFx[19]?0x00080000:0x00) |
+        (m_bFx[20]?0x00100000:0x00) | (m_bFx[21]?0x00200000:0x00) | (m_bFx[22]?0x00400000:0x00) | (m_bFx[23]?0x00800000:0x00) |
+        (m_bFx[24]?0x01000000:0x00) | (m_bFx[25]?0x02000000:0x00) | (m_bFx[26]?0x04000000:0x00) | (m_bFx[27]?0x08000000:0x00)
+        );
+
+    iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    wFunCmd.setgroup ( cmd, m_iFnGroup * 3 + 1 + group );
+    wFunCmd.setfncnt ( cmd, wLoc.getfncnt( lc ) );
+    wFunCmd.setid ( cmd, wLoc.getid( lc ) );
+    wFunCmd.setf0 ( cmd, m_bFn?True:False );
+    wFunCmd.setf1 ( cmd, m_bFx[ 0]?True:False );
+    wFunCmd.setf2 ( cmd, m_bFx[ 1]?True:False );
+    wFunCmd.setf3 ( cmd, m_bFx[ 2]?True:False );
+    wFunCmd.setf4 ( cmd, m_bFx[ 3]?True:False );
+    wFunCmd.setf5 ( cmd, m_bFx[ 4]?True:False );
+    wFunCmd.setf6 ( cmd, m_bFx[ 5]?True:False );
+    wFunCmd.setf7 ( cmd, m_bFx[ 6]?True:False );
+    wFunCmd.setf8 ( cmd, m_bFx[ 7]?True:False );
+    wFunCmd.setf9 ( cmd, m_bFx[ 8]?True:False );
+    wFunCmd.setf10( cmd, m_bFx[ 9]?True:False );
+    wFunCmd.setf11( cmd, m_bFx[10]?True:False );
+    wFunCmd.setf12( cmd, m_bFx[11]?True:False );
+    wFunCmd.setf13( cmd, m_bFx[12]?True:False );
+    wFunCmd.setf14( cmd, m_bFx[13]?True:False );
+    wFunCmd.setf15( cmd, m_bFx[14]?True:False );
+    wFunCmd.setf16( cmd, m_bFx[15]?True:False );
+    wFunCmd.setf17( cmd, m_bFx[16]?True:False );
+    wFunCmd.setf18( cmd, m_bFx[17]?True:False );
+    wFunCmd.setf19( cmd, m_bFx[18]?True:False );
+    wFunCmd.setf20( cmd, m_bFx[19]?True:False );
+    wFunCmd.setf21( cmd, m_bFx[20]?True:False );
+    wFunCmd.setf22( cmd, m_bFx[21]?True:False );
+    wFunCmd.setf23( cmd, m_bFx[22]?True:False );
+    wFunCmd.setf24( cmd, m_bFx[23]?True:False );
+    wFunCmd.setf25( cmd, m_bFx[24]?True:False );
+    wFunCmd.setf26( cmd, m_bFx[25]?True:False );
+    wFunCmd.setf27( cmd, m_bFx[26]?True:False );
+    wFunCmd.setf28( cmd, m_bFx[27]?True:False );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 /*!
@@ -697,7 +826,7 @@ void LocControlDialog::OnButtonLocctrlF1Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF1 = setButtonColor( m_F1, m_bF1 );
+  m_bFx[0+m_iFnGroup*12] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*12] );
   funCmd(0);
 }
 
@@ -709,7 +838,7 @@ void LocControlDialog::OnButtonLocctrlF2Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF2 = setButtonColor( m_F2, m_bF2 );
+  m_bFx[1+m_iFnGroup*12] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*12] );
   funCmd(0);
 }
 
@@ -721,7 +850,7 @@ void LocControlDialog::OnButtonLocctrlF3Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF3 = setButtonColor( m_F3, m_bF3 );
+  m_bFx[2+m_iFnGroup*12] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*12] );
   funCmd(0);
 }
 
@@ -733,7 +862,7 @@ void LocControlDialog::OnButtonLocctrlF4Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF4 = setButtonColor( m_F4, m_bF4 );
+  m_bFx[3+m_iFnGroup*12] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*12] );
   funCmd(0);
 }
 
@@ -862,7 +991,7 @@ void LocControlDialog::OnButtonLocctrlF5Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF5 = setButtonColor( m_F5, m_bF5 );
+  m_bFx[4+m_iFnGroup*12] = setButtonColor( m_F5, m_bFx[4+m_iFnGroup*12] );
   funCmd(1);
 }
 
@@ -874,7 +1003,7 @@ void LocControlDialog::OnButtonLocctrlF6Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF6 = setButtonColor( m_F6, m_bF6 );
+  m_bFx[5+m_iFnGroup*12] = setButtonColor( m_F6, m_bFx[5+m_iFnGroup*12] );
   funCmd(1);
 }
 
@@ -886,7 +1015,7 @@ void LocControlDialog::OnButtonLcctrlF7Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF7 = setButtonColor( m_F7, m_bF7 );
+  m_bFx[6+m_iFnGroup*12] = setButtonColor( m_F7, m_bFx[6+m_iFnGroup*12] );
   funCmd(1);
 }
 
@@ -898,7 +1027,7 @@ void LocControlDialog::OnButtonLcctrlF8Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF8 = setButtonColor( m_F8, m_bF8 );
+  m_bFx[7+m_iFnGroup*12] = setButtonColor( m_F8, m_bFx[7+m_iFnGroup*12] );
   funCmd(1);
 }
 
@@ -911,7 +1040,7 @@ void LocControlDialog::OnButtonLcctrlF12Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF12 = setButtonColor( m_F12, m_bF12 );
+  m_bFx[11+m_iFnGroup*12] = setButtonColor( m_F12, m_bFx[11+m_iFnGroup*12] );
   funCmd(2);
 }
 
@@ -924,7 +1053,7 @@ void LocControlDialog::OnButtonLcctrl9Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF9 = setButtonColor( m_F9, m_bF9 );
+  m_bFx[8+m_iFnGroup*12] = setButtonColor( m_F9, m_bFx[8+m_iFnGroup*12] );
   funCmd(2);
 }
 
@@ -937,7 +1066,7 @@ void LocControlDialog::OnButtonLcctrlF10Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF10 = setButtonColor( m_F10, m_bF10 );
+  m_bFx[9+m_iFnGroup*12] = setButtonColor( m_F10, m_bFx[9+m_iFnGroup*12] );
   funCmd(2);
 }
 
@@ -950,7 +1079,7 @@ void LocControlDialog::OnButtonLcctrlF11Click( wxCommandEvent& event )
 {
   wxString id = m_LcList->GetStringSelection();
 
-  m_bF11 = setButtonColor( m_F11, m_bF11 );
+  m_bFx[10+m_iFnGroup*12] = setButtonColor( m_F11, m_bFx[10+m_iFnGroup*12] );
   funCmd(2);
 }
 
@@ -988,51 +1117,51 @@ void LocControlDialog::OnKeyDown( wxKeyEvent& event )
 
   switch( event.GetKeyCode()) {
     case WXK_F1:
-      m_bF1 = setButtonColor( m_F1, m_bF1 );
+      m_bFx[0+m_iFnGroup*12] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*12] );
       funCmd(0);
       break;
     case WXK_F2:
-      m_bF2 = setButtonColor( m_F2, m_bF2 );
+      m_bFx[1+m_iFnGroup*12] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*12] );
       funCmd(0);
       break;
     case WXK_F3:
-      m_bF3 = setButtonColor( m_F3, m_bF3 );
+      m_bFx[2+m_iFnGroup*12] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*12] );
       funCmd(0);
       break;
     case WXK_F4:
-      m_bF4 = setButtonColor( m_F4, m_bF4 );
+      m_bFx[3+m_iFnGroup*12] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*12] );
       funCmd(0);
       break;
     case WXK_F5:
-      m_bF5 = setButtonColor( m_F5, m_bF5 );
+      m_bFx[4+m_iFnGroup*12] = setButtonColor( m_F5, m_bFx[4+m_iFnGroup*12] );
       funCmd(1);
       break;
     case WXK_F6:
-      m_bF6 = setButtonColor( m_F6, m_bF6 );
+      m_bFx[5+m_iFnGroup*12] = setButtonColor( m_F6, m_bFx[5+m_iFnGroup*12] );
       funCmd(1);
       break;
     case WXK_F7:
-      m_bF7 = setButtonColor( m_F7, m_bF7 );
+      m_bFx[6+m_iFnGroup*12] = setButtonColor( m_F7, m_bFx[6+m_iFnGroup*12] );
       funCmd(1);
       break;
     case WXK_F8:
-      m_bF8 = setButtonColor( m_F8, m_bF8 );
+      m_bFx[7+m_iFnGroup*12] = setButtonColor( m_F8, m_bFx[7+m_iFnGroup*12] );
       funCmd(1);
       break;
     case WXK_F9:
-      m_bF9 = setButtonColor( m_F9, m_bF9 );
+      m_bFx[8+m_iFnGroup*12] = setButtonColor( m_F9, m_bFx[8+m_iFnGroup*12] );
       funCmd(2);
       break;
     case WXK_F10:
-      m_bF10 = setButtonColor( m_F10, m_bF10 );
+      m_bFx[9+m_iFnGroup*12] = setButtonColor( m_F10, m_bFx[9+m_iFnGroup*12] );
       funCmd(2);
       break;
     case WXK_F11:
-      m_bF11 = setButtonColor( m_F11, m_bF11 );
+      m_bFx[10+m_iFnGroup*12] = setButtonColor( m_F11, m_bFx[10+m_iFnGroup*12] );
       funCmd(2);
       break;
     case WXK_F12:
-      m_bF12 = setButtonColor( m_F12, m_bF12 );
+      m_bFx[11+m_iFnGroup*12] = setButtonColor( m_F12, m_bFx[11+m_iFnGroup*12] );
       funCmd(2);
       break;
   }
@@ -1049,5 +1178,19 @@ void LocControlDialog::OnKeyUp( wxKeyEvent& event )
     // Before editing this code, remove the block markers.
     event.Skip();
 ////@end wxEVT_KEY_UP event handler for ID_LOCCONTROL in LocControlDialog.
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_FG
+ */
+
+void LocControlDialog::OnFgClick( wxCommandEvent& event )
+{
+  m_iFnGroup++;
+  if( m_iFnGroup > 1 )
+    m_iFnGroup = 0;
+
+  setFLabels();
 }
 

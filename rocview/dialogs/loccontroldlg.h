@@ -62,6 +62,7 @@
 #define ID_BUTTON_LCCTRL_F11 10014
 #define ID_BUTTON_LCCTRL_F12 10015
 #define ID_BUTTON_LOCCTRL_FN 10004
+#define ID_FG 10318
 #define ID_BITMAPBUTTON_LOCCTRL_DIR 10009
 #define ID_COMBOBOX_LOCCTRL_LOC 10002
 #define ID_BUTTON_LOCCTRL_CANCEL 10010
@@ -171,6 +172,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_FN
     void OnButtonLocctrlFnClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_FG
+    void OnFgClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_LOCCTRL_DIR
     void OnBitmapbuttonLocctrlDirClick( wxCommandEvent& event );
 
@@ -241,6 +245,7 @@ public:
     wxButton* m_F11;
     wxButton* m_F12;
     wxButton* m_Fn;
+    wxButton* m_FG;
     wxBitmapButton* m_Dir;
     wxComboBox* m_LcList;
     wxButton* m_Cancel;
@@ -255,16 +260,11 @@ public:
     bool m_bDir;
     int m_iSpeed;
 ////@end LocControlDialog member variables
-    int m_bF5;
-    int m_bF6;
-    int m_bF7;
-    int m_bF8;
-    int m_bF9;
-    int m_bF10;
-    int m_bF11;
-    int m_bF12;
     iOList m_DlgList;
     iOMap m_DlgMap;
+    bool m_bFx[36];
+    int m_iFnGroup;
+    void setFLabels();
 };
 
 #endif
