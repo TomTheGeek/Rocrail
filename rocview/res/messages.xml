@@ -17295,4 +17295,7 @@
     <nl txt="Rijrichting tijd"/>
     <de txt="Zeit vor Richtungswechsel"/>
   </Msg>
+  <Msg id="slotping">
+    <en txt="Slot ping"/>
+  </Msg>
 </Messages>

@@ -2494,7 +2494,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->swReset = ThreadOp.inst( "swreset", &__swReset, __LocoNet );
     ThreadOp.start( data->swReset );
 
-    if( data->purgetime > 0 ) {
+    if( data->purgetime > 0 && wLocoNet.isslotping(data->loconet) ) {
       data->slotPing = ThreadOp.inst( "slotping", &__slotPing, __LocoNet );
       ThreadOp.start( data->slotPing );
     }

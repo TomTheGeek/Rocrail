@@ -485,6 +485,7 @@
         
       <loconet remark="LocoNet options" wrappername="LocoNet">
         <var name="purgetime" vt="int" defval="200" unit="s" range="0-*" remark="set to zero if the command station does not purge"/>
+        <var name="slotping" vt="bool" defval="true" remark="Enable slot ping if purge time is not zero."/>
         <var name="slots" vt="int" defval="22" range="0-*" remark="number of slots for loco's"/>
         <var name="reportaddr" vt="int" defval="1017" range="0-*" remark="global addres on which sensors are reported"/>
         <const name="cs_dcs50" vt="string" val="dcs50"/>

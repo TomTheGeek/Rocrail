@@ -149,6 +149,7 @@ public:
     wxTextCtrl* m_SWTime;
     wxStaticText* m_labPurgeTime;
     wxTextCtrl* m_PurgeTime;
+    wxCheckBox* m_SlotPing;
     wxStaticBox* m_FastClockBox;
     wxCheckBox* m_UseFC;
     wxCheckBox* m_SyncFC;
