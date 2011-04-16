@@ -2395,10 +2395,6 @@ void Symbol::modelEvent( iONode node ) {
 
       SetToolTip( wxString(l_locidStr,wxConvUTF8) );
 
-      if(!showID) {
-        StrOp.free(l_locidStr);
-        l_locidStr = StrOp.fmt( "" );
-      }
     }
 
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] state=[%s] locid=[%s]",
