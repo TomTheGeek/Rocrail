@@ -60,6 +60,7 @@
 
 
 ////@begin XPM images
+#include "../xpm/dir.xpm"
 ////@end XPM images
 
 /*!
@@ -644,11 +645,11 @@ void LocControlDialog::CreateControls()
     m_FG = new wxButton( itemDialog1, ID_FG, _("FG"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 5);
 
-    m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, wxNullBitmap, wxDefaultPosition, wxSize(-1, 32), wxBU_AUTODRAW );
+    m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, itemDialog1->GetBitmapResource(wxT("../xpm/dir.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
     itemBoxSizer8->Add(m_Dir, 1, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
-    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
+    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, _T(""), wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
     itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer27 = new wxBoxSizer(wxHORIZONTAL);
@@ -966,6 +967,11 @@ wxBitmap LocControlDialog::GetBitmapResource( const wxString& name )
     // Bitmap retrieval
 ////@begin LocControlDialog bitmap retrieval
     wxUnusedVar(name);
+    if (name == _T("../xpm/dir.xpm"))
+    {
+        wxBitmap bitmap( rocrail_direction_xpm);
+        return bitmap;
+    }
     return wxNullBitmap;
 ////@end LocControlDialog bitmap retrieval
 }

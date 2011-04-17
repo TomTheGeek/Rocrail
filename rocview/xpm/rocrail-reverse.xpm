@@ -2,7 +2,7 @@
 static const char * rocrail_reverse_xpm[] = {
 "64 32 6 1",
 " 	c None",
-".	c #FFFFFF",
+".	c None",
 "+	c #000000",
 "@	c #808080",
 "#	c #CCCCCC",
