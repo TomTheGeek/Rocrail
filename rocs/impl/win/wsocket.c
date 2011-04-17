@@ -392,6 +392,12 @@ Boolean rocs_socket_bind( iOSocketData o ) {
     srvaddr.sin_addr = *addr;
 
 
+  if( o->udp && o->multicast ) {
+    int loop = 1;
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "allow all processes to use this port..." );
+    setsockopt ( o->sh, SOL_SOCKET, SO_REUSEADDR, &loop, sizeof (loop));
+  }
+
   rc = bind( o->sh, (struct sockaddr *)&srvaddr, sizeof( struct sockaddr_in ) );
 
   if( rc != -1 && o->udp && o->multicast ) {
