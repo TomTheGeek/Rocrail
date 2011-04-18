@@ -141,10 +141,10 @@ LocControlDialog::LocControlDialog( wxWindow* parent, iOList list, iOMap map, co
     Create(parent, -1, wxGetApp().getMsg( "locctrl" ));
 
   m_iSpeed = 0;
+  m_iFnGroup = 0;
   m_SpeedCtrl->SetRange( 0, 100 );
   m_SpeedCtrl->SetValue(0);
   initLocMap(locid);
-  m_iFnGroup = 0;
 
   initLabels();
   setFLabels();
@@ -230,6 +230,8 @@ void LocControlDialog::setFLabels() {
   iONode lc = (iONode)MapOp.get( m_lcMap, id.mb_str(wxConvUTF8) );
   if(lc != NULL) {
     int fx = wLoc.getfx(lc);
+    if( m_iFnGroup > 1 )
+      m_iFnGroup = 0;
     fx = fx >> (m_iFnGroup * 12 );
     m_bFx[0 +m_iFnGroup * 12] = setButtonColor( m_F1 , (fx & 0x001)?false:true );
     m_bFx[1 +m_iFnGroup * 12] = setButtonColor( m_F2 , (fx & 0x002)?false:true );

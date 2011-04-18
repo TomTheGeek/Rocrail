@@ -1,5 +1,5 @@
 /* XPM */
-static char * rocrail_forwards_xpm[] = {
+static const char * rocrail_forwards_xpm[] = {
 "64 32 6 1",
 " 	c None",
 ".	c None",
