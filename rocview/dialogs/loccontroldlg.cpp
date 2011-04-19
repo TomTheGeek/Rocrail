@@ -579,7 +579,7 @@ void LocControlDialog::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(240, 88), wxBU_AUTODRAW|wxBU_LEFT );
+    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(240, 88), wxBU_AUTODRAW );
     itemBoxSizer2->Add(m_Image, 0, wxGROW|wxALL, 2);
 
     wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 2, 0, 0);
