@@ -1254,6 +1254,8 @@
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
       <var name="commOK" vt="Boolean"/>
+      <var name="magicOK" vt="Boolean"/>
+      <var name="lastMagicReq" vt="unsigned long"/>
       <var name="secAck" vt="Boolean"/>
       <var name="secAckInt" vt="int"/>
       <var name="reader" vt="iOThread"/>

@@ -643,7 +643,7 @@ static void __handleLostNode(iOBiDiB bidib, byte* msg, int size) {
  * len addr seq type data  crc
  * 05  00   00  81   FE AF 89
  */
-static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
+static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing bidib message..." );
 
@@ -657,7 +657,8 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int Magic = (msg[5]<<8)+msg[4];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_SYS_MAGIC, addr=%d seq=%d magic=0x%04X", Addr, Seq, Magic );
-    data->upSeq = msg[2];
+    data->upSeq   = msg[2];
+    data->magicOK = True;
     // query MSG_SYS_GET_P_VERSION
     msg[0] = 3; // length
     msg[1] = 0; // address
@@ -888,6 +889,8 @@ static void __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   }
+
+  return data->magicOK;
 }
 
 
@@ -900,11 +903,15 @@ static void __bidibReader( void* threadinst ) {
   int addr = 0;
   int value = 0;
   int port = 0;
+  int magicreq = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB reader started." );
 
   ThreadOp.sleep(100); /* resume some time to get it all being setup */
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "magic request #%d", magicreq );
+  magicreq++;
+  data->lastMagicReq = SystemOp.getTick();
   msg[0] = 3; // length
   msg[1] = 0; // address
   msg[2] = data->downSeq; // sequence number 1...255
@@ -913,6 +920,8 @@ static void __bidibReader( void* threadinst ) {
   size = __makeMessage(msg, 4);
   data->subWrite((obj)bidib, msg, size);
   data->downSeq++;
+
+  ThreadOp.sleep(100);
 
   while( data->run ) {
 
@@ -938,8 +947,11 @@ static void __bidibReader( void* threadinst ) {
         __processBidiMsg(bidib, msg, size);
       }
 
-      if( TEST ) {
-        ThreadOp.sleep(2500); // TEST
+      if( !data->magicOK && SystemOp.getTick() - data->lastMagicReq > 100 ) {
+        /* no magic received; request again */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "magic request #%d", magicreq );
+        magicreq++;
+        data->lastMagicReq = SystemOp.getTick();
         msg[0] = 3; // length
         msg[1] = 0; // address
         msg[2] = data->downSeq; // sequence number 1...255
@@ -997,7 +1009,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->run      = True;
 
-  data->commOK = False;
+  data->commOK  = False;
+  data->magicOK = False;
 
   data->mux      = MutexOp.inst( NULL, True );
   data->nodemap  = MapOp.inst();
