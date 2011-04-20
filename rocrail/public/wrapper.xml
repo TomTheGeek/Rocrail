@@ -399,6 +399,7 @@
       <!-- tcpip connection -->
       <var name="host" vt="string" defval="" remark="hostname."/>
       <var name="port" vt="int" defval="0" remark="command port."/>
+      <var name="localip" vt="string" defval="" remark="Local interface IP."/>
 
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">
         <var name="lib" vt="string" defval="p50x"/>

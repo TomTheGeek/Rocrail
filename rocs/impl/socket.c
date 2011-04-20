@@ -50,6 +50,7 @@ static int instCnt = 0;
  */
 /* OS dependent: windows(wsocket.c) (os/2)osocket.c (unix)usocket.o */
 Boolean rocs_socket_init( iOSocketData o );
+void rocs_socket_localip( iOSocketData o, const char* ip );
 Boolean rocs_socket_resolveHost( iOSocketData o );
 Boolean rocs_socket_bind( iOSocketData o );
 Boolean rocs_socket_close( iOSocketData o );
@@ -314,6 +315,12 @@ static char* _getMAC( const char* device ) {
   return rocs_socket_mac( device );
 }
 
+
+static void _setLocalIP( iOSocket inst, const char* ip ) {
+  iOSocketData data = Data(inst);
+  rocs_socket_localip( data, ip );
+}
+
 static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp, Boolean multicast ) {
   iOSocket     socket = allocIDMem( sizeof( struct OSocket ), RocsSocketID );
   iOSocketData data   = allocIDMem( sizeof( struct OSocketData ), RocsSocketID );
@@ -322,6 +329,7 @@ static iOSocket _inst( const char* host, int port, Boolean ssl, Boolean udp, Boo
 
   data->host = StrOp.dupID( host, RocsSocketID );
   data->port = port;
+  data->localip = NULL;
 
   data->ssl  = ssl;
   data->udp  = udp;

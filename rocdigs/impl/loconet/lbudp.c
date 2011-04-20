@@ -113,6 +113,9 @@ Boolean lbUDPConnect( obj inst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast address [%s]", wDigInt.gethost( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
+  if( wDigInt.getlocalip( data->ini ) != NULL && StrOp.len(wDigInt.getlocalip( data->ini )) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "local interface address [%s]", wDigInt.getlocalip( data->ini )  );
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->udpQueue  = QueueOp.inst(1000);
@@ -120,8 +123,14 @@ Boolean lbUDPConnect( obj inst ) {
   data->usedouble = loconet != NULL ? wLocoNet.isusedouble(loconet):False;
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
+  if( wDigInt.getlocalip( data->ini ) != NULL && StrOp.len(wDigInt.getlocalip( data->ini )) > 0 ) {
+    SocketOp.setLocalIP(data->readUDP, wDigInt.getlocalip( data->ini ));
+  }
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
+  if( wDigInt.getlocalip( data->ini ) != NULL && StrOp.len(wDigInt.getlocalip( data->ini )) > 0 ) {
+    SocketOp.setLocalIP(data->writeUDP, wDigInt.getlocalip( data->ini ));
+  }
 
   data->udpReader = ThreadOp.inst( "lnudpreader", &__reader, inst );
   ThreadOp.start( data->udpReader );

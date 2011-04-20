@@ -134,6 +134,8 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
     wxTextCtrl* m_Port;
+    wxStaticText* m_labLocalIP;
+    wxTextCtrl* m_LocalIP;
     wxRadioBox* m_Baudrate;
     wxRadioBox* m_SubLib;
     wxCheckBox* m_Flow;

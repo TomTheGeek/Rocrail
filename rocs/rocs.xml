@@ -1100,6 +1100,10 @@
       <param name="inst" vt="this" remark="Socket instance."/>
       <param name="blocking" vt="Boolean" remark="Set True for blocking mode."/>
     </fun>
+    <fun name="setLocalIP" vt="void" remark="Local interface IP.">
+      <param name="inst" vt="this" remark="Socket instance."/>
+      <param name="ip" vt="const char*"/>
+    </fun>
     <fun name="connect" implname="rocs_socket_connect" vt="Boolean" remark="Connect socket with target.">
       <param name="inst" vt="this" remark="Socket instance."/>
     </fun>
@@ -1221,6 +1225,7 @@
     <data>
       <var name="host" vt="char*" remark="Target hostname."/>
       <var name="port" vt="int" remark="Target port."/>
+      <var name="localip" vt="char*" remark="Local interface IP."/>
       <var name="sh" vt="int" remark="Socket handle."/>
       <var name="readed" vt="long" remark="Current number of readed bytes."/>
       <var name="peeked" vt="long" remark="Currently available bytes."/>
