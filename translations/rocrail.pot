@@ -5279,3 +5279,15 @@ msgstr ""
 msgid "Swap timer"
 msgstr ""
 
+#. 
+# id="slotping"
+#, c-format
+msgid "Slot ping"
+msgstr ""
+
+#. 
+# id="localip"
+#, c-format
+msgid "Local IP"
+msgstr ""
+
