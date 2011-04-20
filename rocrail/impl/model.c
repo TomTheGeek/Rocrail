@@ -2515,6 +2515,7 @@ static void __initFieldRunner( void* threadinst ) {
   iOControl cntrl = AppOp.getControl(  );
   iOSwitch sw = NULL;
   iOSignal sg = NULL;
+  iOFBack fb = NULL;
   int error = 0;
   int pause = wCtrl.getinitfieldpause( wRocRail.getctrl( AppOp.getIni(  ) ) );
   Boolean gpON = wCtrl.isinitfieldpower( wRocRail.getctrl( AppOp.getIni(  ) ) );
@@ -2526,6 +2527,15 @@ static void __initFieldRunner( void* threadinst ) {
     ThreadOp.sleep(1000);
     cntrl = AppOp.getControl();
   };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset [%d] sensor counters", MapOp.size( o->feedbackMap ) );
+  fb = (iOFBack)MapOp.first( o->feedbackMap );
+  while( fb != NULL && !ThreadOp.isQuit(th) ) {
+    FBackOp.resetWheelCount(fb);
+    FBackOp.resetCounter(fb);
+    fb = (iOFBack)MapOp.next( o->feedbackMap );
+  }
+
 
   if( gpON ) {
     cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
