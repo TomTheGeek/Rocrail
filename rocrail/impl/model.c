@@ -2531,7 +2531,6 @@ static void __initFieldRunner( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset [%d] sensor counters", MapOp.size( o->feedbackMap ) );
   fb = (iOFBack)MapOp.first( o->feedbackMap );
   while( fb != NULL && !ThreadOp.isQuit(th) ) {
-    FBackOp.resetWheelCount(fb);
     FBackOp.resetCounter(fb);
     fb = (iOFBack)MapOp.next( o->feedbackMap );
   }
