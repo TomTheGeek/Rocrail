@@ -7,6 +7,6 @@
     <!-- Abzweig -->
     <path stroke="black" fill="rgb(0,0,255)" d="M 15,15 L 19,15 L 22,18 L 18,22 L 15,19  z " />
     <path stroke="black" fill="rgb(0,0,255)" d="M 28,24 L 31,27 L 31,31 L 27,31 L 24,28  z " />
-    <path stroke="black" fill="rgb(0,255,255)" d="M 22,18 L 28,24 L 24,28 L 18,22  z " />
+    <path stroke="black" fill="rgb(128,255,255)" d="M 22,18 L 28,24 L 24,28 L 18,22  z " />
   </g>
 </svg>

@@ -3,7 +3,7 @@
     <!-- Gerade -->
     <path stroke="black" fill="rgb(255,0,0)" d="M 0,15 L 2,13 L 8,13 L 8,18 L 2,18 L 0,16 z " />
     <path stroke="black" fill="rgb(255,0,0)" d="M 23,13 L 29,13 L 31,15 L 31,16 L 29,18 L 23,18 z " />
-    <path stroke="black" fill="rgb(255, 255,0)" d="M 8,13 L 23,13 L 23,18 L 8,18 z " />
+    <path stroke="black" fill="rgb(255, 255, 128)" d="M 8,13 L 23,13 L 23,18 L 8,18 z " />
     <!-- Pfeile -->
     <path stroke="black" fill="rgb(0, 255, 0)" d="M 6,15 L 13,8 L 13,23 L 6,16 z " />
     <!-- path stroke="black" fill="rgb(0, 255, 0)" d="M 19,8 L 26,15 L 26,16 L 19,23 z " / -->

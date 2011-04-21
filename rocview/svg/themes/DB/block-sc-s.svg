@@ -1,0 +1,11 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Block -->
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,3 L 63,3 L 63,28 L 0,28 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 1,4 L 62,4 L 62,27 L 1,27 z " />
+    <path stroke="rgb(255,255,200)" fill="rgb(255,255,0)" d="M 2,5 L 61,5 L 61,26 L 2,26 z " />
+    <path stroke="rgb(255,255,255)" fill="rgb(0,0,0)" d="M 8,13 L 54,13 L 54,17 L 8,17 z " />
+	<path stroke="rgb(0,0,0)" fill="none" d="M 3,23 L 7,23 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 5,21 L 5,25 z " />
+	</g>
+</svg>

@@ -12,9 +12,9 @@
     <!-- Abzweig unten links -->
     <path stroke="black" fill="rgb(0, 0, 255)" d="M 16,31 L 20,31 L 23,28 L 19,24 L 16,27 L 16,31 z " />
     <path stroke="black" fill="rgb(0, 0, 255)" d="M 31,16 L 31,20 L 28,23 L 24,19 L 27,16 L 31,16 z " />
-    <path stroke="black" fill="rgb(0, 255, 255)" d="M 24,19 L 28,23 L 23,28 L 19,24 L 24,19 z " />
+    <path stroke="black" fill="rgb(128,255,255)" d="M 24,19 L 28,23 L 23,28 L 19,24 L 24,19 z " />
     <!-- rechte gerade -->    
     <path stroke="black" fill="rgb(0, 0, 255)" d="M 32,15 L 34,13 L 40,13 L 40,18 L 34,18 L 32,16 z " />
     <path stroke="black" fill="rgb(0, 0, 255)" d="M 55,13 L 61,13 L 63,15 L 63,16 L 61,18 L 55,18 z " />
-    <path stroke="black" fill="rgb(0, 255, 255)" d="M 40,13 L 55,13 L 55,18 L 40,18 z " />  </g>
+    <path stroke="black" fill="rgb(128,255,255)" d="M 40,13 L 55,13 L 55,18 L 40,18 z " />  </g>
 </svg>

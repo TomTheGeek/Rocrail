@@ -1,0 +1,12 @@
+<svg width="32" height="32">
+  <g>
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 0,16 L 0,20 L 3,23 L 7,19 L 4,16  z " />
+    <path stroke="black" fill="rgb(222, 184, 135)" d="M 8,28 L 11,31 L 15,31 L 15,27 L 12,24  z " />
+    <path stroke="black" fill="rgb(255, 200, 160)" d="M 3,23 L 8,28 L 12,24 L 7,19  z " />
+    
+    <path stroke="black" fill="red" d="M 0,15 L 2,13 L 8,13 L 8,18 L 2,18 L 0,16 z " />
+    <path stroke="black" fill="red" d="M 23,13 L 29,13 L 31,15 L 31,16 L 29,18 L 23,18 z " />
+    <path stroke="black" fill="rgb(255,255,128)" d="M 8,13 L 23,13 L 23,18 L 8,18 z " />
+
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg width="64" height="32">
+  <g>
+    <!-- Block -->
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,3 L 63,3 L 63,28 L 0,28 z " />
+    <path stroke="green" fill="rgb(200,255,200)" d="M 1,4 L 62,4 L 62,27 L 1,27 z " />
+	<path stroke="rgb(0,0,0)" fill="none" d="M 3,23 L 7,23 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 5,21 L 5,25 z " />
+  </g>
+</svg>

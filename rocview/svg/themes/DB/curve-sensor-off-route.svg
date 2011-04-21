@@ -1,0 +1,12 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="black" fill="rgb(0,0,255)" d="M 0,16 L 0,20 L 3,23 L 7,19 L 4,16  z " />
+    <path stroke="black" fill="rgb(0,0,255)" d="M 8,28 L 11,31 L 15,31 L 15,27 L 12,24  z " />
+    <path stroke="black" fill="rgb(128,255,255)" d="M 3,23 L 8,28 L 12,24 L 7,19  z " />
+    <!-- Sensor innen -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,255,0)" d="M 14,11 L 17,11 L 20,14 L 20,17 L 17,20 L 14,20 L 11,17 L 11,14 z " />
+  </g>
+</svg>
+
+
