@@ -3457,7 +3457,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     Boolean destdir = False;
     Boolean samedir = False;
 
-    if( toBlockId == NULL || StrOp.len(toBlockId) == 0 ) {
+    if( location != NULL && (toBlockId == NULL || StrOp.len(toBlockId) == 0) ) {
       iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( LocationOp.base.properties(location) ), ',' );
       const char* id = NULL;
       while( StrTokOp.hasMoreTokens( blocks ) ) {
