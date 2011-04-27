@@ -71,6 +71,7 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
@@ -2294,13 +2295,31 @@ void Symbol::modelEvent( iONode node ) {
     wStage.setreserved( m_Props, isReserved );
     wStage.setlocid( m_Props, locid );
 
-    occupied = isReserved ? 2:1;
-    occupied = isEntering ? 3:occupied;
+    // update sections
+    iONode section = wStage.getsection(node);
+    while( section != NULL ) {
+      iONode l_section = wStage.getsection(m_Props);
+      while( section != NULL ) {
+        if( StrOp.equals( wStageSection.getid( section ), wStageSection.getid( l_section ) ) ) {
+          wStageSection.setlcid( l_section, wStageSection.getlcid( section ) );
+          break;
+        }
+        l_section = wStage.nextsection(m_Props, l_section);
+      }
+
+      section = wStage.nextsection(node, section);
+    }
+
+    if (locid!=NULL && StrOp.len(locid)>0) {
+      occupied = isReserved ? 2:1;
+      occupied = isEntering ? 3:occupied;
+    }
 
     l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid==NULL?"":locid );
     m_Renderer->setLabel( l_locidStr, occupied, false );
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s, occupied=%d", m_locidStr, occupied );
 
   }
 

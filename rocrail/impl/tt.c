@@ -1323,7 +1323,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
         }
       }
       wTurntable.setlocid( data->props, locid );
-      ModelOp.setBlockOccupancy( AppOp.getModel(), wTurntable.getid(data->props), locid, False, 0, 0 );
+      ModelOp.setBlockOccupancy( AppOp.getModel(), wTurntable.getid(data->props), locid, False, 0, 0, NULL );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
 

@@ -4121,27 +4121,34 @@ static void _stop( iOModel inst ) {
 }
 
 
-static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, int enterside ) {
+static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* LocId, Boolean closed, int placing, int enterside, const char* SectionId ) {
   iOModelData data = Data(inst);
   iONode occ = NULL;
+  char key[256] = {'\0'};
 
   /* Lock the semaphore: */
   MutexOp.wait( data->occMux );
 
+  StrOp.fmtb( key, "%s%s", BlockId, SectionId!=NULL ? SectionId:"");
+
   /* get the node */
-  occ = (iONode)MapOp.get( data->occMap, BlockId );
+  occ = (iONode)MapOp.get( data->occMap, key );
 
   if( occ == NULL ) {
     /* create a node */
     occ = NodeOp.inst( wOccupancy.name(), NULL, ELEMENT_NODE );
     wOccupancy.setbkid( occ, BlockId );
-    MapOp.put( data->occMap, BlockId, (obj)occ );
+    MapOp.put( data->occMap, key, (obj)occ );
   }
 
   /* modify the node */
   wOccupancy.setlcid( occ, LocId );
   wOccupancy.setauto( occ, False );
   wOccupancy.setclosed( occ, closed );
+
+  if( SectionId != NULL ) {
+    wOccupancy.setsecid( occ, SectionId );
+  }
 
   if( LocId != NULL ) {
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId );
@@ -4245,6 +4252,7 @@ static void _loadBlockOccupancy( iOModel inst ) {
     for( i = 0; i < cnt; i++ ) {
       iONode occ = NodeOp.getChild( modocc, i );
       const char* BlockID  = wOccupancy.getbkid( occ );
+      const char* Section  = wOccupancy.getsecid( occ );
       const char* LocoID   = wOccupancy.getlcid( occ );
       const char* ScID     = wOccupancy.getscid( occ );
       int         placing  = wOccupancy.getplacing( occ );
@@ -4252,12 +4260,14 @@ static void _loadBlockOccupancy( iOModel inst ) {
       Boolean     closed   = wOccupancy.isclosed( occ );
       Boolean     automode = wOccupancy.isauto( occ );
       iOLoc       loco     = NULL;
+      char        key[256] = {'\0'};
 
       if( StrOp.len(LocoID) > 0 ) {
         loco = ModelOp.getLoc( inst, LocoID );
       }
 
-      MapOp.put( data->occMap, BlockID, NodeOp.base.clone( occ ) );
+      StrOp.fmtb( key, "%s%s", BlockID, Section!=NULL ? Section:"");
+      MapOp.put( data->occMap, key, NodeOp.base.clone( occ ) );
 
       /* inform loco of placing flag */
       if( loco != NULL ) {
@@ -4297,8 +4307,13 @@ static void _loadBlockOccupancy( iOModel inst ) {
           */
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
 
-          if( loco != NULL )
-            wBlock.setlocid( props, StrOp.dup( LocoID ) );
+          if( loco != NULL ) {
+            if( Section != NULL && StrOp.len( Section ) > 0 && StrOp.equals( block->base.name(), StageOp.base.name()) ) {
+              StageOp.setSectionOcc((iOStage)block, Section, LocoID);
+            }
+            else
+              wBlock.setlocid( props, StrOp.dup( LocoID ) );
+          }
 
           if( location != NULL && loco != NULL ) {
             LocationOp.locoDidArrive(location, LocOp.getId(loco));

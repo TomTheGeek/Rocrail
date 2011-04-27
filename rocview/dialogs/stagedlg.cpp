@@ -182,7 +182,10 @@ void StageDlg::initSections() {
   while( section != NULL ) {
     const char* id = wStageSection.getid(section);
     const char* lcid = wStageSection.getlcid(section);
-    m_SectionList->Append( wxString(id,wxConvUTF8) + _T(" (") + wxString(lcid!=NULL?lcid:"free",wxConvUTF8) + _T(")"), section );
+    if( lcid != NULL && StrOp.len(lcid) > 0 )
+      m_SectionList->Append( wxString(id,wxConvUTF8) + _T(" (") + wxString(lcid,wxConvUTF8) + _T(")"), section );
+    else
+      m_SectionList->Append( wxString(id,wxConvUTF8) + _T(" (") + wxString("free",wxConvUTF8) + _T(")"), section );
     section = wStage.nextsection(m_Props, section);
   }
   m_ModifySection->Enable(false);

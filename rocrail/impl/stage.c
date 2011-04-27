@@ -129,7 +129,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
       data->closereq = False;
     }
     wStage.setstate( data->props, state );
-    /*ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0 );*/
+    ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, NULL, StrOp.equals( wBlock.closed, state ), 0, 0, NULL );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
   }
 
@@ -198,6 +198,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
         LocOp.event( loc, (obj)inst, in_event, 0, True );
         /* stop loco */
         LocOp.stop(loc, False);
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, wStageSection.getid(section) );
       }
     }
   }
@@ -781,6 +782,24 @@ static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 
 static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   return True;
+}
+
+
+static void _setSectionOcc(iOStage inst, const char* sectionid, const char* locoid) {
+  iOStageData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set stage %s section %s occ to %s", data->id, sectionid, locoid );
+
+  int sections = ListOp.size( data->sectionList );
+  int i = 0;
+
+  /* check the sections */
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( StrOp.equals( wStageSection.getid( section ), sectionid ) ) {
+      wStageSection.setlcid( section, locoid);
+      break;
+    }
+  }
 }
 
 

@@ -926,6 +926,7 @@
     <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of associated plan."/>
     <occ cardinality="n" remark="Occupancy entry" wrappername="Occupancy">
       <var name="bkid" vt="string" defval="" range="*" required="true"/>
+      <var name="secid" vt="string" defval="" range="*" required="false"/>
       <var name="lcid" vt="string" defval="" range="*" required="true"/>
       <var name="scid" vt="string" defval="" range="*" required="false"/>
       <var name="placing" vt="int" defval="0" remark="Loco placing: 0 = Not set, 1 = True, 2 = False"/>

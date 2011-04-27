@@ -1220,7 +1220,7 @@ static void __runner( void* threadinst ) {
         wLoc.setplacing( data->props, swap );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
         /* inform model to keep this setting in the occupancy file */
-        ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
 
         /* swap the block enter side flag to be able to use other direction routes */
         LocOp.swapBlockEnterSide(loc, NULL);
@@ -2509,7 +2509,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
   wLoc.setblockenterside(data->props, enterside);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
       wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
-  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2 );
+  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
 
   /* Broadcast to clients. */
   {
