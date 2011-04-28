@@ -51,6 +51,7 @@ protected:
   void OnCancel( wxCommandEvent& event );
   void OnOK( wxCommandEvent& event );
   void OnSetPage(wxCommandEvent& event);
+  void OnFreeSection( wxCommandEvent& event );
 
 public:
 	/** Constructor */

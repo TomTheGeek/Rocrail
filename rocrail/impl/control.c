@@ -71,6 +71,7 @@
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/R2RnetIni.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -615,6 +616,13 @@ static void __callback( obj inst, iONode nodeA ) {
     iOSelTab seltab = ModelOp.getSelectiontable( model, wSelTab.getid( nodeA ) );
     if( seltab != NULL ) {
       SelTabOp.cmd( (iIBlockBase)seltab, nodeA );
+      return;
+    }
+  }
+  else if( StrOp.equals( wStage.name(), nodeName ) ) {
+    iOStage stage = ModelOp.getStage( model, wStage.getid( nodeA ) );
+    if( stage != NULL ) {
+      StageOp.cmd( (iIBlockBase)stage, nodeA );
       return;
     }
   }

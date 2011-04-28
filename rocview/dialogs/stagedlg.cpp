@@ -29,6 +29,7 @@
 #include "rocview/public/guiapp.h"
 
 #include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -88,7 +89,7 @@ void StageDlg::initLabels() {
   m_labDescription->SetLabel( wxGetApp().getMsg( "description" ) );
   m_labSectionLength->SetLabel( wxGetApp().getMsg( "section" ) + _T(" ") + wxGetApp().getMsg( "length" ) );
   m_labTrainGap->SetLabel( wxGetApp().getMsg( "train" ) + _T(" ") + wxGetApp().getMsg( "gap" ) );
-  m_labEnterSensor->SetLabel( wxGetApp().getMsg( "enter" ) );
+  m_labEnterSensor->SetLabel( _T("Enter ") + wxGetApp().getMsg( "sensor" ) );
 
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -96,6 +97,7 @@ void StageDlg::initLabels() {
   m_AddSection->SetLabel( wxGetApp().getMsg( "add" ) );
   m_ModifySection->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_FreeSection->SetLabel( wxGetApp().getMsg( "setloco" ) );
 
   m_EnterSensor->Append( _T("") );
   m_SectionSensor->Append( _T("") );
@@ -190,6 +192,7 @@ void StageDlg::initSections() {
   }
   m_ModifySection->Enable(false);
   m_DeleteSection->Enable(false);
+  m_FreeSection->Enable(false);
 
 }
 
@@ -230,10 +233,27 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
           _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
       m_ModifySection->Enable(true);
       m_DeleteSection->Enable(true);
+      m_FreeSection->Enable(true);
     }
     else
       TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
+}
+
+void StageDlg::OnFreeSection( wxCommandEvent& event )
+{
+  if( m_Props == NULL )
+    return;
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "free section" );
+
+  iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+  wStage.setid( cmd, wStage.getid( m_Props ) );
+  wStage.setlocid( cmd, m_SectionLocoId->GetStringSelection().mb_str(wxConvUTF8) );
+  wStage.setsecid( cmd, m_SectionID->GetValue().mb_str(wxConvUTF8) );
+  wStage.setcmd( cmd, wBlock.loc );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+  OnSectionModify(event);
 }
 
 void StageDlg::OnSectionAdd( wxCommandEvent& event )

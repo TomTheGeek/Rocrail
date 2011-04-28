@@ -2454,6 +2454,12 @@ static iOTT _getTurntable( iOModel inst, const char* id ) {
 }
 
 
+static iOStage _getStage( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  return (iOStage)MapOp.get( o->stageMap, id );
+}
+
+
 static iOSelTab _getSelectiontable( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOSelTab)MapOp.get( o->seltabMap, id );
@@ -2715,27 +2721,31 @@ static void _init( iOModel inst ) {
   _createSwAddrMap( o );
   _createCoAddrMap( o );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init blockInit..." );
-  ModelOp.loadBlockOccupancy(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init blocks..." );
   {
     iIBlockBase block = (iIBlockBase)MapOp.first( o->blockMap );
     while( block != NULL ) {
       block->init( block );
       block = (iIBlockBase)MapOp.next( o->blockMap );
     };
+
+    /* adding the selection tables to the block map: */
     block = (iIBlockBase)MapOp.first( o->seltabMap );
     while( block != NULL ) {
       block->init( block );
-      /* adding the selection tables to the block map: */
       MapOp.put( o->blockMap, block->base.id( block ), (obj)block );
       block = (iIBlockBase)MapOp.next( o->seltabMap );
     };
+
+    /* adding the stageblocks to the block map: */
     block = (iIBlockBase)MapOp.first( o->stageMap );
     while( block != NULL ) {
       block->init( block );
       MapOp.put( o->blockMap, block->base.id( block ), (obj)block );
       block = (iIBlockBase)MapOp.next( o->stageMap );
     };
+
+    /* adding the turntables to the block map: */
     block = (iIBlockBase)MapOp.first( o->ttMap );
     while( block != NULL ) {
       block->init( block );
@@ -2745,6 +2755,8 @@ static void _init( iOModel inst ) {
       block = (iIBlockBase)MapOp.next( o->ttMap );
     };
   }
+
+  ModelOp.loadBlockOccupancy(inst);
 
   if( o->moduleplan != NULL ) {
     if( wModPlan.isinitfield(ModPlanOp.getModPlan(o->moduleplan)) )
@@ -4262,17 +4274,20 @@ static void _loadBlockOccupancy( iOModel inst ) {
       iOLoc       loco     = NULL;
       char        key[256] = {'\0'};
 
-      if( StrOp.len(LocoID) > 0 ) {
+      if( LocoID != NULL && StrOp.len(LocoID) > 0 ) {
         loco = ModelOp.getLoc( inst, LocoID );
       }
 
       StrOp.fmtb( key, "%s%s", BlockID, Section!=NULL ? Section:"");
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupancy key [%s]", key );
       MapOp.put( data->occMap, key, NodeOp.base.clone( occ ) );
 
       /* inform loco of placing flag */
       if( loco != NULL ) {
         iONode props = LocOp.base.properties(loco);
         wLoc.setresumeauto( props, automode );
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore loco settings for [%s]", LocOp.getId(loco));
 
         if( ScID != NULL && StrOp.len(ScID) > 0) {
           LocOp.useSchedule(loco, ScID);
@@ -4307,11 +4322,14 @@ static void _loadBlockOccupancy( iOModel inst ) {
           */
           wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
 
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block [%s]", BlockID );
+
           if( loco != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s], section [%s]", LocoID, Section );
             if( Section != NULL && StrOp.len( Section ) > 0 && StrOp.equals( block->base.name(), StageOp.base.name()) ) {
               StageOp.setSectionOcc((iOStage)block, Section, LocoID);
             }
-            else
+            else if( !StrOp.equals( block->base.name(), StageOp.base.name()) )
               wBlock.setlocid( props, StrOp.dup( LocoID ) );
           }
 
@@ -4319,6 +4337,9 @@ static void _loadBlockOccupancy( iOModel inst ) {
             LocationOp.locoDidArrive(location, LocOp.getId(loco));
           }
 
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block [%s] not found", BlockID );
         }
 
       }

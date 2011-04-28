@@ -17301,4 +17301,10 @@
   <Msg id="localip">
     <en txt="Local IP"/>
   </Msg>
+  <Msg id="setloco">
+    <en txt="Set loco"/>
+  </Msg>
+  <Msg id="compress">
+    <en txt="Compress"/>
+  </Msg>
 </Messages>

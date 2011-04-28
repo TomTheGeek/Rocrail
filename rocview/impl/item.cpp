@@ -136,6 +136,7 @@ enum {
     ME_OpenBlock,
     ME_AcceptIdent,
     ME_ResetWheelcounter,
+    ME_Compress,
     ME_Info,
     ME_Timer,
     ME_TTLightOn,
@@ -205,6 +206,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
 
   EVT_MENU     (ME_Info, Symbol::OnInfo)
   EVT_MENU     (ME_ResetWheelcounter, Symbol::OnResetWheelcounter)
+  EVT_MENU     (ME_Compress, Symbol::OnCompress)
 
   EVT_MENU     (ME_FYGo+0, Symbol::OnFYGo)
   EVT_MENU     (ME_FYGo+1, Symbol::OnFYGo)
@@ -737,6 +739,14 @@ void Symbol::OnResetWheelcounter(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
   wFeedback.setcmd( cmd, wFeedback.reset );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCompress(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+  wStage.setid( cmd, wStage.getid( m_Props ) );
+  wStage.setcmd( cmd, wStage.compress );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -1396,10 +1406,15 @@ void Symbol::OnPopup(wxMouseEvent& event)
       }
       menu.AppendSeparator();
     }
+
     else if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
       if( wFeedback.getbus(m_Props) == wFeedback.fbtype_wheelcounter ) {
         menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("reset") );
       }
+    }
+
+    else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
+      menu.Append( ME_Compress, wxGetApp().getMenu("compress") );
     }
 
     //menu.AppendSeparator();
@@ -2288,6 +2303,7 @@ void Symbol::modelEvent( iONode node ) {
   else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     const char* locid = wStage.getlocid( node );
+    int nrlocos = 0;
     int occupied = 0;
     Boolean isReserved    = wStage.isreserved( node );
     Boolean isEntering    = wStage.isentering( node );
@@ -2299,6 +2315,9 @@ void Symbol::modelEvent( iONode node ) {
     iONode section = wStage.getsection(node);
     while( section != NULL ) {
       iONode l_section = wStage.getsection(m_Props);
+      if(wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
+        nrlocos++;
+      }
       while( section != NULL ) {
         if( StrOp.equals( wStageSection.getid( section ), wStageSection.getid( l_section ) ) ) {
           wStageSection.setlcid( l_section, wStageSection.getlcid( section ) );
@@ -2315,7 +2334,13 @@ void Symbol::modelEvent( iONode node ) {
       occupied = isEntering ? 3:occupied;
     }
 
-    l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid==NULL?"":locid );
+    if( locid != NULL && StrOp.len( locid ) > 0 )
+      l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid );
+    else if( nrlocos > 0 )
+      l_locidStr = StrOp.fmt( "%s [%d]", wStage.getid( node ), nrlocos );
+    else
+      l_locidStr = StrOp.fmt( "%s", wStage.getid( node ) );
+
     m_Renderer->setLabel( l_locidStr, occupied, false );
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;

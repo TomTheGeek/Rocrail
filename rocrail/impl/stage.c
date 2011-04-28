@@ -47,6 +47,9 @@ static int instCnt = 0;
 
 
 static void __initSensors( iOStage inst );
+static Boolean __freeSection(iIBlockBase inst, const char* secid);
+static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lcid);
+static Boolean __moveStageLocos(iIBlockBase inst);
 
 
 /** ----- OBase ----- */
@@ -116,9 +119,31 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
   iOModel model = AppOp.getModel(  );
 
   /* Cmds: lcid="" state="" */
-  const char* state = wStage.getstate( cmd );
+  const char* command = wStage.getcmd( cmd );
+  const char* state   = wStage.getstate( cmd );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage command: %s", command );
 
-  if( state != NULL ) {
+  if( StrOp.equals( wBlock.loc, command ) ) {
+    const char* lcid  = wStage.getlocid(cmd);
+    const char* secid = wStage.getsecid(cmd);
+    if( secid != NULL && StrOp.len(secid) > 0 ) {
+      if( lcid != NULL && StrOp.len(lcid) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set section %s occ to %s", secid, lcid );
+        __occSection(inst, secid, lcid);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "free section %s", secid );
+        __freeSection(inst, secid);
+      }
+      AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+    }
+  }
+
+  else if( StrOp.equals( wStage.compress, command ) ) {
+    __moveStageLocos(inst);
+  }
+
+  else if( state != NULL ) {
     if( StrOp.equals( wBlock.closed, state ) ) {
       data->closereq = True;
     }
@@ -131,12 +156,12 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
     wStage.setstate( data->props, state );
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, NULL, StrOp.equals( wBlock.closed, state ), 0, 0, NULL );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
+
+    StageOp.init( inst );
+    /* Broadcast to clients. */
+    AppOp.broadcastEvent( cmd );
   }
 
-  StageOp.init( inst );
-
-  /* Broadcast to clients. */
-  AppOp.broadcastEvent( cmd );
 
   return True;
 }
@@ -360,7 +385,7 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
 /**  */
 static void _init( iIBlockBase inst ) {
   iOStageData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "init block [%s]", data->id );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init stageblock [%s]", data->id );
   return;
 }
 
@@ -593,24 +618,24 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   iOStageData data = Data(inst);
   Boolean locoMoved = False;
 
-  iONode firstFreeSection = NULL;
+  iONode nextFreeSection = NULL;
   iONode firstOccupiedSection = NULL;
   int i = 0;
   for( i = 0; i < ListOp.size(data->sectionList); i++) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
-    if( firstFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
-      firstFreeSection = section;
-    }
     if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
       firstOccupiedSection = section;
+    }
+    if( firstOccupiedSection != NULL && nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+      nextFreeSection = section;
       break;
     }
   }
-  if( firstFreeSection != NULL && firstOccupiedSection != NULL ) {
+  if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "moving loco %s from %s to %s in stage %s",
         wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
-        wStageSection.getid(firstFreeSection), data->id );
+        wStageSection.getid(nextFreeSection), data->id );
 
     /* TODO: V_min and wait for event of sensor firstFreeSection */
     locoMoved = True;
@@ -639,6 +664,48 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
   __moveStageLocos(inst);
 
   return unlocked;
+}
+
+
+static Boolean __freeSection(iIBlockBase inst, const char* secid) {
+  iOStageData data = Data(inst);
+  Boolean unlocked = False;
+  int i = 0;
+  int sections = ListOp.size( data->sectionList );
+
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( StrOp.equals(wStageSection.getid(section), secid) ) {
+      /* free section */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock section[%d] from %s", i, wStageSection.getlcid(section) );
+      wStageSection.setlcid(section, NULL);
+      ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, secid );
+      unlocked = True;
+    }
+  }
+
+  return unlocked;
+}
+
+
+static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lcid) {
+  iOStageData data = Data(inst);
+  Boolean locked = False;
+  int i = 0;
+  int sections = ListOp.size( data->sectionList );
+
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( StrOp.equals(wStageSection.getid(section), secid) ) {
+      /* occ section */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lock section[%d] by %s", i, lcid );
+      wStageSection.setlcid(section, lcid);
+      ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, lcid, False, 0, 0, secid );
+      locked = True;
+    }
+  }
+
+  return locked;
 }
 
 
@@ -787,7 +854,7 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
 
 static void _setSectionOcc(iOStage inst, const char* sectionid, const char* locoid) {
   iOStageData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set stage %s section %s occ to %s", data->id, sectionid, locoid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set stage %s section %s occ to %s", data->id, sectionid, locoid );
 
   int sections = ListOp.size( data->sectionList );
   int i = 0;
@@ -816,6 +883,8 @@ static struct OStage* _inst( iONode props ) {
   data->sectionList   = ListOp.inst();
   data->sectionLength = wStage.getslen(props);
   data->trainGap      = wStage.getgap(props);
+
+  wStage.setlocid(data->props, NULL);
 
   __initSensors(__Stage);
 

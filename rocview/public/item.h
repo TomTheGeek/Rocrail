@@ -72,6 +72,7 @@ public:
   void OnAcceptIdent(wxCommandEvent& event);
   void OnInfo(wxCommandEvent& event);
   void OnResetWheelcounter(wxCommandEvent& event);
+  void OnCompress(wxCommandEvent& event);
   void OnLocMIC(wxCommandEvent& event);
   void OnLocActivate(wxCommandEvent& event);
   void OnLocDeActivate(wxCommandEvent& event);
