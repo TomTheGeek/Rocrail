@@ -109,6 +109,14 @@
       </workspace>
     </workspaces>
     <mgv cardinality="1" wrappername="MGV">
+      <var name="addr1" vt="int" defval="0"/>
+      <var name="port1" vt="int" defval="0"/>
+      <var name="addr2" vt="int" defval="0"/>
+      <var name="port2" vt="int" defval="0"/>
+      <var name="addr3" vt="int" defval="0"/>
+      <var name="port3" vt="int" defval="0"/>
+      <var name="addr4" vt="int" defval="0"/>
+      <var name="port4" vt="int" defval="0"/>
       <mgvservo cardinality="n" wrappername="MGVServo">
         <var name="addr" vt="int" defval="0"/>
         <var name="port" vt="int" defval="0"/>
