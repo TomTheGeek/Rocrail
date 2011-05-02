@@ -1224,20 +1224,9 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     data->skippos = -1;
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
-    vcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    tracknr = __getOppositeTrack( inst, data->tablepos );
-
-    if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
-      tracknr = data->gotopos;
-    }
-    else {
-      data->gotopos = tracknr;
-    }
-    data->skippos = -1;
+    vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    data->gotopos = data->tablepos;
+    data->skippos = data->tablepos;
   }
   else {
     /* Tracknumber */
