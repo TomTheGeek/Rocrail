@@ -176,6 +176,7 @@ void rocs_socket_localip( iOSocketData o, const char* ip ) {
 #ifdef __ROCS_SOCKET__
   struct in_addr localInterface;
   /* IP_MULTICAST_IF:  Sets the interface over which outgoing multicast datagrams are sent. */
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Set the interface over which outgoing multicast datagrams are sent..." );
   localInterface.s_addr = inet_addr(ip);
   if(setsockopt(o->sh, IPPROTO_IP, IP_MULTICAST_IF, (char *)&localInterface, sizeof(localInterface)) < 0)
   {
