@@ -109,6 +109,7 @@
       </workspace>
     </workspaces>
     <mgv cardinality="1" wrappername="MGV">
+      <var name="iid" vt="string" defval=""/>
       <var name="addr1" vt="int" defval="0"/>
       <var name="port1" vt="int" defval="0"/>
       <var name="addr2" vt="int" defval="0"/>
