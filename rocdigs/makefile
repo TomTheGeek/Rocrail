@@ -51,7 +51,7 @@ endif
 PLATFORM=LINUX
 ARCH=
 ifeq ($(PLATFORM),WIN32)
-	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lwinmm
+	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	LNK_FLAGS=--def rocdigs.def

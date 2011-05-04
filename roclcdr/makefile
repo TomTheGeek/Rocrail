@@ -51,7 +51,7 @@ endif
 PLATFORM=LINUX
 ARCH=
 ifeq ($(PLATFORM),WIN32)
-	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32
+	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	LNK_FLAGS=--def lcdriver.def

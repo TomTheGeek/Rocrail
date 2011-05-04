@@ -50,7 +50,7 @@ endif
 
 PLATFORM=LINUX
 ifeq ($(PLATFORM),WIN32)
-	LIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 $(SSLLIBS)
+	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 $(SSLLIBS)
 	COREDIR=win
 	BINSUFFIX=.exe
 	CC_EXTRA_FLAGS=

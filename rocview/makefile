@@ -52,7 +52,7 @@ ifeq ($(NATIVE),WIN32)
 	WXSUBINCL=
 	WXMSVCINCL=-I$(MINGWINSTALL)$(FS)include$(FS)msvc
 	LINKTOOL=g++
-	WINLIBS=-liphlpapi -lmpr -lwsock32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwsock32 -lwinmm
+	WINLIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lcomctl32 -lrpcrt4 -lwinmm
 endif
 
 
