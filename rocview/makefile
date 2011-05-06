@@ -78,7 +78,7 @@ ifeq ($(PLATFORM),WIN32)
 	CC_EXTRA_FLAGS=
 	BINSUFFIX=.exe
 	LIBSUFFIX=-i586-mingw32msvc
-	WINRESOURCE=$(TMPOUTDIR)\rocview_rc.o
+	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
 	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
 else ifeq ($(PLATFORM),OPENBSD)
 	LIBS=-pthread
