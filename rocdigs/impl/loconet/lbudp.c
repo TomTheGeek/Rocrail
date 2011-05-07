@@ -55,7 +55,7 @@ static void __reader( void* threadinst ) {
       else {
         byte* p = allocMem(0x7F+1);
         MemOp.copy( data->prevPacket, packet, packetSize );
-        if( data->expectdouble ) {
+        if( data->usedouble && data->expectdouble ) {
           data->packetloss++;
           TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "packet loss [0x%02X] of %d total losses", data->prevPacket[0], data->packetloss );
         }
