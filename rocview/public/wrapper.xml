@@ -108,6 +108,10 @@
         <var name="path" vt="string" defval=""/>
       </workspace>
     </workspaces>
+    <swctrl cardinality="1" wrappername="SwCtrl">
+      <var name="iid" vt="string" defval=""/>
+      <var name="module" vt="int" defval="1"/>
+    </swctrl>
     <mgv cardinality="1" wrappername="MGV">
       <var name="iid" vt="string" defval=""/>
       <var name="addr1" vt="int" defval="0"/>

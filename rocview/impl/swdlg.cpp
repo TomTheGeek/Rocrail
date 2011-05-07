@@ -46,6 +46,8 @@
 
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/SwCtrl.h"
 
 BEGIN_EVENT_TABLE(SwCtrlDlg, wxDialog)
     EVT_BUTTON(-1, SwCtrlDlg::OnButton)
@@ -89,13 +91,20 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
   m_labIID = new wxStaticText( this, -1, _("IID"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
   m_IID = new wxTextCtrl( this, -1, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
 
+  iONode swctrl = wGui.getswctrl( wxGetApp().getIni() );
+  if( swctrl == NULL ) {
+    swctrl = NodeOp.inst(wSwCtrl.name(), wxGetApp().getIni(), ELEMENT_NODE);
+    NodeOp.addChild(wxGetApp().getIni(), swctrl);
+  }
+
+  m_IID->SetValue(wxString(wSwCtrl.getiid(swctrl),wxConvUTF8));
+  m_Unit = wSwCtrl.getmodule(swctrl);
 
   m_UnitSpin = new wxSpinCtrl( this, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 0 );
   m_UnitSpin->SetToolTip( wxGetApp().getTip("decoder") );
   m_Quit = new wxButton( this, -1, wxGetApp().getMsg("cancel") );
   m_Quit->SetToolTip( wxGetApp().getTip("cancel") );
 
-  m_Unit = 1;
   m_UnitSpin->SetValue( m_Unit );
 
   sizer2->Add( m_Pin1Green, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
@@ -159,6 +168,10 @@ void SwCtrlDlg::OnButton(wxCommandEvent& event)
   m_Unit = m_UnitSpin->GetValue();
   
   if ( event.GetEventObject() == m_Quit ) {
+    iONode swctrl = wGui.getswctrl( wxGetApp().getIni() );
+
+    wSwCtrl.setiid(swctrl, m_IID->GetValue().mb_str(wxConvUTF8));
+    wSwCtrl.setmodule(swctrl, m_UnitSpin->GetValue());
     Destroy();
     //EndModal(0);
   }
@@ -220,6 +233,10 @@ void SwCtrlDlg::OnButton(wxCommandEvent& event)
 
 
 void SwCtrlDlg::OnClose(wxCloseEvent& event) {
+  iONode swctrl = wGui.getswctrl( wxGetApp().getIni() );
+
+  wSwCtrl.setiid(swctrl, m_IID->GetValue().mb_str(wxConvUTF8));
+  wSwCtrl.setmodule(swctrl, m_UnitSpin->GetValue());
   Destroy();
 }
 
