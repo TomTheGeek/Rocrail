@@ -1137,6 +1137,7 @@ static void __server( void* threadinst ) {
   char client[256];
   int port = 0;
 
+  ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP service started on port %d", wSnmpService.getport(data->ini) );
 
   do {
@@ -1197,6 +1198,7 @@ static struct OSNMP* _inst( iONode ini ) {
 
 
   if( wSnmpService.gettrapport(data->ini) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "connecting to %s:%d", wSnmpService.gettraphost(data->ini), wSnmpService.gettrapport(data->ini) );
     data->snmpTrapSock = SocketOp.inst( wSnmpService.gettraphost(data->ini), wSnmpService.gettrapport(data->ini), False, True, False );
     if( data->snmpTrapSock != NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP Trap activated op port %d", wSnmpService.gettrapport(data->ini) );
@@ -1207,6 +1209,15 @@ static struct OSNMP* _inst( iONode ini ) {
       if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
       }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "disable SNMP trap" );
+        wSnmpService.settrapport(data->ini, 0);
+        SocketOp.base.del(data->snmpTrapSock);
+        data->snmpTrapSock = NULL;
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not connect to %s:%d", wSnmpService.gettraphost(data->ini), wSnmpService.gettrapport(data->ini) );
     }
   }
 
