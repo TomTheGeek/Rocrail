@@ -755,6 +755,17 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
+      if( wTurntable.getaddr6(data->props) > 0 || wTurntable.getport6(data->props) > 0 ) {
+        wSwitch.setaddr1( cmd, wTurntable.getaddr6(data->props) );
+        wSwitch.setport1( cmd, wTurntable.getport6(data->props) );
+        if( invpos )
+          wSwitch.setcmd( cmd, tracknr & 0x20 ? wSwitch.straight:wSwitch.turnout );
+        else
+          wSwitch.setcmd( cmd, tracknr & 0x20 ? wSwitch.turnout:wSwitch.straight );
+        lcmd = (iONode)NodeOp.base.clone(cmd);
+        ControlOp.cmd( control, lcmd, NULL );
+      }
+
       /* signal new position is set: */
       wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport5(data->props) );

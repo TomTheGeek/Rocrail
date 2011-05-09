@@ -270,13 +270,15 @@ void TurntableDialog::initLabels() {
   m_labAddr2->SetLabel( wxGetApp().getMsg( "address" ) + _T(" 2") );
   m_labAddr3->SetLabel( wxGetApp().getMsg( "address" ) + _T(" 3") );
   m_labAddr4->SetLabel( wxGetApp().getMsg( "address" ) + _T(" 4") );
-  m_labAddr5->SetLabel( wxGetApp().getMsg( "address" ) + _T(" 5") );
+  m_labAddr6->SetLabel( wxGetApp().getMsg( "address" ) + _T(" 5") );
+  m_labAddr5->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labPort0->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labPort1->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labPort2->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labPort3->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labPort4->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labPort5->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labPort6->SetLabel( wxGetApp().getMsg( "port" ) );
   m_InvertPos->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_InvertNew->SetLabel( wxGetApp().getMsg( "invert" ) );
 
@@ -403,6 +405,8 @@ void TurntableDialog::initValues() {
   m_Addr4->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
   str = StrOp.fmt( "%d", wTurntable.getaddr5( m_Props ) );
   m_Addr5->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
+  str = StrOp.fmt( "%d", wTurntable.getaddr6( m_Props ) );
+  m_Addr6->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
 
   str = StrOp.fmt( "%d", wTurntable.getport0( m_Props ) );
   m_Port0->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
@@ -416,6 +420,8 @@ void TurntableDialog::initValues() {
   m_Port4->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
   str = StrOp.fmt( "%d", wTurntable.getport5( m_Props ) );
   m_Port5->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
+  str = StrOp.fmt( "%d", wTurntable.getport6( m_Props ) );
+  m_Port6->SetValue( wxString(str,wxConvUTF8 ) ); StrOp.free( str );
 
   m_InvertPos->SetValue( wTurntable.isinvpos(m_Props)?true:false );
   m_InvertNew->SetValue( wTurntable.isinvnew(m_Props)?true:false );
@@ -539,12 +545,14 @@ bool TurntableDialog::evaluate() {
   wTurntable.setaddr3( m_Props, atoi( m_Addr3->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setaddr4( m_Props, atoi( m_Addr4->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setaddr5( m_Props, atoi( m_Addr5->GetValue().mb_str(wxConvUTF8) ) );
+  wTurntable.setaddr6( m_Props, atoi( m_Addr6->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport0( m_Props, atoi( m_Port0->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport1( m_Props, atoi( m_Port1->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport2( m_Props, atoi( m_Port2->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport3( m_Props, atoi( m_Port3->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport4( m_Props, atoi( m_Port4->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setport5( m_Props, atoi( m_Port5->GetValue().mb_str(wxConvUTF8) ) );
+  wTurntable.setport6( m_Props, atoi( m_Port6->GetValue().mb_str(wxConvUTF8) ) );
   wTurntable.setinvpos(m_Props, m_InvertPos->IsChecked()?True:False);
   wTurntable.setinvnew(m_Props, m_InvertNew->IsChecked()?True:False);
 
@@ -631,6 +639,10 @@ bool TurntableDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_Addr4 = NULL;
     m_labPort4 = NULL;
     m_Port4 = NULL;
+    m_labAddr6 = NULL;
+    m_Addr6 = NULL;
+    m_labPort6 = NULL;
+    m_Port6 = NULL;
     m_InvertPos = NULL;
     m_NewPositionFlagBox = NULL;
     m_labAddr5 = NULL;
@@ -680,7 +692,6 @@ void TurntableDialog::CreateControls()
     m_GeneralPanel->SetSizer(itemBoxSizer5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_TT_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -740,7 +751,6 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer25 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer24->Add(itemBoxSizer25, 0, wxALIGN_CENTER_VERTICAL, 5);
     wxFlexGridSizer* itemFlexGridSizer26 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer26->AddGrowableCol(1);
     itemBoxSizer25->Add(itemFlexGridSizer26, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_TT_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer26->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -814,7 +824,6 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer50 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer24->Add(itemBoxSizer50, 1, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer51 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer51->AddGrowableCol(1);
     itemBoxSizer50->Add(itemFlexGridSizer51, 1, wxGROW|wxALL, 5);
     m_labProt = new wxStaticText( m_Interface, wxID_ANY, _("protocol"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer51->Add(m_labProt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -926,36 +935,48 @@ void TurntableDialog::CreateControls()
     m_Port4 = new wxTextCtrl( m_MultiPortPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
     itemFlexGridSizer66->Add(m_Port4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    m_labAddr6 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("Address 5"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer66->Add(m_labAddr6, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_Addr6 = new wxTextCtrl( m_MultiPortPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    itemFlexGridSizer66->Add(m_Addr6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_labPort6 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer66->Add(m_labPort6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_Port6 = new wxTextCtrl( m_MultiPortPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
+    itemFlexGridSizer66->Add(m_Port6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
     m_InvertPos = new wxCheckBox( m_MultiPortPanel, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
     m_InvertPos->SetValue(false);
     itemStaticBoxSizer65->Add(m_InvertPos, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_NewPositionFlagBox = new wxStaticBox(m_MultiPortPanel, wxID_ANY, _("New Position Flag"));
-    wxStaticBoxSizer* itemStaticBoxSizer88 = new wxStaticBoxSizer(m_NewPositionFlagBox, wxVERTICAL);
-    itemBoxSizer64->Add(itemStaticBoxSizer88, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer89 = new wxFlexGridSizer(2, 4, 0, 0);
-    itemStaticBoxSizer88->Add(itemFlexGridSizer89, 0, wxGROW|wxALL, 5);
-    m_labAddr5 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("Address 5"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer89->Add(m_labAddr5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer92 = new wxStaticBoxSizer(m_NewPositionFlagBox, wxVERTICAL);
+    itemBoxSizer64->Add(itemStaticBoxSizer92, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer93 = new wxFlexGridSizer(2, 4, 0, 0);
+    itemStaticBoxSizer92->Add(itemFlexGridSizer93, 0, wxGROW|wxALL, 5);
+    m_labAddr5 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer93->Add(m_labAddr5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Addr5 = new wxTextCtrl( m_MultiPortPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
-    itemFlexGridSizer89->Add(m_Addr5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer93->Add(m_Addr5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPort5 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer89->Add(m_labPort5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer93->Add(m_labPort5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Port5 = new wxTextCtrl( m_MultiPortPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize(60, -1), wxTE_CENTRE );
-    itemFlexGridSizer89->Add(m_Port5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer93->Add(m_Port5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_InvertNew = new wxCheckBox( m_MultiPortPanel, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
     m_InvertNew->SetValue(false);
-    itemStaticBoxSizer88->Add(m_InvertNew, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer92->Add(m_InvertNew, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_Notebook->AddPage(m_MultiPortPanel, _("Multiport"));
 
     m_TracksPanel = new wxPanel( m_Notebook, ID_PANEL_TT_TRACKS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer96 = new wxBoxSizer(wxVERTICAL);
-    m_TracksPanel->SetSizer(itemBoxSizer96);
+    wxBoxSizer* itemBoxSizer100 = new wxBoxSizer(wxVERTICAL);
+    m_TracksPanel->SetSizer(itemBoxSizer100);
 
     m_TracksGrid = new wxGrid( m_TracksPanel, ID_GRID, wxDefaultPosition, wxSize(220, 200), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
     m_TracksGrid->SetDefaultColSize(50);
@@ -963,34 +984,34 @@ void TurntableDialog::CreateControls()
     m_TracksGrid->SetColLabelSize(20);
     m_TracksGrid->SetRowLabelSize(0);
     m_TracksGrid->CreateGrid(1, 5, wxGrid::wxGridSelectRows);
-    itemBoxSizer96->Add(m_TracksGrid, 2, wxGROW|wxALL, 2);
+    itemBoxSizer100->Add(m_TracksGrid, 2, wxGROW|wxALL, 2);
 
-    wxBoxSizer* itemBoxSizer98 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer96->Add(itemBoxSizer98, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer102 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer100->Add(itemBoxSizer102, 0, wxGROW|wxALL, 5);
     m_AddTrack = new wxButton( m_TracksPanel, ID_BUTTON_TT_ADDTRACK, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer98->Add(m_AddTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer102->Add(m_AddTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DelTrack = new wxButton( m_TracksPanel, ID_BUTTON_TT_DELTRACK, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer98->Add(m_DelTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer102->Add(m_DelTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ModifyTrack = new wxButton( m_TracksPanel, ID_BUTTON_TT_MODIFYTRACK, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer98->Add(m_ModifyTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer102->Add(m_ModifyTrack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_TracksPanel, _("Tracks"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer102 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer106 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer102, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer106, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer102->AddButton(m_OK);
+    itemStdDialogButtonSizer106->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer102->AddButton(m_Cancel);
+    itemStdDialogButtonSizer106->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer102->Realize();
+    itemStdDialogButtonSizer106->Realize();
 
 ////@end TurntableDialog content construction
 }

@@ -247,6 +247,10 @@ public:
     wxTextCtrl* m_Addr4;
     wxStaticText* m_labPort4;
     wxTextCtrl* m_Port4;
+    wxStaticText* m_labAddr6;
+    wxTextCtrl* m_Addr6;
+    wxStaticText* m_labPort6;
+    wxTextCtrl* m_Port6;
     wxCheckBox* m_InvertPos;
     wxStaticBox* m_NewPositionFlagBox;
     wxStaticText* m_labAddr5;
