@@ -119,8 +119,11 @@ Boolean lbUDPConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->udpQueue  = QueueOp.inst(1000);
+
+  /* Obsolete options:
   data->useseq    = loconet != NULL ? wLocoNet.isuseseq(loconet):False;
   data->usedouble = loconet != NULL ? wLocoNet.isusedouble(loconet):False;
+  */
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, True );
   if( wDigInt.getlocalip( data->ini ) != NULL && StrOp.len(wDigInt.getlocalip( data->ini )) > 0 ) {
