@@ -1645,6 +1645,7 @@
         <var name="entering" vt="bool" defval="false"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
 
+				<var name="smallsymbol" vt="bool" defval="false" remark="Show this turntable with the small representation."/>
 
         <var name="prot" vt="string" defval="D" range="D,M,N" remark="Protocol to use."/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>

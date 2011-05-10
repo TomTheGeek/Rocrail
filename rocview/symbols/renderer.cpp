@@ -713,8 +713,8 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     *cy = 1;
   }
   else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
-    *cx = 5;
-    *cy = 5;
+    *cx = wTurntable.issmallsymbol( m_Props ) ? 2:5;
+    *cy = wTurntable.issmallsymbol( m_Props ) ? 2:5;
   }
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) &&
            StrOp.equals( wSwitch.dcrossing, wSwitch.gettype( m_Props ) ) ) {
@@ -1822,17 +1822,29 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   dc.SetPen( *pen );
 
-  dc.DrawCircle( 79, 79, 79 );
+
+
+  double delta = 79 ; //79.0;
+
+
+  if(  wTurntable.issmallsymbol( m_Props )) {
+    delta = 29;
+  }
+
+
+  dc.DrawCircle( delta, delta, delta );
   pen->SetStyle(wxSOLID);
 
   iONode track = wTurntable.gettrack( m_Props );
   while( track != NULL ) {
+
+
     double degr = 7.5 * wTTTrack.getnr( track );
     double a = (degr*2*PI25DT)/360;
-    double xa = cos(a) * 79.0;
-    double ya = sin(a) * 79.0;
-    int x = 79 + (int)xa;
-    int y = 79 - (int)ya;
+    double xa = cos(a) * delta;
+    double ya = sin(a) * delta;
+    int x = delta + (int)xa;
+    int y = delta - (int)ya;
 
     if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
       pen = (wxPen*)wxRED_PEN;
@@ -1847,7 +1859,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     }
 
     if( wTTTrack.isshow( track ) )
-      dc.DrawLine( 79, 79, x, y );
+      dc.DrawLine( delta, delta, x, y );
 
     track = wTurntable.nexttrack( m_Props, track );
   }
@@ -1856,9 +1868,9 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   pen->SetWidth(2);
   dc.SetPen(*pen);
 
-  dc.DrawCircle( 79, 79, 36 );
-  dc.DrawCircle( 79, 79, 32 );
-  dc.DrawPolygon( 5, rotateBridge( *bridgepos ) );
+  dc.DrawCircle( delta, delta, 36 );
+  dc.DrawCircle( delta, delta, 32 );
+  dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
   //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
   const wxBrush& b = dc.GetBrush();
@@ -1876,7 +1888,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   else
     dc.SetBrush( *wxGREEN_BRUSH );
 
-  dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos ) );
+  dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
   dc.SetBrush( b );
   if( yellow != NULL )
     delete yellow;
@@ -1993,7 +2005,7 @@ wxPoint* SymbolRenderer::rotateShape( wxPoint* poly, int cnt, const char* oriStr
 }
 
 
-wxPoint* SymbolRenderer::rotateBridge( double ori ) {
+wxPoint* SymbolRenderer::rotateBridge( double ori, double delta ) {
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge pos=%f", ori );
   static wxPoint p[5];
   double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
@@ -2005,8 +2017,8 @@ wxPoint* SymbolRenderer::rotateBridge( double ori ) {
     double a = (angle*2*PI25DT)/360;
     double xa = cos(a) * 32.0;
     double ya = sin(a) * 32.0;
-    p[i].x = 79 + (int)xa;
-    p[i].y = 79 - (int)ya;
+    p[i].x = delta + (int)xa;
+    p[i].y = delta - (int)ya;
     if( i == 0 ) {
       // end point to close the polygon
       p[4].x = p[i].x;
@@ -2017,7 +2029,7 @@ wxPoint* SymbolRenderer::rotateBridge( double ori ) {
 }
 
 
-wxPoint* SymbolRenderer::rotateBridgeSensors( double ori ) {
+wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge pos=%f", ori );
   static wxPoint p[5];
   double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
@@ -2029,8 +2041,8 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori ) {
     double a = (angle*2*PI25DT)/360;
     double xa = cos(a) * 20.0;
     double ya = sin(a) * 20.0;
-    p[i].x = 79 + (int)xa;
-    p[i].y = 79 - (int)ya;
+    p[i].x = delta + (int)xa;
+    p[i].y = delta - (int)ya;
     if( i == 0 ) {
       // end point to close the polygon
       p[4].x = p[i].x;

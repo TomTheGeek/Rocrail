@@ -45,8 +45,8 @@ class SymbolRenderer {
   iONode m_Props;
   wxWindow* m_Parent;
   wxPoint* rotateShape( wxPoint* poly, int cnt, const char* oriStr );
-  wxPoint* rotateBridge( double ori );
-  wxPoint* rotateBridgeSensors( double ori );
+  wxPoint* rotateBridge( double ori, double delta );
+  wxPoint* rotateBridgeSensors( double ori, double delta );
   wxPoint* rotateBridgeNose( double ori );
   int m_cx;
   int m_cy;
