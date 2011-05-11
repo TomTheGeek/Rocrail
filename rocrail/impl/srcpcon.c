@@ -356,11 +356,10 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     /*100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second>*/
     StrOp.fmtb(str, "%lu.%.3lu %d INFO %d TIME %d %d %d %d\n",
         time.tv_sec, time.tv_usec / 1000,
-        100, 1, day, hours, mins, 0 );
+        100, 0, day, hours, mins, 0 );
   }
 
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
-
     iOFBack fb = ModelOp.getFBack(model, wFeedback.getid(evt));
     if( fb != NULL ) {
       int s88busOffset = 0;
@@ -412,8 +411,9 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       iOLoc loco = ModelOp.getLocByAddress(model, loAddr);
       int i, mask ;
 
+      int OLDCONST127 = loSpcnt ;
 
-      int decStep = (wLoc.getV( loProps ) * 127) / wLoc.getV_max( loProps );
+      int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
       char funcString[1023];
       funcString[0] = '\0';
 
@@ -442,7 +442,11 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     const char* text = wException.gettext( evt );
     int        level = wException.getlevel( evt );
       
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp %s lvl %d text [%s]", NodeOp.getName(evt), level, text );
+    /* 
+      TODO: Do we need an exception handling? 
+      Not now. Currently we don't miss any commands or infos
+    */
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rr2srcp %s lvl %d text [%s]", NodeOp.getName(evt), level, text );
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName(evt))){
     const char*   cmd = wBlock.getcmd( evt );
@@ -620,6 +624,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     else if( StrOp.findi( req, "GL" ) ) {
       int idx = 0;
       const char* lcID = NULL;
+      int srcpBus = 0;
       int srcpLoco = 0;
       Boolean srcpDir = True;
       int srcpNewStep = 0;
@@ -632,6 +637,9 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
+        case 2:
+          srcpBus = atoi(s);
+          break;
         case 3: {
           iOLoc loco = NULL;
           srcpLoco = atoi(s);
@@ -682,20 +690,26 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         int newStep = 0 ;
         int divisor = 1 ;
 
+        int OLDCONST127 = loSpcnt ;
+
         /* formulas for loOldStep from p50x.c */
         /* @ROB: Why 127 and not ( wLoc.getspcnt(loProps) -1 ) ??? */
         if( wLoc.getV( loProps ) != -1 ) {
           if( StrOp.equals( wLoc.getV_mode( loProps ), wLoc.V_mode_percent ) ){
-            loOldStep = ( loV * 127) / 100;
+            loOldStep = ( loV * OLDCONST127) / 100;
             divisor = 100;
           }
           else if( loVmax > 0 ){
-            loOldStep = ( loV * 127) / loVmax;
+            loOldStep = ( loV * OLDCONST127) / loVmax;
             divisor = loVmax;
           }
 
           newSpeed = loV;
-          newStep = (newSpeed * 127) / divisor ;
+          newStep = (newSpeed * OLDCONST127) / divisor ;
+
+          if( newStep > loSpcnt ) {
+            newStep = loSpcnt ;
+          }
 
           if( srcpNewStep == 0) { /* halt loco */
             /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcpNewStep %d == 0 %d loco halt", srcpNewStep); */
@@ -709,7 +723,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             while( newStep < srcpNewStep ) {
               /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "newStep %d < srcpNewStep %d adjust ++", newStep, srcpNewStep); */
               newSpeed++;
-              newStep = (newSpeed * 127) / divisor ;
+              newStep = (newSpeed * OLDCONST127) / divisor ;
             }
           }
           else if( srcpNewStep < loOldStep ) { /* slow down */
@@ -717,15 +731,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             while( newStep > srcpNewStep ) {
               /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "newStep %d < srcpNewStep %d adjust --", newStep, srcpNewStep); */
               newSpeed--;
-              newStep = (newSpeed * 127) / divisor ;
+              newStep = (newSpeed * OLDCONST127) / divisor ;
             }
           }
           newSpeed = ( newSpeed > loVmax ) ? loVmax : newSpeed;
         }
-        /*
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loAddr %d : OldSpeed %d OldStep %d NewSpeed %d newStep %d",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loAddr %d : OldSpeed %d OldStep %d NewSpeed %d newStep %d",
               loAddr, loV, loOldStep, newSpeed, srcpNewStep);
-        */
+
         cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setid(cmd, lcID);
         wLoc.setdir(cmd, srcpDir);
@@ -735,6 +748,12 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         if( loFnCnt > 0 ) {
           int group=0;
           iONode fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
+
+          /* 1st send new loco settings before sending any functions */
+          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+          cmd = NULL ;
+
+          /* 2nd send all functions in groups of 4 */ 
           wFunCmd.setid( fcmd, lcID);
           wFunCmd.setgroup(fcmd, group+1 );
           wFunCmd.setfncnt ( fcmd, loFnCnt );
@@ -801,13 +820,16 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               wFunCmd.setgroup(fcmd, 1 );
               wFunCmd.setfncnt ( fcmd, loFnCnt );
               Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
+              break;
+            default:
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcp2rr: Loco %d, #functions %d not in range[0..28]", srcpLoco, loFnCnt);
           }
-        }
-        if( loFnCnt > 0 ) {
-          int group=0;
-          iONode fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
+
+          /* 3rd send all functions as group 1 */ 
+          fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
+          group = 1;
           wFunCmd.setid( fcmd, lcID);
-          wFunCmd.setgroup(fcmd, 1 );
+          wFunCmd.setgroup(fcmd, group );
           wFunCmd.setfncnt ( fcmd, loFnCnt );
           switch( loFnCnt ) {
             case 28: wFunCmd.setf28(fcmd, (srcpFx & 0x08000000)?True:False);
@@ -840,11 +862,21 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             case  1: wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
             Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
           }
+
+          /* 4th send new loco settings after sending all functions */
+          cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setid(cmd, lcID);
+          wLoc.setdir(cmd, srcpDir);
+          wLoc.setfn(cmd, srcpFn);
+          wLoc.setV(cmd, newSpeed);
+          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+          cmd = NULL ;
+          *reqRespCode = (int) 200 ;
         }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No loco with addr %d found", srcpLoco ) ;
-        *reqRespCode = 412 ;
+        *reqRespCode = (int) 412 ;
       }
     }
 
@@ -852,6 +884,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     else if( StrOp.findi( req, "GA" ) ) {
       int idx = 0;
       const char* swID = NULL;
+      int busGA = 0;
       int addrGA = 0;
       int addr = 0;
       int port = 0;
@@ -863,6 +896,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
+        case 2: busGA = atoi(s); break;
         case 3: addrGA = atoi(s); break;
         case 4: gate = atoi(s); break;
         case 5: value = atoi(s); break;
@@ -1046,7 +1080,13 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         int gate3 = wSignal.getgate3(sgProps);
         int gate4 = wSignal.getgate4(sgProps);
 
-        /* TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SG aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req ); */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SG aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
+            addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+
+        /* if cmd != NULL (a sw command was already created) execute that command before creating new command for sg */
+        if ( cmd != NULL ) {
+          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+        }
 
         cmd = NodeOp.inst(wSignal.name(), NULL, ELEMENT_NODE );
         wSignal.setid( cmd, SignalOp.getId(sg) );
@@ -1245,7 +1285,9 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           const char *loProt = wLoc.getprot(loProps);
           int loProtver = wLoc.getprotver(loProps);
 
-          int decStep = (wLoc.getV( loProps ) * 127) / wLoc.getV_max( loProps );
+          int OLDCONST127 = loSpcnt ;
+
+          int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
 
           char srcpProt = loProt[0] ;
 
@@ -1316,8 +1358,9 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           int   loV = wLoc.getV(loProps);
           int   loVmax = wLoc.getV_max(loProps);
           const char *loVmode = wLoc.getV_mode(loProps);
-          int decStep = (wLoc.getV( loProps ) * 127) / wLoc.getV_max( loProps );
           int   loSpcnt = wLoc.getspcnt(loProps);
+          int OLDCONST127 = loSpcnt ;
+          int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
           Boolean loFn = wLoc.isfn( loProps );    
 
           int   loFnCnt = wLoc.getfncnt(loProps);
@@ -1417,7 +1460,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     }
   } /* GET */
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED req/unkown command %s", req );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED req/unkown command %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
     *reqRespCode = (int) 410 ;
   }
 
