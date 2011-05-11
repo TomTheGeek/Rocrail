@@ -776,8 +776,6 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     }
 
     data->dir = ttdir;
-
-    ControlOp.cmd( control, cmd, NULL );
   }
 
 
