@@ -713,8 +713,17 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     *cy = 1;
   }
   else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
-    *cx = wTurntable.issmallsymbol( m_Props ) ? 2:5;
-    *cy = wTurntable.issmallsymbol( m_Props ) ? 2:5;
+
+    int ttdiam = wTurntable.getsymbolsize( m_Props );
+
+    if (ttdiam < 1)
+      ttdiam = 1;
+
+    if (ttdiam > 10)
+      ttdiam = 10;
+
+    *cx = ttdiam;
+    *cy = ttdiam;
   }
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) &&
            StrOp.equals( wSwitch.dcrossing, wSwitch.gettype( m_Props ) ) ) {
@@ -1822,23 +1831,21 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   dc.SetPen( *pen );
 
+  int ttdiam = wTurntable.getsymbolsize( m_Props );
 
+  if (ttdiam < 1)
+    ttdiam = 1;
 
-  double delta = 79 ; //79.0;
+  if (ttdiam > 10)
+    ttdiam = 10;
 
-
-  if(  wTurntable.issmallsymbol( m_Props )) {
-    delta = 29;
-  }
-
+  double delta = (32 * ttdiam)/2;  /* 79.0; for the original one */
 
   dc.DrawCircle( delta, delta, delta );
   pen->SetStyle(wxSOLID);
 
   iONode track = wTurntable.gettrack( m_Props );
   while( track != NULL ) {
-
-
     double degr = 7.5 * wTTTrack.getnr( track );
     double a = (degr*2*PI25DT)/360;
     double xa = cos(a) * delta;
@@ -1868,8 +1875,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   pen->SetWidth(2);
   dc.SetPen(*pen);
 
-  dc.DrawCircle( delta, delta, 36 );
-  dc.DrawCircle( delta, delta, 32 );
+  dc.DrawCircle( delta, delta, 0.45*delta);
+  dc.DrawCircle( delta, delta, 0.40*delta);
   dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
   //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
@@ -2015,8 +2022,8 @@ wxPoint* SymbolRenderer::rotateBridge( double ori, double delta ) {
     if( angle > 360.0 )
       angle = angle -360.0;
     double a = (angle*2*PI25DT)/360;
-    double xa = cos(a) * 32.0;
-    double ya = sin(a) * 32.0;
+    double xa = cos(a) * delta*0.4;
+    double ya = sin(a) * delta*0.4;
     p[i].x = delta + (int)xa;
     p[i].y = delta - (int)ya;
     if( i == 0 ) {
@@ -2039,8 +2046,8 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
     if( angle > 360.0 )
       angle = angle -360.0;
     double a = (angle*2*PI25DT)/360;
-    double xa = cos(a) * 20.0;
-    double ya = sin(a) * 20.0;
+    double xa = cos(a) * delta*0.25;//20.0;
+    double ya = sin(a) * delta*0.25;
     p[i].x = delta + (int)xa;
     p[i].y = delta - (int)ya;
     if( i == 0 ) {
