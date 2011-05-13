@@ -686,7 +686,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 
         /* crossing */
         else if( StrOp.equals( wItem.gettype(item), "crossing" ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d travel: %d", wSwitch.isdir(item), travel );
 
           //rectcrossing
           if( wSwitch.isrectcrossing(item)){
@@ -699,17 +699,11 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               if( (travel == 1) || (travel == 2)) {
                 *x = 1;
                 return travel;
-              } else if ( travel == 3 ) {
-                *x = -1;
-                return travel;
               }
               return travel;
             }
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
-              if( (travel == 0) ) {
-                *y = -1;
-                return travel;
-              } else if ( (travel == 2) || (travel == 3) ) {
+              if ( (travel == 2) || (travel == 3) ) {
                 *y = 1;
                 return travel;
               }
@@ -717,10 +711,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
             }
           } else if( wSwitch.isdir(item) ) { // right
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
-              if( (travel == 1) ) {
-                *x = -1;
-                return travel;
-              } else if ( (travel == 3) || (travel == 2) ) {
+              if ( (travel == 3) || (travel == 2) ) {
                 *x = 1;
                 return travel;
               }
@@ -729,9 +720,6 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
             else if( StrOp.equals( itemori, "north" ) || StrOp.equals( itemori, "south" )) {
               if( (travel == 0) || (travel == 3) ) {
                 *y = 1;
-                return travel;
-              } else if ( travel == 2 ) {
-                *y = -1;
                 return travel;
               }
               return travel;
