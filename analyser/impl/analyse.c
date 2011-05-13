@@ -688,7 +688,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         else if( StrOp.equals( wItem.gettype(item), "crossing" ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d travel: %d", wSwitch.isdir(item), travel );
 
-          //rectcrossing
+          /* rectcrossing */
           if( wSwitch.isrectcrossing(item)){
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " rectcrossing");
             return travel;
@@ -1963,8 +1963,9 @@ static void __analyseList(iOAnalyse inst) {
 
         }
 
+
         const char * prevrouteids = wItem.getrouteids(tracknode);
-        if( prevrouteids != NULL) {
+        if( prevrouteids != NULL ) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           // check if id is all ready in the list
           Boolean isInList = False;
@@ -1975,17 +1976,16 @@ static void __analyseList(iOAnalyse inst) {
             }
           }
 
-          if( !isInList && doIt) {
-
+          if( !isInList ) {
               if( StrOp.len(prevrouteids)>0 ) {
                 prevrouteids = StrOp.cat( (char*)prevrouteids, ",");
               }
-
               char* newval = StrOp.cat( (char*)prevrouteids, wRoute.getid( newRoute) );
-
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
           }
+        } else { // empty attribute
+          wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
         }
 
         if( cleanrun) {
