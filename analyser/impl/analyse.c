@@ -686,10 +686,15 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 
         /* crossing */
         else if( StrOp.equals( wItem.gettype(item), "crossing" ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d", wSwitch.isdir(item) );
+
+          //rectcrossing
+          if( wSwitch.isrectcrossing(item)){
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " rectcrossing");
+            return travel;
+          }
 
           if( !wSwitch.isdir(item)  ) { // left
-
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
               if( (travel == 1) || (travel == 2)) {
                 *x = 1;
