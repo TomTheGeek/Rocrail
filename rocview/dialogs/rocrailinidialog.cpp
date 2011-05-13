@@ -1241,7 +1241,7 @@ void RocrailIniDialog::CreateControls()
     itemFlexGridSizer93->Add(m_labSyncRouteTimeout, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_SyncRouteTimeout = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("2500"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 100, 10000, 2500 );
-    itemFlexGridSizer93->Add(m_SyncRouteTimeout, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer93->Add(m_SyncRouteTimeout, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxStaticLine* itemStaticLine124 = new wxStaticLine( m_AtomatPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
     itemBoxSizer92->Add(itemStaticLine124, 0, wxGROW|wxALL, 5);

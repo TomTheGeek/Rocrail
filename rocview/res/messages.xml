@@ -17307,7 +17307,7 @@
   <Msg id="compress">
     <en txt="Compress"/>
   </Msg>
-  <Msg id="synroutes">
+  <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
   </Msg>
   <Msg id="syncroutetimeout">
