@@ -297,6 +297,8 @@ public:
     wxSpinCtrl* m_LocoStartGap;
     wxStaticText* m_labBlockInitPause;
     wxSpinCtrl* m_BlockInitPause;
+    wxStaticText* m_labSyncRouteTimeout;
+    wxSpinCtrl* m_SyncRouteTimeout;
     wxCheckBox* m_Check2In;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;
@@ -313,6 +315,7 @@ public:
     wxCheckBox* m_ZeroThrottleID;
     wxCheckBox* m_UseBlockSide;
     wxCheckBox* m_StopNoneCommuter;
+    wxCheckBox* m_SyncRoutes;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

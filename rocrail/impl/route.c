@@ -59,6 +59,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 
 static int instCnt = 0;
+static iOMutex __routeSem = NULL;
 
 /*
  ***** OBase functions.
@@ -241,7 +242,7 @@ static void __checkAction( iORoute inst, const char* state ) {
 /*
  ***** _Public functions.
  */
-static Boolean _go( iORoute inst ) {
+static Boolean __syncGo( iORoute inst ) {
   iORouteData o = Data(inst);
   iOModel model = AppOp.getModel(  );
   iONode sw = wRoute.getswcmd( o->props );
@@ -385,6 +386,31 @@ static Boolean _go( iORoute inst ) {
 
   return True;
 }
+
+
+static Boolean _go( iORoute inst ) {
+  Boolean ok = False;
+  if( __routeSem == NULL ) {
+    __routeSem = MutexOp.inst(NULL, True);
+  }
+
+  if( wCtrl.issyncroutes( wRocRail.getctrl(AppOp.getIni())) ) {
+    if( MutexOp.trywait( __routeSem, wCtrl.getsyncroutetimeout( wRocRail.getctrl(AppOp.getIni())) ) ) {
+      ok = __syncGo(inst);
+      MutexOp.post( __routeSem );
+    }
+    else {
+      ok = __syncGo(inst);
+    }
+  }
+  else {
+    ok = __syncGo(inst);
+  }
+
+  return ok;
+}
+
+
 
 static Boolean _cmd( iORoute inst, iONode nodeA ) {
   iORouteData o = Data(inst);

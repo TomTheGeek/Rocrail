@@ -567,6 +567,8 @@
       <var name="allowzerothrottleid" vt="bool" defval="false" remark="Allow broadcasting event coming from zero throttle IDs."/>
       <var name="useblockside" vt="bool" defval="false" remark="Use the defined block sides in the routes to evaluate the running direction."/>
       <var name="stopnonecommuter" vt="bool" defval="false" remark="Stop auto mode for none commuter trains in terminal stations."/>
+      <var name="syncroutes" vt="bool" defval="false" remark="Synchronize routes."/>
+      <var name="syncroutetimeout" vt="int" defval="2500" remark="Timeout in ms for synchronizing routes."/>
     </ctrl>
   </rocrail>
 
