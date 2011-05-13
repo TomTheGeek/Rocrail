@@ -576,9 +576,9 @@
     <zh_TW txt="另存新檔"/>
     <fi txt="Tallenna nimellä"/>
     <id txt="Simpan Sebagai"/>
-    <en_AU txt="Save As"/>
     <en_CA txt="Save As"/>
     <en_GB txt="Save As"/>
+    <en_AU txt="Save As"/>
     <ja txt="別名で保存"/>
   </Msg>
   <Msg id="shutdown" key="Ctrl-D">
@@ -17306,5 +17306,11 @@
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
+  </Msg>
+  <Msg id="synroutes">
+    <en txt="Synchronize routes"/>
+  </Msg>
+  <Msg id="syncroutetimeout">
+    <en txt="Route synchronizer timeout"/>
   </Msg>
 </Messages>
