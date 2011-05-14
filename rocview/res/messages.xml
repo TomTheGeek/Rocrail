@@ -17313,4 +17313,7 @@
   <Msg id="syncroutetimeout">
     <en txt="Route synchronizer timeout"/>
   </Msg>
+  <Msg id="startupschedule">
+    <en txt="Startup schedule"/>
+  </Msg>
 </Messages>

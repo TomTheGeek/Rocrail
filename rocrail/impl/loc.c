@@ -1177,6 +1177,7 @@ static void __runner( void* threadinst ) {
   Boolean cnfgsend = False;
   Boolean loccnfg = wCtrl.isloccnfg( AppOp.getIniNode( wCtrl.name() ) );
 
+  ThreadOp.sleep(500);
   ThreadOp.setDescription( th, wLoc.getdesc( data->props ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Runner for \"%s\" started.", LocOp.getId( loc ) );
@@ -1185,6 +1186,11 @@ static void __runner( void* threadinst ) {
   data->speedstep = wLoc.getV_step( data->props );
 
   data->runtime = wLoc.getruntime( data->props );
+
+  if( wLoc.getstartupscid(data->props) != NULL && StrOp.len(wLoc.getstartupscid(data->props)) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "startup schedule: %s", wLoc.getstartupscid(data->props) );
+    LocOp.useSchedule( loc, wLoc.getstartupscid(data->props) );
+  }
 
   do {
     iOMsg msg = (iOMsg)ThreadOp.getPost( th );

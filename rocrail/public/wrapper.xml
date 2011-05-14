@@ -1854,6 +1854,7 @@
         <const name="shortid" vt="string" val="shortid" remark="Send the short ID to the command station."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
         <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>
+        <var name="startupscid" vt="string" defval="NULL" range="*" remark="Startup schedule ID."/>
         <var name="usescheduletime" vt="bool" defval="False" remark="Use departure time in schedules."/>
         <var name="usemanualroutes" vt="bool" defval="False" remark="Use manual set routes only."/>
         <var name="manual" vt="bool" defval="false" remark="Half auto mode flag."/>
