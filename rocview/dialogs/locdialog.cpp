@@ -221,6 +221,14 @@ static int __sortID(obj* _a, obj* _b)
     return strcmp( idA, idB );
 }
 
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
 
 void LocDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
@@ -345,7 +353,7 @@ void LocDialog::initLabels() {
       }
     }
 
-    ListOp.sort(list, &__sortID);
+    ListOp.sort(list, &__sortStr);
     int cnt = ListOp.size( list );
     for( int i = 0; i < cnt; i++ ) {
       const char* id = (const char*)ListOp.get( list, i );
