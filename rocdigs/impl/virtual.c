@@ -339,36 +339,45 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
-      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-      wProgram.setcv( rsp, cv );
-      wProgram.setvalue( rsp, data->cvval[cv] );
-      wProgram.setcmd( rsp, wProgram.datarsp );
+      if( cv < 1024 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcv( rsp, cv );
+        wProgram.setvalue( rsp, data->cvval[cv] );
+        wProgram.setcmd( rsp, wProgram.datarsp );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "out of range CV%d...", cv );
+      }
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       int cv = wProgram.getcv( node );
-      int value = wProgram.getvalue( node );
-      int decaddr = wProgram.getdecaddr( node );
-      data->cvval[cv] = value;
+      if( cv < 1024 ) {
+        int value = wProgram.getvalue( node );
+        int decaddr = wProgram.getdecaddr( node );
+        data->cvval[cv] = value;
 
-      // POM ?
-      if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
+        // POM ?
+        if( wProgram.ispom(node) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
 
-        if ( cv == 0 )
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of adress!");
+          if ( cv == 0 )
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM does not allow writing of adress!");
 
-      } else {
+        } else {
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
-        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-        wProgram.setcv( rsp, cv );
-        wProgram.setvalue( rsp, value );
-        wProgram.setcmd( rsp, wProgram.datarsp );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
+          rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+          wProgram.setcv( rsp, cv );
+          wProgram.setvalue( rsp, value );
+          wProgram.setcmd( rsp, wProgram.datarsp );
 
 
+        }
       }
-
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "out of range CV%d...", cv );
+      }
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT ON");
