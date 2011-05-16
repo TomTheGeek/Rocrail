@@ -339,13 +339,16 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
 
-    int reqid = 0x10; /* default 14 speed steps */
+    int reqid  = 0x10; /* default 14 speed steps */
+    int modsel = 0x00;
     switch( spcnt ) {
     case 27:
-      reqid = 0x11;
+      reqid  = 0x11;
+      modsel = 0x01;
       break;
     case 28:
-      reqid = 0x12;
+      reqid  = 0x12;
+      modsel = 0x02;
       break;
     case 127:
     case 128:
@@ -421,7 +424,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
 
-    if( (data->lcfn[addr] & 0x10) != (fn?0x10:0) ) {
+    if( !data->v2 && (data->lcfn[addr] & 0x10) != (fn?0x10:0) ) {
       byte* outa = allocMem(32);
       outa[0] = 0xE4;
       outa[1] = 0x20;
@@ -441,11 +444,24 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
 
     byte* outb = allocMem(32);
-    outb[0] = 0xE4;
-    outb[1] = reqid;
-    __setLocAddr( addr, outb+2 );
-    outb[4] = dir ? 0x80:0x00;
-    outb[4] |= lenzspeed;
+    if( data->v2 ) {
+      outb[0] = 0xB4;
+      outb[1] = addr;
+      outb[2] = dir ? 0x40:0x00; /* direction, lights and speed byte */
+      outb[2] |= fn ? 0x20:0x00;
+      outb[2] |= lenzspeed >> 1;
+      outb[2] |= lenzspeed & 0x01 ? 0x10:0x00;
+
+      outb[3] = 0; /* function 1-4 */
+      outb[4] = modsel; /* step selection */
+    }
+    else {
+      outb[0] = 0xE4;
+      outb[1] = reqid;
+      __setLocAddr( addr, outb+2 );
+      outb[4] = dir ? 0x80:0x00;
+      outb[4] |= lenzspeed;
+    }
     ThreadOp.post( data->transactor, (obj)outb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d direction=%s", addr, speed, (dir?"fwd":"rev") );
@@ -498,59 +514,64 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
 
-    if( group == 0 || group == 1 ) {
-      byte* outa = allocMem(32);
-      outa[0] = 0xE4;
-      outa[1] = 0x20;
-      __setLocAddr( addr, outa+2 );
-      outa[4] = functions1;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
-      ThreadOp.post( data->transactor, (obj)outa );
-      /*ThreadOp.sleep(50);*/
+    if( data->v2 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "functions are not implemented for v2" );
     }
+    else {
+      if( group == 0 || group == 1 ) {
+        byte* outa = allocMem(32);
+        outa[0] = 0xE4;
+        outa[1] = 0x20;
+        __setLocAddr( addr, outa+2 );
+        outa[4] = functions1;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
+        ThreadOp.post( data->transactor, (obj)outa );
+        /*ThreadOp.sleep(50);*/
+      }
 
-    if( group == 0 || group == 2 ) {
-      byte* outb = allocMem(32);
-      outb[0] = 0xE4;
-      outb[1] = 0x21;
-      __setLocAddr( addr, outb+2 );
-      outb[4] = functions2;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
-      ThreadOp.post( data->transactor, (obj)outb );
-      /*ThreadOp.sleep(50);*/
-    }
+      if( group == 0 || group == 2 ) {
+        byte* outb = allocMem(32);
+        outb[0] = 0xE4;
+        outb[1] = 0x21;
+        __setLocAddr( addr, outb+2 );
+        outb[4] = functions2;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
+        ThreadOp.post( data->transactor, (obj)outb );
+        /*ThreadOp.sleep(50);*/
+      }
 
 
-    if( group == 0 || group == 3 ) {
-      byte* outc = allocMem(32);
-      outc[0] = 0xE4;
-      outc[1] = 0x22;
-      __setLocAddr( addr, outc+2 );
-      outc[4] = functions3;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
-      ThreadOp.post( data->transactor, (obj)outc );
-      /*ThreadOp.sleep(50);*/
-    }
+      if( group == 0 || group == 3 ) {
+        byte* outc = allocMem(32);
+        outc[0] = 0xE4;
+        outc[1] = 0x22;
+        __setLocAddr( addr, outc+2 );
+        outc[4] = functions3;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
+        ThreadOp.post( data->transactor, (obj)outc );
+        /*ThreadOp.sleep(50);*/
+      }
 
-    if( group == 0 || group == 4 || group == 5 ) {
-      byte* outc = allocMem(32);
-      outc[0] = 0xE4;
-      outc[1] = 0x23;
-      __setLocAddr( addr, outc+2 );
-      outc[4] = functions4;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
-      ThreadOp.post( data->transactor, (obj)outc );
-      /*ThreadOp.sleep(50);*/
-    }
+      if( group == 0 || group == 4 || group == 5 ) {
+        byte* outc = allocMem(32);
+        outc[0] = 0xE4;
+        outc[1] = 0x23;
+        __setLocAddr( addr, outc+2 );
+        outc[4] = functions4;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
+        ThreadOp.post( data->transactor, (obj)outc );
+        /*ThreadOp.sleep(50);*/
+      }
 
-    if( group == 0 || group == 6 || group == 7 ) {
-      byte* outc = allocMem(32);
-      outc[0] = 0xE4;
-      outc[1] = 0x28;
-      __setLocAddr( addr, outc+2 );
-      outc[4] = functions5;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 5" );
-      ThreadOp.post( data->transactor, (obj)outc );
+      if( group == 0 || group == 6 || group == 7 ) {
+        byte* outc = allocMem(32);
+        outc[0] = 0xE4;
+        outc[1] = 0x28;
+        __setLocAddr( addr, outc+2 );
+        outc[4] = functions5;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 5" );
+        ThreadOp.post( data->transactor, (obj)outc );
+      }
     }
 
     /* save the function1 byte to use for setting the lights function... */
@@ -1272,6 +1293,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->fbmod         = wDigInt.getfbmod( ini );
   data->readfb        = wDigInt.isreadfb( ini );
   data->ignoreBusy    = wDigInt.isignorebusy( ini );
+  data->v2            = wDigInt.getprotver( ini ) == 2;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XpressNet %d.%d.%d", vmajor, vminor, patch );
@@ -1284,6 +1306,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps             = %d", wDigInt.getbps( ini ) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout         = %d", wDigInt.gettimeout( ini ) );
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "version         = %d", wDigInt.getprotver( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib          = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime      = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor offset   = %d", data->fboffset );

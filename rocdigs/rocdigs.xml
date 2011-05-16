@@ -339,6 +339,7 @@
       <var name="socket" vt="iOSocket"/>
       <var name="serialmux" vt="iOMutex"/>
       <var name="fboffset" vt="int"/>
+      <var name="v2" vt="Boolean"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="initializer" vt="iOThread"/>

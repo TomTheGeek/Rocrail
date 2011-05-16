@@ -375,6 +375,7 @@
       <var name="identdelay" vt="int" defval="2500" unit="ms" remark="Delay before sending a low sensor state for ident codes."/>
       <var name="fastclock" vt="bool" defval="false" remark="send fast clock commands to the connected command station"/>
       <var name="ignorebusy" vt="bool" defval="false" remark="ignore the busy message from command station"/>
+      <var name="protver" vt="int" defval="0" remark="Protocol version. Default implementation is 0."/>
 
 
       <!-- HSI88 -->
