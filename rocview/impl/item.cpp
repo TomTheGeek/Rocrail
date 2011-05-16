@@ -550,6 +550,8 @@ void Symbol::routeEvent( const char* id, bool locked ) {
   if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.decoupler, wSwitch.gettype(m_Props) ) ||
+      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.crossing, wSwitch.gettype(m_Props) ) ||
+      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(m_Props) ) ||
       StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
     if( wItem.getrouteids( m_Props ) != NULL && StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
@@ -612,10 +614,13 @@ void Symbol::OnPaint(wxPaintEvent& event)
     bool actroute = false;
     int status = 0;
 
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
     if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.decoupler, wSwitch.gettype(m_Props) ) ||
+        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.crossing, wSwitch.gettype(m_Props) ) ||
+        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(m_Props) ) ||
         StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ))
     {
       iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
@@ -624,6 +629,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
       while( routeid != NULL ) {
         if( m_PlanPanel->isRouteLocked(routeid ) ) {
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "actroute for %s...", wItem.getid(m_Props));
           actroute = true;
           break;
         }

@@ -78,10 +78,12 @@ namespace tracktype {
 }
 
 namespace switchtype {
-  static const char* ccrossing      = "ccrossing.svg";
-  static const char* ccrossing_occ  = "ccrossing-occ.svg";
+  static const char* ccrossing       = "ccrossing.svg";
+  static const char* ccrossing_occ   = "ccrossing-occ.svg";
+  static const char* ccrossing_route = "ccrossing-route.svg";
   static const char* crossing       = "crossing.svg";
   static const char* crossing_occ   = "crossing-occ.svg";
+  static const char* crossing_route = "crossing-route.svg";
   static const char* crossing_t     = "crossing-t.svg";
   static const char* crossing_t_occ = "crossing-t-occ.svg";
   static const char* crossingleft0m = "crossingleft0m.svg";

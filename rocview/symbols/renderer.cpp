@@ -204,6 +204,7 @@ void SymbolRenderer::initSym() {
           if( wSwitch.isrectcrossing(m_Props) && wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing );
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_occ );
+            m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_route );
           }
           else if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m : switchtype::crossingright0m );
@@ -229,6 +230,7 @@ void SymbolRenderer::initSym() {
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::ccrossing );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::ccrossing_occ );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::ccrossing_route );
         }
       }
     }
@@ -881,7 +883,7 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, con
 }
 
 
-void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean hasUnit = wSwitch.getaddr1( m_Props ) > 0 ? True:False;
 
@@ -889,20 +891,23 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool occupied, const char* or
     hasUnit = True;
 
   // SVG Symbol:
-  if( m_SvgSym1 != NULL && m_SvgSym2 != NULL ) {
-    drawSvgSym(dc, occupied? m_SvgSym2:m_SvgSym1, ori);
-  }
-  else if( m_SvgSym1 != NULL ) {
+  if( occupied && m_SvgSym2 != NULL )
+    drawSvgSym(dc, m_SvgSym2, ori);
+  else if( actroute && m_SvgSym3 != NULL )
+    drawSvgSym(dc, m_SvgSym3, ori);
+  else if( m_SvgSym1 != NULL )
     drawSvgSym(dc, m_SvgSym1, ori);
-  }
 }
 
 
 /**
  * Crossing Switch object
  */
-void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
+
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Crossing %s occ=%d route=%d",
+      wSwitch.getid( m_Props ), occupied, actroute );
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
@@ -914,6 +919,8 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, const char* ori
   else if( m_SvgSym1!=NULL ) {
     if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
+    else if( actroute && m_SvgSym8 != NULL )
+      drawSvgSym(dc, m_SvgSym8, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
@@ -1206,13 +1213,13 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
       break;
 
     case switchtype::i_ccrossing:
-      drawCCrossing( dc, occupied, ori );
+      drawCCrossing( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_crossing:
     case switchtype::i_crossingleft:
     case switchtype::i_crossingright:
-      drawCrossing( dc, occupied, ori );
+      drawCrossing( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_dcrossingleft:

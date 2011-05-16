@@ -99,8 +99,8 @@ public:
   void drawTrack( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawTurnout( wxPaintDC& dc, bool occupied, const char* ori );
-  void drawCrossing( wxPaintDC& dc, bool occupied, const char* ori );
-  void drawCCrossing( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawCCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori );
   void drawThreeway( wxPaintDC& dc, bool occupied, const char* ori );
   void drawSignal( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );

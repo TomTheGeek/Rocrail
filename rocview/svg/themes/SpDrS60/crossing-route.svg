@@ -1,0 +1,11 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 12,0 L 12,31 L 19,31 L 19,0 z " />
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 14,8 L 14,23 L 17,23 L 17,8 z " />
+    <circle cx="15" cy="16" r="3" fill="yellow" stroke="yellow"/>
+  </g>
+</svg>
