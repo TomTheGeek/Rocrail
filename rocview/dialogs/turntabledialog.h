@@ -192,6 +192,8 @@ public:
     wxTextCtrl* m_y;
     wxStaticText* m_LabelZ;
     wxTextCtrl* m_z;
+    wxStaticText* m_labSize;
+    wxSpinCtrl* m_Size;
     wxPanel* m_Interface;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_IID;
