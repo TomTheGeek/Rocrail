@@ -190,12 +190,14 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
   wSwitch.setport1( swcmd, wSignal.getport1( o->props ) );
   wSwitch.setcmd( swcmd, invert?wSwitch.straight:wSwitch.turnout );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr2( o->props ) > 0 || wSignal.getport2( o->props ) > 0 ) {
     if( wSignal.getaddr2( o->props ) > 0 )
       wSwitch.setaddr1( swcmd, wSignal.getaddr2( o->props ) );
     wSwitch.setport1( swcmd, wSignal.getport2( o->props ) );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
   }
 
   if( wSignal.getaddr3( o->props ) > 0 || wSignal.getport3( o->props ) > 0 ) {
@@ -203,6 +205,7 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
       wSwitch.setaddr1( swcmd, wSignal.getaddr3( o->props ) );
     wSwitch.setport1( swcmd, wSignal.getport3( o->props ) );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+	  ThreadOp.sleep(wSignal.getcmdtime( o->props ));
   }
 
   if( wSignal.getaddr4( o->props ) > 0 || wSignal.getport4( o->props ) > 0 ) {
@@ -210,6 +213,7 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
       wSwitch.setaddr1( swcmd, wSignal.getaddr4( o->props ) );
     wSwitch.setport1( swcmd, wSignal.getport4( o->props ) );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
+  	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
   }
 
   wSwitch.setcmd( swcmd, invert?wSwitch.turnout:wSwitch.straight );
@@ -336,6 +340,7 @@ static Boolean __processPatternCmd( iOSignal inst, const char* state ) {
           "Signal [%s] could not be set!", wSignal.getid( o->props ) );
       return False;
     }
+  	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
   }
 
   if( addr2 != 0 || port2 != 0 ) {
@@ -382,6 +387,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr2( o->props ) > 0 )
     wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
@@ -390,6 +396,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport2( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr3( o->props ) > 0 )
     wOutput.setaddr( cmd, wSignal.getaddr3( o->props ) );
@@ -398,6 +405,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport3( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate3( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
 
   if( wSignal.getaddr4( o->props ) > 0 )
@@ -407,6 +415,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport4( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate4( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
 
   wOutput.setcmd( cmd, wOutput.on );
@@ -475,6 +484,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr2( o->props ) > 0 )
     wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
@@ -483,6 +493,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport2( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr3( o->props ) > 0 )
     wOutput.setaddr( cmd, wSignal.getaddr3( o->props ) );
@@ -491,6 +502,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport3( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate3( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
 
   wOutput.setcmd( cmd, wOutput.on );
@@ -551,6 +563,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   if( wSignal.getaddr2( o->props ) > 0 )
     wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
@@ -559,6 +572,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setport( cmd, wSignal.getport2( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
   wOutput.setcmd( cmd, wOutput.on );
 

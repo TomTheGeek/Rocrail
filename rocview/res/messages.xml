@@ -17316,4 +17316,7 @@
   <Msg id="startupschedule">
     <en txt="Startup schedule"/>
   </Msg>
+  <Msg id="cmdtime">
+    <en txt="Command time"/>
+  </Msg>
 </Messages>

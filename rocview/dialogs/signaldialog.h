@@ -30,8 +30,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/statline.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "basedlg.h"
@@ -251,6 +251,8 @@ public:
     wxCheckBox* m_Invert;
     wxCheckBox* m_PairGates;
     wxCheckBox* m_AsSwitch;
+    wxStaticText* m_labCmdTime;
+    wxSpinCtrl* m_CmdTime;
     wxRadioBox* m_SignalControl;
     wxPanel* m_PropsPanel;
     wxRadioBox* m_Type;

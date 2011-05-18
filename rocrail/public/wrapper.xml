@@ -1139,6 +1139,7 @@
         <var name="inv" vt="bool" defval="false" remark="Signal inverted. (Software wiring correction)"/>
         <var name="pair" vt="bool" defval="false" remark="both gates are used for on-off"/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command incase of 2 aspects"/>
+        <var name="cmdtime" vt="int" defval="0" range="0-*" remark="Time in ms between commands."/>
 
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
