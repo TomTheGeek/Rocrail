@@ -15,12 +15,12 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/textctrl.h>
+#include <wx/spinctrl.h>
 #include <wx/sizer.h>
 #include <wx/radiobox.h>
 #include <wx/checkbox.h>
 #include <wx/statbox.h>
 #include <wx/statline.h>
-#include <wx/spinctrl.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -37,6 +37,8 @@ class rocnetdlggen : public wxDialog
 	protected:
 		wxStaticText* m_labIID;
 		wxTextCtrl* m_IID;
+		wxStaticText* m_labRocNetID;
+		wxSpinCtrl* m_RNID;
 		wxRadioBox* m_Sublib;
 		wxCheckBox* m_CRC;
 		wxStaticLine* m_staticline1;

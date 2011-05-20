@@ -35,6 +35,13 @@ rocnetdlggen::rocnetdlggen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_IID = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_IID, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_labRocNetID = new wxStaticText( this, wxID_ANY, wxT("Rocnet ID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labRocNetID->Wrap( -1 );
+	fgSizer4->Add( m_labRocNetID, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_RNID = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 0 );
+	fgSizer4->Add( m_RNID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	bSizer8->Add( fgSizer4, 0, wxEXPAND, 5 );
 	
 	wxString m_SublibChoices[] = { wxT("UDP"), wxT("Serial") };

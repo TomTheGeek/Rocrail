@@ -49,6 +49,7 @@
 #include "rocview/dialogs/controllers/lenzdlg.h"
 #include "rocview/dialogs/controllers/dcc232dlg.h"
 #include "rocview/dialogs/controllers/bidibdlg.h"
+#include "rocview/dialogs/controllers/rocnetdlg.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -1544,6 +1545,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new DCC232Dlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.bidib, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new BidibDlg(this,m_Controller);
+  else if( StrOp.equals( wDigInt.rocnet, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new RocNetDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts);
   else
