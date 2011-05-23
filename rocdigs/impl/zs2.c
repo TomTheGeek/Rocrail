@@ -791,7 +791,7 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
   iOSlot slot = NULL;
 
   StrOp.fmtb(key, "%d_%d", bus, addr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
       "monitor event: bus=%d, addr=%d val=%02X key=%s.", bus, addr, val, key );
   
   if( bus == 2 ) {
