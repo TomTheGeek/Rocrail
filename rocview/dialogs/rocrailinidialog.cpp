@@ -510,6 +510,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.xpressnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimobin, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.zs2, wxConvUTF8 ) );
 
   m_Lib->SetSelection( 0 );
   m_Controller = NULL;

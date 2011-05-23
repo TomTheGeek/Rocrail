@@ -1276,6 +1276,67 @@
   </object>
 
 
+  <object name="ZS2" interface="$../rocint/rocint.xml:DigInt" use="node,trace,serial,thread,mutex,map" include="$rocint/public/digint">
+    <typedef def="enum {WRITE_FLAG=0x80, DATA_MASK=0x7F} __slxheader"/>
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="nr" vt="int"/>
+      <var name="bus" vt="int"/>
+      <var name="addr" vt="int"/>
+      <var name="speed" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="sx2" vt="Boolean"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="fn" vt="Boolean"/>
+      <var name="fx1" vt="int"/>
+      <var name="fx2" vt="int"/>
+      <var name="lastcmd" vt="long"/>
+    </struct>
+    <struct name="point" typedef="*iOPoint">
+      <var name="id" vt="char*"/>
+      <var name="bus" vt="int"/>
+      <var name="addr" vt="int"/>
+      <var name="port" vt="int"/>
+      <var name="type" vt="int"/>
+      <var name="lastcmd" vt="long"/>
+    </struct>
+    <data>
+      <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
+      <var name="pointmap" vt="iOMap" remark="key=ID, value=point"/>
+      <var name="fbmap" vt="iOMap" remark="key=bus_addr, value=fbbyte"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="lcmux" vt="iOMutex"/>
+      <var name="pointmux" vt="iOMutex"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="device" vt="const char*"/>
+      <var name="bps" vt="serial_bps"/>
+      <var name="timeout" vt="int"/>
+      <var name="swtime" vt="int"/>
+      <var name="iid" vt="const char*"/>
+      <var name="run" vt="Boolean"/>
+      <var name="serialOK" vt="Boolean"/>
+      <var name="initOK" vt="Boolean"/>
+      <var name="activebus" vt="int"/>
+      <var name="sx[3][128]" vt="byte"/>
+      <var name="swstate[3][256]" vt="byte"/>
+      <var name="fbstate[3][256]" vt="byte"/>
+      <var name="fbmodcnt[3]" vt="int"/>
+      <var name="fbmods[3][256]" vt="byte"/>
+      <var name="dummyio" vt="Boolean"/>
+      <var name="sx2slotcnt" vt="int"/>
+    </data>
+  </object>
+
+
 
 
 
