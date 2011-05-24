@@ -32,7 +32,7 @@
     <const name="parse" vt="string" val="-parse" defval="false" remark="Activates parse tracelevel."/>
     <const name="nocom" vt="string" val="-nocom" defval="false" remark="Disable communication."/>
     <const name="console" vt="string" val="-console" defval="false" remark="Enable console commands."/>
-    <const name="port" vt="string" val="-p" defval="62842" range="*" remark="Service port for clients"/>
+    <const name="port" vt="string" val="-p" defval="8051" range="*" remark="Rocrail Client Service."/>
     <const name="initfield" vt="string" val="-f" defval="false" range="*" remark="Activate field initialization: flip all switches twice"/>
     <const name="help" vt="string" val="--help" defval="" range="*" remark="Shows commandline help."/>
     <const name="version" vt="string" val="-version" defval="false" remark="Shows version info and stops rocrail."/>
@@ -103,7 +103,7 @@
     <var name="localbk" vt="string" defval="NULL" range="*" required="true" remark="Local block ID; rrid::bkid"/>
     <var name="remotebk" vt="string" defval="NULL" range="*" required="true" remark="Remote block ID; rrid::bkid"/>
     <var name="host" vt="string" defval="" remark="Server client service."/>
-    <var name="port" vt="int" defval="62842" remark="Server client service."/>
+    <var name="port" vt="int" defval="8051" remark="Rocrail Client Service."/>
     <var name="plan" vt="string" defval="" remark="Plan title."/>
     <const name="rsp_occupied" vt="string" val="occupied"/>
     <const name="rsp_reserved" vt="string" val="reserved"/>
@@ -522,7 +522,7 @@
 
     </digint>
     <tcp remark="Client service port." wrappername="Tcp">
-      <var name="port" vt="int" defval="62842" range="1-65535"/>
+      <var name="port" vt="int" defval="8051" range="1-65535"/>
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
       <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
     </tcp>
