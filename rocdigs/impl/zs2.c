@@ -654,7 +654,7 @@ static Boolean _supportPT( obj inst ) {
 static Boolean __setActiveBus( iOZS2 zs2, int bus ) {
   iOZS2Data data = Data(zs2);
 
-  if( bus < 2 && data->activebus != bus ) {
+  if( bus < 3 && data->activebus != bus ) {
     byte cmd[2];
     cmd[0] = 126;
     cmd[1] = bus;
@@ -662,7 +662,7 @@ static Boolean __setActiveBus( iOZS2 zs2, int bus ) {
 
     data->activebus = bus;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "set active bus to [%d]", bus );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set active bus to sx[%d]", bus );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 2 );
     if( data->dummyio )
       return True;
