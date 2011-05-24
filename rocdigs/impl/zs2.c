@@ -215,13 +215,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
     slot->nr = data->sx2slotcnt;
     data->sx2slotcnt++;
     
-    if( StrOp.equals( wLoc.prot_X, wLoc.getprot(node) ) ) {
-      /* SX2 */
-      longAddr = False;
-      dcc = False;
-      preamble = 4;
-    }
-    else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) && slot->addr < 100 ) {
+    if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) && slot->addr < 100 ) {
       /* DCC short addresses */
       longAddr = False;
       dcc = True;
@@ -242,6 +236,12 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
         preamble = 3;
       else
         preamble = 7;
+    }
+    else {
+      /* SX2 */
+      longAddr = False;
+      dcc = False;
+      preamble = 4;
     }
     
   }
