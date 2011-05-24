@@ -421,7 +421,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoreshunting_2_r_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoreshunting_2_w_occ );
           m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoreshunting_2_r_route );
-          m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoreshunting_2_w_route );
+          m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::semaphoreshunting_2_w_route );
         }
       }
     }
@@ -494,7 +494,7 @@ void SymbolRenderer::initSym() {
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalshunting_2_r_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalshunting_2_w_occ );
           m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalshunting_2_r_route );
-          m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalshunting_2_w_route );
+          m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalshunting_2_w_route );
         }
       }
     }
