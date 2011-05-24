@@ -221,7 +221,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
       dcc = False;
       preamble = 4;
     }
-    else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) ) {
+    else if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) && slot->addr < 100 ) {
       /* DCC short addresses */
       longAddr = False;
       dcc = True;
@@ -232,7 +232,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
       else
         preamble = 5;
     }
-    else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ) {
+    else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) || slot->addr > 100 ) {
       /* DCC long addresses */
       longAddr = True;
       dcc = True;
@@ -274,7 +274,9 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
 		cmd[11] = slot->fx1;
 		cmd[12] = slot->nr * 6 + 5 + WRITE_FLAG;
 		cmd[13] = slot->fx2;
-		TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: create SX2 slot" );
+		TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+		    "create SX2 slot for %s, preamble=%d, addr=%d high%02X:low%02X",
+		    wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
 		ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -348,7 +350,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
       cmd[2] = 127;
       cmd[2] |= WRITE_FLAG;
       cmd[3] = 0x00;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power OFF" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
       ThreadOp.post(data->writer, (obj)cmd);
     }
     if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
@@ -359,7 +361,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
       cmd[2] = 127;
       cmd[2] |= WRITE_FLAG;
       cmd[3] = 0x80;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power ON" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
       ThreadOp.post(data->writer, (obj)cmd);
     }
   }
@@ -389,7 +391,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
       cmd[3] |= pin;
     /* save new state: */
     data->swstate[bus][cmd[2]] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: switch %d", wSwitch.getaddr1( node ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d", wSwitch.getaddr1( node ) );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -415,7 +417,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
       cmd[3] |= pin;
     /* save new state: */
     data->swstate[bus][cmd[2]] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: output %d, %d", wOutput.getaddr( node ), wOutput.getport( node ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d, %d", wOutput.getaddr( node ), wOutput.getport( node ) );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -450,7 +452,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 			cmd[ 1] = 2;
 			cmd[ 2] = slot->nr * 6 + 3 + WRITE_FLAG;
 			cmd[ 3] = speed + (slot->dir ? 0x00:0x80);
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: SX2 loco %d", addr );
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX2 loco %d", addr );
 			ThreadOp.post(data->writer, (obj)cmd);
 		}
 		else {
@@ -463,7 +465,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  cmd[3] |= dir ? 0x00:0x20;
 		  cmd[3] |= fn  ? 0x00:0x40;
 		  cmd[3] |= slot->fn ? 0x80:0x00;
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: loco %d", addr );
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %d", addr );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
 
@@ -561,7 +563,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 				cmd[ 2] = slot->nr * 6 + 5 + WRITE_FLAG;
 				cmd[ 3] = slot->fx2;
 		  }
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: SX2 function %d", addr );
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX2 function %d", addr );
 			ThreadOp.post(data->writer, (obj)cmd);
 		}
 		else {
@@ -579,7 +581,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  slot->fn = f1;
 		  slot->lastcmd = SystemOp.getTick();
 
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: function %d", addr );
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function %d", addr );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
   }
@@ -894,7 +896,7 @@ static void __writer( void* threadinst ) {
   cmd[2] = 125;
   cmd[2] |= WRITE_FLAG;
   cmd[3] = 0x80;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: monitoring ON" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "monitoring ON" );
   ThreadOp.post(th, (obj)cmd);
   
   /* CS on */
@@ -904,7 +906,7 @@ static void __writer( void* threadinst ) {
   cmd[2] = 127;
   cmd[2] |= WRITE_FLAG;
   cmd[3] = 0x80;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command: power ON" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
   ThreadOp.post(th, (obj)cmd);
   
   
