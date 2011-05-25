@@ -2220,7 +2220,7 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
       StrOp.free(rrcall);
       m_bActiveWorkspace = true;
       m_WorkSpace = NULL;
-      Connect( "localhost", 62842, true); // TODO: add const to the wrapper.xml for the defaults.
+      Connect( "localhost", 8051, true); // TODO: add const to the wrapper.xml for the defaults.
 
       iONode workspaces = wGui.getworkspaces(m_Ini);
       if( workspaces == NULL ) {
