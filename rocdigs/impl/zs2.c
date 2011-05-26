@@ -176,6 +176,12 @@ static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
     };
     MutexOp.post(data->lcmux);
   }
+  
+  if( sx2 && slot == NULL ) {
+    /* TODO: create a slot or ignore? */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "undefined slotnr: %d", lcaddr/6 );
+  }
+  
   return slot;
 }
 
@@ -258,6 +264,26 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
       speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
   }
 
+  /*
+		Lokadressen
+		Zur Übertragung der (dezimal) 4-stelligen Lokadresse werden 2
+		Bitgruppen à 7 Bit benutzt um jeweils die Dezimalzahlen von 0 bis
+		99 (eigentlich bis 127) darzustellen. Bei der 2-mal-7-bit Lokadres-
+		se (Bit a13 bis a0) entsprechen die Bits a13 bis a7 der Tausender-
+		und Hunderterstelle, die Bits a6 bis a0 entsprechen den Zehnern
+		und Einern. Sie wird in 2 Bytes geteilt übertragen. Das „High-Byte“
+		beinhaltet die oberen 8 bit a13 bis a6 der Lokadresse, das „Low-
+		Byte“ beinhaltet die unteren 6 bit a5 bis a0 & 2 Lichtbits, von de-
+		nen im Standardfall nur das obere Lichtbit relevant ist.
+  
+		Soll beispielsweise die (dezimale) Adresse 2250 mit (Standard-)
+		Licht an gesendet oder empfangen werden, so haben High- und
+		Low-Byte folgenden Inhalt:
+
+		High-Byte = 00101100 (= 2 x 22 + (50 > 63?)),
+		Low-Byte  = 11001010 (= 4 x 50 + 2 x (Std-Licht an?) + (Zusatzlichan?).
+  */
+  
   if(slot->sx2 ) { 
 		byte* cmd = allocMem(32);
 		cmd[ 0] = 2;
@@ -265,9 +291,9 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
 		cmd[ 2] = slot->nr * 6 + 0 + WRITE_FLAG;
 		cmd[ 3] = preamble;
 		cmd[ 4] = slot->nr * 6 + 1 + WRITE_FLAG;
-		cmd[ 5] = 2 * (slot->addr/100) + ((slot->addr%100) > 63 ? 1:0);
+		cmd[ 5] = (2 * (slot->addr/100)) + ((slot->addr%100) > 63 ? 1:0);
 		cmd[ 6] = slot->nr * 6 + 2 + WRITE_FLAG;
-		cmd[ 7] = 4 * (slot->addr%100) + (slot->lights ? 2:0) + slot->fn ? 1:0;
+		cmd[ 7] = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
 		cmd[ 8] = slot->nr * 6 + 3 + WRITE_FLAG;
 		cmd[ 9] = speed + (slot->dir ? 0x00:0x80);
 		cmd[10] = slot->nr * 6 + 4 + WRITE_FLAG;
@@ -847,6 +873,27 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
     }
   }
   
+  else if( data->sx[bus][addr] != val ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %d:%d=%d", bus, addr, val );
+    int i = 0;
+    for( i = 0; i < 8; i++ ) {
+      int oldval = data->sx[bus][addr] & (0x01 << i);
+      int newval = val & (0x01 << i);
+      if( oldval != newval ) {
+        iOPoint point = __getPointByAddr( data, bus, addr, i+1 );
+        if( point != NULL  && ( SystemOp.getTick() - point->lastcmd > 100 )   ) {
+          iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wSwitch.setiid( nodeC, data->iid );
+          wSwitch.setid( nodeC, point->id );
+          wSwitch.setstate( nodeC, newval?"straight":"turnout" );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %s", point->id );
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+    }
+  }
+  
   
 }
 
@@ -869,6 +916,7 @@ static void __reader( void* threadinst ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 3 );
         
         __evaluateSX(zs2, bus, addr, val);
+        /* save new value */
         data->sx[bus&0x03][addr] = val;
        
       }  
@@ -953,6 +1001,9 @@ static struct OZS2* _inst( const iONode ini ,const iOTrace trc ) {
   iOZS2 __ZS2 = allocMem( sizeof( struct OZS2 ) );
   iOZS2Data data = allocMem( sizeof( struct OZS2Data ) );
   MemOp.basecpy( __ZS2, &ZS2Op, 0, sizeof( struct OZS2 ), data );
+
+  TraceOp.set( trc );
+  SystemOp.inst();
 
   /* Initialize data->xxx members... */
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
