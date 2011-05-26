@@ -638,7 +638,20 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOZS2Data data = Data(inst);
-  return;
+  /* TODO: bus */
+  data->run = False;
+  if( poweroff ) {
+    byte* cmd = allocMem(32);
+    cmd[0] = 0;
+    cmd[1] = 2;
+    cmd[2] = 127;
+    cmd[2] |= WRITE_FLAG;
+    cmd[3] = 0x00;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  ThreadOp.sleep(100);
 }
 
 
