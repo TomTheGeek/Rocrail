@@ -1166,17 +1166,20 @@ void CV::CreateControls() {
   m_saveFile = new wxButton( m_ItemPanel, -1, _("Export"), wxDefaultPosition, wxSize(60, 26), 0 );
   m_LocBox->Add(m_saveFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
+  m_OptionBox = new wxBoxSizer(wxHORIZONTAL);
+  m_PanelMainBox->Add(m_OptionBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+
   m_POM = new wxCheckBox( m_ItemPanel, -1, _T("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
   m_POM->SetToolTip(_T("Program On the Main") );
-  m_LocBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+  m_OptionBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_Acc = new wxCheckBox( m_ItemPanel, -1, _T("Acc"), wxDefaultPosition, wxDefaultSize, 0 );
   m_Acc->SetToolTip(_T("Accessory") );
-  m_LocBox->Add(m_Acc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+  m_OptionBox->Add(m_Acc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_Direct = new wxCheckBox( m_ItemPanel, -1, _T("Direct"), wxDefaultPosition, wxDefaultSize, 0 );
   m_Direct->SetToolTip(_T("Direct programming mode") );
-  m_LocBox->Add(m_Direct, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+  m_OptionBox->Add(m_Direct, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_TableBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_TableBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
