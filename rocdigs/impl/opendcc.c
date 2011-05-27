@@ -307,6 +307,96 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     NodeOp.base.del(cmd);
   }
 
+
+  /* Program command. */
+  else if( wProgram.ispom( cmd ) && wProgram.isacc( cmd ) && wProgram.getcmd( cmd ) == wProgram.set )
+  {
+    iONode ptcmd = NULL;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM set for ACC %d %d=%d",
+        wProgram.getaddr(cmd), wProgram.getcv(cmd), wProgram.getvalue(cmd) );
+
+    if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+      /*
+      XDCC_PA (0xDF)- Länge = 1+5 Bytes
+      0: 0xDF XDCC_PA (= Accessory-Programmieren auf dem Hauptgleis = POM)
+      1: LSB der Zubehöradresse
+      2: MSB der Zubehöradresse (1-510)
+      3: Low Byte der CV-Adresse, welche zu schreiben ist.
+      4: High Byte der CV-Adresse, welche zu schreiben ist. (1..1024)
+      5: Wert
+      Antwort: 0 = Ok, accepted
+      0x80 = busy, command ignored
+      */
+      ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* byteStr = NULL;
+      byte outBytes[7];
+      outBytes[0] = (byte)'x';
+      outBytes[1] = 0xDF;
+      outBytes[2] = wProgram.getaddr(cmd) % 256;
+      outBytes[3] = wProgram.getaddr(cmd) / 256;
+      outBytes[4] = wProgram.getcv(cmd) % 256;
+      outBytes[5] = wProgram.getcv(cmd) / 256;
+      outBytes[6] = wProgram.getvalue(cmd) / 256;
+
+      byteStr = StrOp.byteToStr( outBytes, 7 );
+      wBinCmd.setoutlen( ptcmd, 7 );
+      wBinCmd.setinlen( ptcmd, 1 );
+      wBinCmd.setout( ptcmd, byteStr );
+      StrOp.free( byteStr );
+    }
+    else {
+      /* lenz sublib
+         0xE6 0x30 AddrH AddrL 0xF0+C CV DAT [XOR]
+         Operations Mode Programming write request for accessory decoder;
+         CV is given as 0..1023; C are the two upper bits.
+         Address is coded like with locomotives: if value is >= 100, then the high part is OR'ed with 0xC0.
+       */
+      ptcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+      char* byteStr = NULL;
+      byte outBytes[8];
+      outBytes[0] = 0xE6;
+      outBytes[1] = 0x30;
+      outBytes[2] = wProgram.getaddr(cmd) / 256;
+      outBytes[3] = wProgram.getaddr(cmd) % 256;
+      outBytes[4] = wProgram.getcv(cmd) / 256;
+      outBytes[5] = wProgram.getcv(cmd) % 256;
+      outBytes[6] = wProgram.getvalue(cmd);
+
+      byte bXor = 0;
+      int i = 0;
+      for( i = 0; i < 7; i++ ) {
+        bXor ^= outBytes[ i ];
+      }
+      outBytes[7] = bXor;
+
+      byteStr = StrOp.byteToStr( outBytes, 8 );
+      wBinCmd.setoutlen( ptcmd, 8 );
+      wBinCmd.setinlen( ptcmd, 6 );
+      wBinCmd.setout( ptcmd, byteStr );
+      StrOp.free( byteStr );
+    }
+
+    if( ptcmd != NULL ) {
+      byte* inData = NULL;
+      response = data->sublib->cmd((obj)data->sublib, ptcmd);
+      /* TODO: convert response incase of a bincmd */
+      if( response != NULL ) {
+        inData = StrOp.strToByte( wResponse.getdata( response ) );
+        NodeOp.base.del(response);
+        response = (iONode)NodeOp.base.clone(cmd);
+        if( inData[0] != 0 ) {
+          /* Error PT command */
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+              "Error AccSet [%d] err[%d]", wProgram.getcv(response), inData[0] );
+        }
+        freeMem(inData);
+      }
+    }
+
+    /* Cleanup command node */
+    NodeOp.base.del(cmd);
+  }
+
   /*
      XDCC_PDR (0xDA) - Länge = 1+4 Bytes
        Befehlsbytes:

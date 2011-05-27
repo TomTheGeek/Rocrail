@@ -167,7 +167,9 @@ void CV::init() {
     }
   }
   m_bPOM = False;
+  m_bAcc = False;
   m_bDirect = False;
+  m_Acc->Enable(m_POM->IsChecked());
 }
 
 
@@ -427,6 +429,8 @@ void CV::onDecFX(void) {
 
 void CV::update4POM(void) {
   m_bPOM = m_POM->IsChecked()?True:False;
+  m_bAcc = m_Acc->IsChecked()?True:False;
+  m_Acc->Enable(m_POM->IsChecked());
   /*
   m_getAddress->Enable(!m_bPOM);
   m_getVstart->Enable(!m_bPOM);
@@ -671,7 +675,7 @@ void CV::OnButton(wxCommandEvent& event)
     m_CVoperation = 0;
     doCV( wProgram.load, m_CVnr->GetValue(), atoi( m_CVvalue->GetValue().mb_str(wxConvUTF8) ) );
   }
-  else if ( event.GetEventObject() == m_POM ) {
+  else if ( event.GetEventObject() == m_POM || event.GetEventObject() == m_Acc ) {
     update4POM();
   }
   else if ( event.GetEventObject() == m_CVvalue ) {
@@ -945,6 +949,7 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setcv( cmd, index );
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_bPOM );
+  wProgram.setacc( cmd, m_bAcc );
   wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
   if( m_LocProps != NULL ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
@@ -1164,6 +1169,10 @@ void CV::CreateControls() {
   m_POM = new wxCheckBox( m_ItemPanel, -1, _T("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
   m_POM->SetToolTip(_T("Program On the Main") );
   m_LocBox->Add(m_POM, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+
+  m_Acc = new wxCheckBox( m_ItemPanel, -1, _T("Acc"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_Acc->SetToolTip(_T("Accessory") );
+  m_LocBox->Add(m_Acc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
   m_Direct = new wxCheckBox( m_ItemPanel, -1, _T("Direct"), wxDefaultPosition, wxDefaultSize, 0 );
   m_Direct->SetToolTip(_T("Direct programming mode") );
