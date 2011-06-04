@@ -885,10 +885,12 @@ static void __timedqueue( void* threadinst ) {
   iOXpressNetData data = Data(xpressnet);
 
   iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
 
   while( data->run ) {
     iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
     if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
       ListOp.add(list, (obj)cmd);
     }
 
@@ -898,6 +900,7 @@ static void __timedqueue( void* threadinst ) {
       if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
         byte* outa = allocMem(32);
         MemOp.copy( outa, cmd->out, 32 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
         ThreadOp.post( data->transactor, (obj)outa );
         ListOp.removeObj(list, (obj)cmd);
         freeMem(cmd);
@@ -908,6 +911,7 @@ static void __timedqueue( void* threadinst ) {
     ThreadOp.sleep(10);
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
 }
 
 
@@ -1395,8 +1399,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     /* give the transactor thread time to start up */
     ThreadOp.sleep( 10 );
 
-    ThreadOp.start( data->timedQueue );
     data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __XpressNet );
+    ThreadOp.start( data->timedQueue );
 
 
     data->initializer = ThreadOp.inst( "initializer", &__initializer, __XpressNet );
