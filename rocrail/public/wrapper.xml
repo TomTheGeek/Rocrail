@@ -322,6 +322,7 @@
       <const name="muet" vt="string" val="muet"/>
       <const name="bidib" vt="string" val="bidib"/>
       <const name="zs2" vt="string" val="zs2"/>
+      <const name="cbus" vt="string" val="cbus"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

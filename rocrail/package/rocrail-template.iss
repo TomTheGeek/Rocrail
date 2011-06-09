@@ -80,6 +80,7 @@ Source: "..\..\winbin\massoth.dll"; DestDir: "{app}"
 Source: "..\..\winbin\tamsmc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\muet.dll"; DestDir: "{app}"
 Source: "..\..\winbin\zs2.dll"; DestDir: "{app}"
+Source: "..\..\winbin\cbus.dll"; DestDir: "{app}"
 Source: "..\..\winbin\bidib.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
