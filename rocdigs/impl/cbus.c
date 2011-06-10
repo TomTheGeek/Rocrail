@@ -166,6 +166,40 @@ static int _version( obj inst ) {
 }
 
 
+static int __getOPC(byte* frame) {
+  int offset = (frame[1] == 'S') ? 0:4;
+  int opc = (frame[7] - 0x30) * 10 + (frame[8] - 0x30);
+  return opc;
+}
+
+
+static int __getDataLen(int OPC) {
+  if( OPC < 0x20 )
+    return 0;
+  if( OPC < 0x40 )
+    return 1;
+  if( OPC < 0x60 )
+    return 2;
+  if( OPC < 0x80 )
+    return 3;
+  if( OPC < 0xA0 )
+    return 4;
+  if( OPC < 0xC0 )
+    return 5;
+  if( OPC < 0xE0 )
+    return 6;
+  return 7;
+}
+
+
+static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
+  iOCBUSData data = Data(cbus);
+  int offset = (frame[1] == 'S') ? 0:4;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OPC=", opc );
+
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
@@ -175,9 +209,30 @@ static void __reader( void* threadinst ) {
 
   while( data->run ) {
     byte in[32] = {0};
+    /* Frame ASCII format
+     * :ShhhhNd0d1d2d3d4d5d6d7d; :Xhhhhhhhhd0d1d2d3d4d5d6d7d;
+     * :S    -> S=Standard X=extended start CAN Frame
+     * hhhh  -> SIDH<bit7,6,5,4=Prio bit3,2,1,0=high 4 part of ID> SIDL<bit7,6,5=low 3 part of ID>
+     * Nd    -> N=normal R=RTR
+     * 0d    -> OPC
+     * 1d-7d -> data
+     * ;     -> end of frame
+     */
     if( SerialOp.available(data->serial) ) {
-      if( SerialOp.read(data->serial, in, 5) ) {
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 5 );
+      if( SerialOp.read(data->serial, in, 1) ) {
+        if( in[0] == ':' ) {
+          if( SerialOp.read(data->serial, in+1, 1) ) {
+            if( in[1] == 'S' || in[1] == 'X' ) {
+              int offset = (in[1] == 'S') ? 0:4;
+              if( SerialOp.read(data->serial, in+2, 7 + offset ) ) {
+                int opc = __getOPC(in);
+                int datalen = __getDataLen(opc);
+                TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 9+offset+datalen );
+                __evaluateFrame(cbus, in, opc);
+              }
+            }
+          }
+        }
       }
     }
 
