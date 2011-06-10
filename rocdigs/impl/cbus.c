@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
+#include "rocdigs/impl/cbus/cbus-const.h"
 
 static int instCnt = 0;
 
@@ -165,6 +166,62 @@ static int _version( obj inst ) {
 }
 
 
+static void __reader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
+  iOCBUSData data = Data(cbus);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
+
+  while( data->run ) {
+    byte in[32] = {0};
+    if( SerialOp.available(data->serial) ) {
+      if( SerialOp.read(data->serial, in, 5) ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 5 );
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader ended." );
+}
+
+
+
+
+static void __writer( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
+  iOCBUSData data = Data(cbus);
+  byte* cmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
+  while( data->run ) {
+    byte * post = NULL;
+    int len = 0;
+    byte out[64] = {0};
+
+    ThreadOp.sleep(10);
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( out, post+1, len);
+      freeMem( post);
+
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      if( !SerialOp.write( data->serial, (char*)out, len ) ) {
+        /* sleep and send it again? */
+      }
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
+
+}
+
+
 /**  */
 static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   iOCBUS __CBUS = allocMem( sizeof( struct OCBUS ) );
@@ -180,6 +237,10 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->run    = True;
   data->device = wDigInt.getdevice( data->ini );
 
+  data->run      = True;
+  data->mux      = MutexOp.inst( NULL, True );
+  data->lcmux    = MutexOp.inst( NULL, True );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk/resources/lcb.html" );
@@ -188,6 +249,25 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  data->serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( data->serial, none );
+  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
+
+  data->serialOK = SerialOp.open( data->serial );
+
+  if( data->serialOK ) {
+
+    data->reader = ThreadOp.inst( "cbreader", &__reader, __CBUS );
+    ThreadOp.start( data->reader );
+    data->writer = ThreadOp.inst( "cbwriter", &__writer, __CBUS );
+    ThreadOp.start( data->writer );
+
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init CBUS port!" );
+  }
 
 
   instCnt++;

@@ -1341,13 +1341,29 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="session" vt="int"/>
+      <var name="addr" vt="int"/>
+      <var name="speed" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="fx" vt="int"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
       <var name="device" vt="const char*"/>
+      <var name="bps" vt="serial_bps"/>
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
+      <var name="lcmux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
+      <var name="serialOK" vt="Boolean"/>
+      <var name="initOK" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
     </data>
