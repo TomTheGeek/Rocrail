@@ -477,6 +477,10 @@
         <var name="crc" vt="bool" defval="false"/>
       </rocnet>
 
+      <cbus remark="rocNet options" wrappername="CBus">
+        <var name="cid" vt="int" defval="1" range="0-*" remark="CANID"/>
+      </cbus>
+
       <dcc232 remark="DCC232 options" wrappername="DCC232">
         <var name="port" vt="string" defval="com1" range="*"/>
         <var name="purge" vt="bool" defval="true" remark="Activate purging."/>

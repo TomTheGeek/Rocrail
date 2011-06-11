@@ -143,8 +143,10 @@
     /**
      * CBUS Priorities
      */
-    #define DEFAULT_DYNAMIC_PRIORITY 2
-    #define DEFAULT_MINOR_PRIORITY 3
+    #define PRIORITY_HIGH 0
+    #define PRIORITY_ABOVE 1
+    #define PRIORITY_NORMAL 2
+    #define PRIORITY_LOW 3
 
     /**
      * Event Table

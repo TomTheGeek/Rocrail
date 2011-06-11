@@ -1353,6 +1353,7 @@
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="cbusini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="cid" vt="int"/>
       <var name="reader" vt="iOThread"/>

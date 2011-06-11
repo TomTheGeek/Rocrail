@@ -32,6 +32,7 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/CBus.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
@@ -51,6 +52,7 @@
 static int instCnt = 0;
 
 static void __translate( iOCBUS cbus, iONode node );
+static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -127,16 +129,35 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 }
 
 
+static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen ) {
+  int i = 0;
+
+  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", 0x80 + (prio << 5) + (data->cid >> 3), (data->cid << 5), cmd[0] );
+
+  if( datalen > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
+    for( i = 0; i < datalen; i++ ) {
+      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
+    }
+  }
+
+  frame[0] = StrOp.len(frame+1);
+
+  return frame[0];
+}
+
+
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOCBUSData data = Data(inst);
   data->run = False;
   if( poweroff ) {
-    byte* cmd = allocMem(32);
-    StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TOF );
-    cmd[0] = StrOp.len(cmd+1);
+    byte cmd[2];
+    byte* frame = allocMem(32);
+    cmd[0] = CBUS_TOF;
+    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
-    ThreadOp.post(data->writer, (obj)cmd);
+    ThreadOp.post(data->writer, (obj)frame);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   ThreadOp.sleep(100);
@@ -306,19 +327,21 @@ static void __translate( iOCBUS cbus, iONode node ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
       /* CS off */
-      byte* cmd = allocMem(32);
-      StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TOF );
-      cmd[0] = StrOp.len(cmd+1);
+      byte cmd[2];
+      byte* frame = allocMem(32);
+      cmd[0] = CBUS_TOF;
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
-      ThreadOp.post(data->writer, (obj)cmd);
+      ThreadOp.post(data->writer, (obj)frame);
     }
     if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS on */
-      byte* cmd = allocMem(32);
-      StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TON );
-      cmd[0] = StrOp.len(cmd+1);
+      byte cmd[2];
+      byte* frame = allocMem(32);
+      cmd[0] = CBUS_TON;
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
-      ThreadOp.post(data->writer, (obj)cmd);
+      ThreadOp.post(data->writer, (obj)frame);
     }
   }
 
@@ -335,15 +358,22 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
   /* Initialize data->xxx members... */
 
-  data->ini    = ini;
+  data->ini     = ini;
+  data->cbusini = wDigInt.getcbus(ini);
+  if(data->cbusini == NULL) {
+    data->cbusini = NodeOp.inst( wCBus.name(), ini, ELEMENT_NODE );
+    NodeOp.addChild( data->ini, data->cbusini );
+  }
+
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
-  data->cid    = 1; /* TODO: CAN Bus ID from ini. */
+  data->cid    = wCBus.getcid(data->cbusini);
   data->run    = True;
   data->device = wDigInt.getdevice( data->ini );
 
   data->run      = True;
   data->mux      = MutexOp.inst( NULL, True );
   data->lcmux    = MutexOp.inst( NULL, True );
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS %d.%d.%d", vmajor, vminor, patch );
