@@ -268,7 +268,7 @@ static void __reader( void* threadinst ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
                 if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen ) ) {
-                  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen );
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen );
                   __evaluateFrame(cbus, frame, opc);
                 }
               }
@@ -308,7 +308,7 @@ static void __writer( void* threadinst ) {
       MemOp.copy( out, post+1, len);
       freeMem( post);
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
       if( !SerialOp.write( data->serial, (char*)out, len ) ) {
         /* sleep and send it again? */
       }
@@ -319,13 +319,51 @@ static void __writer( void* threadinst ) {
 }
 
 
+static void __timedqueue( void* threadinst ) {
+  iOThread     th = (iOThread)threadinst;
+  iOCBUS     cbus = (iOCBUS)ThreadOp.getParm(th);
+  iOCBUSData data = Data(cbus);
+
+  iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
+
+  while( data->run ) {
+    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        byte* outa = allocMem(32);
+        MemOp.copy( outa, cmd->out, 32 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        ThreadOp.post( data->writer, (obj)outa );
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
+}
+
+
+
+
 static void __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
 
   /* System command. */
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
       byte cmd[2];
       byte* frame = allocMem(32);
@@ -334,7 +372,18 @@ static void __translate( iOCBUS cbus, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
     }
-    if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+
+    else if( StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+      /* CS ebreak */
+      byte cmd[2];
+      byte* frame = allocMem(32);
+      cmd[0] = CBUS_ESTOP;
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "emergency break" );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS on */
       byte cmd[2];
       byte* frame = allocMem(32);
@@ -344,6 +393,38 @@ static void __translate( iOCBUS cbus, iONode node ) {
       ThreadOp.post(data->writer, (obj)frame);
     }
   }
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte cmd[5];
+    byte* frame = allocMem(32);
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
+
+    cmd[0] = CBUS_ACON;
+    cmd[1] = wSwitch.getaddr1( node ) / 256;
+    cmd[2] = wSwitch.getaddr1( node ) % 256;
+    cmd[3] = wSwitch.getport1( node ) / 256;
+    cmd[4] = wSwitch.getport1( node ) % 256;
+    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ) );
+    ThreadOp.post(data->writer, (obj)frame);
+
+    /* deactivate the gate to be used */
+    iQCmd qcmd = allocMem(sizeof(struct QCmd));
+    qcmd->time   = SystemOp.getTick();
+    qcmd->delay  = delay / 10;
+    cmd[0] = CBUS_ACOF;
+    cmd[1] = wSwitch.getaddr1( node ) / 256;
+    cmd[2] = wSwitch.getaddr1( node ) % 256;
+    cmd[3] = wSwitch.getport1( node ) / 256;
+    cmd[4] = wSwitch.getport1( node ) % 256;
+    __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
+    ThreadOp.post( data->timedqueue, (obj)qcmd );
+
+  }
+
+
 
 }
 
@@ -369,6 +450,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->cid    = wCBus.getcid(data->cbusini);
   data->run    = True;
   data->device = wDigInt.getdevice( data->ini );
+  data->swtime = wDigInt.getswtime( ini );
 
   data->run      = True;
   data->mux      = MutexOp.inst( NULL, True );
@@ -379,10 +461,11 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk/resources/lcb.html" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid     = %d", data->cid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid        = %d", data->cid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device     = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps        = %d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
@@ -398,6 +481,8 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->reader );
     data->writer = ThreadOp.inst( "cbwriter", &__writer, __CBUS );
     ThreadOp.start( data->writer );
+    data->timedqueue = ThreadOp.inst( "cbtimedq", &__timedqueue, __CBUS );
+    ThreadOp.start( data->timedqueue );
 
   }
   else {

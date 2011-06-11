@@ -1351,6 +1351,12 @@
       <var name="lights" vt="Boolean"/>
       <var name="fx" vt="int"/>
     </struct>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="out[32]" vt="byte"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+      <var name="wait4session" vt="int"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="cbusini" vt="iONode"/>
@@ -1358,6 +1364,8 @@
       <var name="cid" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="timedqueue" vt="iOThread"/>
+      <var name="swtime" vt="int"/>
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
       <var name="serial" vt="iOSerial"/>

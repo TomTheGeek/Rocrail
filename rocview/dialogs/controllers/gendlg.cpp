@@ -216,6 +216,10 @@ void GenericCtrlDlg::evaluate() {
     wDigInt.setbps( m_Props, 115200 );
   else if( m_Baudrate->GetSelection() == 7 )
     wDigInt.setbps( m_Props, 230400 );
+  else if( m_Baudrate->GetSelection() == 8 )
+    wDigInt.setbps( m_Props, 500000 );
+  else if( m_Baudrate->GetSelection() == 9 )
+    wDigInt.setbps( m_Props, 1000000 );
 }
 
 
