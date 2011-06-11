@@ -77,6 +77,18 @@ static speed_t __symbolicSpeed( int bps ) {
   /* AIX does not support speeds above 38k. */
 
 
+#ifdef B1000000
+  if( bps >= 1000000 )
+    return B1000000;
+#endif
+
+
+#ifdef B500000
+  if( bps >= 500000 )
+    return B500000;
+#endif
+
+
 #ifdef B230400
   if( bps >= 230400 )
     return B230400;

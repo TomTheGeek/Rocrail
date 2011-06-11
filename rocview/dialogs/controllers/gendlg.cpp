@@ -159,6 +159,10 @@ void GenericCtrlDlg::initValues() {
     m_Baudrate->SetSelection(6);
   else if( wDigInt.getbps( m_Props ) == 230400 )
     m_Baudrate->SetSelection(7);
+  else if( wDigInt.getbps( m_Props ) == 500000 )
+    m_Baudrate->SetSelection(8);
+  else if( wDigInt.getbps( m_Props ) == 1000000 )
+    m_Baudrate->SetSelection(9);
   else
     m_Baudrate->SetSelection(2);
 
@@ -284,7 +288,6 @@ void GenericCtrlDlg::CreateControls()
     itemBoxSizer4->Add(itemBoxSizer5, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -306,6 +309,8 @@ void GenericCtrlDlg::CreateControls()
     m_Lib->Enable(false);
     itemFlexGridSizer6->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer6->AddGrowableCol(1);
+
     wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer5->Add(itemBoxSizer13, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
 
@@ -318,6 +323,8 @@ void GenericCtrlDlg::CreateControls()
     m_BaudrateStrings.Add(_("&57600"));
     m_BaudrateStrings.Add(_("&115200"));
     m_BaudrateStrings.Add(_("&230400"));
+    m_BaudrateStrings.Add(_("&500000"));
+    m_BaudrateStrings.Add(_("&1000000"));
     m_Baudrate = new wxRadioBox( m_Panel, ID_RADIOBOX, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_COLS );
     m_Baudrate->SetSelection(0);
     itemBoxSizer13->Add(m_Baudrate, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
