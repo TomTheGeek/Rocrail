@@ -50,6 +50,8 @@
 
 static int instCnt = 0;
 
+static void __translate( iOCBUS cbus, iONode node );
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -108,6 +110,13 @@ static void* __event( void* inst, const void* evt ) {
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
+  iOCBUSData data = Data(inst);
+
+  if( cmd != NULL ) {
+    int bus = 0;
+    __translate( (iOCBUS)inst, cmd );
+    cmd->base.del(cmd);
+  }
   return NULL;
 }
 
@@ -120,7 +129,17 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOCBUSData data = Data(inst);
+  data->run = False;
+  if( poweroff ) {
+    byte* cmd = allocMem(32);
+    StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TOF );
+    cmd[0] = StrOp.len(cmd+1);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  ThreadOp.sleep(100);
 }
 
 
@@ -168,7 +187,7 @@ static int _version( obj inst ) {
 
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = (frame[7] - 0x30) * 10 + (frame[8] - 0x30);
+  int opc = (frame[7+offset] - 0x30) * 10 + (frame[8+offset] - 0x30);
   return opc;
 }
 
@@ -208,27 +227,29 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
 
   while( data->run ) {
-    byte in[32] = {0};
+    byte frame[32] = {0};
     /* Frame ASCII format
-     * :ShhhhNd0d1d2d3d4d5d6d7d; :Xhhhhhhhhd0d1d2d3d4d5d6d7d;
+     * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d;
      * :S    -> S=Standard X=extended start CAN Frame
      * hhhh  -> SIDH<bit7,6,5,4=Prio bit3,2,1,0=high 4 part of ID> SIDL<bit7,6,5=low 3 part of ID>
      * Nd    -> N=normal R=RTR
-     * 0d    -> OPC
-     * 1d-7d -> data
+     * 0d    -> OPC 2 byte HEXA
+     * 1d-7d -> data 2 byte HEXA
      * ;     -> end of frame
      */
     if( SerialOp.available(data->serial) ) {
-      if( SerialOp.read(data->serial, in, 1) ) {
-        if( in[0] == ':' ) {
-          if( SerialOp.read(data->serial, in+1, 1) ) {
-            if( in[1] == 'S' || in[1] == 'X' ) {
-              int offset = (in[1] == 'S') ? 0:4;
-              if( SerialOp.read(data->serial, in+2, 7 + offset ) ) {
-                int opc = __getOPC(in);
+      if( SerialOp.read(data->serial, frame, 1) ) {
+        if( frame[0] == ':' ) {
+          if( SerialOp.read(data->serial, frame+1, 1) ) {
+            if( frame[1] == 'S' || frame[1] == 'X' ) {
+              int offset = (frame[1] == 'S') ? 0:4;
+              if( SerialOp.read(data->serial, frame + 2, 7 + offset ) ) {
+                int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
-                TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 9+offset+datalen );
-                __evaluateFrame(cbus, in, opc);
+                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen ) ) {
+                  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen );
+                  __evaluateFrame(cbus, frame, opc);
+                }
               }
             }
           }
@@ -277,6 +298,33 @@ static void __writer( void* threadinst ) {
 }
 
 
+static void __translate( iOCBUS cbus, iONode node ) {
+  iOCBUSData data = Data(cbus);
+
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+      /* CS off */
+      byte* cmd = allocMem(32);
+      StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TOF );
+      cmd[0] = StrOp.len(cmd+1);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+    if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS on */
+      byte* cmd = allocMem(32);
+      StrOp.fmtb( cmd+1, ":SB0%02XN%02X;", (data->cid << 5), CBUS_TON );
+      cmd[0] = StrOp.len(cmd+1);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+  }
+
+}
+
+
 /**  */
 static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   iOCBUS __CBUS = allocMem( sizeof( struct OCBUS ) );
@@ -289,6 +337,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->ini    = ini;
   data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
+  data->cid    = 1; /* TODO: CAN Bus ID from ini. */
   data->run    = True;
   data->device = wDigInt.getdevice( data->ini );
 
@@ -301,6 +350,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk/resources/lcb.html" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid     = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );

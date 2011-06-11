@@ -1354,6 +1354,7 @@
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
+      <var name="cid" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="device" vt="const char*"/>
