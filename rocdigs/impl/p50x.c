@@ -776,13 +776,14 @@ static void _halt( obj inst, Boolean poweroff ) {
   iOP50xData data = Data(inst);
   unsigned char p50[2];
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   data->run = False;
   if( poweroff ) {
     p50[0] = (unsigned char)97;
     __transact( data, (char*)p50, 1, NULL, 0, -1, 10 );
   }
+  ThreadOp.sleep(100);
   SerialOp.close( data->serial );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
 }
 
 
