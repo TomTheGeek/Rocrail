@@ -2261,7 +2261,6 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 /**  */
 static void _halt( obj inst, Boolean poweroff ) {
   iOLocoNetData data = Data(inst);
-  data->run = False;
   if( data->swReset != NULL ) {
     iONode quitNode = NodeOp.inst( "quit", NULL, ELEMENT_NODE );
     ThreadOp.post( data->swReset, (obj)quitNode );
@@ -2286,7 +2285,9 @@ static void _halt( obj inst, Boolean poweroff ) {
     }
 
   }
-  ThreadOp.sleep(500); /* time for the last commands to send */
+  ThreadOp.sleep(400); /* time for the last commands to send */
+  data->run = False;
+  ThreadOp.sleep(100); /* time for the last commands to send */
   data->lnDisconnect(inst);
   return;
 }
