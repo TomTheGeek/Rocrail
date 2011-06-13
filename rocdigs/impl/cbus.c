@@ -235,7 +235,7 @@ static int __getDataLen(int OPC) {
 static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OPC=", opc );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OPC=%d", opc );
 
 }
 
@@ -267,8 +267,8 @@ static void __reader( void* threadinst ) {
               if( SerialOp.read(data->serial, frame + 2, 7 + offset ) ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
-                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen ) ) {
-                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen );
+                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen + 1 ) ) {
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen + 1 );
                   __evaluateFrame(cbus, frame, opc);
                 }
               }
@@ -424,7 +424,24 @@ static void __translate( iOCBUS cbus, iONode node ) {
 
   }
 
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    byte cmd[5];
+    byte* frame = allocMem(32);
+    Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
+    cmd[0] = on ? CBUS_ACON:CBUS_ACOF;
+    cmd[1] = wOutput.getaddr( node ) / 256;
+    cmd[2] = wOutput.getaddr( node ) % 256;
+    cmd[3] = wOutput.getport( node ) / 256;
+    cmd[4] = wOutput.getport( node ) % 256;
+    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
+        wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
+    ThreadOp.post(data->writer, (obj)frame);
+
+  }
 
 }
 
