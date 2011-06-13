@@ -232,11 +232,120 @@ static int __getDataLen(int OPC) {
 }
 
 
+static iOSlot __getSlotByAddr(iOCBUSData data, int lcaddr) {
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == lcaddr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
+static iOSlot __getSlot(iOCBUSData data, iONode node) {
+  int    addr  = wLoc.getaddr(node);
+  iOSlot slot  = NULL;
+  int    speed = 0;
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  slot = allocMem( sizeof( struct slot) );
+  slot->addr   = addr;
+  slot->id     = StrOp.dup(wLoc.getid(node));
+  slot->steps  = wLoc.getspcnt(node);
+  slot->lights = True;
+  slot->dir    = wLoc.isdir(node);
+  slot->fx     = wLoc.getfx(node);
+
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+
+  if( wLoc.getV( node ) != -1 ) {
+    if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+      speed = (wLoc.getV( node ) * slot->steps) / 100;
+    else if( wLoc.getV_max( node ) > 0 )
+      speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+  }
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  return slot;
+}
+
+
+
+
+/* Frame ASCII format
+ * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d;
+ */
+static void __updateSlot(iOCBUS cbus, byte* frame) {
+  iOCBUSData data = Data(cbus);
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int session = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
+  int addrh   = (frame[11+offset] - 0x30) * 10 + (frame[12+offset] - 0x30);
+  int addrl   = (frame[13+offset] - 0x30) * 10 + (frame[14+offset] - 0x30);
+  int addr    = addrh * 256 + addrl;
+  iOSlot slot = __getSlotByAddr(data, addr);
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, address %d", session, addr );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "un-managed loco: session %d, address %d", session, addr );
+  }
+}
+
+
+static __evaluateFB( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int addrh   = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
+  int addrl   = (frame[11+offset] - 0x30) * 10 + (frame[11+offset] - 0x30);
+  int addr    = addrh * 256 + addrl;
+
+  Boolean state = False;
+
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, state?True:False );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
+
+
 static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OPC=%d", opc );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=%d", opc );
 
+  switch(opc) {
+  case CBUS_PLOC:
+    __updateSlot(cbus, frame);
+    break;
+  case CBUS_ACON:
+  case CBUS_ACOF:
+    __evaluateFB(cbus, frame);
+    break;
+  }
 }
 
 
@@ -472,6 +581,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->run      = True;
   data->mux      = MutexOp.inst( NULL, True );
   data->lcmux    = MutexOp.inst( NULL, True );
+  data->lcmap    = MapOp.inst();
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );

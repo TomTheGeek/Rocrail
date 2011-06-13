@@ -1336,7 +1336,7 @@
     </data>
   </object>
 
-  <object name="CBUS" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="CBUS">
+  <object name="CBUS" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint" remark="CBUS">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1370,6 +1370,7 @@
       <var name="bps" vt="serial_bps"/>
       <var name="serial" vt="iOSerial"/>
       <var name="mux" vt="iOMutex"/>
+      <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
