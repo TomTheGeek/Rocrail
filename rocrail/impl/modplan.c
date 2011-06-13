@@ -156,7 +156,7 @@ static iONode _parsePlan( const char* filename ) {
  * Resolve module routes to complete routes.
  *
  */
-static void __createRoute( iOModPlanData data, iONode model, iOList routeList, iONode toRoute, const char* modid ) {
+static const char* __createRoute( iOModPlanData data, iONode model, iOList routeList, iONode toRoute, const char* modid ) {
   /* create the new route, merge all crossing blocks and use the properties of the last route. */
   iONode fromRoute = (iONode)ListOp.get( routeList, 0 );
 
@@ -218,6 +218,7 @@ static void __createRoute( iOModPlanData data, iONode model, iOList routeList, i
     NodeOp.addChild( modellist, newRoute );
   }
 
+  return wRoute.getid( newRoute );
 }
 
 
@@ -290,7 +291,10 @@ static iONode __findRouteFromPoint( iOModPlanData data, iONode model, iOList rou
 
       if( !StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {
         /* assume end of route is found */
-        __createRoute(data, model, routeList, route, modid );
+        const char* newRouteID = __createRoute(data, model, routeList, route, modid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "add %d aliases for route [%s] to routeIdMap", ListOp.size(routeList), newRouteID );
+        MapOp.put(data->routeIdMap, newRouteID, (obj)routeList);
       }
       else {
         iOList clonedRouteList = __cloneRouteList(routeList);
@@ -411,9 +415,11 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
          * val = "bka-point-x"
          */
         StrOp.fmtb( key, "%s-%s", wRoute.getbka( route ), wRoute.getbkb(toRoute) );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "add %d aliases for route [%s] to routeIdMap", ListOp.size(routeList), key );
-        MapOp.put(data->routeIdMap, key, (obj)routeList);
+        if( !MapOp.haskey(data->routeIdMap, key) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "add %d aliases for route [%s] to routeIdMap", ListOp.size(routeList), key );
+          MapOp.put(data->routeIdMap, key, (obj)routeList);
+        }
 
       }
       else {
@@ -431,6 +437,7 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
  */
 static iOList _getModuleRouteIDs(iOModPlan inst, const char* routeid) {
   iOModPlanData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "seaching alias list for %s", routeid);
   return (iOList)MapOp.get(data->routeIdMap, routeid);
 }
 
