@@ -614,7 +614,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     bool actroute = false;
     int status = 0;
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
     if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
         StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
