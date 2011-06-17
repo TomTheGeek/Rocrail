@@ -199,6 +199,8 @@ static void __broadcast(iORoute inst) {
     for( i = 0; i < ListOp.size(aliases); i++ ) {
       iONode routeseg = (iONode)ListOp.get( aliases, i );
       wRoute.setid( nodeD, wRoute.getid(routeseg) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "broadcast alias [%s] for route [%s]",
+          wRoute.getid(routeseg), wRoute.getid(o->props) );
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(nodeD) );
     }
     NodeOp.base.del(nodeD);
