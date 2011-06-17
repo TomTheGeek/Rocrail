@@ -226,7 +226,7 @@ static iOList __cloneRouteList( iOList routeList ) {
   iOList list = ListOp.inst();
   int i = 0;
   for(i = 0; i< ListOp.size(routeList); i++) {
-    ListOp.add( list, ListOp.get(routeList,i) );
+    ListOp.add( list, NodeOp.base.clone(ListOp.get(routeList,i)) );
   }
   return list;
 }
