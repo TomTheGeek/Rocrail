@@ -218,6 +218,8 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
     NodeOp.addChild( modellist, newRoute );
   }
 
+  ListOp.add( routeList, (obj)toRoute );
+
   return wRoute.getid( newRoute );
 }
 
