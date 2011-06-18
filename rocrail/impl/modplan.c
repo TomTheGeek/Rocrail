@@ -294,10 +294,13 @@ static iONode __findRouteFromPoint( iOModPlanData data, iONode model, iOList rou
       if( !StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {
         /* assume end of route is found */
         const char* newRouteID = __createRoute(data, model, routeList, route, modid );
+        int listSize = ListOp.size(routeList);
         iOList clonedRouteList = __cloneRouteList(routeList);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "add %d aliases for route [%s] to routeIdMap", ListOp.size(clonedRouteList), newRouteID );
         MapOp.put(data->routeIdMap, newRouteID, (obj)clonedRouteList);
+        /* remove last segment */
+        ListOp.remove(routeList, listSize-1);
       }
       else {
         iOList clonedRouteList = __cloneRouteList(routeList);
