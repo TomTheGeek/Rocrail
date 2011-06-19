@@ -282,6 +282,18 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
       speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
   }
 
+  {
+    byte cmd[5];
+    byte* frame = allocMem(32);
+    cmd[0] = CBUS_RLOC;
+    cmd[1] = addr / 256;
+    cmd[2] = addr % 256;
+    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
+    ThreadOp.post(data->writer, (obj)frame);
+  }
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   return slot;
