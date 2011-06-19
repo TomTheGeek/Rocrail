@@ -53,6 +53,7 @@
     #define CBUS_STMOD 0x44
     #define CBUS_PCON 0x45
     #define CBUS_DSPD 0x47
+    #define CBUS_DFLG 0x48
     #define CBUS_SSTAT 0x4C
 
     #define CBUS_NNACK 0x50

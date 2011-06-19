@@ -315,7 +315,27 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, address %d", session, addr );
-    slot->session = session;
+    if( slot->session == 0 ) {
+      byte cmd[5];
+      byte* frame = allocMem(32);
+
+      slot->session = session;
+
+      cmd[0] = CBUS_DFLG;
+      cmd[1] = slot->session;
+      if( slot->steps == 128 )
+        cmd[2] = 0;
+      else if( slot->steps == 14 )
+        cmd[2] = 1;
+      else if( slot->steps == 28 )
+        cmd[2] = 3;
+      cmd[2] |= (slot->lights ? 0x04:0x00);
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set engine flags for loco %s", slot->id );
+      ThreadOp.post(data->writer, (obj)frame);
+
+    }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "un-managed loco: session %d, address %d", session, addr );
