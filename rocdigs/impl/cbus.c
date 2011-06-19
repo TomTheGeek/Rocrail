@@ -261,12 +261,13 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
   }
 
   slot = allocMem( sizeof( struct slot) );
-  slot->addr   = addr;
-  slot->id     = StrOp.dup(wLoc.getid(node));
-  slot->steps  = wLoc.getspcnt(node);
-  slot->lights = True;
-  slot->dir    = wLoc.isdir(node);
-  slot->fx     = wLoc.getfx(node);
+  slot->addr    = addr;
+  slot->id      = StrOp.dup(wLoc.getid(node));
+  slot->steps   = wLoc.getspcnt(node);
+  slot->lights  = True;
+  slot->dir     = wLoc.isdir(node);
+  slot->fx      = wLoc.getfx(node);
+  slot->session = 0;
 
 
   if( MutexOp.wait( data->lcmux ) ) {
@@ -469,8 +470,11 @@ static void __timedqueue( void* threadinst ) {
 static void __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
 
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+  }
+
   /* System command. */
-  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
@@ -549,6 +553,96 @@ static void __translate( iOCBUS cbus, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
         wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
     ThreadOp.post(data->writer, (obj)frame);
+
+  }
+
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    byte cmd[5];
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+    Boolean fn  = wLoc.isfn( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return;
+    }
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * slot->steps) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+    }
+
+    slot->speed  = speed;
+    slot->dir    = wLoc.isdir(node);
+    slot->lights = wLoc.isfn(node);
+
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
+
+    if( slot->session > 0 ) {
+      byte* frame = allocMem(32);
+      cmd[0] = CBUS_DSPD;
+      cmd[1] = slot->session;
+      cmd[2] = speed | (slot->dir ? 0x80:0x00);
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+    else {
+      iQCmd qcmd = allocMem(sizeof(struct QCmd));
+      qcmd->wait4session  = True;
+      qcmd->slot = slot;
+      cmd[0] = CBUS_DSPD;
+      cmd[1] = slot->session;
+      cmd[2] = speed | (slot->dir ? 0x80:0x00);
+      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
+      ThreadOp.post( data->timedqueue, (obj)qcmd );
+    }
+
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    byte cmd[5];
+    int   addr = wFunCmd.getaddr( node );
+
+    iOSlot slot = __getSlot(data, node );
+
+    if( slot == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
+      return;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
+
+    if( slot->session > 0 ) {
+      byte* frame = allocMem(32);
+      cmd[0] = CBUS_DFUN;
+      cmd[1] = slot->session;
+      /* TODO: Functions. */
+      cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[3] = 0; /* the bits */
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+    else {
+      iQCmd qcmd = allocMem(sizeof(struct QCmd));
+      qcmd->wait4session  = True;
+      qcmd->slot = slot;
+      cmd[0] = CBUS_DFUN;
+      cmd[1] = slot->session;
+      /* TODO: Functions. */
+      cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[3] = 0; /* the bits */
+      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
+      ThreadOp.post( data->timedqueue, (obj)qcmd );
+    }
 
   }
 

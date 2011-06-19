@@ -1356,6 +1356,7 @@
       <var name="time" vt="unsigned long"/>
       <var name="delay" vt="unsigned long"/>
       <var name="wait4session" vt="int"/>
+      <var name="slot" vt="iOSlot"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
