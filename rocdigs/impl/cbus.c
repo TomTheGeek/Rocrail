@@ -303,6 +303,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, address %d", session, addr );
+    slot->session = session;
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "un-managed loco: session %d, address %d", session, addr );
@@ -447,7 +448,20 @@ static void __timedqueue( void* threadinst ) {
     int i = 0;
     for( i = 0; i < ListOp.size(list); i++ ) {
       iQCmd cmd = (iQCmd)ListOp.get(list, i);
-      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+      if( cmd->wait4session ) {
+        /* TODO: Wait for session number. */
+        if( cmd->slot->session > 0 ) {
+          byte* outa = allocMem(32);
+          cmd->out[1] = cmd->slot->session;
+          MemOp.copy( outa, cmd->out, 32 );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "wait4session %d command", cmd->slot->session );
+          ThreadOp.post( data->writer, (obj)outa );
+          ListOp.removeObj(list, (obj)cmd);
+          freeMem(cmd);
+          break;
+        }
+      }
+      else if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
         byte* outa = allocMem(32);
         MemOp.copy( outa, cmd->out, 32 );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
