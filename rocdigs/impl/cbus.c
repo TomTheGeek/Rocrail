@@ -215,9 +215,21 @@ static int _version( obj inst ) {
 }
 
 
+static byte _HEXAToByte( const char* s ) {
+  char val[3] = {0};
+  val[0] = s[0];
+  val[1] = s[1];
+  val[2] = '\0';
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HEXA=[%s]", val );
+  return (unsigned char)(strtol( val, NULL, 16)&0xFF);
+}
+
+
+
+
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = (frame[7+offset] - 0x30) * 10 + (frame[8+offset] - 0x30);
+  int opc = _HEXAToByte(frame+8+offset);
   return opc;
 }
 
@@ -421,7 +433,7 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=%d", opc );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
 
   switch(opc) {
   case OPC_PLOC:
@@ -480,11 +492,12 @@ static void __reader( void* threadinst ) {
           if( SerialOp.read(data->serial, frame+1, 1) ) {
             if( frame[1] == 'S' || frame[1] == 'X' ) {
               int offset = (frame[1] == 'S') ? 0:4;
-              if( SerialOp.read(data->serial, frame + 2, 7 + offset ) ) {
+              if( SerialOp.read(data->serial, frame + 2, 8 + offset ) ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
-                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen + 1 ) ) {
-                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen + 1 );
+                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 8 + offset );
+                if( SerialOp.read(data->serial, frame + 2 + 8 + offset, datalen + 1 ) ) {
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 8 + offset + datalen + 1 );
                   __evaluateFrame(cbus, frame, opc);
                 }
               }
