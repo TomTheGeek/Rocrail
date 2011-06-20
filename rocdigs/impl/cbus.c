@@ -140,13 +140,13 @@ static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int da
   int i = 0;
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeframe for OPC=0x%02X", cmd[0] );
 
-  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", 0x80 + (prio << 5) + (data->cid >> 3), (data->cid << 5), cmd[0] );
+  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", (0x80 + (prio << 5) + (data->cid >> 3)) &0xFF, (data->cid << 5) & 0xFF, cmd[0] );
 
   if( datalen > 0 ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
     for( i = 0; i < datalen; i++ ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeframe: %s", frame+1 );
-      StrOp.fmtb( frame+1+10+i*2, "%02X;", cmd[i+1] );
+      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
     }
   }
 
@@ -229,7 +229,7 @@ static byte _HEXAToByte( const char* s ) {
 
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = _HEXAToByte(frame+8+offset);
+  int opc = _HEXAToByte(frame+7+offset);
   return opc;
 }
 
@@ -329,9 +329,9 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
 static void __updateSlot(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
-  int addrh   = (frame[11+offset] - 0x30) * 10 + (frame[12+offset] - 0x30);
-  int addrl   = (frame[13+offset] - 0x30) * 10 + (frame[14+offset] - 0x30);
+  int session = __HEXA2Byte(frame+9+offset);
+  int addrh   = __HEXA2Byte(frame+11+offset);
+  int addrl   = __HEXA2Byte(frame+13+offset);
   int addr    = addrh * 256 + addrl;
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
@@ -368,8 +368,8 @@ static __evaluateFB( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
-  int addrl   = (frame[11+offset] - 0x30) * 10 + (frame[11+offset] - 0x30);
+  int addrh   = __HEXA2Byte(frame+9+offset);
+  int addrl   = __HEXA2Byte(frame+11+offset);
   int addr    = addrh * 256 + addrl;
 
   Boolean state = False;
@@ -401,15 +401,15 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
-  int addrl   = (frame[11+offset] - 0x30) * 10 + (frame[12+offset] - 0x30);
+  int addrh   = __HEXA2Byte(frame+9+offset);
+  int addrl   = __HEXA2Byte(frame+11+offset);
   int addr    = addrh * 256 + addrl;
 
-  int rfid1  = (frame[13+offset] - 0x30) * 10 + (frame[14+offset] - 0x30);
-  int rfid2  = (frame[15+offset] - 0x30) * 10 + (frame[16+offset] - 0x30);
-  int rfid3  = (frame[17+offset] - 0x30) * 10 + (frame[18+offset] - 0x30);
-  int rfid4  = (frame[19+offset] - 0x30) * 10 + (frame[20+offset] - 0x30);
-  int rfid5  = (frame[21+offset] - 0x30) * 10 + (frame[22+offset] - 0x30);
+  int rfid1  = __HEXA2Byte(frame+13+offset);
+  int rfid2  = __HEXA2Byte(frame+15+offset);
+  int rfid3  = __HEXA2Byte(frame+17+offset);
+  int rfid4  = __HEXA2Byte(frame+19+offset);
+  int rfid5  = __HEXA2Byte(frame+21+offset);
 
   long rfid = rfid1 * 0x1 + rfid2 * 0x100 + rfid3 * 0x10000 + rfid4 * 0x1000000 + rfid5 * 0x100000000;
 
@@ -492,12 +492,12 @@ static void __reader( void* threadinst ) {
           if( SerialOp.read(data->serial, frame+1, 1) ) {
             if( frame[1] == 'S' || frame[1] == 'X' ) {
               int offset = (frame[1] == 'S') ? 0:4;
-              if( SerialOp.read(data->serial, frame + 2, 8 + offset ) ) {
+              if( SerialOp.read(data->serial, frame + 2, 7 + offset ) ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
-                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 8 + offset );
-                if( SerialOp.read(data->serial, frame + 2 + 8 + offset, datalen + 1 ) ) {
-                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 8 + offset + datalen + 1 );
+                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset );
+                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen*2 + 1 ) ) {
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen*2 + 1 );
                   __evaluateFrame(cbus, frame, opc);
                 }
               }
