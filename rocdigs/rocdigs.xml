@@ -1363,6 +1363,8 @@
       <var name="cbusini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="cid" vt="int"/>
+      <var name="sodaddr" vt="int"/>
+      <var name="shortevents" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="timedqueue" vt="iOThread"/>

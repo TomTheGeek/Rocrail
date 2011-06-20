@@ -47,9 +47,16 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
-#include "rocdigs/impl/cbus/cbus-const.h"
+#include "rocdigs/impl/cbus/cbusdefs.h"
 
 static int instCnt = 0;
+/*
+ * CBUS Priorities
+ */
+#define PRIORITY_HIGH 0
+#define PRIORITY_ABOVE 1
+#define PRIORITY_NORMAL 2
+#define PRIORITY_LOW 3
 
 static void __translate( iOCBUS cbus, iONode node );
 static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
@@ -154,7 +161,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
   if( poweroff ) {
     byte cmd[2];
     byte* frame = allocMem(32);
-    cmd[0] = CBUS_TOF;
+    cmd[0] = OPC_TOF;
     __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
     ThreadOp.post(data->writer, (obj)frame);
@@ -285,7 +292,7 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
   {
     byte cmd[5];
     byte* frame = allocMem(32);
-    cmd[0] = CBUS_RLOC;
+    cmd[0] = OPC_RLOC;
     cmd[1] = addr / 256;
     cmd[2] = addr % 256;
     __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
@@ -321,7 +328,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 
       slot->session = session;
 
-      cmd[0] = CBUS_DFLG;
+      cmd[0] = OPC_DFLG;
       cmd[1] = slot->session;
       if( slot->steps == 128 )
         cmd[2] = 0;
@@ -364,6 +371,49 @@ static __evaluateFB( iOCBUS cbus, byte* frame ) {
 }
 
 
+/*
+    E3 RFID tag read (RFID)
+
+    Format: <E3><NNhigh><NNlow><RFID4><RFID3><RFID2><RFID1><RFID0>
+
+    The RFID read event, contains the RFID tag value (Big Endian).
+
+    EM4102 format readers return a 40 bit number when a tag is read.
+    Although read only tags are usually quoted as being 64 bits,
+    the unique tag number is only 40 bits, the other bits are used
+    for the header and for row and column parity.
+ */
+static __evaluateRFID( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int addrh   = (frame[9+offset] - 0x30) * 10 + (frame[10+offset] - 0x30);
+  int addrl   = (frame[11+offset] - 0x30) * 10 + (frame[12+offset] - 0x30);
+  int addr    = addrh * 256 + addrl;
+
+  int rfid1  = (frame[13+offset] - 0x30) * 10 + (frame[14+offset] - 0x30);
+  int rfid2  = (frame[15+offset] - 0x30) * 10 + (frame[16+offset] - 0x30);
+  int rfid3  = (frame[17+offset] - 0x30) * 10 + (frame[18+offset] - 0x30);
+  int rfid4  = (frame[19+offset] - 0x30) * 10 + (frame[20+offset] - 0x30);
+  int rfid5  = (frame[21+offset] - 0x30) * 10 + (frame[22+offset] - 0x30);
+
+  long rfid = rfid1 * 0x1 + rfid2 * 0x100 + rfid3 * 0x10000 + rfid4 * 0x1000000 + rfid5 * 0x100000000;
+
+  Boolean state = False;
+
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, state?True:False );
+  wFeedback.setidentifier( nodeC, rfid );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
+
 
 
 static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
@@ -372,12 +422,17 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=%d", opc );
 
   switch(opc) {
-  case CBUS_PLOC:
+  case OPC_PLOC:
     __updateSlot(cbus, frame);
     break;
-  case CBUS_ACON:
-  case CBUS_ACOF:
+  case OPC_ACON:
+  case OPC_ACOF:
+  case OPC_ASON:
+  case OPC_ASOF:
     __evaluateFB(cbus, frame);
+    break;
+  case OPC_ACDAT:
+    __evaluateRFID(cbus, frame);
     break;
   }
 }
@@ -526,7 +581,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
       /* CS off */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = CBUS_TOF;
+      cmd[0] = OPC_TOF;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
@@ -536,7 +591,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
       /* CS ebreak */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = CBUS_ESTOP;
+      cmd[0] = OPC_ESTOP;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "emergency break" );
       ThreadOp.post(data->writer, (obj)frame);
@@ -546,7 +601,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
       /* CS on */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = CBUS_TON;
+      cmd[0] = OPC_TON;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
       ThreadOp.post(data->writer, (obj)frame);
@@ -559,7 +614,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
 
-    cmd[0] = CBUS_ACON;
+    cmd[0] = OPC_ACON;
     cmd[1] = wSwitch.getaddr1( node ) / 256;
     cmd[2] = wSwitch.getaddr1( node ) % 256;
     cmd[3] = wSwitch.getport1( node ) / 256;
@@ -573,7 +628,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
     iQCmd qcmd = allocMem(sizeof(struct QCmd));
     qcmd->time   = SystemOp.getTick();
     qcmd->delay  = delay / 10;
-    cmd[0] = CBUS_ACOF;
+    cmd[0] = OPC_ACOF;
     cmd[1] = wSwitch.getaddr1( node ) / 256;
     cmd[2] = wSwitch.getaddr1( node ) % 256;
     cmd[3] = wSwitch.getport1( node ) / 256;
@@ -589,7 +644,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-    cmd[0] = on ? CBUS_ACON:CBUS_ACOF;
+    cmd[0] = on ? OPC_ACON:OPC_ACOF;
     cmd[1] = wOutput.getaddr( node ) / 256;
     cmd[2] = wOutput.getaddr( node ) % 256;
     cmd[3] = wOutput.getport( node ) / 256;
@@ -634,7 +689,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
-      cmd[0] = CBUS_DSPD;
+      cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
@@ -644,7 +699,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
       iQCmd qcmd = allocMem(sizeof(struct QCmd));
       qcmd->wait4session  = True;
       qcmd->slot = slot;
-      cmd[0] = CBUS_DSPD;
+      cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
       __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
@@ -669,7 +724,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
-      cmd[0] = CBUS_DFUN;
+      cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
       /* TODO: Functions. */
       cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
@@ -681,7 +736,7 @@ static void __translate( iOCBUS cbus, iONode node ) {
       iQCmd qcmd = allocMem(sizeof(struct QCmd));
       qcmd->wait4session  = True;
       qcmd->slot = slot;
-      cmd[0] = CBUS_DFUN;
+      cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
       /* TODO: Functions. */
       cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
@@ -712,11 +767,13 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     NodeOp.addChild( data->ini, data->cbusini );
   }
 
-  data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
-  data->cid    = wCBus.getcid(data->cbusini);
-  data->run    = True;
-  data->device = wDigInt.getdevice( data->ini );
-  data->swtime = wDigInt.getswtime( ini );
+  data->iid         = StrOp.dup( wDigInt.getiid( ini ) );
+  data->cid         = wCBus.getcid(data->cbusini);
+  data->sodaddr     = wCBus.getsodaddr(data->cbusini);
+  data->shortevents = wCBus.isshortevents(data->cbusini);
+  data->run         = True;
+  data->device      = wDigInt.getdevice( data->ini );
+  data->swtime      = wDigInt.getswtime( ini );
 
   data->run      = True;
   data->mux      = MutexOp.inst( NULL, True );
@@ -725,14 +782,16 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk/resources/lcb.html" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MERG CBUS %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid        = %d", data->cid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device     = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps        = %d", wDigInt.getbps( data->ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime = %d", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid          = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid          = %d", data->cid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod          = %d", data->sodaddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %d", data->shortevents );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device       = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps          = %d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime   = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
