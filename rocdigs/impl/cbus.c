@@ -138,13 +138,15 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen ) {
   int i = 0;
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeframe for OPC=0x%02X", cmd[0] );
 
   StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", 0x80 + (prio << 5) + (data->cid >> 3), (data->cid << 5), cmd[0] );
 
   if( datalen > 0 ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
     for( i = 0; i < datalen; i++ ) {
-      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeframe: %s", frame+1 );
+      StrOp.fmtb( frame+1+10+i*2, "%02X;", cmd[i+1] );
     }
   }
 
@@ -444,6 +446,22 @@ static void __reader( void* threadinst ) {
   iOCBUSData data = Data(cbus);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
+
+  ThreadOp.sleep(1000);
+
+  /* get all input states */
+  if( data->sodaddr > 0 ) {
+    byte cmd[8];
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_ASRQ;
+    cmd[1] = 0;
+    cmd[2] = 0;
+    cmd[3] = data->sodaddr / 256;
+    cmd[4] = data->sodaddr % 256;
+    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "query input state" );
+    ThreadOp.post(data->writer, (obj)frame);
+  }
 
   while( data->run ) {
     byte frame[32] = {0};
@@ -788,7 +806,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid          = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid          = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod          = %d", data->sodaddr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %d", data->shortevents );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device       = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps          = %d", wDigInt.getbps( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime   = %d", data->swtime );
