@@ -811,6 +811,10 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->lcmux    = MutexOp.inst( NULL, True );
   data->lcmap    = MapOp.inst();
 
+  if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
+    data->bps = 500000;
+  else
+    data->bps = 115200;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MERG CBUS %d.%d.%d", vmajor, vminor, patch );
@@ -820,14 +824,15 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid          = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod          = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %s", data->shortevents ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib       = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device       = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps          = %d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps          = %d", data->bps );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime   = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
   data->serialOK = SerialOp.open( data->serial );
