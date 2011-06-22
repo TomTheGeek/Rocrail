@@ -58,6 +58,15 @@ static int instCnt = 0;
 #define PRIORITY_NORMAL 2
 #define PRIORITY_LOW 3
 
+#define OFFSET_OPC 7
+#define OFFSET_D1 9
+#define OFFSET_D2 11
+#define OFFSET_D3 13
+#define OFFSET_D4 15
+#define OFFSET_D5 17
+#define OFFSET_D6 19
+#define OFFSET_D7 21
+
 static void __translate( iOCBUS cbus, iONode node );
 static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
 
@@ -364,15 +373,22 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 }
 
 
-static __evaluateFB( iOCBUS cbus, byte* frame ) {
+static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = __HEXA2Byte(frame+9+offset);
-  int addrl   = __HEXA2Byte(frame+11+offset);
-  int addr    = addrh * 256 + addrl;
+  int nodeh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int nodel   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int node    = nodeh * 256 + nodel;
 
-  Boolean state = False;
+  int eventh   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int eventl   = __HEXA2Byte(frame + OFFSET_D4 + offset);
+  int event    = eventh * 256 + eventl;
+
+  int addr = event;
+
+  if( !data->shortevents )
+    addr += (node << 16);
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -401,17 +417,17 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = __HEXA2Byte(frame+9+offset);
-  int addrl   = __HEXA2Byte(frame+11+offset);
+  int addrh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrl   = __HEXA2Byte(frame + OFFSET_D2 + offset);
   int addr    = addrh * 256 + addrl;
 
-  int rfid1  = __HEXA2Byte(frame+13+offset);
-  int rfid2  = __HEXA2Byte(frame+15+offset);
-  int rfid3  = __HEXA2Byte(frame+17+offset);
-  int rfid4  = __HEXA2Byte(frame+19+offset);
-  int rfid5  = __HEXA2Byte(frame+21+offset);
+  int rfid1  = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int rfid2  = __HEXA2Byte(frame + OFFSET_D4 + offset);
+  int rfid3  = __HEXA2Byte(frame + OFFSET_D5 + offset);
+  int rfid4  = __HEXA2Byte(frame + OFFSET_D6 + offset);
+  int rfid5  = __HEXA2Byte(frame + OFFSET_D7 + offset);
 
-  long rfid = rfid1 * 0x1 + rfid2 * 0x100 + rfid3 * 0x10000 + rfid4 * 0x1000000 + rfid5 * 0x100000000;
+  long rfid = rfid5 * 0x1 + rfid4 * 0x100 + rfid3 * 0x10000 + rfid2 * 0x1000000 + rfid1 * 0x100000000;
 
   Boolean state = False;
 
@@ -440,10 +456,12 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     __updateSlot(cbus, frame);
     break;
   case OPC_ACON:
-  case OPC_ACOF:
   case OPC_ASON:
+    __evaluateFB(cbus, frame, True);
+    break;
+  case OPC_ACOF:
   case OPC_ASOF:
-    __evaluateFB(cbus, frame);
+    __evaluateFB(cbus, frame, False);
     break;
   case OPC_ACDAT:
     __evaluateRFID(cbus, frame);
