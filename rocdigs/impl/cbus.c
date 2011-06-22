@@ -229,7 +229,7 @@ static byte __HEXA2Byte( const char* s ) {
   val[0] = s[0];
   val[1] = s[1];
   val[2] = '\0';
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HEXA=[%s]", val );
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "HEXA=[%s]", val );
   return (unsigned char)(strtol( val, NULL, 16)&0xFF);
 }
 
@@ -338,9 +338,9 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
 static void __updateSlot(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = __HEXA2Byte(frame+9+offset);
-  int addrh   = __HEXA2Byte(frame+11+offset);
-  int addrl   = __HEXA2Byte(frame+13+offset);
+  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrh   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int addrl   = __HEXA2Byte(frame + OFFSET_D3 + offset);
   int addr    = addrh * 256 + addrl;
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
@@ -389,6 +389,8 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
 
   if( !data->shortevents )
     addr += (node << 16);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sevent %d", data->shortevents?"short ":"", addr );
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -510,12 +512,12 @@ static void __reader( void* threadinst ) {
           if( SerialOp.read(data->serial, frame+1, 1) ) {
             if( frame[1] == 'S' || frame[1] == 'X' ) {
               int offset = (frame[1] == 'S') ? 0:4;
-              if( SerialOp.read(data->serial, frame + 2, 7 + offset ) ) {
+              if( SerialOp.read(data->serial, frame + 2, OFFSET_OPC + offset ) ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
-                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset );
-                if( SerialOp.read(data->serial, frame + 2 + 7 + offset, datalen*2 + 1 ) ) {
-                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + 7 + offset + datalen*2 + 1 );
+                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
+                if( SerialOp.read(data->serial, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
                   __evaluateFrame(cbus, frame, opc);
                 }
               }

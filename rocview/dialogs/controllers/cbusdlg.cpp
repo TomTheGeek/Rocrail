@@ -102,7 +102,7 @@ void CbusDlg::evaluate() {
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
 
-  wCBus.setshortevents(m_Props, m_ShortEvents->IsChecked()?True:False);
+  wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
 
 }
 
