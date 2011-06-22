@@ -67,7 +67,7 @@ static int instCnt = 0;
 #define OFFSET_D6 19
 #define OFFSET_D7 21
 
-static void __translate( iOCBUS cbus, iONode node );
+static iONode __translate( iOCBUS cbus, iONode node );
 static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
 
 /** ----- OBase ----- */
@@ -129,13 +129,14 @@ static void* __event( void* inst, const void* evt ) {
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOCBUSData data = Data(inst);
+  iONode rsp = NULL;
 
   if( cmd != NULL ) {
     int bus = 0;
-    __translate( (iOCBUS)inst, cmd );
+    rsp = __translate( (iOCBUS)inst, cmd );
     cmd->base.del(cmd);
   }
-  return NULL;
+  return rsp;
 }
 
 
@@ -403,6 +404,31 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
 }
 
 
+static __evaluateCV( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+  iONode node = NULL;
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int cvh   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int cvl   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int cv    = cvh * 256 + cv;
+
+  int value = __HEXA2Byte(frame + OFFSET_D4 + offset);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cv %d has a value of %d", cv, value );
+
+  node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcv( node, cv );
+  wProgram.setvalue( node, value );
+  wProgram.setcmd( node, wProgram.datarsp );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
 /*
     E3 RFID tag read (RFID)
 
@@ -467,6 +493,9 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     break;
   case OPC_ACDAT:
     __evaluateRFID(cbus, frame);
+    break;
+  case OPC_PCVS:
+    __evaluateCV(cbus, frame);
     break;
   }
 }
@@ -619,8 +648,9 @@ static void __timedqueue( void* threadinst ) {
 
 
 
-static void __translate( iOCBUS cbus, iONode node ) {
+static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
+  iONode rsp = NULL;
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
   }
@@ -706,6 +736,15 @@ static void __translate( iOCBUS cbus, iONode node ) {
         wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
     ThreadOp.post(data->writer, (obj)frame);
 
+  }
+
+  /* Sensor command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    rsp = (iONode)NodeOp.base.clone( node );
   }
 
 
@@ -798,6 +837,88 @@ static void __translate( iOCBUS cbus, iONode node ) {
 
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      int cv = wProgram.getcv( node );
+      int addr = wProgram.getaddr( node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
+
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** not supported *** POM: read CV%d of loc %d...", cv, addr );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read CV%d of loc %d...", cv, addr );
+        byte cmd[5];
+        byte* frame = allocMem(32);
+        Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+        cmd[0] = OPC_QCVS;
+        cmd[1] = 0;
+        cmd[2] = cv / 256;
+        cmd[3] = cv % 256;
+        cmd[4] = 0; /* TODO: Programming mode. */
+        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
+            wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
+
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      int cv = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+      int decaddr = wProgram.getdecaddr( node );
+
+
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
+        byte cmd[10];
+        byte* frame = allocMem(32);
+        Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+        cmd[0] = OPC_WCVOA;
+        cmd[1] = decaddr / 256;
+        cmd[2] = decaddr % 256;
+        cmd[3] = cv / 256;
+        cmd[4] = cv % 256;
+        cmd[5] = 0; /* TODO: Programming mode. */
+        cmd[6] = value;
+        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 6 );
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
+            wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d of loc %d to %d...", cv, decaddr, value );
+        byte cmd[10];
+        byte* frame = allocMem(32);
+        Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+        cmd[0] = OPC_WCVS;
+        cmd[1] = 0;
+        cmd[2] = cv / 256;
+        cmd[3] = cv % 256;
+        cmd[4] = 0; /* TODO: Programming mode. */
+        cmd[5] = value;
+        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 5 );
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
+            wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
+    else if(  wProgram.getcmd( node ) == wProgram.pton ) {
+    }
+    else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+    }
+
+  }
+
+  return rsp;
 }
 
 
