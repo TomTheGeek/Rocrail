@@ -215,7 +215,7 @@ static int _version( obj inst ) {
 }
 
 
-static byte __HEXAToByte( const char* s ) {
+static byte __HEXA2Byte( const char* s ) {
   char val[3] = {0};
   val[0] = s[0];
   val[1] = s[1];
@@ -229,7 +229,7 @@ static byte __HEXAToByte( const char* s ) {
 
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = __HEXAToByte(frame+7+offset);
+  int opc = __HEXA2Byte(frame+7+offset);
   return opc;
 }
 
