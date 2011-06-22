@@ -472,7 +472,21 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 
 
 
+static void __reportState(iOCBUS cbus, Boolean power) {
+  iOCBUSData data = Data(cbus);
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "track power %s", power?"ON":"OFF" );
+
+  if( data->iid != NULL )
+    wState.setiid( node, data->iid );
+  wState.setpower( node, power );
+  wState.settrackbus( node, power );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+}
 
 static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
@@ -496,6 +510,15 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     break;
   case OPC_PCVS:
     __evaluateCV(cbus, frame);
+    break;
+  case OPC_TON:
+    __reportState(cbus, True);
+    break;
+  case OPC_TOF:
+    __reportState(cbus, False);
+    break;
+  case OPC_ESTOP:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Emergency break!" );
     break;
   }
 }
@@ -662,9 +685,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       /* CS off */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = OPC_TOF;
+      cmd[0] = OPC_RTOF;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
     }
 
@@ -672,9 +695,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       /* CS ebreak */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = OPC_ESTOP;
+      cmd[0] = OPC_RESTP;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "emergency break" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request emergency break" );
       ThreadOp.post(data->writer, (obj)frame);
     }
 
@@ -682,9 +705,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       /* CS on */
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = OPC_TON;
+      cmd[0] = OPC_RTON;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)frame);
     }
   }
