@@ -215,7 +215,7 @@ static int _version( obj inst ) {
 }
 
 
-static byte _HEXAToByte( const char* s ) {
+static byte __HEXAToByte( const char* s ) {
   char val[3] = {0};
   val[0] = s[0];
   val[1] = s[1];
@@ -229,7 +229,7 @@ static byte _HEXAToByte( const char* s ) {
 
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = _HEXAToByte(frame+7+offset);
+  int opc = __HEXAToByte(frame+7+offset);
   return opc;
 }
 
@@ -821,7 +821,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid          = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cid          = %d", data->cid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid        = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod          = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib       = %s", wDigInt.getsublib(data->ini) );
