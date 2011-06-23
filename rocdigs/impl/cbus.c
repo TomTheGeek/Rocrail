@@ -432,6 +432,9 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       byte cmd[5];
       byte* frame = allocMem(32);
 
+      if( slot->session == 0 )
+        slot->lastkeep = SystemOp.getTick();
+
       slot->session = session;
 
       cmd[0] = OPC_DFLG;
@@ -724,6 +727,44 @@ static void __writer( void* threadinst ) {
     }
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
+
+}
+
+
+static void __keep( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
+  iOCBUSData data = Data(cbus);
+  byte* cmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "keeper started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    if( MutexOp.wait( data->lcmux ) ) {
+      iOSlot slot = (iOSlot)MapOp.first( data->lcmap);
+      while( slot != NULL ) {
+        if( slot->session > 0  && ( SystemOp.getTick() - slot->lastkeep > (data->purgetime*90) )  ) {
+          byte cmd[5];
+          byte* frame = allocMem(32);
+
+          cmd[0] = OPC_KEEP;
+          cmd[1] = slot->session;
+          __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 1 );
+
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "keep session %d fo %s", slot->session, slot->id );
+          ThreadOp.post(data->writer, (obj)frame);
+
+          slot->lastkeep = SystemOp.getTick();
+        }
+        slot = (iOSlot)MapOp.next( data->lcmap);
+      };
+      MutexOp.post(data->lcmux);
+    }
+
+    ThreadOp.sleep(100);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "keeper ended." );
 
 }
 
@@ -1153,6 +1194,8 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->writer );
     data->timedqueue = ThreadOp.inst( "cbtimedq", &__timedqueue, __CBUS );
     ThreadOp.start( data->timedqueue );
+    data->keep = ThreadOp.inst( "keeper", &__keep, __CBUS );
+    ThreadOp.start( data->keep );
 
   }
   else {

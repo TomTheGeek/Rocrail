@@ -46,6 +46,8 @@ class cbusdlggen : public wxDialog
 		wxSpinCtrl* m_SOD;
 		wxStaticText* m_labSwTime;
 		wxSpinCtrl* m_SwTime;
+		wxStaticText* m_labPurgetime;
+		wxSpinCtrl* m_Purgetime;
 		wxStdDialogButtonSizer* m_StdButton;
 		wxButton* m_StdButtonOK;
 		wxButton* m_StdButtonCancel;

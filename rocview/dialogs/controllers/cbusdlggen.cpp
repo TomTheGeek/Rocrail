@@ -88,6 +88,13 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_SwTime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
 	fgSizer41->Add( m_SwTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_labPurgetime = new wxStaticText( this, wxID_ANY, wxT("Purge time"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labPurgetime->Wrap( -1 );
+	fgSizer41->Add( m_labPurgetime, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_Purgetime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 20, 60, 20 );
+	fgSizer41->Add( m_Purgetime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_OptionsBox->Add( fgSizer41, 1, wxEXPAND, 5 );
 	
 	bSizer8->Add( m_OptionsBox, 0, wxEXPAND|wxALL, 5 );

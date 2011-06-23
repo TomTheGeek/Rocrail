@@ -58,6 +58,8 @@ void CbusDlg::initLabels() {
   m_Sublib->SetLabel(wxGetApp().getMsg( "sublib" ));
 
   // Options
+  m_labSwTime->SetLabel( wxGetApp().getMsg( "swtime" ) );
+  m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -74,6 +76,7 @@ void CbusDlg::initValues() {
   m_CANID->SetValue( wCBus.getcid( cbusini ) );
   m_SOD->SetValue( wCBus.getsodaddr( cbusini ) );
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
+  m_Purgetime->SetValue( wCBus.getpurgetime( cbusini ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(m_Props) )) {
@@ -96,6 +99,7 @@ void CbusDlg::evaluate() {
   wCBus.setsodaddr( cbusini, m_SOD->GetValue() );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
+  wCBus.setpurgetime( cbusini, m_Purgetime->GetValue() );
 
   if( m_Sublib->GetSelection() == 0 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_usb );

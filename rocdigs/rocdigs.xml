@@ -1351,6 +1351,7 @@
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
       <var name="fx" vt="int"/>
+      <var name="lastkeep" vt="long"/>
     </struct>
     <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
       <var name="out[32]" vt="byte"/>
@@ -1369,8 +1370,10 @@
       <var name="buson" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="keep" vt="iOThread"/>
       <var name="timedqueue" vt="iOThread"/>
       <var name="swtime" vt="int"/>
+      <var name="purgetime" vt="int"/>
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
       <var name="serial" vt="iOSerial"/>
