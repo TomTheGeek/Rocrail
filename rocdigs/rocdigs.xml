@@ -1346,6 +1346,7 @@
       <var name="session" vt="int"/>
       <var name="addr" vt="int"/>
       <var name="speed" vt="int"/>
+      <var name="rawspeed" vt="int"/>
       <var name="steps" vt="int"/>
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
@@ -1365,6 +1366,7 @@
       <var name="cid" vt="int"/>
       <var name="sodaddr" vt="int"/>
       <var name="shortevents" vt="Boolean"/>
+      <var name="buson" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="timedqueue" vt="iOThread"/>

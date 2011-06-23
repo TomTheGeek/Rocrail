@@ -280,6 +280,23 @@ static iOSlot __getSlotByAddr(iOCBUSData data, int lcaddr) {
 }
 
 
+static iOSlot __getSlotBySession(iOCBUSData data, int session) {
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->session == session ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by session %d", slot->id, session );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
 static iOSlot __getSlot(iOCBUSData data, iONode node) {
   int    addr  = wLoc.getaddr(node);
   iOSlot slot  = NULL;
@@ -331,6 +348,41 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
 }
 
 
+static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
+  iOCBUSData data = Data(cbus);
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int speed   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  Boolean dir = (speed & 0x80) ? True:False;
+
+  iOSlot slot = __getSlotBySession(data, session);
+
+  speed &= 0x7F;
+
+  if( slot != NULL ) {
+    iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "update speed[%d] for session %d, loco %s", speed, session, slot->id );
+
+    slot->rawspeed = speed;
+    slot->dir      = dir;
+
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    wLoc.setid( nodeC, slot->id );
+    wLoc.setaddr( nodeC, slot->addr );
+    wLoc.setV_raw( nodeC, slot->rawspeed );
+    wLoc.setV_rawMax( nodeC, slot->steps );
+    wLoc.setfn( nodeC, slot->lights);
+    wLoc.setdir( nodeC, slot->dir );
+    wLoc.setcmd( nodeC, wLoc.direction );
+    wLoc.setthrottleid( nodeC, "cbus" );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+  }
+}
 
 
 /* Frame ASCII format
@@ -345,7 +397,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   int addr    = addrh * 256 + addrl;
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, address %d", session, addr );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, loco %s", session, slot->id );
     if( slot->session == 0 ) {
       byte cmd[5];
       byte* frame = allocMem(32);
@@ -355,11 +407,11 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       cmd[0] = OPC_DFLG;
       cmd[1] = slot->session;
       if( slot->steps == 128 )
-        cmd[2] = 0;
+        cmd[2] = TMOD_SPD_128;
       else if( slot->steps == 14 )
-        cmd[2] = 1;
+        cmd[2] = TMOD_SPD_14;
       else if( slot->steps == 28 )
-        cmd[2] = 3;
+        cmd[2] = TMOD_SPD_28;
       cmd[2] |= (slot->lights ? 0x04:0x00);
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
 
@@ -369,7 +421,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
     }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "un-managed loco: session %d, address %d", session, addr );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d, address %d", session, addr );
   }
 }
 
@@ -497,6 +549,9 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_PLOC:
     __updateSlot(cbus, frame);
     break;
+  case OPC_DSPD:
+    __updateSpeedDir(cbus, frame);
+    break;
   case OPC_ACON:
   case OPC_ASON:
     __evaluateFB(cbus, frame, True);
@@ -520,6 +575,21 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_ESTOP:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Emergency break!" );
     break;
+  case OPC_HLT:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus halt" );
+    data->buson = False;
+    break;
+  case OPC_BON:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus on" );
+    data->buson = True;
+    break;
+  case OPC_STAT:
+    {
+      int offset  = (frame[1] == 'S') ? 0:4;
+      int status   = __HEXA2Byte(frame + OFFSET_D1 + offset);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
+      break;
+    }
   }
 }
 
@@ -601,17 +671,19 @@ static void __writer( void* threadinst ) {
     byte out[64] = {0};
 
     ThreadOp.sleep(10);
-    post = (byte*)ThreadOp.getPost( th );
+    if( data->buson ) {
+      post = (byte*)ThreadOp.getPost( th );
 
-    if (post != NULL) {
-      /* first byte is the message length */
-      len = post[0];
-      MemOp.copy( out, post+1, len);
-      freeMem( post);
+      if (post != NULL) {
+        /* first byte is the message length */
+        len = post[0];
+        MemOp.copy( out, post+1, len);
+        freeMem( post);
 
-      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
-      if( !SerialOp.write( data->serial, (char*)out, len ) ) {
-        /* sleep and send it again? */
+        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
+        if( !SerialOp.write( data->serial, (char*)out, len ) ) {
+          /* sleep and send it again? */
+        }
       }
     }
   }
@@ -862,6 +934,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean direct = wProgram.isdirect(node);
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
@@ -881,7 +954,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[1] = 0;
         cmd[2] = cv / 256;
         cmd[3] = cv % 256;
-        cmd[4] = 0; /* TODO: Programming mode. */
+        cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
@@ -907,7 +980,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[2] = decaddr % 256;
         cmd[3] = cv / 256;
         cmd[4] = cv % 256;
-        cmd[5] = 0; /* TODO: Programming mode. */
+        cmd[5] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[6] = value;
         __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 6 );
 
@@ -925,7 +998,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[1] = 0;
         cmd[2] = cv / 256;
         cmd[3] = cv % 256;
-        cmd[4] = 0; /* TODO: Programming mode. */
+        cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[5] = value;
         __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 5 );
 
@@ -971,6 +1044,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->swtime      = wDigInt.getswtime( ini );
 
   data->run      = True;
+  data->buson    = True;
   data->mux      = MutexOp.inst( NULL, True );
   data->lcmux    = MutexOp.inst( NULL, True );
   data->lcmap    = MapOp.inst();
