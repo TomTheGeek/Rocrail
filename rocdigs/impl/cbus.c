@@ -742,6 +742,39 @@ static void __timedqueue( void* threadinst ) {
 
 
 
+static int __getFnGroup(iONode node, byte* fmask) {
+  /*
+    Rocrail: 0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
+    CBUS:    1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28
+   */
+  int fg = wFunCmd.getgroup(node);
+  int f  = wFunCmd.getfnchanged(node);
+
+  if( f < 5 ) {
+    *fmask = f << f;
+    return 1;
+  }
+
+  if( f < 9 ) {
+    *fmask = f << (f-5);
+    return 2;
+  }
+
+  if( f < 13 ) {
+    *fmask = f << (f-9);
+    return 3;
+  }
+
+  if( f < 20 ) {
+    *fmask = f << (f-13);
+    return 4;
+  }
+
+  *fmask = f << (f-20);
+  return 5;
+
+}
+
 
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
@@ -908,24 +941,26 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
 
     if( slot->session > 0 ) {
+      byte fmask = 0;
       byte* frame = allocMem(32);
       cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
       /* TODO: Functions. */
-      cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
-      cmd[3] = 0; /* the bits */
+      cmd[2] = __getFnGroup(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[3] = fmask; /* the bits */
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
       ThreadOp.post(data->writer, (obj)frame);
     }
     else {
+      byte fmask = 0;
       iQCmd qcmd = allocMem(sizeof(struct QCmd));
       qcmd->wait4session  = True;
       qcmd->slot = slot;
       cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
       /* TODO: Functions. */
-      cmd[2] = 1; /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
-      cmd[3] = 0; /* the bits */
+      cmd[2] = __getFnGroup(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[3] = fmask; /* the bits */
       __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
