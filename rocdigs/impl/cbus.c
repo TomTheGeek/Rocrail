@@ -990,6 +990,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
     }
     else {
@@ -1027,6 +1028,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[1] = slot->session;
       cmd[2] = fnchanged;
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
     }
     else {
