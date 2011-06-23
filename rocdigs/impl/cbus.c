@@ -385,6 +385,104 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
 }
 
 
+static int __getFnGroup4RR(int group, int fmask, int* fn) {
+  /*
+    Rocrail: 0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
+    CBUS:    1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28
+   */
+
+  int i = 0;
+  int rrgroup = 0;
+  *fn = 0;
+
+  if( group == 1 ) {
+    for( i = 0; i < 5; i++ ) {
+      if( fmask & (1 << i) ) {
+        *fn = i;
+      }
+    }
+    return (i==0)?0:1;
+  }
+
+  if( group == 2 ) {
+    for( i = 0; i < 4; i++ ) {
+      if( fmask & (1 << i) ) {
+        *fn = i + 5;
+      }
+    }
+    return 2;
+  }
+
+  if( group == 3 ) {
+    for( i = 0; i < 4; i++ ) {
+      if( fmask & (1 << i) ) {
+        *fn = i + 9;
+      }
+    }
+    return 3;
+  }
+
+  if( group == 4 ) {
+    for( i = 0; i < 7; i++ ) {
+      if( fmask & (1 << i) ) {
+        *fn = i + 13;
+      }
+    }
+    return (*fn > 16) ? 5:4;
+  }
+
+  if( group == 5 ) {
+    for( i = 0; i < 9; i++ ) {
+      if( fmask & (1 << i) ) {
+        *fn = i + 20;
+      }
+    }
+    if( *fn == 20 )
+      return 5;
+    return (*fn > 24) ? 7:6;
+  }
+
+  return 0;
+
+}
+
+
+static void __updateFunctions(iOCBUS cbus, byte* frame) {
+  iOCBUSData data = Data(cbus);
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int group   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int fmask   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+
+  iOSlot slot = __getSlotBySession(data, session);
+
+  if( slot != NULL ) {
+    int fnchanged = 0;
+    int fngroup = __getFnGroup4RR(group, fmask, &fnchanged);
+
+    iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "update functions for session %d, loco %s", session, slot->id );
+
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    wFunCmd.setid( nodeC, slot->id );
+    wFunCmd.setaddr( nodeC, slot->addr );
+    wFunCmd.setf0( nodeC, slot->lights );
+
+    wFunCmd.setfnchanged(nodeC, fnchanged);
+    wFunCmd.setgroup(nodeC, fngroup);
+
+    wLoc.setthrottleid( nodeC, "cbus" );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+  }
+}
+
+
 /* Frame ASCII format
  * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d;
  */
@@ -551,6 +649,9 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     break;
   case OPC_DSPD:
     __updateSpeedDir(cbus, frame);
+    break;
+  case OPC_DFUN:
+    __updateFunctions(cbus, frame);
     break;
   case OPC_ACON:
   case OPC_ASON:
@@ -742,7 +843,8 @@ static void __timedqueue( void* threadinst ) {
 
 
 
-static int __getFnGroup(iONode node, byte* fmask) {
+
+static int __getFnGroup4CAN(iONode node, byte* fmask) {
   /*
     Rocrail: 0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
     CBUS:    1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28
@@ -945,8 +1047,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = allocMem(32);
       cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
-      /* TODO: Functions. */
-      cmd[2] = __getFnGroup(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[2] = __getFnGroup4CAN(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
       cmd[3] = fmask; /* the bits */
       __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
       ThreadOp.post(data->writer, (obj)frame);
@@ -958,8 +1059,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       qcmd->slot = slot;
       cmd[0] = OPC_DFUN;
       cmd[1] = slot->session;
-      /* TODO: Functions. */
-      cmd[2] = __getFnGroup(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
+      cmd[2] = __getFnGroup4CAN(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
       cmd[3] = fmask; /* the bits */
       __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
       ThreadOp.post( data->timedqueue, (obj)qcmd );
