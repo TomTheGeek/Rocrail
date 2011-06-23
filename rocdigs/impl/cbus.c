@@ -385,81 +385,15 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
 }
 
 
-static int __getFnGroup4RR(int group, int fmask, int* fn) {
-  /*
-    Rocrail: 0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
-    CBUS:    1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28
-   */
-
-  int i = 0;
-  int rrgroup = 0;
-  *fn = 0;
-
-  if( group == 1 ) {
-    for( i = 0; i < 5; i++ ) {
-      if( fmask & (1 << i) ) {
-        *fn = i;
-      }
-    }
-    return (i==0)?0:1;
-  }
-
-  if( group == 2 ) {
-    for( i = 0; i < 4; i++ ) {
-      if( fmask & (1 << i) ) {
-        *fn = i + 5;
-      }
-    }
-    return 2;
-  }
-
-  if( group == 3 ) {
-    for( i = 0; i < 4; i++ ) {
-      if( fmask & (1 << i) ) {
-        *fn = i + 9;
-      }
-    }
-    return 3;
-  }
-
-  if( group == 4 ) {
-    for( i = 0; i < 7; i++ ) {
-      if( fmask & (1 << i) ) {
-        *fn = i + 13;
-      }
-    }
-    return (*fn > 16) ? 5:4;
-  }
-
-  if( group == 5 ) {
-    for( i = 0; i < 9; i++ ) {
-      if( fmask & (1 << i) ) {
-        *fn = i + 20;
-      }
-    }
-    if( *fn == 20 )
-      return 5;
-    return (*fn > 24) ? 7:6;
-  }
-
-  return 0;
-
-}
-
-
-static void __updateFunctions(iOCBUS cbus, byte* frame) {
+static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
   int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int group   = __HEXA2Byte(frame + OFFSET_D2 + offset);
-  int fmask   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int fn      = __HEXA2Byte(frame + OFFSET_D2 + offset);
 
   iOSlot slot = __getSlotBySession(data, session);
 
   if( slot != NULL ) {
-    int fnchanged = 0;
-    int fngroup = __getFnGroup4RR(group, fmask, &fnchanged);
-
     iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -469,10 +403,8 @@ static void __updateFunctions(iOCBUS cbus, byte* frame) {
       wLoc.setiid( nodeC, data->iid );
     wFunCmd.setid( nodeC, slot->id );
     wFunCmd.setaddr( nodeC, slot->addr );
-    wFunCmd.setf0( nodeC, slot->lights );
-
-    wFunCmd.setfnchanged(nodeC, fnchanged);
-    wFunCmd.setgroup(nodeC, fngroup);
+    wFunCmd.setfnchanged(nodeC, fn);
+    wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
 
     wLoc.setthrottleid( nodeC, "cbus" );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
@@ -650,8 +582,11 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_DSPD:
     __updateSpeedDir(cbus, frame);
     break;
-  case OPC_DFUN:
-    __updateFunctions(cbus, frame);
+  case OPC_FNON:
+    __updateFunction(cbus, frame, True);
+    break;
+  case OPC_FNOF:
+    __updateFunction(cbus, frame, False);
     break;
   case OPC_ACON:
   case OPC_ASON:
@@ -844,39 +779,40 @@ static void __timedqueue( void* threadinst ) {
 
 
 
-static int __getFnGroup4CAN(iONode node, byte* fmask) {
-  /*
-    Rocrail: 0=all, 1=f1-f4, 2=f5-f8, 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
-    CBUS:    1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28
-   */
-  int fg = wFunCmd.getgroup(node);
-  int f  = wFunCmd.getfnchanged(node);
-
-  if( f < 5 ) {
-    *fmask = f << f;
-    return 1;
+Boolean __getFState(iONode fcmd, int fn) {
+  switch( fn ) {
+    case 0 : return wFunCmd.isf0 (fcmd);
+    case 1 : return wFunCmd.isf1 (fcmd);
+    case 2 : return wFunCmd.isf2 (fcmd);
+    case 3 : return wFunCmd.isf3 (fcmd);
+    case 4 : return wFunCmd.isf4 (fcmd);
+    case 5 : return wFunCmd.isf5 (fcmd);
+    case 6 : return wFunCmd.isf6 (fcmd);
+    case 7 : return wFunCmd.isf7 (fcmd);
+    case 8 : return wFunCmd.isf8 (fcmd);
+    case 9 : return wFunCmd.isf9 (fcmd);
+    case 10: return wFunCmd.isf10(fcmd);
+    case 11: return wFunCmd.isf11(fcmd);
+    case 12: return wFunCmd.isf12(fcmd);
+    case 13: return wFunCmd.isf13(fcmd);
+    case 14: return wFunCmd.isf14(fcmd);
+    case 15: return wFunCmd.isf15(fcmd);
+    case 16: return wFunCmd.isf16(fcmd);
+    case 17: return wFunCmd.isf17(fcmd);
+    case 18: return wFunCmd.isf18(fcmd);
+    case 19: return wFunCmd.isf19(fcmd);
+    case 20: return wFunCmd.isf20(fcmd);
+    case 21: return wFunCmd.isf21(fcmd);
+    case 22: return wFunCmd.isf22(fcmd);
+    case 23: return wFunCmd.isf23(fcmd);
+    case 24: return wFunCmd.isf24(fcmd);
+    case 25: return wFunCmd.isf25(fcmd);
+    case 26: return wFunCmd.isf26(fcmd);
+    case 27: return wFunCmd.isf27(fcmd);
+    case 28: return wFunCmd.isf28(fcmd);
   }
-
-  if( f < 9 ) {
-    *fmask = f << (f-5);
-    return 2;
-  }
-
-  if( f < 13 ) {
-    *fmask = f << (f-9);
-    return 3;
-  }
-
-  if( f < 20 ) {
-    *fmask = f << (f-13);
-    return 4;
-  }
-
-  *fmask = f << (f-20);
-  return 5;
-
+  return False;
 }
-
 
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
@@ -1031,7 +967,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     byte cmd[5];
-    int   addr = wFunCmd.getaddr( node );
+    int     addr      = wFunCmd.getaddr( node );
+    int     fnchanged = wFunCmd.getfnchanged(node);
+    Boolean fstate    = __getFState(node, fnchanged);
 
     iOSlot slot = __getSlot(data, node );
 
@@ -1040,16 +978,14 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       return;
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fstate?"ON":"OFF" );
 
     if( slot->session > 0 ) {
-      byte fmask = 0;
       byte* frame = allocMem(32);
-      cmd[0] = OPC_DFUN;
+      cmd[0] = fstate?OPC_FNON:OPC_FNOF;
       cmd[1] = slot->session;
-      cmd[2] = __getFnGroup4CAN(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
-      cmd[3] = fmask; /* the bits */
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
+      cmd[2] = fnchanged;
+      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
       ThreadOp.post(data->writer, (obj)frame);
     }
     else {
@@ -1057,11 +993,10 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       iQCmd qcmd = allocMem(sizeof(struct QCmd));
       qcmd->wait4session  = True;
       qcmd->slot = slot;
-      cmd[0] = OPC_DFUN;
+      cmd[0] = fstate?OPC_FNON:OPC_FNOF;
       cmd[1] = slot->session;
-      cmd[2] = __getFnGroup4CAN(node, &fmask); /* function range: 1=0-4, 2=5-8, 3=9-12, 4=13-19, 5=20-28*/
-      cmd[3] = fmask; /* the bits */
-      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
+      cmd[2] = fnchanged;
+      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
 

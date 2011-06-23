@@ -78,6 +78,8 @@
 #define OPC_KCON    0x46    // De-consist loco
 #define OPC_DSPD    0x47    // Loco speed/dir
 #define OPC_DFLG    0x48    // Set engine flags
+#define OPC_FNON    0x49    // Set engine function on by number
+#define OPC_FNOF    0x4A    // Set engine function off by number
 #define OPC_SSTAT   0x4C    // Service mode status
 
 #define OPC_NNACK	0x50    // Node number acknowledge
