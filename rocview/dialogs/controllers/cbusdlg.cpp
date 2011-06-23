@@ -58,7 +58,7 @@ void CbusDlg::initLabels() {
   m_Sublib->SetLabel(wxGetApp().getMsg( "sublib" ));
 
   // Options
-  m_labSwTime->SetLabel( wxGetApp().getMsg( "swtime" ) );
+  m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
 
   // Buttons
