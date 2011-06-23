@@ -489,6 +489,42 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
 }
 
 
+static __evaluateErr( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+  iONode node = NULL;
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int addrh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrl   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int err     = __HEXA2Byte(frame + OFFSET_D3 + offset);
+
+  int addr = addrh * 256 + addrl;
+
+  const char* errStr = "?";
+
+  switch( err ) {
+  case ERR_LOCO_STACK_FULL:
+    errStr = "loco stack full";
+    break;
+  case ERR_LOCO_ADDR_TAKEN:
+    errStr = "loco address taken";
+    break;
+  case ERR_SESSION_NOT_PRESENT:
+    errStr = "session not present";
+    break;
+  case ERR_NO_MORE_ENGINES:
+    errStr = "no more engines";
+    break;
+  case ERR_ENGINE_NOT_FOUND:
+    errStr = "engine not found";
+    break;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "\"%s\" for address %d", errStr, addr );
+
+}
+
+
 static __evaluateCV( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
   iONode node = NULL;
@@ -579,6 +615,9 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
 
   switch(opc) {
+  case OPC_ERR:
+    __evaluateErr(cbus, frame);
+    break;
   case OPC_PLOC:
     __updateSlot(cbus, frame);
     break;
