@@ -1437,7 +1437,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
 
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init CBUS port!" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init CBUS connection!" );
   }
 
 

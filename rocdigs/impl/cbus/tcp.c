@@ -44,21 +44,18 @@ Boolean tcpConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IP port    [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  while( data->run ) {
-    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
-    data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-    if( data->socket != NULL ) {
-      SocketOp.setNodelay(data->socket, True);
-      if ( SocketOp.connect( data->socket ) ) {
-        TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
-        return True;
-      }
+  TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+  data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+  if( data->socket != NULL ) {
+    SocketOp.setNodelay(data->socket, True);
+    if ( SocketOp.connect( data->socket ) ) {
+      TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
+      return True;
     }
-    if( data->socket != NULL ) {
-      SocketOp.base.del( data->socket );
-      data->socket = NULL;
-    }
-    ThreadOp.sleep(1000);
+  }
+  if( data->socket != NULL ) {
+    SocketOp.base.del( data->socket );
+    data->socket = NULL;
   }
 
   return False;
