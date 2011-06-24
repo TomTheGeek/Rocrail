@@ -105,6 +105,7 @@ ROCNETOBJS=$(patsubst impl/rocnet/%.c,$(TMPOUTDIR)/rocnet/%.o,$(wildcard impl/ro
 OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl/opendcc/*.c))
 XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcard impl/xpressnet/*.c))
 BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
+CBUSOBJS=$(patsubst impl/cbus/%.c,$(TMPOUTDIR)/cbus/%.o,$(wildcard impl/cbus/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
@@ -189,8 +190,8 @@ $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX):  $(BIDIBOBJS) $(TMPOUTDIR)$(FS)bidib.o $(COM
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)bidib.o $(BIDIBOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)zs2.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zs2.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)$(FS)cbus$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)cbus.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)cbus.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)cbus$(SHAREDSUFFIX): $(CBUSOBJS) $(TMPOUTDIR)$(FS)cbus.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)cbus.o $(CBUSOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -236,6 +237,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)opendcc
 	-$(MKDIR) $(TMPOUTDIR)$(FS)xpressnet
 	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
+	-$(MKDIR) $(TMPOUTDIR)$(FS)cbus
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -246,6 +248,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)opendcc$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)xpressnet$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)bidib$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)

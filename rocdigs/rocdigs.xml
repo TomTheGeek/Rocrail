@@ -1337,6 +1337,11 @@
   </object>
 
   <object name="CBUS" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint" remark="CBUS">
+    <typedef def="Boolean(*sublib_connect)(obj)"/>
+    <typedef def="void(*sublib_disconnect)(obj)"/>
+    <typedef def="Boolean(*sublib_read)(obj,byte*,int)"/>
+    <typedef def="Boolean(*sublib_write)(obj,byte*,int)"/>
+    <typedef def="Boolean(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1384,6 +1389,11 @@
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
+      <var name="subConnect" vt="sublib_connect"/>
+      <var name="subDisconnect" vt="sublib_disconnect"/>
+      <var name="subRead" vt="sublib_read"/>
+      <var name="subWrite" vt="sublib_write"/>
+      <var name="subAvailable" vt="sublib_available"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
     </data>

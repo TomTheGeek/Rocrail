@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/State.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/serial.h"
 
 static int instCnt = 0;
 /*
@@ -181,6 +182,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   ThreadOp.sleep(100);
+  data->subDisconnect(inst);
 }
 
 
@@ -824,17 +826,18 @@ static void __reader( void* threadinst ) {
      * 1d-7d -> data 2 byte HEXA
      * ;     -> end of frame
      */
-    if( SerialOp.available(data->serial) ) {
-      if( SerialOp.read(data->serial, frame, 1) ) {
+
+    if( data->subAvailable( (obj)cbus) ) {
+      if( data->subRead( (obj)cbus, frame, 1) ) {
         if( frame[0] == ':' ) {
-          if( SerialOp.read(data->serial, frame+1, 1) ) {
+          if( data->subRead( (obj)cbus, frame+1, 1) ) {
             if( frame[1] == 'S' || frame[1] == 'X' ) {
               int offset = (frame[1] == 'S') ? 0:4;
-              if( SerialOp.read(data->serial, frame + 2, OFFSET_OPC + offset ) ) {
+              if( data->subRead( (obj)cbus, frame + 2, OFFSET_OPC + offset ) ) {
                 int opc = __getOPC(frame);
                 int datalen = __getDataLen(opc);
                 TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
-                if( SerialOp.read(data->serial, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
+                if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
                   TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
                   __evaluateFrame(cbus, frame, opc);
                 }
@@ -877,7 +880,7 @@ static void __writer( void* threadinst ) {
         freeMem( post);
 
         TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
-        if( !SerialOp.write( data->serial, (char*)out, len ) ) {
+        if( !data->subWrite((obj)cbus, out, len) ) {
           /* sleep and send it again? */
         }
       }
@@ -1397,17 +1400,23 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps           = %d", data->bps );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
-  data->serialOK = SerialOp.open( data->serial );
+  /* choose interface: */
+  if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( ini ) ) ) {
+    /* tcp/ip */
+  }
+  else {
+    /* usb or serial */
+    data->subConnect    = serialConnect;
+    data->subDisconnect = serialDisconnect;
+    data->subRead       = serialRead;
+    data->subWrite      = serialWrite;
+    data->subAvailable  = serialAvailable;
+  }
+
+  data->serialOK = data->subConnect((obj)__CBUS);
 
   if( data->serialOK ) {
 
