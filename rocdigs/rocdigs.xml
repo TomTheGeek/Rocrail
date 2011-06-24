@@ -1367,6 +1367,7 @@
       <var name="cid" vt="int"/>
       <var name="sodaddr" vt="int"/>
       <var name="shortevents" vt="Boolean"/>
+      <var name="fonfof" vt="Boolean"/>
       <var name="buson" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>

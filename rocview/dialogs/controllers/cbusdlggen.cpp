@@ -41,10 +41,10 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer8->Add( fgSizer4, 0, wxEXPAND, 5 );
 	
-	wxString m_SublibChoices[] = { wxT("USB"), wxT("Serial") };
+	wxString m_SublibChoices[] = { wxT("USB"), wxT("Serial"), wxT("TCP/IP") };
 	int m_SublibNChoices = sizeof( m_SublibChoices ) / sizeof( wxString );
 	m_Sublib = new wxRadioBox( this, wxID_ANY, wxT("Type"), wxDefaultPosition, wxDefaultSize, m_SublibNChoices, m_SublibChoices, 1, wxRA_SPECIFY_ROWS );
-	m_Sublib->SetSelection( 0 );
+	m_Sublib->SetSelection( 1 );
 	bSizer8->Add( m_Sublib, 0, wxALL|wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer5;
@@ -57,8 +57,8 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_labDevice->Wrap( -1 );
 	fgSizer5->Add( m_labDevice, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_Device = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 160,-1 ), 0 );
-	fgSizer5->Add( m_Device, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	m_Device = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	fgSizer5->Add( m_Device, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	bSizer8->Add( fgSizer5, 1, wxEXPAND, 5 );
 	
@@ -67,7 +67,10 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_ShortEvents = new wxCheckBox( this, wxID_ANY, wxT("Short events"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_ShortEvents->SetValue(true); 
-	m_OptionsBox->Add( m_ShortEvents, 0, wxALL, 5 );
+	m_OptionsBox->Add( m_ShortEvents, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_FonFof = new wxCheckBox( this, wxID_ANY, wxT("FONFOF"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_OptionsBox->Add( m_FonFof, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	wxFlexGridSizer* fgSizer41;
 	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );

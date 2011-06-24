@@ -42,6 +42,7 @@ class cbusdlggen : public wxDialog
 		wxStaticText* m_labDevice;
 		wxTextCtrl* m_Device;
 		wxCheckBox* m_ShortEvents;
+		wxCheckBox* m_FonFof;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_SOD;
 		wxStaticText* m_labSwTime;

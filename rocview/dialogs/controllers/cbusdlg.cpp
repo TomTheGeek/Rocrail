@@ -79,6 +79,9 @@ void CbusDlg::initValues() {
   m_Purgetime->SetValue( wCBus.getpurgetime( cbusini ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 
+  // disable tcp/ip; no implementation jet.
+  m_Sublib->Enable(2, false);
+
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(m_Props) )) {
     // USB
     m_Sublib->SetSelection(0);
@@ -89,6 +92,7 @@ void CbusDlg::initValues() {
   }
 
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
+  m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
 }
 
 void CbusDlg::evaluate() {
@@ -107,6 +111,7 @@ void CbusDlg::evaluate() {
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
 
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
+  wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
 
 }
 

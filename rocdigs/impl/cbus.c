@@ -348,6 +348,29 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
 }
 
 
+static void __broadcastSpeedDir(iOCBUS cbus, iOSlot slot, int speed, Boolean dir) {
+  iOCBUSData data = Data(cbus);
+  iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "update speed[%d] for loco %s", speed, slot->id );
+
+  slot->rawspeed = speed;
+  slot->dir      = dir;
+
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wLoc.setid( nodeC, slot->id );
+  wLoc.setaddr( nodeC, slot->addr );
+  wLoc.setV_raw( nodeC, slot->rawspeed );
+  wLoc.setV_rawMax( nodeC, slot->steps );
+  wLoc.setfn( nodeC, slot->lights);
+  wLoc.setdir( nodeC, slot->dir );
+  wLoc.setcmd( nodeC, wLoc.direction );
+  wLoc.setthrottleid( nodeC, "cbus" );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
@@ -360,24 +383,7 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
   speed &= 0x7F;
 
   if( slot != NULL ) {
-    iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "update speed[%d] for session %d, loco %s", speed, session, slot->id );
-
-    slot->rawspeed = speed;
-    slot->dir      = dir;
-
-    if( data->iid != NULL )
-      wLoc.setiid( nodeC, data->iid );
-    wLoc.setid( nodeC, slot->id );
-    wLoc.setaddr( nodeC, slot->addr );
-    wLoc.setV_raw( nodeC, slot->rawspeed );
-    wLoc.setV_rawMax( nodeC, slot->steps );
-    wLoc.setfn( nodeC, slot->lights);
-    wLoc.setdir( nodeC, slot->dir );
-    wLoc.setcmd( nodeC, wLoc.direction );
-    wLoc.setthrottleid( nodeC, "cbus" );
-    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    __broadcastSpeedDir(cbus, slot, speed, dir);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
@@ -425,6 +431,16 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   int addrh   = __HEXA2Byte(frame + OFFSET_D2 + offset);
   int addrl   = __HEXA2Byte(frame + OFFSET_D3 + offset);
   int addr    = addrh * 256 + addrl;
+
+  int speed   =  __HEXA2Byte(frame + OFFSET_D4 + offset);
+  int f0_4    =  __HEXA2Byte(frame + OFFSET_D5 + offset);
+  int f5_8    =  __HEXA2Byte(frame + OFFSET_D6 + offset);
+  int f9_12   =  __HEXA2Byte(frame + OFFSET_D7 + offset);
+
+  Boolean dir = (speed & 0x80) ? True:False;
+
+  speed &= speed & 0x7F;
+
   iOSlot slot = __getSlotByAddr(data, addr);
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "update slot for session %d, loco %s", session, slot->id );
@@ -450,6 +466,8 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set engine flags for loco %s", slot->id );
       ThreadOp.post(data->writer, (obj)frame);
+
+      __broadcastSpeedDir(cbus, slot, speed, dir);
 
     }
   }
@@ -1191,6 +1209,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->cid         = wCBus.getcid(data->cbusini);
   data->sodaddr     = wCBus.getsodaddr(data->cbusini);
   data->shortevents = wCBus.isshortevents(data->cbusini);
+  data->fonfof      = wCBus.isfonfof(data->cbusini);
   data->run         = True;
   data->device      = wDigInt.getdevice( data->ini );
   data->swtime      = wDigInt.getswtime( ini );
@@ -1210,14 +1229,15 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MERG CBUS %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid          = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid        = %d", data->cid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod          = %d", data->sodaddr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events = %s", data->shortevents ? "yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib       = %s", wDigInt.getsublib(data->ini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device       = %s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps          = %d", data->bps );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime   = %d", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid         = %d", data->cid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod           = %d", data->sodaddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new functions = %s", data->fonfof ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps           = %d", data->bps );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
