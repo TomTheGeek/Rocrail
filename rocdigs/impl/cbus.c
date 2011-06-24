@@ -391,6 +391,31 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
 }
 
 
+static void __broadcastFunctions(iOCBUS cbus, iOSlot slot, int fn, int fg1, int fg2, int fg3, int fg4, int fg5) {
+  iOCBUSData data = Data(cbus);
+
+  iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "update functions for loco %s", slot->id );
+
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wFunCmd.setid( nodeC, slot->id );
+  wFunCmd.setaddr( nodeC, slot->addr );
+  if( fn != -1 ) {
+    wFunCmd.setfnchanged(nodeC, fn);
+    wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
+  }
+  else {
+    /* TODO: Function masks. */
+  }
+
+  wLoc.setthrottleid( nodeC, "cbus" );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
@@ -400,20 +425,73 @@ static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
   iOSlot slot = __getSlotBySession(data, session);
 
   if( slot != NULL ) {
-    iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    int mask = (1 << fn);
+    slot->fx = slot->fx & ~mask;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "update functions for session %d, loco %s", session, slot->id );
+    if( fstate )
+      slot->fx |= mask;
 
-    if( data->iid != NULL )
-      wLoc.setiid( nodeC, data->iid );
-    wFunCmd.setid( nodeC, slot->id );
-    wFunCmd.setaddr( nodeC, slot->addr );
-    wFunCmd.setfnchanged(nodeC, fn);
-    wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
+    __broadcastFunctions(cbus, slot, fn, -1, -1, -1, -1, -1);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+  }
+}
 
-    wLoc.setthrottleid( nodeC, "cbus" );
-    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+static void __updateFunctions(iOCBUS cbus, byte* frame) {
+  iOCBUSData data = Data(cbus);
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
+  int fg      = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int fmask   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+
+  iOSlot slot = __getSlotBySession(data, session);
+
+  if( slot != NULL ) {
+    int f0_4   = -1;
+    int f5_8   = -1;
+    int f9_12  = -1;
+    int f13_19 = -1;
+    int f20_28 = -1;
+
+    int fxmask = 0xFFFFFFFF;
+
+    if( fg == 1 ) {
+      f0_4 = fmask;
+      slot->lights = (fmask & 0x01) ? True:False;
+      fmask >>= 1;
+      fxmask &= 0xFFFFFFF0;
+      slot->fx &= (fxmask | fmask);
+    }
+    else if( fg == 2 ) {
+      f5_8 = fmask;
+      fmask <<= 4;
+      fxmask &= 0xFFFFFF0F;
+      slot->fx &= (fxmask | fmask);
+    }
+    else if( fg == 3 ) {
+      f9_12 = fmask;
+      fmask <<= 8;
+      fxmask &= 0xFFFFF0FF;
+      slot->fx &= (fxmask | fmask);
+    }
+    else if( fg == 4 ) {
+      f13_19 = fmask;
+      fmask <<= 12;
+      fxmask &= 0xFFFC0FFF;
+      slot->fx &= (fxmask | fmask);
+    }
+    else if( fg == 5 ) {
+      f20_28 = fmask;
+      fmask <<= 19;
+      fxmask &= 0xF807FFFF;
+      slot->fx &= (fxmask | fmask);
+    }
+
+    /* TODO: Update fx. */
+
+    __broadcastFunctions(cbus, slot, -1, f0_4, f5_8, f9_12, f13_19, f20_28);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
@@ -468,6 +546,8 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       ThreadOp.post(data->writer, (obj)frame);
 
       __broadcastSpeedDir(cbus, slot, speed, dir);
+      __broadcastFunctions(cbus, slot, -1, f0_4, f5_8, f9_12, -1, -1);
+
 
     }
   }
@@ -647,6 +727,9 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     break;
   case OPC_FNOF:
     __updateFunction(cbus, frame, False);
+    break;
+  case OPC_DFUN:
+    __updateFunctions(cbus, frame);
     break;
   case OPC_ACON:
   case OPC_ASON:
