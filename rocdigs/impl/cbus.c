@@ -1012,6 +1012,56 @@ Boolean __getFState(iONode fcmd, int fn) {
   return False;
 }
 
+
+static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
+  int fnchanged = wFunCmd.getfnchanged(node);
+  int i = 0;
+  int fmask = 0;
+
+  cmd[0] = OPC_DFUN;
+  if( fnchanged < 5 ) {
+    cmd[1] = 1;
+    for( i = 0; i < 5; i++ ) {
+      if( __getFState(node, i) )
+        fmask |= (1 << i);
+    }
+    cmd[2] = fmask;
+  }
+  else if( fnchanged < 9 ) {
+    cmd[1] = 2;
+    for( i = 5; i < 9; i++ ) {
+      if( __getFState(node, i) )
+        fmask |= (1 << (i-5));
+    }
+    cmd[2] = fmask;
+  }
+  else if( fnchanged < 13 ) {
+    cmd[1] = 3;
+    for( i = 9; i < 13; i++ ) {
+      if( __getFState(node, i) )
+        fmask |= (1 << (i-9));
+    }
+    cmd[2] = fmask;
+  }
+  else if( fnchanged < 20 ) {
+    cmd[1] = 4;
+    for( i = 13; i < 20; i++ ) {
+      if( __getFState(node, i) )
+        fmask |= (1 << (i-13));
+    }
+    cmd[2] = fmask;
+  }
+  else if( fnchanged < 29 ) {
+    cmd[1] = 5;
+    for( i = 20; i < 29; i++ ) {
+      if( __getFState(node, i) )
+        fmask |= (1 << (i-20));
+    }
+    cmd[2] = fmask;
+  }
+}
+
+
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
@@ -1181,10 +1231,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
-      cmd[0] = fstate?OPC_FNON:OPC_FNOF;
-      cmd[1] = slot->session;
-      cmd[2] = fnchanged;
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      if( data->fonfof ) {
+        cmd[0] = fstate?OPC_FNON:OPC_FNOF;
+        cmd[1] = slot->session;
+        cmd[2] = fnchanged;
+        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      }
+      else {
+        __makeDFUN(slot, node, cmd);
+        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
+      }
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1193,10 +1249,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       iQCmd qcmd = allocMem(sizeof(struct QCmd));
       qcmd->wait4session  = True;
       qcmd->slot = slot;
-      cmd[0] = fstate?OPC_FNON:OPC_FNOF;
-      cmd[1] = slot->session;
-      cmd[2] = fnchanged;
-      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
+      if( data->fonfof ) {
+        cmd[0] = fstate?OPC_FNON:OPC_FNOF;
+        cmd[1] = slot->session;
+        cmd[2] = fnchanged;
+        __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
+      }
+      else {
+        __makeDFUN(slot, node, cmd);
+        __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
+      }
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
 
@@ -1333,7 +1395,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid         = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod           = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new functions = %s", data->fonfof ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps           = %d", data->bps );
