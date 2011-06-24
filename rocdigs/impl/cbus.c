@@ -69,6 +69,7 @@ static int instCnt = 0;
 
 static iONode __translate( iOCBUS cbus, iONode node );
 static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
+static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -297,7 +298,72 @@ static iOSlot __getSlotBySession(iOCBUSData data, int session) {
 }
 
 
-static iOSlot __getSlot(iOCBUSData data, iONode node) {
+static void __fg2fn(iOCBUS cbus, iOSlot slot, int fg, int fmask) {
+  iOCBUSData data = Data(cbus);
+  int i = 0;
+  Boolean f = False;
+
+  switch( fg ) {
+  case 1: /* 0-4 */
+    for( i = 0; i < 5; i++ ) {
+      f = (fmask & (1 << i)) ? True:False;
+      if( f != slot->f[i]) {
+        slot->f[i] = f;
+        __broadcastFunction(cbus, slot, i );
+      }
+    }
+    break;
+  case 2: /* 5-8 */
+    for( i = 5; i < 9; i++ ) {
+      f = (fmask & (1 << (i-5))) ? True:False;
+      if( f != slot->f[i]) {
+        slot->f[i] = f;
+        __broadcastFunction(cbus, slot, i );
+      }
+    }
+    break;
+  case 3: /* 9-12 */
+    for( i = 9; i < 13; i++ ) {
+      f = (fmask & (1 << (i-9))) ? True:False;
+      if( f != slot->f[i]) {
+        slot->f[i] = f;
+        __broadcastFunction(cbus, slot, i );
+      }
+    }
+    break;
+  case 4: /* 13-19 */
+    for( i = 13; i < 20; i++ ) {
+      f = (fmask & (1 << (i-13))) ? True:False;
+      if( f != slot->f[i]) {
+        slot->f[i] = f;
+        __broadcastFunction(cbus, slot, i );
+      }
+    }
+    break;
+  case 5: /* 20-28 */
+    for( i = 20; i < 29; i++ ) {
+      f = (fmask & (1 << (i-20))) ? True:False;
+      if( f != slot->f[i]) {
+        slot->f[i] = f;
+        __broadcastFunction(cbus, slot, i );
+      }
+    }
+    break;
+  }
+
+}
+
+
+static void __fx2fn(iOSlot slot, int fx) {
+  int i = 0;
+  for( i = 0; i < 28; i++ ) {
+    slot->f[i] = (fx & (1 << i)) ? True:False;
+  }
+}
+
+
+static iOSlot __getSlot(iOCBUS cbus, iONode node) {
+  iOCBUSData data = Data(cbus);
   int    addr  = wLoc.getaddr(node);
   iOSlot slot  = NULL;
   int    speed = 0;
@@ -314,8 +380,9 @@ static iOSlot __getSlot(iOCBUSData data, iONode node) {
   slot->steps   = wLoc.getspcnt(node);
   slot->lights  = True;
   slot->dir     = wLoc.isdir(node);
-  slot->fx      = wLoc.getfx(node);
   slot->session = 0;
+
+  __fx2fn(slot, wLoc.getfx(node));
 
 
   if( MutexOp.wait( data->lcmux ) ) {
@@ -391,7 +458,7 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
 }
 
 
-static void __broadcastFunctions(iOCBUS cbus, iOSlot slot, int fn, int fg1, int fg2, int fg3, int fg4, int fg5) {
+static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn) {
   iOCBUSData data = Data(cbus);
 
   iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -403,13 +470,8 @@ static void __broadcastFunctions(iOCBUS cbus, iOSlot slot, int fn, int fg1, int 
     wLoc.setiid( nodeC, data->iid );
   wFunCmd.setid( nodeC, slot->id );
   wFunCmd.setaddr( nodeC, slot->addr );
-  if( fn != -1 ) {
-    wFunCmd.setfnchanged(nodeC, fn);
-    wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
-  }
-  else {
-    /* TODO: Function masks. */
-  }
+  wFunCmd.setfnchanged(nodeC, fn);
+  wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
 
   wLoc.setthrottleid( nodeC, "cbus" );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
@@ -425,13 +487,8 @@ static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
   iOSlot slot = __getSlotBySession(data, session);
 
   if( slot != NULL ) {
-    int mask = (1 << fn);
-    slot->fx = slot->fx & ~mask;
-
-    if( fstate )
-      slot->fx |= mask;
-
-    __broadcastFunctions(cbus, slot, fn, -1, -1, -1, -1, -1);
+    slot->f[fn] = fstate;
+    __broadcastFunction(cbus, slot, fn );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
@@ -449,49 +506,7 @@ static void __updateFunctions(iOCBUS cbus, byte* frame) {
   iOSlot slot = __getSlotBySession(data, session);
 
   if( slot != NULL ) {
-    int f0_4   = -1;
-    int f5_8   = -1;
-    int f9_12  = -1;
-    int f13_19 = -1;
-    int f20_28 = -1;
-
-    int fxmask = 0xFFFFFFFF;
-
-    if( fg == 1 ) {
-      f0_4 = fmask;
-      slot->lights = (fmask & 0x01) ? True:False;
-      fmask >>= 1;
-      fxmask &= 0xFFFFFFF0;
-      slot->fx &= (fxmask | fmask);
-    }
-    else if( fg == 2 ) {
-      f5_8 = fmask;
-      fmask <<= 4;
-      fxmask &= 0xFFFFFF0F;
-      slot->fx &= (fxmask | fmask);
-    }
-    else if( fg == 3 ) {
-      f9_12 = fmask;
-      fmask <<= 8;
-      fxmask &= 0xFFFFF0FF;
-      slot->fx &= (fxmask | fmask);
-    }
-    else if( fg == 4 ) {
-      f13_19 = fmask;
-      fmask <<= 12;
-      fxmask &= 0xFFFC0FFF;
-      slot->fx &= (fxmask | fmask);
-    }
-    else if( fg == 5 ) {
-      f20_28 = fmask;
-      fmask <<= 19;
-      fxmask &= 0xF807FFFF;
-      slot->fx &= (fxmask | fmask);
-    }
-
-    /* TODO: Update fx. */
-
-    __broadcastFunctions(cbus, slot, -1, f0_4, f5_8, f9_12, f13_19, f20_28);
+    __fg2fn(cbus, slot, fg, fmask);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
@@ -546,7 +561,9 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       ThreadOp.post(data->writer, (obj)frame);
 
       __broadcastSpeedDir(cbus, slot, speed, dir);
-      __broadcastFunctions(cbus, slot, -1, f0_4, f5_8, f9_12, -1, -1);
+      __fg2fn(cbus, slot, 1, f0_4);
+      __fg2fn(cbus, slot, 2, f5_8);
+      __fg2fn(cbus, slot, 3, f9_12);
 
 
     }
@@ -1103,7 +1120,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     Boolean fn  = wLoc.isfn( node );
     Boolean dir = wLoc.isdir( node ); /* True == forwards */
 
-    iOSlot slot = __getSlot(data, node );
+    iOSlot slot = __getSlot(cbus, node );
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
@@ -1153,7 +1170,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     int     fnchanged = wFunCmd.getfnchanged(node);
     Boolean fstate    = __getFState(node, fnchanged);
 
-    iOSlot slot = __getSlot(data, node );
+    iOSlot slot = __getSlot(cbus, node );
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );

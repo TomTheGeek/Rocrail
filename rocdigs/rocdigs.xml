@@ -1350,7 +1350,7 @@
       <var name="steps" vt="int"/>
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
-      <var name="fx" vt="int"/>
+      <var name="f[32]" vt="Boolean"/>
       <var name="lastkeep" vt="long"/>
     </struct>
     <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
