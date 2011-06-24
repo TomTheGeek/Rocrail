@@ -55,6 +55,8 @@ CbusDlg::CbusDlg( wxWindow* parent, iONode props ):cbusdlggen( parent ) {
 void CbusDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
+  m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
+  m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_Sublib->SetLabel(wxGetApp().getMsg( "sublib" ));
 
   // Options
@@ -78,18 +80,24 @@ void CbusDlg::initValues() {
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_Purgetime->SetValue( wCBus.getpurgetime( cbusini ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
-
-  // disable tcp/ip; no implementation jet.
-  m_Sublib->Enable(2, false);
+  m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+  m_Port->SetValue( wDigInt.getport( m_Props ) );
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(m_Props) )) {
     // USB
     m_Sublib->SetSelection(0);
   }
+  else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib(m_Props) )) {
+    // TCP
+    m_Sublib->SetSelection(2);
+  }
   else {
     // Serial
     m_Sublib->SetSelection(1);
   }
+
+  wxCommandEvent event( 0, 0 );
+  OnSublib(event);
 
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
@@ -104,9 +112,13 @@ void CbusDlg::evaluate() {
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
   wCBus.setpurgetime( cbusini, m_Purgetime->GetValue() );
+  wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.setport( m_Props, m_Port->GetValue() );
 
   if( m_Sublib->GetSelection() == 0 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_usb );
+  else if( m_Sublib->GetSelection() == 2 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_tcp );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
 
@@ -117,6 +129,16 @@ void CbusDlg::evaluate() {
 
 
 void CbusDlg::OnSublib( wxCommandEvent& event ) {
+  if( m_Sublib->GetSelection() == 2 ) {
+    m_Host->Enable(true);
+    m_Port->Enable(true);
+    m_Device->Enable(false);
+  }
+  else {
+    m_Host->Enable(false);
+    m_Port->Enable(false);
+    m_Device->Enable(true);
+  }
 }
 
 void CbusDlg::OnCancel( wxCommandEvent& event ) {

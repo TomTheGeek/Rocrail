@@ -16,6 +16,9 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
@@ -58,9 +61,31 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	fgSizer5->Add( m_labDevice, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Device = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	fgSizer5->Add( m_Device, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	fgSizer5->Add( m_Device, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	m_labHost = new wxStaticText( this, wxID_ANY, wxT("Host"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labHost->Wrap( -1 );
+	fgSizer5->Add( m_labHost, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+	
+	m_Host = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( m_Host, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxALL, 5 );
+	
+	m_labPort = new wxStaticText( this, wxID_ANY, wxT("Port"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labPort->Wrap( -1 );
+	fgSizer5->Add( m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_Port = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
+	fgSizer5->Add( m_Port, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer8->Add( fgSizer5, 1, wxEXPAND, 5 );
+	
+	bSizer3->Add( bSizer8, 1, 0, 5 );
+	
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer3->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
 	wxStaticBoxSizer* m_OptionsBox;
 	m_OptionsBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Options") ), wxVERTICAL );
@@ -100,9 +125,11 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_OptionsBox->Add( fgSizer41, 1, wxEXPAND, 5 );
 	
-	bSizer8->Add( m_OptionsBox, 0, wxEXPAND|wxALL, 5 );
+	bSizer4->Add( m_OptionsBox, 1, wxALL, 5 );
 	
-	bSizer6->Add( bSizer8, 1, 0, 5 );
+	bSizer3->Add( bSizer4, 1, 0, 5 );
+	
+	bSizer6->Add( bSizer3, 0, wxEXPAND, 5 );
 	
 	m_StdButton = new wxStdDialogButtonSizer();
 	m_StdButtonOK = new wxButton( this, wxID_OK );
