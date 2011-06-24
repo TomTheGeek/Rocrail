@@ -49,6 +49,7 @@
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/serial.h"
+#include "rocdigs/impl/cbus/tcp.h"
 
 static int instCnt = 0;
 /*
@@ -1406,6 +1407,11 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( ini ) ) ) {
     /* tcp/ip */
+    data->subConnect    = tcpConnect;
+    data->subDisconnect = tcpDisconnect;
+    data->subRead       = tcpRead;
+    data->subWrite      = tcpWrite;
+    data->subAvailable  = tcpAvailable;
   }
   else {
     /* usb or serial */
@@ -1416,9 +1422,9 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     data->subAvailable  = serialAvailable;
   }
 
-  data->serialOK = data->subConnect((obj)__CBUS);
+  data->connOK = data->subConnect((obj)__CBUS);
 
-  if( data->serialOK ) {
+  if( data->connOK ) {
 
     data->reader = ThreadOp.inst( "cbreader", &__reader, __CBUS );
     ThreadOp.start( data->reader );

@@ -1336,7 +1336,7 @@
     </data>
   </object>
 
-  <object name="CBUS" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint" remark="CBUS">
+  <object name="CBUS" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map,socket" include="$rocint/public/digint" remark="CBUS">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="Boolean(*sublib_read)(obj,byte*,int)"/>
@@ -1383,11 +1383,12 @@
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
       <var name="serial" vt="iOSerial"/>
+      <var name="socket" vt="iOSocket"/>
       <var name="mux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap" remark="key=locoID, value=slot"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
-      <var name="serialOK" vt="Boolean"/>
+      <var name="connOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
       <var name="subConnect" vt="sublib_connect"/>
       <var name="subDisconnect" vt="sublib_disconnect"/>
