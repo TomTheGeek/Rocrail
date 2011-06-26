@@ -483,6 +483,34 @@
         <var name="shortevents" vt="bool" defval="true"/>
         <var name="fonfof" vt="bool" defval="false" remark="Use the new opcodes for controlling functions."/>
         <var name="purgetime" vt="int" defval="20" unit="s" range="0-*" remark="CS engine idle timeout."/>
+	      <cbnode cardinality="n" wrappername="CBusNode">
+	        <var name="nr" vt="int" defval="0" range="0-65535" remark="NodeNumber"/>
+	        <var name="manuid" vt="int" defval="0" range="0-65535" remark="NMRA manufacturer ID."/>
+          <var name="version" vt="int" defval="0" range="0-65535" remark="Firmware version."/>
+          <const name="mtyp_canacc4" vt="int" val="1" remark="Solenoid point driver"/>
+          <const name="mtyp_canacc5" vt="int" val="2" remark="Motorised point driver"/>
+          <const name="mtyp_canacc8" vt="int" val="3" remark="8 digital outputs"/>
+          <const name="mtyp_canace3" vt="int" val="4" remark="Control panel switch/button encoder"/>
+          <const name="mtyp_canace8c" vt="int" val="5" remark="8 digital inputs"/>
+          <const name="mtyp_canled" vt="int" val="6" remark="64 led driver"/>
+          <const name="mtyp_canled64" vt="int" val="7" remark="64 led driver (multi leds per event)"/>
+          <const name="mtyp_canacc4_2" vt="int" val="8" remark="12v version of CANACC4"/>
+          <const name="mtyp_cancab" vt="int" val="9" remark="CANCAB hand throttle"/>
+          <const name="mtyp_cancmd" vt="int" val="10" remark="CANCMD command station"/>
+          <const name="mtyp_canservo" vt="int" val="11" remark="8 servo driver (on canacc8 or similar hardware)"/>
+          <const name="mtyp_canbc" vt="int" val="12" remark="BC1a command station"/>
+          <const name="mtyp_canrpi" vt="int" val="13" remark="RPI and RFID interface"/>
+          <const name="mtyp_canttca" vt="int" val="14" remark="Turntable controller (turntable end)"/>
+          <const name="mtyp_canttcb" vt="int" val="15" remark="Turntable controller (control panel end)"/>
+          <var name="mtyp" vt="int" defval="0" range="0-65535" remark="Module type. See cbusdefs.h."/>
+          <var name="nrevt" vt="int" defval="0" range="0-65535" remark="Number of events allowed."/>
+          <var name="nrevtvar" vt="int" defval="0" range="0-65535" remark="Number of event variable per event."/>
+          <var name="nrvar" vt="int" defval="0" range="0-65535" remark="Number of node variables."/>
+          <cbnodevar cardinality="n" wrappername="CBusNodeVar">
+            <var name="nr" vt="int" defval="1" range="1-65535" remark="Node variable index."/>
+            <var name="val" vt="int" defval="0" range="0-65535" remark="Node variable value."/>
+          </cbnodevar>
+	      </cbnode>
       </cbus>
 
       <dcc232 remark="DCC232 options" wrappername="DCC232">
@@ -650,6 +678,8 @@
     <var name="val4" vt="int" defval="0" range="0-255"/>
     <var name="val5" vt="int" defval="0" range="0-255"/>
     <var name="val6" vt="int" defval="0" range="0-255"/>
+    <var name="val7" vt="int" defval="0" range="0-255"/>
+    <var name="val8" vt="int" defval="0" range="0-255"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
     <var name="acc" vt="bool" defval="false" remark="POM Program On the Main for accessory decoders"/>
     <var name="direct" vt="bool" defval="false" remark="Direct mode programming; default is paged."/>
