@@ -50,6 +50,7 @@
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/serial.h"
 #include "rocdigs/impl/cbus/tcp.h"
+#include "rocdigs/impl/cbus/flim.h"
 
 static int instCnt = 0;
 /*
@@ -1346,6 +1347,22 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
     }
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+    }
+
+    /* FLiM: NV0 = NN */
+    else if( wProgram.getcmd( node ) == wProgram.nvget ) {
+      /* Node Value get */
+      int nv  = wProgram.getcv( node );
+      int val = wProgram.getvalue( node );
+      int nn  = wProgram.getdecaddr( node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get NN%d NV%d...", nn, nv );
+    }
+    else if( wProgram.getcmd( node ) == wProgram.nvset ) {
+      /* Node Value set */
+      int nv  = wProgram.getcv( node );
+      int val = wProgram.getvalue( node );
+      int nn  = wProgram.getdecaddr( node );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set NN%d NV%d to %d...", nn, nv, val );
     }
 
   }

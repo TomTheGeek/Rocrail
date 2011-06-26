@@ -631,7 +631,11 @@
     <const name="statusrsp" vt="int" val="8" remark="status response from previous command"/>
     <const name="lncvget" vt="int" val="9"/>
     <const name="lncvset" vt="int" val="10"/>
+    <const name="nvget" vt="int" val="9" remark="Node value get."/>
+    <const name="nvset" vt="int" val="10" remark="Node value set."/>
     <const name="mprsp" vt="int" val="11" remark="multi port data response from previous get command"/>
+    <const name="evset" vt="int" val="12" remark="Event set."/>
+    <const name="evget" vt="int" val="13" remark="Event get."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
@@ -640,6 +644,12 @@
     <var name="longaddr" vt="bool" defval="false" remark="loco address for POM"/>
     <var name="cv" vt="int" defval="0" range="0-1023" remark="CV number"/>
     <var name="value" vt="int" defval="0" range="0-255" remark="CV value"/>
+    <var name="val1" vt="int" defval="0" range="0-255"/>
+    <var name="val2" vt="int" defval="0" range="0-255"/>
+    <var name="val3" vt="int" defval="0" range="0-255"/>
+    <var name="val4" vt="int" defval="0" range="0-255"/>
+    <var name="val5" vt="int" defval="0" range="0-255"/>
+    <var name="val6" vt="int" defval="0" range="0-255"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
     <var name="acc" vt="bool" defval="false" remark="POM Program On the Main for accessory decoders"/>
     <var name="direct" vt="bool" defval="false" remark="Direct mode programming; default is paged."/>
