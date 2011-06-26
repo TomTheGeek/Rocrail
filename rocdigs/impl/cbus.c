@@ -728,7 +728,7 @@ static void __reportState(iOCBUS cbus, Boolean power) {
 
 }
 
-static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
+static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
@@ -790,7 +790,20 @@ static void __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
       break;
     }
+
+  /* TODO: Add all FLiM OPCs to this case. */
+  case OPC_NNACK:
+    {
+      byte* extraMsg = NULL;
+      iONode rsp = processFLiM((obj)cbus, frame, extraMsg);
+      if( rsp != NULL )
+        return rsp;
+      if( extraMsg != NULL )
+        ThreadOp.post(data->writer, (obj)extraMsg);
+      break;
+    }
   }
+  return NULL;
 }
 
 

@@ -21,5 +21,6 @@
 #ifndef CBUSFLIM_H_
 #define CBUSFLIM_H_
 
+iONode processFLiM(obj inst, byte *frame, byte *extraMsg);
 
 #endif /* CBUSFLIM_H_ */
