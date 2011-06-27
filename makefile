@@ -44,7 +44,7 @@ endif
 PLATFORM=LINUX
 ARCH=
 
-offlineall: version
+offlineall:
 	cd rocrail$(CS) $(MAKE) rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL)
 
 all: version
