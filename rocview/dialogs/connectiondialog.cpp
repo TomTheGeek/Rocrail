@@ -93,6 +93,7 @@ ConnectionDialog::ConnectionDialog( wxWindow* parent, iONode props )
 void ConnectionDialog::initLabels() {
   m_LabelHost->SetLabel( wxGetApp().getMsg( "host" ) );
   m_LabelPort->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labControlCode->SetLabel( wxGetApp().getMsg( "controlcode" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -107,6 +108,7 @@ void ConnectionDialog::initValues() {
     if( StrOp.equals( wGui.gethost( m_Props ), wRRCon.gethost( rrcon ) ) ) {
       char* val = StrOp.fmt( "%d", wRRCon.getport( rrcon ) );
       m_Port->SetValue( wxString(val,wxConvUTF8) ); StrOp.free( val );
+      m_ControlCode->SetValue( wxString(wRRCon.getcontrolcode(rrcon),wxConvUTF8) );
     }
     m_Host->Append( wxString( wRRCon.gethost(rrcon),wxConvUTF8 ) );
     rrcon = wGui.nextrrcon( m_Props, rrcon );
@@ -120,6 +122,9 @@ wxString ConnectionDialog::getHostname() {
 int ConnectionDialog::getPort() {
   return atoi( m_Port->GetValue().mb_str(wxConvUTF8) );
 }
+wxString ConnectionDialog::getControlCode() {
+  return m_ControlCode->GetValue();
+}
 
 void ConnectionDialog::evaluate() {
   bool exist = false;
@@ -130,6 +135,7 @@ void ConnectionDialog::evaluate() {
     if( StrOp.equals( hostname, wRRCon.gethost( rrcon ) ) ) {
       wGui.sethost( m_Props, hostname );
       wRRCon.setport( rrcon, atoi( m_Port->GetValue().mb_str(wxConvUTF8) ) );
+      wRRCon.setcontrolcode( rrcon, m_ControlCode->GetValue().mb_str(wxConvUTF8) );
       exist = true;
       break;
     }
@@ -155,6 +161,8 @@ bool ConnectionDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_Host = NULL;
     m_LabelPort = NULL;
     m_Port = NULL;
+    m_labControlCode = NULL;
+    m_ControlCode = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ConnectionDialog member initialisation
@@ -203,19 +211,25 @@ void ConnectionDialog::CreateControls()
     m_Port->SetMaxLength(5);
     itemFlexGridSizer3->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_labControlCode = new wxStaticText( itemDialog1, wxID_ANY, _("Control code"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labControlCode, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_ControlCode = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_ControlCode, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     itemFlexGridSizer3->AddGrowableCol(1);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer8 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer8, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer8->AddButton(m_OK);
+    itemStdDialogButtonSizer10->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer8->AddButton(m_Cancel);
+    itemStdDialogButtonSizer10->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer8->Realize();
+    itemStdDialogButtonSizer10->Realize();
 
 ////@end ConnectionDialog content construction
 }

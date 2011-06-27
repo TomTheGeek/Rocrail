@@ -17319,4 +17319,7 @@
   <Msg id="cmdtime">
     <en txt="Command time"/>
   </Msg>
+  <Msg id="controlcode">
+    <en txt="Control code"/>
+  </Msg>
 </Messages>

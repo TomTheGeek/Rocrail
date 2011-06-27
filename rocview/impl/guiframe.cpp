@@ -1957,7 +1957,7 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
   if( wxID_OK == dlg->ShowModal() ) {
     CleanNotebook();
     wxGetApp().setModel(NULL);
-
+    m_ControlCode = StrOp.dup( dlg->getControlCode().mb_str(wxConvUTF8) );
     Connect(StrOp.dup( dlg->getHostname().mb_str(wxConvUTF8) ), dlg->getPort());
 	}
   dlg->Destroy();
@@ -1979,6 +1979,7 @@ void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
     // Initial connection.
     cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.plan );
+    wModelCmd.setcontrolcode( cmd, m_ControlCode );
     wModelCmd.setdisablemonitor(cmd, wGui.ismonitoring(wxGetApp().getIni()) ? False:True);
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "monitoring is %s", wModelCmd.isdisablemonitor(cmd)?"off":"on" );
     wxGetApp().sendToRocrail( cmd );

@@ -94,6 +94,7 @@ public:
     void CreateControls();
     wxString getHostname();
     int getPort();
+    wxString getControlCode();
 
 ////@begin ConnectionDialog event handler declarations
 
@@ -131,6 +132,8 @@ public:
     wxComboBox* m_Host;
     wxStaticText* m_LabelPort;
     wxTextCtrl* m_Port;
+    wxStaticText* m_labControlCode;
+    wxTextCtrl* m_ControlCode;
     wxButton* m_OK;
     wxButton* m_Cancel;
     iONode m_Props;

@@ -200,6 +200,7 @@ static void __cmdReader( void* threadinst ) {
   iOThread         th = (iOThread)threadinst;
   __iOClntService   o = (__iOClntService)ThreadOp.getParm(th);
   iOClntCon   clntcon = o->ClntCon;
+  iOClntConData data  = Data(clntcon);
   char*         sname = NULL;
   Boolean          ok = False;
   iOThread infoWriter = NULL;
@@ -263,6 +264,18 @@ static void __cmdReader( void* threadinst ) {
               /* inform broadcaster */
               o->disablemonitor = wModelCmd.isdisablemonitor(nodeA);
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "monitoring for client is %s", o->disablemonitor?"off":"on" );
+
+              /* TODO: check control-code for setting the readonly flag. */
+              if( StrOp.len( wTcp.getcontrolcode(data->ini) ) > 0 ) {
+                if( StrOp.equals( wTcp.getcontrolcode(data->ini), wModelCmd.getcontrolcode(nodeA) ) ) {
+                  o->readonly = False;
+                }
+                else {
+                  o->readonly = True;
+                }
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client has %scontrol access", o->readonly?"no ":"" );
+              }
+
             }
 
             if( !o->readonly ||

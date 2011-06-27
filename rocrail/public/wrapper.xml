@@ -562,6 +562,7 @@
       <var name="port" vt="int" defval="8051" range="1-65535"/>
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
       <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
+      <var name="controlcode" vt="string" defval="" range="*"/>
     </tcp>
     <srcpcon remark="SRCP client service port." wrappername="SrcpCon">
       <var name="active" vt="bool" defval="false" remark="Activate srcp service."/>
@@ -810,6 +811,7 @@
     <var name="val" vt="string" defval="" range="*"/>
     <var name="disablemonitor" vt="bool" defval="false" remark="Client do not want to receive monitor messages embeded in exception wrappers.(iRoc)"/>
     <var name="cmdfrom" vt="string" defval="NULL" range="*"/>
+    <var name="controlcode" vt="string" defval="" range="*"/>
   </model>
 
   <auto remark="Auto command." wrappername="AutoCmd">

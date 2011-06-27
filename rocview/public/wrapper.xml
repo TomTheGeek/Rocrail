@@ -136,6 +136,7 @@
       <var name="port" vt="int" defval="8051"/>
       <var name="retry" vt="int" defval="1"/>
       <var name="retryinterval" vt="int" defval="500" remark="In mS"/>
+      <var name="controlcode" vt="string" defval=""/>
     </rrcon>
     <modpanel wrappername="ModPanel">
       <var name="red" vt="int" defval="0"/>

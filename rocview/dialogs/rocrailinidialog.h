@@ -255,6 +255,8 @@ public:
     wxTextCtrl* m_ClientPort;
     wxStaticText* m_LabelMaxCon;
     wxTextCtrl* m_MaxCon;
+    wxStaticText* m_labControlCode;
+    wxTextCtrl* m_ControlCode;
     wxCheckBox* m_OnlyFirstMaster;
     wxStaticBox* m_SrcpService;
     wxStaticText* m_labSrcpPort;

@@ -358,6 +358,7 @@ private:
   JsSupport* m_JsSupport;
   bool m_bCheckedDonKey;
   iONode m_WorkSpace;
+  char* m_ControlCode;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };
