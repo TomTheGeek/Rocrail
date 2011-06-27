@@ -159,6 +159,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
+    int delay = wSwitch.getdelay(node);
     int fada = 0;
     int pada = 0;
     int dir  = 1;
@@ -188,8 +189,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
-        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
+        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d delay=%d",
+        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action, delay );
 
     {
       iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
