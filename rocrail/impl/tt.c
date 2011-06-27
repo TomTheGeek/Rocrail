@@ -2576,10 +2576,15 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
 
-  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) ) {
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ||
+      StrOp.equals( locId, data->lockedId ) || StrOp.equals( "(null)", data->lockedId ) )
+  {
     if( wTurntable.ismanager(data->props) ) {
       /* check if a track block is available */
       return __findFreeTrack(inst, locId) != NULL ? True:False ;
+    }
+    else {
+      return True;
     }
   }
 
