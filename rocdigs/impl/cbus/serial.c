@@ -53,7 +53,12 @@ Boolean serialConnect( obj inst ) {
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
-  return SerialOp.open( data->serial );
+  if( SerialOp.open( data->serial ) )
+    return True;
+
+  SerialOp.base.del(data->serial);
+  data->serial = NULL;
+  return False;
 }
 
 
