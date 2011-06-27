@@ -186,6 +186,27 @@ static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
 }
 
 
+static int __getFreeSlot(iOZS2Data data) {
+  int i = 0;
+  for( i = 0; i < 16; i++ ) {
+    if( data->sx[2][i*6] == 0) {
+      return i + 1;
+    }
+  }
+  return -1;
+}
+
+static int __getSlotNr4Addr(iOZS2Data data, byte preamble, byte addrh, byte addrl) {
+  int i = 0;
+  for( i = 0; i < 16; i++ ) {
+    if( data->sx[2][i*6 + 0] == preamble && data->sx[2][i*6 + 1] == addrh && data->sx[2][i*6 + 2] == addrl ) {
+      return i + 1;
+    }
+  }
+  return -1;
+}
+
+
 static iOSlot __getSlot(iOZS2Data data, iONode node) {
   int addr  = wLoc.getaddr(node);
   iOSlot slot = NULL;
@@ -212,14 +233,6 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   
   if( slot->bus == 2 ) {
     slot->sx2 = True;
-    
-    if( data->sx2slotcnt >= 16 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no SX2 slot available for %s", wLoc.getid(node) );
-      return NULL;
-    }
-    
-    slot->nr = data->sx2slotcnt;
-    data->sx2slotcnt++;
     
     if( StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) && slot->addr < 100 ) {
       /* DCC short addresses */
@@ -252,11 +265,6 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
     
   }
   
-  if( MutexOp.wait( data->lcmux ) ) {
-    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
-    MutexOp.post(data->lcmux);
-  }
-
   if( wLoc.getV( node ) != -1 ) {
     if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
       speed = (wLoc.getV( node ) * slot->steps) / 100;
@@ -285,26 +293,48 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   */
   
   if(slot->sx2 ) { 
-		byte* cmd = allocMem(32);
-		cmd[ 0] = 2;
-		cmd[ 1] = 12;
-		cmd[ 2] = slot->nr * 6 + 0 + WRITE_FLAG;
-		cmd[ 3] = preamble;
-		cmd[ 4] = slot->nr * 6 + 1 + WRITE_FLAG;
-		cmd[ 5] = (2 * (slot->addr/100)) + ((slot->addr%100) > 63 ? 1:0);
-		cmd[ 6] = slot->nr * 6 + 2 + WRITE_FLAG;
-		cmd[ 7] = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
-		cmd[ 8] = slot->nr * 6 + 3 + WRITE_FLAG;
-		cmd[ 9] = speed + (slot->dir ? 0x00:0x80);
-		cmd[10] = slot->nr * 6 + 4 + WRITE_FLAG;
-		cmd[11] = slot->fx1;
-		cmd[12] = slot->nr * 6 + 5 + WRITE_FLAG;
-		cmd[13] = slot->fx2;
-		TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-		    "create SX2 slot for %s, preamble=%d, addr=%d high%02X:low%02X",
-		    wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
-		ThreadOp.post(data->writer, (obj)cmd);
+    byte addrh = (2 * (slot->addr/100)) + ((slot->addr%100) > 63 ? 1:0);
+    byte addrl = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+    int slotnr = __getSlotNr4Addr(data, preamble, addrh, addrl);
+    if( slotnr != -1 ) {
+      slot->nr = slotnr;
+    }
+    else {
+      slotnr = __getFreeSlot(data);
+      if( slotnr != -1 ) {
+        byte* cmd = allocMem(32);
+        cmd[ 0] = 2;
+        cmd[ 1] = 12;
+        cmd[ 2] = slot->nr * 6 + 0 + WRITE_FLAG;
+        cmd[ 3] = preamble;
+        cmd[ 4] = slot->nr * 6 + 1 + WRITE_FLAG;
+        cmd[ 5] = addrh;
+        cmd[ 6] = slot->nr * 6 + 2 + WRITE_FLAG;
+        cmd[ 7] = addrl;
+        cmd[ 8] = slot->nr * 6 + 3 + WRITE_FLAG;
+        cmd[ 9] = speed + (slot->dir ? 0x00:0x80);
+        cmd[10] = slot->nr * 6 + 4 + WRITE_FLAG;
+        cmd[11] = slot->fx1;
+        cmd[12] = slot->nr * 6 + 5 + WRITE_FLAG;
+        cmd[13] = slot->fx2;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "create SX2 slot for %s, preamble=%d, addr=%d high%02X:low%02X",
+            wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
+        ThreadOp.post(data->writer, (obj)cmd);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no free sx2 slot for %s", wLoc.getid(node) );
+        freeMem(slot);
+        return NULL;
+      }
+    }
   }
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   return slot;
