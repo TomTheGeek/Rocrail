@@ -791,8 +791,38 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       break;
     }
 
-  /* TODO: Add all FLiM OPCs to this case. */
+  /* All FLiM OPCs to this case. */
   case OPC_NNACK:
+  case OPC_NNREL:
+  case OPC_NNREF:
+  case OPC_NNLRN:
+  case OPC_NNULN:
+  case OPC_NNCLR:
+  case OPC_NNEVN:
+  case OPC_NERD:
+  case OPC_RQEVN:
+  case OPC_WRACK:
+  case OPC_RQDAT:
+  case OPC_BOOT:
+  case OPC_RQNN:
+  case OPC_RQNP:
+  case OPC_SNN:
+  case OPC_NVRD:
+  case OPC_NENRD:
+  case OPC_RQNPN:
+  case OPC_NUMEV:
+  case OPC_EVULN:
+  case OPC_NVSET:
+  case OPC_NVANS:
+  case OPC_PARAN:
+  case OPC_REVAL:
+  case OPC_REQEV:
+  case OPC_NEVAL:
+  case OPC_EVLRN:
+  case OPC_EVANS:
+  case OPC_PARAMS:
+  case OPC_ENRSP:
+  case OPC_EVLRNI:
     {
       byte* extraMsg = NULL;
       iONode rsp = processFLiM((obj)cbus, frame, extraMsg);
