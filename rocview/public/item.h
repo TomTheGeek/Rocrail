@@ -64,6 +64,7 @@ public:
   void OnLocSwapBlockSide(wxCommandEvent& event);
   void OnScheduleGo(wxCommandEvent& event);
   void OnFYGo(wxCommandEvent& event);
+  void OnTTGo(wxCommandEvent& event);
   void OnLocGoManual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
@@ -134,6 +135,7 @@ private:
 
   iOList m_sclist;
   iOList m_fylist;
+  iOList m_ttlist;
 
   void checkSpeakAction(iONode node);
 

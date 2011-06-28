@@ -17322,4 +17322,7 @@
   <Msg id="controlcode">
     <en txt="Control code"/>
   </Msg>
+  <Msg id="turntable2go">
+    <en txt="Goto Turntable"/>
+  </Msg>
 </Messages>

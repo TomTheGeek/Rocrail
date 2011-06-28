@@ -5291,3 +5291,51 @@ msgstr ""
 msgid "Local IP"
 msgstr ""
 
+#. 
+# id="setloco"
+#, c-format
+msgid "Set loco"
+msgstr ""
+
+#. 
+# id="compress"
+#, c-format
+msgid "Compress"
+msgstr ""
+
+#. 
+# id="syncroutes"
+#, c-format
+msgid "Synchronize routes"
+msgstr ""
+
+#. 
+# id="syncroutetimeout"
+#, c-format
+msgid "Route synchronizer timeout"
+msgstr ""
+
+#. 
+# id="startupschedule"
+#, c-format
+msgid "Startup schedule"
+msgstr ""
+
+#. 
+# id="cmdtime"
+#, c-format
+msgid "Command time"
+msgstr ""
+
+#. 
+# id="controlcode"
+#, c-format
+msgid "Control code"
+msgstr ""
+
+#. 
+# id="turntable2go"
+#, c-format
+msgid "Goto Turntable"
+msgstr ""
+

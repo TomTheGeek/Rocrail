@@ -147,7 +147,8 @@ enum {
     ME_TTTrack, // Should be the last one in the enum list
                // because ME_TTTrack+0...ME_TTTrack+47 are also used!!!.
     ME_ScheduleGo = ME_TTTrack + 48,
-    ME_FYGo = ME_ScheduleGo + 20
+    ME_FYGo = ME_ScheduleGo + 20,
+    ME_TTGo = ME_FYGo + 10
 };
 
 BEGIN_EVENT_TABLE(Symbol, wxWindow)
@@ -182,6 +183,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocSwapBlockSide  , Symbol::OnLocSwapBlockSide  )
   EVT_MENU     (ME_ScheduleGo, Symbol::OnScheduleGo)
   EVT_MENU     (ME_FYGo, Symbol::OnFYGo)
+  EVT_MENU     (ME_TTGo, Symbol::OnTTGo)
   EVT_MENU     (ME_LocGoManual  , Symbol::OnLocGoManual  )
   EVT_MENU     (ME_LocStop, Symbol::OnLocStop)
   EVT_MENU     (ME_LocReset, Symbol::OnLocReset)
@@ -212,6 +214,11 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_FYGo+1, Symbol::OnFYGo)
   EVT_MENU     (ME_FYGo+2, Symbol::OnFYGo)
   EVT_MENU     (ME_FYGo+3, Symbol::OnFYGo)
+
+  EVT_MENU     (ME_TTGo+0, Symbol::OnTTGo)
+  EVT_MENU     (ME_TTGo+1, Symbol::OnTTGo)
+  EVT_MENU     (ME_TTGo+2, Symbol::OnTTGo)
+  EVT_MENU     (ME_TTGo+3, Symbol::OnTTGo)
 
   EVT_MENU     (ME_ScheduleGo+0, Symbol::OnScheduleGo)
   EVT_MENU     (ME_ScheduleGo+1, Symbol::OnScheduleGo)
@@ -1176,6 +1183,40 @@ void Symbol::OnPopup(wxMouseEvent& event)
 
 
 
+         // TT to Go menu
+          m_ttlist = ListOp.inst();
+
+          if( model != NULL ) {
+            iONode ttlist = wPlan.getttlist( model );
+            if( ttlist != NULL ) {
+              int cnt = NodeOp.getChildCnt( ttlist );
+              if( cnt > 0 ) {
+                wxMenu* menuTT2go = new wxMenu();
+                for( int i = 0; i < cnt; i++ ) {
+                  iONode tt = NodeOp.getChild( ttlist, i );
+                  const char* id = wTurntable.getid( tt );
+                  if( id != NULL ) {
+                    ListOp.add(m_ttlist, (obj)id);
+                  }
+                }
+                ListOp.sort(m_ttlist, &__sortStr);
+
+                cnt = ListOp.size( m_ttlist );
+
+                if(cnt > 4) // MAX 4!
+                  cnt = 4;
+
+                for( int i = 0; i < cnt; i++ ) {
+                  const char* id = (const char*)ListOp.get( m_ttlist, i );
+                  menuTT2go->Append( ME_TTGo+i, wxString(id,wxConvUTF8) );
+                }
+                menu.Append( ME_TTGo, wxGetApp().getMenu("turntable2go"), menuTT2go );
+              }
+            }
+          }
+
+
+
         // Schedule 2 Go menu
          m_sclist = ListOp.inst();
          Boolean addSc = False;
@@ -1266,6 +1307,9 @@ void Symbol::OnPopup(wxMouseEvent& event)
         if( mi != NULL && !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_FYGo );
+        if( mi != NULL && !wxGetApp().getFrame()->isAutoMode() )
+          mi->Enable( false );
+        mi = menu.FindItem( ME_TTGo );
         if( mi != NULL && !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_UnLoc );
@@ -1613,7 +1657,31 @@ void Symbol::OnFYGo(wxCommandEvent& event) {
   }
 
   /* clean up the sclist */
-  ListOp.base.del(m_sclist);
+  ListOp.base.del(m_fylist);
+}
+
+void Symbol::OnTTGo(wxCommandEvent& event) {
+
+  const char* ttid = (const char*)ListOp.get( m_ttlist, event.GetId()-ME_TTGo );
+
+  if( ttid != NULL && wBlock.getlocid( m_Props ) != NULL ) {
+    /* Inform RocRail... */
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+    wLoc.setcmd( cmd, wLoc.gotoblock );
+    wLoc.setblockid( cmd, ttid );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+
+    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+    wLoc.setcmd( cmd, wLoc.go );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+
+  /* clean up the sclist */
+  ListOp.base.del(m_ttlist);
 }
 
 void Symbol::OnLocActivate(wxCommandEvent& event) {
