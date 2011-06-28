@@ -412,6 +412,7 @@ static void conThread( void* threadinst ) {
     // Initial connection.
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.plan );
+    wModelCmd.setcontrolcode( cmd, o->m_Frame->m_ControlCode );
     wModelCmd.setdisablemonitor(cmd, wGui.ismonitoring(o->m_Ini) ? False:True);
     char* guiid = StrOp.fmt( "%s,%d,%d", wGui.getid(o->m_Ini),
         SocketOp.getMAC(NULL)!=NULL?SocketOp.getMAC(NULL):0, SystemOp.getpid() );
@@ -714,6 +715,8 @@ bool RocGui::OnInit() {
   m_Frame->SetSize(wxSize(iWidth, iHeight));
   m_Frame->initFrame();
 
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,"control code %s", wRRCon.getcontrolcode( wGui.getrrcon( m_Ini ) ) );
+  m_Frame->m_ControlCode = wRRCon.getcontrolcode( wGui.getrrcon( m_Ini ) );
 
   m_bInit = true;
 

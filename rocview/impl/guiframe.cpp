@@ -1980,6 +1980,7 @@ void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
     cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.plan );
     wModelCmd.setcontrolcode( cmd, m_ControlCode );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999,"control code %s", m_ControlCode );
     wModelCmd.setdisablemonitor(cmd, wGui.ismonitoring(wxGetApp().getIni()) ? False:True);
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "monitoring is %s", wModelCmd.isdisablemonitor(cmd)?"off":"on" );
     wxGetApp().sendToRocrail( cmd );
