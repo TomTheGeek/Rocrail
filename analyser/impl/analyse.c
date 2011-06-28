@@ -1144,6 +1144,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 
   return itemNotInDirection;
 }
+
 static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
     int turnoutstate, int depth, int searchingSignal, Boolean behindABlock) {
   iOAnalyseData data = Data(inst);
@@ -1155,7 +1156,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
   char key[32] = {'\0'};
 
   int i = 0;
-  for ( i = 0; i < 100; i++) {
+  for ( i = 0; i < 10; i++) {
 
   switch(travel) {
      case oriWest:
@@ -1346,7 +1347,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     listitem = (iONode)ListOp.next( occ );
   }
 
-  if ( depth > 1000 || theEnd) {
+  if ( depth > 100 || theEnd) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "max recursion depth (100) reached");
     return False;
   }
 
@@ -2016,6 +2018,47 @@ static void __analyseList(iOAnalyse inst) {
   }
 }
 
+static char* __readableOri( int ori) {
+
+  if (ori == 0)
+    return "west";
+  else  if (ori == 1)
+    return "north";
+  else  if (ori == 2)
+    return "east";
+  else  if (ori == 3)
+    return "south";
+
+  return "";
+
+}
+
+
+static int * _getConnection( iONode item, int * cons ) {
+
+  const char * itemori = wItem.getori(item);
+  const char* type = NodeOp.getName(item);
+  const char* subtype = wItem.gettype(item);
+  int intori = __getOri(item);
+
+  if( __getType(item) == typeTrackCurve  || (StrOp.equals( type , "fb" ) && wFeedback.iscurve( item))   ) {
+
+
+
+  } else if (StrOp.equals( "tk" , type ) && StrOp.equals( subtype , "dir" ) ) {
+
+    cons[0] = 1;
+    cons[1] = 0;
+    cons[2] = 1;
+    cons[3] = 0;
+
+  }
+
+
+
+  return cons;
+}
+
 
 static void _analyse(iIAnalyserInt o) {
   iOAnalyse inst = (iOAnalyse)o;
@@ -2064,11 +2107,96 @@ static void _analyse(iIAnalyserInt o) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "  it contains %d blocks", ListOp.size(data->bklist) );
   
+
+
+  iONode object = NULL;
+  object = (iONode)MapOp.first(data->objectmap);
+    while(object) {
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "  ITEM: %s - %s", NodeOp.getName( object), wItem.getid( object));
+
+      // position
+      int x = wItem.getx( object);
+      int y = wItem.gety( object);
+
+      // size
+      int cx = 1;
+      int cy = 1;
+
+      if( StrOp.equals( NodeOp.getName( object), "bk" ) ) {
+        cx = 4;
+        if( wBlock.issmallsymbol( object) ) {
+          cx = 2;
+        }
+      }
+
+      if( StrOp.equals( NodeOp.getName( object), "sw" ) &&
+          !( StrOp.equals( wItem.gettype( object), "left" ) ||
+            StrOp.equals( wItem.gettype( object), "right" )) ) {
+             cx = 2;
+      }
+
+      if( StrOp.equals( wItem.getori( object), "north" ) ||
+          StrOp.equals( wItem.getori( object), "south" ) ) {
+            int tmp = cx;
+            cx = cy;
+            cy = tmp;
+      }
+
+      //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+       //                 "x: %d y: %d  cx: %d cy: %d ", x, y, cx, cy);
+
+      char key[32] = {'\0'};
+
+      int tmp = 0;
+      int i = 0;
+
+      for (i = 0; i < 4; i++) {
+
+        // get the neighbor keys
+        switch(i) {
+          case 0:
+            StrOp.fmtb( key, "%d-%d-%d", x-1, y, wItem.getz( object) ); break; // west
+          case 1:
+            StrOp.fmtb( key, "%d-%d-%d", x, y-1, wItem.getz( object) ); break; // north
+          case 2:
+            StrOp.fmtb( key, "%d-%d-%d", x+cx, y, wItem.getz( object) ); break; // east
+          case 3:
+            StrOp.fmtb( key, "%d-%d-%d", x, y+cy, wItem.getz( object) ); break; // south
+        }
+
+
+        iONode item = (iONode)MapOp.get( data->objectmap, key);
+        if( item != NULL) {
+
+          // can we go there?
+          int travel = __travel( item, i, 0, &tmp, &tmp, &tmp, "");
+          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            //                "  - travel: %d", travel);
+
+          if( travel == i ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "  - %s==%s %s - %s", __readableOri(i),__readableOri(travel) , NodeOp.getName( item), wItem.getid( item));
+
+          } else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "  - %s!=%s %s - %s", __readableOri(i),__readableOri(travel) , NodeOp.getName( item), wItem.getid( item));
+          }
+        }
+      }
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   " ");
+
+      object = (iONode)MapOp.next(data->objectmap);
+    }
+
   block = (iONode)ListOp.first(data->bklist);
   while(block) {
 
     const char * blockori = wItem.getori(block);
-    /*default*/
+
     if(  blockori == NULL) {
       blockori = "west";
     }
@@ -2085,10 +2213,13 @@ static void _analyse(iIAnalyserInt o) {
   }
 
 
+
   __analyseList(inst);
 
   if( analyserStrict)
     __analyseOccList(inst);
+
+
 
 }
 
