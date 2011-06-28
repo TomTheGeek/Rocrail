@@ -1348,7 +1348,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
   }
 
   if ( depth > 100 || theEnd) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "max recursion depth (100) reached");
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ANALYSER: max. recursion depth (100) reached");
     return False;
   }
 
