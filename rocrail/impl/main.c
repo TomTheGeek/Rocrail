@@ -145,7 +145,7 @@ int main( int argc, char* argv[] ) {
   {
     struct rlimit rl;
     getrlimit( RLIMIT_CORE, &rl );
-    rl.rlim_cur = 1024 * 1024 * 100;
+    rl.rlim_cur = 1024 * 1024 * 1024;
     setrlimit( RLIMIT_CORE, &rl );
     printf( "   --                     \n" );
     printf( "  / /  (_)__  __ ____  __ \n" );
