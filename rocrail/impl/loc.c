@@ -552,6 +552,9 @@ static void __del(void* inst) {
   iOLocData data = Data(inst);
   int retry = 0;
   data->run = False;
+
+  ModelOp.removeSysEventListener( AppOp.getModel(), (obj)inst );
+
   /* wait for thread to stop. */
   while( data->running && retry < 10 ) {
     ThreadOp.sleep( 100 );

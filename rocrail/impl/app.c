@@ -866,7 +866,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     static int cnt1 = 0;
     int cnt2 = MemOp.getAllocCount();
     if( cnt2 > cnt1 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "memory allocations old=%u new=%u", cnt1, cnt2 );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "memory allocations old=%u new=%u", cnt1, cnt2 );
       if(wTrace.ismeminfo( wRocRail.gettrace( data->ini ) ))
         rocsStatistics( True );
     }
