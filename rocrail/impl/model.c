@@ -575,6 +575,7 @@ static void __updateDigInt( iOModel inst ) {
   char* addrStr[32];
   char* mods[32];
   Boolean changed[32];
+  const char* iid = NULL;
 
   if( data->model == NULL )
     return;
@@ -595,7 +596,11 @@ static void __updateDigInt( iOModel inst ) {
     for( i = 0; i < size; i++ ) {
       iONode fb = NodeOp.getChild( db, i );
       int bus  = wFeedback.getbus( fb );
-      int unit = wFeedback.getaddr( fb ) / 8 ; /* asuming sensor modules with 8 contacts */
+      int unit = wFeedback.getaddr( fb ) / 8 ; /* assuming sensor modules with 8 contacts */
+      /* Assuming all sensors are for the same CS... */
+      if( wFeedback.getiid(fb) != NULL && StrOp.len(wFeedback.getiid(fb)) > 0 ) {
+        iid = wFeedback.getiid(fb);
+      }
       if( bus < 32 && unit < 256 ) {
         addresses[bus][unit] = 1;
         if( !changed[bus] && addresses[bus][unit] != data->fbAddresses[bus][unit] ) {
@@ -633,6 +638,8 @@ static void __updateDigInt( iOModel inst ) {
       iOControl cntrl = AppOp.getControl(  );
       iONode cmd = NodeOp.inst( wFbInfo.name(), NULL, ELEMENT_NODE );
       wCommand.setcmd( cmd, wCommand.fbmods );
+      if( iid != NULL )
+        wCommand.setiid( cmd, iid );
       for( n=0; n < 32; n++ ) {
         if( addrStr[n] != NULL ) {
           iONode fmods = NodeOp.inst( wFbMods.name(), cmd, ELEMENT_NODE );
