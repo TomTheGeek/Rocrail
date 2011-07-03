@@ -596,7 +596,8 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
   if( !data->shortevents )
     addr += (node << 16);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sevent %d", data->shortevents?"short ":"", addr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sevent %d %s (node=%d)",
+      data->shortevents?"short ":"", addr, state?"ON":"OFF", node );
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
