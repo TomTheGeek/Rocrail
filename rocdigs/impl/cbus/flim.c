@@ -34,8 +34,10 @@
  * to request more info of the node before creating a Program response
  * for clients.
  */
-iONode processFLiM(obj inst, byte *frame, byte *extraMsg) {
+iONode processFLiM(obj inst, int opc, byte *frame, byte *extraMsg) {
   iOCBUSData data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: 0x%02X", opc );
 
   return NULL;
 }

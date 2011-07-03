@@ -61,6 +61,7 @@ static int instCnt = 0;
 #define PRIORITY_NORMAL 2
 #define PRIORITY_LOW 3
 
+#define OFFSET_TYPE 6
 #define OFFSET_OPC 7
 #define OFFSET_D1 9
 #define OFFSET_D2 11
@@ -825,7 +826,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_EVLRNI:
     {
       byte* extraMsg = NULL;
-      iONode rsp = processFLiM((obj)cbus, frame, extraMsg);
+      iONode rsp = processFLiM((obj)cbus, opc, frame, extraMsg);
       if( rsp != NULL )
         return rsp;
       if( extraMsg != NULL )
@@ -863,7 +864,7 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     byte frame[32] = {0};
     /* Frame ASCII format
-     * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d;
+     * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d; :ShhhhR;
      * :S    -> S=Standard X=extended start CAN Frame
      * hhhh  -> SIDH<bit7,6,5,4=Prio bit3,2,1,0=high 4 part of ID> SIDL<bit7,6,5=low 3 part of ID>
      * Nd    -> N=normal R=RTR
@@ -878,17 +879,54 @@ static void __reader( void* threadinst ) {
           if( data->subRead( (obj)cbus, frame+1, 1) ) {
             if( frame[1] == 'S' || frame[1] == 'X' ) {
               int offset = (frame[1] == 'S') ? 0:4;
-              if( data->subRead( (obj)cbus, frame + 2, OFFSET_OPC + offset ) ) {
-                int opc = __getOPC(frame);
-                int datalen = __getDataLen(opc);
-                TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
-                if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
-                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
-                  __evaluateFrame(cbus, frame, opc);
+
+              if( data->subRead( (obj)cbus, frame + 2, OFFSET_TYPE + offset ) ) {
+                if( frame[OFFSET_TYPE+offset] == 'N' ) {
+                  if( data->subRead( (obj)cbus, frame + 2 + OFFSET_TYPE + offset, OFFSET_OPC - OFFSET_TYPE ) ) {
+                    int opc = __getOPC(frame);
+                    int datalen = __getDataLen(opc);
+                    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
+                    if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
+                      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
+                      __evaluateFrame(cbus, frame, opc);
+                    }
+                  }
+                }
+                else if( frame[OFFSET_TYPE+offset] == 'R' ) {
+                  int n = 1;
+                  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading frame type R" );
+                  if( frame[OFFSET_TYPE+offset+n] == ';' ) {
+                    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 1 + OFFSET_TYPE + offset + n );
+                  }
+                  else {
+                    while( data->subRead( (obj)cbus, frame + 1 + OFFSET_TYPE + offset + n, 1 ) && n < 20 ) {
+                      if( frame[OFFSET_TYPE+offset+n] == ';' ) {
+                        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 1 + OFFSET_TYPE + offset + n );
+                        break;
+                      }
+                      else {
+                        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read byte [%c] for frame type R at index[%d]",
+                            frame[OFFSET_TYPE+offset+n], OFFSET_TYPE+offset+n );
+                      }
+                      n++;
+                    }
+                  }
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown frame type: [%c]", frame[OFFSET_TYPE+offset] );
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_TYPE + offset );
                 }
               }
             }
+            else {
+              /* junk */
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wrong frame byte [%c]", frame[1] );
+            }
           }
+        }
+        else {
+          /* junk */
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no start byte [%c]", frame[0] );
         }
       }
     }
