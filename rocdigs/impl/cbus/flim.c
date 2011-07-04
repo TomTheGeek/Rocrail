@@ -50,13 +50,30 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     cmd[0] = OPC_RQNP;
     makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
     break;
-  }
 
   case OPC_PARAMS:
-  {
-    /* :SB020NEFA5520320020000; */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
-    break;
+    {
+      /* :SB020NEFA5520320020000;
+        Para 1 Manufacturer number as allocated by the NMRA
+        Para 2 Module version number or code
+        Para 3 Module identifier
+        Para 4 Number of events allowed
+        Para 5 Number of event variables per event
+        Para 6 Number of node variables
+        Para 7 Not yet allocated.
+      */
+      int offset = (frame[1] == 'S') ? 0:4;
+      int para1  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int para2  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int para3  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int para4  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      int para5  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int para6  = HEXA2Byte(frame + OFFSET_D6 + offset);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "manuID=%d, version=%d, moduleID=%d", para1, para2, para3 );
+      break;
+    }
+
   }
 
   return NULL;

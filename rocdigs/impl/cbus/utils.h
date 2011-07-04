@@ -40,5 +40,6 @@
 #define OFFSET_D7 21
 
 int makeFrame(obj inst, byte* frame, int prio, byte* cmd, int datalen );
+byte HEXA2Byte( const char* s );
 
 #endif /* CBUS_UTILS_H_ */

@@ -194,21 +194,9 @@ static int _version( obj inst ) {
 }
 
 
-static byte __HEXA2Byte( const char* s ) {
-  char val[3] = {0};
-  val[0] = s[0];
-  val[1] = s[1];
-  val[2] = '\0';
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "HEXA=[%s]", val );
-  return (unsigned char)(strtol( val, NULL, 16)&0xFF);
-}
-
-
-
-
 static int __getOPC(byte* frame) {
   int offset = (frame[1] == 'S') ? 0:4;
-  int opc = __HEXA2Byte(frame+7+offset);
+  int opc = HEXA2Byte(frame+7+offset);
   return opc;
 }
 
@@ -409,8 +397,8 @@ static void __broadcastSpeedDir(iOCBUS cbus, iOSlot slot, int speed, Boolean dir
 static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int speed   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int speed   = HEXA2Byte(frame + OFFSET_D2 + offset);
   Boolean dir = (speed & 0x80) ? True:False;
 
   iOSlot slot = __getSlotBySession(data, session);
@@ -449,8 +437,8 @@ static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn) {
 static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int fn      = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int fn      = HEXA2Byte(frame + OFFSET_D2 + offset);
 
   iOSlot slot = __getSlotBySession(data, session);
 
@@ -467,9 +455,9 @@ static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
 static void __updateFunctions(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int fg      = __HEXA2Byte(frame + OFFSET_D2 + offset);
-  int fmask   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int fg      = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int fmask   = HEXA2Byte(frame + OFFSET_D3 + offset);
 
   iOSlot slot = __getSlotBySession(data, session);
 
@@ -488,15 +476,15 @@ static void __updateFunctions(iOCBUS cbus, byte* frame) {
 static void __updateSlot(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
   int offset  = (frame[1] == 'S') ? 0:4;
-  int session = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int addrh   = __HEXA2Byte(frame + OFFSET_D2 + offset);
-  int addrl   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrh   = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int addrl   = HEXA2Byte(frame + OFFSET_D3 + offset);
   int addr    = addrh * 256 + addrl;
 
-  int speed   =  __HEXA2Byte(frame + OFFSET_D4 + offset);
-  int f0_4    =  __HEXA2Byte(frame + OFFSET_D5 + offset);
-  int f5_8    =  __HEXA2Byte(frame + OFFSET_D6 + offset);
-  int f9_12   =  __HEXA2Byte(frame + OFFSET_D7 + offset);
+  int speed   =  HEXA2Byte(frame + OFFSET_D4 + offset);
+  int f0_4    =  HEXA2Byte(frame + OFFSET_D5 + offset);
+  int f5_8    =  HEXA2Byte(frame + OFFSET_D6 + offset);
+  int f9_12   =  HEXA2Byte(frame + OFFSET_D7 + offset);
 
   Boolean dir = (speed & 0x80) ? True:False;
 
@@ -546,12 +534,12 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int nodeh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int nodel   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int nodeh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int nodel   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int node    = nodeh * 256 + nodel;
 
-  int eventh   = __HEXA2Byte(frame + OFFSET_D3 + offset);
-  int eventl   = __HEXA2Byte(frame + OFFSET_D4 + offset);
+  int eventh   = HEXA2Byte(frame + OFFSET_D3 + offset);
+  int eventl   = HEXA2Byte(frame + OFFSET_D4 + offset);
   int event    = eventh * 256 + eventl;
 
   int addr = event;
@@ -578,9 +566,9 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
   iONode node = NULL;
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int addrl   = __HEXA2Byte(frame + OFFSET_D2 + offset);
-  int err     = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int err     = HEXA2Byte(frame + OFFSET_D3 + offset);
 
   int addr = addrh * 256 + addrl;
 
@@ -614,11 +602,11 @@ static __evaluateCV( iOCBUS cbus, byte* frame ) {
   iONode node = NULL;
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int cvh   = __HEXA2Byte(frame + OFFSET_D2 + offset);
-  int cvl   = __HEXA2Byte(frame + OFFSET_D3 + offset);
+  int cvh   = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int cvl   = HEXA2Byte(frame + OFFSET_D3 + offset);
   int cv    = cvh * 256 + cv;
 
-  int value = __HEXA2Byte(frame + OFFSET_D4 + offset);
+  int value = HEXA2Byte(frame + OFFSET_D4 + offset);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cv %d has a value of %d", cv, value );
 
@@ -650,15 +638,15 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
-  int addrh   = __HEXA2Byte(frame + OFFSET_D1 + offset);
-  int addrl   = __HEXA2Byte(frame + OFFSET_D2 + offset);
+  int addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int addr    = addrh * 256 + addrl;
 
-  int rfid1  = __HEXA2Byte(frame + OFFSET_D3 + offset);
-  int rfid2  = __HEXA2Byte(frame + OFFSET_D4 + offset);
-  int rfid3  = __HEXA2Byte(frame + OFFSET_D5 + offset);
-  int rfid4  = __HEXA2Byte(frame + OFFSET_D6 + offset);
-  int rfid5  = __HEXA2Byte(frame + OFFSET_D7 + offset);
+  int rfid1  = HEXA2Byte(frame + OFFSET_D3 + offset);
+  int rfid2  = HEXA2Byte(frame + OFFSET_D4 + offset);
+  int rfid3  = HEXA2Byte(frame + OFFSET_D5 + offset);
+  int rfid4  = HEXA2Byte(frame + OFFSET_D6 + offset);
+  int rfid5  = HEXA2Byte(frame + OFFSET_D7 + offset);
 
   long rfid = rfid5 * 0x1 + rfid4 * 0x100 + rfid3 * 0x10000 + rfid2 * 0x1000000 + rfid1 * 0x100000000;
 
@@ -751,7 +739,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_STAT:
     {
       int offset  = (frame[1] == 'S') ? 0:4;
-      int status   = __HEXA2Byte(frame + OFFSET_D1 + offset);
+      int status   = HEXA2Byte(frame + OFFSET_D1 + offset);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
       break;
     }
