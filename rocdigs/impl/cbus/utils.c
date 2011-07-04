@@ -20,7 +20,6 @@
 
 #include "rocdigs/impl/cbus_impl.h"
 
-#include "rocdigs/impl/cbus/flim.h"
 #include "rocdigs/impl/cbus/utils.h"
 
 #include "rocs/public/trace.h"
@@ -28,39 +27,25 @@
 #include "rocs/public/str.h"
 #include "rocs/public/system.h"
 
-#include "rocdigs/impl/cbus/cbusdefs.h"
 
-/*
- * The frame has the incoming FLiM message.
- * A Program node is created if the client should be informed.
- * The extraMsg is a pointer to an empty byte array which can be used
- * to request more info of the node before creating a Program response
- * for clients.
- */
-iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
+
+int makeFrame(obj inst, byte* frame, int prio, byte* cmd, int datalen ) {
   iOCBUSData data = Data(inst);
-  byte cmd[32];
+  int i = 0;
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeFrame for OPC=0x%02X", cmd[0] );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: 0x%02X", opc );
+  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", (0x80 + (prio << 5) + (data->cid >> 3)) &0xFF, (data->cid << 5) & 0xFF, cmd[0] );
 
-  switch(opc) {
-  case OPC_NNACK:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: request node parameters" );
-    *extraMsg = allocMem(32);
-    cmd[0] = OPC_RQNP;
-    makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
-    break;
+  if( datalen > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
+    for( i = 0; i < datalen; i++ ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeframe: %s", frame+1 );
+      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
+    }
   }
 
-  case OPC_PARAMS:
-  {
-    /* :SB020NEFA5520320020000; */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
-    break;
-  }
+  frame[0] = StrOp.len(frame+1);
 
-  return NULL;
+  return frame[0];
 }
-
-
 

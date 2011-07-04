@@ -51,28 +51,11 @@
 #include "rocdigs/impl/cbus/serial.h"
 #include "rocdigs/impl/cbus/tcp.h"
 #include "rocdigs/impl/cbus/flim.h"
+#include "rocdigs/impl/cbus/utils.h"
 
 static int instCnt = 0;
-/*
- * CBUS Priorities
- */
-#define PRIORITY_HIGH 0
-#define PRIORITY_ABOVE 1
-#define PRIORITY_NORMAL 2
-#define PRIORITY_LOW 3
-
-#define OFFSET_TYPE 6
-#define OFFSET_OPC 7
-#define OFFSET_D1 9
-#define OFFSET_D2 11
-#define OFFSET_D3 13
-#define OFFSET_D4 15
-#define OFFSET_D5 17
-#define OFFSET_D6 19
-#define OFFSET_D7 21
 
 static iONode __translate( iOCBUS cbus, iONode node );
-static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen );
 static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn);
 
 /** ----- OBase ----- */
@@ -151,26 +134,6 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 }
 
 
-static int __makeFrame(iOCBUSData data, byte* frame, int prio, byte* cmd, int datalen ) {
-  int i = 0;
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeframe for OPC=0x%02X", cmd[0] );
-
-  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", (0x80 + (prio << 5) + (data->cid >> 3)) &0xFF, (data->cid << 5) & 0xFF, cmd[0] );
-
-  if( datalen > 0 ) {
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
-    for( i = 0; i < datalen; i++ ) {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeframe: %s", frame+1 );
-      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
-    }
-  }
-
-  frame[0] = StrOp.len(frame+1);
-
-  return frame[0];
-}
-
-
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOCBUSData data = Data(inst);
@@ -179,7 +142,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
     byte cmd[2];
     byte* frame = allocMem(32);
     cmd[0] = OPC_TOF;
-    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
     ThreadOp.post(data->writer, (obj)frame);
   }
@@ -408,7 +371,7 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
     cmd[0] = OPC_RLOC;
     cmd[1] = addr / 256;
     cmd[2] = addr % 256;
-    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
     ThreadOp.post(data->writer, (obj)frame);
@@ -560,7 +523,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       else if( slot->steps == 28 )
         cmd[2] = TMOD_SPD_28;
       cmd[2] |= (slot->lights ? 0x04:0x00);
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set engine flags for loco %s", slot->id );
       ThreadOp.post(data->writer, (obj)frame);
@@ -827,11 +790,14 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_EVLRNI:
     {
       byte* extraMsg = NULL;
-      iONode rsp = processFLiM((obj)cbus, opc, frame, extraMsg);
+      iONode rsp = processFLiM((obj)cbus, opc, frame, &extraMsg);
       if( rsp != NULL )
         return rsp;
-      if( extraMsg != NULL )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extraMsg=0x%08X", extraMsg );
+      if( extraMsg != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extra frame from flim..." );
         ThreadOp.post(data->writer, (obj)extraMsg);
+      }
       break;
     }
   }
@@ -857,7 +823,7 @@ static void __reader( void* threadinst ) {
     cmd[2] = 0;
     cmd[3] = data->sodaddr / 256;
     cmd[4] = data->sodaddr % 256;
-    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "query input state" );
     ThreadOp.post(data->writer, (obj)frame);
   }
@@ -994,7 +960,7 @@ static void __keep( void* threadinst ) {
 
           cmd[0] = OPC_KEEP;
           cmd[1] = slot->session;
-          __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 1 );
+          makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 1 );
 
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "keep session %d fo %s", slot->session, slot->id );
           ThreadOp.post(data->writer, (obj)frame);
@@ -1164,7 +1130,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTOF;
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1174,7 +1140,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RESTP;
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request emergency break" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1184,7 +1150,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTON;
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 0 );
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1201,7 +1167,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[2] = wSwitch.getaddr1( node ) % 256;
     cmd[3] = wSwitch.getport1( node ) / 256;
     cmd[4] = wSwitch.getport1( node ) % 256;
-    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ) );
     ThreadOp.post(data->writer, (obj)frame);
@@ -1215,7 +1181,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[2] = wSwitch.getaddr1( node ) % 256;
     cmd[3] = wSwitch.getport1( node ) / 256;
     cmd[4] = wSwitch.getport1( node ) % 256;
-    __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
     ThreadOp.post( data->timedqueue, (obj)qcmd );
 
   }
@@ -1231,7 +1197,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[2] = wOutput.getaddr( node ) % 256;
     cmd[3] = wOutput.getport( node ) / 256;
     cmd[4] = wOutput.getport( node ) % 256;
-    __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
         wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
@@ -1283,7 +1249,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
-      __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1294,7 +1260,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
-      __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
+      makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
 
@@ -1322,11 +1288,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[0] = fstate?OPC_FNON:OPC_FNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
-        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 2 );
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
       }
       else {
         __makeDFUN(slot, node, cmd);
-        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 3 );
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 3 );
       }
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
@@ -1340,11 +1306,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[0] = fstate?OPC_FNON:OPC_FNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
-        __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
+        makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
       }
       else {
         __makeDFUN(slot, node, cmd);
-        __makeFrame(data, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
+        makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 3 );
       }
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
@@ -1374,7 +1340,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[2] = cv / 256;
         cmd[3] = cv % 256;
         cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
-        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 4 );
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
             wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
@@ -1401,7 +1367,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[4] = cv % 256;
         cmd[5] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[6] = value;
-        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 6 );
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 6 );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
             wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
@@ -1419,7 +1385,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[3] = cv % 256;
         cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[5] = value;
-        __makeFrame(data, frame, PRIORITY_NORMAL, cmd, 5 );
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
             wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );

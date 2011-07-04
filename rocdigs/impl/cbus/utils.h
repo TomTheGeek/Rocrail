@@ -18,9 +18,27 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef CBUSFLIM_H_
-#define CBUSFLIM_H_
 
-iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg);
+#ifndef CBUS_UTILS_H_
+#define CBUS_UTILS_H_
+/*
+ * CBUS Priorities
+ */
+#define PRIORITY_HIGH 0
+#define PRIORITY_ABOVE 1
+#define PRIORITY_NORMAL 2
+#define PRIORITY_LOW 3
 
-#endif /* CBUSFLIM_H_ */
+#define OFFSET_TYPE 6
+#define OFFSET_OPC 7
+#define OFFSET_D1 9
+#define OFFSET_D2 11
+#define OFFSET_D3 13
+#define OFFSET_D4 15
+#define OFFSET_D5 17
+#define OFFSET_D6 19
+#define OFFSET_D7 21
+
+int makeFrame(obj inst, byte* frame, int prio, byte* cmd, int datalen );
+
+#endif /* CBUS_UTILS_H_ */
