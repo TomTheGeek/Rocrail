@@ -449,9 +449,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outb[1] = addr;
       outb[2] = dir ? 0x40:0x00; /* direction, lights and speed byte */
       outb[2] |= fn ? 0x20:0x00;
-      outb[2] |= (lenzspeed >> 1);
-      outb[2] |= (lenzspeed & 0x01) ? 0x10:0x00;
-
+      outb[2] |= lenzspeed;
       outb[3] = 0; /* function 1-4 */
       outb[4] = modsel; /* step selection */
     }
