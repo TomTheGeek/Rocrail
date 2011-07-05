@@ -72,6 +72,8 @@ Needed instance variables:
 
 #include "rocrail/wrapper/public/DigInt.h"
 
+#include "rocdigs/impl/loconet/lnconst.h"
+
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
@@ -180,7 +182,7 @@ static void __reader( void* threadinst ) {
         echoCatched = data->subSendEcho;
       }
 
-      if( msg[0]!=0x81 && !echoCatched) {
+      if( msg[0] == OPC_GPOFF || msg[0] == OPC_GPON || (msg[0]!=0x81 && !echoCatched)) {
         byte* p = allocMem(msglen+1);
         p[0] = msglen;
         MemOp.copy( p+1, msg, msglen);
