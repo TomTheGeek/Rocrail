@@ -665,6 +665,7 @@
     <const name="mprsp" vt="int" val="11" remark="multi port data response from previous get command"/>
     <const name="evset" vt="int" val="12" remark="Event set."/>
     <const name="evget" vt="int" val="13" remark="Event get."/>
+    <const name="nnreq" vt="int" val="14" remark="Node number request for new module with 'modid'."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
@@ -693,6 +694,7 @@
     <const name="lntype_cs" vt="int" val="3" remark="Command Station Config"/>
     <const name="lntype_mp" vt="int" val="4" remark="LocoIO MP's"/>
     <const name="lntype_opsw" vt="int" val="5" remark="Stationary decoder programming"/>
+    <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <var name="lncv" vt="bool" defval="false"/>
   </program>

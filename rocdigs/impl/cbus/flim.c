@@ -28,7 +28,18 @@
 #include "rocs/public/str.h"
 #include "rocs/public/system.h"
 
+#include "rocrail/wrapper/public/Program.h"
+
 #include "rocdigs/impl/cbus/cbusdefs.h"
+
+/*
+ *  +----------+----+---------------------------+--------------------+---------------+
+ *  | Module   | ID | NV                        | EV1                | EV2           |
+ *  +----------+----+---------------------------+--------------------+---------------+
+ *  | CANACC8  | 3  | -                         | output selection   | polarity 0=on |
+ *  | CANACE8C | 5  | 1 = bit mask ON/OFF event | 0=report separated | -             |
+ */
+
 
 /*
  * The frame has the incoming FLiM message.
@@ -53,6 +64,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
 
   case OPC_PARAMS:
     {
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       /* :SB020NEFA5520320020000;
         Para 1 Manufacturer number as allocated by the NMRA
         Para 2 Module version number or code
@@ -71,7 +83,16 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int para6  = HEXA2Byte(frame + OFFSET_D6 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "manuID=%d, version=%d, moduleID=%d", para1, para2, para3 );
-      break;
+
+      wProgram.setcmd( node, wProgram.nnreq );
+      wProgram.setmodid( node, para3 );
+      wProgram.setval1( node, para1 );
+      wProgram.setval2( node, para2 );
+      wProgram.setval3( node, para3 );
+      wProgram.setval4( node, para4 );
+      wProgram.setval5( node, para5 );
+      wProgram.setval6( node, para6 );
+      return node;
     }
 
   }

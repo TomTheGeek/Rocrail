@@ -779,8 +779,10 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     {
       byte* extraMsg = NULL;
       iONode rsp = processFLiM((obj)cbus, opc, frame, &extraMsg);
-      if( rsp != NULL )
-        return rsp;
+      if( rsp != NULL ) {
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+      }
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extraMsg=0x%08X", extraMsg );
       if( extraMsg != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extra frame from flim..." );

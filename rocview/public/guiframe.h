@@ -43,6 +43,7 @@
 #include "rocview/public/statbar.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
+#include "rocview/dialogs/decoders/cbusnodedlg.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
@@ -246,6 +247,7 @@ public:
   void OnLocoIO(wxCommandEvent& event);
   void OnOpenDecoder(wxCommandEvent& event);
   void OnDTOpSw(wxCommandEvent& event);
+  void OnCBusNode(wxCommandEvent& event);
 
   void OnButton(wxCommandEvent& event);
   void OnSlider(wxScrollEvent& event);
@@ -324,6 +326,7 @@ private:
   wxComboBox*       m_ScaleComboBox;
 
   LocoIO* m_LocoIO;
+  CBusNodeDlg* m_CBusNodeDlg;
   DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
@@ -498,6 +501,7 @@ enum
     ME_MGV,
     ME_MGV141,
     ME_OpenDecoder,
+    ME_CBusNode,
     ME_DTOpSw,
     ME_Uhlenbrock,
     ME_EditBoosters,

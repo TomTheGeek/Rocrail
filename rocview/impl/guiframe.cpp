@@ -285,6 +285,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
     EVT_MENU( ME_Undo           , RocGuiFrame::OnUndo)
     EVT_MENU( ME_OpenDecoder    , RocGuiFrame::OnOpenDecoder)
+    EVT_MENU( ME_CBusNode       , RocGuiFrame::OnCBusNode)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
     EVT_MENU( ME_Zoom50         , RocGuiFrame::OnZoom50)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
@@ -969,6 +970,19 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     else
       m_LNCV->event( node );
   }
+  else if( wProgram.getlntype(node) == wProgram.lntype_cbus ) {
+    if( m_CBusNodeDlg != NULL )
+      m_CBusNodeDlg->event( node );
+    else if(wProgram.getcmd(node) == wProgram.nnreq ) {
+      /* instantiate the dialog */
+      m_CBusNodeDlg = new CBusNodeDlg(this);
+      if( wxID_OK == m_CBusNodeDlg->ShowModal() ) {
+        /* Notify RocRail. */
+      }
+      m_CBusNodeDlg->Destroy();
+      m_CBusNodeDlg = NULL;
+    }
+  }
   else if( wProgram.getlntype(node) == wProgram.lntype_cs ) {
     if( m_RocrailIniDlg != NULL )
       m_RocrailIniDlg->event( node );
@@ -1169,6 +1183,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_SymbolMap          = NULL;
   m_LocalPlan          = _T("");
   m_LocoIO             = NULL;
+  m_CBusNodeDlg        = NULL;
   m_MGV141             = NULL;
   m_DTOpSw             = NULL;
   m_RocrailIniDlg      = NULL;
@@ -1468,6 +1483,10 @@ void RocGuiFrame::initFrame() {
   //wxMenu *menuPTDCC = new wxMenu();
   //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
   //menuProgramming->Append( -1, _T("NMRA DCC"), menuPTDCC );
+
+  wxMenu *menuCBus = new wxMenu();
+  menuCBus->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
+  menuProgramming->Append( -1, _T("CBUS"), menuCBus );
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
@@ -2795,6 +2814,13 @@ void RocGuiFrame::OnOpenDecoder( wxCommandEvent& event ) {
   m_OpenDecoder->Destroy();
   m_OpenDecoder = NULL;
   */
+}
+
+void RocGuiFrame::OnCBusNode( wxCommandEvent& event ) {
+  m_CBusNodeDlg = new CBusNodeDlg(this);
+  m_CBusNodeDlg->ShowModal();
+  m_CBusNodeDlg->Destroy();
+  m_CBusNodeDlg = NULL;
 }
 
 void RocGuiFrame::setOnline( bool online ) {
