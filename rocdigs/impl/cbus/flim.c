@@ -85,6 +85,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "manuID=%d, version=%d, moduleID=%d", para1, para2, para3 );
 
       wProgram.setcmd( node, wProgram.nnreq );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setmodid( node, para3 );
       wProgram.setval1( node, para1 );
       wProgram.setval2( node, para2 );
@@ -95,10 +96,41 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       return node;
     }
 
+  case OPC_NNREF:
+    {
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      int offset = (frame[1] == 'S') ? 0:4;
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int nn = nnh * 256 + nnl;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node number confirmed [%d]", nn );
+      wProgram.setcmd( node, wProgram.nnreq );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
+      wProgram.setdecaddr(node, nn);
+      return node;
+    }
+
   }
 
   return NULL;
 }
 
+byte* programFLiM(obj inst, iONode node) {
+  byte cmd[32];
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: program command." );
+
+  if( wProgram.getcmd( node ) == wProgram.nnreq ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: set node number." );
+
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_SNN;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  return NULL;
+}
 
 

@@ -975,7 +975,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_CBusNodeDlg->event( node );
     else if(wProgram.getcmd(node) == wProgram.nnreq ) {
       /* instantiate the dialog */
-      m_CBusNodeDlg = new CBusNodeDlg(this);
+      m_CBusNodeDlg = new CBusNodeDlg(this, node);
       if( wxID_OK == m_CBusNodeDlg->ShowModal() ) {
         /* Notify RocRail. */
       }

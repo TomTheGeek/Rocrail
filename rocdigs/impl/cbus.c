@@ -1311,7 +1311,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
     Boolean direct = wProgram.isdirect(node);
 
-    if( wProgram.getcmd( node ) == wProgram.get ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program type %d...", wProgram.getlntype(node) );
+
+
+    if( wProgram.getlntype(node) == wProgram.lntype_cbus ) {
+      byte* frame = programFLiM((obj)cbus, node );
+      if( frame != NULL ) {
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
       int addr = wProgram.getaddr( node );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );

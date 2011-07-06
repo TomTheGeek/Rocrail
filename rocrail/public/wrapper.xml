@@ -666,6 +666,7 @@
     <const name="evset" vt="int" val="12" remark="Event set."/>
     <const name="evget" vt="int" val="13" remark="Event get."/>
     <const name="nnreq" vt="int" val="14" remark="Node number request for new module with 'modid'."/>
+    <const name="nnconf" vt="int" val="15" remark="Node number confirmation by module."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

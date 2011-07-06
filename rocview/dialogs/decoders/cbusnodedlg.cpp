@@ -33,17 +33,41 @@
 
 #include "rocs/public/trace.h"
 
-CBusNodeDlg::CBusNodeDlg( wxWindow* parent )
-:
-cbusnodedlggen( parent )
+CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 {
+  init(NULL);
+}
 
+CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( parent )
+{
+  init(event);
+}
+
+void CBusNodeDlg::init( iONode event ) {
+  if( event != NULL ) {
+    if( wProgram.getmodid(event) == 3 ) {
+      m_NodeType->SetValue(_T("CANACC8"));
+    }
+    else if( wProgram.getmodid(event) == 5 ) {
+      m_NodeType->SetValue(_T("CANACE8C"));
+    }
+  }
 }
 
 void CBusNodeDlg::onOK( wxCommandEvent& event )
 {
-	// TODO: Implement onOK
+  EndModal( wxID_OK );
 }
+
+void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.nnreq );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
+}
+
 
 void CBusNodeDlg::event( iONode event ) {
 }
