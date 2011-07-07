@@ -54,7 +54,18 @@ void CBusNodeDlg::init( iONode event ) {
       m_NodeType->SetValue(_T("CANACE8C"));
     }
   }
+
+  m_SetPage = 0;
+  m_NoteBook->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( CBusNodeDlg::onSetPage ), NULL, this );
+  wxCommandEvent cmd( wxEVT_COMMAND_MENU_SELECTED, wxID_CBUSNODE_BOOK );
+  wxPostEvent( m_NoteBook, cmd );
 }
+
+void CBusNodeDlg::onSetPage(wxCommandEvent& event) {
+  TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "set page to %d", m_SetPage );
+  m_NoteBook->SetSelection( m_SetPage );
+}
+
 
 void CBusNodeDlg::onOK( wxCommandEvent& event )
 {
@@ -89,6 +100,14 @@ void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
 
 }
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onEV( wxSpinEvent& event ) {
+
+}
+
+void CBusNodeDlg::onEVBit( wxCommandEvent& event ) {
 
 }
 

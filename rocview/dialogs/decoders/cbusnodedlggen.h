@@ -29,12 +29,11 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define wxID_CBUSNODE_NUMBER 1000
-#define wxID_CBUSNODE_INDEX 1001
-#define wxID_CBUS_ACC8 1002
-#define wxID_CBUS_ACE8C 1003
-#define wxID_CBUS_CMD 1004
-#define wxID_CBUS_EVENTSPANEL 1005
+#define wxID_CBUSNODE_BOOK 1000
+#define wxID_CBUSNODE_NUMBER 1001
+#define wxID_CBUSNODE_INDEX 1002
+#define wxID_CBUS_VAR 1003
+#define wxID_CBUS_EVENTSPANEL 1004
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class cbusnodedlggen
@@ -56,8 +55,7 @@ class cbusnodedlggen : public wxDialog
 		wxPanel* m_IndexPanel;
 		wxListBox* m_listBox1;
 		wxButton* m_IndexDelete;
-		wxPanel* m_ACC8Panel;
-		wxPanel* m_ACE8CPanel;
+		wxPanel* m_VarPanel;
 		wxStaticText* m_labACE8CNV1;
 		wxCheckBox* m_ACE8CInput0;
 		wxCheckBox* m_ACE8CInput1;
@@ -69,7 +67,6 @@ class cbusnodedlggen : public wxDialog
 		wxCheckBox* m_ACE8CInput7;
 		wxButton* m_ACE8CGet;
 		wxButton* m_ACE8CSet;
-		wxPanel* m_CMDPanel;
 		wxPanel* m_EventsPanel;
 		wxListBox* m_EventsList;
 		wxStaticText* m_labEventNode;
@@ -80,6 +77,14 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_EventAddress;
 		wxSpinCtrl* m_EventIndex;
 		wxSpinCtrl* m_EventVar;
+		wxCheckBox* m_EVBit7;
+		wxCheckBox* m_EVBit6;
+		wxCheckBox* m_EVBit5;
+		wxCheckBox* m_EVBit4;
+		wxCheckBox* m_EVBit3;
+		wxCheckBox* m_EVBit2;
+		wxCheckBox* m_EVBit1;
+		wxCheckBox* m_EVBit0;
 		wxButton* m_EventGetAll;
 		wxButton* m_EventAdd;
 		wxButton* m_EventDelete;
@@ -91,6 +96,8 @@ class cbusnodedlggen : public wxDialog
 		virtual void onACE8CGet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onACE8CSet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEV( wxSpinEvent& event ) { event.Skip(); }
+		virtual void onEVBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventDelete( wxCommandEvent& event ) { event.Skip(); }
