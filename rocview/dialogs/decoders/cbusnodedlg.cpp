@@ -45,6 +45,8 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 
 void CBusNodeDlg::init( iONode event ) {
   if( event != NULL ) {
+    m_IID->SetValue( wxString(wProgram.getiid(event),wxConvUTF8) );
+
     if( wProgram.getmodid(event) == 3 ) {
       m_NodeType->SetValue(_T("CANACC8"));
     }
@@ -63,11 +65,37 @@ void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.nnreq );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
   wProgram.setdecaddr( cmd, nn );
   wxGetApp().sendToRocrail( cmd );
 }
 
+void CBusNodeDlg::onACE8CGet( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onACE8CSet( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
+
+}
+void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
+
+}
+void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
+
+}
+void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
+
+}
+
+
 
 void CBusNodeDlg::event( iONode event ) {
+  if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
+    init( event );
+  }
 }

@@ -85,6 +85,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "manuID=%d, version=%d, moduleID=%d", para1, para2, para3 );
 
       wProgram.setcmd( node, wProgram.nnreq );
+      wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setmodid( node, para3 );
       wProgram.setval1( node, para1 );
@@ -105,6 +106,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int nn = nnh * 256 + nnl;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node number confirmed [%d]", nn );
       wProgram.setcmd( node, wProgram.nnreq );
+      wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setdecaddr(node, nn);
       return node;

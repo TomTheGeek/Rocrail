@@ -22,11 +22,19 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/listbox.h>
+#include <wx/checkbox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
+#define wxID_CBUSNODE_NUMBER 1000
+#define wxID_CBUSNODE_INDEX 1001
+#define wxID_CBUS_ACC8 1002
+#define wxID_CBUS_ACE8C 1003
+#define wxID_CBUS_CMD 1004
+#define wxID_CBUS_EVENTSPANEL 1005
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class cbusnodedlggen
@@ -38,16 +46,54 @@ class cbusnodedlggen : public wxDialog
 	protected:
 		wxNotebook* m_NoteBook;
 		wxPanel* m_NodeNumberPanel;
+		wxStaticText* m_labIID;
+		wxTextCtrl* m_IID;
 		wxStaticText* m_labNodeType;
 		wxTextCtrl* m_NodeType;
 		wxStaticText* m_labNumber;
 		wxSpinCtrl* m_NodeNumber;
 		wxButton* m_SetNodeNumber;
+		wxPanel* m_IndexPanel;
+		wxListBox* m_listBox1;
+		wxButton* m_IndexDelete;
+		wxPanel* m_ACC8Panel;
+		wxPanel* m_ACE8CPanel;
+		wxStaticText* m_labACE8CNV1;
+		wxCheckBox* m_ACE8CInput0;
+		wxCheckBox* m_ACE8CInput1;
+		wxCheckBox* m_ACE8CInput2;
+		wxCheckBox* m_ACE8CInput3;
+		wxCheckBox* m_ACE8CInput4;
+		wxCheckBox* m_ACE8CInput5;
+		wxCheckBox* m_ACE8CInput6;
+		wxCheckBox* m_ACE8CInput7;
+		wxButton* m_ACE8CGet;
+		wxButton* m_ACE8CSet;
+		wxPanel* m_CMDPanel;
+		wxPanel* m_EventsPanel;
+		wxListBox* m_EventsList;
+		wxStaticText* m_labEventNode;
+		wxStaticText* m_labEventAddr;
+		wxStaticText* m_labEventIndex;
+		wxStaticText* m_labEventVar;
+		wxSpinCtrl* m_EventNodeNr;
+		wxSpinCtrl* m_EventAddress;
+		wxSpinCtrl* m_EventIndex;
+		wxSpinCtrl* m_EventVar;
+		wxButton* m_EventGetAll;
+		wxButton* m_EventAdd;
+		wxButton* m_EventDelete;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onSetNodeNumber( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onACE8CGet( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onACE8CSet( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEventSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEventAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEventDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	
