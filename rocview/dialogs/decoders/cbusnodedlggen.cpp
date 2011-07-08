@@ -68,10 +68,10 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listBox1 = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	m_listBox1->SetMinSize( wxSize( -1,150 ) );
+	m_IndexList = new wxListBox( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_IndexList->SetMinSize( wxSize( -1,150 ) );
 	
-	bSizer5->Add( m_listBox1, 1, wxALL|wxEXPAND, 5 );
+	bSizer5->Add( m_IndexList, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
@@ -89,61 +89,76 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	wxFlexGridSizer* fgSizer3;
-	fgSizer3 = new wxFlexGridSizer( 2, 2, 0, 0 );
-	fgSizer3->SetFlexibleDirection( wxBOTH );
-	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 2, 2, 0, 0 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labACE8CNV1 = new wxStaticText( m_VarPanel, wxID_ANY, wxT("NV#1"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labACE8CNV1->Wrap( -1 );
-	fgSizer3->Add( m_labACE8CNV1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_labVarNr = new wxStaticText( m_VarPanel, wxID_ANY, wxT("Number"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labVarNr->Wrap( -1 );
+	fgSizer5->Add( m_labVarNr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_labVarValue = new wxStaticText( m_VarPanel, wxID_ANY, wxT("Value"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labVarValue->Wrap( -1 );
+	fgSizer5->Add( m_labVarValue, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_VarNr = new wxSpinCtrl( m_VarPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
+	fgSizer5->Add( m_VarNr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	wxBoxSizer* bSizer121;
+	bSizer121 = new wxBoxSizer( wxVERTICAL );
+	
+	m_VarValue = new wxSpinCtrl( m_VarPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
+	bSizer121->Add( m_VarValue, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_ACE8CInput0 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput0, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_ACE8CInput1 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput1, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_ACE8CInput2 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput2, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_ACE8CInput3 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput3, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_ACE8CInput4 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput4, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_ACE8CInput5 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput5, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	m_ACE8CInput7 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput7, 0, 0, 5 );
 	
 	m_ACE8CInput6 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput6, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	bSizer8->Add( m_ACE8CInput6, 0, 0, 5 );
 	
-	m_ACE8CInput7 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_ACE8CInput7, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	m_ACE8CInput5 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput5, 0, 0, 5 );
 	
-	fgSizer3->Add( bSizer8, 0, wxEXPAND, 5 );
+	m_ACE8CInput4 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput4, 0, 0, 5 );
 	
-	bSizer4->Add( fgSizer3, 0, wxEXPAND, 5 );
+	m_ACE8CInput3 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput3, 0, 0, 5 );
+	
+	m_ACE8CInput2 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput2, 0, 0, 5 );
+	
+	m_ACE8CInput1 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput1, 0, 0, 5 );
+	
+	m_ACE8CInput0 = new wxCheckBox( m_VarPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_ACE8CInput0, 0, 0, 5 );
+	
+	bSizer121->Add( bSizer8, 0, wxEXPAND, 5 );
+	
+	fgSizer5->Add( bSizer121, 1, wxEXPAND, 5 );
+	
+	bSizer4->Add( fgSizer5, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_ACE8CGet = new wxButton( m_VarPanel, wxID_ANY, wxT("Get"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_ACE8CGet, 0, wxALL, 5 );
+	m_VarGet = new wxButton( m_VarPanel, wxID_ANY, wxT("Get"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_VarGet, 0, wxALL, 5 );
 	
-	m_ACE8CSet = new wxButton( m_VarPanel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_ACE8CSet, 0, wxALL, 5 );
+	m_VarSet = new wxButton( m_VarPanel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_VarSet, 0, wxALL, 5 );
 	
 	bSizer4->Add( bSizer9, 0, wxEXPAND, 5 );
 	
 	m_VarPanel->SetSizer( bSizer4 );
 	m_VarPanel->Layout();
 	bSizer4->Fit( m_VarPanel );
-	m_NoteBook->AddPage( m_VarPanel, wxT("Variables"), true );
+	m_NoteBook->AddPage( m_VarPanel, wxT("Variables"), false );
 	m_EventsPanel = new wxPanel( m_NoteBook, wxID_CBUS_EVENTSPANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
@@ -234,12 +249,18 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_EventDelete = new wxButton( m_EventsPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer11->Add( m_EventDelete, 0, wxALL, 5 );
 	
+	m_EvtLearn = new wxButton( m_EventsPanel, wxID_ANY, wxT("Learn"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer11->Add( m_EvtLearn, 0, wxALL, 5 );
+	
+	m_EvtUnlearn = new wxButton( m_EventsPanel, wxID_ANY, wxT("Unlearn"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer11->Add( m_EvtUnlearn, 0, wxALL, 5 );
+	
 	bSizer10->Add( bSizer11, 0, wxEXPAND, 5 );
 	
 	m_EventsPanel->SetSizer( bSizer10 );
 	m_EventsPanel->Layout();
 	bSizer10->Fit( m_EventsPanel );
-	m_NoteBook->AddPage( m_EventsPanel, wxT("Events"), false );
+	m_NoteBook->AddPage( m_EventsPanel, wxT("Events"), true );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -255,8 +276,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	m_SetNodeNumber->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSetNodeNumber ), NULL, this );
-	m_ACE8CGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onACE8CGet ), NULL, this );
-	m_ACE8CSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onACE8CSet ), NULL, this );
+	m_IndexList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onIndexSelect ), NULL, this );
+	m_IndexDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
+	m_VarValue->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
+	m_ACE8CInput7->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput6->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput5->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput4->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput3->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput0->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_VarGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarGet ), NULL, this );
+	m_VarSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarSet ), NULL, this );
 	m_EventsList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onEventSelect ), NULL, this );
 	m_EventVar->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onEV ), NULL, this );
 	m_EVBit7->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );
@@ -270,6 +302,8 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_EventGetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventGetAll ), NULL, this );
 	m_EventAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventAdd ), NULL, this );
 	m_EventDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventDelete ), NULL, this );
+	m_EvtLearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
+	m_EvtUnlearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }
 
@@ -277,8 +311,19 @@ cbusnodedlggen::~cbusnodedlggen()
 {
 	// Disconnect Events
 	m_SetNodeNumber->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSetNodeNumber ), NULL, this );
-	m_ACE8CGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onACE8CGet ), NULL, this );
-	m_ACE8CSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onACE8CSet ), NULL, this );
+	m_IndexList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onIndexSelect ), NULL, this );
+	m_IndexDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
+	m_VarValue->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
+	m_ACE8CInput7->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput6->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput5->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput4->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput3->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_ACE8CInput0->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
+	m_VarGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarGet ), NULL, this );
+	m_VarSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarSet ), NULL, this );
 	m_EventsList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onEventSelect ), NULL, this );
 	m_EventVar->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onEV ), NULL, this );
 	m_EVBit7->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );
@@ -292,5 +337,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_EventGetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventGetAll ), NULL, this );
 	m_EventAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventAdd ), NULL, this );
 	m_EventDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventDelete ), NULL, this );
+	m_EvtLearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
+	m_EvtUnlearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }

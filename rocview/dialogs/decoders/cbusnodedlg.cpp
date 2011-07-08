@@ -82,23 +82,48 @@ void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
 }
 
-void CBusNodeDlg::onACE8CGet( wxCommandEvent& event ) {
+void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
 
 }
 
-void CBusNodeDlg::onACE8CSet( wxCommandEvent& event ) {
+void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onVarValue( wxSpinEvent& event ) {
+
+}
+
+void CBusNodeDlg::onVarBit( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onVarGet( wxCommandEvent& event ) {
+
+}
+
+void CBusNodeDlg::onVarSet( wxCommandEvent& event ) {
 
 }
 
 void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
 
 }
-void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
 
+void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.evgetall );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
 }
+
 void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
 
 }
+
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
 
 }
@@ -111,10 +136,32 @@ void CBusNodeDlg::onEVBit( wxCommandEvent& event ) {
 
 }
 
+void CBusNodeDlg::onLearn( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.learn );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
+}
+
+void CBusNodeDlg::onUnlearn( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.unlearn );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
+}
 
 
 void CBusNodeDlg::event( iONode event ) {
   if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
     init( event );
+  }
+  else if( wProgram.getcmd( event ) == wProgram.evgetall  ) {
+    // ToDo: Add event to the list.
   }
 }

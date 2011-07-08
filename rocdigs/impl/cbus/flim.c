@@ -112,6 +112,32 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       return node;
     }
 
+  case OPC_ENRSP:
+    {
+      /* <0xF2><NN hi><NN lo><EN3><EN2><EN1><EN0><EN#> */
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      int offset = (frame[1] == 'S') ? 0:4;
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int nn = nnh * 256 + nnl;
+      int en3  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int en2  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      int ennn = en3 * 256 + en2;
+      int en1  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int en0  = HEXA2Byte(frame + OFFSET_D6 + offset);
+      int enaddr = en1 * 256 + en0;
+      int ennr = HEXA2Byte(frame + OFFSET_D7 + offset);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response", nn, ennr );
+      wProgram.setcmd( node, wProgram.evget );
+      wProgram.setiid( node, data->iid );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
+      wProgram.setdecaddr(node, nn);
+      wProgram.setval1(node, ennr );
+      wProgram.setval2(node, ennn );
+      wProgram.setval3(node, enaddr );
+      return node;
+    }
+
   }
 
   return NULL;
@@ -126,6 +152,39 @@ byte* programFLiM(obj inst, iONode node) {
 
     byte* frame = allocMem(32);
     cmd[0] = OPC_SNN;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.learn ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: set node %d in learn mode.", wProgram.getdecaddr(node) );
+
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_NNLRN;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.unlearn ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: release node %d from learn mode.", wProgram.getdecaddr(node) );
+
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_NNULN;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.evgetall ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: get all events from node %d.", wProgram.getdecaddr(node) );
+
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_NERD;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );

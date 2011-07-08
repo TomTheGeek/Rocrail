@@ -53,20 +53,23 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_NodeNumber;
 		wxButton* m_SetNodeNumber;
 		wxPanel* m_IndexPanel;
-		wxListBox* m_listBox1;
+		wxListBox* m_IndexList;
 		wxButton* m_IndexDelete;
 		wxPanel* m_VarPanel;
-		wxStaticText* m_labACE8CNV1;
-		wxCheckBox* m_ACE8CInput0;
-		wxCheckBox* m_ACE8CInput1;
-		wxCheckBox* m_ACE8CInput2;
-		wxCheckBox* m_ACE8CInput3;
-		wxCheckBox* m_ACE8CInput4;
-		wxCheckBox* m_ACE8CInput5;
-		wxCheckBox* m_ACE8CInput6;
+		wxStaticText* m_labVarNr;
+		wxStaticText* m_labVarValue;
+		wxSpinCtrl* m_VarNr;
+		wxSpinCtrl* m_VarValue;
 		wxCheckBox* m_ACE8CInput7;
-		wxButton* m_ACE8CGet;
-		wxButton* m_ACE8CSet;
+		wxCheckBox* m_ACE8CInput6;
+		wxCheckBox* m_ACE8CInput5;
+		wxCheckBox* m_ACE8CInput4;
+		wxCheckBox* m_ACE8CInput3;
+		wxCheckBox* m_ACE8CInput2;
+		wxCheckBox* m_ACE8CInput1;
+		wxCheckBox* m_ACE8CInput0;
+		wxButton* m_VarGet;
+		wxButton* m_VarSet;
 		wxPanel* m_EventsPanel;
 		wxListBox* m_EventsList;
 		wxStaticText* m_labEventNode;
@@ -88,19 +91,27 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_EventGetAll;
 		wxButton* m_EventAdd;
 		wxButton* m_EventDelete;
+		wxButton* m_EvtLearn;
+		wxButton* m_EvtUnlearn;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onSetNodeNumber( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onACE8CGet( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onACE8CSet( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onIndexSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onIndexDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onVarValue( wxSpinEvent& event ) { event.Skip(); }
+		virtual void onVarBit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onVarGet( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onVarSet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEV( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onEVBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onLearn( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onUnlearn( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	

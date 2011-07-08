@@ -39,14 +39,20 @@ protected:
 	// Handlers for cbusnodedlggen events.
 	void onOK( wxCommandEvent& event );
   void onSetNodeNumber( wxCommandEvent& event );
-  void onACE8CGet( wxCommandEvent& event );
-  void onACE8CSet( wxCommandEvent& event );
+  void onIndexSelect( wxCommandEvent& event );
+  void onIndexDelete( wxCommandEvent& event );
+  void onVarValue( wxSpinEvent& event );
+  void onVarBit( wxCommandEvent& event );
+  void onVarGet( wxCommandEvent& event );
+  void onVarSet( wxCommandEvent& event );
   void onEventSelect( wxCommandEvent& event );
   void onEventGetAll( wxCommandEvent& event );
   void onEventAdd( wxCommandEvent& event );
   void onEventDelete( wxCommandEvent& event );
   void onEV( wxSpinEvent& event );
   void onEVBit( wxCommandEvent& event );
+  void onLearn( wxCommandEvent& event );
+  void onUnlearn( wxCommandEvent& event );
 
 public:
 	/** Constructor */
