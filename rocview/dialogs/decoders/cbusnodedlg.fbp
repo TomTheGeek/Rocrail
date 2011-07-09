@@ -1774,7 +1774,7 @@
                                             <property name="id">wxID_ANY</property>
                                             <property name="maximum_size"></property>
                                             <property name="minimum_size">-1,150</property>
-                                            <property name="name">m_EventsList</property>
+                                            <property name="name">m_EventList</property>
                                             <property name="permission">protected</property>
                                             <property name="pos"></property>
                                             <property name="size"></property>

@@ -191,6 +191,52 @@ byte* programFLiM(obj inst, iONode node) {
     return frame;
   }
 
+  if( wProgram.getcmd( node ) == wProgram.get ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: get var %d from node %d.", wProgram.getcv(node), wProgram.getdecaddr(node) );
+
+    /* <0x73><NN hi><NN lo><Para#> */
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_RQNPN;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    cmd[3] = wProgram.getcv(node);
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 3 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.set ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: set var %d of node %d to %d.",
+        wProgram.getcv(node), wProgram.getdecaddr(node), wProgram.getvalue(node) );
+
+    /* <0x96><NN hi><NN lo><NV#><NV val> */
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_NVSET;
+    cmd[1] = wProgram.getdecaddr(node) / 256;
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    cmd[3] = wProgram.getcv(node);
+    cmd[4] = wProgram.getvalue(node);
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 4 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.evset ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: set an event for node %d.", wProgram.getdecaddr(node) );
+
+    /* <0xD2><EN3><EN2><EN1><EN0><EV#><EV val> */
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_EVLRN;
+    cmd[1] = wProgram.getval2(node) / 256;
+    cmd[2] = wProgram.getval2(node) % 256;
+    cmd[3] = wProgram.getval3(node) / 256;
+    cmd[4] = wProgram.getval3(node) % 256;
+    cmd[5] = wProgram.getval1(node);
+    cmd[6] = wProgram.getval4(node);
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 6 );
+    return frame;
+  }
+
   return NULL;
 }
 

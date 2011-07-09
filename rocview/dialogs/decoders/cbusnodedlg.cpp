@@ -161,7 +161,13 @@ void CBusNodeDlg::event( iONode event ) {
   if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
     init( event );
   }
-  else if( wProgram.getcmd( event ) == wProgram.evgetall  ) {
+  else if( wProgram.getcmd( event ) == wProgram.evget  ) {
     // ToDo: Add event to the list.
+    int nn   = wProgram.getdecaddr(event);
+    int ennr = wProgram.getval1(event);
+    int ennn = wProgram.getval2(event);
+    int addr = wProgram.getval3(event);
+    m_EventList->Append( wxString::Format(_T("index %d, nodenr %d, address %d"), ennr, ennn, addr),
+        event->base.clone(event) );
   }
 }

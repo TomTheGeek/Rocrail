@@ -71,7 +71,7 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_VarGet;
 		wxButton* m_VarSet;
 		wxPanel* m_EventsPanel;
-		wxListBox* m_EventsList;
+		wxListBox* m_EventList;
 		wxStaticText* m_labEventNode;
 		wxStaticText* m_labEventAddr;
 		wxStaticText* m_labEventIndex;
