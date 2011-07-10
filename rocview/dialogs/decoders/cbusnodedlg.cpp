@@ -99,11 +99,26 @@ void CBusNodeDlg::onVarBit( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onVarGet( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.get );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setcv( cmd, m_VarIndex->GetValue() );
+  wxGetApp().sendToRocrail( cmd );
 }
 
 void CBusNodeDlg::onVarSet( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.set );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setcv( cmd, m_VarIndex->GetValue() );
+  wProgram.setvalue( cmd, m_VarValue->GetValue() );
+  wxGetApp().sendToRocrail( cmd );
 }
 
 void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
@@ -121,11 +136,29 @@ void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.evset );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setval2(cmd, m_EventNodeNr->GetValue()); // nn
+  wProgram.setval3(cmd, m_EventAddress->GetValue()); // addr
+  wProgram.setval1(cmd, m_EventIndex->GetValue() ); // idx
+  wProgram.setval4(cmd, m_EventVar->GetValue() ); // val
+  wxGetApp().sendToRocrail( cmd );
 }
 
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.evdelete );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setval2(cmd, m_EventNodeNr->GetValue()); // nn
+  wProgram.setval3(cmd, m_EventAddress->GetValue()); // addr
+  wxGetApp().sendToRocrail( cmd );
 }
 
 void CBusNodeDlg::onEV( wxSpinEvent& event ) {
@@ -170,4 +203,14 @@ void CBusNodeDlg::event( iONode event ) {
     m_EventList->Append( wxString::Format(_T("index %d, nodenr %d, address %d"), ennr, ennn, addr),
         event->base.clone(event) );
   }
+}
+
+void CBusNodeDlg::onEvtClearAll( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.evclrall );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
 }

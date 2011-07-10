@@ -53,6 +53,7 @@ protected:
   void onEVBit( wxCommandEvent& event );
   void onLearn( wxCommandEvent& event );
   void onUnlearn( wxCommandEvent& event );
+  void onEvtClearAll( wxCommandEvent& event );
 
 public:
 	/** Constructor */

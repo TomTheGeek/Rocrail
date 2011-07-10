@@ -56,9 +56,9 @@ class cbusnodedlggen : public wxDialog
 		wxListBox* m_IndexList;
 		wxButton* m_IndexDelete;
 		wxPanel* m_VarPanel;
-		wxStaticText* m_labVarNr;
+		wxStaticText* m_labVarIndex;
 		wxStaticText* m_labVarValue;
-		wxSpinCtrl* m_VarNr;
+		wxSpinCtrl* m_VarIndex;
 		wxSpinCtrl* m_VarValue;
 		wxCheckBox* m_ACE8CInput7;
 		wxCheckBox* m_ACE8CInput6;
@@ -91,6 +91,7 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_EventGetAll;
 		wxButton* m_EventAdd;
 		wxButton* m_EventDelete;
+		wxButton* m_EvtClearAll;
 		wxButton* m_EvtLearn;
 		wxButton* m_EvtUnlearn;
 		wxStdDialogButtonSizer* m_sdbSizer1;
@@ -110,6 +111,7 @@ class cbusnodedlggen : public wxDialog
 		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEvtClearAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onLearn( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onUnlearn( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }

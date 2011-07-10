@@ -94,16 +94,16 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labVarNr = new wxStaticText( m_VarPanel, wxID_ANY, wxT("Number"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labVarNr->Wrap( -1 );
-	fgSizer5->Add( m_labVarNr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_labVarIndex = new wxStaticText( m_VarPanel, wxID_ANY, wxT("Index"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labVarIndex->Wrap( -1 );
+	fgSizer5->Add( m_labVarIndex, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_labVarValue = new wxStaticText( m_VarPanel, wxID_ANY, wxT("Value"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labVarValue->Wrap( -1 );
 	fgSizer5->Add( m_labVarValue, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_VarNr = new wxSpinCtrl( m_VarPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
-	fgSizer5->Add( m_VarNr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_VarIndex = new wxSpinCtrl( m_VarPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
+	fgSizer5->Add( m_VarIndex, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxBoxSizer* bSizer121;
 	bSizer121 = new wxBoxSizer( wxVERTICAL );
@@ -247,13 +247,16 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer11->Add( m_EventAdd, 0, wxALL, 5 );
 	
 	m_EventDelete = new wxButton( m_EventsPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( m_EventDelete, 0, wxALL, 5 );
+	bSizer11->Add( m_EventDelete, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_EvtClearAll = new wxButton( m_EventsPanel, wxID_ANY, wxT("Clear all"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer11->Add( m_EvtClearAll, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	m_EvtLearn = new wxButton( m_EventsPanel, wxID_ANY, wxT("Learn"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( m_EvtLearn, 0, wxALL, 5 );
+	bSizer11->Add( m_EvtLearn, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_EvtUnlearn = new wxButton( m_EventsPanel, wxID_ANY, wxT("Unlearn"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( m_EvtUnlearn, 0, wxALL, 5 );
+	bSizer11->Add( m_EvtUnlearn, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	bSizer10->Add( bSizer11, 0, wxEXPAND, 5 );
 	
@@ -302,6 +305,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_EventGetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventGetAll ), NULL, this );
 	m_EventAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventAdd ), NULL, this );
 	m_EventDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventDelete ), NULL, this );
+	m_EvtClearAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtClearAll ), NULL, this );
 	m_EvtLearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
 	m_EvtUnlearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
@@ -337,6 +341,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_EventGetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventGetAll ), NULL, this );
 	m_EventAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventAdd ), NULL, this );
 	m_EventDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEventDelete ), NULL, this );
+	m_EvtClearAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtClearAll ), NULL, this );
 	m_EvtLearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
 	m_EvtUnlearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );

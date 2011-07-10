@@ -138,6 +138,26 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       return node;
     }
 
+  case OPC_NVANS:
+    {
+      /* <97><NNhi><NNlo><NV#><NV val> */
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      int offset = (frame[1] == 'S') ? 0:4;
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int nn = nnh * 256 + nnl;
+      int idx  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int val  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] node variable %d=%d response", nn, idx, val );
+      wProgram.setcmd( node, wProgram.get );
+      wProgram.setiid( node, data->iid );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
+      wProgram.setdecaddr(node, nn);
+      wProgram.setcv(node, idx );
+      wProgram.setvalue(node, val );
+      return node;
+    }
+
   }
 
   return NULL;
@@ -227,13 +247,35 @@ byte* programFLiM(obj inst, iONode node) {
     /* <0xD2><EN3><EN2><EN1><EN0><EV#><EV val> */
     byte* frame = allocMem(32);
     cmd[0] = OPC_EVLRN;
-    cmd[1] = wProgram.getval2(node) / 256;
+    cmd[1] = wProgram.getval2(node) / 256; // nn
     cmd[2] = wProgram.getval2(node) % 256;
-    cmd[3] = wProgram.getval3(node) / 256;
+    cmd[3] = wProgram.getval3(node) / 256; // addr
     cmd[4] = wProgram.getval3(node) % 256;
-    cmd[5] = wProgram.getval1(node);
-    cmd[6] = wProgram.getval4(node);
+    cmd[5] = wProgram.getval1(node); // idx
+    cmd[6] = wProgram.getval4(node); // val
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 6 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.evdelete ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: delete an event for node %d.", wProgram.getdecaddr(node) );
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_EVULN;
+    cmd[1] = wProgram.getval2(node) / 256; // nn
+    cmd[2] = wProgram.getval2(node) % 256;
+    cmd[3] = wProgram.getval3(node) / 256; // addr
+    cmd[4] = wProgram.getval3(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 4 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.evclrall ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: clear all events for node %d.", wProgram.getdecaddr(node) );
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_NNCLR;
+    cmd[1] = wProgram.getdecaddr(node) / 256; // nn
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
     return frame;
   }
 

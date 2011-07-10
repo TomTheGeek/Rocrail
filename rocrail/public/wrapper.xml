@@ -670,6 +670,8 @@
     <const name="evgetall" vt="int" val="16" remark="Event get all."/>
     <const name="learn" vt="int" val="17" remark="Set module in learn mode."/>
     <const name="unlearn" vt="int" val="18" remark="Set module in operation mode."/>
+    <const name="evdelete" vt="int" val="19" remark="Event delete."/>
+    <const name="evclrall" vt="int" val="20" remark="Clear all events."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
