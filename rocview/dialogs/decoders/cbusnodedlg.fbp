@@ -1140,7 +1140,7 @@
                                                                     <property name="label">7</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput7</property>
+                                                                    <property name="name">m_VarBit7</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1196,7 +1196,7 @@
                                                                     <property name="label">6</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput6</property>
+                                                                    <property name="name">m_VarBit6</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1252,7 +1252,7 @@
                                                                     <property name="label">5</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput5</property>
+                                                                    <property name="name">m_VarBit5</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1308,7 +1308,7 @@
                                                                     <property name="label">4</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput4</property>
+                                                                    <property name="name">m_VarBit4</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1364,7 +1364,7 @@
                                                                     <property name="label">3</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput3</property>
+                                                                    <property name="name">m_VarBit3</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1420,7 +1420,7 @@
                                                                     <property name="label">2</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput2</property>
+                                                                    <property name="name">m_VarBit2</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1476,7 +1476,7 @@
                                                                     <property name="label">1</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput1</property>
+                                                                    <property name="name">m_VarBit1</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>
@@ -1532,7 +1532,7 @@
                                                                     <property name="label">0</property>
                                                                     <property name="maximum_size"></property>
                                                                     <property name="minimum_size"></property>
-                                                                    <property name="name">m_ACE8CInput0</property>
+                                                                    <property name="name">m_VarBit0</property>
                                                                     <property name="permission">protected</property>
                                                                     <property name="pos"></property>
                                                                     <property name="size"></property>

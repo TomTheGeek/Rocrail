@@ -91,11 +91,30 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onVarValue( wxSpinEvent& event ) {
+  int val = m_VarValue->GetValue();
 
+  m_VarBit0->SetValue( val&0x01? true:false );
+  m_VarBit1->SetValue( val&0x02? true:false );
+  m_VarBit2->SetValue( val&0x04? true:false );
+  m_VarBit3->SetValue( val&0x08? true:false );
+  m_VarBit4->SetValue( val&0x10? true:false );
+  m_VarBit5->SetValue( val&0x20? true:false );
+  m_VarBit6->SetValue( val&0x40? true:false );
+  m_VarBit7->SetValue( val&0x80? true:false );
 }
 
 void CBusNodeDlg::onVarBit( wxCommandEvent& event ) {
+  int val = 0;
+  val |= m_VarBit0->IsChecked() ? 0x01:0;
+  val |= m_VarBit1->IsChecked() ? 0x02:0;
+  val |= m_VarBit2->IsChecked() ? 0x04:0;
+  val |= m_VarBit3->IsChecked() ? 0x08:0;
+  val |= m_VarBit4->IsChecked() ? 0x10:0;
+  val |= m_VarBit5->IsChecked() ? 0x20:0;
+  val |= m_VarBit6->IsChecked() ? 0x40:0;
+  val |= m_VarBit7->IsChecked() ? 0x80:0;
 
+  m_VarValue->SetValue( val );
 }
 
 void CBusNodeDlg::onVarGet( wxCommandEvent& event ) {
@@ -122,7 +141,20 @@ void CBusNodeDlg::onVarSet( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
-
+  if( m_EventList->GetSelection() != wxNOT_FOUND ) {
+    iONode event = (iONode)m_EventList->GetClientData(m_EventList->GetSelection());
+    if( event != NULL ) {
+      int nn   = wProgram.getdecaddr(event);
+      int ennr = wProgram.getval1(event);
+      int ennn = wProgram.getval2(event);
+      int addr = wProgram.getval3(event);
+      m_EventNodeNr->SetValue(ennn);
+      m_EventAddress->SetValue(addr);
+      m_EventIndex->SetValue(ennr);
+    }
+    else
+      TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
 }
 
 void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
@@ -162,11 +194,30 @@ void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onEV( wxSpinEvent& event ) {
+  int val = m_EventVar->GetValue();
 
+  m_EVBit0->SetValue( val&0x01? true:false );
+  m_EVBit1->SetValue( val&0x02? true:false );
+  m_EVBit2->SetValue( val&0x04? true:false );
+  m_EVBit3->SetValue( val&0x08? true:false );
+  m_EVBit4->SetValue( val&0x10? true:false );
+  m_EVBit5->SetValue( val&0x20? true:false );
+  m_EVBit6->SetValue( val&0x40? true:false );
+  m_EVBit7->SetValue( val&0x80? true:false );
 }
 
 void CBusNodeDlg::onEVBit( wxCommandEvent& event ) {
+  int val = 0;
+  val |= m_EVBit0->IsChecked() ? 0x01:0;
+  val |= m_EVBit1->IsChecked() ? 0x02:0;
+  val |= m_EVBit2->IsChecked() ? 0x04:0;
+  val |= m_EVBit3->IsChecked() ? 0x08:0;
+  val |= m_EVBit4->IsChecked() ? 0x10:0;
+  val |= m_EVBit5->IsChecked() ? 0x20:0;
+  val |= m_EVBit6->IsChecked() ? 0x40:0;
+  val |= m_EVBit7->IsChecked() ? 0x80:0;
 
+  m_EventVar->SetValue( val );
 }
 
 void CBusNodeDlg::onLearn( wxCommandEvent& event ) {
