@@ -510,6 +510,12 @@
             <var name="nr" vt="int" defval="1" range="1-65535" remark="Node variable index."/>
             <var name="val" vt="int" defval="0" range="0-65535" remark="Node variable value."/>
           </cbnodevar>
+          <cbnodeevent cardinality="n" wrappername="CBusNodeEvent">
+            <var name="nodenr" vt="int" defval="0" range="1-65535" remark="Node number of producer."/>
+            <var name="addr" vt="int" defval="0" range="1-65535" remark="Device address of producer."/>
+            <var name="ev1" vt="int" defval="0" range="0-65535" remark="Event variable 1."/>
+            <var name="ev2" vt="int" defval="0" range="0-65535" remark="Event variable 2."/>
+          </cbnodeevent>
 	      </cbnode>
       </cbus>
 

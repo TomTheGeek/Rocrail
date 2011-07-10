@@ -3983,10 +3983,10 @@ void RocGuiFrame::OnLangJapanese(wxCommandEvent& event) {
 
 void RocGuiFrame::OnRocrailIni(wxCommandEvent& event) {
   // Get the copied node:
-  iONode ini = (iONode)event.GetClientData();
-  if( ini != NULL && StrOp.equals( wRocRail.name(), NodeOp.getName( ini ) ) ) {
+  m_RocrailIni = (iONode)event.GetClientData();
+  if( m_RocrailIni != NULL && StrOp.equals( wRocRail.name(), NodeOp.getName( m_RocrailIni ) ) ) {
     // RocrailPropertiesDialog:
-    m_RocrailIniDlg = new RocrailIniDialog( this, ini );
+    m_RocrailIniDlg = new RocrailIniDialog( this, m_RocrailIni );
     if( wxID_OK == m_RocrailIniDlg->ShowModal() ) {
     }
     m_RocrailIniDlg->Destroy();

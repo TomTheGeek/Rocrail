@@ -174,6 +174,7 @@ public:
   iONode findCar(const char* carid);
   iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid);
+  iONode getRocrailIni(){return m_RocrailIni;}
   void OnCellLeftDClick( wxGridEvent& event );
   void OnCellLeftClick( wxGridEvent& event );
   void OnCellRightClick( wxGridEvent& event );
@@ -363,6 +364,7 @@ private:
   JsSupport* m_JsSupport;
   bool m_bCheckedDonKey;
   iONode m_WorkSpace;
+  iONode m_RocrailIni;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };
