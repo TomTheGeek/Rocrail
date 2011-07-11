@@ -34,8 +34,12 @@ class CBusNodeDlg : public cbusnodedlggen
 {
   void init(iONode event);
   void initIndex();
+  void initVarList(iONode node);
+  void initEvtList(iONode node);
   void initType(int mtype);
   iONode getNode(int nr, int mtype);
+  iONode getNodeVar(int nn, int mtype, int nr, int val);
+  iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
   int m_SetPage;
 
 protected:
@@ -44,6 +48,7 @@ protected:
   void onSetNodeNumber( wxCommandEvent& event );
   void onIndexSelect( wxCommandEvent& event );
   void onIndexDelete( wxCommandEvent& event );
+  void onVarSelect( wxCommandEvent& event );
   void onVarValue( wxSpinEvent& event );
   void onVarBit( wxCommandEvent& event );
   void onVarGet( wxCommandEvent& event );

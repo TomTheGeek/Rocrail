@@ -57,6 +57,7 @@ class cbusnodedlggen : public wxDialog
 		wxListBox* m_IndexList;
 		wxButton* m_IndexDelete;
 		wxPanel* m_VarPanel;
+		wxListBox* m_VarList;
 		wxStaticText* m_labVarIndex;
 		wxStaticText* m_labVarValue;
 		wxSpinCtrl* m_VarIndex;
@@ -102,6 +103,7 @@ class cbusnodedlggen : public wxDialog
 		virtual void onSetNodeNumber( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onIndexSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onIndexDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onVarSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarValue( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onVarBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarGet( wxCommandEvent& event ) { event.Skip(); }

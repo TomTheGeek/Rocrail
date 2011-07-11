@@ -67,6 +67,7 @@ void CBusNodeDlg::init( iONode event ) {
 }
 
 void CBusNodeDlg::initIndex() {
+  m_IndexList->Clear();
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
     // ToDo: Init index.
@@ -86,6 +87,36 @@ void CBusNodeDlg::initIndex() {
     }
   }
 }
+
+void CBusNodeDlg::initVarList(iONode node) {
+  m_VarList->Clear();
+  if( node != NULL ) {
+    iONode var = wCBusNode.getcbnodevar(node);
+    while( var != NULL ) {
+      m_VarList->Append(
+          wxString::Format(_T("number %d, value %d"),
+              wCBusNodeVar.getnr(var), wCBusNodeVar.getval(var) ),
+          var );
+      var = wCBusNode.nextcbnodevar( node, var );
+    }
+  }
+}
+
+void CBusNodeDlg::initEvtList(iONode node) {
+  m_EventList->Clear();
+  if( node != NULL ) {
+    iONode evt = wCBusNode.getcbnodeevent(node);
+    while( evt != NULL ) {
+      m_EventList->Append(
+          wxString::Format(_T("node %d, addr %d, index %d, value %d"),
+              wCBusNodeEvent.getnodenr(evt), wCBusNodeEvent.getaddr(evt),
+              wCBusNodeEvent.getevnr(evt), wCBusNodeEvent.getevval(evt) ),
+          evt );
+      evt = wCBusNode.nextcbnodeevent( node, evt );
+    }
+  }
+}
+
 
 iONode CBusNodeDlg::getNode(int nr, int mtype) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
@@ -108,6 +139,48 @@ iONode CBusNodeDlg::getNode(int nr, int mtype) {
         return cbusnode;
       }
     }
+  }
+  return NULL;
+}
+
+
+iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
+  iONode node = getNode(nn, mtype);
+  if( node != NULL ) {
+    iONode cbusnodevar = wCBusNode.getcbnodevar(node);
+    while( cbusnodevar != NULL ) {
+      if( wCBusNodeVar.getnr(cbusnodevar) == nr )
+        return cbusnodevar;
+      cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
+    }
+    cbusnodevar = NodeOp.inst( wCBusNodeVar.name(), node, ELEMENT_NODE );
+    NodeOp.addChild(node, cbusnodevar);
+    wCBusNodeVar.setnr( cbusnodevar, nr );
+    wCBusNodeVar.setval( cbusnodevar, val );
+    initVarList(node);
+    return cbusnodevar;
+  }
+  return NULL;
+}
+
+
+iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval) {
+  iONode node = getNode(nn, mtype);
+  if( node != NULL ) {
+    iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
+    while( cbusnodeevt != NULL ) {
+      if( wCBusNodeEvent.getnodenr(cbusnodeevt) == evnn && wCBusNodeEvent.getaddr(cbusnodeevt) == evaddr && wCBusNodeEvent.getevnr(cbusnodeevt) == evnr )
+        return cbusnodeevt;
+      cbusnodeevt = wCBusNode.nextcbnodeevent( node, cbusnodeevt );
+    }
+    cbusnodeevt = NodeOp.inst( wCBusNodeEvent.name(), node, ELEMENT_NODE );
+    NodeOp.addChild(node, cbusnodeevt);
+    wCBusNodeEvent.setnodenr( cbusnodeevt, evnn );
+    wCBusNodeEvent.setaddr( cbusnodeevt, evaddr );
+    wCBusNodeEvent.setevnr( cbusnodeevt, evnr );
+    wCBusNodeEvent.setevval( cbusnodeevt, evval );
+    initEvtList(node);
+    return cbusnodeevt;
   }
   return NULL;
 }
@@ -173,6 +246,8 @@ void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
     if( node != NULL ) {
       initType(wCBusNode.getmtyp(node));
       m_NodeNumber->SetValue(wCBusNode.getnr(node));
+      initVarList(node);
+      initEvtList(node);
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
@@ -188,6 +263,19 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
       iONode cbus = wDigInt.getcbus(digint);
       NodeOp.removeChild( cbus, node );
       initIndex();
+    }
+    else
+      TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
+}
+
+
+void CBusNodeDlg::onVarSelect( wxCommandEvent& event ) {
+  if( m_VarList->GetSelection() != wxNOT_FOUND ) {
+    iONode var = (iONode)m_VarList->GetClientData(m_VarList->GetSelection());
+    if( var != NULL ) {
+      m_VarIndex->SetValue(wCBusNodeVar.getnr(var));
+      m_VarValue->SetValue(wCBusNodeVar.getval(var));
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
@@ -245,6 +333,7 @@ void CBusNodeDlg::onVarSet( wxCommandEvent& event ) {
   wProgram.setvalue( cmd, m_VarValue->GetValue() );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+  getNodeVar(nn, m_NodeTypeNr->GetValue(), m_VarIndex->GetValue(), m_VarValue->GetValue() );
 }
 
 void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
@@ -288,6 +377,7 @@ void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
   wProgram.setval4(cmd, m_EventVar->GetValue() ); // val
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+  getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(), m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
 }
 
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
