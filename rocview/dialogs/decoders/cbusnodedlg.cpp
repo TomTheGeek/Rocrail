@@ -391,6 +391,16 @@ void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
   wProgram.setval3(cmd, m_EventAddress->GetValue()); // addr
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue());
+  if( node != NULL ) {
+    iONode event = getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(), m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
+    if( event != NULL ) {
+      NodeOp.removeChild(node, event);
+      NodeOp.base.del(event);
+      initEvtList(node);
+    }
+  }
 }
 
 void CBusNodeDlg::onEV( wxSpinEvent& event ) {
@@ -453,8 +463,9 @@ void CBusNodeDlg::event( iONode event ) {
     int ennr = wProgram.getval1(event);
     int ennn = wProgram.getval2(event);
     int addr = wProgram.getval3(event);
-    m_EventList->Append( wxString::Format(_T("index %d, nodenr %d, address %d"), ennr, ennn, addr),
-        event->base.clone(event) );
+
+    // ToDo: get the event value...
+    getNodeEvent(nn, m_NodeTypeNr->GetValue(), ennn, addr, ennr, 0 );
   }
 }
 
@@ -467,4 +478,16 @@ void CBusNodeDlg::onEvtClearAll( wxCommandEvent& event ) {
   wProgram.setdecaddr( cmd, nn );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+
+  // Delete all child nodes:
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue());
+  if( node != NULL ) {
+    iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
+    while( cbusnodeevt != NULL ) {
+      NodeOp.removeChild(node, cbusnodeevt);
+      NodeOp.base.del(cbusnodeevt);
+      cbusnodeevt = wCBusNode.getcbnodeevent( node );
+    }
+    initEvtList(node);
+  }
 }
