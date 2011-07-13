@@ -123,7 +123,6 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   case OPC_ENRSP:
     {
       /* <0xF2><NN hi><NN lo><EN3><EN2><EN1><EN0><EN#> */
-      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int offset = (frame[1] == 'S') ? 0:4;
       int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
       int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
@@ -135,7 +134,8 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int en0  = HEXA2Byte(frame + OFFSET_D6 + offset);
       int enaddr = en1 * 256 + en0;
       int ennr = HEXA2Byte(frame + OFFSET_D7 + offset);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response", nn, ennr );
+
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setcmd( node, wProgram.evget );
       wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
@@ -143,6 +143,48 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       wProgram.setval1(node, ennr );
       wProgram.setval2(node, ennn );
       wProgram.setval3(node, enaddr );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response", nn, ennr );
+
+      *extraMsg = allocMem(32);
+      cmd[0] = OPC_REQEV;
+      cmd[1] = nnh;
+      cmd[2] = nnl;
+      cmd[3] = en3;
+      cmd[4] = en2;
+      cmd[5] = en1;
+      cmd[6] = en0;
+      cmd[7] = ennr;
+      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 7 );
+
+      data->nnsetup = nn;
+      return node;
+    }
+
+  case OPC_EVANS:
+    {
+      /* <D3><EN3><EN2><EN1><EN0><EV#><EVval> */
+      int offset = (frame[1] == 'S') ? 0:4;
+      int en3  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int en2  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int ennn = en3 * 256 + en2;
+      int en1  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int en0  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      int enaddr = en1 * 256 + en0;
+      int ennr  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int enval = HEXA2Byte(frame + OFFSET_D6 + offset);
+
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: event value[%d]=%d", ennr, enval );
+      wProgram.setcmd( node, wProgram.evget );
+      wProgram.setiid( node, data->iid );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
+      wProgram.setdecaddr(node, data->nnsetup);
+      wProgram.setval1(node, ennr );
+      wProgram.setval2(node, ennn );
+      wProgram.setval3(node, enaddr );
+      wProgram.setval4(node, enval );
       return node;
     }
 

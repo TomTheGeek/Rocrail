@@ -176,8 +176,11 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
     while( cbusnodeevt != NULL ) {
-      if( wCBusNodeEvent.getnodenr(cbusnodeevt) == evnn && wCBusNodeEvent.getaddr(cbusnodeevt) == evaddr && wCBusNodeEvent.getevnr(cbusnodeevt) == evnr )
+      if( wCBusNodeEvent.getnodenr(cbusnodeevt) == evnn && wCBusNodeEvent.getaddr(cbusnodeevt) == evaddr &&
+          wCBusNodeEvent.getevnr(cbusnodeevt) == evnr ) {
+        wCBusNodeEvent.setevnr(cbusnodeevt, evval);
         return cbusnodeevt;
+      }
       cbusnodeevt = wCBusNode.nextcbnodeevent( node, cbusnodeevt );
     }
     cbusnodeevt = NodeOp.inst( wCBusNodeEvent.name(), node, ELEMENT_NODE );
@@ -233,6 +236,11 @@ void CBusNodeDlg::onOK( wxCommandEvent& event )
     cmd->base.del(cmd);
   }
   EndModal( wxID_OK );
+}
+
+void CBusNodeDlg::onCancel( wxCommandEvent& event )
+{
+  EndModal(0);
 }
 
 void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
@@ -351,13 +359,14 @@ void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
   if( m_EventList->GetSelection() != wxNOT_FOUND ) {
     iONode event = (iONode)m_EventList->GetClientData(m_EventList->GetSelection());
     if( event != NULL ) {
-      int nn   = wProgram.getdecaddr(event);
-      int ennr = wProgram.getval1(event);
-      int ennn = wProgram.getval2(event);
-      int addr = wProgram.getval3(event);
-      m_EventNodeNr->SetValue(ennn);
+      int evnn  = wCBusNodeEvent.getnodenr(event);
+      int addr  = wCBusNodeEvent.getaddr(event);
+      int evnr  = wCBusNodeEvent.getevnr(event);
+      int evval = wCBusNodeEvent.getevval(event);
+      m_EventNodeNr->SetValue(evnn);
       m_EventAddress->SetValue(addr);
-      m_EventIndex->SetValue(ennr);
+      m_EventIndex->SetValue(evnr);
+      m_EventVar->SetValue(evval);
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
@@ -388,7 +397,8 @@ void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
   wProgram.setval4(cmd, m_EventVar->GetValue() ); // val
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
-  getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(), m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
+  getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(),
+      m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
 }
 
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
@@ -405,7 +415,8 @@ void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
 
   iONode node = getNode(nn, m_NodeTypeNr->GetValue());
   if( node != NULL ) {
-    iONode event = getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(), m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
+    iONode event = getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(),
+        m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
     if( event != NULL ) {
       NodeOp.removeChild(node, event);
       NodeOp.base.del(event);
@@ -474,9 +485,10 @@ void CBusNodeDlg::event( iONode event ) {
     int ennr = wProgram.getval1(event);
     int ennn = wProgram.getval2(event);
     int addr = wProgram.getval3(event);
+    int val  = wProgram.getval4(event);
 
     // ToDo: get the event value...
-    getNodeEvent(nn, m_NodeTypeNr->GetValue(), ennn, addr, ennr, 0 );
+    getNodeEvent(nn, m_NodeTypeNr->GetValue(), ennn, addr, ennr, val );
   }
   else if( wProgram.getcmd( event ) == wProgram.get  ) {
     int nn   = wProgram.getdecaddr(event);

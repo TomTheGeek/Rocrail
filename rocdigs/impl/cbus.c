@@ -592,7 +592,63 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
     break;
   }
 
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "\"%s\" for address %d", errStr, addr );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error=%d \"%s\" for address %d", err, errStr, addr );
+
+}
+
+
+static __evaluateCmdErr( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+  iONode node = NULL;
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int err     = HEXA2Byte(frame + OFFSET_D3 + offset);
+
+  int addr = addrh * 256 + addrl;
+
+  const char* errStr = "?";
+
+  /*
+#define CMDERR_INV_CMD      1
+#define CMDERR_NOT_LRN      2
+#define CMDERR_NOT_SETUP    3
+#define CMDERR_TOO_MANY_EVS   4
+#define CMDERR_NO_EV      5
+#define CMDERR_INV_EV_IDX   6
+#define CMDERR_NO_EVENTS    7
+#define CMDERR_INV_EN_IDX   8
+#define CMDERR_INV_PARAM_IDX  9
+*/
+
+  switch( err ) {
+  case CMDERR_INV_CMD:
+    errStr = "invalid command";
+    break;
+  case CMDERR_NOT_LRN:
+    errStr = "not in learn";
+    break;
+  case CMDERR_NOT_SETUP:
+    errStr = "not in setup";
+    break;
+  case CMDERR_TOO_MANY_EVS:
+    errStr = "too many events";
+    break;
+  case CMDERR_NO_EV:
+  case CMDERR_NO_EVENTS:
+    errStr = "no events";
+    break;
+  case CMDERR_INV_EV_IDX:
+  case CMDERR_INV_EN_IDX:
+    errStr = "invalid event index";
+    break;
+  case CMDERR_INV_PARAM_IDX:
+    errStr = "invalid parameter index";
+    break;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error=%d \"%s\" for node %d", err, errStr, addr );
 
 }
 
@@ -690,6 +746,9 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   case OPC_ERR:
     __evaluateErr(cbus, frame);
     break;
+  case OPC_CMDERR:
+    __evaluateCmdErr(cbus, frame);
+    break;
   case OPC_PLOC:
     __updateSlot(cbus, frame);
     break;
@@ -707,10 +766,12 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     break;
   case OPC_ACON:
   case OPC_ASON:
+  case OPC_ARSPO:
     __evaluateFB(cbus, frame, True);
     break;
   case OPC_ACOF:
   case OPC_ASOF:
+  case OPC_ARSPN:
     __evaluateFB(cbus, frame, False);
     break;
   case OPC_ACDAT:

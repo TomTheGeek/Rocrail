@@ -98,6 +98,7 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_EvtUnlearn;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
+		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onSetNodeNumber( wxCommandEvent& event ) { event.Skip(); }
@@ -117,6 +118,7 @@ class cbusnodedlggen : public wxDialog
 		virtual void onEvtClearAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onLearn( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onUnlearn( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	
