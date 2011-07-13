@@ -134,7 +134,7 @@ iONode CBusNodeDlg::getNode(int nr, int mtype) {
       if( cbus != NULL ) {
         iONode cbusnode = wCBus.getcbnode(cbus);
         while( cbusnode != NULL ) {
-          if( wCBusNode.getnr(cbusnode) == nr && wCBusNode.getmtyp(cbusnode) == mtype )
+          if( wCBusNode.getnr(cbusnode) == nr )
             return cbusnode;
           cbusnode = wCBus.nextcbnode( cbus, cbusnode );
         }
@@ -211,7 +211,8 @@ void CBusNodeDlg::initType( int mtype ) {
   case MTYP_CANTTCA:   m_NodeType->SetValue(_T("CANTTCA")); break;
   case MTYP_CANTTCB:   m_NodeType->SetValue(_T("CANTTCB")); break;
   }
-  m_NodeTypeNr->SetValue(mtype);
+  if( mtype > 0 )
+    m_NodeTypeNr->SetValue(mtype);
 }
 
 void CBusNodeDlg::onSetPage(wxCommandEvent& event) {
@@ -269,6 +270,9 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
       iONode digint = wRocRail.getdigint(l_RocrailIni);
       iONode cbus = wDigInt.getcbus(digint);
       NodeOp.removeChild( cbus, node );
+      m_NodeNumber->SetValue(0);
+      m_NodeType->SetValue(_T(""));
+      m_NodeTypeNr->SetValue(0);
       initIndex();
     }
     else
@@ -473,6 +477,13 @@ void CBusNodeDlg::event( iONode event ) {
 
     // ToDo: get the event value...
     getNodeEvent(nn, m_NodeTypeNr->GetValue(), ennn, addr, ennr, 0 );
+  }
+  else if( wProgram.getcmd( event ) == wProgram.get  ) {
+    int nn   = wProgram.getdecaddr(event);
+    int cv = wProgram.getcv(event);
+    int val = wProgram.getvalue(event);
+
+    getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
   }
 }
 
