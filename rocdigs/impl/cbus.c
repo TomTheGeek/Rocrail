@@ -821,7 +821,7 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     byte frame[32] = {0};
     /* Frame ASCII format
-     * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d; :ShhhhR;
+     * :ShhhhNd0d1d2d3d4d5d6d7d; :XhhhhhhhhNd0d1d2d3d4d5d6d7d; :ShhhhR; :SB020N;
      * :S    -> S=Standard X=extended start CAN Frame
      * hhhh  -> SIDH<bit7,6,5,4=Prio bit3,2,1,0=high 4 part of ID> SIDL<bit7,6,5=low 3 part of ID>
      * Nd    -> N=normal R=RTR
@@ -839,13 +839,19 @@ static void __reader( void* threadinst ) {
 
               if( data->subRead( (obj)cbus, frame + 2, OFFSET_TYPE + offset ) ) {
                 if( frame[OFFSET_TYPE+offset] == 'N' ) {
-                  if( data->subRead( (obj)cbus, frame + 2 + OFFSET_TYPE + offset, OFFSET_OPC - OFFSET_TYPE ) ) {
-                    int opc = __getOPC(frame);
-                    int datalen = __getDataLen(opc);
-                    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
-                    if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
-                      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
-                      __evaluateFrame(cbus, frame, opc);
+                  if( frame[OFFSET_TYPE+offset+1] == ';' ) {
+                    /* some kind of empty frame... */
+                    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 1 + OFFSET_TYPE + offset + 1 );
+                  }
+                  else {
+                    if( data->subRead( (obj)cbus, frame + 2 + OFFSET_TYPE + offset, OFFSET_OPC - OFFSET_TYPE ) ) {
+                      int opc = __getOPC(frame);
+                      int datalen = __getDataLen(opc);
+                      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
+                      if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
+                        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
+                        __evaluateFrame(cbus, frame, opc);
+                      }
                     }
                   }
                 }

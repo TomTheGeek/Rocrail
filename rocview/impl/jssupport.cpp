@@ -179,7 +179,7 @@ void JsSupport::OnJsEvent(wxCommandEvent& event) {
     return;
   }
 
-  TraceOp.trc( "js", TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( "js", TRCLEVEL_DEBUG, __LINE__, 9999,
     "JsEvent dev=%d, type=%d, number=%d, value=%d, msec=%d",
     device, type, number, value, wJsEvent.getmsec(js) );
 

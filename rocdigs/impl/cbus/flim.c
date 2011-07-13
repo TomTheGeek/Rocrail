@@ -56,11 +56,17 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
 
   switch(opc) {
   case OPC_NNACK:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: request node parameters" );
-    *extraMsg = allocMem(32);
-    cmd[0] = OPC_RQNP;
-    makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
-    break;
+    {
+      int offset = (frame[1] == 'S') ? 0:4;
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      data->nnsetup = nnh * 256 + nnl;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: request node[%d] parameters", data->nnsetup );
+      *extraMsg = allocMem(32);
+      cmd[0] = OPC_RQNP;
+      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
+      break;
+    }
 
   case OPC_PARAMS:
     {
@@ -82,12 +88,14 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int para5  = HEXA2Byte(frame + OFFSET_D5 + offset);
       int para6  = HEXA2Byte(frame + OFFSET_D6 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "manuID=%d, version=%d, moduleID=%d", para1, para2, para3 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "nodeNr=%d, manuID=%d, version=%d, moduleID=%d", data->nnsetup, para1, para2, para3 );
 
       wProgram.setcmd( node, wProgram.nnreq );
       wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setmodid( node, para3 );
+      wProgram.setdecaddr( node, data->nnsetup );
       wProgram.setval1( node, para1 );
       wProgram.setval2( node, para2 );
       wProgram.setval3( node, para3 );
@@ -215,9 +223,8 @@ byte* programFLiM(obj inst, iONode node) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: get var %d from node %d.", wProgram.getcv(node), wProgram.getdecaddr(node) );
 
-    /* <0x73><NN hi><NN lo><Para#> */
     byte* frame = allocMem(32);
-    cmd[0] = OPC_RQNPN;
+    cmd[0] = OPC_NVRD;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
     cmd[3] = wProgram.getcv(node);

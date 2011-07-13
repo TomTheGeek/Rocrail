@@ -56,6 +56,10 @@ void CBusNodeDlg::init( iONode event ) {
   if( event != NULL ) {
     m_IID->SetValue( wxString(wProgram.getiid(event),wxConvUTF8) );
     initType( wProgram.getmodid(event) );
+    m_NodeNumber->SetValue(wProgram.getdecaddr(event));
+    if( wProgram.getdecaddr(event) > 0 ) {
+      getNode(wProgram.getdecaddr(event), wProgram.getmodid(event));
+    }
   }
 
   initIndex();
@@ -85,6 +89,9 @@ void CBusNodeDlg::initIndex() {
         }
       }
     }
+  }
+  else {
+    wxMessageDialog( this, wxGetApp().getMsg("cbusrocrailini"), _T("Rocrail"), wxOK ).ShowModal();
   }
 }
 

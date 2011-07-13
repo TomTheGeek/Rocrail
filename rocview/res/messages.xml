@@ -17325,4 +17325,7 @@
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
   </Msg>
+  <Msg id="cbusrocrailini">
+    <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
+  </Msg>
 </Messages>
