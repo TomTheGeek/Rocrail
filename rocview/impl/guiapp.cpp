@@ -527,6 +527,7 @@ bool RocGui::OnInit() {
   m_Model = NULL;
   m_OldModel = NULL;
   m_UndoItems = ListOp.inst();
+  m_InitialRocrailIni = false;
 
   // we could need some of these:
   wxInitAllImageHandlers();
@@ -795,6 +796,13 @@ static void rocrailCallback( obj me, iONode node ) {
       guiApp->getFrame()->getPlanPanel()->init();
     }
 
+    // Get the rocrail setup.
+    guiApp->m_InitialRocrailIni = true;
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.getini );
+    wxGetApp().sendToRocrail( cmd, false );
+    cmd->base.del(cmd);
+
     return;
   }
 
@@ -827,10 +835,16 @@ static void rocrailCallback( obj me, iONode node ) {
 
   /* rocrail.ini */
   if( StrOp.equals( wRocRail.name(), NodeOp.getName( node ) ) ) {
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
-    // Make a copy of the node for using it out of this scope:
-    event.SetClientData( node->base.clone( node ) );
-    wxPostEvent( guiApp->getFrame(), event );
+    if( guiApp->m_InitialRocrailIni ) {
+      guiApp->m_InitialRocrailIni = false;
+      guiApp->getFrame()->setRocrailIni((iONode)node->base.clone( node ));
+    }
+    else {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
+      // Make a copy of the node for using it out of this scope:
+      event.SetClientData( node->base.clone( node ) );
+      wxPostEvent( guiApp->getFrame(), event );
+    }
   }
   else if( StrOp.equals( wPwrEvent.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_PowerEvent );

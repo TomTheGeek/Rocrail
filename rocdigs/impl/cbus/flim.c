@@ -146,17 +146,6 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response", nn, ennr );
 
-      *extraMsg = allocMem(32);
-      cmd[0] = OPC_REQEV;
-      cmd[1] = nnh;
-      cmd[2] = nnl;
-      cmd[3] = en3;
-      cmd[4] = en2;
-      cmd[5] = en1;
-      cmd[6] = en0;
-      cmd[7] = ennr;
-      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 7 );
-
       data->nnsetup = nn;
       return node;
     }
@@ -177,7 +166,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: event value[%d]=%d", ennr, enval );
-      wProgram.setcmd( node, wProgram.evget );
+      wProgram.setcmd( node, wProgram.evgetvar );
       wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setdecaddr(node, data->nnsetup);
@@ -325,6 +314,22 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[1] = wProgram.getdecaddr(node) / 256; // nn
     cmd[2] = wProgram.getdecaddr(node) % 256;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.evgetvar ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: get event variable for node %d.", wProgram.getdecaddr(node) );
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_REQEV;
+    cmd[1] = wProgram.getdecaddr(node) / 256; // nn
+    cmd[2] = wProgram.getdecaddr(node) % 256;
+    cmd[3] = wProgram.getval2(node) / 256; // nn
+    cmd[4] = wProgram.getval2(node) % 256;
+    cmd[5] = wProgram.getval3(node) / 256; // addr
+    cmd[6] = wProgram.getval3(node) % 256;
+    cmd[7] = wProgram.getval1(node); // idx
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 7 );
     return frame;
   }
 

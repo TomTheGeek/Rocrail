@@ -58,6 +58,7 @@ protected:
   void onEventGetAll( wxCommandEvent& event );
   void onEventAdd( wxCommandEvent& event );
   void onEventDelete( wxCommandEvent& event );
+  void onEvtGetVar( wxCommandEvent& event );
   void onEV( wxSpinEvent& event );
   void onEVBit( wxCommandEvent& event );
   void onLearn( wxCommandEvent& event );

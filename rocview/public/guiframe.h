@@ -175,6 +175,7 @@ public:
   iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid);
   iONode getRocrailIni(){return m_RocrailIni;}
+  void setRocrailIni(iONode ini){m_RocrailIni = ini;}
   void OnCellLeftDClick( wxGridEvent& event );
   void OnCellLeftClick( wxGridEvent& event );
   void OnCellRightClick( wxGridEvent& event );

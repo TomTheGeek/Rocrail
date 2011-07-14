@@ -82,6 +82,7 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_EventAddress;
 		wxSpinCtrl* m_EventIndex;
 		wxSpinCtrl* m_EventVar;
+		wxButton* m_EvtGetVar;
 		wxCheckBox* m_EVBit7;
 		wxCheckBox* m_EVBit6;
 		wxCheckBox* m_EVBit5;
@@ -111,6 +112,7 @@ class cbusnodedlggen : public wxDialog
 		virtual void onVarSet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEV( wxSpinEvent& event ) { event.Skip(); }
+		virtual void onEvtGetVar( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEVBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventAdd( wxCommandEvent& event ) { event.Skip(); }

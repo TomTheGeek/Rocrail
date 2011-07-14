@@ -87,6 +87,7 @@ public:
   RocGuiFrame*  m_Frame;
   bool          m_bOffline;
   bool          m_bConsoleMode;
+  bool          m_InitialRocrailIni;
 
 private:
   void saveSizePos();

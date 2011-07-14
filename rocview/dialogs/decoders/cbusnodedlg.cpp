@@ -384,6 +384,21 @@ void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+void CBusNodeDlg::onEvtGetVar( wxCommandEvent& event ) {
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.evgetvar );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setval2(cmd, m_EventNodeNr->GetValue()); // nn
+  wProgram.setval3(cmd, m_EventAddress->GetValue()); // addr
+  wProgram.setval1(cmd, m_EventIndex->GetValue() ); // idx
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
 void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -479,15 +494,15 @@ void CBusNodeDlg::event( iONode event ) {
   if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
     init( event );
   }
-  else if( wProgram.getcmd( event ) == wProgram.evget  ) {
-    // ToDo: Add event to the list.
+  else if( wProgram.getcmd( event ) == wProgram.evget || wProgram.getcmd( event ) == wProgram.evgetvar ) {
+    // Add event to the list.
     int nn   = wProgram.getdecaddr(event);
     int ennr = wProgram.getval1(event);
     int ennn = wProgram.getval2(event);
     int addr = wProgram.getval3(event);
     int val  = wProgram.getval4(event);
 
-    // ToDo: get the event value...
+    // get the event value...
     getNodeEvent(nn, m_NodeTypeNr->GetValue(), ennn, addr, ennr, val );
   }
   else if( wProgram.getcmd( event ) == wProgram.get  ) {
