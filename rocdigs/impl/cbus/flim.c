@@ -322,14 +322,12 @@ byte* programFLiM(obj inst, iONode node) {
         "FLiM: get event variable for node %d.", wProgram.getdecaddr(node) );
     byte* frame = allocMem(32);
     cmd[0] = OPC_REQEV;
-    cmd[1] = wProgram.getdecaddr(node) / 256; // nn
-    cmd[2] = wProgram.getdecaddr(node) % 256;
-    cmd[3] = wProgram.getval2(node) / 256; // nn
-    cmd[4] = wProgram.getval2(node) % 256;
-    cmd[5] = wProgram.getval3(node) / 256; // addr
-    cmd[6] = wProgram.getval3(node) % 256;
-    cmd[7] = wProgram.getval1(node); // idx
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 7 );
+    cmd[1] = wProgram.getval2(node) / 256; // nn
+    cmd[2] = wProgram.getval2(node) % 256;
+    cmd[3] = wProgram.getval3(node) / 256; // addr
+    cmd[4] = wProgram.getval3(node) % 256;
+    cmd[5] = wProgram.getval1(node); // idx
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 5 );
     return frame;
   }
 
