@@ -3993,6 +3993,7 @@ void RocGuiFrame::OnRocrailIni(wxCommandEvent& event) {
     m_RocrailIniDlg = NULL;
   }
   else {
+    wxGetApp().m_InitialRocrailIni = false;
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.getini );
     wxGetApp().sendToRocrail( cmd, false );

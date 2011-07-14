@@ -264,6 +264,7 @@ void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
       m_NodeNumber->SetValue(wCBusNode.getnr(node));
       initVarList(node);
       initEvtList(node);
+      SetTitle(_T("CBUS: ") + m_NodeType->GetValue() );
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
