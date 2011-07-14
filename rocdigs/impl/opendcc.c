@@ -336,7 +336,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       outBytes[3] = wProgram.getaddr(cmd) / 256;
       outBytes[4] = wProgram.getcv(cmd) % 256;
       outBytes[5] = wProgram.getcv(cmd) / 256;
-      outBytes[6] = wProgram.getvalue(cmd) / 256;
+      outBytes[6] = wProgram.getvalue(cmd);
 
       byteStr = StrOp.byteToStr( outBytes, 7 );
       wBinCmd.setoutlen( ptcmd, 7 );
