@@ -710,6 +710,7 @@
     <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <var name="lncv" vt="bool" defval="false"/>
+    <var name="filename" vt="string" defval=""/>
   </program>
 
   <exception remark="Exception wrapper" wrappername="Exception">

@@ -24,6 +24,7 @@
 #include <wx/icon.h>
 #include <wx/listbox.h>
 #include <wx/checkbox.h>
+#include <wx/statline.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -34,6 +35,7 @@
 #define wxID_CBUSNODE_INDEX 1002
 #define wxID_CBUS_VAR 1003
 #define wxID_CBUS_EVENTSPANEL 1004
+#define wxID_CBUS_NODEFIRMWAREPANEL 1005
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class cbusnodedlggen
@@ -97,6 +99,14 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_EvtClearAll;
 		wxButton* m_EvtLearn;
 		wxButton* m_EvtUnlearn;
+		wxPanel* m_FirmwarePanel;
+		wxButton* m_HexFile;
+		wxTextCtrl* m_HEXFileName;
+		wxButton* m_HEXFileSend;
+		wxTextCtrl* m_HEXFileText;
+		wxStaticLine* m_staticline1;
+		wxButton* m_BootMode;
+		wxButton* m_ResetBoot;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Cancel;
@@ -120,6 +130,10 @@ class cbusnodedlggen : public wxDialog
 		virtual void onEvtClearAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onLearn( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onUnlearn( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onHexFile( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onHEXFileSend( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onBootmode( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onResetBoot( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		

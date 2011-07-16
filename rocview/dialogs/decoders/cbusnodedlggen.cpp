@@ -291,7 +291,51 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_EventsPanel->SetSizer( bSizer10 );
 	m_EventsPanel->Layout();
 	bSizer10->Fit( m_EventsPanel );
-	m_NoteBook->AddPage( m_EventsPanel, wxT("Events"), true );
+	m_NoteBook->AddPage( m_EventsPanel, wxT("Events"), false );
+	m_FirmwarePanel = new wxPanel( m_NoteBook, wxID_CBUS_NODEFIRMWAREPANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer131;
+	bSizer131 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer7;
+	fgSizer7 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer7->AddGrowableCol( 1 );
+	fgSizer7->SetFlexibleDirection( wxBOTH );
+	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_HexFile = new wxButton( m_FirmwarePanel, wxID_ANY, wxT("HEX File..."), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer7->Add( m_HexFile, 0, wxALL, 5 );
+	
+	m_HEXFileName = new wxTextCtrl( m_FirmwarePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer7->Add( m_HEXFileName, 0, wxALL|wxEXPAND, 5 );
+	
+	m_HEXFileSend = new wxButton( m_FirmwarePanel, wxID_ANY, wxT("Send"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer7->Add( m_HEXFileSend, 0, wxALL, 5 );
+	
+	bSizer131->Add( fgSizer7, 0, wxEXPAND, 5 );
+	
+	m_HEXFileText = new wxTextCtrl( m_FirmwarePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxTE_MULTILINE|wxTE_READONLY );
+	m_HEXFileText->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxT("Monospace") ) );
+	
+	bSizer131->Add( m_HEXFileText, 1, wxALL|wxEXPAND, 5 );
+	
+	m_staticline1 = new wxStaticLine( m_FirmwarePanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer131->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_BootMode = new wxButton( m_FirmwarePanel, wxID_ANY, wxT("Boot mode"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_BootMode, 0, wxALL, 5 );
+	
+	m_ResetBoot = new wxButton( m_FirmwarePanel, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_ResetBoot, 0, wxALL, 5 );
+	
+	bSizer131->Add( bSizer15, 0, wxEXPAND, 5 );
+	
+	m_FirmwarePanel->SetSizer( bSizer131 );
+	m_FirmwarePanel->Layout();
+	bSizer131->Fit( m_FirmwarePanel );
+	m_NoteBook->AddPage( m_FirmwarePanel, wxT("Firmware"), true );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -340,6 +384,10 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_EvtClearAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtClearAll ), NULL, this );
 	m_EvtLearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
 	m_EvtUnlearn->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
+	m_HexFile->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHexFile ), NULL, this );
+	m_HEXFileSend->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHEXFileSend ), NULL, this );
+	m_BootMode->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onBootmode ), NULL, this );
+	m_ResetBoot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onResetBoot ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }
@@ -379,6 +427,10 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_EvtClearAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtClearAll ), NULL, this );
 	m_EvtLearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onLearn ), NULL, this );
 	m_EvtUnlearn->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onUnlearn ), NULL, this );
+	m_HexFile->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHexFile ), NULL, this );
+	m_HEXFileSend->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHEXFileSend ), NULL, this );
+	m_BootMode->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onBootmode ), NULL, this );
+	m_ResetBoot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onResetBoot ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }

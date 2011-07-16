@@ -25,6 +25,7 @@
 #include "wx/wx.h"
 #include "wx/defs.h"
 #endif
+#include <wx/filedlg.h>
 
 #include "rocview/public/guiapp.h"
 
@@ -536,4 +537,53 @@ void CBusNodeDlg::onEvtClearAll( wxCommandEvent& event ) {
     }
     initEvtList(node);
   }
+}
+
+
+void CBusNodeDlg::onHexFile( wxCommandEvent& event ) {
+  wxString ms_FileExt = _T("PIC HEX (*.HEX;*.hex)|*.HEX;*.hex");
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openhexfile"),
+      wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    //fdlg->GetPath();
+    wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
+    // strip filename:
+    wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
+
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
+    iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
+    if( f != NULL ) {
+      TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
+      m_HEXFileName->SetValue(fdlg->GetPath());
+      FILE* fs = FileOp.getStream(f);
+      char str[256];
+      fgets( str, 256, fs );
+
+      /* until end of stream or error: */
+      while( !ferror(fs) && !feof(fs) ) {
+        TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "line=[%s]", str);
+        m_HEXFileText->AppendText(wxString(str,wxConvUTF8));
+        fgets( str, 256, fs );
+      };
+
+      FileOp.base.del( f );
+    }
+  }
+  fdlg->Destroy();
+}
+
+
+void CBusNodeDlg::onHEXFileSend( wxCommandEvent& event ) {
+
+}
+
+
+void CBusNodeDlg::onBootmode( wxCommandEvent& event ) {
+
+}
+
+
+void CBusNodeDlg::onResetBoot( wxCommandEvent& event ) {
+
 }

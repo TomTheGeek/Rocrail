@@ -64,6 +64,10 @@ protected:
   void onLearn( wxCommandEvent& event );
   void onUnlearn( wxCommandEvent& event );
   void onEvtClearAll( wxCommandEvent& event );
+  void onHexFile( wxCommandEvent& event );
+  void onHEXFileSend( wxCommandEvent& event );
+  void onBootmode( wxCommandEvent& event );
+  void onResetBoot( wxCommandEvent& event );
 
 public:
 	/** Constructor */
