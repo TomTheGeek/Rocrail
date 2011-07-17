@@ -215,6 +215,17 @@
 #define CVMODE_REGISTER 3
 #define CVMODE_ADDRONLY 4
 
+// Boot mode codes in extended frames.
+#define BOOTCMD_NOP 0
+#define BOOTCMD_RESET 1
+#define BOOTCMD_INIT 2
+#define BOOTCMD_CHECK 3
+#define BOOTCMD_TEST 4
+
+#define BOOTMSG_ERR 0
+#define BOOTMSG_OK 1
+#define BOOTMSG_ACK 2 // Response to the test command.
+
 #endif		// __OPCODES_H
 
 

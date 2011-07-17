@@ -31,6 +31,7 @@
 #include "rocrail/wrapper/public/Program.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/bootmode.h"
 
 /*
  *  +----------+----+---------------------------+--------------------+---------------+
@@ -329,6 +330,33 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[5] = wProgram.getval1(node); // idx
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 5 );
     return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.bootmode ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: set node %d in boot mode.", wProgram.getdecaddr(node) );
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_BOOT;
+    cmd[1] = wProgram.getval2(node) / 256; // nn
+    cmd[2] = wProgram.getval2(node) % 256;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.reset ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: reset node %d in operation mode.", wProgram.getdecaddr(node) );
+    byte* frame = allocMem(32);
+    StrOp.copy( frame, ":X00080004N000000000D010000;" );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.load ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: load hex file %s into node %d.", wProgram.getfilename(node), wProgram.getdecaddr(node) );
+    /* ToDo: Load file into node. */
+    loadHEXFile(inst, wProgram.getfilename(node), wProgram.getdecaddr(node) );
+    return NULL;
   }
 
   return NULL;

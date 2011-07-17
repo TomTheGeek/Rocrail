@@ -575,15 +575,37 @@ void CBusNodeDlg::onHexFile( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onHEXFileSend( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.load );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wProgram.setfilename( cmd,  m_HEXFileName->GetValue().mb_str(wxConvUTF8) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 
 void CBusNodeDlg::onBootmode( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.bootmode );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 
 void CBusNodeDlg::onResetBoot( wxCommandEvent& event ) {
-
+  int nn = m_NodeNumber->GetValue();
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.reset );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wProgram.setdecaddr( cmd, nn );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }

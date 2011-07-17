@@ -679,6 +679,8 @@
     <const name="evdelete" vt="int" val="19" remark="Event delete."/>
     <const name="evclrall" vt="int" val="20" remark="Clear all events."/>
     <const name="evgetvar" vt="int" val="21" remark="Get event variable."/>
+    <const name="bootmode" vt="int" val="22" remark="Set node in boot mode."/>
+    <const name="reset" vt="int" val="23" remark="Reset decoder mode."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
