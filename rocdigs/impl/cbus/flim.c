@@ -351,7 +351,7 @@ byte* programFLiM(obj inst, iONode node) {
     return frame;
   }
 
-  if( wProgram.getcmd( node ) == wProgram.load ) {
+  if( wProgram.getcmd( node ) == wProgram.writehex ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: load hex file %s into node %d.", wProgram.getfilename(node), wProgram.getdecaddr(node) );
     /* ToDo: Load file into node. */

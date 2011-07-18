@@ -742,116 +742,123 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   int offset = (frame[1] == 'S') ? 0:4;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
 
-  switch(opc) {
-  case OPC_ERR:
-    __evaluateErr(cbus, frame);
-    break;
-  case OPC_CMDERR:
-    __evaluateCmdErr(cbus, frame);
-    break;
-  case OPC_PLOC:
-    __updateSlot(cbus, frame);
-    break;
-  case OPC_DSPD:
-    __updateSpeedDir(cbus, frame);
-    break;
-  case OPC_FNON:
-    __updateFunction(cbus, frame, True);
-    break;
-  case OPC_FNOF:
-    __updateFunction(cbus, frame, False);
-    break;
-  case OPC_DFUN:
-    __updateFunctions(cbus, frame);
-    break;
-  case OPC_ACON:
-  case OPC_ASON:
-  case OPC_ARSPO:
-    __evaluateFB(cbus, frame, True);
-    break;
-  case OPC_ACOF:
-  case OPC_ASOF:
-  case OPC_ARSPN:
-    __evaluateFB(cbus, frame, False);
-    break;
-  case OPC_ACDAT:
-    __evaluateRFID(cbus, frame);
-    break;
-  case OPC_PCVS:
-    __evaluateCV(cbus, frame);
-    break;
-  case OPC_TON:
-    __reportState(cbus, True);
-    break;
-  case OPC_TOF:
-    __reportState(cbus, False);
-    break;
-  case OPC_ESTOP:
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Emergency break!" );
-    break;
-  case OPC_HLT:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus halt" );
-    data->buson = False;
-    break;
-  case OPC_BON:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus on" );
-    data->buson = True;
-    break;
-  case OPC_STAT:
-    {
-      int offset  = (frame[1] == 'S') ? 0:4;
-      int status   = HEXA2Byte(frame + OFFSET_D1 + offset);
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
+  if( frame[1] == 'S' ) {
+    switch(opc) {
+    case OPC_ERR:
+      __evaluateErr(cbus, frame);
       break;
-    }
+    case OPC_CMDERR:
+      __evaluateCmdErr(cbus, frame);
+      break;
+    case OPC_PLOC:
+      __updateSlot(cbus, frame);
+      break;
+    case OPC_DSPD:
+      __updateSpeedDir(cbus, frame);
+      break;
+    case OPC_FNON:
+      __updateFunction(cbus, frame, True);
+      break;
+    case OPC_FNOF:
+      __updateFunction(cbus, frame, False);
+      break;
+    case OPC_DFUN:
+      __updateFunctions(cbus, frame);
+      break;
+    case OPC_ACON:
+    case OPC_ASON:
+    case OPC_ARSPO:
+      __evaluateFB(cbus, frame, True);
+      break;
+    case OPC_ACOF:
+    case OPC_ASOF:
+    case OPC_ARSPN:
+      __evaluateFB(cbus, frame, False);
+      break;
+    case OPC_ACDAT:
+      __evaluateRFID(cbus, frame);
+      break;
+    case OPC_PCVS:
+      __evaluateCV(cbus, frame);
+      break;
+    case OPC_TON:
+      __reportState(cbus, True);
+      break;
+    case OPC_TOF:
+      __reportState(cbus, False);
+      break;
+    case OPC_ESTOP:
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Emergency break!" );
+      break;
+    case OPC_HLT:
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus halt" );
+      data->buson = False;
+      break;
+    case OPC_BON:
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus on" );
+      data->buson = True;
+      break;
+    case OPC_STAT:
+      {
+        int offset  = (frame[1] == 'S') ? 0:4;
+        int status   = HEXA2Byte(frame + OFFSET_D1 + offset);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
+        break;
+      }
 
-  /* All FLiM OPCs to this case. */
-  case OPC_NNACK:
-  case OPC_NNREL:
-  case OPC_NNREF:
-  case OPC_NNLRN:
-  case OPC_NNULN:
-  case OPC_NNCLR:
-  case OPC_NNEVN:
-  case OPC_NERD:
-  case OPC_RQEVN:
-  case OPC_WRACK:
-  case OPC_RQDAT:
-  case OPC_BOOT:
-  case OPC_RQNN:
-  case OPC_RQNP:
-  case OPC_SNN:
-  case OPC_NVRD:
-  case OPC_NENRD:
-  case OPC_RQNPN:
-  case OPC_NUMEV:
-  case OPC_EVULN:
-  case OPC_NVSET:
-  case OPC_NVANS:
-  case OPC_PARAN:
-  case OPC_REVAL:
-  case OPC_REQEV:
-  case OPC_NEVAL:
-  case OPC_EVLRN:
-  case OPC_EVANS:
-  case OPC_PARAMS:
-  case OPC_ENRSP:
-  case OPC_EVLRNI:
-    {
-      byte* extraMsg = NULL;
-      iONode rsp = processFLiM((obj)cbus, opc, frame, &extraMsg);
-      if( rsp != NULL ) {
-        if( data->listenerFun != NULL && data->listenerObj != NULL )
-          data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+    /* All FLiM OPCs to this case. */
+    case OPC_NNACK:
+    case OPC_NNREL:
+    case OPC_NNREF:
+    case OPC_NNLRN:
+    case OPC_NNULN:
+    case OPC_NNCLR:
+    case OPC_NNEVN:
+    case OPC_NERD:
+    case OPC_RQEVN:
+    case OPC_WRACK:
+    case OPC_RQDAT:
+    case OPC_BOOT:
+    case OPC_RQNN:
+    case OPC_RQNP:
+    case OPC_SNN:
+    case OPC_NVRD:
+    case OPC_NENRD:
+    case OPC_RQNPN:
+    case OPC_NUMEV:
+    case OPC_EVULN:
+    case OPC_NVSET:
+    case OPC_NVANS:
+    case OPC_PARAN:
+    case OPC_REVAL:
+    case OPC_REQEV:
+    case OPC_NEVAL:
+    case OPC_EVLRN:
+    case OPC_EVANS:
+    case OPC_PARAMS:
+    case OPC_ENRSP:
+    case OPC_EVLRNI:
+      {
+        byte* extraMsg = NULL;
+        iONode rsp = processFLiM((obj)cbus, opc, frame, &extraMsg);
+        if( rsp != NULL ) {
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extraMsg=0x%08X", extraMsg );
+        if( extraMsg != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extra frame from flim..." );
+          ThreadOp.post(data->writer, (obj)extraMsg);
+        }
+        break;
       }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extraMsg=0x%08X", extraMsg );
-      if( extraMsg != NULL ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extra frame from flim..." );
-        ThreadOp.post(data->writer, (obj)extraMsg);
-      }
-      break;
     }
   }
+  else {
+    /* Extended frame: boot loader */
+  }
+
+
   return NULL;
 }
 

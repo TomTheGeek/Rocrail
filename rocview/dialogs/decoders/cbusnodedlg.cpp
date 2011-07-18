@@ -577,7 +577,7 @@ void CBusNodeDlg::onHexFile( wxCommandEvent& event ) {
 void CBusNodeDlg::onHEXFileSend( wxCommandEvent& event ) {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-  wProgram.setcmd( cmd, wProgram.load );
+  wProgram.setcmd( cmd, wProgram.writehex );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
   wProgram.setdecaddr( cmd, nn );
