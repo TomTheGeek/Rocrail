@@ -63,59 +63,86 @@
 */
 
 /* block types */
-#define NO_BLOCK 0
-#define PROGRAM_BLOCK 1
-#define CONFIG_BLOCK 2
-#define EEPROM_BLOCK 3
+#define NO_BLOCK -1
+#define PROGRAM_BLOCK 0
+#define CONFIG_BLOCK 1
+#define EEPROM_BLOCK 2
 
-static char program[14336 * 2];
-static char config [32 * 2];
-static char eeprom [512 * 2];
+#define PROGRAM_SIZE 14336
+#define CONFIG_SIZE 32
+#define EEPROM_SIZE 512
 
-void evaluateLine(const char* hexline, int* offset, int* block) {
+struct BootData {
+  int block;
+  int offset[3];
+  char* data[3];
+};
+
+static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
   char s[5] = {0,0,0,0,0};
   if( hexline[8] == '4' ) {
     /* extended linear address record */
     MemOp.copy( s, hexline+9, 4);
-    *offset = (int)strtol( s, NULL, 16);
+    int offset = (int)strtol( s, NULL, 16);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extended linear address record: %d(0x%08X)", offset, offset );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extended linear address record: %d", *offset );
-
-    switch( *block ) {
+    switch( bootData->block ) {
     case NO_BLOCK:
-      *block = PROGRAM_BLOCK;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to program block" );
+      if( offset == 0x00 ) {
+        bootData->block = PROGRAM_BLOCK;
+        bootData->offset[PROGRAM_BLOCK] = offset;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to program block" );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not a bootable file!" );
+        return False;
+      }
       break;
     case PROGRAM_BLOCK:
-      *block = CONFIG_BLOCK;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to config block" );
+      if( offset = 0x30 ) {
+        bootData->block = CONFIG_BLOCK;
+        bootData->offset[CONFIG_BLOCK] = offset;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to config block" );
+      }
+      else if( offset = 0xF0 ) {
+        bootData->block = EEPROM_BLOCK;
+        bootData->offset[EEPROM_BLOCK] = offset;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to eeprom block" );
+      }
       break;
     case CONFIG_BLOCK:
-      *block = EEPROM_BLOCK;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to eeprom block" );
+      if( offset = 0xF0 ) {
+        bootData->block = EEPROM_BLOCK;
+        bootData->offset[EEPROM_BLOCK] = offset;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to eeprom block" );
+      }
       break;
     }
   }
-  else if( hexline[8] == '0' ) {
+  else if( hexline[8] == '0' && bootData->block != NO_BLOCK ) {
     /* data record */
+    MemOp.copy( s, hexline+1, 2);
+    int cnt = (int)strtol( s, NULL, 16);
     MemOp.copy( s, hexline+3, 4);
     int addr = (int)strtol( s, NULL, 16);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "data record with start address %d", addr );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "data record with start address %d(0x%08X) with %d bytes for block %d", addr, addr, cnt, bootData->block );
+    int i = 0;
+    for( i = addr; i < (addr+cnt); i++ ) {
+      bootData->data[bootData->block][i*2] = hexline[9+(i-addr)*2];
+      bootData->data[bootData->block][i*2+1] = hexline[9+(i-addr)*2+1];
+    }
   }
   else if( hexline[8] == '1' ) {
     /* end of file record */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of file" );
   }
+
+  return True;
 }
 
 
 void loadHEXFile(obj inst, const char* filename, int nodenr ) {
-  int block  = 0;
-  int offset = 0;
-
-  MemOp.set( program, 'F', 14336 * 2 );
-  MemOp.set( config , 'F', 32 * 2 );
-  MemOp.set( eeprom , 'F', 512 * 2 );
 
   iOFile f = FileOp.inst( filename, OPEN_READONLY );
 
@@ -124,20 +151,52 @@ void loadHEXFile(obj inst, const char* filename, int nodenr ) {
     return;
   }
 
+  struct BootData* bootData = allocMem(sizeof(struct BootData));
+
+  bootData->block  = NO_BLOCK;
+  bootData->offset[PROGRAM_BLOCK] = 0;
+  bootData->offset[CONFIG_BLOCK ] = 0;
+  bootData->offset[EEPROM_BLOCK ] = 0;
+
+  bootData->data[PROGRAM_BLOCK] = allocMem(PROGRAM_SIZE * 2);
+  bootData->data[CONFIG_BLOCK ] = allocMem(CONFIG_SIZE  * 2);
+  bootData->data[EEPROM_BLOCK ] = allocMem(EEPROM_SIZE  * 2);
+
+  MemOp.set( bootData->data[PROGRAM_BLOCK], 'F', PROGRAM_SIZE * 2 );
+  MemOp.set( bootData->data[CONFIG_BLOCK ], 'F', CONFIG_SIZE  * 2 );
+  MemOp.set( bootData->data[EEPROM_BLOCK ], 'F', EEPROM_SIZE  * 2 );
+
   char hexline[128];
   int nr = 0;
-  while( FileOp.readStr( f, hexline ) ) {
+  Boolean ok = True;
+  while( ok && FileOp.readStr( f, hexline ) ) {
     nr++;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing line %d: %s ", nr, hexline );
     if( hexline[0] == ':' ) {
-      evaluateLine(hexline, &offset, &block);
+      ok = evaluateLine(hexline, bootData);
     }
+  }
+
+  if(ok) {
+    TraceOp.setDumpsize(NULL, PROGRAM_SIZE * 2);
+    TraceOp.dump( name, TRCLEVEL_BYTE, bootData->data[PROGRAM_BLOCK], PROGRAM_SIZE * 2 );
+    TraceOp.setDumpsize(NULL, CONFIG_SIZE * 2);
+    TraceOp.dump( name, TRCLEVEL_BYTE, bootData->data[CONFIG_BLOCK ], CONFIG_SIZE  * 2 );
+    TraceOp.setDumpsize(NULL, EEPROM_SIZE * 2);
+    TraceOp.dump( name, TRCLEVEL_BYTE, bootData->data[EEPROM_BLOCK ], EEPROM_SIZE  * 2 );
+
+    ThreadOp.sleep(100);
+
   }
 
 
   FileOp.base.del(f);
 
-  ThreadOp.sleep(100);
+  freeMem(bootData->data[PROGRAM_BLOCK]);
+  freeMem(bootData->data[CONFIG_BLOCK ]);
+  freeMem(bootData->data[EEPROM_BLOCK ]);
+
+  freeMem(bootData);
 
 }
 
