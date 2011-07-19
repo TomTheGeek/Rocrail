@@ -79,6 +79,7 @@ void CbusDlg::initValues() {
   m_SOD->SetValue( wCBus.getsodaddr( cbusini ) );
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_Purgetime->SetValue( wCBus.getpurgetime( cbusini ) );
+  m_LoaderTime->SetValue( wCBus.getloadertime( cbusini ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
   m_Port->SetValue( wDigInt.getport( m_Props ) );
@@ -112,6 +113,7 @@ void CbusDlg::evaluate() {
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
   wCBus.setpurgetime( cbusini, m_Purgetime->GetValue() );
+  wCBus.setloadertime( cbusini, m_LoaderTime->GetValue() );
   wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setport( m_Props, m_Port->GetValue() );
 

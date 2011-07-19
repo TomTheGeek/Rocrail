@@ -483,6 +483,7 @@
         <var name="shortevents" vt="bool" defval="true"/>
         <var name="fonfof" vt="bool" defval="false" remark="Use the new opcodes for controlling functions."/>
         <var name="purgetime" vt="int" defval="20" unit="s" range="0-*" remark="CS engine idle timeout."/>
+        <var name="loadertime" vt="int" defval="50" range="10-*" remark="Sleep time between boot loader lines."/>
 	      <cbnode cardinality="n" wrappername="CBusNode">
 	        <var name="nr" vt="int" defval="0" range="0-65535" remark="NodeNumber"/>
 	        <var name="manuid" vt="int" defval="0" range="0-65535" remark="NMRA manufacturer ID."/>

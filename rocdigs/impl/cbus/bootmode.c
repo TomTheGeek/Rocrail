@@ -28,6 +28,9 @@
 #include "rocs/public/system.h"
 #include "rocs/public/thread.h"
 
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/CBus.h"
+
 /*
 |start of line
 ||byte count(2)
@@ -170,7 +173,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
 
   for( i = 0; i < nrlines; i++ ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d]", i+1, nrlines );
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080005N");
     MemOp.copy( frame+1+11, &bootData->data[PROGRAM_BLOCK][i*8*2], 16 );
@@ -184,7 +187,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     byte* frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080004N000030000D000000;" );
     frame[0] = StrOp.len(frame+1);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
 
     if(bootData->count[CONFIG_BLOCK] < 32 ) {
@@ -196,7 +199,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
 
     for( i = 0; i < nrlines; i++ ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
-      ThreadOp.sleep(50);
+      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
       MemOp.copy( frame+1+11, &bootData->data[CONFIG_BLOCK][i*8*2], 16 );
@@ -212,7 +215,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     byte* frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080004N0000F0000D000000;" );
     frame[0] = StrOp.len(frame+1);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
 
     if(bootData->count[EEPROM_BLOCK] < 512 ) {
@@ -224,7 +227,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
 
     for( i = 0; i < nrlines; i++ ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block[%d of %d]", i+1, nrlines );
-      ThreadOp.sleep(50);
+      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
       MemOp.copy( frame+1+11, &bootData->data[EEPROM_BLOCK][i*8*2], 16 );
