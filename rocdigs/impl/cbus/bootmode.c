@@ -76,6 +76,8 @@ struct BootData {
   int block;
   int offset[3];
   char* data[3];
+  int count[3];
+  int checksum;
 };
 
 static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
@@ -131,7 +133,12 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
     for( i = addr; i < (addr+cnt); i++ ) {
       bootData->data[bootData->block][i*2] = hexline[9+(i-addr)*2];
       bootData->data[bootData->block][i*2+1] = hexline[9+(i-addr)*2+1];
+
+      MemOp.copy( s, hexline+9+(i-addr)*2, 2);
+      int val = (int)strtol( s, NULL, 16);
+      bootData->checksum += val;
     }
+    bootData->count[bootData->block] = addr + cnt;
   }
   else if( hexline[8] == '1' ) {
     /* end of file record */
@@ -153,10 +160,16 @@ void loadHEXFile(obj inst, const char* filename, int nodenr ) {
 
   struct BootData* bootData = allocMem(sizeof(struct BootData));
 
-  bootData->block  = NO_BLOCK;
+  bootData->block = NO_BLOCK;
+  bootData->checksum = 0;
+
   bootData->offset[PROGRAM_BLOCK] = 0;
   bootData->offset[CONFIG_BLOCK ] = 0;
   bootData->offset[EEPROM_BLOCK ] = 0;
+
+  bootData->count[PROGRAM_BLOCK] = 0;
+  bootData->count[CONFIG_BLOCK ] = 0;
+  bootData->count[EEPROM_BLOCK ] = 0;
 
   bootData->data[PROGRAM_BLOCK] = allocMem(PROGRAM_SIZE * 2);
   bootData->data[CONFIG_BLOCK ] = allocMem(CONFIG_SIZE  * 2);
@@ -178,6 +191,13 @@ void loadHEXFile(obj inst, const char* filename, int nodenr ) {
   }
 
   if(ok) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "nr data bytes in program block: %d", bootData->count[PROGRAM_BLOCK] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "nr data bytes in config block : %d", bootData->count[CONFIG_BLOCK] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "nr data bytes in eeprom block : %d", bootData->count[EEPROM_BLOCK] );
+
+    int checksum = 65536 - (bootData->checksum & 0xFFFF);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checksum data bytes: 0x%04X", checksum );
+
     TraceOp.setDumpsize(NULL, PROGRAM_SIZE * 2);
     TraceOp.dump( name, TRCLEVEL_BYTE, bootData->data[PROGRAM_BLOCK], PROGRAM_SIZE * 2 );
     TraceOp.setDumpsize(NULL, CONFIG_SIZE * 2);
