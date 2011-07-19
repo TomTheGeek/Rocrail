@@ -168,9 +168,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     nrlines++;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block" );
-
   for( i = 0; i < nrlines; i++ ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d]", i+1, nrlines );
     ThreadOp.sleep(50);
     frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080005N");
@@ -195,9 +194,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     }
     nrlines = 32 / 8;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block" );
-
     for( i = 0; i < nrlines; i++ ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
       ThreadOp.sleep(50);
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
@@ -224,9 +222,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     }
     nrlines = 512 / 8;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block" );
-
     for( i = 0; i < nrlines; i++ ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block[%d of %d]", i+1, nrlines );
       ThreadOp.sleep(50);
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");

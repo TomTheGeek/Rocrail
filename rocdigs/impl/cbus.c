@@ -876,7 +876,7 @@ static void __reader( void* threadinst ) {
   /* get all input states */
   if( data->sodaddr > 0 ) {
     byte cmd[8];
-    byte* frame = allocMem(32);
+    byte* frame = allocMem(64);
     cmd[0] = OPC_ASRQ;
     cmd[1] = 0;
     cmd[2] = 0;
@@ -903,8 +903,8 @@ static void __reader( void* threadinst ) {
       if( data->subRead( (obj)cbus, frame, 1) ) {
         if( frame[0] == ':' ) {
           if( data->subRead( (obj)cbus, frame+1, 1) ) {
-            if( frame[1] == 'S' || frame[1] == 'X' ) {
-              int offset = (frame[1] == 'S') ? 0:4;
+            if( frame[1] == 'S' ) {
+              int offset = 0;
 
               if( data->subRead( (obj)cbus, frame + 2, OFFSET_TYPE + offset ) ) {
                 if( frame[OFFSET_TYPE+offset] == 'N' ) {
@@ -950,6 +950,25 @@ static void __reader( void* threadinst ) {
                 }
               }
             }
+
+            /* extended frame */
+            else if( frame[1] == 'X' ) {
+              int n = 2;
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading extended frame" );
+              while( data->subRead( (obj)cbus, frame + n, 1 ) && n < 32 ) {
+                if( frame[n] == ';' ) {
+                  frame[n+1] = '\0';
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, n+1 );
+                  break;
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read byte [%c] for extended frame at index[%d]",
+                      frame[n], n );
+                }
+                n++;
+              }
+            }
+
             else {
               /* junk */
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wrong frame byte [%c]", frame[1] );
@@ -1524,6 +1543,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->mux      = MutexOp.inst( NULL, True );
   data->lcmux    = MutexOp.inst( NULL, True );
   data->lcmap    = MapOp.inst();
+  data->loaderMux= MutexOp.inst( NULL, True );
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
     data->bps = 500000;

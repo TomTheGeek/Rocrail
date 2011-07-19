@@ -1398,6 +1398,9 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="nnsetup" vt="int" remark="Current node number in setup mode."/>
+      <var name="loader" vt="iOThread"/>
+      <var name="loaderNode" vt="iONode"/>
+      <var name="loaderMux" vt="iOMutex"/>
     </data>
   </object>
 

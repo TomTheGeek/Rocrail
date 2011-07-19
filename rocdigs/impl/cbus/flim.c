@@ -203,7 +203,31 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   return NULL;
 }
 
+
+
+static void __loader( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
+  iOCBUSData data = Data(cbus);
+
+  ThreadOp.sleep(100);
+
+  if( MutexOp.trywait( data->loaderMux, 1000 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );
+    loadHEXFile(cbus, wProgram.getfilename(data->loaderNode), wProgram.getdecaddr(data->loaderNode) );
+    NodeOp.base.del(data->loaderNode);
+    MutexOp.post(data->loaderMux);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "can't start loader" );
+  }
+}
+
+
+
 byte* programFLiM(obj inst, iONode node) {
+  iOCBUSData data = Data(inst);
   byte cmd[32];
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: program command." );
 
@@ -355,8 +379,11 @@ byte* programFLiM(obj inst, iONode node) {
   if( wProgram.getcmd( node ) == wProgram.writehex ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: load hex file %s into node %d.", wProgram.getfilename(node), wProgram.getdecaddr(node) );
-    /* ToDo: Load file into node. */
-    loadHEXFile(inst, wProgram.getfilename(node), wProgram.getdecaddr(node) );
+    /* Load file into node. */
+    data->loaderNode = (iONode)NodeOp.base.clone(node);
+    data->loader = ThreadOp.inst( "cbloader", &__loader, inst );
+    ThreadOp.start( data->loader );
+
     return NULL;
   }
 
