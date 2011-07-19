@@ -856,6 +856,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   }
   else {
     /* Extended frame: boot loader */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Extended frame: boot loader..." );
   }
 
 

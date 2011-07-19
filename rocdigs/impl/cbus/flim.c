@@ -347,7 +347,8 @@ byte* programFLiM(obj inst, iONode node) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: reset node %d in operation mode.", wProgram.getdecaddr(node) );
     byte* frame = allocMem(32);
-    StrOp.copy( frame, ":X00080004N000000000D010000;" );
+    StrOp.copy( frame+1, ":X00080004N000000000D010000;" );
+    frame[0] = StrOp.len(frame+1);
     return frame;
   }
 

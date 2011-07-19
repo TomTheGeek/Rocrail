@@ -149,7 +149,116 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
 }
 
 
+static void sendData(obj inst, struct BootData* bootData, int nodenr) {
+  iOCBUSData data = Data(inst);
+
+  /* Program block */
+
+  byte* frame = allocMem(32);
+  StrOp.copy( frame+1, ":X00080004N000800000D020000;" );
+  frame[0] = StrOp.len(frame+1);
+  ThreadOp.post(data->writer, (obj)frame);
+
+  int i = 0;
+  int nrlines = bootData->count[PROGRAM_BLOCK] / 8;
+  if(bootData->count[PROGRAM_BLOCK] % 8 > 0 ) {
+    /* Checksum correction is needed for the padding 0xFF bytes. */
+    int padding = 8 - (bootData->count[PROGRAM_BLOCK] % 8);
+    bootData->checksum += padding * 0xFF;
+    nrlines++;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block" );
+
+  for( i = 0; i < nrlines; i++ ) {
+    ThreadOp.sleep(50);
+    frame = allocMem(32);
+    StrOp.copy( frame+1, ":X00080005N");
+    MemOp.copy( frame+1+11, &bootData->data[PROGRAM_BLOCK][i*8*2], 16 );
+    StrOp.copy( frame+1+11+16, ";");
+    frame[0] = StrOp.len(frame+1);
+    ThreadOp.post(data->writer, (obj)frame);
+  }
+
+  /* Config block */
+  if( bootData->count[CONFIG_BLOCK] > 0 ) {
+    byte* frame = allocMem(32);
+    StrOp.copy( frame+1, ":X00080004N000030000D000000;" );
+    frame[0] = StrOp.len(frame+1);
+    ThreadOp.sleep(50);
+    ThreadOp.post(data->writer, (obj)frame);
+
+    if(bootData->count[CONFIG_BLOCK] < 32 ) {
+      /* Checksum correction is needed for the padding 0xFF bytes. */
+      int padding = 32 - bootData->count[CONFIG_BLOCK];
+      bootData->checksum += padding * 0xFF;
+    }
+    nrlines = 32 / 8;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block" );
+
+    for( i = 0; i < nrlines; i++ ) {
+      ThreadOp.sleep(50);
+      frame = allocMem(32);
+      StrOp.copy( frame+1, ":X00080005N");
+      MemOp.copy( frame+1+11, &bootData->data[CONFIG_BLOCK][i*8*2], 16 );
+      StrOp.copy( frame+1+11+16, ";");
+      frame[0] = StrOp.len(frame+1);
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+
+  }
+
+  /* EEProm block */
+  if( bootData->count[EEPROM_BLOCK] > 0 ) {
+    byte* frame = allocMem(32);
+    StrOp.copy( frame+1, ":X00080004N0000F0000D000000;" );
+    frame[0] = StrOp.len(frame+1);
+    ThreadOp.sleep(50);
+    ThreadOp.post(data->writer, (obj)frame);
+
+    if(bootData->count[EEPROM_BLOCK] < 512 ) {
+      /* Checksum correction is needed for the padding 0xFF bytes. */
+      int padding = 512 - bootData->count[CONFIG_BLOCK];
+      bootData->checksum += padding * 0xFF;
+    }
+    nrlines = 512 / 8;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block" );
+
+    for( i = 0; i < nrlines; i++ ) {
+      ThreadOp.sleep(50);
+      frame = allocMem(32);
+      StrOp.copy( frame+1, ":X00080005N");
+      MemOp.copy( frame+1+11, &bootData->data[EEPROM_BLOCK][i*8*2], 16 );
+      StrOp.copy( frame+1+11+16, ";");
+      frame[0] = StrOp.len(frame+1);
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+  }
+
+  /* Checksum. */
+  int checksum = 65536 - (bootData->checksum & 0xFFFF);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checksum data bytes: 0x%04X", checksum );
+  ThreadOp.sleep(50);
+  frame = allocMem(32);
+  StrOp.fmtb( frame+1, ":X00080004N000000000D03%02X%02X;", checksum & 0xFF, (checksum >> 8) & 0xFF );
+  frame[0] = StrOp.len(frame+1);
+  ThreadOp.post(data->writer, (obj)frame);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset" );
+  ThreadOp.sleep(50);
+  frame = allocMem(32);
+  StrOp.copy( frame+1, ":X00080004N000000000D010000;" );
+  frame[0] = StrOp.len(frame+1);
+  ThreadOp.post(data->writer, (obj)frame);
+
+}
+
+
+
 void loadHEXFile(obj inst, const char* filename, int nodenr ) {
+  iOCBUSData data = Data(inst);
 
   iOFile f = FileOp.inst( filename, OPEN_READONLY );
 
@@ -205,8 +314,7 @@ void loadHEXFile(obj inst, const char* filename, int nodenr ) {
     TraceOp.setDumpsize(NULL, EEPROM_SIZE * 2);
     TraceOp.dump( name, TRCLEVEL_BYTE, bootData->data[EEPROM_BLOCK ], EEPROM_SIZE  * 2 );
 
-    ThreadOp.sleep(100);
-
+    sendData(inst, bootData, nodenr);
   }
 
 
