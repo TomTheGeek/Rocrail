@@ -255,6 +255,7 @@ void TurntableDialog::initLabels() {
   m_Type->Append( wxString(wTurntable.muet,wxConvUTF8 ) );
   m_Type->Append( wxString(wTurntable.slx815,wxConvUTF8 ) );
   m_Type->Append( wxString(wTurntable.ttdec,wxConvUTF8 ) );
+  m_Type->Append( wxString(wTurntable.d15,wxConvUTF8 ) );
   m_labProt->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_labDelay->SetLabel( wxGetApp().getMsg( "delay" ) );
   m_labPause->SetLabel( wxGetApp().getMsg( "ttdirpause" ) );

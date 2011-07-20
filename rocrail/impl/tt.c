@@ -1208,6 +1208,10 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   return ok;
 }
 
+static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+}
+
 
 static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   iOTTData data = Data(inst);
@@ -1375,6 +1379,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_slx815( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.ttdec ) )
     return __cmd_ttdec( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.d15 ) )
+    return __cmd_d15( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",

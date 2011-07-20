@@ -1749,7 +1749,8 @@
         <const name="muet" vt="string" val="muet" remark="Muet controller with stepper motor."/>
         <const name="slx815" vt="string" val="slx815" remark="Rautenhaus controller."/>
         <const name="ttdec" vt="string" val="ttdec" remark="LDT TT-DEC"/>
-        <var name="type" vt="string" defval="locdec" range="locdec,digitalbahn,mgv"/>
+        <const name="d15" vt="string" val="d15" remark="Draai15"/>
+        <var name="type" vt="string" defval="locdec" range="*"/>
         <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
