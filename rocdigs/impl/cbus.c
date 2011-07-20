@@ -737,6 +737,46 @@ static void __reportState(iOCBUS cbus, Boolean power) {
 
 }
 
+
+static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
+  iOCBUSData data = Data(cbus);
+  if( frame[2] == '0' ) {
+    /* Commands:
+    :X00080004N000000000D000000; NOP
+    :X00080004N000000000D100000; Reset
+    :X00080004N000000000D200000; Init
+    :X00080004N000000000D300000; Check
+    :X00080004N000000000D400000; Test
+    :X00080005N0000000000000000; Data
+    */
+  }
+
+  else if( frame[2] == '8' ) {
+    /* Responses:
+    :X80080004N00; Error, on response of a Check command.
+    :X80080004N01; OK, on response of a Check command.
+    :X80080004N02; Boot mode confirm, on response of a Test command.
+    */
+    /* ToDo: Generate program nodes. */
+    if(frame[12] == '0') {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error response from bootloader" );
+    }
+    else if(frame[12] == '1') {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OK response from bootloader" );
+    }
+    else if(frame[12] == '2') {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "boot mode confirmed" );
+    }
+  }
+
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown extended frame" );
+  }
+
+  return NULL;
+}
+
+
 static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
@@ -959,6 +999,7 @@ static void __reader( void* threadinst ) {
                 if( frame[n] == ';' ) {
                   frame[n+1] = '\0';
                   TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, n+1 );
+                  __evaluateXFrame(cbus, frame);
                   break;
                 }
                 else {
