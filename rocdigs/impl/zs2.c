@@ -947,9 +947,22 @@ static void __reader( void* threadinst ) {
   iOZS2Data data = Data(zs2);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
+
+  int junk = 0;
+  byte in[32] = {0};
+  /* clean input buffer: */
+  while( data->run && SerialOp.available(data->serial) && junk < 32 ) {
+    if( SerialOp.read(data->serial, in+junk, 1) ) {
+      junk++;
+    }
+  }
+
+  if( junk > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d junk bytes dumped", junk );
+    TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, junk );
+  }
   
   while( data->run ) {
-    byte in[8] = {0};
     if( SerialOp.available(data->serial) ) {
       /* read 3-Byte-Auto-Mode: in[0]=bus, in[1]=addr, in[2]=value */
       if( SerialOp.read(data->serial, in, 3) ) {
@@ -979,6 +992,7 @@ static void __writer( void* threadinst ) {
   byte* cmd = NULL;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
+  ThreadOp.sleep(1000);
 
   /* Monitoring on */
   cmd = allocMem(32);
