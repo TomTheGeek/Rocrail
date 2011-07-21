@@ -1208,8 +1208,128 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   return ok;
 }
 
+
 static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
+/*
+1e bit = reset. Zet de schakeling in de startstand en reset de oude gewenste stand
+2e bit = stand-bit waarde 1
+3e bit = stand-bit waarde 2
+4e bit = stand-bit waarde 4
+5e bit = stand-bit waarde 8
+6e bit = opdracht start draaien rechtsom
+7e bit = opdracht start draaien linksom
+Een reset is noodzakelijk voorafgaande aan alle opdrachten die een nieuw adres bevatten.
+*/
   iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  iONode cmd = NULL;
+  int tracknr = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "draai15: %s", cmdStr );
+
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    tracknr = __getNextTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    tracknr = __getPrevTrack(inst, data->tablepos );
+    if( tracknr != -1 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      data->gotopos = tracknr;
+      data->skippos = -1;
+    }
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    tracknr = __getOppositeTrack( inst, data->tablepos );
+
+    if( tracknr == -1 ) {
+      if( data->tablepos <= 24 )
+        data->gotopos = data->tablepos + 24;
+      else
+        data->gotopos = data->tablepos - 24;
+      tracknr = data->gotopos;
+    }
+    else {
+      data->gotopos = tracknr;
+    }
+    data->skippos = -1;
+  }
+  else {
+    /* Tracknumber */
+    tracknr = atoi( cmdStr );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Goto track %d, current pos=%d", tracknr, data->tablepos );
+
+    if( move ) {
+      data->gotopos = tracknr;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge already at track %d", tracknr );
+      __polarize((obj)inst, tracknr, False);
+    }
+
+  }
+
+  if( cmd != NULL && control != NULL )
+  {
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wTurntable.setiid( cmd, iid );
+
+    tracknr = __getMappedTrack( inst, tracknr );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
+
+    /* pending move operation */
+    data->pending = True;
+
+    int addrCmd = wTurntable.getaddr(data->props) / 4 + 1;
+    int portCmd = wTurntable.getaddr(data->props) % 4 + 1;
+    wSwitch.setaddr1( cmd, addrCmd );
+    wSwitch.setport1( cmd, portCmd );
+    wSwitch.setcmd  ( cmd, wSwitch.turnout );
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending switch command [%d,%d]...",
+                 addrCmd, portCmd);
+
+    ControlOp.cmd( control, cmd, NULL );
+    /* give the decoder some time to think... */
+    ThreadOp.sleep( wTurntable.getpause( data->props ) * 1000 );
+
+
+    cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    /* set type to multiport */
+    wProgram.setlntype( cmd, wProgram.lntype_mp );
+    wProgram.setcmd( cmd, wProgram.lncvset );
+    wProgram.setaddr( cmd, wTurntable.getaddr(data->props) );
+    wProgram.setcv( cmd, 0x00FF ); /* mask */
+    wProgram.setvalue( cmd, (tracknr << 1) | (ttdir?0x80:0x40) ); /* value */
+    ControlOp.cmd( control, cmd, NULL );
+
+
+    data->dir = ttdir;
+
+  }
+
+
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+
+
+  return ok;
 }
 
 
