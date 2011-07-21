@@ -173,13 +173,21 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
 
 
 iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval) {
+  TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,
+      "get node event nn=%d, mtype=%d, evnn=%d, evsddr=%d, evnr=%d, evval=%d",
+      nn, mtype, evnn, evaddr, evnr, evval );
+
   iONode node = getNode(nn, mtype);
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
     while( cbusnodeevt != NULL ) {
-      if( wCBusNodeEvent.getnodenr(cbusnodeevt) == evnn && wCBusNodeEvent.getaddr(cbusnodeevt) == evaddr &&
-          wCBusNodeEvent.getevnr(cbusnodeevt) == evnr ) {
-        wCBusNodeEvent.setevnr(cbusnodeevt, evval);
+      if( wCBusNodeEvent.getnodenr(cbusnodeevt) == evnn &&
+          wCBusNodeEvent.getaddr(cbusnodeevt) == evaddr &&
+          wCBusNodeEvent.getevnr(cbusnodeevt) == evnr )
+      {
+        wCBusNodeEvent.setevval(cbusnodeevt, evval);
+        initEvtList(node);
+        TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
       }
       cbusnodeevt = wCBusNode.nextcbnodeevent( node, cbusnodeevt );
@@ -377,6 +385,22 @@ void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
 
 void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
   int nn = m_NodeNumber->GetValue();
+
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue());
+  if( node != NULL ) {
+    iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
+    while( cbusnodeevt != NULL ) {
+      TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "delete event for node [%d:%d]", nn, m_NodeTypeNr->GetValue());
+      NodeOp.removeChild(node, cbusnodeevt);
+      NodeOp.base.del(cbusnodeevt);
+      cbusnodeevt = wCBusNode.getcbnodeevent(node);
+    }
+    initEvtList(node);
+  }
+  else {
+    TraceOp.trc( "cbusnode", TRCLEVEL_WARNING, __LINE__, 9999, "node not found [%d:%d]", nn, m_NodeTypeNr->GetValue());
+  }
+
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.evgetall );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
