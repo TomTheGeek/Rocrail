@@ -270,13 +270,13 @@ void CV::event( iONode event ) {
   TraceOp.trc( "cv", ivalue != -1 ? TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
       "got program event...cmd=%d cv=%d value=%d %s", cmd, cv, ivalue, cmd == wProgram.datarsp ? "datarsp":"statusrsp" );
 
-  if( ivalue != -1 && (cmd == wProgram.statusrsp|cmd == wProgram.datarsp) && m_CVidx >= 67 && m_CVidx <= 94 ) {
-    if(m_CVidx < 94 && m_bSpeedCurve ) {
+  if( m_bSpeedCurve && ivalue != -1 && (cmd == wProgram.statusrsp|cmd == wProgram.datarsp) && m_CVidx >= 67 && m_CVidx <= 94 ) {
+    if(m_CVidx < 94 ) {
       m_CVoperation = CVSET;
       m_TimerCount = 0;
       doCV( wProgram.set, m_CVidx + 1, m_Curve[m_CVidx-67] );
     }
-    else if(m_CVidx == 94 && m_bSpeedCurve ) {
+    else if(m_CVidx == 94 ) {
       /* post an event to activate the speed curve dialog */
       m_bSpeedCurve = false;
     }
