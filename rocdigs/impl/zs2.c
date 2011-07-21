@@ -971,9 +971,15 @@ static void __reader( void* threadinst ) {
         int val  = in[2] & 0xFF;
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 3 );
         
-        __evaluateSX(zs2, bus, addr, val);
-        /* save new value */
-        data->sx[bus&0x03][addr] = val;
+        if( bus < 3 ) {
+          __evaluateSX(zs2, bus, addr, val);
+          /* save new value */
+          data->sx[bus&0x03][addr] = val;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid bus read: %d", bus );
+          ThreadOp.sleep(500);
+        }
        
       }  
     }
