@@ -180,7 +180,7 @@ static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
   
   if( sx2 && slot == NULL ) {
     /* TODO: create a slot or ignore? */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "undefined slotnr: %d", lcaddr/6 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "undefined sx2 slotnr: %d", lcaddr/6 );
   }
   
   return slot;
@@ -232,6 +232,11 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   slot->fx1    = wLoc.getfx(node) & 0x00FF;
   slot->fx2    = (wLoc.getfx(node) & 0xFF00) >> 8;
   
+  if( slot->bus != 2 && addr > 99 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use sx2 for %s because address %d > 99", wLoc.getid(node), addr );
+    slot->bus = 2;
+  }
+
   if( slot->bus == 2 ) {
     slot->sx2 = True;
     
@@ -294,8 +299,16 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   */
   
   if(slot->sx2 ) { 
-    byte addrh = (2 * (slot->addr/100)) + ((slot->addr%100) > 63 ? 1:0);
-    byte addrl = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+    byte addrh = 0;
+    byte addrl = 0;
+    if( dcc ) {
+      addrh = (slot->addr >> 6);
+      addrl = (slot->addr << 2)  + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+    }
+    else {
+      addrh = (2 * (slot->addr/100)) + ((slot->addr%100) > 63 ? 1:0);
+      addrl = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+    }
     int slotnr = __getSlotNr4Addr(data, preamble, addrh, addrl);
     if( slotnr != -1 ) {
       slot->nr = slotnr;
@@ -863,15 +876,17 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
   iOSlot slot = NULL;
 
   StrOp.fmtb(key, "%d_%d", bus, addr );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "monitor event: bus=%d, addr=%d val=%02X key=%s.", bus, addr, val, key );
   
   if( bus == 2 ) {
     /* SX2 virtual bus */
-    slot = __getSlotByAddr( data, addr, True );
+    if( addr % 6 == 0 && addr < 96) {
+      slot = __getSlotByAddr( data, addr, True );
+    }
   }
   else {
-    if( addr = 127 ) {
+    if( addr == 127 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power %s", (val & 0x80) ? "ON":"OFF" );
       if( data->listenerFun != NULL && data->listenerObj != NULL ) {
         iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
@@ -928,7 +943,7 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
     }
   }
   
-  else if( data->sx[bus][addr] != val ) {
+  else if( bus < 2 && data->sx[bus][addr] != val ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %d:%d=%d", bus, addr, val );
     int i = 0;
     for( i = 0; i < 8; i++ ) {
@@ -1114,7 +1129,6 @@ static struct OZS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->pointmap = MapOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "***** WORK IN PROGRERSS *****" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zs2 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
