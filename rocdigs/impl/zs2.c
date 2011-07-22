@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
 
 
 static int instCnt = 0;
@@ -870,9 +871,20 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
     slot = __getSlotByAddr( data, addr, True );
   }
   else {
-    if( MapOp.haskey( data->fbmap, key) ) {
+    if( addr = 127 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power %s", (val & 0x80) ? "ON":"OFF" );
+      if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+        iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+        wState.setiid( node, data->iid );
+        wState.setpower( node, (val & 0x80)?True:False );
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
+      return;
+    }
+    else if( MapOp.haskey( data->fbmap, key) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupancy for unit %d is %02X", addr, val );
       __evaluateFB( zs2, val, addr, bus );
+      return;
     }
     else {
       /* Loco or Point */
