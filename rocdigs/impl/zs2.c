@@ -200,7 +200,7 @@ static int __getFreeSlot(iOZS2Data data) {
 static int __getSlotNr4Addr(iOZS2Data data, byte preamble, byte addrh, byte addrl) {
   int i = 0;
   for( i = 0; i < 16; i++ ) {
-    if( data->sx[2][i*6 + 0] == preamble && data->sx[2][i*6 + 1] == addrh && data->sx[2][i*6 + 2] == addrl ) {
+    if( data->sx[2][i*6 + 0] == preamble && data->sx[2][i*6 + 1] == addrh && (data->sx[2][i*6 + 2]&0xFC) == (addrl&0xFC) ) {
       return i + 1;
     }
   }
@@ -312,6 +312,9 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
     int slotnr = __getSlotNr4Addr(data, preamble, addrh, addrl);
     if( slotnr != -1 ) {
       slot->nr = slotnr;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "using SX2 slot %d for %s, preamble=%d, addr=%d",
+          slot->nr, wLoc.getid(node), preamble, slot->addr );
     }
     else {
       slotnr = __getFreeSlot(data);
@@ -332,7 +335,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
         cmd[12] = slot->nr * 6 + 5 + WRITE_FLAG;
         cmd[13] = slot->fx2;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "create SX2 slot for %s, preamble=%d, addr=%d high%02X:low%02X",
+            "create SX2 slot for %s, preamble=%d, addr=%d (high=%02X low=%02X)",
             wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
         ThreadOp.post(data->writer, (obj)cmd);
       }
