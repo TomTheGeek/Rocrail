@@ -1316,9 +1316,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     wSwitch.setcmd  ( cmd, wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    /* give the decoder some time to think... */
-    ThreadOp.sleep( wTurntable.getpause( data->props ) * 1000 );
-
+    ThreadOp.sleep( 100 );
 
     addrCmd = (baseAddr+1) / 4 + 1;
     portCmd = (baseAddr+1) % 4 + 1;
@@ -1328,36 +1326,40 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     wSwitch.setcmd  ( cmd, (tracknr&0x01)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
+    ThreadOp.sleep( 100 );
 
-    addrCmd = (baseAddr+2) / 4 + 1;
-    portCmd = (baseAddr+2) % 4 + 1;
+    addrCmd = (baseAddr+1) / 4 + 1;
+    portCmd = (baseAddr+1) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, (tracknr&0x02)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
+    ThreadOp.sleep( 100 );
 
-    addrCmd = (baseAddr+3) / 4 + 1;
-    portCmd = (baseAddr+3) % 4 + 1;
+    addrCmd = (baseAddr+2) / 4 + 1;
+    portCmd = (baseAddr+2) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, (tracknr&0x04)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
+    ThreadOp.sleep( 100 );
 
-    addrCmd = (baseAddr+4) / 4 + 1;
-    portCmd = (baseAddr+4) % 4 + 1;
+    addrCmd = (baseAddr+2) / 4 + 1;
+    portCmd = (baseAddr+2) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, (tracknr&0x08)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
+    ThreadOp.sleep( 100 );
 
-    addrCmd = (baseAddr+5) / 4 + 1;
-    portCmd = (baseAddr+5) % 4 + 1;
+    addrCmd = (baseAddr+3) / 4 + 1;
+    portCmd = (baseAddr+3) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
