@@ -1012,6 +1012,16 @@ static void __writer( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
   ThreadOp.sleep(1000);
 
+  /* Monitoring off */
+  cmd = allocMem(32);
+  cmd[0] = 0;
+  cmd[1] = 2;
+  cmd[2] = 125;
+  cmd[2] |= WRITE_FLAG;
+  cmd[3] = 0x40;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "monitoring OFF" );
+  ThreadOp.post(th, (obj)cmd);
+
   /* Monitoring on */
   cmd = allocMem(32);
   cmd[0] = 0;
