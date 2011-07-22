@@ -721,20 +721,19 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 
 
 
-static void __reportState(iOCBUS cbus, Boolean power) {
+static void __reportState(iOCBUS cbus) {
   iOCBUSData data = Data(cbus);
-  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "track power %s", power?"ON":"OFF" );
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
 
-  if( data->iid != NULL )
-    wState.setiid( node, data->iid );
-  wState.setpower( node, power );
-  wState.settrackbus( node, power );
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, data->power );
+    wState.settrackbus( node, data->buson );
 
-  if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-
+  }
 }
 
 
@@ -822,10 +821,14 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       __evaluateCV(cbus, frame);
       break;
     case OPC_TON:
-      __reportState(cbus, True);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power ON" );
+      data->power = True;
+      __reportState(cbus);
       break;
     case OPC_TOF:
-      __reportState(cbus, False);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power OFF" );
+      data->power = False;
+      __reportState(cbus);
       break;
     case OPC_ESTOP:
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Emergency break!" );
@@ -833,10 +836,12 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_HLT:
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus halt" );
       data->buson = False;
+      __reportState(cbus);
       break;
     case OPC_BON:
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "bus on" );
       data->buson = True;
+      __reportState(cbus);
       break;
     case OPC_STAT:
       {
