@@ -41,5 +41,6 @@
 
 int makeFrame(obj inst, byte* frame, int prio, byte* cmd, int datalen );
 byte HEXA2Byte( const char* s );
+void Byte2HEXA( char* s, byte b );
 
 #endif /* CBUS_UTILS_H_ */

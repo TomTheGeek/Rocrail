@@ -58,3 +58,10 @@ byte HEXA2Byte( const char* s ) {
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "HEXA=[%s]", val );
   return (unsigned char)(strtol( val, NULL, 16)&0xFF);
 }
+
+void Byte2HEXA( char* s, byte b ) {
+  static char cHex[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  int i = 0;
+  s[0] = cHex[(b&0xF0)>>4 ];
+  s[1] = cHex[ b&0x0F     ];
+}

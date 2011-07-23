@@ -934,6 +934,15 @@ static void __reader( void* threadinst ) {
     ThreadOp.post(data->writer, (obj)frame);
   }
 
+  if( 1 ) {
+    byte cmd[8];
+    byte* frame = allocMem(64);
+    cmd[0] = OPC_RSTAT;
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "query cs state" );
+    ThreadOp.post(data->writer, (obj)frame);
+  }
+
   while( data->run ) {
     byte frame[32] = {0};
     /* Frame ASCII format
@@ -1125,7 +1134,9 @@ static void __timedqueue( void* threadinst ) {
   while( data->run ) {
     iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "new timed command time=%d delay=%d tick=%d frame=%s",
+          cmd->time, cmd->delay, SystemOp.getTick(), cmd->out+1 );
       ListOp.add(list, (obj)cmd);
     }
 
@@ -1133,13 +1144,15 @@ static void __timedqueue( void* threadinst ) {
     for( i = 0; i < ListOp.size(list); i++ ) {
       iQCmd cmd = (iQCmd)ListOp.get(list, i);
       if( cmd->wait4session ) {
-        /* TODO: Wait for session number. */
+        /* Wait for session number. */
         if( cmd->slot->session > 0 ) {
           byte* outa = allocMem(32);
-          cmd->out[1] = cmd->slot->session;
+          /* :SCFE0N47008C; */
+          Byte2HEXA( cmd->out+10, cmd->slot->session);
           MemOp.copy( outa, cmd->out, 32 );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-              "got session nr %d: sending command for %s", cmd->slot->session, cmd->slot->id );
+              "got session nr %d: sending frame %s for %s",
+              cmd->slot->session, cmd->out+1, cmd->slot->id );
           ThreadOp.post( data->writer, (obj)outa );
           ListOp.removeObj(list, (obj)cmd);
           freeMem(cmd);
