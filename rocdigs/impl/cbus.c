@@ -360,6 +360,9 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
     cmd[0] = OPC_RLOC;
     cmd[1] = addr / 256;
     cmd[2] = addr % 256;
+    if( addr > 127 ) {
+      cmd[1] |= 0xC0;
+    }
     makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
@@ -481,6 +484,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   int addrh   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int addrl   = HEXA2Byte(frame + OFFSET_D3 + offset);
   int addr    = addrh * 256 + addrl;
+  addr &= 0x3FFF;
 
   int speed   =  HEXA2Byte(frame + OFFSET_D4 + offset);
   int f0_4    =  HEXA2Byte(frame + OFFSET_D5 + offset);
