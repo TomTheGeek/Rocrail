@@ -1305,38 +1305,50 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
 
         Adres 23 groen voor linksom (adres 23 rood is rechtsom)
 
+        -----
+        Ik ben er inmiddels achter dat de reset niet zit op adres 20 maar op 21 groen.
+        Dus niet logisch opvolgende adressen. De pulsduur moet zo'n 200ms zijn
+
+        De adres bits zijn als volgt
+        Waarde 1 op adres 20 groen
+        Waarde 2 op adres 20 rood
+        Waarde 4 op adres 22 groen
+
+        Dus voor positie 5 geef je eerst 21 groen,( reset) en daarna 20 groen en 22groen (1 +4 =5)
+        Dan een draaicommando 23 groen of 23 rood, links of rechts.
+
     */
 
     int baseAddr = wTurntable.getaddr(data->props);
-    int addrCmd = baseAddr / 4 + 1;
-    int portCmd = baseAddr % 4 + 1;
-
+    int addrCmd = (baseAddr+1) / 4 + 1;
+    int portCmd = (baseAddr+1) % 4 + 1;
+    /* reset */
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+1) / 4 + 1;
-    portCmd = (baseAddr+1) % 4 + 1;
+    addrCmd = (baseAddr+0) / 4 + 1;
+    portCmd = (baseAddr+0) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, (tracknr&0x01)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+1) / 4 + 1;
-    portCmd = (baseAddr+1) % 4 + 1;
+    addrCmd = (baseAddr+0) / 4 + 1;
+    portCmd = (baseAddr+0) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, (tracknr&0x02)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 250 );
 
     addrCmd = (baseAddr+2) / 4 + 1;
     portCmd = (baseAddr+2) % 4 + 1;
@@ -1346,7 +1358,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     wSwitch.setcmd  ( cmd, (tracknr&0x04)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 250 );
 
     addrCmd = (baseAddr+2) / 4 + 1;
     portCmd = (baseAddr+2) % 4 + 1;
@@ -1356,8 +1368,9 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     wSwitch.setcmd  ( cmd, (tracknr&0x08)?wSwitch.turnout:wSwitch.straight );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 250 );
 
+    /* turn command */
     addrCmd = (baseAddr+3) / 4 + 1;
     portCmd = (baseAddr+3) % 4 + 1;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
