@@ -137,17 +137,18 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOCBUSData data = Data(inst);
-  data->run = False;
   if( poweroff ) {
     byte cmd[2];
     byte* frame = allocMem(32);
-    cmd[0] = OPC_TOF;
+    cmd[0] = OPC_RTOF;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
     ThreadOp.post(data->writer, (obj)frame);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
-  ThreadOp.sleep(100);
+  ThreadOp.sleep(200);
+  data->run = False;
+  ThreadOp.sleep(200);
   data->subDisconnect(inst);
 }
 
@@ -513,7 +514,8 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       cmd[2] |= (slot->lights ? 0x04:0x00);
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set engine flags for loco %s", slot->id );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "set engine speed steps to %d for loco %s", slot->steps, slot->id );
       ThreadOp.post(data->writer, (obj)frame);
 
       __broadcastSpeedDir(cbus, slot, speed, dir);
@@ -1084,7 +1086,8 @@ static void __keep( void* threadinst ) {
     if( MutexOp.wait( data->lcmux ) ) {
       iOSlot slot = (iOSlot)MapOp.first( data->lcmap);
       while( slot != NULL ) {
-        if( slot->session > 0  && ( SystemOp.getTick() - slot->lastkeep > (data->purgetime*90) )  ) {
+        long tick = SystemOp.getTick();
+        if( slot->session > 0  && ( (tick - slot->lastkeep) > (data->purgetime*90) ) && data->purgetime > 0  ) {
           byte cmd[5];
           byte* frame = allocMem(32);
 
@@ -1092,10 +1095,12 @@ static void __keep( void* threadinst ) {
           cmd[1] = slot->session;
           makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 1 );
 
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "keep session %d fo %s", slot->session, slot->id );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "keep session %d for %s: tick=%ld, lastkeep=%ld, purgetime=%d",
+              slot->session, slot->id, tick, slot->lastkeep, data->purgetime*90 );
           ThreadOp.post(data->writer, (obj)frame);
 
-          slot->lastkeep = SystemOp.getTick();
+          slot->lastkeep = tick;
         }
         slot = (iOSlot)MapOp.next( data->lcmap);
       };
@@ -1133,7 +1138,8 @@ static void __timedqueue( void* threadinst ) {
           byte* outa = allocMem(32);
           cmd->out[1] = cmd->slot->session;
           MemOp.copy( outa, cmd->out, 32 );
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "wait4session %d command", cmd->slot->session );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "got session nr %d: sending command for %s", cmd->slot->session, cmd->slot->id );
           ThreadOp.post( data->writer, (obj)outa );
           ListOp.removeObj(list, (obj)cmd);
           freeMem(cmd);
@@ -1580,6 +1586,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->sodaddr     = wCBus.getsodaddr(data->cbusini);
   data->shortevents = wCBus.isshortevents(data->cbusini);
   data->fonfof      = wCBus.isfonfof(data->cbusini);
+  data->purgetime   = wCBus.getpurgetime(data->cbusini);
   data->run         = True;
   data->device      = wDigInt.getdevice( data->ini );
   data->swtime      = wDigInt.getswtime( ini );
@@ -1607,6 +1614,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );
 
 
   /* choose interface: */
