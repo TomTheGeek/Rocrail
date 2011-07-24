@@ -1241,11 +1241,12 @@ Boolean __getFState(iONode fcmd, int fn) {
 
 static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
   int fnchanged = wFunCmd.getfnchanged(node);
+  int fngroup   = wFunCmd.getgroup(node);
   int i = 0;
   int fmask = 0;
 
   cmd[0] = OPC_DFUN;
-  if( fnchanged < 5 ) {
+  if( fnchanged < 5 || fngroup == 1) {
     cmd[1] = 1;
     for( i = 0; i < 5; i++ ) {
       if( __getFState(node, i) )
@@ -1253,7 +1254,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     }
     cmd[2] = fmask;
   }
-  else if( fnchanged < 9 ) {
+  else if( fnchanged < 9 || fngroup == 2 ) {
     cmd[1] = 2;
     for( i = 5; i < 9; i++ ) {
       if( __getFState(node, i) )
@@ -1261,7 +1262,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     }
     cmd[2] = fmask;
   }
-  else if( fnchanged < 13 ) {
+  else if( fnchanged < 13 || fngroup == 3 ) {
     cmd[1] = 3;
     for( i = 9; i < 13; i++ ) {
       if( __getFState(node, i) )
@@ -1269,7 +1270,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     }
     cmd[2] = fmask;
   }
-  else if( fnchanged < 20 ) {
+  else if( fnchanged < 20  || fngroup == 4 || fngroup == 5) {
     cmd[1] = 4;
     for( i = 13; i < 20; i++ ) {
       if( __getFState(node, i) )
@@ -1277,7 +1278,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     }
     cmd[2] = fmask;
   }
-  else if( fnchanged < 29 ) {
+  else if( fnchanged < 29 || fngroup == 6 ) {
     cmd[1] = 5;
     for( i = 20; i < 29; i++ ) {
       if( __getFState(node, i) )
