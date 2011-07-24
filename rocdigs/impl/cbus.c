@@ -1249,9 +1249,10 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
   cmd[1] = slot->session;
   if( fnchanged < 5 || fngroup == 1) {
     cmd[2] = 1;
-    for( i = 0; i < 5; i++ ) {
+    fmask = __getFState(node, 0) ? 0x10:0x00;
+    for( i = 1; i < 5; i++ ) {
       if( __getFState(node, i) )
-        fmask |= (1 << i);
+        fmask |= (1 << (i-1));
     }
     cmd[3] = fmask;
   }
