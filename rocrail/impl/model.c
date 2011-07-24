@@ -666,7 +666,8 @@ static Boolean _addItem( iOModel inst, iONode item ) {
   const char* itemName = NodeOp.getName( item );
   Boolean added = False;
 
-  if( wItem.getid(item) == NULL || StrOp.len(wItem.getid(item)) == 0 || StrOp.equals("(null)", wItem.getid(item)) ) {
+  if(  !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (wItem.getid(item) == NULL || StrOp.len(wItem.getid(item)) == 0 ||
+      StrOp.equals("(null)", wItem.getid(item)) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid id for new [%s]", itemName );
     return False;
   }
@@ -869,7 +870,8 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
   const char* prev_id = wItem.getprev_id( item );
   Boolean modified = False;
 
-  if( id == NULL || StrOp.len(id) == 0 || StrOp.equals("(null)", id) ) {
+  if( !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (id == NULL ||
+      StrOp.len(id) == 0 || StrOp.equals("(null)", id) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid id for modify [%s]", name );
     return False;
   }
