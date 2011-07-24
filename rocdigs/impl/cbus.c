@@ -1526,9 +1526,6 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[3] = cv % 256;
         cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
-            wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
         ThreadOp.post(data->writer, (obj)frame);
       }
     }
@@ -1545,21 +1542,18 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         byte* frame = allocMem(32);
         Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-        cmd[0] = OPC_WCVOA;
-        cmd[1] = decaddr / 256;
-        cmd[2] = decaddr % 256;
-        cmd[3] = cv / 256;
-        cmd[4] = cv % 256;
-        cmd[5] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
-        cmd[6] = value;
-        if( decaddr > 127 ) {
-          cmd[1] |= 0xC0;
+        iOSlot slot = __getSlotByAddr(data, decaddr );
+        if( slot != NULL && slot->session > 0 ) {
+          cmd[0] = OPC_WCVO;
+          cmd[1] = cv / 256;
+          cmd[2] = cv % 256;
+          cmd[3] = value;
+          makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 3 );
+          ThreadOp.post(data->writer, (obj)frame);
         }
-        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 6 );
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
-            wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
-        ThreadOp.post(data->writer, (obj)frame);
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: no session for loc %d", decaddr );
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d of loc %d to %d...", cv, decaddr, value );
