@@ -1246,45 +1246,46 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
   int fmask = 0;
 
   cmd[0] = OPC_DFUN;
+  cmd[1] = slot->session;
   if( fnchanged < 5 || fngroup == 1) {
-    cmd[1] = 1;
+    cmd[2] = 1;
     for( i = 0; i < 5; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << i);
     }
-    cmd[2] = fmask;
+    cmd[3] = fmask;
   }
   else if( fnchanged < 9 || fngroup == 2 ) {
-    cmd[1] = 2;
+    cmd[2] = 2;
     for( i = 5; i < 9; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-5));
     }
-    cmd[2] = fmask;
+    cmd[3] = fmask;
   }
   else if( fnchanged < 13 || fngroup == 3 ) {
-    cmd[1] = 3;
+    cmd[2] = 3;
     for( i = 9; i < 13; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-9));
     }
-    cmd[2] = fmask;
+    cmd[3] = fmask;
   }
   else if( fnchanged < 20  || fngroup == 4 || fngroup == 5) {
-    cmd[1] = 4;
+    cmd[2] = 4;
     for( i = 13; i < 20; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-13));
     }
-    cmd[2] = fmask;
+    cmd[3] = fmask;
   }
   else if( fnchanged < 29 || fngroup == 6 ) {
-    cmd[1] = 5;
+    cmd[2] = 5;
     for( i = 20; i < 29; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-20));
     }
-    cmd[2] = fmask;
+    cmd[3] = fmask;
   }
 }
 
