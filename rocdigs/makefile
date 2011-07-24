@@ -106,6 +106,7 @@ OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl
 XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcard impl/xpressnet/*.c))
 BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
 CBUSOBJS=$(patsubst impl/cbus/%.c,$(TMPOUTDIR)/cbus/%.o,$(wildcard impl/cbus/*.c))
+OPENLCBOBJS=$(patsubst impl/openlcb/%.c,$(TMPOUTDIR)/openlcb/%.o,$(wildcard impl/openlcb/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
@@ -114,7 +115,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(OUTDIR)$(FS)io8255$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -192,6 +193,8 @@ $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)zs2.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zs2.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX): $(CBUSOBJS) $(TMPOUTDIR)$(FS)cbus.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)cbus.o $(CBUSOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX): $(OPENLCBOBJS) $(TMPOUTDIR)$(FS)openlcb.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)openlcb.o $(OPENLCBOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -238,6 +241,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)xpressnet
 	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
 	-$(MKDIR) $(TMPOUTDIR)$(FS)cbus
+	-$(MKDIR) $(TMPOUTDIR)$(FS)openlcb
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -249,6 +253,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)xpressnet$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)bidib$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)openlcb$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)
@@ -284,6 +289,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
@@ -322,6 +328,7 @@ install:
 	-cp -p $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(DESTDIR)

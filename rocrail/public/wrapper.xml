@@ -323,6 +323,7 @@
       <const name="bidib" vt="string" val="bidib"/>
       <const name="zs2" vt="string" val="zs2"/>
       <const name="cbus" vt="string" val="cbus"/>
+      <const name="openlcb" vt="string" val="openlcb"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
