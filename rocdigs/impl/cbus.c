@@ -588,7 +588,27 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
     errStr = "loco address taken";
     break;
   case ERR_SESSION_NOT_PRESENT:
-    errStr = "session not present";
+    {
+      errStr = "session not present";
+      iOSlot slot = __getSlotBySession(data, addrh);
+      if( slot != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "session %d timed out for %s", addrh, slot->id );
+        slot->session = 0;
+
+        byte cmd[5];
+        byte* frame = allocMem(32);
+        cmd[0] = OPC_RLOC;
+        cmd[1] = slot->addr / 256;
+        cmd[2] = slot->addr % 256;
+        if( addr > 127 ) {
+          cmd[1] |= 0xC0;
+        }
+        makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
     break;
   case ERR_NO_MORE_ENGINES:
     errStr = "no more engines";
