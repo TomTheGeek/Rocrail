@@ -1552,6 +1552,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[4] = cv % 256;
         cmd[5] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[6] = value;
+        if( decaddr > 127 ) {
+          cmd[1] |= 0xC0;
+        }
         makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 6 );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
