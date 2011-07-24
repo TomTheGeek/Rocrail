@@ -332,6 +332,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     else if( StrOp.equals( cmd, wSysCmd.txshortids ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short IDs to the throttle" );
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "syscmd=%s", cmd );
+    }
 
   }
   /* Program command. */
