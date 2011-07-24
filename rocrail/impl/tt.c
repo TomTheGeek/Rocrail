@@ -1316,12 +1316,11 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
 
         Dus voor positie 5 geef je eerst 21 groen,( reset) en daarna 20 groen en 22groen (1 +4 =5)
         Dan een draaicommando 23 groen of 23 rood, links of rechts.
-
     */
 
     int baseAddr = wTurntable.getaddr(data->props);
-    int addrCmd = (baseAddr+1) / 4 + 1;
-    int portCmd = (baseAddr+1) % 4 + 1;
+    int addrCmd = (baseAddr+1) / 4;
+    int portCmd = (baseAddr+1) % 4;
     /* reset */
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
@@ -1330,8 +1329,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+0) / 4 + 1;
-    portCmd = (baseAddr+0) % 4 + 1;
+    addrCmd = (baseAddr+0) / 4;
+    portCmd = (baseAddr+0) % 4;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
@@ -1340,8 +1339,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+0) / 4 + 1;
-    portCmd = (baseAddr+0) % 4 + 1;
+    addrCmd = (baseAddr+0) / 4;
+    portCmd = (baseAddr+0) % 4;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
@@ -1350,8 +1349,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+2) / 4 + 1;
-    portCmd = (baseAddr+2) % 4 + 1;
+    addrCmd = (baseAddr+2) / 4;
+    portCmd = (baseAddr+2) % 4;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
@@ -1360,8 +1359,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     ThreadOp.sleep( 250 );
 
-    addrCmd = (baseAddr+2) / 4 + 1;
-    portCmd = (baseAddr+2) % 4 + 1;
+    addrCmd = (baseAddr+2) / 4;
+    portCmd = (baseAddr+2) % 4;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
@@ -1371,8 +1370,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ThreadOp.sleep( 250 );
 
     /* turn command */
-    addrCmd = (baseAddr+3) / 4 + 1;
-    portCmd = (baseAddr+3) % 4 + 1;
+    addrCmd = (baseAddr+3) / 4;
+    portCmd = (baseAddr+3) % 4;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
