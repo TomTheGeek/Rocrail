@@ -1545,10 +1545,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         iOSlot slot = __getSlotByAddr(data, decaddr );
         if( slot != NULL && slot->session > 0 ) {
           cmd[0] = OPC_WCVO;
-          cmd[1] = cv / 256;
-          cmd[2] = cv % 256;
-          cmd[3] = value;
-          makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 3 );
+          cmd[1] = slot->session;
+          cmd[2] = cv / 256;
+          cmd[3] = cv % 256;
+          cmd[4] = value;
+          makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
           ThreadOp.post(data->writer, (obj)frame);
         }
         else {
