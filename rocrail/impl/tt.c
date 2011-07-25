@@ -1334,7 +1334,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setcmd  ( cmd, wSwitch.straight );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
       ThreadOp.sleep( 250 );
@@ -1345,7 +1345,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setcmd  ( cmd, wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
       ThreadOp.sleep( 250 );
@@ -1356,7 +1356,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setcmd  ( cmd, wSwitch.straight );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
       ThreadOp.sleep( 250 );
@@ -1367,7 +1367,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setcmd  ( cmd, wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
       ThreadOp.sleep( 250 );
