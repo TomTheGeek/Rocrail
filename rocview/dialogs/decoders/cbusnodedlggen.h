@@ -107,9 +107,9 @@ class cbusnodedlggen : public wxDialog
 		wxStaticLine* m_staticline1;
 		wxButton* m_BootMode;
 		wxButton* m_ResetBoot;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Cancel;
+		wxStdDialogButtonSizer* m_stdButton;
+		wxButton* m_stdButtonOK;
+		wxButton* m_stdButtonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onSetNodeNumber( wxCommandEvent& event ) { event.Skip(); }

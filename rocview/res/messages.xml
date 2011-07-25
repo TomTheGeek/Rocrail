@@ -17328,4 +17328,44 @@
   <Msg id="cbusrocrailini">
     <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
   </Msg>
+  
+  <Msg id="node">
+    <en txt="Node"/>
+  </Msg>
+  <Msg id="variables">
+    <en txt="Variables"/>
+  </Msg>
+  <Msg id="variable">
+    <en txt="Variable"/>
+  </Msg>
+  <Msg id="events">
+    <en txt="Events"/>
+  </Msg>
+  <Msg id="firmware">
+    <en txt="Firmware"/>
+  </Msg>
+  <Msg id="get">
+    <en txt="Get"/>
+  </Msg>
+  <Msg id="set">
+    <en txt="Set"/>
+  </Msg>
+  <Msg id="getall">
+    <en txt="Get all"/>
+  </Msg>
+  <Msg id="clearall">
+    <en txt="Clear all"/>
+  </Msg>
+  <Msg id="learn">
+    <en txt="Learn"/>
+  </Msg>
+  <Msg id="unlearn">
+    <en txt="Unlearn"/>
+  </Msg>
+  <Msg id="send">
+    <en txt="Send"/>
+  </Msg>
+  <Msg id="bootmode">
+    <en txt="Boot mode"/>
+  </Msg>
 </Messages>

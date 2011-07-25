@@ -54,6 +54,64 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 }
 
 void CBusNodeDlg::init( iONode event ) {
+  // Init labels.
+  m_NoteBook->SetPageText( 0, wxGetApp().getMsg( "node" ) );
+  m_NoteBook->SetPageText( 1, wxGetApp().getMsg( "index" ) );
+  m_NoteBook->SetPageText( 2, wxGetApp().getMsg( "variables" ) );
+  m_NoteBook->SetPageText( 3, wxGetApp().getMsg( "events" ) );
+  m_NoteBook->SetPageText( 4, wxGetApp().getMsg( "firmware" ) );
+
+  // Node tab
+  m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+  m_labNodeType->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_labNumber->SetLabel( wxGetApp().getMsg( "number" ) );
+  m_SetNodeNumber->SetLabel( wxGetApp().getMsg( "set" ) );
+
+  // Index tab
+  m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
+
+  // Variables tab
+  m_labVarIndex->SetLabel( wxGetApp().getMsg( "index" ) );
+  m_labVarValue->SetLabel( wxGetApp().getMsg( "value" ) );
+  m_VarGet->SetLabel( wxGetApp().getMsg( "get" ) );
+  m_VarSet->SetLabel( wxGetApp().getMsg( "set" ) );
+
+  // Events tab
+  m_labEventNode->SetLabel( wxGetApp().getMsg( "node" ) );
+  m_labEventAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labEventIndex->SetLabel( wxGetApp().getMsg( "index" ) );
+  m_labEventVar->SetLabel( wxGetApp().getMsg( "variable" ) );
+  m_EvtGetVar->SetLabel( wxGetApp().getMsg( "get" ) );
+  m_EventGetAll->SetLabel( wxGetApp().getMsg( "getall" ) );
+  m_EventAdd->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_EventDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_EvtClearAll->SetLabel( wxGetApp().getMsg( "clearall" ) );
+  m_EvtLearn->SetLabel( wxGetApp().getMsg( "learn" ) );
+  m_EvtUnlearn->SetLabel( wxGetApp().getMsg( "unlearn" ) );
+
+  // Firmware tab
+  m_HexFile->SetLabel( _T("HEX ") + wxGetApp().getMsg( "file" ) + _T("...") );
+  m_HEXFileSend->SetLabel( wxGetApp().getMsg( "send" ) );
+  m_BootMode->SetLabel( wxGetApp().getMsg( "bootmode" ) );
+  m_ResetBoot->SetLabel( wxGetApp().getMsg( "reset" ) );
+
+  // Buttons
+  m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
+  m_stdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
+
+  // Resize
+  m_NodeNumberPanel->GetSizer()->Layout();
+  m_IndexPanel->GetSizer()->Layout();
+  m_VarPanel->GetSizer()->Layout();
+  m_EventsPanel->GetSizer()->Layout();
+  m_FirmwarePanel->GetSizer()->Layout();
+
+  m_NoteBook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
+
   if( event != NULL ) {
     m_IID->SetValue( wxString(wProgram.getiid(event),wxConvUTF8) );
     initType( wProgram.getmodid(event) );
