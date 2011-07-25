@@ -1329,41 +1329,49 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     ThreadOp.sleep( 250 );
 
-    portCmd = baseAddr+0;
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, (tracknr&0x01)?wSwitch.turnout:wSwitch.straight );
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-    ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 250 );
+    if( tracknr&0x01 ) {
+      portCmd = baseAddr+0;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setaddr1( cmd, addrCmd );
+      wSwitch.setport1( cmd, portCmd );
+      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+      ControlOp.cmd( control, cmd, NULL );
+      ThreadOp.sleep( 250 );
+    }
 
-    portCmd = baseAddr+0;
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, (tracknr&0x02)?wSwitch.turnout:wSwitch.straight );
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-    ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 250 );
+    if( tracknr&0x02 ) {
+      portCmd = baseAddr+0;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setaddr1( cmd, addrCmd );
+      wSwitch.setport1( cmd, portCmd );
+      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+      ControlOp.cmd( control, cmd, NULL );
+      ThreadOp.sleep( 250 );
+    }
 
-    portCmd = baseAddr+2;
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, (tracknr&0x04)?wSwitch.turnout:wSwitch.straight );
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-    ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 250 );
+    if( tracknr&0x04 ) {
+      portCmd = baseAddr+2;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setaddr1( cmd, addrCmd );
+      wSwitch.setport1( cmd, portCmd );
+      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+      ControlOp.cmd( control, cmd, NULL );
+      ThreadOp.sleep( 250 );
+    }
 
-    portCmd = baseAddr+2;
-    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, (tracknr&0x08)?wSwitch.turnout:wSwitch.straight );
-    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
-    ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 250 );
+    if( tracknr&0x08 ) {
+      portCmd = baseAddr+2;
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setaddr1( cmd, addrCmd );
+      wSwitch.setport1( cmd, portCmd );
+      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+      ControlOp.cmd( control, cmd, NULL );
+      ThreadOp.sleep( 250 );
+    }
 
     /* turn command */
     portCmd = baseAddr+3;
