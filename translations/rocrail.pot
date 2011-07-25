@@ -5339,3 +5339,87 @@ msgstr ""
 msgid "Goto Turntable"
 msgstr ""
 
+#. 
+# id="cbusrocrailini"
+#, c-format
+msgid "Please load the Rocrail server settings before configuring CBUS nodes."
+msgstr ""
+
+#. 
+# id="node"
+#, c-format
+msgid "Node"
+msgstr ""
+
+#. 
+# id="variables"
+#, c-format
+msgid "Variables"
+msgstr ""
+
+#. 
+# id="variable"
+#, c-format
+msgid "Variable"
+msgstr ""
+
+#. 
+# id="events"
+#, c-format
+msgid "Events"
+msgstr ""
+
+#. 
+# id="firmware"
+#, c-format
+msgid "Firmware"
+msgstr ""
+
+#. 
+# id="get"
+#, c-format
+msgid "Get"
+msgstr ""
+
+#. 
+# id="set"
+#, c-format
+msgid "Set"
+msgstr ""
+
+#. 
+# id="getall"
+#, c-format
+msgid "Get all"
+msgstr ""
+
+#. 
+# id="clearall"
+#, c-format
+msgid "Clear all"
+msgstr ""
+
+#. 
+# id="learn"
+#, c-format
+msgid "Learn"
+msgstr ""
+
+#. 
+# id="unlearn"
+#, c-format
+msgid "Unlearn"
+msgstr ""
+
+#. 
+# id="send"
+#, c-format
+msgid "Send"
+msgstr ""
+
+#. 
+# id="bootmode"
+#, c-format
+msgid "Boot mode"
+msgstr ""
+
