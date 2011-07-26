@@ -1279,13 +1279,15 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
 
     tracknr = __getMappedTrack( inst, tracknr );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goto track[%d], mapped=[%d]", data->gotopos, tracknr );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "goto track[%d], mapped=[%d], mask=[0x%02X]", data->gotopos, tracknr, tracknr );
 
     /* pending move operation */
     data->pending = True;
 
 
     /* reset */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset" );
     wSwitch.setaddr1( cmd, wTurntable.getresetaddr(data->props) );
     wSwitch.setport1( cmd, wTurntable.getresetport(data->props) );
     wSwitch.setcmd  ( cmd, wTurntable.getresetbitcmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
@@ -1294,6 +1296,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
 
     if( tracknr&0x01 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bit 0" );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, wTurntable.getaddr0(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport0(data->props) );
@@ -1304,6 +1307,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     }
 
     if( tracknr&0x02 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bit 1" );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, wTurntable.getaddr1(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport1(data->props) );
@@ -1314,6 +1318,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     }
 
     if( tracknr&0x04 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bit 2" );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, wTurntable.getaddr2(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport2(data->props) );
@@ -1324,6 +1329,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     }
 
     if( tracknr&0x08 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bit 3" );
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setaddr1( cmd, wTurntable.getaddr3(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport3(data->props) );
@@ -1334,6 +1340,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     }
 
     /* turn command */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new position" );
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
     wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
