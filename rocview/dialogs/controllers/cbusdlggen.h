@@ -47,6 +47,7 @@ class cbusdlggen : public wxDialog
 		wxStaticText* m_labPort;
 		wxSpinCtrl* m_Port;
 		wxStaticLine* m_staticline1;
+		wxStaticBoxSizer* m_OptionsBox;
 		wxCheckBox* m_ShortEvents;
 		wxCheckBox* m_FonFof;
 		wxStaticText* m_labSOD;

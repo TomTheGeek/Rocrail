@@ -87,7 +87,6 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	wxStaticBoxSizer* m_OptionsBox;
 	m_OptionsBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Options") ), wxVERTICAL );
 	
 	m_ShortEvents = new wxCheckBox( this, wxID_ANY, wxT("Short events"), wxDefaultPosition, wxDefaultSize, 0 );

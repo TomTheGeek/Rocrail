@@ -17368,4 +17368,7 @@
   <Msg id="bootmode">
     <en txt="Boot mode"/>
   </Msg>
+  <Msg id="loadertime">
+    <en txt="Loader time (ms)"/>
+  </Msg>
 </Messages>

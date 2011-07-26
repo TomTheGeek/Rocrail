@@ -1284,101 +1284,60 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     /* pending move operation */
     data->pending = True;
 
-    /*
-        1e bit = reset. Zet de schakeling in de startstand en reset de oude gewenste stand
-        2e bit = stand-bit waarde 1
-        3e bit = stand-bit waarde 2
-        4e bit = stand-bit waarde 4
-        5e bit = stand-bit waarde 8
-        6e bit = opdracht start draaien rechtsom
-        7e bit = opdracht start draaien linksom
-        Een reset is noodzakelijk voorafgaande aan alle opdrachten die een nieuw adres bevatten.
 
-        Eerst een reset: adres 20 groen
-        Dan de positie bits achter elkaar als voorbeeld voor pos. 1 (binair 0001):
-        Adres 21 rood
-        Adres 21 groen
-        Adres 22 groen
-        Adres 22 groen
-
-        En daarna een draairichting bit om de draaischijf te starten :
-
-        Adres 23 groen voor linksom (adres 23 rood is rechtsom)
-
-        -----
-        Ik ben er inmiddels achter dat de reset niet zit op adres 20 maar op 21 groen.
-        Dus niet logisch opvolgende adressen. De pulsduur moet zo'n 200ms zijn
-
-        De adres bits zijn als volgt
-        Waarde 1 op adres 20 groen
-        Waarde 2 op adres 20 rood
-        Waarde 4 op adres 22 groen
-
-        Dus voor positie 5 geef je eerst 21 groen,( reset) en daarna 20 groen en 22groen (1 +4 =5)
-        Dan een draaicommando 23 groen of 23 rood, links of rechts.
-    */
-
-    int baseAddr = wTurntable.getaddr(data->props);
-    int addrCmd = 0;
-    int portCmd = baseAddr+1;
     /* reset */
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, wSwitch.straight );
+    wSwitch.setaddr1( cmd, wTurntable.getresetaddr(data->props) );
+    wSwitch.setport1( cmd, wTurntable.getresetport(data->props) );
+    wSwitch.setcmd  ( cmd, wTurntable.getresetbitcmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
-    ThreadOp.sleep( 250 );
+    ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
 
     if( tracknr&0x01 ) {
-      portCmd = baseAddr+0;
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setaddr1( cmd, addrCmd );
-      wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setaddr1( cmd, wTurntable.getaddr0(data->props) );
+      wSwitch.setport1( cmd, wTurntable.getport0(data->props) );
+      wSwitch.setcmd  ( cmd, wTurntable.getbit0cmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
-      ThreadOp.sleep( 250 );
+      ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
     }
 
     if( tracknr&0x02 ) {
-      portCmd = baseAddr+0;
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setaddr1( cmd, addrCmd );
-      wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setaddr1( cmd, wTurntable.getaddr1(data->props) );
+      wSwitch.setport1( cmd, wTurntable.getport1(data->props) );
+      wSwitch.setcmd  ( cmd, wTurntable.getbit1cmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
-      ThreadOp.sleep( 250 );
+      ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
     }
 
     if( tracknr&0x04 ) {
-      portCmd = baseAddr+2;
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setaddr1( cmd, addrCmd );
-      wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.straight );
+      wSwitch.setaddr1( cmd, wTurntable.getaddr2(data->props) );
+      wSwitch.setport1( cmd, wTurntable.getport2(data->props) );
+      wSwitch.setcmd  ( cmd, wTurntable.getbit2cmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
-      ThreadOp.sleep( 250 );
+      ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
     }
 
     if( tracknr&0x08 ) {
-      portCmd = baseAddr+2;
       cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setaddr1( cmd, addrCmd );
-      wSwitch.setport1( cmd, portCmd );
-      wSwitch.setcmd  ( cmd, wSwitch.turnout );
+      wSwitch.setaddr1( cmd, wTurntable.getaddr3(data->props) );
+      wSwitch.setport1( cmd, wTurntable.getport3(data->props) );
+      wSwitch.setcmd  ( cmd, wTurntable.getbit3cmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
       wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
       ControlOp.cmd( control, cmd, NULL );
-      ThreadOp.sleep( 250 );
+      ThreadOp.sleep( wTurntable.getmotoroffdelay( data->props ) );
     }
 
     /* turn command */
-    portCmd = baseAddr+3;
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setaddr1( cmd, addrCmd );
-    wSwitch.setport1( cmd, portCmd );
-    wSwitch.setcmd  ( cmd, ttdir?wSwitch.turnout:wSwitch.straight );
+    wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
+    wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
+    wSwitch.setcmd  ( cmd, wTurntable.getnewposbitcmd(data->props) == 0 ? wSwitch.straight:wSwitch.turnout );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
 

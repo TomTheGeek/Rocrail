@@ -414,6 +414,7 @@ void LocoNetCtrlDlg::CreateControls()
     m_InterfacePanel->SetSizer(itemBoxSizer5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_InterfacePanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -553,6 +554,7 @@ void LocoNetCtrlDlg::CreateControls()
     itemStaticBoxSizer39->Add(m_StopAtPurge, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer44->AddGrowableCol(1);
     itemStaticBoxSizer39->Add(itemFlexGridSizer44, 0, wxGROW, 5);
     m_labDispatchIID = new wxStaticText( m_DetailsPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_labDispatchIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -562,7 +564,7 @@ void LocoNetCtrlDlg::CreateControls()
 
     itemNotebook3->AddPage(m_DetailsPanel, _("Details"));
 
-    itemBoxSizer2->Add(itemNotebook3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemNotebook3, 1, wxGROW|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer47 = new wxStdDialogButtonSizer;
 
