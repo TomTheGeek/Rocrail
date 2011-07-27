@@ -5429,3 +5429,15 @@ msgstr ""
 msgid "Loader time (ms)"
 msgstr ""
 
+#. 
+# id="shortevents"
+#, c-format
+msgid "Short events"
+msgstr ""
+
+#. 
+# id="startofday"
+#, c-format
+msgid "Start of day"
+msgstr ""
+

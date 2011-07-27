@@ -61,9 +61,11 @@ void CbusDlg::initLabels() {
 
   // Options
   m_OptionsBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "options" ) );
+  m_ShortEvents->SetLabel( wxGetApp().getMsg( "shortevents" ) );
   m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
   m_labLoaderTime->SetLabel( wxGetApp().getMsg( "loadertime" ) );
+  m_labSOD->SetLabel( wxGetApp().getMsg( "startofday" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );

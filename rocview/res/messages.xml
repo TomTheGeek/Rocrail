@@ -17371,4 +17371,10 @@
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
   </Msg>
+  <Msg id="shortevents">
+    <en txt="Short events"/>
+  </Msg>
+  <Msg id="startofday">
+    <en txt="Start of day"/>
+  </Msg>
 </Messages>
