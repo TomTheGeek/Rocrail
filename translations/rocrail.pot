@@ -5423,3 +5423,9 @@ msgstr ""
 msgid "Boot mode"
 msgstr ""
 
+#. 
+# id="loadertime"
+#, c-format
+msgid "Loader time (ms)"
+msgstr ""
+

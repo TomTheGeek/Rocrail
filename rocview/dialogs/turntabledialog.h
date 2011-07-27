@@ -265,7 +265,6 @@ public:
     wxTextCtrl* m_Addr5;
     wxStaticText* m_labPort5;
     wxTextCtrl* m_Port5;
-    wxRadioBox* m_NewPosCmd;
     wxCheckBox* m_InvertNew;
     wxStaticBox* m_ResetFlagBox;
     wxStaticText* m_labResetAddr;

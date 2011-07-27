@@ -1718,7 +1718,6 @@
         <var name="bit3cmd" vt="int" defval="0" range="0,1"/>
         <var name="bit4cmd" vt="int" defval="0" range="0,1"/>
         <var name="bit5cmd" vt="int" defval="0" range="0,1"/>
-        <var name="newposbitcmd" vt="int" defval="0" range="0,1"/>
 
         <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
         <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
