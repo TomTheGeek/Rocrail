@@ -1242,7 +1242,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
     wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
-    wSwitch.setcmd  ( cmd, wSwitch.straight );
+    wSwitch.setcmd  ( cmd, data->dir ? wSwitch.straight:wSwitch.turnout );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     wSwitch.setdelay(cmd, 2500);
     wSwitch.setactdelay(cmd, True);
