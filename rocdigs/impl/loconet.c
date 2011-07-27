@@ -766,7 +766,7 @@ static void __swReset( void* threadinst ) {
         break;
       }
 
-      ThreadOp.sleep( data->swtime );
+      ThreadOp.sleep( wSwitch.getdelay( node ) > 0 ? wSwitch.getdelay( node ):data->swtime );
       {
         byte cmd[32];
         int addr = wSwitch.getaddr1( node );

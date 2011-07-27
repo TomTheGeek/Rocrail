@@ -1237,20 +1237,18 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     }
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    /* turn command */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new position" );
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    tracknr = __getOppositeTrack( inst, data->tablepos );
-
-    if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
-      tracknr = data->gotopos;
-    }
-    else {
-      data->gotopos = tracknr;
-    }
-    data->skippos = -1;
+    wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
+    wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
+    wSwitch.setcmd  ( cmd, wSwitch.straight );
+    wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
+    wSwitch.setdelay(cmd, 2500);
+    wSwitch.setactdelay(cmd, True);
+    ControlOp.cmd( control, cmd, NULL );
+    data->pending = True;
+    cmd = NULL;
   }
   else {
     /* Tracknumber */
