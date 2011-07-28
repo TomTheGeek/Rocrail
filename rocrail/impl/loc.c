@@ -1207,14 +1207,20 @@ static void __runner( void* threadinst ) {
     int   event = -1;
     int   timer = 0;
     int   type  = 0;
+    obj   udata = NULL;
 
     if( msg != NULL ) {
+      emitter = MsgOp.getSender( msg );
+      event   = MsgOp.getEvent( msg );
+      timer   = MsgOp.getTimer( msg );
+      type    = MsgOp.getUsrDataType( msg );
+      udata   = MsgOp.getUsrData(msg);
       msg->base.del( msg );
     }
 
     if( data->driver != NULL ) {
       if( event == swap_event ) {
-        iONode  cmd     = MsgOp.getUsrData(msg);
+        iONode  cmd     = (iONode)udata;
         Boolean swap    = (type & 0x01 ? True:False);
         Boolean consist = (type & 0x02 ? True:False);
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event %d ms", timer );
@@ -1258,12 +1264,6 @@ static void __runner( void* threadinst ) {
         data->driver->drive( data->driver, emitter, event );
       }
     }
-
-    /* clean up after use */
-    if( msg != NULL ) {
-      msg->base.del( msg );
-    }
-
 
 
     if( !cnfgsend && loccnfg ) {
@@ -2400,7 +2400,7 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   MsgOp.setEvent( msg, swap_event );
   if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
     swap = !wLoc.isplacing( data->props );
-  MsgOp.setUsrData(msg, cmd, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+  MsgOp.setUsrData(msg, (iONode)NodeOp.base.clone(cmd), (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
   ThreadOp.post( data->runner, (obj)msg );
 
 }
