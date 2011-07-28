@@ -1209,10 +1209,6 @@ static void __runner( void* threadinst ) {
     int   type  = 0;
 
     if( msg != NULL ) {
-      emitter = MsgOp.getSender( msg );
-      event   = MsgOp.getEvent( msg );
-      timer   = MsgOp.getTimer( msg );
-      type    = MsgOp.getUsrDataType( msg );
       msg->base.del( msg );
     }
 
@@ -1262,6 +1258,12 @@ static void __runner( void* threadinst ) {
         data->driver->drive( data->driver, emitter, event );
       }
     }
+
+    /* clean up after use */
+    if( msg != NULL ) {
+      msg->base.del( msg );
+    }
+
 
 
     if( !cnfgsend && loccnfg ) {
