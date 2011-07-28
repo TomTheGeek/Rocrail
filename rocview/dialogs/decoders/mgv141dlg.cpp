@@ -36,7 +36,7 @@
 MGV141Dlg::MGV141Dlg( wxWindow* parent )
     :mgv141gen( parent )
 {
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "init dialog");
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "init dialog");
   m_TabAlign = wxGetApp().getTabAlign();
   m_Queue = QueueOp.inst(100);
   m_SendedCmd = NULL;
@@ -47,7 +47,7 @@ MGV141Dlg::MGV141Dlg( wxWindow* parent )
 }
 
 void MGV141Dlg::initLabels() {
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
   SetTitle(wxGetApp().getMsg( "cartable" ));
   m_NoteBook->SetPageText( 0, wxGetApp().getMsg( "query" ) );
   m_NoteBook->SetPageText( 1, wxGetApp().getMsg( "setup" ) );
@@ -59,7 +59,7 @@ void MGV141Dlg::initLabels() {
 void MGV141Dlg::onUnitSet( wxCommandEvent& event )
 {
   if( !QueueOp.isEmpty(m_Queue) ) {
-    TraceOp.trc( "mgv141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    TraceOp.trc( "GCA141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
     return;
   }
 
@@ -116,11 +116,11 @@ void MGV141Dlg::onWriteAll( wxCommandEvent& event )
 void MGV141Dlg::makePacket( int offset, int port, int val1, bool sv_set, bool sendnow )
 {
   if( sendnow && !QueueOp.isEmpty(m_Queue) ) {
-    TraceOp.trc( "mgv141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
+    TraceOp.trc( "GCA141", TRCLEVEL_WARNING, __LINE__, 9999, "queue not empty; pending operation...");
     return;
   }
 
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "%s lnsv program command for %d/%d %d",
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "%s lnsv program command for %d/%d %d",
       sv_set?"set":"get", m_iLowAddress, m_iSubAddress, port );
 
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -172,7 +172,7 @@ void MGV141Dlg::onUnitSelected( wxCommandEvent& event ) {
 
   // "%03d/%03d ver:%d"
   char* s = StrOp.dup(m_AddressList->GetStringSelection().mb_str(wxConvUTF8));
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "Selected MGV141 = [%s]", s );
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "Selected MGV141 = [%s]", s );
   // 000/000
   s[3] = '\0';
   s[7] = '\0';
@@ -182,7 +182,7 @@ void MGV141Dlg::onUnitSelected( wxCommandEvent& event ) {
 
   m_iLowAddress = m_UnitHigh->GetValue();
   m_iSubAddress = m_UnitLow->GetValue();
-  SetTitle( wxString::Format( _T("%s  %d-%d"), _T("MGV141"), m_iLowAddress , m_iSubAddress ) );
+  SetTitle( wxString::Format( _T("%s  %d-%d"), _T("GCA141"), m_iLowAddress , m_iSubAddress ) );
 
 }
 
@@ -199,7 +199,7 @@ void MGV141Dlg::queryAddresses()
     return;
   }
 
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "%s lnsv program command for %d/%d",
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "%s lnsv program command for %d/%d",
       "get", 0, 1 );
 
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -232,7 +232,7 @@ void MGV141Dlg::sendPacket() {
 
 
 void MGV141Dlg::OnTimer(wxTimerEvent& event) {
-  TraceOp.trc( "mgv141", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on reply...");
+  TraceOp.trc( "GCA141", TRCLEVEL_WARNING, __LINE__, 9999, "timeout on reply...");
   this->SetCursor(wxCURSOR_ARROW);
   if( m_SendedCmd != NULL ) {
 
@@ -264,10 +264,10 @@ void MGV141Dlg::event( iONode event ) {
   if( cmd == wProgram.datarsp )
     datarsp = true;
 
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "lnsv event for addr %d.%d, sv%d=%d ver=%d",
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "lnsv event for addr %d.%d, sv%d=%d ver=%d",
       lowaddr, subaddr, cv, val, ver );
   if( lowaddr == 80 ) {
-    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "not evaluating the LocoBuffer..." );
+    TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "not evaluating the LocoBuffer..." );
   }
   else if( (m_iLowAddress == lowaddr && m_iSubAddress == subaddr) ||
           m_iLowAddress == -1 || m_iSubAddress == -1 ||
@@ -275,7 +275,7 @@ void MGV141Dlg::event( iONode event ) {
   {
     evaluateEvent( type, lowaddr, subaddr, cv, val, ver );
     if( m_SendedCmd != NULL && cv == wProgram.getcv (m_SendedCmd) ) {
-      TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "reply matches the sended request");
+      TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "reply matches the sended request");
       NodeOp.base.del(m_SendedCmd);
       m_SendedCmd = NULL;
       ThreadOp.sleep(100);
@@ -293,7 +293,7 @@ void MGV141Dlg::event( iONode event ) {
         product = "LocoBooster";
       if( ver < 110 && ver >= 100 )
         product = "LocoServo";
-      TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "address %03d/%03d ver:%d already in list..,", lowaddr, subaddr, ver );
+      TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "address %03d/%03d ver:%d already in list..,", lowaddr, subaddr, ver );
     }
   }
 
@@ -311,29 +311,29 @@ void MGV141Dlg::event( iONode event ) {
 }
 
 void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int ver ) {
-  TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "evaluating sv%d=%d", sv, val );
+  TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "evaluating sv%d=%d", sv, val );
 
   if( sv == 0 ) {
     // setup
-    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "setup" );
+    TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "setup" );
   }
   else if( sv == 1 ) {
     // low address
-    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "low address %d", val );
+    TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "low address %d", val );
     m_iLowAddress = val;
     m_UnitHigh->SetValue(m_iLowAddress);
     SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
   }
   else if( sv == 2 ) {
     // sub address
-    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "sub address %d", val );
+    TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "sub address %d", val );
     m_iSubAddress = val;
     m_UnitLow->SetValue(m_iSubAddress);
     SetTitle( wxString::Format( _T("%s  %d-%d"), _T("LocoIO"), m_iLowAddress , m_iSubAddress ) );
   }
   else if( sv > 2 && sv < 20 ) {
     int port = (sv - 3) / 2;
-    TraceOp.trc( "mgv141", TRCLEVEL_INFO, __LINE__, 9999, "counter %d address %d", port, val );
+    TraceOp.trc( "GCA141", TRCLEVEL_INFO, __LINE__, 9999, "counter %d address %d", port, val );
     wxSpinCtrl* CA[] = {m_CounterAddress1,m_CounterAddress2,m_CounterAddress3,m_CounterAddress4,
                           m_CounterAddress5,m_CounterAddress6, m_CounterAddress7,m_CounterAddress8};
     if( (sv-3) % 2 == 1 ) {

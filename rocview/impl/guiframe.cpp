@@ -1475,10 +1475,10 @@ void RocGuiFrame::initFrame() {
   menuProgramming->Append( -1, _T("LocoNet"), menuPTLN );
 
   wxMenu *menuMGV = new wxMenu();
-  menuMGV->Append( ME_LOCOIO, wxString(_T("MGV50")) + wxString(_T("...")), _T("MGV50") );
-  menuMGV->Append( ME_MGV, _T("MGV136") + wxString(_T("...")), _T("MGV136") );
-  menuMGV->Append( ME_MGV141, _T("MGV141") + wxString(_T("...")), _T("MGV141") );
-  menuProgramming->Append( -1, _T("MGV"), menuMGV );
+  menuMGV->Append( ME_LOCOIO, wxString(_T("GCA50")) + wxString(_T("...")), _T("GCA50") );
+  menuMGV->Append( ME_MGV, _T("GCA136") + wxString(_T("...")), _T("GCA136") );
+  menuMGV->Append( ME_MGV141, _T("GCA141") + wxString(_T("...")), _T("GCA141") );
+  menuProgramming->Append( -1, _T("GCA"), menuMGV );
 
   //wxMenu *menuPTDCC = new wxMenu();
   //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
