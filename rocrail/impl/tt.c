@@ -1847,8 +1847,14 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
         /* check managed TT */
         if( wTurntable.ismanager(data->props) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle bridge event on managed TT %s", TTOp.base.id(inst) );
+
+          if( event == wFeedbackEvent.enter2in_event ) {
+            int timing = wLoc.getevttimer(LocOp.base.properties(loc));
+            LocOp.event( loc, inst, in_event, timing > 0 ? timing:1, False );
+          }
+
           /* V_min for enter and V_0 for in */
-          if( event == wFeedbackEvent.enter_event ) {
+          if( event == wFeedbackEvent.enter_event || event == wFeedbackEvent.enter2in_event ) {
             iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
             wLoc.setV_hint( cmd, wBlock.min );
             wLoc.setdir( cmd, LocOp.getDir( loc) );
