@@ -104,32 +104,38 @@ static int __count(void) {
 }
 static iOBase __clone_original( void* inst ) {
   iONode node = inst;
-  char* str = (char*)NodeOp.toEscString( node );
-  iODoc doc = DocOp.parse( str );
-  iONode clone = NULL;
-  if( doc == NULL )
-    return NULL;
-  clone = DocOp.getRootNode( doc );
-  doc->base.del(doc);
-  StrOp.free( str );
-  return (iOBase)clone;
+  if( inst != NULL ) {
+    char* str = (char*)NodeOp.toEscString( node );
+    iODoc doc = DocOp.parse( str );
+    iONode clone = NULL;
+    if( doc == NULL )
+      return NULL;
+    clone = DocOp.getRootNode( doc );
+    doc->base.del(doc);
+    StrOp.free( str );
+    return (iOBase)clone;
+  }
+  return NULL;
 }
 
 static iOBase __clone( void* inst ) {
   iONode node  = inst;
-  iONode clone = NodeOp.inst( NodeOp.getName( node ), NULL, ELEMENT_NODE );
-  int attrcnt  = NodeOp.getAttrCnt( node );
-  int childcnt = NodeOp.getChildCnt( node );
-  int i = 0;
-  for( i = 0; i < attrcnt; i++ ) {
-    iOAttr a = NodeOp.getAttr( node, i );
-    NodeOp.addAttr( clone, (iOAttr)a->base.clone( a ) );
+  if( inst != NULL ) {
+    iONode clone = NodeOp.inst( NodeOp.getName( node ), NULL, ELEMENT_NODE );
+    int attrcnt  = NodeOp.getAttrCnt( node );
+    int childcnt = NodeOp.getChildCnt( node );
+    int i = 0;
+    for( i = 0; i < attrcnt; i++ ) {
+      iOAttr a = NodeOp.getAttr( node, i );
+      NodeOp.addAttr( clone, (iOAttr)a->base.clone( a ) );
+    }
+    for( i = 0; i < childcnt; i++ ) {
+      iONode n = NodeOp.getChild( node, i );
+      NodeOp.addChild( clone,(iONode) n->base.clone( n ) );
+    }
+    return (iOBase)clone;
   }
-  for( i = 0; i < childcnt; i++ ) {
-    iONode n = NodeOp.getChild( node, i );
-    NodeOp.addChild( clone,(iONode) n->base.clone( n ) );
-  }
-  return (iOBase)clone;
+  return NULL;
 }
 
 
