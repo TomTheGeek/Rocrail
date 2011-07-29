@@ -603,36 +603,36 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  if( fidx > 0 && fidx < 9 ) {
 		    /* fx1 */
 		    if( fidx == 1 ) {
-		      slot->fx1 &= 0x01;
-		      slot->fx1 |= wFunCmd.isf1(node)?0x01:0x00;
+		      slot->fx1 &= ~0x01;
+		      slot->fx1 |= (wFunCmd.isf1(node)?0x01:0x00);
 		    }
 		    else if( fidx == 2 ) {
-		      slot->fx1 &= 0x02;
-		      slot->fx1 |= wFunCmd.isf2(node)?0x02:0x00;
+		      slot->fx1 &= ~0x02;
+		      slot->fx1 |= (wFunCmd.isf2(node)?0x02:0x00);
 		    }
 		    else if( fidx == 3 ) {
-		      slot->fx1 &= 0x04;
-		      slot->fx1 |= wFunCmd.isf3(node)?0x04:0x00;
+		      slot->fx1 &= ~0x04;
+		      slot->fx1 |= (wFunCmd.isf3(node)?0x04:0x00);
 		    }
 		    else if( fidx == 4 ) {
-		      slot->fx1 &= 0x08;
-		      slot->fx1 |= wFunCmd.isf4(node)?0x08:0x00;
+		      slot->fx1 &= ~0x08;
+		      slot->fx1 |= (wFunCmd.isf4(node)?0x08:0x00);
 		    }
 		    else if( fidx == 5 ) {
-		      slot->fx1 &= 0x10;
-		      slot->fx1 |= wFunCmd.isf5(node)?0x10:0x00;
+		      slot->fx1 &= ~0x10;
+		      slot->fx1 |= (wFunCmd.isf5(node)?0x10:0x00);
 		    }
 		    else if( fidx == 6 ) {
-		      slot->fx1 &= 0x20;
-		      slot->fx1 |= wFunCmd.isf6(node)?0x20:0x00;
+		      slot->fx1 &= ~0x20;
+		      slot->fx1 |= (wFunCmd.isf6(node)?0x20:0x00);
 		    }
 		    else if( fidx == 7 ) {
-		      slot->fx1 &= 0x40;
-		      slot->fx1 |= wFunCmd.isf7(node)?0x40:0x00;
+		      slot->fx1 &= ~0x40;
+		      slot->fx1 |= (wFunCmd.isf7(node)?0x40:0x00);
 		    }
 		    else if( fidx == 8 ) {
-		      slot->fx1 &= 0x80;
-		      slot->fx1 |= wFunCmd.isf8(node)?0x80:0x00;
+		      slot->fx1 &= ~0x80;
+		      slot->fx1 |= (wFunCmd.isf8(node)?0x80:0x00);
 		    }
 				cmd[ 2] = slot->nr * 6 + 4 + WRITE_FLAG;
 				cmd[ 3] = slot->fx1;
@@ -640,36 +640,36 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  else {
 		    /* fx2 */
 		    if( fidx == 9 ) {
-		      slot->fx2 &= 0x01;
-		      slot->fx2 |= wFunCmd.isf9(node)?0x01:0x00;
+		      slot->fx2 &= ~0x01;
+		      slot->fx2 |= (wFunCmd.isf9(node)?0x01:0x00);
 		    }
 		    else if( fidx == 10 ) {
-		      slot->fx2 &= 0x02;
-		      slot->fx2 |= wFunCmd.isf10(node)?0x02:0x00;
+		      slot->fx2 &= ~0x02;
+		      slot->fx2 |= (wFunCmd.isf10(node)?0x02:0x00);
 		    }
 		    else if( fidx == 11 ) {
-		      slot->fx2 &= 0x04;
-		      slot->fx2 |= wFunCmd.isf11(node)?0x04:0x00;
+		      slot->fx2 &= ~0x04;
+		      slot->fx2 |= (wFunCmd.isf11(node)?0x04:0x00);
 		    }
 		    else if( fidx == 12 ) {
-		      slot->fx2 &= 0x08;
-		      slot->fx2 |= wFunCmd.isf12(node)?0x08:0x00;
+		      slot->fx2 &= ~0x08;
+		      slot->fx2 |= (wFunCmd.isf12(node)?0x08:0x00);
 		    }
 		    else if( fidx == 13 ) {
-		      slot->fx2 &= 0x10;
-		      slot->fx2 |= wFunCmd.isf13(node)?0x10:0x00;
+		      slot->fx2 &= ~0x10;
+		      slot->fx2 |= (wFunCmd.isf13(node)?0x10:0x00);
 		    }
 		    else if( fidx == 14 ) {
-		      slot->fx2 &= 0x20;
-		      slot->fx2 |= wFunCmd.isf14(node)?0x20:0x00;
+		      slot->fx2 &= ~0x20;
+		      slot->fx2 |= (wFunCmd.isf14(node)?0x20:0x00);
 		    }
 		    else if( fidx == 15 ) {
-		      slot->fx2 &= 0x40;
-		      slot->fx2 |= wFunCmd.isf15(node)?0x40:0x00;
+		      slot->fx2 &= ~0x40;
+		      slot->fx2 |= (wFunCmd.isf15(node)?0x40:0x00);
 		    }
 		    else if( fidx == 16 ) {
-		      slot->fx2 &= 0x80;
-		      slot->fx2 |= wFunCmd.isf16(node)?0x80:0x00;
+		      slot->fx2 &= ~0x80;
+		      slot->fx2 |= (wFunCmd.isf16(node)?0x80:0x00);
 		    }
 				cmd[ 2] = slot->nr * 6 + 5 + WRITE_FLAG;
 				cmd[ 3] = slot->fx2;
