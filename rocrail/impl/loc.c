@@ -2400,7 +2400,11 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
   MsgOp.setEvent( msg, swap_event );
   if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
     swap = !wLoc.isplacing( data->props );
-  MsgOp.setUsrData(msg, (iONode)NodeOp.base.clone(cmd), (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+  if( cmd == NULL )
+    MsgOp.setUsrData(msg, NULL, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+  else
+    MsgOp.setUsrData(msg, (iONode)NodeOp.base.clone(cmd), (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+
   ThreadOp.post( data->runner, (obj)msg );
 
 }
