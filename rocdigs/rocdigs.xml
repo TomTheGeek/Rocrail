@@ -1290,6 +1290,7 @@
       <var name="speed" vt="int"/>
       <var name="steps" vt="int"/>
       <var name="sx2" vt="Boolean"/>
+      <var name="dcc" vt="Boolean"/>
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
       <var name="fn" vt="Boolean"/>

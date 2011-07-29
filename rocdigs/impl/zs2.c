@@ -334,6 +334,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   if(slot->sx2 ) { 
     byte addrh = 0;
     byte addrl = 0;
+    slot->dcc = dcc;
     if( dcc ) {
       addrh = (slot->addr >> 6);
       addrl = (slot->addr << 2)  + (slot->lights ? 2:0) + (slot->fn ? 1:0);
@@ -551,6 +552,12 @@ static void __translate( iOZS2 zs2, iONode node ) {
         speed = (wLoc.getV( node ) * slot->steps) / 100;
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+    }
+
+    if( slot->dcc ) {
+      /* speed step 1 is not valid */
+      if( speed > 0 )
+        speed++;
     }
 
 		slot->speed = speed;
