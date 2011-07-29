@@ -3437,7 +3437,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     //else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED ) {
     // 10217 seems to be the mouse event
     else if( event.GetCol() == LOC_COL_ID ) {
-      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "TODO: D&D eventtype [%d]", event.GetEventType() );
+      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "D&D eventtype [%d]", event.GetEventType() );
 
       wxTextDataObject my_data(_T("moveto:")+str);
       wxDropSource dragSource( this );

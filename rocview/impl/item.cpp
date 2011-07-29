@@ -345,7 +345,9 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     }
   }
 
-  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
+      (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
+  {
     m_BlockDrop = new BlockDrop(m_Props, this);
     SetDropTarget(m_BlockDrop);
   }
@@ -397,7 +399,7 @@ void Symbol::checkSpeakAction(iONode node) {
 
 bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( wxGetApp().isOffline() ) {
-    /**/
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D is not supported in OFFLINE mode" );
     return false;
   }
 
@@ -410,14 +412,20 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( StrTokOp.hasMoreTokens(tok) ) {
     fromid  = StrTokOp.nextToken(tok);
 
-    if( StrOp.equals( wBlock.getid(m_Props), fromid) )
+    if( StrOp.equals( wBlock.getid(m_Props), fromid) ) {
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D on same block: %s", fromid );
       return false;
+    }
   }
 
   bool ok = false;
 
   if( StrOp.equals( "moveto", dropcmd ) ) {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
+        (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
+    {
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: move from %s to %s", fromid, wBlock.getid(m_Props) );
+
       iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
       wBlock.setlocid( cmd, "" );
@@ -436,8 +444,12 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     }
   }
   else {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
+        (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
+    {
       iONode cmd = NULL;
+
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s", fromid, wBlock.getid(m_Props) );
 
       if( wxGetApp().getFrame()->isAutoMode() ) {
         /* flash the block */
@@ -475,6 +487,9 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       }
       ok = true;
 
+    }
+    else {
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&Dis not possible" );
     }
   }
 
