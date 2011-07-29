@@ -1478,6 +1478,11 @@ static const char* _getId( iOLoc inst ) {
   return wLoc.getid( data->props );
 }
 
+static const char* _getEngine( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return wLoc.getengine( data->props );
+}
+
 static int _getLen( iOLoc inst ) {
   iOLocData data = Data(inst);
   return wLoc.getlen( data->props );

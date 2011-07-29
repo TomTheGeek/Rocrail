@@ -276,6 +276,13 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             };
             StrTokOp.base.del(tok);
           }
+          else if( lc != NULL && ( StrOp.equals( state, "diesel" ) ||
+                  StrOp.equals( state, "steam" ) || StrOp.equals( state, "electric" ) ) ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check type of loco id [%s]", LocOp.getId(lc) );
+            rc = StrOp.equals( state, LocOp.getEngine(lc) );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco type [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
+          }
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
