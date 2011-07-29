@@ -156,6 +156,39 @@ static iOPoint __getPoint(iOZS2Data data, iONode node) {
 }
 
 
+static const char* __getSlotID(iOZS2Data data, int slotnr, int bus) {
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while(  slot != NULL ) {
+      if( slot->bus == bus && slot->nr == slotnr ) {
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+
+  if( slot != NULL )
+    return slot->id;
+
+  return "";
+}
+
+
+static void __dumpZS2Slots(iOZS2Data data) {
+  int i = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "S#|PA AH AL DS F1 F9 ID" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--+--------------------------------------" );
+  for( i = 0; i < 16; i++ ) {
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "%02d|%02X %02X %02X %02X %02X %02X %s",
+        i, data->sx[2][i*6+0], data->sx[2][i*6+1], data->sx[2][i*6+2],
+        data->sx[2][i*6+3], data->sx[2][i*6+4], data->sx[2][i*6+5], __getSlotID(data, i, 2) );
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "--+--------------------------------------" );
+}
 
 
 static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
@@ -201,7 +234,7 @@ static int __getSlotNr4Addr(iOZS2Data data, byte preamble, byte addrh, byte addr
   int i = 0;
   for( i = 0; i < 16; i++ ) {
     if( data->sx[2][i*6 + 0] == preamble && data->sx[2][i*6 + 1] == addrh && (data->sx[2][i*6 + 2]&0xFC) == (addrl&0xFC) ) {
-      return i + 1;
+      return i;
     }
   }
   return -1;
@@ -354,6 +387,8 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  if( slot->bus == 2 )
+    __dumpZS2Slots(data);
   return slot;
 }
 
@@ -436,6 +471,9 @@ static void __translate( iOZS2 zs2, iONode node ) {
       cmd[3] = 0x80;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power ON" );
       ThreadOp.post(data->writer, (obj)cmd);
+    }
+    if( StrOp.equals( cmdstr, wSysCmd.slots ) ) {
+      __dumpZS2Slots(data);
     }
   }
   
@@ -879,7 +917,7 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
   iOSlot slot = NULL;
 
   StrOp.fmtb(key, "%d_%d", bus, addr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
       "monitor event: bus=%d, addr=%d val=%02X key=%s.", bus, addr, val, key );
   
   if( bus == 2 ) {
