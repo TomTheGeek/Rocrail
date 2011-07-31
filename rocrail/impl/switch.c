@@ -557,7 +557,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
 
 static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
   iOSwitchData data = Data(inst);
-  if( StrOp.equals( id, data->lockedId ) && (route!=NULL?data->route == route:True)) {
+  if( StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) {
     data->lockedId = NULL;
     data->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
     /* Broadcast to clients. Node6 */
@@ -570,6 +570,11 @@ static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
       AppOp.broadcastEvent( nodeF );
     }
     return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "Switch [%s] is locked by [%s], cannot be unlocked by [%s].",
+        SwitchOp.getId( inst ), data->lockedId, id );
   }
   return False;
 }
