@@ -5441,3 +5441,9 @@ msgstr ""
 msgid "Start of day"
 msgstr ""
 
+#. 
+# id="resetstatus"
+#, c-format
+msgid "Reset status"
+msgstr ""
+

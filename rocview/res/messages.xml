@@ -17377,4 +17377,7 @@
   <Msg id="startofday">
     <en txt="Start of day"/>
   </Msg>
+  <Msg id="resetstatus">
+    <en txt="Reset status"/>
+  </Msg>
 </Messages>

@@ -1342,6 +1342,7 @@
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
         <var name="wheelcount" vt="int" defval="0" remark="counted wheels; sofar"/>
         <const name="reset" vt="string" val="reset"/>
+        <const name="resetstatus" vt="string" val="resetstatus"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
         <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>

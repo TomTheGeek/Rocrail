@@ -324,6 +324,12 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
   if( StrOp.equals(wFeedback.reset, wFeedback.getcmd(cmd))) {
     FBackOp.resetCounter(inst);
   }
+  else if( StrOp.equals(wFeedback.resetstatus, wFeedback.getcmd(cmd))) {
+    data->state = False;
+    wFeedback.setstate( data->props, data->state );
+    iONode clone = (iONode)NodeOp.base.clone( data->props );
+    AppOp.broadcastEvent( clone );
+  }
   else {
     if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter && wFeedback.isstate(cmd) )
       data->wheelcount++;

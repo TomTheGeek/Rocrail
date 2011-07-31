@@ -136,6 +136,7 @@ enum {
     ME_OpenBlock,
     ME_AcceptIdent,
     ME_ResetWheelcounter,
+    ME_ResetSensor,
     ME_Compress,
     ME_Info,
     ME_Timer,
@@ -208,6 +209,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
 
   EVT_MENU     (ME_Info, Symbol::OnInfo)
   EVT_MENU     (ME_ResetWheelcounter, Symbol::OnResetWheelcounter)
+  EVT_MENU     (ME_ResetSensor, Symbol::OnResetSensor)
   EVT_MENU     (ME_Compress, Symbol::OnCompress)
 
   EVT_MENU     (ME_FYGo+0, Symbol::OnFYGo)
@@ -767,6 +769,14 @@ void Symbol::OnResetWheelcounter(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
   wFeedback.setcmd( cmd, wFeedback.reset );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnResetSensor(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
+  wFeedback.setcmd( cmd, wFeedback.resetstatus );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -1476,6 +1486,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       if( wFeedback.getbus(m_Props) == wFeedback.fbtype_wheelcounter ) {
         menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("reset") );
       }
+      menu.Append( ME_ResetSensor, wxGetApp().getMenu("resetstatus") );
     }
 
     else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
