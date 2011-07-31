@@ -54,7 +54,9 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
 
   if( street->isFree(street, data->loc->getId( data->loc )) ) {
     /* TODO: curBlock can be NULL in case of R2Rnet */
-    if( block->lock( block, data->loc->getId( data->loc ), curBlock->base.id( curBlock ), street->base.id(street), False, True, reverse, indelay ) ) {
+    if( block->lock( block, data->loc->getId( data->loc ),
+        curBlock->base.id( curBlock ), street->base.id(street), False, True, reverse, indelay ) )
+    {
       if( street->lock( street, data->loc->getId( data->loc ), reverse, True ) ) {
         if( street->go( street ) ) {
 
@@ -105,6 +107,14 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
       if(grouplocked) {
         unlockBlockGroup(inst, data->blockgroup);
       }
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        "Could not lock route \"%s\", for \"%s\"...",
+        street->base.id( street ), data->loc->getId( data->loc ) );
+    if(grouplocked) {
+      unlockBlockGroup(inst, data->blockgroup);
     }
   }
 
