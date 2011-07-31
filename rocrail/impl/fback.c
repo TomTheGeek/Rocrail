@@ -326,6 +326,7 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
   }
   else if( StrOp.equals(wFeedback.resetstatus, wFeedback.getcmd(cmd))) {
     data->state = False;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensor status [%s]", FBackOp.getId(inst));
     wFeedback.setstate( data->props, data->state );
     iONode clone = (iONode)NodeOp.base.clone( data->props );
     AppOp.broadcastEvent( clone );
