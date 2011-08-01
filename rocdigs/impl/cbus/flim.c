@@ -198,6 +198,24 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       return node;
     }
 
+  case OPC_WRACK:
+    {
+      /* <59><NNhi><NNlo> */
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      int offset = (frame[1] == 'S') ? 0:4;
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int nn = nnh * 256 + nnl;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] write acknowledge", nn );
+      wProgram.setcmd( node, wProgram.statusrsp );
+      wProgram.setiid( node, data->iid );
+      wProgram.setlntype(node, wProgram.lntype_cbus);
+      wProgram.setdecaddr(node, nn);
+      return node;
+    }
+
+
+
   }
 
   return NULL;
@@ -214,7 +232,7 @@ static void __loader( void* threadinst ) {
 
   if( MutexOp.trywait( data->loaderMux, 1000 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );
-    loadHEXFile(cbus, wProgram.getfilename(data->loaderNode), wProgram.getdecaddr(data->loaderNode) );
+    loadHEXFile((obj)cbus, wProgram.getfilename(data->loaderNode), wProgram.getdecaddr(data->loaderNode) );
     NodeOp.base.del(data->loaderNode);
     MutexOp.post(data->loaderMux);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );
