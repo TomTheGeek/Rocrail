@@ -468,10 +468,19 @@ static Boolean __initCallback( iOSwitch inst ) {
   iOSwitchData data = Data(inst);
   Boolean hasFb = False;
   iOModel model = AppOp.getModel(  );
-  iOFBack  fbR = ModelOp.getFBack( model, wSwitch.getfbR( data->props ) );
-  iOFBack  fbG = ModelOp.getFBack( model, wSwitch.getfbG( data->props ) );
-  iOFBack fb2R = ModelOp.getFBack( model, wSwitch.getfb2R( data->props ) );
-  iOFBack fb2G = ModelOp.getFBack( model, wSwitch.getfb2G( data->props ) );
+  iOFBack fbR   = ModelOp.getFBack( model, wSwitch.getfbR( data->props ) );
+  iOFBack fbG   = ModelOp.getFBack( model, wSwitch.getfbG( data->props ) );
+  iOFBack fb2R  = ModelOp.getFBack( model, wSwitch.getfb2R( data->props ) );
+  iOFBack fb2G  = ModelOp.getFBack( model, wSwitch.getfb2G( data->props ) );
+  iOFBack fbOcc = ModelOp.getFBack( model, wSwitch.getfbOcc( data->props ) );
+
+  data->fbR   = NULL;
+  data->fbG   = NULL;
+  data->fb2R  = NULL;
+  data->fb2G  = NULL;
+  data->fbOcc = NULL;
+
+
   if( fbR != NULL ) {
     FBackOp.setListener( fbR, (obj)inst, &__fbEvent );
     data->hasFbSignal = True;
@@ -499,6 +508,9 @@ static Boolean __initCallback( iOSwitch inst ) {
     data->fb2G = fb2G;
     data->fb2Ginv = wSwitch.isfb2Ginv(data->props);
     hasFb = True;
+  }
+  if( fbOcc != NULL ) {
+    data->fbOcc = fbOcc;
   }
 
   return hasFb;
@@ -690,6 +702,13 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Switch [%s] has no address.",
                    SwitchOp.getId( inst ) );
     NodeOp.base.del(nodeA);
+    return True;
+  }
+
+  if( o->fbOcc != NULL && FBackOp.getState(o->fbOcc) ) {
+    /* reject command because its electically occupied */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject command because switch [%s] electically occupied",
+                 SwitchOp.getId( inst ) );
     return True;
   }
 

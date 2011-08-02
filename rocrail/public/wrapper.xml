@@ -1129,6 +1129,7 @@
         <var name="fb2Rinv" vt="bool" defval="false"/>
         <var name="fb2G" vt="string" defval="NULL" range="*" remark="Optional feedback for straigh(Green) state."/>
         <var name="fb2Ginv" vt="bool" defval="false"/>
+        <var name="fbOcc" vt="string" defval="NULL" range="*" remark="Optional feedback for occupancy to block commands."/>
         <const name="accessory" vt="string" val="accessory" remark="Accessory representation, but act like a switch."/>
         <const name="decoupler" vt="string" val="decoupler" remark="Switch type for crossing."/>
         <const name="ccrossing" vt="string" val="ccrossing" remark="Switch type for center crossing."/>

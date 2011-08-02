@@ -17380,4 +17380,7 @@
   <Msg id="resetstatus">
     <en txt="Reset status"/>
   </Msg>
+  <Msg id="occupancy">
+    <en txt="Occupancy"/>
+  </Msg>
 </Messages>

@@ -1343,6 +1343,7 @@
       <var name="fbG" vt="iOFBack"/>
       <var name="fb2R" vt="iOFBack"/>
       <var name="fb2G" vt="iOFBack"/>
+      <var name="fbOcc" vt="iOFBack"/>
       <var name="fbRinv" vt="Boolean"/>
       <var name="fbGinv" vt="Boolean"/>
       <var name="fb2Rinv" vt="Boolean"/>

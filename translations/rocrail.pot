@@ -5447,3 +5447,9 @@ msgstr ""
 msgid "Reset status"
 msgstr ""
 
+#. 
+# id="occupancy"
+#, c-format
+msgid "Occupancy"
+msgstr ""
+

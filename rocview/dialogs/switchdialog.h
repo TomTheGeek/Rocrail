@@ -290,6 +290,8 @@ public:
     wxStaticText* m_LabelFb2G;
     wxComboBox* m_Fb2G;
     wxCheckBox* m_Fb2Ginvert;
+    wxStaticText* m_labFbOcc;
+    wxComboBox* m_FbOcc;
     wxStaticBox* m_CTCBox;
     wxStaticText* m_labCTCMotor;
     wxStaticText* m_labCTCIID;
