@@ -17383,4 +17383,7 @@
   <Msg id="occupancy">
     <en txt="Occupancy"/>
   </Msg>
+  <Msg id="restorespeed">
+    <en txt="Restore speed"/>
+  </Msg>
 </Messages>

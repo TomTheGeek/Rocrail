@@ -5453,3 +5453,9 @@ msgstr ""
 msgid "Occupancy"
 msgstr ""
 
+#. 
+# id="restorespeed"
+#, c-format
+msgid "Restore speed"
+msgstr ""
+

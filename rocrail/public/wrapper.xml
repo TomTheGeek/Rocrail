@@ -1885,6 +1885,7 @@
         <var name="fx" vt="int" defval="0" remark="Function status bits for display only."/>
         <var name="restorefx" vt="bool" defval="false" remark="Restore functions from previouse session."/>
         <var name="active" vt="bool" defval="true" remark="Active for running in auto mode."/>
+        <var name="restorespeed" vt="bool" defval="false" remark="Restore speed from previouse session."/>
 
         <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
         <fundef cardinality="n" wrappername="FunDef">

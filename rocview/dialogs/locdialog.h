@@ -106,9 +106,9 @@ class wxGrid;
 #define ID_CHECKBOX_LOC_CONTROLLED 10117
 #define wxID_STATIC_MASS 10028
 #define ID_TEXTCTRL_MASS 10029
-#define ID_LOC_REGULATED 10375
 #define wxID_STATIC_LOC_PLACING 10118
 #define ID_CHECKBOX_LOC_PLACING 10119
+#define ID_LOC_REGULATED 10375
 #define ID_PANEL_DETAILS 10030
 #define wxID_STATIC_BLOCKWAIT 10031
 #define ID_TEXTCTRL_BLOCKWAIT 10032
@@ -379,12 +379,13 @@ public:
     wxCheckBox* m_V_mode_percent;
     wxStaticText* m_Label_Mass;
     wxTextCtrl* m_Mass;
-    wxCheckBox* m_Regulated;
     wxStaticText* m_LabelPlacing;
     wxCheckBox* m_Placing;
-    wxCheckBox* m_RestoreFx;
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
+    wxCheckBox* m_Regulated;
+    wxCheckBox* m_RestoreFx;
+    wxCheckBox* m_RestoreSpeed;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;
