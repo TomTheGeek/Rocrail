@@ -299,57 +299,69 @@ static void __restoreFx( void* threadinst ) {
 
   ThreadOp.sleep(100 + 200 * data->fxsleep );
 
-  /* Test for restoring the lights function. */
-  if( wLoc.isfn(data->props) ) {
-    iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
-    wLoc.setV( vcmd, 0 );
-    wLoc.setfn( vcmd, wLoc.isfn(data->props) );
-    LocOp.cmd(loc, vcmd);
-    ThreadOp.sleep(500);
-  }
-
-  for( i = 0; i < 28; i++ ) {
-    int f = (1 << i);
-    if( fx & f ) {
-      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring function %d for %s", i+1, wLoc.getid(data->props) );
-      wFunCmd.setf0 ( fcmd, wLoc.isfn(data->props));
-      wFunCmd.setfnchanged( fcmd, i + 1);
-      switch( i ) {
-        case 0 : wFunCmd.setf1 ( fcmd, True); break;
-        case 1 : wFunCmd.setf2 ( fcmd, True); break;
-        case 2 : wFunCmd.setf3 ( fcmd, True); break;
-        case 3 : wFunCmd.setf4 ( fcmd, True); break;
-        case 4 : wFunCmd.setf5 ( fcmd, True); break;
-        case 5 : wFunCmd.setf6 ( fcmd, True); break;
-        case 6 : wFunCmd.setf7 ( fcmd, True); break;
-        case 7 : wFunCmd.setf8 ( fcmd, True); break;
-        case 8 : wFunCmd.setf9 ( fcmd, True); break;
-        case 9 : wFunCmd.setf10( fcmd, True); break;
-        case 10: wFunCmd.setf11( fcmd, True); break;
-        case 11: wFunCmd.setf12( fcmd, True); break;
-        case 12: wFunCmd.setf13( fcmd, True); break;
-        case 13: wFunCmd.setf14( fcmd, True); break;
-        case 14: wFunCmd.setf15( fcmd, True); break;
-        case 15: wFunCmd.setf16( fcmd, True); break;
-        case 16: wFunCmd.setf17( fcmd, True); break;
-        case 17: wFunCmd.setf18( fcmd, True); break;
-        case 18: wFunCmd.setf19( fcmd, True); break;
-        case 19: wFunCmd.setf20( fcmd, True); break;
-        case 20: wFunCmd.setf21( fcmd, True); break;
-        case 21: wFunCmd.setf22( fcmd, True); break;
-        case 22: wFunCmd.setf23( fcmd, True); break;
-        case 23: wFunCmd.setf24( fcmd, True); break;
-        case 24: wFunCmd.setf25( fcmd, True); break;
-        case 25: wFunCmd.setf26( fcmd, True); break;
-        case 26: wFunCmd.setf27( fcmd, True); break;
-        case 27: wFunCmd.setf28( fcmd, True); break;
-      }
-      LocOp.cmd(loc, fcmd);
+  if( wLoc.isrestorefx(data->props) ) {
+    /* Test for restoring the lights function. */
+    if( wLoc.isfn(data->props) ) {
+      iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
+      wLoc.setV( vcmd, 0 );
+      wLoc.setfn( vcmd, wLoc.isfn(data->props) );
+      LocOp.cmd(loc, vcmd);
       ThreadOp.sleep(500);
     }
+
+    for( i = 0; i < 28; i++ ) {
+      int f = (1 << i);
+      if( fx & f ) {
+        iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring function %d for %s", i+1, wLoc.getid(data->props) );
+        wFunCmd.setf0 ( fcmd, wLoc.isfn(data->props));
+        wFunCmd.setfnchanged( fcmd, i + 1);
+        switch( i ) {
+          case 0 : wFunCmd.setf1 ( fcmd, True); break;
+          case 1 : wFunCmd.setf2 ( fcmd, True); break;
+          case 2 : wFunCmd.setf3 ( fcmd, True); break;
+          case 3 : wFunCmd.setf4 ( fcmd, True); break;
+          case 4 : wFunCmd.setf5 ( fcmd, True); break;
+          case 5 : wFunCmd.setf6 ( fcmd, True); break;
+          case 6 : wFunCmd.setf7 ( fcmd, True); break;
+          case 7 : wFunCmd.setf8 ( fcmd, True); break;
+          case 8 : wFunCmd.setf9 ( fcmd, True); break;
+          case 9 : wFunCmd.setf10( fcmd, True); break;
+          case 10: wFunCmd.setf11( fcmd, True); break;
+          case 11: wFunCmd.setf12( fcmd, True); break;
+          case 12: wFunCmd.setf13( fcmd, True); break;
+          case 13: wFunCmd.setf14( fcmd, True); break;
+          case 14: wFunCmd.setf15( fcmd, True); break;
+          case 15: wFunCmd.setf16( fcmd, True); break;
+          case 16: wFunCmd.setf17( fcmd, True); break;
+          case 17: wFunCmd.setf18( fcmd, True); break;
+          case 18: wFunCmd.setf19( fcmd, True); break;
+          case 19: wFunCmd.setf20( fcmd, True); break;
+          case 20: wFunCmd.setf21( fcmd, True); break;
+          case 21: wFunCmd.setf22( fcmd, True); break;
+          case 22: wFunCmd.setf23( fcmd, True); break;
+          case 23: wFunCmd.setf24( fcmd, True); break;
+          case 24: wFunCmd.setf25( fcmd, True); break;
+          case 25: wFunCmd.setf26( fcmd, True); break;
+          case 26: wFunCmd.setf27( fcmd, True); break;
+          case 27: wFunCmd.setf28( fcmd, True); break;
+        }
+        LocOp.cmd(loc, fcmd);
+        ThreadOp.sleep(500);
+      }
+    }
   }
+
+  if( wLoc.isrestorespeed(data->props) ) {
+    iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring speed for %s", wLoc.getid(data->props) );
+    wLoc.setV( vcmd, wLoc.getV(data->props) );
+    wLoc.setfn( vcmd, wLoc.isfn(data->props) );
+    LocOp.cmd(loc, vcmd);
+  }
+
+
   ThreadOp.base.del(th);
 }
 
@@ -364,7 +376,7 @@ static void __sysEvent( obj inst, iONode evtNode ) {
     /* restore fx */
     data->fxrestored = True;
     data->fxsleep = wSysCmd.getval(evtNode);
-    if( wLoc.isrestorefx(data->props)) {
+    if( wLoc.isrestorefx(data->props) || wLoc.isrestorespeed(data->props) ) {
       iOThread th = ThreadOp.inst( NULL, &__restoreFx, inst );
       ThreadOp.start(th);
     }
@@ -2590,7 +2602,8 @@ static iOLoc _inst( iONode props ) {
   data->timedfn = -1; /* function 0 is also used */
 
   /* reset velocity to zero */
-  wLoc.setV( data->props, 0 );
+  if( !wLoc.isrestorespeed(data->props))
+    wLoc.setV( data->props, 0 );
   if( !wLoc.isrestorefx(data->props))
     wLoc.setfx( data->props, 0 );
 
