@@ -607,7 +607,21 @@ static void __translate( iOZS2 zs2, iONode node ) {
 			cmd[ 0] = 2;
 			cmd[ 1] = 2;
 			
-		  if( fidx > 0 && fidx < 9 ) {
+      if( fidx == 0 ) {
+        int addrl = 0;
+        cmd[ 2] = slot->nr * 6 + 2 + WRITE_FLAG;
+
+        slot->lights = (wFunCmd.isf0(node)?True:False);
+        if( slot->dcc ) {
+          addrl = (slot->addr << 2)  + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+        }
+        else {
+          addrl = ((4 * (slot->addr%100)) & 0xFF) + (slot->lights ? 2:0) + (slot->fn ? 1:0);
+        }
+        cmd[ 3] = addrl;
+
+      }
+      else if( fidx > 0 && fidx < 9 ) {
 		    /* fx1 */
 		    if( fidx == 1 ) {
 		      slot->fx1 &= ~0x01;
@@ -644,7 +658,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 				cmd[ 2] = slot->nr * 6 + 4 + WRITE_FLAG;
 				cmd[ 3] = slot->fx1;
 		  }
-		  else {
+      if( fidx > 8 ) {
 		    /* fx2 */
 		    if( fidx == 9 ) {
 		      slot->fx2 &= ~0x01;
