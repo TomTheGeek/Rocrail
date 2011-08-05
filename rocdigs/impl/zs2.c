@@ -202,7 +202,7 @@ static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
 		      break;
 		    }
       }
-      else if( slot->addr == lcaddr ) {
+      else if( slot->addr == lcaddr || slot->addr == lcaddr-1 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
         break;
       }
@@ -593,6 +593,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int   addr = wFunCmd.getaddr( node );
     Boolean f1 = wFunCmd.isf1( node );
+    int fidx = wFunCmd.getfnchanged(node);
 
     iOSlot slot = __getSlot(data, node );
 
@@ -601,8 +602,81 @@ static void __translate( iOZS2 zs2, iONode node ) {
       return;
     }
 
+    if( fidx > 0 && fidx < 9 ) {
+      /* fx1 */
+      if( fidx == 1 ) {
+        slot->fx1 &= ~0x01;
+        slot->fx1 |= (wFunCmd.isf1(node)?0x01:0x00);
+      }
+      else if( fidx == 2 ) {
+        slot->fx1 &= ~0x02;
+        slot->fx1 |= (wFunCmd.isf2(node)?0x02:0x00);
+      }
+      else if( fidx == 3 ) {
+        slot->fx1 &= ~0x04;
+        slot->fx1 |= (wFunCmd.isf3(node)?0x04:0x00);
+      }
+      else if( fidx == 4 ) {
+        slot->fx1 &= ~0x08;
+        slot->fx1 |= (wFunCmd.isf4(node)?0x08:0x00);
+      }
+      else if( fidx == 5 ) {
+        slot->fx1 &= ~0x10;
+        slot->fx1 |= (wFunCmd.isf5(node)?0x10:0x00);
+      }
+      else if( fidx == 6 ) {
+        slot->fx1 &= ~0x20;
+        slot->fx1 |= (wFunCmd.isf6(node)?0x20:0x00);
+      }
+      else if( fidx == 7 ) {
+        slot->fx1 &= ~0x40;
+        slot->fx1 |= (wFunCmd.isf7(node)?0x40:0x00);
+      }
+      else if( fidx == 8 ) {
+        slot->fx1 &= ~0x80;
+        slot->fx1 |= (wFunCmd.isf8(node)?0x80:0x00);
+      }
+    }
+
+    else if( fidx > 8 ) {
+      /* fx2 */
+      if( fidx == 9 ) {
+        slot->fx2 &= ~0x01;
+        slot->fx2 |= (wFunCmd.isf9(node)?0x01:0x00);
+      }
+      else if( fidx == 10 ) {
+        slot->fx2 &= ~0x02;
+        slot->fx2 |= (wFunCmd.isf10(node)?0x02:0x00);
+      }
+      else if( fidx == 11 ) {
+        slot->fx2 &= ~0x04;
+        slot->fx2 |= (wFunCmd.isf11(node)?0x04:0x00);
+      }
+      else if( fidx == 12 ) {
+        slot->fx2 &= ~0x08;
+        slot->fx2 |= (wFunCmd.isf12(node)?0x08:0x00);
+      }
+      else if( fidx == 13 ) {
+        slot->fx2 &= ~0x10;
+        slot->fx2 |= (wFunCmd.isf13(node)?0x10:0x00);
+      }
+      else if( fidx == 14 ) {
+        slot->fx2 &= ~0x20;
+        slot->fx2 |= (wFunCmd.isf14(node)?0x20:0x00);
+      }
+      else if( fidx == 15 ) {
+        slot->fx2 &= ~0x40;
+        slot->fx2 |= (wFunCmd.isf15(node)?0x40:0x00);
+      }
+      else if( fidx == 16 ) {
+        slot->fx2 &= ~0x80;
+        slot->fx2 |= (wFunCmd.isf16(node)?0x80:0x00);
+      }
+    }
+
+
+
 		if(slot->sx2 ) {
-		  int fidx = wFunCmd.getfnchanged(node); 
 			byte* cmd = allocMem(32);
 			cmd[ 0] = 2;
 			cmd[ 1] = 2;
@@ -623,75 +697,11 @@ static void __translate( iOZS2 zs2, iONode node ) {
       }
       else if( fidx > 0 && fidx < 9 ) {
 		    /* fx1 */
-		    if( fidx == 1 ) {
-		      slot->fx1 &= ~0x01;
-		      slot->fx1 |= (wFunCmd.isf1(node)?0x01:0x00);
-		    }
-		    else if( fidx == 2 ) {
-		      slot->fx1 &= ~0x02;
-		      slot->fx1 |= (wFunCmd.isf2(node)?0x02:0x00);
-		    }
-		    else if( fidx == 3 ) {
-		      slot->fx1 &= ~0x04;
-		      slot->fx1 |= (wFunCmd.isf3(node)?0x04:0x00);
-		    }
-		    else if( fidx == 4 ) {
-		      slot->fx1 &= ~0x08;
-		      slot->fx1 |= (wFunCmd.isf4(node)?0x08:0x00);
-		    }
-		    else if( fidx == 5 ) {
-		      slot->fx1 &= ~0x10;
-		      slot->fx1 |= (wFunCmd.isf5(node)?0x10:0x00);
-		    }
-		    else if( fidx == 6 ) {
-		      slot->fx1 &= ~0x20;
-		      slot->fx1 |= (wFunCmd.isf6(node)?0x20:0x00);
-		    }
-		    else if( fidx == 7 ) {
-		      slot->fx1 &= ~0x40;
-		      slot->fx1 |= (wFunCmd.isf7(node)?0x40:0x00);
-		    }
-		    else if( fidx == 8 ) {
-		      slot->fx1 &= ~0x80;
-		      slot->fx1 |= (wFunCmd.isf8(node)?0x80:0x00);
-		    }
 				cmd[ 2] = slot->nr * 6 + 4 + WRITE_FLAG;
 				cmd[ 3] = slot->fx1;
 		  }
-      if( fidx > 8 ) {
+      else if( fidx > 8 ) {
 		    /* fx2 */
-		    if( fidx == 9 ) {
-		      slot->fx2 &= ~0x01;
-		      slot->fx2 |= (wFunCmd.isf9(node)?0x01:0x00);
-		    }
-		    else if( fidx == 10 ) {
-		      slot->fx2 &= ~0x02;
-		      slot->fx2 |= (wFunCmd.isf10(node)?0x02:0x00);
-		    }
-		    else if( fidx == 11 ) {
-		      slot->fx2 &= ~0x04;
-		      slot->fx2 |= (wFunCmd.isf11(node)?0x04:0x00);
-		    }
-		    else if( fidx == 12 ) {
-		      slot->fx2 &= ~0x08;
-		      slot->fx2 |= (wFunCmd.isf12(node)?0x08:0x00);
-		    }
-		    else if( fidx == 13 ) {
-		      slot->fx2 &= ~0x10;
-		      slot->fx2 |= (wFunCmd.isf13(node)?0x10:0x00);
-		    }
-		    else if( fidx == 14 ) {
-		      slot->fx2 &= ~0x20;
-		      slot->fx2 |= (wFunCmd.isf14(node)?0x20:0x00);
-		    }
-		    else if( fidx == 15 ) {
-		      slot->fx2 &= ~0x40;
-		      slot->fx2 |= (wFunCmd.isf15(node)?0x40:0x00);
-		    }
-		    else if( fidx == 16 ) {
-		      slot->fx2 &= ~0x80;
-		      slot->fx2 |= (wFunCmd.isf16(node)?0x80:0x00);
-		    }
 				cmd[ 2] = slot->nr * 6 + 5 + WRITE_FLAG;
 				cmd[ 3] = slot->fx2;
 		  }
@@ -703,17 +713,27 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  cmd[0] = slot->bus;
 		  cmd[1] = 2;
 
-		  cmd[2] = addr & 0x7F;
-		  cmd[2] |= WRITE_FLAG;
-		  cmd[3] = slot->speed;
-		  cmd[3] |= slot->dir ? 0x00:0x20;
-		  cmd[3] |= slot->lights  ? 0x00:0x40;
-		  cmd[3] |= f1 ? 0x80:0x00;
+      if( fidx == 0 ) {
+        slot->lights = (wFunCmd.isf0(node)?True:False);
+        cmd[2] = addr & 0x7F;
+        cmd[2] |= WRITE_FLAG;
+        cmd[3] = slot->speed;
+        cmd[3] |= slot->dir ? 0x00:0x20;
+        cmd[3] |= slot->lights  ? 0x00:0x40;
+        cmd[3] |= f1 ? 0x80:0x00;
 
-		  slot->fn = f1;
-		  slot->lastcmd = SystemOp.getTick();
+        slot->fn = f1;
+      }
+      else if( fidx > 0 && fidx < 9 ) {
+        /* fx1 */
+        cmd[2] = (addr+1) & 0x7F;
+        cmd[2] |= WRITE_FLAG;
+        cmd[ 3] = slot->fx1;
+      }
 
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function %d", addr );
+      slot->lastcmd = SystemOp.getTick();
+
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX1 function %d", addr );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
   }
@@ -885,10 +905,15 @@ static Boolean __updateSlot(iOZS2Data data, iOSlot slot, int addr, int val, Bool
   }
   /* SX0 or SX1 */
   else {
-		speed  = val & 0x1F;
-		dir    = (val & 0x20) ? False:True;
-		lights = (val & 0x40) ? False:True;
-		fn     = (val & 0x80) ? True:False;
+    if( slot->addr == addr ) {
+      speed  = val & 0x1F;
+      dir    = (val & 0x20) ? False:True;
+      lights = (val & 0x40) ? False:True;
+      fn     = (val & 0x80) ? True:False;
+    }
+    else {
+      fx1 = val;
+    }
   }
   
   if( slot->speed != speed ) {
@@ -943,8 +968,12 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
   
   if( bus == 2 ) {
     /* SX2 virtual bus */
-    if( addr % 6 == 0 && addr < 96) {
+    if( addr < 96) {
       slot = __getSlotByAddr( data, addr, True );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "no sx2 slot found for: bus=%d, addr=%d val=%02X.", bus, addr, val );
     }
   }
   else {
