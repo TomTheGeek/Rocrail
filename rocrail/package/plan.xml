@@ -72,13 +72,13 @@
   </stlist>
   <remark text=""/>
   <lclist>
-    <lc id="E03" image="br103.png" addr="3" eng="Elektric" V_min="20" V_max="180" desc="Elektrolokomotive BR 103 der DB" prot="D" V="0" throttleid="0" resumeauto="true" mode="idle" runtime="423">
+    <lc id="E03" image="br103.png" addr="3" eng="Elektric" V_min="20" V_max="180" V_mode="kmh" desc="Elektrolokomotive BR 103 der DB" prot="D" V="0" throttleid="0" resumeauto="true" mode="idle" runtime="423">
       <fundef fn="1" text="Lights"/>
       <fundef fn="2" text="Tail light"/>
       <fundef fn="3" text="Horn"/>
       <fundef fn="4" text="Shunting"/>
     </lc>
-    <lc id="V200" image="v200-1.png" addr="22" eng="Elektric" V_min="15" V_max="120" desc="Elektrolokomotive E 41 der DB" prot="D" V="0" throttleid="0" resumeauto="false" mode="idle" runtime="105">
+    <lc id="V200" image="v200-1.png" addr="22" eng="Elektric" V_min="15" V_max="120" V_mode="kmh" desc="Elektrolokomotive E 41 der DB" prot="D" V="0" throttleid="0" resumeauto="false" mode="idle" runtime="105">
       <fundef fn="1" text="Engine"/>
       <fundef fn="2" text="Tail light"/>
       <fundef fn="3" text="Horn"/>
