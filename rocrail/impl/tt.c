@@ -270,6 +270,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     port = DIGITALBAHN_LIGHT;
     cmdstr = wSwitch.turnout;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
@@ -463,6 +465,8 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
     port = TTDEC_TURN;
     cmdstr = wSwitch.turnout;
     data->pending = True;
+  }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
   }
   else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
   }
@@ -843,6 +847,12 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
     }
     data->skippos = -1;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -972,6 +982,12 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
     }
     data->skippos = -1;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -1085,6 +1101,12 @@ static Boolean __cmd_slx815( iOTT inst, iONode nodeA ) {
     }
     data->skippos = -1;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -1169,6 +1191,12 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
     swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     data->gotopos = data->tablepos;
     data->skippos = data->tablepos;
+  }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
   else {
     /* Tracknumber */
@@ -1266,6 +1294,12 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
     data->pending = True;
     cmd = NULL;
+  }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
   else {
     /* Tracknumber */
@@ -1404,6 +1438,12 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     data->gotopos = data->tablepos;
     data->skippos = data->tablepos;
+  }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
   else {
     /* Tracknumber */
