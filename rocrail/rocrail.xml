@@ -1842,65 +1842,6 @@
   </object>
 
 
-  <object name="Traverser" interface="HtmlInt" use="node,mutex" include="htmlint,route" remark="Traverser object">
-    <fun name="inst" vt="this">
-      <param name="ini" vt="iONode" remark="traverser node"/>
-    </fun>
-    <fun name="lock" vt="Boolean">
-      <param name="inst" vt="this" remark="Switch instance"/>
-      <param name="locid" vt="const char*" remark="Locking locid"/>
-      <param name="route" vt="iORoute" remark="Route instance"/>
-    </fun>
-    <fun name="unLock" vt="Boolean">
-      <param name="inst" vt="this" remark="Switch instance"/>
-      <param name="locid" vt="const char*" remark="Unlocking locid"/>
-    </fun>
-    <fun name="cmd" vt="Boolean">
-      <param name="inst" vt="this" remark="Switch instance"/>
-      <param name="cmd" vt="iONode" remark="Command node"/>
-      <param name="update" vt="Boolean" remark="Send update events"/>
-      <param name="error" vt="int*" remark="error code"/>
-    </fun>
-    <fun name="modify" vt="void">
-      <param name="inst" vt="this" remark="Switch instance"/>
-      <param name="mod" vt="iONode" remark="Modify node"/>
-    </fun>
-    <fun name="isLocked" vt="Boolean">
-      <param name="inst" vt="this" remark="Switch instance"/>
-      <param name="locid" vt="const char*" remark="Querying locid"/>
-    </fun>
-    <fun name="reset" vt="void">
-      <param name="inst" vt="this" remark="Switch instance"/>
-    </fun>
-    <fun name="getAddrKey" vt="const char*">
-      <param name="inst" vt="this" remark="Switch instance"/>
-    </fun>
-    <fun name="createAddrKey" vt="char*">
-      <param name="bus" vt="int" remark="Decoder bus"/>
-      <param name="addr" vt="int" remark="Decoder addres"/>
-      <param name="port" vt="int" remark="Port number"/>
-      <param name="iid" vt="const char*" remark="Interface ID"/>
-    </fun>
-    <fun name="isSet" vt="Boolean" remark="true if the sensor state matches the wanted state">
-      <param name="inst" vt="this" remark="Switch instance"/>
-    </fun>
-    <fun name="isState" vt="Boolean">
-      <param name="inst" vt="this"/>
-      <param name="state" vt="const char*" remark="State to compare with."/>
-    </fun>
-    <data include="fback">
-      <var name="id" vt="const char*"/>
-      <var name="lockedId" vt="const char*"/>
-      <var name="route" vt="iORoute"/>
-      <var name="props" vt="iONode"/>
-      <var name="addrKey" vt="char*" remark="Address key"/>
-      <var name="muxLock" vt="iOMutex"/>
-      <var name="muxCmd" vt="iOMutex"/>
-      <var name="activated" vt="Boolean"/>
-    </data>
-  </object>
-
-
   <object name="Car" interface="HtmlInt" use="node" include="htmlint" remark="Car object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Car node"/>

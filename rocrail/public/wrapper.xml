@@ -1734,6 +1734,7 @@
         <var name="reserved" vt="bool" defval="false"/>
         <var name="entering" vt="bool" defval="false"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="traverser" vt="bool" defval="false"/>
 
 				<var name="symbolsize" vt="int" defval="5" range="2-5"/>
 				
@@ -1753,6 +1754,7 @@
         <const name="turn180" vt="string" val="180" remark="Go to previous track."/>
         <const name="lighton" vt="string" val="lighton" remark="Turn lights on."/>
         <const name="lightoff" vt="string" val="lightoff" remark="Turn lights off."/>
+        <const name="calibrate" vt="string" val="calibrate" remark="Calibrate the turntable."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="locdec" vt="string" val="locdec" remark="Modified analog turntable."/>
         <const name="accdec" vt="string" val="accdec" remark="Controlling a modified turntable with switch commands."/>
@@ -1769,6 +1771,8 @@
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
         <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="s2" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
+        <var name="s3" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
+        <var name="s4" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="sMid" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="state1" vt="bool" defval="false" remark="Feedback state bridge sensor1."/>
         <var name="state2" vt="bool" defval="false" remark="Feedback state bridge sensor2."/>
