@@ -464,6 +464,10 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
     cmdstr = wSwitch.turnout;
     data->pending = True;
   }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
