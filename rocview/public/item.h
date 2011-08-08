@@ -98,6 +98,7 @@ public:
   void OnTTPrev(wxCommandEvent& event);
   void OnTT180(wxCommandEvent& event);
   void OnTTTrack(wxCommandEvent& event);
+  void OnTTCalibrate(wxCommandEvent& event);
 
   void modelEvent( iONode node );
   const char* getId();

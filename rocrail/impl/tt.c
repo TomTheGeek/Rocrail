@@ -652,6 +652,14 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     }
     data->skippos = -1;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+    tracknr = 0x3F;
+    cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );

@@ -17386,4 +17386,7 @@
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
   </Msg>
+  <Msg id="calibrate">
+    <en txt="Calibrate"/>
+  </Msg>
 </Messages>

@@ -144,6 +144,7 @@ enum {
     ME_TTLightOff,
     ME_TTNext,
     ME_TTPrev,
+    ME_TTCalibrate,
     ME_TT180,
     ME_TTTrack, // Should be the last one in the enum list
                // because ME_TTTrack+0...ME_TTTrack+47 are also used!!!.
@@ -248,6 +249,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_TTNext, Symbol::OnTTNext)
   EVT_MENU     (ME_TTPrev, Symbol::OnTTPrev)
   EVT_MENU     (ME_TT180, Symbol::OnTT180)
+  EVT_MENU     (ME_TTCalibrate, Symbol::OnTTCalibrate)
 
   EVT_MENU     (ME_TTTrack+0, Symbol::OnTTTrack)
   EVT_MENU     (ME_TTTrack+1, Symbol::OnTTTrack)
@@ -1426,6 +1428,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       menu.Append( ME_TTNext, wxGetApp().getMenu("nexttrack") );
       menu.Append( ME_TTPrev, wxGetApp().getMenu("prevtrack") );
       menu.Append( ME_TT180, wxGetApp().getMenu("turn180") );
+      menu.Append( ME_TTCalibrate, wxGetApp().getMenu("calibrate") );
       wxMenu* trackmenu = new wxMenu();
 
       iONode track = wTurntable.gettrack( m_Props );
@@ -2130,6 +2133,14 @@ void Symbol::OnTT180(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
   wTurntable.setid( cmd, wTurntable.getid( m_Props ) );
   wTurntable.setcmd( cmd, wTurntable.turn180 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnTTCalibrate(wxCommandEvent& event) {
+  iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+  wTurntable.setid( cmd, wTurntable.getid( m_Props ) );
+  wTurntable.setcmd( cmd, wTurntable.calibrate );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
