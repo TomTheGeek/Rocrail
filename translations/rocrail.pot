@@ -5459,3 +5459,9 @@ msgstr ""
 msgid "Restore speed"
 msgstr ""
 
+#. 
+# id="calibrate"
+#, c-format
+msgid "Calibrate"
+msgstr ""
+
