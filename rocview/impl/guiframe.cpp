@@ -2548,8 +2548,8 @@ void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   m_bLocoBook = mi->IsChecked();
   if(m_bLocoBook) {
     int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
+    m_PlanSplitter->Unsplit( m_StatNotebook );
     m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
-
   }
   else {
     m_PlanSplitter->Unsplit( m_StatNotebook );
@@ -3208,13 +3208,15 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     dlg->Close();
   }
 
+  /*
   wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
-    m_bLocoBook = mi->IsChecked();
-    if(!m_bLocoBook) {
-      int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
-      m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
-      m_bLocoBook = true;
-    }
+  m_bLocoBook = mi->IsChecked();
+  if(!m_bLocoBook) {
+    int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
+    m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
+    m_bLocoBook = true;
+  }
+  */
 
   m_LC->stopTimer();
   wxGetApp().OnExit();
