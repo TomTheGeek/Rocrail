@@ -1849,6 +1849,7 @@ void RocGuiFrame::create() {
   if( !m_bLocoBook ) {
     m_StatNotebook->Show(m_bLocoBook);
     m_PlanSplitter->SetSashPosition( 1 );
+    m_PlanSplitter->Unsplit( m_StatNotebook );
   }
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Show..." );
@@ -2548,7 +2549,6 @@ void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   m_bLocoBook = mi->IsChecked();
   if(m_bLocoBook) {
     int pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
-    m_PlanSplitter->Unsplit( m_StatNotebook );
     m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
   }
   else {
