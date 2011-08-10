@@ -1280,8 +1280,8 @@ void TurntableDialog::OnTypeSelected( wxCommandEvent& event )
   if( type == 2 || type == 8 )
     mp = true;
   m_MultiPortPanel->Enable( mp );
-  m_Address->Enable( mp );
-  m_AddressDir->Enable( mp );
+  m_Address->Enable( !mp );
+  m_AddressDir->Enable( !mp );
 
   bool d15 = (type == 8);
   m_Bit0Cmd->Enable(d15);
