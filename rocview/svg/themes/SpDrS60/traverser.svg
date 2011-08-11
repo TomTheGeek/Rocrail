@@ -1,0 +1,11 @@
+<svg width="128" height="256">
+  <g>
+    <!-- Bridge rails -->
+    <path stroke="rgb(160,160,160)" fill="none" d="M 11,6 L 12,6 L 12,249 L 11,249 z " />
+    <path stroke="rgb(160,160,160)" fill="none" d="M 115,6 L 116,6 L 116,249 L 115,249 z " />
+    <!-- Table -->
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,3 L 127,3 L 127,252 L 0,252 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 6,6 L 121,6 L 121,249 L 6,249 z " />
+  </g>
+</svg>
+

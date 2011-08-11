@@ -33,6 +33,7 @@ namespace symtype {
   static const int i_selecttable= 9;
   static const int i_route      = 10;
   static const int i_stage      = 11;
+  static const int i_traverser  = 12;
 }
 
 namespace tracktype {
@@ -392,6 +393,16 @@ namespace stagetype {
   static const char* stage_ent = "stage-ent.svg";
 
   static const int i_stage = 1;
+}
+
+namespace traversertype {
+  static const char* traverser            = "traverser.svg";
+  static const char* traverser_bridge     = "traverser-bridge.svg";
+  static const char* traverser_bridge_occ = "traverser-bridge-occ.svg";
+  static const char* traverser_bridge_res = "traverser-bridge-res.svg";
+  static const char* traverser_bridge_ent = "traverser-bridge-ent.svg";
+
+  static const int i_traverser = 1;
 }
 
 namespace seltabtype {

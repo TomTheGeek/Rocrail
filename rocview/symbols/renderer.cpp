@@ -641,6 +641,15 @@ void SymbolRenderer::initSym() {
   else if( StrOp.equals( wTurntable.name(), nodeName ) ) {
     m_iSymType = symtype::i_turntable;
     m_iSymSubType = 0;
+    m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser );
+    m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge );
+    m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_occ );
+    m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_res );
+    m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_ent );
+  }
+  else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
+    m_iSymType = symtype::i_selecttable;
+    m_iSymSubType = 0;
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
     m_iSymType = symtype::i_selecttable;
@@ -757,6 +766,18 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
       *cy = m_SvgSym7->height / 32;
     }
   }
+  else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
+    if( wTurntable.istraverser(m_Props )) {
+      if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+        *cy = m_SvgSym1->width  / 32;
+        *cx = m_SvgSym1->height / 32;
+      }
+      else {
+        *cx = m_SvgSym1->width  / 32;
+        *cy = m_SvgSym1->height / 32;
+      }
+    }
+  }
   else if( m_SvgSym1 != NULL ) {
     if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
       *cy = m_SvgSym1->width  / 32;
@@ -787,23 +808,23 @@ wxBrush* SymbolRenderer::getBrush( const char* fill, wxPaintDC& dc ) {
     return new wxBrush(wxString(fill,wxConvUTF8), wxSOLID);
 }
 
-void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori ) {
+void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xoff, int yoff ) {
   const wxBrush& b = dc.GetBrush();
 
   int xOffset = 0;
   int yOffset = 0;
 
-  if( StrOp.equals( wItem.north, ori ) && m_cy > 1) {
-    yOffset = 32 * (m_cy-1);
+  if( StrOp.equals( wItem.north, ori ) && m_cy+yoff > 1) {
+    yOffset = 32 * (m_cy+yoff-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cx > 1) {
-    xOffset = 32 * (m_cx-1);
+  else if( StrOp.equals( wItem.east, ori ) && m_cx+xoff > 1) {
+    xOffset = 32 * (m_cx+xoff-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cy > 1) {
-    yOffset = 32 * (m_cy-1);
+  else if( StrOp.equals( wItem.east, ori ) && m_cy+yoff > 1) {
+    yOffset = 32 * (m_cy+yoff-1);
   }
-  else if( StrOp.equals( wItem.south, ori ) && m_cx > 1) {
-    xOffset = 32 * (m_cx-1);
+  else if( StrOp.equals( wItem.south, ori ) && m_cx+xoff > 1) {
+    xOffset = 32 * (m_cx+xoff-1);
   }
 
 
@@ -1831,7 +1852,24 @@ void SymbolRenderer::drawRoute( wxPaintDC& dc, bool occupied, const char* ori, i
 void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori ) {
 
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "turntable with bridge pos=%f", *bridgepos );
+  
+  // Traverser
+  if( wTurntable.istraverser( m_Props ) ) {
+    drawSvgSym(dc, m_SvgSym1, ori);
+    int yoff = 0;
+		iONode track = wTurntable.gettrack( m_Props );
+		while( track != NULL ) {
+      if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
+        yoff = wTTTrack.getnr( track ) % 24;
+        break;
+      }
+      track = wTurntable.nexttrack( m_Props, track );
+		}
+    drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
+    return;
+  }
 
+  // Turntable
   wxPen* pen = (wxPen*)wxLIGHT_GREY_PEN;
   pen->SetStyle(wxSHORT_DASH);
   pen->SetWidth(1);

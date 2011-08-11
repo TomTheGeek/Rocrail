@@ -92,7 +92,7 @@ public:
   int getcy() {return m_cy;}
   bool isRotateable() { return m_bRotateable; }
 
-  void drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori );
+  void drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xoff=0, int yoff=0 );
   wxPen* getPen( const char* stroke );
   wxBrush* getBrush( const char* fill, wxPaintDC& dc );
 

@@ -185,6 +185,7 @@ public:
     wxStaticBoxSizer* m_OptionsBox;
     wxCheckBox* m_Manager;
     wxCheckBox* m_EmbeddedBlock;
+    wxCheckBox* m_Traverser;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;
