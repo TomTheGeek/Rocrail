@@ -17389,4 +17389,7 @@
   <Msg id="calibrate">
     <en txt="Calibrate"/>
   </Msg>
+  <Msg id="traverser">
+    <en txt="Traverser"/>
+  </Msg>
 </Messages>

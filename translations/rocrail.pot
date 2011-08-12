@@ -5465,3 +5465,9 @@ msgstr ""
 msgid "Calibrate"
 msgstr ""
 
+#. 
+# id="traverser"
+#, c-format
+msgid "Traverser"
+msgstr ""
+
