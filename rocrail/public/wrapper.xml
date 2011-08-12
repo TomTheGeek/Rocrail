@@ -1771,12 +1771,12 @@
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>
         <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="s2" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
-        <var name="s3" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
-        <var name="s4" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="sMid" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
+        <var name="sMid2" vt="string" defval="" range="*" required="true" remark="Feedback ID for detection occupancy on the bridge."/>
         <var name="state1" vt="bool" defval="false" remark="Feedback state bridge sensor1."/>
         <var name="state2" vt="bool" defval="false" remark="Feedback state bridge sensor2."/>
-        <var name="stateMid" vt="bool" defval="false" remark="Feedback state bridge sensor2."/>
+        <var name="stateMid" vt="bool" defval="false" remark="Feedback state bridge sensor3."/>
+        <var name="stateMid2" vt="bool" defval="false" remark="Feedback state bridge sensor4."/>
         <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this turntable."/>
         <var name="delay" vt="int" defval="0" range="0-*" unit="s" required="false"/>

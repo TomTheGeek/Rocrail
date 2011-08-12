@@ -1836,7 +1836,8 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
   const char* event = NULL;
   Boolean state1 = wTurntable.isstate1( data->props );
   Boolean state2 = wTurntable.isstate2( data->props );
-  Boolean stateMid = wTurntable.isstateMid( data->props );
+  Boolean stateMid1 = wTurntable.isstateMid( data->props );
+  Boolean stateMid2 = wTurntable.isstateMid2( data->props );
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Turntable:%s: fbid=%s state=%s ident=%d",
                  inst->id(inst), id, puls?"true":"false", ident );
@@ -1884,10 +1885,19 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 
   /* sMid */
   else if( StrOp.equals( id, wTurntable.getsMid( data->props ) ) ) {
-    stateMid = puls;
-    if( !data->triggerSmid ) {
+    stateMid1 = puls;
+    if( data->triggerSmid2 && !data->triggerSmid1 || !data->hasMid2 && !data->triggerSmid1 ) {
       /* enter event */
-      data->triggerSmid = True;
+      data->triggerSmid1 = True;
+      event = wFeedbackEvent.pre2in_event;
+    }
+  }
+
+  else if( StrOp.equals( id, wTurntable.getsMid2( data->props ) ) ) {
+    stateMid2 = puls;
+    if( data->triggerSmid1 && !data->triggerSmid2 ) {
+      /* enter event */
+      data->triggerSmid2 = True;
       event = wFeedbackEvent.pre2in_event;
     }
   }
@@ -1950,6 +1960,8 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 
   wTurntable.setstate1( data->props, state1 );
   wTurntable.setstate2( data->props, state2 );
+  wTurntable.setstateMid( data->props, stateMid1 );
+  wTurntable.setstateMid2( data->props, stateMid2 );
 
   /* Broadcast to clients. */
   {
@@ -1957,6 +1969,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
     wTurntable.setid( node, inst->id(inst) );
     wTurntable.setstate1( node, state1 );
     wTurntable.setstate2( node, state2 );
+    wTurntable.setstateMid( node, stateMid1 | stateMid2 );
     wTurntable.setbridgepos( node, wTurntable.getbridgepos( data->props) );
     if( wTurntable.getiid( data->props ) != NULL )
       wTurntable.setiid( node, wTurntable.getiid( data->props ) );
@@ -2163,11 +2176,13 @@ static void __initCallback( iOTT inst ) {
   iOModel model = AppOp.getModel();
   iONode track = wTurntable.gettrack( data->props );
 
-  const char* s1   = wTurntable.gets1( data->props );
-  const char* s2   = wTurntable.gets2( data->props );
-  const char* sMid = wTurntable.getsMid( data->props );
-  const char* psen = wTurntable.getpsen( data->props );
+  const char* s1    = wTurntable.gets1( data->props );
+  const char* s2    = wTurntable.gets2( data->props );
+  const char* sMid  = wTurntable.getsMid( data->props );
+  const char* sMid2 = wTurntable.getsMid2( data->props );
+  const char* psen  = wTurntable.getpsen( data->props );
 
+  data->hasMid2 = False;
 
   if( s1 != NULL && StrOp.len( s1 ) > 0 ) {
     iOFBack bridgefb = ModelOp.getFBack( model, s1 );
@@ -2194,6 +2209,17 @@ static void __initCallback( iOTT inst ) {
     if( bridgefb != NULL ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Setting bridge listener [%s]", sMid );
       FBackOp.setListener( bridgefb, (obj)inst, &__fbBridgeEvent );
+    }
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "bridge sMid [%s] not found!", sMid );
+  }
+
+  if( sMid2 != NULL && StrOp.len( sMid2 ) > 0 ) {
+    iOFBack bridgefb = ModelOp.getFBack( model, sMid2 );
+    if( bridgefb != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Setting bridge listener [%s]", sMid2 );
+      FBackOp.setListener( bridgefb, (obj)inst, &__fbBridgeEvent );
+      data->hasMid2 = True;
     }
     else
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "bridge sMid [%s] not found!", sMid );
@@ -2346,7 +2372,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
     }
     data->triggerS1 = False;
     data->triggerS2 = False;
-    data->triggerSmid = False;
+    data->triggerSmid1 = False;
+    data->triggerSmid2 = False;
     data->locoOnBridge = False;
     return True;
   }
@@ -2715,7 +2742,8 @@ static void _resetTrigs( iIBlockBase inst ) {
   iOModel model = AppOp.getModel();
   data->triggerS1 = False;
   data->triggerS2 = False;
-  data->triggerSmid = False;
+  data->triggerSmid1 = False;
+  data->triggerSmid2 = False;
 
   if( wTurntable.ismanager(data->props) ) {
     /* dispatch to all track blocks */

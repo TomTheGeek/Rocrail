@@ -414,8 +414,8 @@ void TurntableDialog::initValues() {
     m_BridgeSensor2->SetStringSelection( wxString(wTurntable.gets2(m_Props),wxConvUTF8) );
   if( wTurntable.getsMid( m_Props ) != NULL && StrOp.len( wTurntable.getsMid( m_Props ) ) > 0 )
     m_BridgeSensorMid->SetStringSelection( wxString(wTurntable.getsMid(m_Props),wxConvUTF8) );
-  if( wTurntable.gets4( m_Props ) != NULL && StrOp.len( wTurntable.gets4( m_Props ) ) > 0 )
-    m_BridgeSensorMid2->SetStringSelection( wxString(wTurntable.gets4(m_Props),wxConvUTF8) );
+  if( wTurntable.getsMid2( m_Props ) != NULL && StrOp.len( wTurntable.getsMid2( m_Props ) ) > 0 )
+    m_BridgeSensorMid2->SetStringSelection( wxString(wTurntable.getsMid2(m_Props),wxConvUTF8) );
   if( wTurntable.getpsen( m_Props ) != NULL && StrOp.len( wTurntable.getpsen( m_Props ) ) > 0 )
     m_PSen->SetStringSelection( wxString(wTurntable.getpsen(m_Props),wxConvUTF8) );
 
@@ -575,9 +575,9 @@ bool TurntableDialog::evaluate() {
     wTurntable.setsMid( m_Props, m_BridgeSensorMid->GetStringSelection().mb_str(wxConvUTF8) );
 
   if( StrOp.equals( "-", m_BridgeSensorMid2->GetStringSelection().mb_str(wxConvUTF8) ) )
-    wTurntable.sets4( m_Props, "" );
+    wTurntable.setsMid2( m_Props, "" );
   else
-    wTurntable.sets4( m_Props, m_BridgeSensorMid2->GetStringSelection().mb_str(wxConvUTF8) );
+    wTurntable.setsMid2( m_Props, m_BridgeSensorMid2->GetStringSelection().mb_str(wxConvUTF8) );
 
   if( StrOp.equals( "-", m_PSen->GetStringSelection().mb_str(wxConvUTF8) ) )
     wTurntable.setpsen( m_Props, "" );
