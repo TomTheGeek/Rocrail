@@ -54,6 +54,7 @@ static int __getOppositeTrack( iOTT inst, int tracknr );
 static int __getNextTrack( iOTT inst, int tracknr );
 static int __getPrevTrack( iOTT inst, int tracknr );
 static void __polarize(obj inst, int pos, Boolean polarization);
+static void __sortTracks(iOTT tt);
 
 
 /*
@@ -143,6 +144,7 @@ static void _modify( iOTT inst, iONode props ) {
     for( i = 0; i < cnt; i++ ) {
       iONode child = NodeOp.getChild( props, i );
       NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
+      __sortTracks(inst);
     }
   }
   else {
@@ -2398,6 +2400,41 @@ static void _reset( iIBlockBase inst ) {
 }
 
 
+static int __compTrackNr(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int nrA = wTTTrack.getnr( a );
+    int nrB = wTTTrack.getnr( b );
+    if( nrA == nrB )
+      return 0;
+    if( nrA > nrB )
+      return 1;
+    return -1;
+}
+
+
+static void __sortTracks(iOTT tt) {
+  iOTTData data = Data(tt);
+  iOList list = ListOp.inst();
+
+  iONode track = wTurntable.gettrack( data->props );
+  while( track != NULL ) {
+    ListOp.add(list, (obj)track );
+    NodeOp.removeChild( data->props, track);
+    track = wTurntable.gettrack( data->props );
+  }
+
+  ListOp.sort(list, &__compTrackNr);
+  int i = 0;
+  for( i = 0; i < ListOp.size(list); i++) {
+    NodeOp.addChild(data->props, (iONode)ListOp.get( list, i));
+  }
+
+  ListOp.base.del(list);
+}
+
+
 static iOTT _inst( iONode props ) {
   iOTT     tt    = allocMem( sizeof( struct OTT ) );
   iOTTData data  = allocMem( sizeof( struct OTTData ) );
@@ -2413,6 +2450,8 @@ static iOTT _inst( iONode props ) {
   data->lcdir = True;
 
   NodeOp.removeAttrByName(data->props, "cmd");
+
+  __sortTracks(tt);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "turntable [%s] initialized at position [%d]", tt->base.id(tt), data->tablepos );
