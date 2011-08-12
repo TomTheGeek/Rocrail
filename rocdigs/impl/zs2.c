@@ -224,7 +224,7 @@ static int __getFreeSlot(iOZS2Data data) {
   int i = 0;
   for( i = 0; i < 16; i++ ) {
     if( data->sx[2][i*6] == 0) {
-      return i + 1;
+      return i;
     }
   }
   return -1;
@@ -354,6 +354,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
       slotnr = __getFreeSlot(data);
       if( slotnr != -1 ) {
         byte* cmd = allocMem(32);
+        slot->nr = slotnr;
         cmd[ 0] = 2;
         cmd[ 1] = 12;
         cmd[ 2] = slot->nr * 6 + 0 + WRITE_FLAG;
@@ -369,8 +370,8 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
         cmd[12] = slot->nr * 6 + 5 + WRITE_FLAG;
         cmd[13] = slot->fx2;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "create SX2 slot for %s, preamble=%d, addr=%d (high=%02X low=%02X)",
-            wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
+            "create SX2 slot[%d] for %s, preamble=%d, addr=%d (high=%02X low=%02X)",
+            slotnr, wLoc.getid(node), preamble, slot->addr, cmd[ 5], cmd[ 7] );
         ThreadOp.post(data->writer, (obj)cmd);
       }
       else {
@@ -719,7 +720,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
         cmd[2] |= WRITE_FLAG;
         cmd[3] = slot->speed;
         cmd[3] |= slot->dir ? 0x00:0x20;
-        cmd[3] |= slot->lights  ? 0x00:0x40;
+        cmd[3] |= slot->lights ? 0x40:0x00;
         cmd[3] |= f1 ? 0x80:0x00;
 
         slot->fn = f1;
@@ -908,7 +909,7 @@ static Boolean __updateSlot(iOZS2Data data, iOSlot slot, int addr, int val, Bool
     if( slot->addr == addr ) {
       speed  = val & 0x1F;
       dir    = (val & 0x20) ? False:True;
-      lights = (val & 0x40) ? False:True;
+      lights = (val & 0x40) ? True:False;
       fn     = (val & 0x80) ? True:False;
     }
     else {
@@ -1026,7 +1027,22 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
         wFunCmd.setid( nodeC, slot->id );
         wFunCmd.setaddr( nodeC, slot->addr );
         wFunCmd.setf0( nodeC, slot->lights );
-        wFunCmd.setf1( nodeC, slot->fn );
+        wFunCmd.setf1( nodeC, slot->fn | (slot->fx1 & 0x01) );
+        wFunCmd.setf2( nodeC, (slot->fx1 & 0x02) );
+        wFunCmd.setf3( nodeC, (slot->fx1 & 0x04) );
+        wFunCmd.setf4( nodeC, (slot->fx1 & 0x08) );
+        wFunCmd.setf5( nodeC, (slot->fx1 & 0x10) );
+        wFunCmd.setf6( nodeC, (slot->fx1 & 0x20) );
+        wFunCmd.setf7( nodeC, (slot->fx1 & 0x40) );
+        wFunCmd.setf8( nodeC, (slot->fx1 & 0x80) );
+        wFunCmd.setf9 ( nodeC, (slot->fx2 & 0x01) );
+        wFunCmd.setf10( nodeC, (slot->fx2 & 0x02) );
+        wFunCmd.setf11( nodeC, (slot->fx2 & 0x04) );
+        wFunCmd.setf12( nodeC, (slot->fx2 & 0x08) );
+        wFunCmd.setf13( nodeC, (slot->fx2 & 0x10) );
+        wFunCmd.setf14( nodeC, (slot->fx2 & 0x20) );
+        wFunCmd.setf15( nodeC, (slot->fx2 & 0x40) );
+        wFunCmd.setf16( nodeC, (slot->fx2 & 0x80) );
 
         wLoc.setthrottleid( nodeC, "sx-bus" );
         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
