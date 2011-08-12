@@ -808,25 +808,26 @@ wxBrush* SymbolRenderer::getBrush( const char* fill, wxPaintDC& dc ) {
     return new wxBrush(wxString(fill,wxConvUTF8), wxSOLID);
 }
 
-void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xoff, int yoff ) {
+void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xOff, int yOff ) {
   const wxBrush& b = dc.GetBrush();
 
   int xOffset = 0;
   int yOffset = 0;
 
-  if( StrOp.equals( wItem.north, ori ) && m_cy+yoff > 1) {
-    yOffset = 32 * (m_cy+yoff-1);
+  if( StrOp.equals( wItem.north, ori ) && m_cy > 1) {
+    yOffset = 32 * (m_cy-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cx+xoff > 1) {
-    xOffset = 32 * (m_cx+xoff-1);
+  else if( StrOp.equals( wItem.east, ori ) && m_cx > 1) {
+    xOffset = 32 * (m_cx-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cy+yoff > 1) {
-    yOffset = 32 * (m_cy+yoff-1);
+  else if( StrOp.equals( wItem.east, ori ) && m_cy > 1) {
+    yOffset = 32 * (m_cy-1);
   }
-  else if( StrOp.equals( wItem.south, ori ) && m_cx+xoff > 1) {
-    xOffset = 32 * (m_cx+xoff-1);
+  else if( StrOp.equals( wItem.south, ori ) && m_cx > 1) {
+    xOffset = 32 * (m_cx-1);
   }
-
+  xOffset += xOff * 32;
+  yOffset += yOff * 32;
 
   int cnt = ListOp.size( svgsym->polyList );
   for( int i = 0; i < cnt; i++ ) {
@@ -840,8 +841,9 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       wxPoint* points = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
       dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
     }
-    else
+    else {
       dc.DrawPolygon( svgpoly->cnt, rotateShape( svgpoly->poly, svgpoly->cnt, ori ), xOffset, yOffset );
+    }
     delete pen;
     delete brush;
   }
@@ -1856,15 +1858,9 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {
     drawSvgSym(dc, m_SvgSym1, ori);
-    int yoff = 0;
-		iONode track = wTurntable.gettrack( m_Props );
-		while( track != NULL ) {
-      if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
-        yoff = wTTTrack.getnr( track ) % 24;
-        break;
-      }
-      track = wTurntable.nexttrack( m_Props, track );
-		}
+    int pos  = wTurntable.getbridgepos( m_Props );
+    int yoff = pos % 24;
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "traverser with bridge pos=%d, yOffset=%d", pos, yoff );
     drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
     return;
   }
