@@ -1,0 +1,9 @@
+<svg width="128" height="32">
+  <g>
+    <!-- Bridge -->
+    <path stroke="rgb(0,0,0)" fill="gray" d="M 7,7 L 17,7 L 17,24 L 7,24 z " />
+    <path stroke="rgb(0,0,0)" fill="gray" d="M 110,7 L 120,7 L 120,24 L 110,24 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,10 L 127,10 L 127,21 L 0,21 z " />
+    <path stroke="gray" fill="rgb(160,160,255)" d="M 1,11 L 126,11 L 126,20 L 1,20 z " />
+  </g>
+</svg>

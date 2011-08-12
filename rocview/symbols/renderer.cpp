@@ -645,7 +645,7 @@ void SymbolRenderer::initSym() {
     m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge );
     m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_occ );
     m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_res );
-    m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_ent );
+    m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, traversertype::traverser_bridge_ent );
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
     m_iSymType = symtype::i_selecttable;
@@ -1861,7 +1861,15 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     int pos  = wTurntable.getbridgepos( m_Props );
     int yoff = pos % 24;
     TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "traverser with bridge pos=%d, yOffset=%d", pos, yoff );
-    drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
+
+    Boolean sensor1 = wTurntable.isstate1( m_Props );
+    Boolean sensor2 = wTurntable.isstate2( m_Props );
+    if( sensor1 && sensor2 )
+      drawSvgSym(dc, m_SvgSym3, ori, 0, yoff);
+    else if( sensor1 || sensor2 )
+      drawSvgSym(dc, m_SvgSym5, ori, 0, yoff);
+    else
+      drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
     return;
   }
 
