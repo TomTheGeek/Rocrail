@@ -239,6 +239,24 @@ static void _modify( struct OBlockGroup* inst ,iONode props ) {
     NodeOp.setStr( data->props, name, value );
   }
 
+
+  /* delete all childs to make 'room' for the new ones: */
+  cnt = NodeOp.getChildCnt( data->props );
+  while( cnt > 0 ) {
+    iONode child = NodeOp.getChild( data->props, 0 );
+    NodeOp.removeChild( data->props, child );
+    cnt = NodeOp.getChildCnt( data->props );
+  }
+
+  /* add the new or modified childs: */
+  cnt = NodeOp.getChildCnt( props );
+  for( i = 0; i < cnt; i++ ) {
+    iONode child = NodeOp.getChild( props, i );
+    NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+  }
+
+
+
   data->allowfollowup = wLink.isallowfollowup(props);
   data->maxfollowup = wLink.getmaxfollowup(props);
   return;
