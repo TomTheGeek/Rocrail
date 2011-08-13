@@ -26,6 +26,7 @@
 #include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Link.h"
+#include "rocrail/wrapper/public/LinkCond.h"
 
 static int instCnt = 0;
 
@@ -148,10 +149,45 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
       data->firstLoco  = NULL;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s locked blockgroup %s with block %s",
-          LocoId, wLink.getid(data->props), BlockId);
-      data->firstBlock = BlockId;
-      data->firstLoco  = LocoId;
+      /* check the conditions... */
+      Boolean condOK = True;
+      iONode cond = wLink.getlinkcond(data->props);
+      while( cond != NULL && condOK ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking blockgroup %s condition first=%s...",
+            wLink.getid(data->props), wLinkCond.getfirst(cond) );
+        if( StrOp.equals( wLinkCond.getfirst(cond), BlockId )) {
+          Boolean freeBlock = False;
+          iOStrTok tok = StrTokOp.inst(wLinkCond.getfree(cond), ',');
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            const char* id = StrTokOp.nextToken( tok );
+            iIBlockBase block = ModelOp.getBlock( model, id );
+            if( block != NULL && block->isFree(block, LocoId) ) {
+              freeBlock = True;
+              break;
+            }
+          };
+          StrTokOp.base.del(tok);
+          if( freeBlock ) {
+            break;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "loco %s cannot lock blockgroup %s with block %s because there is no block free. [%s]",
+                LocoId, wLink.getid(data->props), BlockId, wLinkCond.getfree(cond));
+            condOK = False;
+            grouplocked = False;
+            data->firstBlock = NULL;
+            data->firstLoco  = NULL;
+          }
+        }
+        cond = wLink.nextlinkcond(data->props, cond);
+      }
+      if( condOK ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s locked blockgroup %s with block %s",
+            LocoId, wLink.getid(data->props), BlockId);
+        data->firstBlock = BlockId;
+        data->firstLoco  = LocoId;
+      }
     }
 
     return grouplocked;

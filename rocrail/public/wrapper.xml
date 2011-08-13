@@ -1573,6 +1573,10 @@
         <var name="active" vt="bool" defval="false" remark="Activates links: all blocks are set to manual mode."/>
         <var name="src" vt="string" defval="" range="*" required="true" remark="source block"/>
         <var name="dst" vt="string" defval="" range="*" required="true" remark="destination blocks; id's in CSV format"/>
+        <linkcond cardinality="n" wrappername="LinkCond">
+          <var name="first" vt="string" defval="" range="*" remark="First lock block."/>
+          <var name="free" vt="string" defval="" range="*" remark="One of this blocks must be free. (csv)"/>
+        </linkcond>
       </link>
     </linklist>
     <stlist cardinality="1" remark="Route table" wrappername="RouteList">
