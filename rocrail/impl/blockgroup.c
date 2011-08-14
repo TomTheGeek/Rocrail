@@ -111,6 +111,21 @@ static struct OBlockGroup* _inst( iONode ini ) {
 }
 
 
+static void __rewind(struct OBlockGroup* inst, const char* LocoId) {
+  iOBlockGroupData data = Data(inst);
+  iOModel     model  = AppOp.getModel();
+  /* rewind */
+  iOStrTok tok = StrTokOp.inst( wLink.getdst(data->props), ',' );
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* id = StrTokOp.nextToken( tok );
+    iIBlockBase gblock = ModelOp.getBlock( model, id );
+    if( gblock != NULL ) {
+      gblock->unLockForGroup( gblock, LocoId );
+    }
+  };
+
+}
+
 /**  */
 static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char* LocoId ) {
   iOBlockGroupData data = Data(inst);
@@ -138,13 +153,10 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
     };
     StrTokOp.base.del(tok);
 
-    MapOp.put( data->lockmap, LocoId, (obj)LocoId);
-
     if( !grouplocked ) {
-      /* rewind */
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
           "unable to lock blockgroup %s for loco %s", wLink.getid(data->props), LocoId);
-      BlockGroupOp.unlock(inst, LocoId);
+      __rewind(inst, LocoId);
       data->firstBlock = NULL;
       data->firstLoco  = NULL;
     }
@@ -178,6 +190,7 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
             grouplocked = False;
             data->firstBlock = NULL;
             data->firstLoco  = NULL;
+            __rewind(inst, LocoId);
           }
         }
         cond = wLink.nextlinkcond(data->props, cond);
@@ -188,6 +201,10 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
         data->firstBlock = BlockId;
         data->firstLoco  = LocoId;
       }
+    }
+
+    if( grouplocked && !MapOp.haskey(data->lockmap, LocoId) ) {
+      MapOp.put( data->lockmap, LocoId, (obj)LocoId);
     }
 
     return grouplocked;
