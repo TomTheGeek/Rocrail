@@ -729,7 +729,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  cmd[0] = slot->bus;
 		  cmd[1] = 2;
 
-      if( fidx == 0 ) {
+      if( fidx == 0 || slot->fn != f1 ) {
         slot->lights = (wFunCmd.isf0(node)?True:False);
         cmd[2] = addr & 0x7F;
         cmd[2] |= WRITE_FLAG;
