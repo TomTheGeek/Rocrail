@@ -1028,7 +1028,7 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
         wLoc.setid( nodeC, slot->id );
         wLoc.setaddr( nodeC, slot->addr );
         wLoc.setV_raw( nodeC, slot->speed );
-        wLoc.setV_rawMax( nodeC, 31 );
+        wLoc.setV_rawMax( nodeC, slot->steps );
         wLoc.setfn( nodeC, slot->lights);
         wLoc.setdir( nodeC, slot->dir );
         wLoc.setcmd( nodeC, wLoc.direction );
