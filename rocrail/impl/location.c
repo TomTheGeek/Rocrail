@@ -227,9 +227,12 @@ static Boolean _hasFreeBlock( iOLocation inst, const char* locoId ) {
     iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
 
     if( block != NULL && block->isFree(block, locoId) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location[%s] has a free block[%s]", wLocation.getid(data->props), block->base.id(block));
-      StrTokOp.base.del( blocks );
-      return True;
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locoId );
+      if( loc != NULL && block->isSuited(block, loc ) != suits_not ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location[%s] has a free block[%s]", wLocation.getid(data->props), block->base.id(block));
+        StrTokOp.base.del( blocks );
+        return True;
+      }
     }
   }
   StrTokOp.base.del( blocks );
