@@ -139,6 +139,8 @@ private:
   iOList m_fylist;
   iOList m_ttlist;
 
+  bool m_RotateSym;
+
   void checkSpeakAction(iONode node);
 
   DECLARE_EVENT_TABLE()

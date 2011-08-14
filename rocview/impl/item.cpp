@@ -324,6 +324,8 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   //m_RouteID = NULL;
   m_locidStr = NULL;
   m_Timer = new wxTimer( this, ME_Timer );
+  m_RotateSym = False;
+
 
   int itemidps = 7;
   iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
@@ -2158,7 +2160,6 @@ void Symbol::OnTTTrack(wxCommandEvent& event) {
 void Symbol::modelEvent( iONode node ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
-  bool rotatesym = False;
 
   TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
       "Symbol::modelEvent id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
@@ -2516,9 +2517,10 @@ void Symbol::modelEvent( iONode node ) {
 
       if (locid!=NULL && StrOp.len(locid)>0) {
         iONode loc = wxGetApp().getFrame()->findLoc( locid);
-        Boolean blockenterside = wLoc.isblockenterside( loc);
-        if( (occupied == 1 || occupied == 3) ) {
-          rotatesym = blockenterside;
+        if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) ) {
+          if( (occupied == 1 || occupied == 3) ) {
+            m_RotateSym = wLoc.isblockenterside( loc);
+          }
         }
       }
 
@@ -2552,16 +2554,16 @@ void Symbol::modelEvent( iONode node ) {
 
     }
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] state=[%s] locid=[%s]",
-        id, occupied, state, locid!=NULL?locid:"-" );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locid=[%s]",
+        id, occupied, m_RotateSym, state, locid!=NULL?locid:"-" );
 
 
     if( updateEnterside ) {
-      m_Renderer->setLabel( m_locidStr, -1, rotatesym );
+      m_Renderer->setLabel( m_locidStr, -1, m_RotateSym );
       StrOp.free( l_locidStr );
     }
     else {
-      m_Renderer->setLabel( l_locidStr, occupied, rotatesym );
+      m_Renderer->setLabel( l_locidStr, occupied, m_RotateSym );
       StrOp.free( m_locidStr );
       m_locidStr = l_locidStr;
     }
