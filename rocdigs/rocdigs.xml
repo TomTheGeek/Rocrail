@@ -1293,6 +1293,7 @@
       <var name="dcc" vt="Boolean"/>
       <var name="dir" vt="Boolean"/>
       <var name="lights" vt="Boolean"/>
+      <var name="fcnt" vt="int"/>
       <var name="fn" vt="Boolean"/>
       <var name="fx1" vt="int"/>
       <var name="fx2" vt="int"/>

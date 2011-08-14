@@ -202,12 +202,26 @@ static iOSlot __getSlotByAddr(iOZS2Data data, int lcaddr, Boolean sx2) {
 		      break;
 		    }
       }
-      else if( slot->addr == lcaddr || slot->addr == lcaddr-1 ) {
+      else if( slot->addr == lcaddr ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
         break;
       }
       slot = (iOSlot)MapOp.next( data->lcmap);
     };
+
+    if( slot == NULL && !sx2 ) {
+      slot = (iOSlot)MapOp.first( data->lcmap);
+      while( slot != NULL ) {
+        if( slot->addr == lcaddr-1 && slot->fcnt > 1 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+          break;
+        }
+        slot = (iOSlot)MapOp.next( data->lcmap);
+      };
+
+    }
+
+
     MutexOp.post(data->lcmux);
   }
   
@@ -262,6 +276,7 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
   slot->steps  = wLoc.getspcnt(node);
   slot->lights = True;
   slot->dir    = wLoc.isdir(node);
+  slot->fcnt   = wLoc.getfncnt(node);
   slot->fx1    = wLoc.getfx(node) & 0x00FF;
   slot->fx2    = (wLoc.getfx(node) & 0xFF00) >> 8;
   
@@ -729,7 +744,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
         /* fx1 */
         cmd[2] = (addr+1) & 0x7F;
         cmd[2] |= WRITE_FLAG;
-        cmd[ 3] = slot->fx1;
+        cmd[3] = ((slot->fx2 & 0x01) << 7)  | (slot->fx1 >> 1);
       }
 
       slot->lastcmd = SystemOp.getTick();
@@ -913,7 +928,8 @@ static Boolean __updateSlot(iOZS2Data data, iOSlot slot, int addr, int val, Bool
       fn     = (val & 0x80) ? True:False;
     }
     else {
-      fx1 = val;
+      fx1 = val << 1;
+      fx2 = (val & 0x80) >> 7;
     }
   }
   
