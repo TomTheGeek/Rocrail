@@ -134,7 +134,10 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBloc
 
   /* check if this block belongs to a group: */
   const char* group    = NULL;
-  const char* curgroup = data->model->checkForBlockGroup( data->model, curBlock->base.id(curBlock) );
+  const char* curgroup = NULL;
+
+  if( curBlock != NULL)
+    curgroup = data->model->checkForBlockGroup( data->model, curBlock->base.id(curBlock) );
 
   if( block != NULL ) {
     group = data->model->checkForBlockGroup( data->model, block->base.id(block) );

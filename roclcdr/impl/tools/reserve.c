@@ -113,7 +113,9 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
 
       nextRoute->getDirection( nextRoute, fromBlock->base.id(fromBlock), &fromto );
       /* lock second next destination */
-      if( nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto, indelay ) ) {
+      if( initializeGroup( inst, nextBlock, NULL ) &&
+          nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto, indelay ) )
+      {
         if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, True ) ) {
           *toBlock = nextBlock;
           *toRoute = nextRoute;
