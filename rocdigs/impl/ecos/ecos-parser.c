@@ -514,6 +514,11 @@ static void __parseEND( iONode node, const char* replyline ) {
  *    <REPLY/EVENT set/get/create/delete/request/release/link/unlink/queryObjects(ID, var[val], ...)>
  *    ID var[val], ...
  *    <END rc (string)>
+ *
+ *    <EVENT 1>
+ *    <END 0 (OK)>
+ *    <EVENT 100>
+ *    <END 0 (OK)>
  */
 iONode ecos_parser( const char* reply ) {
 

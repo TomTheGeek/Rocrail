@@ -190,6 +190,7 @@ static const int OID_SWMANAGER       = 11;
 static const int OID_SNIFFER         = 25;
 static const int OID_S88MANAGER      = 26;
 static const int OID_S88_ALL_MODULES = 100;
+static const int OID_ECoSDetectors   = 200;
 
 static int instCnt = 0;
 
@@ -539,6 +540,9 @@ static void __requestViews( iOECoS inst ) {
   StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_S88_ALL_MODULES );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
+  StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_ECoSDetectors );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
   /* loco manager */
   StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_LCMANAGER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
@@ -616,6 +620,9 @@ static void __releaseViews( iOECoS inst ) {
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
   StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_S88_ALL_MODULES );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
+  StrOp.fmtb( ecosCmd, "release(%d, view)\n", OID_ECoSDetectors );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 
     /* FARKLE -- must release all locs??? */
