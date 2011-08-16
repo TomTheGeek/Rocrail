@@ -2741,6 +2741,7 @@ static void _init( iOModel inst ) {
   _createSwAddrMap( o );
   _createCoAddrMap( o );
 
+  ModelOp.loadBlockOccupancy(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init blocks..." );
   {
     iIBlockBase block = (iIBlockBase)MapOp.first( o->blockMap );
@@ -2775,8 +2776,6 @@ static void _init( iOModel inst ) {
       block = (iIBlockBase)MapOp.next( o->ttMap );
     };
   }
-
-  ModelOp.loadBlockOccupancy(inst);
 
   if( o->moduleplan != NULL ) {
     if( wModPlan.isinitfield(ModPlanOp.getModPlan(o->moduleplan)) )
