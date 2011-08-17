@@ -167,6 +167,7 @@ ECoS Keywords:
 #include "rocdigs/impl/ecos_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -1695,6 +1696,14 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
  * 101 state[0x0000]
  * <END 0 (OK)>
  *
+ * <EVENT 200>
+* 200 state[0x3]
+* <END 0 (OK)>
+*
+* <EVENT 200>
+* 200 railcom[00, 0324, 1]
+* <END 0 (OK)>
+ *
  */
 static void __processS88Events( iOECoS inst, iONode node ) {
   iOECoSData data = Data( inst );
@@ -1707,9 +1716,50 @@ static void __processS88Events( iOECoS inst, iONode node ) {
 
     iONode child = NodeOp.getChild( node, idx );
 
-    const char* statestring = NodeOp.getStr( child, "state", NULL );
+    const char* statestring   = NodeOp.getStr( child, "state", NULL );
+    const char* railcomstring = NodeOp.getStr( child, "railcom", NULL );
 
       /* Make sure we have a valid event string */
+
+    if ( railcomstring != NULL ) {
+      /* 00, 0324, 1 */
+      int chanel = 0;
+      int loco   = 0;
+      int dir    = 0;
+      iOStrTok tok = StrTokOp.inst(railcomstring, ',' );
+      if( StrTokOp.hasMoreTokens( tok ) ) {
+        const char* schanel = StrTokOp.nextToken( tok );
+        chanel = (int)strtol( schanel, (char**)NULL, 10 );
+      }
+      if( StrTokOp.hasMoreTokens( tok ) ) {
+        const char* sloco = StrTokOp.nextToken( tok );
+        loco = (int)strtol( sloco, (char**)NULL, 10 );
+      }
+      if( StrTokOp.hasMoreTokens( tok ) ) {
+        const char* sdir = StrTokOp.nextToken( tok );
+        dir = (int)strtol( sdir, (char**)NULL, 10 );
+      }
+      StrTokOp.base.del(tok);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: port=%d, addr=%d, dir=%d", chanel, loco, dir );
+
+      iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+      wFeedback.setaddr( nodeC, chanel );
+      wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
+
+      if( data->iid != NULL )
+        wFeedback.setiid( nodeC, data->iid );
+
+      wFeedback.setdirection( nodeC, dir == 1 ? True:False );
+
+      wFeedback.setstate( nodeC, loco > 0 ? True:False );
+      wFeedback.setidentifier( nodeC, loco);
+
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+      continue;
+    }
 
     if ( statestring == NULL ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Empty event string!" );

@@ -33,6 +33,18 @@ while 1:
       connection.send('100 state[0x0]\n')
       connection.send('<END 0 (OK)>\n')
 
+      connection.send('<EVENT 200>\n')
+      connection.send('200 state[0x3]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 200>\n')
+      connection.send('200 railcom[01, 0356, 1]\n')
+      connection.send('<END 0 (OK)>\n')
+
+      connection.send('<EVENT 200>\n')
+      connection.send('200 railcom[01, 0000, 0]\n')
+      connection.send('<END 0 (OK)>\n')
+
       connection.send('<EVENT 102>\n')
       connection.send('102 state[0x10]\n')
       connection.send('<END 0 (OK)>\n')
