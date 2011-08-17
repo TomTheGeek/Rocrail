@@ -597,8 +597,8 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  cmd[2] |= WRITE_FLAG;
 		  cmd[3] = speed & 0x1F;
 		  cmd[3] |= dir ? 0x00:0x20;
-		  cmd[3] |= fn  ? 0x00:0x40;
-		  cmd[3] |= slot->fn ? 0x80:0x00;
+      cmd[3] |= slot->lights ? 0x40:0x00;
+      cmd[3] |= slot->fn ? 0x80:0x00;
 		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %d", addr );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
@@ -740,7 +740,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 
         slot->fn = f1;
       }
-      else if( fidx > 0 && fidx < 9 ) {
+      else if( fidx > 0 && fidx < 10 ) {
         /* fx1 */
         cmd[2] = (addr+1) & 0x7F;
         cmd[2] |= WRITE_FLAG;
@@ -1253,6 +1253,9 @@ static struct OZS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zs2 %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps    = %d", wDigInt.getbps( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow   = %s", wDigInt.getflow( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid[%s]: %s,%d,%d",
@@ -1260,7 +1263,7 @@ static struct OZS2* _inst( const iONode ini ,const iOTrace trc ) {
         data->device, data->bps, data->timeout );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( ini ) ) ? cts:none );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
