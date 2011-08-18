@@ -1359,6 +1359,7 @@
       <var name="run" vt="Boolean"/>
       <var name="ctc1" vt="Boolean"/>
       <var name="ctc2" vt="Boolean"/>
+      <var name="pendingflip" vt="Boolean"/>
     </data>
   </object>
 

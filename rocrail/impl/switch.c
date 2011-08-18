@@ -668,6 +668,28 @@ static Boolean _isSet( iOSwitch inst ) {
 }
 
 
+static void __flipThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSwitch sw = (iOSwitch)ThreadOp.getParm( th );
+  iOSwitchData data = Data(sw);
+  int error = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Flip thread for \"%s\" started.", data->id );
+
+  ThreadOp.sleep(wSwitch.getdelay(data->props));
+  iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.setcmd( cmd, wSwitch.flip );
+  wSwitch.setid( cmd, wSwitch.getid( data->props ) );
+  wSwitch.setiid( cmd, wSwitch.getiid( data->props ) );
+
+  SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Flip thread for \"%s\" ended.", data->id );
+  data->pendingflip = False;
+  ThreadOp.base.del(th);
+}
+
+
 static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -970,6 +992,18 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     AppOp.broadcastEvent( nodeF );
 
     __ctcActionLED(inst);
+
+
+    if( !o->pendingflip ) {
+      if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.decoupler ) && wSwitch.getdelay( o->props ) > 0 ) {
+        if( StrOp.equals( state, wSwitch.isinv(o->props) ?wSwitch.turnout:wSwitch.straight ) ) {
+          o->pendingflip = True;
+          iOThread th = ThreadOp.inst( NULL, &__flipThread, inst );
+          ThreadOp.start( th );
+        }
+      }
+    }
+
   }
 
   o->activated = True;

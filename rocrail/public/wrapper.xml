@@ -55,6 +55,7 @@
     <const name="poweroff" vt="char" val="y" remark="Turns power off"/>
     <const name="threads" vt="char" val="t" remark="Lists all active threads."/>
     <const name="memory" vt="char" val="m" remark="Shows memory in use."/>
+    <const name="memtrc" vt="char" val="r" remark="Toggle memory tracelevel."/>
     <const name="debug" vt="char" val="d" remark="Toggle debug tracelevel."/>
     <const name="byte" vt="char" val="b" remark="Toggle byte tracelevel."/>
     <const name="automat" vt="char" val="a" remark="Toggle auto tracelevel."/>

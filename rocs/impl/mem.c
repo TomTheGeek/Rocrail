@@ -35,6 +35,8 @@ static long m_lAllocatedSize = 0;
 static long m_lAllocatedID[RocsLASTID];
 static struct __OMemTrace mt;
 static iOMutex mux = NULL;
+#define MAXSTRINGS 100
+static void* m_Strings[MAXSTRINGS];
 /*
  ***** _Public functions.
  */
@@ -198,6 +200,19 @@ static void _mem_resetDump(void) {
   memset( m_lAllocatedID, 0L, sizeof( m_lAllocatedID ) );
 }
 
+
+static void _dumpStrings(void) {
+  RocsMemID id = RocsStrID;
+  if( id == RocsStrID ) {
+    int i = 0;
+    for( i = 0; i < MAXSTRINGS; i++ ) {
+      if( m_Strings[i] != NULL ) {
+        printf("***DUMP STRING[%d]: [%s]\n", i, (char*)m_Strings[i]);
+      }
+    }
+  }
+}
+
 static void* _mem_alloc( long size, const char* file, int line ) {
   void* mp = __mem_alloc_magic( size, file, line, -1 );
   if( mp == NULL ) {
@@ -218,6 +233,16 @@ static void* _mem_allocTID( long size, int id, const char* file, int line ) {
   }
   /*if( m_bDebug )
     printf( " 0x%08X = allocIDMem( 0x%08X ) %s line=%d\n", p, size, file, line );*/
+
+  if( id == RocsStrID ) {
+    int i = 0;
+    for( i = 0; i < MAXSTRINGS; i++ ) {
+      if( m_Strings[i] == NULL ) {
+        m_Strings[i] = p;
+        break;
+      }
+    }
+  }
 
   return p;
 }
@@ -246,6 +271,19 @@ static void _mem_freeTID( void* p, int id, const char* file, int line ) {
   }
   /*if( m_bDebug )
     printf( " freeMem( 0x%08X ) %s line=%d\n", p, file, line );*/
+
+  if( id == RocsStrID ) {
+    int i = 0;
+    for( i = 0; i < MAXSTRINGS; i++ ) {
+      if( m_Strings[i] == p ) {
+        m_Strings[i] = NULL;
+        break;
+      }
+    }
+  }
+
+
+
   __mem_free_magic( p, file, line, id );
 }
 

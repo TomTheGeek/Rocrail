@@ -2517,9 +2517,12 @@ void Symbol::modelEvent( iONode node ) {
 
       if (locid!=NULL && StrOp.len(locid)>0) {
         iONode loc = wxGetApp().getFrame()->findLoc( locid);
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locid=[%s][%s] blockid=[%s]",
+            locid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
         if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) ) {
           if( (occupied == 1 || occupied == 3) ) {
             m_RotateSym = wLoc.isblockenterside( loc);
+            TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locid=[%s] enterside=[%d]", locid, m_RotateSym );
           }
         }
       }

@@ -609,6 +609,7 @@
       <param name="line" vt="int" remark="Sourceline."/>
     </fun>
     <fun name="getAllocCount" implname="_mem_getAllocCount" vt="long" remark="Returns number of allocated memory objects."/>
+    <fun name="dumpStrings" vt="void" remark="Print out all allocated strings."/>
     <fun name="freeObj" implname="_mem_freeObj" vt="void" remark="Free up obj memory.">
       <param name="p" vt="void**" remark="Object to free up."/>
     </fun>

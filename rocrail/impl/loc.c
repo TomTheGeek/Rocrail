@@ -1560,6 +1560,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     data->prevBlock = data->curBlock;
   }
   data->curBlock = id;
+  wLoc.setblockid( data->props, id );
 
   if( data->driver != NULL )
     data->driver->curblock( data->driver, id );

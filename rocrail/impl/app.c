@@ -426,6 +426,7 @@ static void __conhelp() {
     TraceOp.println( " a - Toggle automat tracelevel" );
     TraceOp.println( " h - Toggle http tracelevel" );
     TraceOp.println( " o - Toggle monitor tracelevel" );
+    TraceOp.println( " r - Toggle memory tracelevel" );
 }
 
 
@@ -467,6 +468,10 @@ static __checkConsole( iOAppData data ) {
   else if( c == wConCmd.byte ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle byte tracelevel." );
     TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_BYTE );
+  }
+  else if( c == wConCmd.memtrc ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle memory tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_MEMORY );
   }
   else if( c == wConCmd.automat ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle auto tracelevel." );
