@@ -744,12 +744,14 @@ static void __translate( iOZS2 zs2, iONode node ) {
         /* fx1 */
         cmd[2] = (addr+1) & 0x7F;
         cmd[2] |= WRITE_FLAG;
-        cmd[3] = ((slot->fx2 & 0x01) << 7)  | (slot->fx1 >> 1);
+        cmd[3] = ((slot->fx2 & 0x01) << 7)  | (slot->fx1 >> 1) & 0x7F;
       }
 
       slot->lastcmd = SystemOp.getTick();
 
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX1 function %d", addr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "SX1 function %d(%d), fidx=%d, fx1=0x%02X, fx2=0x%02X",
+          addr, slot->nr, fidx, slot->fx1, slot->fx2 );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
   }
