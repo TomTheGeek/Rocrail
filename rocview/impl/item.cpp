@@ -325,6 +325,8 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_locidStr = NULL;
   m_Timer = new wxTimer( this, ME_Timer );
   m_RotateSym = False;
+  m_dragX = 0;
+  m_dragY = 0;
 
 
   int itemidps = 7;
@@ -971,8 +973,9 @@ void Symbol::OnRightDown(wxMouseEvent& event) {
 }
 
 void Symbol::OnLeftDown(wxMouseEvent& event) {
-  int x;
-  int y;
+  wxPoint p = GetPosition();
+  int x = p.x;
+  int y = p.y;
   
   SetFocus();
 
@@ -1114,8 +1117,9 @@ void Symbol::OnMotion(wxMouseEvent& event) {
     return;
   }
 
-  int x;
-  int y;
+  wxPoint p = GetPosition();
+  int x = p.x;
+  int y = p.y;
 
   wxGetMousePosition( &x, &y );
 
