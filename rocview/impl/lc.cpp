@@ -135,7 +135,7 @@ void LC::speedCmd(bool sendCmd)
 }
 
 
-void LC::funCmd()
+void LC::funCmd(int fidx)
 {
   if( m_LocProps == NULL )
     return;
@@ -155,6 +155,7 @@ void LC::funCmd()
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   wFunCmd.setgroup ( cmd, m_iFnGroup + 1 );
+  wFunCmd.setfnchanged ( cmd, fidx + 1 );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_LocProps ) );
   wFunCmd.setid ( cmd, wLoc.getid( m_LocProps ) );
   wFunCmd.setf0 ( cmd, m_bFn?True:False );
@@ -402,23 +403,23 @@ void LC::OnButton(wxCommandEvent& event)
   else if ( event.GetEventObject() == m_F0 ) {
     m_bFn = setButtonColor( m_F0, m_bFn );
     speedCmd(true);
-    funCmd();
+    funCmd(0);
   }
   else if ( event.GetEventObject() == m_F1 ) {
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetEventObject() == m_F2 ) {
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetEventObject() == m_F3 ) {
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetEventObject() == m_F4 ) {
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
   else if ( event.GetEventObject() == m_Dir ) {
     m_bDir = ! m_bDir;
@@ -430,173 +431,173 @@ void LC::OnButton(wxCommandEvent& event)
     m_iFnGroup = 0;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F2 ) {
     m_iFnGroup = 0;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F3 ) {
     m_iFnGroup = 0;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F4 ) {
     m_iFnGroup = 0;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F5 ) {
     m_iFnGroup = 1;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F6 ) {
     m_iFnGroup = 1;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F7 ) {
     m_iFnGroup = 1;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F8 ) {
     m_iFnGroup = 1;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F9 ) {
     m_iFnGroup = 2;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F10 ) {
     m_iFnGroup = 2;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F11 ) {
     m_iFnGroup = 2;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F12 ) {
     m_iFnGroup = 2;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
 
   else if ( event.GetId() == ME_F13 ) {
     m_iFnGroup = 3;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F14 ) {
     m_iFnGroup = 3;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F15 ) {
     m_iFnGroup = 3;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F16 ) {
     m_iFnGroup = 3;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
 
   else if ( event.GetId() == ME_F17 ) {
     m_iFnGroup = 4;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F18 ) {
     m_iFnGroup = 4;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F19 ) {
     m_iFnGroup = 4;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F20 ) {
     m_iFnGroup = 4;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
 
   else if ( event.GetId() == ME_F21 ) {
     m_iFnGroup = 5;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F22 ) {
     m_iFnGroup = 5;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F23 ) {
     m_iFnGroup = 5;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F24 ) {
     m_iFnGroup = 5;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
 
   else if ( event.GetId() == ME_F25 ) {
     m_iFnGroup = 6;
     setFLabels();
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
-    funCmd();
+    funCmd(0+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F26 ) {
     m_iFnGroup = 6;
     setFLabels();
     m_bFx[1+m_iFnGroup*4] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*4] );
-    funCmd();
+    funCmd(1+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F27 ) {
     m_iFnGroup = 6;
     setFLabels();
     m_bFx[2+m_iFnGroup*4] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*4] );
-    funCmd();
+    funCmd(2+m_iFnGroup*4);
   }
   else if ( event.GetId() == ME_F28 ) {
     m_iFnGroup = 6;
     setFLabels();
     m_bFx[3+m_iFnGroup*4] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*4] );
-    funCmd();
+    funCmd(3+m_iFnGroup*4);
   }
 }
 

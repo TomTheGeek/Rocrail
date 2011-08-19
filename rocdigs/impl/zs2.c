@@ -721,7 +721,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 				cmd[ 2] = slot->nr * 6 + 5 + WRITE_FLAG;
 				cmd[ 3] = slot->fx2;
 		  }
-		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX2 function %d", addr );
+		  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX2 function %d(%d), fidx=%d", addr, slot->nr, fidx );
 			ThreadOp.post(data->writer, (obj)cmd);
 		}
 		else {

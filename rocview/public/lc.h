@@ -50,7 +50,7 @@ private:
     /// Creation
     bool Create();
     void init();
-    void funCmd();
+    void funCmd(int fidx);
     void speedCmd(bool sendCmd);
     bool setButtonColor( wxButton* button, bool state );
 
