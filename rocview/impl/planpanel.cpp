@@ -176,6 +176,8 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_ModViewLabel = NULL;
   m_Parent = parent;
   m_LockedRoutes = MapOp.inst();
+  m_dragX = 0;
+  m_dragY = 0;
 
   m_Z = z;
   m_Ori = wItem.west;
@@ -526,7 +528,7 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
   m_X = (int)(m_mouseX / (m_ItemSize*m_Scale));
   m_Y = (int)(m_mouseY / (m_ItemSize*m_Scale));
 
-  int x, y;
+  int x = 0, y = 0;
   GetViewStart( &x, &y );
 
   char* text = StrOp.fmt( "(%d,%d)", m_X+x, m_Y+y );
@@ -1741,8 +1743,8 @@ void PlanPanel::refresh(bool eraseBackground ) {
 }
 
 void PlanPanel::OnLeftDown(wxMouseEvent& event) {
-  int x;
-  int y;
+  int x = 0;
+  int y = 0;
 
   Raise();
 
