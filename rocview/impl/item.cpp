@@ -885,19 +885,27 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
 
     int x_off, y_off;
     m_PlanPanel->GetViewStart( &x_off, &y_off );
-    wItem.setx( m_Props, p.x + x_off );
-    wItem.sety( m_Props, p.y + y_off );
-    setPosition();
 
-    /* Notify RocRail. */
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
-        "Change position to %d,%d", wItem.getx(m_Props), wItem.gety(m_Props) );
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.modify );
-    iONode item = (iONode)NodeOp.base.clone( m_Props );
-    NodeOp.addChild( cmd, item );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+    // Check for negative values:
+    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0) {
+      wItem.setx( m_Props, p.x + x_off );
+      wItem.sety( m_Props, p.y + y_off );
+      setPosition();
+
+      /* Notify RocRail. */
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+          "Change position to %d,%d", wItem.getx(m_Props), wItem.gety(m_Props) );
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      iONode item = (iONode)NodeOp.base.clone( m_Props );
+      NodeOp.addChild( cmd, item );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+    else {
+      // Restore position
+      setPosition();
+    }
   }
   else {
     const char* nodeName = NodeOp.getName( m_Props );

@@ -624,35 +624,44 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     int x = p.x - x_off;
     int y = p.y - y_off;
 
-    int pre_move_x = wZLevel.getmodviewx( m_zLevel );
-    int pre_move_y = wZLevel.getmodviewy( m_zLevel );
-    wZLevel.setmodviewx( m_zLevel, p.x + x_off );
-    wZLevel.setmodviewy( m_zLevel, p.y + y_off );
+    // Check for negative values:
+    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0) {
 
-    setPosition();
+      int pre_move_x = wZLevel.getmodviewx( m_zLevel );
+      int pre_move_y = wZLevel.getmodviewy( m_zLevel );
+      wZLevel.setmodviewx( m_zLevel, p.x + x_off );
+      wZLevel.setmodviewy( m_zLevel, p.y + y_off );
 
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag end x=%d(%d), y=%d(%d)", p.x, m_dragX, p.y, m_dragY );
+      setPosition();
 
-    /* Notify RocRail. */
-    TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999,
-        "Change position to %d,%d", p.x + x_off, p.y + y_off );
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.modify );
-    NodeOp.setStr( cmd, "id", "movemod" );
+      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag end x=%d(%d), y=%d(%d)", p.x, m_dragX, p.y, m_dragY );
 
-    iONode module = NodeOp.inst( wModule.name(), cmd, ELEMENT_NODE );
-    wModule.setid( module, wZLevel.getmodid(m_zLevel) );
-    wModule.setcmd( module, wModule.cmd_move );
+      /* Notify RocRail. */
+      TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999,
+          "Change position to %d,%d", p.x + x_off, p.y + y_off );
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.setStr( cmd, "id", "movemod" );
 
-    NodeOp.setInt( module, "pre_move_x", pre_move_x );
-    NodeOp.setInt( module, "pre_move_y", pre_move_y );
-    wModule.setx( module, p.x + x_off );
-    wModule.sety( module, p.y + y_off );
+      iONode module = NodeOp.inst( wModule.name(), cmd, ELEMENT_NODE );
+      wModule.setid( module, wZLevel.getmodid(m_zLevel) );
+      wModule.setcmd( module, wModule.cmd_move );
 
-    NodeOp.addChild( cmd, module );
-    wxGetApp().sendToRocrail( cmd );
-    wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( cmd ) );
-    cmd->base.del(cmd);
+      NodeOp.setInt( module, "pre_move_x", pre_move_x );
+      NodeOp.setInt( module, "pre_move_y", pre_move_y );
+      wModule.setx( module, p.x + x_off );
+      wModule.sety( module, p.y + y_off );
+
+      NodeOp.addChild( cmd, module );
+      wxGetApp().sendToRocrail( cmd );
+      wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( cmd ) );
+      cmd->base.del(cmd);
+    }
+    else {
+      // Restore position:
+      setPosition();
+    }
+
   }
   else {
     m_X = (int)(m_mouseX / (m_ItemSize*m_Scale));
