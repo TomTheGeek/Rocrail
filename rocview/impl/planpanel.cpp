@@ -543,6 +543,8 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
 
   if( m_bModView && dragging && event.m_leftDown && !m_isDragged ) {
     m_isDragged = true;
+    m_dragX = x;
+    m_dragY = y;
     CaptureMouse();
   }
 
