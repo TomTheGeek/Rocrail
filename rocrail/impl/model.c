@@ -381,17 +381,40 @@ static Boolean __checkPlanHealth(iOModelData data) {
               NodeOp.getName(firstItem), wItem.getid(firstItem));
           healthy = False;
         }
-        else if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
+
+        if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
           if( wItem.getx(item) < -1 || wItem.gety(item) < -1 ) {
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
                 "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
                 NodeOp.getName(item), wItem.getid(item),
                 wItem.getx(item), wItem.gety(item), wItem.getz(item));
+            if( wItem.getx(item) < -1 )
+              wItem.setx(item, 0);
+            if( wItem.gety(item) < -1 )
+              wItem.sety(item, 0);
             healthy = False;
           }
           else
             MapOp.put(xyzMap, key, (obj)item );
         }
+
+        if( wItem.getx(item) > 256 || wItem.gety(item) > 256 ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+              NodeOp.getName(item), wItem.getid(item),
+              wItem.getx(item), wItem.gety(item), wItem.getz(item));
+          if( wItem.getx(item) > 256 )
+            wItem.setx(item, 0);
+          if( wItem.gety(item) > 256 )
+            wItem.sety(item, 0);
+          healthy = False;
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
+            NodeOp.getName(item), wItem.getid(item),
+            wItem.getx(item), wItem.gety(item), wItem.getz(item));
       }
 
     }
