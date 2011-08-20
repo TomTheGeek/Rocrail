@@ -886,8 +886,8 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     int x_off, y_off;
     m_PlanPanel->GetViewStart( &x_off, &y_off );
 
-    // Check for negative values:
-    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0) {
+    // Check for invalid values:
+    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0 && (p.x + x_off) <= 256 && (p.y + y_off) <= 256 ) {
       wItem.setx( m_Props, p.x + x_off );
       wItem.sety( m_Props, p.y + y_off );
       setPosition();

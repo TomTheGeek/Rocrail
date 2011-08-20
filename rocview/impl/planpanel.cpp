@@ -624,8 +624,8 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     int x = p.x - x_off;
     int y = p.y - y_off;
 
-    // Check for negative values:
-    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0) {
+    // Check for invalid values:
+    if( (p.x + x_off) >= 0 && (p.y + y_off) >= 0 && (p.x + x_off) <= 256 && (p.y + y_off) <= 256 ) {
 
       int pre_move_x = wZLevel.getmodviewx( m_zLevel );
       int pre_move_y = wZLevel.getmodviewy( m_zLevel );
