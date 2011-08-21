@@ -299,7 +299,9 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
       else
         preamble = 5;
     }
-    else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) || slot->addr > 100 ) {
+    else if( StrOp.equals( wLoc.prot_L, wLoc.getprot(node) ) ||
+        (StrOp.equals( wLoc.prot_N, wLoc.getprot(node) ) && slot->addr > 100) )
+    {
       /* DCC long addresses */
       longAddr = True;
       dcc = True;
@@ -362,8 +364,8 @@ static iOSlot __getSlot(iOZS2Data data, iONode node) {
     if( slotnr != -1 ) {
       slot->nr = slotnr;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "using SX2 slot %d for %s, preamble=%d, addr=%d",
-          slot->nr, wLoc.getid(node), preamble, slot->addr );
+          "using SX2 slot %d for %s, preamble=%d, addr=%d, dcc=%d",
+          slot->nr, wLoc.getid(node), preamble, slot->addr, slot->dcc );
     }
     else {
       slotnr = __getFreeSlot(data);
