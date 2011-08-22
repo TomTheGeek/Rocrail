@@ -155,7 +155,7 @@ void LC::funCmd(int fidx)
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   wFunCmd.setgroup ( cmd, m_iFnGroup + 1 );
-  wFunCmd.setfnchanged ( cmd, fidx + 1 );
+  wFunCmd.setfnchanged ( cmd, fidx==-1?0:fidx + 1 );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_LocProps ) );
   wFunCmd.setid ( cmd, wLoc.getid( m_LocProps ) );
   wFunCmd.setf0 ( cmd, m_bFn?True:False );
@@ -403,7 +403,7 @@ void LC::OnButton(wxCommandEvent& event)
   else if ( event.GetEventObject() == m_F0 ) {
     m_bFn = setButtonColor( m_F0, m_bFn );
     speedCmd(true);
-    funCmd(0);
+    funCmd(-1);
   }
   else if ( event.GetEventObject() == m_F1 ) {
     m_bFx[0+m_iFnGroup*4] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*4] );
