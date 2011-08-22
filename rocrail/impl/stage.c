@@ -182,10 +182,21 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
 }
 
 
+static Boolean __isEndSection(iIBlockBase inst, iONode section ) {
+  iOStageData data = Data(inst);
+  if( section == NULL )
+    return False;
+  int cnt = ListOp.size(data->sectionList);
+  if( cnt > 0 && (iONode)ListOp.get(data->sectionList, cnt - 1) == section )
+    return True;
+}
+
+
 /**  */
 static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,int val, int wheelcount ,iONode evtDescr ) {
   iOStageData data = Data(inst);
   iONode section = (iONode)MapOp.get( data->fbMap, id );
+  Boolean isEndSection = __isEndSection(inst, section);
 
   if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
     if( data->locId != NULL && StrOp.len(data->locId) > 0 ) {
@@ -221,8 +232,41 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
       if( loc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of IN event", data->locId );
         LocOp.event( loc, (obj)inst, in_event, 0, True );
-        /* stop loco */
-        LocOp.stop(loc, False);
+        if( !isEndSection ) {
+          /* stop loco */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "stop loco %s because its not in the end section", data->locId );
+          if( LocOp.isAutomode(loc) ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "stop loco %s because its not in the end section", data->locId );
+            LocOp.stop(loc, False);
+          }
+          else {
+            iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+            wLoc.setcmd(cmd, wLoc.velocity);
+            wLoc.setV(cmd, 0);
+            LocOp.cmd(loc, cmd);
+          }
+          if( data->pendingFree ) {
+            iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
+            if( s != NULL )
+              wStageSection.setlcid(s, NULL);
+            data->pendingFree = False;
+          }
+        }
+        else {
+          if( !LocOp.isAutomode(loc) ) {
+            iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+            wLoc.setcmd(cmd, wLoc.velocity);
+            wLoc.setV(cmd, 0);
+            LocOp.cmd(loc, cmd);
+            LocOp.go(loc);
+            if( data->pendingFree ) {
+              iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
+              if( s != NULL )
+                wStageSection.setlcid(s, NULL);
+              data->pendingFree = False;
+            }
+          }
+        }
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, wStageSection.getid(section) );
       }
     }
@@ -632,11 +676,22 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     }
   }
   if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
+    iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection) );
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "moving loco %s from %s to %s in stage %s",
         wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
         wStageSection.getid(nextFreeSection), data->id );
 
+    data->targetSection = wStageSection.getidx(nextFreeSection);
+    data->pendingSection =  wStageSection.getidx(firstOccupiedSection);
+    data->pendingFree = False;
+
+    wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
+    iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+    wLoc.setcmd(cmd, wLoc.velocity);
+    wLoc.setV_hint(cmd, wLoc.min);
+    LocOp.cmd(lc, cmd);
     /* TODO: V_min and wait for event of sensor firstFreeSection */
     locoMoved = True;
   }
