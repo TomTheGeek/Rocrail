@@ -140,7 +140,7 @@ void OperatorDlg::initLocos() {
         m_LocoID->SetStringSelection( wxString(wOperator.getlcid( m_Props ),wxConvUTF8) );
         iONode lc = wxGetApp().getFrame()->findLoc(wOperator.getlcid( m_Props ));
         if( lc != NULL ) {
-          iONode bk = wxGetApp().getFrame()->findBlock4Loc(wOperator.getlcid( m_Props ));
+          iONode bk = wxGetApp().getFrame()->findBlock4Loc(wOperator.getlcid( m_Props ), NULL);
           if( bk != NULL ) {
             m_Location->SetStringSelection( wxString(wBlock.getid( bk ),wxConvUTF8) );
           }

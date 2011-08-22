@@ -436,11 +436,21 @@ iONode RocGuiFrame::findWaybill( const char* billid ) {
 }
 
 
-iONode RocGuiFrame::findBlock4Loc( const char* locid ) {
+iONode RocGuiFrame::findBlock4Loc( const char* locid, const char* blockid ) {
   iONode model = wxGetApp().getModel();
   iONode bklist = wPlan.getbklist( model );
   if( bklist != NULL ) {
     int cnt = NodeOp.getChildCnt( bklist );
+    if( blockid != NULL ) {
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        const char* id = wBlock.getid( bk );
+
+        if( id != NULL && StrOp.equals( blockid, id ) ) {
+          return bk;
+        }
+      }
+    }
     for( int i = 0; i < cnt; i++ ) {
       iONode bk = NodeOp.getChild( bklist, i );
       const char* id = wBlock.getlocid( bk );
@@ -826,7 +836,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, wxALIGN_RIGHT, wxALIGN_CENTRE );
         StrOp.free( val );
-        iONode bk = findBlock4Loc(id);
+        iONode bk = findBlock4Loc(id, NULL);
         if( bk != NULL ) {
           m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK,
               (wLoc.isblockenterside(lc)?_T(""):_T("-")) + wxString(wBlock.getid( bk ),wxConvUTF8) );
@@ -1066,7 +1076,24 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T(""):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );
 
-          iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ));
+          iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getblockid( node ));
+          if(block != NULL ) {
+            wBlock.setupdateenterside(block, True);
+            if( m_ModPanel != NULL) {
+              m_ModPanel->modelEvent( block );
+            } else {
+              int pagecnt = getNotebook()->GetPageCount();
+              for( int i = 0; i < pagecnt; i++ ) {
+                PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+                p->modelEvent( block );
+              }
+            }
+          }
+
+        }
+
+        if( wLoc.getdestblockid( node ) != NULL ) {
+          iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getdestblockid( node ));
           if(block != NULL ) {
             wBlock.setupdateenterside(block, True);
             if( m_ModPanel != NULL) {

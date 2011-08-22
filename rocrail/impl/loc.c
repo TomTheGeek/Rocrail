@@ -2547,8 +2547,8 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
   iOLocData data = Data(loc);
 
   wLoc.setblockenterside(data->props, enterside);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block enter side for [%s] set to [%s]",
-      wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block[%s] enter side for [%s] set to [%s]",
+      blockId!=NULL?blockId:"-", wLoc.getid(data->props), wLoc.isblockenterside( data->props )?"+":"-" );
   ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
 
   /* Broadcast to clients. */
@@ -2565,9 +2565,9 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setmanual( node, data->gomanual );
     if( blockId != NULL )
-      wLoc.setblockid(node, blockId );
+      wLoc.setdestblockid(node, blockId );
     else
-      wLoc.setblockid( node, data->curBlock );
+      wLoc.setdestblockid( node, data->curBlock );
     wLoc.setruntime( node, wLoc.getruntime(data->props) );
     wLoc.setmtime( node, wLoc.getmtime(data->props) );
     wLoc.setmint( node, wLoc.getmint(data->props) );
