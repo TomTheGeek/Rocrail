@@ -59,7 +59,7 @@ cp -R ../rocview/svg/* debian/opt/rocrail/svg
 cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
-dpkg-deb --build debian
+fakeroot dpkg-deb --build debian
 mv debian.deb rocrail-setup-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-$ARCH.deb
 rm -Rf debian
 cd ../rocrail

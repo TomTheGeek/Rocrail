@@ -32,7 +32,7 @@ strip debian/opt/rocrail/*.so
 
 cp -R ../COPYING debian/opt/rocrail
 
-dpkg-deb --build debian
+fakeroot dpkg-deb --build debian
 mv debian.deb rocrail-update-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-i386.deb
 rm -Rf debian
 cd ../rocrail

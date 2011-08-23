@@ -4,6 +4,7 @@ Section: other
 Priority: optional
 Architecture: i386
 Depends: libwxgtk2.8-0
+Installed-Size: 1000
 Maintainer: Rob Versluis <support@rocrail.net>
 Description: Rocrail - Model Railroad Control System.    
 

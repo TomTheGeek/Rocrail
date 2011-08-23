@@ -259,7 +259,7 @@ echo ""
 
 echo "Building debian package..."
 
-dpkg-deb --build debian
+fakeroot dpkg-deb --build debian
 
 echo "    Done"
 echo ""
