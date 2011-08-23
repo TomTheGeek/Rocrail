@@ -1509,6 +1509,15 @@ void Symbol::OnPopup(wxMouseEvent& event)
     }
 
     else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
+      const char* locId = wStage.getlocid( m_Props );
+      Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
+      if( hasLoc ) {
+        iONode lc = wxGetApp().getFrame()->findLoc(locId);
+        Boolean active = wLoc.isactive(lc);
+        menu.Append( ME_LocGo, wxGetApp().getMenu("startloc") );
+        menu.Append( ME_LocGoManual, wxGetApp().getMenu("gomanual") );
+        menu.Append( ME_LocStop, wxGetApp().getMenu("stoploc") );
+      }
       menu.Append( ME_Compress, wxGetApp().getMenu("compress") );
     }
 
