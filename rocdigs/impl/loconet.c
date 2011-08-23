@@ -1313,6 +1313,14 @@ static void __loconetReader( void* threadinst ) {
     cmd[2]  = 0;
     cmd[3] = LocoNetOp.checksum( cmd, 3 );
     LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
+
+    ThreadOp.sleep(100);
+
+    cmd[0] = OPC_RQ_SL_DATA;
+    cmd[1]  = 0; /* dispatch slot */
+    cmd[2]  = 0;
+    cmd[3] = LocoNetOp.checksum( cmd, 3 );
+    LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
   }
 
   while( data->run && !data->dummyio ) {
