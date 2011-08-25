@@ -59,6 +59,12 @@ else
 	BINSUFFIX=
 	CC_EXTRA_FLAGS=-fPIC
 endif
+ifeq ($(PLATFORM),WIN64)
+    LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+    COREDIR=win
+    BINSUFFIX=.exe
+    CC_EXTRA_FLAGS=
+endif 
 ifeq ($(PLATFORM),LINUX)
 	LIBS=-lpthread -ldl
 endif

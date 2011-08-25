@@ -80,6 +80,16 @@ ifeq ($(PLATFORM),WIN32)
 	LIBSUFFIX=-i586-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
 	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
+else ifeq ($(PLATFORM),WIN64)
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	LNK_FLAGS=`$(FS)usr$(FS)amd64-mingw32msvc$(FS)bin$(FS)wx-config --libs`
+	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
+	DIRPREFIX=win
+	CC_EXTRA_FLAGS=
+	BINSUFFIX=.exe
+	LIBSUFFIX=-amd64-mingw32msvc
+	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
+	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
 else ifeq ($(PLATFORM),OPENBSD)
 	LIBS=-pthread
 	DIRPREFIX=unx

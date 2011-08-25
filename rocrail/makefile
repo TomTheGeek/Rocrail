@@ -59,6 +59,11 @@ ifeq ($(PLATFORM),WIN32)
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	BINSUFFIX=.exe
+else ifeq ($(PLATFORM),WIN64)
+	DIRPREFIX=win
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	BINSUFFIX=.exe
+	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),OPENBSD)
 	LIBS=-pthread
 	DIRPREFIX=unx

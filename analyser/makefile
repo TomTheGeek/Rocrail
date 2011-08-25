@@ -56,6 +56,13 @@ ifeq ($(PLATFORM),WIN32)
 	LNK_FLAGS=--def analyser.def
 	LNK=$(TOOLPREFIX)dllwrap
 	SHAREDSUFFIX=.dll
+else ifeq ($(PLATFORM),WIN64)
+	DIRPREFIX=win
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	LNK=$(TOOLPREFIX)dllwrap
+	LNK_FLAGS=--def analyser.def
+	SHAREDSUFFIX=.dll
+	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),MACOSX)
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
