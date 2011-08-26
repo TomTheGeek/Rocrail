@@ -106,6 +106,7 @@ void CbusDlg::initValues() {
 
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
+  m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) ? true:false );
 }
 
 void CbusDlg::evaluate() {
@@ -130,6 +131,7 @@ void CbusDlg::evaluate() {
 
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
+  wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 
 }
 

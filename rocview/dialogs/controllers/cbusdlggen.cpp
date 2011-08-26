@@ -94,7 +94,10 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_OptionsBox->Add( m_ShortEvents, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_FonFof = new wxCheckBox( this, wxID_ANY, wxT("FONFOF"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_OptionsBox->Add( m_FonFof, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	m_OptionsBox->Add( m_FonFof, 0, wxRIGHT|wxLEFT, 5 );
+	
+	m_CTS = new wxCheckBox( this, wxID_ANY, wxT("RTS/CTS"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_OptionsBox->Add( m_CTS, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	wxFlexGridSizer* fgSizer41;
 	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );
