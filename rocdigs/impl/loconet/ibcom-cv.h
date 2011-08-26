@@ -12,5 +12,6 @@
 int makeIBComCVPacket(int cv, int value, byte* buffer, Boolean write);
 int startIBComPT(byte* buffer);
 int stopIBComPT(byte* buffer);
+void initIBCom(iOLocoNet loconet);
 
 #endif /* IBCOMCV_H_ */

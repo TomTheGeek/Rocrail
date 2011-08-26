@@ -79,7 +79,6 @@ static int instCnt = 0;
 
 /* proto types */
 static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size );
-static void __initIBCOM(iOLocoNet loconet);
 
 /** ----- OBase ----- */
 static const char* __id( void* inst ) {
@@ -1293,18 +1292,6 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
 }
 
 
-static void __initIBCOM(iOLocoNet loconet) {
-  byte cmd0[] = {0xE6, 0x15, 0x00, 0x01, 0x20, 0x1A, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x52, 0x11, 0x00, 0x00, 0x00, 0x00, 0x72};
-  byte cmd1[] = {0xED, 0x0F, 0x01, 0x49, 0x42, 0x0D, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  byte cmd2[] = {0xE5, 0x0F, 0x00, 0x49, 0x4B, 0x0B, 0x04, 0x1A, 0x00, 0x52, 0x11, 0x1A, 0x00, 0x00, 0x5B};
-  ThreadOp.sleep(100);
-  LocoNetOp.transact( loconet, cmd0, 21, NULL, NULL, 0, 0, False );
-  ThreadOp.sleep(100);
-  LocoNetOp.transact( loconet, cmd1, 15, NULL, NULL, 0, 0, False );
-  ThreadOp.sleep(100);
-  LocoNetOp.transact( loconet, cmd2, 15, NULL, NULL, 0, 0, False );
-}
-
 static void __loconetReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLocoNet loconet = (iOLocoNet)ThreadOp.getParm( th );
@@ -1337,7 +1324,7 @@ static void __loconetReader( void* threadinst ) {
     LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
 
     if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
-      __initIBCOM(loconet);
+      initIBCom(loconet);
   }
 
   while( data->run && !data->dummyio ) {
@@ -1604,7 +1591,7 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
         }
 
         if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
-          __initIBCOM(loconet);
+          initIBCom(loconet);
 
 
       }
