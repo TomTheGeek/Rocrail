@@ -1361,8 +1361,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.AppendSeparator();
         menu.Append( ME_LocReset, wxGetApp().getMenu("softresetall") );
         mi = menu.FindItem( ME_LocReset );
-        if( wxGetApp().getFrame()->isAutoMode() )
-          mi->Enable( false );
+        //if( wxGetApp().getFrame()->isAutoMode() )
+          //mi->Enable( false );
         menu.AppendSeparator();
         if( !active )
           menu.Append( ME_LocActivate, wxGetApp().getMenu("activate") );
