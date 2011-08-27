@@ -110,7 +110,7 @@ echo ""
 
 # Show the user the filename being built
 
-PACKAGENAME="rocrail-setup-$VERSION.$PATCH-rev$BAZAARREVNO-$RELEASNAME-$DIST-$ARCH.deb"
+PACKAGENAME="rocrail-setup-rev$BAZAARREVNO-$DIST-$ARCH.deb"
 echo "Building $PACKAGENAME in ../package/"
 if [ $DEBUGFLAG = 1 ]; then
   echo "  -- Building a debug package"

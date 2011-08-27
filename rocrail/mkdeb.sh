@@ -1,22 +1,32 @@
 #!/bin/sh
 
 
-VERSION=$1
-PATCH=$2
-RELEASNAME=$3
-SVN=$4
-DIST=$5
-ARCH=$6
+DIST=$1
+ARCH=$2
 
-if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ] || [ ! $5 ]; then
-  echo "usage  : mkdeb.sh version patch relname rev dist arch"
-  echo "example: mkdeb.sh 1.4 999 snapshot 1420 debian5 i386"
+if [ !  $1 ]; then
+  echo "usage  : mkdeb.sh dist arch"
+  echo "example: mkdeb.sh ubuntu1104 i386"
   exit $?
 fi
 
-if [ ! $6 ]; then
+if [ ! $2 ]; then
   ARCH="i386"
 fi
+
+echo "Getting Bazaar revision number..."
+if which bzr > /dev/null
+then
+  BAZAARREV=`bzr revno`
+  echo "    Revision number is $BAZAARREV"
+  echo ""
+else
+  BAZAARREV="user"
+  echo "    Revision number not found or Bazaar not installed, using \"user\""
+  echo ""
+fi
+
+
 
 if [ ! -e ../package ] ; then
 	mkdir ../package
@@ -60,6 +70,6 @@ cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
 fakeroot dpkg-deb --build debian
-mv debian.deb rocrail-setup-$VERSION.$PATCH-rev$SVN-$RELEASNAME-$DIST-$ARCH.deb
+mv debian.deb rocrail-setup-rev$BAZAARREV-$DIST-$ARCH.deb
 rm -Rf debian
 cd ../rocrail

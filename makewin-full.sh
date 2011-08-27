@@ -8,29 +8,9 @@ echo "*** Rocrail makewin-full.sh starting (see www.rocrail.net)..."
 echo ""
 
 # Check params
-# rocrail-setup-[version].[patch]-rev[revno]-[type]-[dist].exe  (md5)
-
-VERSION=$1
-PATCH=$2
-TYPE=$3
-DIST=$4
+# rocrail-setup-rev[revno].exe  (md5)
 
 echo "Checking Parameters..."
-
-if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ]; then
-  echo "Error: Missing parameters:"
-  echo ""
-  echo "    Usage: makewin-full.sh <version> <patch> <type> <dist>"
-  echo ""
-  echo "    Example: \"makewin-full.sh 1.2 999 snapshot unicode\" will build "
-  echo "    \"rocrail-setup-1.2.999-revXXX-snapshot-unicode.exe\" where \"XXX\" is "
-  echo "    the Bazaar revision number or \"user\" if Bazaar is not installed."
-  echo ""
-  exit $?
-else
-  echo "    Parameters okay"
-  echo ""
-fi
 
 # Get the Bazaar revision number if available
 
@@ -115,18 +95,6 @@ echo "Creating Inno Setup installer file..."
 cd ../rocrail/package
 pwd
 sed s/\<BZR\>/$BAZAARREV/ < rocrail-template.iss > rocrail-temp2.iss
-mv rocrail-temp2.iss rocrail-temp.iss
-
-sed s/\<VER\>/$VERSION/ < rocrail-temp.iss > rocrail-temp2.iss
-mv rocrail-temp2.iss rocrail-temp.iss
-
-sed s/\<PATCH\>/$PATCH/ < rocrail-temp.iss > rocrail-temp2.iss
-mv rocrail-temp2.iss rocrail-temp.iss
-
-sed s/\<DIST\>/$DIST/ < rocrail-temp.iss > rocrail-temp2.iss
-mv rocrail-temp2.iss rocrail-temp.iss
-
-sed s/\<TYPE\>/$TYPE/ < rocrail-temp.iss > rocrail-temp2.iss
 mv rocrail-temp2.iss rocrail-temp.iss
 
 echo "    Done"
