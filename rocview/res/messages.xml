@@ -124,7 +124,7 @@
     <ja txt="言語を変えるために再起動してください。"/>
   </Msg>
   <Msg id="cancel">
-    <de txt="Abbruch" tip="Dialog beenden."/>
+    <de txt="Abbrechen" tip="Dialog beenden."/>
     <en txt="Cancel" tip="Cancel the dialog."/>
     <nl txt="Annuleren" tip="Annuleer de dialoog."/>
     <sv txt="Avbryt" tip="Stäng dialogrutan utan att spara."/>
@@ -674,7 +674,7 @@
     <nl txt="Herstel"/>
     <sv txt="Ångra"/>
     <fr txt="Annuler"/>
-    <tr txt="Geri Al"/>
+    <tr txt="Geri al"/>
     <es txt="Undo"/>
     <it txt="Annulla"/>
     <da txt="Fortryd"/>
@@ -809,7 +809,7 @@
     <ro txt="Sursă inactivă"/>
   </Msg>
   <Msg id="initfield">
-    <de txt="Weichen initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
+    <de txt="Weichen/Signale/Zähler initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
     <en txt="Init field" accel="0" tip="Initialize switches according the track plan."/>
     <nl txt="Initialisatie veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
     <sv txt="Initiera anläggning" accel="8" tip="Ställ växlar och signaler enligt spårplan."/>
@@ -951,7 +951,7 @@
     <nl txt="Start alle loc's" tip="Zet alle locomotieven in automaat mode."/>
     <sv txt="Starta alla lok" tip="Kör alla lok automatiskt."/>
     <fr txt="Démarrer toutes les locomotives" tip="Placer toutes les machines en mode automatique."/>
-    <tr txt="Bütün Locları Çalıştır" tip="Oto Modda bütün Locları çalıştır."/>
+    <tr txt="Bütün lokları çalıştır" tip="Oto Modda bütün Locları çalıştır."/>
     <es txt="Arrancar todas las Locs" tip="Poner todas las locomotoras en modo automático."/>
     <it txt="Avvia tutte le locomotive" tip="Imposta tutte le locomotive in automatico"/>
     <da txt="Start alle lokomotiver" tip="Set alle lokomotiver in automatisk kontrol."/>
@@ -978,7 +978,7 @@
     <nl txt="Stop alle locs" tip="Zet alle locomotieven in hand mode."/>
     <sv txt="Stoppa alla lok" tip="Avsluta lokautomatik."/>
     <fr txt="Arrêter toutes les locomotives" tip="Retirer toutes les machines du mode automatique."/>
-    <tr txt="Bütün Locları Durdur" tip="Manuel modda bütün Locları durdur."/>
+    <tr txt="Bütün lokları durdur" tip="Manuel modda bütün Locları durdur."/>
     <es txt="Parar todas las Locs" tip="Poner todas las locomotoras en modo manual."/>
     <it txt="Arresta tutte le locomotive" tip="Imposta tutte le locomotive in manuale."/>
     <da txt="Stop alle lokomotiver" tip="Set alle lokomotiver in manual kontrol."/>
@@ -1005,7 +1005,7 @@
     <nl txt="Start loc" tip="Zet locomotief in automaat mode."/>
     <sv txt="Starta lok" tip="Kör lok automatiskt."/>
     <fr txt="Démarrer la locomotive" tip="Placer cette machine en mode automatique."/>
-    <tr txt="Lokomotifi Çalıştır" tip="Oto Modda lokomotifi başlat."/>
+    <tr txt="Lokomotifi çalıştır" tip="Oto Modda lokomotifi başlat."/>
     <es txt="Arrancar locomotora" tip="Poner locomotora en modo automático."/>
     <it txt="Avvia locomotiva" tip="Imposta la locomotiva in automatico."/>
     <da txt="Start lokomotiv" tip="Sæt lokomotivet til auto kontrol."/>
@@ -1451,7 +1451,7 @@
     <nl txt="Alle loc's  stoppen?"/>
     <sv txt="Vill du stoppa alla lok?"/>
     <fr txt="Arrêter toutes les locomotives maintenant ?"/>
-    <tr txt="Stop all locs now?"/>
+    <tr txt="Bütün loklar şimdi durdurulsun mu?"/>
     <es txt="Stop all locs now?"/>
     <it txt="Fermare tutte le locomotive ora?"/>
     <da txt="Vil du stoppe alle lokomotiver nu?"/>
@@ -1484,7 +1484,7 @@
     <ca txt="Poden haver locomotores en marxa! Apagar el mode automàtic?"/>
     <el txt="Θα μπορούσαν να υπάρχουν Locs τρέχει! Απενεργοποιήστε AutoMode;"/>
     <hu txt="Lehetnek közlekedő mozdonyok! Kikapcsoljam az automatikus üzemet?"/>
-    <ru txt="Могут быть все еще двигающиеся локомотивы! Отключить авторежим?"/>
+    <ru txt="Некоторые локомотивы, всё ещё могут находиться в движении!!! Отключить авторежим?"/>
     <pt txt="Poderá haver locs a andar! Mudar para modo automático?"/>
     <cs txt="Lokomotivy jedou ! Vypnout automatický Mód ?"/>
     <nb txt="Det kan være kjørende lok! Skru av Auto modus?"/>
@@ -2040,7 +2040,7 @@
     <el txt="Block Properties"/>
     <ca txt="Propietats de blocs"/>
     <hu txt="Térköz tulajdonságok"/>
-    <ru txt="Свойства блока"/>
+    <ru txt="Свойства Блока"/>
     <pt txt="Propriedades do bloco"/>
     <cs txt="Vlastnosti bloku"/>
     <nb txt="Blokkegenskaper"/>
@@ -2220,7 +2220,7 @@
     <ca txt="Taula de grup de blocs"/>
     <el txt="Αποκλεισμός πίνακα της ομάδας"/>
     <hu txt="Térköz csoport lista"/>
-    <ru txt="Группы блоков"/>
+    <ru txt="Группы Блоков"/>
     <pt txt="Tabela grupo de blocos"/>
     <cs txt="Seznam skupin bloků"/>
     <nb txt="Blokkgruppetabell"/>
@@ -2397,7 +2397,7 @@
     <hu txt="Szenzorok a(z) %s térköz irányából"/>
     <pt txt="Sensores vindos do bloco %s:"/>
     <cs txt="Senzory přicházi z bloku %s:"/>
-    <ru txt="Датчики, используемые в блоке %s:"/>
+    <ru txt="Датчики, используемые по прибытию из блока %s:"/>
     <nb txt="Følere som kommer fra blokk %s:"/>
     <pl txt="Czujniki z bloku %s:"/>
     <ca txt="Sensor que ve del bloc %s:"/>
@@ -3668,7 +3668,7 @@
     <nl txt="Draaisnelheid"/>
     <sv txt="Rotation velocity"/>
     <fr txt="Vitesse de rotation"/>
-    <tr txt="Rotation velocity"/>
+    <tr txt="Dönüş hızı"/>
     <es txt="Velocidad de rotación"/>
     <it txt="Velocità di rotazione"/>
     <da txt="Rotationshastighed"/>
@@ -4512,7 +4512,7 @@
     <sv txt="Lokaltåg"/>
     <fr txt="Local"/>
     <tr txt="Yerel"/>
-    <es txt="Cercanias"/>
+    <es txt="Suburbano"/>
     <it txt="Locale"/>
     <da txt="Lokaltog"/>
     <bs txt="Lokalno"/>
@@ -4520,14 +4520,14 @@
     <bg txt="Местни"/>
     <el txt="Τοπικά"/>
     <hu txt="Személy"/>
-    <ru txt="Местный"/>
+    <ru txt="Пригородный"/>
     <pt txt="Suburbano"/>
     <nb txt="Lokal"/>
     <ca txt="Rodalies"/>
     <zh_TW txt="區間車"/>
     <pl txt="Lokalny"/>
     <id txt="Lokal"/>
-    <en_AU txt="Local"/>
+    <en_AU txt="Suburban"/>
     <en_CA txt="Local"/>
     <en_GB txt="Local"/>
   </Msg>
@@ -4795,7 +4795,7 @@
     <nl txt="loc"/>
     <sv txt="Lok"/>
     <fr txt="Locomotive"/>
-    <tr txt="Loc"/>
+    <tr txt="Lok"/>
     <es txt="Loc"/>
     <it txt="Locomotiva"/>
     <da txt="Lokomotiv"/>
@@ -4950,7 +4950,7 @@
     <fr txt="Nom de l'hôte"/>
     <tr txt="Ağ Adı"/>
     <es txt="Hostname"/>
-    <it txt="Nome del server"/>
+    <it txt="Indirizzo del server"/>
     <da txt="Værtsnavn"/>
     <bs txt="Naziv računala"/>
     <cs txt="Název počítače"/>
@@ -5635,7 +5635,7 @@
     <bg txt="Блок чакам времето"/>
     <el txt="Αποκλεισμός περιμένετε χρόνο"/>
     <hu txt="Térköz várakozási idő"/>
-    <ru txt="Время ожидания для блока"/>
+    <ru txt="Время ожидания на Блоке"/>
     <pt txt="Tempo de espera do bloco"/>
     <cs txt="Čas čekání bloku"/>
     <nb txt="Blokkventetid"/>
@@ -6247,7 +6247,7 @@
     <bg txt="Мин. блок - влак Дължина (см)"/>
     <el txt="Ελάχ. μπλοκ - μήκος αμαξοστοιχίας (cm)"/>
     <hu txt="Min.térköz - vonat hossza (cm)"/>
-    <ru txt="Мин. длина Блок-Поезд"/>
+    <ru txt="Мин.значение превышения длины Блока над длиной Поезда"/>
     <pt txt="Bloqueio minimo - comprimento comboio (cm)"/>
     <cs txt="Min. blok - délka vlaku (cm)"/>
     <ca txt="Longitud mínima del bloc - Tren (cm)"/>
@@ -6317,7 +6317,7 @@
     <bg txt="Sensor Модули (от ляво, средно, нали, размер)"/>
     <el txt="Sensor Modules (αριστερά, μέση, δεξιά, μέγεθος)"/>
     <hu txt="Szenzor modulok (bal,közép,jobb,méret)"/>
-    <ru txt="Модули датчиков"/>
+    <ru txt="Модули датчиков (left,middle,right,size)"/>
     <pt txt="Modulos sensor (esquerda,centro,direita,tamanho)"/>
     <cs txt="Moduly senzoru"/>
     <nb txt="Følermoduler (venstre,midt,høyre,størrelse)"/>
@@ -6630,7 +6630,7 @@
     <bg txt="Sensor направо"/>
     <el txt="Sensor ευθεία"/>
     <hu txt="Egyenes állás érzékelője"/>
-    <ru txt="Датчик прямого пути"/>
+    <ru txt="Датчик прямого положения стрелки"/>
     <pt txt="Sensor recta"/>
     <cs txt="Senzor rovně"/>
     <nb txt="Føler rett"/>
@@ -6653,7 +6653,7 @@
     <bg txt="Sensor активност"/>
     <el txt="Sensor προσέλευση"/>
     <hu txt="Kitérő állás érzékelője"/>
-    <ru txt="Датчик отклонённого пути"/>
+    <ru txt="Датчик отклонённого положения стрелки"/>
     <pt txt="Sensor desvio/agulha"/>
     <cs txt="Senzor vyhybky"/>
     <nb txt="Føler pens"/>
@@ -7040,7 +7040,7 @@
     <nl txt="Loc keuze"/>
     <sv txt="Lokval"/>
     <fr txt="Sélection de la locomotive"/>
-    <tr txt="Loc Seçimi"/>
+    <tr txt="Lok Seçimi"/>
     <es txt="Seleccionar Locomotora"/>
     <it txt="Selezionare locomotiva"/>
     <da txt="Vælg lokomotiv"/>
@@ -7807,7 +7807,7 @@
     <bg txt="Далечна сигнал"/>
     <el txt="Απόμακρος μήνυμα"/>
     <hu txt="Előjelző"/>
-    <ru txt="Отдалённый сигнал"/>
+    <ru txt="Предупредительный сигнал"/>
     <pt txt="Sinal distante"/>
     <bs txt="Udaljeni signal"/>
     <cs txt="Rezervované návěstí"/>
@@ -8005,7 +8005,7 @@
     <bg txt="Буферни"/>
     <el txt="Buffer"/>
     <hu txt="Ütközőbak"/>
-    <ru txt="Буфер"/>
+    <ru txt="Тупиковый упор"/>
     <pt txt="Buffer"/>
     <nb txt="Buffer"/>
     <ca txt="Topall"/>
@@ -8369,7 +8369,7 @@
     <bg txt="към"/>
     <el txt="κατά"/>
     <hu txt="hová"/>
-    <ru txt="В"/>
+    <ru txt="в"/>
     <pt txt="para"/>
     <bs txt="do"/>
     <nb txt="til"/>
@@ -8643,7 +8643,7 @@
     <bg txt="Сила"/>
     <el txt="Ισχύς"/>
     <hu txt="Feszültség"/>
-    <ru txt="Мощность"/>
+    <ru txt="Питание"/>
     <pt txt="Potência"/>
     <bs txt="Snaga"/>
     <nb txt="Strøm"/>
@@ -8738,7 +8738,7 @@
     <bg txt="Спиране на излизане"/>
     <el txt="Σταματήστε την έξοδο"/>
     <hu txt="Kilépéskor megállít"/>
-    <ru txt="Останавливаться на выезде"/>
+    <ru txt="Остановить лок при выходе"/>
     <pt txt="Parar na saida"/>
     <bs txt="Stani na izlazu"/>
     <cs txt="Zastav při ukončení"/>
@@ -8791,7 +8791,7 @@
     <hu txt="Szövegméret"/>
     <pt txt="Bloco de texto escalonado"/>
     <cs txt="Měřítko Bloktextu"/>
-    <ru txt="Масштабирование блоктекста"/>
+    <ru txt="Масштабирование текстового блока"/>
     <nb txt="Blokktekstskalering"/>
     <ca txt="Mida del text"/>
     <id txt="Blocktext scaling"/>
@@ -9464,7 +9464,7 @@
     <bg txt="DirChange пауза"/>
     <el txt="DirChange διακόψετε"/>
     <hu txt="Irányváltási szünet"/>
-    <ru txt="DirChange пауза"/>
+    <ru txt="Пауза изменения направления"/>
     <pt txt="DirChange pause"/>
     <cs txt="Pauza změna směru"/>
     <nb txt="RetningsEndringsPause"/>
@@ -9556,7 +9556,7 @@
     <bg txt="пропускателните блок"/>
     <el txt="διέλευσης μπλοκ"/>
     <hu txt="keresztezett térköz"/>
-    <ru txt="Пересекаемый блок"/>
+    <ru txt="Проходной блок"/>
     <pt txt="Bloco de cruzamento"/>
     <cs txt="Blok křížení"/>
     <nb txt="kryssende blokk"/>
@@ -9579,7 +9579,7 @@
     <bg txt="Crossing блокове"/>
     <el txt="Διέλευση μπλοκ"/>
     <hu txt="Keresztezett térközök"/>
-    <ru txt="Пересекаемые блоки"/>
+    <ru txt="Проходные блоки"/>
     <pt txt="Blocos de cruzamentos"/>
     <cs txt="Bloky křížení"/>
     <nb txt="Kryssende blokker"/>
@@ -10053,7 +10053,7 @@
     <bg txt="Регулиран"/>
     <el txt="Νομοθετικώς"/>
     <hu txt="Szabályozott"/>
-    <ru txt="Регулируемый декодер"/>
+    <ru txt="Декодер с BackEMF"/>
     <pt txt="Regularizado"/>
     <nb txt="Regulert"/>
     <ca txt="Compensació de càrrega"/>
@@ -11606,7 +11606,7 @@
     <hu txt="Egy kapus"/>
     <pt txt="Portal unico"/>
     <cs txt="Jednoduchá brána"/>
-    <ru txt="Одиночный шлагбаум"/>
+    <ru txt="Одиночный шлюз"/>
     <en_AU txt="Single Gate"/>
     <en_CA txt="Single Gate"/>
     <en_GB txt="Single Gate"/>
@@ -11827,7 +11827,7 @@
     <bg txt="Деактивиране събитие"/>
     <el txt="Απενεργοποίηση περίπτωση"/>
     <hu txt="Deaktivációs esemény"/>
-    <ru txt="Событие деактивации"/>
+    <ru txt="Деактивация события"/>
     <pt txt="desactivação de evento"/>
     <cs txt="Deaktivace události"/>
     <nb txt="Deaktiveringshendelse"/>
@@ -11982,7 +11982,7 @@
     <el txt="Αποθήκευση θέσης χρονόμετρο"/>
     <hu txt="Pozíció mentés időzítése"/>
     <pt txt="Gravar posição tempo"/>
-    <ru txt="Сохранить таймер позиции"/>
+    <ru txt="Сохранить положение таймера"/>
     <cs txt="Ulož pozici časovače"/>
     <en_AU txt="Save position timer"/>
     <en_CA txt="Save position timer"/>
@@ -11996,7 +11996,7 @@
     <sv txt="Tema"/>
     <fr txt="Thème"/>
     <tr txt="Theme"/>
-    <es txt="Theme"/>
+    <es txt="Tema"/>
     <it txt="Tema"/>
     <da txt="Tema"/>
     <cs txt="Motiv"/>
@@ -12483,7 +12483,7 @@
     <hu txt="Áthaladó pozíció"/>
     <pt txt="Posição do tranverser (linha paralela amovivel para arrumação de locs)"/>
     <cs txt="Posuvná pozice"/>
-    <ru txt="Положение траверсера"/>
+    <ru txt="Положение транспортёра"/>
     <en_AU txt="Traverser Position"/>
     <en_CA txt="Traverser Position"/>
     <en_GB txt="Traverser Position"/>
@@ -12858,9 +12858,9 @@
   <Msg id="blockoccupancy">
     <de txt="Blockbelegung"/>
     <en txt="Block occupancy"/>
-    <nl txt="Blok bezetting"/>
+    <nl txt="Block bezetting"/>
     <sv txt="Block occupancy"/>
-    <fr txt="Occupation de bloc"/>
+    <fr txt="Occupation des blocs"/>
     <tr txt="Block occupancy"/>
     <es txt="Block occupancy"/>
     <it txt="Occupazione blocco"/>
@@ -12870,7 +12870,7 @@
     <hu txt="Térköz foglaltság"/>
     <pt txt="Ocupação do bloco"/>
     <cs txt="Blok obsazení"/>
-    <ru txt="Занятость блока"/>
+    <ru txt="Блочная занятость"/>
     <en_AU txt="Block occupancy"/>
     <en_CA txt="Block occupancy"/>
     <en_GB txt="Block occupancy"/>
@@ -12928,8 +12928,8 @@
     <nl txt="Verbindingen"/>
     <sv txt="Connections"/>
     <fr txt="Connexions"/>
-    <tr txt="Connections"/>
-    <es txt="Connections"/>
+    <tr txt="Bağlantılar"/>
+    <es txt="Conexiones"/>
     <it txt="Connessioni"/>
     <da txt="Forbindelser"/>
     <bg txt="Връзките"/>
@@ -12953,7 +12953,7 @@
     <sv txt="Rotation"/>
     <fr txt="Rotation"/>
     <tr txt="Rotation"/>
-    <es txt="Rotation"/>
+    <es txt="Rotación"/>
     <it txt="Rotazione"/>
     <da txt="Rotering"/>
     <cs txt="Rotace"/>
@@ -12977,7 +12977,7 @@
     <sv txt="Side"/>
     <fr txt="Côté"/>
     <tr txt="Side"/>
-    <es txt="Side"/>
+    <es txt="Lado"/>
     <it txt="Lato"/>
     <da txt="Side"/>
     <cs txt="Strana"/>
@@ -12993,7 +12993,7 @@
     <ro txt="Parte"/>
   </Msg>
   <Msg id="initfieldpause">
-    <de txt="Pause bei Weicheninitialisierung"/>
+    <de txt="Pause bei Initialisierung"/>
     <en txt="Init field pause"/>
     <nl txt="Pause tussen init commando's"/>
     <sv txt="Init field pause"/>
@@ -13157,7 +13157,7 @@
     <bg txt="Аксесоари #"/>
     <el txt="Accessory #"/>
     <hu txt="Eszköz#"/>
-    <ru txt="Аксессуар№"/>
+    <ru txt="Аксессуар#"/>
     <pt txt="Acessório#"/>
     <ca txt="Accessori#"/>
     <en_AU txt="Accessory#"/>
@@ -13402,7 +13402,7 @@
     <hu txt="Alapértelmezett jelzéskép"/>
     <pt txt="Cor do sinal por defeito"/>
     <cs txt="Výchozí návěstní znak"/>
-    <ru txt="Вид сигнала по-умолчанию"/>
+    <ru txt="Сигнальное показание по-умолчанию"/>
     <ca txt="Aspecte del Senyal per defecte"/>
     <en_AU txt="Default signal aspect"/>
     <en_CA txt="Default signal aspect"/>
@@ -13751,7 +13751,7 @@
     <el txt="Πρόσβαση"/>
     <es txt="Access"/>
     <hu txt="Elérés"/>
-    <tr txt="Access"/>
+    <tr txt="Erişim"/>
     <it txt="Accesso"/>
     <pt txt="Acesso"/>
     <bs txt="Pristup"/>
@@ -14196,7 +14196,7 @@
     <hu txt="Sebességgörbe kiolvasása a dekóderből?"/>
     <it txt="Leggere l'attuale curva di velocità dal decoder?"/>
     <pt txt="Ler velocidade curva actual do decodificador?"/>
-    <ru txt="Прочитать текущую кривую скорости от декодера?"/>
+    <ru txt="Прочитать текущую кривую скорости из декодера?"/>
     <cs txt="Načíst současnou rychlostní křivku z dekodéru?"/>
     <da txt="Læs hastighedskurve fra dekoderen"/>
     <es txt="Leer curva de velocidad actual del decodificador?"/>
@@ -14303,6 +14303,7 @@
     <en_AU txt="Use shortin event"/>
     <en_CA txt="Use shortin event"/>
     <en_GB txt="Use shortin event"/>
+    <es txt="Utilizar evento shortin"/>
   </Msg>
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
@@ -15718,7 +15719,7 @@
     <pt txt="Publicar"/>
     <ca txt="Missatge"/>
     <da txt="Post"/>
-    <ru txt="Пост"/>
+    <ru txt="Почтовый"/>
     <es txt="Enviar"/>
     <en_AU txt="Post"/>
     <en_CA txt="Post"/>
@@ -15895,7 +15896,7 @@
     <nl txt="Kruisende blok seinen"/>
     <de txt="Signale in kreuzenden Blöcken"/>
     <pt txt="Sinais de bloco cruzados"/>
-    <ru txt="Сигналы пересечения блока"/>
+    <ru txt="Сигналы проходного блока"/>
     <da txt="Overkørsels signal"/>
     <it txt="Segnale di blocco a croce"/>
     <es txt="Señales del cruce de bloques"/>
@@ -16439,7 +16440,7 @@
     <nl txt="Verhinder overnemen loc bediening"/>
     <de txt="Lokübernahme unterbinden"/>
     <it txt="Disabilita controllo locomotive \&quot;rubate\&quot;"/>
-    <ru txt="Отключить управление \&quot;украденными\&quot; локомотивами"/>
+    <ru txt="Отключить управление захваченными локомотивами"/>
     <en_AU txt="Disable steal loco control"/>
     <en_CA txt="Disable steal loco control"/>
     <en_GB txt="Disable steal loco control"/>
@@ -16494,6 +16495,7 @@
     <fr txt="du signal associé"/>
     <em_GB txt="From signal pair"/>
     <em_AU txt="From signal pair"/>
+    <pt txt="Do par de sinal"/>
   </Msg>
   <Msg id="tosignals">
     <en txt="To signal pair"/>
@@ -16509,6 +16511,7 @@
     <fr txt="au signal associé"/>
     <em_GB txt="To signal pair"/>
     <em_AU txt="To signal pair"/>
+    <pt txt="Para par de sinal"/>
   </Msg>
   <Msg id="button">
     <en txt="Button"/>
@@ -16749,7 +16752,7 @@
     <cs txt="Vypnout při resetu"/>
     <fr txt="Eteindre lors de la réinitialisation"/>
     <de txt="Gleisspannung beim Reset ausschalten"/>
-    <ru txt="Выключить при сбросе"/>
+    <ru txt="Выключить питание при сбросе"/>
     <en_AU txt="Power off at reset"/>
     <en_CA txt="Power off at reset"/>
     <en_GB txt="Power off at reset"/>
@@ -16765,7 +16768,7 @@
     <cs txt="Vypnout při ukončení"/>
     <fr txt="Eteindre lors de la fermeture"/>
     <de txt="Gleisspannung beim Beenden ausschalten"/>
-    <ru txt="Выключить при выходе"/>
+    <ru txt="Выключить питание при выходе"/>
     <es txt="Apagar al salir"/>
     <en_AU txt="Power off on exit"/>
     <en_CA txt="Power off on exit"/>
@@ -16867,6 +16870,7 @@
     <fr txt="ignorer les commandes d'alimentation"/>
     <em_GB txt="Ignore power commands"/>
     <em_AU txt="Ignore power commands"/>
+    <pt txt="Ignorar comandos de energia"/>
   </Msg>
   <Msg id="manually">
     <en txt="Manually"/>
@@ -16896,6 +16900,7 @@
     <fr txt="correction d'evenement"/>
     <em_GB txt="Event correction"/>
     <em_AU txt="Event correction"/>
+    <pt txt="Correcção de eventos"/>
   </Msg>
   <Msg id="relay">
     <en txt="Relay"/>
@@ -16918,9 +16923,10 @@
     <en_AU txt="Count cars before firing events."/>
     <en_CA txt="Count cars before firing events."/>
     <en_GB txt="Count cars before firing events."/>
-    <ru txt="Считать вагоны перед запуском собитий"/>
+    <ru txt="Считать вагоны перед запуском событий"/>
     <em_GB txt="Count cars before firing events."/>
     <em_AU txt="Count cars before firing events."/>
+    <fr txt="Compter les voitures avant de déclencher les évenements"/>
   </Msg>
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
@@ -16950,6 +16956,7 @@
     <fr txt="Carte de rétrosignalisation XpressNet"/>
     <em_GB txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
     <em_AU txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
+    <ru txt="Маппинг обратной связи на шине XpressNet"/>
   </Msg>
   <Msg id="allowfollowup">
     <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
@@ -16997,6 +17004,7 @@
     <de txt="Erlaube Fahrregler ohne Kennung"/>
     <em_GB txt="Allow zero throttle ID"/>
     <em_AU txt="Allow zero throttle ID"/>
+    <ru txt="Разрешить нулевой ID пульта управления"/>
   </Msg>
   <Msg id="monitoring">
     <en txt="Monitoring"/>
@@ -17029,7 +17037,7 @@
     <en_GB txt="Allow schedules"/>
     <fr txt="permettre les trajets"/>
     <de txt="Fahrpläne erlaubt"/>
-    <ru txt="Позволить расписание"/>
+    <ru txt="Разрешить расписания"/>
     <em_GB txt="Allow schedules"/>
     <em_AU txt="Allow schedules"/>
     <pt txt="Permite horários"/>
@@ -17077,15 +17085,19 @@
     <em_GB txt="Accept BiDi Loco"/>
     <em_AU txt="Accept BiDi Loco"/>
     <ca txt="Accepta locomotores amb RailCom"/>
+    <en_AU txt="Accept BiDi Loco"/>
+    <ru txt="Принять BiDi Loco"/>
   </Msg>
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
     <nl txt="Gebruik blok zijde voor rijwegen"/>
     <fr txt="utiliser les sens des bloc pour les itinéraires"/>
-    <de txt="Blockseite bei Fahrstrassen verwenden"/>
+    <de txt="Blockseite bei Fahrstraßen verwenden"/>
     <em_GB txt="Use block side for routes"/>
     <em_AU txt="Use block side for routes"/>
     <pt txt="Usa lados do bloco para rotas"/>
+    <en_AU txt="Use block side for routes"/>
+    <ru txt="Использовать стороны Блока для маршрутов"/>
   </Msg>
   <Msg id="swapblockenterside">
     <en txt="Swap block enter side"/>
@@ -17096,6 +17108,7 @@
     <em_AU txt="Swap block enter side"/>
     <pt txt="Ignora lado de entrada do bloco"/>
     <ru txt="Cменить сторону въезда на блок"/>
+    <en_AU txt="Swap block enter side"/>
   </Msg>
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
@@ -17103,6 +17116,7 @@
     <de txt="Nicht-Pendelzüge in Kopfstationen anhalten"/>
     <em_GB txt="Stop none commuter in terminal"/>
     <em_AU txt="Stop none commuter in terminal"/>
+    <en_AU txt="Stop none commuter in terminal"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -17112,6 +17126,7 @@
     <em_GB txt="Slot management"/>
     <em_AU txt="Slot management"/>
     <ru txt="Слот управления"/>
+    <en_AU txt="Slot management"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -17122,6 +17137,7 @@
     <em_AU txt="Decoder type"/>
     <pt txt="Tipo de descodificador"/>
     <ru txt="Тип декодера"/>
+    <en_AU txt="Decoder type"/>
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
@@ -17132,6 +17148,7 @@
     <em_AU txt="Analyze" tip="Analyze track plan for generating routes."/>
     <pt txt="Analisar"/>
     <ru txt="Анализировать"/>
+    <en_AU txt="Analyze"/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -17143,6 +17160,7 @@
     <em_AU txt="System info" tip="Enable extra CS system info."/>
     <pt txt="Informação do sistema"/>
     <ru txt="Информация о системе"/>
+    <en_AU txt="System info"/>
   </Msg>
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
@@ -17153,15 +17171,17 @@
     <em_AU txt="Show only start schedules"/>
     <pt txt="Mostra só horários activos"/>
     <ru txt="Использовать только начальные расписания"/>
+    <en_AU txt="Show only start schedules"/>
   </Msg>
   <Msg id="blankatredsignal">
     <en txt="Blank warning at red main signal."/>
     <nl txt="Zet voorsignaal uit bij rood."/>
     <fr txt="Avertissement blanc au signal principal rouge."/>
-    <de txt="Vorwarnung bei rotem Hauptsignal ausblenden"/>
+    <de txt="Vorsignal bei rotem Hauptsignal dunkeltasten"/>
     <em_GB txt="Blank warning at red main signal."/>
     <em_AU txt="Blank warning at red main signal."/>
     <pt txt="Mostra aviso com sinal vermelho"/>
+    <en_AU txt="Blank warning at red main signal."/>
   </Msg>
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
@@ -17171,15 +17191,18 @@
     <em_GB txt="Overwrite all settings?"/>
     <em_AU txt="Overwrite all settings?"/>
     <ru txt="Перезаписать все настройки?"/>
+    <en_AU txt="Overwrite all settings?"/>
+    <pt txt="Substituir todas as definições?"/>
   </Msg>
   <Msg id="free2go">
     <en txt="Free before start"/>
     <nl txt="Vrij voor start."/>
     <fr txt="Libre avant le démarrer"/>
-    <de txt="vor dem Start freigegeben"/>
+    <de txt="Frei vor dem Start"/>
     <em_GB txt="Free before start"/>
     <em_AU txt="Free before start"/>
     <pt txt="Liberta antes de iniciar"/>
+    <en_AU txt="Free before start"/>
   </Msg>
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
@@ -17189,6 +17212,7 @@
     <em_GB txt="Embedded block"/>
     <em_AU txt="Embedded block"/>
     <ru txt="Встроенный блок"/>
+    <en_AU txt="Embedded block"/>
   </Msg>
   <Msg id="setupsvgtheme">
     <en txt="No SVG Theme was found; Check the Rocview SVG settings."/>
@@ -17198,12 +17222,17 @@
     <em_GB txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <em_AU txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <pt txt="O tema não foi encontrado. Reveja configurações dos temas."/>
+    <en_AU txt="No SVG Theme was found; Check the Rocview SVG settings."/>
+    <ru txt="Тема SVG не была найдена; проверьте настройки SVG в Rocview"/>
   </Msg>
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
     <nl txt="Trein wachttijd in blokken gebruiken."/>
-    <de txt="Eigene Wartezeit in Blocks verwenden"/>
+    <de txt="Eigene Wartezeit in Blöcken verwenden"/>
     <pt txt="Usar o tempo de espera definido por si, nos blocos"/>
+    <en_AU txt="Use own wait time in blocks"/>
+    <ru txt="Использовать собственное время ожидание на блоках"/>
+    <fr txt="Utiliser le temps d'attente propre à chaque bloc"/>
   </Msg>
   <Msg id="forceblocktimer">
     <en txt="Force block timer"/>
@@ -17211,185 +17240,328 @@
     <fr txt="Forcer le timer du bloc"/>
     <de txt="Blockzeitgeber erzwingen"/>
     <pt txt="Forçe o tempo de espera definido no bloco"/>
+    <en_AU txt="Force block timer"/>
+    <ru txt="Форсировать таймер блока"/>
   </Msg>
   <Msg id="useseq">
     <en txt="Use sequence check"/>
     <nl txt="Volgnummer bewaking"/>
     <de txt="Abfolgeprüfung verwenden"/>
+    <en_AU txt="Use sequence check"/>
+    <pt txt="Usar lista de verificações"/>
+    <ru txt="Использовать проверку очерёдности"/>
   </Msg>
   <Msg id="usedouble">
     <en txt="Use double packets"/>
     <nl txt="Paketten dubbel sturen"/>
     <de txt="Doppelte Pakete verwenden"/>
     <pt txt="Utilizar pacotes duplos"/>
+    <en_AU txt="Use double packets"/>
+    <ru txt="Использовать двойные пакеты"/>
+    <fr txt="Utiliser des paquets double"/>
   </Msg>
   <Msg id="rectangular">
     <en txt="Rectangular"/>
     <nl txt="Rechthoekig"/>
     <de txt="Rechteckig"/>
     <pt txt="Rectangular"/>
+    <en_AU txt="Rectangular"/>
+    <fr txt="Rectangulaire"/>
   </Msg>
   <Msg id="sublib">
     <en txt="Sub-Library"/>
     <nl txt="Sub-Library"/>
     <de txt="Sub-Bibliothek"/>
+    <en_AU txt="Sub-Library"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
     <nl txt="Knooppunten"/>
     <de txt="Knoten"/>
     <pt txt="Nós"/>
+    <en_AU txt="Nodes"/>
+    <fr txt="Noeuds"/>
   </Msg>
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
     <nl txt="Schaduw station"/>
     <de txt="Aufstell-Gruppe"/>
+    <en_AU txt="Staging yard"/>
   </Msg>
   <Msg id="stagingblock">
     <en txt="Staging block"/>
     <nl txt="Opstel blok"/>
     <de txt="Aufstell-Block"/>
+    <en_AU txt="Staging block"/>
   </Msg>
   <Msg id="sections">
     <en txt="Sections"/>
     <nl txt="Secties"/>
     <de txt="Abschnitte"/>
+    <en_AU txt="Sections"/>
+    <pt txt="Secções"/>
+    <ru txt="Секции"/>
+    <fr txt="Sections"/>
   </Msg>
   <Msg id="section">
     <en txt="Section"/>
     <nl txt="Sectie"/>
     <de txt="Abschnitt"/>
+    <en_AU txt="Section"/>
+    <pt txt="Secção"/>
+    <ru txt="Секция"/>
+    <fr txt="Section"/>
   </Msg>
   <Msg id="train">
     <en txt="Train"/>
     <nl txt="Trein"/>
     <de txt="Zug"/>
+    <en_AU txt="Train"/>
+    <pt txt="Comboio"/>
+    <ru txt="Поезд"/>
+    <fr txt="Train"/>
   </Msg>
   <Msg id="gap">
     <en txt="gap"/>
     <nl txt="tussenruimte"/>
     <de txt="Abstand"/>
+    <en_AU txt="gap"/>
+    <pt txt="Intervalo"/>
+    <ru txt="Интервал"/>
+    <fr txt="Intervalle"/>
   </Msg>
   <Msg id="patterns">
     <en txt="Patterns"/>
     <nl txt="Patronen"/>
     <de txt="Muster"/>
+    <en_AU txt="Patterns"/>
+    <pt txt="Padrões"/>
+    <ru txt="Шаблоны"/>
   </Msg>
   <Msg id="aspectnr">
     <en txt="Aspect numbers"/>
     <nl txt="Seinbeeld nummers"/>
     <de txt="Begriffs-Nummern"/>
+    <en_AU txt="Aspect numbers"/>
+    <ru txt="Номер аспекта"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
     <nl txt="Baanplan consistentie"/>
     <de txt="Plan-Konsistenz"/>
+    <en_AU txt="Plan health"/>
+    <ru txt="Состояние плана"/>
   </Msg>
   <Msg id="communication">
     <en txt="Communication"/>
     <nl txt="Communicatie"/>
     <de txt="Kommunikation"/>
+    <en_AU txt="Communication"/>
+    <pt txt="Comunicação"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
     <nl txt="Rijrichting tijd"/>
     <de txt="Zeit vor Richtungswechsel"/>
+    <en_AU txt="Swap timer"/>
   </Msg>
   <Msg id="slotping">
     <en txt="Slot ping"/>
+    <nl txt="Slot ping"/>
+    <de txt="Slot Freigabezeit"/>
+    <en_AU txt="Slot ping"/>
   </Msg>
   <Msg id="localip">
     <en txt="Local IP"/>
+    <nl txt="Lokaal IP-adres"/>
+    <de txt="Lokale IP-Adresse"/>
+    <en_AU txt="Local IP"/>
+    <pt txt="IP Local"/>
+    <ru txt="Локальный IP"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
+    <nl txt="Zet locomotief"/>
+    <de txt="Lokbelegung setzten"/>
+    <en_AU txt="Set loco"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
+    <nl txt="Comprimeer"/>
+    <de txt="Komprimieren"/>
+    <en_AU txt="Compress"/>
+    <pt txt="Comprimir"/>
+    <ru txt="Сжатие"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
+    <nl txt="Syncroniseer rijwegen"/>
+    <de txt="Synchronisierte Fahrstraßen"/>
+    <en_AU txt="Synchronize routes"/>
+    <pt txt="Sincronizar Rotas"/>
+    <ru txt="Синхронизировать маршруты"/>
   </Msg>
   <Msg id="syncroutetimeout">
     <en txt="Route synchronizer timeout"/>
+    <nl txt="Rijweg syncronisatie timeout"/>
+    <de txt="Zeitüberschreitung bei synchronisierten Fahrstraßen"/>
+    <en_AU txt="Route synchronizer timeout"/>
+    <ru txt="Таймаут синхронизатора маршрута"/>
   </Msg>
   <Msg id="startupschedule">
     <en txt="Startup schedule"/>
+    <nl txt="Opstart schema"/>
+    <de txt="Start-Fahrplan"/>
+    <en_AU txt="Startup schedule"/>
+    <ru txt="Начальное расписание"/>
   </Msg>
   <Msg id="cmdtime">
     <en txt="Command time"/>
+    <nl txt="Commando tijd"/>
+    <de txt="Befehls-Zeit"/>
+    <en_AU txt="Command time"/>
+    <ru txt="Время команды"/>
   </Msg>
   <Msg id="controlcode">
     <en txt="Control code"/>
+    <nl txt="Controle code"/>
+    <de txt="Zugriffscode"/>
+    <en_AU txt="Control code"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
+    <nl txt="Ga naar draaischijf"/>
+    <de txt="Fahre zur Drehscheibe"/>
+    <en_AU txt="Goto Turntable"/>
   </Msg>
   <Msg id="cbusrocrailini">
     <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
+    <nl txt="Gelieve eerst de Rocrail server instellingen in te laden alvorens de CBUS nodes te configureren."/>
+    <de txt="Bitte Rocrail-Server-Einstellungen laden, bevor CBUS-Knoten konfiguriert werden."/>
+    <en_AU txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
   </Msg>
-  
   <Msg id="node">
     <en txt="Node"/>
+    <nl txt="Knooppunt"/>
+    <de txt="Knoten"/>
+    <en_AU txt="Node"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
+    <nl txt="Variabelen"/>
+    <de txt="Variablen"/>
+    <en_AU txt="Variables"/>
   </Msg>
   <Msg id="variable">
     <en txt="Variable"/>
+    <nl txt="Variabel"/>
+    <de txt="Variable"/>
+    <en_AU txt="Variable"/>
   </Msg>
   <Msg id="events">
     <en txt="Events"/>
+    <nl txt="Gebeurtenissen"/>
+    <de txt="Ereignisse"/>
+    <en_AU txt="Events"/>
   </Msg>
   <Msg id="firmware">
     <en txt="Firmware"/>
+    <nl txt="Firmware"/>
+    <de txt="Firmware"/>
+    <en_AU txt="Firmware"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
+    <nl txt="Ophalen"/>
+    <de txt="Abrufen"/>
+    <en_AU txt="Get"/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
+    <nl txt="Stel in"/>
+    <de txt="Einstellen"/>
+    <en_AU txt="Set"/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
+    <nl txt="Haal alles op"/>
+    <de txt="Alles lesen"/>
+    <en_AU txt="Get all"/>
   </Msg>
   <Msg id="clearall">
     <en txt="Clear all"/>
+    <nl txt="Alles wissen"/>
+    <de txt="Alles zurücksetzen"/>
+    <en_AU txt="Clear all"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
+    <nl txt="Leren"/>
+    <de txt="Lernen"/>
+    <en_AU txt="Learn"/>
   </Msg>
   <Msg id="unlearn">
     <en txt="Unlearn"/>
+    <nl txt="Vergeet"/>
+    <de txt="Stopp lernen"/>
+    <en_AU txt="Unlearn"/>
   </Msg>
   <Msg id="send">
     <en txt="Send"/>
+    <nl txt="Verzend"/>
+    <de txt="Senden"/>
+    <en_AU txt="Send"/>
   </Msg>
   <Msg id="bootmode">
     <en txt="Boot mode"/>
+    <nl txt="Opstart modus"/>
+    <de txt="Boot-Modus"/>
+    <en_AU txt="Boot mode"/>
   </Msg>
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
+    <nl txt="Laad tijd (ms)"/>
+    <de txt="Ladeprogramm-Zeit"/>
+    <en_AU txt="Loader time (ms)"/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
+    <nl txt="Korte gebeurtenissen"/>
+    <de txt="Kurz-Ereignisse"/>
+    <en_AU txt="Short events"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
+    <nl txt="Begin van de dag"/>
+    <de txt="Tages-Anfang"/>
+    <en_AU txt="Start of day"/>
   </Msg>
   <Msg id="resetstatus">
     <en txt="Reset status"/>
+    <nl txt="Reset status"/>
+    <de txt="Status zurücksetzen"/>
+    <en_AU txt="Reset status"/>
   </Msg>
   <Msg id="occupancy">
     <en txt="Occupancy"/>
+    <nl txt="Bezetting"/>
+    <de txt="Belegung"/>
+    <en_AU txt="Occupancy"/>
   </Msg>
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
+    <nl txt="Herstel snelheid"/>
+    <de txt="Geschwindigkeit wiederherstellen"/>
+    <en_AU txt="Restore speed"/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
+    <nl txt="Kalibreer"/>
+    <de txt="Kalibrieren"/>
   </Msg>
   <Msg id="traverser">
     <en txt="Traverser"/>
+    <nl txt="Rolbrug"/>
+    <de txt="Schiebebühne"/>
   </Msg>
 </Messages>
