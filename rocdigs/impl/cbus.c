@@ -1094,7 +1094,6 @@ static void __writer( void* threadinst ) {
         MemOp.copy( out, post+1, len);
         freeMem( post);
 
-        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
         if( !data->subWrite((obj)cbus, out, len) ) {
           /* sleep and send it again? */
         }
@@ -1647,7 +1646,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid         = %d", data->cid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sod           = %d", data->sodaddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SoD address   = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );

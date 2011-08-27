@@ -34,6 +34,32 @@
 
 
 
+static Boolean isCts( obj inst ) {
+  iOCBUSData data = Data(inst);
+  /* CTS */
+  int wait4cts = 0;
+
+  if( !data->cts || data->dummyio ) {
+    return True;
+  }
+
+  while( wait4cts < data->ctsretry ) {
+    int rc = SerialOp.isCTS( data->serial );
+    if( rc == -1 ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; switch to dummy mode" );
+      data->dummyio = True;
+      return False;
+    }
+    if( rc > 0 ) {
+      return True;
+    }
+    ThreadOp.sleep( 10 );
+    wait4cts++;
+  }
+  TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "CTS not ready");
+  return False;
+}
+
 
 
 Boolean serialConnect( obj inst ) {
@@ -44,13 +70,18 @@ Boolean serialConnect( obj inst ) {
   else
     data->bps = 115200;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", data->bps );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow    = %s", wDigInt.getflow( data->ini ) );
+  data->cts = StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) );
+  data->ctsretry = wDigInt.getctsretry( data->ini );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", wDigInt.getdevice( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps           = %d", data->bps );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow          = %s", wDigInt.getflow( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cts retry     = %d * 10ms", data->ctsretry );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout       = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, data->cts ? cts:none );
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
@@ -82,8 +113,11 @@ Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
 
 Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
   iOCBUSData data = Data(inst);
-  TraceOp.dump ( "cbusserial", TRCLEVEL_BYTE, (char*)msg, len );
-  Boolean ok = SerialOp.write( data->serial, (char*)msg, len );
+  Boolean ok = False;
+  if( isCts(inst) ) {
+    TraceOp.dump ( "cbusserial", TRCLEVEL_BYTE, (char*)msg, len );
+    ok = SerialOp.write( data->serial, (char*)msg, len );
+  }
   return ok;
 }
 

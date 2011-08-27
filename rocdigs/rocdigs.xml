@@ -1377,6 +1377,9 @@
       <var name="fonfof" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="buson" vt="Boolean"/>
+      <var name="cts" vt="Boolean"/>
+      <var name="dummyio" vt="Boolean"/>
+      <var name="ctsretry" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="keep" vt="iOThread"/>
