@@ -114,7 +114,7 @@ void CBusNodeDlg::init( iONode event ) {
 
   if( event != NULL ) {
     m_IID->SetValue( wxString(wProgram.getiid(event),wxConvUTF8) );
-    initType( wProgram.getmodid(event) );
+    initType( wProgram.getval1(event),  wProgram.getmodid(event) );
     m_NodeNumber->SetValue(wProgram.getdecaddr(event));
     if( wProgram.getdecaddr(event) > 0 ) {
       getNode(wProgram.getdecaddr(event), wProgram.getmodid(event));
@@ -142,7 +142,7 @@ void CBusNodeDlg::initIndex() {
         while( cbusnode != NULL ) {
           char* s = StrOp.fmt("number %d, type %d (%s)",
               wCBusNode.getnr(cbusnode), wCBusNode.getmtyp(cbusnode),
-              getTypeString(wCBusNode.getmtyp(cbusnode)) );
+              getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)) );
 
           m_IndexList->Append( wxString(s,wxConvUTF8), cbusnode );
           StrOp.free(s);
@@ -265,31 +265,38 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
 }
 
 
-void CBusNodeDlg::initType( int mtype ) {
-  m_NodeType->SetValue( wxString(getTypeString(mtype),wxConvUTF8) );
+void CBusNodeDlg::initType( int manu, int mtype ) {
+  m_NodeType->SetValue( wxString(getTypeString(manu, mtype),wxConvUTF8) );
   if( mtype > 0 )
     m_NodeTypeNr->SetValue(mtype);
 }
 
-const char* CBusNodeDlg::getTypeString( int mtype ) {
-  switch( mtype ) {
-  case MTYP_CANACC4:   return "CANACC4";
-  case MTYP_CANACC5:   return "CANACC5";
-  case MTYP_CANACC8:   return "CANACC8";
-  case MTYP_CANACE3:   return "CANACE3";
-  case MTYP_CANACE8C:  return "CANACE8C";
-  case MTYP_CANLED:    return "CANLED";
-  case MTYP_CANLED64:  return "CANLED64";
-  case MTYP_CANACC4_2: return "CANACC4_2";
-  case MTYP_CANCAB:    return "CANCAB";
-  case MTYP_CANCMD:    return "CANCMD";
-  case MTYP_CANSERVO:  return "CANSERVO";
-  case MTYP_CANBC:     return "CANBC";
-  case MTYP_CANRPI:    return "CANRPI";
-  case MTYP_CANTTCA:   return "CANTTCA";
-  case MTYP_CANTTCB:   return "CANTTCB";
-  case MTYP_CANGC2:    return "CANGC2";
+const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
+  if( manu == MANU_MERG ) {
+    switch( mtype ) {
+    case MTYP_CANACC4:   return "CANACC4";
+    case MTYP_CANACC5:   return "CANACC5";
+    case MTYP_CANACC8:   return "CANACC8";
+    case MTYP_CANACE3:   return "CANACE3";
+    case MTYP_CANACE8C:  return "CANACE8C";
+    case MTYP_CANLED:    return "CANLED";
+    case MTYP_CANLED64:  return "CANLED64";
+    case MTYP_CANACC4_2: return "CANACC4_2";
+    case MTYP_CANCAB:    return "CANCAB";
+    case MTYP_CANCMD:    return "CANCMD";
+    case MTYP_CANSERVO:  return "CANSERVO";
+    case MTYP_CANBC:     return "CANBC";
+    case MTYP_CANRPI:    return "CANRPI";
+    case MTYP_CANTTCA:   return "CANTTCA";
+    case MTYP_CANTTCB:   return "CANTTCB";
+    }
   }
+  if( manu == MANU_ROCRAIL ) {
+    switch( mtype ) {
+    case MTYP_CANGC2:    return "CANGC2";
+    }
+  }
+  TraceOp.trc( "cbusnodedlg", TRCLEVEL_WARNING, __LINE__, 9999, "unknown type: manu=%d, mtype=%d ", manu, mtype );
   return "UNKNOWN";
 }
 
@@ -335,7 +342,7 @@ void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
   if( m_IndexList->GetSelection() != wxNOT_FOUND ) {
     iONode node = (iONode)m_IndexList->GetClientData(m_IndexList->GetSelection());
     if( node != NULL ) {
-      initType(wCBusNode.getmtyp(node));
+      initType(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node));
       m_NodeNumber->SetValue(wCBusNode.getnr(node));
       initVarList(node);
       initEvtList(node);

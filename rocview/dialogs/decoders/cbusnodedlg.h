@@ -36,8 +36,8 @@ class CBusNodeDlg : public cbusnodedlggen
   void initIndex();
   void initVarList(iONode node);
   void initEvtList(iONode node);
-  void initType(int mtype);
-  const char* getTypeString( int mtype );
+  void initType(int manu, int mtype);
+  const char* getTypeString( int manu, int mtype );
   iONode getNode(int nr, int mtype);
   iONode getNodeVar(int nn, int mtype, int nr, int val);
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);

@@ -14,11 +14,8 @@
 
 // Manufacturers
 
-#define MANU_MERG		165
-
-
+#define MANU_MERG		 165
 // Module types
-
 #define MTYP_SLIM        0  // default NN for SLiM nodes
 #define MTYP_CANACC4     1	// Solenoid point driver
 #define MTYP_CANACC5     2	// Motorised point driver
@@ -36,7 +33,10 @@
 #define MTYP_CANTTCA	   14	// Turntable controller (turntable end)
 #define MTYP_CANTTCB	   15 // Turntable controller (control panel end)
 
-#define MTYP_CANGC2      21 // 16 I/O
+
+#define MANU_ROCRAIL 70
+// Module types
+#define MTYP_CANGC2 2 // 16 I/O
 
 
 //  CBUS opcodes list
