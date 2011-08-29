@@ -30,11 +30,13 @@
 #define MTYP_CANACC4_2   8  // 12v version of CANACC4
 #define MTYP_CANCAB      9  // CANCAB hand throttle
 #define MTYP_CANCMD      10 // CANCMD command station
-#define	MTYP_CANSERVO	 11	// 8 servo driver (on canacc8 or similar hardware)
-#define MTYP_CANBC	 	 12 // BC1a command station
-#define MTYP_CANRPI		 13	// RPI and RFID interface
-#define MTYP_CANTTCA	 14	// Turntable controller (turntable end)
-#define MTYP_CANTTCB	 15 // Turntable controller (control panel end)
+#define	MTYP_CANSERVO	   11	// 8 servo driver (on canacc8 or similar hardware)
+#define MTYP_CANBC	 	   12 // BC1a command station
+#define MTYP_CANRPI		   13	// RPI and RFID interface
+#define MTYP_CANTTCA	   14	// Turntable controller (turntable end)
+#define MTYP_CANTTCB	   15 // Turntable controller (control panel end)
+
+#define MTYP_CANGC2      21 // 16 I/O
 
 
 //  CBUS opcodes list

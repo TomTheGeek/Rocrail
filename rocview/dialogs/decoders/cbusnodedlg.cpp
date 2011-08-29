@@ -288,6 +288,7 @@ const char* CBusNodeDlg::getTypeString( int mtype ) {
   case MTYP_CANRPI:    return "CANRPI";
   case MTYP_CANTTCA:   return "CANTTCA";
   case MTYP_CANTTCB:   return "CANTTCB";
+  case MTYP_CANGC2:    return "CANGC2";
   }
   return "UNKNOWN";
 }
