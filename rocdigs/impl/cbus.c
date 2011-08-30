@@ -559,6 +559,7 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
   wAccessory.setnodenr( nodeC, data->shortevents?0:node );
   wAccessory.setdevid( nodeC, addr );
   wAccessory.setval1( nodeC, state );
+  wAccessory.setaccevent( nodeC, True );
   if( data->iid != NULL )
     wAccessory.setiid( nodeC, data->iid );
 
