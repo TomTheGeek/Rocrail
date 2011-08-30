@@ -551,9 +551,6 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
 
   int addr = event;
 
-  if( !data->shortevents )
-    addr += (node << 16);
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sevent %d %s (node=%d)",
       data->shortevents?"short ":"", addr, state?"ON":"OFF", node );
 
