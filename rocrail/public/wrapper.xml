@@ -129,6 +129,16 @@
     </logentry>
   </log>
 
+	<acc wrappername="Accessory">
+    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
+    <var name="nodenr" vt="int" defval="0" range="0-*" required="false" remark="Node number"/>
+    <var name="devid" vt="int" defval="0" range="0-*" required="true" remark="Device ID"/>
+    <var name="val1" vt="int" defval="0" range="0-*" required="true" remark="Value"/>
+    <var name="val2" vt="int" defval="0" range="0-*" required="true" remark="Value"/>
+    <var name="val3" vt="int" defval="0" range="0-*" required="true" remark="Value"/>
+    <var name="val4" vt="int" defval="0" range="0-*" required="true" remark="Value"/>
+	</acc>
+
   <rocrail structname="RRI" wrappername="RocRail">
     <var name="file" vt="string" defval="rocrail.ini" remark="RocRail ini-file."/>
     <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>

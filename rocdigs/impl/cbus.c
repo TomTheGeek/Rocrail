@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Accessory.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/serial.h"
@@ -536,7 +537,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 }
 
 
-static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
+static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
@@ -557,11 +558,12 @@ static __evaluateFB( iOCBUS cbus, byte* frame, Boolean state ) {
       data->shortevents?"short ":"", addr, state?"ON":"OFF", node );
 
   /* inform listener: Node3 */
-  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, state?True:False );
+  iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
+  wAccessory.setnodenr( nodeC, data->shortevents?0:node );
+  wAccessory.setdevid( nodeC, addr );
+  wAccessory.setval1( nodeC, state );
   if( data->iid != NULL )
-    wFeedback.setiid( nodeC, data->iid );
+    wAccessory.setiid( nodeC, data->iid );
 
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
@@ -833,12 +835,12 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_ACON:
     case OPC_ASON:
     case OPC_ARSPO:
-      __evaluateFB(cbus, frame, True);
+      __evaluateAcc(cbus, frame, True);
       break;
     case OPC_ACOF:
     case OPC_ASOF:
     case OPC_ARSPN:
-      __evaluateFB(cbus, frame, False);
+      __evaluateAcc(cbus, frame, False);
       break;
     case OPC_ACDAT:
       __evaluateRFID(cbus, frame);

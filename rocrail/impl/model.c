@@ -117,6 +117,7 @@
 #include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Exception.h"
+#include "rocrail/wrapper/public/Accessory.h"
 
 static int instCnt = 0;
 
@@ -2822,6 +2823,34 @@ static void _event( iOModel inst, iONode nodeC ) {
     StrOp.free( strNode );
   }
 
+  if( StrOp.equals( wAccessory.name(), NodeOp.getName( nodeC ) ) ) {
+    int bus = wAccessory.getnodenr( nodeC );
+    int addr = wAccessory.getdevid( nodeC );
+    int val = wAccessory.getval1( nodeC );
+    const char* iid = wAccessory.getiid( nodeC );
+    char* key = FBackOp.createAddrKey( bus, addr, iid );
+
+    iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
+    StrOp.free( key );
+    if( list != NULL ) {
+      obj fb = ListOp.first( list );
+      while( fb != NULL ) {
+        fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
+        fb = ListOp.next(list);
+      }
+      nodeC->base.del(nodeC);
+      return;
+    }
+    else {
+      NodeOp.setName(nodeC, wSwitch.name());
+      wSwitch.setbus( nodeC, bus );
+      wSwitch.setaddr1( nodeC, 0 );
+      wSwitch.setport1( nodeC, addr );
+      wSwitch.setstate( nodeC, val?"straight":"turnout" );
+    }
+
+  }
+
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( nodeC ) ) ) {
     int bus = wFeedback.getbus( nodeC );
     int addr = wFeedback.getaddr( nodeC );
@@ -2883,6 +2912,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     const char* defiid;
     iONode ini    = AppOp.getIni();
     iONode digint = wRocRail.getdigint( ini );
+    Boolean matched = False;
     
     if( digint != NULL)
       defiid = wDigInt.getiid( digint );
@@ -2934,6 +2964,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port ||
           wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port )
       {
+        matched = True;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", SwitchOp.getId(sw) );
         if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
@@ -2941,6 +2972,11 @@ static void _event( iOModel inst, iONode nodeC ) {
           SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
       }
       sw = (iOSwitch)ListOp.next(o->switchList);
+    }
+
+    if( !matched ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered accessory event: %d:%d:%d %s",
+                   bus, addr, port, wSwitch.getstate(nodeC) );
     }
     NodeOp.base.del(nodeC);
   }
