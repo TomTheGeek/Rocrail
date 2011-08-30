@@ -2834,6 +2834,12 @@ static void _event( iOModel inst, iONode nodeC ) {
     StrOp.free( key );
     if( list != NULL ) {
       obj fb = ListOp.first( list );
+
+      NodeOp.setName(nodeC, wFeedback.name());
+      wFeedback.setaddr(nodeC, addr);
+      wFeedback.setbus(nodeC, bus);
+      wFeedback.setstate(nodeC, val?True:False);
+
       while( fb != NULL ) {
         fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
         fb = ListOp.next(list);
