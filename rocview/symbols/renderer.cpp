@@ -767,7 +767,7 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     }
   }
   else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
-    if( wTurntable.istraverser(m_Props )) {
+    if( wTurntable.istraverser(m_Props ) && m_SvgSym1 != NULL ) {
       if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
         *cy = m_SvgSym1->width  / 32;
         *cx = m_SvgSym1->height / 32;
@@ -1857,19 +1857,21 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {
-    drawSvgSym(dc, m_SvgSym1, ori);
-    int pos  = wTurntable.getbridgepos( m_Props );
-    int yoff = pos % 24;
-    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "traverser with bridge pos=%d, yOffset=%d", pos, yoff );
+    if( m_SvgSym1 != NULL && m_SvgSym2 != NULL && m_SvgSym3 != NULL && m_SvgSym5 != NULL ) {
+      drawSvgSym(dc, m_SvgSym1, ori);
+      int pos  = wTurntable.getbridgepos( m_Props );
+      int yoff = pos % 24;
+      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "traverser with bridge pos=%d, yOffset=%d", pos, yoff );
 
-    Boolean sensor1 = wTurntable.isstate1( m_Props );
-    Boolean sensor2 = wTurntable.isstate2( m_Props );
-    if( sensor1 && sensor2 )
-      drawSvgSym(dc, m_SvgSym3, ori, 0, yoff);
-    else if( sensor1 || sensor2 )
-      drawSvgSym(dc, m_SvgSym5, ori, 0, yoff);
-    else
-      drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
+      Boolean sensor1 = wTurntable.isstate1( m_Props );
+      Boolean sensor2 = wTurntable.isstate2( m_Props );
+      if( sensor1 && sensor2 )
+        drawSvgSym(dc, m_SvgSym3, ori, 0, yoff);
+      else if( sensor1 || sensor2 )
+        drawSvgSym(dc, m_SvgSym5, ori, 0, yoff);
+      else
+        drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
+    }
     return;
   }
 
