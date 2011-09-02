@@ -51,6 +51,7 @@ class cbusnodedlggen : public wxDialog
 		wxTextCtrl* m_IID;
 		wxStaticText* m_labNodeType;
 		wxTextCtrl* m_NodeType;
+		wxSpinCtrl* m_NodeManuNr;
 		wxSpinCtrl* m_NodeTypeNr;
 		wxStaticText* m_labNumber;
 		wxSpinCtrl* m_NodeNumber;

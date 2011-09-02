@@ -37,7 +37,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer3->Add( fgSizer2, 0, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer51;
-	fgSizer51 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer51 = new wxFlexGridSizer( 0, 4, 0, 0 );
 	fgSizer51->AddGrowableCol( 1 );
 	fgSizer51->SetFlexibleDirection( wxBOTH );
 	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -48,6 +48,11 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_NodeType = new wxTextCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	fgSizer51->Add( m_NodeType, 0, wxALL|wxEXPAND, 5 );
+	
+	m_NodeManuNr = new wxSpinCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
+	m_NodeManuNr->Enable( false );
+	
+	fgSizer51->Add( m_NodeManuNr, 0, wxALL, 5 );
 	
 	m_NodeTypeNr = new wxSpinCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
 	m_NodeTypeNr->Enable( false );
@@ -76,7 +81,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_NodeNumberPanel->SetSizer( bSizer3 );
 	m_NodeNumberPanel->Layout();
 	bSizer3->Fit( m_NodeNumberPanel );
-	m_NoteBook->AddPage( m_NodeNumberPanel, wxT("Node"), true );
+	m_NoteBook->AddPage( m_NodeNumberPanel, wxT("Node"), false );
 	m_IndexPanel = new wxPanel( m_NoteBook, wxID_CBUSNODE_INDEX, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
@@ -335,7 +340,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_FirmwarePanel->SetSizer( bSizer131 );
 	m_FirmwarePanel->Layout();
 	bSizer131->Fit( m_FirmwarePanel );
-	m_NoteBook->AddPage( m_FirmwarePanel, wxT("Firmware"), false );
+	m_NoteBook->AddPage( m_FirmwarePanel, wxT("Firmware"), true );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	
