@@ -785,10 +785,25 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer16->Add( m_GC2SetAll, 0, wxALL, 5 );
 	
 	m_GC2SaveOutput = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Save output state"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2SaveOutput, 0, wxALL, 5 );
+	bSizer16->Add( m_GC2SaveOutput, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_GC2ShortEvents = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Short events"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2ShortEvents, 0, wxALL, 5 );
+	bSizer16->Add( m_GC2ShortEvents, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxFlexGridSizer* fgSizer13;
+	fgSizer13 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer13->AddGrowableCol( 1 );
+	fgSizer13->SetFlexibleDirection( wxBOTH );
+	fgSizer13->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_labSOD = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("SoD:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_labSOD->Wrap( -1 );
+	fgSizer13->Add( m_labSOD, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	
+	m_GC2SOD = new wxSpinCtrl( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
+	fgSizer13->Add( m_GC2SOD, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	bSizer16->Add( fgSizer13, 1, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer151->Add( bSizer16, 0, wxEXPAND, 5 );
 	

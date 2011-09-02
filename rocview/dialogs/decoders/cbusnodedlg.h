@@ -43,8 +43,14 @@ class CBusNodeDlg : public cbusnodedlggen
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
   void gc2GetPort(int port, int* conf, int* nn, int* addr);
   void gc2SetPort(int port, int conf, int nn, int addr);
+  void varGet(int nr);
+  void eventGetAll();
+  void initGC2Var(int nr, int val);
+  void initGC2Event(int idx, int nn, int addr);
 
   int m_SetPage;
+  bool m_bGC2GetAll;
+  bool m_bGC2SetAll;
 
 protected:
 	// Handlers for cbusnodedlggen events.

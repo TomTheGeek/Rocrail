@@ -50,6 +50,8 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( parent )
 {
+  m_bGC2GetAll = false;
+  m_bGC2SetAll = false;
   init(event);
 }
 
@@ -222,6 +224,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
       if( wCBusNodeVar.getnr(cbusnodevar) == nr ) {
         wCBusNodeVar.setval(cbusnodevar, val);
         initVarList(node);
+        initGC2Var(nr, val);
         return cbusnodevar;
       }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
@@ -231,6 +234,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     wCBusNodeVar.setnr( cbusnodevar, nr );
     wCBusNodeVar.setval( cbusnodevar, val );
     initVarList(node);
+    initGC2Var(nr, val);
     return cbusnodevar;
   }
   return NULL;
@@ -252,6 +256,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
       {
         wCBusNodeEvent.setevval(cbusnodeevt, evval);
         initEvtList(node);
+        initGC2Event(evnr, evnn, evaddr);
         TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
       }
@@ -264,6 +269,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
     wCBusNodeEvent.setevnr( cbusnodeevt, evnr );
     wCBusNodeEvent.setevval( cbusnodeevt, evval );
     initEvtList(node);
+    initGC2Event(evnr, evnn, evaddr);
     return cbusnodeevt;
   }
   return NULL;
@@ -422,13 +428,17 @@ void CBusNodeDlg::onVarBit( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onVarGet( wxCommandEvent& event ) {
+  varGet( m_VarIndex->GetValue() );
+}
+
+void CBusNodeDlg::varGet( int var ) {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.get );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
   wProgram.setdecaddr( cmd, nn );
-  wProgram.setcv( cmd, m_VarIndex->GetValue() );
+  wProgram.setcv( cmd, var );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -466,6 +476,9 @@ void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
+  eventGetAll();
+}
+void CBusNodeDlg::eventGetAll() {
   int nn = m_NodeNumber->GetValue();
 
   iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue());
@@ -619,6 +632,15 @@ void CBusNodeDlg::event( iONode event ) {
     int val = wProgram.getvalue(event);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
+    if( m_bGC2GetAll ) {
+      if( cv < 17 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGC2GetAll = false;
+        eventGetAll();
+      }
+    }
   }
 }
 
@@ -780,28 +802,58 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
       ,m_GC2Pulse6,m_GC2Pulse7,m_GC2Pulse8,m_GC2Pulse9,m_GC2Pulse10
       ,m_GC2Pulse11,m_GC2Pulse12,m_GC2Pulse13,m_GC2Pulse14,m_GC2Pulse15,m_GC2Pulse16};
 
-  gc2NN[port]->SetValue(nn);
-  gc2Addr[port]->SetValue(addr);
+  if( nn != -1 )
+    gc2NN[port]->SetValue(nn);
+  if( addr != -1 )
+    gc2Addr[port]->SetValue(addr);
 
-  int input  = (conf & 0x01) ? 1:0;
-  int delay  = (conf & 0x02) ? 1:0;
+  if( conf != -1 ) {
+    int input  = (conf & 0x01) ? 1:0;
+    int delay  = (conf & 0x02) ? 1:0;
 
-  if( input && delay )
-    gc2Block[port]->SetValue(true);
-  else if( input && !delay )
-    gc2Input[port]->SetValue(true);
-  else if( delay )
-    gc2Pulse[port]->SetValue(true);
-  else
-    gc2Switch[port]->SetValue(true);
+    if( input && delay )
+      gc2Block[port]->SetValue(true);
+    else if( input && !delay )
+      gc2Input[port]->SetValue(true);
+    else if( delay )
+      gc2Pulse[port]->SetValue(true);
+    else
+      gc2Switch[port]->SetValue(true);
+  }
 
+}
 
+void CBusNodeDlg::initGC2Var( int nr, int val ) {
+  if( nr == 1 ) {
+    // node var1
+    m_GC2SaveOutput->SetValue( (val&0x01) ? true:false );
+    m_GC2ShortEvents->SetValue( (val&0x02) ? true:false );
+  }
+  else if( nr < 18 ) {
+    // port config
+    gc2SetPort(nr-1, val, -1, -1);
+  }
+}
+
+void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
+  if( idx < 16 ) {
+    // port event
+    gc2SetPort(idx+1, -1, nn, addr);
+  }
+  else if( idx == 16 ) {
+    // SOD
+    m_GC2SOD->SetValue( addr );
+  }
 }
 
 void CBusNodeDlg::onGC2GetAll( wxCommandEvent& event ) {
-
+  m_bGC2GetAll = true;
+  varGet(1);
 }
+
+
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
+  m_bGC2SetAll = true;
 
 }
 
