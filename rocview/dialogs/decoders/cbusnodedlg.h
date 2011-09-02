@@ -41,6 +41,9 @@ class CBusNodeDlg : public cbusnodedlggen
   iONode getNode(int nr, int mtype, int manu);
   iONode getNodeVar(int nn, int mtype, int nr, int val);
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
+  void gc2GetPort(int port, int* conf, int* nn, int* addr);
+  void gc2SetPort(int port, int conf, int nn, int addr);
+
   int m_SetPage;
 
 protected:
@@ -69,6 +72,8 @@ protected:
   void onHEXFileSend( wxCommandEvent& event );
   void onBootmode( wxCommandEvent& event );
   void onResetBoot( wxCommandEvent& event );
+  void onGC2GetAll( wxCommandEvent& event );
+  void onGC2SetAll( wxCommandEvent& event );
 
 public:
 	/** Constructor */

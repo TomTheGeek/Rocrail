@@ -715,3 +715,96 @@ void CBusNodeDlg::onResetBoot( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
+
+
+void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
+  wxSpinCtrl* gc2NN[] = {NULL,m_GC2EvtNN1,m_GC2EvtNN2,m_GC2EvtNN3,m_GC2EvtNN4,m_GC2EvtNN5
+      ,m_GC2EvtNN6,m_GC2EvtNN7,m_GC2EvtNN8,m_GC2EvtNN9,m_GC2EvtNN10
+      ,m_GC2EvtNN11,m_GC2EvtNN12,m_GC2EvtNN13,m_GC2EvtNN14,m_GC2EvtNN15,m_GC2EvtNN16};
+
+  wxSpinCtrl* gc2Addr[] = {NULL,m_GC2EvtAddr1,m_GC2EvtAddr2,m_GC2EvtAddr3,m_GC2EvtAddr4,m_GC2EvtAddr5
+      ,m_GC2EvtAddr6,m_GC2EvtAddr7,m_GC2EvtAddr8,m_GC2EvtAddr9,m_GC2EvtAddr10
+      ,m_GC2EvtAddr11,m_GC2EvtAddr12,m_GC2EvtAddr13,m_GC2EvtAddr14,m_GC2EvtAddr15,m_GC2EvtAddr16};
+
+  wxRadioButton* gc2Input[] = {NULL,m_GC2Input1,m_GC2Input2,m_GC2Input3,m_GC2Input4,m_GC2Input5
+      ,m_GC2Input6,m_GC2Input7,m_GC2Input8,m_GC2Input9,m_GC2Input10
+      ,m_GC2Input11,m_GC2Input12,m_GC2Input13,m_GC2Input14,m_GC2Input15,m_GC2Input16};
+
+  wxRadioButton* gc2Block[] = {NULL,m_GC2Block1,m_GC2Block2,m_GC2Block3,m_GC2Block4,m_GC2Block5
+      ,m_GC2Block6,m_GC2Block7,m_GC2Block8,m_GC2Block9,m_GC2Block10
+      ,m_GC2Block11,m_GC2Block12,m_GC2Block13,m_GC2Block14,m_GC2Block15,m_GC2Block16};
+
+  wxRadioButton* gc2Switch[] = {NULL,m_GC2Switch1,m_GC2Switch2,m_GC2Switch3,m_GC2Switch4,m_GC2Switch5
+      ,m_GC2Switch6,m_GC2Switch7,m_GC2Switch8,m_GC2Switch9,m_GC2Switch10
+      ,m_GC2Switch11,m_GC2Switch12,m_GC2Switch13,m_GC2Switch14,m_GC2Switch15,m_GC2Switch16};
+
+  wxRadioButton* gc2Pulse[] = {NULL,m_GC2Pulse1,m_GC2Pulse2,m_GC2Pulse3,m_GC2Pulse4,m_GC2Pulse5
+      ,m_GC2Pulse6,m_GC2Pulse7,m_GC2Pulse8,m_GC2Pulse9,m_GC2Pulse10
+      ,m_GC2Pulse11,m_GC2Pulse12,m_GC2Pulse13,m_GC2Pulse14,m_GC2Pulse15,m_GC2Pulse16};
+
+  *nn   = gc2NN[port]->GetValue();
+  *addr = gc2Addr[port]->GetValue();
+
+  int input  = gc2Input[port]->GetValue() | gc2Block[port]->GetValue();
+  int delay  = gc2Block[port]->GetValue();
+  int output = gc2Switch[port]->GetValue() | gc2Pulse[port]->GetValue();
+  int pulse  = gc2Pulse[port]->GetValue();
+
+  *conf = input | (delay << 1) | (pulse << 1);
+
+}
+
+
+void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
+  wxSpinCtrl* gc2NN[] = {NULL,m_GC2EvtNN1,m_GC2EvtNN2,m_GC2EvtNN3,m_GC2EvtNN4,m_GC2EvtNN5
+      ,m_GC2EvtNN6,m_GC2EvtNN7,m_GC2EvtNN8,m_GC2EvtNN9,m_GC2EvtNN10
+      ,m_GC2EvtNN11,m_GC2EvtNN12,m_GC2EvtNN13,m_GC2EvtNN14,m_GC2EvtNN15,m_GC2EvtNN16};
+
+  wxSpinCtrl* gc2Addr[] = {NULL,m_GC2EvtAddr1,m_GC2EvtAddr2,m_GC2EvtAddr3,m_GC2EvtAddr4,m_GC2EvtAddr5
+      ,m_GC2EvtAddr6,m_GC2EvtAddr7,m_GC2EvtAddr8,m_GC2EvtAddr9,m_GC2EvtAddr10
+      ,m_GC2EvtAddr11,m_GC2EvtAddr12,m_GC2EvtAddr13,m_GC2EvtAddr14,m_GC2EvtAddr15,m_GC2EvtAddr16};
+
+  wxRadioButton* gc2Input[] = {NULL,m_GC2Input1,m_GC2Input2,m_GC2Input3,m_GC2Input4,m_GC2Input5
+      ,m_GC2Input6,m_GC2Input7,m_GC2Input8,m_GC2Input9,m_GC2Input10
+      ,m_GC2Input11,m_GC2Input12,m_GC2Input13,m_GC2Input14,m_GC2Input15,m_GC2Input16};
+
+  wxRadioButton* gc2Block[] = {NULL,m_GC2Block1,m_GC2Block2,m_GC2Block3,m_GC2Block4,m_GC2Block5
+      ,m_GC2Block6,m_GC2Block7,m_GC2Block8,m_GC2Block9,m_GC2Block10
+      ,m_GC2Block11,m_GC2Block12,m_GC2Block13,m_GC2Block14,m_GC2Block15,m_GC2Block16};
+
+  wxRadioButton* gc2Switch[] = {NULL,m_GC2Switch1,m_GC2Switch2,m_GC2Switch3,m_GC2Switch4,m_GC2Switch5
+      ,m_GC2Switch6,m_GC2Switch7,m_GC2Switch8,m_GC2Switch9,m_GC2Switch10
+      ,m_GC2Switch11,m_GC2Switch12,m_GC2Switch13,m_GC2Switch14,m_GC2Switch15,m_GC2Switch16};
+
+  wxRadioButton* gc2Pulse[] = {NULL,m_GC2Pulse1,m_GC2Pulse2,m_GC2Pulse3,m_GC2Pulse4,m_GC2Pulse5
+      ,m_GC2Pulse6,m_GC2Pulse7,m_GC2Pulse8,m_GC2Pulse9,m_GC2Pulse10
+      ,m_GC2Pulse11,m_GC2Pulse12,m_GC2Pulse13,m_GC2Pulse14,m_GC2Pulse15,m_GC2Pulse16};
+
+  gc2NN[port]->SetValue(nn);
+  gc2Addr[port]->SetValue(addr);
+
+  int input  = (conf & 0x01) ? 1:0;
+  int delay  = (conf & 0x02) ? 1:0;
+
+  if( input && delay )
+    gc2Block[port]->SetValue(true);
+  else if( input && !delay )
+    gc2Input[port]->SetValue(true);
+  else if( delay )
+    gc2Pulse[port]->SetValue(true);
+  else
+    gc2Switch[port]->SetValue(true);
+
+
+}
+
+void CBusNodeDlg::onGC2GetAll( wxCommandEvent& event ) {
+
+}
+void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
+
+}
+
+
+
+

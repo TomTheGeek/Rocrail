@@ -268,6 +268,8 @@ class cbusnodedlggen : public wxDialog
 		virtual void onHEXFileSend( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBootmode( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onResetBoot( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onGC2GetAll( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onGC2SetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
