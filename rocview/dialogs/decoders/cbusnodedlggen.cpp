@@ -353,33 +353,33 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer8->SetFlexibleDirection( wxBOTH );
 	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labGC2Port = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2Port->Wrap( -1 );
-	fgSizer8->Add( m_labGC2Port, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	m_lab1GC2Port = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Port"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2Port->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2Port, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_labGC2EvtNN = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Node Nr."), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2EvtNN->Wrap( -1 );
-	fgSizer8->Add( m_labGC2EvtNN, 0, wxALL, 5 );
+	m_lab1GC2EvtNN = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Node Nr."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2EvtNN->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2EvtNN, 0, wxALL, 5 );
 	
-	m_labGC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2EvtAddr->Wrap( -1 );
-	fgSizer8->Add( m_labGC2EvtAddr, 0, wxALL, 5 );
+	m_lab1GC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2EvtAddr->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2EvtAddr, 0, wxALL, 5 );
 	
-	m_LabGC2Input = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Input"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_LabGC2Input->Wrap( -1 );
-	fgSizer8->Add( m_LabGC2Input, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	m_Lab1GC2Input = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Input"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_Lab1GC2Input->Wrap( -1 );
+	fgSizer8->Add( m_Lab1GC2Input, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_labGC2Sensor = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2Sensor->Wrap( -1 );
-	fgSizer8->Add( m_labGC2Sensor, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	m_lab1GC2Sensor = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Block"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2Sensor->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2Sensor, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_labGC2Switch = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2Switch->Wrap( -1 );
-	fgSizer8->Add( m_labGC2Switch, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	m_lab1GC2Switch = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2Switch->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2Switch, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_labGC2Pulse = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC2Pulse->Wrap( -1 );
-	fgSizer8->Add( m_labGC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	m_lab1GC2Pulse = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2Pulse->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_labGC2Port1 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port1->Wrap( -1 );

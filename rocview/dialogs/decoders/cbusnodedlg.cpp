@@ -105,6 +105,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_VarPanel->GetSizer()->Layout();
   m_EventsPanel->GetSizer()->Layout();
   m_FirmwarePanel->GetSizer()->Layout();
+  m_CANGC2Panel->GetSizer()->Layout();
 
   m_NoteBook->Fit();
 

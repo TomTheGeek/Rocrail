@@ -3952,7 +3952,7 @@
                                                             <property name="label">Port</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2Port</property>
+                                                            <property name="name">m_lab1GC2Port</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4007,7 +4007,7 @@
                                                             <property name="label">Node Nr.</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2EvtNN</property>
+                                                            <property name="name">m_lab1GC2EvtNN</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4062,7 +4062,7 @@
                                                             <property name="label">Address</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2EvtAddr</property>
+                                                            <property name="name">m_lab1GC2EvtAddr</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4117,7 +4117,7 @@
                                                             <property name="label">Input</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_LabGC2Input</property>
+                                                            <property name="name">m_Lab1GC2Input</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4172,7 +4172,7 @@
                                                             <property name="label">Block</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2Sensor</property>
+                                                            <property name="name">m_lab1GC2Sensor</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4227,7 +4227,7 @@
                                                             <property name="label">Switch</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2Switch</property>
+                                                            <property name="name">m_lab1GC2Switch</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
@@ -4282,7 +4282,7 @@
                                                             <property name="label">Pulse</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_labGC2Pulse</property>
+                                                            <property name="name">m_lab1GC2Pulse</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size"></property>
