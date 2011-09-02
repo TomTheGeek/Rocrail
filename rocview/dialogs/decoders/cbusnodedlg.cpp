@@ -217,8 +217,11 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
   if( node != NULL ) {
     iONode cbusnodevar = wCBusNode.getcbnodevar(node);
     while( cbusnodevar != NULL ) {
-      if( wCBusNodeVar.getnr(cbusnodevar) == nr )
+      if( wCBusNodeVar.getnr(cbusnodevar) == nr ) {
+        wCBusNodeVar.setval(cbusnodevar, val);
+        initVarList(node);
         return cbusnodevar;
+      }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
     }
     cbusnodevar = NodeOp.inst( wCBusNodeVar.name(), node, ELEMENT_NODE );
@@ -609,7 +612,7 @@ void CBusNodeDlg::event( iONode event ) {
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
 
-    getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
+    iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
   }
 }
 
