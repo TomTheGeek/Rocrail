@@ -42,6 +42,7 @@
 #include "rocs/public/trace.h"
 #include "rocdigs/impl/cbus/cbusdefs.h"
 
+#define ME_GC2Timer 4711
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 {
@@ -56,6 +57,9 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 }
 
 void CBusNodeDlg::init( iONode event ) {
+  m_Timer = new wxTimer( this, ME_GC2Timer );
+  Connect( wxEVT_TIMER, wxTimerEventHandler( CBusNodeDlg::OnTimer ), NULL, this );
+
   // Init labels.
   m_NoteBook->SetPageText( 0, wxGetApp().getMsg( "node" ) );
   m_NoteBook->SetPageText( 1, wxGetApp().getMsg( "index" ) );
@@ -444,17 +448,22 @@ void CBusNodeDlg::varGet( int var ) {
 }
 
 void CBusNodeDlg::onVarSet( wxCommandEvent& event ) {
+  varSet( m_VarIndex->GetValue(), m_VarValue->GetValue(), true );
+}
+
+void CBusNodeDlg::varSet( int idx, int val, bool update ) {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.set );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
   wProgram.setdecaddr( cmd, nn );
-  wProgram.setcv( cmd, m_VarIndex->GetValue() );
-  wProgram.setvalue( cmd, m_VarValue->GetValue() );
+  wProgram.setcv( cmd, idx );
+  wProgram.setvalue( cmd, val );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
-  getNodeVar(nn, m_NodeTypeNr->GetValue(), m_VarIndex->GetValue(), m_VarValue->GetValue() );
+  if( update )
+    getNodeVar(nn, m_NodeTypeNr->GetValue(), m_VarIndex->GetValue(), m_VarValue->GetValue() );
 }
 
 void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
@@ -521,20 +530,26 @@ void CBusNodeDlg::onEvtGetVar( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onEventAdd( wxCommandEvent& event ) {
-  int nn = m_NodeNumber->GetValue();
+  eventSet(m_EventNodeNr->GetValue(), m_EventAddress->GetValue(),
+      m_EventIndex->GetValue(), m_EventVar->GetValue(), true );
+}
+void CBusNodeDlg::eventSet( int nn, int addr, int idx, int val, bool update ) {
+  int nodenr = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.evset );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
-  wProgram.setdecaddr( cmd, nn );
-  wProgram.setval2(cmd, m_EventNodeNr->GetValue()); // nn
-  wProgram.setval3(cmd, m_EventAddress->GetValue()); // addr
-  wProgram.setval1(cmd, m_EventIndex->GetValue() ); // idx
-  wProgram.setval4(cmd, m_EventVar->GetValue() ); // val
+  wProgram.setdecaddr( cmd, nodenr );
+  wProgram.setval2(cmd, nn); // nn
+  wProgram.setval3(cmd, addr); // addr
+  wProgram.setval1(cmd, idx ); // idx
+  wProgram.setval4(cmd, val ); // val
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
-  getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(),
-      m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
+  if( update ) {
+    getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(),
+        m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
+  }
 }
 
 void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
@@ -589,6 +604,9 @@ void CBusNodeDlg::onEVBit( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onLearn( wxCommandEvent& event ) {
+  setLearn();
+}
+void CBusNodeDlg::setLearn() {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.learn );
@@ -600,6 +618,9 @@ void CBusNodeDlg::onLearn( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onUnlearn( wxCommandEvent& event ) {
+  setUnlearn();
+}
+void CBusNodeDlg::setUnlearn() {
   int nn = m_NodeNumber->GetValue();
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.unlearn );
@@ -854,7 +875,45 @@ void CBusNodeDlg::onGC2GetAll( wxCommandEvent& event ) {
 
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
   m_bGC2SetAll = true;
+  m_GC2SetAll->Enable(false);
+  m_GC2SetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+}
 
+
+void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
+  if( m_GC2SetIndex == 0 ) {
+    int nv1 = m_GC2SaveOutput->IsChecked() ? 0x01:0x00;
+    nv1 += m_GC2ShortEvents->IsChecked() ? 0x02:0x00;
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
+    varSet(1, nv1, false);
+  }
+  else if( m_GC2SetIndex == 1 ) {
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set learn mode");
+    setLearn();
+  }
+  else if( m_GC2SetIndex < 18 ) {
+    int conf = 0;
+    int nn = 0;
+    int addr = 0;
+    gc2GetPort(m_GC2SetIndex-1, &conf, &nn, &addr);
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+        "nv%d=0x%02X nn=%d addr=%d", m_GC2SetIndex, conf, nn, addr);
+    varSet(m_GC2SetIndex, conf, false);
+    eventSet( nn, addr, m_GC2SetIndex-2, 0, false );
+  }
+  else if( m_GC2SetIndex == 18 ) {
+    eventSet( 0, m_GC2SOD->GetValue(), 18, 0, false );
+  }
+  m_GC2SetIndex++;
+  if( m_GC2SetIndex < 19 ) {
+    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  }
+  else {
+    m_bGC2SetAll = false;
+    m_GC2SetAll->Enable(true);
+    setUnlearn();
+  }
 }
 
 
