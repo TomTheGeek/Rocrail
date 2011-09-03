@@ -1347,17 +1347,19 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ) );
     ThreadOp.post(data->writer, (obj)frame);
 
-    /* deactivate the gate to be used */
-    iQCmd qcmd = allocMem(sizeof(struct QCmd));
-    qcmd->time   = SystemOp.getTick();
-    qcmd->delay  = delay / 10;
-    cmd[0] = OPC_ACOF;
-    cmd[1] = wSwitch.getaddr1( node ) / 256;
-    cmd[2] = wSwitch.getaddr1( node ) % 256;
-    cmd[3] = wSwitch.getport1( node ) / 256;
-    cmd[4] = wSwitch.getport1( node ) % 256;
-    makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
-    ThreadOp.post( data->timedqueue, (obj)qcmd );
+    if( wSwitch.isactdelay(node) ) {
+      /* deactivate the gate to be used */
+      iQCmd qcmd = allocMem(sizeof(struct QCmd));
+      qcmd->time   = SystemOp.getTick();
+      qcmd->delay  = delay / 10;
+      cmd[0] = OPC_ACOF;
+      cmd[1] = wSwitch.getaddr1( node ) / 256;
+      cmd[2] = wSwitch.getaddr1( node ) % 256;
+      cmd[3] = wSwitch.getport1( node ) / 256;
+      cmd[4] = wSwitch.getport1( node ) % 256;
+      makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
+      ThreadOp.post( data->timedqueue, (obj)qcmd );
+    }
 
   }
 
