@@ -90,6 +90,7 @@ protected:
   void onResetBoot( wxCommandEvent& event );
   void onGC2GetAll( wxCommandEvent& event );
   void onGC2SetAll( wxCommandEvent& event );
+  void onGC2Test( wxCommandEvent& event );
 
 public:
 	/** Constructor */

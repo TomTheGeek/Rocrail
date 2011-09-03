@@ -32,6 +32,8 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocview/wrapper/public/Gui.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/CBus.h"
@@ -654,7 +656,7 @@ void CBusNodeDlg::event( iONode event ) {
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
-      if( cv < 17 ) {
+      if( cv < 19 ) {
         varGet(cv+1);
       }
       else {
@@ -845,6 +847,10 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
 }
 
 void CBusNodeDlg::initGC2Var( int nr, int val ) {
+  wxButton* gc2Test[] = {NULL,m_GC2Test1,m_GC2Test2,m_GC2Test3,m_GC2Test4,m_GC2Test5
+      ,m_GC2Test6,m_GC2Test7,m_GC2Test8,m_GC2Test9,m_GC2Test10
+      ,m_GC2Test11,m_GC2Test12,m_GC2Test13,m_GC2Test14,m_GC2Test15,m_GC2Test16};
+
   if( nr == 1 ) {
     // node var1
     m_GC2SaveOutput->SetValue( (val&0x01) ? true:false );
@@ -853,6 +859,20 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
   else if( nr < 18 ) {
     // port config
     gc2SetPort(nr-1, val, -1, -1);
+  }
+  else if( nr == 18 ) {
+    // port status 1-8
+    for( int i = 0; i < 8; i++) {
+      int on = val & (0x01 << i);
+      gc2Test[i+1]->SetLabel(on > 0 ? _T("1"):_T("0"));
+    }
+  }
+  else if( nr == 19 ) {
+    // port status 9-16
+    for( int i = 0; i < 8; i++) {
+      int on = val & (0x01 << i);
+      gc2Test[i+1+8]->SetLabel(on > 0 ? _T("1"):_T("0"));
+    }
   }
 }
 
@@ -872,6 +892,55 @@ void CBusNodeDlg::onGC2GetAll( wxCommandEvent& event ) {
   varGet(1);
 }
 
+void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
+  wxSpinCtrl* gc2NN[] = {NULL,m_GC2EvtNN1,m_GC2EvtNN2,m_GC2EvtNN3,m_GC2EvtNN4,m_GC2EvtNN5
+      ,m_GC2EvtNN6,m_GC2EvtNN7,m_GC2EvtNN8,m_GC2EvtNN9,m_GC2EvtNN10
+      ,m_GC2EvtNN11,m_GC2EvtNN12,m_GC2EvtNN13,m_GC2EvtNN14,m_GC2EvtNN15,m_GC2EvtNN16};
+
+  wxSpinCtrl* gc2Addr[] = {NULL,m_GC2EvtAddr1,m_GC2EvtAddr2,m_GC2EvtAddr3,m_GC2EvtAddr4,m_GC2EvtAddr5
+      ,m_GC2EvtAddr6,m_GC2EvtAddr7,m_GC2EvtAddr8,m_GC2EvtAddr9,m_GC2EvtAddr10
+      ,m_GC2EvtAddr11,m_GC2EvtAddr12,m_GC2EvtAddr13,m_GC2EvtAddr14,m_GC2EvtAddr15,m_GC2EvtAddr16};
+
+  wxButton* gc2Test[] = {NULL,m_GC2Test1,m_GC2Test2,m_GC2Test3,m_GC2Test4,m_GC2Test5
+      ,m_GC2Test6,m_GC2Test7,m_GC2Test8,m_GC2Test9,m_GC2Test10
+      ,m_GC2Test11,m_GC2Test12,m_GC2Test13,m_GC2Test14,m_GC2Test15,m_GC2Test16};
+
+  int bus  = 0;
+  int addr = 0;
+  int group = 0;
+  const char* cmd = wOutput.on;
+
+  if( event.GetEventType() != wxEVT_COMMAND_BUTTON_CLICKED ) {
+    return;
+  }
+
+  for( int i = 0; i < 16; i++ ) {
+    if( event.GetEventObject() == gc2Test[i+1] ) {
+      bus = gc2NN[i+1]->GetValue();
+      addr = gc2Addr[i+1]->GetValue();
+      if( gc2Test[i+1]->GetLabel().CompareTo(_T("1")) == 0 )
+          cmd = wOutput.off;
+      if( i > 7 )
+        group = 1;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "test button %d clicked", i+1);
+      break;
+    }
+  }
+
+  if( addr != 0 ) {
+    iONode swcmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setport( swcmd, addr );
+    wOutput.setaddr( swcmd, bus );
+    wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wOutput.setcmd( swcmd, cmd );
+    wxGetApp().sendToRocrail( swcmd );
+    swcmd->base.del( swcmd );
+  }
+
+  ThreadOp.sleep(100);
+  varGet(18+group);
+
+}
 
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
   m_bGC2SetAll = true;

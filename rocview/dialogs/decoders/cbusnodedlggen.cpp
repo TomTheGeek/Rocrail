@@ -349,7 +349,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer17 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxFlexGridSizer* fgSizer8;
-	fgSizer8 = new wxFlexGridSizer( 0, 7, 0, 0 );
+	fgSizer8 = new wxFlexGridSizer( 0, 8, 0, 0 );
 	fgSizer8->SetFlexibleDirection( wxBOTH );
 	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -381,6 +381,10 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab1GC2Pulse->Wrap( -1 );
 	fgSizer8->Add( m_lab1GC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
+	m_lab1GC2Test = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2Test->Wrap( -1 );
+	fgSizer8->Add( m_lab1GC2Test, 0, wxALL, 5 );
+	
 	m_labGC2Port1 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port1->Wrap( -1 );
 	fgSizer8->Add( m_labGC2Port1, 0, wxTOP|wxLEFT, 5 );
@@ -402,6 +406,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse1 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse1, 0, wxLEFT, 5 );
+	
+	m_GC2Test1 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test1, 0, wxLEFT, 5 );
 	
 	m_labGC2Port2 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port2->Wrap( -1 );
@@ -425,6 +432,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse2 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse2, 0, wxLEFT, 5 );
 	
+	m_GC2Test2 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test2, 0, wxLEFT, 5 );
+	
 	m_labGC2Port3 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port3->Wrap( -1 );
 	fgSizer8->Add( m_labGC2Port3, 0, wxTOP|wxLEFT, 5 );
@@ -446,6 +456,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse3 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse3, 0, wxLEFT, 5 );
+	
+	m_GC2Test3 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test3, 0, wxLEFT, 5 );
 	
 	m_labGC2Port4 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port4->Wrap( -1 );
@@ -469,6 +482,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse4 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse4, 0, wxLEFT, 5 );
 	
+	m_GC2Test4 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test4, 0, wxLEFT, 5 );
+	
 	m_labGC2Port5 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port5->Wrap( -1 );
 	fgSizer8->Add( m_labGC2Port5, 0, wxTOP|wxLEFT, 5 );
@@ -490,6 +506,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse5 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse5, 0, wxLEFT, 5 );
+	
+	m_GC2Test5 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test5, 0, wxLEFT, 5 );
 	
 	m_labGC2Port6 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port6->Wrap( -1 );
@@ -513,6 +532,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse6 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse6, 0, wxLEFT, 5 );
 	
+	m_GC2Test6 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test6, 0, wxLEFT, 5 );
+	
 	m_labGC2Port7 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port7->Wrap( -1 );
 	fgSizer8->Add( m_labGC2Port7, 0, wxTOP|wxLEFT, 5 );
@@ -534,6 +556,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse7 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse7, 0, wxLEFT, 5 );
+	
+	m_GC2Test7 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test7, 0, wxLEFT, 5 );
 	
 	m_labGC2Port8 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("8"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port8->Wrap( -1 );
@@ -557,13 +582,16 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse8 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer8->Add( m_GC2Pulse8, 0, wxLEFT, 5 );
 	
+	m_GC2Test8 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer8->Add( m_GC2Test8, 0, wxLEFT, 5 );
+	
 	bSizer17->Add( fgSizer8, 1, wxEXPAND, 5 );
 	
 	m_staticline2 = new wxStaticLine( m_CANGC2Panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer17->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer81;
-	fgSizer81 = new wxFlexGridSizer( 0, 7, 0, 0 );
+	fgSizer81 = new wxFlexGridSizer( 0, 8, 0, 0 );
 	fgSizer81->SetFlexibleDirection( wxBOTH );
 	fgSizer81->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -595,6 +623,10 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab2GC2Pulse->Wrap( -1 );
 	fgSizer81->Add( m_lab2GC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
+	m_lab2GC2Test = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab2GC2Test->Wrap( -1 );
+	fgSizer81->Add( m_lab2GC2Test, 0, wxALL, 5 );
+	
 	m_labGC2Port9 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("9"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port9->Wrap( -1 );
 	fgSizer81->Add( m_labGC2Port9, 0, wxTOP|wxLEFT, 5 );
@@ -616,6 +648,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse9 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse9, 0, wxLEFT, 5 );
+	
+	m_GC2Test9 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test9, 0, wxLEFT, 5 );
 	
 	m_labGC2Port10 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port10->Wrap( -1 );
@@ -639,6 +674,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse10 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse10, 0, wxLEFT, 5 );
 	
+	m_GC2Test10 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test10, 0, wxLEFT, 5 );
+	
 	m_labGC2Port11 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("11"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port11->Wrap( -1 );
 	fgSizer81->Add( m_labGC2Port11, 0, wxTOP|wxLEFT, 5 );
@@ -660,6 +698,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse11 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse11, 0, wxLEFT, 5 );
+	
+	m_GC2Test11 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test11, 0, wxLEFT, 5 );
 	
 	m_labGC2Port12 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("12"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port12->Wrap( -1 );
@@ -683,6 +724,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse12 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse12, 0, wxLEFT, 5 );
 	
+	m_GC2Test12 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test12, 0, wxLEFT, 5 );
+	
 	m_labGC2Port13 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("13"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port13->Wrap( -1 );
 	fgSizer81->Add( m_labGC2Port13, 0, wxTOP|wxLEFT, 5 );
@@ -704,6 +748,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse13 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse13, 0, wxLEFT, 5 );
+	
+	m_GC2Test13 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test13, 0, wxLEFT, 5 );
 	
 	m_labGC2Port14 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("14"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port14->Wrap( -1 );
@@ -727,6 +774,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse14 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse14, 0, wxLEFT, 5 );
 	
+	m_GC2Test14 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test14, 0, wxLEFT, 5 );
+	
 	m_labGC2Port15 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("15"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port15->Wrap( -1 );
 	fgSizer81->Add( m_labGC2Port15, 0, wxTOP|wxLEFT, 5 );
@@ -749,6 +799,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2Pulse15 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse15, 0, wxLEFT, 5 );
 	
+	m_GC2Test15 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test15, 0, wxLEFT, 5 );
+	
 	m_labGC2Port16 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("16"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2Port16->Wrap( -1 );
 	fgSizer81->Add( m_labGC2Port16, 0, wxTOP|wxLEFT, 5 );
@@ -770,6 +823,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2Pulse16 = new wxRadioButton( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer81->Add( m_GC2Pulse16, 0, wxLEFT, 5 );
+	
+	m_GC2Test16 = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer81->Add( m_GC2Test16, 0, wxLEFT, 5 );
 	
 	bSizer17->Add( fgSizer81, 1, wxEXPAND, 5 );
 	
@@ -863,6 +919,22 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_HEXFileSend->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHEXFileSend ), NULL, this );
 	m_BootMode->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onBootmode ), NULL, this );
 	m_ResetBoot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onResetBoot ), NULL, this );
+	m_GC2Test1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test3->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test5->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test6->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test8->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test9->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test11->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test14->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test15->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test16->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
 	m_GC2GetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2GetAll ), NULL, this );
 	m_GC2SetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2SetAll ), NULL, this );
 	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
@@ -908,6 +980,22 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_HEXFileSend->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onHEXFileSend ), NULL, this );
 	m_BootMode->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onBootmode ), NULL, this );
 	m_ResetBoot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onResetBoot ), NULL, this );
+	m_GC2Test1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test3->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test5->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test6->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test8->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test9->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test11->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test14->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test15->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
+	m_GC2Test16->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Test ), NULL, this );
 	m_GC2GetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2GetAll ), NULL, this );
 	m_GC2SetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2SetAll ), NULL, this );
 	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
