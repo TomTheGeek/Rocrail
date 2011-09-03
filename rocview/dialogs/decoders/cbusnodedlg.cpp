@@ -866,6 +866,7 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
       int on = val & (0x01 << i);
       gc2Test[i+1]->SetLabel(on > 0 ? _T("1"):_T("0"));
     }
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 1: 0x%02X", val);
   }
   else if( nr == 19 ) {
     // port status 9-16
@@ -873,6 +874,7 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
       int on = val & (0x01 << i);
       gc2Test[i+1+8]->SetLabel(on > 0 ? _T("1"):_T("0"));
     }
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 2: 0x%02X", val);
   }
 }
 
@@ -937,9 +939,8 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
     swcmd->base.del( swcmd );
   }
 
-  ThreadOp.sleep(100);
-  varGet(18+group);
-
+  m_GC2SetIndex = 19+group;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
@@ -974,8 +975,14 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   else if( m_GC2SetIndex == 18 ) {
     eventSet( 0, m_GC2SOD->GetValue(), 18, 0, false );
   }
+  else if( m_GC2SetIndex == 19 ) {
+    varGet(18);
+  }
+  else if( m_GC2SetIndex == 20 ) {
+    varGet(19);
+  }
   m_GC2SetIndex++;
-  if( m_GC2SetIndex < 19 ) {
+  if( m_GC2SetIndex < 20 ) {
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
   else {
