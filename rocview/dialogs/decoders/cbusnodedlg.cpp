@@ -59,6 +59,13 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 }
 
 void CBusNodeDlg::init( iONode event ) {
+  MemOp.set( m_Ports, sizeof(Port), 0 );
+  m_SOD = 0;
+  m_SaveOutputState = false;
+  m_ShortEvents = false;
+
+
+
   m_Timer = new wxTimer( this, ME_GC2Timer );
   Connect( wxEVT_TIMER, wxTimerEventHandler( CBusNodeDlg::OnTimer ), NULL, this );
 
@@ -855,10 +862,14 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     // node var1
     m_GC2SaveOutput->SetValue( (val&0x01) ? true:false );
     m_GC2ShortEvents->SetValue( (val&0x02) ? true:false );
+    m_SaveOutputState = (val&0x01) ? true:false;
+    m_ShortEvents = (val&0x02) ? true:false;
   }
   else if( nr < 18 ) {
     // port config
     gc2SetPort(nr-1, val, -1, -1);
+    m_Ports[nr-2].cfg = val;
+
   }
   else if( nr == 18 ) {
     // port status 1-8
@@ -882,10 +893,13 @@ void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
   if( idx < 16 ) {
     // port event
     gc2SetPort(idx+1, -1, nn, addr);
+    m_Ports[idx].nn = nn;
+    m_Ports[idx].addr = addr;
   }
   else if( idx == 16 ) {
     // SOD
     m_GC2SOD->SetValue( addr );
+    m_SOD = addr;
   }
 }
 
@@ -946,8 +960,48 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
   m_bGC2SetAll = true;
   m_GC2SetAll->Enable(false);
+  m_GC2GetAll->Enable(false);
+  m_GC2Set->Enable(false);
   m_GC2SetIndex = 0;
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+}
+
+
+void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
+  for( int i = 0; i < 16; i++ ) {
+    int conf = 0;
+    int nn = 0;
+    int addr = 0;
+    gc2GetPort(i+1, &conf, &nn, &addr);
+    if( m_Ports[i].nn != nn || m_Ports[i].addr != addr || m_Ports[i].cfg != conf ) {
+      m_Ports[i].nn = nn;
+      m_Ports[i].addr = addr;
+      m_Ports[i].cfg = conf;
+      m_GC2SetIndex = i + 2;
+      m_bGC2SetAll = false;
+      m_GC2Set->Enable(false);
+      setLearn();
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+      return;
+    }
+  }
+
+  if( m_SOD != m_GC2SOD->GetValue() ) {
+    m_GC2SetIndex = 18;
+    m_bGC2SetAll = false;
+    m_GC2Set->Enable(false);
+    setLearn();
+    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    return;
+  }
+
+  if(m_GC2SaveOutput->IsChecked() != m_SaveOutputState || m_GC2ShortEvents->IsChecked() != m_ShortEvents ) {
+    m_GC2SetIndex = 0;
+    m_bGC2SetAll = false;
+    m_GC2Set->Enable(false);
+    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  }
+
 }
 
 
@@ -973,7 +1027,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     eventSet( nn, addr, m_GC2SetIndex-2, 0, false );
   }
   else if( m_GC2SetIndex == 18 ) {
-    eventSet( 0, m_GC2SOD->GetValue(), 18, 0, false );
+    eventSet( 0, m_GC2SOD->GetValue(), 16, 0, false );
   }
   else if( m_GC2SetIndex == 19 ) {
     varGet(18);
@@ -982,12 +1036,14 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     varGet(19);
   }
   m_GC2SetIndex++;
-  if( m_GC2SetIndex < 20 ) {
+  if( m_bGC2SetAll && m_GC2SetIndex < 20 ) {
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
   else {
     m_bGC2SetAll = false;
     m_GC2SetAll->Enable(true);
+    m_GC2GetAll->Enable(true);
+    m_GC2Set->Enable(true);
     setUnlearn();
   }
 }

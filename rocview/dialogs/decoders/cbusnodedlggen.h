@@ -257,6 +257,7 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_GC2Test16;
 		wxButton* m_GC2GetAll;
 		wxButton* m_GC2SetAll;
+		wxButton* m_GC2Set;
 		wxCheckBox* m_GC2SaveOutput;
 		wxCheckBox* m_GC2ShortEvents;
 		wxStaticText* m_labSOD;
@@ -291,6 +292,7 @@ class cbusnodedlggen : public wxDialog
 		virtual void onGC2Test( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onGC2GetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onGC2SetAll( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onGC2Set( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		

@@ -323,7 +323,10 @@ byte* programFLiM(obj inst, iONode node) {
   }
 
   if( wProgram.getcmd( node ) == wProgram.evset ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: set an event for node %d.", wProgram.getdecaddr(node) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: set an event for node %d: nn=%d addr=%d idx=%d val=%d",
+        wProgram.getdecaddr(node), wProgram.getval2(node), wProgram.getval3(node),
+        wProgram.getval1(node), wProgram.getval4(node));
 
     /* <0xD2><EN3><EN2><EN1><EN0><EV#><EV val> */
     byte* frame = allocMem(32);
