@@ -794,6 +794,10 @@ void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
       ,m_GC2Pulse6,m_GC2Pulse7,m_GC2Pulse8,m_GC2Pulse9,m_GC2Pulse10
       ,m_GC2Pulse11,m_GC2Pulse12,m_GC2Pulse13,m_GC2Pulse14,m_GC2Pulse15,m_GC2Pulse16};
 
+  wxCheckBox* gc2C2[] = {NULL,m_GC2c21,m_GC2c22,m_GC2c23,m_GC2c24,m_GC2c25
+      ,m_GC2c26,m_GC2c27,m_GC2c28,m_GC2c29,m_GC2c210
+      ,m_GC2c211,m_GC2c212,m_GC2c213,m_GC2c214,m_GC2c215,m_GC2c216};
+
   *nn   = gc2NN[port]->GetValue();
   *addr = gc2Addr[port]->GetValue();
 
@@ -801,8 +805,8 @@ void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
   int delay  = gc2Block[port]->GetValue();
   int output = gc2Switch[port]->GetValue() | gc2Pulse[port]->GetValue();
   int pulse  = gc2Pulse[port]->GetValue();
-
-  *conf = input | (delay << 1) | (pulse << 1);
+  int c2     = gc2C2[port]->IsChecked() ? 1:0;
+  *conf = input | (delay << 1) | (pulse << 1) | (c2 << 2);
 
 }
 
@@ -832,6 +836,11 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
       ,m_GC2Pulse6,m_GC2Pulse7,m_GC2Pulse8,m_GC2Pulse9,m_GC2Pulse10
       ,m_GC2Pulse11,m_GC2Pulse12,m_GC2Pulse13,m_GC2Pulse14,m_GC2Pulse15,m_GC2Pulse16};
 
+  wxCheckBox* gc2C2[] = {NULL,m_GC2c21,m_GC2c22,m_GC2c23,m_GC2c24,m_GC2c25
+      ,m_GC2c26,m_GC2c27,m_GC2c28,m_GC2c29,m_GC2c210
+      ,m_GC2c211,m_GC2c212,m_GC2c213,m_GC2c214,m_GC2c215,m_GC2c216};
+
+
   if( nn != -1 )
     gc2NN[port]->SetValue(nn);
   if( addr != -1 )
@@ -849,6 +858,8 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
       gc2Pulse[port]->SetValue(true);
     else
       gc2Switch[port]->SetValue(true);
+
+    gc2C2[port]->SetValue((conf & 0x04) ? true:false);
   }
 
 }
