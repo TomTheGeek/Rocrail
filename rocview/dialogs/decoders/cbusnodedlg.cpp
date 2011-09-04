@@ -312,27 +312,27 @@ void CBusNodeDlg::initType( int manu, int mtype, const char* ver ) {
 const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
   if( manu == MANU_ROCRAIL ) {
     switch( mtype ) {
-    case MTYP_CANGC2:    return "CANGC2";
+    case MTYP_CANGC2:    return "ROCRAIL::CANGC2";
     }
   }
   else  {
     // manu == MANU_MERG
     switch( mtype ) {
-    case MTYP_CANACC4:   return "CANACC4";
-    case MTYP_CANACC5:   return "CANACC5";
-    case MTYP_CANACC8:   return "CANACC8";
-    case MTYP_CANACE3:   return "CANACE3";
-    case MTYP_CANACE8C:  return "CANACE8C";
-    case MTYP_CANLED:    return "CANLED";
-    case MTYP_CANLED64:  return "CANLED64";
-    case MTYP_CANACC4_2: return "CANACC4_2";
-    case MTYP_CANCAB:    return "CANCAB";
-    case MTYP_CANCMD:    return "CANCMD";
-    case MTYP_CANSERVO:  return "CANSERVO";
-    case MTYP_CANBC:     return "CANBC";
-    case MTYP_CANRPI:    return "CANRPI";
-    case MTYP_CANTTCA:   return "CANTTCA";
-    case MTYP_CANTTCB:   return "CANTTCB";
+    case MTYP_CANACC4:   return "MERG::CANACC4";
+    case MTYP_CANACC5:   return "MERG::CANACC5";
+    case MTYP_CANACC8:   return "MERG::CANACC8";
+    case MTYP_CANACE3:   return "MERG::CANACE3";
+    case MTYP_CANACE8C:  return "MERG::CANACE8C";
+    case MTYP_CANLED:    return "MERG::CANLED";
+    case MTYP_CANLED64:  return "MERG::CANLED64";
+    case MTYP_CANACC4_2: return "MERG::CANACC4_2";
+    case MTYP_CANCAB:    return "MERG::CANCAB";
+    case MTYP_CANCMD:    return "MERG::CANCMD";
+    case MTYP_CANSERVO:  return "MERG::CANSERVO";
+    case MTYP_CANBC:     return "MERG::CANBC";
+    case MTYP_CANRPI:    return "MERG::CANRPI";
+    case MTYP_CANTTCA:   return "MERG::CANTTCA";
+    case MTYP_CANTTCB:   return "MERG::CANTTCB";
     }
   }
   TraceOp.trc( "cbusnodedlg", TRCLEVEL_WARNING, __LINE__, 9999, "unknown type: manu=%d, mtype=%d ", manu, mtype );
