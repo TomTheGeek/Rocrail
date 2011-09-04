@@ -37,7 +37,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer3->Add( fgSizer2, 0, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer51;
-	fgSizer51 = new wxFlexGridSizer( 0, 4, 0, 0 );
+	fgSizer51 = new wxFlexGridSizer( 0, 8, 0, 0 );
 	fgSizer51->AddGrowableCol( 1 );
 	fgSizer51->SetFlexibleDirection( wxBOTH );
 	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -49,10 +49,27 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_NodeType = new wxTextCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	fgSizer51->Add( m_NodeType, 0, wxALL|wxEXPAND, 5 );
 	
-	m_NodeManuNr = new wxSpinCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
+	m_labVersion = new wxStaticText( m_NodeNumberPanel, wxID_ANY, wxT("Version"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labVersion->Wrap( -1 );
+	fgSizer51->Add( m_labVersion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_Version = new wxTextCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+	m_Version->Enable( false );
+	
+	fgSizer51->Add( m_Version, 0, wxALL, 5 );
+	
+	m_labManu = new wxStaticText( m_NodeNumberPanel, wxID_ANY, wxT("ManuID:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labManu->Wrap( -1 );
+	fgSizer51->Add( m_labManu, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_NodeManuNr = new wxSpinCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxSP_ARROW_KEYS, 0, 255, 0 );
 	m_NodeManuNr->Enable( false );
 	
 	fgSizer51->Add( m_NodeManuNr, 0, wxALL, 5 );
+	
+	m_labModID = new wxStaticText( m_NodeNumberPanel, wxID_ANY, wxT("ModuleID:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labModID->Wrap( -1 );
+	fgSizer51->Add( m_labModID, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
 	m_NodeTypeNr = new wxSpinCtrl( m_NodeNumberPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 255, 0 );
 	m_NodeTypeNr->Enable( false );
@@ -66,7 +83,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer1->SetFlexibleDirection( wxBOTH );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labNumber = new wxStaticText( m_NodeNumberPanel, wxID_ANY, wxT("Number"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labNumber = new wxStaticText( m_NodeNumberPanel, wxID_ANY, wxT("Node Number:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labNumber->Wrap( -1 );
 	fgSizer1->Add( m_labNumber, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
