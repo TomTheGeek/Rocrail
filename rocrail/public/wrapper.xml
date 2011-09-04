@@ -500,7 +500,7 @@
 	      <cbnode cardinality="n" wrappername="CBusNode">
 	        <var name="nr" vt="int" defval="0" range="0-65535" remark="NodeNumber"/>
 	        <var name="manuid" vt="int" defval="0" range="0-65535" remark="NMRA manufacturer ID."/>
-          <var name="version" vt="int" defval="0" range="0-65535" remark="Firmware version."/>
+          <var name="version" vt="string" defval="" range="*" remark="Firmware version."/>
           <const name="mtyp_canacc4" vt="int" val="1" remark="Solenoid point driver"/>
           <const name="mtyp_canacc5" vt="int" val="2" remark="Motorised point driver"/>
           <const name="mtyp_canacc8" vt="int" val="3" remark="8 digital outputs"/>

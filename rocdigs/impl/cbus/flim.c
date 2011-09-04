@@ -88,9 +88,10 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int para4  = HEXA2Byte(frame + OFFSET_D4 + offset);
       int para5  = HEXA2Byte(frame + OFFSET_D5 + offset);
       int para6  = HEXA2Byte(frame + OFFSET_D6 + offset);
+      int para7  = HEXA2Byte(frame + OFFSET_D7 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "nodeNr=%d, manuID=%d, version=%d, moduleID=%d", data->nnsetup, para1, para2, para3 );
+          "nodeNr=%d, manuID=%d, version=%d.%d, moduleID=%d", data->nnsetup, para1, para7, para2, para3 );
 
       wProgram.setcmd( node, wProgram.nnreq );
       wProgram.setiid( node, data->iid );
@@ -103,6 +104,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       wProgram.setval4( node, para4 );
       wProgram.setval5( node, para5 );
       wProgram.setval6( node, para6 );
+      wProgram.setval7( node, para7 );
       return node;
     }
 

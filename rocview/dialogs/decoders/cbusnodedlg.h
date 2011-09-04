@@ -50,9 +50,9 @@ class CBusNodeDlg : public cbusnodedlggen
   void initIndex();
   void initVarList(iONode node);
   void initEvtList(iONode node);
-  void initType(int manu, int mtype, int version);
+  void initType(int manu, int mtype, const char* ver);
   const char* getTypeString( int manu, int mtype );
-  iONode getNode(int nr, int mtype, int manu, int ver);
+  iONode getNode(int nr, int mtype, int manu, const char* ver);
   iONode getNodeVar(int nn, int mtype, int nr, int val);
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
   void gc2GetPort(int port, int* conf, int* nn, int* addr);

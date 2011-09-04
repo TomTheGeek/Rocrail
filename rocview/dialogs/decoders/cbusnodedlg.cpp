@@ -129,11 +129,15 @@ void CBusNodeDlg::init( iONode event ) {
 
 
   if( event != NULL ) {
+    char ver[32] = {'0'};
+    StrOp.fmtb( ver, "%d.%c", wProgram.getval7(event), wProgram.getval2(event));
+    TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"version=%s", ver);
+
     m_IID->SetValue( wxString(wProgram.getiid(event),wxConvUTF8) );
-    initType( wProgram.getval1(event),  wProgram.getmodid(event), wProgram.getval2(event) );
+    initType( wProgram.getval1(event),  wProgram.getmodid(event), ver );
     m_NodeNumber->SetValue(wProgram.getdecaddr(event));
     if( wProgram.getdecaddr(event) > 0 ) {
-      getNode(wProgram.getdecaddr(event), wProgram.getmodid(event), wProgram.getval1(event), wProgram.getval2(event));
+      getNode(wProgram.getdecaddr(event), wProgram.getmodid(event), wProgram.getval1(event), ver);
     }
   }
 
@@ -202,7 +206,7 @@ void CBusNodeDlg::initEvtList(iONode node) {
 }
 
 
-iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, int ver) {
+iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, const char* ver) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
     iONode digint = wRocRail.getdigint(l_RocrailIni);
@@ -221,8 +225,9 @@ iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, int ver) {
         wCBusNode.setmtyp( cbusnode, mtype );
         if( manu > 0 )
           wCBusNode.setmanuid( cbusnode, manu );
-        if( ver > 0 )
+        if( ver != NULL ) {
           wCBusNode.setversion( cbusnode, ver );
+        }
         initIndex();
         return cbusnode;
       }
@@ -233,7 +238,7 @@ iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, int ver) {
 
 
 iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
-  iONode node = getNode(nn, mtype, 0, 0);
+  iONode node = getNode(nn, mtype, 0, NULL);
   if( node != NULL ) {
     iONode cbusnodevar = wCBusNode.getcbnodevar(node);
     while( cbusnodevar != NULL ) {
@@ -262,7 +267,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
       "get node event nn=%d, mtype=%d, evnn=%d, evsddr=%d, evnr=%d, evval=%d",
       nn, mtype, evnn, evaddr, evnr, evval );
 
-  iONode node = getNode(nn, mtype, 0, 0);
+  iONode node = getNode(nn, mtype, 0, NULL);
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
     while( cbusnodeevt != NULL ) {
@@ -292,13 +297,16 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
 }
 
 
-void CBusNodeDlg::initType( int manu, int mtype, int version ) {
+void CBusNodeDlg::initType( int manu, int mtype, const char* ver ) {
   m_NodeType->SetValue( wxString(getTypeString(manu, mtype),wxConvUTF8) );
   if( mtype > 0 )
     m_NodeTypeNr->SetValue(mtype);
   if( manu > 0 )
     m_NodeManuNr->SetValue(manu);
-  m_Version->SetValue(wxString::Format(_T("%d"), version));
+  if( ver != NULL && StrOp.len(ver) > 0 ) {
+    TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"version=%s", ver);
+    m_Version->SetValue(wxString(ver,wxConvUTF8));
+  }
 }
 
 const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
@@ -366,7 +374,7 @@ void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 
-  getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), atoi(m_Version->GetValue().mb_str(wxConvUTF8)));
+  getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8) );
 }
 
 void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
@@ -503,7 +511,7 @@ void CBusNodeDlg::onEventGetAll( wxCommandEvent& event ) {
 void CBusNodeDlg::eventGetAll() {
   int nn = m_NodeNumber->GetValue();
 
-  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), atoi(m_Version->GetValue().mb_str(wxConvUTF8)));
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8));
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
     while( cbusnodeevt != NULL ) {
@@ -577,7 +585,7 @@ void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 
-  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), atoi(m_Version->GetValue().mb_str(wxConvUTF8)));
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8));
   if( node != NULL ) {
     iONode event = getNodeEvent(nn, m_NodeTypeNr->GetValue(), m_EventNodeNr->GetValue(),
         m_EventAddress->GetValue(), m_EventIndex->GetValue(), m_EventVar->GetValue() );
@@ -689,7 +697,7 @@ void CBusNodeDlg::onEvtClearAll( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 
   // Delete all child nodes:
-  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), atoi(m_Version->GetValue().mb_str(wxConvUTF8)));
+  iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8));
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
     while( cbusnodeevt != NULL ) {
