@@ -457,6 +457,20 @@ static void __updateFB( iOZS2 zs2, iONode fbInfo ) {
 
 }
 
+static void __checkSlot(iOZS2 zs2, iOSlot slot) {
+  iOZS2Data data = Data(zs2);
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
+      "check slot of %s if its still in use: V=%d lights%d fn=%d fx1=%d fx2=%d", slot->id,
+      slot->speed, slot->lights, slot->fn, slot->fx1, slot->fx2);
+  if( slot->speed == 0 && !slot->lights && slot->fx1 == 0 && slot->fx2 == 0 ) {
+    if( MapOp.remove(data->lcmap, slot->id) != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "remove slot of %s because speed is zero an all functions are off", slot->id );
+      freeMem(slot);
+    }
+  }
+}
+
+
 
 static void __translate( iOZS2 zs2, iONode node ) {
   iOZS2Data data = Data(zs2);
@@ -605,6 +619,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
 
+		__checkSlot(zs2, slot);
   }  
   
   /* Function command. */
@@ -756,6 +771,9 @@ static void __translate( iOZS2 zs2, iONode node ) {
           addr, slot->nr, fidx, slot->fx1, slot->fx2 );
 		  ThreadOp.post(data->writer, (obj)cmd);
 		}
+
+    __checkSlot(zs2, slot);
+
   }
 
 }
@@ -1067,6 +1085,7 @@ static void __evaluateSX( iOZS2 zs2, int bus, int addr, int val ) {
         wLoc.setthrottleid( nodeC, "sx-bus" );
         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
       }
+      __checkSlot(zs2, slot);
     }
   }
   

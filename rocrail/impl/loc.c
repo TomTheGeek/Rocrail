@@ -2042,6 +2042,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setdir( nodeF, wLoc.isdir( data->props ) );
       wLoc.setV( nodeF, data->drvSpeed );
       wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
+      wLoc.setfx( nodeF, wLoc.getfx( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
       wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
       if( StrOp.equals( wLoc.blockside, cmd ) && data->curBlock != NULL )
