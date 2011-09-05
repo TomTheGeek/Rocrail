@@ -1339,27 +1339,28 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     if( wSwitch.issinglegate(node) ) {
       cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
-      cmd[1] = wSwitch.getaddr1( node ) / 256;
-      cmd[2] = wSwitch.getaddr1( node ) % 256;
-      cmd[3] = wSwitch.getport1( node ) / 256;
-      cmd[4] = wSwitch.getport1( node ) % 256;
+      cmd[1] = wSwitch.getbus( node ) / 256;
+      cmd[2] = wSwitch.getbus( node ) % 256;
+      cmd[3] = wSwitch.getaddr1( node ) / 256;
+      cmd[4] = wSwitch.getaddr1( node ) % 256;
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "single gate switch %d:%d",
-          wSwitch.getaddr1( node ), wSwitch.getport1( node ) );
+          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
       ThreadOp.post(data->writer, (obj)frame);
 
     }
     else {
       cmd[0] = OPC_ACON1;
-      cmd[1] = wSwitch.getaddr1( node ) / 256;
-      cmd[2] = wSwitch.getaddr1( node ) % 256;
-      cmd[3] = wSwitch.getport1( node ) / 256;
-      cmd[4] = wSwitch.getport1( node ) % 256;
+      cmd[1] = wSwitch.getbus( node ) / 256;
+      cmd[2] = wSwitch.getbus( node ) % 256;
+      cmd[3] = wSwitch.getaddr1( node ) / 256;
+      cmd[4] = wSwitch.getaddr1( node ) % 256;
       cmd[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:2;
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d",
+          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
       ThreadOp.post(data->writer, (obj)frame);
 
       if( wSwitch.isactdelay(node) ) {
@@ -1368,10 +1369,10 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         qcmd->time   = SystemOp.getTick();
         qcmd->delay  = delay / 10;
         cmd[0] = OPC_ACOF1;
-        cmd[1] = wSwitch.getaddr1( node ) / 256;
-        cmd[2] = wSwitch.getaddr1( node ) % 256;
-        cmd[3] = wSwitch.getport1( node ) / 256;
-        cmd[4] = wSwitch.getport1( node ) % 256;
+        cmd[1] = wSwitch.getbus( node ) / 256;
+        cmd[2] = wSwitch.getbus( node ) % 256;
+        cmd[3] = wSwitch.getaddr1( node ) / 256;
+        cmd[4] = wSwitch.getaddr1( node ) % 256;
         cmd[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:2;
         makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 5 );
         ThreadOp.post( data->timedqueue, (obj)qcmd );
@@ -1387,14 +1388,14 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
     cmd[0] = on ? OPC_ACON:OPC_ACOF;
-    cmd[1] = wOutput.getaddr( node ) / 256;
-    cmd[2] = wOutput.getaddr( node ) % 256;
-    cmd[3] = wOutput.getport( node ) / 256;
-    cmd[4] = wOutput.getport( node ) % 256;
+    cmd[1] = wOutput.getbus( node ) / 256;
+    cmd[2] = wOutput.getbus( node ) % 256;
+    cmd[3] = wOutput.getaddr( node ) / 256;
+    cmd[4] = wOutput.getaddr( node ) % 256;
     makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
-        wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
+        wOutput.getbus( node ), wOutput.getaddr( node ), on?"ON":"OFF" );
     ThreadOp.post(data->writer, (obj)frame);
 
   }
