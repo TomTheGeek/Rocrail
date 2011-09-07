@@ -494,6 +494,7 @@
         <var name="cid" vt="int" defval="1" range="0-*" remark="CANID"/>
         <var name="sodaddr" vt="int" defval="0" range="0-*" remark="Start of Day input address."/>
         <var name="shortevents" vt="bool" defval="true"/>
+        <var name="usegates" vt="bool" defval="true"/>
         <var name="fonfof" vt="bool" defval="false" remark="Use the new opcodes for controlling functions."/>
         <var name="purgetime" vt="int" defval="20" unit="s" range="0-*" remark="CS engine idle timeout."/>
         <var name="loadertime" vt="int" defval="50" range="10-*" remark="Sleep time between boot loader lines."/>

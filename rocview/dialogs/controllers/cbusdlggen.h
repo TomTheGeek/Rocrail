@@ -51,6 +51,7 @@ class cbusdlggen : public wxDialog
 		wxCheckBox* m_ShortEvents;
 		wxCheckBox* m_FonFof;
 		wxCheckBox* m_CTS;
+		wxCheckBox* m_UseGates;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_SOD;
 		wxStaticText* m_labSwTime;

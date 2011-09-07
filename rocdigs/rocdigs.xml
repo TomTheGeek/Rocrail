@@ -1374,6 +1374,7 @@
       <var name="cid" vt="int"/>
       <var name="sodaddr" vt="int"/>
       <var name="shortevents" vt="Boolean"/>
+      <var name="usegates" vt="Boolean"/>
       <var name="fonfof" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="buson" vt="Boolean"/>

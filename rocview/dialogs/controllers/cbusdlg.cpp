@@ -66,6 +66,7 @@ void CbusDlg::initLabels() {
   m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
   m_labLoaderTime->SetLabel( wxGetApp().getMsg( "loadertime" ) );
   m_labSOD->SetLabel( wxGetApp().getMsg( "startofday" ) );
+  m_UseGates->SetLabel( wxGetApp().getMsg( "usegates" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -107,6 +108,7 @@ void CbusDlg::initValues() {
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
   m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) ? true:false );
+  m_UseGates->SetValue( wCBus.isusegates(cbusini) ? true:false);
 }
 
 void CbusDlg::evaluate() {
@@ -132,6 +134,7 @@ void CbusDlg::evaluate() {
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
+  wCBus.setusegates(cbusini, m_UseGates->IsChecked()?True:False);
 
 }
 
