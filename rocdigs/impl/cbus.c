@@ -1398,7 +1398,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         iQCmd qcmd = allocMem(sizeof(struct QCmd));
         qcmd->time   = SystemOp.getTick();
         qcmd->delay  = delay / 10;
-        cmd[0] = OPC_ACOF1;
+        cmd[0] = OPC_ACOF;
         cmd[1] = wSwitch.getbus( node ) / 256;
         cmd[2] = wSwitch.getbus( node ) % 256;
         cmd[3] = wSwitch.getaddr1( node ) / 256;
