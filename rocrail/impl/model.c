@@ -2983,6 +2983,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     if( !matched && wAccessory.isaccevent(nodeC) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered accessory event: %d:%d:%d value=%d",
                    bus, addr, port, wAccessory.getval1(nodeC) );
+      /* TODO: Change it in an output to check for a match, and then to a signal if no output was found. */
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered switch event: %d:%d:%d %s",

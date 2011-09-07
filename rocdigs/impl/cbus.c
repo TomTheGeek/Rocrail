@@ -1387,15 +1387,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-    cmd[0] = on ? OPC_ACON:OPC_ACOF;
+    cmd[0] = on ? OPC_ACON1:OPC_ACOF1;
     cmd[1] = wOutput.getbus( node ) / 256;
     cmd[2] = wOutput.getbus( node ) % 256;
     cmd[3] = wOutput.getaddr( node ) / 256;
     cmd[4] = wOutput.getaddr( node ) % 256;
-    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
+    cmd[5] = (wOutput.getgate(node) == 0) ? 1:2;
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
-        wOutput.getbus( node ), wOutput.getaddr( node ), on?"ON":"OFF" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d.%d %s",
+        wOutput.getbus( node ), wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
     ThreadOp.post(data->writer, (obj)frame);
 
   }
