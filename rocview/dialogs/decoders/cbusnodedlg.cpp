@@ -968,8 +968,8 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
 
   if( addr != 0 ) {
     iONode swcmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
-    wOutput.setport( swcmd, addr );
-    wOutput.setaddr( swcmd, bus );
+    wOutput.setaddr( swcmd, addr );
+    wOutput.setbus( swcmd, bus );
     wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wOutput.setcmd( swcmd, cmd );
     wxGetApp().sendToRocrail( swcmd );
