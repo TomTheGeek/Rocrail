@@ -1337,76 +1337,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
 
-    if( wSwitch.issinglegate(node) ) {
-      cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
-      cmd[1] = wSwitch.getbus( node ) / 256;
-      cmd[2] = wSwitch.getbus( node ) % 256;
-      cmd[3] = wSwitch.getaddr1( node ) / 256;
-      cmd[4] = wSwitch.getaddr1( node ) % 256;
-      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
+    cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
+    cmd[1] = wSwitch.getbus( node ) / 256;
+    cmd[2] = wSwitch.getbus( node ) % 256;
+    cmd[3] = wSwitch.getaddr1( node ) / 256;
+    cmd[4] = wSwitch.getaddr1( node ) % 256;
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "single gate switch %d:%d",
-          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
-      ThreadOp.post(data->writer, (obj)frame);
-
-    }
-    else if(data->usegates) {
-      cmd[0] = OPC_ACON1;
-      cmd[1] = wSwitch.getbus( node ) / 256;
-      cmd[2] = wSwitch.getbus( node ) % 256;
-      cmd[3] = wSwitch.getaddr1( node ) / 256;
-      cmd[4] = wSwitch.getaddr1( node ) % 256;
-      cmd[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:2;
-      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d",
-          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
-      ThreadOp.post(data->writer, (obj)frame);
-
-      if( wSwitch.isactdelay(node) ) {
-        /* deactivate the gate to be used */
-        iQCmd qcmd = allocMem(sizeof(struct QCmd));
-        qcmd->time   = SystemOp.getTick();
-        qcmd->delay  = delay / 10;
-        cmd[0] = OPC_ACOF1;
-        cmd[1] = wSwitch.getbus( node ) / 256;
-        cmd[2] = wSwitch.getbus( node ) % 256;
-        cmd[3] = wSwitch.getaddr1( node ) / 256;
-        cmd[4] = wSwitch.getaddr1( node ) % 256;
-        cmd[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:2;
-        makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 5 );
-        ThreadOp.post( data->timedqueue, (obj)qcmd );
-      }
-    }
-    else {
-      if( StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ) {
-        wSwitch.setaddr1( node, wSwitch.getaddr1( node ) + 1 );
-      }
-      cmd[0] = OPC_ACON;
-      cmd[1] = wSwitch.getbus( node ) / 256;
-      cmd[2] = wSwitch.getbus( node ) % 256;
-      cmd[3] = wSwitch.getaddr1( node ) / 256;
-      cmd[4] = wSwitch.getaddr1( node ) % 256;
-      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d",
-          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
-      ThreadOp.post(data->writer, (obj)frame);
-
-      if( wSwitch.isactdelay(node) ) {
-        /* deactivate the gate to be used */
-        iQCmd qcmd = allocMem(sizeof(struct QCmd));
-        qcmd->time   = SystemOp.getTick();
-        qcmd->delay  = delay / 10;
-        cmd[0] = OPC_ACOF;
-        cmd[1] = wSwitch.getbus( node ) / 256;
-        cmd[2] = wSwitch.getbus( node ) % 256;
-        cmd[3] = wSwitch.getaddr1( node ) / 256;
-        cmd[4] = wSwitch.getaddr1( node ) % 256;
-        makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 4 );
-        ThreadOp.post( data->timedqueue, (obj)qcmd );
-      }
-    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "single gate switch %d:%d",
+        wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
+    ThreadOp.post(data->writer, (obj)frame);
 
   }
 
@@ -1416,23 +1356,12 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-    if( data->usegates ) {
-      cmd[0] = on ? OPC_ACON1:OPC_ACOF1;
-      cmd[1] = wOutput.getbus( node ) / 256;
-      cmd[2] = wOutput.getbus( node ) % 256;
-      cmd[3] = wOutput.getaddr( node ) / 256;
-      cmd[4] = wOutput.getaddr( node ) % 256;
-      cmd[5] = (wOutput.getgate(node) == 0) ? 1:2;
-      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
-    }
-    else {
-      cmd[0] = on ? OPC_ACON:OPC_ACOF;
-      cmd[1] = wOutput.getbus( node ) / 256;
-      cmd[2] = wOutput.getbus( node ) % 256;
-      cmd[3] = wOutput.getaddr( node ) / 256;
-      cmd[4] = wOutput.getaddr( node ) % 256;
-      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
-    }
+    cmd[0] = on ? OPC_ACON:OPC_ACOF;
+    cmd[1] = wOutput.getbus( node ) / 256;
+    cmd[2] = wOutput.getbus( node ) % 256;
+    cmd[3] = wOutput.getaddr( node ) / 256;
+    cmd[4] = wOutput.getaddr( node ) % 256;
+    makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d.%d %s",
         wOutput.getbus( node ), wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
@@ -1682,7 +1611,6 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->cid         = wCBus.getcid(data->cbusini);
   data->sodaddr     = wCBus.getsodaddr(data->cbusini);
   data->shortevents = wCBus.isshortevents(data->cbusini);
-  data->usegates    = wCBus.isusegates(data->cbusini);
   data->fonfof      = wCBus.isfonfof(data->cbusini);
   data->purgetime   = wCBus.getpurgetime(data->cbusini);
   data->run         = True;
@@ -1710,7 +1638,6 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SoD address   = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use gates     = %s", data->usegates ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );

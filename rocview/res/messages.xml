@@ -17564,7 +17564,4 @@
     <nl txt="Rolbrug"/>
     <de txt="Schiebebühne"/>
   </Msg>
-  <Msg id="usegates">
-    <en txt="Use gates"/>
-  </Msg>
 </Messages>

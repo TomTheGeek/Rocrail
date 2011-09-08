@@ -398,7 +398,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab1GC2Pulse->Wrap( -1 );
 	fgSizer8->Add( m_lab1GC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_lab1C2 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("C2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1C2 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Inv"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lab1C2->Wrap( -1 );
 	fgSizer8->Add( m_lab1C2, 0, wxALL, 5 );
 	
@@ -668,7 +668,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab2GC2Pulse->Wrap( -1 );
 	fgSizer81->Add( m_lab2GC2Pulse, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
-	m_lab2C2 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("C2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab2C2 = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Inv"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lab2C2->Wrap( -1 );
 	fgSizer81->Add( m_lab2C2, 0, wxALL, 5 );
 	
