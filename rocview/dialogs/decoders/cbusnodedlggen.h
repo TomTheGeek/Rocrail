@@ -26,6 +26,7 @@
 #include <wx/checkbox.h>
 #include <wx/statline.h>
 #include <wx/radiobut.h>
+#include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -284,6 +285,7 @@ class cbusnodedlggen : public wxDialog
 		wxCheckBox* m_GC2ShortEvents;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_GC2SOD;
+		wxRadioBox* m_GC2PulseTime;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
 		wxButton* m_stdButtonCancel;

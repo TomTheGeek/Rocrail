@@ -50,6 +50,9 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_Sublib->SetSelection( 1 );
 	bSizer8->Add( m_Sublib, 0, wxALL|wxEXPAND, 5 );
 	
+	m_CTS = new wxCheckBox( this, wxID_ANY, wxT("RTS/CTS"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_CTS, 0, wxALL, 5 );
+	
 	wxFlexGridSizer* fgSizer5;
 	fgSizer5 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer5->AddGrowableCol( 1 );
@@ -96,9 +99,6 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_FonFof = new wxCheckBox( this, wxID_ANY, wxT("FONFOF"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_OptionsBox->Add( m_FonFof, 0, wxRIGHT|wxLEFT, 5 );
 	
-	m_CTS = new wxCheckBox( this, wxID_ANY, wxT("RTS/CTS"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_OptionsBox->Add( m_CTS, 0, wxRIGHT|wxLEFT, 5 );
-	
 	wxFlexGridSizer* fgSizer41;
 	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer41->SetFlexibleDirection( wxBOTH );
@@ -106,24 +106,24 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_labSOD = new wxStaticText( this, wxID_ANY, wxT("SoD"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labSOD->Wrap( -1 );
-	fgSizer41->Add( m_labSOD, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	fgSizer41->Add( m_labSOD, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_SOD = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
-	fgSizer41->Add( m_SOD, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer41->Add( m_SOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labSwTime = new wxStaticText( this, wxID_ANY, wxT("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labSwTime->Wrap( -1 );
-	fgSizer41->Add( m_labSwTime, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	fgSizer41->Add( m_labSwTime, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_SwTime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer41->Add( m_SwTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer41->Add( m_SwTime, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labPurgetime = new wxStaticText( this, wxID_ANY, wxT("Purge time"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPurgetime->Wrap( -1 );
-	fgSizer41->Add( m_labPurgetime, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer41->Add( m_labPurgetime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Purgetime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 20, 60, 20 );
-	fgSizer41->Add( m_Purgetime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer41->Add( m_Purgetime, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labLoaderTime = new wxStaticText( this, wxID_ANY, wxT("Loader time"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labLoaderTime->Wrap( -1 );

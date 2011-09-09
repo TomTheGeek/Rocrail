@@ -908,13 +908,13 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_GC2GetAll = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Get all"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2GetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	bSizer16->Add( m_GC2GetAll, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_GC2SetAll = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set all"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2SetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	bSizer16->Add( m_GC2SetAll, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_GC2Set = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2Set, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	bSizer16->Add( m_GC2Set, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_GC2SaveOutput = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Save output state"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer16->Add( m_GC2SaveOutput, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -930,12 +930,18 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_labSOD = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("SoD:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_labSOD->Wrap( -1 );
-	fgSizer13->Add( m_labSOD, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	fgSizer13->Add( m_labSOD, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_GC2SOD = new wxSpinCtrl( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
-	fgSizer13->Add( m_GC2SOD, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer13->Add( m_GC2SOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 	
 	bSizer16->Add( fgSizer13, 1, wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxString m_GC2PulseTimeChoices[] = { wxT("250ms"), wxT("500ms"), wxT("1 sec."), wxT("2 sec.") };
+	int m_GC2PulseTimeNChoices = sizeof( m_GC2PulseTimeChoices ) / sizeof( wxString );
+	m_GC2PulseTime = new wxRadioBox( m_CANGC2Panel, wxID_ANY, wxT("Pulse time"), wxDefaultPosition, wxDefaultSize, m_GC2PulseTimeNChoices, m_GC2PulseTimeChoices, 1, wxRA_SPECIFY_ROWS );
+	m_GC2PulseTime->SetSelection( 0 );
+	bSizer16->Add( m_GC2PulseTime, 0, wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer151->Add( bSizer16, 0, wxEXPAND, 5 );
 	

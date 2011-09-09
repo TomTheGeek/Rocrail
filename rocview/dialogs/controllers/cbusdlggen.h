@@ -18,8 +18,8 @@
 #include <wx/spinctrl.h>
 #include <wx/sizer.h>
 #include <wx/radiobox.h>
-#include <wx/statline.h>
 #include <wx/checkbox.h>
+#include <wx/statline.h>
 #include <wx/statbox.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -40,6 +40,7 @@ class cbusdlggen : public wxDialog
 		wxStaticText* m_labCANID;
 		wxSpinCtrl* m_CANID;
 		wxRadioBox* m_Sublib;
+		wxCheckBox* m_CTS;
 		wxStaticText* m_labDevice;
 		wxTextCtrl* m_Device;
 		wxStaticText* m_labHost;
@@ -50,7 +51,6 @@ class cbusdlggen : public wxDialog
 		wxStaticBoxSizer* m_OptionsBox;
 		wxCheckBox* m_ShortEvents;
 		wxCheckBox* m_FonFof;
-		wxCheckBox* m_CTS;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_SOD;
 		wxStaticText* m_labSwTime;

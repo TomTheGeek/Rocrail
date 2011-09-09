@@ -45,6 +45,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_SOD;
   bool m_SaveOutputState;
   bool m_ShortEvents;
+  int m_PulseTime;
 
   void init(iONode event);
   void initIndex();
