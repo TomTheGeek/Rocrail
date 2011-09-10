@@ -1170,7 +1170,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Variables</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -2259,7 +2259,7 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">Node#</property>
+                                                    <property name="label">Node Nr.</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_labEventNode</property>
@@ -2314,7 +2314,7 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">Address</property>
+                                                    <property name="label">Event Nr.</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_labEventAddr</property>
@@ -4084,7 +4084,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">CAN-GC2</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -4283,7 +4283,7 @@
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Address</property>
+                                                            <property name="label">Event Nr.</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
                                                             <property name="name">m_lab1GC2EvtAddr</property>
@@ -8921,7 +8921,7 @@
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Address</property>
+                                                            <property name="label">Event Nr.</property>
                                                             <property name="maximum_size"></property>
                                                             <property name="minimum_size"></property>
                                                             <property name="name">m_lab2GC2EvtAddr</property>

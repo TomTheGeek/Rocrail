@@ -198,7 +198,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_VarPanel->SetSizer( bSizer4 );
 	m_VarPanel->Layout();
 	bSizer4->Fit( m_VarPanel );
-	m_NoteBook->AddPage( m_VarPanel, wxT("Variables"), false );
+	m_NoteBook->AddPage( m_VarPanel, wxT("Variables"), true );
 	m_EventsPanel = new wxPanel( m_NoteBook, wxID_CBUS_EVENTSPANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
@@ -213,11 +213,11 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labEventNode = new wxStaticText( m_EventsPanel, wxID_ANY, wxT("Node#"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labEventNode = new wxStaticText( m_EventsPanel, wxID_ANY, wxT("Node Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labEventNode->Wrap( -1 );
 	fgSizer4->Add( m_labEventNode, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_labEventAddr = new wxStaticText( m_EventsPanel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labEventAddr = new wxStaticText( m_EventsPanel, wxID_ANY, wxT("Event Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labEventAddr->Wrap( -1 );
 	fgSizer4->Add( m_labEventAddr, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
@@ -378,7 +378,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab1GC2EvtNN->Wrap( -1 );
 	fgSizer8->Add( m_lab1GC2EvtNN, 0, wxALL, 5 );
 	
-	m_lab1GC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab1GC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Event Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lab1GC2EvtAddr->Wrap( -1 );
 	fgSizer8->Add( m_lab1GC2EvtAddr, 0, wxALL, 5 );
 	
@@ -648,7 +648,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_lab2GC2EvtNN->Wrap( -1 );
 	fgSizer81->Add( m_lab2GC2EvtNN, 0, wxALL, 5 );
 	
-	m_lab2GC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lab2GC2EvtAddr = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("Event Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_lab2GC2EvtAddr->Wrap( -1 );
 	fgSizer81->Add( m_lab2GC2EvtAddr, 0, wxALL, 5 );
 	
@@ -948,7 +948,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CANGC2Panel->SetSizer( bSizer151 );
 	m_CANGC2Panel->Layout();
 	bSizer151->Fit( m_CANGC2Panel );
-	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), true );
+	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), false );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	

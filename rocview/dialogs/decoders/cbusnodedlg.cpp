@@ -94,7 +94,7 @@ void CBusNodeDlg::init( iONode event ) {
 
   // Events tab
   m_labEventNode->SetLabel( wxGetApp().getMsg( "node" ) );
-  m_labEventAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labEventAddr->SetLabel( wxGetApp().getMsg( "event" ) );
   m_labEventIndex->SetLabel( wxGetApp().getMsg( "index" ) );
   m_labEventVar->SetLabel( wxGetApp().getMsg( "variable" ) );
   m_EvtGetVar->SetLabel( wxGetApp().getMsg( "get" ) );
@@ -197,7 +197,7 @@ void CBusNodeDlg::initEvtList(iONode node) {
     iONode evt = wCBusNode.getcbnodeevent(node);
     while( evt != NULL ) {
       m_EventList->Append(
-          wxString::Format(_T("node %d, addr %d, index %d, value %d"),
+          wxString::Format(_T("node %d, event %d, index %d, value %d"),
               wCBusNodeEvent.getnodenr(evt), wCBusNodeEvent.getaddr(evt),
               wCBusNodeEvent.getevnr(evt), wCBusNodeEvent.getevval(evt) ),
           evt );
