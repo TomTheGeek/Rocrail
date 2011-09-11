@@ -747,6 +747,38 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 
 
 
+static __evaluateIR( iOCBUS cbus, byte* frame ) {
+  iOCBUSData data = Data(cbus);
+
+  int offset  = (frame[1] == 'S') ? 0:4;
+  int nodeh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+  int nodel   = HEXA2Byte(frame + OFFSET_D2 + offset);
+  int node    = nodeh * 256 + nodel;
+
+  int addrh   = HEXA2Byte(frame + OFFSET_D3 + offset);
+  int addrl   = HEXA2Byte(frame + OFFSET_D4 + offset);
+  int addr    = addrh * 256 + addrl;
+
+  int ir1  = HEXA2Byte(frame + OFFSET_D5 + offset);
+  int ir2  = HEXA2Byte(frame + OFFSET_D6 + offset);
+  int locoaddr = ir1 * 256 + ir2;
+  int lococat  = HEXA2Byte(frame + OFFSET_D7 + offset);
+
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setbus( nodeC, node );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, True );
+  wFeedback.setidentifier( nodeC, locoaddr );
+  wFeedback.setcategory( nodeC, lococat );
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
+
 static void __reportState(iOCBUS cbus) {
   iOCBUSData data = Data(cbus);
 
@@ -842,6 +874,9 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       break;
     case OPC_ACDAT:
       __evaluateRFID(cbus, frame);
+      break;
+    case OPC_ACON3:
+      __evaluateIR(cbus, frame);
       break;
     case OPC_PCVS:
       __evaluateCV(cbus, frame);
