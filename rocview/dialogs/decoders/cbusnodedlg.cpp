@@ -826,7 +826,10 @@ void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
 
   if( port < 9 ) {
     int ir  = gc2IR[port]->GetValue();
-    *conf |= ir ? 0x08:0x00;
+    *conf = (delay << 1) | (pulse << 1) | (c2 << 2) | (ir << 3);
+  }
+  else {
+    *conf = input | (delay << 1) | (pulse << 1) | (c2 << 2);
   }
 
 }
