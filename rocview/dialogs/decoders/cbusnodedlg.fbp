@@ -323,10 +323,10 @@
                                     </object>
                                     <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
-                                        <property name="flag">wxEXPAND</property>
+                                        <property name="flag"></property>
                                         <property name="proportion">0</property>
                                         <object class="wxFlexGridSizer" expanded="1">
-                                            <property name="cols">8</property>
+                                            <property name="cols">4</property>
                                             <property name="flexible_direction">wxBOTH</property>
                                             <property name="growablecols">1</property>
                                             <property name="growablerows"></property>
@@ -394,7 +394,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxEXPAND</property>
+                                                <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="1">
                                                     <property name="bg"></property>
@@ -410,7 +410,7 @@
                                                     <property name="name">m_NodeType</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="size"></property>
+                                                    <property name="size">160,-1</property>
                                                     <property name="style">wxTE_READONLY</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
@@ -1170,7 +1170,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Variables</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -4084,7 +4084,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">CAN-GC2</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -4148,7 +4148,7 @@
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxEXPAND</property>
-                                                <property name="proportion">1</property>
+                                                <property name="proportion">0</property>
                                                 <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">10</property>
                                                     <property name="flexible_direction">wxBOTH</property>
@@ -6077,7 +6077,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -6642,7 +6642,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -7207,7 +7207,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -7772,7 +7772,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -8337,7 +8337,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -8902,7 +8902,7 @@
                                                         <object class="wxRadioButton" expanded="1">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
-                                                            <property name="enabled">1</property>
+                                                            <property name="enabled">0</property>
                                                             <property name="fg"></property>
                                                             <property name="font"></property>
                                                             <property name="hidden">0</property>
@@ -9289,7 +9289,7 @@
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxEXPAND</property>
-                                                <property name="proportion">1</property>
+                                                <property name="proportion">0</property>
                                                 <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">9</property>
                                                     <property name="flexible_direction">wxBOTH</property>
@@ -13875,7 +13875,7 @@
                                     </object>
                                     <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
-                                        <property name="flag">wxEXPAND</property>
+                                        <property name="flag"></property>
                                         <property name="proportion">0</property>
                                         <object class="wxBoxSizer" expanded="1">
                                             <property name="minimum_size"></property>
@@ -13884,7 +13884,7 @@
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxButton" expanded="1">
                                                     <property name="bg"></property>
@@ -13940,7 +13940,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxButton" expanded="1">
                                                     <property name="bg"></property>
@@ -13996,7 +13996,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxTOP|wxBOTTOM|wxLEFT</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxButton" expanded="1">
                                                     <property name="bg"></property>
@@ -14052,7 +14052,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxCheckBox" expanded="1">
                                                     <property name="bg"></property>
@@ -14108,7 +14108,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxCheckBox" expanded="1">
                                                     <property name="bg"></property>
@@ -14164,7 +14164,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag"></property>
                                                 <property name="proportion">1</property>
                                                 <object class="wxFlexGridSizer" expanded="1">
                                                     <property name="cols">2</property>
@@ -14180,7 +14180,7 @@
                                                     <property name="vgap">0</property>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="1">
                                                             <property name="bg"></property>
@@ -14235,7 +14235,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="1">
                                                             <property name="bg"></property>
@@ -14296,7 +14296,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxTOP|wxBOTTOM|wxRIGHT|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="1">
                                                     <property name="bg"></property>
@@ -14308,7 +14308,7 @@
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Pulse time</property>
-                                                    <property name="majorDimension">1</property>
+                                                    <property name="majorDimension">2</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_GC2PulseTime</property>
