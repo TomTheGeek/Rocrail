@@ -419,6 +419,8 @@ void CBusNodeDlg::onVarSelect( wxCommandEvent& event ) {
     if( var != NULL ) {
       m_VarIndex->SetValue(wCBusNodeVar.getnr(var));
       m_VarValue->SetValue(wCBusNodeVar.getval(var));
+      wxSpinEvent evt( 0, 0 );
+      onVarValue(evt);
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
@@ -488,7 +490,7 @@ void CBusNodeDlg::varSet( int idx, int val, bool update ) {
     getNodeVar(nn, m_NodeTypeNr->GetValue(), m_VarIndex->GetValue(), m_VarValue->GetValue() );
 }
 
-void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
+void CBusNodeDlg::onEventSelect( wxCommandEvent& cmdevent ) {
   if( m_EventList->GetSelection() != wxNOT_FOUND ) {
     iONode event = (iONode)m_EventList->GetClientData(m_EventList->GetSelection());
     if( event != NULL ) {
@@ -500,6 +502,8 @@ void CBusNodeDlg::onEventSelect( wxCommandEvent& event ) {
       m_EventAddress->SetValue(addr);
       m_EventIndex->SetValue(evnr);
       m_EventVar->SetValue(evval);
+      wxSpinEvent evt( 0, 0 );
+      onEV(evt);
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
