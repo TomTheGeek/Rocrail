@@ -46,6 +46,7 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_SaveOutputState;
   bool m_ShortEvents;
   int m_PulseTime;
+  int m_GC2IgnorePortTest;
 
   void init(iONode event);
   void initIndex();

@@ -64,6 +64,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_SaveOutputState = false;
   m_ShortEvents = false;
   m_PulseTime = 0;
+  m_GC2IgnorePortTest = 0;
 
 
 
@@ -924,7 +925,8 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     // port status 1-8
     for( int i = 0; i < 8; i++) {
       int on = val & (0x01 << i);
-      gc2Test[i+1]->SetLabel(on > 0 ? _T("1"):_T("0"));
+      if( !(m_GC2IgnorePortTest == (i+1)) )
+        gc2Test[i+1]->SetLabel(on > 0 ? _T("1"):_T("0"));
     }
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 1: 0x%02X", val);
   }
@@ -932,7 +934,8 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     // port status 9-16
     for( int i = 0; i < 8; i++) {
       int on = val & (0x01 << i);
-      gc2Test[i+1+8]->SetLabel(on > 0 ? _T("1"):_T("0"));
+      if( !(m_GC2IgnorePortTest == (i+1+8)) )
+        gc2Test[i+1+8]->SetLabel(on > 0 ? _T("1"):_T("0"));
     }
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 2: 0x%02X", val);
   }
@@ -979,15 +982,22 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
     return;
   }
 
+  bool isInput = false;
+  int port = 0;
+
   for( int i = 0; i < 16; i++ ) {
     if( event.GetEventObject() == gc2Test[i+1] ) {
+      int cfg, nn, en;
+      gc2GetPort(i+1, &cfg, &nn, &en);
+      port = i+1;
+      isInput = cfg & 0x01;
       bus = gc2NN[i+1]->GetValue();
       addr = gc2Addr[i+1]->GetValue();
       if( gc2Test[i+1]->GetLabel().CompareTo(_T("1")) == 0 )
           cmd = wOutput.off;
       if( i > 7 )
         group = 1;
-      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "test button %d clicked", i+1);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "test button %d clicked, addr=%d, cmd=%s", i+1, addr, cmd);
       break;
     }
   }
@@ -998,10 +1008,18 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
     wOutput.setbus( swcmd, bus );
     wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wOutput.setcmd( swcmd, cmd );
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "send test command for port %d...", port);
     wxGetApp().sendToRocrail( swcmd );
     swcmd->base.del( swcmd );
   }
 
+  if( isInput ) {
+    m_GC2IgnorePortTest = port;
+    if( gc2Test[port]->GetLabel().CompareTo(_T("1")) == 0 )
+      gc2Test[port]->SetLabel(_T("0"));
+    else
+      gc2Test[port]->SetLabel(_T("1"));
+  }
   m_GC2SetIndex = 19+group;
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
