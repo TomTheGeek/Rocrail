@@ -927,6 +927,8 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
       int on = val & (0x01 << i);
       if( !(m_GC2IgnorePortTest == (i+1)) )
         gc2Test[i+1]->SetLabel(on > 0 ? _T("1"):_T("0"));
+      else
+        m_GC2IgnorePortTest = 0;
     }
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 1: 0x%02X", val);
   }
@@ -936,6 +938,8 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
       int on = val & (0x01 << i);
       if( !(m_GC2IgnorePortTest == (i+1+8)) )
         gc2Test[i+1+8]->SetLabel(on > 0 ? _T("1"):_T("0"));
+      else
+        m_GC2IgnorePortTest = 0;
     }
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 2: 0x%02X", val);
   }
