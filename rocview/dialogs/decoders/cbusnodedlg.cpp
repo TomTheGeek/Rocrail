@@ -1102,9 +1102,11 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   }
   else if( m_GC2SetIndex == 19 ) {
     varGet(18);
+    varGet(19);
   }
   else if( m_GC2SetIndex == 20 ) {
     varGet(19);
+    varGet(18);
   }
   m_GC2SetIndex++;
   if( m_bGC2SetAll && m_GC2SetIndex < 20 ) {
