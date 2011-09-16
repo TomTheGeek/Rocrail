@@ -107,6 +107,9 @@ protected:
   void onGC2Test( wxCommandEvent& event );
   void onGC2Set( wxCommandEvent& event );
   void onSoD( wxCommandEvent& event );
+  void onVarValueText( wxCommandEvent& event );
+  void onEVText( wxCommandEvent& event );
+
 
 public:
 	/** Constructor */

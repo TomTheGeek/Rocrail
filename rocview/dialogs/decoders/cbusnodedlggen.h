@@ -306,13 +306,13 @@ class cbusnodedlggen : public wxDialog
 		virtual void onIndexDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarValue( wxSpinEvent& event ) { event.Skip(); }
-		virtual void onVarValue( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onVarValueText( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarGet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVarSet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEV( wxSpinEvent& event ) { event.Skip(); }
-		virtual void onEV( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onEVText( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEvtGetVar( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEVBit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onEventGetAll( wxCommandEvent& event ) { event.Skip(); }

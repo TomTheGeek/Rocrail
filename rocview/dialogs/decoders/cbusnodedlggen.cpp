@@ -1020,7 +1020,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_IndexDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
 	m_VarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onVarSelect ), NULL, this );
 	m_VarValue->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
-	m_VarValue->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
+	m_VarValue->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValueText ), NULL, this );
 	m_VarBit7->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
 	m_VarBit6->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
 	m_VarBit5->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
@@ -1033,7 +1033,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_VarSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarSet ), NULL, this );
 	m_EventList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onEventSelect ), NULL, this );
 	m_EventVar->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onEV ), NULL, this );
-	m_EventVar->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onEV ), NULL, this );
+	m_EventVar->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onEVText ), NULL, this );
 	m_EvtGetVar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtGetVar ), NULL, this );
 	m_EVBit7->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );
 	m_EVBit6->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );
@@ -1085,7 +1085,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_IndexDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
 	m_VarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onVarSelect ), NULL, this );
 	m_VarValue->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
-	m_VarValue->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
+	m_VarValue->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValueText ), NULL, this );
 	m_VarBit7->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
 	m_VarBit6->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
 	m_VarBit5->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarBit ), NULL, this );
@@ -1098,7 +1098,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_VarSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onVarSet ), NULL, this );
 	m_EventList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onEventSelect ), NULL, this );
 	m_EventVar->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onEV ), NULL, this );
-	m_EventVar->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onEV ), NULL, this );
+	m_EventVar->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onEVText ), NULL, this );
 	m_EvtGetVar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEvtGetVar ), NULL, this );
 	m_EVBit7->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );
 	m_EVBit6->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::onEVBit ), NULL, this );

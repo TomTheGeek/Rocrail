@@ -1527,7 +1527,7 @@
                                                             <event name="OnSetFocus"></event>
                                                             <event name="OnSize"></event>
                                                             <event name="OnSpinCtrl">onVarValue</event>
-                                                            <event name="OnSpinCtrlText">onVarValue</event>
+                                                            <event name="OnSpinCtrlText">onVarValueText</event>
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
@@ -2724,7 +2724,7 @@
                                                                     <event name="OnSetFocus"></event>
                                                                     <event name="OnSize"></event>
                                                                     <event name="OnSpinCtrl">onEV</event>
-                                                                    <event name="OnSpinCtrlText">onEV</event>
+                                                                    <event name="OnSpinCtrlText">onEVText</event>
                                                                     <event name="OnUpdateUI"></event>
                                                                 </object>
                                                             </object>

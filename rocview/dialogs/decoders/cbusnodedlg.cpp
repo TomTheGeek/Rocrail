@@ -429,6 +429,11 @@ void CBusNodeDlg::onVarSelect( wxCommandEvent& event ) {
 }
 
 
+void CBusNodeDlg::onVarValueText( wxCommandEvent& event ) {
+  wxSpinEvent evt(0,0);
+  onVarValue(evt);
+}
+
 void CBusNodeDlg::onVarValue( wxSpinEvent& event ) {
   int val = m_VarValue->GetValue();
 
@@ -603,6 +608,10 @@ void CBusNodeDlg::onEventDelete( wxCommandEvent& event ) {
   }
 }
 
+void CBusNodeDlg::onEVText( wxCommandEvent& event ) {
+  wxSpinEvent evt(0,0);
+  onEV(evt);
+}
 void CBusNodeDlg::onEV( wxSpinEvent& event ) {
   int val = m_EventVar->GetValue();
 
