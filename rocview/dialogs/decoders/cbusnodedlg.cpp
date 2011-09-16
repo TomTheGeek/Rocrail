@@ -1125,6 +1125,17 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   }
 }
 
+void CBusNodeDlg::onSoD( wxCommandEvent& event ) {
+  iONode swcmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+  wOutput.setaddr( swcmd, m_GC2SOD->GetValue() );
+  wOutput.setbus( swcmd, 0 );
+  wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wOutput.setcmd( swcmd, wOutput.sod );
+  wxGetApp().sendToRocrail( swcmd );
+  swcmd->base.del( swcmd );
+
+}
+
 
 
 

@@ -947,14 +947,24 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer16;
 	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxFlexGridSizer* fgSizer11;
+	fgSizer11 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer11->SetFlexibleDirection( wxBOTH );
+	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
 	m_GC2GetAll = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Get all"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2GetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	fgSizer11->Add( m_GC2GetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_GC2SetAll = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set all"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2SetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	fgSizer11->Add( m_GC2SetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_GC2Set = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2Set, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
+	fgSizer11->Add( m_GC2Set, 0, wxLEFT, 5 );
+	
+	m_GC2SoD = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("SoD"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer11->Add( m_GC2SoD, 0, wxLEFT, 5 );
+	
+	bSizer16->Add( fgSizer11, 0, 0, 5 );
 	
 	m_GC2SaveOutput = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Save output state"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer16->Add( m_GC2SaveOutput, 0, wxALL, 5 );
@@ -1062,6 +1072,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2GetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2GetAll ), NULL, this );
 	m_GC2SetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2SetAll ), NULL, this );
 	m_GC2Set->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Set ), NULL, this );
+	m_GC2SoD->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSoD ), NULL, this );
 	m_stdButtonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
 	m_stdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }
@@ -1126,6 +1137,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_GC2GetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2GetAll ), NULL, this );
 	m_GC2SetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2SetAll ), NULL, this );
 	m_GC2Set->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC2Set ), NULL, this );
+	m_GC2SoD->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSoD ), NULL, this );
 	m_stdButtonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onCancel ), NULL, this );
 	m_stdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onOK ), NULL, this );
 }

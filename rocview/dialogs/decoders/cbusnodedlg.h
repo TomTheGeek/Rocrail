@@ -106,6 +106,7 @@ protected:
   void onGC2SetAll( wxCommandEvent& event );
   void onGC2Test( wxCommandEvent& event );
   void onGC2Set( wxCommandEvent& event );
+  void onSoD( wxCommandEvent& event );
 
 public:
 	/** Constructor */

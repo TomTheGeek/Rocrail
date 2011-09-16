@@ -1299,6 +1299,7 @@
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <var name="toggleswitch" vt="bool" defval="true" remark="Toggle switch or push button."/>
+        <const name="sod" vt="string" val="sod"/>
         <const name="on" vt="string" val="on"/>
         <const name="active" vt="string" val="active"/>
         <const name="off" vt="string" val="off"/>

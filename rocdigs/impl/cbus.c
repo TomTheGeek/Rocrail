@@ -1391,7 +1391,12 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-    cmd[0] = on ? OPC_ACON:OPC_ACOF;
+
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.sod ) )
+      cmd[0] = OPC_ASRQ;
+    else
+      cmd[0] = on ? OPC_ACON:OPC_ACOF;
+
     cmd[1] = wOutput.getbus( node ) / 256;
     cmd[2] = wOutput.getbus( node ) % 256;
     cmd[3] = wOutput.getaddr( node ) / 256;
