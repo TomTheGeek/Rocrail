@@ -1861,10 +1861,11 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       drawSvgSym(dc, m_SvgSym1, ori);
       int pos  = wTurntable.getbridgepos( m_Props );
       int yoff = pos % 24;
-      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "traverser with bridge pos=%d, yOffset=%d", pos, yoff );
 
       Boolean sensor1 = wTurntable.isstate1( m_Props );
       Boolean sensor2 = wTurntable.isstate2( m_Props );
+      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999,
+          "traverser with bridge pos=%d, yOffset=%d sen1=%d sen2=%d", pos, yoff, sensor1, sensor2 );
       if( sensor1 && sensor2 )
         drawSvgSym(dc, m_SvgSym3, ori, 0, yoff);
       else if( sensor1 || sensor2 )
