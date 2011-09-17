@@ -143,7 +143,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
     byte* frame = allocMem(32);
     cmd[0] = OPC_RTOF;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power OFF" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power OFF" );
     ThreadOp.post(data->writer, (obj)frame);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
@@ -379,7 +379,7 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
 static void __broadcastSpeedDir(iOCBUS cbus, iOSlot slot, int speed, Boolean dir) {
   iOCBUSData data = Data(cbus);
   iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
       "update speed[%d] for loco %s", speed, slot->id );
 
   slot->rawspeed = speed;
@@ -424,7 +424,7 @@ static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn) {
 
   iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
       "update functions for loco %s", slot->id );
 
   if( data->iid != NULL )
@@ -551,7 +551,7 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
 
   int addr = event;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%sevent %d %s (node=%d)",
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d %s (node=%d)",
       data->shortevents?"short ":"", addr, state?"ON":"OFF", node );
 
   /* inform listener: Node3 */
@@ -605,7 +605,7 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
         }
         makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request session for address %d", addr );
         ThreadOp.post(data->writer, (obj)frame);
       }
     }
@@ -690,7 +690,7 @@ static __evaluateCV( iOCBUS cbus, byte* frame ) {
 
   int value = HEXA2Byte(frame + OFFSET_D4 + offset);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cv %d has a value of %d", cv, value );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", cv, value );
 
   node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcv( node, cv );
@@ -734,6 +734,9 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 
   Boolean state = False;
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID %sevent %d id=%ld",
+      data->shortevents?"short ":"", addr, rfid );
+
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
@@ -763,6 +766,9 @@ static __evaluateIR( iOCBUS cbus, byte* frame ) {
   int ir2  = HEXA2Byte(frame + OFFSET_D6 + offset);
   int locoaddr = ir1 * 256 + ir2;
   int lococat  = HEXA2Byte(frame + OFFSET_D7 + offset);
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "IR %sevent %d loco=%d (node=%d)",
+      data->shortevents?"short ":"", addr, locoaddr, node );
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -1342,7 +1348,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTOF;
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power OFF" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
     }
 
@@ -1352,7 +1358,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = allocMem(32);
       cmd[0] = OPC_RESTP;
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request emergency break" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request emergency break" );
       ThreadOp.post(data->writer, (obj)frame);
     }
 
@@ -1362,7 +1368,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTON;
       makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 0 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request power ON" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)frame);
     }
   }
@@ -1380,7 +1386,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[4] = wSwitch.getaddr1( node ) % 256;
     makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "single gate switch %d:%d",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
         wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
     ThreadOp.post(data->writer, (obj)frame);
 
@@ -1404,7 +1410,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[4] = wOutput.getaddr( node ) % 256;
     makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d.%d %s",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d.%d %s",
         wOutput.getbus( node ), wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
     ThreadOp.post(data->writer, (obj)frame);
 
@@ -1415,7 +1421,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     int addr = wFeedback.getaddr( node );
     Boolean state = wFeedback.isstate( node );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
@@ -1447,7 +1453,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     slot->lights = wLoc.isfn(node);
 
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco speed=%d dir=%s", slot->speed, slot->dir?"forwards":"reverse" );
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
@@ -1485,7 +1491,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       return;
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fstate?"ON":"OFF" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fstate?"ON":"OFF" );
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
@@ -1538,13 +1544,13 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
       int addr = wProgram.getaddr( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** not supported *** POM: read CV%d of loc %d...", cv, addr );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read CV%d of loc %d...", cv, addr );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "read CV%d of loc %d...", cv, addr );
         byte cmd[5];
         byte* frame = allocMem(32);
         Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
@@ -1566,7 +1572,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
         byte cmd[10];
         byte* frame = allocMem(32);
         Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
@@ -1586,7 +1592,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d of loc %d to %d...", cv, decaddr, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d of loc %d to %d...", cv, decaddr, value );
         byte cmd[10];
         byte* frame = allocMem(32);
         Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
@@ -1599,7 +1605,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[5] = value;
         makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 5 );
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d %s",
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d %s",
             wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
         ThreadOp.post(data->writer, (obj)frame);
       }
@@ -1615,14 +1621,14 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       int nv  = wProgram.getcv( node );
       int val = wProgram.getvalue( node );
       int nn  = wProgram.getdecaddr( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get NN%d NV%d...", nn, nv );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get NN%d NV%d...", nn, nv );
     }
     else if( wProgram.getcmd( node ) == wProgram.nvset ) {
       /* Node Value set */
       int nv  = wProgram.getcv( node );
       int val = wProgram.getvalue( node );
       int nn  = wProgram.getdecaddr( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set NN%d NV%d to %d...", nn, nv, val );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set NN%d NV%d to %d...", nn, nv, val );
     }
 
   }
