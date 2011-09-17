@@ -114,12 +114,15 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_IndexDelete = new wxButton( m_IndexPanel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_IndexDelete, 0, wxALL, 5 );
 	
+	m_QueryNN = new wxButton( m_IndexPanel, wxID_ANY, wxT("Query"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_QueryNN, 0, wxALL, 5 );
+	
 	bSizer5->Add( bSizer6, 0, wxEXPAND, 5 );
 	
 	m_IndexPanel->SetSizer( bSizer5 );
 	m_IndexPanel->Layout();
 	bSizer5->Fit( m_IndexPanel );
-	m_NoteBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_NoteBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_VarPanel = new wxPanel( m_NoteBook, wxID_CBUS_VAR, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -998,7 +1001,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CANGC2Panel->SetSizer( bSizer151 );
 	m_CANGC2Panel->Layout();
 	bSizer151->Fit( m_CANGC2Panel );
-	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), true );
+	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), false );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -1018,6 +1021,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_SetNodeNumber->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSetNodeNumber ), NULL, this );
 	m_IndexList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onIndexSelect ), NULL, this );
 	m_IndexDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
+	m_QueryNN->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onQuery ), NULL, this );
 	m_VarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onVarSelect ), NULL, this );
 	m_VarValue->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
 	m_VarValue->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValueText ), NULL, this );
@@ -1083,6 +1087,7 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_SetNodeNumber->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSetNodeNumber ), NULL, this );
 	m_IndexList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onIndexSelect ), NULL, this );
 	m_IndexDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onIndexDelete ), NULL, this );
+	m_QueryNN->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onQuery ), NULL, this );
 	m_VarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( cbusnodedlggen::onVarSelect ), NULL, this );
 	m_VarValue->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onVarValue ), NULL, this );
 	m_VarValue->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( cbusnodedlggen::onVarValueText ), NULL, this );

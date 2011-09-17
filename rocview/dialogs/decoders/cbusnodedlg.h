@@ -109,6 +109,7 @@ protected:
   void onSoD( wxCommandEvent& event );
   void onVarValueText( wxCommandEvent& event );
   void onEVText( wxCommandEvent& event );
+  void onQuery( wxCommandEvent& event );
 
 
 public:

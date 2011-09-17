@@ -411,10 +411,22 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
       m_NodeTypeNr->SetValue(0);
       m_NodeManuNr->SetValue(0);
       initIndex();
+      SetTitle( _T("CBUS") );
+
     }
     else
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
+}
+
+void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.query );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_cbus);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
 }
 
 
@@ -675,6 +687,12 @@ void CBusNodeDlg::setUnlearn() {
 void CBusNodeDlg::event( iONode event ) {
   if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
     init( event );
+  }
+  else if( wProgram.getcmd( event ) == wProgram.type  ) {
+    int nn = wProgram.getdecaddr(event);
+    int manu = wProgram.getmanu(event);
+    int prod = wProgram.getprod(event);
+    getNode(nn, prod, manu, NULL);
   }
   else if( wProgram.getcmd( event ) == wProgram.evget || wProgram.getcmd( event ) == wProgram.evgetvar ) {
     // Add event to the list.

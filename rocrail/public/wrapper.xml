@@ -696,6 +696,8 @@
     <const name="bootmode" vt="int" val="22" remark="Set node in boot mode."/>
     <const name="writehex" vt="int" val="23" remark="Set node in boot mode."/>
     <const name="reset" vt="int" val="24" remark="Reset decoder mode."/>
+    <const name="query" vt="int" val="25" remark="Query node numbers."/>
+    <const name="type" vt="int" val="26" remark="Query node numbers."/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
@@ -718,6 +720,8 @@
     <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>
     <var name="modid" vt="int" defval="0" range="*" remark="module id for use with lncv"/>
     <var name="version" vt="int" defval="0" range="*" remark="firmware version"/>
+    <var name="manu" vt="int" defval="0" range="*" remark="manufacturer ID"/>
+    <var name="prod" vt="int" defval="0" range="*" remark="product ID"/>
     <const name="lntype_none" vt="int" val="0"/>
     <const name="lntype_cv" vt="int" val="1" remark="Uhlenbrock LocoNet CV's"/>
     <const name="lntype_sv" vt="int" val="2" remark="LocoIO SV's"/>

@@ -56,6 +56,51 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: 0x%02X", opc );
 
   switch(opc) {
+  case OPC_TYPE:
+  {
+    int offset = (frame[1] == 'S') ? 0:4;
+    int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+    int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+    int nn = nnh * 256 + nnl;
+    int manu  = HEXA2Byte(frame + OFFSET_D3 + offset);
+    int prod  = HEXA2Byte(frame + OFFSET_D4 + offset);
+
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcmd( node, wProgram.type );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_cbus);
+    wProgram.setdecaddr(node, nn);
+    wProgram.setmanu(node, manu);
+    wProgram.setprod(node, prod);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] manufacturer=%d product=%d", nn, manu, prod );
+    return node;
+  }
+    break;
+
+  case OPC_PARAN:
+  {
+    int offset = (frame[1] == 'S') ? 0:4;
+    int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+    int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
+    int nn = nnh * 256 + nnl;
+    int idx  = HEXA2Byte(frame + OFFSET_D3 + offset);
+    int val  = HEXA2Byte(frame + OFFSET_D4 + offset);
+
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcmd( node, wProgram.get );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_cbus);
+    wProgram.setdecaddr(node, nn);
+    wProgram.setcv(node, idx);
+    wProgram.setvalue(node, val);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] parameter %d=%d response", nn, idx, val );
+    return node;
+
+  }
+    break;
+
   case OPC_NNACK:
     {
       int offset = (frame[1] == 'S') ? 0:4;
@@ -387,6 +432,15 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[1] = wProgram.getval2(node) / 256; // nn
     cmd[2] = wProgram.getval2(node) % 256;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    return frame;
+  }
+
+  if( wProgram.getcmd( node ) == wProgram.query ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: Query all connected nodes." );
+    byte* frame = allocMem(32);
+    cmd[0] = OPC_QNN;
+    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
     return frame;
   }
 

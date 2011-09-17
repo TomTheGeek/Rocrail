@@ -936,6 +936,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_NVSET:
     case OPC_NVANS:
     case OPC_PARAN:
+    case OPC_TYPE:
     case OPC_REVAL:
     case OPC_REQEV:
     case OPC_NEVAL:
@@ -1093,7 +1094,7 @@ static void __reader( void* threadinst ) {
         }
         else {
           /* junk */
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no start byte [%c]", frame[0] );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no start byte [0x%02X]", frame[0] );
         }
       }
     }
