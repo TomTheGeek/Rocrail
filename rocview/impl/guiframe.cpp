@@ -1113,7 +1113,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           if( wLoc.getscidx(node) == -1 )
           m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(wLoc.getdestblockid( node ),wxConvUTF8) );
           else {
-            val = StrOp.fmt( "[%d] %s", wLoc.getscidx( node ), wLoc.getdestblockid( node ) );
+            val = StrOp.fmt( "[%s:%d] %s", wLoc.getscheduleid(node), wLoc.getscidx( node ), wLoc.getdestblockid( node ) );
             m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(val,wxConvUTF8) );
             StrOp.free( val );
           }

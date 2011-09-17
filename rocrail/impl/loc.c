@@ -501,6 +501,7 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setactive( node, wLoc.isactive(data->props) );
       if( data->driver != NULL ) {
         wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+        wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
       }
 
       AppOp.broadcastEvent( node );
@@ -1358,6 +1359,7 @@ static void __runner( void* threadinst ) {
       wLoc.setactive( broadcast, wLoc.isactive(data->props) );
       if( data->driver != NULL ) {
         wLoc.setscidx( broadcast, data->driver->getScheduleIdx( data->driver ) );
+        wLoc.setscheduleid(broadcast, LocOp.getSchedule(loc, NULL));
       }
       AppOp.broadcastEvent( broadcast );
     }
@@ -1587,6 +1589,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setactive( node, wLoc.isactive(data->props) );
     if( data->driver != NULL ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+      wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
     }
 
     AppOp.broadcastEvent( node );
@@ -1618,6 +1621,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setactive( node, wLoc.isactive(data->props) );
   if( data->driver != NULL ) {
     wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+    wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
   }
   AppOp.broadcastEvent( node );
 }
@@ -1683,6 +1687,7 @@ static void _setMode( iOLoc inst, const char* mode ) {
     wLoc.setactive( node, wLoc.isactive(data->props) );
     if( data->driver != NULL ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+      wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
     }
 
     AppOp.broadcastEvent( node );
@@ -2090,6 +2095,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setactive( nodeF, wLoc.isactive(data->props) );
   if( data->driver != NULL ) {
     wLoc.setscidx( nodeF, data->driver->getScheduleIdx( data->driver ) );
+    wLoc.setscheduleid(nodeF, LocOp.getSchedule(inst, NULL));
   }
   AppOp.broadcastEvent( nodeF );
 
@@ -2576,6 +2582,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
     wLoc.setactive( node, wLoc.isactive(data->props) );
     if( data->driver != NULL ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
+      wLoc.setscheduleid(node, LocOp.getSchedule(loc, NULL));
     }
 
     AppOp.broadcastEvent( node );
