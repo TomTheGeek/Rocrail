@@ -65,6 +65,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_ShortEvents = false;
   m_PulseTime = 0;
   m_GC2IgnorePortTest = 0;
+  m_CANID = 0;
 
 
 
@@ -712,7 +713,7 @@ void CBusNodeDlg::event( iONode event ) {
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
-      if( cv < 19 ) {
+      if( cv < 20 ) {
         varGet(cv+1);
       }
       else {
@@ -974,6 +975,10 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     }
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "port state group 2: 0x%02X", val);
   }
+  else if( nr == 20 ) {
+    m_CANID = val;
+    m_GC2CanID->SetValue(val);
+  }
 }
 
 void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
@@ -1107,6 +1112,14 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
 
+  if(m_GC2CanID->GetValue() != m_CANID )
+  {
+    m_GC2SetIndex = 21;
+    m_bGC2SetAll = false;
+    m_GC2Set->Enable(false);
+    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  }
+
 }
 
 
@@ -1143,8 +1156,12 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     varGet(19);
     varGet(18);
   }
+  else if( m_GC2SetIndex == 21 ) {
+    int canid = m_GC2CanID->GetValue();
+    varSet(20, canid, false);
+  }
   m_GC2SetIndex++;
-  if( m_bGC2SetAll && m_GC2SetIndex < 20 ) {
+  if( m_bGC2SetAll && m_GC2SetIndex < 21 ) {
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
   else {

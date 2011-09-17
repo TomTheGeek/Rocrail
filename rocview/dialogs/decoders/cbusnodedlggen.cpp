@@ -122,7 +122,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_IndexPanel->SetSizer( bSizer5 );
 	m_IndexPanel->Layout();
 	bSizer5->Fit( m_IndexPanel );
-	m_NoteBook->AddPage( m_IndexPanel, wxT("Index"), true );
+	m_NoteBook->AddPage( m_IndexPanel, wxT("Index"), false );
 	m_VarPanel = new wxPanel( m_NoteBook, wxID_CBUS_VAR, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -951,7 +951,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxFlexGridSizer* fgSizer11;
-	fgSizer11 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer11 = new wxFlexGridSizer( 0, 3, 0, 0 );
 	fgSizer11->SetFlexibleDirection( wxBOTH );
 	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -961,19 +961,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2SetAll = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set all"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer11->Add( m_GC2SetAll, 0, wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
+	m_GC2SaveOutput = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Save output state"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer11->Add( m_GC2SaveOutput, 0, wxALL, 5 );
+	
 	m_GC2Set = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer11->Add( m_GC2Set, 0, wxLEFT, 5 );
 	
 	m_GC2SoD = new wxButton( m_CANGC2Panel, wxID_ANY, wxT("SoD"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer11->Add( m_GC2SoD, 0, wxLEFT, 5 );
 	
-	bSizer16->Add( fgSizer11, 0, 0, 5 );
-	
-	m_GC2SaveOutput = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Save output state"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2SaveOutput, 0, wxALL, 5 );
-	
 	m_GC2ShortEvents = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("Short events"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_GC2ShortEvents, 0, wxALL, 5 );
+	fgSizer11->Add( m_GC2ShortEvents, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	bSizer16->Add( fgSizer11, 0, 0, 5 );
 	
 	wxFlexGridSizer* fgSizer13;
 	fgSizer13 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -988,7 +988,14 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2SOD = new wxSpinCtrl( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer13->Add( m_GC2SOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
-	bSizer16->Add( fgSizer13, 1, 0, 5 );
+	m_labGC2CanID = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("CAN ID:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labGC2CanID->Wrap( -1 );
+	fgSizer13->Add( m_labGC2CanID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_GC2CanID = new wxSpinCtrl( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 255, 0 );
+	fgSizer13->Add( m_GC2CanID, 0, wxBOTTOM|wxRIGHT, 5 );
+	
+	bSizer16->Add( fgSizer13, 1, wxRIGHT, 5 );
 	
 	wxString m_GC2PulseTimeChoices[] = { wxT("250ms"), wxT("500ms"), wxT("1 sec."), wxT("2 sec.") };
 	int m_GC2PulseTimeNChoices = sizeof( m_GC2PulseTimeChoices ) / sizeof( wxString );
@@ -1001,7 +1008,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CANGC2Panel->SetSizer( bSizer151 );
 	m_CANGC2Panel->Layout();
 	bSizer151->Fit( m_CANGC2Panel );
-	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), false );
+	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), true );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	

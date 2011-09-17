@@ -290,12 +290,14 @@ class cbusnodedlggen : public wxDialog
 		wxButton* m_GC2Test16;
 		wxButton* m_GC2GetAll;
 		wxButton* m_GC2SetAll;
+		wxCheckBox* m_GC2SaveOutput;
 		wxButton* m_GC2Set;
 		wxButton* m_GC2SoD;
-		wxCheckBox* m_GC2SaveOutput;
 		wxCheckBox* m_GC2ShortEvents;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_GC2SOD;
+		wxStaticText* m_labGC2CanID;
+		wxSpinCtrl* m_GC2CanID;
 		wxRadioBox* m_GC2PulseTime;
 		wxStdDialogButtonSizer* m_stdButton;
 		wxButton* m_stdButtonOK;
