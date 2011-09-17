@@ -439,7 +439,7 @@ byte* programFLiM(obj inst, iONode node) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: Query all connected nodes." );
     byte* frame = allocMem(32);
-    cmd[0] = OPC_QNN;
+    cmd[0] = OPC_QNTP;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
     return frame;
   }

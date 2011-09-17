@@ -60,6 +60,7 @@
 #define OPC_RQNN    0x0d    // Rest node number
 #define OPC_QNN     0x0e    // Query node numbers
 #define OPC_RQNP    0x10    // Read node parameters
+#define OPC_QNTP    0x11    // Query node type
 
 // Packets with 1 data byte
 
