@@ -1407,6 +1407,8 @@
       <var name="loader" vt="iOThread"/>
       <var name="loaderNode" vt="iONode"/>
       <var name="loaderMux" vt="iOMutex"/>
+      <var name="stress" vt="Boolean"/>
+      <var name="stressRunner" vt="iOThread"/>
     </data>
   </object>
 

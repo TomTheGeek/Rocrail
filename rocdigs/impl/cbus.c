@@ -976,6 +976,38 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   return NULL;
 }
 
+static void __stressRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
+  iOCBUSData data = Data(cbus);
+
+  ThreadOp.sleep(5000);
+  if( data->stress )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS stress runner started." );
+
+  /* try to get the system status: */
+  while( data->run && data->stress ) {
+    /* get all input states */
+    if( data->sodaddr > 0 ) {
+      byte cmd[8];
+      byte* frame = allocMem(64);
+      cmd[0] = OPC_ASRQ;
+      cmd[1] = 0;
+      cmd[2] = 0;
+      cmd[3] = data->sodaddr / 256;
+      cmd[4] = data->sodaddr % 256;
+      makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 4 );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+    ThreadOp.sleep(50);
+
+  };
+
+  if( data->stress )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS stress runner ended." );
+}
+
+
 
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -1670,6 +1702,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->lcmux    = MutexOp.inst( NULL, True );
   data->lcmap    = MapOp.inst();
   data->loaderMux= MutexOp.inst( NULL, True );
+  data->stress   = wDigInt.isstress(ini);
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
     data->bps = 500000;
@@ -1720,6 +1753,11 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->timedqueue );
     data->keep = ThreadOp.inst( "keeper", &__keep, __CBUS );
     ThreadOp.start( data->keep );
+
+    if( data->stress ) {
+      data->stressRunner = ThreadOp.inst( "cbstress", &__stressRunner, __CBUS );
+      ThreadOp.start( data->stressRunner );
+    }
 
   }
   else {
