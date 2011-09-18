@@ -421,6 +421,16 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
+  iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
+  iONode digint = wRocRail.getdigint(l_RocrailIni);
+  iONode cbus = wDigInt.getcbus(digint);
+  iONode node = wCBus.getcbnode(cbus);
+  while( node != NULL ) {
+    NodeOp.removeChild( cbus, node );
+    node = wCBus.getcbnode(cbus);
+  }
+  initIndex();
+
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, wProgram.query );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
@@ -542,11 +552,24 @@ void CBusNodeDlg::eventGetAll() {
   iONode node = getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8));
   if( node != NULL ) {
     iONode cbusnodeevt = wCBusNode.getcbnodeevent(node);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "delete all events for node [%d:%d]", nn, m_NodeTypeNr->GetValue());
     while( cbusnodeevt != NULL ) {
-      TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "delete event for node [%d:%d]", nn, m_NodeTypeNr->GetValue());
-      NodeOp.removeChild(node, cbusnodeevt);
-      NodeOp.base.del(cbusnodeevt);
-      cbusnodeevt = wCBusNode.getcbnodeevent(node);
+      TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999,
+          "delete event for node [%d:%d] [addr=%d, evnr=%d]", nn, m_NodeTypeNr->GetValue(),
+          wCBusNodeEvent.getaddr(cbusnodeevt), wCBusNodeEvent.getevnr(cbusnodeevt));
+
+      if( NodeOp.removeChild(node, cbusnodeevt) != NULL ) {
+        NodeOp.base.del(cbusnodeevt);
+        cbusnodeevt = wCBusNode.getcbnodeevent(node);
+        // ToDo: Work around!? Bug in the Node object?
+        if( cbusnodeevt != wCBusNode.getcbnodeevent(node) )
+          cbusnodeevt = wCBusNode.getcbnodeevent(node);
+        else
+          cbusnodeevt = NULL;
+      }
+      else {
+        cbusnodeevt = NULL;
+      }
     }
     initEvtList(node);
   }
