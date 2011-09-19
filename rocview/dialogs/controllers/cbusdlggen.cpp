@@ -47,8 +47,14 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxString m_SublibChoices[] = { wxT("USB"), wxT("Serial"), wxT("TCP/IP") };
 	int m_SublibNChoices = sizeof( m_SublibChoices ) / sizeof( wxString );
 	m_Sublib = new wxRadioBox( this, wxID_ANY, wxT("Type"), wxDefaultPosition, wxDefaultSize, m_SublibNChoices, m_SublibChoices, 1, wxRA_SPECIFY_ROWS );
-	m_Sublib->SetSelection( 1 );
+	m_Sublib->SetSelection( 0 );
 	bSizer8->Add( m_Sublib, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString m_BPSChoices[] = { wxT("115200"), wxT("230400") };
+	int m_BPSNChoices = sizeof( m_BPSChoices ) / sizeof( wxString );
+	m_BPS = new wxRadioBox( this, wxID_ANY, wxT("BPS"), wxDefaultPosition, wxDefaultSize, m_BPSNChoices, m_BPSChoices, 1, wxRA_SPECIFY_ROWS );
+	m_BPS->SetSelection( 0 );
+	bSizer8->Add( m_BPS, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_CTS = new wxCheckBox( this, wxID_ANY, wxT("RTS/CTS"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer8->Add( m_CTS, 0, wxALL, 5 );
@@ -97,6 +103,8 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_OptionsBox->Add( m_ShortEvents, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_FonFof = new wxCheckBox( this, wxID_ANY, wxT("FONFOF"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_FonFof->Enable( false );
+	
 	m_OptionsBox->Add( m_FonFof, 0, wxRIGHT|wxLEFT, 5 );
 	
 	wxFlexGridSizer* fgSizer41;

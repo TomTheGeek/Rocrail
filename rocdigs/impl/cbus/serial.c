@@ -67,8 +67,11 @@ Boolean serialConnect( obj inst ) {
 
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
     data->bps = 500000;
-  else
-    data->bps = 115200;
+  else {
+    data->bps = wDigInt.getbps(data->ini);
+    if( data->bps != 115200 && data->bps != 230400 )
+      data->bps = 115200;
+  }
 
   data->cts = StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) );
   data->ctsretry = wDigInt.getctsretry( data->ini );

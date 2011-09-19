@@ -1704,11 +1704,6 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->loaderMux= MutexOp.inst( NULL, True );
   data->stress   = wDigInt.isstress(ini);
 
-  if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
-    data->bps = 500000;
-  else
-    data->bps = 115200;
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MERG CBUS %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );

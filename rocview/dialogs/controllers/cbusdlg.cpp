@@ -101,6 +101,11 @@ void CbusDlg::initValues() {
     m_Sublib->SetSelection(1);
   }
 
+  if( wDigInt.getbps(m_Props) == 230400 )
+    m_BPS->SetSelection(1);
+  else
+    m_BPS->SetSelection(0);
+
   wxCommandEvent event( 0, 0 );
   OnSublib(event);
 
@@ -129,6 +134,12 @@ void CbusDlg::evaluate() {
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
 
+  if( m_BPS->GetSelection() == 1 )
+    wDigInt.setbps(m_Props, 230400 );
+  else
+    wDigInt.setbps(m_Props, 115200 );
+
+
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
@@ -147,6 +158,11 @@ void CbusDlg::OnSublib( wxCommandEvent& event ) {
     m_Port->Enable(false);
     m_Device->Enable(true);
   }
+  if( m_Sublib->GetSelection() == 1 ) {
+    m_BPS->Enable(true);
+  }
+  else
+    m_BPS->Enable(false);
 }
 
 void CbusDlg::OnCancel( wxCommandEvent& event ) {
