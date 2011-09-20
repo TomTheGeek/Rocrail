@@ -5471,3 +5471,9 @@ msgstr ""
 msgid "Traverser"
 msgstr ""
 
+#. 
+# id="subtitle"
+#, c-format
+msgid "Sub title"
+msgstr ""
+

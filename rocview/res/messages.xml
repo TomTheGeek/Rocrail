@@ -17564,4 +17564,7 @@
     <nl txt="Rolbrug"/>
     <de txt="Schiebebühne"/>
   </Msg>
+  <Msg id="subtitle">
+    <en txt="Sub title"/>
+  </Msg>
 </Messages>

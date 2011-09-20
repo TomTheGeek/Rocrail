@@ -105,6 +105,8 @@ public:
 ////@begin ModPlanDlg member variables
     wxStaticText* m_labTitle;
     wxTextCtrl* m_Title;
+    wxStaticText* m_labSubTitle;
+    wxTextCtrl* m_SubTitle;
     wxStaticText* m_labLocoFile;
     wxTextCtrl* m_LocoFile;
     wxStaticText* m_labRoutesFile;

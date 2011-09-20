@@ -90,6 +90,7 @@ ModPlanDlg::ModPlanDlg( wxWindow* parent, iONode p_Props )
 
 void ModPlanDlg::initLabels() {
   m_labTitle->SetLabel( wxGetApp().getMsg( "title" ) );
+  m_labSubTitle->SetLabel( wxGetApp().getMsg( "subtitle" ) );
   m_labLocoFile->SetLabel( wxGetApp().getMsg( "loctable" ) );
   m_labRoutesFile->SetLabel( wxGetApp().getMsg( "routetable" ) );
   m_OptionsBox->SetLabel( wxGetApp().getMsg( "option" ) );
@@ -106,6 +107,7 @@ void ModPlanDlg::initValues() {
     return;
 
   m_Title->SetValue( wxString( wModPlan.gettitle( m_Props ),wxConvUTF8 ) );
+  m_SubTitle->SetValue( wxString( wModPlan.getsubtitle( m_Props ),wxConvUTF8 ) );
   m_LocoFile->SetValue( wxString( wModPlan.getlocs( m_Props ),wxConvUTF8 ) );
   m_RoutesFile->SetValue( wxString( wModPlan.getroutes( m_Props ),wxConvUTF8 ) );
 
@@ -121,6 +123,7 @@ void ModPlanDlg::evaluate() {
     return;
 
   wModPlan.settitle( m_Props, m_Title->GetValue().mb_str(wxConvUTF8) );
+  wModPlan.setsubtitle( m_Props, m_SubTitle->GetValue().mb_str(wxConvUTF8) );
   wModPlan.setlocs( m_Props, m_LocoFile->GetValue().mb_str(wxConvUTF8) );
   wModPlan.setroutes( m_Props, m_RoutesFile->GetValue().mb_str(wxConvUTF8) );
 
@@ -173,6 +176,8 @@ void ModPlanDlg::Init()
 ////@begin ModPlanDlg member initialisation
     m_labTitle = NULL;
     m_Title = NULL;
+    m_labSubTitle = NULL;
+    m_SubTitle = NULL;
     m_labLocoFile = NULL;
     m_LocoFile = NULL;
     m_labRoutesFile = NULL;
@@ -200,60 +205,68 @@ void ModPlanDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
     m_labTitle = new wxStaticText( itemDialog1, wxID_ANY, _("Title"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labTitle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Title = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
-    itemFlexGridSizer3->Add(m_Title, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer3->Add(m_Title, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labSubTitle = new wxStaticText( itemDialog1, wxID_ANY, _("Sub title"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labSubTitle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_SubTitle = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_SubTitle, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labLocoFile = new wxStaticText( itemDialog1, wxID_ANY, _("Loco file"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labLocoFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LocoFile = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
-    itemFlexGridSizer3->Add(m_LocoFile, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer3->Add(m_LocoFile, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labRoutesFile = new wxStaticText( itemDialog1, wxID_ANY, _("Routes file"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labRoutesFile, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_RoutesFile = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
-    itemFlexGridSizer3->Add(m_RoutesFile, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer3->Add(m_RoutesFile, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer3->AddGrowableCol(1);
 
     m_OptionsBox = new wxStaticBox(itemDialog1, wxID_ANY, _("Options"));
-    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer(m_OptionsBox, wxHORIZONTAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer10, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer(m_OptionsBox, wxHORIZONTAL);
+    itemBoxSizer2->Add(itemStaticBoxSizer12, 0, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer11 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemStaticBoxSizer10->Add(itemFlexGridSizer11, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemStaticBoxSizer12->Add(itemFlexGridSizer13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_InitField = new wxCheckBox( itemDialog1, wxID_ANY, _("Init field"), wxDefaultPosition, wxDefaultSize, 0 );
     m_InitField->SetValue(false);
-    itemFlexGridSizer11->Add(m_InitField, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_InitField, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Save = new wxCheckBox( itemDialog1, ID_MODPLAN_SAVE, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Save->SetValue(false);
-    itemFlexGridSizer11->Add(m_Save, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_Save, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_SaveModules = new wxCheckBox( itemDialog1, wxID_ANY, _("Save modules"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SaveModules->SetValue(false);
-    itemFlexGridSizer11->Add(m_SaveModules, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_SaveModules, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ModRoutes = new wxCheckBox( itemDialog1, wxID_ANY, _("Module routes"), wxDefaultPosition, wxDefaultSize, 0 );
     m_ModRoutes->SetValue(false);
-    itemFlexGridSizer11->Add(m_ModRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_ModRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer16 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer18 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer16, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer16->AddButton(m_OK);
+    itemStdDialogButtonSizer18->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer16->AddButton(m_Cancel);
+    itemStdDialogButtonSizer18->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer16->Realize();
+    itemStdDialogButtonSizer18->Realize();
 
 ////@end ModPlanDlg content construction
 }
