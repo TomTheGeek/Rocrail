@@ -1566,8 +1566,17 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program type %d...", wProgram.getlntype(node) );
 
-
-    if( wProgram.getlntype(node) == wProgram.lntype_cbus ) {
+    if( wProgram.getlntype(node) == wProgram.lntype_sv && wProgram.getcmd( node ) == wProgram.lncvget &&
+        wProgram.getcv(node) == 0 && wProgram.getmodid(node) == 0 && wProgram.getaddr(node) == 0 )
+    {
+      /* This construct is used to to query all LocoIOs, but is here recycled for query all CAN-GC2s. */
+      wProgram.setcmd(node, wProgram.query);
+      byte* frame = programFLiM((obj)cbus, node );
+      if( frame != NULL ) {
+        ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
+    else if( wProgram.getlntype(node) == wProgram.lntype_cbus ) {
       byte* frame = programFLiM((obj)cbus, node );
       if( frame != NULL ) {
         ThreadOp.post(data->writer, (obj)frame);
