@@ -474,8 +474,9 @@ BasePanel* RocGuiFrame::initModPanel( iONode zlevel  ) {
       ini = NodeOp.inst( wModPanel.name(), m_Ini, ELEMENT_NODE );
       NodeOp.addChild( m_Ini, ini );
     }
+
     m_ModPanel = new ModPanel( m_PlanNotebook, itemsize, m_Scale );
-    m_PlanNotebook->AddPage(m_ModPanel, _T("Module Overview"), true);
+    m_PlanNotebook->AddPage(m_ModPanel, wxString(wPlan.getmodtitle(wxGetApp().getModel()),wxConvUTF8), true);
     wxColor color((byte)wModPanel.getred( ini), (byte)wModPanel.getgreen( ini), (byte)wModPanel.getblue( ini));
     m_ModPanel->SetBackgroundColour(color);
   }

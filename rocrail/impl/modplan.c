@@ -769,6 +769,7 @@ static iONode __parseModPlan( iOModPlan inst ) {
   iONode mod = wModPlan.getmodule( data->modplan );
 
   wPlan.settitle( model, wModPlan.gettitle( data->modplan ) );
+  wPlan.setmodtitle(model, wModPlan.getsubtitle( data->modplan ));
 
   /* add all lists: */
   const char*  dbkey = wBlockList.name();

@@ -974,6 +974,7 @@
 
   <modplan wrappername="ModPlan" remark="Root node of the module master plan.">
     <var name="title" vt="string" defval="Modular Track Layout" range="*" remark="Title of plan."/>
+    <var name="subtitle" vt="string" defval="Modular Track Layout" range="*" remark="Sub title of plan."/>
     <var name="locs" vt="string" defval="lc.xml" range="*" remark="File name of locomotive definitions."/>
     <var name="routes" vt="string" defval="rt.xml" range="*" remark="File name of route and schedule definitions."/>
     <var name="initfield" vt="bool" defval="false"/>
@@ -1059,6 +1060,7 @@
     <var name="themes" vt="string" defval="" range="*" remark="Preferred themes for redndering this plan by Rocviews."/>
     <var name="donkey" vt="bool" defval="false" remark="Flags if a valid donation key is found."/>
     <var name="healthy" vt="bool" defval="true"/>
+    <var name="modtitle" vt="string" defval="Module Overview" range="*" remark="Title of plan."/>
     <digint cardinality="n" wrappername="DigInt" referenceonly="true"/>
     <zlevel cardinality="n" remark="Z-Level description" wrappername="ZLevel">
       <var name="title" vt="string" defval="" range="*"/>
