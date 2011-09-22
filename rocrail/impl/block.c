@@ -233,7 +233,7 @@ static void __TurntableEvent( obj inst, const char* event, const char* id ) {
     iOModel model = AppOp.getModel();
     loc = ModelOp.getLoc( model, data->locId );
     if( loc != NULL )
-      LocOp.event( loc, inst, evt, 0, data->forceblocktimer );
+      LocOp.event( loc, inst, evt, data->forceblocktimer?data->timer:0, data->forceblocktimer );
   }
 
 }
