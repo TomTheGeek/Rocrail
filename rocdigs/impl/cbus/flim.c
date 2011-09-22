@@ -104,7 +104,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   }
     break;
 
-  case OPC_NNACK:
+  case OPC_RQNN:
     {
       int offset = (frame[1] == 'S') ? 0:4;
       int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
@@ -156,7 +156,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       return node;
     }
 
-  case OPC_NNREF:
+  case OPC_NNACK:
     {
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int offset = (frame[1] == 'S') ? 0:4;

@@ -611,11 +611,11 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
       }
     }
     break;
-  case ERR_NO_MORE_ENGINES:
-    errStr = "no more engines";
+  case ERR_CONSIST_EMPTY:
+    errStr = "consist empty";
     break;
-  case ERR_ENGINE_NOT_FOUND:
-    errStr = "engine not found";
+  case ERR_LOCO_NOT_FOUND:
+    errStr = "loco not found";
     break;
   }
 
@@ -659,15 +659,13 @@ static __evaluateCmdErr( iOCBUS cbus, byte* frame ) {
   case CMDERR_NOT_SETUP:
     errStr = "not in setup";
     break;
-  case CMDERR_TOO_MANY_EVS:
+  case CMDERR_TOO_MANY_EVENTS:
     errStr = "too many events";
     break;
-  case CMDERR_NO_EV:
-  case CMDERR_NO_EVENTS:
-    errStr = "no events";
+  case CMDERR_INVALID_EVENT:
+    errStr = "invalid event";
     break;
   case CMDERR_INV_EV_IDX:
-  case CMDERR_INV_EN_IDX:
     errStr = "invalid event index";
     break;
   case CMDERR_INV_PARAM_IDX:
@@ -860,10 +858,10 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_DSPD:
       __updateSpeedDir(cbus, frame);
       break;
-    case OPC_FNON:
+    case OPC_DFNON:
       __updateFunction(cbus, frame, True);
       break;
-    case OPC_FNOF:
+    case OPC_DFNOF:
       __updateFunction(cbus, frame, False);
       break;
     case OPC_DFUN:
@@ -871,12 +869,12 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       break;
     case OPC_ACON:
     case OPC_ASON:
-    case OPC_ARSPO:
+    case OPC_ARON:
       __evaluateAcc(cbus, frame, True);
       break;
     case OPC_ACOF:
     case OPC_ASOF:
-    case OPC_ARSPN:
+    case OPC_AROF:
       __evaluateAcc(cbus, frame, False);
       break;
     case OPC_ACDAT:
@@ -922,7 +920,6 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     /* All FLiM OPCs to this case. */
     case OPC_NNACK:
     case OPC_NNREL:
-    case OPC_NNREF:
     case OPC_NNLRN:
     case OPC_NNULN:
     case OPC_NNCLR:
@@ -1197,7 +1194,7 @@ static void __keep( void* threadinst ) {
           byte cmd[5];
           byte* frame = allocMem(32);
 
-          cmd[0] = OPC_KEEP;
+          cmd[0] = OPC_DKEEP;
           cmd[1] = slot->session;
           makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 1 );
 
@@ -1528,7 +1525,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
       if( data->fonfof ) {
-        cmd[0] = fstate?OPC_FNON:OPC_FNOF;
+        cmd[0] = fstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
         makeFrame((obj)cbus, frame, PRIORITY_NORMAL, cmd, 2 );
@@ -1546,7 +1543,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       qcmd->wait4session  = True;
       qcmd->slot = slot;
       if( data->fonfof ) {
-        cmd[0] = fstate?OPC_FNON:OPC_FNOF;
+        cmd[0] = fstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
         makeFrame((obj)cbus, qcmd->out, PRIORITY_NORMAL, cmd, 2 );
