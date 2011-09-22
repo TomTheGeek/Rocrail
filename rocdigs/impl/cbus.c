@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/Accessory.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/rocrail.h"
 #include "rocdigs/impl/cbus/serial.h"
 #include "rocdigs/impl/cbus/tcp.h"
 #include "rocdigs/impl/cbus/flim.h"
@@ -931,7 +932,6 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_WRACK:
     case OPC_RQDAT:
     case OPC_BOOT:
-    case OPC_RQNN:
     case OPC_RQNP:
     case OPC_SNN:
     case OPC_NVRD:
@@ -942,7 +942,6 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_NVSET:
     case OPC_NVANS:
     case OPC_PARAN:
-    case OPC_TYPE:
     case OPC_REVAL:
     case OPC_REQEV:
     case OPC_NEVAL:
@@ -951,6 +950,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_PARAMS:
     case OPC_ENRSP:
     case OPC_EVLRNI:
+    case OPC_PNN:
       {
         byte* extraMsg = NULL;
         iONode rsp = processFLiM((obj)cbus, opc, frame, &extraMsg);

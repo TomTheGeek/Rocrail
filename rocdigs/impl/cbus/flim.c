@@ -31,6 +31,7 @@
 #include "rocrail/wrapper/public/Program.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/rocrail.h"
 #include "rocdigs/impl/cbus/bootmode.h"
 
 /*
@@ -56,7 +57,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: 0x%02X", opc );
 
   switch(opc) {
-  case OPC_TYPE:
+  case OPC_PNN:
   {
     int offset = (frame[1] == 'S') ? 0:4;
     int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
@@ -64,6 +65,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     int nn = nnh * 256 + nnl;
     int manu  = HEXA2Byte(frame + OFFSET_D3 + offset);
     int prod  = HEXA2Byte(frame + OFFSET_D4 + offset);
+    int nv1   = HEXA2Byte(frame + OFFSET_D5 + offset);
 
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( node, wProgram.type );
@@ -73,7 +75,8 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     wProgram.setmanu(node, manu);
     wProgram.setprod(node, prod);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] manufacturer=%d product=%d", nn, manu, prod );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "FLiM: node [%d] manufacturer=%d product=%d nv=%d", nn, manu, prod, nv1 );
     return node;
   }
     break;
@@ -439,7 +442,7 @@ byte* programFLiM(obj inst, iONode node) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "FLiM: Query all connected nodes." );
     byte* frame = allocMem(32);
-    cmd[0] = OPC_QNTP;
+    cmd[0] = OPC_QNN;
     makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
     return frame;
   }

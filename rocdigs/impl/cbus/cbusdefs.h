@@ -57,10 +57,8 @@
 #define OPC_RESTP   0x0a    // Rest emergency stop all
 #define OPC_RVER    0x0b    // Rest firmware version
 #define OPC_RSTAT   0x0c    // Rest node status
-#define OPC_RQNN    0x0d    // Rest node number
-#define OPC_QNN     0x0e    // Query node numbers
+#define OPC_QNN     0x0d    // Query node numbers
 #define OPC_RQNP    0x10    // Read node parameters
-#define OPC_QNTP    0x11    // Query node type
 
 // Packets with 1 data byte
 
@@ -134,7 +132,6 @@
 #define OPC_ASRQ	0x9A    // Short rest event
 #define OPC_PARAN   0x9B    // Single node parameter response
 #define OPC_REVAL   0x9C    // Rest read of event variable
-#define OPC_TYPE   0x9D    // Report manufacturer and product ID.
 #define OPC_EXTC3   0x9F    // Extended opcode with 3 data bytes
 
 // Packets with 5 data bytes
