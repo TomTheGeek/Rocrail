@@ -19,6 +19,7 @@
 */
 #include "cbusnodedlg.h"
 
+
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
@@ -43,6 +44,7 @@
 
 #include "rocs/public/trace.h"
 #include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/rocrail.h"
 
 #define ME_GC2Timer 4711
 
