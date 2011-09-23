@@ -967,6 +967,7 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     // node var1
     m_GC2SaveOutput->SetValue( (val&0x01) ? true:false );
     m_GC2ShortEvents->SetValue( (val&0x02) ? true:false );
+    m_GC2SODAll->SetValue( (val&0x10) ? true:false );
     m_SaveOutputState = (val&0x01) ? true:false;
     m_ShortEvents = (val&0x02) ? true:false;
     m_SODAll = (val&0x10) ? true:false;
