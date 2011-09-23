@@ -45,6 +45,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_SOD;
   bool m_SaveOutputState;
   bool m_ShortEvents;
+  bool m_SODAll;
   int m_PulseTime;
   int m_GC2IgnorePortTest;
   int m_CANID;

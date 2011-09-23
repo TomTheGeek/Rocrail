@@ -976,7 +976,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer16->Add( fgSizer11, 0, 0, 5 );
 	
 	wxFlexGridSizer* fgSizer13;
-	fgSizer13 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer13 = new wxFlexGridSizer( 0, 3, 0, 0 );
 	fgSizer13->AddGrowableCol( 1 );
 	fgSizer13->SetFlexibleDirection( wxBOTH );
 	fgSizer13->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -987,6 +987,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC2SOD = new wxSpinCtrl( m_CANGC2Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer13->Add( m_GC2SOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	m_GC2SODAll = new wxCheckBox( m_CANGC2Panel, wxID_ANY, wxT("All"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer13->Add( m_GC2SODAll, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	m_labGC2CanID = new wxStaticText( m_CANGC2Panel, wxID_ANY, wxT("CAN ID:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC2CanID->Wrap( -1 );

@@ -296,6 +296,7 @@ class cbusnodedlggen : public wxDialog
 		wxCheckBox* m_GC2ShortEvents;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_GC2SOD;
+		wxCheckBox* m_GC2SODAll;
 		wxStaticText* m_labGC2CanID;
 		wxSpinCtrl* m_GC2CanID;
 		wxRadioBox* m_GC2PulseTime;

@@ -65,6 +65,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_SOD = 0;
   m_SaveOutputState = false;
   m_ShortEvents = false;
+  m_SODAll = false;
   m_PulseTime = 0;
   m_GC2IgnorePortTest = 0;
   m_CANID = 0;
@@ -968,6 +969,7 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
     m_GC2ShortEvents->SetValue( (val&0x02) ? true:false );
     m_SaveOutputState = (val&0x01) ? true:false;
     m_ShortEvents = (val&0x02) ? true:false;
+    m_SODAll = (val&0x10) ? true:false;
     int pulse = (val&0x0C) >> 2;
     m_GC2PulseTime->SetSelection(pulse);
     m_PulseTime = pulse;
@@ -1129,6 +1131,7 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
   if(m_GC2SaveOutput->IsChecked() != m_SaveOutputState ||
       m_GC2ShortEvents->IsChecked() != m_ShortEvents ||
+      m_GC2SODAll->IsChecked() != m_SODAll ||
       m_GC2PulseTime->GetSelection() != m_PulseTime )
   {
     m_GC2SetIndex = 0;
@@ -1153,6 +1156,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     int nv1 = m_GC2SaveOutput->IsChecked() ? 0x01:0x00;
     nv1 += m_GC2ShortEvents->IsChecked() ? 0x02:0x00;
     nv1 += (m_GC2PulseTime->GetSelection() << 2);
+    nv1 += m_GC2SODAll->IsChecked() ? 0x10:0x00;
     TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
     varSet(1, nv1, false);
   }
