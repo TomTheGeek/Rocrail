@@ -120,7 +120,6 @@ class cbusnodedlggen : public wxDialog
 		wxStaticText* m_lab1GC2EvtNN;
 		wxStaticText* m_lab1GC2EvtAddr;
 		wxStaticText* m_Lab1GC2Input;
-		wxStaticText* m_labGC2IR;
 		wxStaticText* m_lab1GC2Sensor;
 		wxStaticText* m_lab1GC2Switch;
 		wxStaticText* m_lab1GC2Pulse;
@@ -130,7 +129,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN1;
 		wxSpinCtrl* m_GC2EvtAddr1;
 		wxRadioButton* m_GC2Input1;
-		wxRadioButton* m_GC2IR1;
 		wxRadioButton* m_GC2Block1;
 		wxRadioButton* m_GC2Switch1;
 		wxRadioButton* m_GC2Pulse1;
@@ -140,7 +138,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN2;
 		wxSpinCtrl* m_GC2EvtAddr2;
 		wxRadioButton* m_GC2Input2;
-		wxRadioButton* m_GC2IR2;
 		wxRadioButton* m_GC2Block2;
 		wxRadioButton* m_GC2Switch2;
 		wxRadioButton* m_GC2Pulse2;
@@ -150,7 +147,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN3;
 		wxSpinCtrl* m_GC2EvtAddr3;
 		wxRadioButton* m_GC2Input3;
-		wxRadioButton* m_GC2IR3;
 		wxRadioButton* m_GC2Block3;
 		wxRadioButton* m_GC2Switch3;
 		wxRadioButton* m_GC2Pulse3;
@@ -160,7 +156,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN4;
 		wxSpinCtrl* m_GC2EvtAddr4;
 		wxRadioButton* m_GC2Input4;
-		wxRadioButton* m_GC2IR4;
 		wxRadioButton* m_GC2Block4;
 		wxRadioButton* m_GC2Switch4;
 		wxRadioButton* m_GC2Pulse4;
@@ -170,7 +165,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN5;
 		wxSpinCtrl* m_GC2EvtAddr5;
 		wxRadioButton* m_GC2Input5;
-		wxRadioButton* m_GC2IR5;
 		wxRadioButton* m_GC2Block5;
 		wxRadioButton* m_GC2Switch5;
 		wxRadioButton* m_GC2Pulse5;
@@ -180,7 +174,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN6;
 		wxSpinCtrl* m_GC2EvtAddr6;
 		wxRadioButton* m_GC2Input6;
-		wxRadioButton* m_GC2IR6;
 		wxRadioButton* m_GC2Block6;
 		wxRadioButton* m_GC2Switch6;
 		wxRadioButton* m_GC2Pulse6;
@@ -190,7 +183,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN7;
 		wxSpinCtrl* m_GC2EvtAddr7;
 		wxRadioButton* m_GC2Input7;
-		wxRadioButton* m_GC2IR7;
 		wxRadioButton* m_GC2Block7;
 		wxRadioButton* m_GC2Switch7;
 		wxRadioButton* m_GC2Pulse7;
@@ -200,7 +192,6 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC2EvtNN8;
 		wxSpinCtrl* m_GC2EvtAddr8;
 		wxRadioButton* m_GC2Input8;
-		wxRadioButton* m_GC2IR8;
 		wxRadioButton* m_GC2Block8;
 		wxRadioButton* m_GC2Switch8;
 		wxRadioButton* m_GC2Pulse8;
