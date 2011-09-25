@@ -1121,6 +1121,25 @@ static void __reader( void* threadinst ) {
               }
             }
 
+            /* binary frame CAN-GC2 */
+            else if( frame[1] == 's' ) {
+              int n = 2;
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading binary frame" );
+              if( data->subRead( (obj)cbus, frame + n, 4 ) ) {
+                int datalen = __getDataLen(frame[5]);
+                n+=4;
+                TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: OPC=0x%02X data=%d",
+                    frame[5], datalen );
+                if( data->subRead( (obj)cbus, frame + n, datalen + 1 ) ) {
+                  byte cmd[32];
+                  n += datalen +1;
+                  makeFrame((obj)cbus, cmd, PRIORITY_NORMAL, frame+5, datalen );
+                  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: %s", cmd+1 );
+                  __evaluateFrame(cbus, cmd+1, frame[5]);
+                }
+              }
+            }
+
             else {
               /* junk */
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wrong frame byte [%c]", frame[1] );

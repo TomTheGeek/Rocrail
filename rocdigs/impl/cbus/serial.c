@@ -69,8 +69,6 @@ Boolean serialConnect( obj inst ) {
     data->bps = 500000;
   else {
     data->bps = wDigInt.getbps(data->ini);
-    if( data->bps != 115200 && data->bps != 230400 )
-      data->bps = 115200;
   }
 
   data->cts = StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) );
