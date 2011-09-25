@@ -54,6 +54,7 @@
 #include "rocdigs/impl/cbus/tcp.h"
 #include "rocdigs/impl/cbus/flim.h"
 #include "rocdigs/impl/cbus/utils.h"
+#include "rocdigs/impl/cbus/cbusmon.h"
 
 static int instCnt = 0;
 
@@ -842,7 +843,7 @@ static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
 static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
+  cbusMon(frame, opc);
 
   if( frame[1] == 'S' ) {
     switch(opc) {
