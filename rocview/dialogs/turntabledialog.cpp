@@ -173,7 +173,7 @@ void TurntableDialog::OnTTTrackAdd(wxCommandEvent& event) {
   int max = 47;
   if( StrOp.equals( wTurntable.f6915, m_Type->GetStringSelection().mb_str(wxConvUTF8) ) ) {
     min = 0;
-    max = 299;
+    max = 511;
   }
   TTTrackDialog* dlg = new TTTrackDialog( this, track, min, max );
   if( wxID_OK == dlg->ShowModal() ) {
