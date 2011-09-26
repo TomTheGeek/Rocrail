@@ -38,16 +38,57 @@ void cbusMon(byte* frame, int opc) {
   int f0      = 0;
   int f1      = 0;
   int f2      = 0;
+  int frange  = 0;
+  int fdat    = 0;
+
+  int hh   = HEXA2Byte(frame + 2);
+  int hl   = HEXA2Byte(frame + 4);
+
+  int canid = ((hh&0x1F) << 3) + ((hl&0xE0) >> 5);
 
   switch(opc) {
+  case OPC_HLT:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_HLT(0x%02X) bus halt", opc );
+    break;
+
+  case OPC_BON:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_BON(0x%02X) bus on", opc );
+    break;
+
   case OPC_RESTP:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RESTP(0x%02X) request emergency stop all", opc );
+    break;
+
+  case OPC_ESTOP:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_ESTOP(0x%02X) all locos have emergency stopped", opc );
+    break;
+
+  case OPC_RTOF:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RTOF(0x%02X) request track off", opc );
+    break;
+
+  case OPC_RTON:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RTON(0x%02X) request track on", opc );
+    break;
+
+  case OPC_QNN:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_QNN(0x%02X) query node numbers", opc );
     break;
 
   case OPC_RLOC:
     addrh   = HEXA2Byte(frame + OFFSET_D1 + offset) & 0x3F;
     addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RLOC(0x%02X) request loco [%d] assignment", opc, addrl+addrh*256 );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RLOC(0x%02X) request loco %d assignment", opc, addrl+addrh*256 );
+    break;
+
+  case OPC_KLOC:
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_KLOC(0x%02X) release loco: session=%d", opc, session );
+    break;
+
+  case OPC_QLOC:
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_QLOC(0x%02X) query loco: session=%d", opc, session );
     break;
 
   case OPC_PLOC:
@@ -59,8 +100,18 @@ void cbusMon(byte* frame, int opc) {
     f1      = HEXA2Byte(frame + OFFSET_D6 + offset);
     f2      = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_PLOC(0x%02X) loco [%d] report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
+        "OPC_PLOC(0x%02X) loco  report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
         opc, addrl+addrh*256, session, speed&0x7F, (speed&0x80)?"fwd":"rev", f0, f1, f2 );
+    break;
+
+  case OPC_STMOD:
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    flags   = HEXA2Byte(frame + OFFSET_D2 + offset);
+    if( flags & 0x02 ) steps = 28;
+    else if( flags & 0x01 ) steps = 14;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "OPC_STMOD(0x%02X) loco flags: session=%d flags=0x%02X steps=%d service=%s soundctrl=%s",
+        opc, session, flags, steps, flags&0x04?"on":"off", flags&0x08?"on":"off" );
     break;
 
   case OPC_DSPD:
@@ -79,6 +130,15 @@ void cbusMon(byte* frame, int opc) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "OPC_DFLG(0x%02X) loco flags: session=%d flags=0x%02X steps=%d lights=%s state=%d",
         opc, session, flags, steps, (flags&0x04)?"on":"off", (flags&0x30)>>4 );
+    break;
+
+  case OPC_DFUN:
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    frange  = HEXA2Byte(frame + OFFSET_D2 + offset);
+    fdat    = HEXA2Byte(frame + OFFSET_D3 + offset);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=%0x%02X",
+        opc, session, frange, fdat );
     break;
 
   default:
