@@ -268,6 +268,8 @@ void ModPanel::OnPanelProps(wxCommandEvent& event) {
     // PropertiesDialog:
     m_ModPlanDlg = new ModPlanDlg( this, ini );
     if( wxID_OK == m_ModPlanDlg->ShowModal() ) {
+      SetLabel(wxString( wModPlan.getsubtitle( ini ),wxConvUTF8 ));
+      wxGetApp().getFrame()->setPlanTitle( wModPlan.gettitle( ini ) );
     }
     m_ModPlanDlg->Destroy();
     m_ModPlanDlg = NULL;
