@@ -164,11 +164,20 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int nn = nnh * 256 + nnl;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node number confirmed [%d]", nn );
+      /*
       wProgram.setcmd( node, wProgram.nnreq );
       wProgram.setiid( node, data->iid );
       wProgram.setlntype(node, wProgram.lntype_cbus);
       wProgram.setdecaddr(node, nn);
       return node;
+      */
+      data->nnsetup = nn;
+      *extraMsg = allocMem(32);
+      cmd[0] = OPC_RQNP;
+      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
+      break;
+
+
     }
 
   case OPC_ENRSP:
