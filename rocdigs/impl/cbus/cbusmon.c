@@ -44,51 +44,51 @@ void cbusMon(byte* frame, int opc) {
   int hh   = HEXA2Byte(frame + 2);
   int hl   = HEXA2Byte(frame + 4);
 
-  int canid = ((hh&0x1F) << 3) + ((hl&0xE0) >> 5);
+  int canid = ((hh&0x0F) << 3) + ((hl&0xE0) >> 5);
 
   switch(opc) {
   case OPC_HLT:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_HLT(0x%02X) bus halt", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_HLT(0x%02X) bus halt", canid, opc );
     break;
 
   case OPC_BON:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_BON(0x%02X) bus on", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_BON(0x%02X) bus on", canid, opc );
     break;
 
   case OPC_RESTP:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RESTP(0x%02X) request emergency stop all", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_RESTP(0x%02X) request emergency stop all", canid, opc );
     break;
 
   case OPC_ESTOP:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_ESTOP(0x%02X) all locos have emergency stopped", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_ESTOP(0x%02X) all locos have emergency stopped", canid, opc );
     break;
 
   case OPC_RTOF:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RTOF(0x%02X) request track off", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_RTOF(0x%02X) request track off", canid, opc );
     break;
 
   case OPC_RTON:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RTON(0x%02X) request track on", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_RTON(0x%02X) request track on", canid, opc );
     break;
 
   case OPC_QNN:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_QNN(0x%02X) query node numbers", opc );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_QNN(0x%02X) query node numbers", canid, opc );
     break;
 
   case OPC_RLOC:
     addrh   = HEXA2Byte(frame + OFFSET_D1 + offset) & 0x3F;
     addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_RLOC(0x%02X) request loco %d assignment", opc, addrl+addrh*256 );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_RLOC(0x%02X) request loco %d assignment", canid, opc, addrl+addrh*256 );
     break;
 
   case OPC_KLOC:
     session = HEXA2Byte(frame + OFFSET_D1 + offset);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_KLOC(0x%02X) release loco: session=%d", opc, session );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_KLOC(0x%02X) release loco: session=%d", canid, opc, session );
     break;
 
   case OPC_QLOC:
     session = HEXA2Byte(frame + OFFSET_D1 + offset);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_QLOC(0x%02X) query loco: session=%d", opc, session );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_QLOC(0x%02X) query loco: session=%d", canid, opc, session );
     break;
 
   case OPC_PLOC:
@@ -100,8 +100,8 @@ void cbusMon(byte* frame, int opc) {
     f1      = HEXA2Byte(frame + OFFSET_D6 + offset);
     f2      = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_PLOC(0x%02X) loco  report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
-        opc, addrl+addrh*256, session, speed&0x7F, (speed&0x80)?"fwd":"rev", f0, f1, f2 );
+        "[%03d] OPC_PLOC(0x%02X) loco  report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
+        canid, opc, addrl+addrh*256, session, speed&0x7F, (speed&0x80)?"fwd":"rev", f0, f1, f2 );
     break;
 
   case OPC_STMOD:
@@ -110,16 +110,16 @@ void cbusMon(byte* frame, int opc) {
     if( flags & 0x02 ) steps = 28;
     else if( flags & 0x01 ) steps = 14;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_STMOD(0x%02X) loco flags: session=%d flags=0x%02X steps=%d service=%s soundctrl=%s",
-        opc, session, flags, steps, flags&0x04?"on":"off", flags&0x08?"on":"off" );
+        "[%03d] OPC_STMOD(0x%02X) loco flags: session=%d flags=0x%02X steps=%d service=%s soundctrl=%s",
+        canid, opc, session, flags, steps, flags&0x04?"on":"off", flags&0x08?"on":"off" );
     break;
 
   case OPC_DSPD:
     session = HEXA2Byte(frame + OFFSET_D1 + offset);
     speed   = HEXA2Byte(frame + OFFSET_D2 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_DSPD(0x%02X) loco speed/dir: session=%d speed=%d dir=%s",
-        opc, session, speed&0x7F, (speed&0x80)?"fwd":"rev" );
+        "[%03d] OPC_DSPD(0x%02X) loco speed/dir: session=%d speed=%d dir=%s",
+        canid, opc, session, speed&0x7F, (speed&0x80)?"fwd":"rev" );
     break;
 
   case OPC_DFLG:
@@ -128,8 +128,8 @@ void cbusMon(byte* frame, int opc) {
     if( flags & 0x02 ) steps = 28;
     else if( flags & 0x01 ) steps = 14;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_DFLG(0x%02X) loco flags: session=%d flags=0x%02X steps=%d lights=%s state=%d",
-        opc, session, flags, steps, (flags&0x04)?"on":"off", (flags&0x30)>>4 );
+        "[%03d] OPC_DFLG(0x%02X) loco flags: session=%d flags=0x%02X steps=%d lights=%s state=%d",
+        canid, opc, session, flags, steps, (flags&0x04)?"on":"off", (flags&0x30)>>4 );
     break;
 
   case OPC_DFUN:
@@ -137,12 +137,12 @@ void cbusMon(byte* frame, int opc) {
     frange  = HEXA2Byte(frame + OFFSET_D2 + offset);
     fdat    = HEXA2Byte(frame + OFFSET_D3 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=%0x%02X",
-        opc, session, frange, fdat );
+        "[%03d] OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=%0x%02X",
+        canid, opc, session, frange, fdat );
     break;
 
   default:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate OPC=0x%02X", opc );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X", canid, opc );
     break;
   }
 

@@ -113,7 +113,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: request node[%d] parameters", data->nnsetup );
       *extraMsg = allocMem(32);
       cmd[0] = OPC_RQNP;
-      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
+      makeFrame(*extraMsg, PRIORITY_NORMAL, cmd, 0, data->cid );
       break;
     }
 
@@ -174,7 +174,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       data->nnsetup = nn;
       *extraMsg = allocMem(32);
       cmd[0] = OPC_RQNP;
-      makeFrame(inst, *extraMsg, PRIORITY_NORMAL, cmd, 0 );
+      makeFrame(*extraMsg, PRIORITY_NORMAL, cmd, 0, data->cid );
       break;
 
 
@@ -315,7 +315,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_SNN;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -326,7 +326,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_NNLRN;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -337,7 +337,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_NNULN;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -348,7 +348,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_NERD;
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -361,7 +361,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[1] = wProgram.getdecaddr(node) / 256;
     cmd[2] = wProgram.getdecaddr(node) % 256;
     cmd[3] = wProgram.getcv(node);
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 3 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 3, data->cid );
     return frame;
   }
 
@@ -377,7 +377,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[2] = wProgram.getdecaddr(node) % 256;
     cmd[3] = wProgram.getcv(node);
     cmd[4] = wProgram.getvalue(node);
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
     return frame;
   }
 
@@ -396,7 +396,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[4] = wProgram.getval3(node) % 256;
     cmd[5] = wProgram.getval1(node); // idx
     cmd[6] = wProgram.getval4(node); // val
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 6 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
     return frame;
   }
 
@@ -408,7 +408,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[2] = wProgram.getval2(node) % 256;
     cmd[3] = wProgram.getval3(node) / 256; // addr
     cmd[4] = wProgram.getval3(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 4 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
     return frame;
   }
 
@@ -418,7 +418,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_NNCLR;
     cmd[1] = wProgram.getdecaddr(node) / 256; // nn
     cmd[2] = wProgram.getdecaddr(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -432,7 +432,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[3] = wProgram.getval3(node) / 256; // addr
     cmd[4] = wProgram.getval3(node) % 256;
     cmd[5] = wProgram.getval1(node); // idx
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 5 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 5, data->cid );
     return frame;
   }
 
@@ -443,7 +443,7 @@ byte* programFLiM(obj inst, iONode node) {
     cmd[0] = OPC_BOOT;
     cmd[1] = wProgram.getval2(node) / 256; // nn
     cmd[2] = wProgram.getval2(node) % 256;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 2 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
     return frame;
   }
 
@@ -452,7 +452,7 @@ byte* programFLiM(obj inst, iONode node) {
         "FLiM: Query all connected nodes." );
     byte* frame = allocMem(32);
     cmd[0] = OPC_QNN;
-    makeFrame(inst, frame, PRIORITY_NORMAL, cmd, 0 );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
     return frame;
   }
 
