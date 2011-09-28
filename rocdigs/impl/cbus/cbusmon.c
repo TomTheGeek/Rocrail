@@ -137,8 +137,15 @@ void cbusMon(byte* frame, int opc) {
     frange  = HEXA2Byte(frame + OFFSET_D2 + offset);
     fdat    = HEXA2Byte(frame + OFFSET_D3 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "[%03d] OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=%0x%02X",
+        "[%03d] OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=0x%02X",
         canid, opc, session, frange, fdat );
+    break;
+
+  case OPC_DKEEP:
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+        "[%03d] OPC_DKEEP(0x%02X) keep alive for cab: session=%d",
+        canid, opc, session );
     break;
 
   default:

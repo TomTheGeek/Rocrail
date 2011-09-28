@@ -55,6 +55,7 @@
 #include "rocdigs/impl/cbus/flim.h"
 #include "rocdigs/impl/cbus/utils.h"
 #include "rocdigs/impl/cbus/cbusmon.h"
+#include "rocdigs/impl/cbus/cbuscmd.h"
 
 static int instCnt = 0;
 
@@ -856,6 +857,10 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_PLOC:
       __updateSlot(cbus, frame);
       break;
+    case OPC_RLOC:
+      if( data->slotserver )
+        slotServer((obj)cbus, opc, frame);
+      break;
     case OPC_DSPD:
       __updateSpeedDir(cbus, frame);
       break;
@@ -1189,6 +1194,7 @@ static void __writer( void* threadinst ) {
         MemOp.copy( out, post+1, len);
         freeMem( post);
 
+        cbusMon(out, __getOPC(out));
         if( !data->subWrite((obj)cbus, out, len) ) {
           /* sleep and send it again? */
         }
@@ -1252,9 +1258,10 @@ static void __timedqueue( void* threadinst ) {
   while( data->run ) {
     iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "new timed command time=%d delay=%d tick=%d frame=%s",
           cmd->time, cmd->delay, SystemOp.getTick(), cmd->out+1 );
+      cbusMon(cmd->out+1, __getOPC(cmd->out+1));
       ListOp.add(list, (obj)cmd);
     }
 
@@ -1721,6 +1728,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->sodaddr     = wCBus.getsodaddr(data->cbusini);
   data->shortevents = wCBus.isshortevents(data->cbusini);
   data->fonfof      = wCBus.isfonfof(data->cbusini);
+  data->slotserver  = wCBus.isslotserver(data->cbusini);
   data->purgetime   = wCBus.getpurgetime(data->cbusini);
   data->run         = True;
   data->device      = wDigInt.getdevice( data->ini );
@@ -1743,6 +1751,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SoD address   = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot server   = %s", data->slotserver ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );
