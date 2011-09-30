@@ -122,7 +122,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)nce$(SHAREDSUFFIX) $(OUTDIR)$(FS)mttmfcc$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(OUTDIR)$(FS)io8255$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -202,6 +202,8 @@ $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX): $(CBUSOBJS) $(TMPOUTDIR)$(FS)cbus.o $(COMMONO
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)cbus.o $(CBUSOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX): $(OPENLCBOBJS) $(TMPOUTDIR)$(FS)openlcb.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)openlcb.o $(OPENLCBOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)perir$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)perir.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)perir.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -299,6 +301,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)openlcb$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -340,5 +343,6 @@ install:
 	-cp -p $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)xpressnet$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(DESTDIR)
 	
 	
