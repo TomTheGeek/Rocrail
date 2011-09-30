@@ -71,6 +71,7 @@ BEGIN_EVENT_TABLE( LocoIO, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_RESET_LOCOIO, LocoIO::OnButtonResetLocoioClick )
 
+    EVT_LISTBOX( ID_LN_ADDRESSLIST, LocoIO::OnLnAddresslistDoubleClicked )
     EVT_LISTBOX_DCLICK( ID_LN_ADDRESSLIST, LocoIO::OnLnAddresslistDoubleClicked )
 
     EVT_BUTTON( ID_QUEURY_ADDRESSES, LocoIO::OnQueuryAddressesClick )
@@ -486,13 +487,14 @@ void LocoIO::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(m_AddressBox, wxVERTICAL);
     itemBoxSizer5->Add(itemStaticBoxSizer6, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer7->AddGrowableCol(1);
     itemStaticBoxSizer6->Add(itemFlexGridSizer7, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
     m_labIID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer7->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer7->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer10 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer6->Add(itemFlexGridSizer10, 0, wxGROW|wxLEFT|wxRIGHT, 5);

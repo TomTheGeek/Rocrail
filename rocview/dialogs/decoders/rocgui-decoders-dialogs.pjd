@@ -160,6 +160,7 @@
         <string name="Use wxPropertyGrid">"Yes"</string>
         <string name="Use wxAUI">"Yes"</string>
         <string name="Use wxSTC">"Yes"</string>
+        <string name="Use wxRegEx">"builtin"</string>
         <string name="Use wxRibbonControl">"Yes"</string>
         <string name="Executable name">"%EXECUTABLE%"</string>
         <string name="Program arguments">""</string>
@@ -195,6 +196,7 @@
         <string name="Include path">"%AUTO%"</string>
         <string name="Resource flags">"%AUTO%"</string>
         <string name="Resource path">"%AUTO%"</string>
+        <string name="Extra dependencies">"%AUTO%"</string>
         <bool name="Suppress source rules">0</bool>
         <bool name="Enable makefile generation">1</bool>
       </document>
@@ -510,6 +512,7 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -1234,6 +1237,7 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -1719,6 +1723,7 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -2179,7 +2184,8 @@
                     <long name="title-mode">0</long>
                     <long name="locked">0</long>
                     <string name="proxy-type">"wbListBoxProxy"</string>
-                    <string name="event-handler-0">"wxEVT_COMMAND_LISTBOX_DOUBLECLICKED|OnLnAddresslistDoubleClicked|NONE||"</string>
+                    <string name="event-handler-0">"wxEVT_COMMAND_LISTBOX_SELECTED|OnLnAddresslistDoubleClicked|NONE||LocoIO"</string>
+                    <string name="event-handler-1">"wxEVT_COMMAND_LISTBOX_DOUBLECLICKED|OnLnAddresslistDoubleClicked|NONE||LocoIO"</string>
                     <string name="proxy-Id name">"ID_LN_ADDRESSLIST"</string>
                     <long name="proxy-Id value">10007</long>
                     <string name="proxy-Name">""</string>
@@ -12030,6 +12036,7 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -12111,6 +12118,7 @@
                           <string name="proxy-Font">""</string>
                           <bool name="proxy-Hidden">0</bool>
                           <bool name="proxy-Enabled">1</bool>
+                          <string name="proxy-Parenting">"Use wxWidgets version"</string>
                           <string name="proxy-Static box class">"wxStaticBox"</string>
                           <string name="proxy-Orientation">"Vertical"</string>
                           <string name="proxy-AlignH">"Expand"</string>
@@ -12523,6 +12531,7 @@
                           <string name="proxy-Font">""</string>
                           <bool name="proxy-Hidden">0</bool>
                           <bool name="proxy-Enabled">1</bool>
+                          <string name="proxy-Parenting">"Use wxWidgets version"</string>
                           <string name="proxy-Static box class">"wxStaticBox"</string>
                           <string name="proxy-Orientation">"Vertical"</string>
                           <string name="proxy-AlignH">"Expand"</string>
@@ -13290,6 +13299,7 @@
                         <string name="proxy-Font">""</string>
                         <bool name="proxy-Hidden">0</bool>
                         <bool name="proxy-Enabled">1</bool>
+                        <string name="proxy-Parenting">"Use wxWidgets version"</string>
                         <string name="proxy-Static box class">"wxStaticBox"</string>
                         <string name="proxy-Orientation">"Vertical"</string>
                         <string name="proxy-AlignH">"Right"</string>
@@ -17371,6 +17381,7 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
