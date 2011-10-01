@@ -214,6 +214,9 @@ static Boolean __isCTS( iOSerial ser, int retries, Boolean handshake ) {
     return True;
   }
 
+  if( ser == NULL )
+    return False;
+
   while( wait4cts < retries ) {
     if( SerialOp.isCTS( ser ) ) {
       return True;
