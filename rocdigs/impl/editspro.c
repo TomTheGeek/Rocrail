@@ -42,6 +42,8 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Accessory.h"
 
+#include "rocutils/public/addr.h"
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -112,15 +114,11 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
-      byte* cmd = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
-      ThreadOp.post(data->writer, (obj)cmd);
     }
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS off */
-      byte* cmd = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
-      ThreadOp.post(data->writer, (obj)cmd);
     }
 
   }
@@ -128,11 +126,21 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     byte* cmd = allocMem(32);
-    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
+    int addr = wSwitch.getaddr1( node );
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+
+    if( port == 0 )
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      AddrOp.fromPADA( port, &addr, &port );
+
+    addr = (addr-1) * 4 + (port-1);
+
 
     cmd[0] = 2; // length
     cmd[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?33:34;
-    cmd[2] = wSwitch.getaddr1( node );
+    cmd[2] = addr;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d to %s",
         wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
@@ -145,7 +153,16 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     byte* cmd = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
-    int   gate = wOutput.getgate( node );
+    int gate = wOutput.getgate( node );
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+
+    if( port == 0 )
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      AddrOp.fromPADA( port, &addr, &port );
+
+    addr = (addr-1) * 4 + (port-1);
 
     if( on ) {
       cmd[0] = 2;
