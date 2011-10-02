@@ -1476,7 +1476,7 @@
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
-      <var name="reader" vt="iOThread"/>
+      <var name="swTimeWatcher" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="device" vt="const char*"/>
       <var name="listenerObj" vt="obj"/>
@@ -1485,6 +1485,8 @@
       <var name="swtime" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="readfb" vt="Boolean"/>
+      <var name="fb[65]" vt="unsigned char"/>
+      <var name="lastSwCmd" vt="int"/>
     </data>
   </object>
 

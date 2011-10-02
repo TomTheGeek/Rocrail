@@ -137,9 +137,66 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d to %s",
         wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
     ThreadOp.post(data->writer, (obj)cmd);
-
+    data->lastSwCmd = 0;
   }
 
+
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    byte* cmd = allocMem(32);
+    Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    int   gate = wOutput.getgate( node );
+
+    if( on ) {
+      cmd[0] = 2;
+      cmd[1] = gate ? 34:33;
+      cmd[2] = wSwitch.getaddr1( node );
+    }
+    else {
+      cmd[0] = 1;
+      cmd[1] = 32;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d %s",
+        wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
+    ThreadOp.post(data->writer, (obj)cmd);
+    data->lastSwCmd = 0;
+  }
+
+  /* Sensor command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    rsp = (iONode)NodeOp.base.clone( node );
+  }
+
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    byte* cmd = allocMem(32);
+
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+    Boolean fn  = wLoc.isfn( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * 15) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * 15) / wLoc.getV_max( node );
+    }
+
+    cmd[0] = 3;
+    cmd[1] = speed;
+    cmd[2] = addr;
+    cmd[3] = dir?43:39;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco speed=%d dir=%s", speed, dir?"forwards":"reverse" );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
 
   return rsp;
 }
@@ -167,7 +224,8 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOEditsProData data = Data(inst);
+  data->run = False;
 }
 
 
@@ -215,6 +273,36 @@ static int _version( obj inst ) {
 }
 
 
+static __evaluateState( iOEditsProData data, int mod, byte val ) {
+
+  if( data->fb[mod] != val )  {
+    int n = 0;
+    int addr = 0;
+    int state = 0;
+    for( n = 0; n < 8; n++ ) {
+      if( (data->fb[mod] & (0x01 << n)) != (val & (0x01 << n)) ) {
+        addr = (mod-1) * 8 + (7-n) + 1;
+
+        state = (val & (0x01 << n)) ? 1:0;
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "fb %d = %d", addr, state );
+        {
+          /* inform listener: Node3 */
+          iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setaddr( nodeC, addr );
+          wFeedback.setstate( nodeC, state?True:False );
+          if( data->iid != NULL )
+            wFeedback.setiid( nodeC, data->iid );
+
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+    }
+  }
+}
+
+
+
+
 static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOEditsPro edits = (iOEditsPro)ThreadOp.getParm( th );
@@ -248,6 +336,7 @@ static void __writer( void* threadinst ) {
           if( SerialOp.read( data->serial, &b, 1 ) ) {
             if( b != out[i] ) {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "read 0x%02X, expected 0x%02X", b, out[i] );
+              ThreadOp.sleep(500);
               break;
             }
           }
@@ -266,11 +355,13 @@ static void __writer( void* threadinst ) {
           if( SerialOp.write( data->serial, &out[0], 1 ) ) {
             if( SerialOp.read( data->serial, &out[0], 1 ) ) {
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
+              __evaluateState(data, mod, out[0]);
             }
           }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected last changed response: %d", out[0] );
+          ThreadOp.sleep(1000);
         }
       }
     }
@@ -280,6 +371,30 @@ static void __writer( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transactor ended." );
 
 }
+
+static void __swTimeWatcher( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOEditsPro edits = (iOEditsPro)ThreadOp.getParm( th );
+  iOEditsProData data = Data(edits);
+  do {
+    ThreadOp.sleep( 10 );
+    if( data->lastSwCmd != -1 && data->lastSwCmd >= data->swtime ) {
+      byte* cmd = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                    "swTimeWatcher() END SWITCHTIME %dms", data->lastSwCmd );
+
+      cmd[0] = 1; // length
+      cmd[1] = 32;
+
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+    if( data->lastSwCmd != -1 ) {
+      data->lastSwCmd += 10;
+    }
+  } while( data->run );
+}
+
+
 
 
 static Boolean __flush( iOEditsProData data ) {
@@ -353,6 +468,8 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
     StrOp.free(thname),
     ThreadOp.start( data->writer );
 
+    data->swTimeWatcher = ThreadOp.inst( "swTimeWatcher", &__swTimeWatcher, __EditsPro );
+    ThreadOp.start( data->swTimeWatcher );
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
