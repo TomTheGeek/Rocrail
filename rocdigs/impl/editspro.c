@@ -26,8 +26,21 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/CBus.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Response.h"
+#include "rocrail/wrapper/public/FbInfo.h"
+#include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Accessory.h"
 
 static int instCnt = 0;
 
@@ -87,9 +100,62 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OEditsPro ----- */
 
 
+static iONode __translate( iOEditsPro edits, iONode node ) {
+  iOEditsProData data = Data(edits);
+  iONode rsp = NULL;
+
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+  }
+
+  /* System command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      /* CS off */
+      byte* cmd = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS off */
+      byte* cmd = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+
+  }
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte* cmd = allocMem(32);
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
+
+    cmd[0] = 2; // length
+    cmd[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?33:34;
+    cmd[2] = wSwitch.getaddr1( node );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d to %s",
+        wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
+    ThreadOp.post(data->writer, (obj)cmd);
+
+  }
+
+
+  return rsp;
+}
+
+
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  iOEditsProData data = Data(inst);
+  iONode rsp = NULL;
+
+  if( cmd != NULL ) {
+    int bus = 0;
+    rsp = __translate( (iOEditsPro)inst, cmd );
+    cmd->base.del(cmd);
+  }
+  return rsp;
 }
 
 
@@ -149,27 +215,96 @@ static int _version( obj inst ) {
 }
 
 
-static void __reader( void* threadinst ) {
+static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
-  iOEditsPro inst = (iOEditsPro)ThreadOp.getParm( th );
-  iOEditsProData data = Data(inst);
+  iOEditsPro edits = (iOEditsPro)ThreadOp.getParm( th );
+  iOEditsProData data = Data(edits);
+  byte* cmd = NULL;
   Boolean ok = False;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "EDiTS PRO reader started." );
   ThreadOp.sleep(500);
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transactor started." );
   while( data->run ) {
-   int bAvail = SerialOp.available(data->serial);
-   if (bAvail < 0) {
-     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
-     break;
-   }
+    byte * post = NULL;
+    int len = 0;
+    int i = 0;
+    byte out[64] = {0};
 
-   ThreadOp.sleep(10);
+    ThreadOp.sleep(10);
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( out, post+1, len);
+      freeMem( post);
+
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+
+      for( i = 0; i < len; i++ ) {
+        if( SerialOp.write( data->serial, &out[i], 1 ) ) {
+          byte b = 0;
+          if( SerialOp.read( data->serial, &b, 1 ) ) {
+            if( b != out[i] ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "read 0x%02X, expected 0x%02X", b, out[i] );
+              break;
+            }
+          }
+        }
+      }
+      ThreadOp.sleep(10);
+    }
+
+    out[0] = 190;
+    if( SerialOp.write( data->serial, &out[0], 1 ) ) {
+      if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+        if( out[0] > 0 && out[0] < 65 ) {
+          int mod = out[0];
+          ThreadOp.sleep(5);
+          out[0] = 191 + mod;
+          if( SerialOp.write( data->serial, &out[0], 1 ) ) {
+            if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
+            }
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected last changed response: %d", out[0] );
+        }
+      }
+    }
+
+
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transactor ended." );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "EDiTS PRO reader ended." );
 }
+
+
+static Boolean __flush( iOEditsProData data ) {
+  /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
+  int bAvail = SerialOp.available(data->serial);
+  if( bAvail > 0 && bAvail < 1000 ) {
+    char c;
+    TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "Flushing %d bytes...", bAvail);
+    while( SerialOp.available(data->serial) > 0 ) {
+      SerialOp.read( data->serial, &c, 1 );
+    };
+  }
+  else if(bAvail >= 1000) {
+    TraceOp.trc(name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Can not flush %d bytes, check your hardware!", bAvail);
+    return False;
+  }
+  else {
+    TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "flushed");
+  }
+  return True;
+}
+
+
+
+
 
 
 /**  */
@@ -185,6 +320,9 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
 
+  data->fbmod    = wDigInt.getfbmod( ini );
+  data->swtime   = wDigInt.getswtime( ini );
+  data->readfb   = wDigInt.isreadfb( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EDiTS PRO %d.%d.%d", vmajor, vminor, patch );
@@ -193,21 +331,27 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate  = %d", 9600 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake = %s", wDigInt.getflow(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swtime    = %d", wDigInt.getswtime(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmodules = %d", wDigInt.getfbmod(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read fb   = %s", wDigInt.isreadfb(ini)?"yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
-  SerialOp.setLine( data->serial, 9600, 8, 2, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setLine( data->serial, 9600, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 
   if( data->serialOK ) {
     char* thname = NULL;
     data->run = True;
 
-    thname = StrOp.fmt("editsread%X", __EditsPro);
-    data->reader = ThreadOp.inst( thname, &__reader, __EditsPro );
+    __flush(data);
+
+    thname = StrOp.fmt("editstx%X", __EditsPro);
+    data->writer = ThreadOp.inst( thname, &__writer, __EditsPro );
     StrOp.free(thname),
-    ThreadOp.start( data->reader );
+    ThreadOp.start( data->writer );
 
   }
   else

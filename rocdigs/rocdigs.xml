@@ -1481,6 +1481,10 @@
       <var name="device" vt="const char*"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="fbmod" vt="int"/>
+      <var name="swtime" vt="int"/>
+      <var name="dummyio" vt="Boolean"/>
+      <var name="readfb" vt="Boolean"/>
     </data>
   </object>
 
