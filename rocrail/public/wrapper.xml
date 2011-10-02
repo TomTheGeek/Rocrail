@@ -337,6 +337,7 @@
       <const name="cbus" vt="string" val="cbus"/>
       <const name="openlcb" vt="string" val="openlcb"/>
       <const name="perir" vt="string" val="perir"/>
+      <const name="editspro" vt="string" val="editspro"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
