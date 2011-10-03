@@ -427,6 +427,9 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="count" vt="int" remark="Car count; Count cars before firing an event."/>
     </fun>
+    <fun name="doTimedOff" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
     <data>
       <var name="props" vt="iONode" remark="Feedback properties"/>
       <var name="state" vt="Boolean" remark="Current state"/>
@@ -438,6 +441,8 @@
       <var name="carcount" vt="int"/>
       <var name="countedcars" vt="int"/>
       <var name="wheelcount" vt="int"/>
+      <var name="timer" vt="int"/>
+      <var name="timedoff" vt="int"/>
     </data>
   </object>
 
@@ -1116,6 +1121,7 @@
       <var name="pendingstartall" vt="Boolean"/>
       <var name="muxSysEvent" vt="iOMutex"/>
       <var name="analyser" vt="iIAnalyserInt"/>
+      <var name="timedoff" vt="iOThread"/>
     </data>
     <struct name="LevelList" typedef="*iOLevelList">
       <var name="list" vt="iOList"/>

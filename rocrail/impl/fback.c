@@ -367,6 +367,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
   }
 
   if(data->state ) {
+    data->timer = 0;
     data->counter++;
 
     if( data->carcount > 0 ) {
@@ -384,7 +385,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
                  wFeedback.getval( nodeC ), data->carcount, data->countedcars );
 
     /* Broadcast to clients. Node4 */
-    {
+    if( data->state || data->timedoff == 0 ) {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setid( nodeD, FBackOp.getId( inst ) );
       wFeedback.setcounter( data->props, data->counter );
@@ -522,6 +523,8 @@ static void _modify( iOFBack inst, iONode props ) {
     NodeOp.removeAttrByName(data->props, "cmd");
   }
 
+  data->timedoff = wFeedback.gettimer(data->props);
+
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
@@ -566,9 +569,10 @@ static iOFBack _inst( iONode props ) {
   MemOp.basecpy( fback, &FBackOp, 0, sizeof( struct OFBack ), data );
 
   data->props = props;
+  data->timer = 0;
   /* initially the state is off: */
   wFeedback.setstate( props, False );
-
+  data->timedoff = wFeedback.gettimer( props );
   data->listeners = ListOp.inst();
 
   data->addrKey = _createAddrKey(
@@ -598,6 +602,52 @@ static Boolean _isState( iOFBack inst, const char* state ) {
     return True;
 
   return False;
+}
+
+
+static void _doTimedOff( iOFBack inst ) {
+  iOFBackData data = Data(inst);
+  if( data->timedoff > 0 ){
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timer=%d, timecnt=%d, state=%d",
+        data->timedoff, data->timer, data->state );
+    if( !data->state && data->timer == data->timedoff ){
+      iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "timed off event for %s", FBackOp.getId( inst ));
+
+      if( data->listenerFun != NULL ) {
+        data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0 );
+      }
+
+      /* Broadcast to clients. Node4 */
+      wFeedback.setid( nodeD, FBackOp.getId( inst ) );
+      wFeedback.setcounter( data->props, data->counter );
+      wFeedback.setcarcount( nodeD, data->carcount );
+      wFeedback.setcountedcars( nodeD, data->countedcars );
+      wFeedback.setstate( nodeD, data->state );
+      wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
+      wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
+      AppOp.broadcastEvent( nodeD );
+      data->timer++;
+
+
+      {
+        obj listener = ListOp.first( data->listeners );
+        while( listener != NULL ) {
+          listener->event( listener, data->props );
+          listener = ListOp.next( data->listeners );
+        };
+      }
+
+
+
+    }
+    else if( !data->state && data->timer < data->timedoff ) {
+      data->timer++;
+    }
+
+  }
 }
 
 

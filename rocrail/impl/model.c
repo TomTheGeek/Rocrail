@@ -1678,6 +1678,25 @@ static Boolean __anyRunningLoco( iOModel inst ) {
 }
 
 
+static void __timedoffRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOModel model = (iOModel)ThreadOp.getParm( th );
+  iOModelData data = Data(model);
+  iOFBack fb = NULL;
+  int i = 0;
+  ThreadOp.sleep(500);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed off thread started");
+  while( True ) {
+    ThreadOp.sleep(100);
+    fb = (iOFBack)MapOp.first( data->feedbackMap );
+    while( fb != NULL ) {
+      FBackOp.doTimedOff(fb);
+      fb = (iOFBack)MapOp.next(data->feedbackMap);
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed off thread ended");
+}
 
 
 static void __startAllLocosRunner( void* threadinst ) {
@@ -4523,6 +4542,10 @@ static iOModel _inst( const char* fileName ) {
 
   /* Initialize random seed. */
   srand( wCtrl.getseed( wRocRail.getctrl( AppOp.getIni() ) ) );
+
+  data->timedoff = ThreadOp.inst( "timedoff", &__timedoffRunner, model );
+  ThreadOp.start( data->timedoff );
+
 
   instCnt++;
 
