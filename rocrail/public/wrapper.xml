@@ -632,6 +632,7 @@
       <var name="stopnonecommuter" vt="bool" defval="false" remark="Stop auto mode for none commuter trains in terminal stations."/>
       <var name="syncroutes" vt="bool" defval="false" remark="Synchronize routes."/>
       <var name="syncroutetimeout" vt="int" defval="2500" remark="Timeout in ms for synchronizing routes."/>
+      <var name="timedsensors" vt="bool" defval="false" remark="Activate timed sensors."/>
     </ctrl>
   </rocrail>
 

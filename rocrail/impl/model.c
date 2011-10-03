@@ -4543,9 +4543,10 @@ static iOModel _inst( const char* fileName ) {
   /* Initialize random seed. */
   srand( wCtrl.getseed( wRocRail.getctrl( AppOp.getIni() ) ) );
 
-  data->timedoff = ThreadOp.inst( "timedoff", &__timedoffRunner, model );
-  ThreadOp.start( data->timedoff );
-
+  if( wCtrl.istimedsensors( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    data->timedoff = ThreadOp.inst( "timedoff", &__timedoffRunner, model );
+    ThreadOp.start( data->timedoff );
+  }
 
   instCnt++;
 

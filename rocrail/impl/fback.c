@@ -52,6 +52,8 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 
 static int instCnt = 0;
@@ -572,7 +574,11 @@ static iOFBack _inst( iONode props ) {
   data->timer = 0;
   /* initially the state is off: */
   wFeedback.setstate( props, False );
-  data->timedoff = wFeedback.gettimer( props );
+
+  if( wCtrl.istimedsensors( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    data->timedoff = wFeedback.gettimer( props );
+  }
+
   data->listeners = ListOp.inst();
 
   data->addrKey = _createAddrKey(
