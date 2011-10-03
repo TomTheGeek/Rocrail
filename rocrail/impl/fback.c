@@ -445,7 +445,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
   }
 
   /* Broadcast to clients. Node4 */
-  {
+  if( data->state || data->timedoff == 0 ) {
     iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( nodeD, FBackOp.getId( inst ) );
     wFeedback.setstate( nodeD, data->state );
