@@ -5477,3 +5477,9 @@ msgstr ""
 msgid "Sub title"
 msgstr ""
 
+#. 
+# id="timedsensors"
+#, c-format
+msgid "Timed sensors"
+msgstr ""
+

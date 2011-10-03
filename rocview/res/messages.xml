@@ -17567,4 +17567,7 @@
   <Msg id="subtitle">
     <en txt="Sub title"/>
   </Msg>
+  <Msg id="timedsensors">
+    <en txt="Timed sensors"/>
+  </Msg>
 </Messages>
