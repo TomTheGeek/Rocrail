@@ -123,7 +123,9 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   iOCBUSData data = Data(inst);
   iONode rsp = NULL;
 
-  if( cmd != NULL ) {
+  if( cmd != NULL )
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cbus cmd = %s", NodeOp.getName(cmd) );
+  if( !data->bootmode && cmd != NULL ) {
     int bus = 0;
     rsp = __translate( (iOCBUS)inst, cmd );
     cmd->base.del(cmd);
@@ -1194,7 +1196,9 @@ static void __writer( void* threadinst ) {
         MemOp.copy( out, post+1, len);
         freeMem( post);
 
-        cbusMon(out, __getOPC(out));
+        if( !data->bootmode )
+          cbusMon(out, __getOPC(out));
+
         if( !data->subWrite((obj)cbus, out, len) ) {
           /* sleep and send it again? */
         }

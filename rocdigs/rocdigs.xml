@@ -1410,6 +1410,7 @@
       <var name="stress" vt="Boolean"/>
       <var name="stressRunner" vt="iOThread"/>
       <var name="slotserver" vt="Boolean"/>
+      <var name="bootmode" vt="Boolean"/>
     </data>
   </object>
 

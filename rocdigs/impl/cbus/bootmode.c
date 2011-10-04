@@ -71,7 +71,7 @@
 #define CONFIG_BLOCK 1
 #define EEPROM_BLOCK 2
 
-#define PROGRAM_SIZE 14336
+#define PROGRAM_SIZE 16384
 #define CONFIG_SIZE 32
 #define EEPROM_SIZE 512
 
@@ -154,6 +154,7 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
 
 static void sendData(obj inst, struct BootData* bootData, int nodenr) {
   iOCBUSData data = Data(inst);
+  data->bootmode = True;
 
   /* Program block */
 
@@ -171,8 +172,9 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     nrlines++;
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending %d PROGRAM blocks...", nrlines );
   for( i = 0; i < nrlines; i++ ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d]", i+1, nrlines );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sending PROGRAM block[%d of %d] (%d)", i+1, nrlines, i*8*2 );
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080005N");
@@ -185,6 +187,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
   /* Config block */
   if( bootData->count[CONFIG_BLOCK] > 0 ) {
     byte* frame = allocMem(32);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block" );
     StrOp.copy( frame+1, ":X00080004N000030000D000000;" );
     frame[0] = StrOp.len(frame+1);
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
@@ -198,7 +201,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     nrlines = 32 / 8;
 
     for( i = 0; i < nrlines; i++ ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
       ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
@@ -213,6 +216,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
   /* EEProm block */
   if( bootData->count[EEPROM_BLOCK] > 0 ) {
     byte* frame = allocMem(32);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block" );
     StrOp.copy( frame+1, ":X00080004N0000F0000D000000;" );
     frame[0] = StrOp.len(frame+1);
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
@@ -253,6 +257,7 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
   frame[0] = StrOp.len(frame+1);
   ThreadOp.post(data->writer, (obj)frame);
 
+  data->bootmode = False;
 }
 
 

@@ -46,6 +46,11 @@ void cbusMon(byte* frame, int opc) {
 
   int canid = ((hh&0x0F) << 3) + ((hl&0xE0) >> 5);
 
+  if( StrOp.startsWith(frame, ":X00080005N") || StrOp.startsWith(frame, ":X00080004N") ) {
+    /* boot mode */
+    return;
+  }
+
   switch(opc) {
   case OPC_HLT:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_HLT(0x%02X) bus halt", canid, opc );
