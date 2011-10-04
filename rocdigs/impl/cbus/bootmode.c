@@ -89,6 +89,7 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
     /* extended linear address record */
     MemOp.copy( s, hexline+9, 4);
     int offset = (int)strtol( s, NULL, 16);
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extended linear address record: %d(0x%08X)", offset, offset );
 
     switch( bootData->block ) {
@@ -104,19 +105,19 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
       }
       break;
     case PROGRAM_BLOCK:
-      if( offset = 0x30 ) {
+      if( offset == 0x30 ) {
         bootData->block = CONFIG_BLOCK;
         bootData->offset[CONFIG_BLOCK] = offset;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to config block" );
       }
-      else if( offset = 0xF0 ) {
+      else if( offset == 0xF0 ) {
         bootData->block = EEPROM_BLOCK;
         bootData->offset[EEPROM_BLOCK] = offset;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to eeprom block" );
       }
       break;
     case CONFIG_BLOCK:
-      if( offset = 0xF0 ) {
+      if( offset == 0xF0 ) {
         bootData->block = EEPROM_BLOCK;
         bootData->offset[EEPROM_BLOCK] = offset;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----- switching to eeprom block" );
@@ -174,7 +175,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending %d PROGRAM blocks...", nrlines );
   for( i = 0; i < nrlines; i++ ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sending PROGRAM block[%d of %d] (%d)", i+1, nrlines, i*8*2 );
+    if( i % 10 == 0 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d] (%d)", i+1, nrlines, i*8*2 );
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080005N");

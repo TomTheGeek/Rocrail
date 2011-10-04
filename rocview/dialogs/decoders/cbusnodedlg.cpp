@@ -133,6 +133,7 @@ void CBusNodeDlg::init( iONode event ) {
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
+  m_FirmwarePanel->Enable(false);
 
   if( event != NULL ) {
     char ver[32] = {'0'};
