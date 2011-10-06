@@ -1495,7 +1495,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   //if( StrOp.equals( ori, wItem.east ) )
     //ori = wItem.west;
 
-  if( m_rotate) {
+  if( m_rotate && m_iOccupied != 0 && m_iOccupied != 2 ) {
     if( StrOp.equals(ori, wItem.west))
         ori = wItem.east;
     else if(StrOp.equals(ori, wItem.east))
