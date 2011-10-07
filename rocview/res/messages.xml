@@ -17570,4 +17570,7 @@
   <Msg id="timedsensors">
     <en txt="Timed sensors"/>
   </Msg>
+  <Msg id="enableanalyzer">
+    <en txt="Enable analyzer"/>
+  </Msg>
 </Messages>

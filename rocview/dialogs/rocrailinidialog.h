@@ -319,6 +319,7 @@ public:
     wxCheckBox* m_StopNoneCommuter;
     wxCheckBox* m_SyncRoutes;
     wxCheckBox* m_TimedSensors;
+    wxCheckBox* m_EnableAnalyzer;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

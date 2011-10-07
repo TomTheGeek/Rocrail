@@ -5483,3 +5483,9 @@ msgstr ""
 msgid "Timed sensors"
 msgstr ""
 
+#. 
+# id="enableanalyzer"
+#, c-format
+msgid "Enable analyzer"
+msgstr ""
+
