@@ -3048,85 +3048,91 @@ typedef iIAnalyserInt (* LPFNGETANALYSERINT)( const iOModel, const iONode, Boole
 
 static void _analyse( iOModel inst, Boolean CleanRun ) {
   iOModelData data = Data(inst);
-  iOLib    pLib = NULL;
-  /* Load the analyzer shared library. */
-  /*
-  char* stamp = StrOp.createStampNoDots();
-  char* stampfile = StrOp.fmt("%s.%s.xml", data->fileName, stamp);
-  const char* filename = data->fileName;
-  StrOp.free(stamp);
-  */
-  char* stampfile = StrOp.fmt("%s.anabak", data->fileName);
-  const char* filename = data->fileName;
-  ModelOp.saveAs(inst, stampfile);
-  data->fileName = filename;
-  data->analyser = NULL;
 
-  /* Make sure the route list is available before analyzing the track plan. */
-  if( wPlan.getstlist(data->model) == NULL ) {
-    iONode stlist = NodeOp.inst( wRouteList.name(), data->model, ELEMENT_NODE);
-    NodeOp.addChild( data->model, stlist );
-  }
+  if( wCtrl.isenableanalyzer( wRocRail.getctrl( AppOp.getIni() ) )) {
 
-  if( data->analyser == NULL ) {
-    /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
-    LPFNGETANALYSERINT pInitFun = (void *) NULL;
+    iOLib    pLib = NULL;
+    /* Load the analyzer shared library. */
+    /*
+    char* stamp = StrOp.createStampNoDots();
+    char* stampfile = StrOp.fmt("%s.%s.xml", data->fileName, stamp);
+    const char* filename = data->fileName;
+    StrOp.free(stamp);
+    */
+    char* stampfile = StrOp.fmt("%s.anabak", data->fileName);
+    const char* filename = data->fileName;
+    ModelOp.saveAs(inst, stampfile);
+    data->fileName = filename;
+    data->analyser = NULL;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "load Analyzer library..." );
-
-    char* libpath = StrOp.fmt( "%s%c%s", AppOp.getLibPath(), SystemOp.getFileSeparator(), "analyser" );
-    pLib = LibOp.inst( libpath );
-    StrOp.free( libpath );
-
-    if (pLib == NULL)
-      return;
-    pInitFun = (LPFNGETANALYSERINT)LibOp.getProc( pLib, "rocGetAnalyserInt" );
-    if (pInitFun == NULL)
-      return;
-
-    data->analyser = pInitFun( inst, data->model, CleanRun, TraceOp.get() );
-  }
-
-  if( data->analyser != NULL ) {
-    iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
-    int nrRoutesBefore = ListOp.size(data->routeList);
-    int nrRoutesAfter = 0;
-    char* msg = NULL;
-
-    if(ListOp.size( data->routeList) > 0 ) {
-      int i = 0;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast delete %d routes", ListOp.size( data->routeList) );
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.remove );
-      for( i = 0; i < ListOp.size( data->routeList); i++ ) {
-        iORoute item = (iORoute)ListOp.get( data->routeList, i);
-        NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
-      }
-      AppOp.broadcastEvent( cmd );
-      ThreadOp.sleep(10);
+    /* Make sure the route list is available before analyzing the track plan. */
+    if( wPlan.getstlist(data->model) == NULL ) {
+      iONode stlist = NodeOp.inst( wRouteList.name(), data->model, ELEMENT_NODE);
+      NodeOp.addChild( data->model, stlist );
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
-    data->analyser->analyse(data->analyser);
+    if( data->analyser == NULL ) {
+      /*iILcDriverInt rocGetLcDrInt( const iOLoc loc, const iOModel model, const iOTrace trc )*/
+      LPFNGETANALYSERINT pInitFun = (void *) NULL;
 
-    /* re-initialize routes */
-    ThreadOp.sleep(100);
-    __reinitRoutes(inst);
-    nrRoutesAfter = ListOp.size(data->routeList);
-    /* Broadcast to clients. */
-    msg = StrOp.fmt("the analyzer created %d new routes", nrRoutesAfter-nrRoutesBefore);
-    wException.settext( e, msg );
-    wException.setlevel( e, TRCLEVEL_CALC );
-    AppOp.broadcastEvent( e );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "load Analyzer library..." );
 
-    /* clean up*/
-    data->analyser->base.del(data->analyser);
-}
+      char* libpath = StrOp.fmt( "%s%c%s", AppOp.getLibPath(), SystemOp.getFileSeparator(), "analyser" );
+      pLib = LibOp.inst( libpath );
+      StrOp.free( libpath );
 
-  if (pLib != NULL)
-    LibOp.base.del(pLib);
+      if (pLib == NULL)
+        return;
+      pInitFun = (LPFNGETANALYSERINT)LibOp.getProc( pLib, "rocGetAnalyserInt" );
+      if (pInitFun == NULL)
+        return;
 
+      data->analyser = pInitFun( inst, data->model, CleanRun, TraceOp.get() );
+    }
 
+    if( data->analyser != NULL ) {
+      iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
+      int nrRoutesBefore = ListOp.size(data->routeList);
+      int nrRoutesAfter = 0;
+      char* msg = NULL;
+
+      if(ListOp.size( data->routeList) > 0 ) {
+        int i = 0;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast delete %d routes", ListOp.size( data->routeList) );
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.remove );
+        for( i = 0; i < ListOp.size( data->routeList); i++ ) {
+          iORoute item = (iORoute)ListOp.get( data->routeList, i);
+          NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
+        }
+        AppOp.broadcastEvent( cmd );
+        ThreadOp.sleep(10);
+      }
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
+      data->analyser->analyse(data->analyser);
+
+      /* re-initialize routes */
+      ThreadOp.sleep(100);
+      __reinitRoutes(inst);
+      nrRoutesAfter = ListOp.size(data->routeList);
+      /* Broadcast to clients. */
+      msg = StrOp.fmt("the analyzer created %d new routes", nrRoutesAfter-nrRoutesBefore);
+      wException.settext( e, msg );
+      wException.setlevel( e, TRCLEVEL_CALC );
+      AppOp.broadcastEvent( e );
+
+      /* clean up*/
+      data->analyser->base.del(data->analyser);
+    }
+
+    if (pLib != NULL)
+      LibOp.base.del(pLib);
+
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "the analyzer is disabled");
+  }
 }
 
 
