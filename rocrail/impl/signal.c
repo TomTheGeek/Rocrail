@@ -787,7 +787,17 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   /* save the new state of the signal */
   if( chgState ) {
     Boolean hasAddr =  (wSignal.getaddr(o->props) == 0 && wSignal.getport1(o->props) == 0 ) ? False:True;
-    wSignal.setstate( o->props, state );
+    if( StrOp.equals(wSignal.red, state ) )
+      wSignal.setstate( o->props, wSignal.red );
+    else if( StrOp.equals(wSignal.blank, state ) )
+      wSignal.setstate( o->props, wSignal.blank );
+    else if( StrOp.equals(wSignal.green, state ) )
+      wSignal.setstate( o->props, wSignal.green );
+    else if( StrOp.equals(wSignal.yellow, state ) )
+      wSignal.setstate( o->props, wSignal.yellow );
+    else if( StrOp.equals(wSignal.white, state ) )
+      wSignal.setstate( o->props, wSignal.white );
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s",
                  wSignal.getid( o->props ), wSignal.getstate( o->props ) );
 
