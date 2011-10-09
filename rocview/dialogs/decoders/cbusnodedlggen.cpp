@@ -98,7 +98,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_NodeNumberPanel->SetSizer( bSizer3 );
 	m_NodeNumberPanel->Layout();
 	bSizer3->Fit( m_NodeNumberPanel );
-	m_NoteBook->AddPage( m_NodeNumberPanel, wxT("Node"), false );
+	m_NoteBook->AddPage( m_NodeNumberPanel, wxT("Node"), true );
 	m_IndexPanel = new wxPanel( m_NoteBook, wxID_CBUSNODE_INDEX, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
@@ -318,6 +318,9 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer10->Fit( m_EventsPanel );
 	m_NoteBook->AddPage( m_EventsPanel, wxT("Events"), false );
 	m_FirmwarePanel = new wxPanel( m_NoteBook, wxID_CBUS_NODEFIRMWAREPANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_FirmwarePanel->Enable( false );
+	m_FirmwarePanel->Hide();
+	
 	wxBoxSizer* bSizer131;
 	bSizer131 = new wxBoxSizer( wxVERTICAL );
 	
@@ -971,7 +974,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CANGC2Panel->SetSizer( bSizer151 );
 	m_CANGC2Panel->Layout();
 	bSizer151->Fit( m_CANGC2Panel );
-	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), true );
+	m_NoteBook->AddPage( m_CANGC2Panel, wxT("CAN-GC2"), false );
 	
 	bSizer1->Add( m_NoteBook, 1, wxEXPAND | wxALL, 5 );
 	
