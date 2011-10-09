@@ -787,7 +787,15 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     }
   }
 
-  wSwitch.setstate( o->props, state );
+  if( StrOp.equals(wSwitch.left, state ) )
+    wSwitch.setstate( o->props, wSwitch.left );
+  else if( StrOp.equals(wSwitch.straight, state ) )
+    wSwitch.setstate( o->props, wSwitch.straight );
+  else if( StrOp.equals(wSwitch.right, state ) )
+    wSwitch.setstate( o->props, wSwitch.right );
+  else if( StrOp.equals(wSwitch.turnout, state ) )
+    wSwitch.setstate( o->props, wSwitch.turnout );
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s,%d,%d]",
                  SwitchOp.getId( inst ), state, wSwitch.issinglegate( o->props ), wSwitch.getgate1( o->props ) );
 
@@ -1231,8 +1239,16 @@ static void _event( iOSwitch inst, iONode nodeC ) {
     }
     else {
       /* single motor */
-      if( !inv )
-        wSwitch.setstate( data->props, state );
+      if( !inv ) {
+        if( StrOp.equals(wSwitch.left, state ) )
+          wSwitch.setstate( data->props, wSwitch.left );
+        else if( StrOp.equals(wSwitch.straight, state ) )
+          wSwitch.setstate( data->props, wSwitch.straight );
+        else if( StrOp.equals(wSwitch.right, state ) )
+          wSwitch.setstate( data->props, wSwitch.right );
+        else if( StrOp.equals(wSwitch.turnout, state ) )
+          wSwitch.setstate( data->props, wSwitch.turnout );
+      }
       else {
         if( StrOp.equals( state, wSwitch.turnout ) )
           wSwitch.setstate( data->props, wSwitch.straight );

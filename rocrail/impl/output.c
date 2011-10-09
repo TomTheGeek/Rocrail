@@ -185,7 +185,12 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
                wOutput.getid( o->props ), state );
 
   /* remember state */
-  wOutput.setstate( o->props, state );
+  if( StrOp.equals(wOutput.active, state ) )
+    wOutput.setstate( o->props, wOutput.active );
+  else if( StrOp.equals(wOutput.off, state ) )
+    wOutput.setstate( o->props, wOutput.off );
+  else if( StrOp.equals(wOutput.on, state ) )
+    wOutput.setstate( o->props, wOutput.on );
 
   if( iid != NULL )
     wOutput.setiid( nodeA, iid );
