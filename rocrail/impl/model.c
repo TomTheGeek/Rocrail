@@ -894,7 +894,8 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
   const char* prev_id = wItem.getprev_id( item );
   Boolean modified = False;
 
-  if( !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (id == NULL ||
+  if( !StrOp.equals(wMVTrack.name(), NodeOp.getName(item) ) &&
+      !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (id == NULL ||
       StrOp.len(id) == 0 || StrOp.equals("(null)", id) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid id for modify [%s]", name );
     return False;
