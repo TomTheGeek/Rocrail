@@ -140,7 +140,8 @@ TurntableDialog::TurntableDialog( wxWindow* parent, wxWindowID id, const wxStrin
 
 void TurntableDialog::OnProps(wxCommandEvent& event) {
   int tracknr = atoi( m_TrackNr );
-  TraceOp.trc( "ttdlg", TRCLEVEL_INFO, __LINE__, 9999, "Props for track %d", tracknr );
+  TraceOp.trc( "ttdlg", TRCLEVEL_INFO, __LINE__, 9999, "Props for track %d (type=%s)",
+      tracknr, (const char*)m_Type->GetStringSelection().mb_str(wxConvUTF8) );
 
   iONode track = wTurntable.gettrack( m_Props );
   while( track != NULL ) {
@@ -894,7 +895,7 @@ void TurntableDialog::CreateControls()
     m_labDelay = new wxStaticText( m_Interface, wxID_STATIC, _("Delay"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer29->Add(m_labDelay, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Delay = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
+    m_Delay = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 60, 0 );
     itemFlexGridSizer29->Add(m_Delay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labPause = new wxStaticText( m_Interface, wxID_ANY, _("Pause"), wxDefaultPosition, wxDefaultSize, 0 );
