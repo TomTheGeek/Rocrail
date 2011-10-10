@@ -180,6 +180,40 @@ static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
 
+static void __irTicker( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOPerIR inst = (iOPerIR)ThreadOp.getParm( th );
+  iOPerIRData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ticker started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    int i = 0;
+    for( i = 0; i < 256; i++ ) {
+      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setstate( evt, False );
+        wFeedback.setaddr( evt, i );
+        wFeedback.setidentifier( evt, 0 );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+
+        data->readerTick[i] = 0;
+        ThreadOp.sleep( 10 );
+      }
+    }
+
+    ThreadOp.sleep( 100 );
+  };
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ticker ended." );
+}
+
+
+
+
 static void __PerIRReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOPerIR inst = (iOPerIR)ThreadOp.getParm( th );
@@ -241,6 +275,8 @@ static void __PerIRReader( void* threadinst ) {
                 decoder, port, wFeedback.getaddr(evt), wFeedback.getidentifier(evt) );
 
             data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+            data->readerTick[(decoder-1) * 8 + port] = SystemOp.getTick();
+
           }
           else {
             /* idle packet */
@@ -333,6 +369,10 @@ static struct OPerIR* _inst( const iONode ini ,const iOTrace trc ) {
     StrOp.free(thname),
     ThreadOp.start( data->reader );
 
+    thname = StrOp.fmt("perirtick%X", __PerIR);
+    data->ticker = ThreadOp.inst( thname, &__irTicker, __PerIR );
+    StrOp.free(thname),
+    ThreadOp.start( data->ticker );
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
