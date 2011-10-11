@@ -53,8 +53,8 @@ ARCH=
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32
 	DIRPREFIX=win
-	CC_EXTRA_FLAGS=
-	LNK_FLAGS=--def lcdriver.def
+	CC_EXTRA_FLAGS=-mthreads
+	LNK_FLAGS=--def lcdriver.def -mthreads
 	LNK=$(TOOLPREFIX)dllwrap
 	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),WIN64)

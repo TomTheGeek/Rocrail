@@ -53,7 +53,7 @@ ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 $(SSLLIBS)
 	COREDIR=win
 	BINSUFFIX=.exe
-	CC_EXTRA_FLAGS=
+	CC_EXTRA_FLAGS=-mthreads
 else
 	COREDIR=unx
 	BINSUFFIX=

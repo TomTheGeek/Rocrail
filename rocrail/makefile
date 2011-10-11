@@ -39,6 +39,7 @@ GENSUFFIX=
 ANSI=-ansi
 MKDIR=mkdir -p
 CPUPDATE=u
+LNK_FLAGS=
 MAKE ?= make
 
 ifeq ($(NATIVE),WIN32)
@@ -57,7 +58,8 @@ ARCH=
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
 	DIRPREFIX=win
-	CC_EXTRA_FLAGS=
+	CC_EXTRA_FLAGS=-mthreads
+	LNK_FLAGS=-mthreads
 	BINSUFFIX=.exe
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win
@@ -89,7 +91,6 @@ CPP=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(ANSI) -I$(INCL_PATH) -I$(GENDIR)
-LNK_FLAGS=
 RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)librocutils.a $(OUTDIR)$(FS)librocrail.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))

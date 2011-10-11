@@ -68,14 +68,14 @@ MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
 
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr
-	LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs`
+	LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads
 	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	ifeq ($(NATIVE),WIN32)
 		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
 		WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
 	endif
 	DIRPREFIX=win
-	CC_EXTRA_FLAGS=
+	CC_EXTRA_FLAGS=-mthreads
 	BINSUFFIX=.exe
 	LIBSUFFIX=-i586-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o

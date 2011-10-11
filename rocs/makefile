@@ -37,6 +37,10 @@ REMOVE=rm -f
 GENSUFFIX=
 MKDIR=mkdir -p
 
+# --- link flags ---
+LNK_FLAGS=
+AR_FLAGS=
+
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
 	CS=&
@@ -53,7 +57,8 @@ ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
 	COREDIR=win
 	BINSUFFIX=.exe
-	CC_EXTRA_FLAGS=
+	CC_EXTRA_FLAGS=-mthreads
+	LNK_FLAGS=-mthreads
 else
 	COREDIR=unx
 	BINSUFFIX=
@@ -97,9 +102,6 @@ LNK=$(TOOLPREFIX)gcc
 # --- compile flags ---
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(OPENSSL) -I$(SRCMOUNTPOINT) -I$(GENMOUNTPOINT)
 
-# --- link flags ---
-LNK_FLAGS=
-AR_FLAGS=
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 
