@@ -193,11 +193,13 @@ static void __irTicker( void* threadinst ) {
       if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
+        wFeedback.setbus( evt, wFeedback.fbtype_lissy );
         wFeedback.setaddr( evt, i );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
 
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset reader %d", i );
         data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
         data->readerTick[i] = 0;
@@ -226,11 +228,30 @@ static void __PerIRReader( void* threadinst ) {
   int idx = 0;
   int datalen = 0;
   Boolean insync = False;
+  Boolean test = False;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PerIR reader started." );
   ThreadOp.sleep(500);
 
   data->initOK = False;
+
+  if(test){ // Test
+    int decoder = 13;
+    int port = 6;
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setaddr( evt, (decoder-1) * 8 + port );
+    wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+    wFeedback.setidentifier( evt, 4711 );
+    wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( evt, data->iid );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detecoder [%d.%d][%d] reported loco address [%d]",
+        decoder, port, wFeedback.getaddr(evt), wFeedback.getidentifier(evt) );
+
+    data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+    data->readerTick[(decoder-1) * 8 + port] = SystemOp.getTick();
+  }
 
   /*
     Byte no:  VALID message:  IDLE message:
