@@ -2559,7 +2559,13 @@ void Symbol::modelEvent( iONode node ) {
         occupied = isAcceptIdent ? 7:occupied;
       }
       else if( StrOp.equals( wBlock.closed, state ) ) {
-        l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
+        if( !wBlock.issmallsymbol(m_Props) ) {
+          l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
+        } else {
+          l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
+          /*alternatively: */
+          /*l_locidStr = StrOp.fmt( "CLOSED" );*/
+        }
         occupied = 4;
       }
       else if( StrOp.equals( wBlock.ghost, state ) ) {
