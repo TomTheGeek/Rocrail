@@ -122,6 +122,7 @@
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
     <fun name="getEventCode" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
       <param name="evtname" vt="const char*"/>
     </fun>
     <data>
@@ -139,6 +140,10 @@
       <var name="listenerFun" vt="block_listener"/>
       <var name="closereq" vt="Boolean"/>
       <var name="trig_enter" vt="Boolean"/>
+      <var name="trig_enter2in" vt="Boolean"/>
+      <var name="trig_enter2pre" vt="Boolean"/>
+      <var name="trig_pre2in" vt="Boolean"/>
+      <var name="trig_shortin" vt="Boolean"/>
       <var name="trig_in" vt="Boolean"/>
       <var name="trig_exit" vt="Boolean"/>
       <var name="trig_out" vt="Boolean"/>

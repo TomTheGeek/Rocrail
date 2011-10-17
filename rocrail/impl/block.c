@@ -194,7 +194,45 @@ static Boolean __acceptGhost( obj inst ) {
 /**
  * translate the event name to an event code
  */
-static int _getEventCode( const char* evtname ) {
+static int _getEventCode( obj inst, const char* evtname ) {
+  if( inst != NULL ) {
+    iOBlockData data = Data(inst);
+    if( !data->trig_enter && StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
+      data->trig_enter = True;
+      return enter_event;
+    }
+    else if( !data->trig_enter2in && StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
+      data->trig_enter2in = True;
+      return enter2in_event;
+    }
+    else if( !data->trig_enter2pre && StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
+      data->trig_enter2pre = True;
+      return enter2pre_event;
+    }
+    else if( !data->trig_in && StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
+      data->trig_in = True;
+      return in_event;
+    }
+    else if( !data->trig_exit && StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
+      data->trig_exit = True;
+      return exit_event;
+    }
+    else if( !data->trig_pre2in && StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
+      data->trig_pre2in = True;
+      return pre2in_event;
+    }
+    else if( StrOp.equals( evtname, wFeedbackEvent.occupied_event ) )
+      return occupied_event;
+    else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
+      return ident_event;
+    else if( !data->trig_shortin && StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
+      data->trig_shortin = True;
+      return shortin_event;
+    }
+    else
+      return 0;
+  }
+
   if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) )
     return enter_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) )
@@ -215,6 +253,7 @@ static int _getEventCode( const char* evtname ) {
     return shortin_event;
   else
     return 0;
+
 }
 
 
@@ -224,7 +263,7 @@ static int _getEventCode( const char* evtname ) {
 static void __TurntableEvent( obj inst, const char* event, const char* id ) {
   iOBlockData data = Data(inst);
   iOLoc loc = NULL;
-  int evt = _getEventCode( event );
+  int evt = _getEventCode( inst, event );
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: ttid=%s event=%s",
       data->id, id, event );
@@ -429,7 +468,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   }
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {
-    int evt = _getEventCode( wFeedbackEvent.getaction( fbevt ) );
+    int evt = _getEventCode( (obj)inst, wFeedbackEvent.getaction( fbevt ) );
     long locident = LocOp.getIdent(loc);
 
     __measureVelocity( (iOBlock)inst, evt );
@@ -754,7 +793,7 @@ static Boolean __isElectricallyFree(iOBlock inst) {
 
   while( fbevt != NULL ) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
-    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
+    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( (obj)inst, wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 5001,
                      "Block [%s] is electrically occupied. %s",
                      data->id, shunting ? "(ignored for shunting)":"" );
@@ -1508,12 +1547,16 @@ static void _setGroup( iIBlockBase inst, const char* group ) {
 
 static void _resetTrigs( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
-  data->trig_enter = False;
-  data->trig_in    = False;
-  data->trig_exit  = False;
-  data->trig_out   = False;
+  data->trig_enter     = False;
+  data->trig_enter2in  = False;
+  data->trig_enter2pre = False;
+  data->trig_pre2in    = False;
+  data->trig_shortin   = False;
+  data->trig_in        = False;
+  data->trig_exit      = False;
+  data->trig_out       = False;
 
-  data->trig_enter_mid   = False;
+  data->trig_enter_mid  = False;
   data->trig_exit_mid   = False;
   data->trig_renter_mid = False;
   data->trig_rexit_mid  = False;
