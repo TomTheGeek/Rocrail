@@ -517,10 +517,8 @@ void FeedbackDialog::CreateControls()
     m_labTimer = new wxStaticText( m_General, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_labTimer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Timer = new wxSpinCtrl( m_General, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 20, 0 );
+    m_Timer = new wxSpinCtrl( m_General, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer13->Add(m_Timer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer13->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer26 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer26, 0, wxGROW|wxALL, 5);
@@ -608,8 +606,6 @@ void FeedbackDialog::CreateControls()
     m_Bus->SetSelection(0);
     itemFlexGridSizer44->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemFlexGridSizer44->AddGrowableCol(1);
-
     wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer43->Add(itemFlexGridSizer49, 0, wxGROW|wxALL, 5);
     m_labBusNr = new wxStaticText( m_Interface, wxID_ANY, _("Bus"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -623,9 +619,6 @@ void FeedbackDialog::CreateControls()
 
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_ADDRESS1, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer49->Add(m_Address, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer49->AddGrowableCol(1);
-    itemFlexGridSizer49->AddGrowableCol(3);
 
     m_ActiveLow = new wxCheckBox( m_Interface, wxID_ANY, _("Active low"), wxDefaultPosition, wxDefaultSize, 0 );
     m_ActiveLow->SetValue(false);
