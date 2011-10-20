@@ -926,7 +926,9 @@ static int _getMaxKmh( iIBlockBase inst ) {
 
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOBlockData data = Data(inst);
-  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
+
+  Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
 
   /* check the manual operated signal */
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
@@ -1231,7 +1233,9 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOBlockData data = Data(inst);
   Boolean wait = False;
-  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
+
+  Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
+  iOSignal signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
