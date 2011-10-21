@@ -60,7 +60,7 @@
 static int instCnt = 0;
 
 static iONode __translate( iOCBUS cbus, iONode node );
-static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn, Boolean on);
+static void __broadcastFunction(iOCBUS cbus, int session, iOSlot slot, int fn, Boolean on);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -226,6 +226,17 @@ static int __getDataLen(int OPC) {
   return 7;
 }
 
+static void __QueryLoco(iOCBUSData data, int session) {
+  // OPC_QLOC
+  byte cmd[4];
+  byte* frame = allocMem(32);
+  cmd[0] = OPC_QLOC;
+  cmd[1] = session;
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query loco for session %d", session );
+  ThreadOp.post(data->writer, (obj)frame);
+
+}
 
 static iOSlot __getSlotByAddr(iOCBUSData data, int lcaddr) {
   iOSlot slot = NULL;
@@ -261,7 +272,7 @@ static iOSlot __getSlotBySession(iOCBUSData data, int session) {
 }
 
 
-static void __fg2fn(iOCBUS cbus, iOSlot slot, int fg, int fmask) {
+static void __fg2fn(iOCBUS cbus, int session, iOSlot slot, int fg, int fmask) {
   iOCBUSData data = Data(cbus);
   int i = 0;
   Boolean f = False;
@@ -269,17 +280,25 @@ static void __fg2fn(iOCBUS cbus, iOSlot slot, int fg, int fmask) {
   wLoc.setthrottleid( nodeC, "cbus" );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
-  wFunCmd.setid( nodeC, slot->id );
-  wFunCmd.setaddr( nodeC, slot->addr );
-  wFunCmd.setgroup( nodeC, fg );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "update functions(0x%02X) in group %d for loco %s", fmask, fg, slot->id );
+  if( slot != NULL ) {
+    wFunCmd.setid( nodeC, slot->id );
+    wFunCmd.setaddr( nodeC, slot->addr );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update functions(0x%02X) in group %d for loco %s", fmask, fg, slot->id );
+  }
+  else {
+    wFunCmd.setaddr( nodeC, data->cab[session] );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update functions(0x%02X) in group %d for session %d", fmask, fg, session );
+  }
+
+  wFunCmd.setgroup( nodeC, fg );
 
 
   switch( fg ) {
   case 1: /* 0-4 */
-    __broadcastFunction(cbus, slot, 0, (fmask & 0x10) ? True:False);
+    __broadcastFunction(cbus, session, slot, 0, (fmask & 0x10) ? True:False);
     wFunCmd.setf0(nodeC, (fmask & 0x10) ? True:False);
     wFunCmd.setf1(nodeC, (fmask & 0x01) ? True:False);
     wFunCmd.setf2(nodeC, (fmask & 0x02) ? True:False);
@@ -389,25 +408,37 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
 }
 
 
-static void __broadcastSpeedDir(iOCBUS cbus, iOSlot slot, int speed, Boolean dir) {
+static void __broadcastSpeedDir(iOCBUS cbus, int session, iOSlot slot, int speed, Boolean dir) {
   iOCBUSData data = Data(cbus);
   iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "update speed[%d] for loco %s", speed, slot->id );
 
-  slot->rawspeed = speed;
-  slot->dir      = dir;
-
+  wLoc.setV_raw( nodeC, speed );
+  wLoc.setdir( nodeC, dir );
+  wLoc.setcmd( nodeC, wLoc.direction );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
-  wLoc.setid( nodeC, slot->id );
-  wLoc.setaddr( nodeC, slot->addr );
-  wLoc.setV_raw( nodeC, slot->rawspeed );
-  wLoc.setV_rawMax( nodeC, slot->steps );
-  wLoc.setfn( nodeC, slot->lights);
-  wLoc.setdir( nodeC, slot->dir );
-  wLoc.setcmd( nodeC, wLoc.direction );
-  wLoc.setthrottleid( nodeC, "cbus" );
+
+
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update speed[%d] for loco %s", speed, slot->id );
+
+    slot->rawspeed = speed;
+    slot->dir      = dir;
+
+    wLoc.setid( nodeC, slot->id );
+    wLoc.setaddr( nodeC, slot->addr );
+    wLoc.setV_rawMax( nodeC, slot->steps );
+    wLoc.setfn( nodeC, slot->lights);
+    wLoc.setthrottleid( nodeC, "cbus" );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update speed[%d] for CAB session %d", speed, session );
+    wLoc.setaddr( nodeC, data->cab[session] );
+    wLoc.setthrottleid( nodeC, "cancab" );
+  }
+
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
@@ -424,27 +455,40 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
   speed &= 0x7F;
 
   if( slot != NULL ) {
-    __broadcastSpeedDir(cbus, slot, speed, dir);
+    __broadcastSpeedDir(cbus, session, slot, speed, dir);
+  }
+  else if( data->cab[session] != 0 ) {
+    __broadcastSpeedDir(cbus, session, NULL, speed, dir);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+    __QueryLoco(data, session);
   }
 }
 
 
-static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn, Boolean on) {
+static void __broadcastFunction(iOCBUS cbus, int session, iOSlot slot, int fn, Boolean on) {
   iOCBUSData data = Data(cbus);
 
   iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   int group = fn/4 + ((fn%4 > 0) ? 1:0);
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "update function %d in group %d for loco %s", fn, group, slot->id );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update function %d in group %d for loco %s", fn, group, slot->id );
+    wFunCmd.setid( nodeC, slot->id );
+    wFunCmd.setaddr( nodeC, slot->addr );
+    wLoc.setthrottleid( nodeC, "cbus" );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "update function %d in group %d for session %d", fn, group, session );
+    wFunCmd.setaddr( nodeC, data->cab[session] );
+    wLoc.setthrottleid( nodeC, "CAB" );
+  }
 
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
-  wFunCmd.setid( nodeC, slot->id );
-  wFunCmd.setaddr( nodeC, slot->addr );
   wFunCmd.setfnchanged(nodeC, fn);
   wFunCmd.setgroup( nodeC, group );
 
@@ -480,7 +524,6 @@ static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn, Boolean on) {
   case 28: wFunCmd.setf28(nodeC, on); break;
   }
 
-  wLoc.setthrottleid( nodeC, "cbus" );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
@@ -495,10 +538,14 @@ static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
 
   if( slot != NULL ) {
     slot->f[fn] = fstate;
-    __broadcastFunction(cbus, slot, fn, fstate );
+    __broadcastFunction(cbus, session, slot, fn, fstate );
+  }
+  else if(data->cab[session] != 0) {
+    __broadcastFunction(cbus, session, NULL, fn, fstate );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+    __QueryLoco(data, session);
   }
 }
 
@@ -513,10 +560,14 @@ static void __updateFunctions(iOCBUS cbus, byte* frame) {
   iOSlot slot = __getSlotBySession(data, session);
 
   if( slot != NULL ) {
-    __fg2fn(cbus, slot, fg, fmask);
+    __fg2fn(cbus, session, slot, fg, fmask);
+  }
+  else if(data->cab[session] != 0) {
+    __fg2fn(cbus, session, NULL, fg, fmask);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
+    __QueryLoco(data, session);
   }
 }
 
@@ -569,16 +620,17 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
           "set engine speed steps to %d for loco %s", slot->steps, slot->id );
       ThreadOp.post(data->writer, (obj)frame);
 
-      __broadcastSpeedDir(cbus, slot, speed, dir);
-      __fg2fn(cbus, slot, 1, f0_4);
-      __fg2fn(cbus, slot, 2, f5_8);
-      __fg2fn(cbus, slot, 3, f9_12);
+      __broadcastSpeedDir(cbus, session, slot, speed, dir);
+      __fg2fn(cbus, session, slot, 1, f0_4);
+      __fg2fn(cbus, session, slot, 2, f5_8);
+      __fg2fn(cbus, session, slot, 3, f9_12);
 
 
     }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d, address %d", session, addr );
+    data->cab[session] = addr;
   }
 }
 
@@ -902,6 +954,12 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
     case OPC_PLOC:
       __updateSlot(cbus, frame);
       break;
+    case OPC_KLOC: {
+      int offset  = (frame[1] == 'S') ? 0:4;
+      int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+      data->cab[session] = 0;
+      break;
+    }
     case OPC_RLOC:
       if( data->slotserver )
         slotServer((obj)cbus, opc, frame);

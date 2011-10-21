@@ -105,7 +105,7 @@ void cbusMon(byte* frame, int opc) {
     f1      = HEXA2Byte(frame + OFFSET_D6 + offset);
     f2      = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "[%03d] OPC_PLOC(0x%02X) loco  report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
+        "[%03d] OPC_PLOC(0x%02X) loco %d report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
         canid, opc, addrl+addrh*256, session, speed&0x7F, (speed&0x80)?"fwd":"rev", f0, f1, f2 );
     break;
 
