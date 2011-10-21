@@ -1411,6 +1411,7 @@
       <var name="stressRunner" vt="iOThread"/>
       <var name="slotserver" vt="Boolean"/>
       <var name="bootmode" vt="Boolean"/>
+      <var name="cvnr" vt="int"/>
     </data>
   </object>
 

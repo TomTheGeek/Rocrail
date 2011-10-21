@@ -843,6 +843,8 @@ static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
 }
 
 
+static const char* PTSTATUS[] = {"Reserved", "No Acknowledge", "Overload", "Write Acknowledge", "Busy", "CV out of range"};
+
 static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] == 'S') ? 0:4;
@@ -924,6 +926,25 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "status 0x%02X", status );
         break;
       }
+    case OPC_SSTAT:
+    {
+      int offset  = (frame[1] == 'S') ? 0:4;
+      int session = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int status  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "service track session %d: status=%d, \"%s\"", session, status, (status < 6) ? PTSTATUS[status]:"Unknown"  );
+
+      if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcv( node, data->cvnr );
+        wProgram.setvalue( node, -1 );
+        wProgram.setcmd( node, wProgram.datarsp );
+        if( data->iid != NULL )
+          wProgram.setiid( node, data->iid );
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
+      break;
+    }
 
     /* All FLiM OPCs to this case. */
     case OPC_NNACK:
@@ -1617,6 +1638,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
       int addr = wProgram.getaddr( node );
+      data->cvnr = cv;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
@@ -1642,6 +1664,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       int cv = wProgram.getcv( node );
       int value = wProgram.getvalue( node );
       int decaddr = wProgram.getdecaddr( node );
+      data->cvnr = cv;
 
 
       if( wProgram.ispom(node) ) {
