@@ -60,7 +60,7 @@
 static int instCnt = 0;
 
 static iONode __translate( iOCBUS cbus, iONode node );
-static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn);
+static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn, Boolean on);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -265,55 +265,63 @@ static void __fg2fn(iOCBUS cbus, iOSlot slot, int fg, int fmask) {
   iOCBUSData data = Data(cbus);
   int i = 0;
   Boolean f = False;
+  iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wLoc.setthrottleid( nodeC, "cbus" );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wFunCmd.setid( nodeC, slot->id );
+  wFunCmd.setaddr( nodeC, slot->addr );
+  wFunCmd.setgroup( nodeC, fg );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "update functions(0x%02X) in group %d for loco %s", fmask, fg, slot->id );
+
 
   switch( fg ) {
   case 1: /* 0-4 */
-    for( i = 0; i < 5; i++ ) {
-      f = (fmask & (1 << i)) ? True:False;
-      if( f != slot->f[i]) {
-        slot->f[i] = f;
-        __broadcastFunction(cbus, slot, i );
-      }
-    }
+    __broadcastFunction(cbus, slot, 0, (fmask & 0x10) ? True:False);
+    wFunCmd.setf0(nodeC, (fmask & 0x10) ? True:False);
+    wFunCmd.setf1(nodeC, (fmask & 0x01) ? True:False);
+    wFunCmd.setf2(nodeC, (fmask & 0x02) ? True:False);
+    wFunCmd.setf3(nodeC, (fmask & 0x04) ? True:False);
+    wFunCmd.setf4(nodeC, (fmask & 0x08) ? True:False);
     break;
   case 2: /* 5-8 */
-    for( i = 5; i < 9; i++ ) {
-      f = (fmask & (1 << (i-5))) ? True:False;
-      if( f != slot->f[i]) {
-        slot->f[i] = f;
-        __broadcastFunction(cbus, slot, i );
-      }
-    }
+    wFunCmd.setf5(nodeC, (fmask & 0x01) ? True:False);
+    wFunCmd.setf6(nodeC, (fmask & 0x02) ? True:False);
+    wFunCmd.setf7(nodeC, (fmask & 0x04) ? True:False);
+    wFunCmd.setf8(nodeC, (fmask & 0x08) ? True:False);
     break;
   case 3: /* 9-12 */
-    for( i = 9; i < 13; i++ ) {
-      f = (fmask & (1 << (i-9))) ? True:False;
-      if( f != slot->f[i]) {
-        slot->f[i] = f;
-        __broadcastFunction(cbus, slot, i );
-      }
-    }
+    wFunCmd.setf9(nodeC, (fmask & 0x01) ? True:False);
+    wFunCmd.setf10(nodeC, (fmask & 0x02) ? True:False);
+    wFunCmd.setf11(nodeC, (fmask & 0x04) ? True:False);
+    wFunCmd.setf12(nodeC, (fmask & 0x08) ? True:False);
     break;
-  case 4: /* 13-19 */
-    for( i = 13; i < 20; i++ ) {
-      f = (fmask & (1 << (i-13))) ? True:False;
-      if( f != slot->f[i]) {
-        slot->f[i] = f;
-        __broadcastFunction(cbus, slot, i );
-      }
-    }
+  case 4: /* 13-20 */
+    wFunCmd.setf13(nodeC, (fmask & 0x01) ? True:False);
+    wFunCmd.setf14(nodeC, (fmask & 0x02) ? True:False);
+    wFunCmd.setf15(nodeC, (fmask & 0x04) ? True:False);
+    wFunCmd.setf16(nodeC, (fmask & 0x08) ? True:False);
+    wFunCmd.setf17(nodeC, (fmask & 0x10) ? True:False);
+    wFunCmd.setf18(nodeC, (fmask & 0x20) ? True:False);
+    wFunCmd.setf19(nodeC, (fmask & 0x40) ? True:False);
+    wFunCmd.setf20(nodeC, (fmask & 0x80) ? True:False);
     break;
-  case 5: /* 20-28 */
-    for( i = 20; i < 29; i++ ) {
-      f = (fmask & (1 << (i-20))) ? True:False;
-      if( f != slot->f[i]) {
-        slot->f[i] = f;
-        __broadcastFunction(cbus, slot, i );
-      }
-    }
+  case 5: /* 21-28 */
+    wFunCmd.setgroup( nodeC, 6 );
+    wFunCmd.setf21(nodeC, (fmask & 0x01) ? True:False);
+    wFunCmd.setf22(nodeC, (fmask & 0x02) ? True:False);
+    wFunCmd.setf23(nodeC, (fmask & 0x04) ? True:False);
+    wFunCmd.setf24(nodeC, (fmask & 0x08) ? True:False);
+    wFunCmd.setf25(nodeC, (fmask & 0x10) ? True:False);
+    wFunCmd.setf26(nodeC, (fmask & 0x20) ? True:False);
+    wFunCmd.setf27(nodeC, (fmask & 0x40) ? True:False);
+    wFunCmd.setf28(nodeC, (fmask & 0x80) ? True:False);
     break;
   }
 
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
 
@@ -424,20 +432,53 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
 }
 
 
-static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn) {
+static void __broadcastFunction(iOCBUS cbus, iOSlot slot, int fn, Boolean on) {
   iOCBUSData data = Data(cbus);
 
   iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  int group = fn/4 + ((fn%4 > 0) ? 1:0);
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "update functions for loco %s", slot->id );
+      "update function %d in group %d for loco %s", fn, group, slot->id );
 
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
   wFunCmd.setid( nodeC, slot->id );
   wFunCmd.setaddr( nodeC, slot->addr );
   wFunCmd.setfnchanged(nodeC, fn);
-  wFunCmd.setgroup( nodeC, fn/4 + ((fn%4 > 0) ? 1:0) );
+  wFunCmd.setgroup( nodeC, group );
+
+  switch(fn) {
+  case  0: wFunCmd.setf0 (nodeC, on); break;
+  case  1: wFunCmd.setf1 (nodeC, on); break;
+  case  2: wFunCmd.setf2 (nodeC, on); break;
+  case  3: wFunCmd.setf3 (nodeC, on); break;
+  case  4: wFunCmd.setf4 (nodeC, on); break;
+  case  5: wFunCmd.setf5 (nodeC, on); break;
+  case  6: wFunCmd.setf6 (nodeC, on); break;
+  case  7: wFunCmd.setf7 (nodeC, on); break;
+  case  8: wFunCmd.setf8 (nodeC, on); break;
+  case  9: wFunCmd.setf9 (nodeC, on); break;
+  case 10: wFunCmd.setf10(nodeC, on); break;
+  case 11: wFunCmd.setf11(nodeC, on); break;
+  case 12: wFunCmd.setf12(nodeC, on); break;
+  case 13: wFunCmd.setf13(nodeC, on); break;
+  case 14: wFunCmd.setf14(nodeC, on); break;
+  case 15: wFunCmd.setf15(nodeC, on); break;
+  case 16: wFunCmd.setf16(nodeC, on); break;
+  case 17: wFunCmd.setf17(nodeC, on); break;
+  case 18: wFunCmd.setf18(nodeC, on); break;
+  case 19: wFunCmd.setf19(nodeC, on); break;
+  case 20: wFunCmd.setf20(nodeC, on); break;
+  case 21: wFunCmd.setf21(nodeC, on); break;
+  case 22: wFunCmd.setf22(nodeC, on); break;
+  case 23: wFunCmd.setf23(nodeC, on); break;
+  case 24: wFunCmd.setf24(nodeC, on); break;
+  case 25: wFunCmd.setf25(nodeC, on); break;
+  case 26: wFunCmd.setf26(nodeC, on); break;
+  case 27: wFunCmd.setf27(nodeC, on); break;
+  case 28: wFunCmd.setf28(nodeC, on); break;
+  }
 
   wLoc.setthrottleid( nodeC, "cbus" );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
@@ -454,7 +495,7 @@ static void __updateFunction(iOCBUS cbus, byte* frame, Boolean fstate) {
 
   if( slot != NULL ) {
     slot->f[fn] = fstate;
-    __broadcastFunction(cbus, slot, fn );
+    __broadcastFunction(cbus, slot, fn, fstate );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unmanaged loco: session %d", session );
@@ -581,7 +622,7 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
   int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int err     = HEXA2Byte(frame + OFFSET_D3 + offset);
 
-  int addr = addrh * 256 + addrl;
+  int addr = (addrh&0x3F) * 256 + addrl;
 
   const char* errStr = "?";
 
