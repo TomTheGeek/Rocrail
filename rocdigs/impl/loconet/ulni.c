@@ -158,7 +158,7 @@ static void __reader( void* threadinst ) {
           break;
       case 0xe0:
           SerialOp.read(data->serial, &c, 1);
-          msg[1] = c;
+          msg[1] = c & 0x7F;
           index = 2;
           msglen = (c & 0x7F);
           break;
@@ -170,7 +170,10 @@ static void __reader( void* threadinst ) {
 		}
 		TraceOp.trc( "ulni", TRCLEVEL_BYTE, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
-		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+    ok = False;
+    if( msglen > 0 && msglen <= 0x7F && msglen >= index ) {
+  		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+    }
 
     if( ok && msglen > 0 && !ignore ) {
       Boolean echoCatched = False;
@@ -224,7 +227,7 @@ static void __writer( void* threadinst ) {
     /* TODO: copy packet for the reader to compair */
 		if( !data->busy && data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) ) {
 		  byte* p = (byte*)QueueOp.get(data->subWriteQueue);
-		  int size = p[0];
+		  int size = p[0] & 0x7F;
 		  busyTimer = 0;
 		  MemOp.copy( ln, &p[1], size );
 		  freeMem(p);
@@ -314,7 +317,7 @@ int ulniRead ( obj inst, unsigned char *msg ) {
   iOLocoNetData data = Data(inst);
   if( !QueueOp.isEmpty(data->subReadQueue) ) {
     byte* p = (byte*)QueueOp.get(data->subReadQueue);
-    int size = p[0];
+    int size = p[0] & 0x7F;
     MemOp.copy( msg, &p[1], size );
     freeMem(p);
     return size;

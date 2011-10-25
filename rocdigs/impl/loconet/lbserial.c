@@ -166,6 +166,12 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
 
   msg[0] = c;
 
+  if( c == 0xE0 ) {
+	  /* Uhli exceptions */
+    TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
+    return -1;
+  }
+
   switch (c & 0xf0) {
   case 0x80:
       msglen = 2;
@@ -183,9 +189,9 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
       break;
   case 0xe0:
       SerialOp.read(data->serial, &c, 1);
-      msg[1] = c;
+      msg[1] = c & 0x7F;
       index = 2;
-      msglen = c;
+      msglen = c & 0x7F;
       break;
   default:
     TraceOp.trc( "lbserial", TRCLEVEL_WARNING, __LINE__, 9999, "undocumented message: start=0x%02X", msg[0] );
@@ -193,7 +199,10 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
   }
   TraceOp.trc( "lbserial", TRCLEVEL_DEBUG, __LINE__, 9999, "message 0x%02X length=%d", msg[0], msglen );
 
-  ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+  ok = False;
+  if( msglen > 0 && msglen <= 0x7F && msglen >= index ) {
+		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+  }
 
   if( ok ) {
     return msglen;
