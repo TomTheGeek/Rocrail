@@ -2218,6 +2218,9 @@ void LocDialog::OnButtonLcCvDescClick( wxCommandEvent& event )
 void LocDialog::OnCVCellLeftClick( wxGridEvent& event )
 {
   m_iSelectedCV = event.GetRow();
+  if( m_iSelectedCV == -1 )
+    return;
+
   wxString str = m_CVList->GetCellValue( m_iSelectedCV, 2 );
   m_CVDescription->SetValue(str);
   m_CVDescription->Enable(true);
