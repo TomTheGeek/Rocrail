@@ -283,7 +283,7 @@ static Boolean _supportPT( obj inst ) {
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
 static int vminor = 0;
-static int patch  = 99;
+static int patch  = 98;
 static int _version( obj inst ) {
   iOEditsProData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
@@ -400,9 +400,10 @@ static void __swTimeWatcher( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                     "swTimeWatcher() END SWITCHTIME %dms", data->lastSwCmd );
 
+      data->lastSwCmd = -1;
+
       cmd[0] = 1; // length
       cmd[1] = 32;
-
       ThreadOp.post(data->writer, (obj)cmd);
     }
     if( data->lastSwCmd != -1 ) {
@@ -455,6 +456,7 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   data->fbmod    = wDigInt.getfbmod( ini );
   data->swtime   = wDigInt.getswtime( ini );
   data->readfb   = wDigInt.isreadfb( ini );
+  data->lastSwCmd = -1;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EDiTS PRO %d.%d.%d", vmajor, vminor, patch );
