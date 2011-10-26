@@ -74,6 +74,14 @@ Needed instance variables:
 
 #include "rocdigs/impl/loconet/lnconst.h"
 
+#ifndef max
+  #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
+#endif
+
+#ifndef min
+  #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#endif
+
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
@@ -188,7 +196,7 @@ static void __reader( void* threadinst ) {
       if( msg[0] == OPC_GPOFF || msg[0] == OPC_GPON || (msg[0]!=0x81 && !echoCatched)) {
         byte* p = allocMem(msglen+1);
         p[0] = msglen;
-        MemOp.copy( p+1, msg, msglen);
+        MemOp.copy( p+1, msg, min(msglen,127));
         QueueOp.post( data->subReadQueue, (obj)p, normal);
         TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, msglen );
       }
@@ -229,13 +237,13 @@ static void __writer( void* threadinst ) {
 		  byte* p = (byte*)QueueOp.get(data->subWriteQueue);
 		  int size = p[0] & 0x7F;
 		  busyTimer = 0;
-		  MemOp.copy( ln, &p[1], size );
+		  MemOp.copy( ln, &p[1], min(size, 127) );
 		  freeMem(p);
       ok = SerialOp.write( data->serial, (char*)ln, size );
       if(ok) {
         echoTimer = 0;
         data->subSendLen = size;
-		    MemOp.copy( data->subSendPacket, ln, size );
+		    MemOp.copy( data->subSendPacket, ln, min(size,127) );
 		    data->subSendEcho = False;
       }
 		}
@@ -318,7 +326,7 @@ int ulniRead ( obj inst, unsigned char *msg ) {
   if( !QueueOp.isEmpty(data->subReadQueue) ) {
     byte* p = (byte*)QueueOp.get(data->subReadQueue);
     int size = p[0] & 0x7F;
-    MemOp.copy( msg, &p[1], size );
+    MemOp.copy( msg, &p[1], min(size, 127) );
     freeMem(p);
     return size;
   }
@@ -334,7 +342,7 @@ Boolean ulniWrite( obj inst, unsigned char *msg, int len ) {
   if( len > 0 ) {
     byte* p = allocMem(len+1);
     p[0] = len;
-    MemOp.copy( p+1, msg, len);
+    MemOp.copy( p+1, msg, min(len,127));
     QueueOp.post( data->subWriteQueue, (obj)p, normal);
     TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, len );
     return True;

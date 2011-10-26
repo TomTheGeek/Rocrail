@@ -75,6 +75,10 @@
 
 #include "rocutils/public/addr.h"
 
+#ifndef min
+  #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#endif
+
 static int instCnt = 0;
 
 /* proto types */
@@ -2011,7 +2015,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
           cmd[3] = V;
           cmd[4] = LocoNetOp.checksum( cmd+1, 3 );
 
-          byte* bcmd = allocMem( 32 );
+          byte* bcmd = allocMem( 64 );
           MemOp.copy( bcmd, cmd, 32 );
           ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
         }
@@ -2023,7 +2027,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
           cmd[3] = dirf;
           cmd[4] = LocoNetOp.checksum( cmd+1, 3 );
 
-          byte* bcmd = allocMem( 32 );
+          byte* bcmd = allocMem( 64 );
           MemOp.copy( bcmd, cmd, 32 );
           ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
         }
@@ -2259,7 +2263,7 @@ int makereqDispatch(iOLocoNetData data, byte *msg, int slot, iONode node, int st
     msg[3] = (status&~LOCOSTAT_MASK)|LOCO_COMMON;
     msg[4] = LocoNetOp.checksum( msg+1, 3 );
 
-    byte* bcmd = allocMem( 32 );
+    byte* bcmd = allocMem( 64 );
     MemOp.copy( bcmd, msg, 32 );
     ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
   }
@@ -2341,7 +2345,7 @@ static void _halt( obj inst, Boolean poweroff ) {
   }
   else {
     if( wDigInt.ispoweroffexit(data->ini) || poweroff ) {
-      byte* bcmd = allocMem(32);
+      byte* bcmd = allocMem(64);
       bcmd[0] = 2;
       bcmd[1] = wLocoNet.isuseidle(data->loconet)?OPC_IDLE:OPC_GPOFF;
       bcmd[2] = LocoNetOp.checksum( bcmd+1, 1 );
@@ -2576,7 +2580,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
 
     if( data->initPacket[0] > 0 ) {
       byte* bcmd = allocMem( 128 );
-      MemOp.copy( bcmd, data->initPacket, data->initPacket[0] );
+      MemOp.copy( bcmd, data->initPacket, min(data->initPacket[0],127) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Send %d byte init packet", data->initPacket[0] & 0xFF );
       ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
     }
