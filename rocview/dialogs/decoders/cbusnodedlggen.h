@@ -123,6 +123,7 @@ class cbusnodedlggen : public wxDialog
 		wxStaticText* m_lab1GC2Sensor;
 		wxStaticText* m_lab1GC2Switch;
 		wxStaticText* m_lab1GC2Pulse;
+		wxStaticText* m_labIR;
 		wxStaticText* m_lab1C2;
 		wxStaticText* m_lab1GC2Test;
 		wxStaticText* m_labGC2Port1;
@@ -132,6 +133,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block1;
 		wxRadioButton* m_GC2Switch1;
 		wxRadioButton* m_GC2Pulse1;
+		wxRadioButton* m_GC2IR1;
 		wxCheckBox* m_GC2c21;
 		wxButton* m_GC2Test1;
 		wxStaticText* m_labGC2Port2;
@@ -141,6 +143,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block2;
 		wxRadioButton* m_GC2Switch2;
 		wxRadioButton* m_GC2Pulse2;
+		wxRadioButton* m_GC2IR2;
 		wxCheckBox* m_GC2c22;
 		wxButton* m_GC2Test2;
 		wxStaticText* m_labGC2Port3;
@@ -150,6 +153,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block3;
 		wxRadioButton* m_GC2Switch3;
 		wxRadioButton* m_GC2Pulse3;
+		wxRadioButton* m_GC2IR3;
 		wxCheckBox* m_GC2c23;
 		wxButton* m_GC2Test3;
 		wxStaticText* m_labGC2Port4;
@@ -159,6 +163,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block4;
 		wxRadioButton* m_GC2Switch4;
 		wxRadioButton* m_GC2Pulse4;
+		wxRadioButton* m_GC2IR4;
 		wxCheckBox* m_GC2c24;
 		wxButton* m_GC2Test4;
 		wxStaticText* m_labGC2Port5;
@@ -168,6 +173,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block5;
 		wxRadioButton* m_GC2Switch5;
 		wxRadioButton* m_GC2Pulse5;
+		wxRadioButton* m_GC2IR5;
 		wxCheckBox* m_GC2c25;
 		wxButton* m_GC2Test5;
 		wxStaticText* m_labGC2Port6;
@@ -177,6 +183,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block6;
 		wxRadioButton* m_GC2Switch6;
 		wxRadioButton* m_GC2Pulse6;
+		wxRadioButton* m_GC2IR6;
 		wxCheckBox* m_GC2c26;
 		wxButton* m_GC2Test6;
 		wxStaticText* m_labGC2Port7;
@@ -186,6 +193,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block7;
 		wxRadioButton* m_GC2Switch7;
 		wxRadioButton* m_GC2Pulse7;
+		wxRadioButton* m_GC2IR7;
 		wxCheckBox* m_GC2c27;
 		wxButton* m_GC2Test7;
 		wxStaticText* m_labGC2Port8;
@@ -195,6 +203,7 @@ class cbusnodedlggen : public wxDialog
 		wxRadioButton* m_GC2Block8;
 		wxRadioButton* m_GC2Switch8;
 		wxRadioButton* m_GC2Pulse8;
+		wxRadioButton* m_GC2IR8;
 		wxCheckBox* m_GC2c28;
 		wxButton* m_GC2Test8;
 		wxStaticLine* m_staticline2;
