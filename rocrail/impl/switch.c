@@ -567,9 +567,9 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
   return ok;
 }
 
-static Boolean _unLock( iOSwitch inst, const char* id, iORoute route ) {
+static Boolean _unLock( iOSwitch inst, const char* id, iORoute route, Boolean force ) {
   iOSwitchData data = Data(inst);
-  if( StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) {
+  if( force || StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) {
     data->lockedId = NULL;
     data->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
     /* Broadcast to clients. Node6 */
@@ -714,7 +714,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   if( StrOp.equals( wSwitch.unlock, wSwitch.getcmd( nodeA ) ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock switch [%s]",
                  SwitchOp.getId( inst ) );
-    SwitchOp.unLock( inst, o->lockedId, NULL );
+    SwitchOp.unLock( inst, o->lockedId, NULL, False );
     NodeOp.base.del(nodeA);
     return True;
   }
@@ -1166,7 +1166,7 @@ static void _reset( iOSwitch inst ) {
   iOSwitchData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset switch [%s]", SwitchOp.getId( inst ) );
-  SwitchOp.unLock( inst, data->lockedId, NULL );
+  SwitchOp.unLock( inst, data->lockedId, NULL, False );
 }
 
 
@@ -1392,7 +1392,7 @@ static void __accThread( void* threadinst ) {
               const char* routeid = StrTokOp.nextToken( tok );
               iORoute route = ModelOp.getRoute(AppOp.getModel(), routeid);
               if( route != NULL ) {
-                if( !RouteOp.unLock(route, data->id, NULL, False) ) {
+                if( !RouteOp.unLock(route, data->id, NULL, False, False) ) {
                   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not unlock route %s for accessory \"%s\"", routeid, data->id );
                 }
                 else {

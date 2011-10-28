@@ -5489,3 +5489,9 @@ msgstr ""
 msgid "Enable analyzer"
 msgstr ""
 
+#. 
+# id="forceunlockatebreak"
+#, c-format
+msgid "Force unlock at EBreak"
+msgstr ""
+

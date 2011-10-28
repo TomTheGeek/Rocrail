@@ -17573,4 +17573,7 @@
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer"/>
   </Msg>
+  <Msg id="forceunlockatebreak">
+    <en txt="Force unlock at EBreak"/>
+  </Msg>
 </Messages>

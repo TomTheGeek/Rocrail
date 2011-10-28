@@ -1076,6 +1076,9 @@
       <param name="scid" vt="const char*" remark="schedule ID"/>
       <param name="lcid" vt="const char*" remark="loco ID"/>
     </fun>
+    <fun name="forceUnlock" vt="void">
+      <param name="inst" vt="this" remark="Model instance"/>
+    </fun>
     <data include="mvtrack,modplan,$rocint/public/analyserint">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
@@ -1200,6 +1203,7 @@
       <param name="locid" vt="const char*" remark="Unlocking locid"/>
       <param name="resblocks" vt="const char**" remark="Reserved blocks; not to unlock as crossing blocks."/>
       <param name="unlockswitches" vt="Boolean" remark="unlock all switches for this route"/>
+      <param name="force" vt="Boolean" remark="Force unlock."/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
@@ -1282,6 +1286,7 @@
       <param name="inst" vt="this" remark="Switch instance"/>
       <param name="locid" vt="const char*" remark="Unlocking locid"/>
       <param name="route" vt="iORoute" remark="Route instance"/>
+      <param name="force" vt="Boolean" remark="Force unlock."/>
     </fun>
     <fun name="cmd" vt="Boolean">
       <param name="inst" vt="this" remark="Switch instance"/>

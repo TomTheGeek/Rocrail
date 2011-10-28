@@ -418,15 +418,15 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
 
   if( data->next1Route != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next1Route for %s...", data->loc->getId( data->loc ));
-    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL, True );
+    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), NULL, True, False );
   }
   if( data->next2Route != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next2Route for %s...", data->loc->getId( data->loc ));
-    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL, True );
+    data->next2Route->unLock( data->next2Route, data->loc->getId( data->loc ), NULL, True, False );
 }
   if( data->next3Route != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next3Route for %s...", data->loc->getId( data->loc ));
-    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL, True );
+    data->next3Route->unLock( data->next3Route, data->loc->getId( data->loc ), NULL, True, False );
   }
 
   if( data->curBlock == NULL ) {

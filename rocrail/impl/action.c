@@ -600,7 +600,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         const char* lockid = wAction.getparam(data->action);
         if( lockid == NULL || StrOp.len( lockid ) == 0 )
           lockid = wAction.getid( data->action );
-        RouteOp.unLock(st, lockid, NULL, True);
+        RouteOp.unLock(st, lockid, NULL, True, False);
       }
       else {
         RouteOp.go( st );

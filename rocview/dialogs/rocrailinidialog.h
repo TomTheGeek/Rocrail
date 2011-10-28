@@ -320,6 +320,7 @@ public:
     wxCheckBox* m_SyncRoutes;
     wxCheckBox* m_TimedSensors;
     wxCheckBox* m_EnableAnalyzer;
+    wxCheckBox* m_ForceUnlock;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

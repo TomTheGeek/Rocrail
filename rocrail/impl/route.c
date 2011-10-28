@@ -87,7 +87,7 @@ static void __ctcAction( void* inst, iONode evt ) {
 
   if( data->ctc2 && data->ctc3 ) {
     /* clear */
-    RouteOp.unLock( (iORoute)inst, wRoute.getid( data->props ), NULL, True );
+    RouteOp.unLock( (iORoute)inst, wRoute.getid( data->props ), NULL, True, False );
   }
 
   if( data->ctc1 && data->ctc2 && !data->ctc3 ) {
@@ -697,7 +697,7 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
 
 
 
-static Boolean __unlockSwitches( iORoute inst, const char* locId );
+static Boolean __unlockSwitches( iORoute inst, const char* locId, Boolean force );
 static Boolean __lockSwitches( iORoute inst, const char* locId ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );
@@ -718,7 +718,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
             False,
             wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) ) {
           /* Rewind. */
-          __unlockSwitches( inst, locId );
+          __unlockSwitches( inst, locId, False );
           return False;
         }
       }
@@ -734,7 +734,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
                 False,
                 wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) ) {
           /* Rewind. */
-          __unlockSwitches( inst, locId );
+          __unlockSwitches( inst, locId, False );
           return False;
         }
       }
@@ -745,7 +745,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         if( wSwitchCmd.islock( sw ) ) {
           if( !SwitchOp.lock( isw, locId, inst ) ) {
             /* Rewind. */
-            __unlockSwitches( inst, locId );
+            __unlockSwitches( inst, locId, False );
             return False;
           }
         }
@@ -762,7 +762,7 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
   return True;
 }
 
-static Boolean __unlockSwitches( iORoute inst, const char* locId ) {
+static Boolean __unlockSwitches( iORoute inst, const char* locId, Boolean force ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );
   iONode      sw = wRoute.getswcmd( o->props );
@@ -790,7 +790,7 @@ static Boolean __unlockSwitches( iORoute inst, const char* locId ) {
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
       if( isw != NULL ) {
-        if( !SwitchOp.unLock( isw, locId, inst ) )
+        if( !SwitchOp.unLock( isw, locId, inst, force ) )
           ok = False;
       }
     }
@@ -1066,7 +1066,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
 
     if( !__lockCrossingBlocks( inst, id ) ) {
       if( lockswitches )
-        __unlockSwitches( inst, id );
+        __unlockSwitches( inst, id, False );
       return False;
     }
 
@@ -1118,13 +1118,16 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
   }
 }
 
-static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, Boolean unlockswitches ) {
+static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, Boolean unlockswitches, Boolean force ) {
   iORouteData o = Data(inst);
-  if( StrOp.equals( lcid, o->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), lcid );
-    __checkAction(inst, "unlock");
+  if( force || StrOp.equals( lcid, o->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), force?"**force**":lcid );
+    if( !force )
+      __checkAction(inst, "unlock");
+
     if( unlockswitches )
-      __unlockSwitches( inst, lcid );
+      __unlockSwitches( inst, lcid, force );
+
     __unlockCrossingBlocks( inst, lcid, resblocks );
     o->lockedId = NULL;
     __broadcast(inst);
@@ -1236,7 +1239,7 @@ static void _reset( iORoute inst ) {
   if( o->lockedId != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                "reset route [%s]", RouteOp.getId( inst ) );
-    RouteOp.unLock( inst, o->lockedId, NULL, True );
+    RouteOp.unLock( inst, o->lockedId, NULL, True, False );
   }
 }
 

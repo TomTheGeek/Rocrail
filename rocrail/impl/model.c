@@ -1761,6 +1761,12 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) && !StrOp.equals( wSysCmd.loccnfg, cmdVal ) ) {
+    if( StrOp.equals( wSysCmd.ebreak, cmdVal ) ) {
+      if( wCtrl.isebreakforceunlock( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+        ModelOp.forceUnlock(inst);
+      }
+    }
+
     /* inform objects of a power on/off */
     if( MutexOp.trywait(data->muxSysEvent, 10) ) {
       int idx = 0;
@@ -4491,6 +4497,27 @@ static void _addSysEventListener(iOModel inst, obj listener) {
 static void _removeSysEventListener(iOModel inst, obj listener) {
   iOModelData data = Data(inst);
   ListOp.removeObj( data->sysEventListeners, listener );
+}
+
+
+static void _forceUnlock(iOModel inst) {
+  iOModelData data = Data(inst);
+  int size = ListOp.size(data->routeList);
+  int i = 0;
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Force unlock %d routes...", size);
+
+  for( i = 0; i < size; i++ ) {
+    iORoute route = (iORoute)ListOp.get(data->routeList, i);
+    if( route != NULL )
+      RouteOp.unLock(route, "*forceUnlock*", NULL, True, True);
+  }
+  size = ListOp.size(data->switchList);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Force unlock %d switches...", size);
+  for( i = 0; i < size; i++ ) {
+    iOSwitch sw = (iOSwitch)ListOp.get(data->switchList, i);
+    if( sw != NULL )
+      SwitchOp.unLock(sw, "*forceUnlock*", NULL, True);
+  }
 }
 
 

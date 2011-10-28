@@ -159,7 +159,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
               resblocks[2] = data->next3Block->base.id(data->next3Block);
           }
         }
-        data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True );
+        data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True, False );
       }
 
       if( data->next1Block != NULL ) {
