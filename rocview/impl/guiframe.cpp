@@ -232,6 +232,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
     EVT_MENU( wxID_HELP         , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
+    EVT_MENU( ME_GCA            , RocGuiFrame::OnGCA)
     EVT_MENU( ME_DonKey         , RocGuiFrame::OnDonKey)
     EVT_MENU( ME_DonKeyInfo     , RocGuiFrame::OnDonKeyInfo)
     EVT_MENU( ME_Translations   , RocGuiFrame::OnTranslations)
@@ -1531,6 +1532,11 @@ void RocGuiFrame::initFrame() {
   menuHelp->Append(translations_menuHelp);
 
   menuHelp->AppendSeparator();
+  wxMenuItem *gca_menuHelp = new wxMenuItem(menuHelp,
+      ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
+  menuHelp->Append(gca_menuHelp);
+  menuHelp->AppendSeparator();
+
 
   wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug, wxGetApp().getMenu("bug"), wxGetApp().getTip("bug") );
   bug_menuHelp->SetBitmap(*_img_bug);
@@ -3285,6 +3291,10 @@ void RocGuiFrame::OnHelp(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnRUG(wxCommandEvent& WXUNUSED(event)) {
   wxLaunchDefaultBrowser(wxGetApp().getMsg("rug"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocGuiFrame::OnGCA(wxCommandEvent& WXUNUSED(event)) {
+  wxLaunchDefaultBrowser(wxT("http://www.phgiling.net"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnTranslations(wxCommandEvent& WXUNUSED(event)) {
