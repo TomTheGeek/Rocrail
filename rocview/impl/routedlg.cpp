@@ -47,6 +47,7 @@
 
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/Item.h"
 
 BEGIN_EVENT_TABLE(RouteCtrlDlg, wxDialog)
     EVT_BUTTON(-1, RouteCtrlDlg::OnButton)
@@ -128,14 +129,35 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
   }
 }
 
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
 void RouteCtrlDlg::fillTable( iONode node ) {
   int cnt = NodeOp.getChildCnt( node );
   if( m_Grid->GetRows() > 0 )
     m_Grid->DeleteRows( 0, m_Grid->GetRows() );
   m_Grid->AppendRows( cnt );
 
+  iOList list = ListOp.inst();
   for( int i = 0; i < cnt; i++ ) {
-    iONode child = NodeOp.getChild( node, i );
+    iONode st = NodeOp.getChild( node, i );
+    const char* id = wRoute.getid( st );
+    if( id != NULL ) {
+      ListOp.add(list, (obj)st);
+    }
+  }
+
+  ListOp.sort(list, &__sortID);
+
+  for( int i = 0; i < cnt; i++ ) {
+    iONode child = (iONode)ListOp.get(list, i); //NodeOp.getChild( node, i );
 
     m_Grid->SetCellValue( wxString(wRoute.getid( child ),wxConvUTF8), i, 0 );
     m_Grid->SetCellValue( wxString(wRoute.getbka( child ),wxConvUTF8), i, 1 );
