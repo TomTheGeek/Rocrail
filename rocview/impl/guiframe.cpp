@@ -1649,7 +1649,7 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddSeparator();
 
   m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, wxGetApp().getTip("softwareupdates") );
-  m_ToolBar->AddTool(ME_Help, wxGetApp().getMsg("documentation"), *_img_manual, wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual, wxGetApp().getTip("documentation") );
 
   m_ToolBar->Realize();
 
