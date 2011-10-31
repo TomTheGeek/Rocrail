@@ -175,9 +175,9 @@ class LocDialog: public wxDialog, public BaseDialog
   void EditFunction( int nr, wxString txt );
   int m_TabAlign;
   void initCVDesc();
-  const char* m_CVDesc[257];
+  const char* m_CVDesc[256];
   int m_iSelectedCV;
-  iONode m_CVNodes[257];
+  iONode m_CVNodes[1024];
   int m_iFunGroup;
 
 public:

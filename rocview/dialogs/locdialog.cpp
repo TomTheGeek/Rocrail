@@ -740,7 +740,7 @@ void LocDialog::InitValues() {
   m_CVList->DeleteRows( 0, m_CVList->GetNumberRows() );
   ListOp.sort(list, &__sortCV);
   int cnt = ListOp.size( list );
-  for( int i = 0; i < cnt; i++ ) {
+  for( int i = 0; i < cnt && cnt < 1024; i++ ) {
     iONode cv = (iONode)ListOp.get( list, i );
     char* cvnr = StrOp.fmt( "%d", wCVByte.getnr( cv ) );
     char* cvval = StrOp.fmt( "%d", wCVByte.getvalue( cv ) );
@@ -753,7 +753,7 @@ void LocDialog::InitValues() {
     if( cvdesc != NULL && StrOp.len(cvdesc) > 0 )
       m_CVList->SetCellValue(row, 2, wxString(cvdesc,wxConvUTF8) );
     else
-      m_CVList->SetCellValue(row, 2, wxString(m_CVDesc[wCVByte.getnr( cv )],wxConvUTF8) );
+      m_CVList->SetCellValue(row, 2, wxString(m_CVDesc[wCVByte.getnr( cv )&0xff],wxConvUTF8) );
     m_CVList->SetReadOnly( row, 0, true );
     m_CVList->SetReadOnly( row, 1, true );
     m_CVList->SetReadOnly( row, 2, true );
@@ -2154,7 +2154,7 @@ void LocDialog::OnButtonLocConsistAddClick( wxCommandEvent& event )
 }
 
 void LocDialog::initCVDesc() {
-  for( int i = 0; i < 257; i++ )
+  for( int i = 0; i < 256; i++ )
     m_CVDesc[i] = "";
 
   m_CVDesc[  1]  = "Primary Address";
@@ -2205,9 +2205,11 @@ void LocDialog::OnButtonLcCvDescClick( wxCommandEvent& event )
   wxString str = m_CVList->GetCellValue(m_iSelectedCV, 0 );
   long cvnr = 0;
   str.ToLong(&cvnr);
-  iONode cv = m_CVNodes[cvnr];
-  wCVByte.setdesc( cv, m_CVDescription->GetValue().mb_str(wxConvUTF8) );
-  m_CVList->SetCellValue(m_iSelectedCV, 2, m_CVDescription->GetValue() );
+  if( cvnr < 256 ) {
+    iONode cv = m_CVNodes[cvnr];
+    wCVByte.setdesc( cv, m_CVDescription->GetValue().mb_str(wxConvUTF8) );
+    m_CVList->SetCellValue(m_iSelectedCV, 2, m_CVDescription->GetValue() );
+  }
 }
 
 
