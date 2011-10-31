@@ -197,20 +197,26 @@ static Boolean __acceptGhost( obj inst ) {
 static int _getEventCode( obj inst, const char* evtname ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);
+    Boolean trig = True;
+    if( data->locId == NULL || StrOp.len(data->locId) == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring trigger for event [%s] in block [%s]; not locked.", evtname, data->id );
+      trig = False;
+    }
+
     if( !data->trig_enter && StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
-      data->trig_enter = True;
+      data->trig_enter = trig;
       return enter_event;
     }
     else if( !data->trig_enter2in && StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
-      data->trig_enter2in = True;
+      data->trig_enter2in = trig;
       return enter2in_event;
     }
     else if( !data->trig_enter2pre && StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
-      data->trig_enter2pre = True;
+      data->trig_enter2pre = trig;
       return enter2pre_event;
     }
     else if( !data->trig_in && StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
-      data->trig_in = True;
+      data->trig_in = trig;
       return in_event;
     }
     else if( !data->trig_exit && StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
@@ -218,7 +224,7 @@ static int _getEventCode( obj inst, const char* evtname ) {
       return exit_event;
     }
     else if( !data->trig_pre2in && StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
-      data->trig_pre2in = True;
+      data->trig_pre2in = trig;
       return pre2in_event;
     }
     else if( StrOp.equals( evtname, wFeedbackEvent.occupied_event ) )
@@ -226,7 +232,7 @@ static int _getEventCode( obj inst, const char* evtname ) {
     else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
       return ident_event;
     else if( !data->trig_shortin && StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
-      data->trig_shortin = True;
+      data->trig_shortin = trig;
       return shortin_event;
     }
     else
