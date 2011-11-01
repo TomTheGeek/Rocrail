@@ -5495,3 +5495,9 @@ msgstr ""
 msgid "Force unlock at EBreak"
 msgstr ""
 
+#. 
+# id="triggerblockevents"
+#, c-format
+msgid "Trigger block events"
+msgstr ""
+

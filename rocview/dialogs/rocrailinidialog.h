@@ -321,6 +321,7 @@ public:
     wxCheckBox* m_TimedSensors;
     wxCheckBox* m_EnableAnalyzer;
     wxCheckBox* m_ForceUnlock;
+    wxCheckBox* m_TriggerBlockEvents;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

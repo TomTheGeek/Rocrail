@@ -17576,4 +17576,7 @@
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
   </Msg>
+  <Msg id="triggerblockevents">
+    <en txt="Trigger block events"/>
+  </Msg>
 </Messages>

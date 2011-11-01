@@ -198,7 +198,7 @@ static int _getEventCode( obj inst, const char* evtname ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);
     Boolean trig = True;
-    if( data->locId == NULL || StrOp.len(data->locId) == 0 ) {
+    if( data->locId == NULL || StrOp.len(data->locId) == 0 || !wCtrl.istriggerblockevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring trigger for event [%s] in block [%s]; not locked.", evtname, data->id );
       trig = False;
     }

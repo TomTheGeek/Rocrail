@@ -635,6 +635,7 @@
       <var name="timedsensors" vt="bool" defval="false" remark="Activate timed sensors."/>
       <var name="enableanalyzer" vt="bool" defval="true"/>
       <var name="ebreakforceunlock" vt="bool" defval="false"/>
+      <var name="triggerblockevents" vt="bool" defval="true"/>
     </ctrl>
   </rocrail>
 
