@@ -1093,6 +1093,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           }
 
         }
+        else {
+          m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wxT("") );
+        }
 
         if( wLoc.getdestblockid( node ) != NULL ) {
           iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getdestblockid( node ));
