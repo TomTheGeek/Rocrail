@@ -441,6 +441,8 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
 
+      wxYield();
+
       cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( cmd, dropid );
       wLoc.setcmd( cmd, wLoc.block );
@@ -471,12 +473,16 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
         cmd->base.del(cmd);
         ThreadOp.sleep(500);
 
+        wxYield();
+
         cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( cmd, wBlock.getid( m_Props ) );
         wBlock.setstate( cmd, blockstate);
         wBlock.setlocid( cmd, blockloc);
         wxGetApp().sendToRocrail( cmd );
         cmd->base.del(cmd);
+
+        wxYield();
 
         /* go to block */
         cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
