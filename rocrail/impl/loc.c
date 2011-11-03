@@ -358,7 +358,7 @@ static void __restoreFx( void* threadinst ) {
     }
   }
 
-  if( wLoc.isrestorespeed(data->props) ) {
+  if( wLoc.getV(data->props) > 0 && wLoc.isrestorespeed(data->props) ) {
     iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring speed for %s", wLoc.getid(data->props) );
     wLoc.setV( vcmd, wLoc.getV(data->props) );
@@ -377,7 +377,7 @@ static void __sysEvent( obj inst, iONode evtNode ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sysEvent [%s] for [%s]...", cmd, LocOp.getId((iOLoc)inst) );
 
-  if( StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
+  if( wLoc.isshow(data->props) && StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
     data->fxrestored = True;
     data->fxsleep = wSysCmd.getval(evtNode);
