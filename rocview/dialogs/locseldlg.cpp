@@ -194,7 +194,7 @@ void LocSelDlg::InitIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
         const char* id = wLoc.getid( lc );
-        if( id != NULL ) {
+        if( id != NULL && wLoc.isshow(lc) ) {
           m_List->Append( wxString(id,wxConvUTF8) );
         }
       }
