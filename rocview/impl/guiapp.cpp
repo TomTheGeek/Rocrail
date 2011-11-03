@@ -778,10 +778,10 @@ static void rocrailCallback( obj me, iONode node ) {
 
     wxGetApp().getFrame()->setEditMode(false);
 
-
     if( guiApp->getFrame()->getNotebook() != NULL ) {
-      if( !guiApp->isModelSet() || guiApp->isStayOffline() ) {
-        wxGetApp().setStayOffline( false );
+      if( !guiApp->isModelSet() ) {
+        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
+            "isModelSet=%d stayOffline=%d", guiApp->isModelSet(), guiApp->isStayOffline() );
         guiApp->setModel( node );
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, INIT_NOTEBOOK );
         wxPostEvent( guiApp->getFrame(), event );
@@ -796,12 +796,15 @@ static void rocrailCallback( obj me, iONode node ) {
       guiApp->getFrame()->getPlanPanel()->init();
     }
 
-    // Get the rocrail setup.
-    guiApp->m_InitialRocrailIni = true;
-    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd( cmd, wSysCmd.getini );
-    wxGetApp().sendToRocrail( cmd, false );
-    cmd->base.del(cmd);
+    if( !guiApp->isStayOffline() ) {
+      // Get the rocrail setup.
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,"get the rocrail.ini...");
+      guiApp->m_InitialRocrailIni = true;
+      iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+      wSysCmd.setcmd( cmd, wSysCmd.getini );
+      wxGetApp().sendToRocrail( cmd, false );
+      cmd->base.del(cmd);
+    }
 
     return;
   }
@@ -1285,6 +1288,8 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
 
   if( szCmd == NULL && m_RCon != NULL ) {
     // force disconnect:
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
+        "sendToRocrail: force disconnect... szCmd=0x%08X wait4rr=%d", szCmd, wait4rr );
     RConOp.close( m_RCon );
     RConOp.base.del( m_RCon );
     m_RCon = NULL;
@@ -1293,6 +1298,7 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
 
   if( m_RCon == NULL ) {
     int waitloops = wait4rr?300:1;
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "connecting... waitloops=%d", waitloops);
 
     if( m_Frame != NULL ) {
       wxCursor cursor = wxCursor(wxCURSOR_WAIT);

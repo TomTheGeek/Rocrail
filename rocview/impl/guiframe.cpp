@@ -2031,6 +2031,7 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
   if( wxID_OK == dlg->ShowModal() ) {
     CleanNotebook();
     wxGetApp().setModel(NULL);
+    wxGetApp().setStayOffline(false);
     m_ControlCode = StrOp.dup( dlg->getControlCode().mb_str(wxConvUTF8) );
     Connect(StrOp.dup( dlg->getHostname().mb_str(wxConvUTF8) ), dlg->getPort());
 	}
