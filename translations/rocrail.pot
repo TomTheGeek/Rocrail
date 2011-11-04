@@ -5501,3 +5501,15 @@ msgstr ""
 msgid "Trigger block events"
 msgstr ""
 
+#. 
+# id="locofilter"
+#, c-format
+msgid "Loco view filter"
+msgstr ""
+
+#. 
+# id="special"
+#, c-format
+msgid "Special"
+msgstr ""
+
