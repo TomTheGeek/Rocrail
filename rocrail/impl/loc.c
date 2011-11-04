@@ -2629,10 +2629,13 @@ static iOLoc _inst( iONode props ) {
   ModelOp.addSysEventListener( AppOp.getModel(), (obj)loc );
 
   /*data->driver = (iILcDriverInt)LcDriverOp.inst( loc );*/
-  if( __loadDriver( loc ) ) {
+  if( wLoc.isshow(data->props) && __loadDriver( loc ) ) {
     data->runner = ThreadOp.inst( _getId(loc), &__runner, loc );
     data->run = True;
     ThreadOp.start( data->runner );
+  }
+  else if(!wLoc.isshow(data->props)) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] is invisible; no runner started", wLoc.getid(props));
   }
 
   instCnt++;

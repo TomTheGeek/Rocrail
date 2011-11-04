@@ -4408,23 +4408,25 @@ static void _loadBlockOccupancy( iOModel inst ) {
         iONode props = LocOp.base.properties(loco);
         wLoc.setresumeauto( props, automode );
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore loco settings for [%s]", LocOp.getId(loco));
+        if( wLoc.isshow(props) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore loco placing for [%s]", LocOp.getId(loco));
 
-        if( ScID != NULL && StrOp.len(ScID) > 0) {
-          LocOp.useSchedule(loco, ScID);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore scheduleID [%s] for [%s]",
-              ScID, LocOp.getId(loco));
-        }
+          if( ScID != NULL && StrOp.len(ScID) > 0) {
+            LocOp.useSchedule(loco, ScID);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore scheduleID [%s] for [%s]",
+                ScID, LocOp.getId(loco));
+          }
 
-        if( enterside > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set enterside to [%s] for [%s]",
-              placing == 1 ?"plus":"min", LocOp.getId(loco) );
-          wLoc.setblockenterside( props, enterside == 1 ? True:False );
-        }
-        if( placing > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set placing to [%s] for [%s]",
-              placing == 1 ?"default":"reverse", LocOp.getId(loco) );
-          wLoc.setplacing( props, placing == 1 ? True:False );
+          if( enterside > 0 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set enterside to [%s] for [%s]",
+                placing == 1 ?"plus":"min", LocOp.getId(loco) );
+            wLoc.setblockenterside( props, enterside == 1 ? True:False );
+          }
+          if( placing > 0 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set placing to [%s] for [%s]",
+                placing == 1 ?"default":"reverse", LocOp.getId(loco) );
+            wLoc.setplacing( props, placing == 1 ? True:False );
+          }
         }
       }
       else if( StrOp.len(LocoID) > 0 ) {
@@ -4446,12 +4448,15 @@ static void _loadBlockOccupancy( iOModel inst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block [%s]", BlockID );
 
           if( loco != NULL ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s], section [%s]", LocoID, Section );
-            if( Section != NULL && StrOp.len( Section ) > 0 && StrOp.equals( block->base.name(), StageOp.base.name()) ) {
-              StageOp.setSectionOcc((iOStage)block, Section, LocoID);
+            iONode lcprops = LocOp.base.properties(loco);
+            if( wLoc.isshow(lcprops) ) {
+              if( Section != NULL && StrOp.len( Section ) > 0 && StrOp.equals( block->base.name(), StageOp.base.name()) ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s], section [%s]", LocoID, Section );
+                StageOp.setSectionOcc((iOStage)block, Section, LocoID);
+              }
+              else if( !StrOp.equals( block->base.name(), StageOp.base.name()) )
+                wBlock.setlocid( props, StrOp.dup( LocoID ) );
             }
-            else if( !StrOp.equals( block->base.name(), StageOp.base.name()) )
-              wBlock.setlocid( props, StrOp.dup( LocoID ) );
           }
 
           if( location != NULL && loco != NULL ) {
