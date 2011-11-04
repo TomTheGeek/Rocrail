@@ -238,6 +238,7 @@ public:
   void OnZoom100(wxCommandEvent& event);
 
   void OnLocoBook(wxCommandEvent& event);
+  void OnLocoSortByAddr(wxCommandEvent& event);
   void OnLocoViewAll(wxCommandEvent& event);
   void OnLocoViewSteam(wxCommandEvent& event);
   void OnLocoViewDiesel(wxCommandEvent& event);
@@ -351,6 +352,7 @@ private:
   const char* m_ThemesPath;
 
   bool  m_bLocoBook;
+  bool  m_LocoSortByAddress;
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
   bool  m_bRaster;
@@ -502,6 +504,7 @@ enum
     ME_LocoViewElectric,
     ME_LocoViewCommuter,
     ME_LocoViewSpecial,
+    ME_LocoSortByAddr,
     ME_ShowID,
     ME_FullScreen,
     ME_Raster,

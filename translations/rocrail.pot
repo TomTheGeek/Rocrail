@@ -5513,3 +5513,9 @@ msgstr ""
 msgid "Special"
 msgstr ""
 
+#. 
+# id="locosortbyaddr"
+#, c-format
+msgid "Sort locos by address"
+msgstr ""
+

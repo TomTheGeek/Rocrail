@@ -17585,4 +17585,7 @@
   <Msg id="special">
     <en txt="Special"/>
   </Msg>
+  <Msg id="locosortbyaddr">
+    <en txt="Sort locos by address"/>
+  </Msg>
 </Messages>

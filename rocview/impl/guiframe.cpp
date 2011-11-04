@@ -292,6 +292,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
     EVT_MENU( ME_Zoom100        , RocGuiFrame::OnZoom100)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
+    EVT_MENU( ME_LocoSortByAddr , RocGuiFrame::OnLocoSortByAddr)
     EVT_MENU( ME_LocoViewAll    , RocGuiFrame::OnLocoViewAll)
     EVT_MENU( ME_LocoViewSteam  , RocGuiFrame::OnLocoViewSteam)
     EVT_MENU( ME_LocoViewDiesel , RocGuiFrame::OnLocoViewDiesel)
@@ -715,6 +716,17 @@ static int locComparator(obj* o1, obj* o2) {
 }
 
 
+static int locAddrComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( wLoc.getaddr( (iONode)*o1) == wLoc.getaddr( (iONode)*o2 ) )
+    return 0;
+  if( wLoc.getaddr( (iONode)*o1)  > wLoc.getaddr( (iONode)*o2 ) )
+    return 1;
+  return -1;
+}
+
+
 void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
   iONode model = wxGetApp().getModel();
   iONode loc = NULL;
@@ -835,7 +847,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         }
       }
       // Sort the list:
-      ListOp.sort( list, locComparator );
+      ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
 
       for( i = 0; i < ListOp.size( list ); i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
@@ -1274,6 +1286,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bCheckedDonKey     = false;
   m_WorkSpace          = NULL;
   m_LocoCategory       = LOCO_VIEW_ALL;
+  m_LocoSortByAddress  = false;
 }
 
 void RocGuiFrame::initFrame() {
@@ -1530,6 +1543,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
+  menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
   wxMenu *menuLocoView = new wxMenu();
   menuLocoView->AppendCheckItem( ME_LocoViewAll, wxGetApp().getMenu("all"), wxGetApp().getTip("all") );
   menuLocoView->AppendCheckItem( ME_LocoViewSteam, wxGetApp().getMenu("steam"), wxGetApp().getTip("steam") );
@@ -2679,6 +2693,13 @@ void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   else {
     m_PlanSplitter->Unsplit( m_StatNotebook );
   }
+}
+
+void RocGuiFrame::OnLocoSortByAddr( wxCommandEvent& event ) {
+  wxMenuItem* mi = menuBar->FindItem(ME_LocoSortByAddr);
+  m_LocoSortByAddress = mi->IsChecked();
+  event.SetClientData(NULL);
+  InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnBackColor( wxCommandEvent& event ) {
