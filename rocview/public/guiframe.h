@@ -238,6 +238,12 @@ public:
   void OnZoom100(wxCommandEvent& event);
 
   void OnLocoBook(wxCommandEvent& event);
+  void OnLocoViewAll(wxCommandEvent& event);
+  void OnLocoViewSteam(wxCommandEvent& event);
+  void OnLocoViewDiesel(wxCommandEvent& event);
+  void OnLocoViewElectric(wxCommandEvent& event);
+  void OnLocoViewCommuter(wxCommandEvent& event);
+  void OnLocoViewSpecial(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
@@ -345,6 +351,7 @@ private:
   const char* m_ThemesPath;
 
   bool  m_bLocoBook;
+  int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
   bool  m_bRaster;
   bool  m_bServerConsoleMode;
@@ -489,6 +496,12 @@ enum
     ME_Zoom75,
     ME_Zoom100,
     ME_LocoBook,
+    ME_LocoViewAll,
+    ME_LocoViewSteam,
+    ME_LocoViewDiesel,
+    ME_LocoViewElectric,
+    ME_LocoViewCommuter,
+    ME_LocoViewSpecial,
     ME_ShowID,
     ME_FullScreen,
     ME_Raster,
@@ -557,5 +570,13 @@ enum {
   LOC_COL_DESTBLOCK = 5,
 
 };
+
+#define LOCO_VIEW_ALL 0
+#define LOCO_VIEW_STEAM 1
+#define LOCO_VIEW_DIESEL 2
+#define LOCO_VIEW_ELECTRIC 3
+#define LOCO_VIEW_COMMUTER 4
+#define LOCO_VIEW_SPECIAL 5
+
 
 #endif

@@ -17579,4 +17579,10 @@
   <Msg id="triggerblockevents">
     <en txt="Trigger block events"/>
   </Msg>
+  <Msg id="locofilter">
+    <en txt="Loco view filter"/>
+  </Msg>
+  <Msg id="special">
+    <en txt="Special"/>
+  </Msg>
 </Messages>
