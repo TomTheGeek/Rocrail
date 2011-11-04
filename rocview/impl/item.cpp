@@ -1057,6 +1057,10 @@ void Symbol::OnTimer(wxTimerEvent& event) {
 
 
 void Symbol::OnMouseEnter(wxMouseEvent& event) {
+  if( wxGetApp().getFrame()->isEditMode() ) {
+    SetBackgroundColour( Base::getYellow() );
+    Refresh();
+  }
   m_hasMouse = true;
   if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
@@ -1067,8 +1071,6 @@ void Symbol::OnMouseEnter(wxMouseEvent& event) {
       ) {
     wxCursor cursor = wxCursor(wxCURSOR_HAND);
     SetCursor( cursor );
-    //SetBackgroundColour( Base::getYellow() );
-    //Refresh();
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     const char* locId = wBlock.getlocid( m_Props );
@@ -1081,13 +1083,15 @@ void Symbol::OnMouseEnter(wxMouseEvent& event) {
         wxCursor cursor = wxCursor(wxCURSOR_HAND);
         SetCursor( cursor );
       }
-      //SetBackgroundColour( Base::getYellow() );
-      //Refresh();
     }
   }
 }
 
 void Symbol::OnMouseLeave(wxMouseEvent& event) {
+  if( wxGetApp().getFrame()->isEditMode() ) {
+    SetBackgroundColour( m_PlanPanel->GetBackgroundColour() );
+    Refresh();
+  }
   m_hasMouse = false;
   if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ||
       StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
@@ -1098,14 +1102,10 @@ void Symbol::OnMouseLeave(wxMouseEvent& event) {
       ) {
     wxCursor cursor = wxCursor(wxCURSOR_ARROW);
     SetCursor( cursor );
-    //SetBackgroundColour( Base::getWhite() );
-    //Refresh();
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     wxCursor cursor = wxCursor(wxCURSOR_ARROW);
     SetCursor( cursor );
-    //SetBackgroundColour( Base::getWhite() );
-    //Refresh();
   }
 }
 
@@ -1177,6 +1177,7 @@ static int __sortStr(obj* _a, obj* _b)
 void Symbol::OnPopup(wxMouseEvent& event)
 {
     wxMenu menu( wxString(wItem.getid( m_Props ),wxConvUTF8) );
+    //SetBackgroundColour( Base::getYellow() );
 
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
       const char* locId = wBlock.getlocid( m_Props );
