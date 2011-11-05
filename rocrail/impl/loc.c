@@ -1349,6 +1349,7 @@ static void __runner( void* threadinst ) {
       wLoc.setfn( broadcast, wLoc.isfn( data->props ) );
       wLoc.setplacing( broadcast, wLoc.isplacing( data->props ) );
       wLoc.setblockenterside( broadcast, wLoc.isblockenterside( data->props ) );
+      wLoc.setblockid(broadcast, data->curBlock );
       wLoc.setmode( broadcast, wLoc.getmode( data->props ) );
       wLoc.setresumeauto( broadcast, wLoc.isresumeauto(data->props) );
       wLoc.setmanual( broadcast, data->gomanual );
@@ -2050,6 +2051,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setfx( nodeF, wLoc.getfx( data->props ) );
       wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
       wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
+      wLoc.setblockid( nodeF, data->curBlock );
       if( StrOp.equals( wLoc.blockside, cmd ) && data->curBlock != NULL )
         wLoc.setblockid( nodeF, data->curBlock );
       wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
@@ -2085,6 +2087,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   wLoc.setfn( nodeF, wLoc.isfn( data->props ) );
   wLoc.setplacing( nodeF, wLoc.isplacing( data->props ) );
   wLoc.setblockenterside( nodeF, wLoc.isblockenterside( data->props ) );
+  wLoc.setblockid( nodeF, data->curBlock );
   wLoc.setmode( nodeF, wLoc.getmode( data->props ) );
   wLoc.setresumeauto( nodeF, wLoc.isresumeauto(data->props) );
   wLoc.setmanual( nodeF, data->gomanual );
@@ -2568,6 +2571,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
     wLoc.setfn( node, wLoc.isfn( data->props ) );
     wLoc.setplacing( node, wLoc.isplacing( data->props ) );
     wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
+    wLoc.setblockid( node, data->curBlock );
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setmanual( node, data->gomanual );
