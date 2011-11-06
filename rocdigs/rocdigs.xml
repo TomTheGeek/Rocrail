@@ -1490,6 +1490,10 @@
       <var name="readfb" vt="Boolean"/>
       <var name="fb[65]" vt="unsigned char"/>
       <var name="lastSwCmd" vt="int"/>
+      <var name="v10" vt="Boolean"/>
+      <var name="addr[81]" vt="unsigned char"/>
+      <var name="speed[2][16]" vt="unsigned char"/>
+      <var name="accgate[4][2]" vt="unsigned char"/>
     </data>
   </object>
 
