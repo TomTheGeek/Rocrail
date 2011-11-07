@@ -1378,7 +1378,7 @@
                                                         <property name="initial">20</property>
                                                         <property name="max">60</property>
                                                         <property name="maximum_size"></property>
-                                                        <property name="min">20</property>
+                                                        <property name="min">1</property>
                                                         <property name="minimum_size"></property>
                                                         <property name="name">m_Purgetime</property>
                                                         <property name="permission">protected</property>
