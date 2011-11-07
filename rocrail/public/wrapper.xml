@@ -338,6 +338,7 @@
       <const name="openlcb" vt="string" val="openlcb"/>
       <const name="perir" vt="string" val="perir"/>
       <const name="editspro" vt="string" val="editspro"/>
+      <const name="infracar" vt="string" val="infracar"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
