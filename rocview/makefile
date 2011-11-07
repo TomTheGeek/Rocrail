@@ -39,6 +39,7 @@ GENSUFFIX=
 MKDIR=mkdir -p
 WXSUBINCL=/wx-2.8
 WXMSVCINCL=
+WXCONFIG=wx-config
 wxversion=2.8
 LINKTOOL=c++
 
@@ -95,15 +96,15 @@ else ifeq ($(PLATFORM),OPENBSD)
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	BINSUFFIX=
-	LNK_FLAGS=`wx-config --libs`
-	WX_FLAGS=`wx-config --cflags`
+	LNK_FLAGS=`$(WXCONFIG) --libs`
+	WX_FLAGS=`$(WXCONFIG) --cflags`
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	BINSUFFIX=
-	LNK_FLAGS=`wx-config --libs`
-	WX_FLAGS=`wx-config --cflags`
+	LNK_FLAGS=`$(WXCONFIG) --libs`
+	WX_FLAGS=`$(WXCONFIG) --cflags`
 endif
 
 MOUNTPOINT=..
