@@ -130,7 +130,7 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_labPurgetime->Wrap( -1 );
 	fgSizer41->Add( m_labPurgetime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_Purgetime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 1, 60, 20 );
+	m_Purgetime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 1, 60, 10 );
 	fgSizer41->Add( m_Purgetime, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labLoaderTime = new wxStaticText( this, wxID_ANY, wxT("Loader time"), wxDefaultPosition, wxDefaultSize, 0 );

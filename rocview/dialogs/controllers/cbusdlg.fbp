@@ -1375,7 +1375,7 @@
                                                         <property name="font"></property>
                                                         <property name="hidden">0</property>
                                                         <property name="id">wxID_ANY</property>
-                                                        <property name="initial">20</property>
+                                                        <property name="initial">10</property>
                                                         <property name="max">60</property>
                                                         <property name="maximum_size"></property>
                                                         <property name="min">1</property>
