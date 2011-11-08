@@ -335,6 +335,59 @@ static __evaluateState( iOEditsProData data, int mod, byte val ) {
 }
 
 
+static void __poller( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOEditsPro edits = (iOEditsPro)ThreadOp.getParm( th );
+  iOEditsProData data = Data(edits);
+  byte out[64] = {0};
+  int fbmodIdx = 0;
+
+  ThreadOp.sleep(500);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "poller started." );
+  while( data->run ) {
+    if( MutexOp.wait( data->mux ) ) {
+
+      if( data->v10 ) {
+        /* V1.0 */
+        if( data->fbmod > 0 ) {
+
+          fbmodIdx++;
+          if( fbmodIdx >= data->fbmod )
+            fbModIdx = 0;
+        }
+      }
+      else {
+        /* V1.2 */
+        out[0] = 190;
+        if( SerialOp.write( data->serial, &out[0], 1 ) ) {
+          if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+            if( out[0] > 0 && out[0] < 65 ) {
+              int mod = out[0];
+              ThreadOp.sleep(5);
+              out[0] = 191 + mod;
+              if( SerialOp.write( data->serial, &out[0], 1 ) ) {
+                if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+                  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
+                  __evaluateState(data, mod, out[0]);
+                }
+              }
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected last changed response: %d", out[0] );
+              ThreadOp.sleep(1000);
+            }
+          }
+        }
+      }
+
+      /* Release the mutex. */
+      MutexOp.post( data->mux );
+    }
+    ThreadOp.sleep(30);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "poller ended." );
+}
 
 
 static void __writer( void* threadinst ) {
@@ -362,42 +415,27 @@ static void __writer( void* threadinst ) {
       MemOp.copy( out, post+1, len);
       freeMem( post);
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      if( MutexOp.wait( data->mux ) ) {
 
-      for( i = 0; i < len; i++ ) {
-        if( SerialOp.write( data->serial, &out[i], 1 ) ) {
-          byte b = 0;
-          if( SerialOp.read( data->serial, &b, 1 ) ) {
-            if( b != out[i] ) {
-              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "read 0x%02X, expected 0x%02X", b, out[i] );
-              ThreadOp.sleep(500);
-              break;
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+
+        for( i = 0; i < len; i++ ) {
+          if( SerialOp.write( data->serial, &out[i], 1 ) ) {
+            byte b = 0;
+            if( SerialOp.read( data->serial, &b, 1 ) ) {
+              if( b != out[i] ) {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "read 0x%02X, expected 0x%02X", b, out[i] );
+                ThreadOp.sleep(500);
+                break;
+              }
             }
           }
         }
+
+        /* Release the mutex. */
+        MutexOp.post( data->mux );
       }
       ThreadOp.sleep(10);
-    }
-
-    out[0] = 190;
-    if( SerialOp.write( data->serial, &out[0], 1 ) ) {
-      if( SerialOp.read( data->serial, &out[0], 1 ) ) {
-        if( out[0] > 0 && out[0] < 65 ) {
-          int mod = out[0];
-          ThreadOp.sleep(5);
-          out[0] = 191 + mod;
-          if( SerialOp.write( data->serial, &out[0], 1 ) ) {
-            if( SerialOp.read( data->serial, &out[0], 1 ) ) {
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
-              __evaluateState(data, mod, out[0]);
-            }
-          }
-        }
-        else {
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected last changed response: %d", out[0] );
-          ThreadOp.sleep(1000);
-        }
-      }
     }
 
 
@@ -528,6 +566,8 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
+  data->mux = MutexOp.inst( StrOp.fmt( "serialMux%08X", data ), True );
+
   data->ini      = ini;
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
@@ -574,6 +614,9 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
 
     data->swTimeWatcher = ThreadOp.inst( "swTimeWatcher", &__swTimeWatcher, __EditsPro );
     ThreadOp.start( data->swTimeWatcher );
+
+    data->poller = ThreadOp.inst( "editspoller", &__poller, __EditsPro );
+    ThreadOp.start( data->poller );
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
