@@ -95,6 +95,10 @@ Auf diesen Befehl reagieren alle Empfänger sofort. Adressunabhängig.
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 
 static int instCnt = 0;
 
@@ -153,10 +157,92 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OInfracar ----- */
 
+static void __translate( iOInfracar inst, iONode node ) {
+  iOInfracarData data = Data(inst);
+
+
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+      /* CS ebreak */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request emergency break" );
+      byte* cmd = allocMem(32);
+      cmd[ 0] = 2;
+      cmd[ 1] = 0xF0;
+      cmd[ 2] = 0xF0;
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+  }
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+
+    byte lsb = addr & 0x3F;
+    byte msb = 0x40 + (addr >> 6) & 0x3F;
+    byte V   = 0xC8;
+    /*
+      Motor direkt:
+      11ee1eee
+      "eeeee" gibt die PWM Rate in 32 Schritten an. Die "1" mittendrin ist kein
+      Tippfehler sondern muss entsprechen "zwischengefummelt" werden.
+    */
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * 32) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * 32) / wLoc.getV_max( node );
+    }
+    V |= speed & 0x07;
+    V |= (speed << 1) & 0x30;
+
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 3;
+    cmd[ 1] = lsb;
+    cmd[ 2] = msb;
+    cmd[ 3] = V;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Infracar %d speed %d", addr, speed );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int   addr = wFunCmd.getaddr( node );
+
+    byte lsb = addr & 0x3F;
+    byte msb = 0x40 + (addr >> 6) & 0x3F;
+    byte fx  = 0x80;
+    fx |= (wFunCmd.isf1(node)?0x01:0x00);
+    fx |= (wFunCmd.isf2(node)?0x02:0x00);
+    fx |= (wFunCmd.isf3(node)?0x04:0x00);
+    fx |= (wFunCmd.isf4(node)?0x08:0x00);
+    fx |= (wFunCmd.isf5(node)?0x10:0x00);
+    fx |= (wFunCmd.isf6(node)?0x20:0x00);
+
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 3;
+    cmd[ 1] = lsb;
+    cmd[ 2] = msb;
+    cmd[ 3] = fx;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Infracar %d fx 0x%02X", addr, fx );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
+}
+
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  iOInfracarData data = Data(inst);
+
+  if( cmd != NULL ) {
+    int bus = 0;
+    __translate( (iOInfracar)inst, cmd );
+    cmd->base.del(cmd);
+  }
+  return NULL;
 }
 
 
@@ -168,7 +254,17 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOInfracarData data = Data(inst);
+  data->run = False;
+  if( poweroff ) {
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 2;
+    cmd[ 1] = 0xF0;
+    cmd[ 2] = 0xF0;
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
+  ThreadOp.sleep(500);
 }
 
 
@@ -214,6 +310,37 @@ static int _version( obj inst ) {
 }
 
 
+static void __writer( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOInfracar irc = (iOInfracar)ThreadOp.getParm( th );
+  iOInfracarData data = Data(irc);
+  byte* cmd = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
+  ThreadOp.sleep(1000);
+
+  while( data->run ) {
+    byte * post = NULL;
+    int len = 0;
+    byte out[32] = {0};
+
+    ThreadOp.sleep(10);
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( out, post+1, len);
+      freeMem( post);
+
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      if( !SerialOp.write( data->serial, (char*)out, len ) ) {
+        /* sleep and send it again? */
+      }
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
+}
 
 
 /**  */
@@ -232,9 +359,28 @@ static struct OInfracar* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Infracar %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device = %s", wDigInt.getdevice( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( ini ) ) ? cts:none );
+  SerialOp.setLine( data->serial, 2400, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
+
+  data->serialOK = SerialOp.open( data->serial );
+
+  if( data->serialOK ) {
+
+    data->writer = ThreadOp.inst( "ircarwriter", &__writer, __Infracar );
+    ThreadOp.start( data->writer );
+
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init Infracar port!" );
+  }
+
 
   instCnt++;
   return __Infracar;

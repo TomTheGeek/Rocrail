@@ -766,6 +766,7 @@
       <var name="dccSwitchAddrToOidMap" vt="iOMap" remark="DCC Switch Addr to OID Mapper"/>
       <var name="dccOidToSwitchAddrMap" vt="iOMap" remark="DCC OID to Switch Addr Mapper"/>
       <var name="dccSwitchStates[2048]" vt="unsigned char" remark="DCC Switch state control"/>
+      <var name="power" vt="Boolean" remark="Power Flag"/>
     </data>
   </object>
 
