@@ -180,6 +180,7 @@ ECoS Keywords:
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/State.h"
 
 #include "rocdigs/impl/ecos/ecos-parser.h"
 
@@ -1804,6 +1805,34 @@ static void __processS88Events( iOECoS inst, iONode node ) {
 }
 
 
+static void __reportState(iOECoS inst) {
+  iOECoSData data = Data(inst);
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, data->power );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
+
+/* ToDo: System events:
+  <EVENT 1>1 status[GO]<END 0 (OK)>
+  <EVENT 1>1 status[STOP]<END 0 (OK)>
+*/
+static void __processSystemEvents( iOECoS inst, iONode node ) {
+  iOECoSData data = Data(inst);
+  const char* status = NodeOp.getStr(node, "status", "?");
+  data->power = StrOp.equals("GO", status);
+  __reportState(inst);
+}
+
+
 /**
  * __processReply -- Handles incoming messages from the ECoS
  *
@@ -1850,7 +1879,10 @@ static void __processReply( iOECoS inst, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "event, rname = [%s]", rname );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "event, oid = [%d]", oid );
 
-    if ( oid == 11) {
+    if ( oid == OID_ECOS) {
+      __processSystemEvents( inst, node );
+    }
+    else if ( oid == 11) {
       __processSwitchManagerEvents( inst, node );
 
     } else if ( oid >= 20000 ) {
