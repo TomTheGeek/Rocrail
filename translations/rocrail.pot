@@ -5516,31 +5516,31 @@ msgstr ""
 #. 
 # id="locoviewsteam"
 #, c-format
-msgid "View Steam"
+msgid "Steamers"
 msgstr ""
 
 #. 
 # id="locoviewdiesel"
 #, c-format
-msgid "View Diesel"
+msgid "Diesels"
 msgstr ""
 
 #. 
 # id="locoviewelectric"
 #, c-format
-msgid "View Electric"
+msgid "Electrics"
 msgstr ""
 
 #. 
 # id="locoviewcommuter"
 #, c-format
-msgid "View Commuter"
+msgid "Commuters"
 msgstr ""
 
 #. 
 # id="locoviewspecial"
 #, c-format
-msgid "View Special"
+msgid "Specials"
 msgstr ""
 
 #. 

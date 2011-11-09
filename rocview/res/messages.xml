@@ -17586,19 +17586,19 @@
     <en txt="View All"/>
   </Msg>
   <Msg id="locoviewsteam" key="Alt-S">
-    <en txt="View Steam"/>
+    <en txt="Steamers"/>
   </Msg>
   <Msg id="locoviewdiesel" key="Alt-I">
-    <en txt="View Diesel"/>
+    <en txt="Diesels"/>
   </Msg>
   <Msg id="locoviewelectric" key="Alt-E">
-    <en txt="View Electric"/>
+    <en txt="Electrics"/>
   </Msg>
   <Msg id="locoviewcommuter" key="Alt-C">
-    <en txt="View Commuter"/>
+    <en txt="Commuters"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
-    <en txt="View Special"/>
+    <en txt="Specials"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
