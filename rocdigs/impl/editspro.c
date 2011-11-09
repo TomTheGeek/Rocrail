@@ -142,7 +142,6 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
 
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
-    byte* cmd = allocMem(32);
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
@@ -154,21 +153,47 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
 
     addr = (addr-1) * 4 + (port-1);
 
-
-    cmd[0] = 2; // length
-    cmd[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?33:34;
-    cmd[2] = addr;
-
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d to %s",
         wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
-    ThreadOp.post(data->writer, (obj)cmd);
-    data->lastSwCmd = 0;
+
+    if( data->v10 ) {
+      int v10addr = wSwitch.getaddr1( node );
+      if( v10addr < 81 && port < 5 ) {
+        byte* cmd = allocMem(32);
+        cmd[0] = 4; // length
+        cmd[1] = 0x3F;
+        cmd[2] = 0x0C;
+        cmd[3] = data->addr[v10addr];
+        cmd[4] = 0xC0 + data->accgate[port-1][StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?0:1];
+        ThreadOp.post(data->writer, (obj)cmd);
+
+        /* ToDo: Use a timed writer for deactivating. */
+        ThreadOp.sleep(data->swtime);
+        cmd = allocMem(32);
+        cmd[0] = 4; // length
+        cmd[1] = 0x3F;
+        cmd[2] = 0x0C;
+        cmd[3] = data->addr[v10addr];
+        cmd[4] = 0x00 + data->accgate[port-1][StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?0:1];
+        ThreadOp.post(data->writer, (obj)cmd);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch addr=%d(80) or port=%d(4) out of range", v10addr, port );
+      }
+    }
+    else {
+      byte* cmd = allocMem(32);
+      cmd[0] = 2; // length
+      cmd[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?33:34;
+      cmd[2] = addr;
+      ThreadOp.post(data->writer, (obj)cmd);
+      data->lastSwCmd = 0;
+    }
   }
 
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-    byte* cmd = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
     int gate = wOutput.getgate( node );
     int addr = wOutput.getaddr( node );
@@ -181,20 +206,38 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
 
     addr = (addr-1) * 4 + (port-1);
 
-    if( on ) {
-      cmd[0] = 2;
-      cmd[1] = gate ? 34:33;
-      cmd[2] = wSwitch.getaddr1( node );
-    }
-    else {
-      cmd[0] = 1;
-      cmd[1] = 32;
-    }
-
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d %s",
         wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
-    ThreadOp.post(data->writer, (obj)cmd);
-    data->lastSwCmd = 0;
+
+    if( data->v10 ) {
+      int v10addr = wSwitch.getaddr1( node );
+      if( v10addr < 81 && port < 5 ) {
+        byte* cmd = allocMem(32);
+        cmd[0] = 4; // length
+        cmd[1] = 0x3F;
+        cmd[2] = 0x0C;
+        cmd[3] = data->addr[v10addr];
+        cmd[4] = (on ? 0xC0:0x00) + data->accgate[port-1][gate?1:0];
+        ThreadOp.post(data->writer, (obj)cmd);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch addr=%d(80) or port=%d(4) out of range", v10addr, port );
+      }
+    }
+    else {
+      byte* cmd = allocMem(32);
+      if( on ) {
+        cmd[0] = 2;
+        cmd[1] = gate ? 34:33;
+        cmd[2] = wSwitch.getaddr1( node );
+      }
+      else {
+        cmd[0] = 1;
+        cmd[1] = 32;
+      }
+      ThreadOp.post(data->writer, (obj)cmd);
+      data->lastSwCmd = 0;
+    }
   }
 
   /* Sensor command. */
@@ -209,8 +252,6 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    byte* cmd = allocMem(32);
-
     int   addr = wLoc.getaddr( node );
     int  speed = 0;
     Boolean fn  = wLoc.isfn( node );
@@ -223,13 +264,31 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
         speed = (wLoc.getV( node ) * 15) / wLoc.getV_max( node );
     }
 
-    cmd[0] = 3;
-    cmd[1] = speed;
-    cmd[2] = addr;
-    cmd[3] = dir?43:39;
-
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco speed=%d dir=%s", speed, dir?"forwards":"reverse" );
-    ThreadOp.post(data->writer, (obj)cmd);
+
+    if( data->v10 ) {
+      if( speed < 16 && addr < 81 ) {
+        byte* cmd = allocMem(32);
+        cmd[0] = 4;
+        cmd[1] = 0x37;
+        cmd[2] = 0x08;
+        cmd[3] = data->addr[addr];
+        cmd[4] = data->speed[dir?0:1][speed];
+        ThreadOp.post(data->writer, (obj)cmd);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco addr=%d(80) or speed=%d(15) out of range", addr, speed );
+      }
+    }
+    else {
+      byte* cmd = allocMem(32);
+      cmd[0] = 3;
+      cmd[1] = speed;
+      cmd[2] = addr;
+      cmd[3] = dir?43:39;
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+
   }
 
   return rsp;
@@ -318,7 +377,7 @@ static __evaluateState( iOEditsProData data, int mod, byte val ) {
         addr = (mod-1) * 8 + (7-n) + 1;
 
         state = (val & (0x01 << n)) ? 1:0;
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "fb %d = %d", addr, state );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fb %d = %d", addr, state );
         {
           /* inform listener: Node3 */
           iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -354,7 +413,22 @@ static void __poller( void* threadinst ) {
 
           fbmodIdx++;
           if( fbmodIdx >= data->fbmod )
-            fbModIdx = 0;
+            fbmodIdx = 0;
+
+          out[0] = 0x37;
+          out[1] = 0x20 + fbmodIdx;
+          if( SerialOp.write( data->serial, &out[0], 1 ) ) {
+            if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+              if( SerialOp.write( data->serial, &out[1], 1 ) ) {
+                if( SerialOp.read( data->serial, &out[1], 1 ) ) {
+                  if( SerialOp.read( data->serial, &out[2], 1 ) ) {
+                    /* the data byte... */
+                    __evaluateState(data, fbmodIdx+1, out[2]);
+                  }
+                }
+              }
+            }
+          }
         }
       }
       else {
@@ -449,21 +523,27 @@ static void __swTimeWatcher( void* threadinst ) {
   iOEditsPro edits = (iOEditsPro)ThreadOp.getParm( th );
   iOEditsProData data = Data(edits);
   do {
-    ThreadOp.sleep( 10 );
-    if( data->lastSwCmd != -1 && data->lastSwCmd >= data->swtime ) {
-      byte* cmd = allocMem(32);
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                    "swTimeWatcher() END SWITCHTIME %dms", data->lastSwCmd );
+    ThreadOp.sleep( 100 );
+    if( data->v10 ) {
 
-      data->lastSwCmd = -1;
+    }
+    else {
+      if( data->lastSwCmd != -1 && data->lastSwCmd >= data->swtime ) {
+        byte* cmd = allocMem(32);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                      "swTimeWatcher() END SWITCHTIME %dms", data->lastSwCmd );
 
-      cmd[0] = 1; // length
-      cmd[1] = 32;
-      ThreadOp.post(data->writer, (obj)cmd);
+        data->lastSwCmd = -1;
+
+        cmd[0] = 1; // length
+        cmd[1] = 32;
+        ThreadOp.post(data->writer, (obj)cmd);
+      }
+      if( data->lastSwCmd != -1 ) {
+        data->lastSwCmd += 10;
+      }
     }
-    if( data->lastSwCmd != -1 ) {
-      data->lastSwCmd += 10;
-    }
+
   } while( data->run );
 }
 
@@ -582,7 +662,7 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EDiTS PRO %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "version   = %s", data->v10 ? "1.0":"1.2" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "prot.ver. = %s", data->v10 ? "1.0":"1.2" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate  = %d", 9600 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake = %s", wDigInt.getflow(ini) );

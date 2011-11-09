@@ -114,6 +114,7 @@ void GenericCtrlDlg::initLabels() {
   m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_PTSupport->SetLabel( wxGetApp().getMsg( "pt" ) );
   m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
+  m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
 }
 
 void GenericCtrlDlg::initValues() {
@@ -129,6 +130,7 @@ void GenericCtrlDlg::initValues() {
   m_FbReset->SetValue( wDigInt.isfbreset( m_Props ) );
   m_PTSupport->SetValue( wDigInt.isptsupport( m_Props ) );
   m_SystemInfo->SetValue( wDigInt.issysteminfo( m_Props ) );
+  m_Version->SetValue( wDigInt.getprotver( m_Props ) );
 
   // flow control
   {
@@ -186,6 +188,7 @@ void GenericCtrlDlg::evaluate() {
   wDigInt.setfbreset( m_Props, m_FbReset->IsChecked()?True:False );
   wDigInt.setptsupport( m_Props, m_PTSupport->IsChecked()?True:False );
   wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
+  wDigInt.setprotver( m_Props, m_Version->GetValue() );
 
   // flow control
   {
@@ -252,6 +255,8 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_OptionsBox = NULL;
     m_PTSupport = NULL;
     m_SystemInfo = NULL;
+    m_labVersion = NULL;
+    m_Version = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end GenericCtrlDlg member initialisation
@@ -399,17 +404,26 @@ void GenericCtrlDlg::CreateControls()
     m_SystemInfo->SetValue(false);
     itemStaticBoxSizer30->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer33 = new wxStdDialogButtonSizer;
+    wxFlexGridSizer* itemFlexGridSizer33 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer30->Add(itemFlexGridSizer33, 0, wxALIGN_LEFT|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer33, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_labVersion = new wxStaticText( m_Panel, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer33->Add(m_labVersion, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Version = new wxSpinCtrl( m_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+    itemFlexGridSizer33->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer36 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer36, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer33->AddButton(m_OK);
+    itemStdDialogButtonSizer36->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_Cancel);
+    itemStdDialogButtonSizer36->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer33->Realize();
+    itemStdDialogButtonSizer36->Realize();
 
 ////@end GenericCtrlDlg content construction
 }
