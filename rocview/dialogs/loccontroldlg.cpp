@@ -502,7 +502,7 @@ void LocControlDialog::initLocMap(const char* locid) {
         if( lc == NULL )
           continue;
         const char* id = wLoc.getid( lc );
-        if( id != NULL && wLoc.getaddr(lc) > 0 ) {
+        if( id != NULL && wLoc.getaddr(lc) > 0 && wLoc.isshow(lc) ) {
           m_LcList->Append( wxString(id,wxConvUTF8) );
           MapOp.put( m_lcMap, id, (obj)lc );
         }
