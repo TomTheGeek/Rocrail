@@ -5508,9 +5508,39 @@ msgid "Loco view filter"
 msgstr ""
 
 #. 
-# id="special"
+# id="locoviewall"
 #, c-format
-msgid "Special"
+msgid "View All"
+msgstr ""
+
+#. 
+# id="locoviewsteam"
+#, c-format
+msgid "View Steam"
+msgstr ""
+
+#. 
+# id="locoviewdiesel"
+#, c-format
+msgid "View Diesel"
+msgstr ""
+
+#. 
+# id="locoviewelectric"
+#, c-format
+msgid "View Electric"
+msgstr ""
+
+#. 
+# id="locoviewcommuter"
+#, c-format
+msgid "View Commuter"
+msgstr ""
+
+#. 
+# id="locoviewspecial"
+#, c-format
+msgid "View Special"
 msgstr ""
 
 #. 

@@ -1344,7 +1344,14 @@ void RocGuiFrame::initFrame() {
   acc_entries[37].Set(wxACCEL_CTRL, (int) 'W', ME_OpenWorkspace);
   acc_entries[38].Set(wxACCEL_CTRL, (int) 'D', ME_ShutdownRocRail);
 
-  wxAcceleratorTable m_accel(39, acc_entries);
+  acc_entries[39].Set(wxACCEL_ALT, (int) 'A', ME_LocoViewAll);
+  acc_entries[40].Set(wxACCEL_ALT, (int) 'S', ME_LocoViewSteam);
+  acc_entries[41].Set(wxACCEL_ALT, (int) 'I', ME_LocoViewDiesel);
+  acc_entries[42].Set(wxACCEL_ALT, (int) 'E', ME_LocoViewElectric);
+  acc_entries[43].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
+  acc_entries[44].Set(wxACCEL_ALT, (int) 'P', ME_LocoViewSpecial);
+
+  wxAcceleratorTable m_accel(46, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
@@ -1548,12 +1555,12 @@ void RocGuiFrame::initFrame() {
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
   menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
   wxMenu *menuLocoView = new wxMenu();
-  menuLocoView->AppendCheckItem( ME_LocoViewAll, wxGetApp().getMenu("all"), wxGetApp().getTip("all") );
-  menuLocoView->AppendCheckItem( ME_LocoViewSteam, wxGetApp().getMenu("steam"), wxGetApp().getTip("steam") );
-  menuLocoView->AppendCheckItem( ME_LocoViewDiesel, wxGetApp().getMenu("diesel"), wxGetApp().getTip("diesel") );
-  menuLocoView->AppendCheckItem( ME_LocoViewElectric, wxGetApp().getMenu("electric"), wxGetApp().getTip("electric") );
-  menuLocoView->AppendCheckItem( ME_LocoViewCommuter, wxGetApp().getMenu("commuter"), wxGetApp().getTip("commuter") );
-  menuLocoView->AppendCheckItem( ME_LocoViewSpecial, wxGetApp().getMenu("special"), wxGetApp().getTip("special") );
+  menuLocoView->AppendCheckItem( ME_LocoViewAll, wxGetApp().getMenu("locoviewall"), wxGetApp().getTip("locoviewall") );
+  menuLocoView->AppendCheckItem( ME_LocoViewSteam, wxGetApp().getMenu("locoviewsteam"), wxGetApp().getTip("locoviewsteam") );
+  menuLocoView->AppendCheckItem( ME_LocoViewDiesel, wxGetApp().getMenu("locoviewdiesel"), wxGetApp().getTip("locoviewdiesel") );
+  menuLocoView->AppendCheckItem( ME_LocoViewElectric, wxGetApp().getMenu("locoviewelectric"), wxGetApp().getTip("locoviewelectric") );
+  menuLocoView->AppendCheckItem( ME_LocoViewCommuter, wxGetApp().getMenu("locoviewcommuter"), wxGetApp().getTip("locoviewcommuter") );
+  menuLocoView->AppendCheckItem( ME_LocoViewSpecial, wxGetApp().getMenu("locoviewspecial"), wxGetApp().getTip("locoviewspecial") );
   menuView->Append( -1, wxGetApp().getMenu("locofilter"), menuLocoView );
 
   menuView->AppendSeparator();

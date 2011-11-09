@@ -17582,8 +17582,23 @@
   <Msg id="locofilter">
     <en txt="Loco view filter"/>
   </Msg>
-  <Msg id="special">
-    <en txt="Special"/>
+  <Msg id="locoviewall" key="Alt-A">
+    <en txt="View All"/>
+  </Msg>
+  <Msg id="locoviewsteam" key="Alt-S">
+    <en txt="View Steam"/>
+  </Msg>
+  <Msg id="locoviewdiesel" key="Alt-I">
+    <en txt="View Diesel"/>
+  </Msg>
+  <Msg id="locoviewelectric" key="Alt-E">
+    <en txt="View Electric"/>
+  </Msg>
+  <Msg id="locoviewcommuter" key="Alt-C">
+    <en txt="View Commuter"/>
+  </Msg>
+  <Msg id="locoviewspecial" key="Alt-P">
+    <en txt="View Special"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
