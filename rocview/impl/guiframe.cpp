@@ -3817,7 +3817,7 @@ void RocGuiFrame::OnLocReset(wxCommandEvent& event) {
   /* Inform RocRail... */
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, m_LocID );
-  wLoc.setcmd( cmd, wLoc.reset );
+  wLoc.setcmd( cmd, wLoc.softreset );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

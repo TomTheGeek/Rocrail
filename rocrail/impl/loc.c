@@ -1963,6 +1963,10 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       _reset( inst, False );
       LocOp.resetPrevBlock(inst);
     }
+    else if( StrOp.equals( wLoc.softreset, cmd ) ) {
+      _reset( inst, True );
+      LocOp.resetPrevBlock(inst);
+    }
     else if( StrOp.equals( wLoc.activate, cmd ) ) {
       wLoc.setactive(data->props, True);
       broadcast = True;

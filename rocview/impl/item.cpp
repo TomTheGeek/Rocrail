@@ -1805,7 +1805,7 @@ void Symbol::OnLocReset(wxCommandEvent& event) {
   /* Inform RocRail... */
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
-  wLoc.setcmd( cmd, wLoc.reset );
+  wLoc.setcmd( cmd, wLoc.softreset );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

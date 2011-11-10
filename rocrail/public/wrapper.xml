@@ -1972,6 +1972,7 @@
         <const name="dispatch" vt="string" val="dispatch" remark="Dispatch loco for throttle."/>
         <const name="release" vt="string" val="release" remark="Release loco from throttle: The releasing throttle must provide the throttleid."/>
         <const name="reset" vt="string" val="reset" remark="Stop immidiately and go to idle mode."/>
+        <const name="softreset" vt="string" val="softreset" remark="Stop immidiately and go to idle mode, save current block."/>
         <const name="swap" vt="string" val="swap" remark="Swap placing."/>
         <const name="blockside" vt="string" val="blockside" remark="Swap block enter side."/>
         <const name="velocity" vt="string" val="velocity" remark="Set direct velocity."/>
