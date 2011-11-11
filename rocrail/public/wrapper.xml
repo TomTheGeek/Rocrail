@@ -357,6 +357,7 @@
       <const name="sublib_lenz_atlas" vt="string" val="atlas"/>
       <const name="sublib_lenz_xntcp" vt="string" val="xntcp"/>
       <const name="sublib_lenz_cttran" vt="string" val="cttran"/>
+      <const name="sublib_lenz_ethernet" vt="string" val="ethernet"/>
       <const name="sublib_digitrax_pr3" vt="string" val="pr3"/>
       <var name="sublib" vt="string" defval="default"/>
 

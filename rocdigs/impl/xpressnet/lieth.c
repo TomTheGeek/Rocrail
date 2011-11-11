@@ -19,15 +19,14 @@
 */
 
 #include "rocdigs/impl/xpressnet_impl.h"
-#include "rocdigs/impl/xpressnet/xntcp.h"
+#include "rocdigs/impl/xpressnet/lieth.h"
 #include "rocdigs/impl/xpressnet/li101.h"
-
 #include "rocrail/wrapper/public/DigInt.h"
 
-Boolean xntcpConnect(obj xpressnet) {
-  iOXpressNetData data = Data(xpressnet);
 
-  TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "XnTcp at %s:%d",
+Boolean liethConnect(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "LI-ETH at %s:%d",
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
   data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
@@ -43,7 +42,7 @@ Boolean xntcpConnect(obj xpressnet) {
   }
 }
 
-void xntcpDisConnect(obj xpressnet) {
+void liethDisConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   if( data->socket != NULL ) {
     SocketOp.disConnect( data->socket );
@@ -52,7 +51,7 @@ void xntcpDisConnect(obj xpressnet) {
   }
 }
 
-Boolean xntcpAvail(obj xpressnet) {
+Boolean liethAvail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   char msgStr[32];
   if( SocketOp.isBroken(data->socket) ) {
@@ -61,11 +60,15 @@ Boolean xntcpAvail(obj xpressnet) {
   return SocketOp.peek( data->socket, msgStr, 1 );
 }
 
-void xntcpInit(obj xpressnet) {
+void liethInit(obj xpressnet) {
   li101Init(xpressnet);
 }
-int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
+
+int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
+  int len = 0;
+
+
   if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 1 ) ) {
     int len = (buffer[0] & 0x0F) + 1;
     if( SocketOp.read( data->socket, buffer+1, len ) )
@@ -74,36 +77,43 @@ int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   }
   return 0;
 }
-Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
+
+Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
+  ThreadOp.sleep( 50 );
+
   int len = 0;
-  int i = 0;
   Boolean rc = False;
-  byte bXor = 0;
-  
-  if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
+  unsigned char out[256];
+
+  *rspexpected = True; /* LIUSB/ETH or CS will confirm every command */
+
+  len = makeChecksum(outin);
+
+  if( len == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-USB" );
     return False;
   }
 
-  *rspexpected = True; /* XnTcp or CS will confirm every command? */
+  /* make extra header for LI-USB*/
+  MemOp.copy( out+2, outin, len );
 
-  len = out[0] & 0x0f;
-  len++; /* header */
+  len = len+2;
+  out[0] = 0xFF;
+  out[1] = 0xFE;
 
-  if( out[0] == 0x00 ) {
-    return False;
+  if( data->dummyio ) {
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+    *rspexpected = False;
+    return True;
   }
-
-  for ( i = 0; i < len; i++ ) {
-    bXor ^= out[i];
-  }
-  out[i] = bXor;
-  len++; /* checksum */
 
   if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
   }
+
   return rc;
 }
+

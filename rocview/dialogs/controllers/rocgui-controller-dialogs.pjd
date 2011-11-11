@@ -140,7 +140,7 @@
         <long name="locked">0</long>
         <string name="template-name">""</string>
         <bool name="dirty">1</bool>
-        <long name="makefile-last-written">4286447616</long>
+        <long name="makefile-last-written">-333379715</long>
         <string name="Compiler name">""</string>
         <string name="Build mode">"Debug"</string>
         <string name="Unicode mode">"ANSI"</string>
@@ -196,7 +196,6 @@
         <string name="Include path">"%AUTO%"</string>
         <string name="Resource flags">"%AUTO%"</string>
         <string name="Resource path">"%AUTO%"</string>
-        <string name="Extra dependencies">"%AUTO%"</string>
         <bool name="Suppress source rules">0</bool>
         <bool name="Enable makefile generation">1</bool>
       </document>
@@ -6324,14 +6323,6 @@
             <string name="proxy-type">"wbBoxSizerProxy"</string>
             <string name="proxy-Orientation">"Vertical"</string>
             <string name="proxy-Member variable name">""</string>
-            <string name="proxy-AlignH">"Centre"</string>
-            <string name="proxy-AlignV">"Centre"</string>
-            <long name="proxy-Stretch factor">0</long>
-            <long name="proxy-Border">5</long>
-            <bool name="proxy-wxLEFT">1</bool>
-            <bool name="proxy-wxRIGHT">1</bool>
-            <bool name="proxy-wxTOP">1</bool>
-            <bool name="proxy-wxBOTTOM">1</bool>
             <bool name="proxy-wxSHAPED">0</bool>
             <bool name="proxy-wxADJUST_MINSIZE">0</bool>
             <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -7257,7 +7248,7 @@
                     <string name="proxy-Member variable name">"m_Type"</string>
                     <string name="proxy-Label">"SubType"</string>
                     <long name="proxy-Major dimension count">2</long>
-                    <string name="proxy-Items">"&amp;LI101F|&amp;LI-USB|&amp;Elite|&amp;OpenDCC|&amp;XnTcp|&amp;CtTran"</string>
+                    <string name="proxy-Items">"&amp;LI101F|&amp;LI-USB|&amp;Elite|&amp;OpenDCC|&amp;XnTcp|&amp;CtTran|&amp;LI-ETH"</string>
                     <long name="proxy-Initial value">0</long>
                     <string name="proxy-Help text">""</string>
                     <string name="proxy-Tooltip text">""</string>
@@ -11100,6 +11091,14 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
+          <string name="proxy-AlignH">"Centre"</string>
+          <string name="proxy-AlignV">"Centre"</string>
+          <long name="proxy-Stretch factor">0</long>
+          <long name="proxy-Border">5</long>
+          <bool name="proxy-wxLEFT">1</bool>
+          <bool name="proxy-wxRIGHT">1</bool>
+          <bool name="proxy-wxTOP">1</bool>
+          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>

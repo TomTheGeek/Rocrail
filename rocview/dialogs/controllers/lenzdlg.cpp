@@ -120,8 +120,16 @@ void LenzDlg::initValues() {
     m_Type->SetSelection(4);
   else if( StrOp.equals( wDigInt.sublib_lenz_cttran, wDigInt.getsublib(m_Props) ))
     m_Type->SetSelection(5);
+  else if( StrOp.equals( wDigInt.sublib_lenz_ethernet, wDigInt.getsublib(m_Props) ))
+    m_Type->SetSelection(6);
   else
     m_Type->SetSelection(0);
+
+  if( m_Type->GetSelection() == 4 || m_Type->GetSelection() == 6 ) {
+    m_BPS->Enable(false);
+    m_HardwareFlow->Enable(false);
+  }
+
 
   m_SensorOffset->SetValue( wDigInt.getfboffset(m_Props));
   m_SwitchTime->SetValue( wDigInt.getswtime(m_Props));
@@ -176,6 +184,8 @@ void LenzDlg::evaluate() {
     wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_xntcp );
   else if( m_Type->GetSelection() == 5 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_cttran );
+  else if( m_Type->GetSelection() == 6 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_lenz_ethernet );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_default );
 
@@ -342,6 +352,7 @@ void LenzDlg::CreateControls()
     m_TypeStrings.Add(_("&OpenDCC"));
     m_TypeStrings.Add(_("&XnTcp"));
     m_TypeStrings.Add(_("&CtTran"));
+    m_TypeStrings.Add(_("&LI-ETH"));
     m_Type = new wxRadioBox( m_MainPanel, ID_LENZTYPE, _("SubType"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_Type->SetSelection(0);
     itemBoxSizer17->Add(m_Type, 0, wxGROW|wxALL, 5);
@@ -468,14 +479,17 @@ void LenzDlg::OnLenztypeSelected( wxCommandEvent& event )
   if( m_Type->GetSelection() == 1 ) {
     m_BPS->SetSelection(3);
     m_BPS->Enable(false);
+    m_HardwareFlow->Enable(true);
     return;
   }
 
-  if( m_Type->GetSelection() == 4 ) {
+  if( m_Type->GetSelection() == 4 || m_Type->GetSelection() == 6 ) {
     m_BPS->Enable(false);
+    m_HardwareFlow->Enable(false);
     return;
   }
 
   m_BPS->Enable(true);
+  m_HardwareFlow->Enable(true);
 }
 

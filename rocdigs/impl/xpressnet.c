@@ -22,6 +22,7 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/li101.h"
 #include "rocdigs/impl/xpressnet/liusb.h"
+#include "rocdigs/impl/xpressnet/lieth.h"
 #include "rocdigs/impl/xpressnet/elite.h"
 #include "rocdigs/impl/xpressnet/opendcc.h"
 #include "rocdigs/impl/xpressnet/atlas.h"
@@ -1330,6 +1331,15 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite   = liusbWrite;
     data->subDisConn = liusbDisConnect;
     data->subAvail   = liusbAvail;
+  }
+  else if( StrOp.equals( wDigInt.sublib_lenz_ethernet, wDigInt.getsublib( ini ) ) ) {
+    /* LI-ETH */
+    data->subConnect = liethConnect;
+    data->subInit    = liethInit;
+    data->subRead    = liethRead;
+    data->subWrite   = liethWrite;
+    data->subDisConn = liethDisConnect;
+    data->subAvail   = liethAvail;
   }
   else if( StrOp.equals( wDigInt.sublib_lenz_elite, wDigInt.getsublib( ini ) ) ) {
     /* Elite */
