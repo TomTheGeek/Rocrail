@@ -83,6 +83,19 @@ der für alle Fahrzeuge gilt:
 11110000
 Dieser Befehl muss 2 mal unmittelbar hintereinader gesendet werden.
 Auf diesen Befehl reagieren alle Empfänger sofort. Adressunabhängig.
+
+
+
+der Befehl "Motor direkt " kann eigenständig genutzt werden.
+Er gibt eine neue Sollgeschwindigkeit vor, die dann langsam angefahren wird.
+Zum sofortigen Anhalten den Stopp Befehl benutzen.
+Diese Befehle vorzugsweise für automatisierte Steuerungen verwenden.
+
+Die Befehle Beschleunigen / Bremsen  bewirken, dass das Fahrzueg schneller oder langsamer wird bis der Befehl
+"keine Änderung" gesendet wird (oder natürlich Maximum oder Null erreicht wird).
+Diese Befehle werden im Handsender genutzt: Drücken der Beschleunigungstaste sendet den Befehl "Beschleuningen".
+Beim Loslassen der Taste wird der befehl "keine Änderung" gesendet.
+Der Handsender sende also nicht ständig sondern nur bei Zustandsänderung..
   */
 
 #include "rocdigs/impl/infracar_impl.h"

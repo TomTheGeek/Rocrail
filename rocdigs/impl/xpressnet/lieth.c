@@ -29,6 +29,13 @@ Boolean liethConnect(obj xpressnet) {
   TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "LI-ETH at %s:%d",
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
+  if( wDigInt.gethost( data->ini ) == NULL || StrOp.len(wDigInt.gethost( data->ini )) == 0 ) {
+    wDigInt.sethost( data->ini, "192.168.0.200" );
+  }
+  if( wDigInt.getport( data->ini ) == 0 ) {
+    wDigInt.setport( data->ini, 5550 );
+  }
+
   data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
   SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
 
