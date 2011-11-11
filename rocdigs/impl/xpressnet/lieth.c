@@ -76,8 +76,9 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
 
 
-  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 1 ) ) {
-    int len = (buffer[0] & 0x0F) + 1;
+  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 2 ) ) {
+    SocketOp.read( data->socket, buffer, 1 );
+    len = (buffer[0] & 0x0F) + 1;
     if( SocketOp.read( data->socket, buffer+1, len ) )
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       return len;
