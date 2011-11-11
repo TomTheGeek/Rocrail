@@ -82,7 +82,7 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   Boolean rc = False;
   byte bXor = 0;
   
-  if( SocketOp.isBroken(data->socket) ) {
+  if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
     return False;
   }
 
