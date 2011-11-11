@@ -1265,7 +1265,8 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
     if( StrOp.equals( wProgram.name(), NodeOp.getName( cmd ) ) ) {
       return;
     }
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Bounce to add to local model..." );
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
+        "Bounce to add to local model: %s:%s", NodeOp.getName( cmd ), wModelCmd.getcmd( cmd ) );
 
     // Bounce to add to local model...
     if( StrOp.equals( wModelCmd.name(), NodeOp.getName( cmd ) ) ) {

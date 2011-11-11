@@ -438,6 +438,9 @@ void ActionsCtrlDlg::apply() {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
 }
 
 

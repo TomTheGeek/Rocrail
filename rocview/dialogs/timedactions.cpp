@@ -669,6 +669,9 @@ void TimedActions::OnApplyClick( wxCommandEvent& event )
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
   initIndex();
 }
 
