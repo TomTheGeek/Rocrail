@@ -1830,8 +1830,8 @@ static void __processSystemEvents( iOECoS inst, iONode node ) {
   int cnt = NodeOp.getChildCnt( node);
   if( cnt > 0 ) {
     iONode child = NodeOp.getChild(node, 0);
-    const char* status = NodeOp.getStr(child, "state", "?");
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system state is [%s]", status );
+    const char* status = NodeOp.getStr(child, "status", "?");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system status is [%s]", status );
     data->power = StrOp.equals("GO", status);
     __reportState(inst);
   }

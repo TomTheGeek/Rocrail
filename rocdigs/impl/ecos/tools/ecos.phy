@@ -62,7 +62,7 @@ while 1:
       connection.send('<END 0 (OK)>\n')
       
       connection.send('<EVENT 1>\n')
-      connection.send('1 state[GO]\n')
+      connection.send('1 status[GO]\n')
       connection.send('<END 0 (OK)>\n')
       time.sleep(3)
       
