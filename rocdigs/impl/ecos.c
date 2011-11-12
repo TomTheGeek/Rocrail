@@ -1827,9 +1827,14 @@ static void __reportState(iOECoS inst) {
 */
 static void __processSystemEvents( iOECoS inst, iONode node ) {
   iOECoSData data = Data(inst);
-  const char* status = NodeOp.getStr(node, "status", "?");
-  data->power = StrOp.equals("GO", status);
-  __reportState(inst);
+  int cnt = NodeOp.getChildCnt( node);
+  if( cnt > 0 ) {
+    iONode child = NodeOp.getChild(node, 0);
+    const char* status = NodeOp.getStr(child, "state", "?");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system state is [%s]", status );
+    data->power = StrOp.equals("GO", status);
+    __reportState(inst);
+  }
 }
 
 
@@ -1845,6 +1850,12 @@ static void __processReply( iOECoS inst, iONode node ) {
   int rtype         = NodeOp.getInt( node, "rtype", REPLY_TYPE_REPLY );
   const char* rname = NodeOp.getStr( node, "cmd", NULL );
   int oid           = NodeOp.getInt( node, "oid", 0 );
+
+  if( TraceOp.getLevel(NULL) & TRCLEVEL_BYTE == TRCLEVEL_BYTE ) {
+    char* s = NodeOp.base.toString(node);
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%s", s);
+    StrOp.free(s);
+  }
 
   if ( rtype == REPLY_TYPE_REPLY ) {
 
@@ -1870,7 +1881,11 @@ static void __processReply( iOECoS inst, iONode node ) {
     } else if ( StrOp.equals( "set", rname ) && oid == OID_SWMANAGER ) {
       __processSwitchSet( inst, node );
 
-    } else {
+    }
+    else if ( oid == OID_ECOS) {
+      __processSystemEvents( inst, node );
+    }
+    else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "other reply, rname = [%s]", rname );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "other reply, oid = [%d]", oid );
     }

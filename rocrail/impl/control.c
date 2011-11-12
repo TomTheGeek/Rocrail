@@ -823,7 +823,9 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     data->trackbus     = wState.istrackbus( nodeC );
     data->sensorbus    = wState.issensorbus( nodeC );
     data->accessorybus = wState.isaccessorybus( nodeC );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "State event from=%s", wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "State event from=%s: track power is %s",
+        wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
     AppOp.broadcastEvent( nodeC );
   }
   else
