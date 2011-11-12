@@ -1182,20 +1182,29 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       StrOp.free( locid );
     }
     */
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Block event %s, locid=%s",
-                 NodeOp.getStr(node, "id", "?"), wBlock.getlocid( node ) );
+    const char* id = wBlock.getid( node );
+    const char* locid = wBlock.getlocid( node );
+    iONode block = NULL;
 
-    iONode block = wxGetApp().getFrame()->findBlock4Loc(wBlock.getlocid( node ), wBlock.getid( node ));
-    if(block != NULL ) {
-      if( m_ModPanel != NULL) {
-        m_ModPanel->modelEvent( block );
+    if( id != NULL ) {
+      if( locid != NULL ) {
+        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Block event %s, locid=%s",
+                     NodeOp.getStr(node, "id", "?"), wBlock.getlocid( node ) );
+
+        block = wxGetApp().getFrame()->findBlock4Loc(wBlock.getlocid( node ), wBlock.getid( node ));
       }
-    }
-    else {
-      int pagecnt = getNotebook()->GetPageCount();
-      for( int i = 0; i < pagecnt; i++ ) {
-        PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-        p->modelEvent( block );
+
+      if(block != NULL ) {
+        if( m_ModPanel != NULL) {
+          m_ModPanel->modelEvent( block );
+        }
+      }
+      else {
+        int pagecnt = getNotebook()->GetPageCount();
+        for( int i = 0; i < pagecnt; i++ ) {
+          PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+          p->modelEvent( block );
+        }
       }
     }
 
