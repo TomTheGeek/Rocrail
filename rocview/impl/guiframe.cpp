@@ -1198,12 +1198,12 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         if( m_ModPanel != NULL) {
           m_ModPanel->modelEvent( block );
         }
-      }
-      else {
-        int pagecnt = getNotebook()->GetPageCount();
-        for( int i = 0; i < pagecnt; i++ ) {
-          PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-          p->modelEvent( block );
+        else {
+          int pagecnt = getNotebook()->GetPageCount();
+          for( int i = 0; i < pagecnt; i++ ) {
+            PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+            p->modelEvent( block );
+          }
         }
       }
     }
