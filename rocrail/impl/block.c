@@ -2194,6 +2194,10 @@ static iOBlock _inst( iONode props ) {
 
   NodeOp.removeAttrByName(data->props, "cmd");
 
+  if( StrOp.equals(wBlock.shortcut, wBlock.getstate(props))) {
+    wBlock.setstate(props, wBlock.open);
+  }
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", data->id );
 
   if( !wBlock.isremote(props) )

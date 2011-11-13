@@ -463,26 +463,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
       if( wxGetApp().getFrame()->isAutoMode() ) {
         /* flash the block */
-        const char* blockstate = wBlock.getstate(m_Props);
         const char* blockloc = wBlock.getlocid(m_Props);
-
-        cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-        wBlock.setid( cmd, wBlock.getid( m_Props ) );
-        wBlock.setstate( cmd, wBlock.shortcut);
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-        ThreadOp.sleep(500);
-
-        wxYield();
-
-        cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-        wBlock.setid( cmd, wBlock.getid( m_Props ) );
-        wBlock.setstate( cmd, blockstate);
-        wBlock.setlocid( cmd, blockloc);
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-
-        wxYield();
 
         /* go to block */
         cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
