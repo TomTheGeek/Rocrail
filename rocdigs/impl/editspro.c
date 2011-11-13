@@ -577,7 +577,7 @@ __initAddrMap(iOEditsPro  edits) {
   data->addr[ 0] = 0x00; data->addr[10] = 0x33; data->addr[20] = 0x11;
   data->addr[ 1] = 0x03; data->addr[11] = 0x31; data->addr[21] = 0x1C;
   data->addr[ 2] = 0x01; data->addr[12] = 0x3C; data->addr[22] = 0x1F;
-  data->addr[ 3] = 0xC0; data->addr[13] = 0x3F; data->addr[23] = 0x1D;
+  data->addr[ 3] = 0x0C; data->addr[13] = 0x3F; data->addr[23] = 0x1D;
   data->addr[ 4] = 0x0F; data->addr[14] = 0x3D; data->addr[24] = 0x14;
   data->addr[ 5] = 0x0D; data->addr[15] = 0x34; data->addr[25] = 0x17;
   data->addr[ 6] = 0x04; data->addr[16] = 0x37; data->addr[26] = 0x15;
