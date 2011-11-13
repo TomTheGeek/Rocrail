@@ -441,8 +441,6 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
 
-      wxYield();
-
       cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( cmd, dropid );
       wLoc.setcmd( cmd, wLoc.block );
