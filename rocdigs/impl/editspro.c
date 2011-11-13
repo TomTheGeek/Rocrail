@@ -271,7 +271,7 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
         byte* cmd = allocMem(32);
         cmd[0] = 4;
         cmd[1] = 0x37;
-        cmd[2] = 0x08;
+        cmd[2] = 0x08 + (fn?0x03:0x00);
         cmd[3] = data->addr[addr];
         cmd[4] = data->speed[dir?0:1][speed];
         ThreadOp.post(data->writer, (obj)cmd);
