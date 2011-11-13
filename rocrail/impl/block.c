@@ -194,7 +194,7 @@ static Boolean __acceptGhost( obj inst ) {
 /**
  * translate the event name to an event code
  */
-static int _getEventCode( obj inst, const char* evtname ) {
+static int _getEventCode( iOBlock inst, const char* evtname ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);
     Boolean trig = True;
@@ -269,7 +269,7 @@ static int _getEventCode( obj inst, const char* evtname ) {
 static void __TurntableEvent( obj inst, const char* event, const char* id ) {
   iOBlockData data = Data(inst);
   iOLoc loc = NULL;
-  int evt = _getEventCode( inst, event );
+  int evt = _getEventCode( (iOBlock)inst, event );
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block:%s: ttid=%s event=%s",
       data->id, id, event );
@@ -474,7 +474,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   }
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {
-    int evt = _getEventCode( (obj)inst, wFeedbackEvent.getaction( fbevt ) );
+    int evt = _getEventCode( (iOBlock)inst, wFeedbackEvent.getaction( fbevt ) );
     long locident = LocOp.getIdent(loc);
 
     __measureVelocity( (iOBlock)inst, evt );
@@ -799,7 +799,7 @@ static Boolean __isElectricallyFree(iOBlock inst) {
 
   while( fbevt != NULL ) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
-    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( (obj)inst, wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
+    if( fb != NULL && FBackOp.getState(fb) && _getEventCode( inst, wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 5001,
                      "Block [%s] is electrically occupied. %s",
                      data->id, shunting ? "(ignored for shunting)":"" );
