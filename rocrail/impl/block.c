@@ -1831,7 +1831,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   const char* state = wBlock.getstate( nodeA );
 
   if( NodeOp.findAttr(nodeA, wAction.block_acceptident) != NULL ) {
-    inst->acceptIdent(inst, wBlock.isacceptident(nodeA));
+    if( data->acceptident && wBlock.isacceptident(nodeA) )
+      inst->acceptIdent(inst, False);
+    else
+      inst->acceptIdent(inst, wBlock.isacceptident(nodeA));
   }
   else if( locid != NULL ) {
     if( StrOp.len(locid) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
@@ -2185,6 +2188,7 @@ static iOBlock _inst( iONode props ) {
   data->forceblocktimer = wBlock.isforceblocktimer( props );
   data->id = wBlock.getid( props );
 
+  wBlock.setacceptident( data->props, False );
   wBlock.setreserved( data->props, False );
   wBlock.setentering( data->props, False );
   wBlock.setupdateenterside( data->props, False );
