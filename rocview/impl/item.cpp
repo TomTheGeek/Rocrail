@@ -2489,6 +2489,8 @@ void Symbol::modelEvent( iONode node ) {
     }
 
     Boolean isAcceptIdent = wBlock.isacceptident( node );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+        "blockid=[%s] %sAccepting Ident", wBlock.getid( node ), isAcceptIdent?"":"not ");
 
     wBlock.setstate( m_Props, state );
     if( StrOp.equals( wBlock.open, state ) ) {

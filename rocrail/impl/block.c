@@ -1881,6 +1881,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
   /* Broadcast to clients. */
   wBlock.setid(nodeA, data->id );
+  wBlock.setacceptident(nodeA, data->acceptident );
   AppOp.broadcastEvent( nodeA );
 
   return True;
