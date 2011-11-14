@@ -881,7 +881,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
 
-        val = StrOp.fmt( "%c%d", wLoc.isplacing(lc)?' ':'-', wLoc.getV( lc )==-1?0:wLoc.getV( lc ) );
+        Boolean dir = wLoc.isdir(lc);
+        Boolean placing = wLoc.isplacing(lc);
+        val = StrOp.fmt( "%s%s%d%s", dir?"":"<", placing?"":"-", wLoc.getV(lc)==-1?0:wLoc.getV(lc), dir?">":"" );
+        //val = StrOp.fmt( "%c%d", wLoc.isplacing(lc)?' ':'-', wLoc.getV( lc )==-1?0:wLoc.getV( lc ) );
         m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_V, wxString(val,wxConvUTF8) );
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_V, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_V, wxALIGN_RIGHT, wxALIGN_CENTRE );
@@ -1070,7 +1073,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
     for( int i = 0; i < m_ActiveLocs->GetNumberRows(); i++ ) {
       char* locid = StrOp.dup( m_ActiveLocs->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
       if( StrOp.equals( wLoc.getid( node ), locid ) ) {
-        char* val = StrOp.fmt( "%c%d", wLoc.isplacing( node )?' ':'-', wLoc.getV( node )==-1?0:wLoc.getV( node ) );
+        Boolean dir = wLoc.isdir(node);
+        Boolean placing = wLoc.isplacing(node);
+        char* val = StrOp.fmt( "%s%s%d%s", dir?"":"<", placing?"":"-", wLoc.getV( node )==-1?0:wLoc.getV( node ), dir?">":"" );
         m_ActiveLocs->SetCellValue( i, LOC_COL_V, wxString(val,wxConvUTF8) );
         StrOp.free( val );
         m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_V,
@@ -1880,7 +1885,7 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_ID, wxGetApp().getMsg("id") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_ADDR, _("#__") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_BLOCK, wxGetApp().getMsg("block") );
-  m_ActiveLocs->SetColLabelValue(LOC_COL_V, _("V__") );
+  m_ActiveLocs->SetColLabelValue(LOC_COL_V, _("V___") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
   m_ActiveLocs->AutoSizeColumns();
