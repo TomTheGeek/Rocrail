@@ -144,9 +144,9 @@ LocControlDialog::LocControlDialog( wxWindow* parent, iOList list, iOMap map, co
   m_iFnGroup = 0;
   m_SpeedCtrl->SetRange( 0, 100 );
   m_SpeedCtrl->SetValue(0);
-  initLocMap(locid);
 
   initLabels();
+  initLocMap(locid);
   setFLabels();
 
   m_DlgList = list;
