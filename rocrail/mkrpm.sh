@@ -15,10 +15,14 @@ if [ !  $1 ] || [ ! $2 ]; then
   exit $?
 fi
 if [ ! -e ~/.rpmmacros ] ; then
-	cp rocrail/_rpmmacros ~/.rpmmacros
+	cp _rpmmacros ~/.rpmmacros
 fi
 
 mkdir -p $BUILDROOT
+
+if [ -e rocrail-$VERSION ] ; then
+	rm -Rf rocrail-$VERSION
+fi
 
 mkdir rocrail-$VERSION
 cd rocrail-$VERSION
@@ -38,10 +42,9 @@ echo "copy to SOURCES..."
 cp rocrail-$VERSION-$BAZAARREV.tar.gz $BUILDROOT
 
 echo "executing rpmbuild..."
-rpmbuild -v -bb --buildroot $BUILDROOT rocrail-$VERSION/Rocrail/rocrail/rocrail.spec
+rpmbuild -v -ba rocrail-$VERSION/Rocrail/rocrail/rocrail.spec
 echo "cleanup..."
 #rm -Rf rocrail-$VERSION
-mv rocrail-$VERSION-$BAZAARREV.tar.gz ../package/rocrail-$VERSION-$BAZAARREV.tar.gz
 cp $BUILDROOT/$CPU/rocrail*.rpm ../package
 #rm -Rf $BUILDROOT/BUILD/rocrail-$VERSION
 
