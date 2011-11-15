@@ -3,54 +3,46 @@
 # variable 2 should be something like "0" == patch 0
 # variable 3: CVS revision tag (rocrail-vXXX or HEAD)
 # variable 4: cvs user
-# variable 5: cpu for redhat i386, suse i586, suses390 s390
+# variable 5: cpu for redhat i386, suse i586, suses390 s390, 64bit x86_64
 
 VERSION=$1
-RELEASE=$2
-REVISION=$3
-CVSUSER=$4
-CPU=$5
+CPU=$2
 BUILDROOT=/home/$USER/rpmbuild
-#BUILDROOT=/usr/src/redhat
+BAZAARREV=`bzr revno`
 
-if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ] || [ ! $5 ]; then
-  echo "usage: mkrpm.sh version release revision cvsuser cpu"
+if [ !  $1 ] || [ ! $2 ]; then
+  echo "usage: mkrpm.sh version cpu"
   exit $?
 fi
 if [ ! -e ~/.rpmmacros ] ; then
 	cp rocrail/_rpmmacros ~/.rpmmacros
 fi
 
-mkdir -p $BUILDROOT/out
-mkdir -p $BUILDROOT/SOURCES
-mkdir -p $BUILDROOT/BUILD
-mkdir -p $BUILDROOT/SPECS
-mkdir -p $BUILDROOT/RPMS
-mkdir -p $BUILDROOT/SRPMS
-mkdir -p $BUILDROOT/$CPU
+mkdir -p $BUILDROOT
 
 mkdir rocrail-$VERSION
 cd rocrail-$VERSION
-svn co -r $REVISION https://rocrail.svn.sourceforge.net/svnroot/rocrail/Rocrail Rocrail
+pwd
+bzr co --lightweight https://launchpad.net/rocrail Rocrail
+sed s/\<BZR\>/$BAZAARREV/ < Rocrail/rocrail/rocrail-template.spec > Rocrail/rocrail/rocrail.spec
 cd ..
 
-if [ -e rocrail-$VERSION-$RELEASE.tar ] ; then
-	rm -f rocrail-$VERSION-$RELEASE.tar
+if [ -e rocrail-$VERSION-$BAZAARREV.tar ] ; then
+	rm -f rocrail-$VERSION-$BAZAARREV.tar
 fi
 echo "creating tar..."
-tar -cf rocrail-$VERSION-$RELEASE.tar rocrail-$VERSION
+tar -cf rocrail-$VERSION-$BAZAARREV.tar rocrail-$VERSION
 echo "zipping tar..."
-gzip -f rocrail-$VERSION-$RELEASE.tar
+gzip -f rocrail-$VERSION-$BAZAARREV.tar
 echo "copy to SOURCES..."
-cp rocrail-$VERSION-$RELEASE.tar.gz $BUILDROOT
+cp rocrail-$VERSION-$BAZAARREV.tar.gz $BUILDROOT
 
 echo "executing rpmbuild..."
 rpmbuild -v -bb --buildroot $BUILDROOT rocrail-$VERSION/Rocrail/rocrail/rocrail.spec
 echo "cleanup..."
 #rm -Rf rocrail-$VERSION
-mkdir ../releases
-mv rocrail-$VERSION-$RELEASE.tar.gz ../releases/rocrail-$VERSION-$RELEASE.tar.gz
-cp $BUILDROOT/$CPU/rocrail*.rpm ../releases
-rm -Rf $BUILDROOT/BUILD/rocrail-$VERSION
+mv rocrail-$VERSION-$BAZAARREV.tar.gz ../package/rocrail-$VERSION-$BAZAARREV.tar.gz
+cp $BUILDROOT/$CPU/rocrail*.rpm ../package
+#rm -Rf $BUILDROOT/BUILD/rocrail-$VERSION
 
 
