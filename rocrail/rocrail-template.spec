@@ -1,7 +1,7 @@
 Summary: Model Railroad Control System
 Name: rocrail
 Vendor: rocrail.net
-Version: 2.0
+Version: <VERSION>
 Release: <BZR>
 Group: Amusements/Games
 License: gpl
