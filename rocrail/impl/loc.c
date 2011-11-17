@@ -50,6 +50,7 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 
 static int instCnt = 0;
@@ -1645,6 +1646,17 @@ static void _useSchedule( iOLoc inst, const char* id ) {
       data->driver->useschedule( data->driver, wSchedule.getid(schedule) );
     else
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Schedule [%s] not found!", id );
+  }
+}
+
+static void _useTour( iOLoc inst, const char* id ) {
+  iOLocData data = Data(inst);
+  if( data->driver != NULL ) {
+    iONode tour = ModelOp.getTour( AppOp.getModel(), id );
+    if( tour != NULL )
+      data->driver->usetour( data->driver, wTour.getid(tour) );
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Tour [%s] not found!", id );
   }
 }
 

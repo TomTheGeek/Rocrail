@@ -118,6 +118,8 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/TourList.h"
 
 static int instCnt = 0;
 
@@ -874,6 +876,19 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     added = True;
   }
 
+  else if( StrOp.equals( wTour.name(), itemName ) ) {
+    iONode tourlist = wPlan.gettourlist( data->model );
+    iONode clone = (iONode)item->base.clone( item );
+    if( tourlist == NULL ) {
+      tourlist = NodeOp.inst( wTourList.name(), data->model, ELEMENT_NODE );
+      NodeOp.addChild( data->model, tourlist );
+    }
+    NodeOp.addChild( tourlist, clone );
+    MapOp.put( data->tourMap, wTour.getid(clone), (obj)clone );
+
+    added = True;
+  }
+
   if(added) {
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.add );
@@ -1289,6 +1304,40 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       _addItem( inst, item );
     }
   }
+  else if( StrOp.equals( wTour.name(), name ) ) {
+    /* modify tour... */
+    iONode tour = NULL;
+    iONode tourlist = wPlan.gettourlist( data->model );
+    if( tourlist != NULL ) {
+      iONode node = wTourList.gettour( tourlist );
+      while( node != NULL ) {
+        Boolean prev_id_matched = StrOp.equals( prev_id, wTour.getid( node ) );
+        if( StrOp.equals( id, wTour.getid( node ) ) || prev_id_matched ) {
+          int cnt = NodeOp.getAttrCnt( item );
+          int i = 0;
+          for( i = 0; i < cnt; i++ ) {
+            iOAttr attr = NodeOp.getAttr( item, i );
+            const char* name  = AttrOp.getName( attr );
+            const char* value = AttrOp.getVal( attr );
+            NodeOp.setStr( node, name, value );
+          }
+          tour = node;
+
+          /* update schedule map */
+          if( prev_id_matched ) {
+            MapOp.remove( data->tourMap, prev_id );
+            MapOp.put( data->tourMap, id, (obj)node );
+          }
+
+          break;
+        }
+        node = wTourList.nexttour( tourlist, node );
+      }
+    }
+    if( tour == NULL && wTour.getid( item ) != NULL && StrOp.len( wTour.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
   else if( StrOp.equals( wMVTrack.name(), name ) ) {
     /* modify mvtrack... */
     iONode mv = wPlan.getmv( data->model );
@@ -1565,6 +1614,23 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
           break;
         }
         node = wScheduleList.nextsc( sclist, node );
+      };
+    }
+  }
+  else if( StrOp.equals( wTour.name(), name ) ) {
+    iONode tour = NULL;
+    iONode tourlist = wPlan.gettourlist( o->model );
+    if( tourlist != NULL ) {
+      iONode node = wTourList.gettour( tourlist );
+      while( node != NULL ) {
+        if( StrOp.equals( wTour.getid( item ), wTour.getid( node ) ) ) {
+          NodeOp.removeChild( tourlist, node );
+          MapOp.remove( o->tourMap, wTour.getid( item ) );
+          node->base.del( node );
+          removed = True;
+          break;
+        }
+        node = wTourList.nexttour( tourlist, node );
       };
     }
   }
@@ -2554,6 +2620,12 @@ static iONode _getSchedule( iOModel inst, const char* id ) {
 }
 
 
+static iONode _getTour( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  return (iONode)MapOp.get( o->tourMap, id );
+}
+
+
 static iOText _getText( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOText)MapOp.get( o->textMap, id );
@@ -2757,6 +2829,7 @@ static void _init( iOModel inst ) {
   __clearMap( o->trackMap );
   __clearMap( o->locationMap );
   __clearMap( o->scheduleMap );
+  __clearMap( o->tourMap );
 
   ListOp.clear( o->routeList);
   ListOp.clear( o->switchList);
@@ -2785,6 +2858,7 @@ static void _init( iOModel inst ) {
   _createMap( o, o->operatorMap, wOperatorList.name(), wOperator.name(), (item_inst)OperatorOp.inst, NULL );
   _createMap( o, o->locationMap, wLocationList.name(), wLocation.name(), (item_inst)LocationOp.inst, NULL );
   _createMap( o, o->scheduleMap, wScheduleList.name(), wSchedule.name(), NULL, NULL );
+  _createMap( o, o->tourMap, wTourList.name(), wTour.name(), NULL, NULL );
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingFbAddrMap..." );
@@ -4559,6 +4633,7 @@ static iOModel _inst( const char* fileName ) {
   data->textMap     = MapOp.inst();
   data->locationMap = MapOp.inst();
   data->scheduleMap = MapOp.inst();
+  data->tourMap = MapOp.inst();
 
   data->fbAddrMap   = MapOp.inst();
   data->swAddrMap   = MapOp.inst();

@@ -73,6 +73,8 @@
       <var name="scheduleCycle" vt="int"/>
       <var name="prewaitScheduleIdx" vt="int"/>
       <var name="scheduletime" vt="long"/>
+      <var name="tour" vt="const char*"/>
+      <var name="tourIdx" vt="int"/>
       <var name="V_hint[32]" vt="char"/>
       <var name="blockgroup" vt="const char*"/>
       <var name="slowdown4route" vt="Boolean"/>

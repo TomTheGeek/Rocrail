@@ -545,6 +545,10 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="scheduleid" vt="const char*"/>
     </fun>
+    <fun name="useTour" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="tourid" vt="const char*"/>
+    </fun>
     <fun name="getSchedule" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="index" vt="int*" remark="Current schedule index."/>
@@ -849,6 +853,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="ScheduleID to search for"/>
     </fun>
+    <fun name="getTour" vt="iONode">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="TourID to search for"/>
+    </fun>
     <fun name="getText" vt="iOText">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="TextID to search for"/>
@@ -1113,6 +1121,7 @@
       <var name="coAddrMap" vt="iOMap"/>
       <var name="locationMap" vt="iOMap"/>
       <var name="scheduleMap" vt="iOMap"/>
+      <var name="tourMap" vt="iOMap"/>
       <var name="actionMap" vt="iOMap"/>
       <var name="waybillMap" vt="iOMap"/>
       <var name="muxFindDest" vt="iOMutex"/>

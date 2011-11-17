@@ -1430,6 +1430,14 @@
         <actionctrl cardinality="n"/>
       </sc>
     </sclist>
+    <tourlist cardinality="1" remark="Tour table" wrappername="TourList">
+      <tour cardinality="n" wrappername="Tour">
+        <var name="id" vt="string" defval="" range="*" required="true" remark="tour name"/>
+        <tourentry cardinality="n" wrappername="TourEntry">
+          <var name="id" vt="string" defval="NULL" range="*" required="false" remark="Schedule ID"/>
+        </tourentry>  
+      </tour>
+    </tourlist>
 
     <bklist cardinality="1" remark="Block table" wrappername="BlockList">
       <bk cardinality="n" wrappername="Block">
@@ -1970,6 +1978,7 @@
         <const name="block" vt="string" val="block" remark="Set loc in the supplied block."/>
         <const name="gotoblock" vt="string" val="gotoblock" remark="Set wanted block."/>
         <const name="useschedule" vt="string" val="useschedule" remark="Set schedule to use."/>
+        <const name="usetour" vt="string" val="usetour" remark="Set tour to use."/>
         <const name="dispatch" vt="string" val="dispatch" remark="Dispatch loco for throttle."/>
         <const name="release" vt="string" val="release" remark="Release loco from throttle: The releasing throttle must provide the throttleid."/>
         <const name="reset" vt="string" val="reset" remark="Stop immidiately and go to idle mode."/>

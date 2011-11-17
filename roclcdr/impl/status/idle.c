@@ -36,6 +36,8 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Link.h"
+#include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/TourEntry.h"
 
 
 
@@ -50,6 +52,37 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
 
     data->state = LC_FINDDEST;
     data->loc->setMode(data->loc, wLoc.mode_auto);
+
+    if( data->tour != NULL ) {
+      iONode tour = data->model->getTour(data->model, data->tour);
+      if( tour != NULL ) {
+        int cnt = NodeOp.getChildCnt(tour);
+        if( cnt > data->tourIdx ) {
+          iONode entry = NodeOp.getChild(tour, data->tourIdx);
+          if( entry != NULL ) {
+            const char* scid = wTourEntry.getid(entry);
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "tour [%s] entry [%d][%s]", wTour.getid(tour), data->tourIdx, scid );
+            LcDriverOp.useschedule( inst, scid );
+            data->tourIdx++;
+          }
+          else {
+            /* tour end */
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                "tour [%s] has unexpectedly ended", wTour.getid(tour));
+            data->tour = NULL;
+            data->tourIdx = 0;
+          }
+        }
+        else {
+          /* tour end */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"tour [%s] has ended", wTour.getid(tour));
+          data->tour = NULL;
+          data->tourIdx = 0;
+        }
+      }
+    }
+
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" from LC_IDLE to LC_FINDDEST.",
                    data->loc->getId( data->loc ) );
