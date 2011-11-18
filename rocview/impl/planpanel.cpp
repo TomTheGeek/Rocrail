@@ -91,6 +91,8 @@
 #include "rocrail/wrapper/public/ScheduleList.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionList.h"
+#include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/TourList.h"
 
 BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
 
@@ -905,6 +907,9 @@ iONode PlanPanel::addItemInList( iONode item ) {
   }
   else if( StrOp.equals( wSchedule.name(), name ) ) {
     dbkey = wScheduleList.name();
+  }
+  else if( StrOp.equals( wTour.name(), name ) ) {
+    dbkey = wTourList.name();
   }
   else if( StrOp.equals( wLocation.name(), name ) ) {
     dbkey = wLocationList.name();

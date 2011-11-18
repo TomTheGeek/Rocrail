@@ -34,8 +34,8 @@ toursdlggen::toursdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	m_labTourID->Wrap( -1 );
 	fgSizer4->Add( m_labTourID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_textCtrl4 = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer4->Add( m_textCtrl4, 0, wxALL|wxEXPAND, 5 );
+	m_ID = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_ID, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer6->Add( fgSizer4, 0, wxEXPAND, 5 );
 	

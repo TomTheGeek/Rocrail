@@ -106,8 +106,10 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Location.h"
 #include "rocrail/wrapper/public/ScheduleList.h"
+#include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/LinkList.h"
 #include "rocrail/wrapper/public/SvnLog.h"
@@ -1048,6 +1050,16 @@ static void rocrailCallback( obj me, iONode node ) {
         }
         if( !__hasIDinList(sclist, wItem.getid(child))  )
           NodeOp.addChild( sclist, (iONode)NodeOp.base.clone(child) );
+        planItems = false;
+      }
+      else if( StrOp.equals( childName, wTour.name() ) ) {
+        iONode tourlist = wPlan.gettourlist( model );
+        if( tourlist == NULL ) {
+          tourlist = NodeOp.inst( wTourList.name(), model, ELEMENT_NODE );
+          NodeOp.addChild(model, tourlist );
+        }
+        if( !__hasIDinList(tourlist, wItem.getid(child))  )
+          NodeOp.addChild( tourlist, (iONode)NodeOp.base.clone(child) );
         planItems = false;
       }
       else if( StrOp.equals( childName, wLocation.name() ) ) {

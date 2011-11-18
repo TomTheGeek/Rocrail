@@ -41,7 +41,7 @@ class toursdlggen : public wxDialog
 		wxPanel* m_IndexPanel;
 		wxListBox* m_TourList;
 		wxStaticText* m_labTourID;
-		wxTextCtrl* m_textCtrl4;
+		wxTextCtrl* m_ID;
 		wxButton* m_AddTour;
 		wxButton* m_ModifyTour;
 		wxButton* m_DeleteTour;
