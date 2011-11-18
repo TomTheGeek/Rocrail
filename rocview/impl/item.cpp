@@ -63,6 +63,7 @@
 #include "rocview/dialogs/seltabdlg.h"
 #include "rocview/dialogs/routedialog.h"
 #include "rocview/dialogs/stagedlg.h"
+#include "rocview/dialogs/toursdlg.h"
 
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -73,6 +74,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -123,6 +125,7 @@ enum {
     ME_UnLoc,
     ME_LocGoTo,
     ME_LocSchedule,
+    ME_LocTour,
     ME_LocGo,
     ME_LocSwap,
     ME_LocSwapBlockSide,
@@ -180,6 +183,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_Delete , Symbol::OnDelete )
   EVT_MENU     (ME_LocGoTo, Symbol::OnLocGoTo)
   EVT_MENU     (ME_LocSchedule, Symbol::OnLocSchedule)
+  EVT_MENU     (ME_LocTour, Symbol::OnLocTour)
   EVT_MENU     (ME_LocGo  , Symbol::OnLocGo  )
   EVT_MENU     (ME_LocSwap  , Symbol::OnLocSwap  )
   EVT_MENU     (ME_LocSwapBlockSide  , Symbol::OnLocSwapBlockSide  )
@@ -1174,6 +1178,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_LocSwapBlockSide, wxGetApp().getMenu("swapblockenterside"), wxGetApp().getTip("swapblockenterside") );
         menu.Append( ME_LocMIC, wxGetApp().getMenu("mic") );
         menu.Append( ME_LocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
+        menu.Append( ME_LocTour, wxGetApp().getMenu("selecttour"), wxGetApp().getTip("selecttour") );
         menu.Append( ME_LocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
 
         // FY to Go menu
@@ -1635,6 +1640,27 @@ void Symbol::OnLocSchedule(wxCommandEvent& event) {
         wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
         wLoc.setcmd( cmd, wLoc.useschedule );
         wLoc.setscheduleid( cmd, id );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+    }
+  }
+  dlg->Destroy();
+}
+
+void Symbol::OnLocTour(wxCommandEvent& event) {
+  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false );
+  if( wxID_OK == dlg->ShowModal() ) {
+    iONode sel = dlg->getProperties();
+    if( sel != NULL ) {
+      const char* id = wTour.getid( sel );
+
+      if( id != NULL ) {
+        /* Inform RocRail... */
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+        wLoc.setcmd( cmd, wLoc.usetour );
+        wLoc.settourid( cmd, id );
         wxGetApp().sendToRocrail( cmd );
         cmd->base.del(cmd);
       }

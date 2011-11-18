@@ -59,6 +59,7 @@ public:
   void OnUnLoc(wxCommandEvent& event);
   void OnLocGoTo(wxCommandEvent& event);
   void OnLocSchedule(wxCommandEvent& event);
+  void OnLocTour(wxCommandEvent& event);
   void OnLocGo(wxCommandEvent& event);
   void OnLocSwap(wxCommandEvent& event);
   void OnLocSwapBlockSide(wxCommandEvent& event);
