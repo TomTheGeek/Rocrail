@@ -450,13 +450,13 @@ void Softwareupdates::CreateControls()
     itemBoxSizer2->Add(m_labUpdates, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_UpdatesStrings;
-    m_Updates = new wxCheckListBox( itemDialog1, wxID_ANY, wxDefaultPosition, wxSize(300, 100), m_UpdatesStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
+    m_Updates = new wxCheckListBox( itemDialog1, wxID_ANY, wxDefaultPosition, wxSize(300, 120), m_UpdatesStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer2->Add(m_Updates, 1, wxGROW|wxALL, 5);
 
     m_labInfo = new wxStaticText( itemDialog1, wxID_ANY, _("Update info"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(m_labInfo, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    m_Info = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+    m_Info = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, 80), wxTE_MULTILINE|wxTE_READONLY );
     m_Info->Enable(false);
     itemBoxSizer2->Add(m_Info, 0, wxGROW|wxALL, 5);
 
