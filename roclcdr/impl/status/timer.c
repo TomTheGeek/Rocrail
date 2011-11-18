@@ -52,6 +52,7 @@ void statusTimer( iILcDriverInt inst, Boolean reverse ) {
   if( data->timer == 0 || !data->run || data->reqstop ) {
 
     if( data->reqstop ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"stop requested");
       data->reqstop = False;
       data->run = False;
       data->warningnodestfound = False;

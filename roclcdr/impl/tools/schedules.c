@@ -140,7 +140,9 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
           data->next1Block = NULL;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
         resetNext2( (iOLcDriver)inst, True );
-        data->run = False;
+        if( data->tour == NULL ) {
+          data->run = False;
+        }
       }
 
     }

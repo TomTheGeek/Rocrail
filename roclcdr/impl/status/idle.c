@@ -58,6 +58,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
       if( tour != NULL ) {
         iOStrTok tok = StrTokOp.inst(wTour.getschedules(tour), ',');
         int cnt = StrTokOp.countTokens(tok);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"tour entries: cnt=%d tourIdx=%d", cnt, data->tourIdx);
         if( cnt > data->tourIdx ) {
           const char* scid = NULL;
           int scidx = 0;
@@ -66,13 +67,20 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
               scid = StrTokOp.nextToken(tok);
               break;
             }
+            else {
+              /* skip */
+              StrTokOp.nextToken(tok);
+            }
             scidx++;
           }
           if( scid != NULL ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "tour [%s] entry [%d][%s]", wTour.getid(tour), data->tourIdx, scid );
-            LcDriverOp.useschedule( inst, scid );
-            data->tourIdx++;
+            iONode schedule = data->model->getSchedule( data->model, scid );
+            if( schedule != NULL ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "tour [%s] entry [%d][%s]", wTour.getid(tour), data->tourIdx, scid );
+              LcDriverOp.useschedule( inst, wSchedule.getid(schedule) );
+              data->tourIdx++;
+            }
           }
           else {
             /* tour end */
@@ -80,6 +88,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
                 "tour [%s] has unexpectedly ended", wTour.getid(tour));
             data->tour = NULL;
             data->tourIdx = 0;
+            data->run = False;
           }
         }
         else {
@@ -87,6 +96,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"tour [%s] has ended", wTour.getid(tour));
           data->tour = NULL;
           data->tourIdx = 0;
+          data->run = False;
         }
         StrTokOp.base.del(tok);
       }
@@ -115,11 +125,22 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
       data->loc->setMode(data->loc, wLoc.mode_wait);
     }
     if( data->reqstop ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"stop requested");
       data->reqstop = False;
       data->run = False;
       data->warningnodestfound = False;
       data->loc->setMode(data->loc, wLoc.mode_idle);
     }
 
+  }
+  else {
+    /* DEBUG */
+    /*
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "idle: run=%d block=%s",
+        data->run,
+        data->loc->getCurBlock( data->loc )==NULL?"":data->loc->getCurBlock( data->loc ));
+    ThreadOp.sleep(1000);
+    */
   }
 }

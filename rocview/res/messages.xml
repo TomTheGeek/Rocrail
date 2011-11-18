@@ -17609,4 +17609,7 @@
   <Msg id="tourtable" dialog="true">
     <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
   </Msg>
+  <Msg id="tour">
+    <en txt="Tour"/>
+  </Msg>
 </Messages>

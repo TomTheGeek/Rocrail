@@ -5549,3 +5549,21 @@ msgstr ""
 msgid "Sort locos by address"
 msgstr ""
 
+#. 
+# id="selecttour"
+#, c-format
+msgid "Select tour"
+msgstr ""
+
+#. 
+# id="tourtable"
+#, c-format
+msgid "Tour table"
+msgstr ""
+
+#. 
+# id="tour"
+#, c-format
+msgid "Tour"
+msgstr ""
+
