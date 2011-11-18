@@ -1433,9 +1433,7 @@
     <tourlist cardinality="1" remark="Tour table" wrappername="TourList">
       <tour cardinality="n" wrappername="Tour">
         <var name="id" vt="string" defval="" range="*" required="true" remark="tour name"/>
-        <tourentry cardinality="n" wrappername="TourEntry">
-          <var name="id" vt="string" defval="NULL" range="*" required="false" remark="Schedule ID"/>
-        </tourentry>  
+        <var name="schedules" vt="string" defval="" range="*" required="true" remark="csv list of schedules"/>
       </tour>
     </tourlist>
 

@@ -37,7 +37,6 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Link.h"
 #include "rocrail/wrapper/public/Tour.h"
-#include "rocrail/wrapper/public/TourEntry.h"
 
 
 
@@ -53,14 +52,23 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
     data->state = LC_FINDDEST;
     data->loc->setMode(data->loc, wLoc.mode_auto);
 
+    /* Check if we are on a tour: */
     if( data->tour != NULL ) {
       iONode tour = data->model->getTour(data->model, data->tour);
       if( tour != NULL ) {
-        int cnt = NodeOp.getChildCnt(tour);
+        iOStrTok tok = StrTokOp.inst(wTour.getschedules(tour), ',');
+        int cnt = StrTokOp.countTokens(tok);
         if( cnt > data->tourIdx ) {
-          iONode entry = NodeOp.getChild(tour, data->tourIdx);
-          if( entry != NULL ) {
-            const char* scid = wTourEntry.getid(entry);
+          const char* scid = NULL;
+          int scidx = 0;
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            if( scidx == data->tourIdx ) {
+              scid = StrTokOp.nextToken(tok);
+              break;
+            }
+            scidx++;
+          }
+          if( scid != NULL ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "tour [%s] entry [%d][%s]", wTour.getid(tour), data->tourIdx, scid );
             LcDriverOp.useschedule( inst, scid );
@@ -80,6 +88,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
           data->tour = NULL;
           data->tourIdx = 0;
         }
+        StrTokOp.base.del(tok);
       }
     }
 

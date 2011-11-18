@@ -38,12 +38,24 @@ class ToursDlg : public toursdlggen
   void initIndex();
   void initValues();
   void initScheduleCombo();
+  bool evaluate();
 
 public:
 	/** Constructor */
 	ToursDlg( wxWindow* parent );
   ToursDlg( wxWindow* parent, iONode tour, bool save );
   iONode getProperties() { return m_Props; };
+
+  void onAddTour( wxCommandEvent& event );
+  void onModifyTour( wxCommandEvent& event );
+  void onDeleteTour( wxCommandEvent& event );
+  void onApply( wxCommandEvent& event );
+  void onTourSelect( wxCommandEvent& event );
+  void onEntryAdd( wxCommandEvent& event );
+  void onEntryDelete( wxCommandEvent& event );
+  void onCancel( wxCommandEvent& event );
+  void onOK( wxCommandEvent& event );
+
 };
 
 #endif // __toursdlg__

@@ -28,6 +28,7 @@
 
 #include "rocview/public/guiapp.h"
 
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Tour.h"
@@ -36,6 +37,8 @@
 
 #include "rocs/public/trace.h"
 #include "rocs/public/list.h"
+#include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 
 ToursDlg::ToursDlg( wxWindow* parent )
   :toursdlggen( parent )
@@ -77,11 +80,11 @@ void ToursDlg::initLabels() {
   TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "initLabels" );
   SetTitle(wxGetApp().getMsg( "tourtable" ));
   m_TourBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
-  m_TourBook->SetPageText( 1, wxGetApp().getMsg( "schedules" ) );
+  m_TourBook->SetPageText( 1, wxGetApp().getMsg( "scheduletable" ) );
 
   // Index
   m_labTourID->SetLabel( wxGetApp().getMsg( "id" ) );
-  m_AddTour->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_AddTour->SetLabel( wxGetApp().getMsg( "new" ) );
   m_ModifyTour->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteTour->SetLabel( wxGetApp().getMsg( "delete" ) );
 
@@ -211,5 +214,172 @@ void ToursDlg::initValues() {
   m_ID->SetValue( wxString(wTour.getid( m_Props ),wxConvUTF8) );
 
   // Schedules
+  m_EntryList->Clear();
+  iOStrTok tok = StrTokOp.inst(wTour.getschedules(m_Props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* scid = StrTokOp.nextToken(tok);
+    m_EntryList->Append( wxString(scid,wxConvUTF8) );
+  }
 
 }
+
+
+bool ToursDlg::evaluate() {
+  if( m_Props == NULL ) {
+    return false;
+  }
+
+  if( m_ID->GetValue().Len() == 0 ) {
+    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    m_ID->SetValue( wxString(wItem.getid( m_Props ),wxConvUTF8) );
+    return false;
+  }
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+
+  int cnt = m_ScheduleList->GetCount();
+  if( cnt > 0 ) {
+    char* ids = StrOp.dup("");
+    for( int i = 0; i < cnt; i++ ) {
+      char* p = ids;
+      if( StrOp.len(ids) == 0 )
+        ids = StrOp.fmt( "%s", (const char*)m_ScheduleList->GetString(i).mb_str(wxConvUTF8) );
+      else
+        ids = StrOp.fmt( "%s,%s", ids, (const char*)m_ScheduleList->GetString(i).mb_str(wxConvUTF8) );
+      StrOp.free( p );
+    }
+    wTour.setschedules( m_Props, ids );
+    StrOp.free( ids );
+  }
+  else
+    wTour.setschedules( m_Props, "" );
+
+  wTour.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+
+  return true;
+}
+
+
+void ToursDlg::onApply( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  if( !evaluate() )
+    return;
+
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
+
+  initIndex();
+
+}
+
+
+void ToursDlg::onModifyTour( wxCommandEvent& event ) {
+  onApply(event);
+}
+
+
+void ToursDlg::onDeleteTour( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
+  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
+  /* Notify RocRail. */
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.remove );
+  NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode tourlist = wPlan.gettourlist( model );
+    if( tourlist != NULL ) {
+      NodeOp.removeChild( tourlist, m_Props );
+      m_Props = NULL;
+    }
+  }
+
+  initIndex();
+
+}
+
+
+void ToursDlg::onAddTour( wxCommandEvent& event ) {
+  int i = m_TourList->FindString( _T("NEW") );
+  if( i == wxNOT_FOUND ) {
+    m_TourList->Append( _T("NEW") );
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode tourlist = wPlan.gettourlist( model );
+      if( tourlist == NULL ) {
+        tourlist = NodeOp.inst( wTourList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, tourlist );
+      }
+
+      if( tourlist != NULL ) {
+        iONode tour = NodeOp.inst( wTour.name(), tourlist, ELEMENT_NODE );
+        NodeOp.addChild( tourlist, tour );
+        wTour.setid( tour, "NEW" );
+        m_Props = tour;
+      }
+    }
+  }
+  m_TourList->SetStringSelection( _T("NEW") );
+  m_TourList->SetFirstItem( _T("NEW") );
+  initValues();
+
+}
+
+void ToursDlg::onTourSelect( wxCommandEvent& event ) {
+  if( m_TourList->GetSelection() != wxNOT_FOUND ) {
+    m_Props = (iONode)m_TourList->GetClientData(m_TourList->GetSelection());
+    if( m_Props != NULL )
+      initValues();
+    else
+      TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  }
+
+}
+
+void ToursDlg::onEntryAdd( wxCommandEvent& event ) {
+  int sel = m_ScheduleList->GetSelection();
+  if( sel != wxNOT_FOUND ) {
+    m_EntryList->Append(m_ScheduleList->GetStringSelection());
+  }
+}
+
+
+void ToursDlg::onEntryDelete( wxCommandEvent& event ) {
+  int sel = m_EntryList->GetSelection();
+  if( sel != wxNOT_FOUND ) {
+    m_EntryList->Delete(sel);
+  }
+}
+
+
+void ToursDlg::onCancel( wxCommandEvent& event ){
+  EndModal( 0 );
+}
+
+
+void ToursDlg::onOK( wxCommandEvent& event ){
+  if( m_bSave )
+    onApply(event);
+  EndModal( wxID_OK );
+}
+
+
