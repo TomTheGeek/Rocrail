@@ -154,6 +154,7 @@ public:
   void OnEditSignals(wxCommandEvent& event);
   void OnEditOutputs(wxCommandEvent& event);
   void OnEditSchedules(wxCommandEvent& event);
+  void OnEditTours(wxCommandEvent& event);
   void OnEditLocations(wxCommandEvent& event);
   void OnEditTurntables(wxCommandEvent& event);
   void OnEditMVTrack(wxCommandEvent& event);
@@ -190,6 +191,7 @@ public:
   void OnLocProps(wxCommandEvent& event);
   void OnLocGoTo(wxCommandEvent& event);
   void OnLocSchedule(wxCommandEvent& event);
+  void OnLocTour(wxCommandEvent& event);
   void OnLocShortID(wxCommandEvent& event);
   void OnTxShortIDs(wxCommandEvent& event);
   void OnLocActivate(wxCommandEvent& event);
@@ -440,6 +442,7 @@ enum
     ME_EditSignals,
     ME_EditOutputs,
     ME_EditSchedules,
+    ME_EditTours,
     ME_EditLocations,
     ME_EditTurntables,
     ME_EditMVTrack,
@@ -454,6 +457,7 @@ enum
     ME_GridLocProps,
     ME_GridLocGoTo,
     ME_GridLocSchedule,
+    ME_GridLocTour,
     ME_GridLocShortID,
     ME_GridLocActivate,
     ME_GridLocDeActivate,

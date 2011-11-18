@@ -2013,6 +2013,10 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       const char* scheduleid = wLoc.getscheduleid( nodeA );
       LocOp.useSchedule( inst, scheduleid );
     }
+    else if( StrOp.equals( wLoc.usetour, cmd ) ) {
+      const char* tourid = wLoc.gettourid( nodeA );
+      LocOp.useTour( inst, tourid );
+    }
     else if( StrOp.equals( wLoc.shortid, cmd ) ) {
       /* send short ID to command station */
       if( wLoc.isuseshortid(data->props) && wLoc.getshortid(data->props) != NULL &&

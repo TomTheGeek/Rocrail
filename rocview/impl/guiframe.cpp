@@ -86,6 +86,7 @@
 #include "rocview/dialogs/powermandlg.h"
 #include "rocview/dialogs/powerctrldlg.h"
 #include "rocview/dialogs/donkey.h"
+#include "rocview/dialogs/toursdlg.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
@@ -130,6 +131,7 @@
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Waybill.h"
@@ -277,6 +279,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditSignals    , RocGuiFrame::OnEditSignals)
     EVT_MENU( ME_EditOutputs    , RocGuiFrame::OnEditOutputs)
     EVT_MENU( ME_EditSchedules  , RocGuiFrame::OnEditSchedules)
+    EVT_MENU( ME_EditTours      , RocGuiFrame::OnEditTours)
     EVT_MENU( ME_EditLocations  , RocGuiFrame::OnEditLocations)
     EVT_MENU( ME_EditMVTrack    , RocGuiFrame::OnEditMVTrack)
     EVT_MENU( ME_EditTimedActions, RocGuiFrame::OnEditTimedActions)
@@ -350,6 +353,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU     (ME_GridLocProps   , RocGuiFrame::OnLocProps)
     EVT_MENU     (ME_GridLocGoTo    , RocGuiFrame::OnLocGoTo)
     EVT_MENU     (ME_GridLocSchedule, RocGuiFrame::OnLocSchedule)
+    EVT_MENU     (ME_GridLocTour    , RocGuiFrame::OnLocTour)
     EVT_MENU     (ME_GridLocShortID , RocGuiFrame::OnLocShortID)
     EVT_MENU     (ME_GridLocActivate, RocGuiFrame::OnLocActivate)
     EVT_MENU     (ME_GridLocDeActivate, RocGuiFrame::OnLocDeActivate)
@@ -1459,6 +1463,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
+  menuTables->Append(ME_EditTours, wxGetApp().getMenu("tourtable"), wxGetApp().getTip("tourtable") );
   menuTables->Append(ME_EditLocations, wxGetApp().getMenu("locationtable"), wxGetApp().getTip("locationtable") );
   menuTables->Append(ME_EditBlockGroups, wxGetApp().getMenu("blockgrouptable"), wxGetApp().getTip("blockgrouptable") );
   menuTables->Append(ME_EditTurnouts, wxGetApp().getMenu("turnouttable"), wxGetApp().getTip("turnouttable") );
@@ -2834,6 +2839,14 @@ void RocGuiFrame::OnEditSchedules( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
+void RocGuiFrame::OnEditTours( wxCommandEvent& event ) {
+  ToursDlg*  dlg = new ToursDlg(this, (iONode)NULL, true );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
 void RocGuiFrame::OnEditLocations( wxCommandEvent& event ) {
   LocationsDialog*  dlg = new LocationsDialog(this, (iONode)NULL );
   if( wxID_OK == dlg->ShowModal() ) {
@@ -3094,6 +3107,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_EditOutputs);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditSchedules);
+  if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
+  mi = menuBar->FindItem(ME_EditTours);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditLocations);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
@@ -3752,6 +3767,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
 
     menu.Append( ME_GridLocGoTo, wxGetApp().getMenu("gotoblock"), wxGetApp().getTip("gotoblock") );
     menu.Append( ME_GridLocSchedule, wxGetApp().getMenu("selectschedule"), wxGetApp().getTip("selectschedule") );
+    menu.Append( ME_GridLocTour, wxGetApp().getMenu("selecttour"), wxGetApp().getTip("selecttour") );
     //menu.Append( ME_GridLocShortID, wxGetApp().getMenu("setshortid"), wxGetApp().getTip("selectschedule") );
     menu.AppendSeparator();
     if( !active )
@@ -3979,6 +3995,31 @@ void RocGuiFrame::OnLocSchedule(wxCommandEvent& event) {
         wLoc.setid( cmd, wLoc.getid( lc ) );
         wLoc.setcmd( cmd, wLoc.useschedule );
         wLoc.setscheduleid( cmd, id );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+    }
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnLocTour(wxCommandEvent& event) {
+  iONode lc = findLoc(m_LocID);
+  const char* blockid = NULL;
+  if( lc != NULL )
+    blockid = wLoc.getblockid(lc);
+  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false );
+  if( wxID_OK == dlg->ShowModal() ) {
+    iONode sel = dlg->getProperties();
+    if( sel != NULL ) {
+      const char* id = wTour.getid( sel );
+
+      if( id != NULL ) {
+        /* Inform RocRail... */
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( cmd, wLoc.getid( lc ) );
+        wLoc.setcmd( cmd, wLoc.usetour );
+        wLoc.settourid( cmd, id );
         wxGetApp().sendToRocrail( cmd );
         cmd->base.del(cmd);
       }

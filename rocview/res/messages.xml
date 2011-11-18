@@ -17603,4 +17603,10 @@
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
   </Msg>
+  <Msg id="selecttour" dialog="true">
+    <en txt="Select tour"/>
+  </Msg>
+  <Msg id="tourtable" dialog="true">
+    <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
+  </Msg>
 </Messages>
