@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/TextList.h"
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/ScheduleList.h"
+#include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/LinkList.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/ActionList.h"
@@ -717,6 +718,7 @@ static Boolean __mergeRoutes( iOModPlanData data, iONode model, const char* fnam
     __mergeList(wLocationList.name(), model, root, -1, 0,0,0, False);
     __mergeList(wScheduleList.name(), model, root, -1, 0,0,0, False);
     __mergeList(wWaybillList.name() , model, root, -1, 0,0,0, False);
+    __mergeList(wTourList.name()    , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
