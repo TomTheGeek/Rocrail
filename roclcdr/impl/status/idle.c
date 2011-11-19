@@ -90,6 +90,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
             data->tour = NULL;
             data->tourIdx = 0;
             data->run = False;
+            data->state = LC_IDLE;
           }
         }
         else {
@@ -98,6 +99,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
           data->tour = NULL;
           data->tourIdx = 0;
           data->run = False;
+          data->state = LC_IDLE;
         }
         StrTokOp.base.del(tok);
       }
