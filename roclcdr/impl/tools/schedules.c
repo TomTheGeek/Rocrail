@@ -307,6 +307,7 @@ Boolean isScheduleEnd( iILcDriverInt inst ) {
     if( data->scheduleIdx >= nrEntries ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "end of schedule[%s] detected; entries=%d index=%d", data->schedule, nrEntries, data->scheduleIdx);
+      data->scheduleended = True; /* flag for signaling the tour for the next schedule */
       return True;
     }
   }

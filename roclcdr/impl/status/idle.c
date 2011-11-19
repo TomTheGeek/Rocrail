@@ -53,8 +53,9 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
     data->loc->setMode(data->loc, wLoc.mode_auto);
 
     /* Check if we are on a tour: */
-    if( data->tour != NULL ) {
+    if( data->tour != NULL && (data->scheduleended || data->tourIdx == 0) ) {
       iONode tour = data->model->getTour(data->model, data->tour);
+      data->scheduleended = False;
       if( tour != NULL ) {
         iOStrTok tok = StrTokOp.inst(wTour.getschedules(tour), ',');
         int cnt = StrTokOp.countTokens(tok);

@@ -68,6 +68,7 @@
       <var name="prevexitbkid" vt="const char*"/>
       <var name="prevoutbkid" vt="const char*"/>
       <var name="gotoBlock" vt="const char*"/>
+      <var name="scheduleended" vt="Boolean"/>
       <var name="schedule" vt="const char*"/>
       <var name="scheduleIdx" vt="int"/>
       <var name="scheduleCycle" vt="int"/>
