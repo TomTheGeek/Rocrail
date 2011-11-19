@@ -1158,6 +1158,9 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
   if( wPlan.getsclist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getsclist(data->model) ) );
 
+  if( wPlan.gettourlist(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.gettourlist(data->model) ) );
+
   if( wPlan.getwaybilllist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getwaybilllist(data->model) ) );
 
