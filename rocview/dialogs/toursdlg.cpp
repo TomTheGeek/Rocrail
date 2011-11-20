@@ -236,17 +236,19 @@ bool ToursDlg::evaluate() {
   }
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
 
-  int cnt = m_ScheduleList->GetCount();
+  int cnt = m_EntryList->GetCount();
+  TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedules in list: %d", cnt );
   if( cnt > 0 ) {
     char* ids = StrOp.dup("");
     for( int i = 0; i < cnt; i++ ) {
       char* p = ids;
       if( StrOp.len(ids) == 0 )
-        ids = StrOp.fmt( "%s", (const char*)m_ScheduleList->GetString(i).mb_str(wxConvUTF8) );
+        ids = StrOp.fmt( "%s", (const char*)m_EntryList->GetString(i).mb_str(wxConvUTF8) );
       else
-        ids = StrOp.fmt( "%s,%s", ids, (const char*)m_ScheduleList->GetString(i).mb_str(wxConvUTF8) );
+        ids = StrOp.fmt( "%s,%s", ids, (const char*)m_EntryList->GetString(i).mb_str(wxConvUTF8) );
       StrOp.free( p );
     }
+    TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedules in tour: \"%s\"", ids );
     wTour.setschedules( m_Props, ids );
     StrOp.free( ids );
   }
