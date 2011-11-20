@@ -1563,11 +1563,16 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
 
+    int addr = wSwitch.getaddr1( node );
+    if( addr == 0 ) {
+      addr = wSwitch.getport1( node );
+    }
+
     cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
     cmd[1] = wSwitch.getbus( node ) / 256;
     cmd[2] = wSwitch.getbus( node ) % 256;
-    cmd[3] = wSwitch.getaddr1( node ) / 256;
-    cmd[4] = wSwitch.getaddr1( node ) % 256;
+    cmd[3] = addr / 256;
+    cmd[4] = addr % 256;
     makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
@@ -1582,6 +1587,10 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
+    int addr = wOutput.getaddr( node );
+    if( addr == 0 ) {
+      addr = wOutput.getport( node );
+    }
 
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.sod ) )
       cmd[0] = OPC_ASRQ;
@@ -1590,8 +1599,8 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     cmd[1] = wOutput.getbus( node ) / 256;
     cmd[2] = wOutput.getbus( node ) % 256;
-    cmd[3] = wOutput.getaddr( node ) / 256;
-    cmd[4] = wOutput.getaddr( node ) % 256;
+    cmd[3] = addr / 256;
+    cmd[4] = addr % 256;
     makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d.%d %s",
