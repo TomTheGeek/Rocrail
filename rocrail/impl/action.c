@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/DigInt.h"
@@ -543,6 +544,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       }
       else if( StrOp.equals( "schedule", wAction.getcmd( data->action ) ) ) {
         bl->setLocSchedule(bl, wAction.getparam( data->action ));
+      }
+      else if( StrOp.equals( wTour.name(), wAction.getcmd( data->action ) ) ) {
+        bl->setLocTour(bl, wAction.getparam( data->action ));
       }
       else if( StrOp.equals( wAction.block_acceptident, wAction.getcmd( data->action ) ) ) {
         bl->acceptIdent(bl, True);

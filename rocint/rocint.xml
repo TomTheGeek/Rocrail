@@ -178,6 +178,10 @@
       <param name="inst" vt="this"/>
       <param name="scid" vt="const char*" remark="schedule for current loc"/>
     </fun>
+    <fun name="setLocTour" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="tourid" vt="const char*" remark="tour for current loc"/>
+    </fun>
     <fun name="getLoc" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>

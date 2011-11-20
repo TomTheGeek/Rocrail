@@ -1642,6 +1642,24 @@ static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
   return ok;
 }
 
+static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
+  Boolean ok = False;
+  if( inst != NULL && tourid != NULL ) {
+    iOBlockData data = Data(inst);
+
+    if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
+      iOModel model = AppOp.getModel();
+      iOLoc loc = ModelOp.getLoc( model, data->locId );
+      if( loc != NULL ) {
+        LocOp.useTour( loc, tourid );
+        LocOp.go(loc);
+      }
+    }
+
+  }
+  return ok;
+}
+
 static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
   iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );

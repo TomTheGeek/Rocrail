@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Text.h"
+#include "rocrail/wrapper/public/Tour.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -812,6 +813,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_setloc, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_schedule, wxConvUTF8));
+      m_Command->Append(wxString( wTour.name(), wxConvUTF8));
       m_Command->Append(wxString( wAction.block_event, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_acceptident, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));

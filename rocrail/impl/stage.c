@@ -639,6 +639,12 @@ static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
 }
 
 
+static Boolean _setLocTour( iIBlockBase inst ,const char* tourid ) {
+  iOStageData data = Data(inst);
+  return False;
+}
+
+
 /**  */
 static void _setManager( iIBlockBase inst ,iIBlockBase manager ) {
   iOStageData data = Data(inst);

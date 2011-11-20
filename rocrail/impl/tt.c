@@ -2357,6 +2357,15 @@ static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
 }
 
 
+static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
+  Boolean ok = False;
+  if( inst != NULL && tourid != NULL ) {
+    iOTTData data = Data(inst);
+  }
+  return ok;
+}
+
+
 
 static Boolean _unLock( iIBlockBase inst, const char* id ) {
   iOTTData data = Data(inst);
