@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/rocrail.h"
@@ -1516,6 +1517,14 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
 }
 
 
+static int __setFastClock(iOCBUS cbus, iONode node) {
+  iOCBUSData data = Data(cbus);
+  return 0;
+}
+
+
+
+
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
@@ -1836,6 +1845,34 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     }
 
   }
+
+  /* Clock command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+    /* Fast Clock */
+
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );
+      wClock.setcmd( node, wClock.set );
+      wClock.setdivider( node, 0 );
+    }
+    else if(  StrOp.equals( wClock.getcmd( node ), wClock.go ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "go clock" );
+      wClock.setcmd( node, wClock.set );
+    }
+    else if(  StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sync clock" );
+      if( !data->fcsync ) {
+        wClock.setcmd( node, wClock.set );
+        data->fcsync = True;
+      }
+    }
+
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.set ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock" );
+      __setFastClock(cbus, node);
+    }
+  }
+
 
   return rsp;
 }
