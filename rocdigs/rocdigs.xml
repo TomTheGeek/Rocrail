@@ -1414,6 +1414,8 @@
       <var name="bootmode" vt="Boolean"/>
       <var name="cvnr" vt="int"/>
       <var name="cab[256]" vt="int"/>
+      <var name="fcnode" vt="int"/>
+      <var name="fcaddr" vt="int"/>
       <var name="fcsync" vt="Boolean"/>
     </data>
   </object>

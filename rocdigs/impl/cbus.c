@@ -58,6 +58,8 @@
 #include "rocdigs/impl/cbus/cbusmon.h"
 #include "rocdigs/impl/cbus/cbuscmd.h"
 
+#include <time.h>
+
 static int instCnt = 0;
 
 static iONode __translate( iOCBUS cbus, iONode node );
@@ -1517,9 +1519,36 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
 }
 
 
-static int __setFastClock(iOCBUS cbus, iONode node) {
+static void __setFastClock(iOCBUS cbus, iONode node) {
   iOCBUSData data = Data(cbus);
-  return 0;
+
+  byte cmd[32];
+  byte* frame = allocMem(32);
+  int hours = 10;
+  int mins  = 30;
+  int div   = wClock.getdivider(node);
+
+  long l_time = wClock.gettime(node);
+  struct tm* lTime = localtime( &l_time );
+
+  mins  = lTime->tm_min;
+  hours = lTime->tm_hour;
+
+  cmd[0] = OPC_ACON3;
+  cmd[1] = data->fcnode / 256;
+  cmd[2] = data->fcnode % 256;
+  cmd[3] = data->fcaddr / 256;
+  cmd[4] = data->fcaddr % 256;
+  cmd[5] = mins;
+  cmd[6] = hours;
+  cmd[7] = div;
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fast clock sync %02d:%02d divider=%d",
+      mins, hours, div );
+  ThreadOp.post(data->writer, (obj)frame);
+
+
 }
 
 
@@ -1902,6 +1931,8 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->fonfof      = wCBus.isfonfof(data->cbusini);
   data->slotserver  = wCBus.isslotserver(data->cbusini);
   data->purgetime   = wCBus.getpurgetime(data->cbusini);
+  data->fcnode      = wCBus.getfcnode(data->cbusini);
+  data->fcaddr      = wCBus.getfcaddr(data->cbusini);
   data->run         = True;
   data->device      = wDigInt.getdevice( data->ini );
   data->swtime      = wDigInt.getswtime( ini );

@@ -502,6 +502,8 @@
         <var name="purgetime" vt="int" defval="10" unit="s" range="0-*" remark="CS engine idle timeout."/>
         <var name="loadertime" vt="int" defval="50" range="10-*" remark="Sleep time between boot loader lines."/>
         <var name="slotserver" vt="bool" defval="false"/>
+        <var name="fcnode" vt="int" defval="0" range="0-*" remark="Fast clock node number."/>
+        <var name="fcaddr" vt="int" defval="9999" range="0-*" remark="Fast clock event address."/>
 	      <cbnode cardinality="n" wrappername="CBusNode">
 	        <var name="nr" vt="int" defval="0" range="0-65535" remark="NodeNumber"/>
 	        <var name="manuid" vt="int" defval="0" range="0-65535" remark="NMRA manufacturer ID."/>
