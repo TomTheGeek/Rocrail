@@ -268,6 +268,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)bidib$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)openlcb$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)nmra$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)
