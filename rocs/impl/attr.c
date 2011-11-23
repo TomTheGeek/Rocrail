@@ -728,7 +728,7 @@ static const char* __escapeStr( iOAttr inst, const char* str ) {
     int len = StrOp.len( str );
     int i = 0;
     int idx = 0;
-    char* buffer = allocIDMem( 1 + len * 6, RocsAttrID ); /* Worst case. */
+    char* buffer = allocIDMem( 1 + len * 10, RocsAttrID ); /* Worst case. */
 
     for( i = 0; i < len; i++ ) {
       if( str[i] == '&' && str[i+1] == '#' ) {
