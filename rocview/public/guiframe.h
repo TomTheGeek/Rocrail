@@ -185,6 +185,7 @@ public:
   void OnLocGo(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
+  void OnLocResetAll(wxCommandEvent& event);
   void OnLocSwap(wxCommandEvent& event);
   void OnLocSwapBlockSide(wxCommandEvent& event);
   void OnLocDispatch(wxCommandEvent& event);
@@ -451,6 +452,7 @@ enum
     ME_GridLocGo,
     ME_GridLocStop,
     ME_GridLocReset,
+    ME_GridLocResetAll,
     ME_GridLocSwap,
     ME_GridLocSwapBlockSide,
     ME_GridLocDispatch,

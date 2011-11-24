@@ -69,6 +69,7 @@ public:
   void OnLocGoManual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
+  void OnLocResetAll(wxCommandEvent& event);
   void OnCloseBlock(wxCommandEvent& event);
   void OnOpenBlock(wxCommandEvent& event);
   void OnAcceptIdent(wxCommandEvent& event);

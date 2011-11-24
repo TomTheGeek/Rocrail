@@ -132,6 +132,7 @@ enum {
     ME_LocGoManual,
     ME_LocStop,
     ME_LocReset,
+    ME_LocResetAll,
     ME_LocMIC,
     ME_LocActivate,
     ME_LocDeActivate,
@@ -193,6 +194,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocGoManual  , Symbol::OnLocGoManual  )
   EVT_MENU     (ME_LocStop, Symbol::OnLocStop)
   EVT_MENU     (ME_LocReset, Symbol::OnLocReset)
+  EVT_MENU     (ME_LocResetAll, Symbol::OnLocResetAll)
   EVT_MENU     (ME_LocMIC  , Symbol::OnLocMIC  )
   EVT_MENU     (ME_LocActivate, Symbol::OnLocActivate  )
   EVT_MENU     (ME_LocDeActivate, Symbol::OnLocDeActivate  )
@@ -1351,6 +1353,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         //  mi->Enable( false );
         menu.AppendSeparator();
         menu.Append( ME_LocReset, wxGetApp().getMenu("softresetall") );
+        menu.Append( ME_LocResetAll, wxGetApp().getMenu("resetall") );
         mi = menu.FindItem( ME_LocReset );
         //if( wxGetApp().getFrame()->isAutoMode() )
           //mi->Enable( false );
@@ -1811,6 +1814,15 @@ void Symbol::OnLocReset(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
   wLoc.setcmd( cmd, wLoc.softreset );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnLocResetAll(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.reset );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
