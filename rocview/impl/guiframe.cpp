@@ -1309,6 +1309,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_WorkSpace          = NULL;
   m_LocoCategory       = LOCO_VIEW_ALL;
   m_LocoSortByAddress  = false;
+  m_FakeLeftClick      = false;
 }
 
 void RocGuiFrame::initFrame() {
@@ -3620,6 +3621,7 @@ void RocGuiFrame::setLocID( const char* locid ) {
     wxString str = m_ActiveLocs->GetCellValue( i, 0 );
     if( StrOp.equals( (const char*)str.mb_str(wxConvUTF8), locid ) ) {
       wxGridEvent event(-1,0,NULL,i);
+      m_FakeLeftClick = true;
       OnCellLeftClick(event);
       break;
     }
@@ -3649,9 +3651,9 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
       OnLocDispatch( event);
     }
     // TODO: Block if the event is not initiated from the mouse.
-    //else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED ) {
+    //else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_LEFT_DOWN  ) {
     // 10217 seems to be the mouse event
-    else if( event.GetCol() == LOC_COL_ID ) {
+    else if( !m_FakeLeftClick && event.GetCol() == LOC_COL_ID ) {
       TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "D&D eventtype [%d]", event.GetEventType() );
 
       wxTextDataObject my_data(_T("moveto:")+str);
@@ -3674,6 +3676,8 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     if(m_CV!=NULL)
       m_CV->OnGrid( event );
   }
+
+  m_FakeLeftClick = false;
 
   event.Skip(true);
 }
@@ -3754,6 +3758,7 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
 
 void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
   if( event.GetEventObject() == m_ActiveLocs ) {
+    m_FakeLeftClick = true;
     OnCellLeftClick(event);
     wxString str = m_ActiveLocs->GetCellValue( event.GetRow(), 0 );
 
@@ -3800,6 +3805,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
 void RocGuiFrame::OnSelectCell( wxGridEvent& event ){
   if( event.GetEventObject() == m_ActiveLocs ) {
     wxString str = m_ActiveLocs->GetCellValue( event.GetRow(), 0 );
+    m_FakeLeftClick = true;
     OnCellLeftClick(event);
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnSelectCell %s", (const char*)str.mb_str(wxConvUTF8) );
   }
