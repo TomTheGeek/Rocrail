@@ -7,22 +7,19 @@ echo "*** Rocrail makemac.sh starting (see www.rocrail.net)..."
 echo ""
 
 # Check params
-# rocrail-setup-[version].[patch]-rev[revno]-[type]-[dist].exe  (md5)
+# rocrail-[revno]-[dist]  (md5)
 
-VERSION=$1
-PATCH=$2
-TYPE=$3
-DIST=$4
+DIST=$1
 
 echo "Checking Parameters..."
 
-if [ !  $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ]; then
+if [ !  $1 ]; then
   echo "Error: Missing parameters:"
   echo ""
-  echo "    Usage: makemac.sh <version> <patch> <type> <dist>"
+  echo "    Usage: makemac.sh <dist>"
   echo ""
-  echo "    Example: \"makemac.sh 1.2 999 snapshot x64\" will build "
-  echo "    \"rocrail-1.2.999-revXXX-snapshot-x64.dmg\" where \"XXX\" is "
+  echo "    Example: \"makemac.sh lion\" will build "
+  echo "    \"rocrail-XXXX-osx-lion.dmg\" where \"XXXX\" is "
   echo "    the Bazaar revision number or \"user\" if Bazaar is not installed."
   echo ""
   exit $?
@@ -45,7 +42,7 @@ else
 	echo ""
 fi
 
-echo "Building rocrail-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.dmg"
+echo "Building rocrail-$BAZAARREV-osx-$DIST.dmg"
 echo ""
 
 TMP=tmp 
@@ -91,4 +88,4 @@ if [ ! -e package ] ; then
 	mkdir package
 fi
 
-mv $DMG_FILE package/rocrail-$VERSION.$PATCH-rev$BAZAARREV-$TYPE-$DIST.dmg
+mv $DMG_FILE package/rocrail-$BAZAARREV-osx-$DIST.dmg
