@@ -1694,7 +1694,9 @@ void RocGuiFrame::initFrame() {
   //m_ToolBar->AddTool(ME_Upload, wxGetApp().getMsg("upload"), *_img_upload, wxGetApp().getTip("upload") );
   m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, wxGetApp().getTip("openworkspace") );
 
+#ifndef __APPLE__
   m_ToolBar->AddSeparator();
+#endif
 
   m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, wxGetApp().getTip("new") );
   m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, wxGetApp().getTip("open") );
@@ -1702,7 +1704,9 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, wxGetApp().getTip("undo") );
   m_ToolBar->EnableTool(ME_Undo, false );
 
+#ifndef __APPLE__
   m_ToolBar->AddSeparator();
+#endif
 
   m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron,
                         wxNullBitmap, wxGetApp().getTip("poweron") );
@@ -1710,7 +1714,9 @@ void RocGuiFrame::initFrame() {
                         wxNullBitmap, wxGetApp().getTip("automode") );
   m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stopall, wxGetApp().getTip("stopall") );
 
+#ifndef __APPLE__
   m_ToolBar->AddSeparator();
+#endif
 
   m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator, wxGetApp().getTip("operator") );
   m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic, wxGetApp().getTip("mic") );
@@ -1718,7 +1724,9 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl, wxGetApp().getTip("swctrl") );
   m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes, wxGetApp().getTip("stctrl") );
 
+#ifndef __APPLE__
   m_ToolBar->AddSeparator();
+#endif
 
   m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
   m_ScaleComboBox->Append(_T("10"));
@@ -1744,7 +1752,9 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddControl(m_ScaleComboBox);
 
 
+#ifndef __APPLE__
   m_ToolBar->AddSeparator();
+#endif
 
   m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, wxGetApp().getTip("softwareupdates") );
   m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual, wxGetApp().getTip("documentation") );
