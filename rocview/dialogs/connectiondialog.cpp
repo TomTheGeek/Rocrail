@@ -193,7 +193,8 @@ void ConnectionDialog::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer3->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
     m_LabelHost = new wxStaticText( itemDialog1, wxID_STATIC_CON_HOST, _("Hostname"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -216,8 +217,6 @@ void ConnectionDialog::CreateControls()
 
     m_ControlCode = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_ControlCode, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer3->AddGrowableCol(1);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
 
