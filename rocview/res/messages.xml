@@ -17612,4 +17612,7 @@
   <Msg id="tour">
     <en txt="Tour"/>
   </Msg>
+  <Msg id="resetspfx">
+    <en txt="Reset speed and functions"/>
+  </Msg>
 </Messages>

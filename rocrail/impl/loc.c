@@ -40,6 +40,7 @@
 #include "rocs/public/lib.h"
 #include "rocs/public/system.h"
 
+#include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Block.h"
@@ -2638,6 +2639,11 @@ static iOLoc _inst( iONode props ) {
   data->cvMap = MapOp.inst();
   data->secondnextblock = wLoc.issecondnextblock( data->props );
   data->timedfn = -1; /* function 0 is also used */
+
+  if( wRocRail.isresetspfx(AppOp.getIni()) ) {
+    wLoc.setV( data->props, 0 );
+    wLoc.setfx( data->props, 0 );
+  }
 
   /* reset velocity to zero */
   if( !wLoc.isrestorespeed(data->props))

@@ -2912,6 +2912,9 @@ static void _init( iOModel inst ) {
   }
 
   __initGroups(inst);
+
+  /* Reset FxSp flag. */
+  wRocRail.setresetspfx(AppOp.getIni(), False);
 }
 
 static void _event( iOModel inst, iONode nodeC ) {

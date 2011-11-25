@@ -157,6 +157,7 @@
     <var name="poweroffonexit" vt="bool" defval="true" remark="Turn track power off on server exit."/>
     <var name="donkey" vt="string" defval=""/>
     <var name="doneml" vt="string" defval=""/>
+    <var name="resetspfx" vt="bool" defval="false" remark="Reset all loco functions and speed at startup."/>
 
     <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
       <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>

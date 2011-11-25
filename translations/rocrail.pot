@@ -5567,3 +5567,9 @@ msgstr ""
 msgid "Tour"
 msgstr ""
 
+#. 
+# id="resetspfx"
+#, c-format
+msgid "Reset speed and functions"
+msgstr ""
+
