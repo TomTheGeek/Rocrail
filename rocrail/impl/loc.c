@@ -2643,6 +2643,7 @@ static iOLoc _inst( iONode props ) {
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
     wLoc.setV( data->props, 0 );
     wLoc.setfx( data->props, 0 );
+    wLoc.setfn( data->props, False );
   }
 
   /* reset velocity to zero */
