@@ -2471,6 +2471,22 @@ void LocDialog::OnButtonShowdocClick( wxCommandEvent& event )
 
 void LocDialog::OnShowClick( wxCommandEvent& event )
 {
-  OnApplyClick(event);
+  if( m_Props == NULL )
+    return;
+
+  if( !Evaluate() )
+    return;
+
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
 }
 
