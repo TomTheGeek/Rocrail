@@ -31,8 +31,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/spinctrl.h"
 #include "wx/statline.h"
+#include "wx/spinctrl.h"
 #include "wx/grid.h"
 ////@end includes
 
@@ -217,6 +217,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORTLOCOS
     void OnButtonImportlocosClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void OnShowClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SHOWDOC
     void OnButtonShowdocClick( wxCommandEvent& event );
 
@@ -304,6 +307,7 @@ public:
     wxButton* m_Doc;
     wxButton* m_Copy;
     wxButton* m_ImportLocos;
+    wxCheckBox* m_Show;
     wxPanel* m_General_Panel;
     wxBoxSizer* m_GeneralSizer;
     wxStaticText* m_label_ID;
@@ -337,7 +341,6 @@ public:
     wxTextCtrl* m_RunTime;
     wxStaticText* m_labMTime;
     wxTextCtrl* m_MTime;
-    wxCheckBox* m_Show;
     wxCheckBox* m_UseShortID;
     wxSpinCtrl* m_ThrottleNr;
     wxButton* m_Serviced;
