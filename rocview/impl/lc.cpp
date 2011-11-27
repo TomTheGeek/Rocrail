@@ -195,16 +195,22 @@ void LC::funCmd(int fidx)
 bool LC::setButtonColor( wxButton* button, bool state ) {
   if( state ) {
     button->SetBackgroundColour( Base::getGreen() );
+    //button->SetForegroundColour( Base::getGreen() );
     wxFont f = button->GetFont();
     f.SetUnderlined(false);
+    f.SetWeight(wxFONTWEIGHT_NORMAL);
     button->SetFont(f);
+    button->Refresh();
     return false;
   }
   else {
     button->SetBackgroundColour( Base::getRed() );
+    //button->SetForegroundColour( Base::getRed() );
     wxFont f = button->GetFont();
     f.SetUnderlined(true);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
     button->SetFont(f);
+    button->Refresh();
     return true;
   }
 }

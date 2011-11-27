@@ -717,6 +717,7 @@ bool LocControlDialog::setButtonColor( wxButton* button, bool state ) {
     button->SetBackgroundColour( Base::getGreen() );
     wxFont f = button->GetFont();
     f.SetUnderlined(false);
+    f.SetWeight(wxFONTWEIGHT_NORMAL);
     button->SetFont(f);
     return false;
   }
@@ -724,6 +725,7 @@ bool LocControlDialog::setButtonColor( wxButton* button, bool state ) {
     button->SetBackgroundColour( Base::getRed() );
     wxFont f = button->GetFont();
     f.SetUnderlined(true);
+    f.SetWeight(wxFONTWEIGHT_BOLD);
     button->SetFont(f);
     return true;
   }
