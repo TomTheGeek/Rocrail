@@ -218,6 +218,12 @@ public:
     void OnButtonImportlocosClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void OnRestoreFxClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void OnRestoreSpeedClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
     void OnShowClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SHOWDOC
@@ -307,6 +313,8 @@ public:
     wxButton* m_Doc;
     wxButton* m_Copy;
     wxButton* m_ImportLocos;
+    wxCheckBox* m_RestoreFx;
+    wxCheckBox* m_RestoreSpeed;
     wxCheckBox* m_Show;
     wxPanel* m_General_Panel;
     wxBoxSizer* m_GeneralSizer;
@@ -387,8 +395,6 @@ public:
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
     wxCheckBox* m_Regulated;
-    wxCheckBox* m_RestoreFx;
-    wxCheckBox* m_RestoreSpeed;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;
