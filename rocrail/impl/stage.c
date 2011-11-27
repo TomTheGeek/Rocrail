@@ -259,11 +259,11 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
             LocOp.go(loc);
-            if( data->pendingFree ) {
+            if( !data->pendingFree ) {
               iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
               if( s != NULL )
                 wStageSection.setlcid(s, NULL);
-              data->pendingFree = False;
+              data->pendingFree = True;
             }
           }
         }
@@ -554,6 +554,11 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
     return False;
   }
 
+  if( !data->pendingFree ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is pending", data->locId!=NULL?data->locId:"?" );
+    return False;
+  }
+
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s locks stageblock", locid );
   {
     iONode nodeD = (iONode)NodeOp.base.clone(data->props);
@@ -670,6 +675,13 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
   iONode nextFreeSection = NULL;
   iONode firstOccupiedSection = NULL;
+
+  if( data->locId != NULL || data->pendingFree ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "can not move a loco because %s is pending", data->locId!=NULL?data->locId:"?");
+    return locoMoved;
+  }
+
   int i = 0;
   for( i = 0; i < ListOp.size(data->sectionList); i++) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
@@ -683,23 +695,28 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   }
   if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection) );
+    if( lc != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "moving loco %s from %s to %s in stage %s",
+          wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
+          wStageSection.getid(nextFreeSection), data->id );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "moving loco %s from %s to %s in stage %s",
-        wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
-        wStageSection.getid(nextFreeSection), data->id );
+      data->targetSection = wStageSection.getidx(nextFreeSection);
+      data->pendingSection =  wStageSection.getidx(firstOccupiedSection);
+      data->pendingFree = False;
+      data->locId = LocOp.getId(lc);
 
-    data->targetSection = wStageSection.getidx(nextFreeSection);
-    data->pendingSection =  wStageSection.getidx(firstOccupiedSection);
-    data->pendingFree = False;
-
-    wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
-    iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-    wLoc.setcmd(cmd, wLoc.velocity);
-    wLoc.setV_hint(cmd, wLoc.min);
-    LocOp.cmd(lc, cmd);
-    /* TODO: V_min and wait for event of sensor firstFreeSection */
-    locoMoved = True;
+      wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
+      iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+      wLoc.setcmd(cmd, wLoc.velocity);
+      wLoc.setV_hint(cmd, wLoc.min);
+      LocOp.cmd(lc, cmd);
+      /* TODO: V_min and wait for event of sensor firstFreeSection */
+      locoMoved = True;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s not found", wStageSection.getlcid(firstOccupiedSection) );
+    }
   }
 
   return locoMoved;
