@@ -4,7 +4,7 @@ if [ ! -e ~/rocrail ] ; then
 fi
 
 if [ ! -e ~/rocrail/rocview.ini ] ; then
-	cp /opt/rocrail/default/plan.xml ~/rocrail
+	cp /opt/rocrail/plan.xml ~/rocrail
 fi
 
 if [ ! -e ~/rocrail/svg ] ; then
