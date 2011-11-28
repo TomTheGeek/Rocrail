@@ -28,6 +28,7 @@
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/lib.h"
@@ -234,6 +235,47 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       response = data->sublib->cmd((obj)data->sublib, iocmd);
     }
   }
+  else if( StrOp.equals( NodeOp.getName( cmd ), wFunCmd.name() ) && wFunCmd.getgroup(cmd)  > 3 ) {
+    /*
+    *** XFunc34 (0x8A) - L‰nge = 1+4 bytes
+       Command:
+      0: 0x8A XFunc34
+      1: LSB der Lokadresse
+      2: MSB der Lokadresse (Adresse im Bereich 1 .. 10239)
+      3: Status der Funktionen F17 (Bit #0) bis F24 (Bit #7)
+      4: Status der Funktionen F25 (Bit #0) bis F28 (Bit #3), die Bits #4 bis
+         #7 sind reserviert
+
+       Antwort: 1 Byte
+      0: Error-Code
+
+       Mˆgliche Error-Codes:
+      OK  - OK, Befehl ausgef¸hrt
+      XBADPRM - Lokadresse auﬂerhalb des Bereichs (1 .. 10239)
+      XNOSLOT - Kein Platz in Refresh-Queue
+    */
+    int   addr = wFunCmd.getaddr( cmd );
+    iONode fxcmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+    char* byteStr = NULL;
+    byte outBytes[6];
+    outBytes[0] = (byte)'x';
+    outBytes[1] = 0x8A;
+    outBytes[2] = addr % 256;
+    outBytes[3] = addr / 256;
+    outBytes[4] = (wFunCmd.isf17(cmd)?0x01:0x00) + (wFunCmd.isf18(cmd)?0x02:0x00) + (wFunCmd.isf19(cmd)?0x04:0x00) + (wFunCmd.isf20(cmd)?0x08:0x00) +
+                  (wFunCmd.isf21(cmd)?0x10:0x00) + (wFunCmd.isf22(cmd)?0x20:0x00) + (wFunCmd.isf23(cmd)?0x40:0x00) + (wFunCmd.isf24(cmd)?0x80:0x00);
+    outBytes[5] = (wFunCmd.isf25(cmd)?0x01:0x00) + (wFunCmd.isf26(cmd)?0x02:0x00) + (wFunCmd.isf27(cmd)?0x04:0x00) + (wFunCmd.isf28(cmd)?0x08:0x00);
+
+    byteStr = StrOp.byteToStr( outBytes, 6 );
+    wBinCmd.setoutlen( fxcmd, 6 );
+    wBinCmd.setinlen( fxcmd, 1 );
+    wBinCmd.setout( fxcmd, byteStr );
+    StrOp.free( byteStr );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "XFunc34" );
+    response = data->sublib->cmd((obj)data->sublib, fxcmd);
+
+  }
+
   else {
     response = data->sublib->cmd((obj)data->sublib, cmd);
   }
