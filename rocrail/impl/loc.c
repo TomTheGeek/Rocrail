@@ -2641,16 +2641,22 @@ static iOLoc _inst( iONode props ) {
   data->timedfn = -1; /* function 0 is also used */
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "global reset speed and functions for loco [%s]", wLoc.getid(props));
     wLoc.setV( data->props, 0 );
     wLoc.setfx( data->props, 0 );
     wLoc.setfn( data->props, False );
   }
-
-  /* reset velocity to zero */
-  if( !wLoc.isrestorespeed(data->props))
-    wLoc.setV( data->props, 0 );
-  if( !wLoc.isrestorefx(data->props))
-    wLoc.setfx( data->props, 0 );
+  else {
+    /* reset velocity to zero */
+    if( !wLoc.isrestorespeed(data->props)) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no restore wanted: reset speed for loco [%s]", wLoc.getid(props));
+      wLoc.setV( data->props, 0 );
+    }
+    if( !wLoc.isrestorefx(data->props)) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no restore wanted: reset functions for loco [%s]", wLoc.getid(props));
+      wLoc.setfx( data->props, 0 );
+    }
+  }
 
   data->fn0 = wLoc.isfn(data->props);
   wLoc.setthrottleid( data->props, "" );
