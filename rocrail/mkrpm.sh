@@ -29,7 +29,7 @@ cd rocrail-$VERSION
 pwd
 bzr co --lightweight https://launchpad.net/rocrail Rocrail
 sed s/\<BZR\>/$BAZAARREV/ < Rocrail/rocrail/rocrail-template.spec > Rocrail/rocrail/rocrail-1.spec
-sed s/\<VERSION\>/$VERSION/ < Rocrail/rocrail/rocrail-template-1.spec > Rocrail/rocrail/rocrail.spec
+sed s/\<VERSION\>/$VERSION/ < Rocrail/rocrail/rocrail-1.spec > Rocrail/rocrail/rocrail.spec
 cd ..
 
 if [ -e rocrail-$VERSION-$BAZAARREV.tar ] ; then
