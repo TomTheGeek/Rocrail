@@ -313,24 +313,21 @@ static int __logo( void ) {
   TraceOp.println( " rrr     ooo ooo ccc    rrr     aaa aaa iii lll   " );
   TraceOp.println( " rrr      ooooo   ccccc rrr      aaaaaa iii  lll  " );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " Copyright (c) Rob Versluis"              );
+  TraceOp.println( " TM and Copyright 2002-2011 Rob Versluis."          );
+  TraceOp.println( " All Rights Reserved."                              );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
   TraceOp.println( " License: GNU GPL 2"                                );
   TraceOp.println( "   http://www.gnu.org/licenses/gpl.txt"             );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " %s %d.%d.%d \"%s\" %s",
+  TraceOp.println( " %s %d.%d \"%s\"",
                    wGlobal.productname,
                    wGlobal.vmajor,
                    wGlobal.vminor,
-                   wGlobal.patch,
-                   wGlobal.releasename, wGlobal.releasesuffix );
-  TraceOp.println( " build %s %s",
-                   wGlobal.buildDate,
-                   wGlobal.buildTime );
+                   wGlobal.releasename );
 
   if( bzr > 0 ){
-    TraceOp.println( " revision %d", bzr );
+    TraceOp.println( " Revision: %d", bzr );
     svn = bzr;
   }
   else {
@@ -345,6 +342,9 @@ static int __logo( void ) {
       }
     }
   }
+  TraceOp.println( " Build: %s %s",
+                   wGlobal.buildDate,
+                   wGlobal.buildTime );
   TraceOp.println( " %s", SystemOp.getBuild() );
   TraceOp.println( " processid = %d", SystemOp.getpid() );
   TraceOp.println( "       mac = %s", SocketOp.getMAC( NULL ) );

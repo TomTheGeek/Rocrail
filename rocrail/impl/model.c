@@ -1940,7 +1940,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     iONode stateevent = ControlOp.getState(AppOp.getControl());
     iONode autoevent = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
 
-    char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
+    char* version = StrOp.fmt( "%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, AppOp.getrevno() );
     wPlan.setrocrailversion( data->model, version );
     StrOp.free(version);
 
