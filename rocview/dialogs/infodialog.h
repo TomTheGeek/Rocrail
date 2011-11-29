@@ -113,6 +113,7 @@ public:
     wxStaticText* m_Build;
     wxStaticText* m_Home;
     wxStaticText* m_Support;
+    wxStaticText* m_labLic;
     wxStaticText* m_ThanksLine;
     wxTextCtrl* m_Thanks;
 ////@end InfoDialog member variables

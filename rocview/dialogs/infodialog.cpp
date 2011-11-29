@@ -81,13 +81,12 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_Splash->SetBitmapLabel( *_img_rocrail_logo );
   m_Splash->Refresh();
 
-  char* str = StrOp.fmt("%d.%d.%d",
-              wGui.vmajor, wGui.vminor, wGui.patch );
+  char* str = StrOp.fmt("%d.%d", wGui.vmajor, wGui.vminor );
   m_Version->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
-  str = StrOp.fmt("\'%s\' %s",
-              wGui.releasename, wGui.releasesuffix );
+  str = StrOp.fmt("\'%s\'",
+              wGui.releasename );
   m_Name->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
@@ -96,7 +95,8 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   StrOp.free( str );
 
   m_Home->SetLabel( _T("http://www.rocrail.net") );
-  m_Support->SetLabel( _T("Copyright 2002-2009 Rob Versluis, License: GPL") );
+  m_Support->SetLabel( _T("TM and Copyright 2002-2011 Rob Versluis.") );
+  m_labLic->SetLabel( _T("All Rights Reserved. License: GNU GPL") );
   //m_ThanksLine->SetLabel( wxGetApp().getMsg( "license" ) );
   m_ThanksLine->SetLabel( _T("") );
 
@@ -138,6 +138,7 @@ bool InfoDialog::Create( wxWindow* parent, wxWindowID id, const wxString& captio
     m_Build = NULL;
     m_Home = NULL;
     m_Support = NULL;
+    m_labLic = NULL;
     m_ThanksLine = NULL;
     m_Thanks = NULL;
 ////@end InfoDialog member initialisation
@@ -177,22 +178,25 @@ void InfoDialog::CreateControls()
     itemFlexGridSizer3->Add(m_Splash, 1, wxGROW|wxGROW|wxALL, 5);
 
     m_Version = new wxStaticText( itemDialog1, wxID_STATIC_INFO_VERSION, _("version"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Name = new wxStaticText( itemDialog1, wxID_STATIC_INFO_NAME, _("name"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Name, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_Name, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Build = new wxStaticText( itemDialog1, wxID_STATIC_INFO_BUILD, _("build"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Build, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_Build, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Home = new wxStaticText( itemDialog1, wxID_STATIC_INFO_HOME, _("home"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Home, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_Home, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Support = new wxStaticText( itemDialog1, wxID_STATIC_INFO_SUPPORT, _("support"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Support, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_Support, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+
+    m_labLic = new wxStaticText( itemDialog1, wxID_ANY, _("License"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labLic, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ThanksLine = new wxStaticText( itemDialog1, WX_STATICTEXT_INFO_THANKS, _("Special Thanks to:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_ThanksLine, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer3->Add(m_ThanksLine, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Thanks = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_INFO_THANKS, wxEmptyString, wxDefaultPosition, wxSize(-1, 100), wxTE_MULTILINE|wxTE_READONLY );
     itemFlexGridSizer3->Add(m_Thanks, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);

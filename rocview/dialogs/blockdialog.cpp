@@ -186,14 +186,6 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   m_bSave = save;
   initLabels();
 
-  initIndex();
-  if( m_Props != NULL ) {
-    initValues();
-    //m_Notebook->SetSelection( 1 );
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
-    wxPostEvent( this, event );
-  }
-
   m_IndexPanel->GetSizer()->Layout();
   m_General_Panel->GetSizer()->Layout();
   m_LocationPanel->GetSizer()->Layout();
@@ -206,6 +198,15 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
 
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
+
+  initIndex();
+  if( m_Props != NULL ) {
+    initValues();
+    //m_Notebook->SetSelection( 1 );
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
+    wxPostEvent( this, event );
+  }
+
 
   if( wxGetApp().isModView() ) {
     m_RoutesPanel->Enable(False);
