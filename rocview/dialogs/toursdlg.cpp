@@ -56,6 +56,7 @@ ToursDlg::ToursDlg( wxWindow* parent, iONode tour, bool save, const char* startb
   m_Props = tour;
   m_bSave = save;
   m_StartBlock = startblock;
+  m_StartBlockID->SetValue((startblock==NULL)?_T(""):wxString(startblock,wxConvUTF8));
 
   initLabels();
   initIndex();
@@ -90,6 +91,7 @@ void ToursDlg::initLabels() {
   m_AddTour->SetLabel( wxGetApp().getMsg( "new" ) );
   m_ModifyTour->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteTour->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_labStartBlock->SetLabel( wxGetApp().getMsg( "startblock" ) );
 
   // Schedules
   m_EntryAdd->SetLabel( wxGetApp().getMsg( "add" ) );
@@ -258,6 +260,9 @@ bool ToursDlg::isFirst(iONode tour) {
             iONode scentry = wSchedule.getscentry( sc );
             TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check schedule entry: %d of %s", i, id );
             if( scentry != NULL && StrOp.equals( m_StartBlock, wScheduleEntry.getblock( scentry ) ) ) {
+              isFirst = true;
+            }
+            else if( scentry != NULL && locationID != NULL && StrOp.equals( locationID, wScheduleEntry.getblock( scentry ) ) ) {
               isFirst = true;
             }
           }
