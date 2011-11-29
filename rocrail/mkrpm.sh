@@ -45,8 +45,11 @@ cp rocrail-$VERSION-$BAZAARREV.tar.gz $BUILDROOT
 echo "executing rpmbuild..."
 rpmbuild -v -ba rocrail-$VERSION/Rocrail/rocrail/rocrail.spec
 echo "cleanup..."
-#rm -Rf rocrail-$VERSION
+rm -Rf rocrail-$VERSION
+if [ ! -e ../package ] ; then
+  mkdir ../package
+fi
 cp $BUILDROOT/$CPU/rocrail*.rpm ../package
-#rm -Rf $BUILDROOT/BUILD/rocrail-$VERSION
+rm -Rf $BUILDROOT/BUILD/rocrail-$VERSION
 
 
