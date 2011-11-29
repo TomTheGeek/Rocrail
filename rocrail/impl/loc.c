@@ -923,7 +923,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
         /* reset previous timed function */
         __resetTimedFunction(inst, cmd, -1);
       }
-      if( wFunCmd.gettimedfn( cmd ) >= 0 ) {
+      if( wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0 ) {
         data->timedfn = wFunCmd.gettimedfn( cmd );
         data->fntimer = wFunCmd.gettimer( cmd );
 
@@ -1144,6 +1144,8 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   int timedfn = data->timedfn;
   int newtimedfn = wFunCmd.gettimedfn( cmd );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d,%d Lights=%d", timedfn, function, data->fn0 );
+
   if( function >= 0 ) {
     timedfn = function;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] deactivated", timedfn );
@@ -1154,6 +1156,9 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "keep state of function [%d]; is same as new", timedfn );
     timedfn = -1;
   }
+
+  if( function != -1 )
+    wFunCmd.setfnchanged( fncmd, function );
 
   wFunCmd.setid ( fncmd, wLoc.getid(data->props) );
   wFunCmd.setf0 ( fncmd, timedfn== 0?False:data->fn0 );
@@ -1189,7 +1194,8 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
 
   wFunCmd.setgroup( fncmd, timedfn/4 + ((timedfn%4 > 0) ? 1:0) );
 
-  wLoc.setfn(data->props, wFunCmd.isf0( fncmd ) );
+  if( timedfn == 0 )
+    wLoc.setfn(data->props, wFunCmd.isf0( fncmd ) );
 
   return fncmd;
 }
