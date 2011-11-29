@@ -1652,7 +1652,7 @@ void Symbol::OnLocSchedule(wxCommandEvent& event) {
 }
 
 void Symbol::OnLocTour(wxCommandEvent& event) {
-  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false );
+  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false, wBlock.getid(m_Props) );
   if( wxID_OK == dlg->ShowModal() ) {
     iONode sel = dlg->getProperties();
     if( sel != NULL ) {

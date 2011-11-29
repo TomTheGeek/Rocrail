@@ -34,6 +34,8 @@
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/ScheduleEntry.h"
+#include "rocrail/wrapper/public/Location.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/list.h"
@@ -48,11 +50,12 @@ ToursDlg::ToursDlg( wxWindow* parent )
 }
 
 
-ToursDlg::ToursDlg( wxWindow* parent, iONode tour, bool save )
+ToursDlg::ToursDlg( wxWindow* parent, iONode tour, bool save, const char* startblock )
   :toursdlggen( parent )
 {
   m_Props = tour;
   m_bSave = save;
+  m_StartBlock = startblock;
 
   initLabels();
   initIndex();
@@ -137,7 +140,8 @@ void ToursDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode tour = (iONode)ListOp.get( list, i );
         const char* id = wTour.getid( tour );
-        m_TourList->Append( wxString(id,wxConvUTF8), tour );
+        if( m_StartBlock == NULL || isFirst(tour) )
+          m_TourList->Append( wxString(id,wxConvUTF8), tour );
       }
       /* clean up the temp. list */
       ListOp.base.del(list);
@@ -198,6 +202,81 @@ void ToursDlg::initScheduleCombo() {
   ListOp.base.del(list);
 }
 
+bool ToursDlg::isFirst(iONode tour) {
+  bool isFirst = false;
+  TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if block %s is first in tour...", m_StartBlock );
+
+  iONode model = wxGetApp().getModel();
+
+  if( model != NULL ) {
+
+    /* check if the block is in a location */
+    const char* locationID = NULL;
+    iONode locationList = wPlan.getlocationlist(model);
+    if( locationList != NULL ) {
+      int cnt = NodeOp.getChildCnt( locationList );
+      TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "%d locations...", cnt );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode location = NodeOp.getChild( locationList, i );
+
+        iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( location ), ',' );
+        const char* id = NULL;
+        while( StrTokOp.hasMoreTokens( blocks ) ) {
+          id = StrTokOp.nextToken( blocks );
+          TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if block [%s] is member location [%s]...", id, wLocation.getid( location ) );
+          if( StrOp.equals( id, m_StartBlock) ) {
+            TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "block [%s] is member of location [%s]", id, wLocation.getid( location ) );
+            locationID = wLocation.getid( location );
+            i = cnt;
+            break;
+          }
+        };
+
+      }
+    }
+
+    char* scid = NULL;
+    TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedules in tour: %s", wTour.getschedules(tour) );
+    iOStrTok tok = StrTokOp.inst(wTour.getschedules(tour), ',');
+    if( StrTokOp.hasMoreTokens(tok) ) {
+      scid = StrOp.dup(StrTokOp.nextToken(tok));
+      TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "first schedule in tour: %s", scid!=NULL?scid:"?" );
+    }
+    StrTokOp.base.del(tok);
+
+    iONode sclist = wPlan.getsclist( model );
+    if( sclist != NULL && scid != NULL ) {
+      int cnt = NodeOp.getChildCnt( sclist );
+      TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "%d schedules...", cnt );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sc = NodeOp.getChild( sclist, i );
+        const char* id = wSchedule.getid( sc );
+        TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if schedule %s == %s", id, scid );
+        if( id != NULL && StrOp.equals(id, scid) ) {
+          if( m_StartBlock != NULL ) {
+            /* check if the schedule start block matches */
+            iONode scentry = wSchedule.getscentry( sc );
+            TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check schedule entry: %d of %s", i, id );
+            if( scentry != NULL && StrOp.equals( m_StartBlock, wScheduleEntry.getblock( scentry ) ) ) {
+              isFirst = true;
+            }
+          }
+          else {
+            TraceOp.trc( "tourdlg", TRCLEVEL_WARNING, __LINE__, 9999, "start block is not set" );
+          }
+          break;
+        }
+     }
+    }
+
+    if( scid != NULL )
+      StrOp.free(scid);
+
+  }
+
+
+  return isFirst;
+}
 
 
 void ToursDlg::initValues() {
@@ -220,6 +299,8 @@ void ToursDlg::initValues() {
     const char* scid = StrTokOp.nextToken(tok);
     m_EntryList->Append( wxString(scid,wxConvUTF8) );
   }
+
+  StrTokOp.base.del(tok);
 
 }
 

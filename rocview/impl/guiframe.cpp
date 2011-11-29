@@ -4042,7 +4042,7 @@ void RocGuiFrame::OnLocTour(wxCommandEvent& event) {
   const char* blockid = NULL;
   if( lc != NULL )
     blockid = wLoc.getblockid(lc);
-  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false );
+  ToursDlg* dlg = new ToursDlg( this, (iONode)NULL, false, blockid );
   if( wxID_OK == dlg->ShowModal() ) {
     iONode sel = dlg->getProperties();
     if( sel != NULL ) {

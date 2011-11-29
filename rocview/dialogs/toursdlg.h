@@ -33,17 +33,19 @@ class ToursDlg : public toursdlggen
 {
   iONode m_Props;
   bool   m_bSave;
+  const char* m_StartBlock;
 
   void initLabels();
   void initIndex();
   void initValues();
   void initScheduleCombo();
   bool evaluate();
+  bool isFirst(iONode tour);
 
 public:
 	/** Constructor */
 	ToursDlg( wxWindow* parent );
-  ToursDlg( wxWindow* parent, iONode tour, bool save );
+  ToursDlg( wxWindow* parent, iONode tour, bool save, const char* startblock=NULL );
   iONode getProperties() { return m_Props; };
 
   void onAddTour( wxCommandEvent& event );
