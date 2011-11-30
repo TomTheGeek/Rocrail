@@ -92,6 +92,7 @@ void ToursDlg::initLabels() {
   m_ModifyTour->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteTour->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_labStartBlock->SetLabel( wxGetApp().getMsg( "startblock" ) );
+  m_ShowAll->SetLabel( wxGetApp().getMsg( "showall" ) );
 
   // Schedules
   m_EntryAdd->SetLabel( wxGetApp().getMsg( "add" ) );
@@ -142,7 +143,7 @@ void ToursDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode tour = (iONode)ListOp.get( list, i );
         const char* id = wTour.getid( tour );
-        if( m_StartBlock == NULL || isFirst(tour) )
+        if( m_StartBlock == NULL || m_ShowAll->IsChecked() || isFirst(tour) )
           m_TourList->Append( wxString(id,wxConvUTF8), tour );
       }
       /* clean up the temp. list */
@@ -468,6 +469,10 @@ void ToursDlg::onOK( wxCommandEvent& event ){
   if( m_bSave )
     onApply(event);
   EndModal( wxID_OK );
+}
+
+void ToursDlg::onShowAll( wxCommandEvent& event ){
+  initIndex();
 }
 
 

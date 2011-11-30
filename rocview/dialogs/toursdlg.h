@@ -57,6 +57,8 @@ public:
   void onEntryDelete( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
+  void onShowAll( wxCommandEvent& event );
+
 
 };
 
