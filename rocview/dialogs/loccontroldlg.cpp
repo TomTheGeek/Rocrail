@@ -645,30 +645,30 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_FG = new wxButton( itemDialog1, ID_FG, _("FG"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 5);
+    itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, itemDialog1->GetBitmapResource(wxT("../xpm/dir.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
     itemBoxSizer8->Add(m_Dir, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
-    itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
+    itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 4);
 
     wxBoxSizer* itemBoxSizer27 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer27, 0, wxGROW|wxALL, 0);
 
     m_Cancel = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Cancel->SetDefault();
-    itemBoxSizer27->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+    itemBoxSizer27->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 4);
 
     m_Stop = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_STOP, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer27->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 2);
+    itemBoxSizer27->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 4);
 
     wxBoxSizer* itemBoxSizer30 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer30, 0, wxGROW|wxALL, 0);
 
     m_Break = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_BREAK, _("BREAK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer30->Add(m_Break, 1, wxGROW|wxALL, 2);
+    itemBoxSizer30->Add(m_Break, 1, wxGROW|wxALL, 4);
 
     // Connect events and objects
     itemDialog1->Connect(ID_LOCCONTROL, wxEVT_DESTROY, wxWindowDestroyEventHandler(LocControlDialog::OnDestroy), NULL, this);

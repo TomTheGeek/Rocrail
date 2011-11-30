@@ -695,7 +695,7 @@ void LC::CreateControls() {
 
 
   m_ButtonSizer = new wxBoxSizer(wxVERTICAL);
-  m_MainSizer->Add(m_ButtonSizer, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+  m_MainSizer->Add(m_ButtonSizer, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
   wxBoxSizer* l_sizer0 = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(l_sizer0, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
@@ -703,11 +703,11 @@ void LC::CreateControls() {
   m_FG = new wxButton( m_Parent, -1, _("FG"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
   l_sizer0->Add(m_FG, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1);
 
-  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(92, -1), wxTE_READONLY|wxTE_CENTRE );
+  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(-1, -1), wxTE_READONLY|wxTE_CENTRE );
   l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 1);
 
   m_Button1Sizer = new wxBoxSizer(wxHORIZONTAL);
-  m_ButtonSizer->Add(m_Button1Sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
+  m_ButtonSizer->Add(m_Button1Sizer, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
   m_F1 = new wxButton( m_Parent, -1, _("F1"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
   m_Button1Sizer->Add(m_F1, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
