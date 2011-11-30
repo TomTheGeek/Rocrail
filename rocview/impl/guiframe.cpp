@@ -2611,17 +2611,18 @@ void RocGuiFrame::OnScaleComboCheck(wxCommandEvent& event)
 
 void RocGuiFrame::OnScaleCombo(wxCommandEvent& event)
 {
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Combobox string '%s' selected", (const char*)event.GetString().c_str() );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999,
+      "Combobox string '%s' selected", (const char*)m_ScaleComboBox->GetStringSelection().c_str() );
   int zoom = 100;
 
-  if( !event.GetString().IsNumber() ) {
-    ((wxComboBox*)event.GetEventObject())->SetValue(_T(""));
+  if( !m_ScaleComboBox->GetStringSelection().IsNumber() ) {
+    m_ScaleComboBox->SetValue(_T(""));
     return;
   }
   else {
-    zoom = atoi(event.GetString().mb_str(wxConvUTF8));
+    zoom = atoi(m_ScaleComboBox->GetStringSelection().mb_str(wxConvUTF8));
     if( zoom < 0 || zoom > 200 ) {
-      ((wxComboBox*)event.GetEventObject())->SetValue(_T(""));
+      m_ScaleComboBox->SetValue(_T(""));
       return;
     }
   }
