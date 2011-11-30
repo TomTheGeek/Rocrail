@@ -266,6 +266,17 @@ void SignalDialog::OnSelectPage(wxCommandEvent& event) {
   m_Notebook->SetSelection( 1 );
 }
 
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
 void SignalDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
@@ -273,15 +284,29 @@ void SignalDialog::initIndex() {
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode sglist = wPlan.getsglist( model );
+
     if( sglist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( sglist );
       for( int i = 0; i < cnt; i++ ) {
         iONode sg = NodeOp.getChild( sglist, i );
         const char* id = wSignal.getid( sg );
         if( id != NULL ) {
-          m_List->Append( wxString(id,wxConvUTF8) );
+          ListOp.add(list, (obj)sg);
         }
       }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sg = (iONode)ListOp.get( list, i );
+        const char* id = wSignal.getid( sg );
+        m_List->Append( wxString(id,wxConvUTF8), sg );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
+
       if( l_Props != NULL ) {
         m_List->SetStringSelection( wxString(wSignal.getid( l_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wSignal.getid( l_Props ),wxConvUTF8) );
@@ -654,7 +679,7 @@ void SignalDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SG, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SG, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);

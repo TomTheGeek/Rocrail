@@ -218,6 +218,17 @@ void FeedbackDialog::initLabels() {
 }
 
 
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
 void FeedbackDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
@@ -226,14 +237,27 @@ void FeedbackDialog::initIndex() {
   if( model != NULL ) {
     iONode fblist = wPlan.getfblist( model );
     if( fblist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( fblist );
+
       for( int i = 0; i < cnt; i++ ) {
         iONode fb = NodeOp.getChild( fblist, i );
         const char* id = wFeedback.getid( fb );
         if( id != NULL ) {
-          m_List->Append( wxString(id,wxConvUTF8) );
+          ListOp.add(list, (obj)fb);
         }
       }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = (iONode)ListOp.get( list, i );
+        const char* id = wFeedback.getid( fb );
+        m_List->Append( wxString(id,wxConvUTF8), fb );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
       if( l_Props != NULL ) {
         m_List->SetStringSelection( wxString(wFeedback.getid( l_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wFeedback.getid( l_Props ),wxConvUTF8) );
@@ -461,7 +485,7 @@ void FeedbackDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_FB, wxDefaultPosition, wxSize(350, -1), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_FB, wxDefaultPosition, wxSize(350, -1), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
@@ -482,6 +506,7 @@ void FeedbackDialog::CreateControls()
     m_General->SetSizer(itemBoxSizer12);
 
     wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer13->AddGrowableCol(1);
     itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_General, wxID_STATIC_FB_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -584,6 +609,7 @@ void FeedbackDialog::CreateControls()
     m_Interface->SetSizer(itemBoxSizer43);
 
     wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer44->AddGrowableCol(1);
     itemBoxSizer43->Add(itemFlexGridSizer44, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_FB_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -607,6 +633,8 @@ void FeedbackDialog::CreateControls()
     itemFlexGridSizer44->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(0, 4, 0, 0);
+    itemFlexGridSizer49->AddGrowableCol(1);
+    itemFlexGridSizer49->AddGrowableCol(3);
     itemBoxSizer43->Add(itemFlexGridSizer49, 0, wxGROW|wxALL, 5);
     m_labBusNr = new wxStaticText( m_Interface, wxID_ANY, _("Bus"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer49->Add(m_labBusNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);

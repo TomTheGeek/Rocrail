@@ -273,6 +273,17 @@ void SwitchDialog::initLabels() {
 }
 
 
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
 void SwitchDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
@@ -281,14 +292,28 @@ void SwitchDialog::initIndex() {
   if( model != NULL ) {
     iONode swlist = wPlan.getswlist( model );
     if( swlist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( swlist );
+
       for( int i = 0; i < cnt; i++ ) {
         iONode sw = NodeOp.getChild( swlist, i );
         const char* id = wSwitch.getid( sw );
         if( id != NULL ) {
-          m_List->Append( wxString(id,wxConvUTF8) );
+          ListOp.add(list, (obj)sw);
         }
       }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sw = (iONode)ListOp.get( list, i );
+        const char* id = wSwitch.getid( sw );
+        m_List->Append( wxString(id,wxConvUTF8), sw );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
+
       if( l_Props != NULL ) {
         m_List->SetStringSelection( wxString(wSwitch.getid( l_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wSwitch.getid( l_Props ),wxConvUTF8) );
@@ -862,7 +887,7 @@ void SwitchDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SW, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SW, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
