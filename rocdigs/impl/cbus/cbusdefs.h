@@ -166,6 +166,25 @@
 
 #define OPC_RDCC5   0xC0    // 5 byte DCC packet
 #define OPC_WCVOA   0xC1    // Write CV ops mode by address
+/*
+Can I suggest using 0xCF as the OPC for a fast clock. Only reasoning behind
+this choice is that the fast clock is a bit of an 'oddity' and the other
+available 0xCx may be wanted for uses that may make more sense if following
+on from  0xC1 (WCVOA). It is also not strictly a 'layout control' command so
+needn't use any 0xDx OPCs. Using 0xCF (FCLK) gives a possible 6 bytes for
+the time so the first four can be in the NMRA RP 9.2.1 format. The other two
+for whatever you want.
+http://www.opendcc.org/info/dcc/Addendum_to_RP_9.2.1(May_2009).pdf
+
+CC=00: DDDDDD = mmmmmm, this denotes the minute, range 0..59.
+CC=10: DDDDDD = 0HHHHHH, this denotes the hour, range 0..23
+CC=01: DDDDDD = 000WWW, this denotes the day of week, 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday.
+CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
+       an acceleration factor of 0 means clock is stopped, a factor of 1 means clock is running real time,
+       a factor of 2 means clock is running twice as fast a real time.
+
+*/
+#define OPC_FCLK    0xCF    // Fast clock event
 
 #define OPC_ACON2   0xD0    // On event with two data bytes
 #define OPC_ACOF2   0xD1    // Off event with two data bytes
