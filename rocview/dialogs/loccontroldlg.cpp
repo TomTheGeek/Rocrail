@@ -599,7 +599,7 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW, 0);
 
     wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW|wxRIGHT, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer9, 1, wxGROW|wxRIGHT, 5);
 
     m_F1 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F1, _("F1"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer9->Add(m_F1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
@@ -639,19 +639,19 @@ void LocControlDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer22->AddGrowableCol(1);
-    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW|wxRIGHT, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer22, 1, wxGROW|wxRIGHT, 5);
 
     m_Fn = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_FN, _("Fn"), wxDefaultPosition, wxSize(50, -1), 0 );
-    itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_TOP|wxBOTTOM, 2);
+    itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
 
     m_FG = new wxButton( itemDialog1, ID_FG, _("FG"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 5);
 
     m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, itemDialog1->GetBitmapResource(wxT("../xpm/dir.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    itemBoxSizer8->Add(m_Dir, 1, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
+    itemBoxSizer8->Add(m_Dir, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
-    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, _T(""), wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
+    m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
     itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer27 = new wxBoxSizer(wxHORIZONTAL);
@@ -973,7 +973,7 @@ wxBitmap LocControlDialog::GetBitmapResource( const wxString& name )
     wxUnusedVar(name);
     if (name == _T("../xpm/dir.xpm"))
     {
-        wxBitmap bitmap( rocrail_direction_xpm);
+        wxBitmap bitmap(rocrail_direction_xpm);
         return bitmap;
     }
     return wxNullBitmap;
