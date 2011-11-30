@@ -587,19 +587,19 @@ void LocControlDialog::CreateControls()
     itemBoxSizer2->Add(itemFlexGridSizer4, 0, wxGROW|wxALL, 0);
 
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxGROW, 0);
+    itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxALIGN_TOP, 0);
 
     m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 40), wxTE_READONLY|wxTE_CENTRE );
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
-    m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxSize(-1, 100), wxSL_VERTICAL|wxSL_INVERSE );
-    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+    m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE );
+    itemBoxSizer5->Add(m_SpeedCtrl, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxGROW, 0);
+    itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 0);
 
     wxFlexGridSizer* itemFlexGridSizer9 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemBoxSizer8->Add(itemFlexGridSizer9, 1, wxGROW|wxRIGHT, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer9, 0, wxGROW|wxRIGHT, 5);
 
     m_F1 = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_F1, _("F1"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer9->Add(m_F1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
@@ -639,7 +639,7 @@ void LocControlDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer22->AddGrowableCol(1);
-    itemBoxSizer8->Add(itemFlexGridSizer22, 1, wxGROW|wxRIGHT, 5);
+    itemBoxSizer8->Add(itemFlexGridSizer22, 0, wxGROW|wxRIGHT, 5);
 
     m_Fn = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_FN, _("Fn"), wxDefaultPosition, wxSize(50, -1), 0 );
     itemFlexGridSizer22->Add(m_Fn, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxBOTTOM, 2);
