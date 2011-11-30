@@ -265,7 +265,7 @@ void CarDlg::initValues() {
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wCar.getimage( m_Props ) ) );
 
-    if( FileOp.exist(pixpath)) {
+    if( FileOp.exist(pixpath) && StrOp.len(wCar.getimage( m_Props )) > 0 ) {
       TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_CarImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }

@@ -424,14 +424,27 @@ void RouteDialog::initIndex() {
   if( model != NULL ) {
     iONode stlist = wPlan.getstlist( model );
     if( stlist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( stlist );
+
       for( int i = 0; i < cnt; i++ ) {
         iONode st = NodeOp.getChild( stlist, i );
-        const char* id = wRoute.getid( st );
+        const char* id = wOutput.getid( st );
         if( id != NULL ) {
-          m_List->Append( wxString(id,wxConvUTF8) );
+          ListOp.add(list, (obj)st);
         }
       }
+
+      ListOp.sort(list, &__sortID);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode st = (iONode)ListOp.get( list, i );
+        const char* id = wRoute.getid( st );
+        m_List->Append( wxString(id,wxConvUTF8), st );
+      }
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
       if( l_Props != NULL ) {
         m_List->SetStringSelection( wxString(wRoute.getid( l_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wRoute.getid( l_Props ),wxConvUTF8) );
@@ -1165,7 +1178,7 @@ void RouteDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_ST, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_ST, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 4, 0, 0);

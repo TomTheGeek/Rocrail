@@ -767,7 +767,8 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_GeneralPanel->SetSizer(itemBoxSizer5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_TT_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -802,7 +803,7 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
     m_LocationPanel->SetSizer(itemBoxSizer16);
 
-    wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer16->Add(itemFlexGridSizer17, 0, wxALIGN_TOP|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_STATIC_TT_X, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer17->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -836,7 +837,8 @@ void TurntableDialog::CreateControls()
 
     wxBoxSizer* itemBoxSizer28 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer27->Add(itemBoxSizer28, 0, wxGROW, 5);
-    wxFlexGridSizer* itemFlexGridSizer29 = new wxFlexGridSizer(2, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer29 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer29->AddGrowableCol(1);
     itemBoxSizer28->Add(itemFlexGridSizer29, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_TT_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer29->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -853,7 +855,7 @@ void TurntableDialog::CreateControls()
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_TT_ADDRESS, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer29->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer35 = new wxFlexGridSizer(1, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer35 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer29->Add(itemFlexGridSizer35, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_TT_ADDRESS, _("0"), wxDefaultPosition, wxSize(70, -1), wxTE_CENTRE );
     itemFlexGridSizer35->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -910,6 +912,7 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer53 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer27->Add(itemBoxSizer53, 1, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer54 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer54->AddGrowableCol(1);
     itemBoxSizer53->Add(itemFlexGridSizer54, 1, wxGROW|wxALL, 5);
     m_labProt = new wxStaticText( m_Interface, wxID_ANY, _("protocol"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer54->Add(m_labProt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1089,7 +1092,7 @@ void TurntableDialog::CreateControls()
     m_NewPositionFlagBox = new wxStaticBox(m_MultiPortPanel, wxID_ANY, _("New Position Flag"));
     wxStaticBoxSizer* itemStaticBoxSizer103 = new wxStaticBoxSizer(m_NewPositionFlagBox, wxVERTICAL);
     itemBoxSizer69->Add(itemStaticBoxSizer103, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer104 = new wxFlexGridSizer(2, 5, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer104 = new wxFlexGridSizer(0, 5, 0, 0);
     itemStaticBoxSizer103->Add(itemFlexGridSizer104, 0, wxGROW|wxALL, 5);
     m_labAddr5 = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer104->Add(m_labAddr5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -1110,7 +1113,7 @@ void TurntableDialog::CreateControls()
     m_ResetFlagBox = new wxStaticBox(m_MultiPortPanel, wxID_ANY, _("Reset Flag"));
     wxStaticBoxSizer* itemStaticBoxSizer110 = new wxStaticBoxSizer(m_ResetFlagBox, wxVERTICAL);
     itemBoxSizer69->Add(itemStaticBoxSizer110, 0, wxGROW|wxLEFT|wxRIGHT, 5);
-    wxFlexGridSizer* itemFlexGridSizer111 = new wxFlexGridSizer(2, 5, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer111 = new wxFlexGridSizer(0, 5, 0, 0);
     itemStaticBoxSizer110->Add(itemFlexGridSizer111, 0, wxGROW|wxLEFT|wxRIGHT, 5);
     m_labResetAddr = new wxStaticText( m_MultiPortPanel, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer111->Add(m_labResetAddr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
