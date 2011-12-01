@@ -143,7 +143,7 @@ void ToursDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode tour = (iONode)ListOp.get( list, i );
         const char* id = wTour.getid( tour );
-        if( m_StartBlock == NULL || m_ShowAll->IsChecked() || isFirst(tour) )
+        if( m_StartBlock == NULL || m_ShowAll->IsChecked() || isFirst(tour, m_StartBlock) )
           m_TourList->Append( wxString(id,wxConvUTF8), tour );
       }
       /* clean up the temp. list */
@@ -205,9 +205,9 @@ void ToursDlg::initScheduleCombo() {
   ListOp.base.del(list);
 }
 
-bool ToursDlg::isFirst(iONode tour) {
+bool ToursDlg::isFirst(iONode tour, const char* startblock) {
   bool isFirst = false;
-  TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if block %s is first in tour...", m_StartBlock );
+  TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if block %s is first in tour...", startblock );
 
   iONode model = wxGetApp().getModel();
 
@@ -227,7 +227,7 @@ bool ToursDlg::isFirst(iONode tour) {
         while( StrTokOp.hasMoreTokens( blocks ) ) {
           id = StrTokOp.nextToken( blocks );
           TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if block [%s] is member location [%s]...", id, wLocation.getid( location ) );
-          if( StrOp.equals( id, m_StartBlock) ) {
+          if( StrOp.equals( id, startblock) ) {
             TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "block [%s] is member of location [%s]", id, wLocation.getid( location ) );
             locationID = wLocation.getid( location );
             i = cnt;
@@ -256,11 +256,11 @@ bool ToursDlg::isFirst(iONode tour) {
         const char* id = wSchedule.getid( sc );
         TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check if schedule %s == %s", id, scid );
         if( id != NULL && StrOp.equals(id, scid) ) {
-          if( m_StartBlock != NULL ) {
+          if( startblock != NULL ) {
             /* check if the schedule start block matches */
             iONode scentry = wSchedule.getscentry( sc );
             TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "check schedule entry: %d of %s", i, id );
-            if( scentry != NULL && StrOp.equals( m_StartBlock, wScheduleEntry.getblock( scentry ) ) ) {
+            if( scentry != NULL && StrOp.equals( startblock, wScheduleEntry.getblock( scentry ) ) ) {
               isFirst = true;
             }
             else if( scentry != NULL && locationID != NULL && StrOp.equals( locationID, wScheduleEntry.getblock( scentry ) ) ) {

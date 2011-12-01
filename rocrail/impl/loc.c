@@ -1651,8 +1651,10 @@ static void _useSchedule( iOLoc inst, const char* id ) {
     iONode schedule = ModelOp.getSchedule( AppOp.getModel(), id );
     if( schedule != NULL )
       data->driver->useschedule( data->driver, wSchedule.getid(schedule) );
-    else
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Schedule [%s] not found!", id );
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Schedule [%s] not found; try for tour...", id );
+      LocOp.useTour(inst, id);
+    }
   }
 }
 

@@ -8534,7 +8534,7 @@
   </Msg>
   <Msg id="schedule2go">
     <de txt="Starte mit Fahrplan"/>
-    <en txt="Go with schedule"/>
+    <en txt="Go with tour or schedule"/>
     <nl txt="Start volgens dienstrooster"/>
     <sv txt="Schedule and Go"/>
     <fr txt="Démarrer avec un des trajets ...."/>

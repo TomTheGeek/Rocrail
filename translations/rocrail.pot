@@ -2258,7 +2258,7 @@ msgstr ""
 #. 
 # id="schedule2go"
 #, c-format
-msgid "Go with schedule"
+msgid "Go with tour or schedule"
 msgstr ""
 
 #. 

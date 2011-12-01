@@ -1252,18 +1252,39 @@ void Symbol::OnPopup(wxMouseEvent& event)
           }
 
 
+          if( model != NULL ) {
+          m_sclist = ListOp.inst();
+          Boolean addSc = False;
+          Boolean onlyStartWith = wGui.isshowonlystartschedules(wxGetApp().getIni());
+          wxMenu* menuSchd2go = NULL;
+
+          iONode tourlist = wPlan.gettourlist( model );
+          // Tours 2 Go
+          if( tourlist != NULL ) {
+            int cnt = NodeOp.getChildCnt( tourlist );
+            if( cnt > 0 ) {
+              for( int i = 0; i < cnt; i++ ) {
+                iONode tour = NodeOp.getChild( tourlist, i );
+                const char* id = wTour.getid( tour );
+                if( !onlyStartWith || ToursDlg::isFirst(tour, wBlock.getid( m_Props )) ) {
+                  addSc = True;
+                  ListOp.add(m_sclist, (obj)id);
+                  if( menuSchd2go == NULL ) {
+                    menuSchd2go = new wxMenu();
+                  }
+                }
+              }
+            }
+          }
 
         // Schedule 2 Go menu
-         m_sclist = ListOp.inst();
-         Boolean addSc = False;
-         Boolean onlyStartWith = wGui.isshowonlystartschedules(wxGetApp().getIni());
-
-         if( model != NULL ) {
            iONode sclist = wPlan.getsclist( model );
            if( sclist != NULL ) {
              int cnt = NodeOp.getChildCnt( sclist );
              if( cnt > 0 ) {
-               wxMenu* menuSchd2go = new wxMenu();
+               if( menuSchd2go == NULL ) {
+                 menuSchd2go = new wxMenu();
+               }
 
                for( int i = 0; i < cnt; i++ ) {
                  iONode sc = NodeOp.getChild( sclist, i );

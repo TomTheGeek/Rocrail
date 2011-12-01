@@ -40,7 +40,6 @@ class ToursDlg : public toursdlggen
   void initValues();
   void initScheduleCombo();
   bool evaluate();
-  bool isFirst(iONode tour);
 
 public:
 	/** Constructor */
@@ -59,6 +58,7 @@ public:
   void onOK( wxCommandEvent& event );
   void onShowAll( wxCommandEvent& event );
 
+  static bool isFirst(iONode tour, const char* startblock);
 
 };
 
