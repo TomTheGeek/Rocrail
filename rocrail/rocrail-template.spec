@@ -17,7 +17,7 @@ RocRail is a 2 tier application written for Linux and Windows in C/C++ based on 
 
 %build
 cd Rocrail
-make all DEBUG=
+make fromtar DEBUG=
 cd ..
 
 %install
