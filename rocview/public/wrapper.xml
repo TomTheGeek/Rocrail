@@ -170,6 +170,7 @@
       <var name="scblue" vt="int" defval="0"/>
       <var name="showsc" vt="bool" defval="true"/>
       <var name="locobook" vt="bool" defval="true"/>
+      <var name="planbook" vt="bool" defval="true"/>
       <var name="cx" vt="int" defval="64"/>
       <var name="cy" vt="int" defval="48"/>
     </planpanel>

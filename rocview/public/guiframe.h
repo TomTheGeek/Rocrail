@@ -241,6 +241,7 @@ public:
   void OnZoom100(wxCommandEvent& event);
 
   void OnLocoBook(wxCommandEvent& event);
+  void OnPlanBook(wxCommandEvent& event);
   void OnLocoSortByAddr(wxCommandEvent& event);
   void OnLocoViewAll(wxCommandEvent& event);
   void OnLocoViewSteam(wxCommandEvent& event);
@@ -275,6 +276,7 @@ public:
   void setEditModPlan( bool editmodplan ) { m_bEditModPlan = editmodplan; }
   bool isAutoMode() { return m_bAutoMode; }
   bool isLocoBook() { return m_bLocoBook; }
+  bool isPlanBook() { return m_bPlanBook; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
   bool isInitialized() { return m_bInitialized; }
@@ -355,6 +357,7 @@ private:
   const char* m_ThemesPath;
 
   bool  m_bLocoBook;
+  bool  m_bPlanBook;
   bool  m_LocoSortByAddress;
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
@@ -505,6 +508,7 @@ enum
     ME_Zoom75,
     ME_Zoom100,
     ME_LocoBook,
+    ME_PlanBook,
     ME_LocoViewAll,
     ME_LocoViewSteam,
     ME_LocoViewDiesel,
