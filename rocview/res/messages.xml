@@ -3044,7 +3044,7 @@
     <sv txt="Vänster"/>
     <fr txt="À gauche"/>
     <tr txt="Sol"/>
-    <es txt="Idquierda"/>
+    <es txt="Izquierda"/>
     <it txt="A sinistra"/>
     <da txt="Venstre"/>
     <bs txt="Lijevo"/>
@@ -4510,7 +4510,7 @@
     <en txt="Suburban"/>
     <nl txt="Stoptrein"/>
     <sv txt="Lokaltåg"/>
-    <fr txt="Local"/>
+    <fr txt="Souterrain"/>
     <tr txt="Yerel"/>
     <es txt="Suburbano"/>
     <it txt="Locale"/>
@@ -8533,11 +8533,11 @@
     <ro txt="Jumătate automatic"/>
   </Msg>
   <Msg id="schedule2go">
-    <de txt="Starte mit Fahrplan"/>
+    <de txt="Starte mit Tour oder Fahrplan"/>
     <en txt="Go with tour or schedule"/>
-    <nl txt="Start volgens dienstrooster"/>
+    <nl txt="Start volgens tour of dienstrooster"/>
     <sv txt="Schedule and Go"/>
-    <fr txt="Démarrer avec un des trajets ...."/>
+    <fr txt="Démarrage avec trajet ou trajets multiple"/>
     <tr txt="Schedule and Go"/>
     <es txt="Proceder con agenda"/>
     <it txt="Avvia con schedulazione"/>
@@ -17117,6 +17117,7 @@
     <em_GB txt="Stop none commuter in terminal"/>
     <em_AU txt="Stop none commuter in terminal"/>
     <en_AU txt="Stop none commuter in terminal"/>
+    <fr txt="Pas d'arrêt des trains de banlieue dans un terminus"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -17250,6 +17251,7 @@
     <en_AU txt="Use sequence check"/>
     <pt txt="Usar lista de verificações"/>
     <ru txt="Использовать проверку очерёдности"/>
+    <fr txt="Utiliser la vérification de séquence"/>
   </Msg>
   <Msg id="usedouble">
     <en txt="Use double packets"/>
@@ -17273,6 +17275,7 @@
     <nl txt="Sub-Library"/>
     <de txt="Sub-Bibliothek"/>
     <en_AU txt="Sub-Library"/>
+    <fr txt="Sous-librairie"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
@@ -17287,12 +17290,14 @@
     <nl txt="Schaduw station"/>
     <de txt="Aufstell-Gruppe"/>
     <en_AU txt="Staging yard"/>
+    <fr txt="gare de triage"/>
   </Msg>
   <Msg id="stagingblock">
     <en txt="Staging block"/>
     <nl txt="Opstel blok"/>
     <de txt="Aufstell-Block"/>
     <en_AU txt="Staging block"/>
+    <fr txt="Bloc en coulisse"/>
   </Msg>
   <Msg id="sections">
     <en txt="Sections"/>
@@ -17337,6 +17342,7 @@
     <en_AU txt="Patterns"/>
     <pt txt="Padrões"/>
     <ru txt="Шаблоны"/>
+    <fr txt="Motifs"/>
   </Msg>
   <Msg id="aspectnr">
     <en txt="Aspect numbers"/>
@@ -17344,6 +17350,7 @@
     <de txt="Begriffs-Nummern"/>
     <en_AU txt="Aspect numbers"/>
     <ru txt="Номер аспекта"/>
+    <fr txt="Numéros d'aspect"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
@@ -17351,6 +17358,7 @@
     <de txt="Plan-Konsistenz"/>
     <en_AU txt="Plan health"/>
     <ru txt="Состояние плана"/>
+    <fr txt="Plan de santé"/>
   </Msg>
   <Msg id="communication">
     <en txt="Communication"/>
@@ -17358,12 +17366,14 @@
     <de txt="Kommunikation"/>
     <en_AU txt="Communication"/>
     <pt txt="Comunicação"/>
+    <fr txt="Communication"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
     <nl txt="Rijrichting tijd"/>
     <de txt="Zeit vor Richtungswechsel"/>
     <en_AU txt="Swap timer"/>
+    <fr txt="Temps de changement"/>
   </Msg>
   <Msg id="slotping">
     <en txt="Slot ping"/>
@@ -17378,12 +17388,14 @@
     <en_AU txt="Local IP"/>
     <pt txt="IP Local"/>
     <ru txt="Локальный IP"/>
+    <fr txt="IP locale"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
     <nl txt="Zet locomotief"/>
     <de txt="Lokbelegung setzten"/>
     <en_AU txt="Set loco"/>
+    <fr txt="Met la loco"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
@@ -17392,6 +17404,7 @@
     <en_AU txt="Compress"/>
     <pt txt="Comprimir"/>
     <ru txt="Сжатие"/>
+    <fr txt="Compresser"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
@@ -17400,6 +17413,7 @@
     <en_AU txt="Synchronize routes"/>
     <pt txt="Sincronizar Rotas"/>
     <ru txt="Синхронизировать маршруты"/>
+    <fr txt="Synchroniser les routes"/>
   </Msg>
   <Msg id="syncroutetimeout">
     <en txt="Route synchronizer timeout"/>
@@ -17407,6 +17421,7 @@
     <de txt="Zeitüberschreitung bei synchronisierten Fahrstraßen"/>
     <en_AU txt="Route synchronizer timeout"/>
     <ru txt="Таймаут синхронизатора маршрута"/>
+    <fr txt="Fin de temps de syncronisation d'itinéraire"/>
   </Msg>
   <Msg id="startupschedule">
     <en txt="Startup schedule"/>
@@ -17414,6 +17429,7 @@
     <de txt="Start-Fahrplan"/>
     <en_AU txt="Startup schedule"/>
     <ru txt="Начальное расписание"/>
+    <fr txt="Planification au démarrage"/>
   </Msg>
   <Msg id="cmdtime">
     <en txt="Command time"/>
@@ -17421,198 +17437,274 @@
     <de txt="Befehls-Zeit"/>
     <en_AU txt="Command time"/>
     <ru txt="Время команды"/>
+    <fr txt="Temps de commande"/>
   </Msg>
   <Msg id="controlcode">
     <en txt="Control code"/>
     <nl txt="Controle code"/>
     <de txt="Zugriffscode"/>
     <en_AU txt="Control code"/>
+    <fr txt="Code de controle"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
     <nl txt="Ga naar draaischijf"/>
     <de txt="Fahre zur Drehscheibe"/>
     <en_AU txt="Goto Turntable"/>
+    <fr txt="Aller a la table des tours"/>
   </Msg>
   <Msg id="cbusrocrailini">
     <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
     <nl txt="Gelieve eerst de Rocrail server instellingen in te laden alvorens de CBUS nodes te configureren."/>
     <de txt="Bitte Rocrail-Server-Einstellungen laden, bevor CBUS-Knoten konfiguriert werden."/>
     <en_AU txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
+    <fr txt="Svp, chargez les réglages du serveur avant de configurer les modes CBUS"/>
   </Msg>
   <Msg id="node">
     <en txt="Node"/>
     <nl txt="Knooppunt"/>
     <de txt="Knoten"/>
     <en_AU txt="Node"/>
+    <fr txt="Nœud"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
     <nl txt="Variabelen"/>
     <de txt="Variablen"/>
     <en_AU txt="Variables"/>
+    <fr txt="Variables"/>
   </Msg>
   <Msg id="variable">
     <en txt="Variable"/>
     <nl txt="Variabel"/>
     <de txt="Variable"/>
     <en_AU txt="Variable"/>
+    <fr txt="Variable"/>
   </Msg>
   <Msg id="events">
     <en txt="Events"/>
     <nl txt="Gebeurtenissen"/>
     <de txt="Ereignisse"/>
     <en_AU txt="Events"/>
+    <fr txt="Évènements"/>
   </Msg>
   <Msg id="firmware">
     <en txt="Firmware"/>
     <nl txt="Firmware"/>
     <de txt="Firmware"/>
     <en_AU txt="Firmware"/>
+    <fr txt="Firmware"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
     <nl txt="Ophalen"/>
     <de txt="Abrufen"/>
     <en_AU txt="Get"/>
+    <fr txt="Obtenir"/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
     <nl txt="Stel in"/>
     <de txt="Einstellen"/>
     <en_AU txt="Set"/>
+    <fr txt="Définir"/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
     <nl txt="Haal alles op"/>
     <de txt="Alles lesen"/>
     <en_AU txt="Get all"/>
+    <fr txt="Tout obtenir"/>
   </Msg>
   <Msg id="clearall">
     <en txt="Clear all"/>
     <nl txt="Alles wissen"/>
     <de txt="Alles zurücksetzen"/>
     <en_AU txt="Clear all"/>
+    <fr txt="Tout effacer"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
     <nl txt="Leren"/>
     <de txt="Lernen"/>
     <en_AU txt="Learn"/>
+    <fr txt="Apprendre"/>
   </Msg>
   <Msg id="unlearn">
     <en txt="Unlearn"/>
     <nl txt="Vergeet"/>
     <de txt="Stopp lernen"/>
     <en_AU txt="Unlearn"/>
+    <fr txt="Désapprendre"/>
   </Msg>
   <Msg id="send">
     <en txt="Send"/>
     <nl txt="Verzend"/>
     <de txt="Senden"/>
     <en_AU txt="Send"/>
+    <fr txt="Envoyer"/>
   </Msg>
   <Msg id="bootmode">
     <en txt="Boot mode"/>
     <nl txt="Opstart modus"/>
     <de txt="Boot-Modus"/>
     <en_AU txt="Boot mode"/>
+    <fr txt="Mode de démarrage"/>
   </Msg>
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
     <nl txt="Laad tijd (ms)"/>
     <de txt="Ladeprogramm-Zeit"/>
     <en_AU txt="Loader time (ms)"/>
+    <fr txt="Temps de chargement (ms)"/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
     <nl txt="Korte gebeurtenissen"/>
     <de txt="Kurz-Ereignisse"/>
     <en_AU txt="Short events"/>
+    <fr txt="Evènements courts"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
     <nl txt="Begin van de dag"/>
     <de txt="Tages-Anfang"/>
     <en_AU txt="Start of day"/>
+    <fr txt="Debut du jour"/>
   </Msg>
   <Msg id="resetstatus">
     <en txt="Reset status"/>
     <nl txt="Reset status"/>
     <de txt="Status zurücksetzen"/>
     <en_AU txt="Reset status"/>
+    <fr txt="Remet a zéro les états"/>
   </Msg>
   <Msg id="occupancy">
     <en txt="Occupancy"/>
     <nl txt="Bezetting"/>
     <de txt="Belegung"/>
     <en_AU txt="Occupancy"/>
+    <fr txt="Occupation"/>
   </Msg>
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
     <nl txt="Herstel snelheid"/>
     <de txt="Geschwindigkeit wiederherstellen"/>
     <en_AU txt="Restore speed"/>
+    <fr txt="Restorer la vitesse"/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
     <nl txt="Kalibreer"/>
     <de txt="Kalibrieren"/>
+    <fr txt="Calibrer"/>
   </Msg>
   <Msg id="traverser">
     <en txt="Traverser"/>
     <nl txt="Rolbrug"/>
     <de txt="Schiebebühne"/>
+    <fr txt="Pont coulissant"/>
   </Msg>
   <Msg id="subtitle">
     <en txt="Sub title"/>
+    <nl txt="Ondertitel"/>
+    <de txt="Untertitel"/>
+    <fr txt="Sous-titre"/>
   </Msg>
   <Msg id="timedsensors">
     <en txt="Timed sensors"/>
+    <nl txt="Vertraagde melders"/>
+    <de txt="Zeitgesteuerte Rückmelder"/>
+    <fr txt="Capteurs temporisés"/>
   </Msg>
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer"/>
+    <nl txt="Aktiveer analyzer"/>
+    <de txt="Auswerteprogramm aktivieren"/>
+    <fr txt="Mettre en service l'analyseur"/>
   </Msg>
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
+    <nl txt="Dwing vrijgave na noodstop"/>
+    <de txt="Freigabe nach Nothalt erzwingen"/>
+    <fr txt="Forcer le déverrouillage dès l'EBreak"/>
   </Msg>
   <Msg id="triggerblockevents">
     <en txt="Trigger block events"/>
+    <nl txt="Trigger blok gebeurtenissen"/>
+    <de txt="Trigger Block-Ereignisse"/>
+    <fr txt="Réglage des événements de blocs"/>
   </Msg>
   <Msg id="locofilter">
     <en txt="Loco view filter"/>
+    <nl txt="Loc aanzicht filter"/>
+    <de txt="Lokanzeigefilter"/>
+    <fr txt="Filtre de vue des loco"/>
   </Msg>
   <Msg id="locoviewall" key="Alt-A">
     <en txt="View All"/>
+    <nl txt="Toon Alles"/>
+    <de txt="Alle anzeigen"/>
+    <fr txt="Tout voir"/>
   </Msg>
   <Msg id="locoviewsteam" key="Alt-S">
     <en txt="Steamers"/>
+    <nl txt="Stomers"/>
+    <de txt="Dampfloks"/>
+    <fr txt="Vapeur"/>
   </Msg>
   <Msg id="locoviewdiesel" key="Alt-I">
     <en txt="Diesels"/>
+    <nl txt="Diesels"/>
+    <de txt="Dieselloks"/>
+    <fr txt="Diesels"/>
   </Msg>
   <Msg id="locoviewelectric" key="Alt-E">
     <en txt="Electrics"/>
+    <nl txt="Elektrische"/>
+    <de txt="Elektroloks"/>
+    <fr txt="Electriques"/>
   </Msg>
   <Msg id="locoviewcommuter" key="Alt-C">
     <en txt="Commuters"/>
+    <nl txt="Pendels"/>
+    <de txt="Pendelzüge"/>
+    <fr txt="Commutateur"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
     <en txt="Specials"/>
+    <nl txt="Specialen"/>
+    <de txt="Specials"/>
+    <fr txt="Spéciaux"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
+    <nl txt="Sorteer locs naar adres"/>
+    <de txt="Loks nach Adresse sortieren"/>
+    <fr txt="Classer les loco par adresse"/>
   </Msg>
   <Msg id="selecttour" dialog="true">
     <en txt="Select tour"/>
+    <nl txt="Selecteer tour"/>
+    <de txt="Tour wählen"/>
+    <fr txt="Selection du trajet compilé"/>
   </Msg>
   <Msg id="tourtable" dialog="true">
     <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
+    <nl txt="Touren"/>
+    <de txt="Touren"/>
+    <fr txt="Tableau de trajets compilés"/>
   </Msg>
   <Msg id="tour">
     <en txt="Tour"/>
+    <nl txt="Tour"/>
+    <de txt="Tour"/>
+    <fr txt="Trajet compilé"/>
   </Msg>
   <Msg id="resetspfx">
     <en txt="Reset speed and functions"/>
+    <nl txt="Snelheid en functies terugzetten"/>
+    <de txt="Zurücksetzen von Geschwindigkeit und Funktionen"/>
+    <fr txt="Remettre à zéro la vitesse et les fonctions"/>
   </Msg>
 </Messages>
