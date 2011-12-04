@@ -3689,10 +3689,12 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     // TODO: Block if the event is not initiated from the mouse.
     //else if( event.GetCol() == LOC_COL_ID && event.GetEventType() == wxEVT_LEFT_DOWN  ) {
     // 10217 seems to be the mouse event
-    else if( !m_FakeLeftClick && event.GetCol() == LOC_COL_ID ) {
+    else if( !m_FakeLeftClick && event.GetCol() == LOC_COL_ID && lc != NULL ) {
       TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "D&D eventtype [%d]", event.GetEventType() );
 
-      wxTextDataObject my_data(_T("moveto:")+str);
+      wxString my_text = _T("moveto:")+wxString(wLoc.getid(lc),wxConvUTF8)+_T("::");
+      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "D&D text [%s]", (const char*)my_text.mb_str(wxConvUTF8) );
+      wxTextDataObject my_data(my_text);
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
@@ -3741,7 +3743,7 @@ void BitmapButton::OnLeftUp(wxMouseEvent& event) {
 }
 void BitmapButton::OnLeftDown(wxMouseEvent& event) {
   if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
-    wxTextDataObject my_data(_T("moveto:") + wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8));
+    wxTextDataObject my_data(_T("moveto:") + wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8)+_T("::"));
     wxDropSource dragSource( this );
     dragSource.SetData( my_data );
     wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);

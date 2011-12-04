@@ -417,11 +417,14 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     return false;
   }
 
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D data [%s][%d]", (const char*)data.mb_str(wxConvUTF8), data.Len() );
   /* Inform RocRail... */
-  iOStrTok tok = StrTokOp.inst(data.mb_str(wxConvUTF8), ':');
+  iOStrTok tok = StrTokOp.inst((const char*)data.mb_str(wxConvUTF8), ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
   const char* dropid  = StrTokOp.nextToken(tok);
   const char* fromid  = "";
+
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D command [%s] for ID [%s]", dropcmd, dropid );
 
   if( StrTokOp.hasMoreTokens(tok) ) {
     fromid  = StrTokOp.nextToken(tok);
@@ -992,13 +995,13 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
 
   if( !wxGetApp().getFrame()->isEditMode() && StrOp.equals( wBlock.name(), NodeOp.getName(m_Props)) && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
     if( event.ControlDown() || event.CmdDown() ) {
-      wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) );
+      wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8)+_T("::") );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
     }
     else {
-      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) + _T(":") + wxString(wBlock.getid(m_Props),wxConvUTF8) );
+      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) + _T(":") + wxString(wBlock.getid(m_Props),wxConvUTF8)+_T(":") );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
