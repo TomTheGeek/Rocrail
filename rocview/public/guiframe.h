@@ -242,6 +242,7 @@ public:
 
   void OnLocoBook(wxCommandEvent& event);
   void OnPlanBook(wxCommandEvent& event);
+  void OnTraceWindow(wxCommandEvent& event);
   void OnLocoSortByAddr(wxCommandEvent& event);
   void OnLocoViewAll(wxCommandEvent& event);
   void OnLocoViewSteam(wxCommandEvent& event);
@@ -277,6 +278,7 @@ public:
   bool isAutoMode() { return m_bAutoMode; }
   bool isLocoBook() { return m_bLocoBook; }
   bool isPlanBook() { return m_bPlanBook; }
+  bool isTraceWindow() { return m_bTraceWindow; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
   bool isInitialized() { return m_bInitialized; }
@@ -358,6 +360,7 @@ private:
 
   bool  m_bLocoBook;
   bool  m_bPlanBook;
+  bool  m_bTraceWindow;
   bool  m_LocoSortByAddress;
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
@@ -509,6 +512,7 @@ enum
     ME_Zoom100,
     ME_LocoBook,
     ME_PlanBook,
+    ME_TraceWindow,
     ME_LocoViewAll,
     ME_LocoViewSteam,
     ME_LocoViewDiesel,

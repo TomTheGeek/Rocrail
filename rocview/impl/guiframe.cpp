@@ -296,6 +296,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Zoom100        , RocGuiFrame::OnZoom100)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
     EVT_MENU( ME_PlanBook       , RocGuiFrame::OnPlanBook)
+    EVT_MENU( ME_TraceWindow    , RocGuiFrame::OnTraceWindow)
     EVT_MENU( ME_LocoSortByAddr , RocGuiFrame::OnLocoSortByAddr)
     EVT_MENU( ME_LocoViewAll    , RocGuiFrame::OnLocoViewAll)
     EVT_MENU( ME_LocoViewSteam  , RocGuiFrame::OnLocoViewSteam)
@@ -1576,6 +1577,7 @@ void RocGuiFrame::initFrame() {
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
   menuView->AppendCheckItem( ME_PlanBook, wxGetApp().getMenu("panel"), wxGetApp().getTip("panel") );
+  menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
   menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
   wxMenu *menuLocoView = new wxMenu();
   menuLocoView->AppendCheckItem( ME_LocoViewAll, wxGetApp().getMenu("locoviewall"), wxGetApp().getTip("locoviewall") );
@@ -1879,6 +1881,7 @@ void RocGuiFrame::create() {
   m_bRaster = (wPlanPanel.israster( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bLocoBook = (wPlanPanel.islocobook( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bPlanBook = (wPlanPanel.isplanbook( wGui.getplanpanel( m_Ini ) ) ? true:false);
+  m_bTraceWindow = (wPlanPanel.istracewindow( wGui.getplanpanel( m_Ini ) ) ? true:false);
 
   if( !m_bLocoBook && !m_bPlanBook ) {
     m_bLocoBook = true;
@@ -2738,6 +2741,18 @@ void RocGuiFrame::OnLocoViewSpecial( wxCommandEvent& event ) {
   InitActiveLocs(event);
 }
 
+void RocGuiFrame::OnTraceWindow( wxCommandEvent& event ) {
+  wxMenuItem* mi = menuBar->FindItem(ME_TraceWindow);
+  m_bTraceWindow = mi->IsChecked();
+  if(m_bTraceWindow) {
+    int pos = wSplitPanel.getmain( wGui.getsplitpanel( m_Ini) );
+    m_Splitter->SplitHorizontally( m_PlanSplitter, m_TraceSplitter, pos );
+  }
+  else {
+    m_Splitter->Unsplit( m_TraceSplitter );
+  }
+}
+
 void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
   m_bLocoBook = mi->IsChecked();
@@ -3331,6 +3346,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_locobook->Check( m_bLocoBook );
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );
+  wxMenuItem* mi_tracewindow  = menuBar->FindItem(ME_TraceWindow);
+  mi_tracewindow->Check( m_bTraceWindow );
   wxMenuItem* mi_showid  = menuBar->FindItem(ME_ShowID);
   mi_showid->Check( m_bShowID );
   wxMenuItem* mi_raster  = menuBar->FindItem(ME_Raster);
