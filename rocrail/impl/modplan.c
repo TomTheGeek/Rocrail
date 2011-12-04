@@ -240,15 +240,15 @@ static iONode __findConnection( iOModPlanData data, iONode model, iOList routeLi
  *
  *
  */
-static const char* Left_points [] = { "point-nw", "point-en", "point-se", "point-ws" };
-static const char* Right_points[] = { "point-ne", "point-es", "point-sw", "point-wn" };
+static const char* Left_points [] = { "point-nw", "point-en", "point-se", "point-ws", "point-nww", "point-enn", "point-see", "point-wss" };
+static const char* Right_points[] = { "point-ne", "point-es", "point-sw", "point-wn", "point-nee", "point-ess", "point-sww", "point-wnn" };
 
 static Boolean __checkPointMatch( const char* point_a, const char* point_b ) {
   int i = 0;
-  for( i = 0; i < 4; i++ ) {
+  for( i = 0; i < 8; i++ ) {
     if( StrOp.equals( Left_points[i], point_a ) ) {
       int n = 0;
-      for( n = 0; n < 4; n++ ) {
+      for( n = 0; n < 8; n++ ) {
         if( StrOp.equals( Right_points[n], point_b ) ) {
           return True;
         }
@@ -256,7 +256,7 @@ static Boolean __checkPointMatch( const char* point_a, const char* point_b ) {
     }
     else if( StrOp.equals( Right_points[i], point_a ) ) {
       int n = 0;
-      for( n = 0; n < 4; n++ ) {
+      for( n = 0; n < 8; n++ ) {
         if( StrOp.equals( Left_points[n], point_b ) ) {
           return True;
         }
