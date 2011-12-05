@@ -417,7 +417,7 @@ void RouteDialog::initLocPermissionList() {
 
 
 void RouteDialog::initIndex() {
-  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
+  TraceOp.trc( "routedlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
   m_List->Clear();
   iONode model = wxGetApp().getModel();
@@ -529,6 +529,8 @@ void RouteDialog::initBlockCombos() {
         m_CondFromBlock->Append( wxString(id,wxConvUTF8) );
       }
     }
+
+    TraceOp.trc( "routedlg", TRCLEVEL_INFO, __LINE__, 9999, "appending points for A" );
 		m_BlockA->Append( wxString( wRoute.point_en,wxConvUTF8) );
 		m_BlockA->Append( wxString( wRoute.point_es,wxConvUTF8) );
 		m_BlockA->Append( wxString( wRoute.point_ne,wxConvUTF8) );
@@ -537,6 +539,14 @@ void RouteDialog::initBlockCombos() {
 		m_BlockA->Append( wxString( wRoute.point_sw,wxConvUTF8) );
 		m_BlockA->Append( wxString( wRoute.point_wn,wxConvUTF8) );
 		m_BlockA->Append( wxString( wRoute.point_ws,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_enn,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_ess,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_nee,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_nww,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_see,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_sww,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_wnn,wxConvUTF8) );
+    m_BlockA->Append( wxString( wRoute.point_wss,wxConvUTF8) );
 		
 		// for single track modules
 		m_BlockA->Append( wxString( wRoute.point_e,wxConvUTF8) );
@@ -544,6 +554,7 @@ void RouteDialog::initBlockCombos() {
 		m_BlockA->Append( wxString( wRoute.point_s,wxConvUTF8) );
 		m_BlockA->Append( wxString( wRoute.point_w,wxConvUTF8) );
 		
+    TraceOp.trc( "routedlg", TRCLEVEL_INFO, __LINE__, 9999, "appending points for B" );
 		m_BlockB->Append( wxString( wRoute.point_en,wxConvUTF8) );
 		m_BlockB->Append( wxString( wRoute.point_es,wxConvUTF8) );
 		m_BlockB->Append( wxString( wRoute.point_ne,wxConvUTF8) );
@@ -552,6 +563,14 @@ void RouteDialog::initBlockCombos() {
 		m_BlockB->Append( wxString( wRoute.point_sw,wxConvUTF8) );
 		m_BlockB->Append( wxString( wRoute.point_wn,wxConvUTF8) );
 		m_BlockB->Append( wxString( wRoute.point_ws,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_enn,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_ess,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_nee,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_nww,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_see,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_sww,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_wnn,wxConvUTF8) );
+    m_BlockB->Append( wxString( wRoute.point_wss,wxConvUTF8) );
 		
 		// for single track modules
 		m_BlockB->Append( wxString( wRoute.point_e,wxConvUTF8) );
@@ -830,7 +849,9 @@ void RouteDialog::initValues() {
 
 void RouteDialog::initCondList() {
   // Conditions
-  m_CondGrid->DeleteRows(0,m_CondGrid->GetNumberRows());
+  if( m_CondGrid->GetNumberRows() > 0 )
+    m_CondGrid->DeleteRows(0,m_CondGrid->GetNumberRows());
+
   iONode cond = wRoute.getstcondition( m_Props );
   while( cond != NULL ) {
     m_CondGrid->AppendRows();

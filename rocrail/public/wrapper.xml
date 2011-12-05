@@ -1638,6 +1638,14 @@
         <const name="point_se" vt="string" val="point-se"/>
         <const name="point_en" vt="string" val="point-en"/>
         <const name="point_es" vt="string" val="point-es"/>
+        <const name="point_nww" vt="string" val="point-nww"/>
+        <const name="point_nee" vt="string" val="point-nee"/>
+        <const name="point_wnn" vt="string" val="point-wnn"/>
+        <const name="point_wss" vt="string" val="point-wss"/>
+        <const name="point_sww" vt="string" val="point-sww"/>
+        <const name="point_see" vt="string" val="point-see"/>
+        <const name="point_enn" vt="string" val="point-enn"/>
+        <const name="point_ess" vt="string" val="point-ess"/>
         <const name="point_n" vt="string" val="point-n" remark="for single track modules"/>
         <const name="point_w" vt="string" val="point-w" remark="for single track modules"/>
         <const name="point_s" vt="string" val="point-s" remark="for single track modules"/>
