@@ -473,7 +473,9 @@ void TurntableDialog::initValues() {
   m_ResetCmd->SetSelection(wTurntable.getresetbitcmd(m_Props));
 
   // Tracks
-  m_TracksGrid->DeleteRows(0,m_TracksGrid->GetNumberRows());
+  if( m_TracksGrid->GetNumberRows() > 0 )
+    m_TracksGrid->DeleteRows(0,m_TracksGrid->GetNumberRows());
+
   iONode track = wTurntable.gettrack( m_Props );
   while( track != NULL ) {
     m_TracksGrid->AppendRows();
