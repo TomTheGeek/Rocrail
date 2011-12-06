@@ -1843,6 +1843,7 @@
           <var name="polarization" vt="bool" defval="false" remark="Flip bridge polarization when entering this track."/>
           <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
         </track>
+        <actionctrl cardinality="n"/>
       </tt>
     </ttlist>
     <lclist cardinality="1" remark="Loc table" wrappername="LocList">

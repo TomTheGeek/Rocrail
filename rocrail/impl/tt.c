@@ -25,6 +25,10 @@
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/switch.h"
+#include "rocrail/public/action.h"
+
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -111,6 +115,38 @@ static int __count(void) {
 
 static void _depart(iIBlockBase inst) {
 }
+
+
+static void __checkAction( iOTT inst, const char* cmd ) {
+
+  iOTTData data     = Data(inst);
+  iOModel  model    = AppOp.getModel();
+  iONode   ttaction = wTurntable.getactionctrl( data->props );
+
+  while( ttaction != NULL) {
+    if( StrOp.len( wActionCtrl.getstate(ttaction) ) == 0 ||
+        StrOp.equals(wActionCtrl.getstate(ttaction), cmd ) )
+    {
+      iOAction action = ModelOp.getAction( AppOp.getModel(), wActionCtrl.getid( ttaction ));
+      if( action != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turntable action: %s", wActionCtrl.getid( ttaction ));
+
+        if( wAction.getoid( ttaction) == NULL || StrOp.len(wAction.getoid( ttaction)) == 0 )
+          wActionCtrl.setlcid( ttaction, data->lockedId );
+        ActionOp.exec(action, ttaction);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( ttaction ), cmd );
+    }
+    ttaction = wTurntable.nextactionctrl( data->props, ttaction );
+  } /* end loop */
+
+  ttaction = NULL;
+
+}
+
 
 
 /**
@@ -1569,6 +1605,14 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     NodeOp.base.del(nodeA);
     return False;
   }
+
+  if( atoi(wTurntable.getcmd( nodeA )) > 0 ) {
+    __checkAction( (iOTT)inst, "goto");
+  }
+  else {
+    __checkAction( (iOTT)inst, wTurntable.getcmd( nodeA ));
+  }
+
 
   if( StrOp.equals( wTurntable.getcmd(nodeA), wSwitch.unlock ) ) {
     TTOp.unLock( inst, data->lockedId );

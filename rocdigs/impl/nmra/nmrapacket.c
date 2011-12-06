@@ -229,7 +229,7 @@ int accDecoderPkt2(byte* retVal, int addr, int active, int outputChannel) {
  int accDecoderPktOpsMode2(byte* retVal, int addr, int active, int outputChannel, int cvNum, int data) {
 
   if (addr < 1 || addr>511) {
-    printf("invalid address %d\n"+addr);
+    printf("invalid address %d\n",addr);
     return 0;
   }
   if (active < 0 || active>1) {
@@ -428,11 +428,11 @@ int opsCvWriteByte(byte* retVal, int address, Boolean longAddr, int cvNum, int d
   }
 
   if (data<0 || data>255) {
-    printf("invalid data "+data);
+    printf("invalid data %d",data);
     return 0;
   }
   if (cvNum<1 || cvNum>512) {
-    printf("invalid CV number "+cvNum);
+    printf("invalid CV number %d", cvNum);
     return 0;
   }
 
