@@ -250,6 +250,7 @@ static Boolean __checkPointMatch( const char* point_a, const char* point_b ) {
       int n = 0;
       for( n = 0; n < 8; n++ ) {
         if( StrOp.equals( Right_points[n], point_b ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] and [%s] do match", point_a, point_b );
           return True;
         }
       }
@@ -258,13 +259,14 @@ static Boolean __checkPointMatch( const char* point_a, const char* point_b ) {
       int n = 0;
       for( n = 0; n < 8; n++ ) {
         if( StrOp.equals( Left_points[n], point_b ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] and [%s] do match", point_a, point_b );
           return True;
         }
       }
     }
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] and [%s] do not match", point_a, point_b );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no match for [%s] and [%s]", point_a, point_b );
   return False;
 }
 
@@ -281,11 +283,24 @@ static iONode __findRouteFromPoint( iOModPlanData data, iONode model, iOList rou
     if( StrOp.equals( modid, wRoute.getmodid(route) ) && StrOp.startsWith( blockFrom, point ) ) {
       /* match; */
 
-      if( StrOp.len(blockFrom) == 8 && StrOp.len(to) == 8 ) {
+      if( StrOp.len(blockFrom) == 9 && StrOp.len(to) == 9 ) {
+        if( !__checkPointMatch( to, blockFrom ) ) {
+          continue;
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "quad track connection from=[%s] to=[%s]", to, blockFrom );
+      }
+      else if( StrOp.len(blockFrom) == 8 && StrOp.len(to) == 8 ) {
         if( !__checkPointMatch( to, blockFrom ) ) {
           continue;
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "double track connection from=[%s] to=[%s]", to, blockFrom );
+      }
+      else if( StrOp.len(blockFrom) != StrOp.len(to) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "incompatible track connection from=[%s] to=[%s]", to, blockFrom );
+        continue;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "single track connection from=[%s] to=[%s]", to, blockFrom );
       }
 
       *routecnt += 1;
