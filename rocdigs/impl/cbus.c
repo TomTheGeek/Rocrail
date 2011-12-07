@@ -1947,6 +1947,11 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->loaderMux= MutexOp.inst( NULL, True );
   data->stress   = wDigInt.isstress(ini);
 
+  if( data->purgetime < 1 || data->purgetime > 19 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "purgetime out of range: %d, reset to 10", data->purgetime );
+    data->purgetime = 10;
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MERG CBUS %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.merg.org.uk" );
