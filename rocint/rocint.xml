@@ -235,6 +235,11 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="locid" vt="const char*" remark="Loc id"/>
     </fun>
+    <fun name="exitBlock" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="locid" vt="const char*" remark="Loco id"/>
+      <param name="unexpected" vt="Boolean" remark="Train did not stop within the IN section."/>
+    </fun>
     <fun name="green" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="distant" vt="Boolean" remark="distant signal"/>

@@ -1285,6 +1285,14 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
 }
 
 
+static void _exitBlock( iIBlockBase inst, const char* id, Boolean unexpected ) {
+  iOBlockData data = Data(inst);
+  if( id != NULL ) {
+    __checkAction((iOBlock)inst, "exit");
+  }
+}
+
+
 static void _inBlock( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
   wBlock.setlocid( data->props, id );

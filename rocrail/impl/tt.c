@@ -2626,6 +2626,10 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
   }
 }
 
+static void _exitBlock( iIBlockBase inst, const char* id, Boolean unexpected ) {
+}
+
+
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOTTData data = Data(inst);
   return wBlock.min;

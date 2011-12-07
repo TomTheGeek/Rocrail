@@ -90,6 +90,9 @@ void eventExit( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Boo
       data->state = LC_IDLE;
       data->loc->setMode(data->loc, wLoc.mode_idle);
       data->run = False;
+      if( data->curBlock != NULL ) {
+        data->curBlock->exitBlock(data->curBlock, data->loc->getId( data->loc ), True);
+      }
 
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                      "Loc set back in manual mode for \"%s\" in \"%s\"! (correct position of loc)",

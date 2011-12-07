@@ -1249,6 +1249,9 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     block->enterBlock( block, id );
 }
 
+static void _exitBlock( iIBlockBase inst, const char* id, Boolean unexpected ) {
+}
+
 static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit, Boolean reverse, Boolean onstop ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getVelocity");

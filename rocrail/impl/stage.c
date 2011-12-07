@@ -181,6 +181,9 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
   }
 }
 
+static void _exitBlock( iIBlockBase inst, const char* id, Boolean unexpected ) {
+}
+
 
 static Boolean __isEndSection(iIBlockBase inst, iONode section ) {
   iOStageData data = Data(inst);
