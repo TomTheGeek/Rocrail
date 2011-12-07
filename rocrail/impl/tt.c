@@ -503,7 +503,7 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = TTDEC_TURN;
-    cmdstr = wSwitch.turnout;
+    cmdstr = wSwitch.straight;
     data->pending = True;
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
