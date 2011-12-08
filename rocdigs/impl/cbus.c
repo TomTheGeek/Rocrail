@@ -355,6 +355,16 @@ static void __fx2fn(iOSlot slot, int fx) {
 }
 
 
+static int __normalizeSteps(int insteps ) {
+  /* SPEEDSTEPS: vaild: 14, 28, 128 */
+  if( insteps < 20 )
+    return 14;
+  if( insteps > 100 )
+    return 127;
+  return 28;
+}
+
+
 static iOSlot __getSlot(iOCBUS cbus, iONode node) {
   iOCBUSData data = Data(cbus);
   int    addr  = wLoc.getaddr(node);
@@ -370,7 +380,7 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
   slot = allocMem( sizeof( struct slot) );
   slot->addr    = addr;
   slot->id      = StrOp.dup(wLoc.getid(node));
-  slot->steps   = wLoc.getspcnt(node);
+  slot->steps   = __normalizeSteps( wLoc.getspcnt(node) );
   slot->lights  = True;
   slot->dir     = wLoc.isdir(node);
   slot->session = 0;
@@ -610,7 +620,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 
       cmd[0] = OPC_DFLG;
       cmd[1] = slot->session;
-      if( slot->steps == 128 )
+      if( slot->steps >= 127 )
         cmd[2] = TMOD_SPD_128;
       else if( slot->steps == 14 )
         cmd[2] = TMOD_SPD_14;
