@@ -1557,7 +1557,7 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fast clock sync %02d:%02d wday=%d divider=%d",
-      mins, hours, wday, div );
+      hours, mins, wday, div );
   ThreadOp.post(data->writer, (obj)frame);
 
 
@@ -1569,6 +1569,8 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName(node) );
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
   }
@@ -1890,26 +1892,27 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     /* Fast Clock */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clock: %s", wClock.getcmd( node ) );
 
     if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze clock" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "freeze clock" );
       wClock.setcmd( node, wClock.set );
       wClock.setdivider( node, 0 );
     }
     else if(  StrOp.equals( wClock.getcmd( node ), wClock.go ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "go clock" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "go clock" );
       wClock.setcmd( node, wClock.set );
     }
     else if(  StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sync clock" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sync clock" );
       if( !data->fcsync ) {
         wClock.setcmd( node, wClock.set );
         data->fcsync = True;
       }
     }
 
-    if(  StrOp.equals( wClock.getcmd( node ), wClock.set ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set clock" );
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.set ) || StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set clock" );
       __setFastClock(cbus, node);
     }
   }
