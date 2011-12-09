@@ -1556,7 +1556,7 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   cmd[3] = wday;
   cmd[4] = div;
   cmd[5] = mday;
-  cmd[6] = mon;
+  cmd[6] = mon+1;
 
   makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
 
