@@ -320,6 +320,7 @@ const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
   if( manu == MANU_ROCRAIL ) {
     switch( mtype ) {
     case MTYP_CANGC2:    return "ROCRAIL::CAN-GC2";
+    case MTYP_CANGC7:    return "ROCRAIL::CAN-GC7";
     }
   }
   else  {
