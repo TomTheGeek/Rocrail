@@ -580,7 +580,8 @@ static void __del(void* inst) {
     ThreadOp.sleep( 100 );
     retry++;
   };
-  data->runner->base.del(data->runner);
+  if( data->runner != NULL )
+    ThreadOp.base.del(data->runner);
   freeMem( data );
   freeMem( inst );
   instCnt--;
@@ -1486,15 +1487,17 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
 
 static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewait ) {
   iOLocData data = Data(inst);
+  if( data->runner != NULL ) {
 
-  iOMsg msg = MsgOp.inst( emitter, evt );
-  iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
-  const char* blockid = block->base.id( block );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
-  MsgOp.setTimer( msg, timer );
-  MsgOp.setUsrData( msg, NULL, forcewait ? 1000:0 );
-  ThreadOp.post( data->runner, (obj)msg );
-  __funEvent(inst, blockid, evt, timer);
+    iOMsg msg = MsgOp.inst( emitter, evt );
+    iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
+    const char* blockid = block->base.id( block );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
+    MsgOp.setTimer( msg, timer );
+    MsgOp.setUsrData( msg, NULL, forcewait ? 1000:0 );
+    ThreadOp.post( data->runner, (obj)msg );
+    __funEvent(inst, blockid, evt, timer);
+  }
 }
 
 
@@ -2457,18 +2460,19 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
 
   Boolean swap = wLoc.isplacing( cmd );
 
-  iOMsg msg = MsgOp.inst( NULL, swap_event );
-  MsgOp.setTimer( msg, wLoc.getswaptimer(data->props) );
-  MsgOp.setEvent( msg, swap_event );
-  if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
-    swap = !wLoc.isplacing( data->props );
-  if( cmd == NULL )
-    MsgOp.setUsrData(msg, NULL, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
-  else
-    MsgOp.setUsrData(msg, (iONode)NodeOp.base.clone(cmd), (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+  if( data->runner != NULL ) {
+    iOMsg msg = MsgOp.inst( NULL, swap_event );
+    MsgOp.setTimer( msg, wLoc.getswaptimer(data->props) );
+    MsgOp.setEvent( msg, swap_event );
+    if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
+      swap = !wLoc.isplacing( data->props );
+    if( cmd == NULL )
+      MsgOp.setUsrData(msg, NULL, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
+    else
+      MsgOp.setUsrData(msg, (iONode)NodeOp.base.clone(cmd), (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
 
-  ThreadOp.post( data->runner, (obj)msg );
-
+    ThreadOp.post( data->runner, (obj)msg );
+  }
 }
 
 
