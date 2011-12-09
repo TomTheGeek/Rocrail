@@ -1537,6 +1537,8 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   int hours = 10;
   int mins  = 30;
   int wday  = 0;
+  int mday  = 0;
+  int mon   = 0;
   int div   = wClock.getdivider(node);
 
   long l_time = wClock.gettime(node);
@@ -1545,14 +1547,16 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   mins  = lTime->tm_min;
   hours = lTime->tm_hour;
   wday  = lTime->tm_wday;
+  mday  = lTime->tm_mday;
+  mon   = lTime->tm_mon;
 
   cmd[0] = OPC_FCLK;
   cmd[1] = mins;
   cmd[2] = hours;
   cmd[3] = wday;
   cmd[4] = div;
-  cmd[5] = 0;
-  cmd[6] = 0;
+  cmd[5] = mday;
+  cmd[6] = mon;
 
   makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
 
