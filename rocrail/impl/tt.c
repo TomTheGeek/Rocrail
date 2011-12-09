@@ -586,8 +586,8 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set direction address=%d, port=%d, gate=%s",
           addr, TTDEC_DIR, ttdir ? TTDEC_DIR_CCW:TTDEC_DIR_CW );
-      int addrCmd = (addr + TTDEC_STEP) / 4 + 1;
-      int portCmd = (addr + TTDEC_STEP) % 4 + 1;
+      int addrCmd = (addr + TTDEC_DIR) / 4 + 1;
+      int portCmd = (addr + TTDEC_DIR) % 4 + 1;
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
       wSwitch.setcmd  ( cmd, ttdir ? TTDEC_DIR_CCW:TTDEC_DIR_CW );
