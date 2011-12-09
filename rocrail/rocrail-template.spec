@@ -17,7 +17,12 @@ RocRail is a 2 tier application written for Linux and Windows in C/C++ based on 
 
 %build
 cd Rocrail
-make fromtar DEBUG=
+# make fromtar DEBUG=
+## make fromtar DEBUG=
+# if you have more than 1 cpu kernel than use -j<num> to speedup compiling.
+# My best prcatice is <num> = 1 + #kernels
+MY_MAKEOPTS=`cat /proc/cpuinfo | grep processor | tail -1 | awk '{if(0 != $NF) {print " -j"2+$NF}}'`
+make $MY_MAKEOPTS fromtar DEBUG=
 cd ..
 
 %install
@@ -45,7 +50,14 @@ install -g users -m 666 Rocrail/rocrail/package/rocrail.xpm $RPM_BUILD_ROOT/opt/
 install -g users -m 666 Rocrail/rocrail/package/plan.xml $RPM_BUILD_ROOT/opt/rocrail/default
 
 install -g users -m 666 Rocrail/stylesheets/*.* $RPM_BUILD_ROOT/opt/rocrail/stylesheets
-install -d -g users -m 666 Rocrail/rocview/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
+
+### install does not handle directory (sub-)trees, so we have to do this manually
+# install -d -g users -m 666 Rocrail/rocview/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
+cp -pr Rocrail/rocview/svg $RPM_BUILD_ROOT/opt/rocrail/
+chown -R :users  $RPM_BUILD_ROOT/opt/rocrail/svg
+find $RPM_BUILD_ROOT/opt/rocrail/svg -type d -exec chmod 755 {} \;
+find $RPM_BUILD_ROOT/opt/rocrail/svg -type f -exec chmod 666 {} \;
+
 install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/symbols
 
 %clean
