@@ -545,9 +545,9 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
 
       port = TTDEC_POS + ((tracknr-1)/2);
       if( (tracknr-1) % 2 == 0 )
-        cmdstr = wSwitch.straight;
-      else
         cmdstr = wSwitch.turnout;
+      else
+        cmdstr = wSwitch.straight;
 
       /* DA check whether 180 degrees turn is required */
       if( (data->tablepos-orig_tracknr) == 24)
