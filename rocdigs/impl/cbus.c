@@ -1553,7 +1553,7 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   cmd[0] = OPC_FCLK;
   cmd[1] = mins;
   cmd[2] = hours;
-  cmd[3] = wday;
+  cmd[3] = wday+1;
   cmd[4] = div;
   cmd[5] = mday;
   cmd[6] = mon+1;
