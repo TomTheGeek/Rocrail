@@ -57,6 +57,7 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 {
   m_bGC2GetAll = false;
   m_bGC2SetAll = false;
+  m_bGC7GetAll = false;
   init(event);
 }
 
@@ -253,6 +254,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         wCBusNodeVar.setval(cbusnodevar, val);
         initVarList(node);
         initGC2Var(nr, val);
+        initGC7Var(nr, val);
         return cbusnodevar;
       }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
@@ -263,6 +265,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     wCBusNodeVar.setval( cbusnodevar, val );
     initVarList(node);
     initGC2Var(nr, val);
+    initGC7Var(nr, val);
     return cbusnodevar;
   }
   return NULL;
@@ -751,6 +754,15 @@ void CBusNodeDlg::event( iONode event ) {
         eventGetAll();
       }
     }
+    if( m_bGC7GetAll ) {
+      if( cv < 2 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGC7GetAll = false;
+        eventGetAll();
+      }
+    }
   }
 }
 
@@ -1220,4 +1232,33 @@ void CBusNodeDlg::onSoD( wxCommandEvent& event ) {
 
 
 
+void CBusNodeDlg::onGC7ShowDate( wxCommandEvent& event ) {
+  int nv1 = m_GC7ShowDate->IsChecked() ? 0x10:0x00;
+  nv1 += m_GC7IntensitySlider->GetValue();
+  varSet(1, nv1, false);
+}
+void CBusNodeDlg::onGC7Intensity( wxScrollEvent& event ) {
+  int nv1 = m_GC7ShowDate->IsChecked() ? 0x10:0x00;
+  nv1 += m_GC7IntensitySlider->GetValue();
+  varSet(1, nv1, false);
+}
+void CBusNodeDlg::onGC7GetAll( wxCommandEvent& event ) {
+  m_bGC7GetAll = true;
+  varGet(1);
+}
+void CBusNodeDlg::onGC7SetCanID( wxCommandEvent& event ) {
+  varSet(2, m_GC7CanID->GetValue(), false);
+}
 
+void CBusNodeDlg::initGC7Var( int nr, int val ) {
+
+  if( nr == 1 ) {
+    // node var1
+    m_GC7ShowDate->SetValue( (val&0x10) ? true:false );
+    m_GC7IntensitySlider->SetValue( val&0x0F);
+  }
+  else if( nr == 2 ) {
+    // node var1
+    m_GC7CanID->SetValue( val);
+  }
+}

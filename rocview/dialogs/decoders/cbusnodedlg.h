@@ -69,6 +69,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void setLearn();
   void setUnlearn();
   void eventSet( int nn, int addr, int idx, int val, bool update );
+  void initGC7Var(int nr, int val);
 
   wxTimer* m_Timer;
   iOQueue m_Queue;
@@ -77,6 +78,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_SetPage;
   bool m_bGC2GetAll;
   bool m_bGC2SetAll;
+  bool m_bGC7GetAll;
 
 protected:
 	// Handlers for cbusnodedlggen events.
@@ -112,6 +114,10 @@ protected:
   void onVarValueText( wxCommandEvent& event );
   void onEVText( wxCommandEvent& event );
   void onQuery( wxCommandEvent& event );
+  void onGC7ShowDate( wxCommandEvent& event );
+  void onGC7Intensity( wxScrollEvent& event );
+  void onGC7GetAll( wxCommandEvent& event );
+  void onGC7SetCanID( wxCommandEvent& event );
 
 
 public:
