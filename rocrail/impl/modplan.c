@@ -171,9 +171,9 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
   wRoute.setsga( newRoute, wRoute.getsga( fromRoute ) );
   wRoute.setbkaside( newRoute, wRoute.isbkaside( fromRoute ) );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s](signal %d) to[%s](signal %d)",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s](signal %d) to[%s](signal %d) -> %s",
       wRoute.getbka( newRoute ), wRoute.getsga( newRoute ),
-      wRoute.getbkb( newRoute ), wRoute.getsgb( newRoute ));
+      wRoute.getbkb( newRoute ), wRoute.getsgb( newRoute ), modid);
 
   routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
   wRoute.setid( newRoute, routeID );
@@ -311,15 +311,22 @@ static iONode __findRouteFromPoint( iOModPlanData data, iONode model, iOList rou
         /* assume end of route is found */
         const char* newRouteID = __createRoute(data, model, routeList, route, modid );
         int listSize = ListOp.size(routeList);
+        int n = 0;
         iOList clonedRouteList = __cloneRouteList(routeList);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "add %d aliases for route [%s] to routeIdMap", ListOp.size(clonedRouteList), newRouteID );
+        for( n=0; n < listSize; n++ ) {
+          iONode segment = (iONode)ListOp.get( clonedRouteList, n );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  alias %d=%s", n, wRoute.getid(segment));
+        }
         MapOp.put(data->routeIdMap, newRouteID, (obj)clonedRouteList);
         /* remove last segment */
         ListOp.remove(routeList, listSize-1);
+        data->endmodid = modid;
       }
       else {
         iOList clonedRouteList = __cloneRouteList(routeList);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no end point in route[%d] %s", *routecnt, wRoute.getid(route));
         ListOp.add( clonedRouteList, (obj)route );
         /* find recursive the next match; clone routeList? */
         __findConnection( data, model, clonedRouteList, wRoute.getbkb( route ), wRoute.getmodid( route ), routecnt);
@@ -362,8 +369,8 @@ static iONode __findConnection( iOModPlanData data, iONode model, iOList routeLi
             /* look up a route from modToid which starts with "point-*" */
             /* TODO: regard second character of the compass point */
             routeTo = __findRouteFromPoint( data, model, routeList, modToid, wModuleConnection.getside(modTocon), to, routecnt );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connection found: from[%s](%s) - to[%s](%s)",
-                wRoute.getbka(routeTo), modid, wRoute.getbkb(routeTo), modToid );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connection found: from[%s](%s) - to[%s](%s) tomodid=%s",
+                wRoute.getbka(routeTo), modid, wRoute.getbkb(routeTo), modToid, NodeOp.getStr(routeTo, "tomodid", "?") );
             return routeTo;
           }
         }
@@ -409,7 +416,7 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
         StrOp.fmtb( key, "%s-%s", modid, to );
         list = (iOList)MapOp.get(data->fbeventMap, key);
         if( list == NULL ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating list for [%s]", key );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating first part list for [%s]", key );
           list = ListOp.inst();
           MapOp.put(data->fbeventMap, key, (obj)list);
         }
@@ -417,11 +424,12 @@ static void __resolveRoutes4Connections( iOModPlanData data, iONode model ) {
             "Adding [%s] to fbeventMapKey [%s]", wRoute.getbkb(toRoute), key );
         ListOp.add(list, (obj)wRoute.getbkb(toRoute));
 
-        /* TODO: event list for last part of routes */
-        StrOp.fmtb( key, "%s-%s", NodeOp.getStr(toRoute, "tomodid", "?"), wRoute.getbka(toRoute) );
+        /* event list for last part of routes */
+        /*StrOp.fmtb( key, "%s-%s", NodeOp.getStr(toRoute, "tomodid", "?"), wRoute.getbka(toRoute) );*/
+        StrOp.fmtb( key, "%s-%s", data->endmodid, wRoute.getbka(toRoute) );
         list = (iOList)MapOp.get(data->fbeventMap, key);
         if( list == NULL ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating list for [%s]", key );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating last part list for [%s] (endmodid=%s)", key, data->endmodid );
           list = ListOp.inst();
           MapOp.put(data->fbeventMap, key, (obj)list);
         }
@@ -521,6 +529,9 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
             return fbevent;
           }
         }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no list found for [%s]", key );
       }
       fbevent = wBlock.nextfbevent(block, fbevent);
     };

@@ -1802,6 +1802,7 @@
       <var name="blockMap" vt="iOMap"/>
       <var name="routeIdMap" vt="iOMap"/>
       <var name="mod2routeIdMap" vt="iOMap"/>
+      <var name="endmodid" vt="const char*"/>
     </data>
   </object>
 
