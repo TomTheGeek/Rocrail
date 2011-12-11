@@ -535,7 +535,7 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
       {
         iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
         wTurntable.setid( event, wTurntable.getid( data->props ) );
-        wTurntable.setbridgepos( event, tracknr );
+        wTurntable.setbridgepos( event, data->gotopos );
         if( wTurntable.getiid( data->props ) != NULL )
           wTurntable.setiid( event, wTurntable.getiid( data->props ) );
         AppOp.broadcastEvent( event );
