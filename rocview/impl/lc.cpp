@@ -733,7 +733,7 @@ void LC::CreateControls() {
   m_SliderSizer = new wxBoxSizer(wxHORIZONTAL);
   m_MainSizer->Add(m_SliderSizer, 0, wxGROW|wxALL, 0);
 
-  m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxSize(-1, 80), wxSL_VERTICAL|wxSL_INVERSE );
+  m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxSize(-1, -1), wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_INVERSE );
   m_SliderSizer->Add(m_Vslider, 1, wxGROW|wxALL, 4);
 
   m_Stop = new wxButton( m_Parent, -1, _("Stop"), wxDefaultPosition, wxSize(130, -1), 0 );
