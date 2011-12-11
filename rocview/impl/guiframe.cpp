@@ -1254,6 +1254,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       }
     }
   }
+  m_ActiveLocs->AutoSizeColumns(false);
   //m_ActiveLocs->AutoSize();
   //m_ActiveLocs->FitInside();
   //m_ActiveLocsPanel->GetSizer()->Layout();
