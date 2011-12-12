@@ -1311,7 +1311,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bCheckedDonKey     = false;
   m_WorkSpace          = NULL;
   m_LocoCategory       = LOCO_VIEW_ALL;
-  m_LocoSortByAddress  = false;
+  m_LocoSortByAddress  = wGui.islocosortbyaddress(m_Ini)?true:false;
   m_FakeLeftClick      = false;
 }
 
@@ -2789,6 +2789,7 @@ void RocGuiFrame::OnPlanBook( wxCommandEvent& event ) {
 void RocGuiFrame::OnLocoSortByAddr( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoSortByAddr);
   m_LocoSortByAddress = mi->IsChecked();
+  wGui.setlocosortbyaddress(m_Ini, m_LocoSortByAddress?True:False );
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }

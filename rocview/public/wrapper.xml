@@ -102,6 +102,7 @@
     <var name="showonlystartschedules" vt="bool" defval="false"/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>
+    <var name="locosortbyaddress" vt="bool" defval="false"/>
     <workspaces cardinality="1" wrappername="WorkSpaces">
       <workspace cardinality="n" wrappername="WorkSpace">
         <var name="title" vt="string" defval="New"/>
