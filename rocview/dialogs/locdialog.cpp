@@ -1223,7 +1223,7 @@ void LocDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer6);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer6->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
