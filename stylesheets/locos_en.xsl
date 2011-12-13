@@ -51,7 +51,7 @@
               <xsl:text>-</xsl:text>
           </xsl:when>
 		  <xsl:otherwise>
-	      <img><xsl:attribute name="src"><xsl:value-of select="@image" /></xsl:attribute></img>
+        <img><xsl:attribute name="src"><xsl:value-of select="concat(../../@guiimagepath, '/', @image)" /></xsl:attribute></img>
        </xsl:otherwise>
        </xsl:choose>
 	   </th>

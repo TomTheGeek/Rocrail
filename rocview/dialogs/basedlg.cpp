@@ -19,6 +19,7 @@ void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {
   // get the model:
   iONode model = wxGetApp().getModel();
   // serialize the model into a string:
+  NodeOp.setStr(model, "guiimagepath", wGui.getimagepath(wxGetApp().getIni()));
   char* xml = model->base.toString( model );
   
   // create a path and filename:
