@@ -1233,21 +1233,23 @@ void CBusNodeDlg::onSoD( wxCommandEvent& event ) {
 
 
 
+void CBusNodeDlg::onGC7ShowTemp( wxCommandEvent& event ) {
+  onGC7ShowDate(event);
+}
 void CBusNodeDlg::onGC7ShowDate( wxCommandEvent& event ) {
   int nv1 = m_GC7ShowDate->IsChecked() ? 0x10:0x00;
   nv1 += m_GC7PosDisplay->IsChecked() ? 0x20:0x00;
+  nv1 += m_GC7ShowTemp->IsChecked() ? 0x40:0x00;
   nv1 += m_GC7IntensitySlider->GetValue();
   varSet(1, nv1, false);
 }
 void CBusNodeDlg::onGC7PosDisplay( wxCommandEvent& event ) {
-  int nv1 = m_GC7ShowDate->IsChecked() ? 0x10:0x00;
-  nv1 += m_GC7PosDisplay->IsChecked() ? 0x20:0x00;
-  nv1 += m_GC7IntensitySlider->GetValue();
-  varSet(1, nv1, false);
+  onGC7ShowDate(event);
 }
 void CBusNodeDlg::onGC7Intensity( wxScrollEvent& event ) {
   int nv1 = m_GC7ShowDate->IsChecked() ? 0x10:0x00;
   nv1 += m_GC7PosDisplay->IsChecked() ? 0x20:0x00;
+  nv1 += m_GC7ShowTemp->IsChecked() ? 0x40:0x00;
   nv1 += m_GC7IntensitySlider->GetValue();
   varSet(1, nv1, false);
 }
@@ -1265,6 +1267,7 @@ void CBusNodeDlg::initGC7Var( int nr, int val ) {
     // node var1
     m_GC7ShowDate->SetValue( (val&0x10) ? true:false );
     m_GC7PosDisplay->SetValue( (val&0x20) ? true:false );
+    m_GC7ShowTemp->SetValue( (val&0x40) ? true:false );
     m_GC7IntensitySlider->SetValue( val&0x0F);
   }
   else if( nr == 2 ) {

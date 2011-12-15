@@ -115,6 +115,7 @@ protected:
   void onEVText( wxCommandEvent& event );
   void onQuery( wxCommandEvent& event );
   void onGC7ShowDate( wxCommandEvent& event );
+  void onGC7ShowTemp( wxCommandEvent& event );
   void onGC7PosDisplay( wxCommandEvent& event );
   void onGC7Intensity( wxScrollEvent& event );
   void onGC7GetAll( wxCommandEvent& event );
