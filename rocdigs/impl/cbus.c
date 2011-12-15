@@ -1540,7 +1540,7 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   int mday  = 0;
   int mon   = 0;
   int div   = wClock.getdivider(node);
-  char temp = 20; /* 20 degrees Celcius */
+  char temp = wClock.gettemp(node);
 
   long l_time = wClock.gettime(node);
   struct tm* lTime = localtime( &l_time );
@@ -1561,8 +1561,8 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
 
   makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fast clock sync %02d:%02d wday=%d divider=%d",
-      hours, mins, wday, div );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fast clock sync %02d:%02d wday=%d divider=%d date=%d-%d temp=%d",
+      hours, mins, wday, div, mday, mon+1, temp );
   ThreadOp.post(data->writer, (obj)frame);
 
 

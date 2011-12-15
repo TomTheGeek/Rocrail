@@ -350,6 +350,7 @@
       <var name="time" vt="long"/>
       <var name="timeset" vt="Boolean"/>
       <var name="clockrun" vt="Boolean"/>
+      <var name="temp" vt="int"/>
       <var name="txshortidsrun" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="programming" vt="Boolean"/>

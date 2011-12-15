@@ -44,6 +44,7 @@ class Clock : public wxPanel{
     wxDateTime* datetime;
     time_t ltime;
     int devider;
+    int m_Temp;
     bool deviderchanged;
     bool run;
     int type;

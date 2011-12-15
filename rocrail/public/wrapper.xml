@@ -201,6 +201,7 @@
       <var name="divider" vt="int" defval="1" range="1,2,4,5,10" remark="time devider: 1 = realtime"/>
       <var name="hour" vt="int" defval="24" range="0-24" remark="start hour; 24 not used"/>
       <var name="minute" vt="int" defval="60" range="0-60" remark="start minute; 60 not used"/>
+      <var name="temp" vt="int" defval="20" range="-127...127" remark="Model temperature."/>
       <const name="freeze" vt="string" val="freeze"/>
       <const name="go" vt="string" val="go"/>
       <const name="set" vt="string" val="set"/>

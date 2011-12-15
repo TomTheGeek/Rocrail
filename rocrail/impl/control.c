@@ -448,6 +448,7 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.setcmd( tick, wClock.go );
           wClock.setdivider( tick, data->devider );
           wClock.settime( tick, data->time );
+          wClock.settemp( tick, data->temp );
           AppOp.broadcastEvent( tick );
         }
         {
@@ -455,6 +456,7 @@ static void __callback( obj inst, iONode nodeA ) {
           wClock.setdivider( tick, data->devider );
           wClock.settime( tick, data->time );
           wClock.setcmd( tick, wClock.go );
+          wClock.settemp( tick, data->temp );
           /* inform all digints */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform all digints..." );
           ControlOp.cmd( (iOControl)inst, tick, NULL );
@@ -471,6 +473,8 @@ static void __callback( obj inst, iONode nodeA ) {
       }
       data->devider = wClock.getdivider(nodeA);
       data->time = wClock.gettime(nodeA);
+      if( NodeOp.findAttr(nodeA, "temp") != NULL )
+        data->temp = wClock.gettemp(nodeA);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting time with devider %d", data->devider );
       data->timeset = True;
       {
@@ -478,6 +482,7 @@ static void __callback( obj inst, iONode nodeA ) {
         wClock.setdivider( tick, data->devider );
         wClock.settime( tick, data->time );
         wClock.setcmd( tick, wClock.set );
+        wClock.settemp( tick, data->temp );
         /* inform all digints */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform all digints..." );
         ControlOp.cmd( (iOControl)inst, tick, NULL );
@@ -1087,6 +1092,7 @@ static void __clockticker( void* threadinst ) {
       iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
+      wClock.settemp( tick, data->temp );
       wClock.setcmd( tick, firstsync ? wClock.set:wClock.sync );
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */

@@ -59,6 +59,7 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   deviderchanged = false;
   m_Plate = _img_plate;
   m_Logo  = _img_logo;
+  m_Temp = 20;
 
 	clockpicwidth = m_Plate->GetWidth();
   SetSize(wxSize(clockpicwidth, clockpicwidth));
@@ -120,10 +121,10 @@ void Clock::OnPopup(wxMouseEvent& event) {
 
 void Clock::OnAdjustTime(wxCommandEvent& event) {
   ClockDialog* dlg = new ClockDialog( this );
-  dlg->setClock( devider, datetime->GetHour(), datetime->GetMinute() );
+  dlg->setClock( devider, datetime->GetHour(), datetime->GetMinute(), m_Temp );
   if( wxID_OK == dlg->ShowModal() ) {
     int hour, minute;
-    dlg->getClock( &devider, &hour, &minute );
+    dlg->getClock( &devider, &hour, &minute, &m_Temp );
 
     datetime->SetHour( hour );
     datetime->SetMinute( minute );
@@ -134,6 +135,7 @@ void Clock::OnAdjustTime(wxCommandEvent& event) {
     iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
     wClock.setdivider( tick, devider );
     wClock.settime( tick, ltime );
+    wClock.settemp( tick, m_Temp );
     wxGetApp().sendToRocrail( tick, false );
   }
 }
@@ -231,6 +233,7 @@ void Clock::SyncClock(iONode node) {
   else {
     SetDevider( wClock.getdivider(node) );
     SetTime( wClock.gettime(node) );
+    m_Temp = wClock.gettemp(node);
   }
 }
 
