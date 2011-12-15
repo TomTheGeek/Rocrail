@@ -119,6 +119,11 @@ protected:
   void onGC7Intensity( wxScrollEvent& event );
   void onGC7GetAll( wxCommandEvent& event );
   void onGC7SetCanID( wxCommandEvent& event );
+  void OnServoSelect( wxCommandEvent& event );
+  void OnServoLeftAngle( wxScrollEvent& event );
+  void OnServoRightAngle( wxScrollEvent& event );
+  void OnServoSpeed( wxScrollEvent& event );
+  void OnServoRelay( wxCommandEvent& event );
 
 
 public:

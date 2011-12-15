@@ -323,6 +323,7 @@ const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
   if( manu == MANU_ROCRAIL ) {
     switch( mtype ) {
     case MTYP_CANGC2:    return "ROCRAIL::CAN-GC2";
+    case MTYP_CANGC6:    return "ROCRAIL::CAN-GC6";
     case MTYP_CANGC7:    return "ROCRAIL::CAN-GC7";
     }
   }
@@ -1271,3 +1272,18 @@ void CBusNodeDlg::initGC7Var( int nr, int val ) {
     m_GC7CanID->SetValue( val);
   }
 }
+
+
+
+// GC6
+void CBusNodeDlg::OnServoSelect( wxCommandEvent& event ) {
+}
+void CBusNodeDlg::OnServoLeftAngle( wxScrollEvent& event ) {
+}
+void CBusNodeDlg::OnServoRightAngle( wxScrollEvent& event ) {
+}
+void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
+}
+void CBusNodeDlg::OnServoRelay( wxCommandEvent& event ) {
+}
+
