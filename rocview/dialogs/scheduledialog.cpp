@@ -101,6 +101,10 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, ScheduleDialog::OnModifyDestinationClick )
 
+    EVT_BUTTON( ID_DESTUP, ScheduleDialog::OnDestupClick )
+
+    EVT_BUTTON( ID_DESTDOWN, ScheduleDialog::OnDestdownClick )
+
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, ScheduleDialog::OnButtonScheduleEntryActionsClick )
 
     EVT_BUTTON( ID_SCHEDULE_ACTIONS, ScheduleDialog::OnScheduleActionsClick )
@@ -295,6 +299,8 @@ void ScheduleDialog::initLabels() {
   m_labDeparture->SetLabel( wxGetApp().getMsg( "departure" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
   m_labInDelay->SetLabel( wxGetApp().getMsg( "indelay" ) );
+  m_DestUp->SetLabel( wxGetApp().getMsg( "up" ) );
+  m_DestDown->SetLabel( wxGetApp().getMsg( "down" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -432,6 +438,8 @@ void ScheduleDialog::initIndex() {
   m_RemoveDestination->Enable( false );
   m_ModifyDestination->Enable( false );
   m_EntryActions->Enable( false );
+  m_DestUp->Enable( false );
+  m_DestDown->Enable( false );
 
 }
 
@@ -493,6 +501,8 @@ void ScheduleDialog::initSchedule() {
   m_RemoveDestination->Enable( false );
   m_ModifyDestination->Enable( false );
   m_EntryActions->Enable( false );
+  m_DestUp->Enable( false );
+  m_DestDown->Enable( false );
 
   initActions();
 
@@ -616,6 +626,8 @@ bool ScheduleDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_InDelay = NULL;
     m_RemoveDestination = NULL;
     m_ModifyDestination = NULL;
+    m_DestUp = NULL;
+    m_DestDown = NULL;
     m_EntryActions = NULL;
     m_ScheduleActions = NULL;
     m_ScheduleBox = NULL;
@@ -784,10 +796,10 @@ void ScheduleDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer43 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer42->Add(itemFlexGridSizer43, 0, wxGROW, 5);
     m_labHour = new wxStaticText( m_Destinations, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer43->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labMinute = new wxStaticText( m_Destinations, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer43->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer43->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -823,42 +835,48 @@ void ScheduleDialog::CreateControls()
     m_ModifyDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer54->Add(m_ModifyDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_DestUp = new wxButton( m_Destinations, ID_DESTUP, _("Up"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer54->Add(m_DestUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_DestDown = new wxButton( m_Destinations, ID_DESTDOWN, _("Down"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer54->Add(m_DestDown, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_EntryActions = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer54->Add(m_EntryActions, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_NoteBook->AddPage(m_Destinations, _("Destinations"));
 
     m_ScheduleActions = new wxPanel( m_NoteBook, ID_PANEL_SCHEDULES_ACTIONS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer59 = new wxBoxSizer(wxVERTICAL);
-    m_ScheduleActions->SetSizer(itemBoxSizer59);
+    wxBoxSizer* itemBoxSizer61 = new wxBoxSizer(wxVERTICAL);
+    m_ScheduleActions->SetSizer(itemBoxSizer61);
 
     m_ScheduleBox = new wxStaticBox(m_ScheduleActions, wxID_ANY, _("Schedule"));
-    wxStaticBoxSizer* itemStaticBoxSizer60 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
-    itemBoxSizer59->Add(itemStaticBoxSizer60, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer62 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
+    itemBoxSizer61->Add(itemStaticBoxSizer62, 0, wxGROW|wxALL, 5);
     wxArrayString m_ScheduleActionStrings;
     m_ScheduleAction = new wxComboBox( m_ScheduleActions, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_ScheduleActionStrings, wxCB_DROPDOWN );
-    itemStaticBoxSizer60->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer62->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_ScheduleActions, ID_SCHEDULE_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer59->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer61->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_NoteBook->AddPage(m_ScheduleActions, _("Actions"));
 
     itemBoxSizer2->Add(m_NoteBook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer63 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer65 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer63, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer65, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer63->AddButton(m_OK);
+    itemStdDialogButtonSizer65->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer63->AddButton(m_Cancel);
+    itemStdDialogButtonSizer65->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer63->AddButton(m_Apply);
+    itemStdDialogButtonSizer65->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer63->Realize();
+    itemStdDialogButtonSizer65->Realize();
 
 ////@end ScheduleDialog content construction
 }
@@ -1040,6 +1058,8 @@ void ScheduleDialog::OnCellLeftClick( wxGridEvent& event )
   m_RemoveDestination->Enable( true );
   m_ModifyDestination->Enable( true );
   m_EntryActions->Enable( true );
+  m_DestUp->Enable( true );
+  m_DestDown->Enable( true );
   initEntry( event.GetRow() );
 }
 
@@ -1252,5 +1272,80 @@ void ScheduleDialog::OnScheduleFromhourUpdated( wxSpinEvent& event )
 {
   if( m_FromHour->GetValue() > m_ToHour->GetValue() )
     m_ToHour->SetValue(m_FromHour->GetValue());
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DESTUP
+ */
+
+void ScheduleDialog::OnDestupClick( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int size = ListOp.size(m_EntryPropsList);
+  if( size == 0 )
+    return;
+
+  if( m_SelectedRow == -1 || m_SelectedRow == 0 )
+    return;
+
+  iONode entry = (iONode)ListOp.get( m_EntryPropsList, m_SelectedRow );
+  if( entry == NULL )
+    return;
+
+  ListOp.insert( m_EntryPropsList, m_SelectedRow-1, (obj)entry);
+  ListOp.remove( m_EntryPropsList, m_SelectedRow+1 );
+
+  iONode scentry = wSchedule.getscentry( m_Props );
+  while( scentry != NULL ) {
+    NodeOp.removeChild(m_Props, scentry);
+    scentry = wSchedule.getscentry( m_Props );
+  }
+
+  size = ListOp.size(m_EntryPropsList);
+  for( int i = 0; i < size; i++ ) {
+    NodeOp.addChild(m_Props, (iONode)ListOp.get(m_EntryPropsList, i));
+  }
+
+  initSchedule();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DESTDOWN
+ */
+
+void ScheduleDialog::OnDestdownClick( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int size = ListOp.size(m_EntryPropsList);
+
+  if( size == 0 )
+    return;
+
+  if( m_SelectedRow == -1 || m_SelectedRow == (size - 1) )
+    return;
+
+  iONode entry = (iONode)ListOp.get( m_EntryPropsList, m_SelectedRow );
+  if( entry == NULL )
+    return;
+
+  ListOp.insert( m_EntryPropsList, m_SelectedRow+2, (obj)entry);
+  ListOp.remove( m_EntryPropsList, m_SelectedRow );
+
+  iONode scentry = wSchedule.getscentry( m_Props );
+  while( scentry != NULL ) {
+    NodeOp.removeChild(m_Props, scentry);
+    scentry = wSchedule.getscentry( m_Props );
+  }
+
+  size = ListOp.size(m_EntryPropsList);
+  for( int i = 0; i < size; i++ ) {
+    NodeOp.addChild(m_Props, (iONode)ListOp.get(m_EntryPropsList, i));
+  }
+
+  initSchedule();
 }
 

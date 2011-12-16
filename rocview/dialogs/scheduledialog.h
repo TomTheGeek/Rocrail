@@ -77,6 +77,8 @@ class wxGrid;
 #define wxID_BUTTON_SCHEDULE_ADD_BLOCK 10274
 #define wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION 10297
 #define wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION 10330
+#define ID_DESTUP 10397
+#define ID_DESTDOWN 10398
 #define wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS 10343
 #define ID_PANEL_SCHEDULES_ACTIONS 10079
 #define ID_SCHEDULE_ACTIONS 10209
@@ -182,6 +184,12 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION
     void OnModifyDestinationClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DESTUP
+    void OnDestupClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DESTDOWN
+    void OnDestdownClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS
     void OnButtonScheduleEntryActionsClick( wxCommandEvent& event );
 
@@ -255,6 +263,8 @@ public:
     wxSpinCtrl* m_InDelay;
     wxButton* m_RemoveDestination;
     wxButton* m_ModifyDestination;
+    wxButton* m_DestUp;
+    wxButton* m_DestDown;
     wxButton* m_EntryActions;
     wxPanel* m_ScheduleActions;
     wxStaticBox* m_ScheduleBox;
