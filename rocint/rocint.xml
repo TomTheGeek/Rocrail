@@ -148,6 +148,9 @@
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*" remark="Querying loc"/>
     </fun>
+    <fun name="isTTBlock" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <fun name="isSuited" vt="int">
       <param name="inst" vt="this"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
