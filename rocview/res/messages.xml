@@ -17707,4 +17707,10 @@
     <de txt="Zurücksetzen von Geschwindigkeit und Funktionen"/>
     <fr txt="Remettre à zéro la vitesse et les fonctions"/>
   </Msg>
+  <Msg id="divider">
+    <en txt="divider"/>
+  </Msg>
+  <Msg id="temperature">
+    <en txt="temperature"/>
+  </Msg>
 </Messages>

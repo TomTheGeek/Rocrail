@@ -67,8 +67,12 @@ ClockDialog::ClockDialog()
 
 ClockDialog::ClockDialog( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-    Init();
-    Create(parent, -1, wxGetApp().getMsg("clock") );
+  Init();
+  Create(parent, -1, wxGetApp().getMsg("clock") );
+  m_labDevider->SetLabel( wxGetApp().getMsg( "divider" ) );
+  m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
+  m_labMinute->SetLabel( wxGetApp().getMsg( "minute" ) );
+  m_labTemp->SetLabel( wxGetApp().getMsg( "temperature" ) );
 }
 
 void ClockDialog::setClock( int divider, int hours, int minutes, int temp ) {
