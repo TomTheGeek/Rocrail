@@ -882,6 +882,10 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
   return False;
 }
 
+static Boolean _isTTBlock( iIBlockBase inst ) {
+  return False;
+}
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = NULL;

@@ -2913,6 +2913,10 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
   return False;
 }
 
+static Boolean _isTTBlock( iIBlockBase inst ) {
+  return True;
+}
+
 /*
  * Check for a free track block in case of an activated manager.
  */

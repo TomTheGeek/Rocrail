@@ -523,6 +523,9 @@ static Boolean _isLinked( iIBlockBase inst ) {
   return False;
 }
 
+static Boolean _isTTBlock( iIBlockBase inst ) {
+  return False;
+}
 
 /**  */
 static Boolean _isReady( iIBlockBase inst ) {

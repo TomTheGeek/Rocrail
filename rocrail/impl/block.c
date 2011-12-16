@@ -976,6 +976,15 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   }
 }
 
+static Boolean _isTTBlock( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  const char* ttId = wBlock.getttid( data->props );
+  if( ttId != NULL && StrOp.len( ttId ) > 0 )
+    return True;
+  return False;
+}
+
+
 /* cross checking block and train types */
 static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   iOBlockData data = Data(block);
