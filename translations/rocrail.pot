@@ -5573,3 +5573,15 @@ msgstr ""
 msgid "Reset speed and functions"
 msgstr ""
 
+#. 
+# id="divider"
+#, c-format
+msgid "divider"
+msgstr ""
+
+#. 
+# id="temperature"
+#, c-format
+msgid "temperature"
+msgstr ""
+
