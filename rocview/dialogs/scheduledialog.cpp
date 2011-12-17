@@ -139,6 +139,8 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
   m_Props = p_Props;
   m_bSave = save;
   m_StartBlock = startblock;
+  m_SelectedRow = -1;
+
   m_ShowAll->SetValue((startblock==NULL)?true:false);
   m_ShowAll->Enable((startblock!=NULL)?true:false);
   m_StartBlockID->SetValue((startblock==NULL)?_T(""):wxString(startblock,wxConvUTF8));
@@ -466,7 +468,6 @@ void ScheduleDialog::initSchedule() {
   // Entries
   m_Entries->DeleteRows(0,m_Entries->GetNumberRows());
   ListOp.clear( m_EntryPropsList );
-  m_SelectedRow = -1;
 
 
   iONode scentry = wSchedule.getscentry( m_Props );
@@ -498,12 +499,16 @@ void ScheduleDialog::initSchedule() {
   //m_Entries->UpdateDimensions();
   m_Destinations->GetSizer()->Layout();
 
-  m_RemoveDestination->Enable( false );
-  m_ModifyDestination->Enable( false );
-  m_EntryActions->Enable( false );
-  m_DestUp->Enable( false );
-  m_DestDown->Enable( false );
-
+  if( m_SelectedRow != -1 ) {
+    m_Entries->SelectRow(m_SelectedRow);
+  }
+  else {
+    m_RemoveDestination->Enable( false );
+    m_ModifyDestination->Enable( false );
+    m_EntryActions->Enable( false );
+    m_DestUp->Enable( false );
+    m_DestDown->Enable( false );
+  }
   initActions();
 
 }
@@ -988,6 +993,7 @@ void ScheduleDialog::OnButtonScheduleNewClick( wxCommandEvent& event )
 void ScheduleDialog::OnListboxScheduleListSelected( wxCommandEvent& event )
 {
   m_Props = (iONode)m_List->GetClientData(m_List->GetSelection() );
+  m_SelectedRow = -1;
   initSchedule();
 }
 
@@ -1296,6 +1302,7 @@ void ScheduleDialog::OnDestupClick( wxCommandEvent& event ) {
 
   ListOp.insert( m_EntryPropsList, m_SelectedRow-1, (obj)entry);
   ListOp.remove( m_EntryPropsList, m_SelectedRow+1 );
+  m_SelectedRow--;
 
   iONode scentry = wSchedule.getscentry( m_Props );
   while( scentry != NULL ) {
@@ -1334,6 +1341,7 @@ void ScheduleDialog::OnDestdownClick( wxCommandEvent& event ) {
 
   ListOp.insert( m_EntryPropsList, m_SelectedRow+2, (obj)entry);
   ListOp.remove( m_EntryPropsList, m_SelectedRow );
+  m_SelectedRow++;
 
   iONode scentry = wSchedule.getscentry( m_Props );
   while( scentry != NULL ) {
