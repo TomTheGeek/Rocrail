@@ -334,7 +334,7 @@ static void __RFIDReader( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, &c, 1 );
 
       if( !packetStart && (c == 0x02 || c >= 'A' && c <= 'H' ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet start detected: [0x%02X]", c );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet start detected: [0x%02X]", c & 0xFF );
         /* STX */
         packetStart = True;
         idx = 0;
@@ -343,7 +343,7 @@ static void __RFIDReader( void* threadinst ) {
       }
       else if(packetStart) {
         if( c == 0x03 || c == '>' ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet end detected: [0x%02X] idx=%d", c, idx );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet end detected: [0x%02X] idx=%d", c & 0xFF, idx );
           /* ETX */
           packetStart = False;
           rfid[idx] = c;
@@ -357,6 +357,9 @@ static void __RFIDReader( void* threadinst ) {
           idx++;
           TraceOp.dump( NULL, TRCLEVEL_BYTE, rfid, idx );
         }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown sequence: [0x%02X]", c & 0xFF );
       }
 
       bAvail = SerialOp.available(data->serial);
@@ -405,8 +408,8 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
 
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setLine( data->serial, 9600, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 
   if( data->serialOK ) {
