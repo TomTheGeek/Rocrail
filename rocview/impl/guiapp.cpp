@@ -214,7 +214,7 @@ int RocGui::OnExit() {
     wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() );
 
 #ifdef __APPLE__
-    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() - 37 ); // hard coded work around for increasing height.
+    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() - 32 ); // hard coded work around for increasing height.
 #endif
 
     if( wGui.getrrcon( m_Ini ) == NULL ) {
