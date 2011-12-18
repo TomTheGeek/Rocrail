@@ -1012,27 +1012,28 @@ void CBusNodeDlg::gc6SetServoEvent(int idx, int nn, int addr) {
 
 
 void CBusNodeDlg::gc6SetServoConf(int servo, int idx, int val) {
-  wxCheckBox* gc6Relay[] = {NULL,m_GC6Servo1Relay,m_GC6Servo1Relay,m_GC6Servo1Relay,m_GC6Servo1Relay};
-  wxCheckBox* gc6ExtFb[] = {NULL,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb};
-  wxSlider* gc6Left[] = {NULL,m_GC6Servo1LeftAng,m_GC6Servo2LeftAng,m_GC6Servo3LeftAng,m_GC6Servo4LeftAng};
-  wxSlider* gc6Right[] = {NULL,m_GC6Servo1RightAng,m_GC6Servo2RightAng,m_GC6Servo3RightAng,m_GC6Servo4RightAng};
-  wxSlider* gc6Speed[] = {NULL,m_GC6Servo1Speed,m_GC6Servo2Speed,m_GC6Servo3Speed,m_GC6Servo4Speed};
+  wxCheckBox* gc6Relay[] = {m_GC6Servo1Relay,m_GC6Servo2Relay,m_GC6Servo3Relay,m_GC6Servo4Relay};
+  wxCheckBox* gc6ExtFb[] = {m_GC6Servo1ExtFb,m_GC6Servo2ExtFb,m_GC6Servo3ExtFb,m_GC6Servo4ExtFb};
+
+  wxSlider* gc6Left [] = {m_GC6Servo1LeftAng ,m_GC6Servo2LeftAng ,m_GC6Servo3LeftAng ,m_GC6Servo4LeftAng};
+  wxSlider* gc6Right[] = {m_GC6Servo1RightAng,m_GC6Servo2RightAng,m_GC6Servo3RightAng,m_GC6Servo4RightAng};
+  wxSlider* gc6Speed[] = {m_GC6Servo1Speed   ,m_GC6Servo2Speed   ,m_GC6Servo3Speed   ,m_GC6Servo4Speed};
 
   if( idx % 4 == 0 ) {
-    m_Servo[servo-1].cfg = val;
+    m_Servo[servo].cfg = val;
     gc6Relay[servo]->SetValue(val&0x01?true:false);
     gc6ExtFb[servo]->SetValue(val&0x02?true:false);
   }
   if( idx % 4 == 1 ) {
-    m_Servo[servo-1].left = val;
+    m_Servo[servo].left = val;
     gc6Left[servo]->SetValue(val);
   }
   if( idx % 4 == 2 ) {
-    m_Servo[servo-1].right = val;
+    m_Servo[servo].right = val;
     gc6Right[servo]->SetValue(val);
   }
   if( idx % 4 == 3 ) {
-    m_Servo[servo-1].speed = val;
+    m_Servo[servo].speed = val;
     gc6Speed[servo]->SetValue(val);
   }
 
@@ -1102,9 +1103,9 @@ void CBusNodeDlg::initGC6Var( int nr, int val ) {
     m_CANID = val;
     m_GC6CanID->SetValue(val);
   }
-  else if( nr < 18 ) {
+  else if( nr < 19 ) {
     // servo config
-    gc6SetServoConf((nr-2)/4 + 1, nr-2, val);
+    gc6SetServoConf((nr-3)/4, nr-3, val);
   }
 }
 
