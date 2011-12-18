@@ -58,6 +58,8 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
   m_bGC2GetAll = false;
   m_bGC2SetAll = false;
   m_bGC7GetAll = false;
+  m_bGC6GetAll = false;
+  m_bGC6SetAll = false;
   init(event);
 }
 
@@ -254,6 +256,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         wCBusNodeVar.setval(cbusnodevar, val);
         initVarList(node);
         initGC2Var(nr, val);
+        initGC6Var(nr, val);
         initGC7Var(nr, val);
         return cbusnodevar;
       }
@@ -265,6 +268,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     wCBusNodeVar.setval( cbusnodevar, val );
     initVarList(node);
     initGC2Var(nr, val);
+    initGC6Var(nr, val);
     initGC7Var(nr, val);
     return cbusnodevar;
   }
@@ -288,6 +292,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
         wCBusNodeEvent.setevval(cbusnodeevt, evval);
         initEvtList(node);
         initGC2Event(evnr, evnn, evaddr);
+        initGC6Event(evnr, evnn, evaddr);
         TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
       }
@@ -301,6 +306,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
     wCBusNodeEvent.setevval( cbusnodeevt, evval );
     initEvtList(node);
     initGC2Event(evnr, evnn, evaddr);
+    initGC6Event(evnr, evnn, evaddr);
     return cbusnodeevt;
   }
   return NULL;
@@ -720,6 +726,7 @@ void CBusNodeDlg::setUnlearn() {
 
 
 void CBusNodeDlg::event( iONode event ) {
+  TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "event cmd=%d", wProgram.getcmd( event ));
   if( wProgram.getcmd( event ) == wProgram.nnreq  ) {
     init( event );
   }
@@ -744,6 +751,7 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d", cv, val);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -752,6 +760,15 @@ void CBusNodeDlg::event( iONode event ) {
       }
       else {
         m_bGC2GetAll = false;
+        eventGetAll();
+      }
+    }
+    if( m_bGC6GetAll ) {
+      if( cv < 18 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGC6GetAll = false;
         eventGetAll();
       }
     }
@@ -975,6 +992,53 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
 
 }
 
+void CBusNodeDlg::gc6SetServoEvent(int idx, int nn, int addr) {
+  wxSpinCtrl* gc6SwNN[] = {NULL,m_GC6Servo1SwNN, m_GC6Servo2SwNN, m_GC6Servo3SwNN, m_GC6Servo4SwNN};
+  wxSpinCtrl* gc6SwAddr[] = {NULL,m_GC6Servo1SwEvent, m_GC6Servo2SwEvent, m_GC6Servo3SwEvent, m_GC6Servo4SwEvent};
+  wxSpinCtrl* gc6FbAddr[] = {NULL,m_GC6Servo1FbEvent, m_GC6Servo2FbEvent, m_GC6Servo3FbEvent, m_GC6Servo4FbEvent};
+
+  if( idx < 4 ) {
+    m_Servo[idx].swnn = nn;
+    m_Servo[idx].swaddr = addr;
+    gc6SwNN[idx+1]->SetValue(nn);
+    gc6SwAddr[idx+1]->SetValue(addr);
+  }
+  else if( idx < 8 ) {
+    m_Servo[idx-4].fbaddr = addr;
+    gc6FbAddr[(idx-4)+1]->SetValue(addr);
+  }
+
+}
+
+
+void CBusNodeDlg::gc6SetServoConf(int servo, int idx, int val) {
+  wxCheckBox* gc6Relay[] = {NULL,m_GC6Servo1Relay,m_GC6Servo1Relay,m_GC6Servo1Relay,m_GC6Servo1Relay};
+  wxCheckBox* gc6ExtFb[] = {NULL,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb,m_GC6Servo1ExtFb};
+  wxSlider* gc6Left[] = {NULL,m_GC6Servo1LeftAng,m_GC6Servo2LeftAng,m_GC6Servo3LeftAng,m_GC6Servo4LeftAng};
+  wxSlider* gc6Right[] = {NULL,m_GC6Servo1RightAng,m_GC6Servo2RightAng,m_GC6Servo3RightAng,m_GC6Servo4RightAng};
+  wxSlider* gc6Speed[] = {NULL,m_GC6Servo1Speed,m_GC6Servo2Speed,m_GC6Servo3Speed,m_GC6Servo4Speed};
+
+  if( idx % 4 == 0 ) {
+    m_Servo[servo-1].cfg = val;
+    gc6Relay[servo]->SetValue(val&0x01?true:false);
+    gc6ExtFb[servo]->SetValue(val&0x02?true:false);
+  }
+  if( idx % 4 == 1 ) {
+    m_Servo[servo-1].left = val;
+    gc6Left[servo]->SetValue(val);
+  }
+  if( idx % 4 == 2 ) {
+    m_Servo[servo-1].right = val;
+    gc6Right[servo]->SetValue(val);
+  }
+  if( idx % 4 == 3 ) {
+    m_Servo[servo-1].speed = val;
+    gc6Speed[servo]->SetValue(val);
+  }
+
+
+}
+
 void CBusNodeDlg::initGC2Var( int nr, int val ) {
   wxButton* gc2Test[] = {NULL,m_GC2Test1,m_GC2Test2,m_GC2Test3,m_GC2Test4,m_GC2Test5
       ,m_GC2Test6,m_GC2Test7,m_GC2Test8,m_GC2Test9,m_GC2Test10
@@ -1026,6 +1090,24 @@ void CBusNodeDlg::initGC2Var( int nr, int val ) {
   }
 }
 
+void CBusNodeDlg::initGC6Var( int nr, int val ) {
+  if( nr == 1 ) {
+    // node var1
+    m_GC6SaveServoPos->SetValue( (val&0x01) ? true:false );
+    m_GC6ShortEvents->SetValue( (val&0x02) ? true:false );
+    m_SaveOutputState = (val&0x01) ? true:false;
+    m_ShortEvents = (val&0x02) ? true:false;
+  }
+  else if( nr == 2 ) {
+    m_CANID = val;
+    m_GC6CanID->SetValue(val);
+  }
+  else if( nr < 18 ) {
+    // servo config
+    gc6SetServoConf((nr-2)/4 + 1, nr-2, val);
+  }
+}
+
 void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
   if( idx < 16 ) {
     // port event
@@ -1036,6 +1118,18 @@ void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
   else if( idx == 16 ) {
     // SOD
     m_GC2SOD->SetValue( addr );
+    m_SOD = addr;
+  }
+}
+
+void CBusNodeDlg::initGC6Event( int idx, int nn, int addr ) {
+  if( idx < 8 ) {
+    // servo event
+    gc6SetServoEvent(idx, nn, addr);
+  }
+  else if( idx == 8 ) {
+    // SOD
+    m_GC6SOD->SetValue( addr );
     m_SOD = addr;
   }
 }
@@ -1288,5 +1382,13 @@ void CBusNodeDlg::OnServoRightAngle( wxScrollEvent& event ) {
 void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
 }
 void CBusNodeDlg::OnServoRelay( wxCommandEvent& event ) {
+}
+
+void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
+  m_bGC6GetAll = true;
+  varGet(1);
+}
+
+void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
 }
 

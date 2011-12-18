@@ -37,11 +37,22 @@ typedef struct {
   int nn;
 } Port;
 
+typedef struct {
+  int cfg;
+  int swaddr;
+  int swnn;
+  int fbaddr;
+  int left;
+  int right;
+  int speed;
+} Servo;
+
 
 /** Implementing cbusnodedlggen */
 class CBusNodeDlg : public cbusnodedlggen
 {
   Port m_Ports[16];
+  Servo m_Servo[4];
   int m_SOD;
   bool m_SaveOutputState;
   bool m_ShortEvents;
@@ -70,15 +81,24 @@ class CBusNodeDlg : public cbusnodedlggen
   void setUnlearn();
   void eventSet( int nn, int addr, int idx, int val, bool update );
   void initGC7Var(int nr, int val);
+  void initGC6Var(int nr, int val);
+  void initGC6Event(int idx, int nn, int addr);
+  void gc6GetServoConf(int servo, int idx, int* conf);
+  void gc6GetServoEvent(int servo, int idx, int* nn, int* addr);
+  void gc6SetServoConf(int servo, int idx, int conf);
+  void gc6SetServoEvent(int idx, int nn, int addr);
 
   wxTimer* m_Timer;
   iOQueue m_Queue;
   int m_GC2SetIndex;
+  int m_GC6SetIndex;
 
   int m_SetPage;
   bool m_bGC2GetAll;
   bool m_bGC2SetAll;
   bool m_bGC7GetAll;
+  bool m_bGC6GetAll;
+  bool m_bGC6SetAll;
 
 protected:
 	// Handlers for cbusnodedlggen events.
@@ -125,6 +145,8 @@ protected:
   void OnServoRightAngle( wxScrollEvent& event );
   void OnServoSpeed( wxScrollEvent& event );
   void OnServoRelay( wxCommandEvent& event );
+  void onGC6GetAll( wxCommandEvent& event );
+  void onGC6SetAll( wxCommandEvent& event );
 
 
 public:
