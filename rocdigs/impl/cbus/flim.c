@@ -204,7 +204,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       wProgram.setval2(node, ennn );
       wProgram.setval3(node, enaddr );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response", nn, ennr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] event %d response: %d-%d", nn, ennr, ennn, enaddr );
 
       data->nnsetup = nn;
       return node;

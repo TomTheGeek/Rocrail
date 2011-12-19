@@ -87,6 +87,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void gc6GetServoEvent(int servo, int idx, int* nn, int* addr);
   void gc6SetServoConf(int servo, int idx, int conf);
   void gc6SetServoEvent(int idx, int nn, int addr);
+  void gc6UpdateServoEvent(int servo);
 
   wxTimer* m_Timer;
   iOQueue m_Queue;

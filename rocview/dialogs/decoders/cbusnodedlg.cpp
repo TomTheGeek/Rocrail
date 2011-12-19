@@ -754,7 +754,8 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
-    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d", cv, val);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc2=%d gc6=%d gc7=%d",
+        cv, val, m_bGC2GetAll, m_bGC6GetAll, m_bGC7GetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -766,16 +767,18 @@ void CBusNodeDlg::event( iONode event ) {
         eventGetAll();
       }
     }
-    if( m_bGC6GetAll ) {
+    else if( m_bGC6GetAll ) {
       if( cv < 18 ) {
         varGet(cv+1);
       }
       else {
         m_bGC6GetAll = false;
+        m_GC6SetAll->Enable(true);
+        m_GC6GetAll->Enable(true);
         eventGetAll();
       }
     }
-    if( m_bGC7GetAll ) {
+    else if( m_bGC7GetAll ) {
       if( cv < 2 ) {
         varGet(cv+1);
       }
@@ -1006,10 +1009,22 @@ void CBusNodeDlg::gc6SetServoEvent(int idx, int nn, int addr) {
     gc6SwNN[idx+1]->SetValue(nn);
     gc6SwAddr[idx+1]->SetValue(addr);
   }
-  else if( idx < 8 ) {
+  else if( idx > 3 && idx < 8 ) {
     m_Servo[idx-4].fbaddr = addr;
     gc6FbAddr[(idx-4)+1]->SetValue(addr);
   }
+
+}
+
+
+void CBusNodeDlg::gc6UpdateServoEvent(int servo) {
+  wxSpinCtrl* gc6SwNN  [] = {m_GC6Servo1SwNN, m_GC6Servo2SwNN, m_GC6Servo3SwNN, m_GC6Servo4SwNN};
+  wxSpinCtrl* gc6SwAddr[] = {m_GC6Servo1SwEvent, m_GC6Servo2SwEvent, m_GC6Servo3SwEvent, m_GC6Servo4SwEvent};
+  wxSpinCtrl* gc6FbAddr[] = {m_GC6Servo1FbEvent, m_GC6Servo2FbEvent, m_GC6Servo3FbEvent, m_GC6Servo4FbEvent};
+
+  m_Servo[servo].swnn   = gc6SwNN  [servo]->GetValue();
+  m_Servo[servo].swaddr = gc6SwAddr[servo]->GetValue();
+  m_Servo[servo].fbaddr = gc6FbAddr[servo]->GetValue();
 
 }
 
@@ -1268,34 +1283,43 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
+  TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+      "timer gc2=%d[%d] gc6=%d[%d]", m_bGC2SetAll, m_GC2SetIndex, m_bGC6SetAll, m_GC6SetIndex);
   if( m_bGC6SetAll ) {
     if( m_GC6SetIndex == 0 ) {
       int nv1 = m_GC6SaveServoPos->IsChecked() ? 0x01:0x00;
       nv1 += m_GC6ShortEvents->IsChecked() ? 0x02:0x00;
-      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc6 nv1=0x%02X", nv1);
       varSet(1, nv1, false);
     }
     else if( m_GC6SetIndex == 1 ) {
       int canid = m_GC6CanID->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc6 nv2=0x%02X", canid);
       varSet(2, canid, false);
     }
     else if( m_GC6SetIndex == 2 ) {
-      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set learn mode");
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc6 learn mode");
       setLearn();
     }
-    else if( m_GC6SetIndex < 7 ) {
+    else if( m_GC6SetIndex > 2 && m_GC6SetIndex < 7 ) {
       // Swithch events
       int servo = m_GC6SetIndex - 3;
+      gc6UpdateServoEvent(servo);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+          "set gc6 switch event %d servo %d", m_GC6SetIndex-3, servo);
       eventSet( m_Servo[servo].swnn, m_Servo[servo].swaddr, m_GC6SetIndex-3, 0, false );
     }
-    else if( m_GC6SetIndex < 11 ) {
+    else if( m_GC6SetIndex > 6 && m_GC6SetIndex < 11 ) {
       // Sensor events
       int servo = m_GC6SetIndex - 7;
-      eventSet( 0, m_Servo[servo].fbaddr, m_GC6SetIndex-7, 0, false );
+      gc6UpdateServoEvent(servo);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc6 sensor event %d servo %d", m_GC6SetIndex-3, servo);
+      eventSet( 0, m_Servo[servo].fbaddr, m_GC6SetIndex-3, 0, false );
     }
     else if( m_GC6SetIndex == 11 ) {
       // SOD
-      eventSet( 0, m_GC6SOD->GetValue(), 11, 0, false );
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc6 SOD event %d", m_GC6SetIndex-3);
+      eventSet( 0, m_GC6SOD->GetValue(), 8, 0, false );
     }
     m_GC6SetIndex++;
     if( m_bGC6SetAll && m_GC6SetIndex < 11 ) {
@@ -1421,19 +1445,58 @@ void CBusNodeDlg::initGC7Var( int nr, int val ) {
 // GC6
 void CBusNodeDlg::OnServoSelect( wxCommandEvent& event ) {
 }
+
 void CBusNodeDlg::OnServoLeftAngle( wxScrollEvent& event ) {
+  wxSlider* slider[] = {m_GC6Servo1LeftAng, m_GC6Servo2LeftAng, m_GC6Servo3LeftAng, m_GC6Servo4LeftAng};
+  for( int i = 0; i < 4; i++ ) {
+    if( event.GetEventObject() == slider[i] ) {
+      varSet( 4 + i*4, slider[i]->GetValue(), false );
+      break;
+    }
+  }
 }
+
 void CBusNodeDlg::OnServoRightAngle( wxScrollEvent& event ) {
+  wxSlider* slider[] = {m_GC6Servo1RightAng, m_GC6Servo2RightAng, m_GC6Servo3RightAng, m_GC6Servo4RightAng};
+  for( int i = 0; i < 4; i++ ) {
+    if( event.GetEventObject() == slider[i] ) {
+      varSet( 5 + i*4, slider[i]->GetValue(), false );
+      break;
+    }
+  }
 }
+
 void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
+  wxSlider* slider[] = {m_GC6Servo1Speed, m_GC6Servo2Speed, m_GC6Servo3Speed, m_GC6Servo4Speed};
+  for( int i = 0; i < 4; i++ ) {
+    if( event.GetEventObject() == slider[i] ) {
+      varSet( 6 + i*4, slider[i]->GetValue(), false );
+      break;
+    }
+  }
 }
+
 void CBusNodeDlg::OnServoRelay( wxCommandEvent& event ) {
+  wxCheckBox* cbRelay[] = {m_GC6Servo1Relay, m_GC6Servo2Relay, m_GC6Servo3Relay, m_GC6Servo4Relay};
+  wxCheckBox* cbExtFb[] = {m_GC6Servo1ExtFb, m_GC6Servo2ExtFb, m_GC6Servo3ExtFb, m_GC6Servo4ExtFb};
+  for( int i = 0; i < 4; i++ ) {
+    if( event.GetEventObject() == cbRelay[i] || event.GetEventObject() == cbExtFb[i] ) {
+      int conf = cbRelay[i]->IsChecked() ? 0x01:0x00;
+      conf += cbExtFb[i]->IsChecked() ? 0x02:0x00;
+      varSet( 3 + i*4, conf, false );
+      break;
+    }
+  }
 }
+
 void CBusNodeDlg::OnExtSensors( wxCommandEvent& event ) {
+  OnServoRelay( event );
 }
 
 void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
   m_bGC6GetAll = true;
+  m_GC6SetAll->Enable(false);
+  m_GC6GetAll->Enable(false);
   varGet(1);
 }
 
