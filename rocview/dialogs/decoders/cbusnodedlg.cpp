@@ -60,6 +60,9 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
   m_bGC7GetAll = false;
   m_bGC6GetAll = false;
   m_bGC6SetAll = false;
+  m_bGC2SetAll = true;
+  m_GC2SetIndex = 0;
+  m_GC6SetIndex = 0;
   init(event);
 }
 
@@ -1265,53 +1268,95 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
-  if( m_GC2SetIndex == 0 ) {
-    int nv1 = m_GC2SaveOutput->IsChecked() ? 0x01:0x00;
-    nv1 += m_GC2ShortEvents->IsChecked() ? 0x02:0x00;
-    nv1 += (m_GC2PulseTime->GetSelection() << 2);
-    nv1 += m_GC2SODAll->IsChecked() ? 0x10:0x00;
-    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
-    varSet(1, nv1, false);
-  }
-  else if( m_GC2SetIndex == 1 ) {
-    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set learn mode");
-    setLearn();
-  }
-  else if( m_GC2SetIndex < 18 ) {
-    int conf = 0;
-    int nn = 0;
-    int addr = 0;
-    gc2GetPort(m_GC2SetIndex-1, &conf, &nn, &addr);
-    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
-        "nv%d=0x%02X nn=%d addr=%d", m_GC2SetIndex, conf, nn, addr);
-    varSet(m_GC2SetIndex, conf, false);
-    eventSet( nn, addr, m_GC2SetIndex-2, 0, false );
-  }
-  else if( m_GC2SetIndex == 18 ) {
-    eventSet( 0, m_GC2SOD->GetValue(), 16, 0, false );
-  }
-  else if( m_GC2SetIndex == 19 ) {
-    varGet(18);
-    varGet(19);
-  }
-  else if( m_GC2SetIndex == 20 ) {
-    varGet(19);
-    varGet(18);
-  }
-  else if( m_GC2SetIndex == 21 ) {
-    int canid = m_GC2CanID->GetValue();
-    varSet(20, canid, false);
-  }
-  m_GC2SetIndex++;
-  if( m_bGC2SetAll && m_GC2SetIndex < 21 ) {
-    m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+  if( m_bGC6SetAll ) {
+    if( m_GC6SetIndex == 0 ) {
+      int nv1 = m_GC6SaveServoPos->IsChecked() ? 0x01:0x00;
+      nv1 += m_GC6ShortEvents->IsChecked() ? 0x02:0x00;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
+      varSet(1, nv1, false);
+    }
+    else if( m_GC6SetIndex == 1 ) {
+      int canid = m_GC6CanID->GetValue();
+      varSet(2, canid, false);
+    }
+    else if( m_GC6SetIndex == 2 ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set learn mode");
+      setLearn();
+    }
+    else if( m_GC6SetIndex < 7 ) {
+      // Swithch events
+      int servo = m_GC6SetIndex - 3;
+      eventSet( m_Servo[servo].swnn, m_Servo[servo].swaddr, m_GC6SetIndex-3, 0, false );
+    }
+    else if( m_GC6SetIndex < 11 ) {
+      // Sensor events
+      int servo = m_GC6SetIndex - 7;
+      eventSet( 0, m_Servo[servo].fbaddr, m_GC6SetIndex-7, 0, false );
+    }
+    else if( m_GC6SetIndex == 11 ) {
+      // SOD
+      eventSet( 0, m_GC6SOD->GetValue(), 11, 0, false );
+    }
+    m_GC6SetIndex++;
+    if( m_bGC6SetAll && m_GC6SetIndex < 11 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
+    else {
+      m_bGC6SetAll = false;
+      m_GC6SetAll->Enable(true);
+      m_GC6GetAll->Enable(true);
+      setUnlearn();
+    }
   }
   else {
-    m_bGC2SetAll = false;
-    m_GC2SetAll->Enable(true);
-    m_GC2GetAll->Enable(true);
-    m_GC2Set->Enable(true);
-    setUnlearn();
+    if( m_GC2SetIndex == 0 ) {
+      int nv1 = m_GC2SaveOutput->IsChecked() ? 0x01:0x00;
+      nv1 += m_GC2ShortEvents->IsChecked() ? 0x02:0x00;
+      nv1 += (m_GC2PulseTime->GetSelection() << 2);
+      nv1 += m_GC2SODAll->IsChecked() ? 0x10:0x00;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "nv1=0x%02X", nv1);
+      varSet(1, nv1, false);
+    }
+    else if( m_GC2SetIndex == 1 ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set learn mode");
+      setLearn();
+    }
+    else if( m_GC2SetIndex < 18 ) {
+      int conf = 0;
+      int nn = 0;
+      int addr = 0;
+      gc2GetPort(m_GC2SetIndex-1, &conf, &nn, &addr);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+          "nv%d=0x%02X nn=%d addr=%d", m_GC2SetIndex, conf, nn, addr);
+      varSet(m_GC2SetIndex, conf, false);
+      eventSet( nn, addr, m_GC2SetIndex-2, 0, false );
+    }
+    else if( m_GC2SetIndex == 18 ) {
+      eventSet( 0, m_GC2SOD->GetValue(), 16, 0, false );
+    }
+    else if( m_GC2SetIndex == 19 ) {
+      varGet(18);
+      varGet(19);
+    }
+    else if( m_GC2SetIndex == 20 ) {
+      varGet(19);
+      varGet(18);
+    }
+    else if( m_GC2SetIndex == 21 ) {
+      int canid = m_GC2CanID->GetValue();
+      varSet(20, canid, false);
+    }
+    m_GC2SetIndex++;
+    if( m_bGC2SetAll && m_GC2SetIndex < 21 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
+    else {
+      m_bGC2SetAll = false;
+      m_GC2SetAll->Enable(true);
+      m_GC2GetAll->Enable(true);
+      m_GC2Set->Enable(true);
+      setUnlearn();
+    }
   }
 }
 
@@ -1384,6 +1429,8 @@ void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
 }
 void CBusNodeDlg::OnServoRelay( wxCommandEvent& event ) {
 }
+void CBusNodeDlg::OnExtSensors( wxCommandEvent& event ) {
+}
 
 void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
   m_bGC6GetAll = true;
@@ -1391,5 +1438,10 @@ void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
+  m_bGC6SetAll = true;
+  m_GC6SetAll->Enable(false);
+  m_GC6GetAll->Enable(false);
+  m_GC6SetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 

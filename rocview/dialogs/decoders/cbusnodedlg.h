@@ -147,6 +147,7 @@ protected:
   void OnServoRelay( wxCommandEvent& event );
   void onGC6GetAll( wxCommandEvent& event );
   void onGC6SetAll( wxCommandEvent& event );
+  void OnExtSensors( wxCommandEvent& event );
 
 
 public:
