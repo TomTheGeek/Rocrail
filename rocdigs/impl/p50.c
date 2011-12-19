@@ -43,6 +43,8 @@
 
 static int instCnt = 0;
 
+static int dir6021[81]; //internal representation of (probable) loco direction stored in 6021.
+
 /*
  ***** OBase functions.
  */
@@ -224,6 +226,11 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
     int   info = 0;
     Boolean fn = wLoc.isfn( node );
     Boolean sw = wLoc.issw( node );
+    int    dir = wLoc.isdir( node );
+
+    if (dir6021[addr]!=dir) {
+      sw=True;
+    }
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -245,6 +252,9 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
       info = speed + (fn?16:0);
       p50[4] = (unsigned char)info;
       p50[5] = (unsigned char)addr;
+      dir6021[addr]=dir6021[addr] ^ 1; //invert internal representation
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reversing lc=%d spd=%d, 6021 dir=%s, rocrail dir=%d",
+		   addr, speed, dir6021[addr]==0?"forward":"reverse",dir);
       return 6;
     }
     else {
@@ -465,6 +475,11 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   iOAttr attr = NULL;
   const char* flow = NULL;
   const char* parity = NULL;
+
+  int i;
+  for (i=0; i<81; i++) {
+    dir6021[i]=1;
+  }
 
   TraceOp.set( trace );
 
