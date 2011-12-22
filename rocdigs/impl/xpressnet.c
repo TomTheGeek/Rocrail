@@ -835,6 +835,80 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 
+  /* BiDi 0x75 0xF2 SID_H SID_L D+AddrH AddrL */
+  if( in[0] == 0x75 && in[1] == 0xF2 ) {
+    int addr = in[2] * 256 + in[3];
+    long ident = (in[4]&0x7F) * 256 + in[5];
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, True );
+    wFeedback.setdirection( nodeC, in[4]&0x80?True:False);
+    wFeedback.setidentifier( nodeC, ident);
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "BiDi Sensor %d ident=%ld direction=%s", addr, ident, in[4]&0x80?"fwd":"rev");
+  }
+
+  /* BiDi 0x73 0xF0 SID_H SID_L */
+  if( in[0] == 0x73 && in[1] == 0xF0 ) {
+    int addr = in[2] * 256 + in[3];
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, False );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDi Sensor %d=%s", addr, "off");
+  }
+
+  /* BiDi 0x73 0xF1 SID_H SID_L  */
+  if( in[0] == 0x73 && in[1] == 0xF1 ) {
+    int addr = in[2] * 256 + in[3];
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, True );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDi Sensor %d=%s", addr, "on");
+  }
+
+  /* BiDi 0x76 0xE1 Type+AddrH AddrL CV_H CV_L DAT */
+  if( in[0] == 0x76 && in[1] == 0xE1 ) {
+    int addr = (in[2]&0x3F) * 256 + in[3];
+    int cv = in[4] * 256 + in[5];
+    int value = in[6];
+    iONode node = NULL;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM cv %d has a value of %d for address %d", cv, value, addr );
+
+    node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setaddr( node, addr );
+    wProgram.setcv( node, cv );
+    wProgram.setvalue( node, value );
+    wProgram.setcmd( node, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( node, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+
+
 }
 
 
