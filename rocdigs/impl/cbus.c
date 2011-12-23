@@ -1344,6 +1344,11 @@ static void __writer( void* threadinst ) {
         }
       }
     }
+    else if( !data->connOK ) {
+      ThreadOp.sleep(5000);
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CBUS is disconnected, try a reconnect..." );
+      data->connOK = data->subConnect((obj)cbus);
+    }
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
 
@@ -1581,13 +1586,6 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
-
-  if( !data->connOK ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CBUS is disconnected, try a reconnect..." );
-    data->connOK = data->subConnect(cbus);
-    if( !data->connOK )
-      return NULL;
-  }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName(node) );
 
