@@ -43,6 +43,10 @@ static Boolean isCts( obj inst ) {
     return True;
   }
 
+  if( data->serial == NULL ) {
+    return False;
+  }
+
   while( wait4cts < data->ctsretry ) {
     int rc = SerialOp.isCTS( data->serial );
     if( rc == -1 ) {
@@ -108,14 +112,14 @@ void serialDisconnect( obj inst ) {
 
 Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
-  return SerialOp.read(data->serial, frame, len);
+  return data->serial == NULL ? False:SerialOp.read(data->serial, frame, len);
 }
 
 
 Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
   iOCBUSData data = Data(inst);
   Boolean ok = False;
-  if( isCts(inst) ) {
+  if( data->serial != NULL && isCts(inst) ) {
     TraceOp.dump ( "cbusserial", TRCLEVEL_BYTE, (char*)msg, len );
     ok = SerialOp.write( data->serial, (char*)msg, len );
   }
@@ -125,6 +129,6 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 
 Boolean serialAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
-  return SerialOp.available(data->serial);
+  return data->serial == NULL ? False:SerialOp.available(data->serial);
 }
 

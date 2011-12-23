@@ -1191,7 +1191,7 @@ static void __reader( void* threadinst ) {
      * ;     -> end of frame
      */
 
-    if( data->subAvailable( (obj)cbus) ) {
+    if( data->connOK && data->subAvailable( (obj)cbus) ) {
       if( data->subRead( (obj)cbus, frame, 1) ) {
         if( frame[0] == ':' ) {
           if( data->subRead( (obj)cbus, frame+1, 1) ) {
@@ -1296,6 +1296,13 @@ static void __reader( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no start byte [0x%02X]", frame[0] );
         }
       }
+      else {
+        /* signals somethingh to read but there was not... */
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "I/O Error. USB device disconnected?" );
+        data->connOK = False;
+        data->subDisconnect((obj)cbus);
+        ThreadOp.sleep(1000);
+      }
     }
 
     ThreadOp.sleep(10);
@@ -1320,7 +1327,7 @@ static void __writer( void* threadinst ) {
     byte out[64] = {0};
 
     ThreadOp.sleep(10);
-    if( data->buson ) {
+    if( data->connOK && data->buson ) {
       post = (byte*)ThreadOp.getPost( th );
 
       if (post != NULL) {
@@ -1574,6 +1581,13 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
 static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
+
+  if( !data->connOK ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CBUS is disconnected, try a reconnect..." );
+    data->connOK = data->subConnect(cbus);
+    if( !data->connOK )
+      return NULL;
+  }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName(node) );
 
