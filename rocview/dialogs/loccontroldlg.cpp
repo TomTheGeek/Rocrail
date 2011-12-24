@@ -593,7 +593,7 @@ void LocControlDialog::CreateControls()
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
     m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_INVERSE );
-    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxGROW|wxALL, 2);
+    itemBoxSizer5->Add(m_SpeedCtrl, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 0);
@@ -648,7 +648,7 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer22->Add(m_FG, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
     m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, itemDialog1->GetBitmapResource(wxT("../xpm/dir.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    itemBoxSizer8->Add(m_Dir, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 2);
+    itemBoxSizer8->Add(m_Dir, 0, wxGROW|wxRIGHT|wxBOTTOM, 2);
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );

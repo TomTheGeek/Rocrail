@@ -15188,9 +15188,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo1LeftAng</property>
                                                                     <property name="permission">protected</property>
@@ -15203,7 +15203,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">100</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -15265,9 +15265,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo1RightAng</property>
                                                                     <property name="permission">protected</property>
@@ -15280,7 +15280,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">200</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -15357,7 +15357,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">1</property>
+                                                                    <property name="value">50</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -16153,9 +16153,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo2LeftAng</property>
                                                                     <property name="permission">protected</property>
@@ -16168,7 +16168,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">100</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -16230,9 +16230,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo2RightAng</property>
                                                                     <property name="permission">protected</property>
@@ -16245,7 +16245,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">200</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -16322,7 +16322,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">1</property>
+                                                                    <property name="value">50</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -17118,9 +17118,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo3LeftAng</property>
                                                                     <property name="permission">protected</property>
@@ -17133,7 +17133,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">100</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -17195,9 +17195,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo3RightAng</property>
                                                                     <property name="permission">protected</property>
@@ -17210,7 +17210,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">200</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -17287,7 +17287,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">1</property>
+                                                                    <property name="value">50</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -18083,9 +18083,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo4LeftAng</property>
                                                                     <property name="permission">protected</property>
@@ -18098,7 +18098,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">100</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -18160,9 +18160,9 @@
                                                                     <property name="font"></property>
                                                                     <property name="hidden">0</property>
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="maxValue">100</property>
+                                                                    <property name="maxValue">250</property>
                                                                     <property name="maximum_size"></property>
-                                                                    <property name="minValue">1</property>
+                                                                    <property name="minValue">50</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_GC6Servo4RightAng</property>
                                                                     <property name="permission">protected</property>
@@ -18175,7 +18175,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">50</property>
+                                                                    <property name="value">200</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
@@ -18252,7 +18252,7 @@
                                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                                     <property name="validator_type">wxDefaultValidator</property>
                                                                     <property name="validator_variable"></property>
-                                                                    <property name="value">1</property>
+                                                                    <property name="value">50</property>
                                                                     <property name="window_extra_style"></property>
                                                                     <property name="window_name"></property>
                                                                     <property name="window_style"></property>
