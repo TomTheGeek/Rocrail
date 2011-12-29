@@ -66,6 +66,13 @@ Read all sensors  (0x14)
 Get firmware version (0x19)
   ￼*/
 
+#define OPC_ACTIVATE 0x01
+#define OPC_DEACTIVATE 0x02
+#define OPC_PULSEON 0x03
+#define OPC_THROTTLE 0x0A
+#define OPC_READALLSENS 0x14
+
+
 #include "rocdigs/impl/cti_impl.h"
 
 #include "rocs/public/mem.h"
@@ -148,8 +155,11 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OCTI ----- */
 
-static void __translate( iOCTI inst, iONode node ) {
+static iONode __translate( iOCTI inst, iONode node ) {
   iOCTIData data = Data(inst);
+  iONode rsp = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName(node) );
 
 
   /* System command. */
@@ -185,21 +195,82 @@ static void __translate( iOCTI inst, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d %s", addr, wSwitch.getcmd( node ) );
   }
 
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
+    int addr = wOutput.getaddr( node );
 
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 3;
+    cmd[ 1] = on ? OPC_ACTIVATE:OPC_DEACTIVATE;
+    cmd[ 2] = addr / 256;
+    cmd[ 3] = addr % 256;
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %s",
+        wOutput.getaddr( node ), on?"ON":"OFF" );
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
+  /* Sensor command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    rsp = (iONode)NodeOp.base.clone( node );
+  }
+
+  /* Loc command.
+   * ￼Throttle   (0x0A) (Bits 15:8) (Bits 7:0) Speed ￼￼Attributes
+        Attribute Bits
+        Bits (2:0) Momentum Control 000 (Minimum Inertia) through 111 (Maximum Inertia)
+        Bit 3      Brake Control 0 = Brake Off 1 = Brake On
+        Bit 4      Direction Control 0 = Forward 1 = Reverse
+        Bit 5      Idle Voltage Control 0 = Do not apply an idling voltage
+                                        1 = Maintain a small idling voltage for use with current sensors
+   *
+   */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   addr = wLoc.getaddr( node );
+    int  speed = 0;
+    Boolean fn  = wLoc.isfn( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * wLoc.getspcnt(node)) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * wLoc.getspcnt(node)) / wLoc.getV_max( node );
+    }
+
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 5;
+    cmd[ 1] = OPC_THROTTLE;
+    cmd[ 2] = addr / 256;
+    cmd[ 3] = addr % 256;
+    cmd[ 4] = speed;
+    cmd[ 5] = wLoc.getmass(node) + (dir << 4);
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco speed=%d dir=%s", speed, dir?"forwards":"reverse" );
+    ThreadOp.post(data->writer, (obj)cmd);
+
+  }
+
+  return rsp;
 }
 
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOCTIData data = Data(inst);
+  iONode rsp = NULL;
 
   if( cmd != NULL ) {
     int bus = 0;
-    __translate( (iOCTI)inst, cmd );
+    rsp = __translate( (iOCTI)inst, cmd );
     cmd->base.del(cmd);
   }
-  return NULL;
+  return rsp;
 }
 
 
@@ -283,7 +354,7 @@ static void __writer( void* threadinst ) {
       MemOp.copy( out, post+1, len);
       freeMem( post);
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
+      TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)out, len );
       if( !SerialOp.write( data->serial, (char*)out, len ) ) {
         /* sleep and send it again? */
       }
@@ -303,13 +374,20 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader started." );
   ThreadOp.sleep(100);
 
+  { /* Start of day */
+    byte* cmd = allocMem(32);
+    cmd[ 0] = 1;
+    cmd[ 1] = OPC_READALLSENS;
+    ThreadOp.post(data->writer, (obj)cmd);
+  }
+
   while( data->run ) {
     byte in[32] = {0};
 
     ThreadOp.sleep(10);
     if( SerialOp.available(data->serial) ) {
       SerialOp.read(data->serial, in, 1);
-      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)in, 1 );
+      TraceOp.dump ( name, TRCLEVEL_INFO, (char*)in, 1 );
     }
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader ended." );
