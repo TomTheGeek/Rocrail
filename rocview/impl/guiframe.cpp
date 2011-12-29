@@ -773,13 +773,13 @@ void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
 
     /* Leave the childs if no new are coming */
     if( deep && NodeOp.getChildCnt( props ) > 0 ) {
+      iONode child = NodeOp.getChild( loc, 0 );
       cnt = NodeOp.getChildCnt( loc );
       TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "remove %d child nodes from loco[%s]", cnt, wLoc.getid(loc) );
-      while( cnt > 0 ) {
-        iONode child = NodeOp.getChild( loc, 0 );
+      while( NodeOp.getChildCnt( props ) > 0 && child != NULL ) {
         NodeOp.removeChild( loc, child );
-        child->base.del(child);
-        cnt = NodeOp.getChildCnt( loc );
+        NodeOp.base.del(child);
+        child = NodeOp.getChild( loc, 0 );
       }
       cnt = NodeOp.getChildCnt( props );
       TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "add %d child nodes to loco[%s]", cnt, wLoc.getid(loc) );
