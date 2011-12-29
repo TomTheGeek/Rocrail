@@ -898,9 +898,6 @@ void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
       ,m_GC2Input6,m_GC2Input7,m_GC2Input8,m_GC2Input9,m_GC2Input10
       ,m_GC2Input11,m_GC2Input12,m_GC2Input13,m_GC2Input14,m_GC2Input15,m_GC2Input16};
 
-  wxRadioButton* gc2IR[] = {NULL,m_GC2IR1,m_GC2IR2,m_GC2IR3,m_GC2IR4
-      ,m_GC2IR5,m_GC2IR6,m_GC2IR7,m_GC2IR8};
-
   wxRadioButton* gc2Block[] = {NULL,m_GC2Block1,m_GC2Block2,m_GC2Block3,m_GC2Block4,m_GC2Block5
       ,m_GC2Block6,m_GC2Block7,m_GC2Block8,m_GC2Block9,m_GC2Block10
       ,m_GC2Block11,m_GC2Block12,m_GC2Block13,m_GC2Block14,m_GC2Block15,m_GC2Block16};
@@ -926,15 +923,6 @@ void CBusNodeDlg::gc2GetPort(int port, int* conf, int* nn, int* addr) {
   int pulse  = gc2Pulse[port]->GetValue();
   int c2     = gc2C2[port]->IsChecked() ? 1:0;
   *conf = input | (delay << 1) | (pulse << 1) | (c2 << 2);
-
-  if( port < 9 ) {
-    int ir  = gc2IR[port]->GetValue();
-    *conf = (delay << 1) | (pulse << 1) | (c2 << 2) | (ir << 3);
-  }
-  else {
-    *conf = input | (delay << 1) | (pulse << 1) | (c2 << 2);
-  }
-
 }
 
 
@@ -950,10 +938,6 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
   wxRadioButton* gc2Input[] = {NULL,m_GC2Input1,m_GC2Input2,m_GC2Input3,m_GC2Input4,m_GC2Input5
       ,m_GC2Input6,m_GC2Input7,m_GC2Input8,m_GC2Input9,m_GC2Input10
       ,m_GC2Input11,m_GC2Input12,m_GC2Input13,m_GC2Input14,m_GC2Input15,m_GC2Input16};
-
-  wxRadioButton* gc2IR[] = {NULL,m_GC2IR1,m_GC2IR2,m_GC2IR3,m_GC2IR4
-      ,m_GC2IR5,m_GC2IR6,m_GC2IR7,m_GC2IR8};
-
 
   wxRadioButton* gc2Block[] = {NULL,m_GC2Block1,m_GC2Block2,m_GC2Block3,m_GC2Block4,m_GC2Block5
       ,m_GC2Block6,m_GC2Block7,m_GC2Block8,m_GC2Block9,m_GC2Block10
@@ -982,9 +966,7 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
     int delay  = (conf & 0x02) ? 1:0;
     int ir     = (conf & 0x08) ? 1:0;
 
-    if( ir && port < 9 )
-      gc2IR[port]->SetValue(true);
-    else if( input && delay )
+    if( input && delay )
       gc2Block[port]->SetValue(true);
     else if( input && !delay )
       gc2Input[port]->SetValue(true);
