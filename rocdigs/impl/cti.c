@@ -1,18 +1,70 @@
-/** ------------------------------------------------------------
-  * A U T O   G E N E R A T E D  (First time only!)
-  * Generator: Rocs ogen (build Dec 21 2011 08:11:37)
-  * Module: RocDigs
-  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
-  * XML: $Revision: 1.14 $
-  * Object: CTI
-  * Date: Thu Dec 29 14:23:11 2011
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Rocrail - Model Railroad Software
+
+ Copyright (C) Rob Versluis <r.j.versluis@rocrail.net>
+ http://www.rocrail.net
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+
+/*
+Command Acknowledge Message
+0x00  The command has been processed successfully.
+0x01  The command has been processed, but cannot be carried out at this time because the CTI network is offline.
+      The command will take effect once the network is placed online.
+0x02  The command addresses a control or sensor beyond the range of the current network hardware.
+￼0x03  An unknown command message was received and discarded.
+
+
+Service Request Message
+￼0x81  A change in the state of one or more sensors has been observed.
+￼￼￼0x82  Communications with the CTI network have been lost.
+
+￼
+            OPC    AddrH       AddrL
+Activate   (0x01) (Bits 15:8) (Bits 7:0)
+Deactivate (0x02) (Bits 15:8) (Bits 7:0)
+Pulse ON   (0x03) (Bits 15:8) (Bits 7:0) (‘N’ 10’ths of seconds)
+Pulse OFF  (0x04) (Bits 15:8) (Bits 7:0) (‘N’ 10’ths of seconds)
+Blink      (0x05) (Bits 15:8) (Bits 7:0) (‘N’ 10’ths of seconds)
+Blink rev. (0x06) (Bits 15:8) (Bits 7:0) (‘N’ 10’ths of seconds)
+Control 4  (0x07) (Bits 15:8) (Bits 7:0) (state xxxx3210)
+Control 8  (0x08) (Bits 15:8) (Bits 7:0) (state 76543210)
+Control 16 (0x09) (Bits 15:8) (Bits 7:0) (state FEDCBA98) (state 76543210)
+
+￼Throttle   (0x0A) (Bits 15:8) (Bits 7:0) Speed ￼￼Attributes
+  Attribute Bits
+  Bits (2:0) Momentum Control 000 (Minimum Inertia) through 111 (Maximum Inertia)
+  Bit 3      Brake Control 0 = Brake Off 1 = Brake On
+  Bit 4      Direction Control 0 = Forward 1 = Reverse
+  Bit 5      Idle Voltage Control 0 = Do not apply an idling voltage
+                                  1 = Maintain a small idling voltage for use with current sensors
+  Bit 6      Unused -> 0
+  Bit 7      Unused -> 0
+
+Emergency stop (0x0B)
+Signal 2       (0x0C) (Bits 15:8) (Bits 7:0) (aspect xxYY2211)
+Signal 3       (0x0D) (Bits 15:8) (Bits 7:0) (aspect xx332211)
+Signal 4       (0x0E) (Bits 15:8) (Bits 7:0) (aspect 44332211)
+
+Configure sensors (0x10) (Bits 15:8) (Bits 7:0) (config)
+Read all sensors  (0x14)
+
+Get firmware version (0x19)
+  ￼*/
 
 #include "rocdigs/impl/cti_impl.h"
 
