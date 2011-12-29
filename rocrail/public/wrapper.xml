@@ -341,6 +341,7 @@
       <const name="perir" vt="string" val="perir"/>
       <const name="editspro" vt="string" val="editspro"/>
       <const name="infracar" vt="string" val="infracar"/>
+      <const name="cti" vt="string" val="cti"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
