@@ -443,20 +443,22 @@ void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
     iONode digint = wRocRail.getdigint(l_RocrailIni);
-    iONode cbus = wDigInt.getcbus(digint);
-    iONode node = wCBus.getcbnode(cbus);
-    while( node != NULL ) {
-      NodeOp.removeChild( cbus, node );
-      node = wCBus.getcbnode(cbus);
-    }
-    initIndex();
+    if( digint != NULL ) {
+      iONode cbus = wDigInt.getcbus(digint);
+      iONode node = wCBus.getcbnode(cbus);
+      while( node != NULL ) {
+        NodeOp.removeChild( cbus, node );
+        node = wCBus.getcbnode(cbus);
+      }
+      initIndex();
 
-    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-    wProgram.setcmd( cmd, wProgram.query );
-    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
-    wProgram.setlntype(cmd, wProgram.lntype_cbus);
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcmd( cmd, wProgram.query );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_cbus);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
   }
 }
 
