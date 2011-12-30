@@ -96,6 +96,10 @@ void SymbolRenderer::initSym() {
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
 
+  if( m_SymMap == NULL ) {
+    TraceOp.trc( "render", TRCLEVEL_EXCEPTION, __LINE__, 9999, "Symbol map is not initialized." );
+    return;
+  }
   // TRACKS
   if( StrOp.equals( wTrack.name(), nodeName ) ) {
     m_iSymType = symtype::i_track;
