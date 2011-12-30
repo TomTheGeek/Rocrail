@@ -75,6 +75,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_PulseTime = 0;
   m_GC2IgnorePortTest = 0;
   m_CANID = 0;
+  m_DigInt = NULL;
 
 
 
@@ -168,8 +169,12 @@ void CBusNodeDlg::initIndex() {
   if( l_RocrailIni != NULL ) {
     // ToDo: Init index.
     iONode digint = wRocRail.getdigint(l_RocrailIni);
-    if( digint != NULL ) {
+    while( digint != NULL && !StrOp.equals( wDigInt.getlib(digint), wDigInt.cbus ) ) {
+      digint = wRocRail.nextdigint(l_RocrailIni, digint);
+    }
+    if( digint != NULL && StrOp.equals( wDigInt.getlib(digint), wDigInt.cbus ) ) {
       iONode cbus = wDigInt.getcbus(digint);
+      m_DigInt = digint;
       if( cbus != NULL ) {
         iONode cbusnode = wCBus.getcbnode(cbus);
         while( cbusnode != NULL ) {
@@ -181,11 +186,21 @@ void CBusNodeDlg::initIndex() {
           StrOp.free(s);
           cbusnode = wCBus.nextcbnode( cbus, cbusnode );
         }
+        m_IID->SetValue(wxString(wDigInt.getiid(digint),wxConvUTF8));
       }
+      else {
+        wxMessageDialog( this, _T("No valid CBUS setup found."), _T("Rocrail"), wxOK ).ShowModal();
+        EndModal(0);
+      }
+    }
+    else {
+      wxMessageDialog( this, _T("No CBUS setup found."), _T("Rocrail"), wxOK ).ShowModal();
+      EndModal(0);
     }
   }
   else {
     wxMessageDialog( this, wxGetApp().getMsg("cbusrocrailini"), _T("Rocrail"), wxOK ).ShowModal();
+    EndModal(0);
   }
 }
 
@@ -222,9 +237,8 @@ void CBusNodeDlg::initEvtList(iONode node) {
 iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, const char* ver) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
-    iONode digint = wRocRail.getdigint(l_RocrailIni);
-    if( digint != NULL ) {
-      iONode cbus = wDigInt.getcbus(digint);
+    if( m_DigInt != NULL ) {
+      iONode cbus = wDigInt.getcbus(m_DigInt);
       if( cbus != NULL ) {
         iONode cbusnode = wCBus.getcbnode(cbus);
         while( cbusnode != NULL ) {
@@ -421,10 +435,8 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
   if( m_IndexList->GetSelection() != wxNOT_FOUND ) {
     iONode node = (iONode)m_IndexList->GetClientData(m_IndexList->GetSelection());
     if( node != NULL ) {
-      iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
-      if( l_RocrailIni != NULL ) {
-        iONode digint = wRocRail.getdigint(l_RocrailIni);
-        iONode cbus = wDigInt.getcbus(digint);
+      if( m_DigInt != NULL ) {
+        iONode cbus = wDigInt.getcbus(m_DigInt);
         NodeOp.removeChild( cbus, node );
         m_NodeNumber->SetValue(0);
         m_NodeType->SetValue(_T(""));
@@ -442,9 +454,12 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
 void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
-    iONode digint = wRocRail.getdigint(l_RocrailIni);
-    if( digint != NULL ) {
-      iONode cbus = wDigInt.getcbus(digint);
+    if( m_DigInt != NULL ) {
+      iONode cbus = wDigInt.getcbus(m_DigInt);
+      if( cbus == NULL ) {
+        cbus = NodeOp.inst( wCBus.name(), m_DigInt, ELEMENT_NODE);
+        NodeOp.addChild( m_DigInt, cbus );
+      }
       iONode node = wCBus.getcbnode(cbus);
       while( node != NULL ) {
         NodeOp.removeChild( cbus, node );
