@@ -5,6 +5,7 @@
 #define MANU_ROCRAIL 70
 // Module types
 #define MTYP_CANGC2  2 // 16 I/O
+#define MTYP_CANGC4  4 // 8 channel rfid12 concentrator
 #define MTYP_CANGC6  6 // 4 Chanal Servo
 #define MTYP_CANGC7  7 // Fast clock
 
