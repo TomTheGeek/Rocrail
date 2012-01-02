@@ -593,7 +593,7 @@ void LocControlDialog::CreateControls()
     itemBoxSizer5->Add(m_Speed, 0, wxGROW|wxALL, 2);
 
     m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_INVERSE );
-    itemBoxSizer5->Add(m_SpeedCtrl, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+    itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer4->Add(itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 0);
