@@ -173,6 +173,22 @@ static iONode __translate( iOCTI inst, iONode node ) {
       cmd[ 1] = 0x0B;
       ThreadOp.post(data->writer, (obj)cmd);
     }
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS on */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
+      byte* cmd = allocMem(32);
+      cmd[ 0] = 1;
+      cmd[ 1] = 0x16;
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+    else if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      /* CS off */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
+      byte* cmd = allocMem(32);
+      cmd[ 0] = 1;
+      cmd[ 1] = 0x17;
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
   }
 
   /* Switch command. */
