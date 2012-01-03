@@ -194,6 +194,38 @@ static iOSignal SRCPgetSgByAddress( iOModel model, int addr, int port ) {
 }
                                                         
 
+/* Send powerState to all srcp info connections */
+static void sendPWstate2InfoChannels( struct timeval time, int busId, char* state ) {
+  iOList thList = ThreadOp.getAll(); 
+  int cnt = ListOp.size( thList );
+  char str[1025] = {'\0'};
+  int j;
+
+  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
+    time.tv_sec, time.tv_usec / 1000, busId, state );
+
+  /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
+
+  for( j = 0; j < cnt; j++ ) {
+    iOThread th = (iOThread)ListOp.get( thList, j );
+    const char* tname = ThreadOp.getName( th );
+
+    iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
+    iOSrcpConData data = Data(srcpcon);
+    __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
+
+    if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
+      if ( oI->infomode ) {
+        SocketOp.fmt(oI->clntSocket, str);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
+        ThreadOp.sleep( 10 );
+      }
+    }
+  }
+}
+
 
 /** ----- OSrcpCon ----- */
 
@@ -326,6 +358,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     const char *iid = wState.getiid(evt);
     if( iid != NULL ) {
       int s88busOffset = 0;
+      int busId;
 
       iONode srcpconoffset = wSrcpCon.getsrcpconoffset(data->ini);
       while( srcpconoffset != NULL ) {
@@ -336,7 +369,10 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
         srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
       }
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StName %s EvName %s srcpconoffset %d PW %s", wState.name(), NodeOp.getName(evt), s88busOffset, wState.ispower(evt)?"ON":"OFF" );
+      busId = s88busOffset + 1;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StName %s EvName %s srcpconoffset %d busId %d PW %s", wState.name(), NodeOp.getName(evt), s88busOffset, busId, wState.ispower(evt)?"ON":"OFF" );
+
+      sendPWstate2InfoChannels( time, busId, wState.ispower(evt)?"ON":"OFF" );
 
       /*100 INFO <bus> POWER ON/OFF <freetext>*/
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
@@ -594,11 +630,13 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           wSysCmd.setcmd( localCmd, wSysCmd.stop );
           Data(srcpcon)->callback( Data(srcpcon)->callbackObj, localCmd );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wSysCmd.stop" );
+
+          sendPWstate2InfoChannels( time, busId, optionString );
         }
 
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER OFF %s\n", time.tv_sec, time.tv_usec / 1000, busId, freeText );
         SocketOp.fmt(o->clntSocket, str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %s", str ) ;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
         ThreadOp.sleep( 10 );
 
       } else if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "ON" ) ) {
@@ -609,11 +647,13 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           wSysCmd.setcmd( localCmd, wSysCmd.go );
           Data(srcpcon)->callback( Data(srcpcon)->callbackObj, localCmd );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wSysCmd.go" );
+
+          sendPWstate2InfoChannels( time, busId, optionString );
         }
 
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER ON %s\n", time.tv_sec, time.tv_usec / 1000, busId, freeText );
         SocketOp.fmt(o->clntSocket, str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %s", str ) ;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
         ThreadOp.sleep( 10 );
       } else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown/unhandled POWER option in req %s", req );
@@ -629,7 +669,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       Boolean srcpDir = True;
       int srcpNewStep = 0;
       int srcpMaxStep = 0;
-      Boolean srcpFn = False;
+      Boolean srcpF0 = False;
       int srcpFx = 0;
 
       iOStrTok tok = StrTokOp.inst(req, ' ');
@@ -660,8 +700,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           srcpMaxStep = atoi(s);
           break;
         case 7:
-          if( s[0] == '0') srcpFn = False;
-          if( s[0] == '1') srcpFn = True;
+          if( s[0] == '0') srcpF0 = False;
+          if( s[0] == '1') srcpF0 = True;
           break;
         }
         /* Functions F1, F2, .... start at text position 8 with a value of "1" representing an active function, 
@@ -739,95 +779,11 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loAddr %d : OldSpeed %d OldStep %d NewSpeed %d newStep %d",
               loAddr, loV, loOldStep, newSpeed, srcpNewStep);
 
-        cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid(cmd, lcID);
-        wLoc.setdir(cmd, srcpDir);
-        wLoc.setfn(cmd, srcpFn);
-        wLoc.setV(cmd, newSpeed);
-        /* wLoc.setfx(cmd, srcpFx); *//* setfx doesn't work as I expected, so we have to generate and use a FunCmd */
         if( loFnCnt > 0 ) {
-          int group=0;
+          /* send all functions as group 0 */ 
           iONode fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
+          int group=0;
 
-          /* 1st send new loco settings before sending any functions */
-          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-          cmd = NULL ;
-
-          /* 2nd send all functions in groups of 4 */ 
-          wFunCmd.setid( fcmd, lcID);
-          wFunCmd.setgroup(fcmd, group+1 );
-          wFunCmd.setfncnt ( fcmd, loFnCnt );
-          switch( loFnCnt ) {
-            case 28: wFunCmd.setf28(fcmd, (srcpFx & 0x08000000)?True:False);
-            case 27: wFunCmd.setf27(fcmd, (srcpFx & 0x04000000)?True:False);
-            case 26: wFunCmd.setf26(fcmd, (srcpFx & 0x02000000)?True:False);
-            case 25: wFunCmd.setf25(fcmd, (srcpFx & 0x01000000)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 7 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case 24: wFunCmd.setf24(fcmd, (srcpFx & 0x00800000)?True:False);
-            case 23: wFunCmd.setf23(fcmd, (srcpFx & 0x00400000)?True:False);
-            case 22: wFunCmd.setf22(fcmd, (srcpFx & 0x00200000)?True:False);
-            case 21: wFunCmd.setf21(fcmd, (srcpFx & 0x00100000)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 6 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case 20: wFunCmd.setf20(fcmd, (srcpFx & 0x00080000)?True:False);
-            case 19: wFunCmd.setf19(fcmd, (srcpFx & 0x00040000)?True:False);
-            case 18: wFunCmd.setf18(fcmd, (srcpFx & 0x00020000)?True:False);
-            case 17: wFunCmd.setf17(fcmd, (srcpFx & 0x00010000)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 5 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case 16: wFunCmd.setf16(fcmd, (srcpFx & 0x00008000)?True:False);
-            case 15: wFunCmd.setf15(fcmd, (srcpFx & 0x00004000)?True:False);
-            case 14: wFunCmd.setf14(fcmd, (srcpFx & 0x00002000)?True:False);
-            case 13: wFunCmd.setf13(fcmd, (srcpFx & 0x00001000)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 4 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case 12: wFunCmd.setf12(fcmd, (srcpFx & 0x00000800)?True:False);
-            case 11: wFunCmd.setf11(fcmd, (srcpFx & 0x00000400)?True:False);
-            case 10: wFunCmd.setf10(fcmd, (srcpFx & 0x00000200)?True:False);
-            case  9: wFunCmd.setf9( fcmd, (srcpFx & 0x00000100)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 3 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case  8: wFunCmd.setf8( fcmd, (srcpFx & 0x00000080)?True:False);
-            case  7: wFunCmd.setf7( fcmd, (srcpFx & 0x00000040)?True:False);
-            case  6: wFunCmd.setf6( fcmd, (srcpFx & 0x00000020)?True:False);
-            case  5: wFunCmd.setf5( fcmd, (srcpFx & 0x00000010)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 2 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-            case  4: wFunCmd.setf4( fcmd, (srcpFx & 0x00000008)?True:False);
-            case  3: wFunCmd.setf3( fcmd, (srcpFx & 0x00000004)?True:False);
-            case  2: wFunCmd.setf2( fcmd, (srcpFx & 0x00000002)?True:False);
-            case  1: wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
-              wFunCmd.setid( fcmd, lcID);
-              wFunCmd.setgroup(fcmd, 1 );
-              wFunCmd.setfncnt ( fcmd, loFnCnt );
-              Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
-              break;
-            default:
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcp2rr: Loco %d, #functions %d not in range[0..28]", srcpLoco, loFnCnt);
-          }
-
-          /* 3rd send all functions as group 1 */ 
-          fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-          group = 1;
           wFunCmd.setid( fcmd, lcID);
           wFunCmd.setgroup(fcmd, group );
           wFunCmd.setfncnt ( fcmd, loFnCnt );
@@ -860,19 +816,21 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             case  3: wFunCmd.setf3( fcmd, (srcpFx & 0x00000004)?True:False);
             case  2: wFunCmd.setf2( fcmd, (srcpFx & 0x00000002)?True:False);
             case  1: wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
+            case  0: wFunCmd.setf0( fcmd,  srcpF0);
             Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
           }
 
-          /* 4th send new loco settings after sending all functions */
-          cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
-          wLoc.setid(cmd, lcID);
-          wLoc.setdir(cmd, srcpDir);
-          wLoc.setfn(cmd, srcpFn);
-          wLoc.setV(cmd, newSpeed);
-          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-          cmd = NULL ;
-          *reqRespCode = (int) 200 ;
         }
+        /* send new loco basic settings after sending all functions */
+        cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid(cmd, lcID);
+        wLoc.setdir(cmd, srcpDir);
+        wLoc.setfn(cmd, srcpF0);
+        wLoc.setV(cmd, newSpeed);
+        Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+        cmd = NULL ;
+
+        *reqRespCode = (int) 200 ;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No loco with addr %d found", srcpLoco ) ;
@@ -1164,37 +1122,20 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               PROBLEM: Does the corresponding info session always get the session ID exaclty 1 higher ?
         */
 
-        /* Send powerState to all srcp info connections */
+
+
         iOList thList = ThreadOp.getAll(); 
         int cnt = ListOp.size( thList );
         int j;
+
+        /* Send powerState to all srcp info connections */
+        sendPWstate2InfoChannels( time, busId, isPower?"ON":"OFF" );
 
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
             time.tv_sec, time.tv_usec / 1000, busId, isPower?"ON":"OFF" );
 
         /* send INFO <bus> POWER answer back to requesting command channel */
         SocketOp.fmt(o->clntSocket, str);
-
-        /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
-
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
-
-        for( j = 0; j < cnt; j++ ) {
-          iOThread th = (iOThread)ListOp.get( thList, j );
-          const char* tname = ThreadOp.getName( th );
-
-          iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
-          iOSrcpConData data = Data(srcpcon);
-          __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
-
-          if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
-            if ( oI->infomode ) {
-              SocketOp.fmt(oI->clntSocket, str);
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
-              ThreadOp.sleep( 10 );
-            }
-          }
-        }
 
         /* Send all feedback stati of the currently requested bus to the clients */
         while( fback != NULL ) {
