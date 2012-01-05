@@ -288,11 +288,15 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     port = DIGITALBAHN_STEP;
     cmdstr = wSwitch.straight;
     data->pending = True;
+    /* set gotopos for previous track */
+    data->gotopos = __getNextTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
     port = DIGITALBAHN_STEP;
     cmdstr = wSwitch.turnout;
     data->pending = True;
+    /* set gotopos for previous track */
+    data->gotopos = __getPrevTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = DIGITALBAHN_TURN;
@@ -329,18 +333,6 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Goto decoder track [%d] in direction [%s]", tracknr, ttdir ? "CCW":"CW" );
       data->pending = True;
 
-      /* Broadcast to clients. */
-      {
-        iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
-        wTurntable.setid( event, wTurntable.getid( data->props ) );
-        wTurntable.setbridgepos( event, tracknr );
-        wTurntable.setstate1( event, wTurntable.isstate1(data->props) );
-        wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
-        if( wTurntable.getiid( data->props ) != NULL )
-          wTurntable.setiid( event, wTurntable.getiid( data->props ) );
-        AppOp.broadcastEvent( event );
-      }
-
       doDirCmd = True;
 
       port = DIGITALBAHN_POS + ((tracknr-1)/2);
@@ -373,6 +365,39 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     }
   }
 
+ /* Broadcast to clients. */
+  if (port == DIGITALBAHN_STEP || port >= DIGITALBAHN_POS)
+  {
+    iONode track = wTurntable.gettrack( data->props );
+    while ( track != NULL ) {
+      if  ( wTTTrack.getnr( track ) == data->gotopos){
+        if ( (( wTTTrack.getposfb( track) == NULL) || StrOp.equals( wTTTrack.getposfb( track), "\0"))
+        && (( wTurntable.getpsen( data->props ) == NULL) || StrOp.equals( wTurntable.getpsen( data->props ), "\0")))
+        {
+          /* Only if no fb for track or position reached is defined */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "draw bridge position %d", data->gotopos );
+          iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+          wTurntable.setid( event, wTurntable.getid( data->props ) );
+          wTurntable.setbridgepos( event, data->gotopos );
+          if( wTurntable.getiid( data->props ) != NULL )
+            wTurntable.setiid( event, wTurntable.getiid( data->props ) );
+          AppOp.broadcastEvent( event );
+        }
+        else
+        {
+          /* Delete position if fb for track or bridge in position available to improve visual feedback on display*/
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position deleted waiting for fb event" );
+          iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+          wTurntable.setid( event, wTurntable.getid( data->props ) );
+          wTurntable.setbridgepos( event, -1 );
+          if( wTurntable.getiid( data->props ) != NULL )
+            wTurntable.setiid( event, wTurntable.getiid( data->props ) );
+          AppOp.broadcastEvent( event );
+        }
+      }
+      track = wTurntable.nexttrack( data->props, track );
+    }
+  }
 
   if( cmdstr != NULL && control != NULL )
   {
@@ -387,8 +412,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set direction address=%d, port=%d, gate=%s",
           addr, DIGITALBAHN_DIR, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
-      int addrCmd = (addr + DIGITALBAHN_DIR) / 4 + 1;
-      int portCmd = (addr + DIGITALBAHN_DIR) % 4 + 1;
+      int addrCmd = (addr-1 + DIGITALBAHN_DIR) / 4 + 1; /* address bug correction */
+      int portCmd = (addr-1 + DIGITALBAHN_DIR) % 4 + 1; /* address bug correction */
       wSwitch.setaddr1( cmd, addrCmd );
       wSwitch.setport1( cmd, portCmd );
       wSwitch.setcmd  ( cmd, ttdir ? DIGITALBAHN_DIR_CCW:DIGITALBAHN_DIR_CW );
@@ -415,8 +440,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set position address=%d, port=%d, gate=%s",
         addr, port, cmdstr );
 
-    int addrCmd = (addr + port) / 4 + 1;
-    int portCmd = (addr + port) % 4 + 1;
+    int addrCmd = (addr-1 + port) / 4 + 1; /* address bug correction */
+    int portCmd = (addr-1 + port) % 4 + 1; /* address bug correction */
     wSwitch.setaddr1( cmd, addrCmd );
     wSwitch.setport1( cmd, portCmd );
     wSwitch.setcmd  ( cmd, cmdstr );
@@ -433,10 +458,9 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     while ( track != NULL ) {
       if ( ( wTTTrack.getnr( track ) == data->gotopos)
         && ( ( wTTTrack.getposfb( track) == NULL) || StrOp.equals( wTTTrack.getposfb( track), "\0"))) {
+        data->tablepos = data->gotopos; /* lines switched in order to get correct trace */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set optimistic tablepos %d", data->tablepos ); /* lines switched in order to get correct trace */
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set optimistic tablepos %d", data->tablepos );
-
-        data->tablepos = data->gotopos;
         wTurntable.setbridgepos( data->props, data->tablepos );
       }
       track = wTurntable.nexttrack( data->props, track );
