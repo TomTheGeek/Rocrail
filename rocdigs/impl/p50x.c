@@ -18,6 +18,11 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#define MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS          0x2000L /* 2.000 */
+#define MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS     0x1708L /* 23.08 */
+#define MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS    0x01040666L /* 1.4.6f */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -581,19 +586,22 @@ static Boolean __getversion( iOP50x inst ) {
   iOP50xData data = Data(inst);
   char out[8] = {'x',0xA0};
   char in[256];
+  char inVersion[256];
+  char inSerno[256];
   char rl = 0;
   int idx = 0;
   int outsize = 2;
   int insize = 0;
+  int sizeVersion = 0;
+  int sizeSerno = 0;
   p50state state = P50_OK;
   Boolean ok = False;
   memset(in,0,32);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sending XNOP..." );
-  out[0]= 'x';
-  out[1]= 0xC4;
-
   if( !data->dummyio && MutexOp.trywait( data->mux, data->timeout ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sending XNOP..." );
+    out[0]= 'x';
+    out[1]= 0xC4;
 
     if( SerialOp.write( data->serial, (char*)out, 2 ) ) {
       if( !SerialOp.read( data->serial, (char*)in, 1 ) )
@@ -603,11 +611,11 @@ static Boolean __getversion( iOP50x inst ) {
       state = P50_SNDERR;
 
     if( state = P50_OK ) {
-    int bAvail = 0;
-    ThreadOp.sleep( 500 );
-    bAvail = SerialOp.available(data->serial);
-    if( bAvail > 0 && bAvail < 32 )
-      SerialOp.read( data->serial, (char*)in, bAvail );
+      int bAvail = 0;
+      ThreadOp.sleep( 500 );
+      bAvail = SerialOp.available(data->serial);
+      if( bAvail > 0 && bAvail < 32 )
+        SerialOp.read( data->serial, (char*)in, bAvail );
       if( bAvail == 1 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "p50 mode detected!!!" );
         MutexOp.post( data->mux );
@@ -628,7 +636,7 @@ static Boolean __getversion( iOP50x inst ) {
       /* First in byte tells how much bytes are comming. */
       if( SerialOp.read( data->serial, in, 1 ) ) {
         state = P50_OK;
-        insize = in[0];
+        sizeVersion = in[0];
       }
       else {
         state = P50_RCVERR;
@@ -636,7 +644,7 @@ static Boolean __getversion( iOP50x inst ) {
         return False;
       }
 
-      if( SerialOp.read( data->serial, in, insize ) ) {
+      if( SerialOp.read( data->serial, inVersion, sizeVersion ) ) {
         state = P50_OK;
       }
       else {
@@ -645,37 +653,17 @@ static Boolean __getversion( iOP50x inst ) {
         return False;
       }
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, insize );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                   "Intellibox version --- %c.%c%c%c ---",
-                   ((in[1] & 0xF0) >> 4) + 0x30,
-                   (in[1] & 0x0F) + 0x30,
-                   ((in[0] & 0xF0) >> 4) + 0x30,
-                   (in[0] & 0x0F) + 0x30
-                   );
-
       /* Read the rest of the XVer: */
+      /* store all into inSerno-buffer, because last item read will be the serno */
       do {
         rl = 0;
         ok = SerialOp.read( data->serial, &rl, 1 );
         if( ok && rl > 0 ) {
-          ok = SerialOp.read( data->serial, in, rl );
-          if( ok && idx == 4 && rl == 5 ) {
-            /* Should be sn: */
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                         "Intellibox serial number --- %c%c%c%c%c%c%c%c%c%c ---",
-                         ((in[0] & 0xF0) >> 4) + 0x30,
-                         (in[0] & 0x0F) + 0x30,
-                         ((in[1] & 0xF0) >> 4) + 0x30,
-                         (in[1] & 0x0F) + 0x30,
-                         ((in[2] & 0xF0) >> 4) + 0x30,
-                         (in[2] & 0x0F) + 0x30,
-                         ((in[3] & 0xF0) >> 4) + 0x30,
-                         (in[3] & 0x0F) + 0x30,
-                         ((in[4] & 0xF0) >> 4) + 0x30,
-                         (in[4] & 0x0F) + 0x30
-                        );
-          }
+          ok = SerialOp.read( data->serial, inSerno, rl );
+          if( ok )
+            sizeSerno = rl;
+          else
+            sizeSerno = 0;
         }
         else if( rl == 0 ) {
           /* End of sequence. */
@@ -685,15 +673,112 @@ static Boolean __getversion( iOP50x inst ) {
       } while( ok && rl > 0 && idx < 10 );
 
       MutexOp.post( data->mux );
+    } /* End of reading */
 
+    /*
+     * IB      6 answers first is 2 Bytes (BCD)
+     * OpenDCC 2 answers first is 2 Bytes (BYTE)
+     * Tams    2 answers first is 3 Bytes (BCD) or 4 Bytes (3*BCD + ASCII)
+     */
 
-    }
-    else {
-      MutexOp.post( data->mux );
-      return False;
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__getversion sizeVersion %d sizeSerno %d idx %d", sizeVersion, sizeSerno, idx );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, inVersion, sizeVersion );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, inSerno, sizeSerno );
+
+    switch (sizeVersion) {
+      case 2:
+        if( idx == 1 ) {
+          /* OpenDCC */
+          data->swversion = ( ( inVersion[0] & 0xFF ) << 8 ) + ( inVersion[1] & 0xFF );
+          if( data->swversion >= MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS ) {
+            data->useextfunc = True;
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "activated extended function commands" );
+          }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   "OpenDCC version --- %d.%d ---%s",
+                   (inVersion[0] & 0xFF),
+                   (inVersion[1] & 0xFF),
+                   data->useextfunc?" extended functions enabled":""
+                   );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "OpenDCC version --- %lX (MinVerExt %lX UseExt %s) ---", 
+                     data->swversion, (unsigned long) MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS, data->useextfunc?"TRUE":"FALSE" );
+
+          if( sizeSerno == 1 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC serial# --- %d ---",
+                                                                  (unsigned int) (inSerno[0] & 0xFF) );
+          }
+        }
+        else { /* idx should be 5, I verify/check this only for the serial# */
+          /* Intellibox */
+          data->swversion = ( ( inVersion[1] & 0xFF ) << 8 ) + ( inVersion[0] & 0xFF );
+          if( data->swversion >= MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS ) {
+            data->useextfunc = True;
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "activated extended function commands" );
+          }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   "Intellibox version --- %c.%c%c%c ---%s",
+                   ((inVersion[1] & 0xF0) >> 4) + 0x30,
+                   (inVersion[1] & 0x0F) + 0x30,
+                   ((inVersion[0] & 0xF0) >> 4) + 0x30,
+                   (inVersion[0] & 0x0F) + 0x30,
+                   data->useextfunc?" extended functions enabled":""
+                   );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Intellibox version --- %lX (MinVerExt %lX UseExt %s) ---", 
+                     data->swversion, (unsigned long) MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS, data->useextfunc?"TRUE":"FALSE" );
+
+          if( idx == 5 && sizeSerno == 5 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                             "Intellibox serial# --- %c%c%c%c%c%c%c%c%c%c ---",
+                             ((inSerno[0] & 0xF0) >> 4) + 0x30,
+                             (inSerno[0] & 0x0F) + 0x30,
+                             ((inSerno[1] & 0xF0) >> 4) + 0x30,
+                             (inSerno[1] & 0x0F) + 0x30,
+                             ((inSerno[2] & 0xF0) >> 4) + 0x30,
+                             (inSerno[2] & 0x0F) + 0x30,
+                             ((inSerno[3] & 0xF0) >> 4) + 0x30,
+                             (inSerno[3] & 0x0F) + 0x30,
+                             ((inSerno[4] & 0xF0) >> 4) + 0x30,
+                             (inSerno[4] & 0x0F) + 0x30
+                            );
+          }
+        }
+        break;
+      case 3:
+      case 4:
+        /* Tams */
+        inVersion[sizeVersion] = 0x00;
+        data->swversion = ( (inVersion[0] & 0xFF) << 24 ) + ( (inVersion[1] & 0xFF) << 16 ) + ( (inVersion[2] & 0xFF) << 8 ) ;
+        if (sizeVersion == 4) {
+          /* ASCII char ! */
+          data->swversion += (inVersion[3] & 0xFF);
+        }
+        if( data->swversion >= MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS ) {
+          data->useextfunc = True;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TamsMC %s activated extended function commands", data->iid );
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                   "TamsMC version --- %d.%d.%.d%s ---%s",
+                   (inVersion[0] & 0xFF),
+                   (inVersion[1] & 0xFF),
+                   (inVersion[2] & 0xFF),
+                   (sizeVersion == 4) ? inVersion+3 : "",
+                   data->useextfunc?" extended functions enabled":""
+                   );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TamsMC version --- %08.8lX (MinVerExt %08.8lX UseExt %s) ---", 
+                     data->swversion, (unsigned long) MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS, data->useextfunc?"TRUE":"FALSE" );
+
+        if( idx == 1 && sizeSerno == 4 ) {
+        /* Should be sn: */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                           "TamsMC serial# --- %02.2X%02.2X%02.2X%02.2X ---",
+                           (inSerno[0] & 0xFF), (inSerno[1] & 0xFF), (inSerno[2] & 0xFF), (inSerno[3] & 0xFF)
+                          );
+        }
+        break;
+      default:
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "P50X getversion: sizeVersion=%d sizeSerno=%d idx=%d", sizeVersion, sizeSerno, idx );
     }
   }
-
   return True;
 }
 
@@ -1056,9 +1141,112 @@ static void __handleLoco(iOP50x p50x, byte* status) {
   wFunCmd.setf7( nodeC, (status[1] & 0x40) ? True:False );
   wFunCmd.setf8( nodeC, (status[1] & 0x80) ? True:False );
   wLoc.setthrottleid( nodeC, "p50x" );
+  wFunCmd.setgroup(nodeC, 0 );
+
+  if( data->useextfunc ) {
+    byte out[8];
+    byte in[512];
+
+    if( !data->stopio && !data->dummyio && MutexOp.trywait( data->mux, data->timeout ) ) {
+      if( !__flushP50x(data) ) {
+        MutexOp.post( data->mux );
+        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        return;
+      }
+
+      /* XFunc2Sts / XFuncXSts */
+      out[0] = (byte)'x';
+      out[1] = 0x8D;
+      out[2] = (byte)(addr&0xFF);
+      out[3] = (addr >> 8) & 0x07;
+
+      /* ask for F9 to F16 */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XFuncXSts F9-F16 of %d", addr );
+      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 4 );
+      if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
+        Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
+        if( read ) {
+          TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+          if (in[0] == 0x00 ) {
+            if( SerialOp.read( data->serial, (char*)in+1, 1 ) ) {
+              TraceOp.dump( name, TRCLEVEL_DEBUG, in, 2 );
+
+              wFunCmd.setf9(  nodeC, (in[1] & 0x01) ? True:False );
+              wFunCmd.setf10( nodeC, (in[1] & 0x02) ? True:False );
+              wFunCmd.setf11( nodeC, (in[1] & 0x04) ? True:False );
+              wFunCmd.setf12( nodeC, (in[1] & 0x08) ? True:False );
+              wFunCmd.setf13( nodeC, (in[1] & 0x10) ? True:False );
+              wFunCmd.setf14( nodeC, (in[1] & 0x20) ? True:False );
+              wFunCmd.setf15( nodeC, (in[1] & 0x40) ? True:False );
+              wFunCmd.setf16( nodeC, (in[1] & 0x80) ? True:False );
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read loco event");
+            }
+          }
+          else {
+            /* 
+               0x02 XBADPRM - Lokadresse ausserhalb des Bereichs (1 .. 10239)
+               0x0A XNODATA - Es liegen keine Lokdaten vor (Lok nicht in Refresh-Queue)
+            */
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "XFuncXSts ERR %02.2X", (int) in[0] );
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no XFuncXSts reply for addr %d", addr );
+        }
+      }
+
+      /* XFunc34Sts */
+      out[0] = (byte)'x';
+      out[1] = 0x8E;
+      out[2] = (byte)(addr&0xFF);
+      out[3] = (addr >> 8) & 0x07;
+
+      /* ask for F17 to F28 */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XFunc34Sts F17-F28 of %d", addr );
+      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 4 );
+      if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
+        Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
+        if( read ) {
+          TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+          if (in[0] == 0x00 ) {
+            if( SerialOp.read( data->serial, (char*)in+1, 2 ) ) {
+              TraceOp.dump( name, TRCLEVEL_DEBUG, in, 3 );
+
+              wFunCmd.setf17( nodeC, (in[1] & 0x01) ? True:False );
+              wFunCmd.setf18( nodeC, (in[1] & 0x02) ? True:False );
+              wFunCmd.setf19( nodeC, (in[1] & 0x04) ? True:False );
+              wFunCmd.setf20( nodeC, (in[1] & 0x08) ? True:False );
+              wFunCmd.setf21( nodeC, (in[1] & 0x10) ? True:False );
+              wFunCmd.setf22( nodeC, (in[1] & 0x20) ? True:False );
+              wFunCmd.setf23( nodeC, (in[1] & 0x40) ? True:False );
+              wFunCmd.setf24( nodeC, (in[1] & 0x80) ? True:False );
+              wFunCmd.setf25( nodeC, (in[2] & 0x01) ? True:False );
+              wFunCmd.setf26( nodeC, (in[2] & 0x02) ? True:False );
+              wFunCmd.setf27( nodeC, (in[2] & 0x04) ? True:False );
+              wFunCmd.setf28( nodeC, (in[2] & 0x08) ? True:False );
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read loco event");
+            }
+          }
+          else {
+            /* 
+               0x02 XBADPRM - Lokadresse ausserhalb des Bereichs (1 .. 10239)
+               0x0A XNODATA - Es liegen keine Lokdaten vor (Lok nicht in Refresh-Queue)
+            */
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "XFunc34Sts ERR %02.2X", (int) in[0] );
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no XFunc34Sts reply for addr %d", addr );
+        }
+      }
+      MutexOp.post( data->mux );
+    }
+  }
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-
-
 }
 
 static void __dummy( void* threadinst ) {

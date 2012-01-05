@@ -96,6 +96,8 @@
       <var name="halt" vt="Boolean"/>
       <var name="cv_nr" vt="int"/>
       <var name="cv_val" vt="int"/>
+      <var name="useextfunc" vt="Boolean"/>
+      <var name="swversion" vt="unsigned long"/>
     </data>
   </object>
 
