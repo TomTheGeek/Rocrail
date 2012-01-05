@@ -1128,6 +1128,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
           iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getblockid( node ));
           if(block != NULL ) {
+            wBlock.setlocid(block, wLoc.getid( node ) );
             wBlock.setupdateenterside(block, True);
             if( m_ModPanel != NULL) {
               m_ModPanel->modelEvent( block );
@@ -1151,6 +1152,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         if( wLoc.getdestblockid( node ) != NULL ) {
           iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getdestblockid( node ));
           if(block != NULL ) {
+            wBlock.setlocid(block, wLoc.getid( node ) );
             wBlock.setupdateenterside(block, True);
             if( m_ModPanel != NULL) {
               m_ModPanel->modelEvent( block );
