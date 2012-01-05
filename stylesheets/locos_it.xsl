@@ -115,11 +115,13 @@
 	   <xsl:variable name="runtime" select="@runtime" />
 	   <TD align="center">
 	   <xsl:choose>
-         <xsl:when test="$runtime = ''">
+      <xsl:when test="string(number($runtime))='NaN'">
          <xsl:text>-</xsl:text>
        </xsl:when>
        <xsl:otherwise>
-         <xsl:value-of select="@runtime" />
+         <xsl:value-of select="format-number(floor(@runtime div 3600),'0')" /> h 
+		 <xsl:value-of select="format-number(@runtime mod 3600 div 60,'0')" /> min
+
        </xsl:otherwise>
        </xsl:choose>
 	   </TD>
