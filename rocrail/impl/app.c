@@ -410,7 +410,7 @@ static void __conhelp() {
     TraceOp.println( " p - Power ON" );
     TraceOp.println( " y - Power OFF" );
     TraceOp.println( " x - Read all slots" );
-    TraceOp.println( " 5 - Query LocoIO" );
+    TraceOp.println( " 5 - Query network" );
     TraceOp.println( " t - List all active threads" );
     TraceOp.println( " z - Analyse track plan" );
     TraceOp.println( " l - Cleanup analyzed route info" );

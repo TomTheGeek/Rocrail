@@ -71,6 +71,7 @@ Get firmware version (0x19)
 #define OPC_PULSEON 0x03
 #define OPC_THROTTLE 0x0A
 #define OPC_READALLSENS 0x14
+#define OPC_QNETWORK 0x18
 
 
 #include "rocdigs/impl/cti_impl.h"
@@ -270,6 +271,25 @@ static iONode __translate( iOCTI inst, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco speed=%d dir=%s", speed, dir?"forwards":"reverse" );
     ThreadOp.post(data->writer, (obj)cmd);
 
+  }
+
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean direct = wProgram.isdirect(node);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program type %d...", wProgram.getlntype(node) );
+
+    if( wProgram.getlntype(node) == wProgram.lntype_sv && wProgram.getcmd( node ) == wProgram.lncvget &&
+        wProgram.getcv(node) == 0 && wProgram.getmodid(node) == 0 && wProgram.getaddr(node) == 0 )
+    {
+      /* This construct is used to to query all LocoIOs, but is here recycled for query all CAN-GC2s. */
+      byte* cmd = allocMem(32);
+      cmd[ 0] = 1;
+      cmd[ 1] = OPC_QNETWORK;
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query network configuration..." );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
   }
 
   return rsp;
