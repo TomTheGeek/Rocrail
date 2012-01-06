@@ -1285,6 +1285,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
        : wxFrame((wxFrame *)NULL, -1, title, pos, size)
 {
   m_Ini                = ini;
+  m_RocrailIni         = NULL;
   m_WarningPanel       = NULL;
   m_MonitorPanel       = NULL;
   m_bEditMode          = false;

@@ -1239,12 +1239,14 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
     int addr = 0;
     gc2GetPort(i+1, &conf, &nn, &addr);
     if( m_Ports[i].nn != nn || m_Ports[i].addr != addr || m_Ports[i].cfg != conf ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+          "port %d nn=%d-%d addr=%d-%d cfg=%d-%d",
+          i, m_Ports[i].nn, nn, m_Ports[i].addr, addr, m_Ports[i].cfg, conf);
       m_Ports[i].nn = nn;
       m_Ports[i].addr = addr;
       m_Ports[i].cfg = conf;
       m_GC2SetIndex = i + 2;
       m_bGC2SetAll = false;
-      m_GC2Set->Enable(false);
       setLearn();
       m_Timer->Start( 100, wxTIMER_ONE_SHOT );
       return;
@@ -1252,9 +1254,9 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
   }
 
   if( m_SOD != m_GC2SOD->GetValue() ) {
+    m_SOD = m_GC2SOD->GetValue();
     m_GC2SetIndex = 18;
     m_bGC2SetAll = false;
-    m_GC2Set->Enable(false);
     setLearn();
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     return;
@@ -1265,17 +1267,20 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
       m_GC2SODAll->IsChecked() != m_SODAll ||
       m_GC2PulseTime->GetSelection() != m_PulseTime )
   {
+    m_SaveOutputState = m_GC2SaveOutput->IsChecked();
+    m_ShortEvents = m_GC2ShortEvents->IsChecked();
+    m_SODAll = m_GC2SODAll->IsChecked();
+    m_PulseTime = m_GC2PulseTime->GetSelection();
     m_GC2SetIndex = 0;
     m_bGC2SetAll = false;
-    m_GC2Set->Enable(false);
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
 
   if(m_GC2CanID->GetValue() != m_CANID )
   {
+    m_CANID = m_GC2CanID->GetValue();
     m_GC2SetIndex = 21;
     m_bGC2SetAll = false;
-    m_GC2Set->Enable(false);
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
   }
 
