@@ -786,7 +786,7 @@ void CBusNodeDlg::event( iONode event ) {
       }
     }
     else if( m_bGC6GetAll ) {
-      if( cv < 18 ) {
+      if( cv < 22 ) {
         varGet(cv+1);
       }
       else {
@@ -1032,27 +1032,34 @@ void CBusNodeDlg::gc6UpdateServoEvent(int servo) {
 void CBusNodeDlg::gc6SetServoConf(int servo, int idx, int val) {
   wxCheckBox* gc6Relay[] = {m_GC6Servo1Relay,m_GC6Servo2Relay,m_GC6Servo3Relay,m_GC6Servo4Relay};
   wxCheckBox* gc6ExtFb[] = {m_GC6Servo1ExtFb,m_GC6Servo2ExtFb,m_GC6Servo3ExtFb,m_GC6Servo4ExtFb};
+  wxCheckBox* gc6Bounce[] = {m_GC6Servo1Bounce,m_GC6Servo2Bounce,m_GC6Servo3Bounce,m_GC6Servo4Bounce};
 
   wxSlider* gc6Left [] = {m_GC6Servo1LeftAng ,m_GC6Servo2LeftAng ,m_GC6Servo3LeftAng ,m_GC6Servo4LeftAng};
   wxSlider* gc6Right[] = {m_GC6Servo1RightAng,m_GC6Servo2RightAng,m_GC6Servo3RightAng,m_GC6Servo4RightAng};
-  wxSlider* gc6Speed[] = {m_GC6Servo1Speed   ,m_GC6Servo2Speed   ,m_GC6Servo3Speed   ,m_GC6Servo4Speed};
+  wxSlider* gc6SpeedL[] = {m_GC6Servo1Speed  ,m_GC6Servo2Speed   ,m_GC6Servo3Speed   ,m_GC6Servo4Speed};
+  wxSlider* gc6SpeedR[] = {m_GC6Servo1SpeedR ,m_GC6Servo2SpeedR  ,m_GC6Servo3SpeedR  ,m_GC6Servo4SpeedR};
 
-  if( idx % 4 == 0 ) {
+  if( idx % 5 == 0 ) {
     m_Servo[servo].cfg = val;
     gc6Relay[servo]->SetValue(val&0x01?true:false);
     gc6ExtFb[servo]->SetValue(val&0x02?true:false);
+    gc6Bounce[servo]->SetValue(val&0x04?true:false);
   }
-  if( idx % 4 == 1 ) {
+  if( idx % 5 == 1 ) {
     m_Servo[servo].left = val;
     gc6Left[servo]->SetValue(val);
   }
-  if( idx % 4 == 2 ) {
+  if( idx % 5 == 2 ) {
     m_Servo[servo].right = val;
     gc6Right[servo]->SetValue(val);
   }
-  if( idx % 4 == 3 ) {
-    m_Servo[servo].speed = val;
-    gc6Speed[servo]->SetValue(val);
+  if( idx % 5 == 3 ) {
+    m_Servo[servo].speedL = val;
+    gc6SpeedL[servo]->SetValue(val);
+  }
+  if( idx % 5 == 4 ) {
+    m_Servo[servo].speedR = val;
+    gc6SpeedR[servo]->SetValue(val);
   }
 
 
@@ -1121,9 +1128,9 @@ void CBusNodeDlg::initGC6Var( int nr, int val ) {
     m_CANID = val;
     m_GC6CanID->SetValue(val);
   }
-  else if( nr < 19 ) {
+  else if( nr < 23 ) {
     // servo config
-    gc6SetServoConf((nr-3)/4, nr-3, val);
+    gc6SetServoConf((nr-3)/5, nr-3, val);
   }
 }
 
@@ -1455,7 +1462,7 @@ void CBusNodeDlg::OnServoLeftAngle( wxScrollEvent& event ) {
   wxSlider* slider[] = {m_GC6Servo1LeftAng, m_GC6Servo2LeftAng, m_GC6Servo3LeftAng, m_GC6Servo4LeftAng};
   for( int i = 0; i < 4; i++ ) {
     if( event.GetEventObject() == slider[i] ) {
-      varSet( 4 + i*4, slider[i]->GetValue(), false );
+      varSet( 4 + i*5, slider[i]->GetValue(), false );
       break;
     }
   }
@@ -1465,7 +1472,7 @@ void CBusNodeDlg::OnServoRightAngle( wxScrollEvent& event ) {
   wxSlider* slider[] = {m_GC6Servo1RightAng, m_GC6Servo2RightAng, m_GC6Servo3RightAng, m_GC6Servo4RightAng};
   for( int i = 0; i < 4; i++ ) {
     if( event.GetEventObject() == slider[i] ) {
-      varSet( 5 + i*4, slider[i]->GetValue(), false );
+      varSet( 5 + i*5, slider[i]->GetValue(), false );
       break;
     }
   }
@@ -1475,7 +1482,15 @@ void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
   wxSlider* slider[] = {m_GC6Servo1Speed, m_GC6Servo2Speed, m_GC6Servo3Speed, m_GC6Servo4Speed};
   for( int i = 0; i < 4; i++ ) {
     if( event.GetEventObject() == slider[i] ) {
-      varSet( 6 + i*4, slider[i]->GetValue(), false );
+      varSet( 6 + i*5, slider[i]->GetValue(), false );
+      break;
+    }
+  }
+
+  wxSlider* sliderR[] = {m_GC6Servo1SpeedR, m_GC6Servo2SpeedR, m_GC6Servo3SpeedR, m_GC6Servo4SpeedR};
+  for( int i = 0; i < 4; i++ ) {
+    if( event.GetEventObject() == sliderR[i] ) {
+      varSet( 7 + i*5, sliderR[i]->GetValue(), false );
       break;
     }
   }
@@ -1484,17 +1499,23 @@ void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
 void CBusNodeDlg::OnServoRelay( wxCommandEvent& event ) {
   wxCheckBox* cbRelay[] = {m_GC6Servo1Relay, m_GC6Servo2Relay, m_GC6Servo3Relay, m_GC6Servo4Relay};
   wxCheckBox* cbExtFb[] = {m_GC6Servo1ExtFb, m_GC6Servo2ExtFb, m_GC6Servo3ExtFb, m_GC6Servo4ExtFb};
+  wxCheckBox* cbBounce[] = {m_GC6Servo1Bounce, m_GC6Servo2Bounce, m_GC6Servo3Bounce, m_GC6Servo4Bounce};
   for( int i = 0; i < 4; i++ ) {
-    if( event.GetEventObject() == cbRelay[i] || event.GetEventObject() == cbExtFb[i] ) {
+    if( event.GetEventObject() == cbRelay[i] || event.GetEventObject() == cbExtFb[i] || event.GetEventObject() == cbBounce[i] ) {
       int conf = cbRelay[i]->IsChecked() ? 0x01:0x00;
-      conf += cbExtFb[i]->IsChecked() ? 0x02:0x00;
-      varSet( 3 + i*4, conf, false );
+      conf += cbExtFb[i]->IsChecked()    ? 0x02:0x00;
+      conf += cbBounce[i]->IsChecked()   ? 0x04:0x00;
+      varSet( 3 + i*5, conf, false );
       break;
     }
   }
 }
 
 void CBusNodeDlg::OnExtSensors( wxCommandEvent& event ) {
+  OnServoRelay( event );
+}
+
+void CBusNodeDlg::OnBounce( wxCommandEvent& event ) {
   OnServoRelay( event );
 }
 

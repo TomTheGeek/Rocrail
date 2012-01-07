@@ -44,8 +44,13 @@ typedef struct {
   int fbaddr;
   int left;
   int right;
-  int speed;
+  int speedL;
+  int speedR;
 } Servo;
+
+#define SERVOCONF_POLAR  0x01
+#define SERVOCONF_EXTSEN 0x02
+#define SERVOCONF_BOUNCE 0x04
 
 
 /** Implementing cbusnodedlggen */
@@ -150,6 +155,7 @@ protected:
   void onGC6GetAll( wxCommandEvent& event );
   void onGC6SetAll( wxCommandEvent& event );
   void OnExtSensors( wxCommandEvent& event );
+  void OnBounce( wxCommandEvent& event );
 
 
 public:
