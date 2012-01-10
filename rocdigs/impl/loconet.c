@@ -668,6 +668,7 @@ static void __handleLoco(iOLocoNet loconet, byte* rsp ) {
     wLoc.setthrottleid( nodeC, sthrottleid );
     wLoc.setcmd( nodeC, wLoc.velocity );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    data->slotV[slot] = spd;
   }
   else if( rsp[0] == OPC_LOCO_DIRF ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot=%d addr=%d dirf=0x%02X id=%d", slot, addr, dirf, throttleid );
