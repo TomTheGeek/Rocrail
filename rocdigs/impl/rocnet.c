@@ -286,9 +286,11 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
     rnReceipientAddresToPacket( addr, rn, data->seven );
     rn[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
-    rn[RN_PACKET_LEN] = 2;
+    rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = V;
-    rn[RN_PACKET_DATA + 1] = dir | fn | prot;
+    rn[RN_PACKET_DATA + 1] = dir;
+    rn[RN_PACKET_DATA + 2] = fn;
+    rn[RN_PACKET_DATA + 3] = prot;
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
