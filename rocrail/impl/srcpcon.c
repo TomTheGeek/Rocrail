@@ -57,6 +57,7 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Block.h"
 
+extern const int bzr;
 
 static int instCnt = 0;
 
@@ -72,7 +73,7 @@ struct __OSrcpService {
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-static const char* SRCPVERSION="Rocrail 2.0; SRCP 0.8.4; SRCPOTHER 0.8.3";
+static const char* SRCPVERSION="Rocrail 2.0 Rev %d; SRCP 0.8.4; SRCPOTHER 0.8.3";
 
 /*
 200 OK <ID>
@@ -201,8 +202,15 @@ static void sendPWstate2InfoChannels( struct timeval time, int busId, char* stat
   char str[1025] = {'\0'};
   int j;
 
-  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
-    time.tv_sec, time.tv_usec / 1000, busId, state );
+  if( busId == 0 ){
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n%lu.%.3lu 100 INFO %d POWER %s\n",
+      time.tv_sec, time.tv_usec / 1000, busId, state, 
+      time.tv_sec, time.tv_usec / 1000, 1, state );
+  }
+  else{
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
+      time.tv_sec, time.tv_usec / 1000, busId, state );
+  }
 
   /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
 
@@ -369,7 +377,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
         srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
       }
 
-      busId = s88busOffset + 1;
+      busId = s88busOffset;
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StName %s EvName %s srcpconoffset %d busId %d PW %s", wState.name(), NodeOp.getName(evt), s88busOffset, busId, wState.ispower(evt)?"ON":"OFF" );
 
       sendPWstate2InfoChannels( time, busId, wState.ispower(evt)?"ON":"OFF" );
@@ -377,7 +385,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       /*100 INFO <bus> POWER ON/OFF <freetext>*/
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
         time.tv_sec, time.tv_usec / 1000,
-        100, s88busOffset + 1, wState.ispower(evt)?"ON":"OFF" );
+        100, s88busOffset, wState.ispower(evt)?"ON":"OFF" );
     }
   }
 
@@ -413,7 +421,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       /*100 INFO <bus> FB <addr> <value>*/
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
           time.tv_sec, time.tv_usec / 1000,
-          100, wFeedback.getbus(evt) + s88busOffset + 1, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+          100, wFeedback.getbus(evt) + s88busOffset, wFeedback.getaddr(evt), wFeedback.isstate(evt));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FBcmd [%s]", str );
     }
   }
@@ -1153,11 +1161,11 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
           }
           /* Is fb on the current bus? */
-          if( busId == (wFeedback.getbus(fbProps) + s88busOffset + 1) ) {
+          if( busId == (wFeedback.getbus(fbProps) + s88busOffset) ) {
             /*100 INFO <bus> FB <addr> <value>*/
             StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
                 time.tv_sec, time.tv_usec / 1000,
-                100, wFeedback.getbus(fbProps) + s88busOffset + 1, wFeedback.getaddr(fbProps), wFeedback.isstate(fbProps));
+                100, wFeedback.getbus(fbProps) + s88busOffset, wFeedback.getaddr(fbProps), wFeedback.isstate(fbProps));
 
             for( j = 0; j < cnt; j++ ) {
               iOThread th = (iOThread)ListOp.get( thList, j );
@@ -1704,12 +1712,15 @@ static void __SrcpService( void* threadinst ) {
   char*         sname = NULL;
   Boolean          ok = False;
   iOThread infoWriter = NULL;
+  char str[1025] = {'\0'};
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
       SocketOp.getPeername(o->clntSocket), o->id );
-  SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );
+  StrOp.fmtb(str, SRCPVERSION, (int) bzr );
+  SocketOp.write( o->clntSocket, str, StrOp.len(str) );
+/*  SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );*/
   SocketOp.write( o->clntSocket, "\n", 1 );
 
   sname = StrOp.fmt( "srcp%08X", o->clntSocket );
