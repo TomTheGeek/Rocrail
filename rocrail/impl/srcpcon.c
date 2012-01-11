@@ -1836,6 +1836,12 @@ static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj cal
 
   instCnt++;
 
+  if( wSrcpCon.getsrcpconoffset(ini) == NULL ) {
+    iONode offset = NodeOp.inst( wSrcpConOffset.name(), ini, ELEMENT_NODE );
+    wSrcpConOffset.setoffset(offset, 1);
+    NodeOp.addChild(ini, offset);
+  }
+
   data->manager = ThreadOp.inst( "srcpmngr", __manager, __SrcpCon );
   data->broadcaster = ThreadOp.inst( "srcpbrdcst", __broadcaster, __SrcpCon );
   ThreadOp.start( data->manager );
