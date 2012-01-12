@@ -206,40 +206,40 @@ static void __saveFxState(iOLoc inst) {
   wLoc.setfx( data->props, fx );
 }
 
-static void __cpNode2Fn(iOLoc inst, iONode cmd) {
+static Boolean __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
   if( StrOp.equals( wLoc.function, wLoc.getcmd(cmd) ) ) {
     int function = wFunCmd.getfnchanged(cmd);
     switch ( function ) {
-      case 0 : data->fn0 = wFunCmd.isf0(cmd); break;
-      case 1 : data->fn1 = wFunCmd.isf1(cmd); break;
-      case 2 : data->fn2 = wFunCmd.isf2(cmd); break;
-      case 3 : data->fn3 = wFunCmd.isf3(cmd); break;
-      case 4 : data->fn4 = wFunCmd.isf4(cmd); break;
-      case 5 : data->fn5 = wFunCmd.isf5(cmd); break;
-      case 6 : data->fn6 = wFunCmd.isf6(cmd); break;
-      case 7 : data->fn7 = wFunCmd.isf7(cmd); break;
-      case 8 : data->fn8 = wFunCmd.isf8(cmd); break;
-      case 9 : data->fn9 = wFunCmd.isf9(cmd); break;
-      case 10 : data->fn10 = wFunCmd.isf10(cmd); break;
-      case 11 : data->fn11 = wFunCmd.isf11(cmd); break;
-      case 12 : data->fn12 = wFunCmd.isf12(cmd); break;
-      case 13 : data->fn13 = wFunCmd.isf13(cmd); break;
-      case 14 : data->fn14 = wFunCmd.isf14(cmd); break;
-      case 15 : data->fn15 = wFunCmd.isf15(cmd); break;
-      case 16 : data->fn16 = wFunCmd.isf16(cmd); break;
-      case 17 : data->fn17 = wFunCmd.isf17(cmd); break;
-      case 18 : data->fn18 = wFunCmd.isf18(cmd); break;
-      case 19 : data->fn19 = wFunCmd.isf19(cmd); break;
-      case 20 : data->fn20 = wFunCmd.isf20(cmd); break;
-      case 21 : data->fn21 = wFunCmd.isf21(cmd); break;
-      case 22 : data->fn22 = wFunCmd.isf22(cmd); break;
-      case 23 : data->fn23 = wFunCmd.isf23(cmd); break;
-      case 24 : data->fn24 = wFunCmd.isf24(cmd); break;
-      case 25 : data->fn25 = wFunCmd.isf25(cmd); break;
-      case 26 : data->fn26 = wFunCmd.isf26(cmd); break;
-      case 27 : data->fn27 = wFunCmd.isf27(cmd); break;
-      case 28 : data->fn28 = wFunCmd.isf28(cmd); break;
+      case 0 : data->fn0 = wFunCmd.isf0(cmd); return data->fn0;
+      case 1 : data->fn1 = wFunCmd.isf1(cmd); return data->fn1;
+      case 2 : data->fn2 = wFunCmd.isf2(cmd); return data->fn2;
+      case 3 : data->fn3 = wFunCmd.isf3(cmd); return data->fn3;
+      case 4 : data->fn4 = wFunCmd.isf4(cmd); return data->fn4;
+      case 5 : data->fn5 = wFunCmd.isf5(cmd); return data->fn5;
+      case 6 : data->fn6 = wFunCmd.isf6(cmd); return data->fn6;
+      case 7 : data->fn7 = wFunCmd.isf7(cmd); return data->fn7;
+      case 8 : data->fn8 = wFunCmd.isf8(cmd); return data->fn8;
+      case 9 : data->fn9 = wFunCmd.isf9(cmd); return data->fn9;
+      case 10 : data->fn10 = wFunCmd.isf10(cmd); return data->fn10;
+      case 11 : data->fn11 = wFunCmd.isf11(cmd); return data->fn11;
+      case 12 : data->fn12 = wFunCmd.isf12(cmd); return data->fn12;
+      case 13 : data->fn13 = wFunCmd.isf13(cmd); return data->fn13;
+      case 14 : data->fn14 = wFunCmd.isf14(cmd); return data->fn14;
+      case 15 : data->fn15 = wFunCmd.isf15(cmd); return data->fn15;
+      case 16 : data->fn16 = wFunCmd.isf16(cmd); return data->fn16;
+      case 17 : data->fn17 = wFunCmd.isf17(cmd); return data->fn17;
+      case 18 : data->fn18 = wFunCmd.isf18(cmd); return data->fn18;
+      case 19 : data->fn19 = wFunCmd.isf19(cmd); return data->fn19;
+      case 20 : data->fn20 = wFunCmd.isf20(cmd); return data->fn20;
+      case 21 : data->fn21 = wFunCmd.isf21(cmd); return data->fn21;
+      case 22 : data->fn22 = wFunCmd.isf22(cmd); return data->fn22;
+      case 23 : data->fn23 = wFunCmd.isf23(cmd); return data->fn23;
+      case 24 : data->fn24 = wFunCmd.isf24(cmd); return data->fn24;
+      case 25 : data->fn25 = wFunCmd.isf25(cmd); return data->fn25;
+      case 26 : data->fn26 = wFunCmd.isf26(cmd); return data->fn26;
+      case 27 : data->fn27 = wFunCmd.isf27(cmd); return data->fn27;
+      case 28 : data->fn28 = wFunCmd.isf28(cmd); return data->fn28;
     }
   } else {
     if( wFunCmd.getgroup(cmd) == 0)
@@ -287,6 +287,7 @@ static void __cpNode2Fn(iOLoc inst, iONode cmd) {
     data->fn28 = wFunCmd.isf28( cmd );
     }
   }
+  return False;
 }
 
 
@@ -730,6 +731,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( data->fn0 != wLoc.isfn( cmd ) )
         f0changed = True;
       data->fn0 = wLoc.isfn( cmd );
+      __checkAction(inst, "lights");
     }
 
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
@@ -943,8 +945,15 @@ static void __engine( iOLoc inst, iONode cmd ) {
       }
 
       /* save the function status: */
-      __cpNode2Fn(inst, cmd);
+      Boolean fon = __cpNode2Fn(inst, cmd);
       __saveFxState(inst);
+
+      if( fnchanged != -1 && fon ) {
+        char fstr[32] = {'\0'};
+        StrOp.fmtb(fstr, "f%d", fnchanged );
+        __checkAction(inst, fstr);
+      }
+
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s(%d) lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
           wLoc.getid( data->props ), fnchanged,
