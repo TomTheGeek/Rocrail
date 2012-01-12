@@ -1351,7 +1351,7 @@ static void __statusReader( void* threadinst ) {
             if( SerialOp.read( o->serial, (char*)in, (int) ans*2 ) ) {
               int i = 0;
               for ( i = 0; i < ans; i++) {
-                 __handleSwitch(p50, in[i*2], in[i*2+1]);
+                 __handleSwitch(p50, in[i*2] + ((in[i*2+1]&0x07) * 256), in[i*2+1]);
               }
             }
             else {
