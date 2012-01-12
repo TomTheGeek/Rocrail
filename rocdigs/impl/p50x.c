@@ -1074,12 +1074,12 @@ static void __PTeventReader( void* threadinst ) {
 static void __handleSwitch(iOP50x p50x, int pada, int state) {
   iOP50xData data = Data(p50x);
 
-  int port;
-  int addr;
-  int value;
+  int port = 0;
+  int addr = 0;
+  Boolean value = False;
 
-  if( state == 0x80) value = 1;
-  else value = 0;
+  if( state & 0x80)
+    value = True;
 
   AddrOp.fromPADA( pada, &addr, &port );
 
