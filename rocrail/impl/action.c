@@ -27,6 +27,7 @@
 #include "rocrail/public/output.h"
 #include "rocrail/public/text.h"
 #include "rocrail/public/loc.h"
+#include "rocrail/public/fback.h"
 
 #include "rocs/public/system.h"
 #include "rocs/public/mem.h"
@@ -426,6 +427,21 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wOutput.setcmd( cmd, cmdStr );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output [%s] to [%s]", id, cmdStr );
       OutputOp.cmd( co, cmd, True );
+    }
+  }
+
+  /* sensor action */
+  else if( StrOp.equals( wFeedback.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getoid( data->action );
+    iOFBack fb = ModelOp.getFBack( model, id );
+    if( fb != NULL ) {
+      iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+      const char* cmdStr = wAction.getcmd( data->action );
+      int error = 0;
+      wFeedback.setid( cmd, id );
+      wFeedback.setstate( cmd, StrOp.equals("on", cmdStr) ? True:False);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting sensor [%s] to [%s]", id, cmdStr );
+      FBackOp.event( fb, cmd );
     }
   }
 
