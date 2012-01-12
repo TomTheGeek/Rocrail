@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -137,7 +138,7 @@ void TimedActions::initLabels() {
 
     m_ExecCmd->Enable(false);
 
-    // "co,ext,sw,st,sys,sg,bk,lc,fn,tt,seltab,tx"
+    // "co,ext,sw,st,sys,sg,bk,lc,fn,tt,seltab,tx,fb"
     m_Type->Append( wxGetApp().getMsg( "output" ) );
     m_Type->Append( wxGetApp().getMsg( "program" ) );
     m_Type->Append( wxGetApp().getMsg( "turnout" ) );
@@ -150,6 +151,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "turntable" ) );
     m_Type->Append( wxGetApp().getMsg( "seltab" ) );
     m_Type->Append( wxGetApp().getMsg( "text" ) );
+    m_Type->Append( wxGetApp().getMsg( "sensor" ) );
 }
 
 
@@ -191,6 +193,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(10);
   else if( StrOp.equals( wText.name(), type ) )
     m_Type->SetSelection(11);
+  else if( StrOp.equals( wFeedback.name(), type ) )
+    m_Type->SetSelection(12);
 
   initOutputList();
   initCommands();
@@ -302,6 +306,7 @@ bool TimedActions::evaluate() {
     case 9: wAction.settype(m_Props, wTurntable.name()); break;
     case 10: wAction.settype(m_Props, wSelTab.name()); break;
     case 11: wAction.settype(m_Props, wText.name()); break;
+    case 12: wAction.settype(m_Props, wFeedback.name()); break;
   }
 
   return true;
@@ -342,6 +347,7 @@ void TimedActions::initOutputList() {
       case 9: colist = wPlan.getttlist( model ); break;
       case 10: colist = wPlan.getseltablist( model ); break;
       case 11: colist = wPlan.gettxlist( model ); break;
+      case 12: colist = wPlan.getfblist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -846,6 +852,10 @@ void TimedActions::initCommands()
       break;
     case 11: // text
       m_Command->Append(wxString( wAction.text_update, wxConvUTF8));
+      break;
+    case 12: // sensor
+      m_Command->Append(wxString( wAction.output_on, wxConvUTF8));
+      m_Command->Append(wxString( wAction.output_off, wxConvUTF8));
       break;
   }
 
