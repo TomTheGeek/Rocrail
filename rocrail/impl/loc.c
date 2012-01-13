@@ -439,7 +439,7 @@ static void* __event( void* inst, const void* evt ) {
   if( evtNode == NULL )
     return NULL;
 
-  if( data->go ) {
+  if( data->go && !data->gomanual ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "ignore field event for [%s] while running in auto mode", wLoc.getid(data->props) );
     return NULL;
