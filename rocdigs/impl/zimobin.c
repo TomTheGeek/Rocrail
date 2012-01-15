@@ -66,6 +66,10 @@ soh soh seq ack pri seq crc8 eot
 
 #include "rocutils/public/addr.h"
 
+#define OPC_CS 0x0A
+#define CTRL_TRACK 0
+#define CTRL_LOCO 1
+#define CTRL_ACCESSORY 5
 
 static int instCnt = 0;
 
@@ -300,8 +304,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
     byte* outa = allocMem(32);
     outa[0] = 5;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 7;    /* accessory command */
+    outa[1] = OPC_CS; /* command station instruction */
+    outa[2] = CTRL_ACCESSORY;    /* accessory command */
     outa[3] = addr / 256 | 0x80;
     outa[4] = addr % 256;
     outa[5] = (port+state) | 0x08; /* TODO: Reset thge other gate? */
@@ -332,8 +336,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
     byte* outa = allocMem(32);
     outa[0] = 5;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 7;    /* accessory command */
+    outa[1] = OPC_CS; /* command station instruction */
+    outa[2] = CTRL_ACCESSORY;    /* accessory command */
     outa[3] = addr / 256 | 0x80;
     outa[4] = addr % 256;
     outa[5] = (port+gate) | state;
@@ -393,8 +397,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
 
     outa[0] = 8;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 3;    /* loco control */
+    outa[1] = OPC_CS; /* command station instruction */
+    outa[2] = CTRL_LOCO;    /* loco control */
     outa[3] = addr / 256 | 0x80; /* force dcc */
     outa[4] = addr % 256;
     outa[5] = V;
@@ -419,8 +423,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     byte* outa = allocMem(256);
 
     outa[0] = 3;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 2;    /* track control */
+    outa[1] = OPC_CS; /* command station instruction */
+    outa[2] = CTRL_TRACK;    /* track control */
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
@@ -431,7 +435,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[3] = 2; /* switch track voltage ON */
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
       outa[3] = 0; /* stop broadcast */
     }
     ThreadOp.post( data->transactor, (obj)outa );
@@ -685,7 +689,7 @@ static void __transactor( void* threadinst ) {
 /* VERSION: */
 static int vmajor = 2;
 static int vminor = 0;
-static int patch  = 99;
+static int patch  = 98;
 static int _version( obj inst ) {
   iOZimoBinData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
