@@ -1345,7 +1345,7 @@ static void __accThread( void* threadinst ) {
 
         /* try to lock the routes */
         const char* routeid = NULL;
-        if( StrOp.len( wAccessoryCtrl.getlockroutes(data->accctrl) ) ) {
+        if( StrOp.len( wAccessoryCtrl.getlockroutes(data->accctrl) ) >= 0 ) {
           iOStrTok tok = StrTokOp.inst( wAccessoryCtrl.getlockroutes(data->accctrl) , ',' );
           Boolean allRouteesLocked = True;
           /* iterate all routes to lock */
