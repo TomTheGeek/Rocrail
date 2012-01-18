@@ -1330,7 +1330,7 @@ static void __runner( void* threadinst ) {
 
     /* this is approximately a second */
     if( tick % 10 == 0 && tick != 0 ) {
-      if( data->drvSpeed > 0  ) {
+      if( data->drvSpeed > 0 || (!data->go && wLoc.getV(data->props) > 0) ) {
         data->runtime++;
         wLoc.setruntime( data->props, data->runtime );
       }
