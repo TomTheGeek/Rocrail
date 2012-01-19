@@ -392,13 +392,16 @@ static void _modify( struct OText* inst ,iONode props ) {
   }
 
   /* Leave the childs if no new are comming */
-  if( NodeOp.getChildCnt( props ) > 0 ) {
+  if( NodeOp.getChildCnt( o->props ) > 0 ) {
     cnt = NodeOp.getChildCnt( o->props );
     while( cnt > 0 ) {
       iONode child = NodeOp.getChild( o->props, 0 );
       NodeOp.removeChild( o->props, child );
       cnt = NodeOp.getChildCnt( o->props );
     }
+  }
+
+  if( NodeOp.getChildCnt( props ) > 0 ) {
     cnt = NodeOp.getChildCnt( props );
     for( i = 0; i < cnt; i++ ) {
       iONode child = NodeOp.getChild( props, i );
