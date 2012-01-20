@@ -254,7 +254,7 @@ msgstr ""
 #. 
 # id="initfield"
 #, c-format
-msgid "Init field"
+msgid "Start of Day"
 msgstr ""
 
 #. 

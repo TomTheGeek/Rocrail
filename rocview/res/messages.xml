@@ -810,7 +810,7 @@
   </Msg>
   <Msg id="initfield">
     <de txt="Weichen/Signale/Zähler initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
-    <en txt="Init field" accel="0" tip="Initialize switches according the track plan."/>
+    <en txt="Start of Day" accel="0" tip="Initialize switches according the track plan."/>
     <nl txt="Initialisatie veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
     <sv txt="Initiera anläggning" accel="8" tip="Ställ växlar och signaler enligt spårplan."/>
     <fr txt="Positionner les aiguillages" accel="0" tip="Positionner les aiguillages comme sur le TCO."/>
