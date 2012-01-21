@@ -99,6 +99,7 @@ class CBusNodeDlg : public cbusnodedlggen
   iOQueue m_Queue;
   int m_GC2SetIndex;
   int m_GC6SetIndex;
+  int m_GC4SetIndex;
 
   int m_SetPage;
   bool m_bGC2GetAll;
@@ -106,6 +107,8 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_bGC7GetAll;
   bool m_bGC6GetAll;
   bool m_bGC6SetAll;
+  bool m_bGC4GetAll;
+  bool m_bGC4SetAll;
 
 protected:
 	// Handlers for cbusnodedlggen events.
@@ -156,6 +159,8 @@ protected:
   void onGC6SetAll( wxCommandEvent& event );
   void OnExtSensors( wxCommandEvent& event );
   void OnBounce( wxCommandEvent& event );
+  void onGC4GetAll( wxCommandEvent& event );
+  void onGC4SetAll( wxCommandEvent& event );
 
 
 public:

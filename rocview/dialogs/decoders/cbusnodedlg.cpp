@@ -1534,3 +1534,18 @@ void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
+void CBusNodeDlg::onGC4GetAll( wxCommandEvent& event ) {
+  m_bGC4GetAll = true;
+  m_GC4SetAll->Enable(false);
+  m_GC4GetAll->Enable(false);
+  varGet(1);
+}
+
+void CBusNodeDlg::onGC4SetAll( wxCommandEvent& event ) {
+  m_bGC4SetAll = true;
+  m_GC4SetAll->Enable(false);
+  m_GC4GetAll->Enable(false);
+  m_GC4SetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+}
+
