@@ -88,7 +88,9 @@ class CBusNodeDlg : public cbusnodedlggen
   void eventSet( int nn, int addr, int idx, int val, bool update );
   void initGC7Var(int nr, int val);
   void initGC6Var(int nr, int val);
+  void initGC4Var(int nr, int val);
   void initGC6Event(int idx, int nn, int addr);
+  void initGC4Event(int idx, int nn, int addr);
   void gc6GetServoConf(int servo, int idx, int* conf);
   void gc6GetServoEvent(int servo, int idx, int* nn, int* addr);
   void gc6SetServoConf(int servo, int idx, int conf);
@@ -109,6 +111,8 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_bGC6SetAll;
   bool m_bGC4GetAll;
   bool m_bGC4SetAll;
+
+  long m_GC4AllowedRFID[5];
 
 protected:
 	// Handlers for cbusnodedlggen events.

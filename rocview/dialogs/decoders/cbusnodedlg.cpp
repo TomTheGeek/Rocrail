@@ -58,11 +58,14 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
   m_bGC2GetAll = false;
   m_bGC2SetAll = false;
   m_bGC7GetAll = false;
+  m_bGC4GetAll = false;
+  m_bGC4SetAll = false;
   m_bGC6GetAll = false;
   m_bGC6SetAll = false;
   m_bGC2SetAll = true;
   m_GC2SetIndex = 0;
   m_GC6SetIndex = 0;
+  m_GC4SetIndex = 0;
   init(event);
 }
 
@@ -273,6 +276,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         wCBusNodeVar.setval(cbusnodevar, val);
         initVarList(node);
         initGC2Var(nr, val);
+        initGC4Var(nr, val);
         initGC6Var(nr, val);
         initGC7Var(nr, val);
         return cbusnodevar;
@@ -285,6 +289,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     wCBusNodeVar.setval( cbusnodevar, val );
     initVarList(node);
     initGC2Var(nr, val);
+    initGC4Var(nr, val);
     initGC6Var(nr, val);
     initGC7Var(nr, val);
     return cbusnodevar;
@@ -309,6 +314,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
         wCBusNodeEvent.setevval(cbusnodeevt, evval);
         initEvtList(node);
         initGC2Event(evnr, evnn, evaddr);
+        initGC4Event(evnr, evnn, evaddr);
         initGC6Event(evnr, evnn, evaddr);
         TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
@@ -323,6 +329,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
     wCBusNodeEvent.setevval( cbusnodeevt, evval );
     initEvtList(node);
     initGC2Event(evnr, evnn, evaddr);
+    initGC4Event(evnr, evnn, evaddr);
     initGC6Event(evnr, evnn, evaddr);
     return cbusnodeevt;
   }
@@ -772,8 +779,8 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
-    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc2=%d gc6=%d gc7=%d",
-        cv, val, m_bGC2GetAll, m_bGC6GetAll, m_bGC7GetAll);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc2=%d gc4=%d gc6=%d gc7=%d",
+        cv, val, m_bGC2GetAll, m_bGC6GetAll, m_bGC6GetAll, m_bGC7GetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -793,6 +800,17 @@ void CBusNodeDlg::event( iONode event ) {
         m_bGC6GetAll = false;
         m_GC6SetAll->Enable(true);
         m_GC6GetAll->Enable(true);
+        eventGetAll();
+      }
+    }
+    else if( m_bGC4GetAll ) {
+      if( cv < 27 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGC4GetAll = false;
+        m_GC4SetAll->Enable(true);
+        m_GC4GetAll->Enable(true);
         eventGetAll();
       }
     }
@@ -1134,6 +1152,28 @@ void CBusNodeDlg::initGC6Var( int nr, int val ) {
   }
 }
 
+void CBusNodeDlg::initGC4Var( int nr, int val ) {
+  if( nr == 1 ) {
+    // node var1
+    // reset allowed rfids
+    for( int i = 0; i < 5; i++ )
+      m_GC4AllowedRFID[i] = 0;
+  }
+  else if( nr == 2 ) {
+    m_CANID = val;
+    m_GC4CANID->SetValue(val);
+  }
+  else if( nr < 28 ) {
+    // allowed rfid
+    long lval = val;
+    m_GC4AllowedRFID[(nr-3)/5] += lval * (((nr-3)%5)*256);
+    if( (nr-3)%5 == 4 ) {
+      wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
+      allowedRFID[(nr-3)/5]->SetValue(wxString::Format(_T("%ld"),m_GC4AllowedRFID[(nr-3)/5]));
+    }
+  }
+}
+
 void CBusNodeDlg::initGC2Event( int idx, int nn, int addr ) {
   if( idx < 16 ) {
     // port event
@@ -1156,6 +1196,24 @@ void CBusNodeDlg::initGC6Event( int idx, int nn, int addr ) {
   else if( idx == 8 ) {
     // SOD
     m_GC6SOD->SetValue( addr );
+    m_SOD = addr;
+  }
+}
+
+void CBusNodeDlg::initGC4Event( int idx, int nn, int addr ) {
+  if( idx < 8 ) {
+    // rfid event
+    wxSpinCtrl* event[] = {m_GC4RFID1,m_GC4RFID2,m_GC4RFID3,m_GC4RFID4,m_GC4RFID5,m_GC4RFID6,m_GC4RFID7,m_GC4RFID8};
+    event[idx]->SetValue(addr);
+  }
+  else if( idx < 16 ) {
+    // block event
+    wxSpinCtrl* event[] = {m_GC4BK1,m_GC4BK2,m_GC4BK3,m_GC4BK4,m_GC4BK5,m_GC4BK6,m_GC4BK7,m_GC4BK8};
+    event[idx-8]->SetValue(addr);
+  }
+  else if( idx == 16 ) {
+    // SOD
+    m_GC4SOD->SetValue( addr );
     m_SOD = addr;
   }
 }
@@ -1296,7 +1354,7 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
-      "timer gc2=%d[%d] gc6=%d[%d]", m_bGC2SetAll, m_GC2SetIndex, m_bGC6SetAll, m_GC6SetIndex);
+      "timer gc2=%d[%d] gc4=%d[%d] gc6=%d[%d]", m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex);
   if( m_bGC6SetAll ) {
     if( m_GC6SetIndex == 0 ) {
       int nv1 = m_GC6SaveServoPos->IsChecked() ? 0x01:0x00;
@@ -1341,6 +1399,64 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       m_bGC6SetAll = false;
       m_GC6SetAll->Enable(true);
       m_GC6GetAll->Enable(true);
+      setUnlearn();
+    }
+  }
+  else if( m_bGC4SetAll ) {
+    if( m_GC4SetIndex == 0 ) {
+      int nv1 = 0x00;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv1=0x%02X", nv1);
+      varSet(1, nv1, false);
+    }
+    else if( m_GC4SetIndex == 1 ) {
+      int canid = m_GC4CANID->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv2=0x%02X", canid);
+      varSet(2, canid, false);
+    }
+    else if( m_GC4SetIndex < 27 ) {
+      int rfid = (m_GC4SetIndex - 2) / 5;
+      int idx  = (m_GC4SetIndex - 2) % 5;
+      wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
+      long lval = 0;
+      allowedRFID[rfid]->GetValue().ToLong(&lval);
+      int val = (int)((lval >> idx) & 0xFF);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv%d=0x%02X", m_GC4SetIndex+1, val);
+      varSet(m_GC4SetIndex+1, val, false);
+    }
+    else if( m_GC6SetIndex == 27 ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 learn mode");
+      setLearn();
+    }
+    else if( m_GC4SetIndex > 27 && m_GC4SetIndex < 35 ) {
+      // rfid events
+      wxSpinCtrl* rfidAddr[] = {m_GC4RFID1,m_GC4RFID2,m_GC4RFID3,m_GC4RFID4,m_GC4RFID5,m_GC4RFID6,m_GC4RFID7,m_GC4RFID8};
+      int rfid = m_GC4SetIndex - 28;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+          "set gc4 event %d rfid %d", rfid, rfidAddr[rfid]->GetValue());
+      eventSet( 0, rfidAddr[rfid]->GetValue(), m_GC4SetIndex-28, 0, false );
+    }
+    else if( m_GC4SetIndex > 34 && m_GC4SetIndex < 43 ) {
+      // block events
+      int block = m_GC4SetIndex - 35;
+      wxSpinCtrl* blockAddr[] = {m_GC4BK1,m_GC4BK2,m_GC4BK3,m_GC4BK4,m_GC4BK5,m_GC4BK6,m_GC4BK7,m_GC4BK8};
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
+          "set gc4 event %d rfid %d", block, blockAddr[block]->GetValue());
+      eventSet( 0, blockAddr[block]->GetValue(), m_GC4SetIndex-28, 0, false );
+    }
+    else if( m_GC4SetIndex == 43 ) {
+      // SOD
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 SOD event %d", m_GC4SetIndex-28);
+      eventSet( 0, m_GC4SOD->GetValue(), m_GC4SetIndex-28, 0, false );
+    }
+
+    m_GC4SetIndex++;
+    if( m_bGC4SetAll && m_GC4SetIndex < 44 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
+    else {
+      m_bGC4SetAll = false;
+      m_GC4SetAll->Enable(true);
+      m_GC4GetAll->Enable(true);
       setUnlearn();
     }
   }
