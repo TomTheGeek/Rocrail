@@ -214,7 +214,7 @@ Boolean rocs_socket_create( iOSocketData o ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creating socket udp=%d", o->udp );
 
-  o->sh = socket( AF_INET, o->udp ? SOCK_DGRAM:SOCK_STREAM, 0 );
+  o->sh = socket( AF_INET, o->udp ? SOCK_DGRAM:SOCK_STREAM, o->udp ? IPPROTO_UDP:IPPROTO_TCP );
   if( o->sh < 0 ) {
     o->rc = errno;
     TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 8015, o->rc, "socket() failed" );
