@@ -117,7 +117,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
     return True;
   }
 
-  if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
+  if( data->socket != NULL ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
   }
