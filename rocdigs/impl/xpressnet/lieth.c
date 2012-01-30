@@ -24,6 +24,31 @@
 #include "rocrail/wrapper/public/DigInt.h"
 
 
+static void __timeoutwd( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog started" );
+
+  while( data->run ) {
+    long t = time(NULL);
+    if( t - data->lastcmd >= 30 ) {
+      /* send a packet: (0xFF 0xFE) 0xF1 0x01 (0xF0) */
+      byte* outa = allocMem(32);
+      outa[0] = 0xF1;
+      outa[1] = 0x01;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
+    ThreadOp.sleep(1000);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog ended" );
+}
+
+
 Boolean liethConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "LI-ETH at %s:%d",
@@ -40,6 +65,8 @@ Boolean liethConnect(obj xpressnet) {
   SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
 
   if ( SocketOp.connect( data->socket ) ) {
+    data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
+    ThreadOp.start( data->timeOutWD );
     return True;
   }
   else {
@@ -83,6 +110,10 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       return len;
   }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "problem reading XpressNet%s", SocketOp.isBroken(data->socket)?" (broken)":"" );
+  }
+
   return 0;
 }
 
@@ -117,9 +148,13 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
     return True;
   }
 
-  if( data->socket != NULL ) {
+  if( !SocketOp.isBroken(data->socket) && data->socket != NULL ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
+    data->lastcmd = time(NULL);
+    if( !rc ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to XpressNet" );
+    }
   }
 
   return rc;

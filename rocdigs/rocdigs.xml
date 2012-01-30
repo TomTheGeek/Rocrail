@@ -347,6 +347,8 @@
       <var name="initializer" vt="iOThread"/>
       <var name="transactor" vt="iOThread"/>
       <var name="timedQueue" vt="iOThread"/>
+      <var name="lastcmd" vt="long"/>
+      <var name="timeOutWD" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
