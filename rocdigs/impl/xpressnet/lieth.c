@@ -88,7 +88,7 @@ void liethDisConnect(obj xpressnet) {
 Boolean liethAvail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   char msgStr[32];
-  if( SocketOp.isBroken(data->socket) ) {
+  if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
     return False;
   }
   return SocketOp.peek( data->socket, msgStr, 1 );
@@ -103,7 +103,7 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
 
 
-  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 2 ) ) {
+  if( data->socket != NULL && !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 2 ) ) {
     SocketOp.read( data->socket, buffer, 1 );
     len = (buffer[0] & 0x0F) + 1;
     if( SocketOp.read( data->socket, buffer+1, len ) )
@@ -148,7 +148,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
     return True;
   }
 
-  if( !SocketOp.isBroken(data->socket) && data->socket != NULL ) {
+  if( data->socket != NULL && !SocketOp.isBroken(data->socket) ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
     data->lastcmd = time(NULL);
