@@ -395,6 +395,7 @@ public:
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
     wxCheckBox* m_Regulated;
+    wxCheckBox* m_Info4Throttle;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;

@@ -2025,6 +2025,7 @@
         <var name="evttimer" vt="int" defval="0" range="0-*" unit="ms" remark="event timer; loc should wait this time before processing the event"/>
         <var name="ent2incorr" vt="int" defval="100" range="1-*" unit="%" remark="Correction percentage for enter2in block timer"/>
         <var name="swaptimer" vt="int" defval="0" range="0-*" unit="ms" remark="Swap placing timer; Loco should wait this time before processing the swap."/>
+        <var name="info4throttle" vt="bool" defval="False" remark="Get loco info if it is stalled and not in automode."/>
 
         <const name="mode_idle" vt="string" val="idle"/>
         <const name="mode_wait" vt="string" val="wait"/>

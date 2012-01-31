@@ -17713,4 +17713,7 @@
   <Msg id="temperature">
     <en txt="temperature"/>
   </Msg>
+  <Msg id="info4throttle">
+    <en txt="Poll info"/>
+  </Msg>
 </Messages>

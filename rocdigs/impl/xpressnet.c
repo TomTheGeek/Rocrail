@@ -775,10 +775,12 @@ static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
 
   wLoc.setaddr( nodeC, data->infoaddr );
   wLoc.setV_raw( nodeC, speed );
+  wLoc.setV_rawMax( nodeC, steps );
   wLoc.setspcnt( nodeC, steps );
   wLoc.setdir( nodeC, dir );
-  wLoc.setcmd( nodeC, wLoc.direction );
+  wLoc.setcmd( nodeC, wLoc.velocity );
   wLoc.setfn( nodeC, (F0 & 0x10) ? True:False );
+  wLoc.setthrottleid( nodeC, "xpressnet" );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
