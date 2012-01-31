@@ -771,15 +771,16 @@ static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "loco %d dir=%s speed=%d steps=%d F0=0x%02X F1=0x%02X", data->infoaddr, dir?"fwd":"rev", speed, steps, F0, F1 );
+      "loco %d dir=%s fn=%d speed=%d steps=%d F0=0x%02X F1=0x%02X",
+      data->infoaddr, dir?"fwd":"rev", (F0 & 0x10) ? True:False, speed, steps, F0, F1 );
 
   wLoc.setaddr( nodeC, data->infoaddr );
   wLoc.setV_raw( nodeC, speed );
   wLoc.setV_rawMax( nodeC, steps );
   wLoc.setspcnt( nodeC, steps );
   wLoc.setdir( nodeC, dir );
-  wLoc.setcmd( nodeC, wLoc.velocity );
-  wLoc.setfn( nodeC, (F0 & 0x10) ? True:False );
+  wLoc.setcmd( nodeC, wLoc.dirfun );
+  wLoc.setfn( nodeC, ((F0 & 0x10) ? True:False) );
   wLoc.setthrottleid( nodeC, "xpressnet" );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
