@@ -33,14 +33,16 @@ static void __timeoutwd( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog started" );
 
   while( data->run ) {
-    long t = time(NULL);
-    if( t - data->lastcmd >= 30 ) {
-      /* send a packet: (0xFF 0xFE) 0xF1 0x01 (0xF0) */
-      byte* outa = allocMem(32);
-      outa[0] = 0xF1;
-      outa[1] = 0x01;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
-      ThreadOp.post( data->transactor, (obj)outa );
+    if( data->socket != NULL ) {
+      long t = time(NULL);
+      if( t - data->lastcmd >= 30 ) {
+        /* send a packet: (0xFF 0xFE) 0xF1 0x01 (0xF0) */
+        byte* outa = allocMem(32);
+        outa[0] = 0xF1;
+        outa[1] = 0x01;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
+        ThreadOp.post( data->transactor, (obj)outa );
+      }
     }
     ThreadOp.sleep(1000);
   }
@@ -102,6 +104,9 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int len = 0;
 
+  if( data->socket == NULL ) {
+    return 0;
+  }
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 2 ) ) {
     SocketOp.read( data->socket, buffer, 1 );
@@ -111,10 +116,11 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
       return len;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "problem reading XpressNet%s", SocketOp.isBroken(data->socket)?" (broken)":"" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading XpressNet: Disconnect" );
+    liethDisConnect(xpressnet);
+    ThreadOp.sleep(1000);
   }
 
-  return 0;
 }
 
 Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
@@ -127,6 +133,10 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   unsigned char out[256];
 
   *rspexpected = True; /* LIUSB/ETH or CS will confirm every command */
+  if( data->socket == NULL ) {
+    return 0;
+  }
+
 
   len = makeChecksum(outin);
 
