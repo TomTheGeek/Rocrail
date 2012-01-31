@@ -972,6 +972,17 @@ static void __engine( iOLoc inst, iONode cmd ) {
     }
   }
 
+  else if( !LocOp.isAutomode(inst) || data->gomanual ) {
+    data->infocheck++;
+    if( data->infocheck > 10 ) {
+      if( cmd == NULL )
+        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setcmd( cmd, wLoc.info );
+      wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
+      data->infocheck = 0;
+    }
+  }
+
 
 
   /* New speed attributes: */

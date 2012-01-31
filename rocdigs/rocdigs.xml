@@ -370,6 +370,8 @@
       <var name="interfaceVersion" vt="int"/>
       <var name="power" vt="Boolean"/>
       <var name="ignoreBusy" vt="Boolean"/>
+      <var name="infoQueue" vt="iOThread"/>
+      <var name="infoaddr" vt="int"/>
     </data>
   </object>
 

@@ -331,6 +331,18 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
+  /* Loc info command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals( wLoc.getcmd(node), wLoc.info) ) {
+    int   addr = wLoc.getaddr( node );
+    byte* outa = allocMem(32);
+    outa[0] = 0xE3;
+    outa[1] = 0x00;
+    __setLocAddr( addr, outa+2 );
+    outa[4] = addr / 256;
+    outa[5] = addr % 256;
+    ThreadOp.post( data->infoQueue, (obj)outa );
+  }
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
@@ -737,6 +749,48 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 }
 
 
+static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
+  iOXpressNetData data = Data(xpressnet);
+  iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  int steps = in[1] & 0x07;
+  int speed = in[2];
+  int F0 = in[3];
+  int F1 = in[4];
+
+  Boolean dir = (speed & 0x80) ? True:False;
+  speed = speed & 0x7F;
+  if( steps == 0 ) steps = 14;
+  else if( steps == 0x01 ) steps = 27;
+  else if( steps == 0x02 ) steps = 28;
+  else steps = 128;
+
+  if( steps == 27 || steps == 28 ) {
+    int bit4 = (speed & 0x10) >> 4;
+    speed &= 0x0F;
+    speed = (speed << 1) + bit4;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "loco %d dir=%s speed=%d steps=%d F0=0x%02X F1=0x%02X", data->infoaddr, dir?"fwd":"rev", speed, steps, F0, F1 );
+
+  wLoc.setaddr( nodeC, data->infoaddr );
+  wLoc.setV_raw( nodeC, speed );
+  wLoc.setspcnt( nodeC, steps );
+  wLoc.setdir( nodeC, dir );
+  wLoc.setcmd( nodeC, wLoc.direction );
+  wLoc.setfn( nodeC, (F0 & 0x10) ? True:False );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  /*
+   * F0: ZustandderFunktionen0bis4. 000F0F4F3F2F1
+   * F1: Zustand der Funktionen 5 bis 12 F12 F11 F10 F9 F8 F7 F6 F5
+   */
+  data->infoaddr = 0;
+}
+
+
 static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
   iOXpressNetData data = Data(xpressnet);
 
@@ -958,6 +1012,28 @@ static Boolean __checkLiRc(iOXpressNetData data, byte* in) {
   }
 
   return rspReceived;
+}
+
+
+static void __infoqueue( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info queue started" );
+
+  while( data->run ) {
+    if( data->infoaddr == 0 ) {
+      byte* cmd = (byte*)ThreadOp.getPost( th );
+      if (cmd != NULL) {
+        data->infoaddr = cmd[4]*256 + cmd[5];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info request for %d", data->infoaddr );
+        ThreadOp.post( data->transactor, (obj)cmd );
+      }
+    }
+    ThreadOp.sleep(10);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info queue ended" );
 }
 
 
@@ -1240,10 +1316,16 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
         rspReceived = True;
       }
+      else if (in[0] == 0xE4){
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loco info...");
+        __evaluateLoco( xpressnet, in );
+        rspReceived = True;
+      }
       else if (!rspReceived) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check byte dump:");
         TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
+
 
       /* anything will go to rocgui ...*/
       __evaluateResponse( xpressnet, in );
@@ -1307,6 +1389,7 @@ static void _halt( obj inst, Boolean poweroff ) {
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   data->subDisConn(inst);
+  ThreadOp.sleep(500);
   return;
 }
 
@@ -1492,6 +1575,9 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
 
     data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __XpressNet );
     ThreadOp.start( data->timedQueue );
+
+    data->infoQueue = ThreadOp.inst( "infoqueue", &__infoqueue, __XpressNet );
+    ThreadOp.start( data->infoQueue );
 
 
     data->initializer = ThreadOp.inst( "initializer", &__initializer, __XpressNet );

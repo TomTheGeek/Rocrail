@@ -703,6 +703,7 @@
       <var name="runtime" vt="long"/>
       <var name="secondnextblock" vt="Boolean"/>
       <var name="usemanualroutes" vt="Boolean"/>
+      <var name="infocheck" vt="int"/>
     </data>
   </object>
 
