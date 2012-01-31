@@ -830,7 +830,7 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout status change address %d port %d", baseadress+1, start+k );
       } else {
         if( (b2[7-k*2] + b2[6-k*2]) == 2 )       // turnout reported invalid position
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Lenz turnout reports invalid position address %d port %d", baseadress+1, start+k );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Lenz turnout reports invalid position address %d port %d", baseadress+1, start+k );
         else                                     // turnout not yet operated since power on
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout not operated yet address %d port %d", baseadress+1, start+k );
       }
@@ -1030,7 +1030,7 @@ static void __infoqueue( void* threadinst ) {
       byte* cmd = (byte*)ThreadOp.getPost( th );
       if (cmd != NULL) {
         data->infoaddr = cmd[4]*256 + cmd[5];
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info request for %d", data->infoaddr );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info request for %d", data->infoaddr );
         ThreadOp.post( data->transactor, (obj)cmd );
       }
     }
