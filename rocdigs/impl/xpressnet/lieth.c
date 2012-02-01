@@ -23,13 +23,16 @@
 #include "rocdigs/impl/xpressnet/li101.h"
 #include "rocrail/wrapper/public/DigInt.h"
 
+Boolean liethConnect(obj xpressnet);
 
 static void __timeoutwd( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
   iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
   iOXpressNetData data = Data(xpressnet);
 
-  iOList list = ListOp.inst();
+  int retry = 0;
+
+  ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog started" );
 
   while( data->run ) {
@@ -42,6 +45,15 @@ static void __timeoutwd( void* threadinst ) {
         outa[1] = 0x01;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
         ThreadOp.post( data->transactor, (obj)outa );
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
+      if( retry < 10 && !liethConnect((obj)xpressnet) ) {
+        retry++;
+      }
+      else {
+        retry = 0;
       }
     }
     ThreadOp.sleep(1000);
@@ -67,8 +79,10 @@ Boolean liethConnect(obj xpressnet) {
   SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
 
   if ( SocketOp.connect( data->socket ) ) {
-    data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
-    ThreadOp.start( data->timeOutWD );
+    if( data->timeOutWD == NULL ) {
+      data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
+      ThreadOp.start( data->timeOutWD );
+    }
     return True;
   }
   else {
