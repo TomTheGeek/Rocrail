@@ -86,8 +86,10 @@ Boolean liethConnect(obj xpressnet) {
     return True;
   }
   else {
-    SocketOp.base.del( data->socket );
-    data->socket = NULL;
+    if( data->socket != NULL ) {
+      SocketOp.base.del( data->socket );
+      data->socket = NULL;
+    }
     return False;
   }
 }
@@ -95,9 +97,10 @@ Boolean liethConnect(obj xpressnet) {
 void liethDisConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   if( data->socket != NULL ) {
-    SocketOp.disConnect( data->socket );
-    SocketOp.base.del( data->socket );
+    iOSocket socket = data->socket;
     data->socket = NULL;
+    SocketOp.disConnect( socket );
+    SocketOp.base.del( socket );
   }
 }
 
