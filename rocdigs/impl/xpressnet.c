@@ -335,11 +335,23 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals( wLoc.getcmd(node), wLoc.info) ) {
     int   addr = wLoc.getaddr( node );
     byte* outa = allocMem(32);
-    outa[0] = 0xE3;
-    outa[1] = 0x00;
-    __setLocAddr( addr, outa+2 );
-    outa[4] = addr / 256;
-    outa[5] = addr % 256;
+    if( data->v2 ) {
+      int  spcnt = wLoc.getspcnt( node );
+      outa[0] = 0xA2;
+      outa[1] = addr;
+      outa[2] = 0;
+      if( spcnt == 27 )
+        outa[2] = 1;
+      if( spcnt == 28 )
+        outa[2] = 2;
+    }
+    else {
+      outa[0] = 0xE3;
+      outa[1] = 0x00;
+      __setLocAddr( addr, outa+2 );
+      outa[4] = addr / 256;
+      outa[5] = addr % 256;
+    }
     ThreadOp.post( data->infoQueue, (obj)outa );
   }
 
@@ -749,6 +761,56 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 }
 
 
+static void __evaluateLocoV2( iOXpressNet xpressnet, byte* in ) {
+  iOXpressNetData data = Data(xpressnet);
+  iONode  nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  int     addr  = in[1];
+  int     speed = in[2];
+  Boolean dir   = ((speed & 0x40) ? True:False);
+  Boolean fn    = ((speed & 0x20) ? True:False);
+  int     F0    = in[3];
+  int     steps = 14;
+  if( in[4] == 1 )
+    steps = 27;
+  if( in[4] == 2 )
+    steps = 28;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "locoV2 %d(%d) dir=%s fn=%d speed=%d steps=%d F0=0x%02X",
+      addr, data->infoaddr, dir?"fwd":"rev", fn, speed, steps, F0 );
+
+  wLoc.setthrottleid( nodeC, "xpressnet" );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wLoc.setaddr( nodeC, addr );
+  wLoc.setV_raw( nodeC, speed );
+  wLoc.setV_rawMax( nodeC, steps );
+  wLoc.setspcnt( nodeC, steps );
+  wLoc.setdir( nodeC, dir );
+  wLoc.setcmd( nodeC, wLoc.dirfun );
+  wLoc.setfn( nodeC, fn );
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  /*
+   * F0: ZustandderFunktionen1bis4. 0000F4F3F2F1
+   */
+
+  nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wLoc.setthrottleid( nodeC, "xpressnet" );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wFunCmd.setf0(nodeC, fn);
+  wFunCmd.setf1(nodeC, (F0 & 0x01) ? True:False);
+  wFunCmd.setf2(nodeC, (F0 & 0x02) ? True:False);
+  wFunCmd.setf3(nodeC, (F0 & 0x04) ? True:False);
+  wFunCmd.setf4(nodeC, (F0 & 0x08) ? True:False);
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+
+  data->infoaddr = 0;
+}
+
+
 static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
   iOXpressNetData data = Data(xpressnet);
   iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -790,6 +852,27 @@ static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
    * F0: ZustandderFunktionen0bis4. 000F0F4F3F2F1
    * F1: Zustand der Funktionen 5 bis 12 F12 F11 F10 F9 F8 F7 F6 F5
    */
+
+  nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wLoc.setthrottleid( nodeC, "xpressnet" );
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  wFunCmd.setf0(nodeC, (F0 & 0x10) ? True:False);
+  wFunCmd.setf1(nodeC, (F0 & 0x01) ? True:False);
+  wFunCmd.setf2(nodeC, (F0 & 0x02) ? True:False);
+  wFunCmd.setf3(nodeC, (F0 & 0x04) ? True:False);
+  wFunCmd.setf4(nodeC, (F0 & 0x08) ? True:False);
+  wFunCmd.setf5(nodeC, (F1 & 0x01) ? True:False);
+  wFunCmd.setf6(nodeC, (F1 & 0x02) ? True:False);
+  wFunCmd.setf7(nodeC, (F1 & 0x04) ? True:False);
+  wFunCmd.setf8(nodeC, (F1 & 0x08) ? True:False);
+  wFunCmd.setf9(nodeC, (F1 & 0x10) ? True:False);
+  wFunCmd.setf10(nodeC,(F1 & 0x20) ? True:False);
+  wFunCmd.setf11(nodeC,(F1 & 0x40) ? True:False);
+  wFunCmd.setf12(nodeC,(F1 & 0x80) ? True:False);
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+
   data->infoaddr = 0;
 }
 
@@ -1319,9 +1402,14 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock...");
         rspReceived = True;
       }
-      else if (in[0] == 0xE4){
+      else if (in[0] == 0xE4 ){
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loco info...");
         __evaluateLoco( xpressnet, in );
+        rspReceived = True;
+      }
+      else if ( data->v2 && in[0] == 0x84 ){
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loco info v2...");
+        __evaluateLocoV2( xpressnet, in );
         rspReceived = True;
       }
       else if (!rspReceived) {
