@@ -1418,11 +1418,10 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check byte dump:");
         TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
-
-
-      /* anything will go to rocgui ...*/
-      __evaluateResponse( xpressnet, in );
-
+      else {
+        /* anything will go to rocgui ...*/
+        __evaluateResponse( xpressnet, in );
+      }
     }
 
 
