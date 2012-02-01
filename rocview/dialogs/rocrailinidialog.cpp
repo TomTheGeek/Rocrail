@@ -128,6 +128,8 @@ RocrailIniDialog::RocrailIniDialog( wxWindow* parent, iONode props )
   initLabels();
   initValues();
   m_Apply->Enable( false );
+  m_Debug->Enable( false );
+
 
   m_GeneralPanel->GetSizer()->Layout();
   m_TracePanel->GetSizer()->Layout();

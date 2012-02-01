@@ -110,6 +110,7 @@ RocguiIniDialog::RocguiIniDialog( wxWindow* parent, iONode ini )
   initLabels();
   m_Ini = ini;
   initValues();
+  m_Debug->Enable( false );
 
   m_TracePanel->GetSizer()->Layout();
   m_MICpanel->GetSizer()->Layout();
