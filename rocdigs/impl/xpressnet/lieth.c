@@ -46,14 +46,14 @@ static void __timeoutwd( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
         ThreadOp.post( data->transactor, (obj)outa );
       }
+      retry = 0;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
-      if( retry < 10 && !liethConnect((obj)xpressnet) ) {
+      if( retry < 60 && !liethConnect((obj)xpressnet) ) {
         retry++;
       }
       else {
-        retry = 0;
       }
     }
     ThreadOp.sleep(1000);
