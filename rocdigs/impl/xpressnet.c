@@ -900,24 +900,26 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
   __dec2bin( &b3[0], i3);
 
   /* Turnout broadcast: */
-  if ( i0 == 0x42 && i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
-    int baseadress = i1;
-    int k, start;
+  if ( i0 == 0x42 ) {
+    if( i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
+      int baseadress = i1;
+      int k, start;
 
-    if( b2[3] == 0 )
-      start = 1;
-    else
-      start = 3;
+      if( b2[3] == 0 )
+        start = 1;
+      else
+        start = 3;
 
-    for (k = 0; k < 2; k++) {
-      if( (b2[7-k*2] + b2[6-k*2]) == 1 ) {       // only handle changed turnouts ignore those unchanged (00) or invalid (11)
-        __handleSwitch(xpressnet, baseadress, start+k, b2[7-k*2]);
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout status change address %d port %d", baseadress+1, start+k );
-      } else {
-        if( (b2[7-k*2] + b2[6-k*2]) == 2 )       // turnout reported invalid position
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Lenz turnout reports invalid position address %d port %d", baseadress+1, start+k );
-        else                                     // turnout not yet operated since power on
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout not operated yet address %d port %d", baseadress+1, start+k );
+      for (k = 0; k < 2; k++) {
+        if( (b2[7-k*2] + b2[6-k*2]) == 1 ) {       // only handle changed turnouts ignore those unchanged (00) or invalid (11)
+          __handleSwitch(xpressnet, baseadress, start+k, b2[7-k*2]);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout status change address %d port %d", baseadress+1, start+k );
+        } else {
+          if( (b2[7-k*2] + b2[6-k*2]) == 2 )       // turnout reported invalid position
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Lenz turnout reports invalid position address %d port %d", baseadress+1, start+k );
+          else                                     // turnout not yet operated since power on
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Lenz turnout not operated yet address %d port %d", baseadress+1, start+k );
+        }
       }
     }
   }
@@ -1418,10 +1420,10 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown command; check byte dump:");
         TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, inlen);
       }
-      else {
-        /* anything will go to rocgui ...*/
-        __evaluateResponse( xpressnet, in );
-      }
+
+      /* anything will go to rocgui ...*/
+      __evaluateResponse( xpressnet, in );
+
     }
 
 
