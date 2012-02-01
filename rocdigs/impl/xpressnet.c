@@ -796,6 +796,7 @@ static void __evaluateLocoV2( iOXpressNet xpressnet, byte* in ) {
    */
 
   nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setaddr( nodeC, addr );
   wLoc.setthrottleid( nodeC, "xpressnet" );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
@@ -854,6 +855,7 @@ static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
    */
 
   nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  wFunCmd.setaddr( nodeC, data->infoaddr );
   wLoc.setthrottleid( nodeC, "xpressnet" );
   if( data->iid != NULL )
     wLoc.setiid( nodeC, data->iid );
