@@ -1624,7 +1624,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
   gettimeofday(&time, NULL);
 
   if( StrOp.startsWithi( req, "SET CONNECTIONMODE" ) ) {
-    if( StrOp.equalsi( req, "SET CONNECTIONMODE SRCP INFO" ) ) {
+    if( StrOp.startsWithi( req, "SET CONNECTIONMODE SRCP INFO" ) ) {
       o->infomode = True;
     }else {
       o->infomode = False;
