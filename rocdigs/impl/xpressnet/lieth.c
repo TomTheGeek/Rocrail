@@ -50,7 +50,7 @@ static void __timeoutwd( void* threadinst ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
-      if( retry < 60 && !liethConnect((obj)xpressnet) ) {
+      if( !data->connectpending && retry < 60 && !liethConnect((obj)xpressnet) ) {
         retry++;
       }
       else {
@@ -65,8 +65,9 @@ static void __timeoutwd( void* threadinst ) {
 
 Boolean liethConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
-  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "LI-ETH at %s:%d",
-      wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+  iOSocket socket = NULL;
+
+  data->connectpending = True;
 
   if( wDigInt.gethost( data->ini ) == NULL || StrOp.len(wDigInt.gethost( data->ini )) == 0 ) {
     wDigInt.sethost( data->ini, "192.168.0.200" );
@@ -75,21 +76,29 @@ Boolean liethConnect(obj xpressnet) {
     wDigInt.setport( data->ini, 5550 );
   }
 
-  data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-  SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "LI-ETH at %s:%d",
+      wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
-  if ( SocketOp.connect( data->socket ) ) {
+  socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+  SocketOp.setRcvTimeout( socket, wDigInt.gettimeout(data->ini) / 1000);
+
+  if ( SocketOp.connect( socket ) ) {
+    data->socket = socket;
     if( data->timeOutWD == NULL ) {
       data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
       ThreadOp.start( data->timeOutWD );
     }
+    data->connectpending = False;
     return True;
   }
   else {
-    if( data->socket != NULL ) {
-      SocketOp.base.del( data->socket );
-      data->socket = NULL;
+    TraceOp.trc( "lieth", TRCLEVEL_WARNING, __LINE__, 9999, "unable to connect to %s:%d; check the network...",
+        wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+    if( socket != NULL ) {
+      SocketOp.base.del( socket );
+      socket = NULL;
     }
+    data->connectpending = False;
     return False;
   }
 }

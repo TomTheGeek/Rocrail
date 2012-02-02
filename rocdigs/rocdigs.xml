@@ -372,6 +372,7 @@
       <var name="ignoreBusy" vt="Boolean"/>
       <var name="infoQueue" vt="iOThread"/>
       <var name="infoaddr" vt="int"/>
+      <var name="connectpending" vt="Boolean"/>
     </data>
   </object>
 
