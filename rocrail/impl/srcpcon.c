@@ -73,7 +73,7 @@ struct __OSrcpService {
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-static const char* SRCPVERSION="Rocrail 2.0 Rev %d; SRCP 0.8.4; SRCPOTHER 0.8.3";
+static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3";
 
 /*
 200 OK <ID>
