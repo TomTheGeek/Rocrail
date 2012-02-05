@@ -833,16 +833,21 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int addr    = addrh * 256 + addrl;
 
-  int rfid1  = HEXA2Byte(frame + OFFSET_D3 + offset);
-  int rfid2  = HEXA2Byte(frame + OFFSET_D4 + offset);
-  int rfid3  = HEXA2Byte(frame + OFFSET_D5 + offset);
-  int rfid4  = HEXA2Byte(frame + OFFSET_D6 + offset);
-  int rfid5  = HEXA2Byte(frame + OFFSET_D7 + offset);
+  long rfid1  = HEXA2Byte(frame + OFFSET_D3 + offset);
+  long rfid2  = HEXA2Byte(frame + OFFSET_D4 + offset);
+  long rfid3  = HEXA2Byte(frame + OFFSET_D5 + offset);
+  long rfid4  = HEXA2Byte(frame + OFFSET_D6 + offset);
+  long rfid5  = HEXA2Byte(frame + OFFSET_D7 + offset);
 
-  long rfid = rfid5 * 0x1 + rfid4 * 0x100 + rfid3 * 0x10000 + rfid2 * 0x1000000 + rfid1 * 0x100000000;
+  long rfid = rfid5;
+  rfid += rfid4 << 1 * 8;
+  rfid += rfid3 << 2 * 8;
+  rfid += rfid2 << 3 * 8;
+  rfid += rfid1 << 4 * 8;
 
   Boolean state = False;
 
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "RFID %02X %02X %02X %02X %02X",rfid1,rfid2,rfid3,rfid4,rfid5);
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID %sevent %d id=%ld",
       data->shortevents?"short ":"", addr, rfid );
 
