@@ -1170,7 +1170,7 @@ void CBusNodeDlg::initGC4Var( int nr, int val ) {
   else if( nr < 28 ) {
     // allowed rfid
     long lval = val;
-    m_GC4AllowedRFID[(nr-3)/5] += lval * (((nr-3)%5)*256);
+    m_GC4AllowedRFID[(nr-3)/5] += lval << ((nr-3)%5)*8;
     if( (nr-3)%5 == 4 ) {
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
       allowedRFID[(nr-3)/5]->SetValue(wxString::Format(_T("%ld"),m_GC4AllowedRFID[(nr-3)/5]));
@@ -1428,15 +1428,15 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
       long lval = 0;
       allowedRFID[rfid]->GetValue().ToLong(&lval);
-      int val = (int)((lval >> idx) & 0xFF);
+      int val = (int)((lval >> (idx*8)) & 0xFF);
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv%d=0x%02X", m_GC4SetIndex+1, val);
       varSet(m_GC4SetIndex+1, val, false);
     }
-    else if( m_GC6SetIndex == 27 ) {
+    else if( m_GC4SetIndex == 27 ) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 learn mode");
       setLearn();
     }
-    else if( m_GC4SetIndex > 27 && m_GC4SetIndex < 35 ) {
+    else if( m_GC4SetIndex > 27 && m_GC4SetIndex < 36 ) {
       // rfid events
       wxSpinCtrl* rfidAddr[] = {m_GC4RFID1,m_GC4RFID2,m_GC4RFID3,m_GC4RFID4,m_GC4RFID5,m_GC4RFID6,m_GC4RFID7,m_GC4RFID8};
       int rfid = m_GC4SetIndex - 28;
@@ -1444,15 +1444,15 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
           "set gc4 event %d rfid %d", rfid, rfidAddr[rfid]->GetValue());
       eventSet( 0, rfidAddr[rfid]->GetValue(), m_GC4SetIndex-28, 0, false );
     }
-    else if( m_GC4SetIndex > 34 && m_GC4SetIndex < 43 ) {
+    else if( m_GC4SetIndex > 35 && m_GC4SetIndex < 44 ) {
       // block events
-      int block = m_GC4SetIndex - 35;
+      int block = m_GC4SetIndex - 36;
       wxSpinCtrl* blockAddr[] = {m_GC4BK1,m_GC4BK2,m_GC4BK3,m_GC4BK4,m_GC4BK5,m_GC4BK6,m_GC4BK7,m_GC4BK8};
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
           "set gc4 event %d rfid %d", block, blockAddr[block]->GetValue());
       eventSet( 0, blockAddr[block]->GetValue(), m_GC4SetIndex-28, 0, false );
     }
-    else if( m_GC4SetIndex == 43 ) {
+    else if( m_GC4SetIndex == 44 ) {
       // SOD
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 SOD event %d", m_GC4SetIndex-28);
       eventSet( 0, m_GC4SOD->GetValue(), m_GC4SetIndex-28, 0, false );
