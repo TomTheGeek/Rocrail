@@ -1170,10 +1170,12 @@ void CBusNodeDlg::initGC4Var( int nr, int val ) {
   else if( nr < 28 ) {
     // allowed rfid
     long lval = val;
-    m_GC4AllowedRFID[(nr-3)/5] += lval << ((nr-3)%5)*8;
-    if( (nr-3)%5 == 4 ) {
+    int idx = (nr-3)/5;
+    int offset = (nr-3)%5;
+    m_GC4AllowedRFID[idx] += lval << ((4-offset)*8);
+    if( offset == 4 ) {
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
-      allowedRFID[(nr-3)/5]->SetValue(wxString::Format(_T("%ld"),m_GC4AllowedRFID[(nr-3)/5]));
+      allowedRFID[idx]->SetValue(wxString::Format(_T("%ld"),m_GC4AllowedRFID[idx]));
     }
   }
 }
@@ -1428,7 +1430,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
       long lval = 0;
       allowedRFID[rfid]->GetValue().ToLong(&lval);
-      int val = (int)((lval >> (idx*8)) & 0xFF);
+      int val = (int)((lval >> ((4-idx)*8)) & 0xFF);
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv%d=0x%02X", m_GC4SetIndex+1, val);
       varSet(m_GC4SetIndex+1, val, false);
     }
