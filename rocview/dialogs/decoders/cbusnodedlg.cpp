@@ -1155,6 +1155,10 @@ void CBusNodeDlg::initGC6Var( int nr, int val ) {
 void CBusNodeDlg::initGC4Var( int nr, int val ) {
   if( nr == 1 ) {
     // node var1
+    //#define CFG_SAVERFID 0x01
+    //#define CFG_CHECKRFID 0x02
+    m_GC4SaveRFID->SetValue((val & 0x01) ? true:false );
+    m_GC4CheckRFID->SetValue((val & 0x02) ? true:false );
     // reset allowed rfids
     for( int i = 0; i < 5; i++ )
       m_GC4AllowedRFID[i] = 0;
@@ -1404,7 +1408,8 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   }
   else if( m_bGC4SetAll ) {
     if( m_GC4SetIndex == 0 ) {
-      int nv1 = 0x00;
+      int nv1 = m_GC4SaveRFID->IsChecked() ? 0x01:0x00;
+      nv1 += m_GC4CheckRFID->IsChecked() ? 0x02:0x00;
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv1=0x%02X", nv1);
       varSet(1, nv1, false);
     }
