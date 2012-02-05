@@ -1000,6 +1000,7 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       __evaluateAcc(cbus, frame, False);
       break;
     case OPC_ACDAT:
+    case OPC_DDES:
       __evaluateRFID(cbus, frame);
       break;
     case OPC_ACON3:
