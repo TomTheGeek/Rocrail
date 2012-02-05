@@ -780,7 +780,7 @@ void CBusNodeDlg::event( iONode event ) {
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
     TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc2=%d gc4=%d gc6=%d gc7=%d",
-        cv, val, m_bGC2GetAll, m_bGC6GetAll, m_bGC6GetAll, m_bGC7GetAll);
+        cv, val, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -1224,6 +1224,8 @@ void CBusNodeDlg::initGC4Event( int idx, int nn, int addr ) {
 
 void CBusNodeDlg::onGC2GetAll( wxCommandEvent& event ) {
   m_bGC2GetAll = true;
+  m_bGC4GetAll = false;
+  m_bGC6GetAll = false;
   varGet(1);
 }
 
@@ -1293,6 +1295,8 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
 
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
   m_bGC2SetAll = true;
+  m_bGC4SetAll = false;
+  m_bGC6SetAll = false;
   m_GC2SetAll->Enable(false);
   m_GC2GetAll->Enable(false);
   m_GC2Set->Enable(false);
@@ -1648,6 +1652,8 @@ void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
+  m_bGC2SetAll = false;
+  m_bGC4SetAll = false;
   m_bGC6SetAll = true;
   m_GC6SetAll->Enable(false);
   m_GC6GetAll->Enable(false);
@@ -1656,14 +1662,18 @@ void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC4GetAll( wxCommandEvent& event ) {
+  m_bGC2GetAll = false;
   m_bGC4GetAll = true;
+  m_bGC6GetAll = false;
   m_GC4SetAll->Enable(false);
   m_GC4GetAll->Enable(false);
   varGet(1);
 }
 
 void CBusNodeDlg::onGC4SetAll( wxCommandEvent& event ) {
+  m_bGC2SetAll = false;
   m_bGC4SetAll = true;
+  m_bGC6SetAll = false;
   m_GC4SetAll->Enable(false);
   m_GC4GetAll->Enable(false);
   m_GC4SetIndex = 0;
