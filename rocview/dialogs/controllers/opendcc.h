@@ -193,6 +193,7 @@ public:
     wxRadioBox* m_Baudrate;
     wxStaticBox* m_labSpecials;
     wxCheckBox* m_Clock;
+    wxCheckBox* m_Bidi;
     wxStaticBox* m_BiDiBox;
     wxCheckBox* m_BiDiCutOut;
     wxCheckBox* m_BiDiIdNotify;

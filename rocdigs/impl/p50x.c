@@ -1446,10 +1446,10 @@ static void __feedbackReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
   do {
 
-    ThreadOp.sleep( 250 );
+    ThreadOp.sleep( o->bidi ? 200:250 );
 
     out[0] = (byte)'x';
-    out[1] = 0xCB;
+    out[1] = 0xCB; /*XEvtSen*/
 
     if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       if( o->tok)
@@ -1514,6 +1514,77 @@ static void __feedbackReader( void* threadinst ) {
       }
 
     }
+
+
+    /* BiDi */
+    if( o->bidi ) {
+      ThreadOp.sleep( 50 );
+      out[0] = (byte)'x';
+      out[1] = 0xD2; /*XEvtBiDi*/
+
+      if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
+        o->tok = True;
+        state = __cts( o );
+        if( state == P50_OK ) {
+          if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
+            byte module = 0;
+            state = P50_OK;
+            if( SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
+              while( in[0] & 0x80 ) {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
+                if( SerialOp.read( o->serial, (char*)&in[1], 3 ) ) {
+                  if( in[3] & 0x40 ) {
+                    if( SerialOp.read( o->serial, (char*)&in[4], 1 ) ) {
+                      /* Speed byte */
+                    }
+                    else {
+                      break;
+                    }
+                  }
+                }
+                else {
+                  break;
+                }
+
+                /* Report BiDi */
+                {
+                  int bidiAddr = in[1] + ((in[0] & 0x0F)) << 8;
+                  int locoAddr = in[2] + ((in[3] & 0x3F)) << 8;
+                  Boolean dir = (in[3] & 0x80) ? True:False;
+                  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+                  wFeedback.setaddr( nodeC, bidiAddr );
+                  wFeedback.setbus( nodeC, wFeedback.fbtype_railcom );
+                  wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
+
+                  if( o->iid != NULL )
+                    wFeedback.setiid( nodeC, o->iid );
+
+                  wFeedback.setidentifier( nodeC, locoAddr );
+                  wFeedback.setstate( nodeC, True );
+                  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                      "BiDi[%d] reports decoder address [%d] %s",
+                      bidiAddr, locoAddr, dir?"forwards":"reverse" );
+
+                  o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
+                }
+
+                /* Next */
+                in[0] = 0;
+                if( !SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
+                  break;
+                }
+
+              }
+            }
+          }
+        }
+
+        o->tok = False;
+        MutexOp.post( o->mux );
+      }
+    }
+
 
   } while( o->run );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader ended." );
@@ -1599,6 +1670,7 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   data->ctsretry = wDigInt.getctsretry( settings );
   data->readfb   = wDigInt.isreadfb( settings );
   data->run      = True;
+  data->bidi     = wDigInt.isreadbidi( settings );
 
   data->serialOK = False;
   data->initOK = False;
@@ -1631,6 +1703,7 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x timeout=%d", data->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x ctsretry=%d", data->ctsretry );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x readbidi=%d", data->bidi );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x readfb=%d", data->readfb );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x fbmod=%d", data->fbmod );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x swtime=%d", data->swtime );

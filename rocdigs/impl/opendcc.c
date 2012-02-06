@@ -825,6 +825,7 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
           /* inform the xpressnet library to adde opendcc support */
           wDigInt.setsublib( data->ini, wDigInt.opendcc );
         }
+        wDigInt.setreadbidi( data->ini, wOpenDCC.isbidi( data->opendccini ) );
         data->sublib = pInitFun( data->ini, trc );
       }
     }

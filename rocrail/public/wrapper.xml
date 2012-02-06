@@ -416,6 +416,7 @@
 
       <var name="dummyio" vt="bool" defval="false" remark="Do not use real I/O."/>
       <var name="readfb" vt="bool" defval="true" remark="Poll the feedback units."/>
+      <var name="readbidi" vt="bool" defval="false" remark="Poll the bidi units."/>
       <var name="startpwstate" vt="bool" defval="false" remark="Powerstate at startup."/>
       <var name="pw4acc" vt="bool" defval="true" remark="Power must be on for accessory commands."/>
 
@@ -428,6 +429,7 @@
         <var name="lib" vt="string" defval="p50x"/>
         <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>
         <var name="fastclock" vt="bool" defval="false" remark="Fast clock flag read from SO 2."/>
+        <var name="bidi" vt="bool" defval="true" remark="Activate BiDi support."/>
       </opendcc>
 
       <bidib remark="BiDiB options" wrappername="BiDiB">

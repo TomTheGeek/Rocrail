@@ -98,6 +98,7 @@
       <var name="cv_val" vt="int"/>
       <var name="useextfunc" vt="Boolean"/>
       <var name="swversion" vt="unsigned long"/>
+      <var name="bidi" vt="Boolean"/>
     </data>
   </object>
 
