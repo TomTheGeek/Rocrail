@@ -1546,6 +1546,8 @@ static void __feedbackReader( void* threadinst ) {
                   break;
                 }
 
+                TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 4 );
+
                 /* Report BiDi */
                 {
                   int bidiAddr = in[1] + ((in[0] & 0x0F)) << 8;
