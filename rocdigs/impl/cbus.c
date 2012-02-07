@@ -64,6 +64,7 @@ static int instCnt = 0;
 
 static iONode __translate( iOCBUS cbus, iONode node );
 static void __broadcastFunction(iOCBUS cbus, int session, iOSlot slot, int fn, Boolean on);
+static void __releaseSessions(iOCBUS cbus);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -146,6 +147,7 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOCBUSData data = Data(inst);
+  __releaseSessions((iOCBUS)inst);
   if( poweroff ) {
     byte cmd[2];
     byte* frame = allocMem(32);
@@ -362,6 +364,27 @@ static int __normalizeSteps(int insteps ) {
   if( insteps > 100 )
     return 127;
   return 28;
+}
+
+
+static void __releaseSessions(iOCBUS cbus) {
+  iOCBUSData data = Data(cbus);
+  iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
+  while( slot != NULL ) {
+    if( slot->session > 0 ) {
+      byte cmd[5];
+      byte* frame = allocMem(32);
+      cmd[0] = OPC_KLOC;
+      cmd[1] = slot->session;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "release session %d for address %d", slot->session, slot->addr );
+      ThreadOp.post(data->writer, (obj)frame);
+      slot->session = 0;
+      ThreadOp.sleep(50);
+    }
+    slot = (iOSlot)MapOp.next( data->lcmap );
+  }
+
 }
 
 
@@ -1982,6 +2005,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->lcmap    = MapOp.inst();
   data->loaderMux= MutexOp.inst( NULL, True );
   data->stress   = wDigInt.isstress(ini);
+  data->dummyio  = wDigInt.isdummyio(ini);
 
   if( data->purgetime < 1 || data->purgetime > 19 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "purgetime out of range: %d, reset to 10", data->purgetime );
@@ -2001,6 +2025,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummy I/O     = %s", data->dummyio ? "yes":"no" );
 
 
   /* choose interface: */
