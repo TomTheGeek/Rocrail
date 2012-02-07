@@ -370,7 +370,7 @@ static int __normalizeSteps(int insteps ) {
 static void __releaseSessions(iOCBUS cbus) {
   iOCBUSData data = Data(cbus);
   iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
-  if( MutexOp.wait( data->lcmux ) ) {
+  if( MutexOp.trywait( data->lcmux, 500 ) ) {
     while( slot != NULL ) {
       if( slot->session > 0 ) {
         byte cmd[5];
