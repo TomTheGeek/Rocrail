@@ -370,21 +370,23 @@ static int __normalizeSteps(int insteps ) {
 static void __releaseSessions(iOCBUS cbus) {
   iOCBUSData data = Data(cbus);
   iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
-  while( slot != NULL ) {
-    if( slot->session > 0 ) {
-      byte cmd[5];
-      byte* frame = allocMem(32);
-      cmd[0] = OPC_KLOC;
-      cmd[1] = slot->session;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "release session %d for address %d", slot->session, slot->addr );
-      ThreadOp.post(data->writer, (obj)frame);
-      slot->session = 0;
-      ThreadOp.sleep(50);
+  if( MutexOp.wait( data->lcmux ) ) {
+    while( slot != NULL ) {
+      if( slot->session > 0 ) {
+        byte cmd[5];
+        byte* frame = allocMem(32);
+        cmd[0] = OPC_KLOC;
+        cmd[1] = slot->session;
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "release session %d for address %d", slot->session, slot->addr );
+        ThreadOp.post(data->writer, (obj)frame);
+        slot->session = 0;
+        ThreadOp.sleep(50);
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap );
     }
-    slot = (iOSlot)MapOp.next( data->lcmap );
+    MutexOp.post(data->lcmux);
   }
-
 }
 
 
