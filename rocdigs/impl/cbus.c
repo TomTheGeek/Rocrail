@@ -1400,20 +1400,32 @@ static void __keep( void* threadinst ) {
       iOSlot slot = (iOSlot)MapOp.first( data->lcmap);
       while( slot != NULL ) {
         long tick = SystemOp.getTick();
-        if( slot->session > 0  && ( (tick - slot->lastkeep) > (data->purgetime*90) ) && data->purgetime > 0  ) {
-          byte cmd[5];
-          byte* frame = allocMem(32);
+        if( slot->session > 0 ) {
+          if( slot->releasereq && slot->speed == 0 ) {
+            byte cmd[5];
+            byte* frame = allocMem(32);
+            cmd[0] = OPC_KLOC;
+            cmd[1] = slot->session;
+            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "release session %d for loco %d", slot->session, slot->addr );
+            ThreadOp.post(data->writer, (obj)frame);
+            slot->session = 0;
+            slot->releasereq = False;
+          }
+          else if( ( (tick - slot->lastkeep) > (data->purgetime*90) ) && data->purgetime > 0 ) {
+            byte cmd[5];
+            byte* frame = allocMem(32);
+            cmd[0] = OPC_DKEEP;
+            cmd[1] = slot->session;
+            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
 
-          cmd[0] = OPC_DKEEP;
-          cmd[1] = slot->session;
-          makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "keep session %d for %s: tick=%ld, lastkeep=%ld, purgetime=%d",
+                slot->session, slot->id, tick, slot->lastkeep, data->purgetime*90 );
+            ThreadOp.post(data->writer, (obj)frame);
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "keep session %d for %s: tick=%ld, lastkeep=%ld, purgetime=%d",
-              slot->session, slot->id, tick, slot->lastkeep, data->purgetime*90 );
-          ThreadOp.post(data->writer, (obj)frame);
-
-          slot->lastkeep = tick;
+            slot->lastkeep = tick;
+          }
         }
         slot = (iOSlot)MapOp.next( data->lcmap);
       };
@@ -1718,6 +1730,17 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
+
+  /* Loc release command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.release, wLoc.getcmd(node)) ) {
+    iOSlot slot = __getSlot(cbus, node );
+    if( slot != NULL && slot->session > 0 ) {
+      slot->releasereq = True;
+    }
+    else if( slot != NULL && slot->session == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "no session for loco %d", slot->addr );
+    }
+  }
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {

@@ -1368,6 +1368,7 @@
       <var name="lights" vt="Boolean"/>
       <var name="f[32]" vt="Boolean"/>
       <var name="lastkeep" vt="long"/>
+      <var name="releasereq" vt="Boolean"/>
     </struct>
     <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
       <var name="out[32]" vt="byte"/>

@@ -17716,4 +17716,7 @@
   <Msg id="info4throttle">
     <en txt="Poll info"/>
   </Msg>
+  <Msg id="releaseonidle">
+    <en txt="Release loco on idle"/>
+  </Msg>
 </Messages>

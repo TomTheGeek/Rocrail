@@ -1157,6 +1157,16 @@ static void __engine( iOLoc inst, iONode cmd ) {
       ControlOp.cmd( control, cmdTD, NULL );
   }
 
+  if( cmd == NULL && wLoc.getV(data->props) == 0 && !data->go && !data->released ) {
+    /* ToDo: Release loco? */
+    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setaddr(cmd, wLoc.getaddr(data->props));
+    wLoc.setid(cmd, wLoc.getid(data->props));
+    wLoc.setcmd(cmd, wLoc.release );
+    ControlOp.cmd( control, cmd, NULL );
+    data->released = True;
+  }
+
   data->step++;
 }
 
@@ -1747,6 +1757,7 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
   data->curBlock = StrOp.dup(curblock); /* make a copy before it is freed up */
   data->goNet = True; /* signal that the current block is from the net */
   data->go = True;
+  data->released = False;
   data->gomanual = False;
   if( data->driver != NULL )
     data->driver->goNet( data->driver, data->gomanual, curblock, nextblock, nextroute );
@@ -1765,6 +1776,7 @@ static Boolean _go( iOLoc inst ) {
   if( wLoc.isactive(data->props)) {
     if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
       data->go = True;
+      data->released = False;
       data->gomanual = False;
       if( data->driver != NULL )
         data->driver->go( data->driver, data->gomanual );
@@ -1859,6 +1871,7 @@ static void __gomanual( iOLoc inst ) {
   iOLocData data = Data(inst);
   data->go = True;
   data->gomanual = True;
+  data->released = False;
   if( data->driver != NULL )
     data->driver->go( data->driver, data->gomanual );
 }
