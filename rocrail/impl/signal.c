@@ -111,6 +111,7 @@ static void* _getProperties( void* inst ) {
 
 static void _event( iOSignal inst, iONode nodeC ) {
   iOSignalData data = Data(inst);
+  Boolean update = False;
   Boolean acc = wAccessory.isaccevent(nodeC);
   int val = wAccessory.getval1( nodeC );
   const char* state = wSwitch.getstate(nodeC);
@@ -125,10 +126,11 @@ static void _event( iOSignal inst, iONode nodeC ) {
 
   if( wSignal.getaspects(data->props) == 2 ) {
     wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
+    update = True;
   }
 
   /* Broadcast to clients. */
-  {
+  if( update ) {
     iONode nodeF = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setid( nodeF, wSignal.getid( data->props ) );
     wSignal.setstate( nodeF, wSignal.getstate( data->props ) );
