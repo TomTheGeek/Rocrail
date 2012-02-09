@@ -1435,6 +1435,10 @@
     <fun name="isManualOperated" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="event" vt="void">
+      <param name="inst" vt="this" remark="Signal instance"/>
+      <param name="evt" vt="iONode" remark="Event node"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="isStateInverted" vt="Boolean"/>

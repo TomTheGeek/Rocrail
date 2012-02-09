@@ -3083,15 +3083,18 @@ static void _event( iOModel inst, iONode nodeC ) {
       sw = (iOSwitch)ListOp.next(o->switchList);
     }
 
-    if( !matched && wAccessory.isaccevent(nodeC) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered accessory event: %d:%d:%d value=%d",
-                   bus, addr, port, wAccessory.getval1(nodeC) );
-      /* TODO: Change it in an output to check for a match, and then to a signal if no output was found. */
+    if( !matched ) {
+      iOSignal sg = ModelOp.getSgByAddress(inst, addr, port);
+      if( sg != NULL ) {
+        SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered %s event: %d:%d:%d",
+            wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
+      }
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered switch event: %d:%d:%d %s",
-                   bus, addr, port, wSwitch.getstate(nodeC) );
-    }
+
+
     NodeOp.base.del(nodeC);
   }
 

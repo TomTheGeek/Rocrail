@@ -108,6 +108,22 @@ static void* _getProperties( void* inst ) {
 }
 
 
+static void _event( iOSignal inst, iONode nodeC ) {
+  iOSignalData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ToDo: event for signal %s...", wSignal.getid( data->props ));
+
+  if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
+    char* strNode = (char*)NodeOp.base.toString( nodeC );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "signal event: %s", strNode );
+    StrOp.free( strNode );
+  }
+
+  /* Cleanup Node3 */
+  if( nodeC != NULL )
+    NodeOp.base.del(nodeC);
+}
+
+
 static void _green( iOSignal inst ) {
   if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
     iOSignalData data = Data(inst);
