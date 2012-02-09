@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Accessory.h"
 
 static int instCnt = 0;
 
@@ -110,13 +111,33 @@ static void* _getProperties( void* inst ) {
 
 static void _event( iOSignal inst, iONode nodeC ) {
   iOSignalData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ToDo: event for signal %s...", wSignal.getid( data->props ));
+  Boolean acc = wAccessory.isaccevent(nodeC);
+  int val = wAccessory.getval1( nodeC );
+  const char* state = wSwitch.getstate(nodeC);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "ToDo: event for signal %s acc=%d sw=%s...", wSignal.getid( data->props ), val, state);
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
     char* strNode = (char*)NodeOp.base.toString( nodeC );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "signal event: %s", strNode );
     StrOp.free( strNode );
   }
+
+  if( wSignal.getaspects(data->props) == 2 ) {
+    wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
+  }
+
+  /* Broadcast to clients. */
+  {
+    iONode nodeF = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+    wSignal.setid( nodeF, wSignal.getid( data->props ) );
+    wSignal.setstate( nodeF, wSignal.getstate( data->props ) );
+    wSignal.setmanual( nodeF, wSignal.ismanual( data->props ) );
+    if( wSignal.getiid( data->props ) != NULL )
+      wSignal.setiid( nodeF, wSignal.getiid( data->props ) );
+    AppOp.broadcastEvent( nodeF );
+  }
+
 
   /* Cleanup Node3 */
   if( nodeC != NULL )
