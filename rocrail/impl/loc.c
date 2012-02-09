@@ -1157,14 +1157,16 @@ static void __engine( iOLoc inst, iONode cmd ) {
       ControlOp.cmd( control, cmdTD, NULL );
   }
 
-  if( cmd == NULL && wLoc.getV(data->props) == 0 && !data->go && !data->released ) {
-    /* ToDo: Release loco? */
-    cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    wLoc.setaddr(cmd, wLoc.getaddr(data->props));
-    wLoc.setid(cmd, wLoc.getid(data->props));
-    wLoc.setcmd(cmd, wLoc.release );
-    ControlOp.cmd( control, cmd, NULL );
-    data->released = True;
+  if( wCtrl.isreleaseonidle( AppOp.getIniNode( wCtrl.name() )) ) {
+    if( cmd == NULL && wLoc.getV(data->props) == 0 && !data->go && !data->released ) {
+      /* Release loco? */
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setaddr(cmd, wLoc.getaddr(data->props));
+      wLoc.setid(cmd, wLoc.getid(data->props));
+      wLoc.setcmd(cmd, wLoc.release );
+      ControlOp.cmd( control, cmd, NULL );
+      data->released = True;
+    }
   }
 
   data->step++;
