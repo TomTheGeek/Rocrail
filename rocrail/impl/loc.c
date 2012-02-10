@@ -1803,6 +1803,8 @@ static void _stop( iOLoc inst, Boolean resume ) {
   }
 
   data->go = False;
+  data->released = False;
+
   if( data->driver != NULL )
     data->driver->stop( data->driver );
 }

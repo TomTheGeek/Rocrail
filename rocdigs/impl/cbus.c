@@ -390,6 +390,22 @@ static void __releaseSessions(iOCBUS cbus) {
 }
 
 
+static void __requestSession(iOCBUS cbus, int addr) {
+  iOCBUSData data = Data(cbus);
+  byte cmd[5];
+  byte* frame = allocMem(32);
+  cmd[0] = OPC_RLOC;
+  cmd[1] = addr / 256;
+  cmd[2] = addr % 256;
+  if( addr > 127 ) {
+    cmd[1] |= 0xC0;
+  }
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
+  ThreadOp.post(data->writer, (obj)frame);
+}
+
 static iOSlot __getSlot(iOCBUS cbus, iONode node) {
   iOCBUSData data = Data(cbus);
   int    addr  = wLoc.getaddr(node);
@@ -399,6 +415,9 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
   slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
   if( slot != NULL ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    if( slot->session == 0 ) {
+      __requestSession(cbus, slot->addr);
+    }
     return slot;
   }
 
@@ -425,20 +444,7 @@ static iOSlot __getSlot(iOCBUS cbus, iONode node) {
       speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
   }
 
-  {
-    byte cmd[5];
-    byte* frame = allocMem(32);
-    cmd[0] = OPC_RLOC;
-    cmd[1] = addr / 256;
-    cmd[2] = addr % 256;
-    if( addr > 127 ) {
-      cmd[1] |= 0xC0;
-    }
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
-
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
-    ThreadOp.post(data->writer, (obj)frame);
-  }
+  __requestSession(cbus, slot->addr);
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
