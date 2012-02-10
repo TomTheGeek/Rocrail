@@ -2688,6 +2688,7 @@ static iOLoc _inst( iONode props ) {
   data->cvMap = MapOp.inst();
   data->secondnextblock = wLoc.issecondnextblock( data->props );
   data->timedfn = -1; /* function 0 is also used */
+  data->released = True;
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "global reset speed and functions for loco [%s]", wLoc.getid(props));
