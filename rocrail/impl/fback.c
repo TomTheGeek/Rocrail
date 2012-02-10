@@ -362,14 +362,26 @@ static void _event( iOFBack inst, iONode nodeC ) {
   if( wFeedback.isactivelow( data->props ) )
     state = !state;
 
-  if( data->timedoff > 0 && (data->timer != 0 || !state) ) {
-    if( state ) {
-      /* reload timer */
+  /* check for a timed off sensor */
+  if( data->timedoff > 0 ) {
+    if( data->state && !state ) {
       data->timer = data->timedoff;
+      /* Cleanup Node3 */
+      nodeC->base.del(nodeC);
+      return;
     }
-    /* Cleanup Node3 */
-    nodeC->base.del(nodeC);
-    return;
+    if( data->timer > 0 && data->state && state ) {
+      data->timer = data->timedoff;
+      /* Cleanup Node3 */
+      nodeC->base.del(nodeC);
+      return;
+    }
+    if( data->timer == 0 && data->state && state ) {
+      data->timer = -1;
+      /* Cleanup Node3 */
+      nodeC->base.del(nodeC);
+      return;
+    }
   }
 
 
@@ -381,8 +393,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
     /* the plus data->wheelcount is for simulation */
   }
 
-  if(data->state && data->timer == 0) {
-    data->timer = data->timedoff;
+  if(data->state) {
+    data->timer = -1;
     data->counter++;
 
     if( data->carcount > 0 ) {
@@ -631,6 +643,7 @@ static void _doTimedOff( iOFBack inst ) {
   if( data->timedoff > 0 ){
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timer=%d, timecnt=%d, state=%d",
         data->timedoff, data->timer, data->state );
+
     if( data->state && data->timer == 0 ) {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
