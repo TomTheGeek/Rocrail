@@ -350,6 +350,7 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
 static void _event( iOFBack inst, iONode nodeC ) {
   iOFBackData data = Data(inst);
   Boolean hasListener = False;
+  Boolean state = wFeedback.isstate( nodeC );
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
     char* strNode = (char*)NodeOp.base.toString( nodeC );
@@ -357,10 +358,22 @@ static void _event( iOFBack inst, iONode nodeC ) {
     StrOp.free( strNode );
   }
 
-  data->state = wFeedback.isstate( nodeC );
   /* check for active low */
   if( wFeedback.isactivelow( data->props ) )
-    data->state = !data->state;
+    state = !state;
+
+  if( data->timedoff > 0 && (data->timer != 0 || !state) ) {
+    if( state ) {
+      /* reload timer */
+      data->timer = data->timedoff;
+    }
+    /* Cleanup Node3 */
+    nodeC->base.del(nodeC);
+    return;
+  }
+
+
+  data->state = state;
 
   if( wFeedback.getbus(data->props) == wFeedback.fbtype_wheelcounter ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] COUNTING WHEELS: countedwheels=%d",
@@ -368,8 +381,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
     /* the plus data->wheelcount is for simulation */
   }
 
-  if(data->state ) {
-    data->timer = 0;
+  if(data->state && data->timer == 0) {
+    data->timer = data->timedoff;
     data->counter++;
 
     if( data->carcount > 0 ) {
@@ -525,7 +538,9 @@ static void _modify( iOFBack inst, iONode props ) {
     NodeOp.removeAttrByName(data->props, "cmd");
   }
 
-  data->timedoff = wFeedback.gettimer(data->props);
+  if( wCtrl.istimedsensors( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    data->timedoff = wFeedback.gettimer(data->props);
+  }
 
   /* Broadcast to clients. */
   {
@@ -616,7 +631,7 @@ static void _doTimedOff( iOFBack inst ) {
   if( data->timedoff > 0 ){
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timer=%d, timecnt=%d, state=%d",
         data->timedoff, data->timer, data->state );
-    if( !data->state && data->timer == data->timedoff ){
+    if( data->state && data->timer == 0 ) {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -626,6 +641,7 @@ static void _doTimedOff( iOFBack inst ) {
         data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0 );
       }
 
+      data->state = False;
       /* Broadcast to clients. Node4 */
       wFeedback.setid( nodeD, FBackOp.getId( inst ) );
       wFeedback.setcounter( data->props, data->counter );
@@ -635,8 +651,6 @@ static void _doTimedOff( iOFBack inst ) {
       wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
       wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
       AppOp.broadcastEvent( nodeD );
-      data->timer++;
-
 
       {
         obj listener = ListOp.first( data->listeners );
@@ -645,12 +659,9 @@ static void _doTimedOff( iOFBack inst ) {
           listener = ListOp.next( data->listeners );
         };
       }
-
-
-
     }
-    else if( !data->state && data->timer < data->timedoff ) {
-      data->timer++;
+    else if( data->timer > 0 ) {
+      data->timer--;
     }
 
   }
