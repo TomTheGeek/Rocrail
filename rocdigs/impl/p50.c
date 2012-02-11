@@ -408,7 +408,7 @@ static void __feedbackReader( void* threadinst ) {
     unsigned char out[256];
     unsigned char in [512];
 
-    ThreadOp.sleep( 200 );
+    ThreadOp.sleep( o->psleep );
     if( o->fbmod == 0 )
       continue;
 
@@ -498,7 +498,7 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   data->timeout  = wDigInt.gettimeout( settings );
   data->fbmod    = wDigInt.getfbmod( settings );
   data->swtime   = wDigInt.getswtime( settings );
-/*  data->psleep   = wDigInt.getpsleep( settings, "psleep"  , 100    );*/
+  data->psleep   = wDigInt.getpsleep( settings);
   data->dummyio  = wDigInt.isdummyio( settings );
   data->ctsretry = wDigInt.getctsretry( settings );
   data->readfb   = wDigInt.isreadfb( settings );

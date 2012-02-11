@@ -17719,4 +17719,7 @@
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
   </Msg>
+  <Msg id="sleep">
+    <en txt="Sleep"/>
+  </Msg>
 </Messages>

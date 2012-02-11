@@ -419,6 +419,7 @@
       <var name="readbidi" vt="bool" defval="false" remark="Poll the bidi units."/>
       <var name="startpwstate" vt="bool" defval="false" remark="Powerstate at startup."/>
       <var name="pw4acc" vt="bool" defval="true" remark="Power must be on for accessory commands."/>
+      <var name="psleep" vt="int" defval="200" unit="ms" remark="Sleep between polling of the feedback units."/>
 
       <!-- tcpip connection -->
       <var name="host" vt="string" defval="" remark="hostname."/>

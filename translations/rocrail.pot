@@ -5585,3 +5585,21 @@ msgstr ""
 msgid "temperature"
 msgstr ""
 
+#. 
+# id="info4throttle"
+#, c-format
+msgid "Poll info"
+msgstr ""
+
+#. 
+# id="releaseonidle"
+#, c-format
+msgid "Release loco on idle"
+msgstr ""
+
+#. 
+# id="sleep"
+#, c-format
+msgid "Sleep"
+msgstr ""
+

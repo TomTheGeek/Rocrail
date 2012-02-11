@@ -115,6 +115,7 @@ void GenericCtrlDlg::initLabels() {
   m_PTSupport->SetLabel( wxGetApp().getMsg( "pt" ) );
   m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
   m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
+  m_labPollSleep->SetLabel( wxGetApp().getMsg( "sleep" ) );
 }
 
 void GenericCtrlDlg::initValues() {
@@ -131,6 +132,7 @@ void GenericCtrlDlg::initValues() {
   m_PTSupport->SetValue( wDigInt.isptsupport( m_Props ) );
   m_SystemInfo->SetValue( wDigInt.issysteminfo( m_Props ) );
   m_Version->SetValue( wDigInt.getprotver( m_Props ) );
+  m_PollSleep->SetValue( wDigInt.getpsleep( m_Props ) );
 
   // flow control
   {
@@ -189,6 +191,7 @@ void GenericCtrlDlg::evaluate() {
   wDigInt.setptsupport( m_Props, m_PTSupport->IsChecked()?True:False );
   wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
   wDigInt.setprotver( m_Props, m_Version->GetValue() );
+  wDigInt.setpsleep( m_Props, m_PollSleep->GetValue() );
 
   // flow control
   {
@@ -250,6 +253,8 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_FbMod = NULL;
     m_labFbOffset = NULL;
     m_FbOffset = NULL;
+    m_labPollSleep = NULL;
+    m_PollSleep = NULL;
     m_FbPoll = NULL;
     m_FbReset = NULL;
     m_OptionsBox = NULL;
@@ -297,6 +302,7 @@ void GenericCtrlDlg::CreateControls()
     itemBoxSizer4->Add(itemBoxSizer5, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -317,8 +323,6 @@ void GenericCtrlDlg::CreateControls()
     m_Lib = new wxTextCtrl( m_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_Lib->Enable(false);
     itemFlexGridSizer6->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-
-    itemFlexGridSizer6->AddGrowableCol(1);
 
     wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer5->Add(itemBoxSizer13, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -384,6 +388,12 @@ void GenericCtrlDlg::CreateControls()
     m_FbOffset = new wxSpinCtrl( m_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer23->Add(m_FbOffset, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    m_labPollSleep = new wxStaticText( m_Panel, wxID_ANY, _("Sleep"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer23->Add(m_labPollSleep, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_PollSleep = new wxSpinCtrl( m_Panel, wxID_ANY, _T("200"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 1000, 200 );
+    itemFlexGridSizer23->Add(m_PollSleep, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_FbPoll = new wxCheckBox( m_Panel, wxID_ANY, _("Poll"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FbPoll->SetValue(false);
     itemStaticBoxSizer22->Add(m_FbPoll, 0, wxALIGN_LEFT|wxALL, 5);
@@ -393,37 +403,37 @@ void GenericCtrlDlg::CreateControls()
     itemStaticBoxSizer22->Add(m_FbReset, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_OptionsBox = new wxStaticBox(m_Panel, wxID_ANY, _("Options"));
-    wxStaticBoxSizer* itemStaticBoxSizer30 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
-    itemBoxSizer21->Add(itemStaticBoxSizer30, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer32 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
+    itemBoxSizer21->Add(itemStaticBoxSizer32, 0, wxGROW|wxALL, 5);
 
     m_PTSupport = new wxCheckBox( m_Panel, wxID_ANY, _("PT Support"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PTSupport->SetValue(false);
-    itemStaticBoxSizer30->Add(m_PTSupport, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer32->Add(m_PTSupport, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_SystemInfo = new wxCheckBox( m_Panel, wxID_ANY, _("System info"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SystemInfo->SetValue(false);
-    itemStaticBoxSizer30->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer32->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer33 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer30->Add(itemFlexGridSizer33, 0, wxALIGN_LEFT|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer35 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer32->Add(itemFlexGridSizer35, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_labVersion = new wxStaticText( m_Panel, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_labVersion, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer35->Add(m_labVersion, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Version = new wxSpinCtrl( m_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
-    itemFlexGridSizer33->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer35->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer36 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer38 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer36, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer38, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer36->AddButton(m_OK);
+    itemStdDialogButtonSizer38->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer36->AddButton(m_Cancel);
+    itemStdDialogButtonSizer38->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer36->Realize();
+    itemStdDialogButtonSizer38->Realize();
 
 ////@end GenericCtrlDlg content construction
 }

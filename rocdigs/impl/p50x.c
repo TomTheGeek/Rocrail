@@ -1006,7 +1006,7 @@ static void __PTeventReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PTevent reader started." );
   do {
 
-    ThreadOp.sleep( 250 );
+    ThreadOp.sleep( o->psleep );
 
     out[0] = (byte)'x';
     out[1] = 0xCE;
@@ -1300,7 +1300,7 @@ static void __statusReader( void* threadinst ) {
 
   do {
 
-    ThreadOp.sleep( 250 );
+    ThreadOp.sleep( o->psleep );
 
     if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
 
@@ -1446,7 +1446,7 @@ static void __feedbackReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
   do {
 
-    ThreadOp.sleep( o->bidi ? 200:250 );
+    ThreadOp.sleep( o->psleep );
 
     out[0] = (byte)'x';
     out[1] = 0xCB; /*XEvtSen*/
@@ -1518,7 +1518,7 @@ static void __feedbackReader( void* threadinst ) {
 
     /* BiDi */
     if( o->bidi ) {
-      ThreadOp.sleep( 50 );
+      ThreadOp.sleep( 10 );
       out[0] = (byte)'x';
       out[1] = 0xD2; /*XEvtBiDi*/
 
@@ -1604,7 +1604,7 @@ static void __feedbackP50Reader( void* threadinst ) {
     unsigned char out[256];
     unsigned char in [512];
 
-    ThreadOp.sleep( 200 );
+    ThreadOp.sleep( data->psleep );
     if( data->stopio || data->fbmod == 0 )
       continue;
 
@@ -1667,7 +1667,7 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   data->timeout  = wDigInt.gettimeout( settings );
   data->fbmod    = wDigInt.getfbmod( settings );
   data->swtime   = wDigInt.getswtime( settings );
-/*  data->psleep   = wDigInt.getpsleep( settings, "psleep"  , 100    );*/
+  data->psleep   = wDigInt.getpsleep( settings );
   data->dummyio  = wDigInt.isdummyio( settings );
   data->ctsretry = wDigInt.getctsretry( settings );
   data->readfb   = wDigInt.isreadfb( settings );
@@ -1708,6 +1708,7 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x readbidi=%d", data->bidi );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x readfb=%d", data->readfb );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x fbmod=%d", data->fbmod );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x poll sleep=%d", data->psleep );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x swtime=%d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 

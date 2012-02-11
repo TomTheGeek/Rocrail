@@ -136,6 +136,8 @@ public:
     wxSpinCtrl* m_FbMod;
     wxStaticText* m_labFbOffset;
     wxSpinCtrl* m_FbOffset;
+    wxStaticText* m_labPollSleep;
+    wxSpinCtrl* m_PollSleep;
     wxCheckBox* m_FbPoll;
     wxCheckBox* m_FbReset;
     wxStaticBox* m_OptionsBox;
