@@ -364,20 +364,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
 
   /* check for a timed off sensor */
   if( data->timedoff > 0 ) {
-    if( data->state && !state ) {
+    if( !state ) {
       data->timer = data->timedoff;
-      /* Cleanup Node3 */
-      nodeC->base.del(nodeC);
-      return;
-    }
-    if( data->timer > 0 && data->state && state ) {
-      data->timer = data->timedoff;
-      /* Cleanup Node3 */
-      nodeC->base.del(nodeC);
-      return;
-    }
-    if( data->timer == 0 && data->state && state ) {
-      data->timer = -1;
       /* Cleanup Node3 */
       nodeC->base.del(nodeC);
       return;
@@ -598,7 +586,7 @@ static iOFBack _inst( iONode props ) {
   MemOp.basecpy( fback, &FBackOp, 0, sizeof( struct OFBack ), data );
 
   data->props = props;
-  data->timer = 0;
+  data->timer = -1;
   /* initially the state is off: */
   wFeedback.setstate( props, False );
 
@@ -644,8 +632,10 @@ static void _doTimedOff( iOFBack inst ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timer=%d, timecnt=%d, state=%d",
         data->timedoff, data->timer, data->state );
 
-    if( data->state && data->timer == 0 ) {
+    if( data->timer == 0 ) {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+      data->state = False;
+      data->timer = -1;
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "timed off event for %s", FBackOp.getId( inst ));
@@ -654,7 +644,6 @@ static void _doTimedOff( iOFBack inst ) {
         data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0 );
       }
 
-      data->state = False;
       /* Broadcast to clients. Node4 */
       wFeedback.setid( nodeD, FBackOp.getId( inst ) );
       wFeedback.setcounter( data->props, data->counter );
