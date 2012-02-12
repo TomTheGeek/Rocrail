@@ -428,6 +428,11 @@ public:
     wxButton* m_Button_f0;
     wxStaticText* m_labFnGroup;
     wxButton* m_FunctionGroup;
+    wxStaticText* m_labFnNr;
+    wxStaticText* m_labFnDesc;
+    wxStaticText* m_labFnTimer;
+    wxStaticText* m_labFnEvents;
+    wxStaticText* m_labFnAddr;
     wxStaticText* m_Label_f1;
     wxTextCtrl* m_f1;
     wxSpinCtrl* m_TimerF1;
