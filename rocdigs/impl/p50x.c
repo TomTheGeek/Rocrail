@@ -1548,7 +1548,32 @@ static void __feedbackReader( void* threadinst ) {
 
                 TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 4 );
 
-                /* Report BiDi */
+                /* Report BiDi
+                 1. Byte:       bit#   7     6     5     4     3     2     1     0
+                                    +-----+-----+-----+-----+-----+-----+-----+-----+
+                                    |  LE | res | res | res | D11 | D10 |  D9 |  D8 |
+                                    +-----+-----+-----+-----+-----+-----+-----+-----+
+
+                          LE:      0:   Listenende, es folgen keine weiteren Daten.
+                                   1:   Es folgen Daten fuer diesen Listeneintrag.
+                                   res: reserviert
+                          D11-D8:  DID (DID = Detektor-ID), high nibble;
+
+                 2. Byte: D7-D0:   Detektor-ID, Low Byte
+                 3. Byte: low byte of Lok# (A7..A0)
+                 4. Byte: high byte of Lok#, high byte of Lok#, plus Dir and Speed status, coded as follows:
+                                bit#   7     6     5     4     3     2     1     0
+                                    +-----+-----+-----+-----+-----+-----+-----+-----+
+                                    | Dir | Spd | A13 | A12 | A11 | A10 | A9  | A8  |
+                                    +-----+-----+-----+-----+-----+-----+-----+-----+
+                          Dir: Lokrichtung
+                          Spd: 1: es folgt ein weiteres Byte mit der Istgeschwindigkeit
+                 5. Byte: [optional] Speed gemaess der BiDi-Kodierung
+                             0..63: speed = value / 2;
+                             64..127: speed = value - 32;
+                             128..254: speed = value * 4;
+                             255: Kennzeichnet eine ungueltige Geschwindkeit (wird u.a. intern verwendet).
+                */
                 {
                   int bidiAddr = in[1] + ((in[0] & 0x0F)) << 8;
                   int locoAddr = in[2] + ((in[3] & 0x3F)) << 8;

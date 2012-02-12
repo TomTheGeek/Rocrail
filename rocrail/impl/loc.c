@@ -60,6 +60,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function);
 static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent );
 static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
 static void __swapConsist( iOLoc inst, iONode cmd );
+static int __getFnAddr( iOLoc inst, int function);
 
 /*
  ***** OBase functions.
@@ -137,38 +138,69 @@ static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd) {
 }
 
 
-static void __cpFn2Node(iOLoc inst, iONode cmd, int fn) {
+static void __cpFn2Node(iOLoc inst, iONode cmd, int fn, int addr) {
   iOLocData data = Data(inst);
   wFunCmd.setfncnt( cmd, wLoc.getfncnt( data->props ) );
-  if( fn == -1 || fn != 0 ) wFunCmd.setf0 ( cmd, data->fn0  );
-  if( fn == -1 || fn != 1 ) wFunCmd.setf1 ( cmd, data->fn1  );
-  if( fn == -1 || fn != 2 ) wFunCmd.setf2 ( cmd, data->fn2  );
-  if( fn == -1 || fn != 3 ) wFunCmd.setf3 ( cmd, data->fn3  );
-  if( fn == -1 || fn != 4 ) wFunCmd.setf4 ( cmd, data->fn4  );
-  if( fn == -1 || fn != 5 ) wFunCmd.setf5 ( cmd, data->fn5  );
-  if( fn == -1 || fn != 6 ) wFunCmd.setf6 ( cmd, data->fn6  );
-  if( fn == -1 || fn != 7 ) wFunCmd.setf7 ( cmd, data->fn7  );
-  if( fn == -1 || fn != 8 ) wFunCmd.setf8 ( cmd, data->fn8  );
-  if( fn == -1 || fn != 9 ) wFunCmd.setf9 ( cmd, data->fn9  );
-  if( fn == -1 || fn != 10 ) wFunCmd.setf10( cmd, data->fn10 );
-  if( fn == -1 || fn != 11 ) wFunCmd.setf11( cmd, data->fn11 );
-  if( fn == -1 || fn != 12 ) wFunCmd.setf12( cmd, data->fn12 );
-  if( fn == -1 || fn != 13 ) wFunCmd.setf13( cmd, data->fn13 );
-  if( fn == -1 || fn != 14 ) wFunCmd.setf14( cmd, data->fn14 );
-  if( fn == -1 || fn != 15 ) wFunCmd.setf15( cmd, data->fn15 );
-  if( fn == -1 || fn != 16 ) wFunCmd.setf16( cmd, data->fn16 );
-  if( fn == -1 || fn != 17 ) wFunCmd.setf17( cmd, data->fn17 );
-  if( fn == -1 || fn != 18 ) wFunCmd.setf18( cmd, data->fn18 );
-  if( fn == -1 || fn != 19 ) wFunCmd.setf19( cmd, data->fn19 );
-  if( fn == -1 || fn != 20 ) wFunCmd.setf20( cmd, data->fn20 );
-  if( fn == -1 || fn != 21 ) wFunCmd.setf21( cmd, data->fn21 );
-  if( fn == -1 || fn != 22 ) wFunCmd.setf22( cmd, data->fn22 );
-  if( fn == -1 || fn != 23 ) wFunCmd.setf23( cmd, data->fn23 );
-  if( fn == -1 || fn != 24 ) wFunCmd.setf24( cmd, data->fn24 );
-  if( fn == -1 || fn != 25 ) wFunCmd.setf25( cmd, data->fn25 );
-  if( fn == -1 || fn != 26 ) wFunCmd.setf26( cmd, data->fn26 );
-  if( fn == -1 || fn != 27 ) wFunCmd.setf27( cmd, data->fn27 );
-  if( fn == -1 || fn != 28 ) wFunCmd.setf28( cmd, data->fn28 );
+
+  if( addr == 0 )
+    if( fn == -1 || fn != 0 ) wFunCmd.setf0 ( cmd, data->fn0  );
+
+  if( addr == 0 || __getFnAddr(inst, 1) == addr )
+    if( fn == -1 || fn != 1 ) wFunCmd.setf1 ( cmd, data->fn1  );
+  if( addr == 0 || __getFnAddr(inst, 2) == addr )
+    if( fn == -1 || fn != 2 ) wFunCmd.setf2 ( cmd, data->fn2  );
+  if( addr == 0 || __getFnAddr(inst, 3) == addr )
+    if( fn == -1 || fn != 3 ) wFunCmd.setf3 ( cmd, data->fn3  );
+  if( addr == 0 || __getFnAddr(inst, 4) == addr )
+    if( fn == -1 || fn != 4 ) wFunCmd.setf4 ( cmd, data->fn4  );
+  if( addr == 0 || __getFnAddr(inst, 5) == addr )
+    if( fn == -1 || fn != 5 ) wFunCmd.setf5 ( cmd, data->fn5  );
+  if( addr == 0 || __getFnAddr(inst, 6) == addr )
+    if( fn == -1 || fn != 6 ) wFunCmd.setf6 ( cmd, data->fn6  );
+  if( addr == 0 || __getFnAddr(inst, 7) == addr )
+    if( fn == -1 || fn != 7 ) wFunCmd.setf7 ( cmd, data->fn7  );
+  if( addr == 0 || __getFnAddr(inst, 8) == addr )
+    if( fn == -1 || fn != 8 ) wFunCmd.setf8 ( cmd, data->fn8  );
+  if( addr == 0 || __getFnAddr(inst, 9) == addr )
+    if( fn == -1 || fn != 9 ) wFunCmd.setf9 ( cmd, data->fn9  );
+  if( addr == 0 || __getFnAddr(inst, 10) == addr )
+    if( fn == -1 || fn != 10 ) wFunCmd.setf10( cmd, data->fn10 );
+  if( addr == 0 || __getFnAddr(inst, 11) == addr )
+    if( fn == -1 || fn != 11 ) wFunCmd.setf11( cmd, data->fn11 );
+  if( addr == 0 || __getFnAddr(inst, 12) == addr )
+    if( fn == -1 || fn != 12 ) wFunCmd.setf12( cmd, data->fn12 );
+  if( addr == 0 || __getFnAddr(inst, 13) == addr )
+    if( fn == -1 || fn != 13 ) wFunCmd.setf13( cmd, data->fn13 );
+  if( addr == 0 || __getFnAddr(inst, 14) == addr )
+    if( fn == -1 || fn != 14 ) wFunCmd.setf14( cmd, data->fn14 );
+  if( addr == 0 || __getFnAddr(inst, 15) == addr )
+    if( fn == -1 || fn != 15 ) wFunCmd.setf15( cmd, data->fn15 );
+  if( addr == 0 || __getFnAddr(inst, 16) == addr )
+    if( fn == -1 || fn != 16 ) wFunCmd.setf16( cmd, data->fn16 );
+  if( addr == 0 || __getFnAddr(inst, 17) == addr )
+    if( fn == -1 || fn != 17 ) wFunCmd.setf17( cmd, data->fn17 );
+  if( addr == 0 || __getFnAddr(inst, 18) == addr )
+    if( fn == -1 || fn != 18 ) wFunCmd.setf18( cmd, data->fn18 );
+  if( addr == 0 || __getFnAddr(inst, 19) == addr )
+    if( fn == -1 || fn != 19 ) wFunCmd.setf19( cmd, data->fn19 );
+  if( addr == 0 || __getFnAddr(inst, 20) == addr )
+    if( fn == -1 || fn != 20 ) wFunCmd.setf20( cmd, data->fn20 );
+  if( addr == 0 || __getFnAddr(inst, 21) == addr )
+    if( fn == -1 || fn != 21 ) wFunCmd.setf21( cmd, data->fn21 );
+  if( addr == 0 || __getFnAddr(inst, 22) == addr )
+    if( fn == -1 || fn != 22 ) wFunCmd.setf22( cmd, data->fn22 );
+  if( addr == 0 || __getFnAddr(inst, 23) == addr )
+    if( fn == -1 || fn != 23 ) wFunCmd.setf23( cmd, data->fn23 );
+  if( addr == 0 || __getFnAddr(inst, 24) == addr )
+    if( fn == -1 || fn != 24 ) wFunCmd.setf24( cmd, data->fn24 );
+  if( addr == 0 || __getFnAddr(inst, 25) == addr )
+    if( fn == -1 || fn != 25 ) wFunCmd.setf25( cmd, data->fn25 );
+  if( addr == 0 || __getFnAddr(inst, 26) == addr )
+    if( fn == -1 || fn != 26 ) wFunCmd.setf26( cmd, data->fn26 );
+  if( addr == 0 || __getFnAddr(inst, 27) == addr )
+    if( fn == -1 || fn != 27 ) wFunCmd.setf27( cmd, data->fn27 );
+  if( addr == 0 || __getFnAddr(inst, 28) == addr )
+    if( fn == -1 || fn != 28 ) wFunCmd.setf28( cmd, data->fn28 );
 }
 
 
@@ -545,7 +577,7 @@ static void* __event( void* inst, const void* evt ) {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       wFunCmd.setid( node, wLoc.getid( data->props ) );
       wFunCmd.setaddr( node, wLoc.getaddr( data->props ) );
-      __cpFn2Node(inst, node, -1);
+      __cpFn2Node(inst, node, -1, 0);
       wFunCmd.setf0( node, wLoc.isfn(data->props) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcasting function command %d...", wFunCmd.isf0( node));
       AppOp.broadcastEvent( node );
@@ -687,6 +719,20 @@ static int __getFnTimer( iOLoc inst, int function) {
   return 0;
 }
 
+static int __getFnAddr( iOLoc inst, int function) {
+  iOLocData    data = Data(inst);
+
+  iONode fundef = wLoc.getfundef( data->props );
+  while( fundef != NULL ) {
+    if( wFunDef.getfn(fundef) == function ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function address for %d = %d", function, wFunDef.getaddr(fundef) );
+      return wFunDef.getaddr(fundef);
+    }
+    fundef = wLoc.nextfundef( data->props, fundef );
+  };
+  return 0;
+}
+
 /*
   Using the new V_* attributes for controlling loc speed.
 */
@@ -737,12 +783,16 @@ static void __engine( iOLoc inst, iONode cmd ) {
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       int fnchanged = -1;
+      int decaddr = 0;
 
       wFunCmd.setaddr(cmd, wLoc.getaddr( data->props ));
 
       if( wFunCmd.getfnchanged(cmd) != -1 ) {
-        /* TODO: Merge all known states in this command node. */
-        __cpFn2Node(inst, cmd, wFunCmd.getfnchanged(cmd));
+        /* Merge all known states in this command node. */
+        decaddr = __getFnAddr(inst, wFunCmd.getfnchanged(cmd) );
+        wLoc.setaddr( cmd, decaddr > 0 ? decaddr:wLoc.getaddr(data->props) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function %d address=%d", wFunCmd.getfnchanged(cmd), decaddr );
+        __cpFn2Node(inst, cmd, wFunCmd.getfnchanged(cmd), decaddr);
       }
 
       /* function timers
@@ -955,8 +1005,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
       }
 
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s(%d) lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
-          wLoc.getid( data->props ), fnchanged,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s [addr=%d] [fn=%d] lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+          wLoc.getid( data->props ), cmdFn==NULL?wLoc.getaddr( cmd ):wFunCmd.getaddr(cmdFn), fnchanged,
           data->fn0  ? "on":"off",
           data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
           data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
@@ -976,10 +1026,11 @@ static void __engine( iOLoc inst, iONode cmd ) {
     if( wLoc.isinfo4throttle(data->props ) ) {
       data->infocheck++;
       if( data->infocheck > 10 ) {
-        if( cmd == NULL )
+        if( cmd == NULL ) {
           cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
+        }
         wLoc.setcmd( cmd, wLoc.info );
-        wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
         data->infocheck = 0;
       }
     }
@@ -1088,7 +1139,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     wLoc.setid( cmd, wLoc.getid(data->props) );
 
     /* some controllers use this information because they make no diff between loc or fun cmd: */
-    __cpFn2Node(inst, cmd, -1);
+    __cpFn2Node(inst, cmd, -1, 0);
 
     if( wLoc.getV( cmd ) == -1 )
       wLoc.setV( cmd, data->drvSpeed );
@@ -1134,7 +1185,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       if( iid != NULL )
         wLoc.setiid( cmd, iid );
 
-      wLoc.setaddr( cmd, wLoc.getaddr( data->props ) );
+      /*wLoc.setaddr( cmd, wLoc.getaddr( data->props ) );*/
 
       if( curblock != NULL ) {
         wBlock.setport( cmd, curblock->getTDport( curblock ) );
@@ -1471,7 +1522,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "On Event for funcion %d.", fn );
         wFunCmd.setid( cmd, LocOp.getId( inst ) );
-        __cpFn2Node(inst, cmd, -1);
+        __cpFn2Node(inst, cmd, -1, 0);
         __FnOnOff(inst, fn, True, cmd);
         LocOp.cmd( inst, cmd );
       }
@@ -1487,7 +1538,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", fn );
         wFunCmd.setid( cmd, LocOp.getId( inst ) );
-        __cpFn2Node(inst, cmd, -1);
+        __cpFn2Node(inst, cmd, -1, 0);
         __FnOnOff(inst, fn, False, cmd);
         LocOp.cmd( inst, cmd );
       }
@@ -1508,7 +1559,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", data->timedfn );
         wFunCmd.setid( cmd, LocOp.getId( inst ) );
-        __cpFn2Node(inst, cmd, -1);
+        __cpFn2Node(inst, cmd, -1, 0);
         __FnOnOff(inst, data->timedfn, False, cmd);
         LocOp.cmd( inst, cmd );
         StrOp.free( data->fneventblock );
@@ -2606,7 +2657,7 @@ static Boolean _matchIdent( iOLoc loc, long ident ) {
 static iONode _getFunctionStatus( iOLoc loc, iONode cmd ) {
   iOLocData data = Data(loc);
   /* save the function status: */
-  __cpFn2Node(loc, cmd, -1);
+  __cpFn2Node(loc, cmd, -1, 0);
   wFunCmd.setf0( cmd, wLoc.isfn(data->props) );
   return cmd;
 }
