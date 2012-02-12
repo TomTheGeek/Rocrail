@@ -137,7 +137,7 @@ void LenzDlg::initValues() {
   m_FastClock->SetValue( wDigInt.isfastclock(m_Props)?true:false);
   m_AccPower->SetValue( wDigInt.ispw4acc(m_Props)?true:false);
   m_IgnoreBusy->SetValue( wDigInt.isignorebusy(m_Props)?true:false);
-  m_V2->SetValue( wDigInt.getprotver(m_Props)==2?true:false);
+  m_V2->SetValue( wDigInt.getprotver(m_Props) > 0 ? true:false);
 
   if( wDigInt.getbps( m_Props ) == 9600 )
     m_BPS->SetSelection(0);
@@ -172,7 +172,11 @@ void LenzDlg::evaluate() {
   wDigInt.setfastclock(m_Props, m_FastClock->IsChecked()?True:False);
   wDigInt.setpw4acc(m_Props, m_AccPower->IsChecked()?True:False);
   wDigInt.setignorebusy(m_Props, m_IgnoreBusy->IsChecked()?True:False);
-  wDigInt.setprotver(m_Props, m_V2->IsChecked()?2:0);
+
+  if( m_Type->GetSelection() == 2 ) // Elite
+    wDigInt.setprotver(m_Props, m_V2->IsChecked()?1:0);
+  else
+    wDigInt.setprotver(m_Props, m_V2->IsChecked()?2:0);
 
   if( m_Type->GetSelection() == 1 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_usb );
