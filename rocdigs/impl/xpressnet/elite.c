@@ -20,6 +20,7 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/elite.h"
 #include "rocdigs/impl/xpressnet/li101.h"
+#include "rocrail/wrapper/public/DigInt.h"
 
 Boolean eliteConnect(obj xpressnet) {
   return li101Connect(xpressnet);
@@ -83,9 +84,12 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   data->interfaceVersion = 1;
 
 
-  /* when sending to elite we have to correct for elite (version 1.3) addressing fault
-     address 1, port 1 does not exist in elite, address 1 port 2 becomes decoder 1 port 1,
-     address 1 port 3 becomes decoder 1 port 2, address 2 port 1 becomes decoder 1 port 4
+  /* when sending to elite we have to correct for elite addressing fault.
+     The actual fault depends on the mode setting of the elite.
+     Based on NMRA addressing, in classic mode the address has to be increased by 1,
+     in standard mode the port has to be increased by 1.
+     The actual operating mode must be set by the protver parameter in the digint section of rocrail.ini.
+     By default protver is 0, meaning standard mode. When protver is set to 1, classic mode correction is used
    */
 
   /* add port hack */
@@ -94,9 +98,15 @@ Boolean eliteWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
     int addr = out[1];
     b1 = out[1];
     b2 = out[2];
-    port++;
-    if( port > 3 ) {
-      port = 0;
+    if( wDigInt.getprotver(data->ini) == 0 ) {
+      /* standard mode correction */
+      port++;
+      if( port > 3 ) {
+        port = 0;
+        addr++;
+      }
+    } else {
+      /* classic mode correction */
       addr++;
     }
     out[1] = addr;
