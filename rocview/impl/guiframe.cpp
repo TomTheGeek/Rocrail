@@ -2015,6 +2015,9 @@ void RocGuiFrame::create() {
     m_PlanSplitter->SetSashPosition( 1 );
     m_PlanSplitter->Unsplit( m_PlanNotebook );
   }
+  if( !m_bTraceWindow ) {
+    m_Splitter->Unsplit( m_TraceSplitter );
+  }
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Show..." );
 
@@ -2749,6 +2752,7 @@ void RocGuiFrame::OnLocoViewSpecial( wxCommandEvent& event ) {
 void RocGuiFrame::OnTraceWindow( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_TraceWindow);
   m_bTraceWindow = mi->IsChecked();
+  wPlanPanel.settracewindow( wGui.getplanpanel( m_Ini ), m_bTraceWindow ? True:False);
   if(m_bTraceWindow) {
     int pos = wSplitPanel.getmain( wGui.getsplitpanel( m_Ini) );
     m_Splitter->SplitHorizontally( m_PlanSplitter, m_TraceSplitter, pos );
