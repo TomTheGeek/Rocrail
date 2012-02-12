@@ -2073,7 +2073,7 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
 
   TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
 
-  if( m_WarningPanel != NULL ) {
+  if( m_bTraceWindow && m_WarningPanel != NULL ) {
     long i = m_WarningPanel->GetLastPosition();
     if( i > maxlen )
       m_WarningPanel->Remove(0, len+1);
