@@ -725,7 +725,7 @@ static int __getFnAddr( iOLoc inst, int function) {
   iONode fundef = wLoc.getfundef( data->props );
   while( fundef != NULL ) {
     if( wFunDef.getfn(fundef) == function ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function address for %d = %d", function, wFunDef.getaddr(fundef) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function address for %d = %d", function, wFunDef.getaddr(fundef) );
       return wFunDef.getaddr(fundef);
     }
     fundef = wLoc.nextfundef( data->props, fundef );
