@@ -1575,8 +1575,8 @@ static void __feedbackReader( void* threadinst ) {
                              255: Kennzeichnet eine ungueltige Geschwindkeit (wird u.a. intern verwendet).
                 */
                 {
-                  int bidiAddr = in[1] + ((in[0] & 0x0F)) << 8;
-                  int locoAddr = in[2] + ((in[3] & 0x3F)) << 8;
+                  int bidiAddr = in[1] + ((in[0] & 0x0F) << 8);
+                  int locoAddr = in[2] + ((in[3] & 0x3F) << 8);
                   Boolean dir = (in[3] & 0x80) ? True:False;
                   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
