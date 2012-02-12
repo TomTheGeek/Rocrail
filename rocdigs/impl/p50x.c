@@ -676,8 +676,11 @@ static Boolean __getversion( iOP50x inst ) {
     } /* End of reading */
 
     /*
+     * Version Info:
      * IB      6 answers first is 2 Bytes (BCD)
-     * OpenDCC 2 answers first is 2 Bytes (BYTE)
+     * OpenDCC 1 answer           1 Bytes (BYTE) (until V0.14, only version)
+     * OpenDCC 1 answer           2 Bytes (BYTE) (since V0.15, version+serno combined)
+     * OpenDCC 2 answers first is 2 Bytes (BYTE) (since V0.23.8release)
      * Tams    2 answers first is 3 Bytes (BCD) or 4 Bytes (3*BCD + ASCII)
      */
 
@@ -686,9 +689,27 @@ static Boolean __getversion( iOP50x inst ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, inSerno, sizeSerno );
 
     switch (sizeVersion) {
+      case 1:
+        if( idx == 0 ) {
+          /* OpenDCC until V0.14, only version (1 byte) */
+          data->swversion = ( inVersion[0] & 0xFF ) << 8 ;
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC version --- 0.%d.0 ---",
+                                                                  (unsigned int) (inVersion[0] & 0xFF) );
+        }
+        break;
       case 2:
-        if( idx == 1 ) {
-          /* OpenDCC */
+        if( idx == 0 ) {
+          /* OpenDCC V0.15 until V0.23.8beta, (2 bytes version+serno) */
+          data->swversion = ( inVersion[0] & 0xFF ) << 8 ;
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC version --- 0.%d.0 ---",
+                                                                  (unsigned int) (inVersion[0] & 0xFF) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC serial# --- %d ---",
+                                                                  (unsigned int) (inVersion[1] & 0xFF) );
+        }
+        else if( idx == 1 ) {
+          /* OpenDCC since V0.23.8 (2 bytes version + 1 byte serno) */
           data->swversion = ( ( inVersion[0] & 0xFF ) << 8 ) + ( inVersion[1] & 0xFF );
           if( data->swversion >= MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS ) {
             data->useextfunc = True;
