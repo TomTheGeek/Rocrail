@@ -3,7 +3,7 @@ if [ ! -e ~/rocrail ] ; then
 	mkdir ~/rocrail
 fi
 
-if [ ! -e ~/rocrail/rocview.ini ] ; then
+if [ ! -e ~/rocrail/plan.xml ] ; then
 	cp /opt/rocrail/default/plan.xml ~/rocrail
 fi
 
@@ -17,5 +17,5 @@ fi
 
 cd ~/rocrail
 
-/opt/rocrail/rocview -sp /opt/rocrail -themespath . $1 $2 $3
+/opt/rocrail/rocview -sp /opt/rocrail $1 $2 $3
 
