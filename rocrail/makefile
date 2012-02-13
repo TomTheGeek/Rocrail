@@ -172,7 +172,7 @@ install_all:
 	-rm -Rf $(DESTDIR)
 #	-mkdir -p ~$(FS)rocrail$(FS)locxpm
 	-mkdir -p $(DESTDIR)
-	-mkdir -p $(DESTDIR)
+	-mkdir -p $(DESTDIR)$(FS)default
 	-cp -p $(OUTDIR)$(FS)rocrail$(BINSUFFIX) $(DESTDIR)
 	cd ..$(FS)rocdigs$(CS) $(MAKE) install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE)
 	cd ..$(FS)roclcdr$(CS) $(MAKE) install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE)
@@ -185,7 +185,7 @@ install_all:
 	-cp -Rp$(CPUPDATE) symbols $(DESTDIR)
 	-cp -Rp$(CPUPDATE) ..$(FS)stylesheets $(DESTDIR)
 	-cp -Rp$(CPUPDATE) package$(FS)images $(DESTDIR)
-	-cp -p$(CPUPDATE) package$(FS)plan.xml $(DESTDIR)
+	-cp -p$(CPUPDATE) package$(FS)plan.xml $(DESTDIR)$(FS)default
 	-cp -p package$(FS)rocrail.sh $(DESTDIR)
 	-cp -p package$(FS)rocview.sh $(DESTDIR)
 	-chmod +x $(DESTDIR)$(FS)rocrail.sh
