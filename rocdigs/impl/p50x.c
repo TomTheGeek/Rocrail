@@ -1033,7 +1033,8 @@ static void __PTeventReader( void* threadinst ) {
     out[1] = 0xCE;
 
     if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
-      Boolean ptEvent = False;
+      Boolean ptEvent   = False;
+      Boolean bidiEvent = False;
       out[1] = 0xC8;
       state = __cts( o );
       if( state == P50_OK ) {
@@ -1051,7 +1052,8 @@ static void __PTeventReader( void* threadinst ) {
                 if( evt[1] & 0x80 ) {
                   if( SerialOp.read( o->serial, (char*)&evt[2], 1 ) ) {
                     /* 3rd flag TODO: evaulate */
-                    ptEvent = (evt[2] & 0x01) ? True:False;
+                    ptEvent = (evt[2] & 0x21) ? True:False;
+                    bidiEvent = (evt[2] & 0x40) ? True:False;
                     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                         "3rd event flags = 0x%02X", evt[2] );
                   }
@@ -1082,6 +1084,72 @@ static void __PTeventReader( void* threadinst ) {
             }
           }
         }
+      }
+
+      if( bidiEvent && o->bidi ) {
+        /* BiDi */
+        out[0] = (byte)'x';
+        out[1] = 0xD2; /*XEvtBiDi*/
+
+        if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
+          o->tok = True;
+          state = __cts( o );
+          if( state == P50_OK ) {
+            if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
+              byte module = 0;
+              state = P50_OK;
+              if( SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
+                while( in[0] & 0x80 ) {
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
+                  if( SerialOp.read( o->serial, (char*)&in[1], 3 ) ) {
+                    if( in[3] & 0x40 ) {
+                      if( SerialOp.read( o->serial, (char*)&in[4], 1 ) ) {
+                        /* Speed byte */
+                      }
+                      else {
+                        break;
+                      }
+                    }
+                  }
+                  else {
+                    break;
+                  }
+
+                  TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 4 );
+                  {
+                    int bidiAddr = in[1] + ((in[0] & 0x0F) << 8);
+                    int locoAddr = in[2] + ((in[3] & 0x3F) << 8);
+                    Boolean dir = (in[3] & 0x80) ? True:False;
+                    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+                    wFeedback.setaddr( nodeC, bidiAddr );
+                    wFeedback.setbus( nodeC, wFeedback.fbtype_railcom );
+                    wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
+
+                    if( o->iid != NULL )
+                      wFeedback.setiid( nodeC, o->iid );
+
+                    wFeedback.setidentifier( nodeC, locoAddr );
+                    wFeedback.setstate( nodeC, True );
+                    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                        "BiDi[%d] reports decoder address [%d] %s",
+                        bidiAddr, locoAddr, dir?"forwards":"reverse" );
+
+                    o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
+                  }
+
+                  /* Next */
+                  in[0] = 0;
+                  if( !SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
+                    break;
+                  }
+
+                }
+              }
+            }
+          }
+        }
+
       }
 
       MutexOp.post( o->mux );
@@ -1534,103 +1602,6 @@ static void __feedbackReader( void* threadinst ) {
         }
       }
 
-    }
-
-
-    /* BiDi */
-    if( o->bidi ) {
-      ThreadOp.sleep( 10 );
-      out[0] = (byte)'x';
-      out[1] = 0xD2; /*XEvtBiDi*/
-
-      if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
-        o->tok = True;
-        state = __cts( o );
-        if( state == P50_OK ) {
-          if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
-            byte module = 0;
-            state = P50_OK;
-            if( SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
-              while( in[0] & 0x80 ) {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
-                if( SerialOp.read( o->serial, (char*)&in[1], 3 ) ) {
-                  if( in[3] & 0x40 ) {
-                    if( SerialOp.read( o->serial, (char*)&in[4], 1 ) ) {
-                      /* Speed byte */
-                    }
-                    else {
-                      break;
-                    }
-                  }
-                }
-                else {
-                  break;
-                }
-
-                TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 4 );
-
-                /* Report BiDi
-                 1. Byte:       bit#   7     6     5     4     3     2     1     0
-                                    +-----+-----+-----+-----+-----+-----+-----+-----+
-                                    |  LE | res | res | res | D11 | D10 |  D9 |  D8 |
-                                    +-----+-----+-----+-----+-----+-----+-----+-----+
-
-                          LE:      0:   Listenende, es folgen keine weiteren Daten.
-                                   1:   Es folgen Daten fuer diesen Listeneintrag.
-                                   res: reserviert
-                          D11-D8:  DID (DID = Detektor-ID), high nibble;
-
-                 2. Byte: D7-D0:   Detektor-ID, Low Byte
-                 3. Byte: low byte of Lok# (A7..A0)
-                 4. Byte: high byte of Lok#, high byte of Lok#, plus Dir and Speed status, coded as follows:
-                                bit#   7     6     5     4     3     2     1     0
-                                    +-----+-----+-----+-----+-----+-----+-----+-----+
-                                    | Dir | Spd | A13 | A12 | A11 | A10 | A9  | A8  |
-                                    +-----+-----+-----+-----+-----+-----+-----+-----+
-                          Dir: Lokrichtung
-                          Spd: 1: es folgt ein weiteres Byte mit der Istgeschwindigkeit
-                 5. Byte: [optional] Speed gemaess der BiDi-Kodierung
-                             0..63: speed = value / 2;
-                             64..127: speed = value - 32;
-                             128..254: speed = value * 4;
-                             255: Kennzeichnet eine ungueltige Geschwindkeit (wird u.a. intern verwendet).
-                */
-                {
-                  int bidiAddr = in[1] + ((in[0] & 0x0F) << 8);
-                  int locoAddr = in[2] + ((in[3] & 0x3F) << 8);
-                  Boolean dir = (in[3] & 0x80) ? True:False;
-                  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-
-                  wFeedback.setaddr( nodeC, bidiAddr );
-                  wFeedback.setbus( nodeC, wFeedback.fbtype_railcom );
-                  wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
-
-                  if( o->iid != NULL )
-                    wFeedback.setiid( nodeC, o->iid );
-
-                  wFeedback.setidentifier( nodeC, locoAddr );
-                  wFeedback.setstate( nodeC, True );
-                  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-                      "BiDi[%d] reports decoder address [%d] %s",
-                      bidiAddr, locoAddr, dir?"forwards":"reverse" );
-
-                  o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
-                }
-
-                /* Next */
-                in[0] = 0;
-                if( !SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
-                  break;
-                }
-
-              }
-            }
-          }
-        }
-
-        o->tok = False;
-        MutexOp.post( o->mux );
-      }
     }
 
 
