@@ -1130,7 +1130,7 @@ static void __PTeventReader( void* threadinst ) {
                       wFeedback.setiid( nodeC, o->iid );
 
                     wFeedback.setidentifier( nodeC, locoAddr );
-                    wFeedback.setstate( nodeC, True );
+                    wFeedback.setstate( nodeC, bidiAddr > 0 ?True:False );
                     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                         "BiDi[%d] reports decoder address [%d] %s",
                         bidiAddr, locoAddr, dir?"forwards":"reverse" );
