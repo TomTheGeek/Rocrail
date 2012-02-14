@@ -247,22 +247,14 @@ void Clock::SetDevider(int p_devider) {
 }
 
 void Clock::SetTime(long p_time) {
-  ltime = p_time;
+  ltime = (p_time / 60) * 60 - 60; // Filter out the seconds.
+  if( run ) {
+    calculate();
+    Refresh(true);
+  }
 }
 
-
-void Clock::Timer(wxTimerEvent& WXUNUSED(event))
-{
-  if( deviderchanged ) {
-    deviderchanged = false;
-    WxTimer->Start(TIMER/devider);
-  }
-
-  if( !run ) {
-    return;
-  }
-
-  //if( devider > 1 ) {
+void Clock::calculate() {
   if( 1 ) {
     ltime++;
     datetime->Set( ltime );
@@ -273,15 +265,30 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
   }
   SetToolTip( datetime->FormatISOTime());
 
-  if ((datetime->GetSecond() == 0) || start) Refresh(true);
+  /*
+  if ((datetime->GetSecond() == 0) || start)
+    Refresh(true);
   start = false;
-
+*/
   x = sm_angle(datetime->GetSecond());
   xpre = sm_angle(datetime->GetSecond()-1);
+  if( xpre < 0 )
+    xpre = 59;
   y = sm_angle(datetime->GetMinute());
   z = h_angle(datetime->GetHour(),datetime->GetMinute());
   hours   = datetime->GetHour();
   minutes = datetime->GetMinute();
+}
 
-  Refresh(true);
+void Clock::Timer(wxTimerEvent& WXUNUSED(event))
+{
+  if( deviderchanged ) {
+    deviderchanged = false;
+    WxTimer->Start(TIMER/devider);
+  }
+
+  if( run ) {
+    calculate();
+    Refresh(true);
+  }
 }
