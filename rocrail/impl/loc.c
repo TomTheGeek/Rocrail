@@ -1199,13 +1199,22 @@ static void __engine( iOLoc inst, iONode cmd ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d",wLoc.getV(cmd) );
-    if( cmdFn != NULL )
+    if( cmdFn != NULL ) {
+      if( wLoc.getaddr( cmdFn ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
+        wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
+      }
       ControlOp.cmd( control, cmdFn, NULL );
+    }
+
+    if( wLoc.getaddr( cmd ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
+      wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
+    }
 
     ControlOp.cmd( control, cmd, NULL );
 
-    if( cmdTD != NULL )
+    if( cmdTD != NULL ) {
       ControlOp.cmd( control, cmdTD, NULL );
+    }
   }
 
   if( wCtrl.isreleaseonidle( AppOp.getIniNode( wCtrl.name() )) ) {
