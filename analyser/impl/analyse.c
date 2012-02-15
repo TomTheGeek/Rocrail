@@ -1986,6 +1986,8 @@ static void __analyseList(iOAnalyse inst) {
               wItem.setrouteids(tracknode, newval );
               StrOp.free(newval);
           }
+
+          StrTokOp.base.del(tok);
         } else { // empty attribute
           wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
         }
