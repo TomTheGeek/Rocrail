@@ -171,9 +171,14 @@ static void __driverThread( void* threadinst ) {
         break;
       }
 
-      data->tick = !data->tick;
-      SerialOp.setDTR(data->serial, data->tick);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s...", data->tick?"tick":"tack" );
+      if( StrOp.equals( wClock.sync, wClock.getcmd(node) ) ) {
+        data->tick = !data->tick;
+        SerialOp.setDTR(data->serial, data->tick);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s...", data->tick?"tick":"tack" );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", wClock.getcmd(node) );
+      }
       node->base.del( node );
 
     }
