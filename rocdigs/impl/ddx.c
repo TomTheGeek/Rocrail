@@ -629,6 +629,7 @@ static struct ODDX* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* make a clone of the ini node: it could be replaced by rocrailDialog in the rocgui... */
   data->ini = (iONode)NodeOp.base.clone( ini );
+  data->iid = StrOp.dup(wDigInt.getiid( ini ));
   data->swtime = wDigInt.getswtime( ini );
 
   ddx_ini = wDigInt.getddx( data->ini );
