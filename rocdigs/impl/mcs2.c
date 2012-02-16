@@ -575,7 +575,11 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-    SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
+    if( data->udp )
+      SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
+    else
+      SerialOp.read( data->serial, in, 13 );
+
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -619,7 +623,11 @@ static void __writer( void* threadinst ) {
     cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
-      SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
+      if( data->udp )
+        SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
+      else
+        SerialOp.write( data->serial, cmd, 13 );
+
       freeMem( cmd );
     }
 
@@ -660,20 +668,57 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->ini = ini;
+  data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp address [%s]", wDigInt.gethost(data->ini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", 15731 );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", 15730 );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules       [%d]", wDigInt.getfbmod( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sublib      [%s]", wDigInt.getsublib(data->ini) );
+  if( data->udp ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp address [%s]", wDigInt.gethost(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", 15731 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", 15730 );
 
+    data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
+    SocketOp.bind(data->readUDP);
+    data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True, False );
+    data->conOK = True;
+  }
+  else {
+    serial_flow   flow   = none;
+    serial_parity parity = none;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.getbps(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.getflow(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  stopbits    [%d]", wDigInt.getstopbits(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  parity      [%d]", wDigInt.getparity(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout     [%d]ms", wDigInt.gettimeout( data->ini ) );
+
+    if( StrOp.equals( wDigInt.dsr, wDigInt.getflow(data->ini) ) )
+      flow = dsr;
+    else if( StrOp.equals( wDigInt.cts, wDigInt.getflow(data->ini) ) )
+      flow = cts;
+    else if( StrOp.equals( wDigInt.xon, wDigInt.getflow(data->ini) ) )
+      flow = xon;
+
+    if( StrOp.equals( wDigInt.even, wDigInt.getparity(data->ini) ) )
+      parity = even;
+    else if( StrOp.equals( wDigInt.odd, wDigInt.getparity(data->ini) ) )
+      parity = odd;
+    else if( StrOp.equals( wDigInt.none, wDigInt.getparity(data->ini) ) )
+      parity = none;
+
+
+    data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
+    SerialOp.setFlow( data->serial, flow );
+    SerialOp.setLine( data->serial, wDigInt.getbps(data->ini), 8, wDigInt.getstopbits(data->ini),
+        parity, wDigInt.isrtsdisabled(data->ini) );
+    SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+    data->conOK = SerialOp.open( data->serial );
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
-  SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True, False );
-  data->fbmod    = wDigInt.getfbmod( ini );
-  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
-  data->run = True;
+  data->fbmod = wDigInt.getfbmod( ini );
+  data->iid   = StrOp.dup( wDigInt.getiid( ini ) );
+  data->run   = True;
 
   data->reader = ThreadOp.inst( "mcs2reader", &__reader, __MCS2 );
   ThreadOp.start( data->reader );

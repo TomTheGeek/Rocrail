@@ -861,6 +861,9 @@
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
       <var name="iid" vt="const char*" remark="Interface ID"/>
       <var name="run" vt="Boolean"/>
+      <var name="udp" vt="Boolean"/>
+      <var name="conOK" vt="Boolean"/>
+      <var name="serial" vt="iOSerial"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="reader" vt="iOThread"/>
