@@ -375,7 +375,7 @@ static int _getMaxKmh( iIBlockBase inst ) {
 /**  */
 static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
   iOStageData data = Data(inst);
-  return 1000;
+  return 1;
 }
 
 
@@ -747,6 +747,9 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
 
   __moveStageLocos(inst);
 
+  /* Broadcast to clients. */
+  AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+
   return unlocked;
 }
 
@@ -967,6 +970,7 @@ static struct OStage* _inst( iONode props ) {
   data->sectionList   = ListOp.inst();
   data->sectionLength = wStage.getslen(props);
   data->trainGap      = wStage.getgap(props);
+  data->pendingFree   = True;
 
   wStage.setlocid(data->props, NULL);
 
