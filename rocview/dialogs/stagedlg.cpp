@@ -193,6 +193,7 @@ void StageDlg::initSections() {
   }
   m_ModifySection->Enable(false);
   m_DeleteSection->Enable(false);
+  m_SetLoco->Enable(false);
   m_FreeSection->Enable(false);
 
 }
@@ -234,6 +235,7 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
           _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
       m_ModifySection->Enable(true);
       m_DeleteSection->Enable(true);
+      m_SetLoco->Enable(true);
       m_FreeSection->Enable(true);
     }
     else
