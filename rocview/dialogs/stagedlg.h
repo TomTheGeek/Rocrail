@@ -52,6 +52,7 @@ protected:
   void OnOK( wxCommandEvent& event );
   void OnSetPage(wxCommandEvent& event);
   void OnFreeSection( wxCommandEvent& event );
+  void OnSetLoco( wxCommandEvent& event );
 
 public:
 	/** Constructor */

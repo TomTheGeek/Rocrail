@@ -97,7 +97,8 @@ void StageDlg::initLabels() {
   m_AddSection->SetLabel( wxGetApp().getMsg( "add" ) );
   m_ModifySection->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
-  m_FreeSection->SetLabel( wxGetApp().getMsg( "setloco" ) );
+  m_SetLoco->SetLabel( wxGetApp().getMsg( "setloco" ) );
+  m_FreeSection->SetLabel( wxGetApp().getMsg( "free" ) );
 
   m_EnterSensor->Append( _T("") );
   m_SectionSensor->Append( _T("") );
@@ -240,7 +241,12 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
   }
 }
 
-void StageDlg::OnFreeSection( wxCommandEvent& event )
+void StageDlg::OnFreeSection( wxCommandEvent& event ) {
+  m_SectionLocoId->SetSelection(0);
+  OnSetLoco(event);
+}
+
+void StageDlg::OnSetLoco( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
