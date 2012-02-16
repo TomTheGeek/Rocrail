@@ -577,8 +577,20 @@ static void __reader( void* threadinst ) {
   do {
     if( data->udp )
       SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
-    else
-      SerialOp.read( data->serial, in, 13 );
+    else {
+      if( SerialOp.available(data->serial) ) {
+        if( !SerialOp.read( data->serial, in, 13 ) ) {
+          ThreadOp.sleep(10);
+          if( data->run ) continue;
+          else break;
+        }
+      }
+      else {
+        ThreadOp.sleep(10);
+        if( data->run ) continue;
+        else break;
+      }
+    }
 
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
@@ -666,6 +678,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(1.0) %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
 
   data->ini = ini;
   data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
@@ -675,6 +688,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp address [%s]", wDigInt.gethost(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", 15731 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", 15730 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
     SocketOp.bind(data->readUDP);
@@ -688,8 +702,9 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.getbps(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.getflow(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  stopbits    [%d]", wDigInt.getstopbits(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  parity      [%d]", wDigInt.getparity(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  parity      [%s]", wDigInt.getparity(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout     [%d]ms", wDigInt.gettimeout( data->ini ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     if( StrOp.equals( wDigInt.dsr, wDigInt.getflow(data->ini) ) )
       flow = dsr;
@@ -713,8 +728,6 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );
   }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->fbmod = wDigInt.getfbmod( ini );
   data->iid   = StrOp.dup( wDigInt.getiid( ini ) );
