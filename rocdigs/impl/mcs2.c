@@ -698,7 +698,6 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", cts );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
