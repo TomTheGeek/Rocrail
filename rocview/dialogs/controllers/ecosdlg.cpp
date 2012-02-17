@@ -337,7 +337,7 @@ void ECoSCtrlDialog::SublibSelected()
   }
   else {
     m_Host->Enable(true);
-    m_Port->Enable(true);
+    m_Port->Enable(StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) )?false:true);
     m_Device->Enable(false);
   }
 }
