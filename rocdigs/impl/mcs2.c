@@ -696,35 +696,14 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     data->conOK = True;
   }
   else {
-    serial_flow   flow   = none;
-    serial_parity parity = none;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.getbps(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.getflow(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  stopbits    [%d]", wDigInt.getstopbits(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  parity      [%s]", wDigInt.getparity(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout     [%d]ms", wDigInt.gettimeout( data->ini ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", cts );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-    if( StrOp.equals( wDigInt.dsr, wDigInt.getflow(data->ini) ) )
-      flow = dsr;
-    else if( StrOp.equals( wDigInt.cts, wDigInt.getflow(data->ini) ) )
-      flow = cts;
-    else if( StrOp.equals( wDigInt.xon, wDigInt.getflow(data->ini) ) )
-      flow = xon;
-
-    if( StrOp.equals( wDigInt.even, wDigInt.getparity(data->ini) ) )
-      parity = even;
-    else if( StrOp.equals( wDigInt.odd, wDigInt.getparity(data->ini) ) )
-      parity = odd;
-    else if( StrOp.equals( wDigInt.none, wDigInt.getparity(data->ini) ) )
-      parity = none;
-
-
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
-    SerialOp.setFlow( data->serial, flow );
-    SerialOp.setLine( data->serial, wDigInt.getbps(data->ini), 8, wDigInt.getstopbits(data->ini),
-        parity, wDigInt.isrtsdisabled(data->ini) );
+    SerialOp.setFlow( data->serial, cts );
+    SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );
   }
