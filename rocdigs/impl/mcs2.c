@@ -578,7 +578,7 @@ static void __reader( void* threadinst ) {
     if( data->udp )
       SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
     else {
-      if( SerialOp.available(data->serial) ) {
+      if( data->conOK && SerialOp.available(data->serial) ) {
         if( !SerialOp.read( data->serial, in, 13 ) ) {
           ThreadOp.sleep(10);
           if( data->run ) continue;

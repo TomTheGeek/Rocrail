@@ -48,6 +48,8 @@ IMPLEMENT_DYNAMIC_CLASS( ECoSCtrlDialog, wxDialog )
 BEGIN_EVENT_TABLE( ECoSCtrlDialog, wxDialog )
 
 ////@begin ECoSCtrlDialog event table entries
+    EVT_RADIOBOX( ID_SUBLIB, ECoSCtrlDialog::OnSublibSelected )
+
     EVT_BUTTON( wxID_OK, ECoSCtrlDialog::OnOkClick )
 
     EVT_BUTTON( wxID_CANCEL, ECoSCtrlDialog::OnCancelClick )
@@ -89,9 +91,11 @@ ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props )
 
 void ECoSCtrlDialog::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+  m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
   m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
   m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labFBMod->SetLabel( wxGetApp().getMsg( "sensors" ) );
+  m_SubLib->SetLabel( wxGetApp().getMsg( "type" ) );
 }
 
 void ECoSCtrlDialog::initValues() {
@@ -99,12 +103,20 @@ void ECoSCtrlDialog::initValues() {
     return;
 
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
+  m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
 
   char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
   m_Port->SetValue( wxString( val, wxConvUTF8 ) );
   StrOp.free( val );
   m_FBMod->SetValue( wDigInt.getfbmod( m_Props ) );
+
+  if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(m_Props) )) {
+    m_SubLib->SetSelection(1);
+  }
+
+  SublibSelected();
+
 }
 
 
@@ -112,9 +124,15 @@ void ECoSCtrlDialog::evaluate() {
   if( m_Props == NULL )
     return;
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setport( m_Props, atoi( m_Port->GetValue().mb_str(wxConvUTF8) ) );
   wDigInt.setfbmod( m_Props, m_FBMod->GetValue() );
+  if( m_SubLib->GetSelection() == 1 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
+  else
+    wDigInt.setsublib(m_Props, wDigInt.sublib_default );
+
 }
 
 
@@ -157,12 +175,15 @@ void ECoSCtrlDialog::Init()
 ////@begin ECoSCtrlDialog member initialisation
     m_labIID = NULL;
     m_IID = NULL;
+    m_labDevice = NULL;
+    m_Device = NULL;
     m_labHost = NULL;
     m_Host = NULL;
     m_labPort = NULL;
     m_Port = NULL;
     m_labFBMod = NULL;
     m_FBMod = NULL;
+    m_SubLib = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -196,10 +217,16 @@ void ECoSCtrlDialog::CreateControls()
     m_IID = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_labDevice = new wxStaticText( itemPanel3, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Device = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_labHost = new wxStaticText( itemPanel3, wxID_ANY, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Host = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, -1), 0 );
+    m_Host = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
     itemFlexGridSizer5->Add(m_Host, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPort = new wxStaticText( itemPanel3, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -215,17 +242,24 @@ void ECoSCtrlDialog::CreateControls()
     m_FBMod = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 64, 0 );
     itemFlexGridSizer5->Add(m_FBMod, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer14 = new wxStdDialogButtonSizer;
+    wxArrayString m_SubLibStrings;
+    m_SubLibStrings.Add(_("&Ethernet"));
+    m_SubLibStrings.Add(_("&Serial"));
+    m_SubLib = new wxRadioBox( itemPanel3, ID_SUBLIB, _("SubType"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_ROWS );
+    m_SubLib->SetSelection(0);
+    itemBoxSizer4->Add(m_SubLib, 0, wxGROW|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer17 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer17, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer14->AddButton(m_OK);
+    itemStdDialogButtonSizer17->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer14->AddButton(m_Cancel);
+    itemStdDialogButtonSizer17->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer14->Realize();
+    itemStdDialogButtonSizer17->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }
@@ -284,3 +318,26 @@ void ECoSCtrlDialog::OnCancelClick( wxCommandEvent& event )
   EndModal( 0 );
 }
 
+
+/*!
+ * wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SUBLIB
+ */
+
+void ECoSCtrlDialog::OnSublibSelected( wxCommandEvent& event )
+{
+  SublibSelected();
+}
+
+void ECoSCtrlDialog::SublibSelected()
+{
+  if( m_SubLib->GetSelection() == 1 ) {
+    m_Host->Enable(false);
+    m_Port->Enable(false);
+    m_Device->Enable(true);
+  }
+  else {
+    m_Host->Enable(true);
+    m_Port->Enable(true);
+    m_Device->Enable(false);
+  }
+}
