@@ -1096,7 +1096,7 @@ static void __clockticker( void* threadinst ) {
       wClock.setcmd( tick, firstsync ? wClock.set:wClock.sync );
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new clock event" );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "new clock event" );
       ControlOp.cmd( control, tick, NULL );
     }
 
