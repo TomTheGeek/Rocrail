@@ -968,7 +968,7 @@ void SwitchDialog::CreateControls()
     m_labAccNr = new wxStaticText( m_GeneralPanel, wxID_ANY, _("accnr"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_labAccNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_AccNr = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 99, 1 );
+    m_AccNr = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 99, 1 );
     itemFlexGridSizer14->Add(m_AccNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_LabelDir = new wxStaticText( m_GeneralPanel, wxID_STATIC_SW_DIR, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
