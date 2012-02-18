@@ -876,8 +876,6 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   rfid += rfid2 << 3 * 8;
   rfid += rfid1 << 4 * 8;
 
-  Boolean state = False;
-
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "RFID %02X %02X %02X %02X %02X",rfid1,rfid2,rfid3,rfid4,rfid5);
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID %sevent %d id=%ld",
       data->shortevents?"short ":"", addr, rfid );
@@ -885,7 +883,7 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, state?True:False );
+  wFeedback.setstate( nodeC, rfid > 0 ? True:False );
   wFeedback.setidentifier( nodeC, rfid );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
