@@ -135,6 +135,8 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)
 	-$(MKDIR) $(GENDIR)$(FS)rocrail
 	-$(REMOVE) $(OUTDIR)$(FS)*.o
+	-$(REMOVE) $(OUTDIR)$(FS)libwrapper.a
+	-$(REMOVE) $(OUTDIR)$(FS)librocrail.a
 	-$(REMOVE) $(GENDIR)$(FS)rocrail$(FS)wrapper$(FS)public$(FS)*
 	-$(REMOVE) $(GENDIR)$(FS)rocrail$(FS)wrapper$(FS)impl$(FS)*
 	-$(REMOVE) $(GENDIR)$(FS)rocrail$(FS)wrapper$(FS)bin$(FS)*
