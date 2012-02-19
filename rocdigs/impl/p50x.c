@@ -553,7 +553,6 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
         Antwort: 0 = Ok, accepted
                  0x80 = busy, command ignored
         */
-
         p50[0] = (byte)'x';
         p50[1] = 0xDE;
         p50[2] = addr & 0xFF;
@@ -1454,22 +1453,22 @@ static void __feedbackReader( void* threadinst ) {
   byte out[256];
   byte in [512];
   byte tmp [8];
-  byte into [512];
   p50state state = P50_OK;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader started." );
   /* set byte arrays to a defined state: */
   MemOp.set( out, 0, 256 );
   MemOp.set(  in, 0, 512 );
-  MemOp.set(into, 0, 512 );
 
   out[0] = 'x';
   out[1] = 0x99;
   __transact( o, (char*)out, 2, in, 1, -1, o->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
+
   do {
 
     ThreadOp.sleep( o->psleep );
+    MemOp.set(  in, 0, 256 );
 
     out[0] = (byte)'x';
     out[1] = 0xCB; /*XEvtSen*/
@@ -1538,6 +1537,8 @@ static void __feedbackReader( void* threadinst ) {
 
     }
 
+    /* reset input buffer */
+    MemOp.set(  in, 0, 256 );
 
     if( o->bidi ) {
       ThreadOp.sleep( 10 );
@@ -1619,7 +1620,6 @@ static void __feedbackReader( void* threadinst ) {
                 }
 
                 /* Next */
-                in[0] = 0;
                 if( !SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
                   break;
                 }
