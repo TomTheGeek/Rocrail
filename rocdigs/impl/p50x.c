@@ -1451,25 +1451,23 @@ static void __feedbackReader( void* threadinst ) {
   iOP50xData o = Data(p50);
   unsigned char* fb = allocMem(256);
   byte out[256];
-  byte in [512];
+  byte s88_in [512];
   byte tmp [8];
   p50state state = P50_OK;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader started." );
   /* set byte arrays to a defined state: */
   MemOp.set( out, 0, 256 );
-  MemOp.set(  in, 0, 512 );
+  MemOp.set( s88_in, 0, 512 );
 
   out[0] = 'x';
   out[1] = 0x99;
-  __transact( o, (char*)out, 2, in, 1, -1, o->timeout );
+  __transact( o, (char*)out, 2, s88_in, 1, -1, o->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
 
   do {
 
     ThreadOp.sleep( o->psleep );
-    MemOp.set(  in, 0, 256 );
-
     out[0] = (byte)'x';
     out[1] = 0xCB; /*XEvtSen*/
 
@@ -1494,8 +1492,8 @@ static void __feedbackReader( void* threadinst ) {
 
               if( module < 32 ) {
                 /* s88 */
-                in[(module-1)*2] = tmp[0];
-                in[((module-1)*2)+1] = tmp[1];
+                s88_in[(module-1)*2] = tmp[0];
+                s88_in[((module-1)*2)+1] = tmp[1];
               }
               else {
                 /* loconet */
@@ -1528,19 +1526,18 @@ static void __feedbackReader( void* threadinst ) {
 
       /* only compare if communication was OK: */
       if( state == P50_OK ) {
-        if( memcmp( fb, in, o->fbmod * 2 ) != 0 ) {
+        if( memcmp( fb, s88_in, o->fbmod * 2 ) != 0 ) {
           /* inform listener */
-          __evaluateState( o, fb, in, o->fbmod * 2);
-          memcpy( fb, in, o->fbmod * 2 );
+          __evaluateState( o, fb, s88_in, o->fbmod * 2);
+          memcpy( fb, s88_in, o->fbmod * 2 );
         }
       }
 
     }
 
-    /* reset input buffer */
-    MemOp.set(  in, 0, 256 );
-
     if( o->bidi ) {
+      byte bidi_in [32];
+
       ThreadOp.sleep( 10 );
       out[0] = (byte)'x';
       out[1] = 0xD2; /*XEvtBiDi*/
@@ -1552,12 +1549,12 @@ static void __feedbackReader( void* threadinst ) {
           if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
             byte module = 0;
             state = P50_OK;
-            if( SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
-              while( in[0] & 0x80 ) {
+            if( SerialOp.read( o->serial, (char*)&bidi_in[0], 1 ) ) {
+              while( bidi_in[0] & 0x80 ) {
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
-                if( SerialOp.read( o->serial, (char*)&in[1], 3 ) ) {
-                  if( in[3] & 0x40 ) {
-                    if( SerialOp.read( o->serial, (char*)&in[4], 1 ) ) {
+                if( SerialOp.read( o->serial, (char*)&bidi_in[1], 3 ) ) {
+                  if( bidi_in[3] & 0x40 ) {
+                    if( SerialOp.read( o->serial, (char*)&bidi_in[4], 1 ) ) {
                       /* Speed byte */
                     }
                     else {
@@ -1569,7 +1566,7 @@ static void __feedbackReader( void* threadinst ) {
                   break;
                 }
 
-                TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 4 );
+                TraceOp.dump( NULL, TRCLEVEL_BYTE, bidi_in, 4 );
 
                 /* Report BiDi
                  1. Byte:       bit#   7     6     5     4     3     2     1     0
@@ -1598,9 +1595,9 @@ static void __feedbackReader( void* threadinst ) {
                              255: Kennzeichnet eine ungueltige Geschwindkeit (wird u.a. intern verwendet).
                 */
                 {
-                  int bidiAddr = in[1] + ((in[0] & 0x0F) << 8);
-                  int locoAddr = in[2] + ((in[3] & 0x3F) << 8);
-                  Boolean dir = (in[3] & 0x80) ? True:False;
+                  int bidiAddr = bidi_in[1] + ((bidi_in[0] & 0x0F) << 8);
+                  int locoAddr = bidi_in[2] + ((bidi_in[3] & 0x3F) << 8);
+                  Boolean dir = (bidi_in[3] & 0x80) ? True:False;
                   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
                   wFeedback.setaddr( nodeC, bidiAddr );
@@ -1620,7 +1617,7 @@ static void __feedbackReader( void* threadinst ) {
                 }
 
                 /* Next */
-                if( !SerialOp.read( o->serial, (char*)&in[0], 1 ) ) {
+                if( !SerialOp.read( o->serial, (char*)&bidi_in[0], 1 ) ) {
                   break;
                 }
 
