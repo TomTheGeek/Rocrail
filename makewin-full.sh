@@ -67,7 +67,7 @@ then
 
   sudo gunzip /usr/share/doc/mingw32-runtime/mingwm10.dll.gz
   cp /usr/share/doc/mingw32-runtime/mingwm10.dll .
-  sudo gzip /usr/share/doc/mingw32-runtime/mingwm10.dll
+  #sudo gzip /usr/share/doc/mingw32-runtime/mingwm10.dll
 else
   echo "Error: mingwm10.dll not found!"
   echo ""
