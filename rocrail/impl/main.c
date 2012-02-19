@@ -114,6 +114,9 @@ int main( int argc, char* argv[] ) {
   /* Resets memory statistics. */
   MemOp.resetDump();
 
+  /* disable stdout buffering to be able to tail the nohup out*/
+  setbuf( stdout, NULL );
+
   /* make copy of arguments for later use: */
   m_argc = argc;
   {
