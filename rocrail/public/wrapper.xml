@@ -601,10 +601,10 @@
       <var name="active" vt="bool" defval="false" remark="Activate srcp service."/>
       <var name="port" vt="int" defval="4303" range="1-65535"/>
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
-      <srcpconoffset cardinality="n" wrappername="SrcpConOffset">
+      <srcpbus cardinality="n" wrappername="SrcpBus">
         <var name="iid" vt="string" defval="" range="*"/>
-        <var name="offset" vt="int" defval="0" range="*"/>
-      </srcpconoffset>
+        <var name="bus" vt="int" defval="1" range="*"/>
+      </srcpbus>
     </srcpcon>
     <ctrl wrappername="Ctrl">
       <var name="swtimeout" vt="int" defval="250" range="100-1000" unit="ms" remark="Switch activation time."/>

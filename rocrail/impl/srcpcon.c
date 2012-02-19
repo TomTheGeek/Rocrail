@@ -49,13 +49,14 @@
 #include "rocrail/wrapper/public/FunDef.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SrcpCon.h"
-#include "rocrail/wrapper/public/SrcpConOffset.h"
+#include "rocrail/wrapper/public/SrcpBus.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/DigInt.h"
 
 extern const int bzr;
 
@@ -162,42 +163,153 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /** helper functions **/
-/* "quiet" version of ModelOp.getSwByAddress */
-static iOSwitch SRCPgetSwByAddress( iOModel model, int addr, int port ) {
+
+static const char *getDefaultIid() {
+  return( wDigInt.getiid(AppOp.getIniNode( wDigInt.name() ) ) );
+}
+
+static int getSrcpBus( iOSrcpConData data, const char *iid ) {
+  /* initialize with default */
+  int srcpBus = 1;
+
+  iONode srcpbus = wSrcpCon.getsrcpbus(data->ini);
+  while( srcpbus != NULL ) {
+    if( StrOp.equals( iid, wSrcpBus.getiid( srcpbus ) ) ) {
+      srcpBus = wSrcpBus.getbus( srcpbus );
+      break;
+    }
+    if( 0 == StrOp.len( wSrcpBus.getiid( srcpbus ) ) ){
+      /* read system default value */
+      srcpBus = wSrcpBus.getbus( srcpbus ) ;
+    }
+    srcpbus = wSrcpCon.nextsrcpbus(data->ini, srcpbus);
+  }
+  return( srcpBus );
+}
+
+static char *getSrcpIid( iOSrcpConData data, const int bus, char* srcpIid) {
+  /* initialize with default */
+  StrOp.copy( srcpIid, getDefaultIid() );
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "getSrcpIid: iid[%d]", bus );
+
+  iONode srcpbus = wSrcpCon.getsrcpbus(data->ini);
+  while( srcpbus != NULL ) {
+    if( bus == wSrcpBus.getbus( srcpbus ) ) {
+      if( StrOp.len(wSrcpBus.getiid( srcpbus )) ) {
+        StrOp.copy( srcpIid, wSrcpBus.getiid( srcpbus ));
+      }
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "getSrcpIid: iid[%d]=\"%s\" \"%s\"", bus, srcpIid, wSrcpBus.getiid( srcpbus ) );
+      break;
+    }
+    srcpbus = wSrcpCon.nextsrcpbus(data->ini, srcpbus);
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "getSrcpIid: iid[%d]=\"%s\"", bus, srcpIid );
+
+  return srcpIid ;
+}
+
+/* "extended" version of ModelOp.getSwByAddress */
+static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
   iOMap switchMap = ModelOp.getSwitchMap( model );
+
   iOSwitch sw = (iOSwitch)MapOp.first( switchMap );
+
   while( sw != NULL ) {
-    if( wSwitch.getaddr1( SwitchOp.base.properties(sw)) == addr && wSwitch.getport1( SwitchOp.base.properties(sw)) == port )
-      return sw;
-    if( wSwitch.getaddr2( SwitchOp.base.properties(sw)) == addr && wSwitch.getport2( SwitchOp.base.properties(sw)) == port )
-      return sw;
+    iONode swProps = SwitchOp.base.properties(sw);
+
+    if( wSwitch.getaddr1( swProps ) == addr && wSwitch.getport1( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), iid ) )
+      break;
+    if( wSwitch.getaddr2( swProps ) == addr && wSwitch.getport2( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), iid ) )
+      break;
     sw = (iOSwitch)MapOp.next( switchMap );
   };
+  if( sw != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSwByAddressAndIid sw != NULL iid %s , swIid %s", iid, wSwitch.getiid(SwitchOp.base.properties(sw)) );
+    return sw;
+  }else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSwByAddressAndIid: defaultIid %s", getDefaultIid() );
+
+    if( StrOp.equals( iid, getDefaultIid() ) ) {
+      sw = (iOSwitch)MapOp.first( switchMap );
+
+      while( sw != NULL ) {
+        iONode swProps = SwitchOp.base.properties(sw);
+        if( wSwitch.getaddr1( swProps ) == addr && wSwitch.getport1( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), "" ) )
+          break;
+        if( wSwitch.getaddr2( swProps ) == addr && wSwitch.getport2( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), "" ) )
+          break;
+        sw = (iOSwitch)MapOp.next( switchMap );
+      };
+    }
+  }
+  if( sw != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSwByAddressAndIid sw != NULL iid %s , swIid %s", iid, wSwitch.getiid(SwitchOp.base.properties(sw)) );
+    return sw;
+  }else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSwByAddressAndIid sw == NULL iid %s", iid );
+  }
   return NULL;
 }
-                                    
-/* "quiet" version of ModelOp.getSgByAddress */
-static iOSignal SRCPgetSgByAddress( iOModel model, int addr, int port ) {
+
+/* "extended" version of ModelOp.getSgByAddress */
+static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
   iOMap signalMap = ModelOp.getSignalMap( model );
+
   iOSignal sg = (iOSignal)MapOp.first( signalMap );
+
   while( sg != NULL ) {
-    if( wSignal.getaddr( SignalOp.base.properties(sg)) == addr && wSignal.getport1( SignalOp.base.properties(sg)) == port )
-      return sg;
-    if( wSignal.getaddr2( SignalOp.base.properties(sg)) == addr && wSignal.getport2( SignalOp.base.properties(sg)) == port )
-      return sg;
-    if( wSignal.getaddr3( SignalOp.base.properties(sg)) == addr && wSignal.getport3( SignalOp.base.properties(sg)) == port )
-      return sg;
-    if( wSignal.getaddr4( SignalOp.base.properties(sg)) == addr && wSignal.getport4( SignalOp.base.properties(sg)) == port )
-      return sg;
+    iONode sgProps = SignalOp.base.properties(sg);
+    int aspects = wSignal.getaspects( sgProps );
+
+    if( wSignal.getaddr(  sgProps ) == addr && wSignal.getport1( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+      break;
+    if( wSignal.getaddr2( sgProps ) == addr && wSignal.getport2( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+      break;
+    if( (aspects > 2) && wSignal.getaddr3( sgProps ) == addr && wSignal.getport3( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+      break;
+    if( (aspects > 3) && wSignal.getaddr4( sgProps ) == addr && wSignal.getport4( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+      break;
     sg = (iOSignal)MapOp.next( signalMap );
   };
+  if( sg != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSgByAddressAndIid sw != NULL iid %s , sgIid %s", iid, wSignal.getiid(SignalOp.base.properties(sg)) );
+    return sg;
+  }else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid: defaultIid %s", getDefaultIid() );
+
+    if( StrOp.equals( iid, getDefaultIid() ) ) {
+      sg = (iOSignal)MapOp.first( signalMap );
+
+      while( sg != NULL ) {
+        iONode sgProps = SignalOp.base.properties(sg);
+        int aspects = wSignal.getaspects( sgProps );
+
+        if( wSignal.getaddr(  sgProps ) == addr && wSignal.getport1( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+          break;
+        if( wSignal.getaddr2( sgProps ) == addr && wSignal.getport2( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+          break;
+        if( (aspects > 2) && wSignal.getaddr3( sgProps ) == addr && wSignal.getport3( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+          break;
+        if( (aspects > 3) && wSignal.getaddr4( sgProps ) == addr && wSignal.getport4( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+          break;
+        sg = (iOSignal)MapOp.next( signalMap );
+      };
+    }
+  }
+  if( sg != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSgByAddressAndIid sg != NULL iid %s , sgIid %s", iid, wSignal.getiid(SignalOp.base.properties(sg)) );
+    return sg;
+  }else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid sg == NULL iid %s", iid );
+  }
   return NULL;
 }
-                                                        
+
 
 /* Send powerState to all srcp info connections */
 static void sendPWstate2InfoChannels( struct timeval time, int busId, char* state ) {
-  iOList thList = ThreadOp.getAll(); 
+  iOList thList = ThreadOp.getAll();
   int cnt = ListOp.size( thList );
   char str[1025] = {'\0'};
   int j;
@@ -235,9 +347,61 @@ static void sendPWstate2InfoChannels( struct timeval time, int busId, char* stat
 }
 
 
+/* Send sessionState to all srcp info connections */
+static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, Boolean mode ) {
+  iOList thList = ThreadOp.getAll(); 
+  int cnt = ListOp.size( thList );
+  char str[1025] = {'\0'};
+  int j;
+  struct timeval time;
+  gettimeofday(&time, NULL);
+
+  switch(srcpCode) {
+    case 101:
+      /* Initialisation of session */
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d SESSION %d %s\n", 
+              time.tv_sec, time.tv_usec / 1000, srcpCode, busId, sessId, mode?"INFO":"COMMAND");
+      break;
+    case 102:
+      /* Termination of session */
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d SESSION %d\n", 
+              time.tv_sec, time.tv_usec / 1000, srcpCode, busId, sessId);
+      break;
+    default:
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sendSessionstate2InfoChannels wrong srcpCode %d", srcpCode );
+      return;
+      break;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
+
+  /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
+
+  for( j = 0; j < cnt; j++ ) {
+    iOThread th = (iOThread)ListOp.get( thList, j );
+    const char* tname = ThreadOp.getName( th );
+
+    iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
+    iOSrcpConData data = Data(srcpcon);
+    __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
+
+    if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
+      if ( oI->infomode ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
+        SocketOp.fmt(oI->clntSocket, str);
+        ThreadOp.sleep( 10 );
+      }
+    }
+  }
+}
+
+
 /** ----- OSrcpCon ----- */
 
-static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
+static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
+  iOSrcpConData data = Data(srcpcon);
   struct timeval time;
   gettimeofday(&time, NULL);
   iOModel model = AppOp.getModel();
@@ -250,45 +414,38 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       iONode swProps = SwitchOp.base.properties(sw);
       int addr  = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
       int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
+      int srcpBus = getSrcpBus( data, wSwitch.getiid(swProps));
 
       if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
         /*100 INFO <bus> GA <addr> <port> <value>*/
-        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-            time.tv_sec, time.tv_usec / 1000,
-            100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
       }
       else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway) 
             || StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing)) {
         if( StrOp.equals( wSwitch.getstate(evt), wSwitch.straight)) {
-        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
-            time.tv_sec, time.tv_usec / 1000,
-            100, 1, addr, 0,
-            time.tv_sec, time.tv_usec / 1000,
-            100, 1, addr2, 0);
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 0,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 0);
         }
         else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.left)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr2, 0,
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr, 1);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 0,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 0);
         }
         else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.right)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr, 0,
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr2, 1);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1);
         }
         else if( StrOp.equals( wSwitch.getstate(evt), wSwitch.turnout)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr, 1,
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr2, 1);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1, time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1);
         }
         else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED swEvent type %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSwitch.gettype(swProps) , addr, addr2, wSwitch.getstate(evt), wSwitch.getstate(swProps));
@@ -297,13 +454,13 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.decoupler )) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TYPE %s # %d set to %d", wSwitch.gettype(swProps), addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0 );
         if( ! wSwitch.issinglegate(evt)){
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0);
         }else {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr, wSwitch.getport1(evt));
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, wSwitch.getgate1(evt),
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, wSwitch.getgate1(evt));
         }
       }
       else {
@@ -317,13 +474,14 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     if( sg != NULL ) {
       iONode sgProps = SignalOp.base.properties(sg);
       int addr = AddrOp.toPADA( wSignal.getaddr(sgProps), wSignal.getport1(sgProps) );
+      int srcpBus = getSrcpBus( data, wSignal.getiid(sgProps));
       int aspects = wSignal.getaspects( sgProps );
 
       /*100 INFO <bus> GA <addr> <port> <value>*/
       if( aspects == 2 ) {
-        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-            time.tv_sec, time.tv_usec / 1000,
-            100, 1, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1);
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1);
       }else if( aspects > 2 ) {
         int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
         int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
@@ -332,24 +490,24 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sgEvent typeP %s, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, addr3, addr4, wSignal.getstate(evt), wSignal.getstate(sgProps));
 
         if( StrOp.equals( wSignal.getstate(evt), wSignal.red)) {
-        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-            time.tv_sec, time.tv_usec / 1000,
-            100, 1, addr, 0);
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.green)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr2, 1);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.yellow)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr3, 0);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr3, 0,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr3, 0);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.white)) {
-          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n",
-              time.tv_sec, time.tv_usec / 1000,
-              100, 1, addr4, 1);
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr4, 1,
+              time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr4, 1);
         }
         else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
@@ -365,27 +523,17 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
   else if( StrOp.equals( wState.name(), NodeOp.getName(evt))) {
     const char *iid = wState.getiid(evt);
     if( iid != NULL ) {
-      int s88busOffset = 0;
-      int busId;
 
-      iONode srcpconoffset = wSrcpCon.getsrcpconoffset(data->ini);
-      while( srcpconoffset != NULL ) {
-        if( StrOp.equals( iid, wSrcpConOffset.getiid( srcpconoffset ) ) ) {
-          s88busOffset = wSrcpConOffset.getoffset( srcpconoffset );
-          break;
-        }
-        srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
-      }
+      int srcpBus = getSrcpBus( data, iid );
 
-      busId = s88busOffset;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StName %s EvName %s srcpconoffset %d busId %d PW %s", wState.name(), NodeOp.getName(evt), s88busOffset, busId, wState.ispower(evt)?"ON":"OFF" );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StateName %s EvtName %s srcpBus %d PW %s", wState.name(), NodeOp.getName(evt), srcpBus, wState.ispower(evt)?"ON":"OFF" );
 
-      sendPWstate2InfoChannels( time, busId, wState.ispower(evt)?"ON":"OFF" );
+      sendPWstate2InfoChannels( time, srcpBus, wState.ispower(evt)?"ON":"OFF" );
 
       /*100 INFO <bus> POWER ON/OFF <freetext>*/
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
-        time.tv_sec, time.tv_usec / 1000,
-        100, s88busOffset, wState.ispower(evt)?"ON":"OFF" );
+            time.tv_sec, time.tv_usec / 1000, 100, 
+            srcpBus, wState.ispower(evt)?"ON":"OFF" );
     }
   }
 
@@ -406,22 +554,13 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
     iOFBack fb = ModelOp.getFBack(model, wFeedback.getid(evt));
     if( fb != NULL ) {
-      int s88busOffset = 0;
       iONode fbProps = FBackOp.base.properties(fb);
-
-      iONode srcpconoffset = wSrcpCon.getsrcpconoffset(data->ini);
-      while( srcpconoffset != NULL ) {
-        if( StrOp.equals( wFeedback.getiid(fbProps), wSrcpConOffset.getiid( srcpconoffset ) ) ) {
-          s88busOffset = wSrcpConOffset.getoffset( srcpconoffset );
-          break;
-        }
-        srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
-      }
+      int srcpBus = getSrcpBus( data, wFeedback.getiid(fbProps));
 
       /*100 INFO <bus> FB <addr> <value>*/
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
           time.tv_sec, time.tv_usec / 1000,
-          100, wFeedback.getbus(evt) + s88busOffset, wFeedback.getaddr(evt), wFeedback.isstate(evt));
+          100, srcpBus, wFeedback.getaddr(evt), wFeedback.isstate(evt));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FBcmd [%s]", str );
     }
   }
@@ -436,6 +575,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       iONode loProps = LocOp.base.properties(lo);
 
       int   loAddr = wLoc.getaddr(loProps);
+      
       Boolean loDir = wLoc.isdir(loProps);
       int   loV = wLoc.getV(loProps);
       int   loVmax = wLoc.getV_max(loProps);
@@ -455,9 +595,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
       iOLoc loco = ModelOp.getLocByAddress(model, loAddr);
       int i, mask ;
 
-      int OLDCONST127 = loSpcnt ;
-
-      int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
+      int decStep = (wLoc.getV( loProps ) * loSpcnt) / wLoc.getV_max( loProps );
       char funcString[1023];
       funcString[0] = '\0';
 
@@ -467,13 +605,15 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
         funcString[2*i+1] = loFx&mask?'1':'0';
       }
       funcString[2*loFnCnt] = '\0';
+      
+      int srcpBus = getSrcpBus( data, wLoc.getiid(loProps));
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr %d isdir %d V %d Vmode %s decStep %d spcnt %d loFx %d loId %s loFnCnt %d functions %s", 
               loAddr, loDir, loV, loVmode, decStep, loSpcnt, loFx, loId, loFnCnt, funcString );
 
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GL %d %d %d %d %d%s\n",
           time.tv_sec, time.tv_usec / 1000,
-          100, wLoc.getbus(loProps) + 1, loAddr,  loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString );
+          100, srcpBus, loAddr,  loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString );
     }
   }
 
@@ -492,15 +632,17 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
     */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "rr2srcp %s lvl %d text [%s]", NodeOp.getName(evt), level, text );
   }
+
   else if( StrOp.equals( wBlock.name(), NodeOp.getName(evt))){
     const char*   cmd = wBlock.getcmd( evt );
     int          addr = wBlock.getaddr( evt );
     const char* locId = wBlock.getlocid( evt );
     int	         port = wBlock.getport( evt );
     Boolean       pow = wBlock.ispower( evt );
-      
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp %s addr %d cmd [%s] locId [%s] port %d power %s", NodeOp.getName(evt), addr, cmd, locId, port, pow?"yes":"no" );
   }
+
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp unhandled event [%s] returns [%s]", NodeOp.getName(evt), str );
   }
@@ -510,6 +652,7 @@ static char* __rr2srcp(iOSrcpConData data, iONode evt, char* str) {
 
 
 static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, int *reqRespCode) {
+  iOSrcpConData data = Data(srcpcon);
   iONode cmd = NULL;
   iOModel model = AppOp.getModel();
   struct timeval time;
@@ -526,7 +669,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
    */
   if( StrOp.startsWithi( req, "INIT " ) ) {
     int idx = 0;
-    int busId = 0;
+    int srcpBus = 0;
     char busType[1025] = {'\0'};
     char optionString[1025] = {'\0'};
     int addrGA = 0 ;
@@ -538,7 +681,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       const char* s = StrTokOp.nextToken(tok);
       switch(idx) {
       case 1:
-        busId = atoi(s) ;
+        srcpBus = atoi(s) ;
         break;
       case 2:
         StrOp.copy( busType, s ) ;
@@ -563,7 +706,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     };
     StrTokOp.base.del(tok);
     /*
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Parts INIT %d %s %s", busId, busType, optionString );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Parts INIT %d %s %s", srcpBus, busType, optionString );
     */
     if( StrOp.equals( busType, "POWER" )) {
       /* INIT <bus> POWER */
@@ -571,17 +714,20 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       *reqRespCode = (int) 200 ;
     }else if( StrOp.equals( busType, "GA" )) {
       /* INIT <bus> GA <addr>  <protocol> <optional further parameters> */
+      char srcpBusIid[1025];
       int addr;
       int port;
       iOSwitch sw;
       iOSignal sg;
 
       AddrOp.fromPADA( addrGA, &addr, &port );
-      sw = SRCPgetSwByAddress(model, addr, port);
-      sg = SRCPgetSgByAddress(model, addr, port);
+      sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+      sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
 
       if( sw || sg ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Valid GA at %d", addrGA );
+        /* 200 OK */
+        *reqRespCode = (int) 200;
       }else{
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
@@ -605,7 +751,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       /* SET <bus> POWER [ON|OFF] [freetext] */
       int idx = 0;
       char str[1025] = {'\0'};
-      int busId = 0;
+      int srcpBus = 0;
       char busType[1025] = {'\0'};
       char optionString[1025] = {'\0'};
       char freeText[1025] = {'\0'};
@@ -615,7 +761,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
         case 1:
-          busId = atoi(s) ;
+          srcpBus = atoi(s) ;
           break;
         case 2:
           StrOp.copy( busType, s) ;
@@ -632,38 +778,39 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       StrTokOp.base.del(tok);
 
       if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "OFF" ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__srcp2rr: SET %d POWER OFF %s", busId, freeText);
-        if( 1 == busId ) { /* We use only the srcp-bus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: SET %d POWER %s %s", srcpBus, optionString, freeText);
+        if( 1 == srcpBus ) { /* We use only the srcpBus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
           iONode localCmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( localCmd, wSysCmd.stop );
-          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, localCmd );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wSysCmd.stop" );
+          data->callback( data->callbackObj, localCmd );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP sent wSysCmd.stop" );
 
-          sendPWstate2InfoChannels( time, busId, optionString );
+          sendPWstate2InfoChannels( time, srcpBus, optionString );
         }
 
-        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER OFF %s\n", time.tv_sec, time.tv_usec / 1000, busId, freeText );
+        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER OFF %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, freeText );
         SocketOp.fmt(o->clntSocket, str);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
         ThreadOp.sleep( 10 );
-
-      } else if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "ON" ) ) {
+      }
+      else if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "ON" ) ) {
         /* SET <bus> POWER ON <freetext> */
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__srcp2rr: SET %d POWER ON %s", busId, freeText);
-        if( 1 == busId ) { /* We use only the srcp-bus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: SET %d POWER %s %s", srcpBus, optionString, freeText);
+        if( 1 == srcpBus ) { /* We use only the srcpBus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
           iONode localCmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( localCmd, wSysCmd.go );
-          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, localCmd );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wSysCmd.go" );
+          data->callback( data->callbackObj, localCmd );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP sent wSysCmd.go" );
 
-          sendPWstate2InfoChannels( time, busId, optionString );
+          sendPWstate2InfoChannels( time, srcpBus, optionString );
         }
 
-        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER ON %s\n", time.tv_sec, time.tv_usec / 1000, busId, freeText );
+        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER ON %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, freeText );
         SocketOp.fmt(o->clntSocket, str);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
         ThreadOp.sleep( 10 );
-      } else {
+      }
+      else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown/unhandled POWER option in req %s", req );
       }
     }
@@ -685,7 +832,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 2:
+        case 1:
           srcpBus = atoi(s);
           break;
         case 3: {
@@ -724,39 +871,33 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       if( lcID != NULL ) {
         iONode loProps = LocOp.base.properties(ModelOp.getLoc(model, lcID));
 
-        int loAddr   = wLoc.getaddr(loProps);
-        int loV      = wLoc.getV(loProps);
-        int loVmax   = wLoc.getV_max(loProps);
-        int loSpcnt  = wLoc.getspcnt(loProps);
-        int loOldStep  = 0 ;
-        int loDir    = wLoc.isdir( loProps );
-        Boolean loFn = wLoc.isfn( loProps );
-        int loFnCnt  = wLoc.getfncnt(loProps);
-        int loFx     = wLoc.getfx(loProps);
+        int loAddr    = wLoc.getaddr(loProps);
+        int loV       = wLoc.getV(loProps);
+        int loVmax    = wLoc.getV_max(loProps);
+        int loSpcnt   = wLoc.getspcnt(loProps);
+        int loDir     = wLoc.isdir( loProps );
+        Boolean loFn  = wLoc.isfn( loProps );
+        int loFnCnt   = wLoc.getfncnt(loProps);
+        int loFx      = wLoc.getfx(loProps);
+        int newSpeed  = wLoc.getV(loProps) != -1 ? wLoc.getV(loProps):0;
+        int newStep   = 0 ;
+        int oldStep   = 0 ;
+        int divisor   = 1 ;
 
-        int newSpeed = wLoc.getV(loProps) != -1 ? wLoc.getV(loProps):0;
-        int newStep = 0 ;
-        int divisor = 1 ;
-
-        int OLDCONST127 = loSpcnt ;
-
-        /* formulas for loOldStep from p50x.c */
-        /* @ROB: Why 127 and not ( wLoc.getspcnt(loProps) -1 ) ??? */
         if( wLoc.getV( loProps ) != -1 ) {
           if( StrOp.equals( wLoc.getV_mode( loProps ), wLoc.V_mode_percent ) ){
-            loOldStep = ( loV * OLDCONST127) / 100;
             divisor = 100;
           }
           else if( loVmax > 0 ){
-            loOldStep = ( loV * OLDCONST127) / loVmax;
             divisor = loVmax;
           }
 
           newSpeed = loV;
-          newStep = (newSpeed * OLDCONST127) / divisor ;
+          newStep = ( newSpeed * loSpcnt) / divisor;
+          oldStep = ( loV      * loSpcnt) / divisor;
 
           if( newStep > loSpcnt ) {
-            newStep = loSpcnt ;
+            newStep = loSpcnt;
           }
 
           if( srcpNewStep == 0) { /* halt loco */
@@ -766,31 +907,31 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           else if( newStep == srcpNewStep ) {
               /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "newStep %d == srcpNewStep %d adjust none", newStep, srcpNewStep); */
           }
-          else if( srcpNewStep > loOldStep ) { /* increase speed */
-            /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcpNewStep %d > loOldStep %d", srcpNewStep, loOldStep); */
+          else if( srcpNewStep > oldStep ) { /* increase speed */
+            /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcpNewStep %d > oldStep %d", srcpNewStep, oldStep); */
             while( newStep < srcpNewStep ) {
               /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "newStep %d < srcpNewStep %d adjust ++", newStep, srcpNewStep); */
               newSpeed++;
-              newStep = (newSpeed * OLDCONST127) / divisor ;
+              newStep = (newSpeed * loSpcnt) / divisor ;
             }
           }
-          else if( srcpNewStep < loOldStep ) { /* slow down */
-            /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcpNewStep %d < loOldStep %d", srcpNewStep, loOldStep); */
+          else if( srcpNewStep < oldStep ) { /* slow down */
+            /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcpNewStep %d < oldStep %d", srcpNewStep, oldStep); */
             while( newStep > srcpNewStep ) {
               /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "newStep %d < srcpNewStep %d adjust --", newStep, srcpNewStep); */
               newSpeed--;
-              newStep = (newSpeed * OLDCONST127) / divisor ;
+              newStep = (newSpeed * loSpcnt) / divisor ;
             }
           }
           newSpeed = ( newSpeed > loVmax ) ? loVmax : newSpeed;
         }
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loAddr %d : OldSpeed %d OldStep %d NewSpeed %d newStep %d",
-              loAddr, loV, loOldStep, newSpeed, srcpNewStep);
+              loAddr, loV, oldStep, newSpeed, srcpNewStep);
 
         if( loFnCnt > 0 ) {
           /* send all functions as group 0 */ 
           iONode fcmd = NodeOp.inst(wFunCmd.name(), NULL, ELEMENT_NODE );
-          int group=0;
+          int group = 0;
 
           wFunCmd.setid( fcmd, lcID);
           wFunCmd.setgroup(fcmd, group );
@@ -825,7 +966,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             case  2: wFunCmd.setf2( fcmd, (srcpFx & 0x00000002)?True:False);
             case  1: wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
             case  0: wFunCmd.setf0( fcmd,  srcpF0);
-            Data(srcpcon)->callback( Data(srcpcon)->callbackObj, fcmd );
+            data->callback( data->callbackObj, fcmd );
           }
 
         }
@@ -835,13 +976,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         wLoc.setdir(cmd, srcpDir);
         wLoc.setfn(cmd, srcpF0);
         wLoc.setV(cmd, newSpeed);
-        Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+        data->callback( data->callbackObj, cmd );
         cmd = NULL ;
 
         *reqRespCode = (int) 200 ;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No loco with addr %d found", srcpLoco ) ;
+        /* 412 ERROR wrong value */
         *reqRespCode = (int) 412 ;
       }
     }
@@ -850,77 +992,90 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     else if( StrOp.findi( req, "GA" ) ) {
       int idx = 0;
       const char* swID = NULL;
-      int busGA = 0;
-      int addrGA = 0;
-      int addr = 0;
-      int port = 0;
-      int gate = 0;
-      int value = 0;
+      int  srcpBus  = 0;
+      char srcpBusIid[1024];
+      int  srcpAddr = 0;
+      int  addr     = 0;
+      int  port     = 0;
+      int  gate     = 0;
+      int  value    = 0;
+      int  delay    = 0;
       iOSwitch sw;
       iOSignal sg;
       iOStrTok tok = StrTokOp.inst(req, ' ');
+
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 2: busGA = atoi(s); break;
-        case 3: addrGA = atoi(s); break;
-        case 4: gate = atoi(s); break;
-        case 5: value = atoi(s); break;
+        case 1: srcpBus  = atoi(s); break;
+        case 3: srcpAddr = atoi(s); break;
+        case 4: gate     = atoi(s); break;
+        case 5: value    = atoi(s); break;
+        case 6: delay    = atoi(s); break; /* TODO: use delay ? No, not yet */
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
       /* Find switch */
-      AddrOp.fromPADA( addrGA, &addr, &port );
+      AddrOp.fromPADA( srcpAddr, &addr, &port );
 
-      sw = SRCPgetSwByAddress(model, addr, port);
+      sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+
       if( sw != NULL ) {
         iONode swProps = SwitchOp.base.properties(sw);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "swIid \"%s\" srcpBusIid \"%s\"", wSwitch.getiid(swProps), srcpBusIid ) ;
+
         int addr1 = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
         int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
         int gate1 = wSwitch.getgate1(swProps);
         int gate2 = wSwitch.getgate2(swProps);
 
-        if(( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left))
-        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.right))
-        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing))
-        || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) ) {
+        if(  ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left))
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.right))
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing))
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) ) {
           cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-          wSwitch.setid( cmd, SwitchOp.getId(sw) );
+          wSwitch.setiid( cmd, srcpBusIid );
+          wSwitch.setid(  cmd, SwitchOp.getId(sw) );
           wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "srcpAddr %d addr %d port %d srcpBus %d srcpBusIid \"%s\"", srcpAddr, addr, port, srcpBus, srcpBusIid ) ;
         }
         else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway)) {
           /* straight left right */
           const char *currState = wSwitch.getstate(swProps);
 
-          if( ( addr1 == addrGA ) && ( gate == 0 ) ) {
+          if( ( addr1 == srcpAddr ) && ( gate == 0 ) ) {
             if( StrOp.equals( currState, wSwitch.left) ) {
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, wSwitch.straight );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", addrGA, gate, wSwitch.threeway, currState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", srcpAddr, gate, wSwitch.threeway, currState ) ;
             }
-          }else if( ( addr1 == addrGA ) && ( gate == 1 ) ) {
+          }else if( ( addr1 == srcpAddr ) && ( gate == 1 ) ) {
             if( StrOp.equals( currState, wSwitch.straight) || StrOp.equals( currState, wSwitch.right) ) {
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, wSwitch.left );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to left", addrGA, gate, wSwitch.threeway, currState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to left", srcpAddr, gate, wSwitch.threeway, currState ) ;
             }
-          }else if( ( addr2 == addrGA ) && ( gate == 0 ) ) {
+          }else if( ( addr2 == srcpAddr ) && ( gate == 0 ) ) {
             if( StrOp.equals( currState, wSwitch.right) ) {
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, wSwitch.straight );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", addrGA, gate, wSwitch.threeway, currState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to straight", srcpAddr, gate, wSwitch.threeway, currState ) ;
             }
-          }else if( ( addr2 == addrGA ) && ( gate == 1 ) ) {
+          }else if( ( addr2 == srcpAddr ) && ( gate == 1 ) ) {
             if( StrOp.equals( currState, wSwitch.straight) || StrOp.equals( currState, wSwitch.left) ) {
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, wSwitch.right );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to right", addrGA, gate, wSwitch.threeway, currState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d gate %d : type %s currstate %s set to right", srcpAddr, gate, wSwitch.threeway, currState ) ;
             }
           }
         }
@@ -930,64 +1085,72 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           const char *currState = wSwitch.getstate(swProps);
           const char *nextState ;
 
-          if( ( addr1 == addrGA ) && ( 0 == value ) ) {
+          if( ( addr1 == srcpAddr ) && ( 0 == value ) ) {
             if( StrOp.equals( currState, wSwitch.turnout) ) {
               nextState = wSwitch.right;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }else if( StrOp.equals( currState, wSwitch.left) ) {
               nextState = wSwitch.straight;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }
-          }else if( ( addr1 == addrGA ) && ( 1 == value ) ) {
+          }else if( ( addr1 == srcpAddr ) && ( 1 == value ) ) {
             if( StrOp.equals( currState, wSwitch.straight) ) {
               nextState = wSwitch.left;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }else if( StrOp.equals( currState, wSwitch.right) ) {
               nextState = wSwitch.turnout;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }
-          }else if( ( addr2 == addrGA ) && ( 0 == value ) ) {
+          }else if( ( addr2 == srcpAddr ) && ( 0 == value ) ) {
             if( StrOp.equals( currState, wSwitch.right) ) {
               nextState = wSwitch.straight;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }else if( StrOp.equals( currState, wSwitch.turnout) ) {
               nextState = wSwitch.left;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }
-          }else if( ( addr2 == addrGA ) && ( 1 == value ) ) {
+          }else if( ( addr2 == srcpAddr ) && ( 1 == value ) ) {
             if( StrOp.equals( currState, wSwitch.straight) ) {
               nextState = wSwitch.right;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }else if( StrOp.equals( currState, wSwitch.left) ) {
               nextState = wSwitch.turnout;
               cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setid( cmd, SwitchOp.getId(sw) );
+              wSwitch.setiid( cmd, srcpBusIid );
+              wSwitch.setid(  cmd, SwitchOp.getId(sw) );
               wSwitch.setcmd( cmd, nextState );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", addrGA, port, value, wSwitch.dcrossing, currState, nextState ) ;
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SW %d port %d value %d : type %s Set from %s to %s ", srcpAddr, port, value, wSwitch.dcrossing, currState, nextState ) ;
             }
           }else{
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW NO COMBO FOR addr/gate/value found aGA %d a %d p %d gate %d value %d : type %s a1 %d a2 %d g1 %d g2 %d REQ %s", addrGA, addr, port, gate, value, wSwitch.gettype(swProps), addr1, addr2, gate1, gate2, req );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET for SW NO COMBO FOR addr/gate/value found aGA %d a %d p %d gate %d value %d : type %s a1 %d a2 %d g1 %d g2 %d REQ %s", srcpAddr, addr, port, gate, value, wSwitch.gettype(swProps), addr1, addr2, gate1, gate2, req );
           }
         }
         else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.decoupler)) {
@@ -995,17 +1158,16 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
           if( ! isSingle ) {
             cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-            wSwitch.setid( cmd, SwitchOp.getId(sw) );
+            wSwitch.setiid( cmd, srcpBusIid );
+            wSwitch.setid(  cmd, SwitchOp.getId(sw) );
             wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
-
           }else {
-            iOMap        swMap = NULL;
+            iOMap swMap = NULL;
 
             swMap = ModelOp.getSwitchMap(model);
             iOSwitch swM = (iOSwitch)MapOp.first( swMap );
-            /* TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "LOTHAR: map %p sw %p", swMap, sw ); */
 
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TYPE %s # %d set to %s\naddr %d port %d gate %d value %d isSingle %d", wSwitch.gettype(swProps), addrGA, gate?wSwitch.straight:wSwitch.turnout, addr, port, gate, value, isSingle?1:0 );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TYPE %s # %d set to %s\naddr %d port %d gate %d value %d isSingle %d", wSwitch.gettype(swProps), srcpAddr, gate?wSwitch.straight:wSwitch.turnout, addr, port, gate, value, isSingle?1:0 );
 
             while( swM != NULL ) {
               /* check the switch */
@@ -1019,60 +1181,70 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
                 const char *id   =  wSwitch.getid(swPropsM);
                 const char *currState = wSwitch.getstate(swPropsM);
 
-                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "LOTHAR desc %s id %s type %s addr1 %d port 1 %d gate1 %d isSingle %d currState %s", desc, id, wSwitch.gettype(swPropsM), addr1, wSwitch.getport1(swPropsM), gate1,  isSingle?1:0, currState ) ;
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "desc %s id %s type %s addr1 %d port 1 %d gate1 %d isSingle %d currState %s", desc, id, wSwitch.gettype(swPropsM), addr1, wSwitch.getport1(swPropsM), gate1,  isSingle?1:0, currState ) ;
 
                 cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
-                wSwitch.setid( cmd, id );
+                wSwitch.setiid( cmd, srcpBusIid );
+                wSwitch.setid(  cmd, id );
                 wSwitch.setcmd( cmd, gate?wSwitch.straight:wSwitch.turnout );
               }
               swM = (iOSwitch)MapOp.next( swMap );
-            };
-          };
+            }
+          }
         }else{
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown GA-type %s with address %d", wSwitch.gettype(swProps),addrGA );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown GA-type %s with address %d", wSwitch.gettype(swProps),srcpAddr );
         }
       }
       
-      sg = SRCPgetSgByAddress(model, addr, port);
+      sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+
       if( sg != NULL ) {
         iONode sgProps = SignalOp.base.properties(sg);
-        int aspects = wSignal.getaspects( sgProps );
-        int addr1 = AddrOp.toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
-        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
-        int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
-        int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
-        int gate1 = wSignal.getgate1(sgProps);
-        int gate2 = wSignal.getgate2(sgProps);
-        int gate3 = wSignal.getgate3(sgProps);
-        int gate4 = wSignal.getgate4(sgProps);
+        if( StrOp.equals(wSignal.getiid(sgProps), srcpBusIid) ){
+          int aspects = wSignal.getaspects( sgProps );
+          int addr1 = AddrOp.toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
+          int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+          int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+          int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+          int gate1 = wSignal.getgate1(sgProps);
+          int gate2 = wSignal.getgate2(sgProps);
+          int gate3 = wSignal.getgate3(sgProps);
+          int gate4 = wSignal.getgate4(sgProps);
 
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SG aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
-            addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET for SG aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
+              srcpAddr, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
 
-        /* if cmd != NULL (a sw command was already created) execute that command before creating new command for sg */
-        if ( cmd != NULL ) {
-          Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-        }
+          /* if cmd != NULL (a sw command was already created) execute that command before creating new command for sg */
+          if ( cmd != NULL ) {
+            data->callback( data->callbackObj, cmd );
+          }
 
-        cmd = NodeOp.inst(wSignal.name(), NULL, ELEMENT_NODE );
-        wSignal.setid( cmd, SignalOp.getId(sg) );
+          cmd = NodeOp.inst(wSignal.name(), NULL, ELEMENT_NODE );
+          wSignal.setiid( cmd, srcpBusIid );
+          wSignal.setid( cmd, SignalOp.getId(sg) );
 
-        if( ( addr1 == addrGA ) && ( gate1 == gate ) ) {
-          wSignal.setcmd( cmd, wSignal.red );
-        }else if( ( addr2 == addrGA ) && ( gate2 == gate ) ) {
-          wSignal.setcmd( cmd, wSignal.green );
-        }else if( ( aspects >= 3 ) && ( addr3 == addrGA ) && ( gate3 == gate ) ) {
-          wSignal.setcmd( cmd, wSignal.yellow );
-        }else if( ( aspects >= 4 ) && ( addr4 == addrGA ) && ( gate4 == gate ) ) {
-          wSignal.setcmd( cmd, wSignal.white );
-        }else{
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "for SG NO COMOBO FOR addr/gate found aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", addrGA, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+          if( ( addr1 == srcpAddr ) && ( gate1 == gate ) ) {
+            wSignal.setcmd( cmd, wSignal.red );
+          }else if( ( addr2 == srcpAddr ) && ( gate2 == gate ) ) {
+            wSignal.setcmd( cmd, wSignal.green );
+          }else if( ( aspects >= 3 ) && ( addr3 == srcpAddr ) && ( gate3 == gate ) ) {
+            wSignal.setcmd( cmd, wSignal.yellow );
+          }else if( ( aspects >= 4 ) && ( addr4 == srcpAddr ) && ( gate4 == gate ) ) {
+            wSignal.setcmd( cmd, wSignal.white );
+          }else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "for SG NO COMOBO FOR addr/gate found iid %s aGA %d a %d p %d gate %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
+                         srcpBusIid, srcpAddr, addr, port, gate, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+          }
         }
       }
       if( ( sw == NULL ) && ( sg == NULL ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no switch or signal found for found iid %s aGA %d a %d p %d gate %d : REQ %s", 
+                     srcpBusIid, srcpAddr, addr, port, gate, req );
+        /* 412 ERROR wrong value */
         *reqRespCode = (int) 412 ;
       }
     }
+
     else if( StrOp.findi( req, "SM" ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET <bus> SM not supported" );
       /* 425 ERROR not supported */
@@ -1087,7 +1259,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       /* GET <bus> POWER */
       int idx = 0;
       char str[1025] = {'\0'};
-      int busId = 0;
+      int srcpBus = 0;
       char busType[1025] = {'\0'};
       iOStrTok tok = StrTokOp.inst(req, ' ');
 
@@ -1095,7 +1267,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
         case 1:
-          busId = atoi(s) ;
+          srcpBus = atoi(s) ;
           break;
         case 2:
           StrOp.copy( busType, s) ;
@@ -1107,88 +1279,19 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
       if( StrOp.equals( busType, "POWER" ) ) {
         /* GET <bus> POWER */
-        int i =0;
-
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POWER[%d]", busId );
-
-        iOMap   fbMap = ModelOp.getFeedbackMap( model );
-        iOFBack fback = (iOFBack)MapOp.first( fbMap );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POWER[%d]", srcpBus );
 
         /* current overall system state (ON/OFF) */
         Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
 
-
-        /* 
-          We get the request through a command channel, but the answers have to be send also on the info channel.
-          (If it is the first/initial request, we also have to send the answers back through the commanchannel!)
-          Because we don't know which info channel belongs to which command channel, we send the answers on all info channels
-
-          MY strategy:
-              send INFO to all srcp client sessions currently in infomode
-          OTHER strategy:
-              send only to session with an ID exactly 1 higher than current command session ID
-              PROBLEM: Does the corresponding info session always get the session ID exaclty 1 higher ?
-        */
-
-
-
-        iOList thList = ThreadOp.getAll(); 
-        int cnt = ListOp.size( thList );
-        int j;
-
         /* Send powerState to all srcp info connections */
-        sendPWstate2InfoChannels( time, busId, isPower?"ON":"OFF" );
+        sendPWstate2InfoChannels( time, srcpBus, isPower?"ON":"OFF" );
 
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
-            time.tv_sec, time.tv_usec / 1000, busId, isPower?"ON":"OFF" );
+            time.tv_sec, time.tv_usec / 1000, srcpBus, isPower?"ON":"OFF" );
 
         /* send INFO <bus> POWER answer back to requesting command channel */
         SocketOp.fmt(o->clntSocket, str);
-
-        /* Send all feedback stati of the currently requested bus to the clients */
-        while( fback != NULL ) {
-          iOSrcpConData data = Data(srcpcon);
-          iOFBack fb = fback;
-          int s88busOffset = 0;
-          iONode fbProps = FBackOp.base.properties(fback);
-
-          iONode srcpconoffset = wSrcpCon.getsrcpconoffset(data->ini);
-          while( srcpconoffset != NULL ) {
-            if( StrOp.equals( wFeedback.getiid(fbProps), wSrcpConOffset.getiid( srcpconoffset ) ) ) {
-              s88busOffset = wSrcpConOffset.getoffset( srcpconoffset );
-              break;
-            }
-            srcpconoffset = wSrcpCon.nextsrcpconoffset(data->ini, srcpconoffset);
-          }
-          /* Is fb on the current bus? */
-          if( busId == (wFeedback.getbus(fbProps) + s88busOffset) ) {
-            /*100 INFO <bus> FB <addr> <value>*/
-            StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
-                time.tv_sec, time.tv_usec / 1000,
-                100, wFeedback.getbus(fbProps) + s88busOffset, wFeedback.getaddr(fbProps), wFeedback.isstate(fbProps));
-
-            for( j = 0; j < cnt; j++ ) {
-              iOThread th = (iOThread)ListOp.get( thList, j );
-              const char* tname = ThreadOp.getName( th );
-
-              iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
-              iOSrcpConData data = Data(srcpcon);
-              __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
-
-              if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
-                if ( oI->infomode ) {
-                  SocketOp.fmt(oI->clntSocket, str);
-                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
-                  ThreadOp.sleep( 10 );
-                }
-              }
-            }
-          }
-          fback = (iOFBack)MapOp.next( fbMap );
-          ThreadOp.sleep( 0 );
-        };
-        /* Cleanup. */
-        thList->base.del( thList );
       }
     } /* GET <bus> POWER */
     /* GET <bus> DESCRIPTION GL <addr> */
@@ -1198,8 +1301,9 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       /* 101 INFO <bus> GL <addr> <proto> <protver> <speedsteps> <num functions> */
       int idx = 0;
       const char* lcID = NULL;
-      int busId = 0;
+      int srcpBus = 0;
       int addrGL = 0;
+      char srcpBusIid[1024];
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET DESCRIPTION REQ %s", req);
 
@@ -1208,7 +1312,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
           case 1:
-            busId = atoi(s) ;
+            srcpBus = atoi(s) ;
             break;
           case 4: 
             addrGL = atoi(s);
@@ -1223,41 +1327,46 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       }
       StrTokOp.base.del(tok);
 
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
       if( addrGL > 0 ) {
         iOLoc loco = ModelOp.getLocByAddress(model, addrGL);
         if( loco != NULL ) {
-          char rsp[1025] = {'\0'};
-          iONode loProps = LocOp.base.properties(loco);
-          int   loSpcnt = wLoc.getspcnt(loProps);
-          const char *loDecType = wLoc.getdectype(loProps);
-          int   loFnCnt = wLoc.getfncnt(loProps);
-          const char *loProt = wLoc.getprot(loProps);
-          int loProtver = wLoc.getprotver(loProps);
+          iONode  loProps = LocOp.base.properties(loco);
+          if( StrOp.equals(wLoc.getiid(loProps), srcpBusIid) ) {
+            char        rsp[1025] = {'\0'};
+            int           loSpcnt = wLoc.getspcnt(loProps);
+            const char *loDecType = wLoc.getdectype(loProps);
+            int           loFnCnt = wLoc.getfncnt(loProps);
+            const char    *loProt = wLoc.getprot(loProps);
+            int         loProtver = wLoc.getprotver(loProps);
+            int           decStep = (wLoc.getV( loProps ) * loSpcnt) / wLoc.getV_max( loProps );
+            char         srcpProt = loProt[0];
+            int       srcpProtver = loProtver;
 
-          int OLDCONST127 = loSpcnt ;
+            switch(srcpProt) {
+              case 'P': break;
+              case 'M': break;
+              case 'N': srcpProtver=1;break;
+              case 'L': srcpProt='N';srcpProtver=2;break;
+              case 'A': break;
+              case 'C': srcpProt='N';break;
+              case 'S': break;
+              case 'X': srcpProt='S';break;
+            }
 
-          int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
+            StrOp.fmtb(rsp, "%lu.%.3lu 101 INFO %d GL %d %c %d %d %d\n", 
+                time.tv_sec, time.tv_usec / 1000, srcpBus, addrGL, srcpProt, srcpProtver, loSpcnt, loFnCnt+1 );
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "101 %s", rsp);
+            SocketOp.fmt(o->clntSocket, rsp);
 
-          char srcpProt = loProt[0] ;
-
-          switch(srcpProt) {
-            case 'P': break;
-            case 'M': break;
-            case 'N': break;
-            case 'L': srcpProt='N';break;
-            case 'A': break;
-            case 'C': srcpProt='N';break;
-            case 'S': break;
-            case 'X': srcpProt='S';break;
+            *reqRespCode = (int) 0 ;
+          }else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> loco with address %d found on %s and not on srcpBus %d (%s) not found", req, addrGL, wLoc.getiid(loProps), srcpBus, srcpBusIid );
+            /* 416 ERROR no data */
+            *reqRespCode = (int) 416;
           }
-
-          StrOp.fmtb(rsp, "%lu.%.3lu 101 INFO 1 GL %d %c %d %d %d\n", 
-              time.tv_sec, time.tv_usec / 1000, addrGL, srcpProt, loProtver, loSpcnt, loFnCnt+1 );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "101 %s", rsp);
-          SocketOp.fmt(o->clntSocket, rsp);
-
-          *reqRespCode = (int) 0 ;
-        } else{
+        }else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> locoID for address %d not found", req, addrGL );
           /* 416 ERROR no data */
           *reqRespCode = (int) 416;
@@ -1272,8 +1381,9 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       /* "100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn>" */
       int idx = 0;
       const char* lcID = NULL;
-      int busId = 0;
+      int srcpBus = 0;
       int addrGL = 0;
+      char srcpBusIid[1024];
 
       Boolean dir = True;
       int V = 0;
@@ -1283,7 +1393,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
           case 1:
-            busId = atoi(s) ;
+            srcpBus = atoi(s) ;
             break;
           case 3: 
             addrGL = atoi(s);
@@ -1298,45 +1408,50 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       }
       StrTokOp.base.del(tok);
 
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
       if( addrGL > 0) {
         iOLoc loco = ModelOp.getLocByAddress(model, addrGL);
         if( loco != NULL ) {
           iONode loProps = LocOp.base.properties(loco);
+          const char *loIid = StrOp.equals(wLoc.getiid(loProps), "" ) ? getDefaultIid() : wLoc.getiid(loProps) ;
 
-          Boolean loDir = wLoc.isdir(loProps);
-          int   loV = wLoc.getV(loProps);
-          int   loVmax = wLoc.getV_max(loProps);
-          const char *loVmode = wLoc.getV_mode(loProps);
-          int   loSpcnt = wLoc.getspcnt(loProps);
-          int OLDCONST127 = loSpcnt ;
-          int decStep = (wLoc.getV( loProps ) * OLDCONST127) / wLoc.getV_max( loProps );
-          Boolean loFn = wLoc.isfn( loProps );    
+          if( StrOp.equals( loIid, srcpBusIid)) {
+            Boolean loDir = wLoc.isdir(loProps);
+            int   loV = wLoc.getV(loProps);
+            int   loVmax = wLoc.getV_max(loProps);
+            const char *loVmode = wLoc.getV_mode(loProps);
+            int   loSpcnt = wLoc.getspcnt(loProps);
+            int decStep = (wLoc.getV( loProps ) * loSpcnt) / wLoc.getV_max( loProps );
+            Boolean loFn = wLoc.isfn( loProps );    
+            int   loFnCnt = wLoc.getfncnt(loProps);
+            int   loFx = wLoc.getfx(loProps);
+            char rsp[1025] = {'\0'};
+            char freeText[1025] = {'\0'};
+            int dir = LocOp.getDir(loco);
+            int V = LocOp.getV(loco);
+            char funcString[1023];
+            funcString[0] = '\0';
+            int i, mask;
 
-          int   loFnCnt = wLoc.getfncnt(loProps);
-          int   loFx = wLoc.getfx(loProps);
+            for( i=0 ; i < loFnCnt ; i++ ) {
+              mask = 1 << i ;
+              funcString[2*i] = ' ';
+              funcString[2*i+1] = loFx&mask?'1':'0';
+            }
+            funcString[2*loFnCnt] = '\0';
 
-          char rsp[1025] = {'\0'};
-          char freeText[1025] = {'\0'};
-          int dir = LocOp.getDir(loco);
-          int V = LocOp.getV(loco);
-          
-          char funcString[1023];
-          funcString[0] = '\0';
-          int i, mask;
+            StrOp.fmtb(rsp, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
+                time.tv_sec, time.tv_usec / 1000, srcpBus, addrGL, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", rsp);
+            SocketOp.fmt(o->clntSocket, rsp);
 
-          for( i=0 ; i < loFnCnt ; i++ ) {
-            mask = 1 << i ;
-            funcString[2*i] = ' ';
-            funcString[2*i+1] = loFx&mask?'1':'0';
+            *reqRespCode = (int) 0 ;
+          }else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> loco with address %d found on %s and not on srcpBus %d (%s) not found", req, addrGL, wLoc.getiid(loProps), srcpBus, srcpBusIid );
+            /* 416 ERROR no data */
+            *reqRespCode = (int) 416;
           }
-          funcString[2*loFnCnt] = '\0';
-
-          StrOp.fmtb(rsp, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
-              time.tv_sec, time.tv_usec / 1000, busId, addrGL, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", rsp);
-          SocketOp.fmt(o->clntSocket, rsp);
-
-          *reqRespCode = (int) 0 ;
         }
         else{
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> locoID for address %d not found", req, addrGL );
@@ -1353,16 +1468,17 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       /* 101 INFO <bus> GA <addr> <device protocol> */
       char str[1025] = {'\0'};
       int idx = 0;
-      int bus = 0;
-      int addrGA = 0;
+      int srcpBus = 0;
+      int srcpAddr = 0;
       int addr = 0;
+      char srcpBusIid[1024];
 
       iOStrTok tok = StrTokOp.inst(req, ' ');
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 1: bus = atoi(s); break;
-        case 4: addrGA = atoi(s); break;
+        case 1: srcpBus = atoi(s); break;
+        case 4: srcpAddr = atoi(s); break;
         case 5:
           /* too many arguments ; 418 ERROR list too long */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
@@ -1373,25 +1489,67 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       };
       StrTokOp.base.del(tok);
 
-      if( addrGA > 0 ) {
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      if( srcpAddr > 0 ) {
+        char srcpBusIid[1025];
         int addr;
         int port;
         iOSwitch sw;
         iOSignal sg;
+        char prot[1025] = {'\0'};
 
-        AddrOp.fromPADA( addrGA, &addr, &port );
-        sw = SRCPgetSwByAddress(model, addr, port);
-        sg = SRCPgetSgByAddress(model, addr, port);
+        AddrOp.fromPADA( srcpAddr, &addr, &port );
+        sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+        sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+
+        /*
+          SRCP GA protocols
+          M     Maerklin/Motorola Format
+                Valid addresses are from 1 to 324, valid ports are 0 or 1, valid values are: 0 and 1 
+          N     NMRA-DCC Format
+                Valid addresses are from 1 to 511, valid ports are 0 or 1, valid values are: 0 and 1 
+          S     Selectrix Format
+                Valid addresses are from 0 to 111, valid ports are 1 to 8, valid values are: 0 and 1 
+          P     Protocol by server
+          
+          Rocrail sw/sg protocols: M,N,D,mdd,om32,do,vo
+          M      -> M
+          N      -> N
+          others -> P
+        */
 
         if( sw || sg ) {
-          /* we just send back that all switches and signals use NMRA-DCC format */
-          /* TODO: send back real protocol */
-          StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000, bus, addrGA, "N" );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+          if( sw ) {
+            iONode swProps = SwitchOp.base.properties(sw);
+
+            StrOp.copy( prot, wSwitch.getprot(swProps));
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SW %d at controller %s : swProt %s", 
+                        srcpAddr, srcpBusIid, prot);
+          }else {
+            iONode sgProps = SignalOp.base.properties(sg);
+
+            StrOp.copy( prot, wSignal.getprot(sgProps));
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG %d at controller %s : sgProt %s", 
+                  srcpAddr, srcpBusIid, prot);
+          }
+          switch( prot[0] & 0xFF ) {
+            case 'M':
+            case 'N':
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Prot %s OK", prot);
+              break;
+            default:
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Prot %s not srcp conform, set to P", prot);
+              StrOp.copy( prot, "P");
+          }
+          StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, srcpAddr, prot );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Answer: %s", str);
           SocketOp.fmt(o->clntSocket, str);
           *reqRespCode = (int) 0 ;
-        }else{
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> switch/signal for address %d not found", req, addrGA );
+        }
+
+        if( ! sw && ! sg ){
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> switch/signal on %s for address %d not found", req, srcpBusIid, srcpAddr );
           /* 416 ERROR no data */
           *reqRespCode = (int) 416;
         }
@@ -1403,11 +1561,166 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
     /* GET <bus> GA <addr> <port> */
     else if( StrOp.findi( req, "GA" ) ) {
       /* "100 INFO <bus> GA <addr> <port> <value>" */
-      /* we just send back that we have no data ; 416 ERROR no data */
-      /* TODO: send back real data */
+      char str[1025] = {'\0'};
+      int idx = 0;
+      int srcpBus = 0;
+      int srcpAddr = 0;
+      int srcpPort = 0;
+      int addr = 0;
+      char srcpBusIid[1024];
+
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1: srcpBus = atoi(s); break;
+        case 3: srcpAddr = atoi(s); break;
+        case 4: srcpPort = atoi(s); break;
+        case 5:
+          /* too many arguments ; 418 ERROR list too long */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
+          *reqRespCode = 418 ;
+          break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      if( srcpAddr > 0 ) {
+        char srcpBusIid[1025];
+        int addr;
+        int port;
+        int value;
+        iOSwitch sw;
+        iOSignal sg;
+        char valStr[1025] = {'\0'};
+        Boolean twoMotors = False;
+
+        AddrOp.fromPADA( srcpAddr, &addr, &port );
+        sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+        sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+
+        /* Q: "GET <bus> GA <addr> <port>" */
+        /* A: "100 INFO <bus> GA <addr> <port> <value>" */
+
+        value = 0;
+        if( sw || sg ) {
+
+          str[0] = '\0';
+          /* 416 ERROR no data */
+          *reqRespCode = (int) 416 ;
+          if( sw ) {
+            iONode swProps = SwitchOp.base.properties(sw);
+            const char* type = wSwitch.gettype( swProps );
+
+            if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) ) {
+              twoMotors = True;
+            }
+
+            StrOp.copy( valStr, wSwitch.getstate(swProps) );
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SW %d at controller %s : twoMotors %d value %s", 
+                        srcpAddr, srcpBusIid, twoMotors, valStr );
+
+            /* TODO: do we have to check if addr/port is really used */
+            StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
+                  time.tv_sec, time.tv_usec / 1000, srcpBus, srcpAddr, srcpPort );
+            SocketOp.fmt(o->clntSocket, str);
+            *reqRespCode = (int) 0 ;
+          }else {
+            iONode sgProps = SignalOp.base.properties(sg);
+            int aspects = wSignal.getaspects( sgProps );
+
+            StrOp.copy( valStr, wSignal.getstate(sgProps) );
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG %d at controller %s : aspects %d value %s", 
+                  srcpAddr, srcpBusIid, aspects, valStr );
+
+            /* TODO: check if addr/port is really used (... only for 3 aspect signals ?) */
+            StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n", 
+                  time.tv_sec, time.tv_usec / 1000, srcpBus, srcpAddr, srcpPort );
+            SocketOp.fmt(o->clntSocket, str);
+            *reqRespCode = (int) 0 ;
+          }
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Answer: %s", str);
+        }
+
+        if( ! sw && ! sg ){
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> switch/signal on %s for address %d not found", req, srcpBusIid, srcpAddr );
+          /* 416 ERROR no data */
+          *reqRespCode = (int) 416;
+        }
+      }else {
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412;
+      }
+    }else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unhandled GET REQ %s", req );
+      /* 416 ERROR no data */
       *reqRespCode = (int) 416 ;
     }
   } /* GET */
+
+  else if( StrOp.startsWithi( req, "TERM " ) ) {
+    if( StrOp.startsWithi( req, "TERM 0 SESSION" ) ) {
+      /* TERM <bus> SESSION <id> */
+      int idx = 0;
+      char str[1025] = {'\0'};
+      int srcpBus = 0;
+      int sessId = 0;
+      char busType[1025] = {'\0'};
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1:
+          srcpBus = atoi(s) ;
+          break;
+        case 3:
+          sessId = atoi(s) ;
+          break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      /* check for optional parameter <SESSIONID> */
+      if( sessId == 0 ){
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TERM request from session %d without (optional) session ID", o->id );
+        sessId = o->id;
+      }
+
+      if( sessId != o->id ){
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TERM request for Id %d but session Id is %d", sessId, o->id );
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+      } else if( srcpBus == 0 ){
+        /* terminate session */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Terminating session %d", sessId );
+        /* last action is to send back confirmation */
+        /* 102 INFO 0 SESSION <SESSIONID> */
+
+        StrOp.fmtb(str, "%lu.%.3lu 102 INFO %d SESSION %d\n", 
+              time.tv_sec, time.tv_usec / 1000, srcpBus, sessId );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s [%p]", str, o->clntSocket);
+        SocketOp.fmt(o->clntSocket, str);
+        /* TODO: close IP socket */
+        /* inform all info sessions about closing a session */
+        /* -> this will be automatically invoked for all sessions when closing the socket ! */
+        /* sendSessionstate2InfoChannels( 0, sessId, 102, o->infomode ); */
+        *reqRespCode = (int) 0 ;
+      }
+      else {
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED TERM req %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
+      *reqRespCode = (int) 410 ;
+    }
+  }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED req/unkown command %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
     *reqRespCode = (int) 410 ;
@@ -1488,8 +1801,7 @@ static void __broadcaster( void* threadinst ) {
   } while(True);
 }
 
-static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int id)
-{
+static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int id) {
     switch (errorcode) {
         case 100:
             sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
@@ -1514,7 +1826,6 @@ static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int
           else
             sprintf(msg, "%lu.%.3lu %d OK\n", time.tv_sec,
                     time.tv_usec / 1000, errorcode);
-
             break;
         case 202:
             sprintf(msg, "%lu.%.3lu %d OK CONNECTIONMODE\n", time.tv_sec,
@@ -1618,6 +1929,319 @@ static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int
     return msg;
 }
 
+static void sendFeedbackList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  iOModel model = AppOp.getModel();
+  char str[1025] = {'\0'};
+  
+  iOMap fbackMap = ModelOp.getFeedbackMap( model );
+  iOFBack fb = (iOFBack)MapOp.first( fbackMap );
+
+  while( fb != NULL ) {
+    iONode fbProps = FBackOp.base.properties(fb);
+    int srcpBus = getSrcpBus( Data(srcpcon), wFeedback.getiid(fbProps));
+
+    /*100 INFO <bus> FB <addr> <value>*/
+    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
+        time.tv_sec, time.tv_usec / 1000,
+        100, srcpBus, wFeedback.getaddr(fbProps), wFeedback.isstate(fbProps));
+
+    if( StrOp.len( str ) ){
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendFeedbackList2InfoChannel: snd2info[%d]: %s", o->id, str ) ;
+      SocketOp.fmt(o->clntSocket, str);
+    }
+
+    fb = (iOFBack)MapOp.next( fbackMap );
+  };
+}
+
+static void sendSwitchList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  iOModel model = AppOp.getModel();
+  char str[1025] = {'\0'};
+  
+  iOMap switchMap = ModelOp.getSwitchMap( model );
+  iOSwitch sw = (iOSwitch)MapOp.first( switchMap );
+
+  while( sw != NULL ) {
+    /* 100 INFO <bus> GA <addr> <port> <value> */
+    iONode swProps = SwitchOp.base.properties(sw);
+    int srcpBus = getSrcpBus( Data(srcpcon), wSwitch.getiid(swProps));
+    int addr  = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
+    int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
+    const char *swProt = wSwitch.getprot(swProps);
+    char prot[256] = {'\0'} ;
+
+    if( StrOp.startsWithi( swProt, "M" )) {
+      StrOp.copy( prot, "M" );
+    }else {
+      StrOp.copy( prot, "N" );
+    }
+    
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSwitchList2InfoChannel: iidSP %s srcpBus %d swType %s",
+        wSwitch.getiid(swProps), srcpBus, wSwitch.gettype(swProps) );
+
+    if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
+     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
+     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
+     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, addr, prot,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1);
+    }
+    else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway) 
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing)) {
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, addr, prot,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1,
+          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, addr2, prot,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 0,
+          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, 1);
+    }
+    else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.decoupler )) {
+      if( ! wSwitch.issinglegate(swProps)){
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 101, srcpBus, addr, prot,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 0,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, 1);
+      }else {
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+            time.tv_sec, time.tv_usec / 1000, 101, srcpBus, addr, prot,
+            time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, wSwitch.getgate1(swProps));
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED swDevice typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSwitch.gettype(swProps) , addr, addr2, wSwitch.getstate(swProps), wSwitch.getstate(swProps));
+      str[0] = '\0' ;
+    }
+
+    if( StrOp.len( str ) ){
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSwitchList2InfoChannel: snd2info[%d]: %s", o->id, str ) ;
+      SocketOp.fmt(o->clntSocket, str);
+    }
+
+    sw = (iOSwitch)MapOp.next( switchMap );
+  };
+}
+
+static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  iOModel model = AppOp.getModel();
+  char str[1025] = {'\0'};
+  
+  iOMap signalMap = ModelOp.getSignalMap( model );
+  iOSignal sg = (iOSignal)MapOp.first( signalMap );
+
+  while( sg != NULL ) {
+    iONode sgProps = SignalOp.base.properties(sg);
+    int aspects = wSignal.getaspects( sgProps );
+    const char *sgProt = wSignal.getprot(sgProps);
+    char prot[256] = {'\0'} ;
+    int lastAddrSgProt = -1;
+    int addr  = -1;
+    int addr2 = -1;
+    int addr3 = -1;
+    int addr4 = -1;
+    int gate1 = -1;
+    int gate2 = -1;
+    int gate3 = -1;
+    int gate4 = -1;
+
+    str[0] = '\0' ;
+
+    if( StrOp.startsWithi( sgProt, "M" )) {
+      StrOp.copy( prot, "M" );
+    }else {
+      StrOp.copy( prot, "N" );
+    }
+    
+    /* 100 INFO <bus> GA <addr> <port> <value> */
+    int srcpBus = getSrcpBus( Data(srcpcon), wSignal.getiid(sgProps));
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSignalList2InfoChannel: iidSP %s srcpBus %d sgProt %s",
+        wSignal.getiid(sgProps), srcpBus, sgProt );
+
+    switch( aspects ){
+      case 4:
+        addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+        gate4 = wSignal.getgate4(sgProps);
+        lastAddrSgProt = addr4;
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",
+                        time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
+        SocketOp.fmt(o->clntSocket, str);
+      case 3:
+        addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+        gate3 = wSignal.getgate3(sgProps);
+        if( addr3 != lastAddrSgProt ) {
+          lastAddrSgProt = addr3;
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",
+                          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
+          SocketOp.fmt(o->clntSocket, str);
+        }
+      case 2:
+        addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+        gate2 = wSignal.getgate2(sgProps);
+        if( addr2 != lastAddrSgProt ) {
+          lastAddrSgProt = addr2;
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",
+                          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
+          SocketOp.fmt(o->clntSocket, str);
+        }
+      case 1:
+        addr  = AddrOp.toPADA( wSignal.getaddr( sgProps), wSignal.getport1(sgProps) );
+        gate1 = wSignal.getgate1(sgProps);
+        if( addr != lastAddrSgProt ) {
+          lastAddrSgProt = addr;
+          StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",
+                          time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
+          SocketOp.fmt(o->clntSocket, str);
+        }
+    }
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSignalList2InfoChannel: sg aspects %d, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, gate1 %d, gate2 %d, gate3 %d, gate4 %d, stateE %s, stateP %s", aspects, addr, addr2, addr3, addr4, gate1, gate2, gate3, gate4, wSignal.getstate(sgProps), wSignal.getstate(sgProps));
+
+    /*100 INFO <bus> GA <addr> <port> <value>*/
+    switch( aspects ){
+      case 1:
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n",
+                        time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr, gate1 );
+        break;
+      case 2:
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr,  gate1,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, gate2 );
+        break;
+      case 3:
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr,  gate1,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, gate2,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr3, gate3 );
+        break;
+      case 4:
+        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr,  gate1,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr2, gate2,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr3, gate3,
+                          time.tv_sec, time.tv_usec / 1000, 100, srcpBus, addr4, gate4 );
+        break;
+      default:
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgDevice aspects %d, SGaddr %d, SGaddr2 %d, stateE %s, stateP %s", aspects, addr, addr2, wSignal.getstate(sgProps), wSignal.getstate(sgProps));
+    }
+
+    if( StrOp.len( str ) ){
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSignalList2InfoChannel: snd2info[%d] SG1: %s", o->id, str ) ;
+      SocketOp.fmt(o->clntSocket, str);
+    }
+
+    sg = (iOSignal)MapOp.next( signalMap );
+  };
+}
+
+static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  iOModel model = AppOp.getModel();
+  
+  iOMap locoMap = ModelOp.getLocoMap( model );
+  iOLoc loco = (iOLoc)MapOp.first( locoMap );
+
+  while( loco != NULL ) {
+    /* 101 INFO <bus> GL <addr> <protocol> <optional further parameters> */
+    /* 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
+    if( loco != NULL ) {
+      iONode loProps = LocOp.base.properties(loco);
+
+      int            loAddr = wLoc.getaddr(loProps);
+      const char     *loIid = wLoc.getiid(loProps);
+      const char    *loProt = wLoc.getprot(loProps);
+      int         loProtver = wLoc.getprotver(loProps);
+      int             loBus = wLoc.getbus(loProps);
+      Boolean         loDir = wLoc.isdir(loProps);
+      int               loV = wLoc.getV(loProps);
+      int            loVmax = wLoc.getV_max(loProps);
+      const char   *loVmode = wLoc.getV_mode(loProps);
+      int           loSpcnt = wLoc.getspcnt(loProps);
+      int           decStep = (wLoc.getV( loProps ) * loSpcnt) / wLoc.getV_max( loProps );
+      Boolean          loFn = wLoc.isfn( loProps );    
+      int           loFnCnt = wLoc.getfncnt(loProps);
+      int              loFx = wLoc.getfx(loProps);
+      int               dir = LocOp.getDir(loco);
+      int                 V = LocOp.getV(loco);
+      char        str[1025] = {'\0'};
+      char   freeText[1025] = {'\0'};
+      char funcString[1023] = {'\0'};
+      int i, mask;
+
+      for( i=0 ; i < loFnCnt ; i++ ) {
+        mask = 1 << i ;
+        funcString[2*i] = ' ';
+        funcString[2*i+1] = loFx&mask?'1':'0';
+      }
+      funcString[2*loFnCnt] = '\0';
+
+      int     srcpBus = getSrcpBus( Data(srcpcon), loIid);
+      char   srcpProt = loProt[0] ;
+      int srcpProtver = loProtver ;
+
+      switch(srcpProt) {
+        case 'P': break;
+        case 'M': break;
+        case 'N': srcpProtver=1;break;
+        case 'L': srcpProt='N';srcpProtver=2;break;
+        case 'A': break;
+        case 'C': srcpProt='N';break;
+        case 'S': break;
+        case 'X': srcpProt='S';break;
+      }
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr %d iid %s prot %s/%c protver %d/%d loBus %d srcpBus %d", loAddr, loIid, loProt, srcpProt, loProtver, srcpProtver, loBus, srcpBus);
+
+      /* 101 INFO <bus> GL <addr> <protocol> <optional further parameters> */
+      StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GL %d %c %d %d %d\n",
+              time.tv_sec, time.tv_usec / 1000, srcpBus, loAddr, srcpProt, srcpProtver, loSpcnt, loFnCnt+1 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+      SocketOp.fmt(o->clntSocket, str);
+      /* 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
+      StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
+              time.tv_sec, time.tv_usec / 1000, srcpBus, loAddr, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+      SocketOp.fmt(o->clntSocket, str);
+    }
+    loco = (iOLoc)MapOp.next( locoMap );
+  };
+}
+
+static void sendPowerstate2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  char str[1025] = {'\0'};
+  int defaultSrcpBus;
+
+  /* current overall system state (ON/OFF) */
+  Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
+
+  /* first/master command station */
+  defaultSrcpBus = getSrcpBus( Data(srcpcon), getDefaultIid() );
+
+  /* 100 INFO <bus> POWER [ON|OFF] <freetext> */
+  /* the system itself has bus 0 */
+  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n", 
+              time.tv_sec, time.tv_usec / 1000, 0, isPower?"ON":"OFF");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+  SocketOp.fmt(o->clntSocket, str);
+
+  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n", 
+              time.tv_sec, time.tv_usec / 1000, defaultSrcpBus, isPower?"ON":"OFF");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+  SocketOp.fmt(o->clntSocket, str);
+}
+
+
 static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req) {
   char rsp[1025] = {'\0'};
   struct timeval time;
@@ -1629,47 +2253,61 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
     }else {
       o->infomode = False;
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFOMODE":"COMMANDMODE" ) ;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
     SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s for req %s socket %p", rsp, req, o->clntSocket ) ;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
   }
   else if( StrOp.startsWithi( req, "GO" ) ) {
     SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, o->id));
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
 
-    /* LRLRLR if we started an info channel send information about server to client */
+    /* if we started an info channel send all information about server to that channel */
     if( o->infomode ) {
       char rspInfo[1025] = {'\0'};
+      int defaultSrcpBus = getSrcpBus( Data(srcpcon), getDefaultIid() );
       /*
       100 INFO 0 DESCRIPTION SESSION SERVER TIME GM
       101 INFO 0 TIME 0 0
       100 INFO 1 DESCRIPTION GA GL SM POWER LOCK DESCRIPTION
       */
       /* announce basic system capabilities (server) */
-      sprintf(rspInfo, "%lu.%.3lu 100 INFO 0 DESCRIPTION SESSION SERVER TIME GM\n", time.tv_sec, time.tv_usec / 1000);
+      /* the system itself has bus 0 */
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 DESCRIPTION SESSION SERVER TIME GM\n", time.tv_sec, time.tv_usec / 1000);
       SocketOp.fmt(o->clntSocket, rspInfo);
-      sprintf(rspInfo, "%lu.%.3lu 101 INFO 0 TIME 0 0\n", time.tv_sec, time.tv_usec / 1000);
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME 0 0\n", time.tv_sec, time.tv_usec / 1000);
       SocketOp.fmt(o->clntSocket, rspInfo);
-      /* LRLRLR TODO: loop over all cmd stations, calc srcp bus id(s) and announce capabilities */
-      /* get first (master) command station and report capabilities (including those of Rocrail -> Locking) */
-      /* usually we have: accessories, locos, service mode (programming locos), power (on/off), locking (from rockrail) */
-      /* perhaps we need an array of command stations with a list of capabilities (or put them directly into the command station struct !) */
-      /*
-      sprintf(rspInfo, "%lu.%.3lu 100 INFO 1 DESCRIPTION GA GL FB SM POWER LOCK DESCRIPTION\n", time.tv_sec, time.tv_usec / 1000);
+      /* TODO: loop over all cmd stations, calc srcp bus id(s) and announce capabilities
+       * get first (master) command station and report capabilities (including those of Rocrail -> Locking?)
+       * usually we have: accessories, locos, service mode (programming locos), power (on/off), locking (from Rocrail)
+       * perhaps we need an array of command stations with a list of capabilities (or put them directly into the command station struct !)
+       */
+      /* hard coded examples
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 1 DESCRIPTION GA GL FB SM POWER LOCK\n", time.tv_sec, time.tv_usec / 1000);
+      SocketOp.fmt(o->clntSocket, rspInfo);
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 2 DESCRIPTION FB POWER\n", time.tv_sec, time.tv_usec / 1000);
+      SocketOp.fmt(o->clntSocket, rspInfo);
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 3 DESCRIPTION FB\n", time.tv_sec, time.tv_usec / 1000);
+      SocketOp.fmt(o->clntSocket, rspInfo);
       */
+      /* announce 2normal" capabilities for first command stattion *
       /* SM and LOCK currently not supported through srcp server */
-      sprintf(rspInfo, "%lu.%.3lu 100 INFO 1 DESCRIPTION GA GL FB POWER DESCRIPTION\n", time.tv_sec, time.tv_usec / 1000);
+      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n", time.tv_sec, time.tv_usec / 1000, defaultSrcpBus);
       SocketOp.fmt(o->clntSocket, rspInfo);
 
-      /* loop over cmd stations and over all feedbacks and announce the srcp busses */
-      /* LRLRLR: do we also have to loop through all switches and signals ?*/
-      /*
-      sprintf(rspInfo, "%lu.%.3lu 100 INFO 2 DESCRIPTION FB POWER\n", time.tv_sec, time.tv_usec / 1000);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      sprintf(rspInfo, "%lu.%.3lu 100 INFO 3 DESCRIPTION FB\n", time.tv_sec, time.tv_usec / 1000);
-      SocketOp.fmt(o->clntSocket, rspInfo);
+      sendFeedbackList2InfoChannel( o, srcpcon);
+      sendSwitchList2InfoChannel( o, srcpcon);
+      sendSignalList2InfoChannel( o, srcpcon);
+      sendLocoList2InfoChannel( o, srcpcon);
+      sendPowerstate2InfoChannel( o, srcpcon);
+      /* TODO:
+      sendTime2InfoChannel( o, time);
+      */
+      /* TODO:
+      sendLock2InfoChannel( o, time);
       */
     }
+    /* inform all info sessions about a new session */
+    sendSessionstate2InfoChannels( 0, o->id, 101, o->infomode );
   }
   else if( StrOp.startsWithi( req, "INIT 1 SM NMRA") ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
@@ -1689,9 +2327,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
     int reqRespCode = 200 ;
     iONode cmd = __srcp2rr(srcpcon, o, req, &reqRespCode);
     if( cmd != NULL ){
-
-      /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__evalRequest __srcp2rr() returned with %s [%d]", cmd, o->clntSocket );*/
-
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__evalRequest __srcp2rr() returned with %s [%d]", cmd, o->clntSocket );
       Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
     }
     else{
@@ -1708,11 +2344,12 @@ static void __SrcpService( void* threadinst ) {
   iOThread         th = (iOThread)threadinst;
   __iOSrcpService   o = (__iOSrcpService)ThreadOp.getParm(th);
   iOSrcpCon   srcpcon = o->SrcpCon;
-  iOSrcpConData data = Data(srcpcon);
+  iOSrcpConData  data = Data(srcpcon);
   char*         sname = NULL;
   Boolean          ok = False;
   iOThread infoWriter = NULL;
   char str[1025] = {'\0'};
+  int sessId;
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
@@ -1720,7 +2357,6 @@ static void __SrcpService( void* threadinst ) {
       SocketOp.getPeername(o->clntSocket), o->id );
   StrOp.fmtb(str, SRCPVERSION, (int) bzr );
   SocketOp.write( o->clntSocket, str, StrOp.len(str) );
-/*  SocketOp.write( o->clntSocket, SRCPVERSION, StrOp.len(SRCPVERSION) );*/
   SocketOp.write( o->clntSocket, "\n", 1 );
 
   sname = StrOp.fmt( "srcp%08X", o->clntSocket );
@@ -1734,13 +2370,14 @@ static void __SrcpService( void* threadinst ) {
 
   do {
     char str[1025] = {'\0'};
+    int strLen;
 
     obj post = ThreadOp.getPost( th );
     if( post != NULL ) {
       iONode node = (iONode)post;
       if( node != NULL ) {
         if( o->infomode ) {
-          __rr2srcp(data, node, str);
+          __rr2srcp(srcpcon, node, str);
           SocketOp.write( o->clntSocket, str, StrOp.len(str) );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__SrcpService __rr2srcp() returned with %s %p [%p] ID: %d", str, o, o->clntSocket, o->id );
         }
@@ -1759,10 +2396,32 @@ static void __SrcpService( void* threadinst ) {
     }
 
     SocketOp.readln(o->clntSocket, str);
+    strLen = StrOp.len(str);
+
+    /* TODO: scan string, replace and/or delete redundant white chars */
+    /* Currently we just fix the known */
+    /* In case string starts with <CR> <\r> 0x0D (may be from JMRI), remove first char */
+    if( (byte) str[0] == 0x0D ) {
+      int i;
+
+      /* copy strlen bytes (includes '\0') */
+      for( i = 0; i < strLen; i++ ) {
+        str[i] = str[i+1];
+      }
+      /* adjust strLen 'manually' for next usage */
+      strLen--;
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__SrcpService removed leading <CR> from string" ) ;
+    }
+
     /* Strip trailing "\n", makes debug output more readable */
-    int strLen = StrOp.len(str);
     if( ( strLen != 0 ) && ( str[strLen-1] == '\n' ) ) {
       str[strLen-1] = 0;
+      strLen--;
+    }
+    /* Strip trailing "\r" in case we had \r or \r\n at end of line (windows telnet) */
+    if( ( strLen != 0 ) && ( str[strLen-1] == '\r' ) ) {
+      str[strLen-1] = 0;
+      strLen--;
     }
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__evalRequest %s for ID: %d", str, o->id );
@@ -1770,10 +2429,9 @@ static void __SrcpService( void* threadinst ) {
     ThreadOp.sleep(10);
 
   } while( !o->quit );
-  /*} while( !o->quit && SocketOp.isConnected(o->clntSocket) && !SocketOp.isBroken(o->clntSocket));*/
-
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service ended for session [%d]", o->id );
+  sessId = o->id;
 
   /* Lock the semaphore: */
   if( MutexOp.trywait( Data(srcpcon)->muxMap, 100 ) ) {
@@ -1785,6 +2443,8 @@ static void __SrcpService( void* threadinst ) {
   SocketOp.base.del(o->clntSocket);
   freeMem(o);
   ThreadOp.base.del( th );
+
+  sendSessionstate2InfoChannels( 0, sessId, 102, False );
 }
 
 
@@ -1847,10 +2507,10 @@ static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj cal
 
   instCnt++;
 
-  if( wSrcpCon.getsrcpconoffset(ini) == NULL ) {
-    iONode offset = NodeOp.inst( wSrcpConOffset.name(), ini, ELEMENT_NODE );
-    wSrcpConOffset.setoffset(offset, 1);
-    NodeOp.addChild(ini, offset);
+  if( wSrcpCon.getsrcpbus(ini) == NULL ) {
+    iONode bus = NodeOp.inst( wSrcpBus.name(), ini, ELEMENT_NODE );
+    wSrcpBus.setbus(bus, 1);
+    NodeOp.addChild(ini, bus);
   }
 
   data->manager = ThreadOp.inst( "srcpmngr", __manager, __SrcpCon );
