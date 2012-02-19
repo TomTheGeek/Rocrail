@@ -2311,7 +2311,7 @@ static iOSignal _getSgByAddress( iOModel inst, int addr, int port ) {
       return sg;
     sg = (iOSignal)MapOp.next( o->signalMap );
   };
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no signal found by address [%d,%d]", addr, port );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no signal found by address [%d,%d]", addr, port );
   return NULL;
 }
 
