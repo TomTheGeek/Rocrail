@@ -17722,4 +17722,7 @@
   <Msg id="sleep">
     <en txt="Sleep"/>
   </Msg>
+  <Msg id="closeonghost">
+    <en txt="Close block on ghost"/>
+  </Msg>
 </Messages>

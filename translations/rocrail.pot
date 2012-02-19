@@ -5603,3 +5603,9 @@ msgstr ""
 msgid "Sleep"
 msgstr ""
 
+#. 
+# id="closeonghost"
+#, c-format
+msgid "Close block on ghost"
+msgstr ""
+

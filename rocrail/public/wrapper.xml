@@ -647,6 +647,7 @@
       <var name="ebreakforceunlock" vt="bool" defval="false"/>
       <var name="triggerblockevents" vt="bool" defval="false"/>
       <var name="releaseonidle" vt="bool" defval="false"/>
+      <var name="closeonghost" vt="bool" defval="false"/>
     </ctrl>
   </rocrail>
 
