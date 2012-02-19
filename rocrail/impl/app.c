@@ -331,6 +331,7 @@ static int __logo( void ) {
     svn = bzr;
   }
   else {
+/*
     iODoc doc = DocOp.parse(svnLog);
     if( doc != NULL ) {
       iONode log = DocOp.getRootNode(doc);
@@ -341,6 +342,7 @@ static int __logo( void ) {
         NodeOp.base.del(log);
       }
     }
+*/
   }
   TraceOp.println( " Build: %s %s",
                    wGlobal.buildDate,
