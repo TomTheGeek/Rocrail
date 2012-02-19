@@ -1944,8 +1944,10 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     wPlan.setrocrailversion( data->model, version );
     StrOp.free(version);
 
-    if( !SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
-        StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+    unsigned char* donkey = StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni()));
+    char* decodedKey = SystemOp.decode(donkey, StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni()));
+
+    if( !SystemOp.isExpired(decodedKey, NULL) ) {
       wPlan.setdonkey(data->model, True);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "valid donation key: %s", wRocRail.getdoneml(AppOp.getIni()) );
     }
@@ -1953,6 +1955,9 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       wPlan.setdonkey(data->model, False);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no valid donation key found" );
     }
+
+    freeMem(decodedKey);
+    freeMem(donkey);
 
     wAutoCmd.setcmd( autoevent, ModelOp.isAuto(inst)?wAutoCmd.on:wAutoCmd.off );
     wState.setconsolemode( stateevent, AppOp.isConsoleMode() );
