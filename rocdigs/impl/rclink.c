@@ -258,7 +258,7 @@ static void __RcLinkTicker( void* threadinst ) {
 
   while( data->run ) {
     int i = 0;
-    for( i = 0; i < 24; i++ ) {
+    for( i = 0; i < 256; i++ ) {
       if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
