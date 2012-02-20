@@ -739,7 +739,7 @@ void LocControlDialog::OnButtonLocctrlFnClick( wxCommandEvent& event )
 {
   m_bFn = setButtonColor( m_Fn, m_bFn );
   speedCmd(true);
-  funCmd(0);
+  funCmd(-1);
 }
 
 
@@ -766,7 +766,7 @@ void LocControlDialog::speedCmd(bool sendCmd)
 }
 
 
-void LocControlDialog::funCmd(int group)
+void LocControlDialog::funCmd(int fidx)
 {
   if( m_LcList->GetSelection() == wxNOT_FOUND )
     return;
@@ -786,7 +786,8 @@ void LocControlDialog::funCmd(int group)
         );
 
     iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    wFunCmd.setgroup ( cmd, m_iFnGroup * 3 + 1 + group );
+    wFunCmd.setgroup ( cmd, m_iFnGroup * 3 + 1 );
+    wFunCmd.setfnchanged ( cmd, fidx==-1?0:fidx + 1 );
     wFunCmd.setfncnt ( cmd, wLoc.getfncnt( lc ) );
     wFunCmd.setid ( cmd, wLoc.getid( lc ) );
     wFunCmd.setf0 ( cmd, m_bFn?True:False );
@@ -832,7 +833,7 @@ void LocControlDialog::OnButtonLocctrlF1Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[0+m_iFnGroup*12] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*12] );
-  funCmd(0);
+  funCmd(0+m_iFnGroup*12);
 }
 
 /*!
@@ -844,7 +845,7 @@ void LocControlDialog::OnButtonLocctrlF2Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[1+m_iFnGroup*12] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*12] );
-  funCmd(0);
+  funCmd(1+m_iFnGroup*12);
 }
 
 /*!
@@ -856,7 +857,7 @@ void LocControlDialog::OnButtonLocctrlF3Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[2+m_iFnGroup*12] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*12] );
-  funCmd(0);
+  funCmd(2+m_iFnGroup*12);
 }
 
 /*!
@@ -868,7 +869,7 @@ void LocControlDialog::OnButtonLocctrlF4Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[3+m_iFnGroup*12] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*12] );
-  funCmd(0);
+  funCmd(03+m_iFnGroup*12);
 }
 
 /*!
@@ -1002,7 +1003,7 @@ void LocControlDialog::OnButtonLocctrlF5Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[4+m_iFnGroup*12] = setButtonColor( m_F5, m_bFx[4+m_iFnGroup*12] );
-  funCmd(1);
+  funCmd(4+m_iFnGroup*12);
 }
 
 /*!
@@ -1014,7 +1015,7 @@ void LocControlDialog::OnButtonLocctrlF6Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[5+m_iFnGroup*12] = setButtonColor( m_F6, m_bFx[5+m_iFnGroup*12] );
-  funCmd(1);
+  funCmd(5+m_iFnGroup*12);
 }
 
 /*!
@@ -1026,7 +1027,7 @@ void LocControlDialog::OnButtonLcctrlF7Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[6+m_iFnGroup*12] = setButtonColor( m_F7, m_bFx[6+m_iFnGroup*12] );
-  funCmd(1);
+  funCmd(6+m_iFnGroup*12);
 }
 
 /*!
@@ -1038,7 +1039,7 @@ void LocControlDialog::OnButtonLcctrlF8Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[7+m_iFnGroup*12] = setButtonColor( m_F8, m_bFx[7+m_iFnGroup*12] );
-  funCmd(1);
+  funCmd(7+m_iFnGroup*12);
 }
 
 
@@ -1051,7 +1052,7 @@ void LocControlDialog::OnButtonLcctrlF12Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[11+m_iFnGroup*12] = setButtonColor( m_F12, m_bFx[11+m_iFnGroup*12] );
-  funCmd(2);
+  funCmd(11+m_iFnGroup*12);
 }
 
 
@@ -1064,7 +1065,7 @@ void LocControlDialog::OnButtonLcctrl9Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[8+m_iFnGroup*12] = setButtonColor( m_F9, m_bFx[8+m_iFnGroup*12] );
-  funCmd(2);
+  funCmd(8+m_iFnGroup*12);
 }
 
 
@@ -1077,7 +1078,7 @@ void LocControlDialog::OnButtonLcctrlF10Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[9+m_iFnGroup*12] = setButtonColor( m_F10, m_bFx[9+m_iFnGroup*12] );
-  funCmd(2);
+  funCmd(9+m_iFnGroup*12);
 }
 
 
@@ -1090,7 +1091,7 @@ void LocControlDialog::OnButtonLcctrlF11Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[10+m_iFnGroup*12] = setButtonColor( m_F11, m_bFx[10+m_iFnGroup*12] );
-  funCmd(2);
+  funCmd(10+m_iFnGroup*12);
 }
 
 
@@ -1128,51 +1129,51 @@ void LocControlDialog::OnKeyDown( wxKeyEvent& event )
   switch( event.GetKeyCode()) {
     case WXK_F1:
       m_bFx[0+m_iFnGroup*12] = setButtonColor( m_F1, m_bFx[0+m_iFnGroup*12] );
-      funCmd(0);
+      funCmd(0+m_iFnGroup*12);
       break;
     case WXK_F2:
       m_bFx[1+m_iFnGroup*12] = setButtonColor( m_F2, m_bFx[1+m_iFnGroup*12] );
-      funCmd(0);
+      funCmd(1+m_iFnGroup*12);
       break;
     case WXK_F3:
       m_bFx[2+m_iFnGroup*12] = setButtonColor( m_F3, m_bFx[2+m_iFnGroup*12] );
-      funCmd(0);
+      funCmd(2+m_iFnGroup*12);
       break;
     case WXK_F4:
       m_bFx[3+m_iFnGroup*12] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*12] );
-      funCmd(0);
+      funCmd(3+m_iFnGroup*12);
       break;
     case WXK_F5:
       m_bFx[4+m_iFnGroup*12] = setButtonColor( m_F5, m_bFx[4+m_iFnGroup*12] );
-      funCmd(1);
+      funCmd(4+m_iFnGroup*12);
       break;
     case WXK_F6:
       m_bFx[5+m_iFnGroup*12] = setButtonColor( m_F6, m_bFx[5+m_iFnGroup*12] );
-      funCmd(1);
+      funCmd(5+m_iFnGroup*12);
       break;
     case WXK_F7:
       m_bFx[6+m_iFnGroup*12] = setButtonColor( m_F7, m_bFx[6+m_iFnGroup*12] );
-      funCmd(1);
+      funCmd(6+m_iFnGroup*12);
       break;
     case WXK_F8:
       m_bFx[7+m_iFnGroup*12] = setButtonColor( m_F8, m_bFx[7+m_iFnGroup*12] );
-      funCmd(1);
+      funCmd(7+m_iFnGroup*12);
       break;
     case WXK_F9:
       m_bFx[8+m_iFnGroup*12] = setButtonColor( m_F9, m_bFx[8+m_iFnGroup*12] );
-      funCmd(2);
+      funCmd(8+m_iFnGroup*12);
       break;
     case WXK_F10:
       m_bFx[9+m_iFnGroup*12] = setButtonColor( m_F10, m_bFx[9+m_iFnGroup*12] );
-      funCmd(2);
+      funCmd(9+m_iFnGroup*12);
       break;
     case WXK_F11:
       m_bFx[10+m_iFnGroup*12] = setButtonColor( m_F11, m_bFx[10+m_iFnGroup*12] );
-      funCmd(2);
+      funCmd(10+m_iFnGroup*12);
       break;
     case WXK_F12:
       m_bFx[11+m_iFnGroup*12] = setButtonColor( m_F12, m_bFx[11+m_iFnGroup*12] );
-      funCmd(2);
+      funCmd(11+m_iFnGroup*12);
       break;
   }
 }
