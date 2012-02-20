@@ -538,16 +538,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
 
     if( data->v2 ) {
-      if( group == 0 || group == 1 ) {
-        byte* outa = allocMem(32);
-        outa[0] = 0xE4;
-        outa[1] = 0x24;
-        __setLocAddr( addr, outa+2 );
-        outa[4] = functions1;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
-        ThreadOp.post( data->transactor, (obj)outa );
-        /*ThreadOp.sleep(50);*/
-      }
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "no function command available for XBus V2" );
     }
     else {
       if( group == 0 || group == 1 ) {
