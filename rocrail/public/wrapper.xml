@@ -1961,6 +1961,7 @@
           <var name="offevent" vt="string" defval="in_block" range="enter_block,exit_block,in_block,out_block" remark="Deactivation event."/>
           <var name="offblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
           <var name="addr" vt="int" defval="0" range="0-*" remark="Function decoder address."/>
+          <var name="mappedfn" vt="int" defval="0" range="0-*" remark="Mapped function number in case of other address then main decodcer."/>
           <const name="enter_block" vt="string" val="enter_block"/>
           <const name="in_block" vt="string" val="in_block"/>
           <const name="exit_block" vt="string" val="exit_block"/>
