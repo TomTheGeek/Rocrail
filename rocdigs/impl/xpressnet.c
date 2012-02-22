@@ -191,6 +191,64 @@ static void __handleSwitch(iOXpressNet xpressnet, int addr, int port, int value)
 }
 
 
+static int __modsel(int* spcnt, int* reqid) {
+  switch( *spcnt ) {
+  case 27:
+    *reqid  = 0x11;
+    return 0x01;
+  case 28:
+    *reqid  = 0x12;
+    return 0x02;
+  case 127:
+  case 128:
+    *reqid = 0x13;
+    *spcnt = 127;
+    break;
+  default:
+    *reqid = 0x10;
+    *spcnt = 14;
+    break;
+  }
+  return 0;
+}
+
+static int __lenzSpeed(iONode node, int spcnt) {
+  int lenzspeed = 0;
+  if( wLoc.getV( node ) != -1 ) {
+    if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+      lenzspeed = (wLoc.getV( node ) * spcnt) / 100;
+    else if( wLoc.getV_max( node ) > 0 )
+      lenzspeed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", lenzspeed );
+  }
+
+  /* Remove e-stop in 14 and 127 speed step mode */
+  if ( spcnt == 14 || spcnt == 127 ){
+    if ( lenzspeed > 0 )
+      lenzspeed = lenzspeed + 1;
+    /* prevent bit overflow at max speed */
+    if ( lenzspeed > spcnt)
+      lenzspeed = spcnt;
+  }
+
+  /* Adjust bit positions for lenz command stations */
+  if (( spcnt == 27 ) || ( spcnt == 28 )){
+
+    /* Remove 2 unused speed step and e-stop speed step */
+    if ( lenzspeed > 0 )
+      lenzspeed = lenzspeed + 3;
+
+    /* Transfer LSB to front of bit 0-3 */
+    if ( lenzspeed & 0x01 )
+      lenzspeed = lenzspeed | 0x20;
+
+    /* Move all bit in right position */
+    lenzspeed = lenzspeed >> 1;
+  }
+  return lenzspeed;
+}
+
+
 static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   iOXpressNetData data = Data(xpressnet);
   iONode rsp = NULL;
@@ -358,96 +416,12 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
-    int  speed = 0;
-    int  lenzspeed = 0;
     Boolean fn = wLoc.isfn( node );
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
-
     int reqid  = 0x10; /* default 14 speed steps */
-    int modsel = 0x00;
-    switch( spcnt ) {
-    case 27:
-      reqid  = 0x11;
-      modsel = 0x01;
-      break;
-    case 28:
-      reqid  = 0x12;
-      modsel = 0x02;
-      break;
-    case 127:
-    case 128:
-      reqid = 0x13;
-      spcnt = 127;
-      break;
-    default:
-      reqid = 0x10;
-      spcnt = 14;
-      break;
-    }
-    /*
-      General Lenz speed values
-
-      14
-      Step 0 Stop
-      Step 1 E-Stop
-      Step 2-15 Train in motion
-
-      27
-      Step 0 Stop
-      Step 1 Not used
-      Step 2 E-Stop
-      Step 3 Not used
-      Step 4-30 Train in motion
-      Step 31 Not used
-
-      28
-      Step 0 Stop
-      Step 1 Not used
-      Step 2 E-Stop
-      Step 3 Not used
-      Step 4-31 Train in motion
-
-      128
-      Step 0 Stop
-      Step 1 E-Stop
-      Step 2-127 Train in motion
-     */
-
-    if( wLoc.getV( node ) != -1 ) {
-      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * spcnt) / 100;
-      else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
-    }
-
-    lenzspeed = speed;
-
-    /* Remove e-stop in 14 and 127 speed step mode */
-    if ( spcnt == 14 || spcnt == 127 ){
-      if ( lenzspeed > 0 )
-        lenzspeed = lenzspeed + 1;
-      /* prevent bit overflow at max speed */
-      if ( lenzspeed > spcnt)
-        lenzspeed = spcnt;
-    }
-
-    /* Adjust bit positions for lenz command stations */
-    if (( spcnt == 27 ) || ( spcnt == 28 )){
-
-      /* Remove 2 unused speed step and e-stop speed step */
-      if ( lenzspeed > 0 )
-        lenzspeed = lenzspeed + 3;
-
-      /* Transfer LSB to front of bit 0-3 */
-      if ( lenzspeed & 0x01 )
-        lenzspeed = lenzspeed | 0x20;
-
-      /* Move all bit in right position */
-      lenzspeed = lenzspeed >> 1;
-    }
-
+    int modsel = __modsel(&spcnt, &reqid);
+    int lenzspeed = __lenzSpeed(node, spcnt);
 
     if( !data->v2 && (data->lcfn[addr] & 0x10) != (fn?0x10:0) ) {
       byte* outa = allocMem(32);
@@ -470,6 +444,11 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
     byte* outb = allocMem(32);
     if( data->v2 ) {
+      Boolean f1 = wFunCmd.isf1( node );
+      Boolean f2 = wFunCmd.isf2( node );
+      Boolean f3 = wFunCmd.isf3( node );
+      Boolean f4 = wFunCmd.isf4( node );
+      byte functions1 = (f1 ?0x01:0) + (f2 ?0x02:0) + (f3 ?0x04:0) + (f4 ?0x08:0);
       outb[0] = 0xB4;
       outb[1] = addr;
       outb[2] = dir ? 0x40:0x00; /* direction, lights and speed byte */
@@ -487,13 +466,19 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
     ThreadOp.post( data->transactor, (obj)outb );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d direction=%s", addr, speed, (dir?"fwd":"rev") );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d direction=%s", addr, lenzspeed, (dir?"fwd":"rev") );
   }
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    int addr  = wFunCmd.getaddr( node );
-    int group = wFunCmd.getgroup( node );
+    int   addr = wFunCmd.getaddr( node );
+    int  group = wFunCmd.getgroup( node );
+    Boolean fn = wLoc.isfn( node );
+    int    dir = wLoc.isdir( node );
+    int  spcnt = wLoc.getspcnt( node );
+    int reqid  = 0x10; /* default 14 speed steps */
+    int modsel = __modsel(&spcnt, &reqid);
+    int lenzspeed = __lenzSpeed(node, spcnt);
 
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
@@ -538,7 +523,19 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         (f9?"ON":"OFF"), (f10?"ON":"OFF"), (f11?"ON":"OFF"), (f12?"ON":"OFF") );
 
     if( data->v2 ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "no function command available for XBus V2" );
+      if( group == 0 || group == 1 ) {
+        byte* outb = allocMem(32);
+        outb[0] = 0xB4;
+        outb[1] = addr;
+        outb[2] = dir ? 0x40:0x00; /* direction, lights and speed byte */
+        outb[2] |= fn ? 0x20:0x00;
+        outb[2] |= lenzspeed;
+        outb[3] = functions1; /* function 1-4 */
+        outb[4] = modsel; /* step selection */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "V2 function group 1" );
+        ThreadOp.post( data->transactor, (obj)outb );
+        /*ThreadOp.sleep(50);*/
+      }
     }
     else {
       if( group == 0 || group == 1 ) {
