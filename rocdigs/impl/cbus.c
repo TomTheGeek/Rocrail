@@ -2033,7 +2033,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[0] = OPC_ACDAT;
       cmd[1] = addr / 256;
       cmd[2] = addr % 256;
-      cmd[3] = display;
+      cmd[3] = display + (i << 4);
       cmd[4] = len > i*4+0 ? text[i*4+0]:0;
       cmd[5] = len > i*4+1 ? text[i*4+1]:0;
       cmd[6] = len > i*4+2 ? text[i*4+2]:0;

@@ -168,8 +168,8 @@ void cbusMon(byte* frame, int opc) {
     char2   = HEXA2Byte(frame + OFFSET_D6 + offset);
     char3   = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "OPC_ACDAT(0x%02X) address=%d display=%d line=%d text=[%c%c%c%c]",
-        opc, addrh*256+addrl, display&0x03, ((display&0x04) >> 2),
+        "OPC_ACDAT(0x%02X) address=%d display=%d line=%d nr=%d text=[%c%c%c%c]",
+        opc, addrh*256+addrl, display&0x03, ((display&0x04) >> 2), ((display&0xF0) >> 4),
         char0=='\0'?' ':char0, char1=='\0'?' ':char1, char2=='\0'?' ':char2, char3=='\0'?' ':char3 );
   }
   break;
