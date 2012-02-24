@@ -5609,3 +5609,9 @@ msgstr ""
 msgid "Close block on ghost"
 msgstr ""
 
+#. 
+# id="display"
+#, c-format
+msgid "Display"
+msgstr ""
+

@@ -17725,4 +17725,7 @@
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
   </Msg>
+  <Msg id="display">
+    <en txt="Display"/>
+  </Msg>
 </Messages>
