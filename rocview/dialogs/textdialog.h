@@ -30,6 +30,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -40,6 +41,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -62,6 +64,7 @@ class wxNotebook;
 #define ID_BUTTON_TEXT_COLOR 10220
 #define ID_BUTTON_TEXT_BACKGROUND 10351
 #define ID_TEXT_ACTIONS 10387
+#define ID_PANEL_INT 10399
 #define ID_PANEL1 10021
 #define ID_STATICTEXT_TEXT_X 10022
 #define ID_TEXTCTRL_TEXT_X 10023
@@ -171,6 +174,13 @@ public:
     wxCheckBox* m_Transparent;
     wxRadioBox* m_Ori;
     wxButton* m_Actions;
+    wxPanel* m_Interface;
+    wxStaticText* m_labIID;
+    wxTextCtrl* m_IID;
+    wxStaticText* m_labAddress;
+    wxSpinCtrl* m_Address;
+    wxStaticText* m_labDisplay;
+    wxSpinCtrl* m_Display;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
     wxTextCtrl* m_x;

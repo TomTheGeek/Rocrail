@@ -153,6 +153,27 @@ void cbusMon(byte* frame, int opc) {
         canid, opc, session );
     break;
 
+  case OPC_ACDAT:
+  {
+    char char0  = '\0';
+    char char1  = '\0';
+    char char2  = '\0';
+    char char3  = '\0';
+    int display = 0;
+    addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+    addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
+    display = HEXA2Byte(frame + OFFSET_D3 + offset);
+    char0   = HEXA2Byte(frame + OFFSET_D4 + offset);
+    char1   = HEXA2Byte(frame + OFFSET_D5 + offset);
+    char2   = HEXA2Byte(frame + OFFSET_D6 + offset);
+    char3   = HEXA2Byte(frame + OFFSET_D7 + offset);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "OPC_ACDAT(0x%02X) address=%d display=%d line=%d text=[%c%c%c%c]",
+        opc, addrh*256+addrl, display&0x03, ((display&0x04) >> 2),
+        char0=='\0'?' ':char0, char1=='\0'?' ':char1, char2=='\0'?' ':char2, char3=='\0'?' ':char3 );
+  }
+  break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X", canid, opc );
     break;

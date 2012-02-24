@@ -269,6 +269,19 @@ static void* __event( void* inst, const void* evt ) {
     }
 
 
+    if( wText.getaddr(data->props) > 0 ) {
+      iONode node = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
+      wText.setiid( node, wText.getiid( data->props ) );
+      wText.setaddr( node, wText.getaddr( data->props ) );
+      wText.setdisplay( node, wText.getdisplay( data->props ) );
+      wText.setid( node, wText.getid( data->props ) );
+      wText.setblock( node, wText.getblock( data->props ) );
+      wText.setlocation( node, wText.getlocation( data->props ) );
+      wText.settext( node, wText.gettext( data->props ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send text [%s]", wText.gettext( data->props ));
+      ControlOp.cmd( AppOp.getControl(), node, NULL );
+    }
+
     /* Broadcast to clients. */
     {
       iONode node = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );

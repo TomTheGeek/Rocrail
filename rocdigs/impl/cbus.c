@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Accessory.h"
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/rocrail.h"
@@ -2014,6 +2015,37 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       __setFastClock(cbus, node);
     }
   }
+
+  /* Text command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wText.name() ) ) {
+    const char* text = wText.gettext(node);
+    int addr = wText.getaddr(node);
+    int display = wText.getdisplay(node);
+    int len = StrOp.len( text );
+    int packets = len / 4 + ((len % 4 > 0) ?1:0);
+    int i = 0;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set display %d:%d to \"%s\"", addr, display, text );
+
+    for( i = 0; i < packets; i++ ) {
+      byte cmd[10];
+      byte* frame = allocMem(32);
+      cmd[0] = OPC_ACDAT;
+      cmd[1] = addr / 256;
+      cmd[2] = addr % 256;
+      cmd[3] = display;
+      cmd[4] = len > i*4+0 ? text[i*4+0]:0;
+      cmd[5] = len > i*4+1 ? text[i*4+1]:0;
+      cmd[6] = len > i*4+2 ? text[i*4+2]:0;
+      cmd[7] = len > i*4+3 ? text[i*4+3]:0;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid );
+
+      ThreadOp.post(data->writer, (obj)frame);
+      ThreadOp.sleep(10);
+    }
+
+  }
+
 
 
   return rsp;

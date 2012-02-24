@@ -2160,6 +2160,9 @@
         <var name="countedcars" vt="int" defval="0" range="0-*"/>
         <var name="carcount" vt="int" defval="0" range="0-*"/>
         <var name="wheelcount" vt="int" defval="0" range="0-*"/>
+        <var name="iid" vt="string" defval="" range="*" required="false"/>
+        <var name="addr" vt="int" defval="0" range="0-*"/>
+        <var name="display" vt="int" defval="0" range="0-*"/>
         <actionctrl cardinality="n"/>
       </tx>
     </txlist>
