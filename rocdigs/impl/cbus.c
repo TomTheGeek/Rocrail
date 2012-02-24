@@ -1502,7 +1502,7 @@ static void __timedqueue( void* threadinst ) {
 
 Boolean __getFState(iONode fcmd, int fn) {
   switch( fn ) {
-    case 0 : return wFunCmd.isf0 (fcmd);
+    case 0 : return (wFunCmd.isf0 (fcmd) | wLoc.isfn(fcmd));
     case 1 : return wFunCmd.isf1 (fcmd);
     case 2 : return wFunCmd.isf2 (fcmd);
     case 3 : return wFunCmd.isf3 (fcmd);
@@ -1634,7 +1634,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   iOCBUSData data = Data(cbus);
   iONode rsp = NULL;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName(node) );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName( node ) );
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
   }
@@ -1802,21 +1802,44 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte cmd[5];
     int     addr      = wFunCmd.getaddr( node );
     int     fnchanged = wFunCmd.getfnchanged(node);
-    Boolean fstate    = __getFState(node, fnchanged);
+    Boolean fnstate   = __getFState(node, fnchanged);
 
     iOSlot slot = __getSlot(cbus, node );
+
+
+    Boolean lights = wLoc.isfn(node);
+    Boolean f0 = wFunCmd.isf0( node );
+    Boolean f1 = wFunCmd.isf1( node );
+    Boolean f2 = wFunCmd.isf2( node );
+    Boolean f3 = wFunCmd.isf3( node );
+    Boolean f4 = wFunCmd.isf4( node );
+    Boolean f5 = wFunCmd.isf5( node );
+    Boolean f6 = wFunCmd.isf6( node );
+    Boolean f7 = wFunCmd.isf7( node );
+    Boolean f8 = wFunCmd.isf8( node );
+    Boolean f9  = wFunCmd.isf9( node );
+    Boolean f10 = wFunCmd.isf10( node );
+    Boolean f11 = wFunCmd.isf11( node );
+    Boolean f12 = wFunCmd.isf12( node );
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+            "decoder %d lights=%s f0=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
+            addr, lights?"on":"off", f0?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
+            f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off",
+            f9?"on":"off", f10?"on":"off", f11?"on":"off", f12?"on":"off" );
+
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
       return;
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fstate?"ON":"OFF" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fnstate?"ON":"OFF" );
 
     if( slot->session > 0 ) {
       byte* frame = allocMem(32);
       if( data->fonfof ) {
-        cmd[0] = fstate?OPC_DFNON:OPC_DFNOF;
+        cmd[0] = fnstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
         makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
@@ -1834,7 +1857,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       qcmd->wait4session  = True;
       qcmd->slot = slot;
       if( data->fonfof ) {
-        cmd[0] = fstate?OPC_DFNON:OPC_DFNOF;
+        cmd[0] = fnstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
         makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 2, data->cid );
