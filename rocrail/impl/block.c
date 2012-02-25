@@ -868,7 +868,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                        "Block \"%s\" is electrically occupied without locId set!",
                        data->id );
-        wBlock.setstate(data->props, wBlock.closed);
+
         /* Broadcast to clients. */
         if( !wBlock.isacceptghost( data->props ) && wCtrl.iscloseonghost(wRocRail.getctrl( AppOp.getIni() ))) {
           iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
