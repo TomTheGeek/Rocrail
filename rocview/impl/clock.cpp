@@ -61,8 +61,6 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   m_Logo  = _img_logo;
   m_Temp = 20;
 
-	//clockpicwidth = 300;
-  //SetSize(wxSize(clockpicwidth, clockpicwidth));
   hw = handwidth;
   type = clocktype;
 
@@ -279,34 +277,27 @@ void Clock::drawClock() {
 
   double c = width/2;
 
-  wxBrush* brush = new wxBrush( wxColour(255, 255, 255), wxSOLID );
-  //dc.SetBrush( *brush );
-  wxPen* pen = new wxPen( wxColour(255, 255, 255), wxSOLID );
-  //dc.SetPen( *pen );
-
-  //dc.DrawCircle( c, c, width );
-
   int i;
   for (i = 0; i < 60; i++) {
     double k = sm_angle( i );
 
-    pen = new wxPen( wxColour(0, 0, 0), wxSOLID );
-    pen->SetWidth(1);
-    dc.SetPen( *pen );
+    wxPen pen( wxColour(0, 0, 0), wxSOLID );
+    pen.SetWidth(1);
+    dc.SetPen( pen );
 
     dc.DrawLine((int)(c + 0.85 * c * cos(k)), (int)(c - 0.85 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
 
     if( i%5 == 0 ) {
-      pen->SetWidth(4);
-      dc.SetPen( *pen );
+      pen.SetWidth(4);
+      dc.SetPen( pen );
       dc.DrawLine((int)(c + 0.70 * c * cos(k)), (int)(c - 0.70 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
     }
   }
 
   // hour
-  pen = new wxPen( wxColour(0, 0, 0), wxSOLID );
-  pen->SetWidth(4);
-  dc.SetPen( *pen );
+  wxPen blackPen( wxColour(0, 0, 0), wxSOLID );
+  blackPen.SetWidth(4);
+  dc.SetPen( blackPen );
   dc.DrawLine((int)c, (int)c, (int)(c + 0.6 * c * cos(z)), (int)(c - 0.6  * c * sin(z))); // hour hand
 
 
@@ -315,11 +306,11 @@ void Clock::drawClock() {
 
 
   // second
-  brush = new wxBrush( wxColour(255, 0, 0), wxSOLID );
-  dc.SetBrush( *brush );
-  pen = new wxPen( wxColour(255, 0, 0), wxSOLID );
-  pen->SetWidth(2);
-  dc.SetPen( *pen );
+  wxBrush brush( wxColour(255, 0, 0), wxSOLID );
+  dc.SetBrush( brush );
+  wxPen redPen( wxColour(255, 0, 0), wxSOLID );
+  redPen.SetWidth(2);
+  dc.SetPen( redPen );
   dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
 
   dc.DrawCircle( c, c, 1 );
