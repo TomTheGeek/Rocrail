@@ -57,11 +57,9 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   start = true;
   run   = true;
   deviderchanged = false;
-  m_Plate = _img_plate;
   m_Logo  = _img_logo;
   m_Temp = 20;
 
-  hw = handwidth;
   type = clocktype;
 
   devider = p_devider;
@@ -75,6 +73,9 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
 	WxTimer = new wxTimer();
 	WxTimer->SetOwner(this, ID_WXTIMER);
 	WxTimer->Start(TIMER/devider);
+
+	calculate();
+
   TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock instantiated" );
 }
 
@@ -173,7 +174,7 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
   		  timestring = wxString::Format(_T("AM"), hours, minutes);
   		else if( type == 1 && hours >= 12 )
         timestring = wxString::Format(_T("PM"), hours, minutes);
-  		else if( type == 2 )
+  		else
         timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
   		int w = 0;
       int h = 0;
@@ -243,9 +244,6 @@ void Clock::calculate() {
   start = false;
 */
   x = sm_angle(datetime->GetSecond());
-  xpre = sm_angle(datetime->GetSecond()-1);
-  if( xpre < 0 )
-    xpre = 59;
   y = sm_angle(datetime->GetMinute());
   z = h_angle(datetime->GetHour(),datetime->GetMinute());
   hours   = datetime->GetHour();
