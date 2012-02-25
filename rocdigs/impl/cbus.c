@@ -2021,7 +2021,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     const char* text = wText.gettext(node);
     int addr = wText.getaddr(node);
     int display = wText.getdisplay(node);
-    int len = StrOp.len( text );
+    int len = StrOp.len( text ) + 1; /* send the terminating zero byte too */
     int packets = len / 4 + ((len % 4 > 0) ?1:0);
     int i = 0;
 
