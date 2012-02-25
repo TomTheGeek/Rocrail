@@ -333,7 +333,7 @@ void LocControlDialog::modelEvent( iONode evt ) {
       /* update function "n" */
       m_bFn = wFunCmd.isf0( evt)?true:false;
       setButtonColor( m_Fn, !m_bFn);
-      setFLabels();
+      //setFLabels();
       /* update further functions */
       int fx = wLoc.getfx(evt);
       TraceOp.trc( "lcdlg", TRCLEVEL_INFO, __LINE__, 9999, "function update %s", wLoc.getid( evt ) );
@@ -786,7 +786,7 @@ void LocControlDialog::funCmd(int fidx)
         );
 
     iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    wFunCmd.setgroup ( cmd, m_iFnGroup * 3 + 1 );
+    wFunCmd.setgroup ( cmd, fidx==-1?0:fidx/4 + 1 );
     wFunCmd.setfnchanged ( cmd, fidx==-1?0:fidx + 1 );
     wFunCmd.setfncnt ( cmd, wLoc.getfncnt( lc ) );
     wFunCmd.setid ( cmd, wLoc.getid( lc ) );
@@ -869,7 +869,7 @@ void LocControlDialog::OnButtonLocctrlF4Click( wxCommandEvent& event )
   wxString id = m_LcList->GetStringSelection();
 
   m_bFx[3+m_iFnGroup*12] = setButtonColor( m_F4, m_bFx[3+m_iFnGroup*12] );
-  funCmd(03+m_iFnGroup*12);
+  funCmd(3+m_iFnGroup*12);
 }
 
 /*!
