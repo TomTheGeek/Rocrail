@@ -52,7 +52,7 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(100,100), wxBORDER_NONE)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
 {
   start = true;
   run   = true;
@@ -61,8 +61,8 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   m_Logo  = _img_logo;
   m_Temp = 20;
 
-	clockpicwidth = m_Plate->GetWidth();
-  SetSize(wxSize(clockpicwidth, clockpicwidth));
+	//clockpicwidth = 300;
+  //SetSize(wxSize(clockpicwidth, clockpicwidth));
   hw = handwidth;
   type = clocktype;
 
@@ -159,19 +159,15 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
 
 void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
-  if(m_Plate && m_Plate->Ok())
-  {
+
     //TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock paint" );
 		wxPaintDC dc(this);
-		double c = clockpicwidth / 2;
+	  int width, height;
+	  GetSize(&width, &height);
+	  if( height < width )
+	    width = height;
 
-    wxPen pen(GetBackgroundColour(),hw,wxSOLID);
-    // clear pre-now
-    dc.SetPen(pen);
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(xpre)), (int)(c - 0.90 * c * sin(xpre))); // pre-second hand
-
-    pen.SetColour(*wxBLACK);
-    dc.SetPen(pen);
+    dc.SetPen(*wxBLACK_PEN);
 
     if( type > 0 ) {
   		wxString timestring;
@@ -184,37 +180,15 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
   		int w = 0;
       int h = 0;
   		dc.GetTextExtent(timestring, &w, &h);
-  		dc.DrawText(timestring, 50-(w/2),63);
+  		dc.DrawText(timestring, (width/2)-(w/2),width*0.6);
 		}
 
     if(m_Logo != NULL && m_Logo->Ok()) {
       int w = m_Logo->GetWidth();
-      dc.DrawBitmap(wxBitmap(*m_Logo),50-(w/2),28,true);
+      dc.DrawBitmap(wxBitmap(*m_Logo),(width/2)-(w/2),width*0.3,true);
     }
 
-		// draw now
-    if(m_Plate != NULL)
-      dc.DrawBitmap(wxBitmap(*m_Plate),0,0,true);
-
-		pen.SetColour(*wxBLACK);
-		pen.SetWidth(hw*2);
-		dc.SetPen(pen);
-		dc.DrawLine((int)c, (int)c, (int)(c + 0.6 * c * cos(z)), (int)(c - 0.6  * c * sin(z))); // hour hand
-		pen.SetWidth(hw*2);
-		dc.SetPen(pen);
-		dc.DrawLine((int)c, (int)c, (int)(c + 0.85 * c * cos(y)), (int)(c - 0.85  * c * sin(y))); // minute hand
-		pen.SetWidth(hw);
-		pen.SetColour(*wxRED);
-		dc.SetPen(pen);
-		dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-
-		pen.SetColour(*wxWHITE);
-    dc.SetPen(pen);
-    dc.DrawPoint(50,50);
-  }
-  else {
-    TraceOp.trc( "clock", TRCLEVEL_WARNING, __LINE__, 9999, "no valid plate" );
-  }
+    drawClock();
 }
 
 void Clock::stopTimer() {
@@ -292,3 +266,65 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
     Refresh(true);
   }
 }
+
+
+
+void Clock::drawClock() {
+  int width, height;
+  wxPaintDC dc(this);
+  GetSize(&width, &height);
+
+  if( height < width )
+    width = height;
+
+  double c = width/2;
+
+  wxBrush* brush = new wxBrush( wxColour(255, 255, 255), wxSOLID );
+  //dc.SetBrush( *brush );
+  wxPen* pen = new wxPen( wxColour(255, 255, 255), wxSOLID );
+  //dc.SetPen( *pen );
+
+  //dc.DrawCircle( c, c, width );
+
+  int i;
+  for (i = 0; i < 60; i++) {
+    double k = sm_angle( i );
+
+    pen = new wxPen( wxColour(0, 0, 0), wxSOLID );
+    pen->SetWidth(1);
+    dc.SetPen( *pen );
+
+    dc.DrawLine((int)(c + 0.85 * c * cos(k)), (int)(c - 0.85 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
+
+    if( i%5 == 0 ) {
+      pen->SetWidth(4);
+      dc.SetPen( *pen );
+      dc.DrawLine((int)(c + 0.70 * c * cos(k)), (int)(c - 0.70 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
+    }
+  }
+
+  // hour
+  pen = new wxPen( wxColour(0, 0, 0), wxSOLID );
+  pen->SetWidth(4);
+  dc.SetPen( *pen );
+  dc.DrawLine((int)c, (int)c, (int)(c + 0.6 * c * cos(z)), (int)(c - 0.6  * c * sin(z))); // hour hand
+
+
+  // minute
+  dc.DrawLine((int)c, (int)c, (int)(c + 0.85 * c * cos(y)), (int)(c - 0.85  * c * sin(y))); // minute hand
+
+
+  // second
+  brush = new wxBrush( wxColour(255, 0, 0), wxSOLID );
+  dc.SetBrush( *brush );
+  pen = new wxPen( wxColour(255, 0, 0), wxSOLID );
+  pen->SetWidth(2);
+  dc.SetPen( *pen );
+  dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
+
+  dc.DrawCircle( c, c, 1 );
+
+
+
+}
+

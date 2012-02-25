@@ -34,6 +34,7 @@ class Clock : public wxPanel{
     void SyncClock( iONode node );
     void stopTimer();
     void calculate();
+    void drawClock();
 
 	private:
 		wxBitmap* m_Plate;
