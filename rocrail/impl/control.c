@@ -1055,7 +1055,7 @@ static void __clockticker( void* threadinst ) {
     }
   }
 
-  if( data->devider > 100 ) {
+  if( data->devider > 100 || data->devider < 1 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ClockTicker: unexpected devider value [%d] reset to [1].", data->devider );
     data->devider = 1;
   }
