@@ -254,7 +254,9 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 {
   if( deviderchanged ) {
     deviderchanged = false;
-    WxTimer->Start(TIMER/devider);
+    if( this->devider <= 10 ) {
+      WxTimer->Start(TIMER/devider);
+    }
   }
 
   if( run ) {
@@ -304,15 +306,16 @@ void Clock::drawClock() {
 
 
   // second
-  wxBrush brush( wxColour(255, 0, 0), wxSOLID );
-  dc.SetBrush( brush );
-  wxPen redPen( wxColour(255, 0, 0), wxSOLID );
-  redPen.SetWidth(2);
-  dc.SetPen( redPen );
-  dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
+  if( this->devider <= 10 ) {
+    wxBrush brush( wxColour(255, 0, 0), wxSOLID );
+    dc.SetBrush( brush );
+    wxPen redPen( wxColour(255, 0, 0), wxSOLID );
+    redPen.SetWidth(2);
+    dc.SetPen( redPen );
+    dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
 
-  dc.DrawCircle( c, c, 1 );
-
+    dc.DrawCircle( c, c, 1 );
+  }
 
 
 }
