@@ -307,7 +307,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     break;
   case 0xFC:
     /* Address report */
-  {
+  if( ((packet[2] & 0x7F)*256 + packet[3]) > 0 ){
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     /*
      * Bit7=0 Lok nach rechts
