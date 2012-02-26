@@ -97,12 +97,11 @@ public:
 
 ////@begin ClockDialog member variables
     wxStaticBoxSizer* m_ClockBox;
-    wxStaticText* m_labDevider;
-    wxSpinCtrl* m_Divider;
     wxStaticText* m_labHour;
     wxSpinCtrl* m_Hour;
     wxStaticText* m_labMinute;
     wxSpinCtrl* m_Minute;
+    wxRadioBox* m_DividerList;
     wxStaticText* m_labTemp;
     wxSpinCtrl* m_Temp;
     wxButton* m_OK;

@@ -69,21 +69,45 @@ ClockDialog::ClockDialog( wxWindow* parent, wxWindowID id, const wxString& capti
 {
   Init();
   Create(parent, -1, wxGetApp().getMsg("clock") );
-  m_labDevider->SetLabel( wxGetApp().getMsg( "divider" ) );
+  m_DividerList->SetLabel( wxGetApp().getMsg( "divider" ) );
   m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
   m_labMinute->SetLabel( wxGetApp().getMsg( "minute" ) );
   m_labTemp->SetLabel( wxGetApp().getMsg( "temperature" ) );
 }
 
 void ClockDialog::setClock( int divider, int hours, int minutes, int temp ) {
-  m_Divider->SetValue(divider);
+  //1,2,4,5,10,20,25,40,50
+  switch( divider ) {
+  case  1: m_DividerList->SetSelection(0); break;
+  case  2: m_DividerList->SetSelection(1); break;
+  case  4: m_DividerList->SetSelection(2); break;
+  case  5: m_DividerList->SetSelection(3); break;
+  case 10: m_DividerList->SetSelection(4); break;
+  case 20: m_DividerList->SetSelection(5); break;
+  case 25: m_DividerList->SetSelection(6); break;
+  case 40: m_DividerList->SetSelection(7); break;
+  case 50: m_DividerList->SetSelection(8); break;
+  default: m_DividerList->SetSelection(0); break;
+  }
   m_Hour->SetValue(hours);
   m_Minute->SetValue(minutes);
   m_Temp->SetValue(temp);
 }
 
 void ClockDialog::getClock( int* divider, int* hours, int* minutes, int* temp ) {
-  *divider = m_Divider->GetValue();
+  //1,2,4,5,10,20,25,40,50
+  switch( m_DividerList->GetSelection() ) {
+  case 0: *divider =  1; break;
+  case 1: *divider =  2; break;
+  case 2: *divider =  4; break;
+  case 3: *divider =  5; break;
+  case 4: *divider = 10; break;
+  case 5: *divider = 20; break;
+  case 6: *divider = 25; break;
+  case 7: *divider = 40; break;
+  case 8: *divider = 50; break;
+  default: *divider =  1; break;
+  }
   *hours = m_Hour->GetValue();
   *minutes = m_Minute->GetValue();
   *temp = m_Temp->GetValue();
@@ -130,12 +154,11 @@ void ClockDialog::Init()
 {
 ////@begin ClockDialog member initialisation
     m_ClockBox = NULL;
-    m_labDevider = NULL;
-    m_Divider = NULL;
     m_labHour = NULL;
     m_Hour = NULL;
     m_labMinute = NULL;
     m_Minute = NULL;
+    m_DividerList = NULL;
     m_labTemp = NULL;
     m_Temp = NULL;
     m_OK = NULL;
@@ -161,13 +184,7 @@ void ClockDialog::CreateControls()
     itemBoxSizer2->Add(m_ClockBox, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 6, 0, 0);
-    m_ClockBox->Add(itemFlexGridSizer4, 0, wxALIGN_CENTER_HORIZONTAL, 5);
-
-    m_labDevider = new wxStaticText( itemDialog1, wxID_ANY, _("divider"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer4->Add(m_labDevider, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_Divider = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 50, 1 );
-    itemFlexGridSizer4->Add(m_Divider, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
+    m_ClockBox->Add(itemFlexGridSizer4, 0, wxGROW, 5);
 
     m_labHour = new wxStaticText( itemDialog1, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer4->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -181,25 +198,39 @@ void ClockDialog::CreateControls()
     m_Minute = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
     itemFlexGridSizer4->Add(m_Minute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer11 = new wxFlexGridSizer(0, 2, 0, 0);
-    m_ClockBox->Add(itemFlexGridSizer11, 0, wxALIGN_LEFT, 5);
+    wxArrayString m_DividerListStrings;
+    m_DividerListStrings.Add(_("&1"));
+    m_DividerListStrings.Add(_("&2"));
+    m_DividerListStrings.Add(_("&4"));
+    m_DividerListStrings.Add(_("&5"));
+    m_DividerListStrings.Add(_("&10"));
+    m_DividerListStrings.Add(_("&20"));
+    m_DividerListStrings.Add(_("&25"));
+    m_DividerListStrings.Add(_("&40"));
+    m_DividerListStrings.Add(_("&50"));
+    m_DividerList = new wxRadioBox( itemDialog1, wxID_ANY, _("Divider"), wxDefaultPosition, wxDefaultSize, m_DividerListStrings, 1, wxRA_SPECIFY_ROWS );
+    m_DividerList->SetSelection(0);
+    m_ClockBox->Add(m_DividerList, 0, wxGROW|wxALL, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer10 = new wxFlexGridSizer(0, 2, 0, 0);
+    m_ClockBox->Add(itemFlexGridSizer10, 0, wxALIGN_LEFT, 5);
 
     m_labTemp = new wxStaticText( itemDialog1, wxID_ANY, _("Temperature"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer11->Add(m_labTemp, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    itemFlexGridSizer10->Add(m_labTemp, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
     m_Temp = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("21"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, -99, 99, 21 );
-    itemFlexGridSizer11->Add(m_Temp, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer10->Add(m_Temp, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer14 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer13 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer13, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer14->AddButton(m_OK);
+    itemStdDialogButtonSizer13->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer14->AddButton(m_Cancel);
+    itemStdDialogButtonSizer13->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer14->Realize();
+    itemStdDialogButtonSizer13->Realize();
 
 ////@end ClockDialog content construction
 }
