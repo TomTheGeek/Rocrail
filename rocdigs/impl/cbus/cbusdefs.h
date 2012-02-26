@@ -21,7 +21,9 @@
 
 // Manufacturers
 
-#define MANU_MERG		165
+#define MANU_MERG		165	// http://www.merg.co.uk
+#define MANU_ROCRAIL	70	// http://www.rocrail.net
+#define MANU_SPECTRUM	80	// http://animatedmodeler.com  (Spectrum Engineering)
 
 
 // Module types
@@ -42,7 +44,21 @@
 #define MTYP_CANRPI		 13	// RPI and RFID interface
 #define MTYP_CANTTCA	 14	// Turntable controller (turntable end)
 #define MTYP_CANTTCB	 15 // Turntable controller (control panel end)
+#define MTYP_CANHS		 16	// Handset controller for old BC1a type handsets
 
+
+#define	MTYP_CANGC1		 1	//	RS232 PC interface
+#define MTYP_CANGC2  	 2	// 	16 I/O
+#define MTYP_CANGC3		 3	//	Command station (derived from cancmd)
+#define	MTYP_CANGC4		 4	//	8 channel RFID reader
+#define MTYP_CANGC5		 5	//  Cab for fixed panels (derived from cancab)
+#define MTYP_CANGC6		 6	//  4 channel servo controller
+#define MTYP_CANGC7		 7	//	Fast clock module
+
+// Animated Modeller module types
+
+#define MTYP_AMCTRLR	 1	// Animation controller (firmware derived from cancmd)
+#define MTYP_DUALCAB	 2	// Dual cab based on cancab
 
 
 //  CBUS opcodes list
@@ -82,8 +98,9 @@
 // Packets with 2 data bytes
 
 #define OPC_RLOC    0x40    // Request session for loco
+#define OPC_QCON	0x41	// Query consist
 #define OPC_SNN     0x42    // Set node number
-#define OPC_STMOD   0x44    // Set Throttlle mode
+#define OPC_STMOD   0x44    // Set Throttle mode
 #define OPC_PCON    0x45    // Consist loco
 #define OPC_KCON    0x46    // De-consist loco
 #define OPC_DSPD    0x47    // Loco speed/dir
@@ -110,13 +127,14 @@
 // Packets with 3 data bytes
 
 #define OPC_DFUN    0x60    // Set engine functions
+#define OPC_GLOC	0x61	// Get loco (with support for steal/share)
 #define OPC_ERR     0x63    // Command station error
 #define OPC_CMDERR  0x6F    // Errors from nodes during config
 
 #define OPC_EVNLF	0x70    // Event slots left response
 #define OPC_NVRD	0x71    // Request read of node variable
-#define OPC_NENRD   0x72    // Reqeust read stored event by index
-#define OPC_RQNPN	0x73	// Request read module paramters
+#define OPC_NENRD   0x72    // Request read stored event by index
+#define OPC_RQNPN	0x73	// Request read module parameters
 #define OPC_NUMEV   0x74    // Number of events stored response
 #define OPC_EXTC2   0x7F    // Extended opcode with 2 data bytes
 
@@ -156,6 +174,7 @@
 #define OPC_ARON1	0xB3	// Accessory on response (1 data byte)
 #define OPC_AROF1  	0xB4    // Accessory off response (1 data byte)
 #define OPC_NEVAL   0xB5    // Event variable by index read response
+#define OPC_PNN		0xB6	// Response to QNN
 #define OPC_ASON1	0xB8	// Accessory short on with 1 data byte
 #define OPC_ASOF1	0xB9	// Accessory short off with 1 data byte
 #define	OPC_ARSON1	0xBD	// Short response event on with one data byte
@@ -166,16 +185,8 @@
 
 #define OPC_RDCC5   0xC0    // 5 byte DCC packet
 #define OPC_WCVOA   0xC1    // Write CV ops mode by address
+#define OPC_FCLK	0xCF	// Fast clock
 /*
-Can I suggest using 0xCF as the OPC for a fast clock. Only reasoning behind
-this choice is that the fast clock is a bit of an 'oddity' and the other
-available 0xCx may be wanted for uses that may make more sense if following
-on from  0xC1 (WCVOA). It is also not strictly a 'layout control' command so
-needn't use any 0xDx OPCs. Using 0xCF (FCLK) gives a possible 6 bytes for
-the time so the first four can be in the NMRA RP 9.2.1 format. The other two
-for whatever you want.
-http://www.opendcc.org/info/dcc/Addendum_to_RP_9.2.1(May_2009).pdf
-
 CC=00: DDDDDD = mmmmmm, this denotes the minute, range 0..59.
 CC=10: DDDDDD = 0HHHHHH, this denotes the hour, range 0..23
 CC=01: DDDDDD = 000WWW, this denotes the day of week, 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday.
@@ -219,7 +230,7 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define OPC_DDRS	0xFB	// Short data frame response aka device data response
 #define	OPC_ARSON3	0xFD	// Short response event on with 3 data bytes
 #define	OPC_ARSOF3  0xFE	// Short response event off with 3 data bytes
-#define OPC_EXTC6	0xFF	// Extendeed opcode with 6 data byes
+#define OPC_EXTC6	0xFF	// Extended opcode with 6 data byes
 
 
 // Modes for STMOD
@@ -238,6 +249,8 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define ERR_CONSIST_EMPTY	    	4
 #define ERR_LOCO_NOT_FOUND		  	5
 #define ERR_CMD_RX_BUF_OFLOW		6
+#define ERR_INVALID_REQUEST		    7
+#define ERR_SESSION_CANCELLED	    8
 
 // Status codes for OPC_SSTAT
 
@@ -261,6 +274,25 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define CMDERR_INV_NV_IDX		10
 #define	CMDERR_INV_EV_VALUE		11
 #define	CMDERR_INV_NV_VALUE		12
+
+// Parameter index numbers (readable by OPC_RQNPN, returned in OPC_PARAN)
+
+#define	PAR_MANU				1	// Manufacturer id
+#define	PAR_MINVER				2	// Minor version letter
+#define	PAR_MTYP				3	// Module type code				
+#define	PAR_EVTNUM				4	// Number of events supported
+#define	PAR_EVNUM				5	// Event variables per event
+#define	PAR_NVNUM				6	// Number of Node variables
+#define	PAR_MAJVER				7	// Major version number
+#define	PAR_FLAGS				8	// Node flags
+
+// Flags in PAR_FLAGS
+
+#define	PF_CONSUMER				1
+#define	PF_PRODUCER				2
+#define	PF_COMBI				3
+#define PF_FLiM					4
+
 
 #endif		// __OPCODES_H
 
