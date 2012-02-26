@@ -290,7 +290,7 @@ void Clock::drawClock() {
     if( i%5 == 0 ) {
       pen.SetWidth(4);
       dc.SetPen( pen );
-      dc.DrawLine((int)(c + 0.70 * c * cos(k)), (int)(c - 0.70 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
+      dc.DrawLine((int)(c + 0.75 * c * cos(k)), (int)(c - 0.75 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
     }
   }
 
@@ -313,9 +313,9 @@ void Clock::drawClock() {
     redPen.SetWidth(2);
     dc.SetPen( redPen );
     dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-
-    dc.DrawCircle( c, c, 1 );
+    dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
   }
+  dc.DrawCircle( c, c, 2 );
 
 
 }
