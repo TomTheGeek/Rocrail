@@ -738,6 +738,7 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
     }
     fundef = wLoc.nextfundef( data->props, fundef );
   };
+  *mappedfn = function;
   return 0;
 }
 
