@@ -104,8 +104,8 @@ void DonKey::initValues() {
     m_DonateText->SetValue( wxGetApp().getMsg( "donatekey" ) );
   }
   else {
-    m_LoadKey->Enable(false);
-    m_Donate->Enable(false);
+    //m_LoadKey->Enable(false);
+    //m_Donate->Enable(false);
     m_DonateText->SetValue( wxGetApp().getMsg( "donatethanks" ) );
     m_stdButtonOK->SetDefault();
   }

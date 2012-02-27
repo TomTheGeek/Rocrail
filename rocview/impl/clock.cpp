@@ -285,9 +285,9 @@ void Clock::drawClock() {
   if( type > 0 ) {
     wxString timestring;
     if( type == 1 && hours < 12 )
-      timestring = wxString::Format(_T("AM"), hours, minutes);
+      timestring = wxString::Format(_T("AM %d:%02d"), hours, minutes);
     else if( type == 1 && hours >= 12 )
-      timestring = wxString::Format(_T("PM"), hours, minutes);
+      timestring = wxString::Format(_T("PM %d:%02d"), hours-12, minutes);
     else
       timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
     int w = 0;
