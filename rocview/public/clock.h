@@ -37,6 +37,7 @@ class Clock : public wxPanel{
     void drawClock();
 
 	private:
+		wxBitmap* m_Plate;
     wxBitmap* m_Logo;
 		wxTimer *WxTimer;
 		double x,y,z;
