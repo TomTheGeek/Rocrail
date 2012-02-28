@@ -753,13 +753,13 @@ static void __engine( iOLoc inst, iONode cmd ) {
   iOLocData    data = Data(inst);
   iOControl control = AppOp.getControl();
 
-  const char* V_hint = NULL;
+  const char* V_hint   = NULL;
   int         V_maxkmh = 0;
-  int         V_new  = -1;
-  int         V_old  = wLoc.getV(data->props);
-  iONode      cmdTD  = NULL;
-  iONode      cmdFn  = NULL;
-  static Boolean  f0changed = False;
+  int         V_new    = -1;
+  int         V_old    = wLoc.getV(data->props);
+  iONode      cmdTD    = NULL;
+  iONode      cmdFn    = NULL;
+  int      fnchanged   = -1;
 
   if( cmd != NULL )
   {
@@ -767,6 +767,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
     V_hint   = wLoc.getV_hint( cmd );
     V_maxkmh = wLoc.getV_maxkmh( cmd );
 
+
+    /* Workarounds for the P50 interface. */
     if( NodeOp.findAttr(cmd,"dir") && wLoc.isdir(cmd) != wLoc.isdir( data->props ) ) {
       /* Informing the P50 interface. */
       wLoc.setsw( cmd, True );
@@ -781,27 +783,25 @@ static void __engine( iOLoc inst, iONode cmd ) {
     }
 
     if( NodeOp.findAttr(cmd,"fn") ) {
-      /* Informing the P50 interface. */
       wLoc.setfn( data->props, wLoc.isfn( cmd ) );
       if( data->fn0 != wLoc.isfn( cmd ) )
-        f0changed = True;
+        wFunCmd.setfnchanged(cmd, 0);
       data->fn0 = wLoc.isfn( cmd );
       __checkAction(inst, "lights");
     }
 
-    if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
-      int fnchanged = -1;
+    if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       wFunCmd.setaddr(cmd, wLoc.getaddr( data->props ));
 
-      /* function timers
-         when f0 is turned on, data->fn0 is set true above at informing the P50 interface, 
+      /* The fnchanged attribute is no longer optional and must be set in all cases. */
+      fnchanged = wFunCmd.getfnchanged(cmd);
+
+      /* when f0 is turned on, data->fn0 is set true above at informing the P50 interface,
          so if data->fn0 is true and f0changed is true, fn0 is turned on and we must check for the function timer */
-      if( data->fn0 && f0changed && wFunCmd.isf0( cmd ) )
-        data->fxtimer[0] = __getFnTimer( inst, 0);
-      if( (!data->fn0 && wFunCmd.isf0( cmd ) ) || (data->fn0 && !wFunCmd.isf0( cmd ) ) || f0changed ) {
-        fnchanged = 0;
+
+      if( fnchanged == 0 ) {
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setdir( cmdFn, wLoc.isplacing(data->props) ? wLoc.isdir(data->props):!wLoc.isdir(data->props) );
         wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
@@ -822,155 +822,12 @@ static void __engine( iOLoc inst, iONode cmd ) {
         wLoc.setprotver( cmdFn, wLoc.getprotver( data->props ) );
         wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
         wFunCmd.setfnchanged(cmdFn, wFunCmd.getfnchanged(cmd));
-        f0changed = False;
       }
 
-      if( !data->fn1 && wFunCmd.isf1( cmd ) )
-        data->fxtimer[1] = __getFnTimer( inst, 1);
-      if( (!data->fn1 && wFunCmd.isf1( cmd ) ) || (data->fn1 && !wFunCmd.isf1( cmd ) ) )
-        fnchanged = 1;
-
-      if( !data->fn2 && wFunCmd.isf2( cmd ) )
-        data->fxtimer[2] = __getFnTimer( inst, 2);
-      if( (!data->fn2 && wFunCmd.isf2( cmd ) ) || (data->fn2 && !wFunCmd.isf2( cmd ) ) )
-        fnchanged = 2;
-
-      if( !data->fn3 && wFunCmd.isf3( cmd ) )
-        data->fxtimer[3] = __getFnTimer( inst, 3);
-      if( (!data->fn3 && wFunCmd.isf3( cmd ) ) || (data->fn3 && !wFunCmd.isf3( cmd ) ) )
-        fnchanged = 3;
-
-      if( !data->fn4 && wFunCmd.isf4( cmd ) )
-        data->fxtimer[4] = __getFnTimer( inst, 4);
-      if( (!data->fn4 && wFunCmd.isf4( cmd ) ) || (data->fn4 && !wFunCmd.isf4( cmd ) ) )
-        fnchanged = 4;
-
-      if( !data->fn5 && wFunCmd.isf5( cmd ) )
-        data->fxtimer[5] = __getFnTimer( inst, 5);
-      if( (!data->fn5 && wFunCmd.isf5( cmd ) ) || (data->fn5 && !wFunCmd.isf5( cmd ) ) )
-        fnchanged = 5;
-
-      if( !data->fn6 && wFunCmd.isf6( cmd ) )
-        data->fxtimer[6] = __getFnTimer( inst, 6);
-      if( (!data->fn6 && wFunCmd.isf6( cmd ) ) || (data->fn6 && !wFunCmd.isf6( cmd ) ) )
-        fnchanged = 6;
-
-      if( !data->fn7 && wFunCmd.isf7( cmd ) )
-        data->fxtimer[7] = __getFnTimer( inst, 7);
-      if( (!data->fn7 && wFunCmd.isf7( cmd ) ) || (data->fn7 && !wFunCmd.isf7( cmd ) ) )
-        fnchanged = 7;
-
-      if( !data->fn8 && wFunCmd.isf8( cmd ) )
-        data->fxtimer[8] = __getFnTimer( inst, 8);
-      if( (!data->fn8 && wFunCmd.isf8( cmd ) ) || (data->fn8 && !wFunCmd.isf8( cmd ) ) )
-        fnchanged = 8;
-
-      if( !data->fn9 && wFunCmd.isf9( cmd ) )
-        data->fxtimer[9] = __getFnTimer( inst, 9);
-      if( (!data->fn9 && wFunCmd.isf9( cmd ) ) || (data->fn9 && !wFunCmd.isf9( cmd ) ) )
-        fnchanged = 9;
-
-      if( !data->fn10 && wFunCmd.isf10( cmd ) )
-        data->fxtimer[10] = __getFnTimer( inst, 10);
-      if( (!data->fn10 && wFunCmd.isf10( cmd ) ) || (data->fn10 && !wFunCmd.isf10( cmd ) ) )
-        fnchanged = 10;
-
-      if( !data->fn11 && wFunCmd.isf11( cmd ) )
-        data->fxtimer[11] = __getFnTimer( inst, 11);
-      if( (!data->fn11 && wFunCmd.isf11( cmd ) ) || (data->fn11 && !wFunCmd.isf11( cmd ) ) )
-        fnchanged = 11;
-
-      if( !data->fn12 && wFunCmd.isf12( cmd ) )
-        data->fxtimer[12] = __getFnTimer( inst, 12);
-      if( (!data->fn12 && wFunCmd.isf12( cmd ) ) || (data->fn12 && !wFunCmd.isf12( cmd ) ) )
-        fnchanged = 12;
-
-      if( !data->fn13 && wFunCmd.isf13( cmd ) )
-        data->fxtimer[13] = __getFnTimer( inst, 13);
-      if( (!data->fn13 && wFunCmd.isf13( cmd ) ) || (data->fn13 && !wFunCmd.isf13( cmd ) ) )
-        fnchanged = 13;
-
-      if( !data->fn14 && wFunCmd.isf14( cmd ) )
-        data->fxtimer[14] = __getFnTimer( inst, 14);
-      if( (!data->fn14 && wFunCmd.isf14( cmd ) ) || (data->fn14 && !wFunCmd.isf14( cmd ) ) )
-        fnchanged = 14;
-
-      if( !data->fn15 && wFunCmd.isf15( cmd ) )
-        data->fxtimer[15] = __getFnTimer( inst, 15);
-      if( (!data->fn15 && wFunCmd.isf15( cmd ) ) || (data->fn15 && !wFunCmd.isf15( cmd ) ) )
-        fnchanged = 15;
-
-      if( !data->fn16 && wFunCmd.isf16( cmd ) )
-        data->fxtimer[16] = __getFnTimer( inst, 16);
-      if( (!data->fn16 && wFunCmd.isf16( cmd ) ) || (data->fn16 && !wFunCmd.isf16( cmd ) ) )
-        fnchanged = 16;
-
-      if( !data->fn17 && wFunCmd.isf17( cmd ) )
-        data->fxtimer[17] = __getFnTimer( inst, 17);
-      if( (!data->fn17 && wFunCmd.isf17( cmd ) ) || (data->fn17 && !wFunCmd.isf17( cmd ) ) )
-        fnchanged = 17;
-
-      if( !data->fn18 && wFunCmd.isf18( cmd ) )
-        data->fxtimer[18] = __getFnTimer( inst, 18);
-      if( (!data->fn18 && wFunCmd.isf18( cmd ) ) || (data->fn18 && !wFunCmd.isf18( cmd ) ) )
-        fnchanged = 18;
-
-      if( !data->fn19 && wFunCmd.isf19( cmd ) )
-        data->fxtimer[19] = __getFnTimer( inst, 19);
-      if( (!data->fn19 && wFunCmd.isf19( cmd ) ) || (data->fn19 && !wFunCmd.isf19( cmd ) ) )
-        fnchanged = 19;
-
-      if( !data->fn20 && wFunCmd.isf20( cmd ) )
-        data->fxtimer[20] = __getFnTimer( inst, 20);
-      if( (!data->fn20 && wFunCmd.isf20( cmd ) ) || (data->fn20 && !wFunCmd.isf20( cmd ) ) )
-        fnchanged = 20;
-
-      if( !data->fn21 && wFunCmd.isf21( cmd ) )
-        data->fxtimer[21] = __getFnTimer( inst, 21);
-      if( (!data->fn21 && wFunCmd.isf21( cmd ) ) || (data->fn21 && !wFunCmd.isf21( cmd ) ) )
-        fnchanged = 21;
-
-      if( !data->fn22 && wFunCmd.isf22( cmd ) )
-        data->fxtimer[22] = __getFnTimer( inst, 22);
-      if( (!data->fn22 && wFunCmd.isf22( cmd ) ) || (data->fn22 && !wFunCmd.isf22( cmd ) ) )
-        fnchanged = 22;
-
-      if( !data->fn23 && wFunCmd.isf23( cmd ) )
-        data->fxtimer[23] = __getFnTimer( inst, 23);
-      if( (!data->fn23 && wFunCmd.isf23( cmd ) ) || (data->fn23 && !wFunCmd.isf23( cmd ) ) )
-        fnchanged = 23;
-
-      if( !data->fn24 && wFunCmd.isf24( cmd ) )
-        data->fxtimer[24] = __getFnTimer( inst, 24);
-      if( (!data->fn24 && wFunCmd.isf24( cmd ) ) || (data->fn24 && !wFunCmd.isf24( cmd ) ) )
-        fnchanged = 24;
-
-      if( !data->fn25 && wFunCmd.isf25( cmd ) )
-        data->fxtimer[25] = __getFnTimer( inst, 25);
-      if( (!data->fn25 && wFunCmd.isf25( cmd ) ) || (data->fn25 && !wFunCmd.isf25( cmd ) ) )
-        fnchanged = 25;
-
-      if( !data->fn26 && wFunCmd.isf26( cmd ) )
-        data->fxtimer[26] = __getFnTimer( inst, 26);
-      if( (!data->fn26 && wFunCmd.isf26( cmd ) ) || (data->fn26 && !wFunCmd.isf26( cmd ) ) )
-        fnchanged = 26;
-
-      if( !data->fn27 && wFunCmd.isf27( cmd ) )
-        data->fxtimer[27] = __getFnTimer( inst, 27);
-      if( (!data->fn27 && wFunCmd.isf27( cmd ) ) || (data->fn27 && !wFunCmd.isf27( cmd ) ) )
-        fnchanged = 27;
-
-      if( !data->fn28 && wFunCmd.isf28( cmd ) )
-        data->fxtimer[28] = __getFnTimer( inst, 28);
-      if( (!data->fn28 && wFunCmd.isf28( cmd ) ) || (data->fn28 && !wFunCmd.isf28( cmd ) ) )
-        fnchanged = 28;
-
-      if( wFunCmd.getfnchanged(cmd) != -1 ) {
-        /* use the fnchanged send from client */
-        fnchanged = wFunCmd.getfnchanged(cmd);
+      /* function timers */
+      if( fnchanged != -1 && fnchanged < 29 ) {
+        data->fxtimer[fnchanged] = __getFnTimer( inst, fnchanged);
       }
-
-      wFunCmd.setfnchanged(cmd, fnchanged);
 
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0) {
         /* reset previous timed function */
