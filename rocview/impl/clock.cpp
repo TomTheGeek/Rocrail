@@ -330,10 +330,10 @@ void Clock::drawClock() {
     dc.SetPen( redPen );
     //dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
 #if defined __APPLE__
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.53 * c * cos(x)), (int)(c - 0.53 * c * sin(x))); // second hand
+    dc.DrawLine((int)c, (int)c, (int)(c + 0.52 * c * cos(x)), (int)(c - 0.52 * c * sin(x))); // second hand
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
-    dc.DrawLine((int)(c + 0.67 * c * cos(x)), (int)(c - 0.67 * c * sin(x)), (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
+    dc.DrawLine((int)(c + 0.68 * c * cos(x)), (int)(c - 0.68 * c * sin(x)), (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
 #else
     dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
 #endif
