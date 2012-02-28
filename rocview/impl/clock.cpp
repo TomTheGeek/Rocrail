@@ -254,8 +254,11 @@ void Clock::drawClock() {
 
   double c = width/2;
 
-
 #if defined __APPLE__
+  dc.SetPen(*wxBLACK_PEN);
+  dc.SetBrush(*wxWHITE_BRUSH);
+  dc.DrawCircle( c, c, c );
+
   int i;
   for (i = 0; i < 60; i++) {
     double k = sm_angle( i );
@@ -275,6 +278,11 @@ void Clock::drawClock() {
 #else
   width = m_Plate->GetWidth();
   c = width/2;
+
+  dc.SetPen(*wxWHITE_PEN);
+  dc.SetBrush(*wxWHITE_BRUSH);
+  dc.DrawCircle( c-1, c-1, c );
+
   // draw now
   if(m_Plate != NULL)
     dc.DrawBitmap(wxBitmap(*m_Plate),0,0,true);
