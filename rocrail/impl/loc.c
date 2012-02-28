@@ -133,75 +133,77 @@ static void __FnOnOff(iOLoc inst, int fn, Boolean OnOff, iONode cmd, Boolean sav
     case 28: wFunCmd.setf28( cmd, OnOff ); if(save) data->fn28 = OnOff; fgroup = 7; break;
   }
   wFunCmd.setfncnt( cmd, wLoc.getfncnt( data->props ) );
-  wFunCmd.setgroup( cmd, fgroup );
-  wFunCmd.setfnchanged( cmd, fn );
+  if( save ) {
+    wFunCmd.setgroup( cmd, fgroup );
+    wFunCmd.setfnchanged( cmd, fn );
+  }
 }
 
 
 static void __cpFn2Node(iOLoc inst, iONode cmd, int fn, int addr) {
   iOLocData data = Data(inst);
-  int mappedfn = 0;
+  int mappedfn = fn;
   wFunCmd.setfncnt( cmd, wLoc.getfncnt( data->props ) );
 
   if( addr == 0 )
-    if( fn == -1 || fn != 0 ) wFunCmd.setf0 ( cmd, data->fn0  );
+    if( fn == -1 || fn != 0 ) __FnOnOff(inst, 0, data->fn0, cmd, False);
 
   if( addr == 0 || __getFnAddr(inst, 1, &mappedfn) == addr )
-    if( fn == -1 || fn != 1 ) __FnOnOff(inst, mappedfn, data->fn1, cmd, False);
+    if( fn == -1 || fn != 1 ) __FnOnOff(inst, mappedfn==-1?1:mappedfn, data->fn1, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 2, &mappedfn) == addr )
-    if( fn == -1 || fn != 2 ) __FnOnOff(inst, mappedfn, data->fn2, cmd, False);
+    if( fn == -1 || fn != 2 ) __FnOnOff(inst, mappedfn==-1?2:mappedfn, data->fn2, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 3, &mappedfn) == addr )
-    if( fn == -1 || fn != 3 ) __FnOnOff(inst, mappedfn, data->fn3, cmd, False);
+    if( fn == -1 || fn != 3 ) __FnOnOff(inst, mappedfn==-1?3:mappedfn, data->fn3, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 4, &mappedfn) == addr )
-    if( fn == -1 || fn != 4 ) __FnOnOff(inst, mappedfn, data->fn4, cmd, False);
+    if( fn == -1 || fn != 4 ) __FnOnOff(inst, mappedfn==-1?4:mappedfn, data->fn4, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 5, &mappedfn) == addr )
-    if( fn == -1 || fn != 5 ) __FnOnOff(inst, mappedfn, data->fn5, cmd, False);
+    if( fn == -1 || fn != 5 ) __FnOnOff(inst, mappedfn==-1?5:mappedfn, data->fn5, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 6, &mappedfn) == addr )
-    if( fn == -1 || fn != 6 ) __FnOnOff(inst, mappedfn, data->fn6, cmd, False);
+    if( fn == -1 || fn != 6 ) __FnOnOff(inst, mappedfn==-1?6:mappedfn, data->fn6, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 7, &mappedfn) == addr )
-    if( fn == -1 || fn != 7 ) __FnOnOff(inst, mappedfn, data->fn7, cmd, False);
+    if( fn == -1 || fn != 7 ) __FnOnOff(inst, mappedfn==-1?7:mappedfn, data->fn7, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 8, &mappedfn) == addr )
-    if( fn == -1 || fn != 8 ) __FnOnOff(inst, mappedfn, data->fn8, cmd, False);
+    if( fn == -1 || fn != 8 ) __FnOnOff(inst, mappedfn==-1?8:mappedfn, data->fn8, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 9, &mappedfn) == addr )
-    if( fn == -1 || fn != 9 ) __FnOnOff(inst, mappedfn, data->fn9, cmd, False);
+    if( fn == -1 || fn != 9 ) __FnOnOff(inst, mappedfn==-1?9:mappedfn, data->fn9, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 10, &mappedfn) == addr )
-    if( fn == -1 || fn != 10 ) __FnOnOff(inst, mappedfn, data->fn10, cmd, False);
+    if( fn == -1 || fn != 10 ) __FnOnOff(inst, mappedfn==-1?10:mappedfn, data->fn10, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 11, &mappedfn) == addr )
-    if( fn == -1 || fn != 11 ) __FnOnOff(inst, mappedfn, data->fn11, cmd, False);
+    if( fn == -1 || fn != 11 ) __FnOnOff(inst, mappedfn==-1?11:mappedfn, data->fn11, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 12, &mappedfn) == addr )
-    if( fn == -1 || fn != 12 ) __FnOnOff(inst, mappedfn, data->fn12, cmd, False);
+    if( fn == -1 || fn != 12 ) __FnOnOff(inst, mappedfn==-1?12:mappedfn, data->fn12, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 13, &mappedfn) == addr )
-    if( fn == -1 || fn != 13 ) __FnOnOff(inst, mappedfn, data->fn13, cmd, False);
+    if( fn == -1 || fn != 13 ) __FnOnOff(inst, mappedfn==-1?13:mappedfn, data->fn13, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 14, &mappedfn) == addr )
-    if( fn == -1 || fn != 14 ) __FnOnOff(inst, mappedfn, data->fn14, cmd, False);
+    if( fn == -1 || fn != 14 ) __FnOnOff(inst, mappedfn==-1?14:mappedfn, data->fn14, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 15, &mappedfn) == addr )
-    if( fn == -1 || fn != 15 ) __FnOnOff(inst, mappedfn, data->fn15, cmd, False);
+    if( fn == -1 || fn != 15 ) __FnOnOff(inst, mappedfn==-1?15:mappedfn, data->fn15, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 16, &mappedfn) == addr )
-    if( fn == -1 || fn != 16 ) __FnOnOff(inst, mappedfn, data->fn16, cmd, False);
+    if( fn == -1 || fn != 16 ) __FnOnOff(inst, mappedfn==-1?16:mappedfn, data->fn16, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 17, &mappedfn) == addr )
-    if( fn == -1 || fn != 17 ) __FnOnOff(inst, mappedfn, data->fn17, cmd, False);
+    if( fn == -1 || fn != 17 ) __FnOnOff(inst, mappedfn==-1?17:mappedfn, data->fn17, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 18, &mappedfn) == addr )
-    if( fn == -1 || fn != 18 ) __FnOnOff(inst, mappedfn, data->fn18, cmd, False);
+    if( fn == -1 || fn != 18 ) __FnOnOff(inst, mappedfn==-1?18:mappedfn, data->fn18, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 19, &mappedfn) == addr )
-    if( fn == -1 || fn != 19 ) __FnOnOff(inst, mappedfn, data->fn19, cmd, False);
+    if( fn == -1 || fn != 19 ) __FnOnOff(inst, mappedfn==-1?19:mappedfn, data->fn19, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 20, &mappedfn) == addr )
-    if( fn == -1 || fn != 20 ) __FnOnOff(inst, mappedfn, data->fn20, cmd, False);
+    if( fn == -1 || fn != 20 ) __FnOnOff(inst, mappedfn==-1?20:mappedfn, data->fn20, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 21, &mappedfn) == addr )
-    if( fn == -1 || fn != 21 ) __FnOnOff(inst, mappedfn, data->fn21, cmd, False);
+    if( fn == -1 || fn != 21 ) __FnOnOff(inst, mappedfn==-1?21:mappedfn, data->fn21, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 22, &mappedfn) == addr )
-    if( fn == -1 || fn != 22 ) __FnOnOff(inst, mappedfn, data->fn22, cmd, False);
+    if( fn == -1 || fn != 22 ) __FnOnOff(inst, mappedfn==-1?22:mappedfn, data->fn22, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 23, &mappedfn) == addr )
-    if( fn == -1 || fn != 23 ) __FnOnOff(inst, mappedfn, data->fn23, cmd, False);
+    if( fn == -1 || fn != 23 ) __FnOnOff(inst, mappedfn==-1?23:mappedfn, data->fn23, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 24, &mappedfn) == addr )
-    if( fn == -1 || fn != 24 ) __FnOnOff(inst, mappedfn, data->fn24, cmd, False);
+    if( fn == -1 || fn != 24 ) __FnOnOff(inst, mappedfn==-1?24:mappedfn, data->fn24, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 25, &mappedfn) == addr )
-    if( fn == -1 || fn != 25 ) __FnOnOff(inst, mappedfn, data->fn25, cmd, False);
+    if( fn == -1 || fn != 25 ) __FnOnOff(inst, mappedfn==-1?25:mappedfn, data->fn25, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 26, &mappedfn) == addr )
-    if( fn == -1 || fn != 26 ) __FnOnOff(inst, mappedfn, data->fn26, cmd, False);
+    if( fn == -1 || fn != 26 ) __FnOnOff(inst, mappedfn==-1?26:mappedfn, data->fn26, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 27, &mappedfn) == addr )
-    if( fn == -1 || fn != 27 ) __FnOnOff(inst, mappedfn, data->fn27, cmd, False);
+    if( fn == -1 || fn != 27 ) __FnOnOff(inst, mappedfn==-1?27:mappedfn, data->fn27, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 28, &mappedfn) == addr )
-    if( fn == -1 || fn != 28 ) __FnOnOff(inst, mappedfn, data->fn28, cmd, False);
+    if( fn == -1 || fn != 28 ) __FnOnOff(inst, mappedfn==-1?28:mappedfn, data->fn28, cmd, False);
 }
 
 
@@ -241,8 +243,9 @@ static void __saveFxState(iOLoc inst) {
 
 static Boolean __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
-  if( StrOp.equals( wLoc.function, wLoc.getcmd(cmd) ) ) {
-    int function = wFunCmd.getfnchanged(cmd);
+  int function = wFunCmd.getfnchanged(cmd);
+
+  if( function != -1 || StrOp.equals( wLoc.function, wLoc.getcmd(cmd) ) ) {
     switch ( function ) {
       case 0 : data->fn0 = wFunCmd.isf0(cmd); return data->fn0;
       case 1 : data->fn1 = wFunCmd.isf1(cmd); return data->fn1;
@@ -724,9 +727,13 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
   iOLocData    data = Data(inst);
 
   iONode fundef = wLoc.getfundef( data->props );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "looking up function %d...", function );
+
+
   while( fundef != NULL ) {
     if( wFunDef.getfn(fundef) == function ) {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "function address for %d = %d:%d", function, wFunDef.getaddr(fundef), wFunDef.getmappedfn(fundef) );
       if( mappedfn != NULL ) {
         if( wFunDef.getmappedfn(fundef) > 0 )
@@ -738,7 +745,10 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
     }
     fundef = wLoc.nextfundef( data->props, fundef );
   };
-  *mappedfn = function;
+  if( mappedfn != NULL ) {
+    *mappedfn = function;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function %d not defined", *mappedfn );
+  }
   return 0;
 }
 
@@ -805,6 +815,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
         cmdFn = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setdir( cmdFn, wLoc.isplacing(data->props) ? wLoc.isdir(data->props):!wLoc.isdir(data->props) );
         wLoc.setfn( cmdFn, wFunCmd.isf0( cmd ) );
+        wFunCmd.setf0(cmdFn, wFunCmd.isf0( cmd ) );
         wLoc.setfncnt( cmdFn, wLoc.getfncnt( data->props ) );
         wLoc.setid( cmdFn, wLoc.getid(data->props) );
         wLoc.setoid( cmdFn, wLoc.getoid(data->props) );
