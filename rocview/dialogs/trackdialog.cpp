@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocview/public/guiapp.h"
 
 ////@begin XPM images
@@ -403,9 +404,22 @@ void TrackDialog::CreateControls()
 
 void TrackDialog::OnOkClick( wxCommandEvent& event )
 {
+  if( !m_Props )
+    return;
   if( !evaluate() )
     return;
-
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
+ 
   EndModal( wxID_OK );
 }
 

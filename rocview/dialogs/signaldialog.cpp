@@ -456,6 +456,7 @@ bool SignalDialog::evaluate() {
   }
 
   // General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wSignal.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wSignal.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
   wSignal.setblockid( m_Props, m_BlockID->GetStringSelection().mb_str(wxConvUTF8) );

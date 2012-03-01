@@ -1906,14 +1906,9 @@ void Symbol::OnProps(wxCommandEvent& event) {
 
   if( StrOp.equals( wBlock.name(), name ) ) {
     BlockDialog* blockDlg = new BlockDialog( this, m_Props );
-    if( wxID_OK == blockDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+
+    wxID_OK == blockDlg->ShowModal();
+
     updateLabel();
     Show(FALSE);
     Refresh();
@@ -1922,14 +1917,7 @@ void Symbol::OnProps(wxCommandEvent& event) {
   }
   else if( StrOp.equals( wSwitch.name(), name ) ) {
     SwitchDialog* swDlg = new SwitchDialog( this, m_Props );
-    if( wxID_OK == swDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == swDlg->ShowModal();
     sizeToScale();
     Show(wSwitch.isshow(m_Props));
     Refresh();
@@ -1937,122 +1925,60 @@ void Symbol::OnProps(wxCommandEvent& event) {
   }
   else if( StrOp.equals( wSignal.name(), name ) ) {
     SignalDialog* sgDlg = new SignalDialog( this, m_Props );
-    if( wxID_OK == sgDlg->ShowModal() ) {
-      // Notify RocRail.
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == sgDlg->ShowModal();
     Refresh();
     sgDlg->Destroy();
   }
   else if( StrOp.equals( wOutput.name(), name ) ) {
     OutputDialog* coDlg = new OutputDialog( this, m_Props );
-    if( wxID_OK == coDlg->ShowModal() ) {
-      // Notify RocRail.
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == coDlg->ShowModal();
     Show(wOutput.isshow(m_Props));
     Refresh();
     coDlg->Destroy();
   }
   else if( StrOp.equals( wFeedback.name(), name ) ) {
     FeedbackDialog* fbDlg = new FeedbackDialog( this, m_Props );
-    if( wxID_OK == fbDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == fbDlg->ShowModal();
     Show(wFeedback.isshow(m_Props));
     Refresh();
     fbDlg->Destroy();
   }
   else if( StrOp.equals( wRoute.name(), name ) ) {
     RouteDialog* dlg = new RouteDialog( this, m_Props );
-    if( wxID_OK == dlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == dlg->ShowModal();
     Show(wRoute.isshow(m_Props));
     Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wTrack.name(), name ) ) {
     TrackDialog* tkDlg = new TrackDialog( this, m_Props );
-    if( wxID_OK == tkDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == tkDlg->ShowModal();
+    Show(wRoute.isshow(m_Props));
     Refresh();
     tkDlg->Destroy();
   }
   else if( StrOp.equals( wText.name(), name ) ) {
     TextDialog* txDlg = new TextDialog( this, m_Props );
-    if( wxID_OK == txDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == txDlg->ShowModal();
     Refresh();
     txDlg->Destroy();
   }
   else if( StrOp.equals( wTurntable.name(), name ) ) {
     TurntableDialog* ttDlg = new TurntableDialog( this, m_Props );
-    if( wxID_OK == ttDlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == ttDlg->ShowModal();
     Refresh();
     ttDlg->Destroy();
   }
   else if( StrOp.equals( wSelTab.name(), name ) ) {
     /* dialog for selection table */
     SelTabDialog* dlg = new SelTabDialog( this, m_Props );
-    if( wxID_OK == dlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == dlg->ShowModal();
     Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wStage.name(), name ) ) {
     StageDlg* dlg = new StageDlg( this, m_Props );
-    if( wxID_OK == dlg->ShowModal() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
-    }
+    wxID_OK == dlg->ShowModal();
     Refresh();
     dlg->Destroy();
   }
@@ -2276,6 +2202,12 @@ void Symbol::modelEvent( iONode node ) {
     return;
   }
 
+  const char* tip = wItem.getid( m_Props );
+  if( StrOp.len( wItem.getdesc( m_Props ) ) > 0 )
+    tip = wItem.getdesc( m_Props );
+
+  SetToolTip( wxString(tip,wxConvUTF8) );
+ 
   if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "signal set to %s", wSignal.ismanual(node) ? "manual":"auto" );
     wSignal.setmanual( m_Props, wSignal.ismanual(node) );

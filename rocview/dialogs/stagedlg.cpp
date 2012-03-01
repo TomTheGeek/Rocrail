@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Loc.h"
 
@@ -315,7 +316,21 @@ void StageDlg::OnSectionDelete( wxCommandEvent& event )
 
 void StageDlg::OnOK( wxCommandEvent& event )
 {
-  evaluate();
+  if( m_Props == NULL )
+    return;
+  if( !evaluate() )
+    return;
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
   EndModal( wxID_OK );
 }
 void StageDlg::OnCancel( wxCommandEvent& event )

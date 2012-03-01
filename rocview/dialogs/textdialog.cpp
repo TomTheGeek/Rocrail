@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocview/wrapper/public/Gui.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocview/public/guiapp.h"
 #include "rocs/public/system.h"
 
@@ -487,8 +488,21 @@ void TextDialog::CreateControls()
 
 void TextDialog::OnOkClick( wxCommandEvent& event )
 {
+  if( !m_Props )
+    return;
   if( !evaluate() )
     return;
+  if( !wxGetApp().isStayOffline() ) {
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.modify );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else {
+    wxGetApp().setLocalModelModified(true);
+  }
   EndModal( wxID_OK );
 }
 
@@ -496,8 +510,7 @@ void TextDialog::OnOkClick( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
  */
 
-void TextDialog::OnCancelClick( wxCommandEvent& event )
-{
+void TextDialog::OnCancelClick( wxCommandEvent& event ){
   EndModal( 0 );
 }
 

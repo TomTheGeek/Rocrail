@@ -1179,6 +1179,18 @@ void PlanPanel::addItemCmd(wxCommandEvent& event) {
   addItem( child );
 }
 
+
+void PlanPanel::ChangeItemKey( const char* key, const char* prev_key ) {
+
+  Symbol* item = (Symbol*)m_ChildTable->Get( wxString(prev_key,wxConvUTF8) ); 
+  if (item) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "generate new key, prev: %s , new: %s", prev_key, key );
+    m_ChildTable->Put( wxString(key,wxConvUTF8), item);
+    m_ChildTable->Delete(wxString(prev_key,wxConvUTF8));
+  }
+}
+
+
 void PlanPanel::putChild(void* item) {
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "put moved Item at level %d", m_Z );
 
@@ -1457,9 +1469,17 @@ void PlanPanel::modelEvent( iONode node ) {
   }
   else if( id != NULL ) {
     char key[256];
-    itemKey( node, key, NULL );
+    char prev_key[256];
+    itemKey( node, key, prev_key );
     TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "itemKey=\"%s\"", key );
     Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
+		if(( item == NULL ) && ( !StrOp.equals(key, prev_key) )) {
+    	TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s at level %d not found!", key, wZLevel.getz(m_zLevel) );
+    	item = (Symbol*)m_ChildTable->Get( wxString(prev_key,wxConvUTF8) );
+			if (item)
+				ChangeItemKey(key, prev_key);
+    	item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
+		}
     if( item != NULL ) {
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update item=[%s]", key );
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
