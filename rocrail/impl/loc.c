@@ -245,6 +245,9 @@ static Boolean __cpNode2Fn(iOLoc inst, iONode cmd) {
   iOLocData data = Data(inst);
   int function = wFunCmd.getfnchanged(cmd);
 
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+      "copy node function status, fnchanged=%d group=%d", function,wFunCmd.getgroup(cmd));
+
   if( function != -1 || StrOp.equals( wLoc.function, wLoc.getcmd(cmd) ) ) {
     switch ( function ) {
       case 0 : data->fn0 = wFunCmd.isf0(cmd); return data->fn0;
@@ -395,6 +398,7 @@ static void __restoreFx( void* threadinst ) {
         ThreadOp.sleep(500);
       }
     }
+    data->fxrestoredbythread = True;
   }
 
   if( wLoc.getV(data->props) > 0 && wLoc.isrestorespeed(data->props) ) {
@@ -419,6 +423,7 @@ static void __sysEvent( obj inst, iONode evtNode ) {
   if( wLoc.isshow(data->props) && StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
     data->fxrestored = True;
+    data->fxrestoredbythread = False;
     data->fxsleep = wSysCmd.getval(evtNode);
     if( wLoc.isrestorefx(data->props) || wLoc.isrestorespeed(data->props) ) {
       iOThread th = ThreadOp.inst( NULL, &__restoreFx, inst );
@@ -480,6 +485,15 @@ static void* __event( void* inst, const void* evt ) {
         "ignore field event for [%s] while running in auto mode", wLoc.getid(data->props) );
     return NULL;
   }
+
+  if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) ) || StrOp.equals( wFunCmd.name(), NodeOp.getName(evtNode) ) ) {
+    if( wLoc.isrestorefx(data->props) && !data->fxrestoredbythread ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "ignore field event for [%s] while function restore is not ready", wLoc.getid(data->props) );
+      return NULL;
+    }
+  }
+
 
   if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) )) {
     int V = __getVfromRaw(inst, evtNode);
