@@ -212,6 +212,12 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
             int maxkmh = 0;
             wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
             wLoc.setV_maxkmh(cmd, maxkmh);
+
+            if( data->next1Route != NULL && !StrOp.equals( wLoc.getV_hint( cmd), wLoc.min ) && data->next1Route->hasThrownSwitch(data->next1Route) ) {
+              if( data->loc->compareVhint( data->loc, wLoc.mid) == -1 || data->loc->getV( data->loc ) == 0 )
+                wLoc.setV_hint( cmd, wLoc.mid );
+            }
+
           }
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           data->loc->cmd( data->loc, cmd );
