@@ -92,6 +92,7 @@ enum {
   so_sw_sensor_offset = 16,
   so_sw_sensor_mode = 17,
   so_xpn_feedback_mapping = 29,
+  so_xpn_sensors = 32,
 };
 
 #define ME_SOTimer 10003
@@ -214,6 +215,8 @@ public:
     wxSpinCtrl* m_S88Bus2;
     wxStaticText* m_labS88Bus3;
     wxSpinCtrl* m_S88Bus3;
+    wxStaticText* m_labXpressNetSensors;
+    wxSpinCtrl* m_XpressNetSensors;
     wxStaticBox* m_S88SettingsBox;
     wxCheckBox* m_S88Active;
     wxCheckBox* m_S88TurnoutSensors;
