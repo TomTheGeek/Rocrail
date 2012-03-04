@@ -237,8 +237,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     if( pada == 0 )
       pada = AddrOp.toPADA( addr, port );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d %s fada=%04d pada=%04d",
-        addr, port, gate, wOutput.getcmd(node), fada, pada );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s fada=%d pada=%d",
+        addr, port, gate, wOutput.getcmd(node)!=NULL?wOutput.getcmd(node):"-", fada, pada );
   }
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {

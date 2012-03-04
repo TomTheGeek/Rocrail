@@ -53,6 +53,7 @@
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Text.h"
+#include "rocrail/wrapper/public/State.h"
 
 static int instCnt = 0;
 
@@ -137,6 +138,18 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           }
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block not found [%s]", id );
+        }
+
+        /* System */
+        else if( StrOp.equals( wSysCmd.name(), wActionCond.gettype(actionCond) ) ) {
+          iONode state = ControlOp.getState(AppOp.getControl());
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "check system: power=%s", wState.ispower(state)?"go":"stop" );
+          if( wState.ispower(state) && !StrOp.equalsi( wSysCmd.go, wActionCond.getstate(actionCond) ) )
+            rc = False;
+          else if( !wState.ispower(state) && !StrOp.equalsi( wSysCmd.stop, wActionCond.getstate(actionCond) ) )
+            rc = False;
+          /* clean up */
+          NodeOp.base.del(state);
         }
 
         /* Output */
