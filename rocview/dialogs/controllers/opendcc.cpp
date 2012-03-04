@@ -319,7 +319,12 @@ void OpenDCCCtrlDlg::evaluate() {
   else if( m_Baudrate->GetSelection() == 6 )
     wDigInt.setbps( m_Props, 115200 );
 
-  wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue()*2 + m_S88Bus2->GetValue()*2 + m_S88Bus3->GetValue()*2 );
+  if (m_XpressNetSensors->GetValue() != 0 ) {
+    wDigInt.setfbmod( m_Props, m_XpressNetSensors->GetValue()*2 );
+  }
+  else {
+    wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue()*2 + m_S88Bus2->GetValue()*2 + m_S88Bus3->GetValue()*2 );
+  }
 
   iONode opendccini = wDigInt.getopendcc(m_Props);
   wOpenDCC.setlib(opendccini, m_SubLib->GetSelection() == 0 ? wDigInt.p50x:wDigInt.xpressnet);
