@@ -856,6 +856,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
       if( data->timedfn >= 0 && wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0) {
         /* reset previous timed function */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset previous timed function");
         __resetTimedFunction(inst, cmd, -1);
       }
       if( wFunCmd.gettimedfn( cmd ) >= 0 && wFunCmd.gettimer( cmd ) > 0 ) {
@@ -1229,6 +1230,7 @@ static void __runner( void* threadinst ) {
     int   event = -1;
     int   timer = 0;
     int   type  = 0;
+    int   fx    = 0;
     obj   udata = NULL;
 
     if( msg != NULL ) {
@@ -1321,10 +1323,13 @@ static void __runner( void* threadinst ) {
         wLoc.setruntime( data->props, data->runtime );
       }
 
+
+      fx = wLoc.getfx( data->props );
       for( i = 0; i < 28; i++ ) {
-        if( data->fxtimer[i] > 0 ) {
+        if( i == 0 && data->fn0 && data->fxtimer[i] > 0 || i > 0 && (fx & (1 << (i-1))) && data->fxtimer[i] > 0 ) {
           data->fxtimer[i]--;
           if( data->fxtimer[i] == 0 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", i);
             fncmd = __resetTimedFunction(loc, NULL, i);
           }
         }
@@ -1333,6 +1338,7 @@ static void __runner( void* threadinst ) {
       if( fncmd == NULL && data->timedfn >= 0 && data->fntimer >= 0 ) {
         data->fntimer--;
         if( data->fntimer == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", data->timedfn);
           fncmd = __resetTimedFunction(loc, NULL, -1);
         }
       }
