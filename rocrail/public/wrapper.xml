@@ -1081,6 +1081,7 @@
     <var name="donkey" vt="bool" defval="false" remark="Flags if a valid donation key is found."/>
     <var name="healthy" vt="bool" defval="true"/>
     <var name="modtitle" vt="string" defval="Module Overview" range="*" remark="Title of plan."/>
+    <actionctrl cardinality="n"/>
     <digint cardinality="n" wrappername="DigInt" referenceonly="true"/>
     <zlevel cardinality="n" remark="Z-Level description" wrappername="ZLevel">
       <var name="title" vt="string" defval="" range="*"/>

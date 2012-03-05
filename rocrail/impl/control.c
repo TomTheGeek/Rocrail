@@ -67,6 +67,7 @@
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/PwrCmd.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/Booster.h"
@@ -77,6 +78,7 @@ typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
 static void __informDigInts( iOControl inst );
 static void __listener( obj inst, iONode nodeC, int level );
+static void __checkAction( iOControl inst, const char* state );
 
 static int instCnt = 0;
 
@@ -325,6 +327,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
       /* keep a copy of the command to inform the model after the digints */
       modelSysCmd = (iONode)NodeOp.base.clone(node);
+      __checkAction(inst, wSysCmd.getcmd(node));
     }
 
     if( StrOp.equals( wPwrCmd.name(), NodeOp.getName(node) ) && data->powerman != NULL ) {
@@ -842,6 +845,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
         "State event from=%s: track power is %s",
         wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
     AppOp.broadcastEvent( nodeC );
+    __checkAction((iOControl)inst, data->power?wSysCmd.go:wSysCmd.stop);
   }
   else
     ModelOp.event( model, nodeC );
@@ -1041,6 +1045,41 @@ static void __checkActions( iOControl control ) {
   }
 
 }
+
+
+
+static void __checkAction( iOControl inst, const char* state ) {
+  iOControlData data   = Data(inst);
+  iOModel       model  = AppOp.getModel();
+
+  if( model != NULL ) {
+    iONode plan   = ModelOp.getModel( model );
+    if( plan != NULL ) {
+      iONode action = wPlan.getactionctrl(plan);
+      /* loop over all actions */
+      while( action != NULL ) {
+        if( StrOp.equals(state, wActionCtrl.getstate( action )) )
+        {
+          iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+          if( Action != NULL ) {
+            ActionOp.exec(Action, action);
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+              wActionCtrl.getstate( action ), state );
+        }
+
+        action = wPlan.nextactionctrl( plan, action );
+      }
+    }
+  }
+}
+
+
+
+
+
 
 static void __clockticker( void* threadinst ) {
   iOThread        th = (iOThread)threadinst;
